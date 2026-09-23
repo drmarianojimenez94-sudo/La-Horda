@@ -4332,6 +4332,10 @@ function spawnEnemy(type, atBoss, champion){
     target:null,
     alive:true
   };
+  // Tundraverx (subjefe de la Arena de Hielo, nivel 6): sus 2 ataques propios (Aliento de
+  // Hielo y Nova de Hielo, ver update()) usan cooldowns propios que necesitan arrancar en
+  // cuanto aparece, igual que los del Demonio Mayor.
+  if(type==="dragon_hielo"){ e.breathCd = 2600; e.waveCd = 4400; }
   enemies.push(e);
   // Un campeón (subjefe) detiene la aparición normal de monstruos mientras esté vivo,
   // salvo que se marque explícitamente como "caótico" (permite que sigan apareciendo).
@@ -6883,6 +6887,45 @@ function update(dt){
         particles.push({x:e.x,y:e.y, life:650, ring:true, maxLife:650, maxR:R, color:"#ff6a3d"});
         particles.push({x:e.x,y:e.y, life:800, ring:true, maxLife:800, maxR:R*0.7, color:"#ffcf5c"});
         showBanner("¡Onda de Fuego Infernal!");
+      }
+    }
+
+    // ---- Habilidades del subjefe de la Arena de Hielo (Tundraverx, Soberano de Hielo) ----
+    // Mismo patrón que el Demonio Mayor de arriba: un lanzallamas en cono (Aliento de Hielo)
+    // y una onda circular (Nova de Hielo), alternando por cooldown propio. Se suman a su
+    // ataque a distancia normal (esquirlas de hielo), no lo reemplazan.
+    if(e.type==="dragon_hielo"){
+      if(e.breathCd>0) e.breathCd -= dt;
+      if(e.waveCd>0) e.waveCd -= dt;
+      if(e.breathCd<=0 && dist < 340){
+        e.breathCd = 5200; e.attackAnim = 550;
+        const targets = [player, ...allies].filter(h=>h.alive);
+        for(const h of targets){
+          const hdx=h.x-e.x, hdy=h.y-e.y, hd=Math.hypot(hdx,hdy)||1;
+          const dot = (hdx/hd)*e.fx + (hdy/hd)*e.fy; // dentro del cono frontal
+          if(hd < 310 && dot > 0.6){
+            damageHero(h, e.dmg*1.25);
+            h.slowAmt = Math.max(h.slowAmt||0, 0.4); h.slowTimer = Math.max(h.slowTimer||0, 1400);
+          }
+        }
+        for(let i=0;i<18;i++){
+          const spread=(Math.random()-0.5)*0.7, dist2=80+Math.random()*220;
+          particles.push({x:e.x, y:e.y, vx:(e.fx*Math.cos(spread)-e.fy*Math.sin(spread))*dist2*2,
+            vy:(e.fx*Math.sin(spread)+e.fy*Math.cos(spread))*dist2*2, life:420, color:Math.random()<0.5?"#bfe8ff":"#eaf7ff"});
+        }
+        showBanner("¡Aliento de Hielo!");
+      } else if(e.waveCd<=0){
+        e.waveCd = 7600; e.attackAnim = 550;
+        const R = 220;
+        const targets = [player, ...allies].filter(h=>h.alive);
+        for(const h of targets){
+          if(distance(e,h) <= R){
+            damageHero(h, e.dmg*1.05);
+            h.slowAmt = Math.max(h.slowAmt||0, 0.45); h.slowTimer = Math.max(h.slowTimer||0, 1600);
+          }
+        }
+        frostNovaVFX(e, R, 3);
+        showBanner("¡Nova de Hielo!");
       }
     }
 
