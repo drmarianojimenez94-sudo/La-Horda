@@ -3521,12 +3521,17 @@ function drawArena(){
 // puede golpear cualquier estructura, para poder probar la regla de verdad.
 // ============================================================
 const DIVINA_LAYOUT = [
-  {type:"castle", side:"enemy",  x:0,    y:-700, hp:2600},
-  {type:"tower",  side:"enemy",  x:-260, y:-560, hp:600},
-  {type:"tower",  side:"enemy",  x:260,  y:-560, hp:600},
-  {type:"castle", side:"player", x:0,    y:700,  hp:2600},
-  {type:"tower",  side:"player", x:-260, y:560,  hp:600},
-  {type:"tower",  side:"player", x:260,  y:560,  hp:600}
+  {type:"castle",   side:"enemy",  x:0,    y:-700, hp:2600},
+  {type:"tower",    side:"enemy",  x:-260, y:-560, hp:600},
+  {type:"tower",    side:"enemy",  x:260,  y:-560, hp:600},
+  // Estructuras intermedias: una torre de avanzada por bando, a mitad de camino entre la
+  // base y el centro del mapa. No protegen al castillo (solo lo hacen las 2 torres de base,
+  // ver castleProtected) — son un objetivo/obstáculo extra en el camino de las oleadas.
+  {type:"midtower", side:"enemy",  x:0,    y:-260, hp:900},
+  {type:"midtower", side:"player", x:0,    y:260,  hp:900},
+  {type:"castle",   side:"player", x:0,    y:700,  hp:2600},
+  {type:"tower",    side:"player", x:-260, y:560,  hp:600},
+  {type:"tower",    side:"player", x:260,  y:560,  hp:600}
 ];
 let divinaStructures = [];
 let divinaLevel = 1; // nivel de la Arena Divina: cada uno sube 10 niveles de personaje al equipo enemigo
@@ -3546,6 +3551,15 @@ function pickDivinaTeamClasses(){
 // Divina")- SIN tocar save.champions en ningún momento: usa el parámetro de nivel opcional
 // de computePlayerStats/makeHero, así el nivel real del jugador queda intacto.
 function spawnDivinaEnemyTeam(){
+  // Nivel 6: en vez de otro equipo de campeones, el rival son los 4 jefes finales de las
+  // arenas normales (ver makeDivinaBossChamp más arriba).
+  if(divinaLevel===DIVINA_BOSS_LEVEL){
+    divinaEnemies = DIVINA_BOSS_TYPES.map((type,i)=>{
+      const ang = (i/DIVINA_BOSS_TYPES.length)*Math.PI*2;
+      return makeDivinaBossChamp(type, Math.cos(ang)*90, -640+Math.sin(ang)*90);
+    });
+    return;
+  }
   const lvl = Math.min(99, divinaLevel*10);
   const classes = pickDivinaTeamClasses();
   divinaEnemies = classes.map((k,i)=>{
@@ -3594,23 +3608,23 @@ function updateDivinaEnemies(dt){
       continue;
     }
 
-    // --- DEFENSA: si alguna estructura PROPIA está siendo amenazada por un héroe del
-    // jugador, prioriza volver a defenderla por sobre seguir avanzando a ciegas.
+    // --- DEFENSA: si alguna estructura PROPIA está siendo amenazada por un héroe o un minion
+    // del jugador, prioriza volver a defenderla por sobre seguir avanzando a ciegas.
+    const playerThreats = [...heroes.filter(p=>p.alive), ...divinaMinions.filter(m=>m.alive && m.side==="player")];
     let threatened = null, threatD = 240;
     for(const s of divinaStructures){
       if(!s.alive || s.side!=="enemy") continue;
-      for(const p of heroes){
-        if(!p.alive) continue;
+      for(const p of playerThreats){
         const d = distance(p, s);
         if(d < threatD){ threatD = d; threatened = s; }
       }
     }
 
-    // --- COMBATE: entre los héroes al alcance, prioriza al más vulnerable (menos vida),
-    // no siempre al más cercano sin criterio -tal como pedía el diseño original.
+    // --- COMBATE: entre los héroes y minions del jugador al alcance, prioriza al más
+    // vulnerable (menos vida), no siempre al más cercano sin criterio -tal como pedía el
+    // diseño original- ahora también trabando combate con las oleadas, no solo con héroes.
     let target = null, bestScore = -Infinity;
-    for(const p of heroes){
-      if(!p.alive) continue;
+    for(const p of playerThreats){
       const d = distance(h,p);
       if(d > 260) continue;
       const score = (1 - p.hp/p.maxHp)*180 - d; // vida baja pesa más que la cercanía
@@ -3636,7 +3650,7 @@ function updateDivinaEnemies(dt){
       } else if(h.atkCd<=0){
         h.atkCd = 1000;
         h.attackAnim = 190;
-        damageHero(target, h.baseDmg*0.8);
+        if(target.classKey) damageHero(target, h.baseDmg*0.8); else damageDivinaMinion(target, h.baseDmg*0.8);
         spawnSlash(h);
       }
     } else {
@@ -3674,22 +3688,13 @@ function updateDivinaEnemies(dt){
 }
 function buildDivinaStructures(){
   divinaStructures = DIVINA_LAYOUT.map(s=>({
-    ...s, maxHp:s.hp, alive:true,
+    ...s, maxHp:s.hp, alive:true, atkCd:0,
     radius: s.type==="castle" ? 95 : 40
   }));
 }
 // ¿Sigue protegido el castillo de este lado? (true mientras le quede alguna torre propia en pie)
 function castleProtected(side){
   return divinaStructures.some(s=>s.type==="tower" && s.side===side && s.alive);
-}
-function nearestDivinaStructure(ent, range){
-  let best=null, bestD=Infinity;
-  for(const s of divinaStructures){
-    if(!s.alive) continue;
-    const d = distance(ent, s) - s.radius;
-    if(d <= range && d < bestD){ bestD=d; best=s; }
-  }
-  return best;
 }
 function damageDivinaStructure(s, amount, src){
   if(!s.alive) return;
@@ -3703,10 +3708,10 @@ function damageDivinaStructure(s, amount, src){
   if(s.hp<=0){
     s.alive = false;
     particles.push({x:s.x,y:s.y-40, life:700, ring:true, maxLife:700, maxR:s.radius+40, color:"#d29aff"});
-    if(s.type==="tower"){
-      showBanner("¡TORRE DESTRUIDA!");
-      if(!castleProtected(s.side)) setTimeout(()=>showBanner("¡CASTILLO VULNERABLE!"), 900);
-    } else {
+    // OJO: antes esto chequeaba "if(type==='tower') ... else CASTILLO DESTRUIDO", así que una
+    // torre intermedia (type:"midtower") caía en el else y terminaba la partida como si fuera
+    // el castillo. Ahora se chequea el castillo explícitamente primero.
+    if(s.type==="castle"){
       showBanner("¡CASTILLO DESTRUIDO!");
       if(s.side==="enemy"){
         divinaLevel++; // Fase 4: ganaste -> el próximo intento ya escala al nivel siguiente
@@ -3714,8 +3719,186 @@ function damageDivinaStructure(s, amount, src){
       } else {
         setTimeout(()=>{ showGameOverScreen("castle"); }, 900);
       }
+    } else {
+      showBanner(s.type==="midtower" ? "¡TORRE INTERMEDIA DESTRUIDA!" : "¡TORRE DESTRUIDA!");
+      if(s.type==="tower" && !castleProtected(s.side)) setTimeout(()=>showBanner("¡CASTILLO VULNERABLE!"), 900);
     }
   }
+}
+
+// ============================================================
+// ARENA DIVINA — combate por bando: unifica campeones, oleadas de minions y estructuras bajo
+// una sola noción de "objetivo hostil", para que cualquier cosa que pelee en el asedio (tuya
+// o del equipo enemigo) pueda trabar combate con lo que tenga cerca, no solo con los héroes
+// (antes tus 3 aliados no atacaban NADA en la Arena Divina: ver triggerBasic/updateAllies).
+// mySide "player" = vos (heroes); "enemy" = el equipo rival (divinaEnemies).
+// ============================================================
+function divinaHostiles(mySide, x, y, range, opts){
+  opts = opts || {};
+  const list = [];
+  if(mySide==="player"){
+    for(const h of divinaEnemies){ if(h.alive) list.push({kind:"champ", ref:h}); }
+    for(const m of divinaMinions){ if(m.alive && m.side==="enemy") list.push({kind:"minion", ref:m}); }
+    if(!opts.unitsOnly) for(const s of divinaStructures){ if(s.alive && s.side==="enemy") list.push({kind:"structure", ref:s}); }
+  } else {
+    for(const h of heroes){ if(h.alive) list.push({kind:"hero", ref:h}); }
+    for(const m of divinaMinions){ if(m.alive && m.side==="player") list.push({kind:"minion", ref:m}); }
+    if(!opts.unitsOnly) for(const s of divinaStructures){ if(s.alive && s.side==="player") list.push({kind:"structure", ref:s}); }
+  }
+  let best=null, bestD=Infinity;
+  for(const it of list){
+    const d = distance({x,y}, it.ref) - (it.ref.radius||0);
+    if(d<=range && d<bestD){ bestD=d; best=it; }
+  }
+  return best;
+}
+function divinaDealDamage(target, amount, src){
+  if(target.kind==="hero" || target.kind==="champ") damageHero(target.ref, amount);
+  else if(target.kind==="minion") damageDivinaMinion(target.ref, amount, src);
+  else if(target.kind==="structure") damageDivinaStructure(target.ref, amount, src);
+}
+
+// ---- Torres y castillo: ahora atacan solas a cualquier campeón/minion enemigo a su alcance
+// (antes eran puramente objetivos pasivos). Nunca disparan contra otra estructura.
+function updateDivinaStructuresCombat(dt){
+  for(const s of divinaStructures){
+    if(!s.alive) continue;
+    if(s.atkCd>0){ s.atkCd -= dt; continue; }
+    const range = s.type==="castle" ? 260 : 220;
+    const hit = divinaHostiles(s.side, s.x, s.y, range, {unitsOnly:true});
+    if(!hit) continue;
+    s.atkCd = s.type==="castle" ? 900 : 1100;
+    const dmg = s.type==="castle" ? 46 : 30;
+    divinaDealDamage(hit, dmg, s);
+    pushDivinaStructureBeam(s, hit.ref);
+  }
+}
+function pushDivinaStructureBeam(s, t){
+  particles.push({x:s.x, y:s.y-(s.type==="castle"?90:80), x2:t.x, y2:t.y-14, life:180, bolt:true, color:"#d29aff"});
+}
+
+// ---- Oleadas de minions: cada tanto salen refuerzos para LOS DOS bandos, con exactamente la
+// misma composición para cada uno (mismo sorteo, tal como pediste). El roster sale de TODOS
+// los enemigos comunes de las 4 arenas normales (Bosque/Hielo/Laberinto/Infernal), sin jefes
+// ni subjefes -la Arena Divina como "resumen" de todo lo ya peleado, no monstruos propios-.
+let divinaMinions = [];
+let divinaWaveTimer = 0;
+const DIVINA_WAVE_INTERVAL = 20000;
+const DIVINA_WAVE_SIZE = 4;
+// Calculado perezosamente (no al cargar el script): ENEMY_BASE todavía no existe en este
+// punto del archivo, así que un `const ... = Object.keys(ENEMY_BASE)` de nivel superior acá
+// rompería el juego entero al arrancar (ReferenceError por TDZ).
+let _divinaWavePoolCache = null;
+function divinaWavePool(){
+  if(!_divinaWavePoolCache){
+    _divinaWavePoolCache = Object.keys(ENEMY_BASE).filter(k=>{
+      const r = ENEMY_BASE[k].rank;
+      return r!=="jefe" && r!=="subjefe";
+    });
+  }
+  return _divinaWavePoolCache;
+}
+function pickDivinaWaveComposition(){
+  const pool = divinaWavePool();
+  const picks = [];
+  for(let i=0;i<DIVINA_WAVE_SIZE;i++) picks.push(pool[(Math.random()*pool.length)|0]);
+  return picks;
+}
+function makeDivinaMinion(type, side, x, y){
+  const base = ENEMY_BASE[type];
+  const lvlScale = Math.min(2.2, 1 + (divinaLevel-1)*0.12);
+  return {
+    type, side, rank: base.rank, alive:true,
+    x, y, radius: base.radius, scale: base.scale*0.92,
+    hp: Math.round(base.hp*lvlScale*1.4), maxHp: Math.round(base.hp*lvlScale*1.4),
+    dmg: Math.round(base.dmg*lvlScale*1.2),
+    speed: base.speed*0.9, color: base.color,
+    ranged: base.ranged||false, range: base.range||0, projSpeed: base.projSpeed||0,
+    atkCd:0, fx:0, fy: side==="enemy"?1:-1, animT:Math.random()*600, attackAnim:0, hitFlash:0,
+    goal: side==="enemy" ? {x:0,y:700} : {x:0,y:-700}
+  };
+}
+function spawnDivinaWave(){
+  const picks = pickDivinaWaveComposition();
+  picks.forEach((type,i)=>{
+    const off = (i-(picks.length-1)/2)*46;
+    divinaMinions.push(makeDivinaMinion(type, "enemy", off, -640));
+    divinaMinions.push(makeDivinaMinion(type, "player", off, 640));
+  });
+  showBanner("¡Oleada de refuerzos!");
+}
+function updateDivinaMinions(dt){
+  for(const m of divinaMinions){
+    if(!m.alive) continue;
+    if(m.atkCd>0) m.atkCd -= dt;
+    if(m.hitFlash>0) m.hitFlash -= dt;
+    if(m.attackAnim>0) m.attackAnim -= dt;
+    const AGGRO = 220, atkRange = m.ranged ? m.range : (m.radius+30);
+    const hit = divinaHostiles(m.side, m.x, m.y, AGGRO);
+    if(hit){
+      const t = hit.ref;
+      const dx=t.x-m.x, dy=t.y-m.y, d=Math.hypot(dx,dy)||1;
+      m.fx=dx/d; m.fy=dy/d;
+      const stopDist = hit.kind==="structure" ? ((t.radius||0)+atkRange) : atkRange;
+      if(d > stopDist){
+        m.x += dx/d*m.speed*dt/1000; m.y += dy/d*m.speed*dt/1000;
+      } else if(m.atkCd<=0){
+        m.atkCd = m.ranged ? 1400 : 1000;
+        m.attackAnim = 220;
+        divinaDealDamage(hit, m.dmg, m);
+      }
+    } else {
+      const dx=m.goal.x-m.x, dy=m.goal.y-m.y, d=Math.hypot(dx,dy)||1;
+      if(d>20){ m.fx=dx/d; m.fy=dy/d; m.x += dx/d*m.speed*dt/1000; m.y += dy/d*m.speed*dt/1000; }
+    }
+    m.animT += dt;
+  }
+  divinaMinions = divinaMinions.filter(m=>m.alive);
+}
+function damageDivinaMinion(m, amount){
+  if(!m.alive) return;
+  m.hp -= amount;
+  m.hitFlash = 90;
+  floatText(m.x, m.y-20, Math.round(amount), null);
+  if(m.hp<=0){
+    m.alive = false;
+    for(let i=0;i<6;i++) particles.push({x:m.x,y:m.y, vx:(Math.random()-0.5)*120, vy:(Math.random()-0.5)*120, life:360, color:m.color});
+  }
+}
+
+// ---- Colores de equipo: anillo bajo los pies de cada campeón (tuyo o rival) mientras estás
+// en la Arena Divina, para distinguir a simple vista quién pelea para cada bando.
+function drawDivinaTeamRing(ent, side){
+  const col = side==="enemy" ? "#ff5a6a" : "#4ac8ff";
+  const pulse = 0.6+0.4*Math.sin(performance.now()/260 + ent.x*0.01);
+  ctx.save();
+  ctx.globalAlpha = 0.5+0.25*pulse;
+  ctx.strokeStyle = col; ctx.lineWidth = 2.2; ctx.shadowColor = col; ctx.shadowBlur = 6;
+  const r = ent.radius||24;
+  ctx.beginPath(); ctx.ellipse(ent.x, ent.y+r*0.5, r*1.05, r*0.42, 0, 0, Math.PI*2); ctx.stroke();
+  ctx.restore();
+}
+
+// ---- Nivel 6 de la Arena Divina: en vez de otro equipo de 4 campeones, el rival son los 4
+// jefes finales de las arenas normales (uno por bioma), reutilizando sus stats de ENEMY_BASE
+// pero envueltos como "campeón divino" -puede recibir daño con damageHero, atacar estructuras,
+// retirarse, etc., igual que cualquier otro divinaEnemies- (ver spawnDivinaEnemyTeam).
+const DIVINA_BOSS_LEVEL = 6;
+const DIVINA_BOSS_TYPES = ["demonio_mayor","angel_caido_hielo","jinete_sin_cabeza","minotauro"];
+function makeDivinaBossChamp(type, x, y){
+  const base = ENEMY_BASE[type];
+  const scaleMult = 1 + Math.max(0, divinaLevel-DIVINA_BOSS_LEVEL)*0.12;
+  return {
+    type, rank: base.rank, isBossChamp:true, isDivineFoe:true, alive:true,
+    x, y, radius: base.radius*1.15, scale: base.scale*1.05,
+    hp: Math.round(base.hp*1.6*scaleMult), maxHp: Math.round(base.hp*1.6*scaleMult),
+    dmg: Math.round(base.dmg*1.3*scaleMult), baseDmg: Math.round(base.dmg*1.3*scaleMult),
+    speed: base.speed*0.85, baseSpeed: base.speed*0.85, def:0.12, classKey:null, stats:null,
+    cls:{name:base.name, color:base.color},
+    color: base.color, ranged: base.ranged||false, range: base.range||0, projSpeed: base.projSpeed||0,
+    fx:0, fy:1, animT:Math.random()*600, attackAnim:0, hitFlash:0, hurtTimer:0, atkCd:0, retreatTimer:0,
+    divinaAdvanceTarget: {x:0, y:700}
+  };
 }
 function drawDivinaHpBar(s){
   const w = s.type==="castle" ? 130 : 56, h = 6, y = s.y - (s.type==="castle" ? 175 : 118);
@@ -4152,6 +4335,8 @@ function startDivinaExploration(){
   divinaMode = true;
   currentArena = "divina";
   buildDivinaStructures();
+  divinaMinions = [];
+  divinaWaveTimer = 14000; // primera oleada recién a los 14s, para dar tiempo a acomodarse
   startRun(1);
   spawnDivinaEnemyTeam(); // después de startRun: necesita runStats ya inicializado
 }
@@ -5203,7 +5388,7 @@ function botTryAbilities(h){
     const isSupport = supportKinds.includes(sk.kind);
     const teamHurt = heroes.some(o=>o.alive && o.hp/o.maxHp<0.62);
     if(isSupport && !teamHurt) continue;
-    if(!isSupport && !nearestEnemyTo(h, 300)) continue;
+    if(!isSupport && !(divinaMode ? divinaHostiles("player", h.x, h.y, 300) : nearestEnemyTo(h, 300))) continue;
     h.energy -= sk.cost;
     h.cds[idx] = sk.cd * 1.1 * masteryCdMult(masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult;
     castAbility(h, sk, false, idx);
@@ -5310,7 +5495,11 @@ function updateAllies(dt){
     if(h.attackAnim>0) h.attackAnim -= dt;
     if(h.hurtTimer>0) h.hurtTimer -= dt;
 
-    const target = nearestEnemyTo(h, 620);
+    // En la Arena Divina no hay nada en `enemies` (los monstruos comunes viven en
+    // divinaMinions): sin esto, tus 3 aliados nunca encontraban a quién perseguir y se
+    // quedaban solo siguiendo al jugador sin pelear.
+    const divinaHit = divinaMode ? divinaHostiles("player", h.x, h.y, 620) : null;
+    const target = divinaHit ? divinaHit.ref : nearestEnemyTo(h, 620);
     const desired = h.cls.ranged ? 190 : (h.cls.basicRange*0.7);
     let mx=0, my=0;
     // Si está herido, prioriza ir a buscar la poción más cercana (antes ningún aliado las
@@ -5548,6 +5737,29 @@ function triggerBasic(caster){
   const cls = caster.cls;
   const mythicBonus = mythicExecuteBonus(caster); // Sobrecarga Mítica: bonus si vida<50%
   const aspd = 1 + passiveSum(caster.classKey,"atkspeed_mult") + mythicBonus;
+
+  if(divinaMode){
+    // Bug corregido: antes SOLO el jugador atacaba en la Arena Divina (los 3 aliados no
+    // hacían nada salvo caminar) porque acá abajo, para cualquier otro caster, se buscaba
+    // target en `enemies` -que en la Arena Divina siempre está vacío-. Ahora cualquiera de
+    // tu equipo (o del rival) busca objetivo entre campeones/minions/estructuras hostiles.
+    const mySide = caster.isDivineFoe ? "enemy" : "player";
+    const hit = divinaHostiles(mySide, caster.x, caster.y, cls.basicRange + 40);
+    if(!hit) return;
+    if(caster===player){
+      caster.basicCd = cls.basicCd / (player.buffAtkSpeedMult * aspd);
+    } else {
+      caster.basicCd = cls.basicCd * 1.15 / ((caster.buffAtkSpeedMult||1) * aspd);
+    }
+    caster.attackAnim = 190;
+    const dmg = caster.baseDmg * runStats.dmgMult * (caster.buffDmgMult||1) * furyMissingHpMult(caster) * arenaMods().heroDmgMult * (1 + passiveSum(caster.classKey,"dmg_mult") + mythicBonus);
+    const dx=hit.ref.x-caster.x, dy=hit.ref.y-caster.y, l=Math.hypot(dx,dy)||1;
+    caster.fx=dx/l; caster.fy=dy/l;
+    divinaDealDamage(hit, dmg, caster);
+    spawnSlash(caster);
+    return;
+  }
+
   if(caster===player){
     caster.basicCd = cls.basicCd / (player.buffAtkSpeedMult * aspd);
   } else {
@@ -5557,32 +5769,6 @@ function triggerBasic(caster){
   }
   caster.attackAnim = 190;
   const dmg = caster.baseDmg * runStats.dmgMult * (caster.buffDmgMult||1) * furyMissingHpMult(caster) * arenaMods().heroDmgMult * (1 + passiveSum(caster.classKey,"dmg_mult") + mythicBonus);
-  if(divinaMode && caster===player){
-    // Fase 3: ahora hay dos cosas para golpear -los 4 enemigos divinos y las estructuras-.
-    // Prioridad: primero un enemigo vivo cerca (combate real), y solo si no hay ninguno al
-    // alcance, la torre/castillo más cercana (sigue sirviendo para probar la regla de asedio).
-    let enemyTarget = null, bestD = cls.basicRange + 20;
-    for(const h of divinaEnemies){
-      if(!h.alive) continue;
-      const d = distance(caster,h);
-      if(d < bestD){ bestD = d; enemyTarget = h; }
-    }
-    if(enemyTarget){
-      const dx=enemyTarget.x-caster.x, dy=enemyTarget.y-caster.y, l=Math.hypot(dx,dy)||1;
-      caster.fx=dx/l; caster.fy=dy/l;
-      damageHero(enemyTarget, dmg);
-      spawnSlash(caster);
-      return;
-    }
-    const target = nearestDivinaStructure(caster, cls.basicRange + 60);
-    if(target){
-      const dx=target.x-caster.x, dy=target.y-caster.y, l=Math.hypot(dx,dy)||1;
-      caster.fx=dx/l; caster.fy=dy/l;
-      damageDivinaStructure(target, dmg, caster);
-      spawnSlash(caster);
-    }
-    return;
-  }
   const bleedOpt = caster.buffBleedOnHit ? {bleed:true, bleedDur:2400} : {};
   if(cls.ranged){
     const target = nearestEnemyTo(caster, cls.basicRange);
@@ -6500,7 +6686,13 @@ function update(dt){
     if(axiomFreezeTimer<=0) axiomFreezeCaster = null;
   }
   if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
-  if(divinaMode) updateDivinaEnemies(dt);
+  if(divinaMode){
+    updateDivinaEnemies(dt);
+    updateDivinaMinions(dt);
+    updateDivinaStructuresCombat(dt);
+    divinaWaveTimer -= dt;
+    if(divinaWaveTimer<=0){ divinaWaveTimer = DIVINA_WAVE_INTERVAL; spawnDivinaWave(); }
+  }
 
   // player movement
   player.moving = false;
@@ -7510,6 +7702,7 @@ function drawHero(h){
   const colossal = h.colossalTimer>0;
   const drawScale = colossal ? h.scale*1.55 : (h.growTimer>0 ? h.scale*(h.growScale||1) : h.scale);
   drawShadow(h.x, h.y, h.radius*(colossal?1.3:0.85));
+  if(divinaMode) drawDivinaTeamRing(h, h.isDivineFoe ? "enemy" : "player");
   if(h.isDivineFoe) drawDivineAura(h);
   drawGroundSigil(h);
 
@@ -7874,10 +8067,20 @@ function render(){
   const ents = [];
   for(const e of enemies){ if(e.alive) ents.push({y:e.y, e}); }
   for(const h of heroes){ if(h.alive) ents.push({y:h.y, h}); }
-  if(divinaMode) for(const h of divinaEnemies){ if(h.alive) ents.push({y:h.y, h}); }
+  if(divinaMode){
+    // Los campeones divinos son "héroes" (drawHero), salvo en el nivel de jefes (nivel 6),
+    // donde son entidades tipo enemigo (drawEnemy) — ver makeDivinaBossChamp.
+    for(const h of divinaEnemies){ if(h.alive){ if(h.isBossChamp) ents.push({y:h.y, e:h}); else ents.push({y:h.y, h}); } }
+    for(const m of divinaMinions){ if(m.alive) ents.push({y:m.y, e:m}); }
+  }
   ents.sort((a,b)=>a.y-b.y);
   for(const it of ents){
-    if(it.e) drawEnemy(it.e); else drawHero(it.h);
+    if(it.e){
+      if(divinaMode && (it.e.isBossChamp || it.e.side)) drawDivinaTeamRing(it.e, it.e.side || "enemy");
+      drawEnemy(it.e);
+    } else {
+      drawHero(it.h);
+    }
   }
 
   // proyectiles
