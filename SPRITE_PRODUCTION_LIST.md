@@ -47,7 +47,7 @@ Dónde se integra en el código (`index.html`):
 | C1 | ~~**Segador Olvidado**~~ ✅ | Campeón | **Integrado con el diseño nuevo del Pack 1** (parca violeta): quieto, caminar, ataque, cast, golpe y muerte en 3 direcciones. Habilidades sin cambios | Opcional: rehacer los frames de muerte intermedios (venían partidos) |
 | C2 | ~~**Axiom**~~ ✅ | Campeón | **Integrado con el diseño nuevo del Pack 1** (paladín dorado): quieto, caminar, ataque, cast y muerte en 3 direcciones. Habilidades sin cambios | Opcional: golpe recibido y más frames de cast (los del pack venían partidos) |
 | C3 | ~~**Duende del Bosque**~~ ✅ | Ruinas del Bosque, común | **Integrado** (Pack 2, commit de este sprint): caminar 5, idle 3, ataque 4, golpe 1, muerte 3 | Opcional: rehacer ataque/golpe/muerte (varios frames venían partidos por la grilla y se descartaron) |
-| C4 | **Bestia del Bosque** | Ruinas del Bosque, subélite | Usa el sprite del Zombi (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **ataque 3 frames** — *Pack 2 no usable: casi todos los frames vienen partidos a la mitad por la grilla de la hoja JPEG.* |
+| C4 | ~~**Bestia del Bosque**~~ ✅ | Ruinas del Bosque, subélite | **Integrado** (sprint de integración visual): se reconstruyó cada fila del Pack 2 uniendo las celdas partidas por la grilla. Idle 4, caminar 5, ataque 3, golpe 1, muerte 4 | Opcional: vistas de frente/espalda |
 | C5 | ~~**Guardián del Laberinto**~~ ✅ | Laberinto Maldito, subjefe | **Integrado** (Pack 3): idle 3, caminar 4, ataque 5, golpe 2, muerte 5. Habilidades sin cambios | Opcional: vistas de frente/espalda (el pack solo trae perfil 3/4) |
 
 ---
@@ -99,7 +99,23 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 - **VFX de habilidades de los packs:** no se usaron. Son un solo frame cada uno (no animación)
   y las habilidades que ilustran ya tienen su efecto en el juego.
 
-## IMPORTANTE
+## Sprint de integración visual (auditoría completa)
+
+- **Corregidos:** Escorpión (el perfil mezclaba frames que miraban a lados opuestos), Tiburón
+  Blanco (idle2 de otra toma, se veía gigante), Kraken (tamaño que "latía" entre frames),
+  Anguila y Leviatán (recortes con restos de hoja), Demonio de Hielo (lanza del frame vecino),
+  Soporte (atlas con huecos transparentes en cara/manto, líneas de grilla y cuadriculado),
+  La Profeta (caminata más chica que el idle, restos de guadaña), Musashi, Segador, Axiom,
+  Nigromante y Sylva (líneas de grilla y fragmentos de frames vecinos), Lobo Espectral (texto de
+  la hoja incrustado), esqueletos invocados, VFX de Axiom (traían al Axiom viejo dibujado adentro).
+- **Recortes descartados por rotos** (se usa otro frame del mismo set): Musashi basic1,
+  Nigromante idleA2–A5, esqueleto walk2 y mageAtk, lobo run, Demonio Nigromántico "slam"
+  (trae un cartel de texto de la hoja).
+- **Pendientes de arte** (se ven bien, pero conviene rehacer): Nigromante — ciclo de idle limpio;
+  Demonio Nigromántico — golpe al suelo; Lobo Espectral — carrera; Musashi — primer frame del
+  básico; los VFX de Axiom se recortaron con máscara y pueden tener un hueco suave donde estaba
+  el personaje viejo.
+
 
 | # | Entidad | Arena / rol | Hoy | A producir |
 |---|---------|-------------|-----|------------|
@@ -115,7 +131,7 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 | I10 | **Demonio Mayor — efectos** | Arena Infernal, jefe | El cuerpo tiene atlas real; el **aliento** y la **onda** se dibujan por código | **Aliento de fuego 4 a 6 frames** (efecto, dirección derecha) + **onda expansiva 4 frames** (anillo/golpe al suelo, vista cenital) |
 | I11 | ~~**Zombi**~~ ✅ | Arena Infernal, común | **Integrado** (Pack 4): idle 4, caminar 3, ataque 3, golpe 1, muerte 3. *La fila "attack" del pack dibuja otra criatura (con cuernos y lanza): se usaron como ataque los frames de embestida de la fila "hit"* | Opcional: ataque propio (mordida/zarpazo) con el mismo diseño |
 | I12 | ~~**Esqueleto Cornudo**~~ ✅ | Arena Infernal, subélite | **Integrado** (Pack 4): idle 4, caminar 4, ataque 3, golpe 2, muerte 3 | — |
-| I13 | **Arena Divina — ruinas** | Estructuras | La torre y el castillo destruidos son rectángulos dibujados por código | **Torre destruida 1 frame** (~160×217, misma escala que la torre) + **Castillo destruido 1 frame** (~260×139). Opcional: derrumbe de 3 frames |
+| I13 | ~~**Arena Divina — ruinas**~~ ✅ | Estructuras | **Resuelto**: las torres/castillos usan ahora el arte del Pack 5 por facción (celestial tu lado, infernal el rival) y la ruina se genera del mismo sprite (base quebrada, chamuscada, con escombros) | Opcional: derrumbe animado de 3 frames |
 
 ---
 
