@@ -120,24 +120,42 @@ Dónde se integra en el código (`index.html`):
 
 ---
 
-## No producir: ya entregado, pendiente de integrar
+## No producir: ya entregado (actualizado tras el sprint de integración, commit `afdd233`)
 
-Este arte ya está en los zips que mandaste. Falta integrarlo en código (un sprint aparte),
-**no hay que producirlo**:
+Este arte ya está en los zips que mandaste. Lo tachado ✅ ya se integró (sin cambios de
+gameplay/balance); el resto sigue disponible para un próximo sprint, **no hay que producirlo
+de nuevo**:
 
-- **Musashi**: `walk`, `ronin_01-04` (Corte del Rōnin), `ghost_01-04` (Paso Fantasma),
-  `thousand_01-04` (Mil Cortes), `ulti_cast`, `ulti_faceoff`, `ulti_finish`, `ulti_portal`.
-- **Sylva**: flecha perforante (`piercing_*`), lluvia (`rain_top_01`), trampa (`trap_top_01`),
-  ataque rápido (`rapid_attack_01/02`), movimiento (`movement_*`: esquivar, correr, saltar),
-  `ultimate_01`.
-- **Nigromante**: `idle_01-05`, `walk_01-06`, `sprint_01-06`, `damage_death_01-05`,
-  `plague_01-09`, `summon_skeleton_01-09`, `summon_golem_01-04`, `skeleton_variant_01-08`.
-- **Arena Acuática**: unos 60 recortes extra del pack (incluye la muerte del tiburón con sangre,
-  variantes del cangrejo, de la medusa y de la sirena, y ataques).
-- **Demonio de Hielo y Fuego**: `lanzallamas_1-4`, `muro_1-4`, `estalactitas`. Esas habilidades
-  todavía no existen en el juego: hace falta diseñarlas antes de usar este arte.
-- **Demonio Nigromántico**: `demon_colossus_slam` y `demon_soul_fire_cast/projectile` ya están
-  cargados, pero ninguna habilidad los dispara (conectarlos implica un cambio de gameplay).
+- **Musashi**: ✅ `ronin_01-04` (Corte del Rōnin), ✅ `ghost_01-04` (Paso Fantasma, además
+  corrigió un bug: la habilidad nunca dibujaba sus estelas), ✅ `thousand_01-04` (Mil Cortes),
+  ✅ `ulti_portal` y ✅ `ulti_finish` (banners de Último Duelo). Sin integrar: `walk` (no
+  hay un estado de movimiento distinto donde usarlo), `ulti_cast`, `ulti_faceoff`.
+- **Sylva**: ✅ `piercing_top_01/02` (carga y disparo de Flecha Perforante) y ✅
+  `piercing_bottom_02` recortado (impacto crítico sobre la Presa), ✅ `rain_top_01`
+  (Lluvia de la Cazadora), ✅ `trap_top_01` (crecimiento de la Trampa del Bosque). Sin
+  integrar: `piercing_bottom_01` (escena de perforar varios enemigos, más compleja de
+  recortar), ataque rápido (`rapid_attack_01/02`), movimiento (`movement_*`: esquivar,
+  correr, saltar -sin una habilidad propia donde encajarlos-), `ultimate_01`.
+- **Nigromante**: ✅ `idle_01-05` y ✅ `walk_01-06` (ciclos reales, antes 1 y 2 frames), ✅ 2
+  de los `summon_skeleton_01-09` (materialización) y ✅ 1 de los `summon_golem_01-04`, ✅ 2
+  de los `skeleton_variant_01-08` (caminata del esqueleto guerrero invocado). Sin integrar:
+  `sprint_01-06` (no hay un estado de "correr" distinto de caminar), `damage_death_01-05`
+  (ya tenía pose de muerte real de un sprint anterior), el resto de `summon_skeleton`/
+  `summon_golem`/`skeleton_variant`, `plague_01-09` (pose de cast del propio Nigromante,
+  distinta de los `ground1-3` ya integrados antes).
+- **Arena Acuática**: ✅ 4 de los ~68 recortes (segundo frame de idle para tiburón joven,
+  tiburón blanco, cangrejo y medusa). Sin integrar: el resto (~64), incluida la muerte del
+  tiburón con sangre y variantes de ataque de cangrejo/medusa/sirena.
+- **Demonio de Hielo y Fuego**: sin integrar. `lanzallamas_1-4`, `muro_1-4`, `estalactitas`
+  son habilidades que hoy no existen en el juego: usarlas implica diseñar una habilidad
+  nueva para un enemigo existente (cambio de gameplay/balance), no solo cablear arte. Se
+  evaluó en este sprint y se decidió no tocarlo sin tu confirmación explícita.
+- **Demonio Nigromántico**: `demon_colossus_slam` y `demon_soul_slash` (el tajo) siguen sin
+  integrar: son recortes con un texto de rótulo ("…DEMONÍACA…"/"…FORMA DEM…") pegado
+  encima que ocupa casi todo el ancho -no se puede recortar sin perder la pose-, necesitan
+  una reexportación limpia tuya (ver P25 más arriba). `demon_soul_fire_cast` y
+  `demon_soul_fire_projectile` sí se integraron (✅) como pose de cast y destello
+  decorativo de la Plaga mientras el Nigromante está transformado.
 
 ---
 
