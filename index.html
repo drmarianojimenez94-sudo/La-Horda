@@ -244,64 +244,9 @@
 
 <script src="js/assets/asset-manifest.js"></script>
 <script src="js/assets/preload.js"></script>
-<script>
-/* Módulo de terceros: Cadena de Relámpagos (arte + animación, imagen embebida) */
-(function(g){
-const image=new Image();image.src='assets/vfx/vendor/cadena-relampagos.png';
-const animations={"lanzamiento": {"frames": [0, 1, 2, 3], "fps": 8, "loop": false}, "rayo": {"frames": [4, 5, 6, 7], "fps": 16, "loop": true}, "electrificado": {"frames": [8, 9, 10, 11], "fps": 10, "loop": true}, "impacto": {"frames": [12, 13], "fps": 10, "loop": false}, "carga": {"frames": [14], "fps": 1, "loop": true}};
-function draw(ctx,name,time,x,y,width=128,height=width){
-const a=animations[name];if(!a)throw Error('Animación desconocida: '+name);
-if(!image.complete||!image.naturalWidth)return;
-let n=Math.max(0,Math.floor(time*a.fps));n=a.loop?n%a.frames.length:Math.min(n,a.frames.length-1);const f=a.frames[n];
-ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(image,f%4*256,Math.floor(f/4)*256,256,256,x-width/2,y-height/2,width,height);ctx.restore();}
-function drawLink(ctx,time,a,b,thickness=55){const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);if(d<1)return;ctx.save();ctx.translate((a.x+b.x)/2,(a.y+b.y)/2);ctx.rotate(Math.atan2(dy,dx));draw(ctx,'rayo',time,0,0,d*1.2,thickness);ctx.restore();}
-function drawChain(ctx,time,points,thickness=55){for(let i=1;i<points.length;i++)drawLink(ctx,time+i*.03,points[i-1],points[i],thickness);}
-g.CadenaRelampagos={image,animations,draw,drawLink,drawChain};
-})(globalThis);
-
-</script>
-<script>
-/* Módulo de terceros: Muro de Fuego (arte + animación, imagen embebida) */
-/* Atlas embebido: funciona sin fetch ni dependencias. Tiempo en segundos. */
-(function(g){
-const image=new Image(); image.src="assets/vfx/vendor/muro-fuego.png";
-const animations={"lanzamiento": {"frames": [0, 1, 2, 3], "fps": 8, "loop": false}, "formacion": {"frames": [4, 5, 6, 7], "fps": 8, "loop": false}, "activo": {"frames": [8, 9, 10, 11], "fps": 10, "loop": true}, "extincion": {"frames": [12], "fps": 3, "loop": false}, "quemadura": {"frames": [13, 14], "fps": 8, "loop": true}};
-function draw(ctx,name,time,x,y,size=160){
- const a=animations[name]; if(!a) throw Error('Animación desconocida: '+name);
- if(!image.complete || !image.naturalWidth) return;
- let n=Math.max(0,Math.floor(time*a.fps));n=a.loop?n%a.frames.length:Math.min(n,a.frames.length-1);
- const f=a.frames[n];ctx.save();ctx.imageSmoothingEnabled=false;
- ctx.drawImage(image,(f%4)*256,Math.floor(f/4)*256,256,256,x-size*.5,y-size*.9,size,size);ctx.restore();
-}
-// Solo presentación visual. El juego debe calcular colisión, daño y enfriamiento.
-function drawWall(ctx,age,x,y,size=200,duration=4){
- if(age<0 || age>=duration+.35)return;
- if(age<.5)draw(ctx,'formacion',age,x,y,size);
- else if(age<duration)draw(ctx,'activo',age-.5,x,y,size);
- else {ctx.save();ctx.globalAlpha*=1-(age-duration)/.35;draw(ctx,'extincion',age-duration,x,y,size);ctx.restore();}
-}
-g.MuroFuego={image,animations,draw,drawWall};
-})(globalThis);
-
-</script>
-<script>
-/* Módulo de terceros: 3 habilidades del Caballerito (Torbellino/Estampida/Grito), imagen embebida */
-/* Caballerito: tres habilidades. Canvas 2D. Sin dependencias ni fetch. */
-(function(g){
-const sources={"torbellino": "assets/vfx/vendor/caballerito-torbellino.png", "estampida": "assets/vfx/vendor/caballerito-estampida.png", "grito": "assets/vfx/vendor/caballerito-grito.png"}, animations={"torbellino": {"inicio": {"frames": [0, 1, 2, 3], "fps": 16, "loop": false}, "activo": {"frames": [4, 5, 6, 7, 8, 9, 10, 11], "fps": 16, "loop": true}, "fin": {"frames": [12, 13], "fps": 8, "loop": false}, "reposo": {"frames": [13], "fps": 10, "loop": false}, "efecto": {"frames": [14], "fps": 10, "loop": false}}, "estampida": {"carga": {"frames": [0, 1, 2, 3], "fps": 10, "loop": false}, "avance": {"frames": [4, 5, 6, 7], "fps": 16, "loop": true}, "impacto": {"frames": [8, 9], "fps": 12, "loop": false}, "estela": {"frames": [10, 11], "fps": 10, "loop": false}, "fin": {"frames": [12, 13, 14], "fps": 10, "loop": false}, "reposo": {"frames": [14], "fps": 10, "loop": false}}, "grito": {"inicio": {"frames": [0, 1, 2, 3], "fps": 10, "loop": false}, "activo": {"frames": [4, 5, 6, 7], "fps": 8, "loop": true}, "onda": {"frames": [8], "fps": 10, "loop": false}, "aura": {"frames": [9], "fps": 10, "loop": false}, "armadura": {"frames": [10], "fps": 10, "loop": false}, "vida": {"frames": [11], "fps": 10, "loop": false}, "provocado": {"frames": [12], "fps": 10, "loop": false}, "torbellino": {"frames": [13], "fps": 10, "loop": false}, "fin": {"frames": [14], "fps": 10, "loop": false}, "reposo": {"frames": [0], "fps": 10, "loop": false}}}, images={};
-for(const k of Object.keys(sources)){const im=new Image();im.src=sources[k];images[k]=im;}
-const ready=Promise.all(Object.values(images).map(im=>new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth)return resolve();im.onload=()=>resolve();im.onerror=()=>reject(Error('No se pudo cargar un atlas'));})));
-function drawFrame(ctx,skill,frame,x,y,size=160,flip=false){const im=images[skill];if(!im)throw Error('Habilidad desconocida: '+skill);if(!im.complete||!im.naturalWidth)return;ctx.save();ctx.imageSmoothingEnabled=false;ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.drawImage(im,(frame%4)*256,Math.floor(frame/4)*256,256,256,-size/2,-size/2,size,size);ctx.restore();}
-function draw(ctx,skill,action,time,x,y,size=160,flip=false){const a=animations[skill]?.[action];if(!a)throw Error('Animación desconocida: '+skill+'/'+action);let n=Math.max(0,Math.floor(time*a.fps));n=a.loop?n%a.frames.length:Math.min(n,a.frames.length-1);drawFrame(ctx,skill,a.frames[n],x,y,size,flip);}
-function spinDuration(empowered=false){return empowered?8:4;}
-function drawWhirlwind(ctx,age,x,y,size=180,empowered=false){const duration=spinDuration(empowered);if(age<0){draw(ctx,'torbellino','reposo',0,x,y,size);return;}if(age<.25)draw(ctx,'torbellino','inicio',age,x,y,size);else if(age<.25+duration)draw(ctx,'torbellino','activo',age-.25,x,y,size);else if(age<.5+duration)draw(ctx,'torbellino','fin',age-.25-duration,x,y,size);else draw(ctx,'torbellino','reposo',0,x,y,size);}
-// Solo render: el juego controla posición, trayectoria y colisiones.
-function drawDash(ctx,age,x,y,size=170,flip=false){if(age<0)draw(ctx,'estampida','reposo',0,x,y,size,flip);else if(age<.4)draw(ctx,'estampida','carga',age,x,y,size,flip);else if(age<.75)draw(ctx,'estampida','avance',age-.4,x,y,size,flip);else if(age<1.05)draw(ctx,'estampida','fin',age-.75,x,y,size,flip);else draw(ctx,'estampida','reposo',0,x,y,size,flip);}
-function drawTaunt(ctx,age,x,y,size=140,duration=8){if(age<0){draw(ctx,'grito','reposo',0,x,y,size);return;}if(age<.4){draw(ctx,'grito','inicio',age,x,y,size);return;}if(age<.9){ctx.save();ctx.globalAlpha*=1-(age-.4)/.5;draw(ctx,'grito','onda',0,x,y,size*(1+(age-.4)*5));ctx.restore();}if(age<.4+duration){const scale=1+.5*Math.min(1,(age-.4)/.3);draw(ctx,'grito','activo',age-.4,x,y,size*scale);}else{if(age<.75+duration){ctx.save();ctx.globalAlpha*=1-(age-.4-duration)/.35;draw(ctx,'grito','fin',0,x,y,size*1.5);ctx.restore();}draw(ctx,'grito','reposo',0,x,y,size);}}
-g.CaballeritoHabilidades={images,ready,animations,draw,drawFrame,drawWhirlwind,drawDash,drawTaunt,spinDuration};
-})(globalThis);
-
-</script>
+<script src="js/vendor/cadena-relampagos.js"></script>
+<script src="js/vendor/muro-fuego.js"></script>
+<script src="js/vendor/caballerito-habilidades.js"></script>
 <script>
 (function(){
 "use strict";
