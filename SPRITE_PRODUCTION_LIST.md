@@ -135,6 +135,46 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 
 ---
 
+## Pack de VFX propio (dibujado a mano, sin IA de imágenes)
+
+El pack `LA_HORDA_sprites_reparados.zip` que mandaste desde otra IA resultó no tener trabajo
+real: de 433 frames comparados byte a byte contra el arte ya integrado, 427 eran idénticos, 4
+eran el mismo frame del Nigromante solo reescalado (misma pose) y 1 (Musashi `basic1`) era en
+realidad su propio `idle` de espalda mal etiquetado. No había ninguna pose nueva para los ~13
+jefes/subjefes de un solo frame que son el pedido central. No se integró nada de ese zip.
+
+Tampoco hay en esta sesión un generador de imágenes ni acceso a Canva: no puedo dibujar un
+campeón nuevo de 16px con la profundidad del arte pintado existente. Lo que sí es un trabajo
+genuino y de calidad consistente es un **pack de efectos (VFX)** dibujado con formas
+vectoriales propias (Python/PIL, supersampleado 4x + glow aditivo real, bajado con LANCZOS) en
+vez de pixel-art de bordes duros -mismo look pintado/suave que el arte real ya existente
+(`soulFireProj`, `ronin4`, etc.)-, embebido en `index.html` como el resto del arte del juego
+(sin dependencias externas ni scripts que cargar en cada sesión):
+
+- **`ice_crystal`** y **`frost_rune`**: esquirla de hielo facetada y runa nórdica angular,
+  reemplazan/acompañan el rombo y las marcas de tick dibujadas por código en Nova de Escarcha
+  y Cataclismo del Mago (niveles altos de talento).
+- **`scythe_slash`** (4 frames): tajo en arco carmesí que sigue el ángulo real del golpe, para
+  el Tajo del Segador.
+- **`soul_reap_burst`** (5 frames): vórtice oscuro con una calavera emergiendo, para "Segador
+  de Almas" (ulti).
+- **`holy_heal_burst`** (4 frames): pilar de luz dorado con una cruz, uno por aliado curado en
+  Curación de Área y Bendición Suprema del Soporte.
+- **`holy_shield_bubble`** (4 frames, loop perfecto): burbuja hexagonal de energía sobre el
+  aliado mientras dura el escudo de equipo.
+- **`water_splash`** (4 frames): salpicadura con anillo expansivo y gotas, en cada golpe a un
+  enemigo acuático (Arena Acuática).
+
+Todo esto es una capa visual **encima** de habilidades que ya funcionan (no cambia daño, área,
+cooldown ni ningún número de balance) y quedó probado con Playwright sin errores de consola en
+los 3 campeones tocados (Mago, Segador, Soporte) y en un golpe acuático real.
+
+**Sigue haciendo falta tu ayuda** para lo que esta técnica no puede resolver: las poses nuevas
+de personajes/jefes de los ítems CRÍTICO/IMPORTANTE de más arriba (Bestia del Bosque, jefes de
+Hielo/Bosque/Laberinto, etc.) necesitan arte pintado real, no formas vectoriales.
+
+---
+
 ## POLISH
 
 ### Enemigos
@@ -170,9 +210,9 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 ### Efectos de habilidades (hoy dibujados por código)
 | # | Habilidad | A producir |
 |---|-----------|------------|
-| P21 | **Soporte**: curación y escudo | Burst de curación 4 a 6 frames + burbuja o escudo en loop de 4 frames |
-| P22 | **Segador**: habilidades y "Segador de Almas" (ulti) | Tajo de guadaña 4 frames + efecto de ulti 6 frames |
-| P23 | **Mago**: Nova de Escarcha y Cataclismo | Nova 5 a 6 frames (anillo cenital) + Cataclismo 6 frames (meteoro o impacto) |
+| P21 | ~~**Soporte**: curación y escudo~~ ✅ | **Resuelto** (ver "Pack de VFX propio" más abajo): pilar de luz + cruz 4 frames y burbuja hexagonal en loop 4 frames |
+| P22 | ~~**Segador**: Tajo del Segador y "Segador de Almas" (ulti)~~ ✅ | **Resuelto**: tajo en arco 4 frames (sigue el ángulo real del golpe) y vórtice de almas con calavera 5 frames |
+| P23 | **Mago**: Nova de Escarcha y Cataclismo | Parcial ✅: cristal de hielo y runa nórdica reales (reemplazan/acompañan el rombo y las marcas de tick dibujados por código en los niveles altos de talento). Falta: anillo cenital propio de la Nova y un efecto de impacto propio para el Cataclismo (hoy usa rayos encadenados, no un meteoro) |
 
 ### Reexportaciones de arte que YA existe (no hay que dibujar, solo exportar limpio)
 | # | Material | Problema | Qué hace falta |
