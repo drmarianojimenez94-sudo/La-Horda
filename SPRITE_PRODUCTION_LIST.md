@@ -44,8 +44,8 @@ Dónde se integra en el código (`index.html`):
 
 | # | Entidad | Arena / rol | Hoy | A producir |
 |---|---------|-------------|-----|------------|
-| C1 | **Segador Olvidado** | Campeón | 3 imágenes quietas (abajo/perfil/arriba, ~100×90 px), sin caminata ni ataque | **Caminata 4 frames × 3 vistas** (abajo, perfil derecha, arriba) + **ataque básico 4 frames** (perfil derecha; ideal también abajo y arriba) |
-| C2 | **Axiom** | Campeón | 3 imágenes quietas (abajo/perfil/arriba, ~60×108 px) | **Caminata 4 frames × 3 vistas** + **ataque/cast 4 frames** (perfil derecha; ideal también abajo y arriba). Sus efectos de habilidades YA existen |
+| C1 | ~~**Segador Olvidado**~~ ✅ | Campeón | **Integrado con el diseño nuevo del Pack 1** (parca violeta): quieto, caminar, ataque, cast, golpe y muerte en 3 direcciones. Habilidades sin cambios | Opcional: rehacer los frames de muerte intermedios (venían partidos) |
+| C2 | ~~**Axiom**~~ ✅ | Campeón | **Integrado con el diseño nuevo del Pack 1** (paladín dorado): quieto, caminar, ataque, cast y muerte en 3 direcciones. Habilidades sin cambios | Opcional: golpe recibido y más frames de cast (los del pack venían partidos) |
 | C3 | ~~**Duende del Bosque**~~ ✅ | Ruinas del Bosque, común | **Integrado** (Pack 2, commit de este sprint): caminar 5, idle 3, ataque 4, golpe 1, muerte 3 | Opcional: rehacer ataque/golpe/muerte (varios frames venían partidos por la grilla y se descartaron) |
 | C4 | **Bestia del Bosque** | Ruinas del Bosque, subélite | Usa el sprite del Zombi (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **ataque 3 frames** — *Pack 2 no usable: casi todos los frames vienen partidos a la mitad por la grilla de la hoja JPEG.* |
 | C5 | **Guardián del Laberinto** | Laberinto Maldito, subjefe | Usa el sprite del Gólem (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **golpe/slam 4 frames** |
@@ -59,12 +59,10 @@ quedaron con líneas de grilla, restos de celdas vecinas, halos grises o el cuer
 
 - **Integrado:** Duende del Bosque (ver C3). Se limpió automáticamente y se descartaron los
   frames partidos.
-- **No integrado — rediseño de personajes existentes:** el **Segador** del pack es un parca
-  violeta con guadaña, pero el Segador del juego es un caballero rojo y negro con mandoble. El
-  **Axiom** del pack es un paladín dorado, pero el Axiom del juego es un chico de pelo blanco con
-  una tableta. Reemplazarlos cambiaría la identidad visual de los campeones: queda a tu
-  decisión. Los VFX del Pack 1 (golpe sagrado, barrera temporal, pulso cronal, nova oscura,
-  corte sinfonal, cataclismo) no corresponden a ninguna habilidad real de esos campeones.
+- **Integrado a pedido tuyo — Segador y Axiom con diseño nuevo:** se cambió solo la apariencia y
+  las animaciones (ver C1/C2). Las habilidades, su lógica y sus efectos siguen iguales. Los VFX
+  del Pack 1 (golpe sagrado, barrera temporal, pulso cronal, nova oscura, corte sinfonal,
+  cataclismo) no se usaron porque no corresponden a ninguna de sus habilidades.
 - **No integrado — enemigos que no existen en el juego:** araña gigante, arquero, druida
   corrompido, escorpión del bosque, espíritu, lobo sombrío, planta carnívora y treant
   ancestral. Además el treant viene con los frames desalineados.
@@ -119,8 +117,8 @@ Para una próxima tanda con ChatGPT (o cualquier generador), pedí **PNG con tra
 | P14 | **Tanque** | Muerte 4 frames (terminando tendido) |
 | P15 | **Asesino** (clave `guerrero`) | Muerte 4 frames |
 | P16 | **Soporte** | Muerte 4 frames + **idle animado 3 a 4 frames** (hoy 1) + **golpe recibido 1 frame** |
-| P17 | **Segador Olvidado** | Muerte 4 frames (además de C1) |
-| P18 | **Axiom** | Muerte 4 frames (además de C2) |
+| P17 | ~~**Segador Olvidado**~~ ✅ | Muerte integrada (Pack 1) |
+| P18 | ~~**Axiom**~~ ✅ | Muerte integrada (Pack 1) |
 | P19 | **La Profeta** | Muerte 4 frames |
 | P20 | **Sylva** | Muerte 4 frames + **golpe recibido 1 frame** |
 
