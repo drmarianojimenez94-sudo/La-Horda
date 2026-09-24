@@ -469,15 +469,6 @@ function autoEquipBest(classKey){
   });
   persist();
 }
-
-const SKILL_ICON_IMG = {
-  "Torbellino": "assets/ui/skill-icons/torbellino.png",
-  "Embestida": "assets/ui/skill-icons/embestida.png",
-  "Grito de Guerra": "assets/ui/skill-icons/grito-de-guerra.png",
-  "Cadena de Relámpago": "assets/ui/skill-icons/cadena-de-relampago.png",
-  "Nova de Escarcha": "assets/ui/skill-icons/nova-de-escarcha.png",
-  "Muro de Fuego": "assets/ui/skill-icons/muro-de-fuego.png"
-};
 function renderMasteryPanel(){
   const panel = document.getElementById("mastery-panel");
   if(!panel || !player) return;
@@ -1318,236 +1309,6 @@ function generateReward(classKey, score){
 function arenaMods(){ return ARENA_MODS[currentArena] || ARENA_MODS.bosque; }
 function isArenaUnlocked(key){ return true; } // demo: todo desbloqueado. Acá va la condición real después.
 
-// Musashi: sprites reales recortados (idle/run x2/ataque básico x5/hurt/death), llegaron
-// en un segundo ZIP ya prolijos (transparencia real, un PNG por pose) — reemplaza el
-// sprite procedural GRIDS.musashi/PAL.musashi como imagen PRINCIPAL (el procedural queda
-// de respaldo silencioso si algo no cargara). Mismo patrón que Segador/Axiom
-// (draw3DirRealSprite) pero con más poses propias: acá se arma un mini-atlas manual con
-// una sola imagen por estado en vez de una grilla, ya que las 4 habilidades tienen su
-// propio feedback (partículas/afterimages) hecho a mano y no dependen de más frames.
-const MUSASHI_REAL_IMG = {};
-const MUSASHI_REAL_READY = {};
-MUSASHI_REAL_IMG.idle = new Image();
-MUSASHI_REAL_READY.idle = false;
-MUSASHI_REAL_IMG.idle.onload = () => { MUSASHI_REAL_READY.idle = true; };
-MUSASHI_REAL_IMG.idle.src = "assets/sprites/champions/musashi/idle.png";
-MUSASHI_REAL_IMG.run1 = new Image();
-MUSASHI_REAL_READY.run1 = false;
-MUSASHI_REAL_IMG.run1.onload = () => { MUSASHI_REAL_READY.run1 = true; };
-MUSASHI_REAL_IMG.run1.src = "assets/sprites/champions/musashi/run1.png";
-MUSASHI_REAL_IMG.run2 = new Image();
-MUSASHI_REAL_READY.run2 = false;
-MUSASHI_REAL_IMG.run2.onload = () => { MUSASHI_REAL_READY.run2 = true; };
-MUSASHI_REAL_IMG.run2.src = "assets/sprites/champions/musashi/run2.png";
-MUSASHI_REAL_IMG.hurt = new Image();
-MUSASHI_REAL_READY.hurt = false;
-MUSASHI_REAL_IMG.hurt.onload = () => { MUSASHI_REAL_READY.hurt = true; };
-MUSASHI_REAL_IMG.hurt.src = "assets/sprites/champions/musashi/hurt.png";
-MUSASHI_REAL_IMG.death = new Image();
-MUSASHI_REAL_READY.death = false;
-MUSASHI_REAL_IMG.death.onload = () => { MUSASHI_REAL_READY.death = true; };
-MUSASHI_REAL_IMG.death.src = "assets/sprites/champions/musashi/death.png";
-MUSASHI_REAL_IMG.basic1 = new Image();
-MUSASHI_REAL_READY.basic1 = false;
-MUSASHI_REAL_IMG.basic1.onload = () => { MUSASHI_REAL_READY.basic1 = true; };
-MUSASHI_REAL_IMG.basic1.src = "assets/sprites/champions/musashi/basic1.png";
-MUSASHI_REAL_IMG.basic2 = new Image();
-MUSASHI_REAL_READY.basic2 = false;
-MUSASHI_REAL_IMG.basic2.onload = () => { MUSASHI_REAL_READY.basic2 = true; };
-MUSASHI_REAL_IMG.basic2.src = "assets/sprites/champions/musashi/basic2.png";
-MUSASHI_REAL_IMG.basic3 = new Image();
-MUSASHI_REAL_READY.basic3 = false;
-MUSASHI_REAL_IMG.basic3.onload = () => { MUSASHI_REAL_READY.basic3 = true; };
-MUSASHI_REAL_IMG.basic3.src = "assets/sprites/champions/musashi/basic3.png";
-MUSASHI_REAL_IMG.basic4 = new Image();
-MUSASHI_REAL_READY.basic4 = false;
-MUSASHI_REAL_IMG.basic4.onload = () => { MUSASHI_REAL_READY.basic4 = true; };
-MUSASHI_REAL_IMG.basic4.src = "assets/sprites/champions/musashi/basic4.png";
-MUSASHI_REAL_IMG.basic5 = new Image();
-MUSASHI_REAL_READY.basic5 = false;
-MUSASHI_REAL_IMG.basic5.onload = () => { MUSASHI_REAL_READY.basic5 = true; };
-MUSASHI_REAL_IMG.basic5.src = "assets/sprites/champions/musashi/basic5.png";
-
-// Arte real adicional (mismos zips originales de Musashi, ya subidos, sin usar hasta ahora):
-// poses de Corte del Rōnin/Paso Fantasma/Mil Cortes (windup/impacto de cada habilidad, ya con
-// la silueta de Musashi incluida en el frame -mismo criterio que BOSS_FX: van en REEMPLAZO del
-// sprite normal mientras dura la pose, no superpuestas-) y dos "banners" decorativos de Último
-// Duelo (portal de entrada / destello de victoria), estos sí superpuestos aparte del cuerpo.
-MUSASHI_REAL_IMG.ronin1 = new Image();
-MUSASHI_REAL_READY.ronin1 = false;
-MUSASHI_REAL_IMG.ronin1.onload = () => { MUSASHI_REAL_READY.ronin1 = true; };
-MUSASHI_REAL_IMG.ronin1.src = "assets/sprites/champions/musashi/ronin1.png";
-MUSASHI_REAL_IMG.ronin2 = new Image();
-MUSASHI_REAL_READY.ronin2 = false;
-MUSASHI_REAL_IMG.ronin2.onload = () => { MUSASHI_REAL_READY.ronin2 = true; };
-MUSASHI_REAL_IMG.ronin2.src = "assets/sprites/champions/musashi/ronin2.png";
-MUSASHI_REAL_IMG.ronin3 = new Image();
-MUSASHI_REAL_READY.ronin3 = false;
-MUSASHI_REAL_IMG.ronin3.onload = () => { MUSASHI_REAL_READY.ronin3 = true; };
-MUSASHI_REAL_IMG.ronin3.src = "assets/sprites/champions/musashi/ronin3.png";
-MUSASHI_REAL_IMG.ronin4 = new Image();
-MUSASHI_REAL_READY.ronin4 = false;
-MUSASHI_REAL_IMG.ronin4.onload = () => { MUSASHI_REAL_READY.ronin4 = true; };
-MUSASHI_REAL_IMG.ronin4.src = "assets/sprites/champions/musashi/ronin4.png";
-MUSASHI_REAL_IMG.ghost1 = new Image();
-MUSASHI_REAL_READY.ghost1 = false;
-MUSASHI_REAL_IMG.ghost1.onload = () => { MUSASHI_REAL_READY.ghost1 = true; };
-MUSASHI_REAL_IMG.ghost1.src = "assets/sprites/champions/musashi/ghost1.png";
-MUSASHI_REAL_IMG.ghost2 = new Image();
-MUSASHI_REAL_READY.ghost2 = false;
-MUSASHI_REAL_IMG.ghost2.onload = () => { MUSASHI_REAL_READY.ghost2 = true; };
-MUSASHI_REAL_IMG.ghost2.src = "assets/sprites/champions/musashi/ghost2.png";
-MUSASHI_REAL_IMG.ghost3 = new Image();
-MUSASHI_REAL_READY.ghost3 = false;
-MUSASHI_REAL_IMG.ghost3.onload = () => { MUSASHI_REAL_READY.ghost3 = true; };
-MUSASHI_REAL_IMG.ghost3.src = "assets/sprites/champions/musashi/ghost3.png";
-MUSASHI_REAL_IMG.ghost4 = new Image();
-MUSASHI_REAL_READY.ghost4 = false;
-MUSASHI_REAL_IMG.ghost4.onload = () => { MUSASHI_REAL_READY.ghost4 = true; };
-MUSASHI_REAL_IMG.ghost4.src = "assets/sprites/champions/musashi/ghost4.png";
-MUSASHI_REAL_IMG.thousand1 = new Image();
-MUSASHI_REAL_READY.thousand1 = false;
-MUSASHI_REAL_IMG.thousand1.onload = () => { MUSASHI_REAL_READY.thousand1 = true; };
-MUSASHI_REAL_IMG.thousand1.src = "assets/sprites/champions/musashi/thousand1.png";
-MUSASHI_REAL_IMG.thousand2 = new Image();
-MUSASHI_REAL_READY.thousand2 = false;
-MUSASHI_REAL_IMG.thousand2.onload = () => { MUSASHI_REAL_READY.thousand2 = true; };
-MUSASHI_REAL_IMG.thousand2.src = "assets/sprites/champions/musashi/thousand2.png";
-MUSASHI_REAL_IMG.thousand3 = new Image();
-MUSASHI_REAL_READY.thousand3 = false;
-MUSASHI_REAL_IMG.thousand3.onload = () => { MUSASHI_REAL_READY.thousand3 = true; };
-MUSASHI_REAL_IMG.thousand3.src = "assets/sprites/champions/musashi/thousand3.png";
-MUSASHI_REAL_IMG.thousand4 = new Image();
-MUSASHI_REAL_READY.thousand4 = false;
-MUSASHI_REAL_IMG.thousand4.onload = () => { MUSASHI_REAL_READY.thousand4 = true; };
-MUSASHI_REAL_IMG.thousand4.src = "assets/sprites/champions/musashi/thousand4.png";
-MUSASHI_REAL_IMG.ultiPortal = new Image();
-MUSASHI_REAL_READY.ultiPortal = false;
-MUSASHI_REAL_IMG.ultiPortal.onload = () => { MUSASHI_REAL_READY.ultiPortal = true; };
-MUSASHI_REAL_IMG.ultiPortal.src = "assets/sprites/champions/musashi/ultiPortal.png";
-MUSASHI_REAL_IMG.ultiFinish = new Image();
-MUSASHI_REAL_READY.ultiFinish = false;
-MUSASHI_REAL_IMG.ultiFinish.onload = () => { MUSASHI_REAL_READY.ultiFinish = true; };
-MUSASHI_REAL_IMG.ultiFinish.src = "assets/sprites/champions/musashi/ultiFinish.png";
-// Sylva, La Cazadora del Bosque: sprites reales recortados (idle/run x2/combo de ataque
-// x6/lobo espectral x3), llegaron ya prolijos en PNGs separados por pose (algunos eran
-// tiras de varios cuadros parejos, recortadas automáticamente con PIL antes de insertar).
-// Mismo patrón que Musashi/Segador/Axiom: una imagen completa por estado, sin grilla.
-const SYLVA_REAL_IMG = {};
-const SYLVA_REAL_READY = {};
-SYLVA_REAL_IMG.idle = new Image();
-SYLVA_REAL_READY.idle = false;
-SYLVA_REAL_IMG.idle.onload = () => { SYLVA_REAL_READY.idle = true; };
-SYLVA_REAL_IMG.idle.src = "assets/sprites/champions/cazadora/idle.png";
-SYLVA_REAL_IMG.run1 = new Image();
-SYLVA_REAL_READY.run1 = false;
-SYLVA_REAL_IMG.run1.onload = () => { SYLVA_REAL_READY.run1 = true; };
-SYLVA_REAL_IMG.run1.src = "assets/sprites/champions/cazadora/run1.png";
-SYLVA_REAL_IMG.run2 = new Image();
-SYLVA_REAL_READY.run2 = false;
-SYLVA_REAL_IMG.run2.onload = () => { SYLVA_REAL_READY.run2 = true; };
-SYLVA_REAL_IMG.run2.src = "assets/sprites/champions/cazadora/run2.png";
-SYLVA_REAL_IMG.atk1 = new Image();
-SYLVA_REAL_READY.atk1 = false;
-SYLVA_REAL_IMG.atk1.onload = () => { SYLVA_REAL_READY.atk1 = true; };
-SYLVA_REAL_IMG.atk1.src = "assets/sprites/champions/cazadora/atk1.png";
-SYLVA_REAL_IMG.atk2 = new Image();
-SYLVA_REAL_READY.atk2 = false;
-SYLVA_REAL_IMG.atk2.onload = () => { SYLVA_REAL_READY.atk2 = true; };
-SYLVA_REAL_IMG.atk2.src = "assets/sprites/champions/cazadora/atk2.png";
-SYLVA_REAL_IMG.atk3 = new Image();
-SYLVA_REAL_READY.atk3 = false;
-SYLVA_REAL_IMG.atk3.onload = () => { SYLVA_REAL_READY.atk3 = true; };
-SYLVA_REAL_IMG.atk3.src = "assets/sprites/champions/cazadora/atk3.png";
-SYLVA_REAL_IMG.atk4 = new Image();
-SYLVA_REAL_READY.atk4 = false;
-SYLVA_REAL_IMG.atk4.onload = () => { SYLVA_REAL_READY.atk4 = true; };
-SYLVA_REAL_IMG.atk4.src = "assets/sprites/champions/cazadora/atk4.png";
-SYLVA_REAL_IMG.atk5 = new Image();
-SYLVA_REAL_READY.atk5 = false;
-SYLVA_REAL_IMG.atk5.onload = () => { SYLVA_REAL_READY.atk5 = true; };
-SYLVA_REAL_IMG.atk5.src = "assets/sprites/champions/cazadora/atk5.png";
-SYLVA_REAL_IMG.atk6 = new Image();
-SYLVA_REAL_READY.atk6 = false;
-SYLVA_REAL_IMG.atk6.onload = () => { SYLVA_REAL_READY.atk6 = true; };
-SYLVA_REAL_IMG.atk6.src = "assets/sprites/champions/cazadora/atk6.png";
-
-// Arte real adicional (mismo zip original de Sylva, sin usar hasta ahora): pose de puntería
-// (chargeAim, mientras carga Flecha Perforante), 2 frames de disparo (release1/2, reemplazan
-// su cuerpo durante el breve instante del disparo) e impacto crítico sobre la Presa
-// (piercingCrit, decorativo). Recortados a mano para sacar el texto de rótulo que traían
-// pegado arriba (p.ej. "IMPACTO EN PRESA (CRÍTICO)") -ver piercingCrit-.
-SYLVA_REAL_IMG.chargeAim = new Image();
-SYLVA_REAL_READY.chargeAim = false;
-SYLVA_REAL_IMG.chargeAim.onload = () => { SYLVA_REAL_READY.chargeAim = true; };
-SYLVA_REAL_IMG.chargeAim.src = "assets/sprites/champions/cazadora/chargeAim.png";
-SYLVA_REAL_IMG.release1 = new Image();
-SYLVA_REAL_READY.release1 = false;
-SYLVA_REAL_IMG.release1.onload = () => { SYLVA_REAL_READY.release1 = true; };
-SYLVA_REAL_IMG.release1.src = "assets/sprites/champions/cazadora/release1.png";
-SYLVA_REAL_IMG.release2 = new Image();
-SYLVA_REAL_READY.release2 = false;
-SYLVA_REAL_IMG.release2.onload = () => { SYLVA_REAL_READY.release2 = true; };
-SYLVA_REAL_IMG.release2.src = "assets/sprites/champions/cazadora/release2.png";
-SYLVA_REAL_IMG.piercingCrit = new Image();
-SYLVA_REAL_READY.piercingCrit = false;
-SYLVA_REAL_IMG.piercingCrit.onload = () => { SYLVA_REAL_READY.piercingCrit = true; };
-SYLVA_REAL_IMG.piercingCrit.src = "assets/sprites/champions/cazadora/piercingCrit.png";
-// Lluvia de la Cazadora: 3 frames reales (flecha subiendo / cayendo en lluvia / impacto en
-// el suelo), del mismo zip -antes solo se veía el círculo punteado del telegraph-.
-const SYLVA_RAIN_IMG = {};
-const SYLVA_RAIN_READY = {};
-SYLVA_RAIN_IMG.f1 = new Image();
-SYLVA_RAIN_READY.f1 = false;
-SYLVA_RAIN_IMG.f1.onload = () => { SYLVA_RAIN_READY.f1 = true; };
-SYLVA_RAIN_IMG.f1.src = "assets/vfx/cazadora/rain-f1.png";
-SYLVA_RAIN_IMG.f2 = new Image();
-SYLVA_RAIN_READY.f2 = false;
-SYLVA_RAIN_IMG.f2.onload = () => { SYLVA_RAIN_READY.f2 = true; };
-SYLVA_RAIN_IMG.f2.src = "assets/vfx/cazadora/rain-f2.png";
-SYLVA_RAIN_IMG.f3 = new Image();
-SYLVA_RAIN_READY.f3 = false;
-SYLVA_RAIN_IMG.f3.onload = () => { SYLVA_RAIN_READY.f3 = true; };
-SYLVA_RAIN_IMG.f3.src = "assets/vfx/cazadora/rain-f3.png";
-// Trampa del Bosque: 4 frames reales de crecimiento (plantada -> raíces creciendo -> trampa
-// formada), del mismo zip -antes solo la mira procedural-.
-const SYLVA_TRAP_IMG = {};
-const SYLVA_TRAP_READY = {};
-SYLVA_TRAP_IMG.f1 = new Image();
-SYLVA_TRAP_READY.f1 = false;
-SYLVA_TRAP_IMG.f1.onload = () => { SYLVA_TRAP_READY.f1 = true; };
-SYLVA_TRAP_IMG.f1.src = "assets/vfx/cazadora/trap-f1.png";
-SYLVA_TRAP_IMG.f2 = new Image();
-SYLVA_TRAP_READY.f2 = false;
-SYLVA_TRAP_IMG.f2.onload = () => { SYLVA_TRAP_READY.f2 = true; };
-SYLVA_TRAP_IMG.f2.src = "assets/vfx/cazadora/trap-f2.png";
-SYLVA_TRAP_IMG.f3 = new Image();
-SYLVA_TRAP_READY.f3 = false;
-SYLVA_TRAP_IMG.f3.onload = () => { SYLVA_TRAP_READY.f3 = true; };
-SYLVA_TRAP_IMG.f3.src = "assets/vfx/cazadora/trap-f3.png";
-SYLVA_TRAP_IMG.f4 = new Image();
-SYLVA_TRAP_READY.f4 = false;
-SYLVA_TRAP_IMG.f4.onload = () => { SYLVA_TRAP_READY.f4 = true; };
-SYLVA_TRAP_IMG.f4.src = "assets/vfx/cazadora/trap-f4.png";// Lobo Espectral (solo existe durante Cacería Salvaje): idle/correr/mordida/salto.
-const WOLF_REAL_IMG = {};
-const WOLF_REAL_READY = {};
-WOLF_REAL_IMG.idle = new Image();
-WOLF_REAL_READY.idle = false;
-WOLF_REAL_IMG.idle.onload = () => { WOLF_REAL_READY.idle = true; };
-WOLF_REAL_IMG.idle.src = "assets/sprites/champions/cazadora/wolf/idle.png";
-WOLF_REAL_IMG.run = new Image();
-WOLF_REAL_READY.run = false;
-WOLF_REAL_IMG.run.onload = () => { WOLF_REAL_READY.run = true; };
-WOLF_REAL_IMG.run.src = "assets/sprites/champions/cazadora/wolf/run.png";
-WOLF_REAL_IMG.bite = new Image();
-WOLF_REAL_READY.bite = false;
-WOLF_REAL_IMG.bite.onload = () => { WOLF_REAL_READY.bite = true; };
-WOLF_REAL_IMG.bite.src = "assets/sprites/champions/cazadora/wolf/bite.png";
-WOLF_REAL_IMG.jump = new Image();
-WOLF_REAL_READY.jump = false;
-WOLF_REAL_IMG.jump.onload = () => { WOLF_REAL_READY.jump = true; };
-WOLF_REAL_IMG.jump.src = "assets/sprites/champions/cazadora/wolf/jump.png";
-
 // Copia de una paleta donde todo es blanco: sirve de silueta para el destello de impacto
 function whitePal(pal){
   const out = {};
@@ -1777,10 +1538,6 @@ function buildAnimDefFromLegacy(legacy, targetHeight, events){
    castAbility con su propio timer, sin depender de esto para nada.
    ============================================================ */
 const MAGO_ATLAS = {"image": "mago.png", "imageSize": [1254, 1254], "referenceHeight": 270, "anchor": "bottom-center", "frames": [{"x": 54, "y": 32, "w": 225, "h": 264, "pivotX": 111}, {"x": 362, "y": 33, "w": 223, "h": 263, "pivotX": 113}, {"x": 678, "y": 32, "w": 218, "h": 264, "pivotX": 107}, {"x": 987, "y": 32, "w": 220, "h": 264, "pivotX": 108}, {"x": 50, "y": 343, "w": 238, "h": 269, "pivotX": 115}, {"x": 364, "y": 347, "w": 227, "h": 265, "pivotX": 111}, {"x": 669, "y": 344, "w": 231, "h": 269, "pivotX": 116}, {"x": 982, "y": 346, "w": 232, "h": 266, "pivotX": 113}, {"x": 45, "y": 664, "w": 243, "h": 256, "pivotX": 120}, {"x": 358, "y": 621, "w": 228, "h": 299, "pivotX": 117}, {"x": 645, "y": 688, "w": 341, "h": 232, "pivotX": 120}, {"x": 996, "y": 665, "w": 213, "h": 255, "pivotX": 99}, {"x": 55, "y": 1009, "w": 221, "h": 209, "pivotX": 110}, {"x": 358, "y": 1038, "w": 213, "h": 183, "pivotX": 117}, {"x": 646, "y": 1042, "w": 245, "h": 179, "pivotX": 119}, {"x": 951, "y": 1110, "w": 276, "h": 111, "pivotX": 134}], "animations": {"idle": {"frames": [0, 1, 2, 3], "fps": 4, "loop": true}, "walk": {"frames": [4, 5, 6, 7], "fps": 8, "loop": true}, "cast": {"frames": [8, 9, 10, 11], "fps": 8, "loop": false}, "hurt": {"frames": [12], "fps": 6, "loop": false}, "death": {"frames": [12, 13, 14, 15], "fps": 6, "loop": false}}};
-const MAGO_IMG = new Image();
-let MAGO_IMG_READY = false;
-MAGO_IMG.onload = () => { MAGO_IMG_READY = true; };
-MAGO_IMG.src = "assets/sprites/champions/mago/atlas.png";
 const MAGO_TARGET_HEIGHT = 70; // altura visible aproximada en unidades de mundo, a escala normal (drawScale=2.0)
 
 // Definición + atlas del Mago en el formato nuevo, construida a partir de la misma tabla de
@@ -1827,10 +1584,6 @@ function drawMagoFallen(h, alpha){
    el sprite procedural existente (fallback ya presente en el motor).
    ============================================================ */
 const SOPORTE_ATLAS = {"image": "soporte_atlas.png", "imageSize": [818, 122], "referenceHeight": 114, "anchor": "bottom-center", "frames": [{"x": 4, "y": 4, "w": 147, "h": 114, "pivotX": 74}, {"x": 155, "y": 4, "w": 175, "h": 114, "pivotX": 88}, {"x": 334, "y": 4, "w": 130, "h": 114, "pivotX": 65}, {"x": 468, "y": 12, "w": 111, "h": 106, "pivotX": 56}, {"x": 583, "y": 12, "w": 114, "h": 106, "pivotX": 57}, {"x": 701, "y": 12, "w": 113, "h": 106, "pivotX": 56}], "animations": {"idle": {"frames": [0], "fps": 1, "loop": true}, "walk": {"frames": [0, 1, 2], "fps": 7, "loop": true}, "cast": {"frames": [3, 4, 5], "fps": 8, "loop": false}, "hurt": {"frames": [0], "fps": 6, "loop": false}}};
-const SOPORTE_IMG = new Image();
-let SOPORTE_IMG_READY = false;
-SOPORTE_IMG.onload = () => { SOPORTE_IMG_READY = true; };
-SOPORTE_IMG.src = "assets/sprites/champions/soporte/atlas.png";
 const SOPORTE_TARGET_HEIGHT = 70; // mismo criterio de tamaño en pantalla que el Mago
 
 // Migrado al motor genérico AnimAtlas (ver más arriba, junto al Mago) — mismo esquema,
@@ -1856,16 +1609,8 @@ function drawSoporteAtlas(h, drawScale, alpha){
    paquete -> esos dos estados siguen el fallback ya existente en el motor.
    ============================================================ */
 const TANQUE_ATLAS = {"image": "caballerito.png", "imageSize": [1024, 1536], "referenceHeight": 200, "frames": [{"x": 32, "y": 43, "w": 168, "h": 202, "pivotX": 93, "pivotY": 202}, {"x": 300, "y": 42, "w": 160, "h": 203, "pivotX": 85, "pivotY": 203}, {"x": 561, "y": 42, "w": 157, "h": 203, "pivotX": 84, "pivotY": 203}, {"x": 819, "y": 43, "w": 165, "h": 202, "pivotX": 86, "pivotY": 202}, {"x": 46, "y": 280, "w": 151, "h": 215, "pivotX": 79, "pivotY": 215}, {"x": 301, "y": 280, "w": 153, "h": 216, "pivotX": 84, "pivotY": 216}, {"x": 561, "y": 280, "w": 154, "h": 213, "pivotX": 84, "pivotY": 213}, {"x": 818, "y": 280, "w": 151, "h": 216, "pivotX": 87, "pivotY": 216}, {"x": 44, "y": 527, "w": 182, "h": 211, "pivotX": 81, "pivotY": 211}, {"x": 302, "y": 527, "w": 180, "h": 211, "pivotX": 83, "pivotY": 211}, {"x": 563, "y": 527, "w": 178, "h": 211, "pivotX": 82, "pivotY": 211}, {"x": 822, "y": 527, "w": 173, "h": 211, "pivotX": 83, "pivotY": 211}, {"x": 32, "y": 787, "w": 178, "h": 202, "pivotX": 93, "pivotY": 202}, {"x": 296, "y": 755, "w": 170, "h": 234, "pivotX": 89, "pivotY": 234}, {"x": 551, "y": 786, "w": 217, "h": 203, "pivotX": 94, "pivotY": 203}, {"x": 801, "y": 786, "w": 183, "h": 203, "pivotX": 104, "pivotY": 203}, {"x": 40, "y": 1023, "w": 209, "h": 204, "pivotX": 85, "pivotY": 204}, {"x": 311, "y": 994, "w": 159, "h": 228, "pivotX": 74, "pivotY": 228}, {"x": 557, "y": 1023, "w": 244, "h": 204, "pivotX": 88, "pivotY": 204}, {"x": 811, "y": 1023, "w": 197, "h": 200, "pivotX": 94, "pivotY": 200}, {"x": 43, "y": 1269, "w": 175, "h": 205, "pivotX": 82, "pivotY": 205}, {"x": 303, "y": 1237, "w": 179, "h": 239, "pivotX": 82, "pivotY": 239}, {"x": 553, "y": 1251, "w": 212, "h": 224, "pivotX": 92, "pivotY": 224}, {"x": 815, "y": 1268, "w": 185, "h": 208, "pivotX": 90, "pivotY": 208}], "animations": {"idle_down": {"frames": [0], "fps": 1, "loop": true, "flip": false}, "walk_down": {"frames": [0, 1, 2, 3], "fps": 8, "loop": true, "flip": false}, "attack_down": {"frames": [12, 13, 14, 15], "fps": 10, "loop": false, "flip": false}, "idle_right": {"frames": [4], "fps": 1, "loop": true, "flip": false}, "walk_right": {"frames": [4, 5, 6, 7], "fps": 8, "loop": true, "flip": false}, "attack_right": {"frames": [16, 17, 18, 19], "fps": 10, "loop": false, "flip": false}, "idle_up": {"frames": [8], "fps": 1, "loop": true, "flip": false}, "walk_up": {"frames": [8, 9, 10, 11], "fps": 8, "loop": true, "flip": false}, "attack_up": {"frames": [20, 21, 22, 23], "fps": 10, "loop": false, "flip": false}, "idle_left": {"frames": [4], "fps": 1, "loop": true, "flip": true}, "walk_left": {"frames": [4, 5, 6, 7], "fps": 8, "loop": true, "flip": true}, "attack_left": {"frames": [16, 17, 18, 19], "fps": 10, "loop": false, "flip": true}}};
-const TANQUE_IMG = new Image();
-let TANQUE_IMG_READY = false;
-TANQUE_IMG.onload = () => { TANQUE_IMG_READY = true; };
-TANQUE_IMG.src = "assets/sprites/champions/tanque/atlas.png";
 
 const GUERRERO_ATLAS = {"image": "asesino.png", "imageSize": [1024, 1536], "referenceHeight": 220, "frames": [{"x": 58, "y": 23, "w": 168, "h": 228, "pivotX": 87, "pivotY": 228}, {"x": 303, "y": 25, "w": 172, "h": 226, "pivotX": 92, "pivotY": 226}, {"x": 548, "y": 23, "w": 171, "h": 228, "pivotX": 87, "pivotY": 228}, {"x": 795, "y": 25, "w": 173, "h": 226, "pivotX": 90, "pivotY": 226}, {"x": 45, "y": 276, "w": 189, "h": 217, "pivotX": 100, "pivotY": 217}, {"x": 289, "y": 276, "w": 191, "h": 217, "pivotX": 106, "pivotY": 217}, {"x": 530, "y": 276, "w": 191, "h": 217, "pivotX": 105, "pivotY": 217}, {"x": 788, "y": 276, "w": 185, "h": 217, "pivotX": 97, "pivotY": 217}, {"x": 58, "y": 522, "w": 172, "h": 225, "pivotX": 87, "pivotY": 225}, {"x": 297, "y": 520, "w": 178, "h": 228, "pivotX": 98, "pivotY": 228}, {"x": 548, "y": 520, "w": 176, "h": 228, "pivotX": 87, "pivotY": 228}, {"x": 794, "y": 521, "w": 173, "h": 229, "pivotX": 91, "pivotY": 229}, {"x": 31, "y": 772, "w": 223, "h": 220, "pivotX": 114, "pivotY": 220}, {"x": 276, "y": 777, "w": 216, "h": 225, "pivotX": 119, "pivotY": 225}, {"x": 535, "y": 772, "w": 216, "h": 221, "pivotX": 100, "pivotY": 221}, {"x": 777, "y": 777, "w": 221, "h": 222, "pivotX": 108, "pivotY": 222}, {"x": 47, "y": 1024, "w": 191, "h": 219, "pivotX": 98, "pivotY": 219}, {"x": 299, "y": 1023, "w": 193, "h": 226, "pivotX": 96, "pivotY": 226}, {"x": 524, "y": 1024, "w": 244, "h": 222, "pivotX": 111, "pivotY": 222}, {"x": 793, "y": 1024, "w": 190, "h": 225, "pivotX": 92, "pivotY": 225}, {"x": 41, "y": 1265, "w": 200, "h": 226, "pivotX": 104, "pivotY": 226}, {"x": 285, "y": 1270, "w": 194, "h": 224, "pivotX": 110, "pivotY": 224}, {"x": 524, "y": 1270, "w": 241, "h": 226, "pivotX": 111, "pivotY": 226}, {"x": 786, "y": 1266, "w": 196, "h": 230, "pivotX": 99, "pivotY": 230}], "animations": {"idle_down": {"frames": [0], "fps": 1, "loop": true, "flip": false}, "walk_down": {"frames": [0, 1, 2, 3], "fps": 8, "loop": true, "flip": false}, "attack_down": {"frames": [12, 13, 14, 15], "fps": 10, "loop": false, "flip": false}, "idle_right": {"frames": [4], "fps": 1, "loop": true, "flip": false}, "walk_right": {"frames": [4, 5, 6, 7], "fps": 8, "loop": true, "flip": false}, "attack_right": {"frames": [16, 17, 18, 19], "fps": 10, "loop": false, "flip": false}, "idle_up": {"frames": [8], "fps": 1, "loop": true, "flip": false}, "walk_up": {"frames": [8, 9, 10, 11], "fps": 8, "loop": true, "flip": false}, "attack_up": {"frames": [20, 21, 22, 23], "fps": 10, "loop": false, "flip": false}, "idle_left": {"frames": [4], "fps": 1, "loop": true, "flip": true}, "walk_left": {"frames": [4, 5, 6, 7], "fps": 8, "loop": true, "flip": true}, "attack_left": {"frames": [16, 17, 18, 19], "fps": 10, "loop": false, "flip": true}}};
-const GUERRERO_IMG = new Image();
-let GUERRERO_IMG_READY = false;
-GUERRERO_IMG.onload = () => { GUERRERO_IMG_READY = true; };
-GUERRERO_IMG.src = "assets/sprites/champions/guerrero/atlas.png";
 
 // Registro genérico de "atlas de 4 direcciones" por clase: agregar una clase nueva de este
 // tipo es sumar una entrada acá, sin escribir funciones nuevas.
@@ -1939,10 +1684,6 @@ const PROFETA_ATLAS = {
     spin:   { frames:[8,9],     fps:7,  loop:false }
   }
 };
-const PROFETA_IMG = new Image();
-let PROFETA_IMG_READY = false;
-PROFETA_IMG.onload = () => { PROFETA_IMG_READY = true; };
-PROFETA_IMG.src = "assets/sprites/champions/profeta/atlas.png";
 const PROFETA_TARGET_HEIGHT = 68; // altura visible aprox. a escala normal (drawScale=2.0), mismo criterio que MAGO_TARGET_HEIGHT
 const PROFETA_ANIM_DEF = buildAnimDefFromLegacy(PROFETA_ATLAS, PROFETA_TARGET_HEIGHT, {});
 const PROFETA_ANIM_ATLAS = wrapAnimImage(PROFETA_IMG, ()=>PROFETA_IMG_READY, PROFETA_ANIM_DEF);
@@ -1979,37 +1720,12 @@ const ENEMY_ANIM_DEF = {
   atacar_arriba:     {frames:[20,21,22,23], fps:10, loop:false, flip:false},
   atacar_izquierda:  {frames:[16,17,18,19], fps:10, loop:false, flip:true}
 };
-const ENEMY_ATLAS_IMG = {}, ENEMY_ATLAS_READY = {};
-ENEMY_ATLAS_READY["esqueleto"] = false;
-ENEMY_ATLAS_IMG["esqueleto"] = new Image();
-ENEMY_ATLAS_IMG["esqueleto"].onload = () => { ENEMY_ATLAS_READY["esqueleto"] = true; };
-ENEMY_ATLAS_IMG["esqueleto"].src = "assets/sprites/enemies/infernal/esqueleto/atlas.png";
-ENEMY_ATLAS_READY["demonio_menor"] = false;
-ENEMY_ATLAS_IMG["demonio_menor"] = new Image();
-ENEMY_ATLAS_IMG["demonio_menor"].onload = () => { ENEMY_ATLAS_READY["demonio_menor"] = true; };
-ENEMY_ATLAS_IMG["demonio_menor"].src = "assets/sprites/enemies/infernal/demonio_menor/atlas.png";
-ENEMY_ATLAS_READY["demonio_mayor"] = false;
-ENEMY_ATLAS_IMG["demonio_mayor"] = new Image();
-ENEMY_ATLAS_IMG["demonio_mayor"].onload = () => { ENEMY_ATLAS_READY["demonio_mayor"] = true; };
-ENEMY_ATLAS_IMG["demonio_mayor"].src = "assets/sprites/bosses/infernal/demonio_mayor/atlas.png";
-ENEMY_ATLAS_READY["demonio_mago"] = false;
-ENEMY_ATLAS_IMG["demonio_mago"] = new Image();
-ENEMY_ATLAS_IMG["demonio_mago"].onload = () => { ENEMY_ATLAS_READY["demonio_mago"] = true; };
-ENEMY_ATLAS_IMG["demonio_mago"].src = "assets/sprites/enemies/infernal/demonio_mago/atlas.png";
-ENEMY_ATLAS_READY["golem"] = false;
-ENEMY_ATLAS_IMG["golem"] = new Image();
-ENEMY_ATLAS_IMG["golem"].onload = () => { ENEMY_ATLAS_READY["golem"] = true; };
-ENEMY_ATLAS_IMG["golem"].src = "assets/sprites/enemies/infernal/golem/atlas.png";
 
 // Lobo Ártico (Arena de Hielo, nivel 1): a diferencia de los 5 tipos de arriba (grilla
 // compartida 119x119), esta hoja tiene su propia celda (ver ENEMY_ATLAS_GRID) porque los
 // frames originales no eran cuadrados de 119px -- drawEnemyAtlas usa ENEMY_ATLAS_GRID[e.type]
 // cuando existe, si no cae al tamaño global de siempre.
 const ENEMY_ATLAS_GRID = { lobo_artico: {cols:4, w:96, h:105} };
-ENEMY_ATLAS_READY["lobo_artico"] = false;
-ENEMY_ATLAS_IMG["lobo_artico"] = new Image();
-ENEMY_ATLAS_IMG["lobo_artico"].onload = () => { ENEMY_ATLAS_READY["lobo_artico"] = true; };
-ENEMY_ATLAS_IMG["lobo_artico"].src = "assets/sprites/enemies/hielo/lobo_artico/atlas.png";
 // Dirección cardinal dominante a partir del vector de mirada del enemigo
 function enemyAtlasDir(e){
   const fx = e.fx||0, fy = e.fy!==undefined?e.fy:1;
@@ -2027,115 +1743,12 @@ for(const _t in ENEMY_ATLAS_IMG){
     def: buildAnimDefFromGrid(g?g.cols:ENEMY_ATLAS_COLS, g?g.w:ENEMY_ATLAS_FRAME, g?g.h:ENEMY_ATLAS_FRAME, ENEMY_ANIM_DEF)
   };
 }
-// Dibuja un enemigo con su atlas real si está disponible; devuelve false si no (para que
-// drawEnemy caiga al sprite procedural de siempre, como con zombie/esqueleto_h).
-
-/* ============================================================
-   Sprites reales limpiados a mano (recortados de las hojas que subiste y
-   pasaste por Photoroom): un frame estático por criatura, con espejo para el
-   lado izquierdo/derecho. Reemplaza el sprite prestado SOLO para estos 4 tipos
-   de la Arena de Hielo; el resto sigue con visualAlias hasta tener su propio arte.
-   ============================================================ */
-const ICE_REAL_IMG = {}, ICE_REAL_READY = {};
-ICE_REAL_READY["angel_hielo"] = false;
-ICE_REAL_IMG["angel_hielo"] = new Image();
-ICE_REAL_IMG["angel_hielo"].onload = () => { ICE_REAL_READY["angel_hielo"] = true; };
-ICE_REAL_IMG["angel_hielo"].src = "assets/sprites/enemies/hielo/angel_hielo/static.png";
-ICE_REAL_READY["golem_hielo"] = false;
-ICE_REAL_IMG["golem_hielo"] = new Image();
-ICE_REAL_IMG["golem_hielo"].onload = () => { ICE_REAL_READY["golem_hielo"] = true; };
-ICE_REAL_IMG["golem_hielo"].src = "assets/sprites/enemies/hielo/golem_hielo/static.png";
-ICE_REAL_READY["demonio_hielo_fuego"] = false;
-ICE_REAL_IMG["demonio_hielo_fuego"] = new Image();
-ICE_REAL_IMG["demonio_hielo_fuego"].onload = () => { ICE_REAL_READY["demonio_hielo_fuego"] = true; };
-ICE_REAL_IMG["demonio_hielo_fuego"].src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/static.png";
-
-ICE_REAL_READY["dragon_hielo"] = false;
-ICE_REAL_IMG["dragon_hielo"] = new Image();
-ICE_REAL_IMG["dragon_hielo"].onload = () => { ICE_REAL_READY["dragon_hielo"] = true; };
-ICE_REAL_IMG["dragon_hielo"].src = "assets/sprites/enemies/hielo/dragon_hielo/static.png";
-ICE_REAL_READY["mago_hielo_cristal"] = false;
-ICE_REAL_IMG["mago_hielo_cristal"] = new Image();
-ICE_REAL_IMG["mago_hielo_cristal"].onload = () => { ICE_REAL_READY["mago_hielo_cristal"] = true; };
-ICE_REAL_IMG["mago_hielo_cristal"].src = "assets/sprites/bosses/hielo/mago_hielo_cristal/static.png";
-ICE_REAL_READY["dragoncito_hielo"] = false;
-ICE_REAL_IMG["dragoncito_hielo"] = new Image();
-ICE_REAL_IMG["dragoncito_hielo"].onload = () => { ICE_REAL_READY["dragoncito_hielo"] = true; };
-ICE_REAL_IMG["dragoncito_hielo"].src = "assets/sprites/enemies/hielo/dragoncito_hielo/static.png";
-ICE_REAL_READY["angel_caido_hielo"] = false;
-ICE_REAL_IMG["angel_caido_hielo"] = new Image();
-ICE_REAL_IMG["angel_caido_hielo"].onload = () => { ICE_REAL_READY["angel_caido_hielo"] = true; };
-ICE_REAL_IMG["angel_caido_hielo"].src = "assets/sprites/bosses/hielo/angel_caido_hielo/static.png";
-
-ICE_REAL_READY["ent"] = false;
-ICE_REAL_IMG["ent"] = new Image();
-ICE_REAL_IMG["ent"].onload = () => { ICE_REAL_READY["ent"] = true; };
-ICE_REAL_IMG["ent"].src = "assets/sprites/enemies/bosque/ent/static.png";
-ICE_REAL_READY["cu_sith"] = false;
-ICE_REAL_IMG["cu_sith"] = new Image();
-ICE_REAL_IMG["cu_sith"].onload = () => { ICE_REAL_READY["cu_sith"] = true; };
-ICE_REAL_IMG["cu_sith"].src = "assets/sprites/enemies/bosque/cu_sith/static.png";
-ICE_REAL_READY["jinete_sin_cabeza"] = false;
-ICE_REAL_IMG["jinete_sin_cabeza"] = new Image();
-ICE_REAL_IMG["jinete_sin_cabeza"].onload = () => { ICE_REAL_READY["jinete_sin_cabeza"] = true; };
-ICE_REAL_IMG["jinete_sin_cabeza"].src = "assets/sprites/bosses/bosque/jinete_sin_cabeza/static.png";
-ICE_REAL_READY["enjambre_hadas"] = false;
-ICE_REAL_IMG["enjambre_hadas"] = new Image();
-ICE_REAL_IMG["enjambre_hadas"].onload = () => { ICE_REAL_READY["enjambre_hadas"] = true; };
-ICE_REAL_IMG["enjambre_hadas"].src = "assets/sprites/enemies/bosque/enjambre_hadas/static.png";
-ICE_REAL_READY["dama_bosque"] = false;
-ICE_REAL_IMG["dama_bosque"] = new Image();
-ICE_REAL_IMG["dama_bosque"].onload = () => { ICE_REAL_READY["dama_bosque"] = true; };
-ICE_REAL_IMG["dama_bosque"].src = "assets/sprites/enemies/bosque/dama_bosque/static.png";
-
-ICE_REAL_READY["doblador_guerrero"] = false;
-ICE_REAL_IMG["doblador_guerrero"] = new Image();
-ICE_REAL_IMG["doblador_guerrero"].onload = () => { ICE_REAL_READY["doblador_guerrero"] = true; };
-ICE_REAL_IMG["doblador_guerrero"].src = "assets/sprites/bosses/bosque/doblador_guerrero/static.png";
-ICE_REAL_READY["doblador_arquera"] = false;
-ICE_REAL_IMG["doblador_arquera"] = new Image();
-ICE_REAL_IMG["doblador_arquera"].onload = () => { ICE_REAL_READY["doblador_arquera"] = true; };
-ICE_REAL_IMG["doblador_arquera"].src = "assets/sprites/bosses/bosque/doblador_arquera/static.png";
-ICE_REAL_READY["doblador_picaro"] = false;
-ICE_REAL_IMG["doblador_picaro"] = new Image();
-ICE_REAL_IMG["doblador_picaro"].onload = () => { ICE_REAL_READY["doblador_picaro"] = true; };
-ICE_REAL_IMG["doblador_picaro"].src = "assets/sprites/bosses/bosque/doblador_picaro/static.png";
-ICE_REAL_READY["doblador_clerigo"] = false;
-ICE_REAL_IMG["doblador_clerigo"] = new Image();
-ICE_REAL_IMG["doblador_clerigo"].onload = () => { ICE_REAL_READY["doblador_clerigo"] = true; };
-ICE_REAL_IMG["doblador_clerigo"].src = "assets/sprites/bosses/bosque/doblador_clerigo/static.png";
-ICE_REAL_READY["minotauro"] = false;
-ICE_REAL_IMG["minotauro"] = new Image();
-ICE_REAL_IMG["minotauro"].onload = () => { ICE_REAL_READY["minotauro"] = true; };
-ICE_REAL_IMG["minotauro"].src = "assets/sprites/bosses/laberinto/minotauro/static.png";
-
-// Animaciones de habilidades del Mago de Hielo y Cristal (jefe de la Arena de Hielo, fase 1):
-// tiras de 12 frames (Ventisca, Nova de Hielo, Armadura de Hielo), una imagen por habilidad.
-const SKILL_ATLAS_READY = {};
-const SKILL_ATLAS_IMG = {};
 const SKILL_ATLAS_DEF = {
   ventisca: {frames:12, w:181, h:160},
   nova_hielo: {frames:12, w:181, h:145},
   armadura_hielo: {frames:12, w:181, h:160},
   nova_escarcha: {frames:1, w:190, h:252},
 };
-SKILL_ATLAS_READY["ventisca"] = false;
-SKILL_ATLAS_IMG["ventisca"] = new Image();
-SKILL_ATLAS_IMG["ventisca"].onload = () => { SKILL_ATLAS_READY["ventisca"] = true; };
-SKILL_ATLAS_IMG["ventisca"].src = "assets/vfx/skills/ventisca.png";
-SKILL_ATLAS_READY["nova_hielo"] = false;
-SKILL_ATLAS_IMG["nova_hielo"] = new Image();
-SKILL_ATLAS_IMG["nova_hielo"].onload = () => { SKILL_ATLAS_READY["nova_hielo"] = true; };
-SKILL_ATLAS_IMG["nova_hielo"].src = "assets/vfx/skills/nova_hielo.png";
-SKILL_ATLAS_READY["armadura_hielo"] = false;
-SKILL_ATLAS_IMG["armadura_hielo"] = new Image();
-SKILL_ATLAS_IMG["armadura_hielo"].onload = () => { SKILL_ATLAS_READY["armadura_hielo"] = true; };
-SKILL_ATLAS_IMG["armadura_hielo"].src = "assets/vfx/skills/armadura_hielo.png";
-
-SKILL_ATLAS_READY["nova_escarcha"] = false;
-SKILL_ATLAS_IMG["nova_escarcha"] = new Image();
-SKILL_ATLAS_IMG["nova_escarcha"].onload = () => { SKILL_ATLAS_READY["nova_escarcha"] = true; };
-SKILL_ATLAS_IMG["nova_escarcha"].src = "assets/vfx/skills/nova_escarcha.png";// Animaciones de habilidades del Dragón de Hielo (Tundraverx, subjefe de la Arena de
 // Un AnimAtlas por tipo (tira horizontal) para las habilidades del Mago de Hielo y
 // Cristal -mismo dato SKILL_ATLAS_DEF de siempre, ahora armando el clip una sola vez.
 const SKILL_ATLASES = {};
@@ -2143,28 +1756,10 @@ for(const _k in SKILL_ATLAS_DEF){
   const d = SKILL_ATLAS_DEF[_k];
   SKILL_ATLASES[_k] = { img: SKILL_ATLAS_IMG[_k], ready:()=>SKILL_ATLAS_READY[_k], clip: buildStripClip(d.frames, d.w, d.h, 20, false) };
 }
-// Hielo): a diferencia de SKILL_ATLAS (que se dibuja ENCIMA del sprite normal), estas
-// hojas ya traen al dragón dibujado adentro de cada frame (cuerpo + efecto juntos), así
-// que reemplazan el sprite normal mientras dura la animación en vez de superponerse.
-const BOSS_FX_READY = {};
-const BOSS_FX_IMG = {};
 const BOSS_FX_DEF = {
   aliento_hielo: {frames:12, w:128, h:140},
   nova_hielo_dragon: {frames:12, w:256, h:162},
 };
-BOSS_FX_READY["aliento_hielo"] = false;
-BOSS_FX_IMG["aliento_hielo"] = new Image();
-BOSS_FX_IMG["aliento_hielo"].onload = () => { BOSS_FX_READY["aliento_hielo"] = true; };
-BOSS_FX_IMG["aliento_hielo"].src = "assets/vfx/bosses/aliento_hielo.png";
-BOSS_FX_READY["nova_hielo_dragon"] = false;
-BOSS_FX_IMG["nova_hielo_dragon"] = new Image();
-BOSS_FX_IMG["nova_hielo_dragon"].onload = () => { BOSS_FX_READY["nova_hielo_dragon"] = true; };
-BOSS_FX_IMG["nova_hielo_dragon"].src = "assets/vfx/bosses/nova_hielo_dragon.png";
-// Sprites animados reales del Laberinto Maldito (Gólem de Piedra, Esfinge, Medusa,
-// Druida de Arena, Escorpión Gigante) y upgrade del Minotauro: tiras de N frames con
-// los pies anclados abajo, para que el ciclo de caminata no salte verticalmente.
-const REAL_ANIM_READY = {};
-const REAL_ANIM_IMG = {};
 const REAL_ANIM_DEF = {
   golem_piedra: {frames:55, w:75, h:61},
   esfinge: {frames:31, w:82, h:72},
@@ -2173,30 +1768,6 @@ const REAL_ANIM_DEF = {
   escorpion_gigante: {frames:16, w:55, h:44},
   minotauro: {frames:20, w:81, h:74},
 };
-REAL_ANIM_READY["golem_piedra"] = false;
-REAL_ANIM_IMG["golem_piedra"] = new Image();
-REAL_ANIM_IMG["golem_piedra"].onload = () => { REAL_ANIM_READY["golem_piedra"] = true; };
-REAL_ANIM_IMG["golem_piedra"].src = "assets/sprites/enemies/laberinto/golem_piedra/walk-strip.png";
-REAL_ANIM_READY["esfinge"] = false;
-REAL_ANIM_IMG["esfinge"] = new Image();
-REAL_ANIM_IMG["esfinge"].onload = () => { REAL_ANIM_READY["esfinge"] = true; };
-REAL_ANIM_IMG["esfinge"].src = "assets/sprites/enemies/laberinto/esfinge/walk-strip.png";
-REAL_ANIM_READY["medusa"] = false;
-REAL_ANIM_IMG["medusa"] = new Image();
-REAL_ANIM_IMG["medusa"].onload = () => { REAL_ANIM_READY["medusa"] = true; };
-REAL_ANIM_IMG["medusa"].src = "assets/sprites/enemies/laberinto/medusa/walk-strip.png";
-REAL_ANIM_READY["druida_arena"] = false;
-REAL_ANIM_IMG["druida_arena"] = new Image();
-REAL_ANIM_IMG["druida_arena"].onload = () => { REAL_ANIM_READY["druida_arena"] = true; };
-REAL_ANIM_IMG["druida_arena"].src = "assets/sprites/enemies/laberinto/druida_arena/walk-strip.png";
-REAL_ANIM_READY["escorpion_gigante"] = false;
-REAL_ANIM_IMG["escorpion_gigante"] = new Image();
-REAL_ANIM_IMG["escorpion_gigante"].onload = () => { REAL_ANIM_READY["escorpion_gigante"] = true; };
-REAL_ANIM_IMG["escorpion_gigante"].src = "assets/sprites/enemies/laberinto/escorpion_gigante/walk-strip.png";
-REAL_ANIM_READY["minotauro"] = false;
-REAL_ANIM_IMG["minotauro"] = new Image();
-REAL_ANIM_IMG["minotauro"].onload = () => { REAL_ANIM_READY["minotauro"] = true; };
-REAL_ANIM_IMG["minotauro"].src = "assets/sprites/bosses/laberinto/minotauro/walk-strip.png";
 // Un AnimAtlas por tipo, tira horizontal (buildStripClip), para las habilidades del Dragón
 // de Hielo -mismo dato BOSS_FX_DEF de siempre, ahora armando el clip una sola vez al cargar
 // en vez de recalcular sx/sy a mano en cada draw().
@@ -2286,551 +1857,6 @@ function drawRealAnimSprite(e){
   drawAnimFrameSized(atlas.img, clip, n, e.x, e.y, f.w*s, f.h*s, 0.5, 0.92, flip, undefined);
   return true;
 }
-
-
-/* ============================================================
-   DUENDE DEL BOSQUE — arte real (Pack 2 de Ruinas del Bosque). Antes usaba prestada la
-   silueta procedural del Esqueleto. Los recortes venían de una hoja JPEG con grilla, así
-   que se limpiaron automáticamente (líneas de grilla, restos de celdas vecinas) y se
-   descartaron los frames que quedaban partidos por el corte de la celda.
-   ============================================================ */
-const PACK_DUENDE_IMG = {};
-const PACK_DUENDE_READY = {};
-PACK_DUENDE_IMG.walk1 = new Image();
-PACK_DUENDE_READY.walk1 = false;
-PACK_DUENDE_IMG.walk1.onload = () => { PACK_DUENDE_READY.walk1 = true; };
-PACK_DUENDE_IMG.walk1.src = "assets/sprites/enemies/bosque/duende_bosque/walk1.png";
-PACK_DUENDE_IMG.walk2 = new Image();
-PACK_DUENDE_READY.walk2 = false;
-PACK_DUENDE_IMG.walk2.onload = () => { PACK_DUENDE_READY.walk2 = true; };
-PACK_DUENDE_IMG.walk2.src = "assets/sprites/enemies/bosque/duende_bosque/walk2.png";
-PACK_DUENDE_IMG.walk3 = new Image();
-PACK_DUENDE_READY.walk3 = false;
-PACK_DUENDE_IMG.walk3.onload = () => { PACK_DUENDE_READY.walk3 = true; };
-PACK_DUENDE_IMG.walk3.src = "assets/sprites/enemies/bosque/duende_bosque/walk3.png";
-PACK_DUENDE_IMG.walk4 = new Image();
-PACK_DUENDE_READY.walk4 = false;
-PACK_DUENDE_IMG.walk4.onload = () => { PACK_DUENDE_READY.walk4 = true; };
-PACK_DUENDE_IMG.walk4.src = "assets/sprites/enemies/bosque/duende_bosque/walk4.png";
-PACK_DUENDE_IMG.walk5 = new Image();
-PACK_DUENDE_READY.walk5 = false;
-PACK_DUENDE_IMG.walk5.onload = () => { PACK_DUENDE_READY.walk5 = true; };
-PACK_DUENDE_IMG.walk5.src = "assets/sprites/enemies/bosque/duende_bosque/walk5.png";
-PACK_DUENDE_IMG.idle1 = new Image();
-PACK_DUENDE_READY.idle1 = false;
-PACK_DUENDE_IMG.idle1.onload = () => { PACK_DUENDE_READY.idle1 = true; };
-PACK_DUENDE_IMG.idle1.src = "assets/sprites/enemies/bosque/duende_bosque/idle1.png";
-PACK_DUENDE_IMG.idle2 = new Image();
-PACK_DUENDE_READY.idle2 = false;
-PACK_DUENDE_IMG.idle2.onload = () => { PACK_DUENDE_READY.idle2 = true; };
-PACK_DUENDE_IMG.idle2.src = "assets/sprites/enemies/bosque/duende_bosque/idle2.png";
-PACK_DUENDE_IMG.idle3 = new Image();
-PACK_DUENDE_READY.idle3 = false;
-PACK_DUENDE_IMG.idle3.onload = () => { PACK_DUENDE_READY.idle3 = true; };
-PACK_DUENDE_IMG.idle3.src = "assets/sprites/enemies/bosque/duende_bosque/idle3.png";
-PACK_DUENDE_IMG.atk1 = new Image();
-PACK_DUENDE_READY.atk1 = false;
-PACK_DUENDE_IMG.atk1.onload = () => { PACK_DUENDE_READY.atk1 = true; };
-PACK_DUENDE_IMG.atk1.src = "assets/sprites/enemies/bosque/duende_bosque/atk1.png";
-PACK_DUENDE_IMG.atk2 = new Image();
-PACK_DUENDE_READY.atk2 = false;
-PACK_DUENDE_IMG.atk2.onload = () => { PACK_DUENDE_READY.atk2 = true; };
-PACK_DUENDE_IMG.atk2.src = "assets/sprites/enemies/bosque/duende_bosque/atk2.png";
-PACK_DUENDE_IMG.atk3 = new Image();
-PACK_DUENDE_READY.atk3 = false;
-PACK_DUENDE_IMG.atk3.onload = () => { PACK_DUENDE_READY.atk3 = true; };
-PACK_DUENDE_IMG.atk3.src = "assets/sprites/enemies/bosque/duende_bosque/atk3.png";
-PACK_DUENDE_IMG.atk4 = new Image();
-PACK_DUENDE_READY.atk4 = false;
-PACK_DUENDE_IMG.atk4.onload = () => { PACK_DUENDE_READY.atk4 = true; };
-PACK_DUENDE_IMG.atk4.src = "assets/sprites/enemies/bosque/duende_bosque/atk4.png";
-PACK_DUENDE_IMG.hit1 = new Image();
-PACK_DUENDE_READY.hit1 = false;
-PACK_DUENDE_IMG.hit1.onload = () => { PACK_DUENDE_READY.hit1 = true; };
-PACK_DUENDE_IMG.hit1.src = "assets/sprites/enemies/bosque/duende_bosque/hit1.png";
-PACK_DUENDE_IMG.death1 = new Image();
-PACK_DUENDE_READY.death1 = false;
-PACK_DUENDE_IMG.death1.onload = () => { PACK_DUENDE_READY.death1 = true; };
-PACK_DUENDE_IMG.death1.src = "assets/sprites/enemies/bosque/duende_bosque/death1.png";
-PACK_DUENDE_IMG.death2 = new Image();
-PACK_DUENDE_READY.death2 = false;
-PACK_DUENDE_IMG.death2.onload = () => { PACK_DUENDE_READY.death2 = true; };
-PACK_DUENDE_IMG.death2.src = "assets/sprites/enemies/bosque/duende_bosque/death2.png";
-PACK_DUENDE_IMG.death3 = new Image();
-PACK_DUENDE_READY.death3 = false;
-PACK_DUENDE_IMG.death3.onload = () => { PACK_DUENDE_READY.death3 = true; };
-PACK_DUENDE_IMG.death3.src = "assets/sprites/enemies/bosque/duende_bosque/death3.png";
-// Packs 3-4 (ChatGPT): recortados de nuevo desde las hojas de referencia (la grilla del zip venía
-// desalineada) con fondo quitado por flood-fill. Un objeto de imágenes por entidad.
-const PACK_GUARDIAN_IMG = {}, PACK_GUARDIAN_READY = {};
-PACK_GUARDIAN_IMG.atk1 = new Image();
-PACK_GUARDIAN_READY.atk1 = false;
-PACK_GUARDIAN_IMG.atk1.onload = () => { PACK_GUARDIAN_READY.atk1 = true; };
-PACK_GUARDIAN_IMG.atk1.src = "assets/sprites/bosses/laberinto/guardian_laberinto/atk1.png";
-PACK_GUARDIAN_IMG.atk2 = new Image();
-PACK_GUARDIAN_READY.atk2 = false;
-PACK_GUARDIAN_IMG.atk2.onload = () => { PACK_GUARDIAN_READY.atk2 = true; };
-PACK_GUARDIAN_IMG.atk2.src = "assets/sprites/bosses/laberinto/guardian_laberinto/atk2.png";
-PACK_GUARDIAN_IMG.atk3 = new Image();
-PACK_GUARDIAN_READY.atk3 = false;
-PACK_GUARDIAN_IMG.atk3.onload = () => { PACK_GUARDIAN_READY.atk3 = true; };
-PACK_GUARDIAN_IMG.atk3.src = "assets/sprites/bosses/laberinto/guardian_laberinto/atk3.png";
-PACK_GUARDIAN_IMG.atk4 = new Image();
-PACK_GUARDIAN_READY.atk4 = false;
-PACK_GUARDIAN_IMG.atk4.onload = () => { PACK_GUARDIAN_READY.atk4 = true; };
-PACK_GUARDIAN_IMG.atk4.src = "assets/sprites/bosses/laberinto/guardian_laberinto/atk4.png";
-PACK_GUARDIAN_IMG.atk5 = new Image();
-PACK_GUARDIAN_READY.atk5 = false;
-PACK_GUARDIAN_IMG.atk5.onload = () => { PACK_GUARDIAN_READY.atk5 = true; };
-PACK_GUARDIAN_IMG.atk5.src = "assets/sprites/bosses/laberinto/guardian_laberinto/atk5.png";
-PACK_GUARDIAN_IMG.death1 = new Image();
-PACK_GUARDIAN_READY.death1 = false;
-PACK_GUARDIAN_IMG.death1.onload = () => { PACK_GUARDIAN_READY.death1 = true; };
-PACK_GUARDIAN_IMG.death1.src = "assets/sprites/bosses/laberinto/guardian_laberinto/death1.png";
-PACK_GUARDIAN_IMG.death2 = new Image();
-PACK_GUARDIAN_READY.death2 = false;
-PACK_GUARDIAN_IMG.death2.onload = () => { PACK_GUARDIAN_READY.death2 = true; };
-PACK_GUARDIAN_IMG.death2.src = "assets/sprites/bosses/laberinto/guardian_laberinto/death2.png";
-PACK_GUARDIAN_IMG.death3 = new Image();
-PACK_GUARDIAN_READY.death3 = false;
-PACK_GUARDIAN_IMG.death3.onload = () => { PACK_GUARDIAN_READY.death3 = true; };
-PACK_GUARDIAN_IMG.death3.src = "assets/sprites/bosses/laberinto/guardian_laberinto/death3.png";
-PACK_GUARDIAN_IMG.death4 = new Image();
-PACK_GUARDIAN_READY.death4 = false;
-PACK_GUARDIAN_IMG.death4.onload = () => { PACK_GUARDIAN_READY.death4 = true; };
-PACK_GUARDIAN_IMG.death4.src = "assets/sprites/bosses/laberinto/guardian_laberinto/death4.png";
-PACK_GUARDIAN_IMG.death5 = new Image();
-PACK_GUARDIAN_READY.death5 = false;
-PACK_GUARDIAN_IMG.death5.onload = () => { PACK_GUARDIAN_READY.death5 = true; };
-PACK_GUARDIAN_IMG.death5.src = "assets/sprites/bosses/laberinto/guardian_laberinto/death5.png";
-PACK_GUARDIAN_IMG.hit1 = new Image();
-PACK_GUARDIAN_READY.hit1 = false;
-PACK_GUARDIAN_IMG.hit1.onload = () => { PACK_GUARDIAN_READY.hit1 = true; };
-PACK_GUARDIAN_IMG.hit1.src = "assets/sprites/bosses/laberinto/guardian_laberinto/hit1.png";
-PACK_GUARDIAN_IMG.hit2 = new Image();
-PACK_GUARDIAN_READY.hit2 = false;
-PACK_GUARDIAN_IMG.hit2.onload = () => { PACK_GUARDIAN_READY.hit2 = true; };
-PACK_GUARDIAN_IMG.hit2.src = "assets/sprites/bosses/laberinto/guardian_laberinto/hit2.png";
-PACK_GUARDIAN_IMG.idle1 = new Image();
-PACK_GUARDIAN_READY.idle1 = false;
-PACK_GUARDIAN_IMG.idle1.onload = () => { PACK_GUARDIAN_READY.idle1 = true; };
-PACK_GUARDIAN_IMG.idle1.src = "assets/sprites/bosses/laberinto/guardian_laberinto/idle1.png";
-PACK_GUARDIAN_IMG.idle2 = new Image();
-PACK_GUARDIAN_READY.idle2 = false;
-PACK_GUARDIAN_IMG.idle2.onload = () => { PACK_GUARDIAN_READY.idle2 = true; };
-PACK_GUARDIAN_IMG.idle2.src = "assets/sprites/bosses/laberinto/guardian_laberinto/idle2.png";
-PACK_GUARDIAN_IMG.idle3 = new Image();
-PACK_GUARDIAN_READY.idle3 = false;
-PACK_GUARDIAN_IMG.idle3.onload = () => { PACK_GUARDIAN_READY.idle3 = true; };
-PACK_GUARDIAN_IMG.idle3.src = "assets/sprites/bosses/laberinto/guardian_laberinto/idle3.png";
-PACK_GUARDIAN_IMG.walk1 = new Image();
-PACK_GUARDIAN_READY.walk1 = false;
-PACK_GUARDIAN_IMG.walk1.onload = () => { PACK_GUARDIAN_READY.walk1 = true; };
-PACK_GUARDIAN_IMG.walk1.src = "assets/sprites/bosses/laberinto/guardian_laberinto/walk1.png";
-PACK_GUARDIAN_IMG.walk2 = new Image();
-PACK_GUARDIAN_READY.walk2 = false;
-PACK_GUARDIAN_IMG.walk2.onload = () => { PACK_GUARDIAN_READY.walk2 = true; };
-PACK_GUARDIAN_IMG.walk2.src = "assets/sprites/bosses/laberinto/guardian_laberinto/walk2.png";
-PACK_GUARDIAN_IMG.walk3 = new Image();
-PACK_GUARDIAN_READY.walk3 = false;
-PACK_GUARDIAN_IMG.walk3.onload = () => { PACK_GUARDIAN_READY.walk3 = true; };
-PACK_GUARDIAN_IMG.walk3.src = "assets/sprites/bosses/laberinto/guardian_laberinto/walk3.png";
-PACK_GUARDIAN_IMG.walk4 = new Image();
-PACK_GUARDIAN_READY.walk4 = false;
-PACK_GUARDIAN_IMG.walk4.onload = () => { PACK_GUARDIAN_READY.walk4 = true; };
-PACK_GUARDIAN_IMG.walk4.src = "assets/sprites/bosses/laberinto/guardian_laberinto/walk4.png";
-const PACK_ZOMBI_IMG = {}, PACK_ZOMBI_READY = {};
-PACK_ZOMBI_IMG.atk1 = new Image();
-PACK_ZOMBI_READY.atk1 = false;
-PACK_ZOMBI_IMG.atk1.onload = () => { PACK_ZOMBI_READY.atk1 = true; };
-PACK_ZOMBI_IMG.atk1.src = "assets/sprites/enemies/infernal/zombie/atk1.png";
-PACK_ZOMBI_IMG.atk2 = new Image();
-PACK_ZOMBI_READY.atk2 = false;
-PACK_ZOMBI_IMG.atk2.onload = () => { PACK_ZOMBI_READY.atk2 = true; };
-PACK_ZOMBI_IMG.atk2.src = "assets/sprites/enemies/infernal/zombie/atk2.png";
-PACK_ZOMBI_IMG.atk3 = new Image();
-PACK_ZOMBI_READY.atk3 = false;
-PACK_ZOMBI_IMG.atk3.onload = () => { PACK_ZOMBI_READY.atk3 = true; };
-PACK_ZOMBI_IMG.atk3.src = "assets/sprites/enemies/infernal/zombie/atk3.png";
-PACK_ZOMBI_IMG.death1 = new Image();
-PACK_ZOMBI_READY.death1 = false;
-PACK_ZOMBI_IMG.death1.onload = () => { PACK_ZOMBI_READY.death1 = true; };
-PACK_ZOMBI_IMG.death1.src = "assets/sprites/enemies/infernal/zombie/death1.png";
-PACK_ZOMBI_IMG.death2 = new Image();
-PACK_ZOMBI_READY.death2 = false;
-PACK_ZOMBI_IMG.death2.onload = () => { PACK_ZOMBI_READY.death2 = true; };
-PACK_ZOMBI_IMG.death2.src = "assets/sprites/enemies/infernal/zombie/death2.png";
-PACK_ZOMBI_IMG.death3 = new Image();
-PACK_ZOMBI_READY.death3 = false;
-PACK_ZOMBI_IMG.death3.onload = () => { PACK_ZOMBI_READY.death3 = true; };
-PACK_ZOMBI_IMG.death3.src = "assets/sprites/enemies/infernal/zombie/death3.png";
-PACK_ZOMBI_IMG.hit1 = new Image();
-PACK_ZOMBI_READY.hit1 = false;
-PACK_ZOMBI_IMG.hit1.onload = () => { PACK_ZOMBI_READY.hit1 = true; };
-PACK_ZOMBI_IMG.hit1.src = "assets/sprites/enemies/infernal/zombie/hit1.png";
-PACK_ZOMBI_IMG.idle1 = new Image();
-PACK_ZOMBI_READY.idle1 = false;
-PACK_ZOMBI_IMG.idle1.onload = () => { PACK_ZOMBI_READY.idle1 = true; };
-PACK_ZOMBI_IMG.idle1.src = "assets/sprites/enemies/infernal/zombie/idle1.png";
-PACK_ZOMBI_IMG.idle2 = new Image();
-PACK_ZOMBI_READY.idle2 = false;
-PACK_ZOMBI_IMG.idle2.onload = () => { PACK_ZOMBI_READY.idle2 = true; };
-PACK_ZOMBI_IMG.idle2.src = "assets/sprites/enemies/infernal/zombie/idle2.png";
-PACK_ZOMBI_IMG.idle3 = new Image();
-PACK_ZOMBI_READY.idle3 = false;
-PACK_ZOMBI_IMG.idle3.onload = () => { PACK_ZOMBI_READY.idle3 = true; };
-PACK_ZOMBI_IMG.idle3.src = "assets/sprites/enemies/infernal/zombie/idle3.png";
-PACK_ZOMBI_IMG.idle4 = new Image();
-PACK_ZOMBI_READY.idle4 = false;
-PACK_ZOMBI_IMG.idle4.onload = () => { PACK_ZOMBI_READY.idle4 = true; };
-PACK_ZOMBI_IMG.idle4.src = "assets/sprites/enemies/infernal/zombie/idle4.png";
-PACK_ZOMBI_IMG.walk1 = new Image();
-PACK_ZOMBI_READY.walk1 = false;
-PACK_ZOMBI_IMG.walk1.onload = () => { PACK_ZOMBI_READY.walk1 = true; };
-PACK_ZOMBI_IMG.walk1.src = "assets/sprites/enemies/infernal/zombie/walk1.png";
-PACK_ZOMBI_IMG.walk2 = new Image();
-PACK_ZOMBI_READY.walk2 = false;
-PACK_ZOMBI_IMG.walk2.onload = () => { PACK_ZOMBI_READY.walk2 = true; };
-PACK_ZOMBI_IMG.walk2.src = "assets/sprites/enemies/infernal/zombie/walk2.png";
-PACK_ZOMBI_IMG.walk3 = new Image();
-PACK_ZOMBI_READY.walk3 = false;
-PACK_ZOMBI_IMG.walk3.onload = () => { PACK_ZOMBI_READY.walk3 = true; };
-PACK_ZOMBI_IMG.walk3.src = "assets/sprites/enemies/infernal/zombie/walk3.png";
-const PACK_ESQC_IMG = {}, PACK_ESQC_READY = {};
-PACK_ESQC_IMG.atk1 = new Image();
-PACK_ESQC_READY.atk1 = false;
-PACK_ESQC_IMG.atk1.onload = () => { PACK_ESQC_READY.atk1 = true; };
-PACK_ESQC_IMG.atk1.src = "assets/sprites/enemies/infernal/esqueleto_h/atk1.png";
-PACK_ESQC_IMG.atk2 = new Image();
-PACK_ESQC_READY.atk2 = false;
-PACK_ESQC_IMG.atk2.onload = () => { PACK_ESQC_READY.atk2 = true; };
-PACK_ESQC_IMG.atk2.src = "assets/sprites/enemies/infernal/esqueleto_h/atk2.png";
-PACK_ESQC_IMG.atk3 = new Image();
-PACK_ESQC_READY.atk3 = false;
-PACK_ESQC_IMG.atk3.onload = () => { PACK_ESQC_READY.atk3 = true; };
-PACK_ESQC_IMG.atk3.src = "assets/sprites/enemies/infernal/esqueleto_h/atk3.png";
-PACK_ESQC_IMG.death1 = new Image();
-PACK_ESQC_READY.death1 = false;
-PACK_ESQC_IMG.death1.onload = () => { PACK_ESQC_READY.death1 = true; };
-PACK_ESQC_IMG.death1.src = "assets/sprites/enemies/infernal/esqueleto_h/death1.png";
-PACK_ESQC_IMG.death2 = new Image();
-PACK_ESQC_READY.death2 = false;
-PACK_ESQC_IMG.death2.onload = () => { PACK_ESQC_READY.death2 = true; };
-PACK_ESQC_IMG.death2.src = "assets/sprites/enemies/infernal/esqueleto_h/death2.png";
-PACK_ESQC_IMG.death3 = new Image();
-PACK_ESQC_READY.death3 = false;
-PACK_ESQC_IMG.death3.onload = () => { PACK_ESQC_READY.death3 = true; };
-PACK_ESQC_IMG.death3.src = "assets/sprites/enemies/infernal/esqueleto_h/death3.png";
-PACK_ESQC_IMG.hit1 = new Image();
-PACK_ESQC_READY.hit1 = false;
-PACK_ESQC_IMG.hit1.onload = () => { PACK_ESQC_READY.hit1 = true; };
-PACK_ESQC_IMG.hit1.src = "assets/sprites/enemies/infernal/esqueleto_h/hit1.png";
-PACK_ESQC_IMG.hit2 = new Image();
-PACK_ESQC_READY.hit2 = false;
-PACK_ESQC_IMG.hit2.onload = () => { PACK_ESQC_READY.hit2 = true; };
-PACK_ESQC_IMG.hit2.src = "assets/sprites/enemies/infernal/esqueleto_h/hit2.png";
-PACK_ESQC_IMG.idle1 = new Image();
-PACK_ESQC_READY.idle1 = false;
-PACK_ESQC_IMG.idle1.onload = () => { PACK_ESQC_READY.idle1 = true; };
-PACK_ESQC_IMG.idle1.src = "assets/sprites/enemies/infernal/esqueleto_h/idle1.png";
-PACK_ESQC_IMG.idle2 = new Image();
-PACK_ESQC_READY.idle2 = false;
-PACK_ESQC_IMG.idle2.onload = () => { PACK_ESQC_READY.idle2 = true; };
-PACK_ESQC_IMG.idle2.src = "assets/sprites/enemies/infernal/esqueleto_h/idle2.png";
-PACK_ESQC_IMG.idle3 = new Image();
-PACK_ESQC_READY.idle3 = false;
-PACK_ESQC_IMG.idle3.onload = () => { PACK_ESQC_READY.idle3 = true; };
-PACK_ESQC_IMG.idle3.src = "assets/sprites/enemies/infernal/esqueleto_h/idle3.png";
-PACK_ESQC_IMG.idle4 = new Image();
-PACK_ESQC_READY.idle4 = false;
-PACK_ESQC_IMG.idle4.onload = () => { PACK_ESQC_READY.idle4 = true; };
-PACK_ESQC_IMG.idle4.src = "assets/sprites/enemies/infernal/esqueleto_h/idle4.png";
-PACK_ESQC_IMG.walk1 = new Image();
-PACK_ESQC_READY.walk1 = false;
-PACK_ESQC_IMG.walk1.onload = () => { PACK_ESQC_READY.walk1 = true; };
-PACK_ESQC_IMG.walk1.src = "assets/sprites/enemies/infernal/esqueleto_h/walk1.png";
-PACK_ESQC_IMG.walk2 = new Image();
-PACK_ESQC_READY.walk2 = false;
-PACK_ESQC_IMG.walk2.onload = () => { PACK_ESQC_READY.walk2 = true; };
-PACK_ESQC_IMG.walk2.src = "assets/sprites/enemies/infernal/esqueleto_h/walk2.png";
-PACK_ESQC_IMG.walk3 = new Image();
-PACK_ESQC_READY.walk3 = false;
-PACK_ESQC_IMG.walk3.onload = () => { PACK_ESQC_READY.walk3 = true; };
-PACK_ESQC_IMG.walk3.src = "assets/sprites/enemies/infernal/esqueleto_h/walk3.png";
-PACK_ESQC_IMG.walk4 = new Image();
-PACK_ESQC_READY.walk4 = false;
-PACK_ESQC_IMG.walk4.onload = () => { PACK_ESQC_READY.walk4 = true; };
-PACK_ESQC_IMG.walk4.src = "assets/sprites/enemies/infernal/esqueleto_h/walk4.png";
-const PACK_GOLEMH_IMG = {}, PACK_GOLEMH_READY = {};
-PACK_GOLEMH_IMG.atk1 = new Image();
-PACK_GOLEMH_READY.atk1 = false;
-PACK_GOLEMH_IMG.atk1.onload = () => { PACK_GOLEMH_READY.atk1 = true; };
-PACK_GOLEMH_IMG.atk1.src = "assets/sprites/enemies/hielo/golem_hielo/atk1.png";
-PACK_GOLEMH_IMG.atk2 = new Image();
-PACK_GOLEMH_READY.atk2 = false;
-PACK_GOLEMH_IMG.atk2.onload = () => { PACK_GOLEMH_READY.atk2 = true; };
-PACK_GOLEMH_IMG.atk2.src = "assets/sprites/enemies/hielo/golem_hielo/atk2.png";
-PACK_GOLEMH_IMG.atk3 = new Image();
-PACK_GOLEMH_READY.atk3 = false;
-PACK_GOLEMH_IMG.atk3.onload = () => { PACK_GOLEMH_READY.atk3 = true; };
-PACK_GOLEMH_IMG.atk3.src = "assets/sprites/enemies/hielo/golem_hielo/atk3.png";
-PACK_GOLEMH_IMG.atk4 = new Image();
-PACK_GOLEMH_READY.atk4 = false;
-PACK_GOLEMH_IMG.atk4.onload = () => { PACK_GOLEMH_READY.atk4 = true; };
-PACK_GOLEMH_IMG.atk4.src = "assets/sprites/enemies/hielo/golem_hielo/atk4.png";
-PACK_GOLEMH_IMG.death1 = new Image();
-PACK_GOLEMH_READY.death1 = false;
-PACK_GOLEMH_IMG.death1.onload = () => { PACK_GOLEMH_READY.death1 = true; };
-PACK_GOLEMH_IMG.death1.src = "assets/sprites/enemies/hielo/golem_hielo/death1.png";
-PACK_GOLEMH_IMG.death2 = new Image();
-PACK_GOLEMH_READY.death2 = false;
-PACK_GOLEMH_IMG.death2.onload = () => { PACK_GOLEMH_READY.death2 = true; };
-PACK_GOLEMH_IMG.death2.src = "assets/sprites/enemies/hielo/golem_hielo/death2.png";
-PACK_GOLEMH_IMG.death3 = new Image();
-PACK_GOLEMH_READY.death3 = false;
-PACK_GOLEMH_IMG.death3.onload = () => { PACK_GOLEMH_READY.death3 = true; };
-PACK_GOLEMH_IMG.death3.src = "assets/sprites/enemies/hielo/golem_hielo/death3.png";
-PACK_GOLEMH_IMG.death4 = new Image();
-PACK_GOLEMH_READY.death4 = false;
-PACK_GOLEMH_IMG.death4.onload = () => { PACK_GOLEMH_READY.death4 = true; };
-PACK_GOLEMH_IMG.death4.src = "assets/sprites/enemies/hielo/golem_hielo/death4.png";
-PACK_GOLEMH_IMG.hit1 = new Image();
-PACK_GOLEMH_READY.hit1 = false;
-PACK_GOLEMH_IMG.hit1.onload = () => { PACK_GOLEMH_READY.hit1 = true; };
-PACK_GOLEMH_IMG.hit1.src = "assets/sprites/enemies/hielo/golem_hielo/hit1.png";
-PACK_GOLEMH_IMG.hit2 = new Image();
-PACK_GOLEMH_READY.hit2 = false;
-PACK_GOLEMH_IMG.hit2.onload = () => { PACK_GOLEMH_READY.hit2 = true; };
-PACK_GOLEMH_IMG.hit2.src = "assets/sprites/enemies/hielo/golem_hielo/hit2.png";
-PACK_GOLEMH_IMG.idle1 = new Image();
-PACK_GOLEMH_READY.idle1 = false;
-PACK_GOLEMH_IMG.idle1.onload = () => { PACK_GOLEMH_READY.idle1 = true; };
-PACK_GOLEMH_IMG.idle1.src = "assets/sprites/enemies/hielo/golem_hielo/idle1.png";
-PACK_GOLEMH_IMG.idle2 = new Image();
-PACK_GOLEMH_READY.idle2 = false;
-PACK_GOLEMH_IMG.idle2.onload = () => { PACK_GOLEMH_READY.idle2 = true; };
-PACK_GOLEMH_IMG.idle2.src = "assets/sprites/enemies/hielo/golem_hielo/idle2.png";
-PACK_GOLEMH_IMG.walk1 = new Image();
-PACK_GOLEMH_READY.walk1 = false;
-PACK_GOLEMH_IMG.walk1.onload = () => { PACK_GOLEMH_READY.walk1 = true; };
-PACK_GOLEMH_IMG.walk1.src = "assets/sprites/enemies/hielo/golem_hielo/walk1.png";
-PACK_GOLEMH_IMG.walk2 = new Image();
-PACK_GOLEMH_READY.walk2 = false;
-PACK_GOLEMH_IMG.walk2.onload = () => { PACK_GOLEMH_READY.walk2 = true; };
-PACK_GOLEMH_IMG.walk2.src = "assets/sprites/enemies/hielo/golem_hielo/walk2.png";
-PACK_GOLEMH_IMG.walk3 = new Image();
-PACK_GOLEMH_READY.walk3 = false;
-PACK_GOLEMH_IMG.walk3.onload = () => { PACK_GOLEMH_READY.walk3 = true; };
-PACK_GOLEMH_IMG.walk3.src = "assets/sprites/enemies/hielo/golem_hielo/walk3.png";
-const PACK_DEMH_IMG = {}, PACK_DEMH_READY = {};
-PACK_DEMH_IMG.atk1 = new Image();
-PACK_DEMH_READY.atk1 = false;
-PACK_DEMH_IMG.atk1.onload = () => { PACK_DEMH_READY.atk1 = true; };
-PACK_DEMH_IMG.atk1.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/atk1.png";
-PACK_DEMH_IMG.atk2 = new Image();
-PACK_DEMH_READY.atk2 = false;
-PACK_DEMH_IMG.atk2.onload = () => { PACK_DEMH_READY.atk2 = true; };
-PACK_DEMH_IMG.atk2.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/atk2.png";
-PACK_DEMH_IMG.atk3 = new Image();
-PACK_DEMH_READY.atk3 = false;
-PACK_DEMH_IMG.atk3.onload = () => { PACK_DEMH_READY.atk3 = true; };
-PACK_DEMH_IMG.atk3.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/atk3.png";
-PACK_DEMH_IMG.death1 = new Image();
-PACK_DEMH_READY.death1 = false;
-PACK_DEMH_IMG.death1.onload = () => { PACK_DEMH_READY.death1 = true; };
-PACK_DEMH_IMG.death1.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/death1.png";
-PACK_DEMH_IMG.death2 = new Image();
-PACK_DEMH_READY.death2 = false;
-PACK_DEMH_IMG.death2.onload = () => { PACK_DEMH_READY.death2 = true; };
-PACK_DEMH_IMG.death2.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/death2.png";
-PACK_DEMH_IMG.death3 = new Image();
-PACK_DEMH_READY.death3 = false;
-PACK_DEMH_IMG.death3.onload = () => { PACK_DEMH_READY.death3 = true; };
-PACK_DEMH_IMG.death3.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/death3.png";
-PACK_DEMH_IMG.death4 = new Image();
-PACK_DEMH_READY.death4 = false;
-PACK_DEMH_IMG.death4.onload = () => { PACK_DEMH_READY.death4 = true; };
-PACK_DEMH_IMG.death4.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/death4.png";
-PACK_DEMH_IMG.hit1 = new Image();
-PACK_DEMH_READY.hit1 = false;
-PACK_DEMH_IMG.hit1.onload = () => { PACK_DEMH_READY.hit1 = true; };
-PACK_DEMH_IMG.hit1.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/hit1.png";
-PACK_DEMH_IMG.hit2 = new Image();
-PACK_DEMH_READY.hit2 = false;
-PACK_DEMH_IMG.hit2.onload = () => { PACK_DEMH_READY.hit2 = true; };
-PACK_DEMH_IMG.hit2.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/hit2.png";
-PACK_DEMH_IMG.idle1 = new Image();
-PACK_DEMH_READY.idle1 = false;
-PACK_DEMH_IMG.idle1.onload = () => { PACK_DEMH_READY.idle1 = true; };
-PACK_DEMH_IMG.idle1.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/idle1.png";
-PACK_DEMH_IMG.idle2 = new Image();
-PACK_DEMH_READY.idle2 = false;
-PACK_DEMH_IMG.idle2.onload = () => { PACK_DEMH_READY.idle2 = true; };
-PACK_DEMH_IMG.idle2.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/idle2.png";
-PACK_DEMH_IMG.idle3 = new Image();
-PACK_DEMH_READY.idle3 = false;
-PACK_DEMH_IMG.idle3.onload = () => { PACK_DEMH_READY.idle3 = true; };
-PACK_DEMH_IMG.idle3.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/idle3.png";
-PACK_DEMH_IMG.walk1 = new Image();
-PACK_DEMH_READY.walk1 = false;
-PACK_DEMH_IMG.walk1.onload = () => { PACK_DEMH_READY.walk1 = true; };
-PACK_DEMH_IMG.walk1.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/walk1.png";
-PACK_DEMH_IMG.walk2 = new Image();
-PACK_DEMH_READY.walk2 = false;
-PACK_DEMH_IMG.walk2.onload = () => { PACK_DEMH_READY.walk2 = true; };
-PACK_DEMH_IMG.walk2.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/walk2.png";
-PACK_DEMH_IMG.walk3 = new Image();
-PACK_DEMH_READY.walk3 = false;
-PACK_DEMH_IMG.walk3.onload = () => { PACK_DEMH_READY.walk3 = true; };
-PACK_DEMH_IMG.walk3.src = "assets/sprites/enemies/hielo/demonio_hielo_fuego/walk3.png";
-const PACK_TREANT_IMG = {}, PACK_TREANT_READY = {};
-PACK_TREANT_IMG.atk1 = new Image();
-PACK_TREANT_READY.atk1 = false;
-PACK_TREANT_IMG.atk1.onload = () => { PACK_TREANT_READY.atk1 = true; };
-PACK_TREANT_IMG.atk1.src = "assets/sprites/enemies/bosque/ent/atk1.png";
-PACK_TREANT_IMG.atk2 = new Image();
-PACK_TREANT_READY.atk2 = false;
-PACK_TREANT_IMG.atk2.onload = () => { PACK_TREANT_READY.atk2 = true; };
-PACK_TREANT_IMG.atk2.src = "assets/sprites/enemies/bosque/ent/atk2.png";
-PACK_TREANT_IMG.atk3 = new Image();
-PACK_TREANT_READY.atk3 = false;
-PACK_TREANT_IMG.atk3.onload = () => { PACK_TREANT_READY.atk3 = true; };
-PACK_TREANT_IMG.atk3.src = "assets/sprites/enemies/bosque/ent/atk3.png";
-PACK_TREANT_IMG.atk4 = new Image();
-PACK_TREANT_READY.atk4 = false;
-PACK_TREANT_IMG.atk4.onload = () => { PACK_TREANT_READY.atk4 = true; };
-PACK_TREANT_IMG.atk4.src = "assets/sprites/enemies/bosque/ent/atk4.png";
-PACK_TREANT_IMG.death1 = new Image();
-PACK_TREANT_READY.death1 = false;
-PACK_TREANT_IMG.death1.onload = () => { PACK_TREANT_READY.death1 = true; };
-PACK_TREANT_IMG.death1.src = "assets/sprites/enemies/bosque/ent/death1.png";
-PACK_TREANT_IMG.death2 = new Image();
-PACK_TREANT_READY.death2 = false;
-PACK_TREANT_IMG.death2.onload = () => { PACK_TREANT_READY.death2 = true; };
-PACK_TREANT_IMG.death2.src = "assets/sprites/enemies/bosque/ent/death2.png";
-PACK_TREANT_IMG.death3 = new Image();
-PACK_TREANT_READY.death3 = false;
-PACK_TREANT_IMG.death3.onload = () => { PACK_TREANT_READY.death3 = true; };
-PACK_TREANT_IMG.death3.src = "assets/sprites/enemies/bosque/ent/death3.png";
-PACK_TREANT_IMG.death4 = new Image();
-PACK_TREANT_READY.death4 = false;
-PACK_TREANT_IMG.death4.onload = () => { PACK_TREANT_READY.death4 = true; };
-PACK_TREANT_IMG.death4.src = "assets/sprites/enemies/bosque/ent/death4.png";
-PACK_TREANT_IMG.death5 = new Image();
-PACK_TREANT_READY.death5 = false;
-PACK_TREANT_IMG.death5.onload = () => { PACK_TREANT_READY.death5 = true; };
-PACK_TREANT_IMG.death5.src = "assets/sprites/enemies/bosque/ent/death5.png";
-PACK_TREANT_IMG.hit1 = new Image();
-PACK_TREANT_READY.hit1 = false;
-PACK_TREANT_IMG.hit1.onload = () => { PACK_TREANT_READY.hit1 = true; };
-PACK_TREANT_IMG.hit1.src = "assets/sprites/enemies/bosque/ent/hit1.png";
-PACK_TREANT_IMG.hit2 = new Image();
-PACK_TREANT_READY.hit2 = false;
-PACK_TREANT_IMG.hit2.onload = () => { PACK_TREANT_READY.hit2 = true; };
-PACK_TREANT_IMG.hit2.src = "assets/sprites/enemies/bosque/ent/hit2.png";
-PACK_TREANT_IMG.idle1 = new Image();
-PACK_TREANT_READY.idle1 = false;
-PACK_TREANT_IMG.idle1.onload = () => { PACK_TREANT_READY.idle1 = true; };
-PACK_TREANT_IMG.idle1.src = "assets/sprites/enemies/bosque/ent/idle1.png";
-PACK_TREANT_IMG.idle2 = new Image();
-PACK_TREANT_READY.idle2 = false;
-PACK_TREANT_IMG.idle2.onload = () => { PACK_TREANT_READY.idle2 = true; };
-PACK_TREANT_IMG.idle2.src = "assets/sprites/enemies/bosque/ent/idle2.png";
-PACK_TREANT_IMG.idle3 = new Image();
-PACK_TREANT_READY.idle3 = false;
-PACK_TREANT_IMG.idle3.onload = () => { PACK_TREANT_READY.idle3 = true; };
-PACK_TREANT_IMG.idle3.src = "assets/sprites/enemies/bosque/ent/idle3.png";
-PACK_TREANT_IMG.idle4 = new Image();
-PACK_TREANT_READY.idle4 = false;
-PACK_TREANT_IMG.idle4.onload = () => { PACK_TREANT_READY.idle4 = true; };
-PACK_TREANT_IMG.idle4.src = "assets/sprites/enemies/bosque/ent/idle4.png";
-PACK_TREANT_IMG.walk1 = new Image();
-PACK_TREANT_READY.walk1 = false;
-PACK_TREANT_IMG.walk1.onload = () => { PACK_TREANT_READY.walk1 = true; };
-PACK_TREANT_IMG.walk1.src = "assets/sprites/enemies/bosque/ent/walk1.png";
-PACK_TREANT_IMG.walk2 = new Image();
-PACK_TREANT_READY.walk2 = false;
-PACK_TREANT_IMG.walk2.onload = () => { PACK_TREANT_READY.walk2 = true; };
-PACK_TREANT_IMG.walk2.src = "assets/sprites/enemies/bosque/ent/walk2.png";
-PACK_TREANT_IMG.walk3 = new Image();
-PACK_TREANT_READY.walk3 = false;
-PACK_TREANT_IMG.walk3.onload = () => { PACK_TREANT_READY.walk3 = true; };
-PACK_TREANT_IMG.walk3.src = "assets/sprites/enemies/bosque/ent/walk3.png";
-PACK_TREANT_IMG.walk4 = new Image();
-PACK_TREANT_READY.walk4 = false;
-PACK_TREANT_IMG.walk4.onload = () => { PACK_TREANT_READY.walk4 = true; };
-PACK_TREANT_IMG.walk4.src = "assets/sprites/enemies/bosque/ent/walk4.png";
-// Bestia del Bosque (Pack 2): la grilla de la hoja partía cada frame entre dos celdas; se
-// reconstruyó cada fila uniendo las celdas en orden y se volvió a separar, sin halo ni sombra.
-const PACK_BESTIA_IMG = {}, PACK_BESTIA_READY = {};
-PACK_BESTIA_IMG.idle1 = new Image();
-PACK_BESTIA_READY.idle1 = false;
-PACK_BESTIA_IMG.idle1.onload = () => { PACK_BESTIA_READY.idle1 = true; };
-PACK_BESTIA_IMG.idle1.src = "assets/sprites/enemies/bosque/bestia_bosque/idle1.png";
-PACK_BESTIA_IMG.idle2 = new Image();
-PACK_BESTIA_READY.idle2 = false;
-PACK_BESTIA_IMG.idle2.onload = () => { PACK_BESTIA_READY.idle2 = true; };
-PACK_BESTIA_IMG.idle2.src = "assets/sprites/enemies/bosque/bestia_bosque/idle2.png";
-PACK_BESTIA_IMG.idle3 = new Image();
-PACK_BESTIA_READY.idle3 = false;
-PACK_BESTIA_IMG.idle3.onload = () => { PACK_BESTIA_READY.idle3 = true; };
-PACK_BESTIA_IMG.idle3.src = "assets/sprites/enemies/bosque/bestia_bosque/idle3.png";
-PACK_BESTIA_IMG.idle4 = new Image();
-PACK_BESTIA_READY.idle4 = false;
-PACK_BESTIA_IMG.idle4.onload = () => { PACK_BESTIA_READY.idle4 = true; };
-PACK_BESTIA_IMG.idle4.src = "assets/sprites/enemies/bosque/bestia_bosque/idle4.png";
-PACK_BESTIA_IMG.walk1 = new Image();
-PACK_BESTIA_READY.walk1 = false;
-PACK_BESTIA_IMG.walk1.onload = () => { PACK_BESTIA_READY.walk1 = true; };
-PACK_BESTIA_IMG.walk1.src = "assets/sprites/enemies/bosque/bestia_bosque/walk1.png";
-PACK_BESTIA_IMG.walk2 = new Image();
-PACK_BESTIA_READY.walk2 = false;
-PACK_BESTIA_IMG.walk2.onload = () => { PACK_BESTIA_READY.walk2 = true; };
-PACK_BESTIA_IMG.walk2.src = "assets/sprites/enemies/bosque/bestia_bosque/walk2.png";
-PACK_BESTIA_IMG.walk3 = new Image();
-PACK_BESTIA_READY.walk3 = false;
-PACK_BESTIA_IMG.walk3.onload = () => { PACK_BESTIA_READY.walk3 = true; };
-PACK_BESTIA_IMG.walk3.src = "assets/sprites/enemies/bosque/bestia_bosque/walk3.png";
-PACK_BESTIA_IMG.walk4 = new Image();
-PACK_BESTIA_READY.walk4 = false;
-PACK_BESTIA_IMG.walk4.onload = () => { PACK_BESTIA_READY.walk4 = true; };
-PACK_BESTIA_IMG.walk4.src = "assets/sprites/enemies/bosque/bestia_bosque/walk4.png";
-PACK_BESTIA_IMG.walk5 = new Image();
-PACK_BESTIA_READY.walk5 = false;
-PACK_BESTIA_IMG.walk5.onload = () => { PACK_BESTIA_READY.walk5 = true; };
-PACK_BESTIA_IMG.walk5.src = "assets/sprites/enemies/bosque/bestia_bosque/walk5.png";
-PACK_BESTIA_IMG.atk1 = new Image();
-PACK_BESTIA_READY.atk1 = false;
-PACK_BESTIA_IMG.atk1.onload = () => { PACK_BESTIA_READY.atk1 = true; };
-PACK_BESTIA_IMG.atk1.src = "assets/sprites/enemies/bosque/bestia_bosque/atk1.png";
-PACK_BESTIA_IMG.atk2 = new Image();
-PACK_BESTIA_READY.atk2 = false;
-PACK_BESTIA_IMG.atk2.onload = () => { PACK_BESTIA_READY.atk2 = true; };
-PACK_BESTIA_IMG.atk2.src = "assets/sprites/enemies/bosque/bestia_bosque/atk2.png";
-PACK_BESTIA_IMG.atk3 = new Image();
-PACK_BESTIA_READY.atk3 = false;
-PACK_BESTIA_IMG.atk3.onload = () => { PACK_BESTIA_READY.atk3 = true; };
-PACK_BESTIA_IMG.atk3.src = "assets/sprites/enemies/bosque/bestia_bosque/atk3.png";
-PACK_BESTIA_IMG.hit1 = new Image();
-PACK_BESTIA_READY.hit1 = false;
-PACK_BESTIA_IMG.hit1.onload = () => { PACK_BESTIA_READY.hit1 = true; };
-PACK_BESTIA_IMG.hit1.src = "assets/sprites/enemies/bosque/bestia_bosque/hit1.png";
-PACK_BESTIA_IMG.death1 = new Image();
-PACK_BESTIA_READY.death1 = false;
-PACK_BESTIA_IMG.death1.onload = () => { PACK_BESTIA_READY.death1 = true; };
-PACK_BESTIA_IMG.death1.src = "assets/sprites/enemies/bosque/bestia_bosque/death1.png";
-PACK_BESTIA_IMG.death2 = new Image();
-PACK_BESTIA_READY.death2 = false;
-PACK_BESTIA_IMG.death2.onload = () => { PACK_BESTIA_READY.death2 = true; };
-PACK_BESTIA_IMG.death2.src = "assets/sprites/enemies/bosque/bestia_bosque/death2.png";
-PACK_BESTIA_IMG.death3 = new Image();
-PACK_BESTIA_READY.death3 = false;
-PACK_BESTIA_IMG.death3.onload = () => { PACK_BESTIA_READY.death3 = true; };
-PACK_BESTIA_IMG.death3.src = "assets/sprites/enemies/bosque/bestia_bosque/death3.png";
-PACK_BESTIA_IMG.death4 = new Image();
-PACK_BESTIA_READY.death4 = false;
-PACK_BESTIA_IMG.death4.onload = () => { PACK_BESTIA_READY.death4 = true; };
-PACK_BESTIA_IMG.death4.src = "assets/sprites/enemies/bosque/bestia_bosque/death4.png";
 const PACK_ANIM = {
   duende_bosque: { img:PACK_DUENDE_IMG, ready:PACK_DUENDE_READY,
     walk:["walk1","walk2","walk3","walk4","walk5"], idle:["idle1","idle2","idle3"],
@@ -2984,23 +2010,6 @@ function drawEnemyAtlas(e){
    ============================================================ */
 const ASESINO_HAB_ANIM = {"pestilencia": {"sigilo": {"frames": [0, 1, 2, 3], "fps": 10, "loop": false}, "emboscada": {"frames": [4, 5, 6, 7], "fps": 10, "loop": false}, "cadena": {"frames": [8, 9, 10, 11], "fps": 14, "loop": true}, "veneno": {"frames": [12], "fps": 10, "loop": false}, "sangrado": {"frames": [13], "fps": 10, "loop": false}, "impacto": {"frames": [14], "fps": 10, "loop": false}, "reposo": {"frames": [0], "fps": 10, "loop": false}}, "triple_golpe": {"combo": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "fps": 10, "loop": false}, "primer_corte": {"frames": [12], "fps": 10, "loop": false}, "segundo_corte": {"frames": [13], "fps": 10, "loop": false}, "corte_final": {"frames": [14], "fps": 10, "loop": false}, "reposo": {"frames": [0], "fps": 10, "loop": false}}, "trampa": {"colocar": {"frames": [0, 1, 2, 3], "fps": 10, "loop": false}, "desplegar": {"frames": [4, 5, 6, 7], "fps": 10, "loop": false}, "armada": {"frames": [7], "fps": 10, "loop": false}, "activar": {"frames": [8, 9, 10, 11], "fps": 10, "loop": false}, "atrapado": {"frames": [12, 13], "fps": 8, "loop": true}, "restos": {"frames": [14], "fps": 10, "loop": false}, "reposo": {"frames": [0], "fps": 10, "loop": false}}, "corte_sangrante": {"corte": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "fps": 12, "loop": false}, "arco": {"frames": [12], "fps": 10, "loop": false}, "sangrado": {"frames": [13, 14], "fps": 6, "loop": true}, "reposo": {"frames": [0], "fps": 10, "loop": false}}};
 const ASESINO_HAB_FRAME = 84, ASESINO_HAB_COLS = 4;
-const ASESINO_HAB_IMG = {}, ASESINO_HAB_READY = {};
-ASESINO_HAB_READY["trampa"] = false;
-ASESINO_HAB_IMG["trampa"] = new Image();
-ASESINO_HAB_IMG["trampa"].onload = () => { ASESINO_HAB_READY["trampa"] = true; };
-ASESINO_HAB_IMG["trampa"].src = "assets/vfx/guerrero/trampa.png";
-ASESINO_HAB_READY["triple_golpe"] = false;
-ASESINO_HAB_IMG["triple_golpe"] = new Image();
-ASESINO_HAB_IMG["triple_golpe"].onload = () => { ASESINO_HAB_READY["triple_golpe"] = true; };
-ASESINO_HAB_IMG["triple_golpe"].src = "assets/vfx/guerrero/triple_golpe.png";
-ASESINO_HAB_READY["pestilencia"] = false;
-ASESINO_HAB_IMG["pestilencia"] = new Image();
-ASESINO_HAB_IMG["pestilencia"].onload = () => { ASESINO_HAB_READY["pestilencia"] = true; };
-ASESINO_HAB_IMG["pestilencia"].src = "assets/vfx/guerrero/pestilencia.png";
-ASESINO_HAB_READY["corte_sangrante"] = false;
-ASESINO_HAB_IMG["corte_sangrante"] = new Image();
-ASESINO_HAB_IMG["corte_sangrante"].onload = () => { ASESINO_HAB_READY["corte_sangrante"] = true; };
-ASESINO_HAB_IMG["corte_sangrante"].src = "assets/vfx/guerrero/corte_sangrante.png";
 
 // Migrado al motor genérico AnimAtlas: un atlas por habilidad (mismo criterio que
 // ENEMY_ANIM_ATLASES), cada uno construido a partir de la misma tabla ASESINO_HAB_ANIM de
@@ -4376,18 +3385,6 @@ function aidDrawDivinaGround(now){
   ctx.restore();
 }
 
-// Estructuras de la Arena Divina por facción (Pack 5, recortadas de la hoja de referencia)
-const DIVINA_FACTION_IMG = {};
-DIVINA_FACTION_IMG.tower_cel_1 = new Image(); DIVINA_FACTION_IMG.tower_cel_1.src = "assets/sprites/arenas/divina/tower_cel_1.png";
-DIVINA_FACTION_IMG.tower_cel_2 = new Image(); DIVINA_FACTION_IMG.tower_cel_2.src = "assets/sprites/arenas/divina/tower_cel_2.png";
-DIVINA_FACTION_IMG.tower_cel_3 = new Image(); DIVINA_FACTION_IMG.tower_cel_3.src = "assets/sprites/arenas/divina/tower_cel_3.png";
-DIVINA_FACTION_IMG.tower_cel_4 = new Image(); DIVINA_FACTION_IMG.tower_cel_4.src = "assets/sprites/arenas/divina/tower_cel_4.png";
-DIVINA_FACTION_IMG.tower_inf_1 = new Image(); DIVINA_FACTION_IMG.tower_inf_1.src = "assets/sprites/arenas/divina/tower_inf_1.png";
-DIVINA_FACTION_IMG.tower_inf_2 = new Image(); DIVINA_FACTION_IMG.tower_inf_2.src = "assets/sprites/arenas/divina/tower_inf_2.png";
-DIVINA_FACTION_IMG.tower_inf_3 = new Image(); DIVINA_FACTION_IMG.tower_inf_3.src = "assets/sprites/arenas/divina/tower_inf_3.png";
-DIVINA_FACTION_IMG.castle_cel = new Image(); DIVINA_FACTION_IMG.castle_cel.src = "assets/sprites/arenas/divina/castle_cel.png";
-DIVINA_FACTION_IMG.castle_inf = new Image(); DIVINA_FACTION_IMG.castle_inf.src = "assets/sprites/arenas/divina/castle_inf.png";
-
 // ---------------- Arena Divina: estructuras por facción (arte del Pack 5) ----------------
 // Tu bando (sur) usa la Torre/Castillo Celestial; el rival (norte), la Torre/Castillo Infernal.
 // Antes los dos bandos usaban exactamente el mismo sprite violeta. Estados: normal, golpeado
@@ -5317,89 +4314,6 @@ function makeDivinaBossChamp(type, x, y){
     divinaAdvanceTarget: {x:0, y:700}
   };
 }
-/* ============================================================
-   ARENA DIVINA — sprites reales de castillo/torre/proyectil (referencia del usuario). Mismo
-   patron que el resto de sprites reales del juego: una imagen por frame, sin motor de grilla.
-   ============================================================ */
-const DIVINA_CASTLE_REAL_IMG = {};
-const DIVINA_CASTLE_REAL_READY = {};
-DIVINA_CASTLE_REAL_IMG.frame1 = new Image(); DIVINA_CASTLE_REAL_READY.frame1=false; DIVINA_CASTLE_REAL_IMG.frame1.onload=()=>{ DIVINA_CASTLE_REAL_READY.frame1=true; };
-DIVINA_CASTLE_REAL_IMG.frame1.src = "assets/sprites/arenas/divina/castle-frame1.png";
-DIVINA_CASTLE_REAL_IMG.frame2 = new Image(); DIVINA_CASTLE_REAL_READY.frame2=false; DIVINA_CASTLE_REAL_IMG.frame2.onload=()=>{ DIVINA_CASTLE_REAL_READY.frame2=true; };
-DIVINA_CASTLE_REAL_IMG.frame2.src = "assets/sprites/arenas/divina/castle-frame2.png";
-
-const DIVINA_TOWER_REAL_IMG = {};
-const DIVINA_TOWER_REAL_READY = {};
-DIVINA_TOWER_REAL_IMG.frame1 = new Image(); DIVINA_TOWER_REAL_READY.frame1=false; DIVINA_TOWER_REAL_IMG.frame1.onload=()=>{ DIVINA_TOWER_REAL_READY.frame1=true; };
-DIVINA_TOWER_REAL_IMG.frame1.src = "assets/sprites/arenas/divina/tower-frame1.png";
-DIVINA_TOWER_REAL_IMG.frame2 = new Image(); DIVINA_TOWER_REAL_READY.frame2=false; DIVINA_TOWER_REAL_IMG.frame2.onload=()=>{ DIVINA_TOWER_REAL_READY.frame2=true; };
-DIVINA_TOWER_REAL_IMG.frame2.src = "assets/sprites/arenas/divina/tower-frame2.png";
-DIVINA_TOWER_REAL_IMG.frame3 = new Image(); DIVINA_TOWER_REAL_READY.frame3=false; DIVINA_TOWER_REAL_IMG.frame3.onload=()=>{ DIVINA_TOWER_REAL_READY.frame3=true; };
-DIVINA_TOWER_REAL_IMG.frame3.src = "assets/sprites/arenas/divina/tower-frame3.png";
-DIVINA_TOWER_REAL_IMG.frame4 = new Image(); DIVINA_TOWER_REAL_READY.frame4=false; DIVINA_TOWER_REAL_IMG.frame4.onload=()=>{ DIVINA_TOWER_REAL_READY.frame4=true; };
-DIVINA_TOWER_REAL_IMG.frame4.src = "assets/sprites/arenas/divina/tower-frame4.png";
-DIVINA_TOWER_REAL_IMG.frame5 = new Image(); DIVINA_TOWER_REAL_READY.frame5=false; DIVINA_TOWER_REAL_IMG.frame5.onload=()=>{ DIVINA_TOWER_REAL_READY.frame5=true; };
-DIVINA_TOWER_REAL_IMG.frame5.src = "assets/sprites/arenas/divina/tower-frame5.png";
-
-const DIVINA_PROJ_REAL_IMG = {};
-const DIVINA_PROJ_REAL_READY = {};
-DIVINA_PROJ_REAL_IMG.frame1 = new Image(); DIVINA_PROJ_REAL_READY.frame1=false; DIVINA_PROJ_REAL_IMG.frame1.onload=()=>{ DIVINA_PROJ_REAL_READY.frame1=true; };
-DIVINA_PROJ_REAL_IMG.frame1.src = "assets/vfx/divina/tower-projectile-frame1.png";
-DIVINA_PROJ_REAL_IMG.frame2 = new Image(); DIVINA_PROJ_REAL_READY.frame2=false; DIVINA_PROJ_REAL_IMG.frame2.onload=()=>{ DIVINA_PROJ_REAL_READY.frame2=true; };
-DIVINA_PROJ_REAL_IMG.frame2.src = "assets/vfx/divina/tower-projectile-frame2.png";
-DIVINA_PROJ_REAL_IMG.frame3 = new Image(); DIVINA_PROJ_REAL_READY.frame3=false; DIVINA_PROJ_REAL_IMG.frame3.onload=()=>{ DIVINA_PROJ_REAL_READY.frame3=true; };
-DIVINA_PROJ_REAL_IMG.frame3.src = "assets/vfx/divina/tower-projectile-frame3.png";
-DIVINA_PROJ_REAL_IMG.frame4 = new Image(); DIVINA_PROJ_REAL_READY.frame4=false; DIVINA_PROJ_REAL_IMG.frame4.onload=()=>{ DIVINA_PROJ_REAL_READY.frame4=true; };
-DIVINA_PROJ_REAL_IMG.frame4.src = "assets/vfx/divina/tower-projectile-frame4.png";
-DIVINA_PROJ_REAL_IMG.frame5 = new Image(); DIVINA_PROJ_REAL_READY.frame5=false; DIVINA_PROJ_REAL_IMG.frame5.onload=()=>{ DIVINA_PROJ_REAL_READY.frame5=true; };
-DIVINA_PROJ_REAL_IMG.frame5.src = "assets/vfx/divina/tower-projectile-frame5.png";
-
-/* ============================================================
-   ARENA ACUÁTICA — sprites reales (tiburón joven/blanco, medusa, cangrejo, sirena). Anguila,
-   Kraken y Leviatán todavía no tienen arte definitivo: usan un placeholder procedural propio,
-   claramente marcado en el código, hasta que llegue arte real para reemplazarlos.
-   ============================================================ */
-const ACUA_IMG = {};
-const ACUA_READY = {};
-ACUA_IMG.tiburonJovenIdle = new Image(); ACUA_READY.tiburonJovenIdle=false; ACUA_IMG.tiburonJovenIdle.onload=()=>{ ACUA_READY.tiburonJovenIdle=true; };
-ACUA_IMG.tiburonJovenIdle.src = "assets/sprites/enemies/acuatica/tiburon_joven/idle.png";
-ACUA_IMG.tiburonJovenAtk = new Image(); ACUA_READY.tiburonJovenAtk=false; ACUA_IMG.tiburonJovenAtk.onload=()=>{ ACUA_READY.tiburonJovenAtk=true; };
-ACUA_IMG.tiburonJovenAtk.src = "assets/sprites/enemies/acuatica/tiburon_joven/atk.png";
-ACUA_IMG.tiburonBlancoIdle = new Image(); ACUA_READY.tiburonBlancoIdle=false; ACUA_IMG.tiburonBlancoIdle.onload=()=>{ ACUA_READY.tiburonBlancoIdle=true; };
-ACUA_IMG.tiburonBlancoIdle.src = "assets/sprites/enemies/acuatica/tiburon_blanco/idle.png";
-ACUA_IMG.tiburonBlancoAtk = new Image(); ACUA_READY.tiburonBlancoAtk=false; ACUA_IMG.tiburonBlancoAtk.onload=()=>{ ACUA_READY.tiburonBlancoAtk=true; };
-ACUA_IMG.tiburonBlancoAtk.src = "assets/sprites/enemies/acuatica/tiburon_blanco/atk.png";
-ACUA_IMG.cangrejoIdle = new Image(); ACUA_READY.cangrejoIdle=false; ACUA_IMG.cangrejoIdle.onload=()=>{ ACUA_READY.cangrejoIdle=true; };
-ACUA_IMG.cangrejoIdle.src = "assets/sprites/enemies/acuatica/cangrejo_acorazado/idle.png";
-ACUA_IMG.cangrejoAtk = new Image(); ACUA_READY.cangrejoAtk=false; ACUA_IMG.cangrejoAtk.onload=()=>{ ACUA_READY.cangrejoAtk=true; };
-ACUA_IMG.cangrejoAtk.src = "assets/sprites/enemies/acuatica/cangrejo_acorazado/atk.png";
-ACUA_IMG.medusaIdle = new Image(); ACUA_READY.medusaIdle=false; ACUA_IMG.medusaIdle.onload=()=>{ ACUA_READY.medusaIdle=true; };
-ACUA_IMG.medusaIdle.src = "assets/sprites/enemies/acuatica/medusa_electrica/idle.png";
-ACUA_IMG.medusaAtk = new Image(); ACUA_READY.medusaAtk=false; ACUA_IMG.medusaAtk.onload=()=>{ ACUA_READY.medusaAtk=true; };
-ACUA_IMG.medusaAtk.src = "assets/sprites/enemies/acuatica/medusa_electrica/atk.png";
-ACUA_IMG.sirenaIdle = new Image(); ACUA_READY.sirenaIdle=false; ACUA_IMG.sirenaIdle.onload=()=>{ ACUA_READY.sirenaIdle=true; };
-ACUA_IMG.sirenaIdle.src = "assets/sprites/enemies/acuatica/sirena_abisal/idle.png";
-ACUA_IMG.sirenaAtk = new Image(); ACUA_READY.sirenaAtk=false; ACUA_IMG.sirenaAtk.onload=()=>{ ACUA_READY.sirenaAtk=true; };
-ACUA_IMG.sirenaAtk.src = "assets/sprites/enemies/acuatica/sirena_abisal/atk.png";
-
-// Segundo frame de idle real (mismo pack de la Arena Acuática, recortes ya limpios sin usar
-// hasta ahora) para tiburón joven/blanco, cangrejo y medusa -ver ACUA_IDLE2/drawAcuaticaReal-.
-ACUA_IMG.tiburonJovenIdle2 = new Image();
-ACUA_READY.tiburonJovenIdle2 = false;
-ACUA_IMG.tiburonJovenIdle2.onload = () => { ACUA_READY.tiburonJovenIdle2 = true; };
-ACUA_IMG.tiburonJovenIdle2.src = "assets/sprites/enemies/acuatica/tiburon_joven/idle2.png";
-ACUA_IMG.tiburonBlancoIdle2 = new Image();
-ACUA_READY.tiburonBlancoIdle2 = false;
-ACUA_IMG.tiburonBlancoIdle2.onload = () => { ACUA_READY.tiburonBlancoIdle2 = true; };
-ACUA_IMG.tiburonBlancoIdle2.src = "assets/sprites/enemies/acuatica/tiburon_blanco/idle2.png";
-ACUA_IMG.cangrejoIdle2 = new Image();
-ACUA_READY.cangrejoIdle2 = false;
-ACUA_IMG.cangrejoIdle2.onload = () => { ACUA_READY.cangrejoIdle2 = true; };
-ACUA_IMG.cangrejoIdle2.src = "assets/sprites/enemies/acuatica/cangrejo_acorazado/idle2.png";
-ACUA_IMG.medusaIdle2 = new Image();
-ACUA_READY.medusaIdle2 = false;
-ACUA_IMG.medusaIdle2.onload = () => { ACUA_READY.medusaIdle2 = true; };
-ACUA_IMG.medusaIdle2.src = "assets/sprites/enemies/acuatica/medusa_electrica/idle2.png";
 function drawDivinaHpBar(s){
   const w = s.type==="castle" ? 130 : 56, h = 6, y = s.y - (s.type==="castle" ? 175 : 118);
   ctx.save();
@@ -10627,43 +9541,6 @@ function drawDivineAura(h){
   }
   ctx.restore();
 }
-
-// Segador Olvidado ("Berserk"): sprite real de 3 direcciones (abajo/derecha/arriba, con
-// espejo para izquierda), reemplaza al sprite procedural viejo que se veía cortado a la
-// mitad. Por ahora un frame estático por dirección (sin ciclo de caminar todavía).
-const SEGADOR_REAL_IMG = {down:new Image(), right:new Image(), up:new Image()};
-const SEGADOR_REAL_READY = {down:false, right:false, up:false};
-["down","right","up"].forEach(dir=>{
-  SEGADOR_REAL_IMG[dir].onload = () => { SEGADOR_REAL_READY[dir] = true; };
-});
-
-SEGADOR_REAL_IMG["down"].src = "assets/sprites/champions/segador/dir-down.png";
-SEGADOR_REAL_IMG["right"].src = "assets/sprites/champions/segador/dir-right.png";
-SEGADOR_REAL_IMG["up"].src = "assets/sprites/champions/segador/dir-up.png";
-/* ============================================================
-   SEGADOR y AXIOM — animaciones nuevas (Pack 1, pedido explícito: cambiar SOLO la apariencia
-   y las animaciones; las habilidades, su lógica y sus efectos visuales quedan exactamente
-   como estaban). Quieto / caminar / ataque / cast / golpe / muerte en 3 direcciones (abajo,
-   perfil mirando a la derecha -se espeja para la izquierda-, arriba). Los recortes venían de
-   una hoja JPEG con grilla: se limpiaron líneas de grilla y restos de celdas vecinas, y se
-   dejaron afuera los frames que venían partidos. Si por algo no cargaran, se sigue usando el
-   arte anterior (draw3DirRealSprite) como respaldo.
-   ============================================================ */
-const CHAMP_PACK = {};
-function champPackLoad(key, def){
-  const P = {sets:{}, ready:false, n:0, loaded:0};
-  for(const k in def){
-    P.sets[k] = def[k].map(src=>{
-      const im = new Image(); P.n++;
-      im.onload = ()=>{ P.loaded++; if(P.loaded===P.n) P.ready = true; };
-      im.src = src;
-      return im;
-    });
-  }
-  CHAMP_PACK[key] = P;
-}
-champPackLoad("segador", {"idle_down": ["assets/sprites/champions/segador/idle_down_01.png", "assets/sprites/champions/segador/idle_down_02.png", "assets/sprites/champions/segador/idle_down_03.png", "assets/sprites/champions/segador/idle_down_04.png"], "idle_side": ["assets/sprites/champions/segador/idle_side_01.png", "assets/sprites/champions/segador/idle_side_02.png", "assets/sprites/champions/segador/idle_side_03.png", "assets/sprites/champions/segador/idle_side_04.png"], "idle_up": ["assets/sprites/champions/segador/idle_up_01.png", "assets/sprites/champions/segador/idle_up_02.png", "assets/sprites/champions/segador/idle_up_03.png", "assets/sprites/champions/segador/idle_up_04.png"], "walk_down": ["assets/sprites/champions/segador/walk_down_01.png", "assets/sprites/champions/segador/walk_down_02.png", "assets/sprites/champions/segador/walk_down_03.png", "assets/sprites/champions/segador/walk_down_04.png"], "walk_side": ["assets/sprites/champions/segador/walk_side_01.png", "assets/sprites/champions/segador/walk_side_02.png", "assets/sprites/champions/segador/walk_side_03.png", "assets/sprites/champions/segador/walk_side_04.png"], "walk_up": ["assets/sprites/champions/segador/walk_up_01.png", "assets/sprites/champions/segador/walk_up_02.png", "assets/sprites/champions/segador/walk_up_03.png", "assets/sprites/champions/segador/walk_up_04.png"], "attack_down": ["assets/sprites/champions/segador/attack_down_01.png", "assets/sprites/champions/segador/attack_down_02.png", "assets/sprites/champions/segador/attack_down_03.png", "assets/sprites/champions/segador/attack_down_04.png"], "attack_side": ["assets/sprites/champions/segador/attack_side_01.png", "assets/sprites/champions/segador/attack_side_02.png", "assets/sprites/champions/segador/attack_side_03.png", "assets/sprites/champions/segador/attack_side_04.png"], "attack_up": ["assets/sprites/champions/segador/attack_up_01.png", "assets/sprites/champions/segador/attack_up_02.png", "assets/sprites/champions/segador/attack_up_03.png", "assets/sprites/champions/segador/attack_up_04.png"], "cast_down": ["assets/sprites/champions/segador/cast_down_01.png", "assets/sprites/champions/segador/cast_down_02.png"], "cast_side": ["assets/sprites/champions/segador/cast_side_01.png", "assets/sprites/champions/segador/cast_side_02.png", "assets/sprites/champions/segador/cast_side_03.png", "assets/sprites/champions/segador/cast_side_04.png"], "cast_up": ["assets/sprites/champions/segador/cast_up_01.png", "assets/sprites/champions/segador/cast_up_02.png", "assets/sprites/champions/segador/cast_up_03.png"], "hit_down": ["assets/sprites/champions/segador/hit_down_01.png", "assets/sprites/champions/segador/hit_down_02.png"], "hit_side": ["assets/sprites/champions/segador/hit_side_01.png", "assets/sprites/champions/segador/hit_side_02.png"], "hit_up": ["assets/sprites/champions/segador/hit_up_01.png", "assets/sprites/champions/segador/hit_up_02.png"], "death_down": ["assets/sprites/champions/segador/death_down_01.png", "assets/sprites/champions/segador/death_down_02.png", "assets/sprites/champions/segador/death_down_03.png"], "death_side": ["assets/sprites/champions/segador/death_side_01.png", "assets/sprites/champions/segador/death_side_02.png", "assets/sprites/champions/segador/death_side_03.png", "assets/sprites/champions/segador/death_side_04.png"], "death_up": ["assets/sprites/champions/segador/death_up_01.png", "assets/sprites/champions/segador/death_up_02.png", "assets/sprites/champions/segador/death_up_03.png", "assets/sprites/champions/segador/death_up_04.png"]});
-champPackLoad("axiom", {"idle_down": ["assets/sprites/champions/axiom/idle_down_01.png", "assets/sprites/champions/axiom/idle_down_02.png", "assets/sprites/champions/axiom/idle_down_03.png", "assets/sprites/champions/axiom/idle_down_04.png"], "idle_side": ["assets/sprites/champions/axiom/idle_side_01.png", "assets/sprites/champions/axiom/idle_side_02.png", "assets/sprites/champions/axiom/idle_side_03.png", "assets/sprites/champions/axiom/idle_side_04.png"], "idle_up": ["assets/sprites/champions/axiom/idle_up_01.png", "assets/sprites/champions/axiom/idle_up_02.png", "assets/sprites/champions/axiom/idle_up_03.png", "assets/sprites/champions/axiom/idle_up_04.png"], "walk_down": ["assets/sprites/champions/axiom/walk_down_01.png", "assets/sprites/champions/axiom/walk_down_02.png", "assets/sprites/champions/axiom/walk_down_03.png", "assets/sprites/champions/axiom/walk_down_04.png"], "walk_side": ["assets/sprites/champions/axiom/walk_side_01.png", "assets/sprites/champions/axiom/walk_side_02.png", "assets/sprites/champions/axiom/walk_side_03.png", "assets/sprites/champions/axiom/walk_side_04.png"], "walk_up": ["assets/sprites/champions/axiom/walk_up_01.png", "assets/sprites/champions/axiom/walk_up_02.png", "assets/sprites/champions/axiom/walk_up_03.png", "assets/sprites/champions/axiom/walk_up_04.png"], "attack_down": ["assets/sprites/champions/axiom/attack_down_01.png", "assets/sprites/champions/axiom/attack_down_02.png"], "attack_side": ["assets/sprites/champions/axiom/attack_side_01.png", "assets/sprites/champions/axiom/attack_side_02.png"], "attack_up": ["assets/sprites/champions/axiom/attack_up_01.png", "assets/sprites/champions/axiom/attack_up_02.png"], "cast_down": ["assets/sprites/champions/axiom/cast_down_01.png"], "cast_side": ["assets/sprites/champions/axiom/cast_side_01.png"], "cast_up": ["assets/sprites/champions/axiom/cast_up_01.png"], "death_down": ["assets/sprites/champions/axiom/death_down_01.png", "assets/sprites/champions/axiom/death_down_02.png", "assets/sprites/champions/axiom/death_down_03.png", "assets/sprites/champions/axiom/death_down_04.png"], "death_side": ["assets/sprites/champions/axiom/death_side_01.png", "assets/sprites/champions/axiom/death_side_02.png", "assets/sprites/champions/axiom/death_side_03.png", "assets/sprites/champions/axiom/death_side_04.png"], "death_up": ["assets/sprites/champions/axiom/death_up_01.png", "assets/sprites/champions/axiom/death_up_02.png", "assets/sprites/champions/axiom/death_up_03.png"]});
 // Dirección de la pose (abajo / perfil / arriba) con histéresis, para que no parpadee en diagonal.
 function champPackDir(h){
   const fx = h.fx||0, fy = (h.fy===undefined ? 1 : h.fy), ax = Math.abs(fx), ay = Math.abs(fy);
@@ -10789,180 +9666,6 @@ function drawMusashiAfterimages(){
     drawAnimFrameSized(img, clip, 0, a.x, a.y, img.width*s, img.height*s, 0.5, 0.94, a.fx<-0.12, alpha);
   }
 }
-
-// Sylva, La Cazadora del Bosque: mismo patrón (una imagen por estado). El combo básico cicla
-// 6 frames durante attackAnim -se acelera solo porque attackAnim ya dura menos con más
-// velocidad de ataque (ver triggerBasic), sin necesitar un sistema de animación aparte-.
-
-/* ============================================================
-   NIGROMANTE — sprites reales recortados (Nigromante_Sprites_V2). Mismo patron que
-   MUSASHI_REAL_IMG/SYLVA_REAL_IMG: una imagen estatica por pose/estado, sin motor de
-   grilla -drawAnimFrameSized ya sabe dibujar un solo frame sintetico por imagen-.
-   ============================================================ */
-const NIGRO_IMG = {};
-const NIGRO_READY = {};
-NIGRO_IMG.idle = new Image(); NIGRO_READY.idle=false; NIGRO_IMG.idle.onload=()=>{ NIGRO_READY.idle=true; };
-NIGRO_IMG.idle.src = "assets/sprites/champions/nigromante/idle.png";
-NIGRO_IMG.walk1 = new Image(); NIGRO_READY.walk1=false; NIGRO_IMG.walk1.onload=()=>{ NIGRO_READY.walk1=true; };
-NIGRO_IMG.walk1.src = "assets/sprites/champions/nigromante/walk1.png";
-NIGRO_IMG.walk2 = new Image(); NIGRO_READY.walk2=false; NIGRO_IMG.walk2.onload=()=>{ NIGRO_READY.walk2=true; };
-NIGRO_IMG.walk2.src = "assets/sprites/champions/nigromante/walk2.png";
-NIGRO_IMG.run1 = new Image(); NIGRO_READY.run1=false; NIGRO_IMG.run1.onload=()=>{ NIGRO_READY.run1=true; };
-NIGRO_IMG.run1.src = "assets/sprites/champions/nigromante/run1.png";
-NIGRO_IMG.run2 = new Image(); NIGRO_READY.run2=false; NIGRO_IMG.run2.onload=()=>{ NIGRO_READY.run2=true; };
-NIGRO_IMG.run2.src = "assets/sprites/champions/nigromante/run2.png";
-NIGRO_IMG.basic1 = new Image(); NIGRO_READY.basic1=false; NIGRO_IMG.basic1.onload=()=>{ NIGRO_READY.basic1=true; };
-NIGRO_IMG.basic1.src = "assets/sprites/champions/nigromante/basic1.png";
-NIGRO_IMG.basic2 = new Image(); NIGRO_READY.basic2=false; NIGRO_IMG.basic2.onload=()=>{ NIGRO_READY.basic2=true; };
-NIGRO_IMG.basic2.src = "assets/sprites/champions/nigromante/basic2.png";
-NIGRO_IMG.basic3 = new Image(); NIGRO_READY.basic3=false; NIGRO_IMG.basic3.onload=()=>{ NIGRO_READY.basic3=true; };
-NIGRO_IMG.basic3.src = "assets/sprites/champions/nigromante/basic3.png";
-NIGRO_IMG.basic4 = new Image(); NIGRO_READY.basic4=false; NIGRO_IMG.basic4.onload=()=>{ NIGRO_READY.basic4=true; };
-NIGRO_IMG.basic4.src = "assets/sprites/champions/nigromante/basic4.png";
-NIGRO_IMG.basic5 = new Image(); NIGRO_READY.basic5=false; NIGRO_IMG.basic5.onload=()=>{ NIGRO_READY.basic5=true; };
-NIGRO_IMG.basic5.src = "assets/sprites/champions/nigromante/basic5.png";
-NIGRO_IMG.hurt = new Image(); NIGRO_READY.hurt=false; NIGRO_IMG.hurt.onload=()=>{ NIGRO_READY.hurt=true; };
-NIGRO_IMG.hurt.src = "assets/sprites/champions/nigromante/hurt.png";
-NIGRO_IMG.death = new Image(); NIGRO_READY.death=false; NIGRO_IMG.death.onload=()=>{ NIGRO_READY.death=true; };
-NIGRO_IMG.death.src = "assets/sprites/champions/nigromante/death.png";
-NIGRO_IMG.castSkeleton1 = new Image(); NIGRO_READY.castSkeleton1=false; NIGRO_IMG.castSkeleton1.onload=()=>{ NIGRO_READY.castSkeleton1=true; };
-NIGRO_IMG.castSkeleton1.src = "assets/sprites/champions/nigromante/castSkeleton1.png";
-NIGRO_IMG.castSkeleton2 = new Image(); NIGRO_READY.castSkeleton2=false; NIGRO_IMG.castSkeleton2.onload=()=>{ NIGRO_READY.castSkeleton2=true; };
-NIGRO_IMG.castSkeleton2.src = "assets/sprites/champions/nigromante/castSkeleton2.png";
-NIGRO_IMG.castSkeleton3 = new Image(); NIGRO_READY.castSkeleton3=false; NIGRO_IMG.castSkeleton3.onload=()=>{ NIGRO_READY.castSkeleton3=true; };
-NIGRO_IMG.castSkeleton3.src = "assets/sprites/champions/nigromante/castSkeleton3.png";
-NIGRO_IMG.castGolem1 = new Image(); NIGRO_READY.castGolem1=false; NIGRO_IMG.castGolem1.onload=()=>{ NIGRO_READY.castGolem1=true; };
-NIGRO_IMG.castGolem1.src = "assets/sprites/champions/nigromante/castGolem1.png";
-NIGRO_IMG.castGolem2 = new Image(); NIGRO_READY.castGolem2=false; NIGRO_IMG.castGolem2.onload=()=>{ NIGRO_READY.castGolem2=true; };
-NIGRO_IMG.castGolem2.src = "assets/sprites/champions/nigromante/castGolem2.png";
-NIGRO_IMG.castPlague1 = new Image(); NIGRO_READY.castPlague1=false; NIGRO_IMG.castPlague1.onload=()=>{ NIGRO_READY.castPlague1=true; };
-NIGRO_IMG.castPlague1.src = "assets/sprites/champions/nigromante/castPlague1.png";
-NIGRO_IMG.castPlague2 = new Image(); NIGRO_READY.castPlague2=false; NIGRO_IMG.castPlague2.onload=()=>{ NIGRO_READY.castPlague2=true; };
-NIGRO_IMG.castPlague2.src = "assets/sprites/champions/nigromante/castPlague2.png";
-NIGRO_IMG.ultTransform1 = new Image(); NIGRO_READY.ultTransform1=false; NIGRO_IMG.ultTransform1.onload=()=>{ NIGRO_READY.ultTransform1=true; };
-NIGRO_IMG.ultTransform1.src = "assets/sprites/champions/nigromante/ultTransform1.png";
-NIGRO_IMG.ultTransform2 = new Image(); NIGRO_READY.ultTransform2=false; NIGRO_IMG.ultTransform2.onload=()=>{ NIGRO_READY.ultTransform2=true; };
-NIGRO_IMG.ultTransform2.src = "assets/sprites/champions/nigromante/ultTransform2.png";
-NIGRO_IMG.ultTransform3 = new Image(); NIGRO_READY.ultTransform3=false; NIGRO_IMG.ultTransform3.onload=()=>{ NIGRO_READY.ultTransform3=true; };
-NIGRO_IMG.ultTransform3.src = "assets/sprites/champions/nigromante/ultTransform3.png";
-NIGRO_IMG.ultTransform4 = new Image(); NIGRO_READY.ultTransform4=false; NIGRO_IMG.ultTransform4.onload=()=>{ NIGRO_READY.ultTransform4=true; };
-NIGRO_IMG.ultTransform4.src = "assets/sprites/champions/nigromante/ultTransform4.png";
-
-// Ciclo de idle (5 frames) y caminata (6 frames) reales -antes un solo frame quieto y una
-// alternancia de 2 frames-, mismo zip del Nigromante, sin usar hasta ahora.
-NIGRO_IMG.idleA1 = new Image();
-NIGRO_READY.idleA1 = false;
-NIGRO_IMG.idleA1.onload = () => { NIGRO_READY.idleA1 = true; };
-NIGRO_IMG.idleA1.src = "assets/sprites/champions/nigromante/idleA1.png";
-NIGRO_IMG.idleA2 = new Image();
-NIGRO_READY.idleA2 = false;
-NIGRO_IMG.idleA2.onload = () => { NIGRO_READY.idleA2 = true; };
-NIGRO_IMG.idleA2.src = "assets/sprites/champions/nigromante/idleA2.png";
-NIGRO_IMG.idleA3 = new Image();
-NIGRO_READY.idleA3 = false;
-NIGRO_IMG.idleA3.onload = () => { NIGRO_READY.idleA3 = true; };
-NIGRO_IMG.idleA3.src = "assets/sprites/champions/nigromante/idleA3.png";
-NIGRO_IMG.idleA4 = new Image();
-NIGRO_READY.idleA4 = false;
-NIGRO_IMG.idleA4.onload = () => { NIGRO_READY.idleA4 = true; };
-NIGRO_IMG.idleA4.src = "assets/sprites/champions/nigromante/idleA4.png";
-NIGRO_IMG.idleA5 = new Image();
-NIGRO_READY.idleA5 = false;
-NIGRO_IMG.idleA5.onload = () => { NIGRO_READY.idleA5 = true; };
-NIGRO_IMG.idleA5.src = "assets/sprites/champions/nigromante/idleA5.png";
-NIGRO_IMG.walkA1 = new Image();
-NIGRO_READY.walkA1 = false;
-NIGRO_IMG.walkA1.onload = () => { NIGRO_READY.walkA1 = true; };
-NIGRO_IMG.walkA1.src = "assets/sprites/champions/nigromante/walk1.png";
-NIGRO_IMG.walkA2 = new Image();
-NIGRO_READY.walkA2 = false;
-NIGRO_IMG.walkA2.onload = () => { NIGRO_READY.walkA2 = true; };
-NIGRO_IMG.walkA2.src = "assets/sprites/champions/nigromante/walkA2.png";
-NIGRO_IMG.walkA3 = new Image();
-NIGRO_READY.walkA3 = false;
-NIGRO_IMG.walkA3.onload = () => { NIGRO_READY.walkA3 = true; };
-NIGRO_IMG.walkA3.src = "assets/sprites/champions/nigromante/walkA3.png";
-NIGRO_IMG.walkA4 = new Image();
-NIGRO_READY.walkA4 = false;
-NIGRO_IMG.walkA4.onload = () => { NIGRO_READY.walkA4 = true; };
-NIGRO_IMG.walkA4.src = "assets/sprites/champions/nigromante/walk2.png";
-NIGRO_IMG.walkA5 = new Image();
-NIGRO_READY.walkA5 = false;
-NIGRO_IMG.walkA5.onload = () => { NIGRO_READY.walkA5 = true; };
-NIGRO_IMG.walkA5.src = "assets/sprites/champions/nigromante/walkA5.png";
-NIGRO_IMG.walkA6 = new Image();
-NIGRO_READY.walkA6 = false;
-NIGRO_IMG.walkA6.onload = () => { NIGRO_READY.walkA6 = true; };
-NIGRO_IMG.walkA6.src = "assets/sprites/champions/nigromante/walkA6.png";
-const NIGRO_SKEL_IMG = {};
-const NIGRO_SKEL_READY = {};
-NIGRO_SKEL_IMG.warrior = new Image(); NIGRO_SKEL_READY.warrior=false; NIGRO_SKEL_IMG.warrior.onload=()=>{ NIGRO_SKEL_READY.warrior=true; };
-NIGRO_SKEL_IMG.warrior.src = "assets/sprites/champions/nigromante/skeleton/warrior.png";
-NIGRO_SKEL_IMG.warriorAtk = new Image(); NIGRO_SKEL_READY.warriorAtk=false; NIGRO_SKEL_IMG.warriorAtk.onload=()=>{ NIGRO_SKEL_READY.warriorAtk=true; };
-NIGRO_SKEL_IMG.warriorAtk.src = "assets/sprites/champions/nigromante/skeleton/warriorAtk.png";
-NIGRO_SKEL_IMG.mage = new Image(); NIGRO_SKEL_READY.mage=false; NIGRO_SKEL_IMG.mage.onload=()=>{ NIGRO_SKEL_READY.mage=true; };
-NIGRO_SKEL_IMG.mage.src = "assets/sprites/champions/nigromante/skeleton/mage.png";
-NIGRO_SKEL_IMG.mageAtk = new Image(); NIGRO_SKEL_READY.mageAtk=false; NIGRO_SKEL_IMG.mageAtk.onload=()=>{ NIGRO_SKEL_READY.mageAtk=true; };
-NIGRO_SKEL_IMG.mageAtk.src = "assets/sprites/champions/nigromante/skeleton/mageAtk.png";
-
-// Caminata real (2 frames) del esqueleto guerrero invocado -antes pose quieta todo el
-// tiempo- y ráfaga de materialización al invocar cada esqueleto (spawnWarrior/spawnMage).
-NIGRO_SKEL_IMG.walk1 = new Image();
-NIGRO_SKEL_READY.walk1 = false;
-NIGRO_SKEL_IMG.walk1.onload = () => { NIGRO_SKEL_READY.walk1 = true; };
-NIGRO_SKEL_IMG.walk1.src = "assets/sprites/champions/nigromante/skeleton/walk1.png";
-NIGRO_SKEL_IMG.walk2 = new Image();
-NIGRO_SKEL_READY.walk2 = false;
-NIGRO_SKEL_IMG.walk2.onload = () => { NIGRO_SKEL_READY.walk2 = true; };
-NIGRO_SKEL_IMG.walk2.src = "assets/sprites/champions/nigromante/skeleton/walk2.png";
-NIGRO_SKEL_IMG.spawnWarrior = new Image();
-NIGRO_SKEL_READY.spawnWarrior = false;
-NIGRO_SKEL_IMG.spawnWarrior.onload = () => { NIGRO_SKEL_READY.spawnWarrior = true; };
-NIGRO_SKEL_IMG.spawnWarrior.src = "assets/sprites/champions/nigromante/skeleton/spawnWarrior.png";
-NIGRO_SKEL_IMG.spawnMage = new Image();
-NIGRO_SKEL_READY.spawnMage = false;
-NIGRO_SKEL_IMG.spawnMage.onload = () => { NIGRO_SKEL_READY.spawnMage = true; };
-NIGRO_SKEL_IMG.spawnMage.src = "assets/sprites/champions/nigromante/skeleton/spawnMage.png";const NIGRO_GOLEM_IMG = {};
-const NIGRO_GOLEM_READY = {};
-NIGRO_GOLEM_IMG.stone = new Image(); NIGRO_GOLEM_READY.stone=false; NIGRO_GOLEM_IMG.stone.onload=()=>{ NIGRO_GOLEM_READY.stone=true; };
-NIGRO_GOLEM_IMG.stone.src = "assets/sprites/champions/nigromante/golem/stone.png";
-NIGRO_GOLEM_IMG.stoneAtk = new Image(); NIGRO_GOLEM_READY.stoneAtk=false; NIGRO_GOLEM_IMG.stoneAtk.onload=()=>{ NIGRO_GOLEM_READY.stoneAtk=true; };
-NIGRO_GOLEM_IMG.stoneAtk.src = "assets/sprites/champions/nigromante/golem/stoneAtk.png";
-NIGRO_GOLEM_IMG.fire = new Image(); NIGRO_GOLEM_READY.fire=false; NIGRO_GOLEM_IMG.fire.onload=()=>{ NIGRO_GOLEM_READY.fire=true; };
-NIGRO_GOLEM_IMG.fire.src = "assets/sprites/champions/nigromante/golem/fire.png";
-NIGRO_GOLEM_IMG.ice = new Image(); NIGRO_GOLEM_READY.ice=false; NIGRO_GOLEM_IMG.ice.onload=()=>{ NIGRO_GOLEM_READY.ice=true; };
-NIGRO_GOLEM_IMG.ice.src = "assets/sprites/champions/nigromante/golem/ice.png";
-
-// Ráfaga de materialización real al invocar el Golem (antes sin usar).
-NIGRO_GOLEM_IMG.spawn = new Image();
-NIGRO_GOLEM_READY.spawn = false;
-NIGRO_GOLEM_IMG.spawn.onload = () => { NIGRO_GOLEM_READY.spawn = true; };
-NIGRO_GOLEM_IMG.spawn.src = "assets/sprites/champions/nigromante/golem/spawn.png";
-const NIGRO_DEMON_IMG = {};
-const NIGRO_DEMON_READY = {};
-NIGRO_DEMON_IMG.idle = new Image(); NIGRO_DEMON_READY.idle=false; NIGRO_DEMON_IMG.idle.onload=()=>{ NIGRO_DEMON_READY.idle=true; };
-NIGRO_DEMON_IMG.idle.src = "assets/sprites/champions/nigromante/demon/idle.png";
-NIGRO_DEMON_IMG.attack1 = new Image(); NIGRO_DEMON_READY.attack1=false; NIGRO_DEMON_IMG.attack1.onload=()=>{ NIGRO_DEMON_READY.attack1=true; };
-NIGRO_DEMON_IMG.attack1.src = "assets/sprites/champions/nigromante/demon/attack1.png";
-NIGRO_DEMON_IMG.attack2 = new Image(); NIGRO_DEMON_READY.attack2=false; NIGRO_DEMON_IMG.attack2.onload=()=>{ NIGRO_DEMON_READY.attack2=true; };
-NIGRO_DEMON_IMG.attack2.src = "assets/sprites/champions/nigromante/demon/attack2.png";
-NIGRO_DEMON_IMG.soulFireCast = new Image(); NIGRO_DEMON_READY.soulFireCast=false; NIGRO_DEMON_IMG.soulFireCast.onload=()=>{ NIGRO_DEMON_READY.soulFireCast=true; };
-NIGRO_DEMON_IMG.soulFireCast.src = "assets/sprites/champions/nigromante/demon/soulFireCast.png";
-NIGRO_DEMON_IMG.soulFireProj = new Image(); NIGRO_DEMON_READY.soulFireProj=false; NIGRO_DEMON_IMG.soulFireProj.onload=()=>{ NIGRO_DEMON_READY.soulFireProj=true; };
-NIGRO_DEMON_IMG.soulFireProj.src = "assets/sprites/champions/nigromante/demon/soulFireProj.png";
-NIGRO_DEMON_IMG.slam = new Image(); NIGRO_DEMON_READY.slam=false; NIGRO_DEMON_IMG.slam.onload=()=>{ NIGRO_DEMON_READY.slam=true; };
-NIGRO_DEMON_IMG.slam.src = "assets/sprites/champions/nigromante/demon/slam.png";
-NIGRO_DEMON_IMG.slash = new Image(); NIGRO_DEMON_READY.slash=false; NIGRO_DEMON_IMG.slash.onload=()=>{ NIGRO_DEMON_READY.slash=true; };
-NIGRO_DEMON_IMG.slash.src = "assets/sprites/champions/nigromante/demon/slash.png";
-
-const NIGRO_PLAGUE_FX_IMG = {};
-const NIGRO_PLAGUE_FX_READY = {};
-NIGRO_PLAGUE_FX_IMG.ground1 = new Image(); NIGRO_PLAGUE_FX_READY.ground1=false; NIGRO_PLAGUE_FX_IMG.ground1.onload=()=>{ NIGRO_PLAGUE_FX_READY.ground1=true; };
-NIGRO_PLAGUE_FX_IMG.ground1.src = "assets/vfx/nigromante/plague-ground1.png";
-NIGRO_PLAGUE_FX_IMG.ground2 = new Image(); NIGRO_PLAGUE_FX_READY.ground2=false; NIGRO_PLAGUE_FX_IMG.ground2.onload=()=>{ NIGRO_PLAGUE_FX_READY.ground2=true; };
-NIGRO_PLAGUE_FX_IMG.ground2.src = "assets/vfx/nigromante/plague-ground2.png";
-NIGRO_PLAGUE_FX_IMG.ground3 = new Image(); NIGRO_PLAGUE_FX_READY.ground3=false; NIGRO_PLAGUE_FX_IMG.ground3.onload=()=>{ NIGRO_PLAGUE_FX_READY.ground3=true; };
-NIGRO_PLAGUE_FX_IMG.ground3.src = "assets/vfx/nigromante/plague-ground3.png";
 
 
 // Nigromante — cuerpo principal: mismo patron drawXReal que Musashi/Sylva (una imagen estatica
@@ -11183,25 +9886,6 @@ function drawSpectralWolf(w){
   drawShadow(w.x, w.y, 22);
   drawAnimFrameSized(img, clip, 0, w.x, w.y, img.width*s, img.height*s, 0.5, 0.95, flip, 0.92);
 }
-
-// Axiom: sprite real (llegó en un zip aparte, ya recortado con alfa real) — 3 direcciones
-// estáticas, con espejo para izquierda, mismo patrón que el Segador.
-const AXIOM_REAL_IMG = {down:new Image(), right:new Image(), up:new Image()};
-const AXIOM_REAL_READY = {down:false, right:false, up:false};
-["down","right","up"].forEach(dir=>{
-  AXIOM_REAL_IMG[dir].onload = () => { AXIOM_REAL_READY[dir] = true; };
-});
-
-AXIOM_REAL_IMG["down"].src = "assets/sprites/champions/axiom/dir-down.png";
-AXIOM_REAL_IMG["right"].src = "assets/sprites/champions/axiom/dir-right.png";
-AXIOM_REAL_IMG["up"].src = "assets/sprites/champions/axiom/dir-up.png";
-// Axiom — VFX animados de las habilidades (varios frames por burst, con fundido de
-// entrada/salida). activeAxiomVfx guarda instancias activas {key,x,y,age} y se
-// dibuja/actualiza cada frame (ver drawAxiomVfxActive/updateAxiomVfx más abajo).
-// Las tiras traían dibujado al Axiom anterior (el nene de pelo blanco) adentro de cada frame; con
-// el diseño nuevo del Pack 1 se veía el personaje viejo encima: se enmascaró el cuerpo y queda el efecto.
-const AXIOM_VFX_IMG = {};
-const AXIOM_VFX_READY = {};
 const AXIOM_VFX_DEF = {
   err404: {frames:13, w:120, h:160},
   overwrite: {frames:13, w:125, h:140},
@@ -11210,26 +9894,6 @@ const AXIOM_VFX_DEF = {
   forcequit: {frames:13, w:120, h:145},
 };
 let activeAxiomVfx = [];
-AXIOM_VFX_IMG["err404"] = new Image();
-AXIOM_VFX_READY["err404"] = false;
-AXIOM_VFX_IMG["err404"].onload = () => { AXIOM_VFX_READY["err404"] = true; };
-AXIOM_VFX_IMG["err404"].src = "assets/vfx/axiom/err404.png";
-AXIOM_VFX_IMG["overwrite"] = new Image();
-AXIOM_VFX_READY["overwrite"] = false;
-AXIOM_VFX_IMG["overwrite"].onload = () => { AXIOM_VFX_READY["overwrite"] = true; };
-AXIOM_VFX_IMG["overwrite"].src = "assets/vfx/axiom/overwrite.png";
-AXIOM_VFX_IMG["teleport_out"] = new Image();
-AXIOM_VFX_READY["teleport_out"] = false;
-AXIOM_VFX_IMG["teleport_out"].onload = () => { AXIOM_VFX_READY["teleport_out"] = true; };
-AXIOM_VFX_IMG["teleport_out"].src = "assets/vfx/axiom/teleport_out.png";
-AXIOM_VFX_IMG["teleport_in"] = new Image();
-AXIOM_VFX_READY["teleport_in"] = false;
-AXIOM_VFX_IMG["teleport_in"].onload = () => { AXIOM_VFX_READY["teleport_in"] = true; };
-AXIOM_VFX_IMG["teleport_in"].src = "assets/vfx/axiom/teleport_in.png";
-AXIOM_VFX_IMG["forcequit"] = new Image();
-AXIOM_VFX_READY["forcequit"] = false;
-AXIOM_VFX_IMG["forcequit"].onload = () => { AXIOM_VFX_READY["forcequit"] = true; };
-AXIOM_VFX_IMG["forcequit"].src = "assets/vfx/axiom/forcequit.png";// Cada burst reproduce TODOS los frames de su animación una sola vez, a un ritmo fijo
 // Un AnimAtlas por tipo (tira horizontal) para los bursts de Axiom -mismo dato
 // AXIOM_VFX_DEF de siempre, ahora armando el clip una sola vez al cargar.
 const AXIOM_VFX_ATLASES = {};
@@ -11265,39 +9929,6 @@ function drawAxiomVfxActive(){
 function drawAxiomReal(h, drawScale, alpha){
   return drawChampPack("axiom", h, drawScale, alpha) || draw3DirRealSprite(AXIOM_REAL_IMG, AXIOM_REAL_READY, h, drawScale, alpha);
 }
-
-/* Arena Acuática: sprites reales de Anguila Eléctrica, Kraken Joven y Leviatán (recortados de la hoja
-   de referencia provista; frames por pose: idle/ataque/embestida/daño/muerte + efectos de agua). */
-const ACUA2_IMG = {};
-const ACUA2_READY = {};
-function acua2Load(key, list){ ACUA2_IMG[key]=[]; ACUA2_READY[key]=0; for(const src of list){ const im=new Image(); im.onload=()=>{ ACUA2_READY[key]++; }; im.src=src; ACUA2_IMG[key].push(im); } }
-acua2Load('eelIdle', ["assets/sprites/enemies/acuatica/anguila_electrica/idle_01.png", "assets/sprites/enemies/acuatica/anguila_electrica/idle_02.png", "assets/sprites/enemies/acuatica/anguila_electrica/idle_03.png", "assets/sprites/enemies/acuatica/anguila_electrica/idle_04.png"]);
-acua2Load('eelAtk', ["assets/sprites/enemies/acuatica/anguila_electrica/atk_01.png"]);
-acua2Load('eelDash', ["assets/sprites/enemies/acuatica/anguila_electrica/dash_01.png", "assets/sprites/enemies/acuatica/anguila_electrica/dash_02.png", "assets/sprites/enemies/acuatica/anguila_electrica/dash_03.png"]);
-acua2Load('eelHurt', ["assets/sprites/enemies/acuatica/anguila_electrica/hurt_01.png", "assets/sprites/enemies/acuatica/anguila_electrica/hurt_02.png"]);
-acua2Load('eelDeath', ["assets/sprites/enemies/acuatica/anguila_electrica/death_01.png", "assets/sprites/enemies/acuatica/anguila_electrica/death_02.png", "assets/sprites/enemies/acuatica/anguila_electrica/death_03.png", "assets/sprites/enemies/acuatica/anguila_electrica/death_04.png", "assets/sprites/enemies/acuatica/anguila_electrica/death_05.png"]);
-acua2Load('krIdle', ["assets/sprites/bosses/acuatica/kraken_joven/idle_01.png", "assets/sprites/bosses/acuatica/kraken_joven/idle_02.png", "assets/sprites/bosses/acuatica/kraken_joven/idle_03.png", "assets/sprites/bosses/acuatica/kraken_joven/idle_04.png"]);
-acua2Load('krHurt', ["assets/sprites/bosses/acuatica/kraken_joven/hurt_01.png", "assets/sprites/bosses/acuatica/kraken_joven/hurt_02.png", "assets/sprites/bosses/acuatica/kraken_joven/hurt_03.png"]);
-acua2Load('krDeath', ["assets/sprites/bosses/acuatica/kraken_joven/death_01.png", "assets/sprites/bosses/acuatica/kraken_joven/death_02.png", "assets/sprites/bosses/acuatica/kraken_joven/death_03.png", "assets/sprites/bosses/acuatica/kraken_joven/death_04.png", "assets/sprites/bosses/acuatica/kraken_joven/death_05.png"]);
-acua2Load('krTent', ["assets/sprites/bosses/acuatica/kraken_joven/tent_01.png", "assets/sprites/bosses/acuatica/kraken_joven/tent_02.png", "assets/sprites/bosses/acuatica/kraken_joven/tent_03.png", "assets/sprites/bosses/acuatica/kraken_joven/tent_04.png", "assets/sprites/bosses/acuatica/kraken_joven/tent_05.png", "assets/sprites/bosses/acuatica/kraken_joven/tent_06.png"]);
-acua2Load('krGrab', ["assets/sprites/bosses/acuatica/kraken_joven/grab_01.png"]);
-acua2Load('krSweep', ["assets/sprites/bosses/acuatica/kraken_joven/sweep_01.png"]);
-acua2Load('levHead', ["assets/sprites/bosses/acuatica/leviatan/head_01.png", "assets/sprites/bosses/acuatica/leviatan/head_02.png"]);
-acua2Load('levCoil', ["assets/sprites/bosses/acuatica/leviatan/coil_01.png", "assets/sprites/bosses/acuatica/leviatan/coil_02.png"]);
-acua2Load('levBite', ["assets/sprites/bosses/acuatica/leviatan/bite_01.png"]);
-acua2Load('levDash', ["assets/sprites/bosses/acuatica/leviatan/dash_01.png", "assets/sprites/bosses/acuatica/leviatan/dash_02.png"]);
-acua2Load('levHit', ["assets/sprites/bosses/acuatica/leviatan/hit_01.png"]);
-acua2Load('levDeath', ["assets/sprites/bosses/acuatica/leviatan/death_01.png", "assets/sprites/bosses/acuatica/leviatan/death_02.png", "assets/sprites/bosses/acuatica/leviatan/death_03.png", "assets/sprites/bosses/acuatica/leviatan/death_04.png"]);
-acua2Load('levP2', ["assets/sprites/bosses/acuatica/leviatan/p2_01.png", "assets/sprites/bosses/acuatica/leviatan/p2_02.png"]);
-acua2Load('levP3', ["assets/sprites/bosses/acuatica/leviatan/p3_01.png"]);
-acua2Load('fxOrb', ["assets/vfx/acuatica/orb_01.png"]);
-acua2Load('fxSplash', ["assets/vfx/acuatica/splash_01.png"]);
-acua2Load('fxSpike', ["assets/vfx/acuatica/spike_01.png"]);
-acua2Load('fxWhirl', ["assets/vfx/acuatica/whirl_01.png"]);
-acua2Load('fxVortex', ["assets/vfx/acuatica/vortex_01.png"]);
-acua2Load('fxWave', ["assets/vfx/acuatica/wave_01.png"]);
-acua2Load('fxSpark', ["assets/vfx/acuatica/spark_01.png"]);
-acua2Load('fxBolt', ["assets/vfx/acuatica/bolt_01.png"]);
 
 /* ============================================================
    ANIMFX + VFX — sistema central de animación procedural y efectos visuales.
@@ -11729,49 +10360,6 @@ function vfxTelegraph(o){
   s.x = o.x!==undefined ? o.x : (s.follow ? s.follow.x : 0); s.y = o.y!==undefined ? o.y : (s.follow ? s.follow.y : 0);
   return s;
 }
-// ---------------- Pack de VFX propio (agua/ataque/cast dark fantasy), generado por Claude ----------------
-// Técnica: formas vectoriales supersampleadas 4x + glow aditivo real, bajadas con LANCZOS -mismo
-// look pintado/suave que el arte real existente (soulFireProj, ronin4, etc.), no pixel-art de bordes duros-.
-const NEWFX_IMG = {}, NEWFX_READY = {};
-function newfxLoad(key, list){ NEWFX_IMG[key]=[]; NEWFX_READY[key]=0; for(const src of list){ const im=new Image(); im.onload=()=>{ NEWFX_READY[key]++; }; im.src=src; NEWFX_IMG[key].push(im); } }
-function newfxReady(key){ const a = NEWFX_IMG[key]; return !!a && NEWFX_READY[key] >= a.length; }
-newfxLoad('iceCrystal', [
-  "assets/vfx/abilities/iceCrystal_01.png"
-]);
-newfxLoad('frostRune', [
-  "assets/vfx/abilities/frostRune_01.png"
-]);
-newfxLoad('scytheSlash', [
-  "assets/vfx/abilities/scytheSlash_01.png",
-  "assets/vfx/abilities/scytheSlash_02.png",
-  "assets/vfx/abilities/scytheSlash_03.png",
-  "assets/vfx/abilities/scytheSlash_04.png"
-]);
-newfxLoad('soulReapBurst', [
-  "assets/vfx/abilities/soulReapBurst_01.png",
-  "assets/vfx/abilities/soulReapBurst_02.png",
-  "assets/vfx/abilities/soulReapBurst_03.png",
-  "assets/vfx/abilities/soulReapBurst_04.png",
-  "assets/vfx/abilities/soulReapBurst_05.png"
-]);
-newfxLoad('holyHealBurst', [
-  "assets/vfx/abilities/holyHealBurst_01.png",
-  "assets/vfx/abilities/holyHealBurst_02.png",
-  "assets/vfx/abilities/holyHealBurst_03.png",
-  "assets/vfx/abilities/holyHealBurst_04.png"
-]);
-newfxLoad('holyShieldBubble', [
-  "assets/vfx/abilities/holyShieldBubble_01.png",
-  "assets/vfx/abilities/holyShieldBubble_02.png",
-  "assets/vfx/abilities/holyShieldBubble_03.png",
-  "assets/vfx/abilities/holyShieldBubble_04.png"
-]);
-newfxLoad('waterSplash', [
-  "assets/vfx/abilities/waterSplash_01.png",
-  "assets/vfx/abilities/waterSplash_02.png",
-  "assets/vfx/abilities/waterSplash_03.png",
-  "assets/vfx/abilities/waterSplash_04.png"
-]);
 const VFX_SPR_MAX = 40, vfxSprites = [];
 for(let i=0;i<VFX_SPR_MAX;i++) vfxSprites.push({on:false, key:"", frame:0, x:0, y:0, h:0, t:0, dur:0, follow:null, grow:0.2, flip:false, anchorY:0.9, alpha:1, fps:0, vx:0, vy:0, ground:false, rot:0});
 // Fuentes de frames para vfxSprite además de las de la Arena Acuática (ACUA2_IMG): arte real ya
@@ -12526,19 +11114,6 @@ function updateBossSkills(e, dt, tgt, dist){
   }
   return false;
 }
-
-/* ---- dibujo ---- */
-const ICE_WALL_IMG = [new Image(), new Image()], ICE_WALL_READY = [false, false];
-const FROST_BEAM_IMG = [new Image(), new Image(), new Image()], FROST_BEAM_READY = [false, false, false];
-ICE_WALL_IMG.forEach((im,i)=>{ im.onload = ()=>{ ICE_WALL_READY[i] = true; }; });
-FROST_BEAM_IMG.forEach((im,i)=>{ im.onload = ()=>{ FROST_BEAM_READY[i] = true; }; });
-// Arte real del zip del Demonio de Hielo (recortado a mano: sin el tablero gris ni los
-// rótulos que traía pegados): bloque de cristal del Muro y 3 frames del chorro.
-ICE_WALL_IMG[0].src = "assets/vfx/bosses/ice-wall_01.png";
-ICE_WALL_IMG[1].src = "assets/vfx/bosses/ice-wall_01.png";
-FROST_BEAM_IMG[0].src = "assets/vfx/bosses/frost-beam_01.png";
-FROST_BEAM_IMG[1].src = "assets/vfx/bosses/frost-beam_02.png";
-FROST_BEAM_IMG[2].src = "assets/vfx/bosses/frost-beam_03.png";
 
 
 // Un segmento del Muro de Hielo (se dibuja ordenado por profundidad junto a las entidades).
