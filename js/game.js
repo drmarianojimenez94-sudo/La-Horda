@@ -4,95 +4,6 @@
    Código del juego que todavía no fue separado en módulos propios.
    ============================================================ */
 
-/* ============================================================
-   SAVE / PERMANENT PROGRESSION
-   ============================================================ */
-const SAVE_KEY = "laHordaSave_v1";
-// Maestría de una habilidad: nivel ganado por uso en combate (useLvl/useXp)
-// + puntos de talento invertidos manualmente (alloc). Ambos se suman.
-function mkMastery(){ return {useXp:0, useLvl:1, alloc:0}; }
-// Talentos/Maestría (permanentes, ver sección "TALENTOS Y MAESTRÍAS" más abajo): nodes/picks/
-// mastery/masteryNodes son independientes por campeón, cambiar de campeón nunca comparte esto.
-function mkTalentState(){ return { nodes:{}, picks:{}, mastery:null, masteryNodes:{} }; }
-// Nota: no puede iterar EQUIP_SLOT_TYPES acá (ese const se define más abajo en el archivo y
-// defaultSave() ya corre en la carga inicial del módulo, antes de esa línea) -> las 6 ranuras
-// van escritas a mano, en el mismo orden que ITEM_TYPES.
-function mkEquipment(){
-  return {arma:null, escudo:null, casco:null, pechera:null, guantes:null, botas:null};
-}
-function mkChampion(unlocked){
-  return {level:1, xp:0, talentPoints:0, unlocked: unlocked!==false,
-    skillMastery:[mkMastery(),mkMastery(),mkMastery()], ultMastery:mkMastery(),
-    inventory:[], equipment:mkEquipment(),
-    talents: mkTalentState()};
-}
-// Saves de antes del rediseño de rarezas usaban ["comun","magico","raro","legendario","mitico","unico"];
-// "magico" pasó a llamarse "raro" y el viejo "raro" pasó a ser "muyraro" (ver RARITIES). Como
-// "raro" es un string válido en AMBOS esquemas (con significado distinto), la única forma segura
-// de no reinterpretar mal un objeto viejo es marcar el save con una versión de esquema: si el
-// save cargado NO tiene esa marca, es de antes del cambio y se remapea completo; si ya la tiene,
-// no se toca nada (evita corromper objetos nuevos que legítimamente son "raro").
-const ITEM_SCHEMA_VERSION = 2;
-const RARITY_KEY_MIGRATION_V1_TO_V2 = {magico:"raro", raro:"muyraro"};
-function migrateItemRarity(it){
-  if(it && RARITY_KEY_MIGRATION_V1_TO_V2[it.rarity]) it.rarity = RARITY_KEY_MIGRATION_V1_TO_V2[it.rarity];
-  return it;
-}
-function defaultSave(){
-  const champions = {};
-  CHAMPION_CATALOG.forEach(c=>{ champions[c.id] = mkChampion(c.unlockedByDefault); });
-  return {
-    champions,
-    itemSchemaV: ITEM_SCHEMA_VERSION,
-    gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
-    divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
-    arenasCleared:{bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false},
-    relics:{hp:0,dmg:0,def:0,vel:0} // permanent small stat items found from élite+ enemies
-  };
-}
-let save = defaultSave();
-function loadSave(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if(raw){
-      const parsed = JSON.parse(raw);
-      const needsRarityMigration = parsed.itemSchemaV !== ITEM_SCHEMA_VERSION;
-      save = Object.assign(defaultSave(), parsed);
-      save.itemSchemaV = ITEM_SCHEMA_VERSION;
-      const defChamps = defaultSave().champions;
-      save.champions = {};
-      Object.keys(defChamps).forEach(k=>{
-        const base = defChamps[k], loaded = (parsed.champions||{})[k] || {};
-        // Object.assign no pisa "unlocked" si el campeón ya estaba guardado de antes sin ese
-        // campo -> las partidas viejas conservan sus campeones ya jugados como desbloqueados.
-        const merged = Object.assign({}, base, loaded);
-        merged.skillMastery = [0,1,2].map(i => Object.assign(mkMastery(), (loaded.skillMastery||[])[i] || {}));
-        merged.ultMastery = Object.assign(mkMastery(), loaded.ultMastery || {});
-        merged.inventory = (loaded.inventory || []).map(it => needsRarityMigration ? migrateItemRarity(it) : it);
-        merged.equipment = Object.assign(mkEquipment(), loaded.equipment || {});
-        // Migración segura de saves viejos sin árbol de talentos: defaults vacíos, nunca
-        // undefined (evita errores al leer nodes/picks/masteryNodes de una partida anterior).
-        const loadedTalents = loaded.talents || {};
-        merged.talents = {
-          nodes: Object.assign({}, loadedTalents.nodes||{}),
-          picks: Object.assign({}, loadedTalents.picks||{}),
-          mastery: loadedTalents.mastery || null,
-          masteryNodes: Object.assign({}, loadedTalents.masteryNodes||{})
-        };
-        save.champions[k] = merged;
-      });
-      save.relics = Object.assign(defaultSave().relics, parsed.relics||{});
-      save.gems = parsed.gems || 0;
-      // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
-      // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
-      // sesión que solo mira sin tocar nada perdería el arreglo al cerrar el navegador.
-      if(needsRarityMigration) persist();
-    }
-  }catch(e){ save = defaultSave(); }
-}
-function persist(){
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){ /* storage unavailable, continue in-memory */ }
-}
 // Curva de experiencia MUY empinada a propósito: subir de nivel de personaje es permanente,
 // así que debe costar un esfuerzo enorme, sobre todo pasados los primeros niveles.
 function xpToNext(level){ return Math.round(80 + level*55 + Math.pow(level,2.3)*4); }
@@ -5838,38 +5749,6 @@ function renderSaveLine(){
   document.getElementById("save-line").innerHTML =
     `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Reliquias permanentes: <b>${totalRelics}</b><br>El progreso se intenta guardar solo en este dispositivo/navegador — si lo abrís desde otro lugar (u otro navegador no lo conserva), usá el código de guardado de abajo.`;
 }
-// Guardado manual por código: además del localStorage automático (que en algunos contextos
-// -como abrir el juego siempre desde un link o una vista previa- puede no persistir entre
-// sesiones), esto permite copiar todo el progreso como texto y restaurarlo a mano después.
-function serializeSaveCode(){
-  return btoa(unescape(encodeURIComponent(JSON.stringify(save))));
-}
-function applySaveCode(code){
-  const parsed = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-  if(!parsed || !parsed.champions) throw new Error("formato inválido");
-  localStorage.setItem(SAVE_KEY, JSON.stringify(parsed));
-  loadSave();
-}
-document.getElementById("export-save-btn").addEventListener("click", ()=>{
-  const code = serializeSaveCode();
-  const finish = ()=> alert("Código copiado. Guardalo en Notas — con eso podés restaurar tu progreso (nivel, ítems, oro) en cualquier momento, aunque el navegador borre los datos.");
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(code).then(finish).catch(()=> prompt("Copiá este código a mano (seleccionalo todo):", code));
-  } else {
-    prompt("Copiá este código a mano (seleccionalo todo):", code);
-  }
-});
-document.getElementById("import-save-btn").addEventListener("click", ()=>{
-  const code = prompt("Pegá acá tu código de guardado:");
-  if(!code) return;
-  try{
-    applySaveCode(code);
-    renderChampGrid(); renderSaveLine();
-    alert("¡Progreso restaurado!");
-  }catch(e){
-    alert("Ese código no es válido o está incompleto.");
-  }
-});
 
 /* ============================================================
    ENTITY FACTORY
