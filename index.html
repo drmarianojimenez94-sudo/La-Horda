@@ -535,7 +535,6 @@ function talentState(classKey){
   return c.talents;
 }
 function talentRank(classKey, id){ return talentState(classKey).nodes[id] || 0; }
-function masteryNodeRank(classKey, id){ return talentState(classKey).masteryNodes[id] || 0; }
 function talentAllNodes(classKey){
   const tree = talentTreeFor(classKey);
   return tree ? tree.nodes : [];
@@ -564,11 +563,6 @@ function talentNodeLockReason(classKey, node){
   }
   if(champ.talentPoints < (node.cost||1)) return `Sin puntos suficientes (necesita ${node.cost||1}, tenés ${champ.talentPoints})`;
   return null;
-}
-function canBuyTalentNode(classKey, id){
-  const node = talentNodeById(classKey, id);
-  if(!node) return false;
-  return talentNodeLockReason(classKey, node) === null;
 }
 // needsConfirm: true si esta compra es una decisión irreversible que debe confirmarse antes
 // (nodo especial que abre una bifurcación exclusiva -sección 8-). El llamador (UI) debe volver
@@ -764,7 +758,6 @@ function talentSkillMods(classKey, skillKey){
   const key = skillKey===undefined ? 0 : skillKey;
   return talentMods(classKey).bySkill[key] || {powerMult:0,areaMult:0,durationMult:0,cdMult:0,jumpBonus:0,flags:{}};
 }
-function talentFlag(classKey, skillKey, flag){ return talentSkillMods(classKey, skillKey).flags[flag]; }
 
 // Teletransporte de Axiom con cargas (sección 12/37): una carga bancada se gasta SIN tocar el
 // cooldown principal (permite encadenar 2-3 teleports), y ese cooldown principal SIEMPRE
@@ -4575,16 +4568,6 @@ function drawProfetaAtlas(h, drawScale, alpha){
   return drawAnimAtlas(PROFETA_ANIM_ATLAS, profetaResolveClip(h), h, drawScale, alpha);
 }
 
-// Íconos de las 4 habilidades (recortados del paquete, fondo removido) para la barra de
-// habilidades cuando el campeón activo es La Profeta -el resto del roster sigue usando los
-// glifos genéricos de siempre (ver #skillzone en el HTML), esto es puramente aditivo.
-const PROFETA_SKILL_ICONS = {
-  destino_restaurado:  "assets/sprites/champions/profeta/unused-skill-icons/destino_restaurado.png",
-  vision_inmortal:      "assets/sprites/champions/profeta/unused-skill-icons/vision_inmortal.png",
-  danza_augurio:        "assets/sprites/champions/profeta/unused-skill-icons/danza_augurio.png",
-  ascension_elegido:    "assets/sprites/champions/profeta/unused-skill-icons/ascension_elegido.png"
-};
-
 
 /* ============================================================
    ENEMIGOS — sprites reales del usuario (5 tipos: esqueleto, demonio_menor,
@@ -7305,56 +7288,6 @@ function drawDeadTree(t){
   ctx.restore();
 }
 
-// Paleta del altar/círculo central según la arena (sección "IDENTIDAD DE ARENAS"): el mismo
-// landmark geométrico (siempre visible, no afecta colisión/pathfinding) ahora se lee como hielo,
-// vida/musgo, piedra desértica o fuego según dónde se está, en vez del mismo altar ígneo en las 4.
-function runeCirclePalette(){
-  if(currentArena==="hielo") return { ring:"rgba(150,210,255,0.35)", rune:p=>`rgba(150,${200+40*p|0},255,${0.75*p+0.25})`, glow:"rgba(140,210,255,0.85)" };
-  if(currentArena==="bosque") return { ring:"rgba(140,220,90,0.35)", rune:p=>`rgba(120,${200+40*p|0},90,${0.75*p+0.25})`, glow:"rgba(120,220,90,0.8)" };
-  if(currentArena==="laberinto") return { ring:"rgba(230,190,110,0.4)", rune:p=>`rgba(220,${175+40*p|0},90,${0.75*p+0.25})`, glow:"rgba(230,190,110,0.85)" };
-  return { ring:"rgba(255,110,40,0.35)", rune:p=>`rgba(255,${80+60*p|0},20,${0.75*p+0.25})`, glow:"rgba(255,90,20,0.8)" };
-}
-function drawRuneCircle(now){
-  const R = 260;
-  const pal = runeCirclePalette();
-  ctx.save();
-  // losa central lisa
-  ctx.fillStyle = "rgba(20,13,11,0.55)";
-  ctx.beginPath(); ctx.ellipse(0,0,R,R*0.72,0,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle = "rgba(90,66,52,0.9)"; ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.ellipse(0,0,R,R*0.72,0,0,Math.PI*2); ctx.stroke();
-  ctx.strokeStyle = pal.ring; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.ellipse(0,0,R-10,(R-10)*0.72,0,0,Math.PI*2); ctx.stroke();
-
-  // grietas internas
-  ctx.strokeStyle = "rgba(0,0,0,0.5)"; ctx.lineWidth = 2;
-  for(let i=0;i<10;i++){
-    const a = i*0.628;
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(a)*30, Math.sin(a)*22);
-    ctx.lineTo(Math.cos(a+0.3)*(R-24), Math.sin(a+0.3)*(R-24)*0.72);
-    ctx.stroke();
-  }
-
-  // cuatro runas grandes que laten
-  const pulse = 0.65 + 0.35*Math.sin(now*1.6);
-  ctx.strokeStyle = pal.rune(pulse);
-  ctx.lineWidth = 7; ctx.lineCap = "square";
-  ctx.shadowColor = pal.glow; ctx.shadowBlur = 16;
-  const runes = [
-    [{x:-70,y:-46},[[0,0],[0,-30],[12,-14],[24,-30],[24,0]]],   // "M"
-    [{x: 40,y:-46},[[0,0],[0,-30],[20,-22],[0,-12]]],           // "R"
-    [{x:-66,y: 26},[[0,-26],[16,-26],[16,0],[0,0],[0,-26]]],    // rombo/caja
-    [{x: 42,y: 26},[[0,0],[0,-28],[18,-28],[6,-14]]]            // "F"
-  ];
-  for(const [o, pts] of runes){
-    ctx.beginPath();
-    pts.forEach((p,i)=> i===0 ? ctx.moveTo(o.x+p[0], o.y+p[1]) : ctx.lineTo(o.x+p[0], o.y+p[1]));
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
 // Colores de las venas/charcos luminosos del suelo, según el tema de la arena actual:
 // fuego (Infernal), grietas de hielo (Hielo) o musgo luminoso (Bosque).
 function arenaVeinColors(pulse){
@@ -8258,13 +8191,6 @@ function drawDivinaCastle(s, now){
   }
   ctx.restore();
   drawDivinaHpBar(s);
-}
-function drawDivinaStructures(now){
-  for(const s of divinaStructures){
-    if(!inView(s.x, s.y, 200)) continue;
-    if(s.type==="castle") drawDivinaCastle(s, now);
-    else drawDivinaTower(s, now);
-  }
 }
 
 /* ============================================================
@@ -9446,15 +9372,6 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{ setState("
    COMBAT HELPERS
    ============================================================ */
 function distance(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
-function nearestEnemy(range){
-  let best=null, bestD=Infinity;
-  for(const e of enemies){ if(!e.alive) continue; const d=distance(player,e); if(d<bestD && (!range||d<=range)){bestD=d;best=e;} }
-  return best;
-}
-function currentDmgMultiplier(){
-  return runStats.dmgMult * player.buffDmgMult;
-}
-function isCrit(){ return Math.random() < runStats.critChance; }
 
 function floatText(x,y,text,cls){
   const el = document.createElement("div");
@@ -9559,12 +9476,6 @@ function startMusic(){
   }
   cycleVoice(0);
   setTimeout(()=>cycleVoice(0), 2600); // segunda voz arrancando desfasada, para que se crucen
-}
-function stopMusic(){
-  musicStarted = false;
-  if(musicLoopTimer) clearTimeout(musicLoopTimer);
-  padOscs.forEach(o=>{ try{o.stop();}catch(e){} });
-  padOscs = [];
 }
 // Efectos breves, todos sintetizados (sin archivos de audio externos)
 function playSfx(type){
@@ -9911,9 +9822,6 @@ function damageHero(h, amount){
     }
   }
 }
-function damagePlayer(amount, opts){ damageHero(player, amount); }
-
-function livingHeroes(){ return heroes.filter(h=>h.alive); }
 function nearestHeroTo(x, y){
   let best=null, bestD=Infinity;
   for(const h of heroes){
@@ -16167,10 +16075,6 @@ function updateBossSkillWorld(dt){
     }
     iceWalls.length = w;
   }
-}
-function resetBossSkillWorld(){
-  iceWalls.length = 0; bossStrikes.length = 0;
-  for(const h of heroes){ h.frostStacks = 0; h.frostTimer = 0; }
 }
 
 // ---- piezas de kit reutilizables ----
