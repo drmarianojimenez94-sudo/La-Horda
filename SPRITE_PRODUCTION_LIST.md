@@ -48,7 +48,7 @@ Dónde se integra en el código (`index.html`):
 | C2 | ~~**Axiom**~~ ✅ | Campeón | **Integrado con el diseño nuevo del Pack 1** (paladín dorado): quieto, caminar, ataque, cast y muerte en 3 direcciones. Habilidades sin cambios | Opcional: golpe recibido y más frames de cast (los del pack venían partidos) |
 | C3 | ~~**Duende del Bosque**~~ ✅ | Ruinas del Bosque, común | **Integrado** (Pack 2, commit de este sprint): caminar 5, idle 3, ataque 4, golpe 1, muerte 3 | Opcional: rehacer ataque/golpe/muerte (varios frames venían partidos por la grilla y se descartaron) |
 | C4 | **Bestia del Bosque** | Ruinas del Bosque, subélite | Usa el sprite del Zombi (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **ataque 3 frames** — *Pack 2 no usable: casi todos los frames vienen partidos a la mitad por la grilla de la hoja JPEG.* |
-| C5 | **Guardián del Laberinto** | Laberinto Maldito, subjefe | Usa el sprite del Gólem (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **golpe/slam 4 frames** |
+| C5 | ~~**Guardián del Laberinto**~~ ✅ | Laberinto Maldito, subjefe | **Integrado** (Pack 3): idle 3, caminar 4, ataque 5, golpe 2, muerte 5. Habilidades sin cambios | Opcional: vistas de frente/espalda (el pack solo trae perfil 3/4) |
 
 ---
 
@@ -72,6 +72,33 @@ Para una próxima tanda con ChatGPT (o cualquier generador), pedí **PNG con tra
 (sin tablero de ajedrez ni fondo blanco), un frame por archivo, sin textos ni grilla**, y el
 **mismo diseño** que el sprite actual (pasale la imagen existente como referencia).
 
+## Revisión de los Packs 3, 4 y 5 (generados con ChatGPT)
+
+Los recortes por celda del zip **no se pudieron usar**: la grilla asumía 6 columnas por fila,
+pero las hojas traen entre 4 y 7, así que casi todos los frames venían partidos o mezclados con
+el vecino. Se recortó todo de nuevo desde las hojas de referencia (`PACK_N_REFERENCE_SHEET.png`),
+quitando el fondo oscuro del panel y las sombras suaves y separando los frames uno por uno.
+Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del juego.
+
+- **Integrado (entidades sin arte propio):** Guardián del Laberinto (C5), Zombi (I11) y
+  Esqueleto Cornudo (I12).
+- **Integrado (reemplazo de sprites de 1 solo frame):** Gólem de Hielo (P5), Demonio de Hielo
+  y Fuego (P8) y Ent (P11, con el Treant Ancestral). **Dos cambian de diseño**, el Demonio y el
+  Ent (ver sus filas): si preferís el aspecto anterior, se vuelve atrás por entidad.
+- **No integrado — el juego ya tiene arte real completo y el diseño del pack es otro:**
+  Minotauro (el del pack es rojo con armadura y hacha; el actual es marrón con capa),
+  Escorpión (violeta en el pack, azul oscuro en el juego), Gólem de Arena (dorado; el Gólem de
+  Piedra actual es gris verdoso), Esfinge (alas plateadas; la actual es toda dorada), Demonio
+  Mayor, Kraken, Leviatán y Anguila Eléctrica (los actuales son más grandes y detallados).
+- **No integrado — calidad:** Dragón de Hielo (Tundraverx, I4). Los frames de caminar miran a
+  la izquierda y los de golpe a la derecha, y el tamaño salta de un frame a otro.
+- **No integrado — no existen en el juego:** todo el Pack 5 (Ángel Guardián, Serafín Caído,
+  Titán de Luz, Demonio Divino, Criaturas Celestiales, Soldado Celestial, Sombra Corrupta,
+  Elemental Divino), además de las torres y castillos celestial e infernal (la Arena Divina ya
+  tiene los suyos). Las ruinas (I13) no vienen en el pack.
+- **VFX de habilidades de los packs:** no se usaron. Son un solo frame cada uno (no animación)
+  y las habilidades que ilustran ya tienen su efecto en el juego.
+
 ## IMPORTANTE
 
 | # | Entidad | Arena / rol | Hoy | A producir |
@@ -86,8 +113,8 @@ Para una próxima tanda con ChatGPT (o cualquier generador), pedí **PNG con tra
 | I8 | **Doblador — Clérigo** | Bosque, subjefe | 1 frame (22×33) | **Caminata 4 frames** + **cast 3 frames** |
 | I9 | **Minotauro** | Laberinto, jefe final | La tira real solo trae perfil caminando (derecha) y espalda (3 frames) | **Ataque 4 frames** (perfil derecha: embestida o hachazo) + **caminata de frente 4 frames** (vista abajo) |
 | I10 | **Demonio Mayor — efectos** | Arena Infernal, jefe | El cuerpo tiene atlas real; el **aliento** y la **onda** se dibujan por código | **Aliento de fuego 4 a 6 frames** (efecto, dirección derecha) + **onda expansiva 4 frames** (anillo/golpe al suelo, vista cenital) |
-| I11 | **Zombi** | Arena Infernal, común | Sprite dibujado por código (no es arte real) | **Caminata 4 frames** (perfil; ideal también espalda) + **ataque 2 frames** + **golpe recibido 1 frame** |
-| I12 | **Esqueleto Cornudo** | Arena Infernal, subélite | Sprite dibujado por código | **Caminata 4 frames** (perfil; ideal también espalda) + **ataque 2 frames** |
+| I11 | ~~**Zombi**~~ ✅ | Arena Infernal, común | **Integrado** (Pack 4): idle 4, caminar 3, ataque 3, golpe 1, muerte 3. *La fila "attack" del pack dibuja otra criatura (con cuernos y lanza): se usaron como ataque los frames de embestida de la fila "hit"* | Opcional: ataque propio (mordida/zarpazo) con el mismo diseño |
+| I12 | ~~**Esqueleto Cornudo**~~ ✅ | Arena Infernal, subélite | **Integrado** (Pack 4): idle 4, caminar 4, ataque 3, golpe 2, muerte 3 | — |
 | I13 | **Arena Divina — ruinas** | Estructuras | La torre y el castillo destruidos son rectángulos dibujados por código | **Torre destruida 1 frame** (~160×217, misma escala que la torre) + **Castillo destruido 1 frame** (~260×139). Opcional: derrumbe de 3 frames |
 
 ---
@@ -101,13 +128,13 @@ Para una próxima tanda con ChatGPT (o cualquier generador), pedí **PNG con tra
 | P2 | **Gólem de Piedra** (Laberinto) | Mismo problema de recortes. **Caminata 4 frames** perfil derecha + 4 frames de frente + **golpe 3 frames** |
 | P3 | **Esfinge** (Laberinto) | **Ataque 3 a 4 frames** (garra o aleteo, perfil derecha). Caminar en las 3 vistas ya existe |
 | P4 | **Muertes del Laberinto** (Esfinge, Medusa, Druida, Minotauro) | **Muerte 4 frames** cada uno (hoy el sistema de VFX anima el sprite de caminata cayendo) |
-| P5 | **Gólem de Hielo** | Caminata 4 + ataque 3 (hoy 1 frame, 91×92) |
+| P5 | ~~**Gólem de Hielo**~~ ✅ | **Integrado** (Pack 4): idle 2, caminar 3, ataque 4, golpe 2, muerte 4 |
 | P6 | **Dragoncito de Hielo** | Vuelo 4 + ataque/escupitajo 3 (hoy 1 frame) |
 | P7 | **Ángel de Hielo y Cristal** | Vuelo 4 + ataque 3 (hoy 1 frame, 122×105) |
-| P8 | **Demonio de Hielo y Fuego** | Caminata 4 + ataque 3 (hoy 1 frame, 146×110). Ver también "No producir": lanzallamas y muro |
+| P8 | ~~**Demonio de Hielo y Fuego**~~ ✅ | **Integrado** (Pack 4, "Demonio de Hielo"): idle 3, caminar 3, ataque 3, golpe 2, muerte 4. **Cambio de diseño:** el pack es un demonio de hielo celeste; el anterior era oscuro con cuernos rojos y hacha. Lanzallamas y Muro de Hielo siguen iguales |
 | P9 | **Enjambre de Hadas** | Aleteo en loop de 4 frames (hoy 1 frame) |
 | P10 | **Cù-Sìth** | Carrera 4 + mordida 3 (hoy 1 frame) |
-| P11 | **Ent** | Caminata 4 + golpe 3 (hoy 1 frame) |
+| P11 | ~~**Ent**~~ ✅ | **Integrado** con el "Treant Ancestral" del Pack 3: idle 4, caminar 4, ataque 4, golpe 2, muerte 5. **Cambio de diseño:** más grande y frondoso que el Ent anterior |
 | P12 | **Dama del Bosque** | Flotación 4 + cast 3 (hoy 1 frame) |
 | P13 | **Gólem de fuego y de hielo** (invocación del Nigromante, según talento) | **Pose de ataque 1 frame** para cada uno (el de piedra ya la tiene) |
 
@@ -181,7 +208,10 @@ de nuevo**:
 
 ## Resumen de conteo
 
-- **CRÍTICO**: 5 entidades (2 campeones sin animación; 3 enemigos con arte prestado).
-- **IMPORTANTE**: 13 ítems (3 jefes finales, 5 subjefes o élites, el Minotauro, los efectos del
-  Demonio Mayor, 2 comunes dibujados por código y las ruinas de la Arena Divina).
-- **POLISH**: 26 ítems (enemigos de un frame, muertes, efectos y 3 reexportaciones).
+- **CRÍTICO**: queda 1 de 5 (Bestia del Bosque, C4). Resueltos: Segador, Axiom, Duende y
+  Guardián del Laberinto.
+- **IMPORTANTE**: quedan 11 de 13. Resueltos: Zombi y Esqueleto Cornudo. Pendientes: los 3 jefes
+  finales de un frame, Tundraverx, los 4 Dobladores, el Minotauro, los efectos del Demonio Mayor
+  y las ruinas de la Arena Divina.
+- **POLISH**: quedan 21 de 26. Resueltos: muertes del Segador y de Axiom, Gólem de Hielo, Demonio
+  de Hielo y Fuego y Ent.
