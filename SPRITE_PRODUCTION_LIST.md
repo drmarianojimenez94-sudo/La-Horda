@@ -46,17 +46,39 @@ Dónde se integra en el código (`index.html`):
 |---|---------|-------------|-----|------------|
 | C1 | **Segador Olvidado** | Campeón | 3 imágenes quietas (abajo/perfil/arriba, ~100×90 px), sin caminata ni ataque | **Caminata 4 frames × 3 vistas** (abajo, perfil derecha, arriba) + **ataque básico 4 frames** (perfil derecha; ideal también abajo y arriba) |
 | C2 | **Axiom** | Campeón | 3 imágenes quietas (abajo/perfil/arriba, ~60×108 px) | **Caminata 4 frames × 3 vistas** + **ataque/cast 4 frames** (perfil derecha; ideal también abajo y arriba). Sus efectos de habilidades YA existen |
-| C3 | **Duende del Bosque** | Ruinas del Bosque, común | Usa el sprite del Esqueleto (prestado) | Sprite propio: **caminata 4 frames** (perfil derecha; ideal también abajo y arriba) + **ataque 3 frames** |
-| C4 | **Bestia del Bosque** | Ruinas del Bosque, subélite | Usa el sprite del Zombi (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **ataque 3 frames** |
+| C3 | ~~**Duende del Bosque**~~ ✅ | Ruinas del Bosque, común | **Integrado** (Pack 2, commit de este sprint): caminar 5, idle 3, ataque 4, golpe 1, muerte 3 | Opcional: rehacer ataque/golpe/muerte (varios frames venían partidos por la grilla y se descartaron) |
+| C4 | **Bestia del Bosque** | Ruinas del Bosque, subélite | Usa el sprite del Zombi (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **ataque 3 frames** — *Pack 2 no usable: casi todos los frames vienen partidos a la mitad por la grilla de la hoja JPEG.* |
 | C5 | **Guardián del Laberinto** | Laberinto Maldito, subjefe | Usa el sprite del Gólem (prestado) | Sprite propio: **caminata 4 frames** (perfil; ideal también abajo y arriba) + **golpe/slam 4 frames** |
 
 ---
+
+## Revisión de los Packs 1 y 2 (generados con ChatGPT)
+
+Se revisaron los 541 recortes. Venían de hojas JPEG con grilla y texto, así que muchos frames
+quedaron con líneas de grilla, restos de celdas vecinas, halos grises o el cuerpo partido.
+
+- **Integrado:** Duende del Bosque (ver C3). Se limpió automáticamente y se descartaron los
+  frames partidos.
+- **No integrado — rediseño de personajes existentes:** el **Segador** del pack es un parca
+  violeta con guadaña, pero el Segador del juego es un caballero rojo y negro con mandoble. El
+  **Axiom** del pack es un paladín dorado, pero el Axiom del juego es un chico de pelo blanco con
+  una tableta. Reemplazarlos cambiaría la identidad visual de los campeones: queda a tu
+  decisión. Los VFX del Pack 1 (golpe sagrado, barrera temporal, pulso cronal, nova oscura,
+  corte sinfonal, cataclismo) no corresponden a ninguna habilidad real de esos campeones.
+- **No integrado — enemigos que no existen en el juego:** araña gigante, arquero, druida
+  corrompido, escorpión del bosque, espíritu, lobo sombrío, planta carnívora y treant
+  ancestral. Además el treant viene con los frames desalineados.
+- **No integrado — calidad:** Bestia del Bosque (C4) y Jinete (I1), ver sus filas.
+
+Para una próxima tanda con ChatGPT (o cualquier generador), pedí **PNG con transparencia real
+(sin tablero de ajedrez ni fondo blanco), un frame por archivo, sin textos ni grilla**, y el
+**mismo diseño** que el sprite actual (pasale la imagen existente como referencia).
 
 ## IMPORTANTE
 
 | # | Entidad | Arena / rol | Hoy | A producir |
 |---|---------|-------------|-----|------------|
-| I1 | **Jinete Sin Cabeza** | Ruinas del Bosque, jefe final | 1 frame (54×50) | **Galope 4 frames** (perfil derecha) + **ataque 4 frames**. Opcional: pose de "Resurrección Eterna" (2 a 3 frames) |
+| I1 | **Jinete Sin Cabeza** | Ruinas del Bosque, jefe final | 1 frame (54×50) | **Galope 4 frames** (perfil derecha) + **ataque 4 frames**. Opcional: pose de "Resurrección Eterna" (2 a 3 frames) — *El Pack 2 trae otro diseño (caballo negro con cabeza en llamas) distinto del Jinete actual (caballo pálido), con halos grises y cortes: no se integró.* |
 | I2 | **Mago de Hielo y Cristal** | Hielo, jefe final (fase 1) | 1 frame (38×44). Los efectos de Ventisca, Nova y Armadura YA existen | **Caminata o flotación 4 frames** + **cast 3 frames** |
 | I3 | **Ángel Caído de Hielo** | Hielo, jefe final (fase 2) | 1 frame (42×43) | **Vuelo/caminata 4 frames** + **ataque 4 frames** |
 | I4 | **Tundraverx (Dragón de Hielo)** | Hielo, élite/jefe intermedio | 1 frame (39×38). El Aliento y la Nova (con el cuerpo incluido) YA existen | **Vuelo/caminata 4 frames** (perfil derecha) |
