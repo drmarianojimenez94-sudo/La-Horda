@@ -21,7 +21,7 @@ function renderChampGrid(){
       <div class="champ-role">${cls.role}</div>
       <div class="champ-lvl">Nv. ${champ.level}</div>
     `;
-    card.addEventListener("click", ()=>{ selectedClass = key; renderChampGrid(); });
+    card.addEventListener("click", ()=>{ selectedClass = key; if(typeof netRememberChamp==="function") netRememberChamp(key); renderChampGrid(); });
     grid.appendChild(card);
   });
   startChampPreviewLoop();

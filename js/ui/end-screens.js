@@ -41,7 +41,8 @@ function showGameOverScreen(divinaOutcome){
   }
   title.textContent = "La Horda te ha consumido";
   title.style.color = "#c62828";
-  retryBtn.textContent = netMatch ? "Volver a la sala" : "Reintentar desde el Nivel 1";
+  retryBtn.textContent = netMatch ? "VOLVER AL LOBBY" : "Reintentar desde el Nivel 1";
+  if(netMatch) netOnEndScreen(false); else netEndLabels();
   const penalty = applyArenaFailurePenalty(player.classKey);
   // Derrota: la performance igual se muestra, y a veces hay un objeto de consuelo (ver DEFEAT_LOOT)
   const perf = computePerformance(player);
@@ -202,7 +203,8 @@ function renderVictoryStep(){
   const isLast = victoryStep === VICTORY_STEPS.length-1;
   nextBtn.textContent = isLast ? "Continuar" : "Continuar";
   nextBtn.classList.toggle("hidden", false);
-  document.getElementById("again-btn").textContent = (netMatch || netInRoom()) ? "Volver a la sala" : "Volver a entrar";
+  document.getElementById("again-btn").textContent = (netMatch || netInRoom()) ? "VOLVER AL LOBBY" : "Volver a entrar";
+  netEndLabels();
   document.getElementById("again-btn").classList.toggle("hidden", !isLast);
   document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
   if(isLast) nextBtn.classList.add("hidden");
@@ -227,6 +229,7 @@ function showVictoryScreen(){
   victoryData = buildVictoryData();
   victoryStep = 0;
   renderVictoryStep();
+  if(netMatch) netOnEndScreen(true);
 }
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
   if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); }

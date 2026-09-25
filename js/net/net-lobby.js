@@ -8,7 +8,9 @@
      arena (la arena es la del anfitrión) -> prepara su equipo -> LISTO -> espera el comienzo.
    Sin sala, la pre-sala funciona exactamente como antes (vos + 3 bots, sin conexión).
    ============================================================ */
-const netLobby = { loadouts:{}, pendingJoin:null, loadoutTimer:null, lastError:"" };
+const netLobby = { loadouts:{}, pendingJoin:null, loadoutTimer:null, lastError:"", matches:0, autoCreate:false, autoTimer:null, roomGone:false };
+// Color de cada jugador (P1-P4): sala, nombres sobre el personaje y marcadores.
+const NET_SLOT_COLORS = ["#ff7a2e","#3fa7ff","#4fd16a","#c77dff"];
 const NET_ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
 const NET_ERRORS = {
   ROOM_FULL:"SALA COMPLETA: ya hay 4 jugadores.", NOT_FOUND:"No existe esa sala (¿el anfitrión la cerró?).",
@@ -17,6 +19,7 @@ const NET_ERRORS = {
   HOST_RECONNECT:"El anfitrión no puede volver a entrar a su sala."
 };
 
+function netNotReady(){ return net.room ? net.room.slots.filter((s,i)=> i>0 && s && s.connected && !s.ready) : []; }
 function netInRoom(){ return !!(net.room && net.role); }
 function netHumanCount(){ return net.room ? net.room.slots.filter(s=>s && s.connected).length : 1; }
 function netDuplicateChamps(){
@@ -43,23 +46,28 @@ function netRenderLobbyBar(){
   } else if(net.role==="host"){
     const url = netInviteUrl();
     const dup = netDuplicateChamps();
+    const arenaOpts = ARENA_ORDER.filter(k=>isArenaUnlocked(k)).map(k=>`<option value="${k}" ${k===currentArena?"selected":""}>${(ARENA_MODS[k]||{}).label||k}</option>`).join("");
     bar.innerHTML = `<div class="net-row">${nameInput}<span class="net-code">SALA <b>${net.code}</b></span>
         <button class="btn small" id="net-copy-btn">📋 Copiar enlace</button>
         ${navigator.share ? `<button class="btn small" id="net-share-btn">📨 Invitar</button>` : ""}
         <button class="btn secondary small" id="net-close-btn">Cerrar sala</button></div>
-      <div class="net-hint">Mandá el enlace a tus amigos (hasta 3). Aparecen acá en tiempo real. Cuando quieras, COMENZAR: los lugares libres los ocupan bots.</div>
+      <div class="net-row"><label class="net-name net-arena">Arena <select id="net-arena-sel">${arenaOpts}</select></label></div>
+      <div class="net-hint">Mandá el enlace (o el código <b>${net.code}</b>) a tus amigos: lo pegan en MULTIJUGADOR → Unirse. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots.</div>
       <div class="net-link">${url}</div>
+      ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Hay campeones repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
       ${netLobby.lastError ? `<div class="net-err">${netLobby.lastError}</div>` : ""}`;
   } else {
     const me = net.room.slots[net.slot] || {};
     const dup = netDuplicateChamps();
+    const hostBusy = net.room.state!=="lobby";
     bar.innerHTML = `<div class="net-row">${nameInput}<span class="net-code">SALA <b>${net.code}</b> · Anfitrión: ${(net.room.slots[0]||{}).name||"?"}</span>
-        <button class="btn small ${me.ready?"ready-on":""}" id="net-ready-btn">${me.ready ? "✔ LISTO" : "Marcar LISTO"}</button>
-        <button class="btn secondary small" id="net-champ-btn">Cambiar campeón</button>
+        <button class="btn small ${me.ready?"ready-on":""}" id="net-ready-btn" ${hostBusy?"disabled":""}>${me.ready ? "✔ LISTO" : "Marcar LISTO"}</button>
         <button class="btn secondary small" id="net-leave-btn">Salir de la sala</button></div>
-      <div class="net-hint">Prepará tu equipo. El anfitrión decide cuándo comenzar.</div>
-      ${dup.length ? `<div class="net-err">Tu campeón ya lo usa otro jugador: tocá "Cambiar campeón".</div>` : ""}`;
+      <div class="net-hint">Elegí tu campeón y prepará tu equipo. Arena: <b>${(ARENA_MODS[currentArena]||{}).label||""}</b> (la elige el anfitrión).</div>
+      ${hostBusy ? `<div class="net-wait-host">El anfitrión todavía está en la partida/resultados: cuando vuelva a la sala vas a poder marcar LISTO.</div>` : ""}
+      ${netChampStripHTML()}
+      ${dup.length ? `<div class="net-err">Tu campeón ya lo usa otro jugador: elegí otro.</div>` : ""}`;
   }
   const ni = document.getElementById("net-name-input");
   if(ni) ni.addEventListener("change", ()=>{ netSetPlayerName(ni.value); });
@@ -78,9 +86,19 @@ function netRenderLobbyBar(){
   const cl = document.getElementById("net-close-btn");
   if(cl) cl.addEventListener("click", ()=>{ if(confirm("¿Cerrar la sala? Los jugadores conectados vuelven al menú.")){ netLeaveRoom(); renderPrepSummary(); } });
   const rd = document.getElementById("net-ready-btn");
-  if(rd) rd.addEventListener("click", ()=>{ const me = net.room.slots[net.slot]||{}; netSendLoadout(true); netSend({t:"update", ready:!me.ready}); });
-  const ch = document.getElementById("net-champ-btn");
-  if(ch) ch.addEventListener("click", ()=>{ setState("menu"); renderChampGrid(); renderSaveLine(); });
+  if(rd) rd.addEventListener("click", ()=>{
+    const me = net.room.slots[net.slot]||{};
+    if(!me.ready && netDuplicateChamps().includes(selectedClass)){ showNetToast("Ese campeón ya lo usa otro jugador: elegí otro."); return; }
+    netSendLoadout(true); netSend({t:"update", ready:!me.ready});
+  });
+  bar.querySelectorAll("[data-net-champ]").forEach(b=> b.addEventListener("click", ()=> netPickChamp(b.getAttribute("data-net-champ"))));
+  const as = document.getElementById("net-arena-sel");
+  if(as) as.addEventListener("change", ()=>{
+    if(!isArenaUnlocked(as.value)) return;
+    currentArena = as.value; updateMenuBrandSub();
+    netSend({t:"update", arena:currentArena});
+    renderPrepSummary();
+  });
   const lv = document.getElementById("net-leave-btn");
   if(lv) lv.addEventListener("click", ()=>{ netLeaveRoom(); setState("mainmenu"); renderMainMenu(); });
 }
@@ -89,6 +107,30 @@ function netCopy(text, btn){
   if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(()=>{ prompt("Copiá este enlace:", text); }); }
   else prompt("Copiá este enlace:", text);
 }
+// Elegir campeón DENTRO de la sala (anfitrión e invitados): los que usa otro jugador salen
+// deshabilitados. Cambiar de campeón te saca el LISTO (tenés que prepararte de nuevo).
+function netTakenChamps(){
+  const t = new Set();
+  if(net.room) net.room.slots.forEach((s,i)=>{ if(s && s.connected && i!==net.slot) t.add(s.champ); });
+  return t;
+}
+function netChampStripHTML(){
+  const taken = netTakenChamps();
+  const btns = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false).map(k=>{
+    const c = CLASSES[k], lv = save.champions[k].level;
+    return `<button class="net-champ ${k===selectedClass?"sel":""}" data-net-champ="${k}" ${taken.has(k)&&k!==selectedClass?"disabled":""} title="${c.name}">${c.icon||""} ${c.name} · ${lv}</button>`;
+  }).join("");
+  return `<div class="net-hint">Tu campeón:</div><div class="net-champs">${btns}</div>`;
+}
+function netPickChamp(k){
+  if(!CLASSES[k] || !save.champions[k] || k===selectedClass) return;
+  if(netTakenChamps().has(k)){ showNetToast("Ese campeón ya lo usa otro jugador."); return; }
+  selectedClass = k; netRememberChamp(k);
+  if(net.role==="guest"){ netSend({t:"update", ready:false}); netSendLoadout(true); }
+  else netSend({t:"update", champ:k, level:save.champions[k].level});
+  renderPrepSummary();
+}
+function netRememberChamp(k){ try{ save.lastChamp = k; persist(); }catch(e){} }
 // Lugares de la sala (reemplaza la vista "vos + 3 bots" cuando hay una sala online).
 function netRenderLobbySlots(){
   const slots = document.getElementById("lobby-slots"); if(!slots || !net.room) return;
@@ -98,12 +140,12 @@ function netRenderLobbySlots(){
     const you = i===net.slot, key = you ? selectedClass : s.champ;
     const cls = CLASSES[key] || CLASSES.guerrero;
     const lv = you ? save.champions[selectedClass].level : s.level;
-    const tag = i===0 ? "HOST" : (you ? "VOS" : "AMIGO");
+    const tag = `P${i+1} · ` + (i===0 ? "HOST" : (you ? "VOS" : "AMIGO"));
     const st = !s.connected ? `<div class="lobby-ready off">⚠ Sin conexión</div>` : (i===0 ? `<div class="lobby-ready">● Conectado</div>` : (s.ready ? `<div class="lobby-ready">✔ Listo</div>` : `<div class="lobby-ready wait">● Conectado</div>`));
-    return `<div class="lobby-slot ${you?"you":""}">
-      <div class="lobby-tag ${you?"you":(i===0?"host":"friend")}">${tag}</div>
+    return `<div class="lobby-slot pc${i} ${you?"you":""}">
+      <div class="lobby-tag p${i}">${tag}</div>
       <canvas class="champ-anim lobby-anim" width="88" height="88" data-class-key="${key}" style="background:${cls.color}1c;"></canvas>
-      <div class="lobby-name">${s.name}</div>
+      <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>
       <div class="lobby-meta">${cls.name} · ${NET_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv||1}</div>
       ${st}
@@ -113,8 +155,10 @@ function netRenderLobbySlots(){
   if(startBtn){
     if(net.role==="host"){
       const dup = netDuplicateChamps().length>0;
+      const waiting = netNotReady().length;
       startBtn.disabled = dup;
-      startBtn.textContent = `Comenzar (${netHumanCount()} ${netHumanCount()===1?"jugador":"jugadores"} + ${4-netHumanCount()} bots)`;
+      const verb = netLobby.matches>0 ? `Reintentar · ${(ARENA_MODS[currentArena]||{}).label||""}` : "Comenzar";
+      startBtn.textContent = `${verb} (${netHumanCount()} ${netHumanCount()===1?"jugador":"jugadores"} + ${4-netHumanCount()} bots)` + (waiting ? ` · faltan ${waiting} LISTO` : "");
       startBtn.classList.remove("hidden");
     } else {
       startBtn.textContent = "Esperando que el anfitrión comience…";
@@ -149,6 +193,9 @@ netOn("joined", (m)=>{
 });
 netOn("room", (room)=>{
   if(netMatch && netIsHost()) netHostOnRoom(room);
+  if(net.role==="guest" && !netIsGuestPlaying() && room.arena && room.arena!==currentArena){ currentArena = room.arena; }
+  // el anfitrión volvió a la sala: los invitados que siguen en los resultados lo siguen solos
+  if(net.role==="guest" && room.state==="lobby" && (state==="gameover" || state==="victory")) netStartAutoReturn(4, "El anfitrión volvió a la sala");
   if(state==="prep") renderPrepSummary();
   if(typeof netDebugRefresh==="function") netDebugRefresh();
 });
@@ -158,7 +205,14 @@ netOn("msg", (from, d)=>{
 });
 netOn("closed", (reason, role)=>{
   if(netMatch && (state==="playing" || state==="buff" || state==="paused")){ netOnMatchClosed(reason, role); return; }
-  netMatch = null;
+  if(netMatch){ netRestoreBackups(); netMatch = null; persistNow(); }
+  netCancelAutoReturn();
+  if(state==="gameover" || state==="victory"){
+    // estaba viendo los resultados: la sala ya no existe -> el botón lleva al menú
+    netLobby.roomGone = true; netEndLabels();
+    showNetToast(reason==="host_left" ? "El anfitrión cerró la sala." : "Se perdió la conexión con la sala.");
+    return;
+  }
   netLobby.lastError = reason==="host_left" ? "El anfitrión cerró la sala." : (reason==="kicked" ? "Te sacaron de la sala." : "Se perdió la conexión con la sala.");
   if(state==="prep" || state==="menu"){
     if(role==="guest"){ setState("mainmenu"); renderMainMenu(); showNetToast(netLobby.lastError); }
@@ -170,6 +224,8 @@ netOn("error", (m)=>{
   if(state==="prep") netRenderLobbyBar();
   const tj = document.getElementById("title-join-status");
   if(tj) tj.textContent = netLobby.lastError;
+  const ms = document.getElementById("multi-status");
+  if(ms && state==="multi") ms.textContent = netLobby.lastError;
   showNetToast(netLobby.lastError);
 });
 function showNetToast(text){
@@ -211,4 +267,133 @@ function showNetToast(text){
     }
     btn.disabled = false; btn.textContent = `Unirse a la sala ${code}`;
   });
+})();
+
+function netIsGuestPlaying(){ return !!(netMatch && netMatch.role==="guest" && !netMatch.ended); }
+
+/* ---------------- LOOP DE LA SALA: partida -> resultados -> la MISMA sala ----------------
+   Derrota (team wipe) o victoria -> resultados -> VOLVER AL LOBBY. El anfitrión vuelve (botón, o
+   solo a los 20 s en una derrota) y la sala pasa a "esperando": los invitados que siguen en los
+   resultados vuelven solos a los pocos segundos. Misma sala, mismo código, misma arena, mismos
+   jugadores; LISTO vuelve a NO LISTO (lo resetea el servidor) y cada uno puede cambiar de
+   campeón, equipo y talentos antes de marcar LISTO otra vez. */
+function netEndLabels(){
+  const online = !!(netMatch || netInRoom());
+  const back = netLobby.roomGone ? "Volver al menú" : "VOLVER AL LOBBY";
+  const r = document.getElementById("retry-btn"), a = document.getElementById("again-btn");
+  const m1 = document.getElementById("menu-btn-1"), m2 = document.getElementById("menu-btn-2");
+  if(online || netLobby.roomGone){
+    if(r) r.textContent = back;
+    if(a) a.textContent = back;
+    const leave = netLobby.roomGone ? "Volver al menú" : (net.role==="host" ? "Cerrar la sala y salir" : "Salir de la sala");
+    if(m1) m1.textContent = leave;
+    if(m2) m2.textContent = leave;
+  } else {
+    if(m1) m1.textContent = "Volver al menú";
+    if(m2) m2.textContent = "Volver al menú";
+  }
+}
+function netCancelAutoReturn(){ if(netLobby.autoTimer){ clearInterval(netLobby.autoTimer); netLobby.autoTimer = null; } }
+function netStartAutoReturn(secs, why){
+  if(netLobby.autoTimer) return;
+  let left = secs;
+  if(why) showNetToast(why);
+  const tick = ()=>{
+    if(state!=="gameover" && state!=="victory"){ netCancelAutoReturn(); return; }
+    const r = document.getElementById(state==="gameover" ? "retry-btn" : "again-btn");
+    if(left<=0){ netCancelAutoReturn(); netBackToRoomIfAny(); return; }
+    if(r) r.textContent = `VOLVER AL LOBBY (${left})`;
+    left--;
+  };
+  tick();
+  netLobby.autoTimer = setInterval(tick, 1000);
+}
+// Llamado al mostrar la pantalla de derrota/victoria de una partida online.
+function netOnEndScreen(victory){
+  netLobby.roomGone = false;
+  netEndLabels();
+  if(net.role==="host" && !victory) netStartAutoReturn(20);
+  // el invitado que llega tarde a los resultados y el anfitrión ya volvió: lo sigue
+  if(net.role==="guest" && net.room && net.room.state==="lobby") netStartAutoReturn(4, "El anfitrión ya volvió a la sala");
+}
+
+/* ---------------- MULTIJUGADOR: crear sala / unirse pegando el enlace o el código ---------------- */
+// Acepta el enlace completo (…index.html?room=QKL58J[&server=…]), "SALA QKL58J" o el código solo.
+function netParseInvite(txt){
+  txt = String(txt||"").trim();
+  if(!txt) return null;
+  let code = null, server = null;
+  const m = txt.match(/[?&#]room=([A-Za-z0-9]+)/);
+  if(m){
+    code = m[1];
+    const sm = txt.match(/[?&]server=([^&#\s]+)/);
+    if(sm){ try{ server = decodeURIComponent(sm[1]); }catch(e){} }
+  } else {
+    const c = txt.toUpperCase().replace(/^SALA\s*/, "").replace(/[^A-Z0-9]/g, "");
+    if(c.length>=4 && c.length<=8) code = c;
+  }
+  if(!code) return null;
+  return {code: code.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0,8), server};
+}
+function renderMultiScreen(){
+  if(netAvailable()) netWarmup();
+  const nm = document.getElementById("multi-name");
+  if(nm) nm.value = netPlayerName()==="Jugador" ? "" : netPlayerName();
+  const sel = document.getElementById("multi-champ");
+  if(sel){
+    sel.innerHTML = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false)
+      .map(k=>`<option value="${k}" ${k===selectedClass?"selected":""}>${CLASSES[k].name} · Nv. ${save.champions[k].level}</option>`).join("");
+  }
+  const st = document.getElementById("multi-status");
+  if(st) st.textContent = netAvailable() ? "" : "El modo online no está configurado en esta versión.";
+}
+async function netJoinFromInput(){
+  const st = document.getElementById("multi-status");
+  const btn = document.getElementById("multi-join-btn");
+  const inv = netParseInvite((document.getElementById("multi-code")||{}).value);
+  if(!inv){ if(st) st.textContent = "Pegá el enlace de invitación o escribí el código de 6 letras."; return; }
+  if(inv.server) net.serverOverride = inv.server;
+  if(!netAvailable()){ if(st) st.textContent = "El modo online no está configurado en esta versión."; return; }
+  const nm = document.getElementById("multi-name"); if(nm) netSetPlayerName(nm.value);
+  const sel = document.getElementById("multi-champ");
+  if(sel && sel.value && save.champions[sel.value]){ selectedClass = sel.value; netRememberChamp(selectedClass); }
+  if(netInRoom()) netLeaveRoom();
+  netLobby.lastError = "";
+  if(btn){ btn.disabled = true; btn.textContent = "Conectando… (hasta 1 minuto si el servidor dormía)"; }
+  if(st) st.textContent = "";
+  try{ await netJoinRoom(inv.code, selectedClass, (save.champions[selectedClass]||{}).level||1); }
+  catch(e){ if(st) st.textContent = "No se pudo conectar: "+(e.message||e); netLog("NETWORK_ERROR", {join:String(e.message||e)}); }
+  if(btn){ btn.disabled = false; btn.textContent = "Unirse"; }
+}
+(function netSetupMultiScreen(){
+  const open = document.getElementById("mainmenu-multi-btn");
+  if(open) open.addEventListener("click", ()=>{ setState("multi"); renderMultiScreen(); });
+  const back = document.getElementById("multi-back-btn");
+  if(back) back.addEventListener("click", ()=>{ setState("mainmenu"); renderMainMenu(); });
+  const join = document.getElementById("multi-join-btn");
+  if(join) join.addEventListener("click", netJoinFromInput);
+  const code = document.getElementById("multi-code");
+  if(code) code.addEventListener("keydown", (e)=>{ if(e.key==="Enter") netJoinFromInput(); });
+  const paste = document.getElementById("multi-paste-btn");
+  if(paste) paste.addEventListener("click", async ()=>{
+    try{ const t = await navigator.clipboard.readText(); if(t && code) code.value = t.trim(); }
+    catch(e){ if(code) code.focus(); showNetToast("Mantené apretado el cuadro y elegí Pegar."); }
+  });
+  const sel = document.getElementById("multi-champ");
+  if(sel) sel.addEventListener("change", ()=>{ if(save.champions[sel.value]){ selectedClass = sel.value; netRememberChamp(selectedClass); } });
+  const nm = document.getElementById("multi-name");
+  if(nm) nm.addEventListener("change", ()=> netSetPlayerName(nm.value));
+  const create = document.getElementById("multi-create-btn");
+  if(create) create.addEventListener("click", ()=>{
+    if(nm) netSetPlayerName(nm.value);
+    netLobby.autoCreate = true;
+    setState("arenaselect"); renderArenaGrid();
+  });
+})();
+// El campeón elegido la última vez (en la selección, la sala o Multijugador) queda recordado.
+(function netRestoreLastChamp(){
+  try{
+    const k = save.lastChamp;
+    if(k && CLASSES[k] && save.champions[k] && save.champions[k].unlocked!==false) selectedClass = k;
+  }catch(e){}
 })();

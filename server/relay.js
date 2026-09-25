@@ -140,8 +140,14 @@ function handle(ws, msg){
         if(msg.champ !== undefined) me.champ = clean(msg.champ, 24);
         if(msg.level !== undefined) me.level = msg.level|0;
         if(msg.name !== undefined) me.name = clean(msg.name, 24) || me.name;
+        // el anfitrión puede cambiar la arena desde la sala (entre partidas)
+        if(msg.arena !== undefined && ws._slot === 0) room.arena = clean(msg.arena, 24) || room.arena;
+      } else if(msg.champ !== undefined && ws._slot > 0){
+        // un invitado que ya volvió a la sala mientras el anfitrión mira los resultados
+        me.champ = clean(msg.champ, 24);
+        if(msg.level !== undefined) me.level = msg.level|0;
       }
-      if(msg.ready !== undefined) me.ready = !!msg.ready;
+      if(msg.ready !== undefined) me.ready = room.state === "lobby" ? !!msg.ready : false; // LISTO solo cuenta en la sala
       if(ws._slot === 0) me.ready = true; // el anfitrión siempre está listo: decide cuándo comenzar
       broadcastRoom(room);
       return;

@@ -38,7 +38,21 @@ document.getElementById("shop-back-btn").addEventListener("click", ()=>{
 document.getElementById("champdetail-back-btn").addEventListener("click", ()=>{
   setState("shop"); renderShop();
 });
+// PLAYTEST V1: bono único de 2.000 de oro para cada jugador (una sola vez por guardado, nunca
+// se repite: queda marcado en save.playtestV1Bonus).
+const PLAYTEST_V1_GOLD = 2000;
+let playtestBonusJustGranted = false;
+(function grantPlaytestV1Bonus(){
+  try{
+    if(save.playtestV1Bonus) return;
+    save.playtestV1Bonus = true;
+    save.gold = (save.gold||0) + PLAYTEST_V1_GOLD;
+    playtestBonusJustGranted = true;
+    persist();
+  }catch(e){}
+})();
 function renderMainMenu(){
+  if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
@@ -228,6 +242,8 @@ document.getElementById("start-btn").addEventListener("click", ()=>{
   lobbyAllies = pickLobbyAllies(selectedClass);
   setState("prep");
   renderPrepSummary();
+  // Multijugador -> Crear sala: al llegar a la sala se crea sola (con la arena y el campeón elegidos)
+  if(netLobby.autoCreate){ netLobby.autoCreate = false; const cb = document.getElementById("net-create-btn"); if(cb) cb.click(); }
 });
 document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
@@ -246,6 +262,8 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
       if(net.role!=="host") return; // el anfitrión decide cuándo comenzar
       if(netDuplicateChamps().length){ netRenderLobbyBar(); return; }
       if(!isArenaUnlocked(currentArena)){ alert("Esa arena todavía no la desbloqueaste."); return; }
+      const nr = netNotReady();
+      if(nr.length && !confirm(`${nr.map(s=>s.name).join(", ")} todavía no ${nr.length>1?"están":"está"} LISTO. ¿Comenzar igual?`)) return;
       netHostStartGame();
       return;
     }
@@ -410,6 +428,8 @@ function renderChampInventory(panel, classKey, rerender){
 }
 function netBackToRoomIfAny(){
   // B1: al terminar una partida online, "volver a la sala" mantiene el mismo código
+  netCancelAutoReturn();
+  if(netLobby.roomGone && !netInRoom()){ netLobby.roomGone = false; netMatch = null; setState("mainmenu"); renderMainMenu(); return true; }
   if(!netMatch && !netInRoom()) return false;
   netFinishMatch();
   if(netInRoom()){ setState("prep"); renderPrepSummary(); return true; }
@@ -420,13 +440,22 @@ document.getElementById("retry-btn").addEventListener("click", ()=>{
   if(currentArena==="divina"){ startDivinaExploration(); return; }
   startRun(1);
 });
+function netLeaveAfterMatch(){
+  // "Salir de la sala" / "Cerrar la sala y salir" desde los resultados
+  netCancelAutoReturn();
+  const gone = netLobby.roomGone; netLobby.roomGone = false;
+  if(netMatch || netInRoom()){ netFinishMatch(); if(netInRoom()) netLeaveRoom(); return true; }
+  return gone;
+}
 document.getElementById("menu-btn-1").addEventListener("click", ()=>{
-  if(netMatch || netInRoom()){ netFinishMatch(); if(netInRoom()) netLeaveRoom(); }
+  if(net.role==="host" && netHumanCount()>1 && !confirm("¿Cerrar la sala? Tus amigos vuelven al menú.")) return;
+  if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
   if(currentArena==="divina"){ setState("divina"); return; }
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
 document.getElementById("again-btn").addEventListener("click", ()=>{ if(netBackToRoomIfAny()) return; startRun(1); });
 document.getElementById("menu-btn-2").addEventListener("click", ()=>{
-  if(netMatch || netInRoom()){ netFinishMatch(); if(netInRoom()) netLeaveRoom(); }
+  if(net.role==="host" && netHumanCount()>1 && !confirm("¿Cerrar la sala? Tus amigos vuelven al menú.")) return;
+  if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
   setState("menu"); renderChampGrid(); renderSaveLine();
 });

@@ -285,3 +285,26 @@
 #net-debug-panel .nd-row span:last-child{ text-align:right; word-break:break-all; }
 #net-debug-panel .nd-log{ margin-top:6px; color:#9fb8cf; }
 #prep-screen{ justify-content:flex-start; } /* contenido alto (equipo/árbol): que se pueda scrollear desde arriba */
+/* B1: pantalla Multijugador (unirse pegando el enlace/código) */
+#multi-screen{ justify-content:flex-start; overflow-y:auto; }
+.multi-box{ font-family:var(--font-retro); width:min(560px, 92vw); background:rgba(20,12,8,0.7); border:2px solid #000; box-shadow:inset 0 0 0 1px rgba(255,160,90,0.15);
+  padding:10px 12px; margin:6px 0; display:flex; flex-direction:column; gap:6px; }
+.multi-title{ font-family:var(--font-retro); color:var(--ember3); font-size:0.85rem; }
+.multi-input{ width:100%; box-sizing:border-box; padding:8px; background:#140c08; color:var(--text); border:2px solid #000; font:inherit; font-size:0.8rem; }
+.net-name select{ padding:4px; background:#140c08; color:var(--text); border:2px solid #000; font:inherit; }
+/* selector de campeón dentro de la sala online */
+.net-champs{ display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.net-champ{ padding:3px 7px; font-size:0.68rem; background:#1c120c; color:var(--text); border:2px solid #000; cursor:pointer; }
+.net-champ.sel{ border-color:var(--ember3); color:var(--ember3); }
+.net-champ:disabled{ opacity:0.35; cursor:default; }
+.net-arena select{ padding:4px; background:#140c08; color:var(--text); border:2px solid #000; font:inherit; }
+.lobby-tag.p0{ background:#ff7a2e; } .lobby-tag.p1{ background:#3fa7ff; } .lobby-tag.p2{ background:#4fd16a; } .lobby-tag.p3{ background:#c77dff; }
+.lobby-slot.pc0{ border-color:#ff7a2e; } .lobby-slot.pc1{ border-color:#3fa7ff; } .lobby-slot.pc2{ border-color:#4fd16a; } .lobby-slot.pc3{ border-color:#c77dff; }
+.net-wait-host{ color:#ffcf5c; font-size:0.7rem; margin-top:4px; }
+.lobby-tag.p0,.lobby-tag.p1,.lobby-tag.p2,.lobby-tag.p3{ color:#0b0705; font-weight:bold; }
+/* Centrado "seguro": si el contenido de una pantalla no entra (iPhone apaisado), se scrollea desde
+   arriba en vez de cortarse la parte de arriba (pasaba en ARENA con la primera tarjeta). Cuando sí
+   entra, queda centrado exactamente igual que antes. */
+.screen:not(#title-screen){ justify-content:flex-start; }
+.screen:not(#title-screen) > :first-child{ margin-top:auto; }
+.screen:not(#title-screen) > :last-child{ margin-bottom:auto; }

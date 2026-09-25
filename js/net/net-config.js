@@ -10,5 +10,5 @@
    ============================================================ */
 const NET_CONFIG = {
   serverUrl: "wss://la-horda-relay.onrender.com",
-  build: "B1-1" // si el anfitrión y el invitado tienen builds distintos, el servidor no los junta
+  build: "B1-2" // si el anfitrión y el invitado tienen builds distintos, el servidor no los junta
 };

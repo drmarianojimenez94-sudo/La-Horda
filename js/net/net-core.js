@@ -30,6 +30,7 @@ function netLog(ev, data){
   if(typeof netDebugRefresh==="function") netDebugRefresh();
 }
 function netServerUrl(){
+  if(net.serverOverride) return net.serverOverride; // vino en un enlace pegado en Multijugador
   try{
     const q = new URLSearchParams(location.search).get("server");
     if(q) return q;
