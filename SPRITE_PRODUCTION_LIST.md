@@ -30,13 +30,14 @@ Así lo consume el código hoy; respetarlo permite integrarlo sin retocar nada:
 - **Cantidad de frames**: caminata de 4 (6 como máximo), ataque de 3 a 4 con el impacto en el
   frame 2 o 3, muerte de 4 a 5 terminando tendido en el piso, golpe recibido de 1.
 
-Dónde se integra en el código (`index.html`):
-- Enemigos con frame único → `ICE_REAL_IMG` / `drawIceRealSprite`.
-- Enemigos con tira → `REAL_ANIM_DEF` + `REAL_ANIM_SETS` / `drawRealAnimSprite`.
+Dónde se integra en el código (desde la modularización: PNG en `assets/`, carga en
+`js/assets/*.js`, dibujo en `js/rendering/*.js` — ver `ARCHITECTURE.md`):
+- Enemigos con frame único → `ICE_REAL_IMG` (`js/assets/enemy-sprites.js`) / `drawIceRealSprite` (`js/rendering/enemy-sprites.js`).
+- Enemigos con tira → `REAL_ANIM_DEF` + `REAL_ANIM_SETS` / `drawRealAnimSprite` (`js/rendering/enemy-sprites.js`).
 - Enemigos con grilla de 4 direcciones → `ENEMY_ATLAS_IMG` / `drawEnemyAtlas`.
-- Segador → `SEGADOR_REAL_IMG`; Axiom → `AXIOM_REAL_IMG`.
-- Muerte de campeones → `FALLEN_REAL` / `drawFallenHero`.
-- Efectos de suelo o encima de la entidad → `VFX_SPR_EXTRA` / `vfxSprite`.
+- Segador → `SEGADOR_REAL_IMG`; Axiom → `AXIOM_REAL_IMG` (`js/assets/champion-sprites.js`).
+- Muerte de campeones → `FALLEN_REAL` / `drawFallenHero` (`js/rendering/champion-sprites.js`).
+- Efectos de suelo o encima de la entidad → `VFX_SPR_EXTRA` / `vfxSprite` (`js/rendering/vfx.js`).
 
 ---
 
@@ -148,8 +149,8 @@ campeón nuevo de 16px con la profundidad del arte pintado existente. Lo que sí
 genuino y de calidad consistente es un **pack de efectos (VFX)** dibujado con formas
 vectoriales propias (Python/PIL, supersampleado 4x + glow aditivo real, bajado con LANCZOS) en
 vez de pixel-art de bordes duros -mismo look pintado/suave que el arte real ya existente
-(`soulFireProj`, `ronin4`, etc.)-, embebido en `index.html` como el resto del arte del juego
-(sin dependencias externas ni scripts que cargar en cada sesión):
+(`soulFireProj`, `ronin4`, etc.)-. Hoy vive en `assets/vfx/abilities/` como el resto del arte
+del juego (sin dependencias externas ni scripts que cargar en cada sesión):
 
 - **`ice_crystal`** y **`frost_rune`**: esquirla de hielo facetada y runa nórdica angular,
   reemplazan/acompañan el rombo y las marcas de tick dibujadas por código en Nova de Escarcha
