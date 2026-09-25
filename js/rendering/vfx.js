@@ -163,7 +163,7 @@ const VFX_SPR_EXTRA = {
   // (dibujan al Musashi/Sylva viejos: se apagan cuando está cargado el arte nuevo, para no mezclar estilos)
   musashiFinish: { imgs:[MUSASHI_REAL_IMG.ultiFinish], ready:()=>MUSASHI_REAL_READY.ultiFinish && !(CHAMP_PACK.musashi && CHAMP_PACK.musashi.ready), ground:false },
   // Flecha Perforante: impacto crítico real sobre la Presa Acorralada (antes sin usar).
-  sylvaPiercingCrit: { imgs:[SYLVA_REAL_IMG.piercingCrit], ready:()=>SYLVA_REAL_READY.piercingCrit, ground:false },
+  sylvaPiercingCrit: { imgs:[SYLVA_REAL_IMG.piercingCrit], ready:()=>SYLVA_REAL_READY.piercingCrit && !(CHAMP_PACK.cazadora && CHAMP_PACK.cazadora.ready), ground:false },
   // Materialización real al invocar esqueletos/Golem (antes sin usar).
   nigroSkeletonSpawnWarrior: { imgs:[NIGRO_SKEL_IMG.spawnWarrior], ready:()=>NIGRO_SKEL_READY.spawnWarrior, ground:false },
   nigroSkeletonSpawnMage: { imgs:[NIGRO_SKEL_IMG.spawnMage], ready:()=>NIGRO_SKEL_READY.spawnMage, ground:false },

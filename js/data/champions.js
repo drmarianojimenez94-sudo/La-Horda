@@ -147,7 +147,7 @@ const CLASSES = {
     ultimate:{name:"Último Duelo", ico:"★", cd:34000, kind:"last_duel_ult", duration:13000, speedMult:1.25, atkSpeedMult:1.35, dmgMult:1.25, critChanceBonus:0.15, critMultBonus:0.4, ghostStepCdMult:0.4, desc:"Se transporta con su objetivo de duelo a una arena privada: 1 contra 1 hasta que uno de los dos caiga o se acabe el tiempo"}
   },
   cazadora:{
-    name:"Sylva", icon:"🏹", color:"#5c9a4a", glow:"#c8f0a8",
+    name:"La Cazadora", icon:"🏹", color:"#5c9a4a", glow:"#c8f0a8",
     role:"Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.", roleCategory:"asesino",
     // Vida y defensa las más bajas del roster (mago:95/0.06 es la referencia más frágil que
     // había; Sylva queda un poco por debajo todavía), a cambio de la velocidad de movimiento
