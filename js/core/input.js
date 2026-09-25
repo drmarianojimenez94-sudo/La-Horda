@@ -144,8 +144,10 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
     setState("divina");
     return;
   }
-  if(!confirm("¿Abandonar la arena? Vas a perder el 50% de la XP acumulada del campeón y el 50% de tu oro, igual que si perdieras.")) return;
+  const lootMsg = runLevel >= DEFEAT_LOOT.minLevel ? " Igual te llevás un objeto por haber llegado al nivel "+runLevel+"." : "";
+  if(!confirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg)) return;
   applyArenaFailurePenalty(player.classKey);
+  if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
 document.querySelectorAll(".pause-tab").forEach(tab=>{

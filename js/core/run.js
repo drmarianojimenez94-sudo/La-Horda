@@ -47,6 +47,7 @@ function startDivinaExploration(){
 }
 function startRun(fromLevel){
   runLevel = fromLevel || 1;
+  markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
   runEnding = false;
   kills = 0;

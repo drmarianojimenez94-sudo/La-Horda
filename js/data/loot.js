@@ -40,7 +40,9 @@ const TIER_EXP = {comun:0, raro:0.5, muyraro:1, legendario:1.5, set:1.5, mitico:
 // cada subjefe derrotado suma +10% a ese extra y hay un 2º extra (máx. 3) con la mitad.
 const LOOT_MAX_ITEMS = 3;
 // Derrota: con suerte, un objeto de consuelo (desde el nivel 6), sin categorías altas casi nunca.
-const DEFEAT_LOOT = {minLevel:6, chance:0.4, gradeCap:"B", highTierMult:0.25};
+// Perder (o abandonar) después de pelear el nivel 6 (subjefe) deja SIEMPRE un objeto de consuelo;
+// la XP y el oro sí se castigan (ver applyArenaFailurePenalty).
+const DEFEAT_LOOT = {minLevel:6, chance:1, gradeCap:"B", highTierMult:0.25};
 // Protección suave contra la mala suerte: cada VICTORIA sin la categoría sube un poco su
 // probabilidad (tope), y se reinicia cuando cae. Oculta para el jugador.
 const LOOT_PITY = {
