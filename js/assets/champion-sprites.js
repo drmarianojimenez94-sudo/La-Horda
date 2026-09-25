@@ -252,9 +252,13 @@ function champPackLoadAtlas(key, src, meta){
   const img = new Image();
   const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:meta.sets, ready:false };
   img.onload = ()=>{ P.ready = true; };
+  img.onerror = ()=>{ P.failed = true; }; // solo entonces se usa el arte anterior como respaldo
   img.src = src;
   CHAMP_PACK[key] = P;
 }
+// El arte redibujado de este campeón todavía está bajando: no se dibuja NADA (antes se veía un
+// instante el arte viejo descartado, ej. en el título mientras decía "Cargando…").
+function champPackPending(key){ const P = CHAMP_PACK[key]; return !!(P && !P.ready && !P.failed); }
 champPackLoadAtlas("segador", "assets/sprites/champions/segador/v2/atlas.png", {"w":91,"h":107,"cols":8,"refH":75,"anchor":0.9439,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("musashi", "assets/sprites/champions/musashi/v2/atlas.png", {"w":91,"h":91,"cols":8,"refH":84,"anchor":0.9451,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("profeta", "assets/sprites/champions/profeta/v2/atlas.png", {"w":93,"h":133,"cols":8,"refH":76,"anchor":0.9098,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});

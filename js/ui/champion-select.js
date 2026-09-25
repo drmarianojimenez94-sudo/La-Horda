@@ -41,7 +41,7 @@ function drawChampionPreviewFrame(cvs, key){
 // la pantalla de título). `fx` = hacia dónde mira (1 derecha, -1 izquierda).
 function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving){
   const cls = CLASSES[key];
-  if(!cls) return;
+  if(!cls || champPackPending(key)) return;
   const fake = {
     x, y, fx, fy:0, moving,
     animT, attackAnim:0, hurtTimer:0,

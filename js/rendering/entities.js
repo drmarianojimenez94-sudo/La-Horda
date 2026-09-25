@@ -41,6 +41,7 @@ function drawHero(h){
 // Cuerpo del campeón según su arte real (atlas / poses recortadas / procedural de respaldo).
 // Lo comparten el dibujo normal, el hit flash y la caída al morir.
 function drawHeroBody(h, drawScale, spinning, stealthed){
+  if(champPackPending(h.classKey)) return; // nunca el arte viejo mientras baja el redibujado
   // El Mago usa su propio atlas de sprites (arte provisto por el usuario) en vez del sprite
   // procedural; el resto de las clases sigue exactamente igual que antes.
   if(h.classKey==="mago" && drawMagoAtlas(h, drawScale, stealthed?0.32:1)){
