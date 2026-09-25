@@ -209,6 +209,9 @@ function killEnemy(e){
 function damageHero(h, amount, src){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
+  // Regla de la Arena PvE: sin fuego amigo. Un aliado (héroe, su invocación o su proyectil)
+  // nunca daña a otro aliado. Curas/escudos/buffs/revivir no pasan por acá: no se tocan.
+  if(!modeRules().friendlyFire && src && src!==h){ const atk = allyAttackerOf(src); if(atk && atk!==h) return; }
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
