@@ -100,6 +100,12 @@ function drawPotion(p){
   const liquidHi = isMana ? "#7ec8ff" : "#ff8090";
   const glow = isMana ? "70,150,255" : "255,70,90";
   ctx.save();
+  // parpadea los últimos 3 s antes de desaparecer, y se ve apagada si al jugador no le sirve
+  // (barra llena): así nunca parece una poción "trabada" en el piso
+  let a = 1;
+  if(p.life < 3000) a = (Math.floor(p.life/150)%2) ? 0.35 : 1;
+  if(player && typeof potionUseful==="function" && !potionUseful(player, p)) a *= 0.55;
+  ctx.globalAlpha = a;
   ctx.fillStyle = "#0e0608";
   ctx.fillRect(x-8, y-16, 16, 20);
   ctx.fillStyle = "#c9c2d6";

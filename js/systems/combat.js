@@ -180,11 +180,11 @@ function killEnemy(e){
   if(e.rank==="elite") potionChance = 0.30;
   if(e.rank==="subjefe") potionChance = 1.0;
   if(e.rank==="jefe") potionChance = 1.0;
-  potionChance = Math.min(1, potionChance * (runStats.potionRateMult||1));
+  potionChance = Math.min(1, potionChance * (runStats.potionRateMult||1) * (arenaMods().potionMult||1));
   if(Math.random() < potionChance){
     const n = (e.rank==="subjefe"||e.rank==="jefe") ? 3 : 1;
     for(let i=0;i<n;i++){
-      potions.push({x:e.x+(Math.random()-0.5)*40, y:e.y+(Math.random()-0.5)*40, life:22000, phase:Math.random()*6, type:"heal"});
+      dropPotion(e.x, e.y, "heal");
     }
   }
   // Pociones de energía/maná: caen con más frecuencia que las de vida, ya que ahora las
@@ -193,7 +193,7 @@ function killEnemy(e){
   if(Math.random() < manaPotionChance){
     const n = (e.rank==="subjefe"||e.rank==="jefe") ? 3 : 1;
     for(let i=0;i<n;i++){
-      potions.push({x:e.x+(Math.random()-0.5)*40, y:e.y+(Math.random()-0.5)*40, life:22000, phase:Math.random()*6, type:"mana"});
+      dropPotion(e.x, e.y, "mana");
     }
   }
   if(e===boss){
