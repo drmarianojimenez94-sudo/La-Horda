@@ -241,19 +241,6 @@ SEGADOR_REAL_IMG["up"].src = "assets/sprites/champions/segador/dir-up.png";
    arte anterior (draw3DirRealSprite) como respaldo.
    ============================================================ */
 const CHAMP_PACK = {};
-function champPackLoad(key, def){
-  const P = {sets:{}, ready:false, n:0, loaded:0};
-  for(const k in def){
-    P.sets[k] = def[k].map(src=>{
-      const im = new Image(); P.n++;
-      im.onload = ()=>{ P.loaded++; if(P.loaded===P.n) P.ready = true; };
-      im.src = src;
-      return im;
-    });
-  }
-  CHAMP_PACK[key] = P;
-}
-champPackLoad("axiom", {"idle_down": ["assets/sprites/champions/axiom/idle_down_01.png", "assets/sprites/champions/axiom/idle_down_02.png", "assets/sprites/champions/axiom/idle_down_03.png", "assets/sprites/champions/axiom/idle_down_04.png"], "idle_side": ["assets/sprites/champions/axiom/idle_side_01.png", "assets/sprites/champions/axiom/idle_side_02.png", "assets/sprites/champions/axiom/idle_side_03.png", "assets/sprites/champions/axiom/idle_side_04.png"], "idle_up": ["assets/sprites/champions/axiom/idle_up_01.png", "assets/sprites/champions/axiom/idle_up_02.png", "assets/sprites/champions/axiom/idle_up_03.png", "assets/sprites/champions/axiom/idle_up_04.png"], "walk_down": ["assets/sprites/champions/axiom/walk_down_01.png", "assets/sprites/champions/axiom/walk_down_02.png", "assets/sprites/champions/axiom/walk_down_03.png", "assets/sprites/champions/axiom/walk_down_04.png"], "walk_side": ["assets/sprites/champions/axiom/walk_side_01.png", "assets/sprites/champions/axiom/walk_side_02.png", "assets/sprites/champions/axiom/walk_side_03.png", "assets/sprites/champions/axiom/walk_side_04.png"], "walk_up": ["assets/sprites/champions/axiom/walk_up_01.png", "assets/sprites/champions/axiom/walk_up_02.png", "assets/sprites/champions/axiom/walk_up_03.png", "assets/sprites/champions/axiom/walk_up_04.png"], "attack_down": ["assets/sprites/champions/axiom/attack_down_01.png", "assets/sprites/champions/axiom/attack_down_02.png"], "attack_side": ["assets/sprites/champions/axiom/attack_side_01.png", "assets/sprites/champions/axiom/attack_side_02.png"], "attack_up": ["assets/sprites/champions/axiom/attack_up_01.png", "assets/sprites/champions/axiom/attack_up_02.png"], "cast_down": ["assets/sprites/champions/axiom/cast_down_01.png"], "cast_side": ["assets/sprites/champions/axiom/cast_side_01.png"], "cast_up": ["assets/sprites/champions/axiom/cast_up_01.png"], "death_down": ["assets/sprites/champions/axiom/death_down_01.png", "assets/sprites/champions/axiom/death_down_02.png", "assets/sprites/champions/axiom/death_down_03.png", "assets/sprites/champions/axiom/death_down_04.png"], "death_side": ["assets/sprites/champions/axiom/death_side_01.png", "assets/sprites/champions/axiom/death_side_02.png", "assets/sprites/champions/axiom/death_side_03.png", "assets/sprites/champions/axiom/death_side_04.png"], "death_up": ["assets/sprites/champions/axiom/death_up_01.png", "assets/sprites/champions/axiom/death_up_02.png", "assets/sprites/champions/axiom/death_up_03.png"]});
 
 /* ============================================================
    REDRAW (hojas "La Horda — estilo oficial", docs/ART_REPLACEMENT_QUEUE.md): un atlas por campeón,
@@ -272,6 +259,9 @@ champPackLoadAtlas("segador", "assets/sprites/champions/segador/v2/atlas.png", {
 champPackLoadAtlas("musashi", "assets/sprites/champions/musashi/v2/atlas.png", {"w":91,"h":91,"cols":8,"refH":84,"anchor":0.9451,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("profeta", "assets/sprites/champions/profeta/v2/atlas.png", {"w":93,"h":133,"cols":8,"refH":76,"anchor":0.9098,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("cazadora", "assets/sprites/champions/cazadora/v2/atlas.png", {"w":90,"h":94,"cols":8,"refH":79,"anchor":0.9362,"sets":{"idle_down":[17,18,19,20],"idle_side":[30],"idle_left":[26],"idle_up":[34],"walk_down":[22,23,24,25],"walk_side":[30,31,32,33],"walk_left":[26,27,28,29],"walk_up":[34,35,36,37],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12],"aim":[21]}});
+champPackLoadAtlas("axiom", "assets/sprites/champions/axiom/v2/atlas.png", {"w":88,"h":99,"cols":8,"refH":76,"anchor":0.9394,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
+champPackLoadAtlas("nigromante", "assets/sprites/champions/nigromante/v2/atlas.png", {"w":161,"h":114,"cols":8,"refH":82,"anchor":0.9386,"sets":{"idle_down":[18,19,20,21],"idle_side":[31],"idle_left":[34],"idle_up":[37],"walk_down":[26,27,28,29,30],"walk_side":[31,32,33],"walk_left":[34,35,36],"walk_up":[37,38,41],"walk_up_left":[39,40],"attack_side":[0,1,2,3],"cast_side":[4,5,6,7],"hit_down":[14,15,16,17],"death_down":[8,9,10,11,12,13],"ult":[22,23,24,25]}});
+champPackLoadAtlas("nigro_skel", "assets/sprites/champions/nigromante/skeleton/v2/atlas.png", {"w":63,"h":95,"cols":6,"refH":75,"anchor":0.9368,"sets":{"warrior_idle":[4],"warrior_walk":[4,5],"warrior_atk":[3],"mage_idle":[1],"mage_walk":[1,2],"mage_atk":[0]}});
 
 // Sylva, La Cazadora del Bosque: mismo patrón (una imagen por estado). El combo básico cicla
 // 6 frames durante attackAnim -se acelera solo porque attackAnim ya dura menos con más

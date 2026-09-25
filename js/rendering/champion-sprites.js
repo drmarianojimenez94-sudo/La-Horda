@@ -232,6 +232,7 @@ function champPackScale(P, h, drawScale){
 function champPackSet(P, st, dir, h){
   if(P.sets[st] && !P.sets[st+"_down"]) return {arr:P.sets[st], flip:!!h._pleft};
   if(dir==="side" && h._pleft && P.sets[st+"_left"]) return {arr:P.sets[st+"_left"], flip:false};
+  if(dir==="up" && h._pleft && P.sets[st+"_up_left"]) return {arr:P.sets[st+"_up_left"], flip:false};
   for(const d of [dir, "side", "down"]){
     const arr = P.sets[st+"_"+d];
     if(arr) return {arr, flip: d==="side" && !!h._pleft};
@@ -378,6 +379,16 @@ function drawMusashiAfterimages(){
 // fija en cada case del switch de castAbility junto al attackAnim generico) y la secuencia de
 // transformacion de la ultimate (h.nigroTransformTimer, ver enterAbyssForm).
 function drawNigromanteReal(h, drawScale, alpha){
+  const P = CHAMP_PACK.nigromante;
+  if(P && P.ready){
+    // Encarnación del Abismo: la pose "especial/ultimate" de la hoja mientras dura la transformación
+    if(h.nigroTransformTimer>0 && P.sets.ult){
+      const arr = P.sets.ult, prog = Math.max(0, Math.min(0.999, 1-h.nigroTransformTimer/NIGRO_TRANSFORM_MS));
+      champPackDrawFrame(P, arr[Math.floor(prog*arr.length)], h.x, h.y, champPackScale(P, h, drawScale), (h.fx||0) < -0.12, alpha);
+      return true;
+    }
+    return drawChampPack("nigromante", h, drawScale, alpha);
+  }
   if(!NIGRO_READY.idle) return false;
   let img, clipW = 0;
   if(h.nigroTransformTimer>0 && NIGRO_READY.ultTransform1){
@@ -492,8 +503,26 @@ function drawFallenHero(h){
 // mismo criterio que el Lobo Espectral de Sylva -objeto simple con x/y/hp/IA, dibujado y
 // actualizado aparte del pipeline de heroes/enemigos-.
 function drawSkeletonMinion(sk){
-  if(!NIGRO_SKEL_READY.warrior) return;
   const isMage = sk.type==="mage";
+  const SP = CHAMP_PACK.nigro_skel;
+  if(SP && SP.ready){
+    const pre = isMage ? "mage_" : "warrior_";
+    const arr = sk.attackAnim>0 ? SP.sets[pre+"atk"] : sk.moving ? SP.sets[pre+"walk"] : SP.sets[pre+"idle"];
+    const v = arr[Math.floor(animNow/180) % arr.length];
+    const targetH = 46*(sk.scale||1), s = targetH/SP.refH;
+    drawShadow(sk.x, sk.y, 16);
+    sk._animKey = "nigro_skel";
+    const Pk = animPose(sk, animProfileOf(sk), false);
+    ctx.save(); animApply(sk.x, sk.y, Pk);
+    champPackDrawFrame(SP, v, sk.x, sk.y, s, (sk.fx||0) < -0.12, sk.hitFlash>0?0.6:1);
+    ctx.restore();
+    if(sk.hp<sk.maxHp){
+      ctx.fillStyle="rgba(0,0,0,0.5)"; ctx.fillRect(sk.x-16,sk.y-targetH-10,32,4);
+      ctx.fillStyle="#7ad48a"; ctx.fillRect(sk.x-16,sk.y-targetH-10,32*Math.max(0,sk.hp/sk.maxHp),4);
+    }
+    return;
+  }
+  if(!NIGRO_SKEL_READY.warrior) return;
   let img;
   // (el recorte "mageAtk" mezcla pedazos de dos frames: atacando, el mago usa su pose normal
   // y el ataque se lee por el proyectil)

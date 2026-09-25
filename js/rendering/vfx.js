@@ -165,8 +165,8 @@ const VFX_SPR_EXTRA = {
   // Flecha Perforante: impacto crítico real sobre la Presa Acorralada (antes sin usar).
   sylvaPiercingCrit: { imgs:[SYLVA_REAL_IMG.piercingCrit], ready:()=>SYLVA_REAL_READY.piercingCrit && !(CHAMP_PACK.cazadora && CHAMP_PACK.cazadora.ready), ground:false },
   // Materialización real al invocar esqueletos/Golem (antes sin usar).
-  nigroSkeletonSpawnWarrior: { imgs:[NIGRO_SKEL_IMG.spawnWarrior], ready:()=>NIGRO_SKEL_READY.spawnWarrior, ground:false },
-  nigroSkeletonSpawnMage: { imgs:[NIGRO_SKEL_IMG.spawnMage], ready:()=>NIGRO_SKEL_READY.spawnMage, ground:false },
+  nigroSkeletonSpawnWarrior: { imgs:[NIGRO_SKEL_IMG.spawnWarrior], ready:()=>NIGRO_SKEL_READY.spawnWarrior && !(CHAMP_PACK.nigro_skel && CHAMP_PACK.nigro_skel.ready), ground:false },
+  nigroSkeletonSpawnMage: { imgs:[NIGRO_SKEL_IMG.spawnMage], ready:()=>NIGRO_SKEL_READY.spawnMage && !(CHAMP_PACK.nigro_skel && CHAMP_PACK.nigro_skel.ready), ground:false },
   nigroGolemSpawn: { imgs:[NIGRO_GOLEM_IMG.spawn], ready:()=>NIGRO_GOLEM_READY.spawn, ground:false },
   // Pack de VFX propio (dibujado a mano vía formas vectoriales, no arte de campeón): cristal/runa
   // de hielo del Mago, tajo del Segador y su ulti, sanación/escudo del Soporte, salpicadura de agua.
