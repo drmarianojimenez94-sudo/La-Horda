@@ -162,3 +162,24 @@ deterministas (estado cada 30 cuadros + píxeles del canvas).
   eso hace falta la prueba manual en el teléfono.
 - Tiempo de carga con red móvil real: ahora son ~620 archivos (23 MB) en vez de 1 HTML de
   31 MB; con HTTP/2 debería ser igual o más rápido, y el título aparece antes.
+
+## 9. Fix post-entrega: zoom accidental de Safari/iOS
+
+Al probar en un iPhone real, la página apareció con zoom (como si "la cámara se acercara"):
+todo el contenido (HUD incluido) se veía agrandado y con bordes recortados, señal de que era
+un zoom del navegador y no un cambio en `CAM_ZOOM` (que quedó idéntico). La hipótesis: iOS
+Safari zoomea con pellizco o doble toque incluso con `user-scalable=no` y `touch-action:none`
+(los ignora en ciertos casos), y el nuevo gate de precarga deja el botón "Toca para continuar"
+deshabilitado con texto "Cargando… X%", lo que invita a tocarlo varias veces seguidas.
+
+Se agregó `js/core/anti-zoom.js` (cargado justo después de `core/canvas.js`): bloquea el
+gesto de pellizco (`gesturestart/change/end`, específico de WebKit) y el doble toque rápido
+**sobre el mismo elemento** (`touchend` con `e.target === lastTarget` dentro de 350 ms).
+Exigir el mismo elemento es clave: una primera versión bloqueaba por tiempo y posición nada
+más, y eso frenaba la navegación normal de menús en móvil (tocar rápido dos botones distintos
+que caen en la misma zona de la pantalla entre pantallas, típico de un menú con el botón
+principal centrado) — se detectó con la suite funcional (94/94) antes de subir el fix.
+No toca gameplay, arte ni balance. Verificado: 33/33 deterministas y 94/94 funcionales
+idénticos al build ya entregado, más un test unitario del guard (`t_dtunit.js`) que confirma
+que el segundo toque sobre el mismo elemento se bloquea y que toques sobre elementos distintos
+no se ven afectados.
