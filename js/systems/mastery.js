@@ -16,6 +16,7 @@
 const TALENT_MAX = 10;      // tope de puntos de talento invertibles por habilidad
 const ULT_MIN_ARENA_LEVEL = 5; // la ulti no está disponible hasta este nivel de la arena
 const USE_LVL_CAP = 40;     // tope de niveles de uso (crecimiento lento, siempre mínimo)
+const ULT_POINTS_MIN_LEVEL = 20; // la ulti queda en su nivel base hasta que el campeón llega a este nivel
 function masteryOf(classKey, idx){
   const c = save.champions[classKey];
   return idx==="ult" ? c.ultMastery : c.skillMastery[idx];
@@ -64,14 +65,38 @@ function gainSkillUseXp(classKey, idx){
   if(m.useXp >= need){ m.useXp -= need; m.useLvl += 1; }
   persist();
 }
-function investTalentPoint(classKey, idx){
+// Motivo por el que no se puede subir una habilidad (o null si se puede).
+function skillInvestLockReason(classKey, idx){
   const champ = save.champions[classKey];
-  if(champ.talentPoints<=0) return;
+  if(!champ) return "?";
   const m = idx==="ult" ? champ.ultMastery : champ.skillMastery[idx];
-  if(allocLevel(m) >= TALENT_MAX) return;
+  if(allocLevel(m) >= TALENT_MAX) return "MÁX";
+  if(idx==="ult" && champ.level < ULT_POINTS_MIN_LEVEL) return `La ulti se sube desde el nivel ${ULT_POINTS_MIN_LEVEL}`;
+  if(champ.talentPoints<=0) return "Sin puntos";
+  return null;
+}
+function investTalentPoint(classKey, idx){
+  if(skillInvestLockReason(classKey, idx)) return false;
+  const champ = save.champions[classKey];
+  const m = idx==="ult" ? champ.ultMastery : champ.skillMastery[idx];
   m.alloc += 1; champ.talentPoints -= 1;
   persist();
-  renderMasteryPanel();
+  if(typeof onSkillInvested==="function") onSkillInvested(classKey, idx);
+  return true;
+}
+// Sugerencia de qué subir (botón + resaltado en la partida): la ulti apenas se habilita si está
+// por debajo del resto, si no la habilidad menos subida (a igualdad, la de menor número).
+function suggestedSkillInvest(classKey){
+  const champ = save.champions[classKey];
+  if(!champ || champ.talentPoints<=0) return null;
+  const opts = [0,1,2,"ult"].filter(idx=>!skillInvestLockReason(classKey, idx));
+  if(!opts.length) return null;
+  const lvl = idx=> allocLevel(idx==="ult" ? champ.ultMastery : champ.skillMastery[idx]);
+  const minSkill = Math.min(...[0,1,2].map(lvl));
+  if(opts.includes("ult") && lvl("ult") <= minSkill) return "ult";
+  let best = null;
+  for(const idx of opts){ if(idx==="ult") continue; if(best===null || lvl(idx) < lvl(best)) best = idx; }
+  return best===null ? opts[0] : best;
 }
 // IA de los aliados (bots): reparte sus puntos de talento entre las 3 habilidades y la ulti,
 // priorizando siempre la que menos invertida está, para que terminen con una build pareja
@@ -80,7 +105,7 @@ function autoInvestTalentPoints(classKey){
   const champ = save.champions[classKey];
   if(!champ) return;
   while(champ.talentPoints>0){
-    const options = [0,1,2,"ult"];
+    const options = [0,1,2,"ult"].filter(idx=>!skillInvestLockReason(classKey, idx));
     let best = options[0], bestLvl = Infinity;
     for(const idx of options){
       const m = idx==="ult" ? champ.ultMastery : champ.skillMastery[idx];

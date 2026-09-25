@@ -10,6 +10,8 @@
 const screens = {
   title: document.getElementById("title-screen"),
   mainmenu: document.getElementById("mainmenu-screen"),
+  champions: document.getElementById("champions-screen"),
+  champhub: document.getElementById("champhub-screen"),
   champdetail: document.getElementById("champdetail-screen"),
   shop: document.getElementById("shop-screen"),
   modeselect: document.getElementById("modeselect-screen"),

@@ -104,6 +104,11 @@
       <div class="mode-card-title">MODOS DE JUEGO</div>
       <div class="mode-card-desc">Arena (y, más adelante, el modo 4 contra 4).</div>
     </button>
+    <button class="mode-card" id="mainmenu-campeones-btn">
+      <div class="mode-card-icon">🛡</div>
+      <div class="mode-card-title">MIS CAMPEONES</div>
+      <div class="mode-card-desc">Tus campeones: equipamiento, habilidades y árbol de talentos.</div>
+    </button>
     <button class="mode-card" id="mainmenu-tienda-btn">
       <div class="mode-card-icon">🪙</div>
       <div class="mode-card-title">TIENDA</div>
@@ -111,6 +116,25 @@
     </button>
     <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
     <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
+  </div>
+
+  <!-- MIS CAMPEONES: inventario de campeones propios (hoy todos; más adelante 4 de arranque y el
+       resto se compra en la Tienda). Cada uno abre su ficha con equipo, habilidades y talentos. -->
+  <div id="champions-screen" class="screen hidden">
+    <div class="arena-title">Mis Campeones</div>
+    <div class="lobby-sub" id="champions-sub"></div>
+    <div id="mychamps-grid"></div>
+    <button class="btn secondary" id="champions-back-btn">Volver</button>
+  </div>
+  <div id="champhub-screen" class="screen hidden">
+    <div id="champhub-head"></div>
+    <div class="hub-tabs" id="champhub-tabs">
+      <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
+      <button class="hub-tab" data-tab="talentos">Talentos</button>
+      <button class="hub-tab" data-tab="habilidades">Habilidades</button>
+    </div>
+    <div id="champhub-panel"></div>
+    <button class="btn secondary" id="champhub-back-btn">Volver a Mis Campeones</button>
   </div>
 
   <!-- FICHA INDIVIDUAL DE CAMPEÓN -->
@@ -171,7 +195,14 @@
     <div class="lobby-sub" id="lobby-sub"></div>
     <div id="lobby-slots"></div>
     <div id="prep-summary"></div>
+    <div class="hub-tabs" id="prep-tabs">
+      <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
+      <button class="hub-tab" data-tab="talentos">Talentos</button>
+      <button class="hub-tab" data-tab="habilidades">Habilidades</button>
+    </div>
     <div id="prep-inventory-panel"></div>
+    <div id="prep-talents-panel" class="hidden"></div>
+    <div id="prep-skills-panel" class="hidden"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>
     <button class="btn secondary" id="prep-back-btn">Volver a elegir campeón</button>
   </div>
@@ -220,16 +251,8 @@
   <!-- PAUSE -->
   <div id="pause-screen" class="screen hidden">
     <div class="arena-title">Pausa</div>
-    <div id="pause-tabs">
-      <button class="pause-tab active" data-tab="skills">Habilidades</button>
-      <button class="pause-tab" data-tab="talents">Talentos</button>
-      <button class="pause-tab" data-tab="inventory">Inventario</button>
-      <button class="pause-tab" data-tab="stats">Estadísticas</button>
-    </div>
-    <div id="mastery-panel"></div>
-    <div id="talents-panel" class="hidden"></div>
-    <div id="inventory-panel" class="hidden"></div>
-    <div id="stats-panel" class="hidden"></div>
+    <div class="pause-note">Pausa solo para pruebas: en multijugador no va a haber pausa. Objetos y talentos se cambian en la Sala antes de entrar; las habilidades se suben en partida con el <b>+</b> que aparece sobre cada botón.</div>
+    <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
     <button class="btn secondary" id="quit-btn">Abandonar arena</button>
   </div>
@@ -329,6 +352,7 @@
 <script src="js/ui/hud.js"></script>
 <script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/menus.js"></script>
+<script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/end-screens.js"></script>
 <script src="js/core/run.js"></script>

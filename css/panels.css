@@ -225,3 +225,96 @@
 .set-panel .sp-bonus{ margin-top:3px; color:#7c8a7f; }
 .set-panel .sp-bonus.on{ color:#3ddc71; }
 .set-panel .sp-reforge{ margin-top:5px; }
+
+/* ---------- Pausa (solo pruebas): nota + estadísticas ---------- */
+.pause-note{ max-width:460px; font-size:0.72rem; color:var(--text-dim); line-height:1.5; margin:-14px 0 12px; }
+.tp-note{ color:var(--text-dim); font-weight:400; font-size:0.66rem; }
+
+/* ---------- Pestañas de la Sala y de la ficha de Mis Campeones ---------- */
+.hub-tabs{ display:flex; gap:6px; width:100%; max-width:560px; margin:4px 0 10px; }
+.hub-tab{
+  flex:1; padding:8px 6px; border:3px solid #000; background:linear-gradient(160deg, var(--panel), #0f0805);
+  color:var(--text-dim); font-family:var(--font-retro); font-size:0.95rem; cursor:pointer;
+  box-shadow: inset 1px 1px 0 rgba(255,180,120,0.14), 2px 2px 0 #000;
+}
+.hub-tab.active{ color:var(--ember3); border-color:var(--ember1); background:rgba(255,122,46,0.12); }
+#prep-inventory-panel, #prep-skills-panel, #champhub-panel{ width:100%; max-width:560px; margin-bottom:12px; }
+#prep-talents-panel{ width:100%; max-width:980px; margin-bottom:12px; }
+#champhub-panel.tree-wide{ max-width:980px; }
+
+/* ---------- Árbol de talentos (renderTalentTree) ---------- */
+.tt-wrap{ width:100%; text-align:left; }
+.tt-root{
+  margin:0 auto 18px; width:max-content; max-width:100%; display:flex; align-items:center; gap:8px; position:relative;
+  padding:6px 12px; border:3px solid; background:linear-gradient(160deg, var(--panel), #0f0805); font-size:0.78rem;
+  box-shadow:2px 2px 0 #000;
+}
+.tt-root::after{ content:""; position:absolute; left:50%; bottom:-19px; width:2px; height:16px; background:#6a4a2e; }
+.tt-root-ico{ font-size:1.2rem; }
+.tt-cols{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; position:relative; padding-top:14px; }
+/* barra horizontal que une la raíz con las 3 ramas */
+.tt-cols::before{ content:""; position:absolute; top:0; left:16.66%; right:16.66%; height:2px; background:#6a4a2e; }
+.tt-col{ position:relative; min-width:0; }
+.tt-col::before{ content:""; position:absolute; top:-14px; left:50%; width:2px; height:14px; background:#6a4a2e; }
+.tt-branch{
+  display:flex; justify-content:space-between; align-items:baseline; gap:6px; padding:5px 8px; margin-bottom:8px;
+  font-family:var(--font-retro); font-size:1rem; color:var(--ember3); text-transform:uppercase;
+  border:2px solid #000; background:rgba(255,122,46,0.10);
+}
+.tt-branch small{ color:var(--text-dim); font-size:0.75rem; text-transform:none; }
+.tt-chain{ position:relative; display:flex; flex-direction:column; gap:10px; }
+/* línea vertical de la rama, por detrás de los íconos */
+.tt-chain::before{ content:""; position:absolute; left:17px; top:18px; bottom:18px; width:2px; background:#4a3424; }
+.tt-node{ position:relative; display:flex; align-items:flex-start; gap:8px; }
+.tt-ico{
+  position:relative; z-index:1; flex:none; width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:1.05rem;
+  background:#140c08; border:2px solid #4a3424; color:#8a7666;
+}
+.tt-node.special .tt-ico{ border-radius:9px; border-style:double; border-width:4px; }
+.tt-rank{ position:absolute; bottom:-7px; right:-9px; font-size:0.55rem; padding:0 3px; border-radius:6px;
+  background:#000; border:1px solid #4a3424; color:var(--text-dim); line-height:12px; }
+.tt-node.avail .tt-ico{ border-color:var(--ember1); color:var(--ember3); box-shadow:0 0 8px rgba(255,122,46,0.55); }
+.tt-node.owned .tt-ico{ border-color:#ffcf5c; color:#ffcf5c; background:#2a1c08; }
+.tt-node.maxed .tt-ico{ border-color:#3ddc71; color:#3ddc71; background:#0c2414; }
+.tt-node.locked{ opacity:0.72; }
+.tt-txt{ flex:1; min-width:0; }
+.tt-name{ font-size:0.72rem; font-weight:700; color:var(--text); line-height:1.25; }
+.tt-node.owned .tt-name, .tt-node.maxed .tt-name{ color:#ffcf5c; }
+.tt-desc{ font-size:0.62rem; color:var(--text-dim); line-height:1.35; }
+.tt-eff{ font-size:0.6rem; color:#ffcf5c; line-height:1.35; }
+.tt-eff.next{ color:#7dc98a; }
+.tt-lock{ font-size:0.58rem; color:#ff9a7a; line-height:1.3; }
+.tt-cost{ font-size:0.55rem; color:#ffd76a; font-weight:400; }
+.tt-buy{ flex:none; align-self:center; }
+.tt-fork{ position:relative; border:1px dashed #8a6a2e; border-radius:8px; padding:14px 6px 6px; display:flex; flex-direction:column; gap:6px; background:rgba(255,207,92,0.04); }
+.tt-fork-label{ position:absolute; top:-8px; left:40px; font-size:0.56rem; padding:0 5px; background:#0d0705; color:#ffd76a; }
+.tt-fork-or{ font-size:0.6rem; color:#ffd76a; margin-left:12px; }
+.tt-crown .tt-ico{ font-size:1.2rem; border-color:#8a6a2e; color:#ffd76a; }
+.tt-crown.avail .tt-ico{ box-shadow:0 0 12px rgba(255,207,92,0.8); }
+.tt-crown .tt-name{ color:#ffd76a; }
+.tt-crown .mastery-pick-btn{ margin-top:4px; padding:5px 8px; font-size:0.7rem; }
+
+/* ---------- Mis Campeones ---------- */
+#champions-screen, #champhub-screen{ justify-content:flex-start; }
+#mychamps-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; width:100%; max-width:440px; margin-bottom:12px; }
+.mychamp-card{ display:flex; flex-direction:column; align-items:center; padding:10px 8px; }
+.mychamp-meta{ font-size:0.72rem; color:var(--text-dim); }
+.mychamp-pts{ color:#ffcf5c; }
+.hub-head{ display:flex; gap:12px; align-items:center; width:100%; max-width:560px; text-align:left; margin-bottom:4px; }
+.hub-anim{ width:72px; height:72px; flex:none; border:2px solid #000; image-rendering:pixelated; }
+.hub-head-txt{ flex:1; min-width:0; }
+.hub-name{ font-family:var(--font-retro); font-size:1.5rem; line-height:1; text-shadow:2px 2px 0 #000; }
+.hub-meta{ font-size:0.72rem; color:var(--text); margin-top:2px; }
+.hub-meta.dim{ color:var(--text-dim); font-size:0.64rem; }
+.hub-xp{ height:5px; background:var(--panel-b); margin-top:4px; }
+.hub-xp > div{ height:100%; background:linear-gradient(90deg, var(--ember1), var(--ember3)); }
+@media (orientation: landscape) and (max-height: 520px){
+  #mychamps-grid{ grid-template-columns:repeat(5,1fr); max-width:760px; gap:8px; }
+  .mychamp-card{ padding:6px 4px; }
+  .mychamp-card .gallery-card-name{ font-size:0.9rem; }
+}
+@media (max-width: 640px) and (orientation: portrait){
+  .tt-cols{ grid-template-columns:1fr; }
+  .tt-cols::before, .tt-col::before{ display:none; }
+}

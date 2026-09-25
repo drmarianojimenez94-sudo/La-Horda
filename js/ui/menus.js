@@ -1,8 +1,8 @@
 "use strict";
 /* ============================================================
    js/ui/menus.js
-   Menús: botones del título y menú principal, galería, ficha de campeón, selección
-   de arena, preparación e inventario previo a la partida.
+   Menús: botones del título y menú principal, tienda, ficha de campeón, selección
+   de arena y Sala previa a la partida (equipamiento reutilizable por campeón).
    ============================================================ */
 
 /* ============================================================
@@ -262,18 +262,20 @@ function renderPrepSummary(){
   }).join("");
   const box = document.getElementById("prep-summary");
   const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
-  box.innerHTML = `<div class="lobby-equip-title">Equipamiento de ${cls.name} (Nv. ${champ.level})</div>`;
-  renderPrepInventory();
+  box.innerHTML = `<div class="lobby-equip-title">${cls.name} · Nv. ${champ.level}</div><div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>`;
+  renderPrepTabs();
   startChampAnimLoop();
 }
 let prepCompareOpenUid = null; // qué tarjeta tiene la comparación abierta, en esta pantalla
-// Pestaña de equipamiento previa a entrar a la arena: mismo comportamiento que Pausa →
-// Inventario (equipar/desequipar/comparar/vender/descartar), pero sobre selectedClass en vez
-// de player.classKey, porque acá todavía no existe una partida en curso.
+// Equipamiento de un campeón (equipar/desequipar/comparar/vender/descartar/fusionar). Es el
+// ÚNICO lugar donde se cambian objetos: la Sala antes de la partida y la ficha de Mis Campeones.
+// En partida no se puede (el juego es multijugador: no va a haber pausa para equiparse).
+// rerender: qué volver a dibujar después de un cambio (la pantalla que contiene el panel).
 function renderPrepInventory(){
-  const panel = document.getElementById("prep-inventory-panel");
+  renderChampInventory(document.getElementById("prep-inventory-panel"), selectedClass, renderPrepSummary);
+}
+function renderChampInventory(panel, classKey, rerender){
   if(!panel) return;
-  const classKey = selectedClass;
   const champ = save.champions[classKey];
   champ.inventory = champ.inventory || [];
   champ.equipment = Object.assign(mkEquipment(), champ.equipment||{});
@@ -314,7 +316,7 @@ function renderPrepInventory(){
     });
     html += '</div>';
   }
-  html += `<button class="inv-debug-btn" id="prep-debug-gen" ${full?"disabled":""}>[Prueba] Generar objeto al azar — para testear sin esperar a derrotar un subjefe</button>`;
+  html += `<button class="inv-debug-btn prep-debug-gen" ${full?"disabled":""}>[Prueba] Generar objeto al azar — para testear sin esperar a derrotar un subjefe</button>`;
   panel.innerHTML = html;
 
   panel.querySelectorAll(".inv-card").forEach(card=>{
@@ -322,7 +324,7 @@ function renderPrepInventory(){
       if(ev.target.closest("button")) return;
       const uid = card.getAttribute("data-prep-compare");
       prepCompareOpenUid = (prepCompareOpenUid===uid) ? null : uid;
-      renderPrepInventory();
+      rerender();
     });
   });
   panel.querySelectorAll("[data-prep-equip]").forEach(btn=>{
@@ -330,14 +332,14 @@ function renderPrepInventory(){
       ev.stopPropagation();
       equipItem(classKey, btn.getAttribute("data-prep-equip"));
       prepCompareOpenUid = null;
-      renderPrepSummary();
+      rerender();
     });
   });
   panel.querySelectorAll("[data-prep-unequip]").forEach(btn=>{
     btn.addEventListener("click", (ev)=>{
       ev.stopPropagation();
       unequipItem(classKey, btn.getAttribute("data-prep-unequip"));
-      renderPrepSummary();
+      rerender();
     });
   });
   panel.querySelectorAll("[data-prep-sell]").forEach(btn=>{
@@ -346,7 +348,7 @@ function renderPrepInventory(){
       if(!confirm("¿Vender este objeto? No se puede deshacer.")) return;
       sellItem(classKey, btn.getAttribute("data-prep-sell"));
       prepCompareOpenUid = null;
-      renderPrepSummary();
+      rerender();
       renderSaveLine();
     });
   });
@@ -356,23 +358,23 @@ function renderPrepInventory(){
       if(!confirm("¿Descartar este objeto sin recompensa? No se puede deshacer.")) return;
       discardItem(classKey, btn.getAttribute("data-prep-discard"));
       prepCompareOpenUid = null;
-      renderPrepSummary();
+      rerender();
     });
   });
   panel.querySelectorAll("[data-prep-fuse]").forEach(btn=>{
     btn.addEventListener("click", (ev)=>{
       ev.stopPropagation();
       handleFuseClick(classKey, btn.getAttribute("data-prep-fuse"));
-      renderPrepSummary();
+      rerender();
     });
   });
-  const prepDbg = document.getElementById("prep-debug-gen");
+  const prepDbg = panel.querySelector(".prep-debug-gen");
   if(prepDbg) prepDbg.addEventListener("click", ()=>{
     const type = rollItemType(classKey);
     const rarity = RARITIES[Math.floor(Math.random()*RARITIES.length)];
     const item = makeItem(type, rarity, classKey);
     addItemToInventory(classKey, item);
-    renderPrepSummary();
+    rerender();
   });
 }
 document.getElementById("retry-btn").addEventListener("click", ()=>{

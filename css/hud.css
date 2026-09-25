@@ -267,3 +267,13 @@
   z-index:16; pointer-events:auto; background:rgba(10,6,4,0.6); border:1px solid var(--panel-b);
   color:var(--text-dim); font-size:0.9rem; border-radius:8px; padding:4px 10px;
 }
+/* Subir habilidades en partida (js/ui/hud.js): "+" delante de cada botón con puntos disponibles. */
+.skill-plus{position:fixed; z-index:18; width:26px; height:26px; border-radius:50%; padding:0;
+  font:700 1rem/1 inherit; color:#1a1004; background:#d9b25a; border:2px solid #fff3c4;
+  box-shadow:0 0 6px rgba(0,0,0,0.6); pointer-events:auto; touch-action:none;}
+.skill-plus.suggested{background:#ffcf2e; animation:skillPlusPulse 0.9s ease-in-out infinite;}
+.skill-plus.hidden{display:none;}
+@keyframes skillPlusPulse{ 0%,100%{box-shadow:0 0 4px rgba(255,207,46,0.5); transform:scale(1);} 50%{box-shadow:0 0 16px rgba(255,207,46,1); transform:scale(1.15);} }
+.skill-lvl-pip{position:absolute; bottom:-4px; right:-4px; min-width:16px; height:16px; padding:0 3px; border-radius:8px;
+  background:#1a1004; border:1px solid #d9b25a; color:#ffcf5c; font-size:0.58rem; line-height:14px; text-align:center; pointer-events:none;}
+.skill-lvl-pip:empty{display:none;}

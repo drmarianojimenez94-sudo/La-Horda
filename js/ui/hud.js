@@ -116,6 +116,7 @@ function updateHUD(){
   renderParty();
 
   updateSkillButtonStates();
+  updateSkillLevelUI();
 }
 
 /* Estados de los botones de habilidad: LISTA / ACTIVA / ENFRIAMIENTO / SIN RECURSO. Se leen de
@@ -223,3 +224,77 @@ function renderParty(){
     if(shB) shB.classList.toggle("hidden", a.shieldAuraTimer<=0);
   });
 }
+
+/* ============================================================
+   SUBIR HABILIDADES EN PARTIDA
+   El juego es multijugador: no hay pausa para repartir puntos. Cuando el campeón tiene puntos
+   sin gastar, aparece un "+" chico delante de cada botón de habilidad que se puede subir; el
+   sugerido (suggestedSkillInvest) late en dorado. La ulti recién acepta puntos desde el nivel
+   ULT_POINTS_MIN_LEVEL del campeón. Cada botón muestra además el nivel actual de la habilidad.
+   ============================================================ */
+const SKILL_PLUS_IDS = [["btn-s1",0],["btn-s2",1],["btn-s3",2],["btn-ult","ult"]];
+let _skillLvlKey = "", _skillPlusHintShown = false;
+function buildSkillPlusButtons(){
+  const controls = document.getElementById("controls");
+  if(!controls || document.getElementById("skill-plus-btn-0")) return;
+  SKILL_PLUS_IDS.forEach(([btnId, idx])=>{
+    const b = document.createElement("button");
+    b.className = "skill-plus hidden"; b.id = "skill-plus-btn-"+idx; b.textContent = "+";
+    b.setAttribute("data-idx", String(idx));
+    b.title = "Subir esta habilidad";
+    const go = (ev)=>{
+      ev.preventDefault(); ev.stopPropagation();
+      if(!player || state!=="playing") return;
+      if(investTalentPoint(player.classKey, idx)){
+        playSfx && playSfx("levelup");
+        const btn = document.getElementById(btnId);
+        if(btn){ btn.classList.remove("ready-pop"); void btn.offsetWidth; btn.classList.add("ready-pop"); }
+      }
+    };
+    b.addEventListener("pointerdown", go);
+    b.addEventListener("touchstart", (ev)=>{ ev.stopPropagation(); }, {passive:true});
+    controls.appendChild(b);
+    const lv = document.createElement("div");
+    lv.className = "skill-lvl-pip"; lv.id = "skill-lvl-"+idx;
+    const host = document.getElementById(btnId);
+    if(host) host.appendChild(lv);
+  });
+}
+function positionSkillPlusButtons(){
+  SKILL_PLUS_IDS.forEach(([btnId, idx])=>{
+    const host = document.getElementById(btnId), b = document.getElementById("skill-plus-btn-"+idx);
+    if(!host || !b) return;
+    const r = host.getBoundingClientRect();
+    // "un poquito adelante" del botón: arriba a la izquierda, sin taparlo
+    b.style.left = Math.round(r.left - 12) + "px";
+    b.style.top = Math.round(r.top - 12) + "px";
+  });
+}
+function onSkillInvested(){ _skillLvlKey = ""; if(state==="playing") updateSkillLevelUI(); }
+function updateSkillLevelUI(){
+  if(!player) return;
+  const champ = save.champions[player.classKey]; if(!champ) return;
+  const allocs = [0,1,2].map(i=>allocLevel(champ.skillMastery[i])).concat([allocLevel(champ.ultMastery)]);
+  const key = player.classKey+"|"+champ.talentPoints+"|"+champ.level+"|"+allocs.join(",");
+  if(key === _skillLvlKey) return;
+  _skillLvlKey = key;
+  buildSkillPlusButtons();
+  positionSkillPlusButtons();
+  const sug = suggestedSkillInvest(player.classKey);
+  SKILL_PLUS_IDS.forEach(([btnId, idx], k)=>{
+    const pip = document.getElementById("skill-lvl-"+idx);
+    if(pip) pip.textContent = allocs[k] > 0 ? allocs[k] : "";
+    const b = document.getElementById("skill-plus-btn-"+idx);
+    if(!b) return;
+    const can = !skillInvestLockReason(player.classKey, idx);
+    b.classList.toggle("hidden", !can);
+    b.classList.toggle("suggested", can && idx===sug);
+  });
+  if(champ.talentPoints>0 && sug!==null && !_skillPlusHintShown){
+    _skillPlusHintShown = true;
+    showBanner("¡Punto de habilidad! Tocá el + dorado para subirla");
+  }
+}
+function resetSkillLevelUI(){ _skillLvlKey = ""; _skillPlusHintShown = false; }
+window.addEventListener("resize", ()=>{ _skillLvlKey = ""; });
+window.addEventListener("orientationchange", ()=>{ _skillLvlKey = ""; });

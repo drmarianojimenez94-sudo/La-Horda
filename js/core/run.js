@@ -111,6 +111,7 @@ function startRun(fromLevel){
   buildArenaDecor();
   for(let i=0;i<60;i++) embers.push(spawnEmber());
   updateAbilityButtons();
+  if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
   beginLevel();
   setState("playing");
 }

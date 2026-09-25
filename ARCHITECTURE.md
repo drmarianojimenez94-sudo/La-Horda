@@ -104,7 +104,11 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 1. `js/main.js` carga el guardado (`loadSave`), arma los menús y muestra el título.
 2. `js/assets/preload.js` deja "Toca para continuar" deshabilitado (con %) hasta que baja todo
    el arte.
-3. Menús (`js/ui/menus.js`, `js/ui/champion-select.js`): elegís modo, arena y campeón.
+3. Menús (`js/ui/menus.js`, `js/ui/champion-select.js`): elegís modo, arena y campeón, y pasás
+   a la **Sala** (4 lugares; equipamiento, árbol de talentos y habilidades del campeón). Fuera de
+   la partida también está **Mis Campeones** (`js/ui/champions-hub.js`) con lo mismo por campeón.
+   Objetos y talentos se cambian SOLO ahí (el juego es multijugador: en partida no hay pausa);
+   las habilidades se suben en partida con los "+" del HUD (`js/ui/hud.js`).
 4. **Comenzar** → `startRun()` en `js/core/run.js` crea al jugador y los 3 aliados
    (`js/champions/hero-factory.js`), arma el escenario (`js/arenas/arena-identity.js`) y arranca
    el nivel (`beginLevel` en `js/systems/waves.js`). La Arena Divina entra por

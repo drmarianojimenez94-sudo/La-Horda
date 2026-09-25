@@ -135,7 +135,7 @@ function updateReviveBtn(){
 }
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{
-  if(state==="playing"){ setState("paused"); renderMasteryPanel(); renderTalentsPanel(); renderInventoryPanel(); renderStatsPanel(); }
+  if(state==="playing"){ setState("paused"); renderStatsPanel(); }
 });
 document.getElementById("resume-btn").addEventListener("click", ()=> setState("playing"));
 document.getElementById("quit-btn").addEventListener("click", ()=>{
@@ -149,18 +149,4 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
   applyArenaFailurePenalty(player.classKey);
   if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
   setState("menu"); renderChampGrid(); renderSaveLine();
-});
-document.querySelectorAll(".pause-tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".pause-tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    const which = tab.dataset.tab;
-    document.getElementById("mastery-panel").classList.toggle("hidden", which!=="skills");
-    document.getElementById("talents-panel").classList.toggle("hidden", which!=="talents");
-    document.getElementById("inventory-panel").classList.toggle("hidden", which!=="inventory");
-    document.getElementById("stats-panel").classList.toggle("hidden", which!=="stats");
-    if(which==="talents") renderTalentsPanel();
-    if(which==="inventory") renderInventoryPanel();
-    if(which==="stats") renderStatsPanel();
-  });
 });

@@ -1,38 +1,43 @@
 "use strict";
 /* ============================================================
    js/ui/panels-skills.js
-   Pantalla de pausa: paneles de habilidades (maestría) y talentos.
+   Paneles de habilidades (niveles/maestría) y ÁRBOL DE TALENTOS de un campeón. Se usan fuera
+   de la partida: en la Sala (antes de entrar) y en la ficha de Mis Campeones. En partida las
+   habilidades se suben con los "+" del HUD (ver js/ui/hud.js) y los talentos no se tocan.
    ============================================================ */
 
-function renderMasteryPanel(){
-  const panel = document.getElementById("mastery-panel");
-  if(!panel || !player) return;
-  const classKey = player.classKey;
+// Habilidades: nivel invertido (0-10), nivel de uso y qué da el próximo punto.
+// rerender: qué volver a dibujar después de invertir un punto.
+function renderSkillsPanel(panel, classKey, rerender){
+  if(!panel) return;
   const cls = CLASSES[classKey];
   const champ = save.champions[classKey];
   const items = cls.skills.map((sk,i)=>({sk, idx:i, m:champ.skillMastery[i]}))
     .concat([{sk:cls.ultimate, idx:"ult", m:champ.ultMastery}]);
-  let html = `<div class="talent-points">Puntos de talento disponibles: <b>${champ.talentPoints}</b></div><div class="mastery-list">`;
+  let html = `<div class="talent-points">Puntos disponibles: <b>${champ.talentPoints}</b> <span class="tp-note">(1 por nivel de campeón; se comparten con los talentos)</span></div><div class="mastery-list">`;
   items.forEach(({sk,idx,m})=>{
     const tLvl = allocLevel(m);
     const tMaxed = tLvl>=TALENT_MAX;
     const need = useXpThreshold(m.useLvl);
     const usePct = Math.min(100, m.useXp/need*100);
-    const canInvest = champ.talentPoints>0 && !tMaxed;
+    const lock = skillInvestLockReason(classKey, idx);
+    const canInvest = !lock;
     const statNow = skillStatLine(sk, m);
     const nextM = {useXp:0, useLvl:m.useLvl, alloc: Math.min(TALENT_MAX, m.alloc+1)};
     const statNext = tMaxed ? "" : `<span class="mastery-next"> → ${skillStatLine(sk, nextM)}</span>`;
     const useBonusPct = Math.round((usePowerMult(m)-1)*100);
     const iconImg = SKILL_ICON_IMG[sk.name];
     const iconHtml = iconImg ? `<img src="${iconImg}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;">` : sk.ico;
+    const ultLock = (idx==="ult" && champ.level < ULT_POINTS_MIN_LEVEL) ? `<div class="talent-lock-reason">🔒 ${lock}</div>` : "";
     html += `
       <div class="mastery-row">
         <div class="mastery-icon">${iconHtml}</div>
         <div class="mastery-info">
-          <div class="mastery-name"><span>${sk.name}</span><span class="mastery-lvl">${tMaxed?"Talento MÁX":"Talento "+tLvl+"/"+TALENT_MAX}</span></div>
+          <div class="mastery-name"><span>${sk.name}</span><span class="mastery-lvl">${tMaxed?"Nv. MÁX":"Nv. "+tLvl+"/"+TALENT_MAX}</span></div>
           <div class="mastery-bar-track"><div class="mastery-bar-fill" style="width:${usePct}%"></div></div>
           <div class="mastery-stats"><b>${statNow}</b>${statNext}</div>
           <div class="mastery-use">Uso Nv. ${m.useLvl} · +${useBonusPct}% daño permanente por práctica</div>
+          ${ultLock}
         </div>
         <button class="mastery-plus ${canInvest?"ready":""}" ${canInvest?"":"disabled"} data-idx="${idx}">+</button>
       </div>`;
@@ -42,98 +47,124 @@ function renderMasteryPanel(){
   panel.querySelectorAll(".mastery-plus.ready").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const raw = btn.getAttribute("data-idx");
-      investTalentPoint(classKey, raw==="ult" ? "ult" : parseInt(raw));
+      if(investTalentPoint(classKey, raw==="ult" ? "ult" : parseInt(raw))) rerender();
     });
   });
 }
-// Nombre legible de a qué habilidad/ulti apunta un nodo (para mostrar "afecta: X" en su fila).
+
+/* ============================================================
+   ÁRBOL DE TALENTOS
+   Raíz (el campeón) -> 3 ramas en columnas, cada una una cadena de nodos unidos por una línea
+   (común -> común -> común -> especial...), las bifurcaciones exclusivas lado a lado ("elegí
+   uno") y, coronando cada rama, su Maestría (nivel 90) con su mini-árbol si es la elegida.
+   Cada nodo: ícono con su rango, nombre y explicación al lado.
+   ============================================================ */
+const TALENT_GLYPH_BY_KEY = {powerMult:"⚔", areaMult:"◎", durationMult:"⏳", cdMult:"⟳", jumpBonus:"ϟ"};
+const TALENT_GLYPH_BY_EFFECT = {dmg_mult:"⚔", skilldmg_mult:"✧", cd_mult:"⟳", def_add:"🛡", atkspeed_mult:"»",
+  lifesteal_add:"🩸", heal_mult:"✚", hp_mult:"❤", speed_mult:"➶", energy_mult:"💧", crit_chance_add:"✦", crit_mult_add:"✦"};
+function talentGlyph(node){
+  let mods = [];
+  try{ mods = node.mods(1) || []; }catch(e){}
+  const m = mods[0];
+  if(!m) return node.type==="special" ? "★" : "•";
+  if(m.flag) return "★";
+  if(m.key && TALENT_GLYPH_BY_KEY[m.key]) return TALENT_GLYPH_BY_KEY[m.key];
+  if(m.effect && TALENT_GLYPH_BY_EFFECT[m.effect]) return TALENT_GLYPH_BY_EFFECT[m.effect];
+  return "•";
+}
+// Nombre legible de a qué habilidad/ulti apunta un nodo (para mostrar "afecta: X").
 function talentSkillLabel(classKey, targetSkill){
   if(targetSkill===undefined) return "";
   const cls = CLASSES[classKey];
   if(targetSkill==="ult") return cls.ultimate.name;
   return cls.skills[targetSkill] ? cls.skills[targetSkill].name : "";
 }
-function renderTalentNodeRow(classKey, node, rank, lockReason, isMastery){
+function talentBranchLabel(branch){
+  return branch.replace(/_/g," ").replace(/\b\w/g, c=>c.toUpperCase());
+}
+function talentNodeHTML(classKey, node, rank, lockReason, isMastery){
   const maxed = rank>=node.maxRank;
   const locked = !!lockReason && lockReason!=="MÁX";
+  const avail = !locked && !maxed;
   const targets = [];
   try{
-    const sample = node.mods(Math.max(1,rank||1))||[];
-    sample.forEach(m=>{ if(m.targetSkill!==undefined){ const l=talentSkillLabel(classKey,m.targetSkill); if(l && !targets.includes(l)) targets.push(l); } });
+    (node.mods(Math.max(1,rank||1))||[]).forEach(m=>{ if(m.targetSkill!==undefined){ const l=talentSkillLabel(classKey,m.targetSkill); if(l && !targets.includes(l)) targets.push(l); } });
   }catch(e){}
-  const nextDesc = maxed ? "" : `<div class="mastery-next">Próximo rango: ${node.rankDesc(rank+1)}</div>`;
-  const curDesc = rank>0 ? `<div class="mastery-stats"><b>Actual:</b> ${node.rankDesc(rank)}</div>` : "";
-  const typeLabel = node.type==="special" ? "Especial" : (isMastery ? "Maestría" : "Común");
-  const reasonHtml = (locked && lockReason) ? `<div class="talent-lock-reason">🔒 ${lockReason}</div>` : "";
-  const btnCls = (!locked && !maxed) ? "ready" : "";
-  const rowCls = ["talent-row","mastery-row"];
-  if(locked) rowCls.push("locked");
-  if(node.type==="special") rowCls.push("special");
-  if(maxed) rowCls.push("maxed");
-  return `
-    <div class="${rowCls.join(" ")}" data-node="${node.id}" data-mastery="${isMastery?"1":"0"}">
-      <div class="mastery-icon">${maxed?"✔":(node.type==="special"?"★":"•")}</div>
-      <div class="mastery-info">
-        <div class="mastery-name"><span>${node.name} <span class="talent-badge${node.type==="special"?" special":""}">${typeLabel}</span></span><span class="mastery-lvl">${rank}/${node.maxRank}</span></div>
-        <div class="mastery-use">${node.desc}${targets.length?` (afecta: ${targets.join(", ")})`:""}</div>
-        ${curDesc}
-        ${nextDesc}
-        ${reasonHtml}
-      </div>
-      <button class="mastery-plus ${btnCls}" ${btnCls?"":"disabled"} data-node="${node.id}" data-mastery="${isMastery?"1":"0"}">${maxed?"✔":"+"}</button>
-    </div>`;
+  const effect = rank>0 ? `<div class="tt-eff"><b>Ahora:</b> ${node.rankDesc(rank)}</div>` : "";
+  const next = maxed ? "" : `<div class="tt-eff next">${rank>0?"Siguiente":"Rango 1"}: ${node.rankDesc(rank+1)}</div>`;
+  const cls = ["tt-node", node.type==="special"?"special":"common", maxed?"maxed":(rank>0?"owned":(avail?"avail":"locked"))];
+  const reason = locked ? `<div class="tt-lock">🔒 ${lockReason}</div>` : "";
+  return `<div class="${cls.join(" ")}" data-node="${node.id}">
+    <div class="tt-ico">${maxed?"✔":talentGlyph(node)}<span class="tt-rank">${rank}/${node.maxRank}</span></div>
+    <div class="tt-txt">
+      <div class="tt-name">${node.name}${node.type==="special"?' <span class="talent-badge special">Especial</span>':""}${node.cost>1?` <span class="tt-cost">${node.cost} pts</span>`:""}</div>
+      <div class="tt-desc">${node.desc}${targets.length?` <i>(${targets.join(", ")})</i>`:""}</div>
+      ${effect}${next}${reason}
+    </div>
+    ${avail ? `<button class="tt-buy mastery-plus ready" data-node="${node.id}" data-mastery="${isMastery?"1":"0"}">+</button>` : ""}
+  </div>`;
 }
-function renderTalentsPanel(){
-  const panel = document.getElementById("talents-panel");
-  if(!panel || !player) return;
-  const classKey = player.classKey;
+// Lista de nodos de una rama -> HTML de la cadena, agrupando pares exclusivos en una bifurcación.
+function talentChainHTML(classKey, nodes, rankOf, lockOf, isMastery){
+  let html = "", i = 0;
+  while(i < nodes.length){
+    const n = nodes[i];
+    const pair = n.exclusiveWith ? nodes.find(o=>o.id===n.exclusiveWith) : null;
+    if(pair && nodes.indexOf(pair) > i){
+      html += `<div class="tt-fork"><div class="tt-fork-label">Elegí uno (permanente)</div>
+        ${talentNodeHTML(classKey, n, rankOf(n), lockOf(n), isMastery)}
+        <div class="tt-fork-or">o</div>
+        ${talentNodeHTML(classKey, pair, rankOf(pair), lockOf(pair), isMastery)}</div>`;
+      i++; continue;
+    }
+    if(pair && nodes.indexOf(pair) < i){ i++; continue; } // ya dibujado junto a su par
+    html += talentNodeHTML(classKey, n, rankOf(n), lockOf(n), isMastery);
+    i++;
+  }
+  return html;
+}
+function renderTalentTree(panel, classKey, rerender){
+  if(!panel) return;
+  const cls = CLASSES[classKey];
   const champ = save.champions[classKey];
   const tree = talentTreeFor(classKey);
-  if(!tree){ panel.innerHTML = `<div class="talent-lock-banner">Esta clase todavía no tiene árbol de talentos.</div>`; return; }
-  let html = `<div class="talent-points">Nivel ${champ.level} · Puntos de talento disponibles: <b>${champ.talentPoints}</b></div>`;
-  if(champ.level < TALENT_TREE_MIN_LEVEL){
-    html += `<div class="talent-lock-banner">🔒 Los talentos se desbloquean en el nivel ${TALENT_TREE_MIN_LEVEL} (te faltan ${TALENT_TREE_MIN_LEVEL-champ.level} niveles). Podés inspeccionar todo el árbol y planificar tu build desde ahora.</div>`;
-  }
-  const branches = [...new Set(tree.nodes.map(n=>n.branch))];
+  if(!tree){ panel.innerHTML = `<div class="talent-lock-banner">Este campeón todavía no tiene árbol de talentos.</div>`; return; }
   const st = talentState(classKey);
+  const branches = [...new Set(tree.nodes.map(n=>n.branch))];
+  let html = `<div class="tt-wrap">
+    <div class="tt-root" style="border-color:${cls.color};"><span class="tt-root-ico" style="color:${cls.color};">${cls.icon}</span>
+      <span><b>${cls.name}</b> · Nv. ${champ.level} · Puntos: <b>${champ.talentPoints}</b></span></div>`;
+  if(champ.level < TALENT_TREE_MIN_LEVEL){
+    html += `<div class="talent-lock-banner">🔒 Los talentos se compran desde el nivel ${TALENT_TREE_MIN_LEVEL} (te faltan ${TALENT_TREE_MIN_LEVEL-champ.level}). Ya podés ver todo el árbol y planear tu build.</div>`;
+  }
+  html += `<div class="tt-cols">`;
   branches.forEach(branch=>{
     const inv = branchInvestment(classKey, branch);
-    html += `<div class="talent-branch-title"><span>${branch.replace(/_/g," ")}</span><span class="inv">${inv} pts. invertidos</span></div>`;
-    tree.nodes.filter(n=>n.branch===branch).forEach(node=>{
-      const rank = st.nodes[node.id]||0;
-      const reason = talentNodeLockReason(classKey, node);
-      html += renderTalentNodeRow(classKey, node, rank, reason, false);
-    });
-  });
-  // ---- Maestría ----
-  html += `<div class="mastery-section"><div class="talent-branch-title"><span>Maestría (nivel ${TALENT_MASTERY_MIN_LEVEL}+)</span></div>`;
-  const options = masteryOptionsFor(classKey);
-  if(!st.mastery){
-    options.forEach(m=>{
-      const canPick = canPickMastery(classKey, m.id);
-      const reason = masteryLockReason(classKey, m.id);
-      html += `<div class="mastery-choice-card ${canPick?"eligible":""}">
-        <div class="mc-name">${m.name}</div>
-        <div class="mc-desc">${m.desc}</div>
-        ${canPick ? `<button class="btn wide mastery-pick-btn" data-mastery-id="${m.id}">Elegir Maestría (permanente)</button>` : `<div class="talent-lock-reason">🔒 ${reason}</div>`}
-      </div>`;
-    });
-  } else {
-    const chosen = tree.masteries[st.mastery];
-    html += `<div class="mastery-choice-card eligible"><div class="mc-name">${chosen.name} ✔</div><div class="mc-desc">${chosen.desc}</div></div>`;
-    chosen.miniTree.forEach(node=>{
-      const rank = st.masteryNodes[node.id]||0;
-      const reason = masteryMiniLockReason(classKey, node);
-      html += renderTalentNodeRow(classKey, node, rank, reason, true);
-    });
-    const others = options.filter(m=>m.id!==st.mastery);
-    if(others.length){
-      html += `<div class="talent-lock-reason" style="margin-top:6px;">Maestrías bloqueadas permanentemente: ${others.map(m=>m.name).join(", ")}</div>`;
+    const nodes = tree.nodes.filter(n=>n.branch===branch);
+    html += `<div class="tt-col"><div class="tt-branch"><span>${talentBranchLabel(branch)}</span><small>${inv} pts</small></div><div class="tt-chain">`;
+    html += talentChainHTML(classKey, nodes, n=>st.nodes[n.id]||0, n=>talentNodeLockReason(classKey, n), false);
+    // Corona de la rama: su Maestría
+    const mastery = Object.values(tree.masteries||{}).find(m=>m.branch===branch);
+    if(mastery){
+      const chosen = st.mastery===mastery.id, otherChosen = st.mastery && !chosen;
+      const canPick = canPickMastery(classKey, mastery.id);
+      const reason = chosen ? "" : (otherChosen ? "Bloqueada: elegiste otra Maestría" : masteryLockReason(classKey, mastery.id));
+      html += `<div class="tt-node tt-crown ${chosen?"maxed":(canPick?"avail":"locked")}">
+        <div class="tt-ico">♛</div>
+        <div class="tt-txt"><div class="tt-name">Maestría: ${mastery.name}${chosen?" ✔":""}</div>
+          <div class="tt-desc">${mastery.desc}</div>
+          ${reason?`<div class="tt-lock">🔒 ${reason}</div>`:""}
+          ${canPick?`<button class="btn wide mastery-pick-btn" data-mastery-id="${mastery.id}">Elegir Maestría (permanente)</button>`:""}
+        </div></div>`;
+      if(chosen){
+        html += talentChainHTML(classKey, mastery.miniTree, n=>st.masteryNodes[n.id]||0, n=>masteryMiniLockReason(classKey, n), true);
+      }
     }
-  }
-  html += "</div>";
+    html += `</div></div>`;
+  });
+  html += `</div></div>`;
   panel.innerHTML = html;
-  panel.querySelectorAll(".mastery-plus.ready").forEach(btn=>{
+  panel.querySelectorAll(".tt-buy").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const nodeId = btn.getAttribute("data-node");
       const isMastery = btn.getAttribute("data-mastery")==="1";
@@ -147,7 +178,7 @@ function renderTalentsPanel(){
         if(confirm(msg)) res = buyFn(classKey, nodeId, true);
         else return;
       }
-      if(res.ok) renderTalentsPanel();
+      if(res.ok) rerender();
       else if(res.reason) alert(res.reason);
     });
   });
@@ -161,13 +192,13 @@ function renderTalentsPanel(){
           res = pickMastery(classKey, masteryId, true);
         } else return;
       }
-      if(res.ok) renderTalentsPanel();
+      if(res.ok) rerender();
       else if(res.reason) alert(res.reason);
     });
   });
 }
 // Resumen numérico de una habilidad para un objeto de maestría dado (real o hipotético, para
-// previsualizar el próximo nivel de talento sin mutar el estado guardado).
+// previsualizar el próximo nivel sin mutar el estado guardado).
 function skillStatLine(sk, m){
   const POWER = masteryPowerMult(m), AREA = masteryAreaMult(m), DUR = masteryDurationMult(m);
   const powerLabel = sk.dmgMult ? "Daño" : (sk.healPct||sk.hpBonusPct||sk.shieldPct) ? "Efecto" : null;
