@@ -156,11 +156,12 @@ const VFX_SPR_EXTRA = {
   // otro efecto de vfxSprite-.
   nigroSoulFireFlare: { imgs:[NIGRO_DEMON_IMG.soulFireProj], ready:()=>NIGRO_DEMON_READY.soulFireProj, ground:false },
   // Corte del Rōnin: destello de impacto real (antes solo el chispazo genérico de pushSpark).
-  musashiRoninImpact: { imgs:[MUSASHI_REAL_IMG.ronin4], ready:()=>MUSASHI_REAL_READY.ronin4, ground:false },
+  musashiRoninImpact: { imgs:[MUSASHI_REAL_IMG.ronin4], ready:()=>MUSASHI_REAL_READY.ronin4 && !(CHAMP_PACK.musashi && CHAMP_PACK.musashi.ready), ground:false },
   // Último Duelo: banners decorativos (no reemplazan el cuerpo de Musashi, van superpuestos
   // arriba de él) para la entrada a la arena de bolsillo y el instante del Golpe de Gracia.
   musashiPortal: { imgs:[MUSASHI_REAL_IMG.ultiPortal], ready:()=>MUSASHI_REAL_READY.ultiPortal, ground:false },
-  musashiFinish: { imgs:[MUSASHI_REAL_IMG.ultiFinish], ready:()=>MUSASHI_REAL_READY.ultiFinish, ground:false },
+  // (dibujan al Musashi/Sylva viejos: se apagan cuando está cargado el arte nuevo, para no mezclar estilos)
+  musashiFinish: { imgs:[MUSASHI_REAL_IMG.ultiFinish], ready:()=>MUSASHI_REAL_READY.ultiFinish && !(CHAMP_PACK.musashi && CHAMP_PACK.musashi.ready), ground:false },
   // Flecha Perforante: impacto crítico real sobre la Presa Acorralada (antes sin usar).
   sylvaPiercingCrit: { imgs:[SYLVA_REAL_IMG.piercingCrit], ready:()=>SYLVA_REAL_READY.piercingCrit, ground:false },
   // Materialización real al invocar esqueletos/Golem (antes sin usar).
