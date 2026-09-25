@@ -50,7 +50,8 @@ function defaultSave(){
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
-    campaignResetV1:true,   // modo campaña: ver campaignResetV1() en loadSave
+    campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
+    campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
     starterChosen:false,    // todavía no eligió su campeón de regalo (pantalla "Tu primer campeón")
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
@@ -92,11 +93,15 @@ function loadSave(){
       save.arenasCleared = Object.assign(defaultSave().arenasCleared, parsed.arenasCleared||{});
       // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
       // Acuática tenía abierto el Hielo, y lo conserva (una sola vez, al cargar por primera vez).
-      // MODO CAMPAÑA (una sola vez): la prueba de campaña arranca de cero para todos -todos los
-      // campeones a nivel 1, sin talentos ni maestría, bloqueados (se elige uno de regalo y el resto
-      // se compra), campaña y oro en cero-. Los objetos se conservan. El guardado anterior queda
-      // copiado entero en localStorage (SAVE_KEY + "_antesDeCampania") por si hay que volver atrás.
-      if(!parsed.campaignResetV1){ campaignResetV1(raw); }
+      // MODO CAMPAÑA: la prueba de campaña arranca de cero para todos -todos los campeones a
+      // nivel 1, sin talentos ni maestría, bloqueados (se elige uno de regalo y el resto se
+      // compra), campaña y oro en cero-. Los objetos se conservan. El guardado anterior queda
+      // copiado entero en localStorage (SAVE_KEY + "_antesDeCampania") por si hay que volver
+      // atrás. campaignResetV2 es un 2do reinicio (mismo mecanismo, flag nueva): sirve para
+      // volver a arrancar de cero a quien ya jugó con campaignResetV1 puesto (ej. antes de una
+      // prueba real con amigos) sin tocar a un guardado recién creado, que ya nace con ambas
+      // flags en true. Si en el futuro hace falta un 3er reinicio, agregar campaignResetV3 igual.
+      if(!parsed.campaignResetV2){ campaignReset(raw); }
       if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
@@ -106,7 +111,7 @@ function loadSave(){
     }
   }catch(e){ save = defaultSave(); }
 }
-function campaignResetV1(raw){
+function campaignReset(raw){
   try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeCampania")) localStorage.setItem(SAVE_KEY+"_antesDeCampania", raw); }catch(e){}
   for(const k in save.champions){
     const c = save.champions[k];
@@ -121,6 +126,7 @@ function campaignResetV1(raw){
   save.starterChosen = false; save.lastChamp = null;
   save.playtestV1Bonus = true;
   save.campaignResetV1 = true;
+  save.campaignResetV2 = true;
   persist();
 }
 // ¿Tiene que elegir todavía su campeón de regalo? Solo mientras no tenga ningún campeón propio
