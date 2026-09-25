@@ -32,6 +32,10 @@ function grantXP(champKey, amount){
    Morir o abandonar antes del jefe final resta un porcentaje de la XP y del oro GANADOS EN
    ESA PARTIDA (no del total acumulado): perder duele, pero nunca te deja por debajo del nivel
    y del oro con los que entraste, así que no se puede quedar trabado retrocediendo.
+   Calibrado con 360 partidas simuladas desde cero (0%, 25%, 35% y 50%, 3 campeones x 30
+   partidas): con 50% ningún campeón perdió jamás un nivel y el ritmo para pasar arenas fue el
+   mismo en todos los casos (el freno real es la dificultad de cada arena); lo que sí baja es
+   la velocidad de subida (~Nv. 51-60 vs ~56-76 a las 30 partidas) y el oro juntado (-25/-50%).
    ============================================================ */
 let ARENA_FAIL_PENALTY_PCT = 0.5; // let: las pruebas de balance (tools/playtest) lo varían para calibrar
 let runStartXp = 0, runStartGold = 0;

@@ -7,7 +7,7 @@ const [jobsFile, outFile, port] = [process.argv[2], process.argv[3], process.arg
 const jobs = JSON.parse(fs.readFileSync(jobsFile, 'utf8'));
 const HOOKS = () => {
   if (window.__CP) return; const CP = window.__CP = {};
-  CP.reset = () => { CP.dmgSrc = {}; CP.items = []; CP.buffs = []; CP.levelAt = {}; CP.bossAt = null; CP.bossDeadAt = null; CP.idleMs = 0; CP.peakEnemies = 0; CP.minHpPct = 100; CP.revives = 0; CP.allyDowns = 0; };
+  CP.reset = () => { CP.dmgSrc = {}; CP.items = []; CP.buffs = []; CP.levelAt = {}; CP.bossAt = null; CP.bossDeadAt = null; CP.idleMs = 0; CP.peakEnemies = 0; CP.minHpPct = 100; CP.revives = 0; CP.allyDowns = 0; CP.bigHits = []; };
   CP.reset();
   const dh = window.damageHero;
   window.damageHero = function (h, amount, src) {
@@ -15,6 +15,7 @@ const HOOKS = () => {
     if (h === player) { let k = src && src.type ? src.type : (src && src.from && src.from.type ? src.from.type + '(proj)' : null);
       if (!k) { const fr = (new Error().stack || '').split('\n').slice(2, 5).map(x => (x.trim().split(' ')[1] || '?')).join('<'); k = 'fn:' + fr; }
       const lost = Math.max(0, Math.min(hp0, hp0 - h.hp)); CP.dmgSrc[k] = (CP.dmgSrc[k] || 0) + lost;
+      if (amount > h.maxHp * 0.6 && CP.bigHits.length < 5) CP.bigHits.push(k + (src && src.kind ? '[' + src.kind + ']' : '') + ' ' + Math.round(amount) + '/' + Math.round(h.maxHp) + ' L' + runLevel);
       if (a0 && !h.alive) CP.killer = k + ' (hit ' + Math.round(amount) + ', hp antes ' + Math.round(hp0) + '/' + Math.round(h.maxHp) + ', nivel ' + runLevel + ')'; }
     else if (a0 && !h.alive) CP.allyDowns++;
   };
@@ -25,6 +26,9 @@ const HOOKS = () => {
 async function runOne(page, job) {
   return page.evaluate(([job]) => {
     if (job.lvl > 0) for (const k in save.champions) { save.champions[k].level = job.lvl; const al = Math.min(10, Math.floor(job.lvl / 3)); save.champions[k].skillMastery.forEach(m => m.alloc = al); save.champions[k].ultMastery.alloc = al; }
+    if (job.diff) Object.assign(DIFF, job.diff);
+    if (job.penalty !== undefined) ARENA_FAIL_PENALTY_PCT = job.penalty;
+    if (job.mods) Object.assign(ARENA_MODS[job.arena], job.mods);
     if (job.gear) { for (const k in save.champions) if (typeof autoEquipBest === 'function') autoEquipBest(k); }
     __CP.reset();
     if (job.arena === 'auto') job.arena = ARENA_ORDER.find(a => !(save.arenasCleared||{})[a]) || 'infernal';
@@ -48,8 +52,9 @@ async function runOne(page, job) {
       bossSecs: __CP.bossAt !== null ? ((__CP.bossDeadAt || Math.round(t / 1000)) - __CP.bossAt) : null, bossType: boss ? boss.type : null, bossHpLeftPct: boss && boss.alive ? Math.round(100 * boss.hp / boss.maxHp) : 0,
       dmgShare: Math.round(100 * (st.dmgDealt || 0) / Math.max(1, (st.dmgDealt || 0) + allyDmg)), casts: st.skillCasts || 0, dmgTaken: Math.round(st.dmgTaken || 0), healDone: Math.round(st.healDone || 0),
       minHpPct: __CP.minHpPct, idleSecs: Math.round(__CP.idleMs / 1000), peakEnemies: __CP.peakEnemies, allyDowns: __CP.allyDowns,
-      items: __CP.items, killer: __CP.killer || null, buffs: __CP.buffs, levelAt: __CP.levelAt, top,
-      xpGain: (save.champions[job.cls].level - lvl0) + ' lv / ' + Math.round(save.champions[job.cls].xp - xp0) + ' xp', goldGain: save.gold - gold0, apErr: __AP.err || null };
+      items: __CP.items, bigHits: __CP.bigHits, killer: __CP.killer || null, buffs: __CP.buffs, levelAt: __CP.levelAt, top,
+      xpGain: (save.champions[job.cls].level - lvl0) + ' lv / ' + Math.round(save.champions[job.cls].xp - xp0) + ' xp', goldGain: save.gold - gold0, apErr: __AP.err || null,
+      after: { lv: save.champions[job.cls].level, totXp: totalXpForChamp(job.cls), gold: save.gold, cleared: Object.keys(save.arenasCleared || {}).length } };
     // leave the run cleanly so the next job starts from a menu state
     try { if (typeof clearRunTimers === 'function') clearRunTimers(); } catch (e) {}
     state = 'menu';
