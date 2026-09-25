@@ -245,6 +245,11 @@ Si falta el arte real, el juego dibuja un pixel art de respaldo desde `js/data/p
 
 ## 9. Cómo agregar una arena
 
+**Camino recomendado (desde la Arena III):** carpeta propia `js/arenas/<clave>/` registrada en
+`ARENA_DEFS` (`js/arenas/common/arena-registry.js`), sin tocar el motor: ver
+`docs/arena-identity/README.md` y, como ejemplo completo, `js/arenas/fortaleza/`. El camino
+clásico de abajo es el que siguen las 5 arenas originales.
+
 1. `js/data/arenas.js`: entrada en `ARENA_MODS` (nombre, modificadores) y en `ARENA_ORDER`.
 2. `js/enemies/spawning.js`: su `spawnPoolFor...` y que `spawnPoolFor()` la use.
 3. Escenario: `aidBuild<Arena>()` en `js/arenas/arena-identity.js`, estilo en `AID_STYLE`
