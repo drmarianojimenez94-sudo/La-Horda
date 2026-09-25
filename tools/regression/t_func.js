@@ -267,8 +267,9 @@ async function canvasNonBlank(page) {
   {
     const legacy = { champions: { tanque: { level: 7, xp: 12, unlocked: true, skillMastery: [{ useXp: 3, useLvl: 2 }], ultMastery: { useXp: 0, useLvl: 1 } }, mago: { level: 3, xp: 0 } }, gold: 321, itemSchemaV: 1, arenasCleared: { bosque: true } };
     const { ctx, page, errors } = await newPage(browser, site, { save: legacy });
-    const s = await page.evaluate(() => window.__T.ev('({gold: save.gold, tl: save.champions.tanque.level, talents: !!save.champions.tanque.talents, eq: !!save.champions.tanque.equipment, n: Object.keys(save.champions).length, schema: save.itemSchemaV})'));
-    check('save.legacy_migrates', s.gold === 321 && s.tl === 7 && s.talents && s.eq && s.n === 10, s);
+    const s = await page.evaluate(() => window.__T.ev('({gold: save.gold, tl: save.champions.tanque.level, talents: !!save.champions.tanque.talents, eq: !!save.champions.tanque.equipment, n: Object.keys(save.champions).length, nClasses: Object.keys(CLASSES).length, schema: save.itemSchemaV})'));
+    // 321 del guardado viejo (+2000 del bono único de bienvenida, P4); un guardado por campeón existente
+    check('save.legacy_migrates', (s.gold === 321 || s.gold === 2321) && s.tl === 7 && s.talents && s.eq && s.n === s.nClasses, s);
     await page.click('#title-continue-btn'); await page.click('#mainmenu-tienda-btn');
     check('save.legacy_gallery', (await page.locator('#shop-champ-grid .gallery-card').count()) >= 10);
     const errs = await gameErrors(page, errors);
