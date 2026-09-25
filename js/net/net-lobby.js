@@ -391,9 +391,10 @@ async function netJoinFromInput(){
   });
 })();
 // El campeón elegido la última vez (en la selección, la sala o Multijugador) queda recordado.
-(function netRestoreLastChamp(){
+// Se llama desde main.js después de loadSave().
+function netRestoreLastChamp(){
   try{
     const k = save.lastChamp;
     if(k && CLASSES[k] && save.champions[k] && save.champions[k].unlocked!==false) selectedClass = k;
   }catch(e){}
-})();
+}

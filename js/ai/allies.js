@@ -145,23 +145,27 @@ function botTryAbilities(h){
    pantalla de quien revive:
    - Un caído tiene a lo sumo UN reanimador a la vez (candado): a._reviveBy / a._reviveT (ms
      acumulados) / a._reviveDur (humano 1,3 s con el botón, bot 2,4 s). Todos lo ven igual.
-   - Cada cuadro en que el reanimador sigue siendo válido "toca" el progreso. Si un cuadro no lo
-     toca (soltó el botón, se alejó, cayó, quedó aturdido, se desconectó, el caído ya no es
-     válido o la partida terminó) el progreso vuelve a 0: nunca queda un "reviviendo" fantasma.
+   - El progreso vuelve a 0 al instante si el reanimador suelta el botón, se aleja, cae, queda
+     aturdido, se desconecta, el caído deja de ser válido o la partida termina; y si un bot deja
+     de revivirlo más de REVIVE_GRACE_MS. Nunca queda un "reviviendo" fantasma.
    - Recibir daño NO interrumpe (el aturdimiento sí).
    - Los humanos mantienen el botón: h._revHold = índice (en heroes) del caído; el invitado lo
      pide con {k:"revive", slot, on}. Los bots avanzan desde botMove (bot-brain.js). */
-let reviveFrame = 0;
+// Un bot que esquiva un aviso un instante no pierde lo avanzado; si deja de revivir más de esto,
+// vuelve a 0. Las interrupciones de un humano (soltar, alejarse, caer, aturdido, desconexión) son
+// inmediatas (cancelRevivesBy).
+const REVIVE_GRACE_MS = 350;
 function reviveBusyFor(a, r){
   if(!a || !a._reviveBy || a._reviveBy===r) return false;
   if(netIsGuest()) return a._reviveT > 0; // el invitado solo ve lo que manda el anfitrión
-  return a._reviveBy.alive && (a._revTouch|0) >= reviveFrame-1;
+  return a._reviveBy.alive && runElapsedMs - (a._revTouchAt||0) <= REVIVE_GRACE_MS;
 }
 function reviverCanAct(r){ return !!(r && r.alive && !(r.stunTimer>0) && !r.fused); }
+function cancelRevivesBy(r){ if(!r || !heroes) return; for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
 // Un cuadro de progreso de r sobre a. Devuelve true si lo terminó de revivir.
 function reviveStep(a, r, dur, dt){
   if(a._reviveBy!==r){ a._reviveBy = r; a._reviveT = 0; }
-  a._reviveDur = dur; a._revTouch = reviveFrame;
+  a._reviveDur = dur; a._revTouchAt = runElapsedMs;
   a._reviveT = (a._reviveT||0) + dt;
   if(a._reviveT >= dur){ reviveHero(a, r); return true; }
   return false;
@@ -172,14 +176,14 @@ function updateRevives(dt){
     const a = heroes[r._revHold];
     const ok = state==="playing" && !runEnding && !divinaMode && reviverCanAct(r) && a && a!==r && !a.alive
       && distance(r, a) < REVIVE_RANGE + (r.isRemote ? 20 : 0) && !reviveBusyFor(a, r);
-    if(!ok){ r._revHold = -1; continue; }
+    if(!ok){ r._revHold = -1; cancelRevivesBy(r); continue; }
     if(reviveStep(a, r, REVIVE_BTN_HOLD_MS, dt)) r._revHold = -1;
   }
   for(const a of heroes){
     if(a.alive){ if(a._reviveBy || a._reviveT){ a._reviveBy = null; a._reviveT = 0; } continue; }
-    if(a._reviveBy && (a._revTouch!==reviveFrame || runEnding || !a._reviveBy.alive)){ a._reviveBy = null; a._reviveT = 0; }
+    const by = a._reviveBy;
+    if(by && (runEnding || !reviverCanAct(by) || runElapsedMs - (a._revTouchAt||0) > REVIVE_GRACE_MS)){ a._reviveBy = null; a._reviveT = 0; }
   }
-  reviveFrame++;
 }
 // Revive al instante (lo usan las pruebas y herramientas); el botón usa el progreso de arriba.
 function tryReviveAlly(a){

@@ -101,7 +101,9 @@ function setReviveHold(target){
     else netSendToHost({k:"revive", on:0});
     return;
   }
-  if(player) player._revHold = target ? heroes.indexOf(target) : -1;
+  if(!player) return;
+  player._revHold = target ? heroes.indexOf(target) : -1;
+  if(!target) cancelRevivesBy(player); // soltar el botón corta al instante
 }
 function stopReviveBtnHold(){
   if(reviveBtnHoldRaf) cancelAnimationFrame(reviveBtnHoldRaf);

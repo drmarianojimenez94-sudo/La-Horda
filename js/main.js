@@ -9,6 +9,8 @@
    INIT
    ============================================================ */
 loadSave();
+grantPlaytestV1Bonus();  // bono único de 2.000 de oro (sobre el guardado REAL, recién cargado)
+netRestoreLastChamp();   // el último campeón elegido
 renderChampGrid();
 renderSaveLine();
 updateMenuBrandSub();

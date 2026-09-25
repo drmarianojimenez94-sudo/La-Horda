@@ -54,7 +54,7 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   // estado de animación que calcula el propio renderizador de cada cliente
   "_an",
   // revivir: el candado/progreso viaja (_reviveBy/_reviveT/_reviveDur); esto es interno del anfitrión
-  "_revTouch","_revHold"]);
+  "_revTouchAt","_revHold"]);
 // Se mandan solo en los snapshots completos (cada ~4 s y al terminar): cambian todo el tiempo y
 // solo hacen falta para la pantalla final (estadísticas de rendimiento).
 const NET_KEYFRAME_ONLY = new Set(["stats"]);
@@ -370,19 +370,18 @@ function netHostOnMsg(from, d){
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(d.aim||null); });
       return;
     case "revive": // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)
-      if(!d.on){ h._revHold = -1; return; }
+      if(!d.on){ h._revHold = -1; cancelRevivesBy(h); return; }
       if(heroes[d.slot|0] && heroes[d.slot|0]!==h) h._revHold = d.slot|0;
       return;
     case "invest": investTalentPoint(h.classKey, d.idx==="ult" ? "ult" : (d.idx|0)); return;
     case "buff": netHostBuffPicked(from, d.id); return;
     case "needFull": netSendTo(from, netStartMessage()); return;
     case "quit":
-      n.connected = false; h.isRemote = false; h._revHold = -1; netCancelRevivesBy(h); // lo sigue un bot hasta el final
+      n.connected = false; h.isRemote = false; h._revHold = -1; cancelRevivesBy(h); // lo sigue un bot hasta el final
       showBanner(`${h.netName||h.cls.name} abandonó la partida (lo controla un bot)`);
       return;
   }
 }
-function netCancelRevivesBy(r){ for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
 // Cambios de la sala en plena partida: desconexiones / reconexiones.
 function netHostOnRoom(room){
   if(!netMatch || netMatch.ended) return;
@@ -392,7 +391,7 @@ function netHostOnRoom(room){
     const connected = !!(s && s.connected);
     if(!connected && h._net.connected){
       h._net.connected = false; h.isRemote = false; h._revHold = -1;
-      netCancelRevivesBy(h); // desconectarse interrumpe su revivir (el bot, si quiere, empieza de cero)
+      cancelRevivesBy(h); // desconectarse interrumpe su revivir (el bot, si quiere, empieza de cero)
       showBanner(`${h.netName} se desconectó — lo controla un bot`);
     } else if(connected && !h._net.connected){
       h._net.connected = true; h.isRemote = true; h._net.in = null; h._net.posAuth++;

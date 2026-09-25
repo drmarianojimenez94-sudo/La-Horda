@@ -42,7 +42,9 @@ document.getElementById("champdetail-back-btn").addEventListener("click", ()=>{
 // se repite: queda marcado en save.playtestV1Bonus).
 const PLAYTEST_V1_GOLD = 2000;
 let playtestBonusJustGranted = false;
-(function grantPlaytestV1Bonus(){
+// OJO: se llama desde main.js DESPUÉS de loadSave() (antes de eso `save` es el guardado vacío por
+// defecto y persistirlo pisaría el progreso real del jugador).
+function grantPlaytestV1Bonus(){
   try{
     if(save.playtestV1Bonus) return;
     save.playtestV1Bonus = true;
@@ -50,7 +52,7 @@ let playtestBonusJustGranted = false;
     playtestBonusJustGranted = true;
     persist();
   }catch(e){}
-})();
+}
 function renderMainMenu(){
   if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
   const el = document.getElementById("mainmenu-gold-line");

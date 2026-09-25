@@ -107,13 +107,19 @@ function botMove(h, dt){
   const dz = botDangerVec(h.x, h.y, (h.radius||18) + 14);
   if(dz){
     h._dangerT = (h._dangerT||0) + dt;
-    if(h._dangerT > 230){ const l = Math.hypot(dz.x, dz.y)||1; return {mx:dz.x/l, my:dz.y/l, target, dodging:true}; }
+    if(h._dangerT > 230){
+      // si estaba reviviendo a alguien y sigue en rango, el esquive PAUSA el revivir (no lo reinicia)
+      for(const a of heroes){ if(a._reviveBy===h && !a.alive && distance(h, a) < REVIVE_RANGE) a._revTouchAt = runElapsedMs; }
+      const l = Math.hypot(dz.x, dz.y)||1; return {mx:dz.x/l, my:dz.y/l, target, dodging:true};
+    }
   } else h._dangerT = 0;
   // 2) revivir a otro bot caído (si no hay un jefe encima)
   const down = botDownedNear(h, 520);
   if(down){
     const d = distance(h, down);
-    if(d > 46){ return {mx:(down.x-h.x)/d, my:(down.y-h.y)/d, target}; }
+    // se acerca a 46 para empezar; si ya lo está reviviendo, un empujón no lo corta (hasta 70)
+    const already = down._reviveBy===h && down._reviveT>0;
+    if(d > (already ? 70 : 46)){ return {mx:(down.x-h.x)/d, my:(down.y-h.y)/d, target}; }
     if(reviverCanAct(h)) reviveStep(down, h, BOT_REVIVE_MS, dt);
     return {mx:0, my:0, target, reviving:true};
   }
