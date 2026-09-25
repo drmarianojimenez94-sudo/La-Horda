@@ -30,6 +30,7 @@ function update(dt){
   updateAcuaCurrent(dt);
   updateAcuaAmbience(dt);
   aidNavUpdate(dt); aidAmbUpdate(dt);
+  if(arenaHas("update")) arenaHook("update", dt); // mecanismos propios de la arena (La Fortaleza)
   if(axiomForceQuitFlash>0){
     axiomForceQuitFlash -= dt;
     canvas.style.filter = "invert(1)";
@@ -109,7 +110,7 @@ function update(dt){
     // El enemigo persigue al héroe vivo más cercano (jugador o aliado), salvo que esté provocado
     let tgt;
     if(e.tauntedBy && e.tauntedBy.alive && e.tauntTimer>0){ tgt = e.tauntedBy; e.tauntTimer -= dt; }
-    else { tgt = nearestHeroTo(e.x, e.y); }
+    else { tgt = arenaHas("enemyTarget") ? arenaHook("enemyTarget", e) : nearestHeroTo(e.x, e.y); }
     if(!tgt) continue;
     const dx = tgt.x-e.x, dy = tgt.y-e.y;
     const dist = Math.hypot(dx,dy)||1;
@@ -202,6 +203,9 @@ function update(dt){
     // ---- Habilidades especiales de jefes/subjefes (módulo updateBossSkills): mientras un
     // enemigo canaliza o embiste, no se mueve ni ataca de la forma normal. ----
     if(BOSS_SKILL_TYPES[e.type] && updateBossSkills(e, dt, tgt, dist)) continue;
+
+    // ---- IA propia de la arena (ARENA_DEFS[arena].enemyAI[tipo]): true = ya actuó este cuadro ----
+    { const aai = arenaEnemyAI(e.type); if(aai && aai(e, dt, tgt, dist)) continue; }
 
     // ---- Arena Acuática: habilidades de los enemigos propios (mismo criterio que el resto del
     // roster de jefes/subjefes de arriba -bloques por e.type, cooldowns propios en el propio
@@ -439,6 +443,7 @@ function update(dt){
   }
   enemies = enemies.filter(e=>e.alive || e.hp>-9999);
   enemies = enemies.filter(e=>e.alive);
+  if(arenaHas("afterEnemies")) arenaHook("afterEnemies"); // p.ej. nadie queda sobre la lava tras un empujón
 
   // projectiles
   for(const p of projectiles){
@@ -463,7 +468,7 @@ function update(dt){
       }
     }
   }
-  projectiles = projectiles.filter(p=>p.life>0 && Math.hypot(p.x-player.x,p.y-player.y)<2200);
+  projectiles = projectiles.filter(p=>p.life>0 && (Math.hypot(p.x-player.x,p.y-player.y)<2200 || (arenaDef() && heroes.some(h=>Math.hypot(p.x-h.x,p.y-h.y)<2200))));
 
   stepParticles(dt);
   for(const em of embers){ em.y += em.vy*dt/1000; em.phase += dt/1000; if(em.y < player.y-700) em.y = player.y+700; }
@@ -489,7 +494,7 @@ function update(dt){
     // El nivel de cuenta de los héroes acorta más este intervalo (partyLevelScale) -sobre
     // el piso ya reducido a 560ms-, para que una cuenta veterana enfrente más enemigos por
     // minuto sin depender solo del nivel de la arena en esta partida puntual.
-    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate);
+    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1));
     if(spawnTimer<=0 && !activeChampion){
       spawnTimer = spawnInterval;
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo
@@ -501,7 +506,7 @@ function update(dt){
     } else if(spawnTimer<=0){
       spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el campeón caiga
     }
-    const subBossLevels = (currentArena==="hielo"||currentArena==="laberinto"||currentArena==="acuatica") ? [6] : (currentArena==="bosque" ? [9] : [4,7,9]);
+    const subBossLevels = arenaDef() ? (arenaDef().subBossLevels||[]) : ((currentArena==="hielo"||currentArena==="laberinto"||currentArena==="acuatica") ? [6] : (currentArena==="bosque" ? [9] : [4,7,9]));
     if(subBossLevels.includes(runLevel) && !midBossSpawned && levelTimer > levelDuration*0.45){
       midBossSpawned = true;
       if(currentArena==="bosque"){
@@ -536,7 +541,7 @@ function update(dt){
       }
     }
     levelTimer += dt;
-    if(levelTimer >= levelDuration && !levelClearing){
+    if(levelTimer >= levelDuration && !levelClearing && !arenaHook("holdLevel")){
       if(runLevel === LEVEL_COUNT){
         startBossFight();
       } else {

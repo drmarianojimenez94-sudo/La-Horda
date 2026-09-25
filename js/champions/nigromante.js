@@ -119,10 +119,12 @@ function updateNigromanteSkeletons(h, dt){
       if(sk.hp<=0){ killNigroSkeleton(sk); h.nigroGraveyard.push({type:sk.type, timer:14000}); }
     }
     // Si se aleja demasiado del dueño o queda "trabado" fuera del mapa, vuelve de un salto.
-    if(distance(sk, h) > NIGRO_SKELETON_LEASH || Math.hypot(sk.x,sk.y) > ARENA_RADIUS+400){
+    // (en arenas con mapa propio -La Fortaleza- el centro no es el origen: solo cuenta la correa)
+    if(distance(sk, h) > NIGRO_SKELETON_LEASH || (!arenaDef() && Math.hypot(sk.x,sk.y) > ARENA_RADIUS+400)){
       const ang = Math.random()*Math.PI*2;
       sk.x = h.x+Math.cos(ang)*50; sk.y = h.y+Math.sin(ang)*50;
     }
+    if(arenaHas("clamp")) clampToArena(sk);
     const target = sk.target;
     if(target){
       const dx=target.x-sk.x, dy=target.y-sk.y, d=Math.hypot(dx,dy)||1;
@@ -230,9 +232,10 @@ function updateNigromanteGolem(h, dt){
     g.target = best;
     if(g.hp<=0){ killNigroGolem(h); return; }
   }
-  if(distance(g, h) > NIGRO_GOLEM_LEASH || Math.hypot(g.x,g.y) > ARENA_RADIUS+400){
+  if(distance(g, h) > NIGRO_GOLEM_LEASH || (!arenaDef() && Math.hypot(g.x,g.y) > ARENA_RADIUS+400)){
     g.x = h.x+h.fx*60; g.y = h.y+h.fy*60;
   }
+  if(arenaHas("clamp")) clampToArena(g);
   const mods = talentSkillMods(h.classKey, 1);
   const AREA_G = 1+(mods.flags.golemAreaBonus||0)+mods.areaMult;
   const range = 70*AREA_G;

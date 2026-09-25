@@ -12,16 +12,23 @@
 // muros y obstáculos. Con vista directa sigue yendo derecho (mismo comportamiento de siempre).
 // Los jefes (rank "jefe") no navegan ni chocan: embisten a través de todo y siempre llegan.
 const AID_NAV = { cell:40, x0:-1340, y0:-940, W:67, H:47, on:false, blocked:null, dist:null, queue:null, t:0 };
+const AID_NAV_DEFAULT = {x0:-1340, y0:-940, W:67, H:47};
 function aidNavBuild(){
   const N = AID_NAV;
-  N.on = !!(aidSolids.length || labyrinthWalls.length);
+  // grilla propia de la arena (La Fortaleza es un mapa mucho más grande que el coliseo)
+  const def = arenaDef(), nb = def && def.navBounds;
+  const want = nb ? {x0:nb.x0, y0:nb.y0, W:Math.ceil((nb.x1-nb.x0)/N.cell), H:Math.ceil((nb.y1-nb.y0)/N.cell)} : AID_NAV_DEFAULT;
+  if(want.W!==N.W || want.H!==N.H){ N.blocked = null; }
+  N.x0 = want.x0; N.y0 = want.y0; N.W = want.W; N.H = want.H;
+  const custom = arenaHas("navBlocked");
+  N.on = !!(aidSolids.length || labyrinthWalls.length || custom);
   if(!N.on) return;
   const n = N.W*N.H;
   if(!N.blocked){ N.blocked = new Uint8Array(n); N.dist = new Uint16Array(n); N.distP = new Uint16Array(n); N.queue = new Int32Array(n); }
   const pad = 20;
   for(let j=0;j<N.H;j++) for(let i=0;i<N.W;i++){
     const x = N.x0 + (i+0.5)*N.cell, y = N.y0 + (j+0.5)*N.cell;
-    let b = !aidInside(x, y, 0);
+    let b = custom ? arenaHook("navBlocked", x, y) : !aidInside(x, y, 0);
     if(!b) for(const s of aidSolids){ if(Math.hypot(s.x-x, s.y-y) < s.r+pad){ b = true; break; } }
     if(!b) for(const w of labyrinthWalls){ if(aidPointInWall(w, x, y, pad)){ b = true; break; } }
     N.blocked[j*N.W+i] = b ? 1 : 0;

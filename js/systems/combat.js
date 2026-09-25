@@ -146,6 +146,7 @@ function killEnemy(e){
   // nuevo Rastreo" -acá el cambio es forzado porque ya no hay a quién rastrear-).
   for(const h of heroes){ if(h.huntTarget===e){ sylvaClearTrack(h); } }
   kills++;
+  if(arenaHas("enemyKilled")) arenaHook("enemyKilled", e); // muertes con efecto propio de la arena
   if(e.lastHitBy && e.lastHitBy.classKey && (e.lastHitBy===player || inView(e.x, e.y, 0))) killFeedback(e, e.lastHitBy===player);
   if(e.rank==="subjefe") subjefesDefeated++;
   if(e.lastHitBy && e.lastHitBy.stats) e.lastHitBy.stats.kills++;

@@ -451,6 +451,7 @@ function _entPush(y, e, h, w, p){
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){
+  if(p.fortSpr && arenaHook("drawProjectile", p)) return;
   if(p.lob){
     // tiro en arco: sombra en el piso + proyectil elevado según la altura del arco
     ctx.save(); ctx.globalAlpha = 0.35; ctx.fillStyle = "#000";

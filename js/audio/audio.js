@@ -258,7 +258,7 @@ function _duck(amount, ms){
 }
 function playSfx(type){
   if(!audioCtx) return;
-  const cfg = SFX_CFG[type]; if(!cfg) return;
+  const cfg = SFX_CFG[type] || ARENA_SFX[type]; if(!cfg) return;
   const nowMs = performance.now();
   if(_sfxLast[type] && nowMs - _sfxLast[type] < cfg.gap) return;
   const t0 = audioCtx.currentTime;
@@ -333,6 +333,10 @@ function playSfx(type){
       _noise(t0,0.8,0.2,"bandpass",600,0.8,D); _duck(0.5,800); len=1.0; break;
     }
     case "thunder": _noise(t0,1.1,0.55,"lowpass",1500,0,D); _tone(t0,"sine",60,28,1.0,0.6,D); _noise(t0,0.08,0.4,"highpass",2000,0,D); _duck(0.35,1000); len=1.1; break;
+    default:
+      // sonidos propios de una arena (ARENA_SFX, p.ej. La Fortaleza): mismo control de prioridad/voces
+      if(cfg.play) len = cfg.play(t0, D) || 0.3;
+      break;
     case "ult":
       _tone(t0,"sawtooth",85,42,0.7,0.42,D,0.06); _noise(t0,0.6,0.18,"bandpass",900,0.7,D); _tone(t0+0.1,"triangle",660,990,0.5,0.08,D,0.05);
       _duck(0.5,700); len=0.75; break;

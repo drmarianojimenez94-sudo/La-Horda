@@ -25,12 +25,12 @@ const DIFF = {
   subbossHp: 1.6,   // subjefes
   // Ajuste por jefe para que las peleas duren parecido: el Leviatán tiene 3 vidas y el Jinete 2
   // (cada vida vuelve a llenar la barra); el Mago se transforma en el Ángel.
-  bossHpType: {leviatan:0.45, jinete_sin_cabeza:0.8, mago_hielo_cristal:1.0, angel_caido_hielo:1.2, minotauro:1.3, demonio_mayor:1.5},
+  bossHpType: {leviatan:0.45, jinete_sin_cabeza:0.8, mago_hielo_cristal:1.0, angel_caido_hielo:1.2, minotauro:1.3, demonio_mayor:1.5, caballero:0.95},
   // El daño de jefes y subjefes se ancla a la vida de referencia del equipo (mitad la del jugador,
   // mitad el promedio de los 4: el que pierde la partida es el jugador, y un tanque no debería
   // volver letales los golpes para una maga). Un ataque x1.0 del jefe quita este % de esa vida:
   // siempre PESA, pero nunca borra de un golpe. Sube con la dificultad de la arena.
-  bossDmgPct: {bosque:0.09, acuatica:0.10, hielo:0.105, laberinto:0.11, infernal:0.12},
+  bossDmgPct: {bosque:0.09, acuatica:0.10, fortaleza:0.102, hielo:0.105, laberinto:0.11, infernal:0.12},
   subbossDmgPct: 0.065,
   bossBasicMult: 0.5  // sus ataques comunes (proyectil/golpe) pegan la mitad que sus habilidades
 };

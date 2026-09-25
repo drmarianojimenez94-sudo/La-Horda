@@ -178,6 +178,7 @@ function aidDrawKelp(k, now){
 }
 // piezas altas que están en cámara → al orden por profundidad de render()
 function aidPushTall(){
+  if(arenaHas("pushTall")) arenaHook("pushTall");
   for(const p of aidProps){ if(inView(p.x, p.y-p.h*0.5, Math.max(p.w, p.h))) _entPush(p.y, null, null, null, p); }
   for(const w of labyrinthWalls){ const b = aidWallAABB(w); if(inView(w.x, w.y, Math.max(b.x1-b.x0, b.y1-b.y0)*0.5+80)) _entPush(b.y1, null, null, null, w); }
   for(const k of aidKelp){ if(inView(k.x, k.y-k.h*0.5, k.h)) _entPush(k.y, null, null, null, k); }
@@ -185,6 +186,7 @@ function aidPushTall(){
   if(currentArena==="divina") for(const s of divinaStructures){ if(inView(s.x, s.y, 200)) _entPush(s.y, null, null, null, {divStruct:s}); }
 }
 function aidDrawTall(it, now){
+  if(it.arena){ arenaHook("drawTall", it, now); return; }
   if(it.divStruct){ const s = it.divStruct; if(s.type==="castle") drawDivinaCastle(s, now); else drawDivinaTower(s, now); return; }
   if(it.img) aidDrawProp(it);
   else if(it.axis) aidDrawWall(it, now);
@@ -541,6 +543,7 @@ function drawArena(){
   // de píxeles de distancia -no se vería nada útil igual-). Si el que está en duelo es un
   // aliado/bot, la cámara sigue centrada en `player` como siempre y esto ni se ejecuta.
   if(player.duelActive){ drawLastDuelArena(player); return; }
+  if(arenaHas("drawWorld")){ arenaHook("drawWorld", now); return; } // escenario propio (La Fortaleza)
   const st = aidStyle();
 
   // ---------- Terreno exterior propio de cada arena ----------

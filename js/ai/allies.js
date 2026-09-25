@@ -338,7 +338,7 @@ function updateAllies(dt){
         if(p.type==="mana" && h.energy >= h.maxEnergy*0.3) continue;
         if(p.type!=="mana" && h.hp >= h.maxHp*0.75) continue;
         const d = distance(h,p);
-        if(d < 420 && d < bd){ bd = d; seekPotion = p; }
+        if(d < 420 && d < bd && (!arenaHas("heroReachable") || arenaHook("heroReachable", h, p))){ bd = d; seekPotion = p; }
       }
     }
     if(seekPotion){

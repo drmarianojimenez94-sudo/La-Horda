@@ -35,6 +35,7 @@ function botDangerVec(x, y, pad){
     for(const z of safes){ const d = Math.hypot(z.x-x, z.y-y); if(d < bd){ bd = d; best = z; } }
     if(bd > best.r*0.55){ const l = bd || 1; return {x:(best.x-x)/l*2, y:(best.y-y)/l*2}; }
   }
+  if(arenaHas("botDanger")){ const ad = arenaHook("botDanger", x, y, pad); if(ad){ hit = true; vx += ad.x; vy += ad.y; } } // trampas propias de la arena
   for(const s of bossStrikes){ const dx = x-s.x, dy = y-s.y, d = Math.hypot(dx,dy)||1; if(d < s.r + pad){ hit = true; vx += dx/d; vy += dy/d; } }
   if(typeof hazardZones!=="undefined") for(const z of hazardZones){ const dx = x-z.x, dy = y-z.y, d = Math.hypot(dx,dy)||1; if(d < (z.r||60) + pad*0.5){ hit = true; vx += dx/d*0.7; vy += dy/d*0.7; } }
   return hit ? {x:vx, y:vy} : null;
@@ -91,7 +92,7 @@ function botWard(h){
 function botDownedNear(h, range){
   if(divinaMode) return null;
   let best = null, bd = range;
-  for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h || reviveBusyFor(a, h)) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
+  for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h || reviveBusyFor(a, h)) continue; if(arenaHas("heroReachable") && !arenaHook("heroReachable", h, a)) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
   return best;
 }
 // A distancia salvo El Libertador montado (sable corvo: caballería que carga cuerpo a cuerpo).
@@ -102,7 +103,15 @@ function botMove(h, dt){
   const divinaHit = divinaMode ? divinaHostiles("player", h.x, h.y, 620) : null;
   // el objetivo por rol se re-elige cada ~250 ms (el del mago mira grupos: no hace falta por cuadro)
   h._tgtT = (h._tgtT||0) - dt;
-  if(!divinaHit && (h._tgtT <= 0 || !h._tgt || !h._tgt.alive)){ h._tgt = botPickTarget(h, 620); h._tgtT = 250; }
+  if(!divinaHit && (h._tgtT <= 0 || !h._tgt || !h._tgt.alive)){
+    h._tgt = botPickTarget(h, 620); h._tgtT = 250;
+    // mapa con tramos separados (puentes que se mueven): un bot cuerpo a cuerpo no persigue lo que no puede alcanzar
+    if(h._tgt && !botRanged(h) && arenaHas("heroReachable") && !arenaHook("heroReachable", h, h._tgt)){
+      let best = null, bd = 620;
+      for(const e of enemies){ if(!e.alive) continue; const d = distance(h, e); if(d < bd && arenaHook("heroReachable", h, e)){ bd = d; best = e; } }
+      h._tgt = best;
+    }
+  }
   const target = divinaHit ? divinaHit.ref : h._tgt;
   let mx = 0, my = 0;
   // 1) peligro telegrafiado: reacción humana (~250 ms) y salir de ahí antes que nada
@@ -125,9 +134,13 @@ function botMove(h, dt){
     if(reviverCanAct(h)) reviveStep(down, h, BOT_REVIVE_MS, dt);
     return {mx:0, my:0, target, reviving:true};
   }
-  // 3) reagruparse si se alejó mucho del jugador
-  const leash = Math.hypot(h.x-player.x, h.y-player.y);
-  if(leash > (bossActive ? 420 : 320)){ return {mx:(player.x-h.x)/leash, my:(player.y-h.y)/leash, target}; }
+  // 3) reagruparse si se alejó mucho del jugador. Si un puente los separó, espera en el borde de
+  // su tramo más cercano al jugador (no camina contra la lava) hasta que el mecanismo los una.
+  let rg = player;
+  if(arenaHas("heroReachable") && !arenaHook("heroReachable", h, player)){ rg = arenaHook("botRegroup", h, player) || h; }
+  const leash = Math.hypot(h.x-rg.x, h.y-rg.y);
+  if(rg!==player){ if(leash > 30 && !target) return {mx:(rg.x-h.x)/leash, my:(rg.y-h.y)/leash, target}; }
+  else if(leash > (bossActive ? 420 : 320)){ return {mx:(player.x-h.x)/leash, my:(player.y-h.y)/leash, target}; }
   // 4) según el rol
   if(role==="soporte"){
     const w = botWard(h);

@@ -12,6 +12,7 @@ let aidLights = [];  // charcos de luz aditiva (braseros, antorchas, cristales, 
 let aidKelp = [];    // algas animadas (Acuática)
 const AID_SCALE = 2; // 1 píxel del arte = 2 unidades de mundo (mismo grano que los sprites)
 function aidInside(x, y, margin){
+  if(arenaHas("inside")) return arenaHook("inside", x, y, margin||0);
   // mismo octágono que clampToArena, con margen hacia adentro
   const nx = x/1.18, ny = y/0.82;
   return Math.hypot(nx, ny) < ARENA_RADIUS*0.94*Math.cos(Math.PI/8) - (margin||0);
@@ -181,6 +182,8 @@ function aidWallAABB(w){
 }
 const AID_WALL_H = 46; // alto visual de los muros (la colisión es solo la planta)
 function buildArenaDecor(){
+  // Arena con escenario propio (ARENA_DEFS): no usa el coliseo octogonal
+  if(arenaHas("buildDecor")){ arenaHook("buildDecor"); return; }
   lavaPools = []; floorDecor = []; braziers = []; wallBlocks = []; deadTrees = []; smokePuffs = [];
   buildLabyrinthWalls(); // no hace nada si la arena actual no tiene muros
 

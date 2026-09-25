@@ -10,6 +10,8 @@ function clampToArena(ent){
   // frame) -si se dejara pasar por el recorte de acá abajo, los mandaría de vuelta de un tirón
   // al octágono principal, a decenas de miles de píxeles de donde están parados-.
   if(ent.duelActive || ent.isDuelLocked) return;
+  // Arenas con geometría propia (La Fortaleza: plataformas, puentes y puertas)
+  if(arenaHas("clamp")){ arenaHook("clamp", ent); return; }
   // El coliseo es un octágono alargado: recortamos contra cada uno de sus 8 lados
   const R = ARENA_RADIUS*0.94, SX = 1.18, SY = 0.82;
   const nx = ent.x/SX, ny = ent.y/SY;

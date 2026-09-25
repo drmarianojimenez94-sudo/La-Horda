@@ -129,6 +129,7 @@ function render(){
   drawAcua2Overlays();
   drawBossSkillOverlay();
   vfxDrawSprites();
+  if(arenaHas("drawTop")) arenaHook("drawTop");
   drawChampFxTop(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
 
   // proyectiles: núcleo + glow cacheado + estela (sin shadowBlur, que es caro en mobile)
@@ -232,6 +233,7 @@ function render(){
   drawFloatTexts();          // números de daño/curación y avisos, por encima de todo el mundo
 
   ctx.restore();
+  if(arenaHas("drawScreen")) arenaHook("drawScreen"); // minimapa de las arenas grandes
   drawChampFxScreen();       // Cruce de los Andes (Cordillera + nieve) y siluetas de El Retumbar
   drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }

@@ -322,7 +322,7 @@ function divinaWavePool(){
   if(!_divinaWavePoolCache){
     _divinaWavePoolCache = Object.keys(ENEMY_BASE).filter(k=>{
       const r = ENEMY_BASE[k].rank;
-      return r!=="jefe" && r!=="subjefe";
+      return r!=="jefe" && r!=="subjefe" && !ENEMY_BASE[k].noDivina; // (Engendro: solo nace de un Prisionero)
     });
   }
   return _divinaWavePoolCache;

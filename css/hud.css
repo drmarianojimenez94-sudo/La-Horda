@@ -296,3 +296,18 @@
 #se-hud .se-fury{ color:#ffb09a; }
 #btn-ult.rumble{ box-shadow:0 0 14px 4px rgba(255,40,20,0.85); animation: sePulse .5s infinite alternate; }
 @keyframes sePulse{ from{ filter:brightness(1); } to{ filter:brightness(1.45); } }
+
+/* ---------- Cartel grande de arena / subjefe / jefe (arenaTitleCard) ---------- */
+#arena-title-card{
+  position:absolute; top:13%; left:50%; transform:translateX(-50%); pointer-events:none; text-align:center;
+  width:min(92vw, 720px); z-index:6; opacity:0; text-shadow:0 2px 0 #000, 0 0 18px rgba(0,0,0,0.9);
+}
+#arena-title-card.show{animation:atcIn 4.2s ease-out forwards;}
+#arena-title-card .atc-kicker{font-family:'Press Start 2P',monospace; font-size:0.62rem; letter-spacing:4px; color:#e0b060;}
+#arena-title-card .atc-title{font-family:'Press Start 2P',monospace; font-size:clamp(1rem, 4.4vw, 1.9rem); color:#ffdcb0; margin:8px 0 6px;
+  letter-spacing:2px; -webkit-text-stroke:1px #3a0a04;}
+#arena-title-card .atc-sub{font-family:'VT323',monospace; font-size:clamp(1rem, 3.4vw, 1.4rem); color:#e8c8a8; font-style:italic;}
+#arena-title-card::before, #arena-title-card::after{content:""; display:block; height:2px; margin:6px auto;
+  width:70%; background:linear-gradient(90deg, rgba(176,128,64,0), rgba(224,176,96,0.9), rgba(176,128,64,0));}
+@keyframes atcIn{ 0%{opacity:0; transform:translate(-50%,-12px) scale(1.06);} 10%{opacity:1; transform:translate(-50%,0) scale(1);}
+  82%{opacity:1;} 100%{opacity:0;} }

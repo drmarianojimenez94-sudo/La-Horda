@@ -48,7 +48,8 @@ function defaultSave(){
     itemSchemaV: ITEM_SCHEMA_VERSION,
     gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
-    arenasCleared:{bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false},
+    arenasCleared:{bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false},
+    fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0} // protección suave contra la mala suerte (oculta), ver js/data/loot.js
   };
@@ -85,6 +86,10 @@ function loadSave(){
         save.champions[k] = merged;
       });
       save.relics = Object.assign(defaultSave().relics, parsed.relics||{});
+      save.arenasCleared = Object.assign(defaultSave().arenasCleared, parsed.arenasCleared||{});
+      // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
+      // Acuática tenía abierto el Hielo, y lo conserva (una sola vez, al cargar por primera vez).
+      if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una

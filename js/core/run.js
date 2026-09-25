@@ -92,6 +92,7 @@ function startRun(fromLevel){
   resetFeedback();
   hazardZones = []; arenaRuleTimer = 8000; resetArenaRule();
   bossHudHide();
+  if(typeof arenaTitleCardHide==="function") arenaTitleCardHide();
   player = makePlayer();
   // Talentos de crítico (sección 4/32): a diferencia de dmg/cd/def/lifesteal -que se consultan
   // en caliente vía passiveSum en cada fórmula-, crítico vive en runStats (igual que los buffs
@@ -125,6 +126,7 @@ function startRun(fromLevel){
   for(let i=0;i<60;i++) embers.push(spawnEmber());
   updateAbilityButtons();
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
+  if(arenaHas("runStart")) arenaHook("runStart"); // mapa propio: estado inicial y héroes en la entrada
   beginLevel();
   setState("playing");
 }
@@ -206,7 +208,7 @@ function onBossDefeated(){
   grantGold(80);
   // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
   // save.arenasCleared trackea cada una de verdad y persiste.
-  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false};
+  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false};
   save.arenasCleared[currentArena] = true;
   if(ARENA_ORDER.every(a=>save.arenasCleared[a]) && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;

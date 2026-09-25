@@ -54,7 +54,9 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   // estado de animación que calcula el propio renderizador de cada cliente
   "_an",
   // revivir: el candado/progreso viaja (_reviveBy/_reviveT/_reviveDur); esto es interno del anfitrión
-  "_revTouchAt","_revHold"]);
+  "_revTouchAt","_revHold",
+  // La Fortaleza: forma caminable cacheada (se recalcula en cada cliente) e internos del anfitrión
+  "_fs","_strT","_fortStranded","_ux","_uy","_ut","_stk"]);
 // Se mandan solo en los snapshots completos (cada ~4 s y al terminar): cambian todo el tiempo y
 // solo hacen falta para la pantalla final (estadísticas de rendimiento).
 const NET_KEYFRAME_ONLY = new Set(["stats"]);
@@ -122,13 +124,15 @@ const NET_GLOBALS = {
   axiomForceQuitFlash:[()=>axiomForceQuitFlash, v=>{ axiomForceQuitFlash = v; }], axiomFreezeTimer:[()=>axiomFreezeTimer, v=>{ axiomFreezeTimer = v; }],
   runElapsedMs:[()=>runElapsedMs, v=>{ runElapsedMs = v; }], levelClearing:[()=>levelClearing, v=>{ levelClearing = v; }],
   arenaRuleBossStacks:[()=>arenaRuleBossStacks, v=>{ arenaRuleBossStacks = v; }], arenaRuleBossTimer:[()=>arenaRuleBossTimer, v=>{ arenaRuleBossTimer = v; }],
-  acuaCurrent:[()=>acuaCurrent, v=>{ acuaCurrent = v; }], runEnding:[()=>runEnding, v=>{ runEnding = v; }]
+  acuaCurrent:[()=>acuaCurrent, v=>{ acuaCurrent = v; }], runEnding:[()=>runEnding, v=>{ runEnding = v; }],
+  // estado propio de la arena (La Fortaleza: puertas, puentes, trampas, redes, Caballero, Dragón)
+  arenaState:[()=>arenaHook("netState"), v=>{ if(v) arenaHook("applyNetState", v); }]
 };
 
 /* ---------------- eventos visuales/sonoros (se graban en el anfitrión, se repiten en los invitados) ---------------- */
 const NET_EVENT_FNS = ["floatText","showBanner","playSfx","vfxBurst","vfxConverge","vfxShock","vfxTelegraph","vfxSprite","vfxShake",
   "vfxOnDeath","flashScreen","pushChainBolt","pushSpark","pushAsesinoFx","bossHudShow","bossHudHide","bossHudHint","bossHudPhase",
-  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst"];
+  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard"];
 const NET_INLINE_EVENTS = new Set(["vfxOnDeath","bossHudShow"]); // su entidad puede no haber llegado nunca al invitado
 const NET_ORIG = {};
 let _netRecDepth = 0, _netEvents = [];
@@ -557,6 +561,7 @@ function netGuestStartRun(msg){
   partyBuilt = false;
   if(floorPatterns[currentArena]){ floorPattern = floorPatterns[currentArena]; } else { buildFloorTile(); }
   if(!SPRITES.guerrero){ buildSprites(); }
+  if(arenaHas("guestStart")) arenaHook("guestStart");
   netWithSeed(msg.seed, ()=> buildArenaDecor());
   for(let i=0;i<60;i++) embers.push(spawnEmber());
   updateAbilityButtons();
@@ -689,6 +694,7 @@ function netGuestUpdate(dt){
   for(const em of embers){ em.y += em.vy*dt/1000; em.phase += dt/1000; if(em.y < player.y-700) em.y = player.y+700; }
   updateAcuaAmbience && updateAcuaAmbience(dt);
   aidAmbUpdate && aidAmbUpdate(dt);
+  if(arenaHas("guestUpdate")) arenaHook("guestUpdate", dt); // animación de mecanismos propios
   netGuestSendInput(false);
   updateBossHud(dt);
   updateHUD();
