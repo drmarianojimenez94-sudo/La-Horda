@@ -116,17 +116,28 @@ function renderEquipmentGridHTML(classKey, unequipAttr){
 function renderSetPanelHTML(classKey){
   const activeIds = activeSetIdsFor(classKey);
   if(!activeIds.length) return "";
-  let html = '<div class="set-panel">';
-  activeIds.forEach(setId=>{
-    const prog = setProgressFor(classKey, setId);
-    const rm = RARITY_META[prog.set.rarity];
-    html += `<div class="set-title" style="color:${rm.color};">${prog.set.name} — ${prog.count}/${prog.total} piezas</div>`;
-    prog.thresholds.forEach(th=>{
-      html += `<div class="set-thr ${th.active?"active":""}">(${th.count}) ${th.desc}</div>`;
-    });
-  });
-  html += '</div>';
-  return html;
+  return activeIds.map(id=>setDetailHTML(classKey, id)).join("");
+}
+// Detalle de un set: piezas (✓ equipada · ◐ en el inventario · □ falta), bonus por cantidad de
+// piezas EQUIPADAS (los activos en verde) y, si hay repetidas, la reforja. Es el "me falta una".
+function setDetailHTML(classKey, setId){
+  const S = SET_DB[setId]; if(!S) return "";
+  const champ = save.champions[classKey];
+  const owned = ownedDesignIds(classKey);
+  const eqIds = new Set(EQUIP_SLOT_TYPES.map(t=>{ const it = equippedItem(classKey, t); return it && it.set===setId ? it.designId : null; }).filter(Boolean));
+  const n = eqIds.size, total = setPieceCount(setId);
+  const pieces = setPieceIds(setId).map(id=>{
+    const d = DESIGNED_ITEMS[id], st = eqIds.has(id) ? "✓" : (owned.has(id) ? "◐" : "□");
+    return `<div class="sp-piece ${owned.has(id)?"have":"miss"}">${st} ${d.name} <span style="opacity:.6">(${ITEM_TYPES[d.type].label})</span></div>`;
+  }).join("");
+  const bonuses = S.thresholds.map((th,i)=>{
+    const full = i===S.thresholds.length-1;
+    return `<div class="sp-bonus ${n>=th.count?"on":""}">${full?"SET COMPLETO":"BONUS"} ${th.count}/${total} — ${th.desc}</div>`;
+  }).join("");
+  const dup = setDuplicateInfo(classKey, setId);
+  const reforge = (dup.dupes.length>=2 && dup.missing.length) ? `<div class="sp-reforge"><button data-reforge="${setId}">Reforjar: 2 repetidas → 1 pieza que te falta</button></div>` : "";
+  return `<div class="set-panel"><div class="sp-title">SET: ${S.name} — ${n}/${total} equipadas</div>
+    ${S.theme?`<div class="sp-theme">${S.theme}</div>`:""}${pieces}${bonuses}${reforge}</div>`;
 }
 // Barra de fusión (sección 18): agrupa lo fusionable y ofrece un botón por grupo. fuseAttr
 // distingue el data- atributo entre las dos pantallas que la usan (igual que unequipAttr).
@@ -173,7 +184,7 @@ function renderInventoryPanel(){
   html += renderFusionHTML(classKey, "fuse");
 
   if(!champ.inventory.length){
-    html += '<div class="inv-empty">Todavía no tenés objetos. Se obtienen al derrotar subjefes y al jefe final.</div>';
+    html += '<div class="inv-empty">Todavía no tenés objetos. Salen del cofre del jefe al ganar una arena: mejor calificación y arenas más difíciles, mejores probabilidades.</div>';
   } else {
     html += '<div class="inv-list">';
     champ.inventory.slice().reverse().forEach(it=>{
@@ -185,8 +196,9 @@ function renderInventoryPanel(){
         <span class="item-icon">${it.icon}</span>
         <div class="item-meta">
           <div class="item-name" style="color:${it.set?"#3ddc71":rm.color};">${it.name}${it.set?' <span class="set-badge">SET</span>':""}</div>
-          <div class="item-stat">${rm.label} · +${Math.round(it.value*100)}% ${ITEM_TYPES[it.type].statLabel}</div>
+          <div class="item-stat">${it.set?"Set":rm.label} · +${Math.round(it.value*100)}% ${ITEM_TYPES[it.type].statLabel}</div>
           ${it.desc ? `<div class="item-desc">${it.desc}</div>` : ""}
+          ${(it.set && comparing) ? setDetailHTML(classKey, it.set) : ""}
           ${passiveTxt ? `<div class="item-passives">${passiveTxt}</div>` : ""}
           ${(!equipped && comparing) ? compareItemsHTML(classKey, it) : ""}
           <div class="vic-item-actions">
@@ -256,6 +268,14 @@ function renderInventoryPanel(){
       renderStatsPanel();
     });
   });
+  panel.querySelectorAll("[data-reforge]").forEach(btn=>{
+    btn.addEventListener("click", (ev)=>{
+      ev.stopPropagation();
+      const r = reforgeSetDuplicates(classKey, btn.getAttribute("data-reforge"));
+      if(r.ok){ floatText(player.x, player.y-60, "¡"+r.item.name+"!", "heal"); playSfx("shield"); }
+      renderInventoryPanel();
+    });
+  });
   panel.querySelectorAll("[data-fuse]").forEach(btn=>{
     btn.addEventListener("click", (ev)=>{
       ev.stopPropagation();
@@ -267,9 +287,9 @@ function renderInventoryPanel(){
   });
   const dbg = document.getElementById("inv-debug-gen");
   if(dbg) dbg.addEventListener("click", ()=>{
-    const type = rollItemType(classKey);
-    const rarity = RARITIES[Math.floor(Math.random()*RARITIES.length)];
-    const item = makeItem(type, rarity, classKey);
+    const tier = LOOT_TIERS[Math.floor(Math.random()*LOOT_TIERS.length)];
+    const spec = tier==="set" ? Object.assign({tier}, _rollSetPiece("infernal", ownedDesignIds(classKey), Math.random)) : {tier};
+    const item = materializeLoot(spec, classKey);
     addItemToInventory(classKey, item);
     renderInventoryPanel();
   });
