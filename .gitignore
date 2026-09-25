@@ -8,3 +8,4 @@ Thumbs.db
 # Por si en algún momento se agrega herramienta de build
 node_modules/
 dist/
+__pycache__/

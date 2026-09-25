@@ -4,6 +4,7 @@
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
   "assets/sprites/champions/segador/v2/atlas.png",
+  "assets/sprites/champions/profeta/v2/atlas.png",
   "assets/vfx/vendor/cadena-relampagos.png",
   "assets/vfx/vendor/muro-fuego.png",
   "assets/vfx/vendor/caballerito-torbellino.png",

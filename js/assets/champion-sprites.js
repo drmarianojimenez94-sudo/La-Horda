@@ -269,6 +269,7 @@ function champPackLoadAtlas(key, src, meta){
   CHAMP_PACK[key] = P;
 }
 champPackLoadAtlas("segador", "assets/sprites/champions/segador/v2/atlas.png", {"w":91,"h":107,"cols":8,"refH":75,"anchor":0.9439,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
+champPackLoadAtlas("profeta", "assets/sprites/champions/profeta/v2/atlas.png", {"w":93,"h":133,"cols":8,"refH":76,"anchor":0.9098,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 
 // Sylva, La Cazadora del Bosque: mismo patrón (una imagen por estado). El combo básico cicla
 // 6 frames durante attackAnim -se acelera solo porque attackAnim ya dura menos con más
