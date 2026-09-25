@@ -12,105 +12,34 @@ equipo técnico después — acá solo se pide el arte.
 
 ---
 
-## PRIORIDAD 1 — Campeones jugables (6)
+## Estado
 
-### 1. Segador Olvidado ("Berserk")
-- **Qué se mantiene:** encapuchado, manto oscuro (violeta/negro), arma pesada de filo grande,
-  identidad "cuanto más daño recibe, más peligroso" (armadura de la furia con aura roja/negra).
-- **Por qué es REDRAW:** proporciones de adulto realista y sombreado pintado (degradados
-  suaves), incompatibles con la proporción chibi del Caballero.
-- **Referencia de estilo:** Master Reference (Caballero) para proporción/contorno/sombreado;
-  como dirección de agresividad, el espadachín oscuro ensangrentado que mandó el equipo es un
-  ejemplo válido de "más grande/agresivo sin cambiar de familia" si se opta por escalarlo como
-  subjefe visual, pero **Segador es un campeón jugable**: debe quedar en la MISMA escala que el
-  resto del roster (chibi, ~66–70 unidades), no al tamaño de un jefe.
-- **Frames a reproducir** (mismo naming que hoy en `assets/sprites/champions/segador/`):
-  `idle_down/side/up` (4 c/u), `walk_down/side/up` (4 c/u), `attack_down/side/up` (4 c/u),
-  `hit_down/side/up` (2 c/u), `death_down/side/up` (3–4 c/u). Total ~64 frames, formato
-  atlas o sueltos (como está hoy).
-- **Extra:** una pose de "Armadura de la Furia" (aura roja/negra) reusando el mismo cuerpo.
+**Integrados (PASS):** Segador Olvidado, La Profeta, Musashi, La Cazadora, Dama del Bosque y los 4
+Doppelgängers — ver `docs/VISUAL_ASSET_MANIFEST.md` ("Redraw integrado").
 
-### 2. Axiom
-- **Qué se mantiene:** armadura dorada/ornamentada, capa/escudo azul, temática "código/glitch"
-  (parpadeo, teletransporte).
-- **Por qué es REDRAW:** proporciones altas y armadura muy detallada/pintada, no chibi.
-- **Frames a reproducir:** `idle/walk/attack/cast_down/side/up`, `death_down/side/up` (igual
-  cantidad que hoy en `assets/sprites/champions/axiom/`, ver manifest). Total ~46 frames.
-- **Extra:** un efecto de "glitch" (parpadeo/transparencia) se resuelve por código (alpha), no
-  hace falta dibujarlo.
+## PENDIENTE — Campeones (2)
 
-### 3. La Profeta
-- **Qué se mantiene:** pelo oscuro largo, túnica clara con capucha, dos hojas/dagas con brillo
-  turquesa, identidad de sanadora de combate cuerpo a cuerpo.
-- **Por qué es REDRAW:** estilo más ilustrado (rostro detallado, sombreado suave), proporciones
-  altas.
-- **Frames a reproducir:** el atlas actual usa `idle` (1), `walk` (3), `attack` (4), `spin` (2) —
-  ver `PROFETA_ATLAS_FRAMES` en `js/rendering/champion-sprites.js`. Para el redraw, expandir al
-  formato de 4 direcciones como el resto del roster si es posible (idle/walk/attack ×
-  down/side/up), o mantener el mismo esquema de "un solo perfil + espejo" si se prefiere — a
-  decidir con el equipo antes de encargar el arte.
+### Axiom
+- **Qué se mantiene:** armadura dorada/ornamentada, capa/escudo azul, temática "código/glitch".
+- **Frames que usa el motor** (misma grilla que las hojas ya integradas): caminar ↓/←/→/↑ ×4,
+  idle ×4, ataque básico ×4, golpe ×4, muerte ×6, y una fila de "preparación" de habilidad (×3).
+  El glitch/teletransporte/Error 404/Force Quit siguen siendo VFX del código.
 
-### 4. Musashi
-- **Qué se mantiene:** kimono/gi azul, samurái, espada (bokken), identidad de duelista.
-- **Por qué es REDRAW:** proporciones adultas realistas, pintado con sombreado suave.
-- **Frames a reproducir** (naming actual en `assets/sprites/champions/musashi/`): `idle`,
-  `run1-2`, `basic1-5` (ataque básico), `ronin1-4` (Corte del Rōnin), `thousand1-4` (Mil
-  Cortes), `hurt`, `death`. El efecto `ghost1-4` (Paso Fantasma) es un VFX de estela y puede
-  seguir siendo una silueta translúcida derivada del `idle` nuevo — no hace falta redibujarlo
-  aparte.
+### Nigromante
+- **Qué se mantiene:** túnica/capucha negra, cetro con orbe verde, invocador.
+- **Frames:** los mismos que Axiom. Las invocaciones (esqueletos guerrero/mago, gólem) y la forma
+  demoníaca de Encarnación del Abismo tienen arte propio que ya pasa el Gate; si la hoja nueva las
+  trae, se evalúan aparte (no se reemplazan si no pasan).
 
-### 5. Sylva (Cazadora del Bosque)
-- **Qué se mantiene:** pelo rojizo/naranja, ropa de cazadora verde/marrón, arco largo, Lobo
-  Espectral como invocación.
-- **Por qué es REDRAW:** proporciones adultas realistas.
-- **Frames a reproducir:** `idle`, `run1-2`, `atk1-6` (básico), `chargeAim`, `release1-2`,
-  `piercingCrit` (Flecha Perforante). El Lobo Espectral (`wolf/idle,run,bite,jump`) **queda
-  igual** (no es REDRAW, ver manifest §5).
-
-### 6. Nigromante
-- **Qué se mantiene:** túnica/capucha negra, cetro con orbe verde, identidad de invocador
-  (esqueletos, gólem, plaga) y su forma demoníaca (Encarnación del Abismo).
-- **Por qué es REDRAW:** estilo pintado/tinta con proporciones altas; además varios frames
-  vienen cortados por el borde del recorte original (`idle`, `walk1-2`, `walkA2/3/5/6`,
-  `basic1-4` — hoy el juego ya evita usar los cortados, ver manifest §1).
-- **Frames a reproducir:** `idle`, `walk1-2` (o el ciclo de 6 que ya existe, `walkA1-6`),
-  `run1-2`, `basic1-5`, `castSkeleton1-3`, `castGolem1-2`, `castPlague1-2`, `hurt`, `death`,
-  `ultTransform1-4`. Las invocaciones (esqueleto/gólem/demonio) **no** son REDRAW — quedan
-  iguales.
-
----
-
-## PRIORIDAD 2 — Subjefes con arte demasiado chico/borroso (5)
-
-Estos NO son un problema de estilo (encajan en la familia pintada de jefes/élites) sino de
-**resolución de origen**: el archivo fuente es tan chico que se ve borroso incluso ampliado con
-vecino más cercano. Limpiar halo/alfa no alcanza; hace falta una fuente de mayor resolución con
-el mismo diseño.
-
-### 7–10. Los 4 "Dobladores" (Doblador — Guerrero / Arquera / Pícaro / Clérigo)
-- **Dónde:** `assets/sprites/bosses/bosque/doblador_{guerrero,arquera,picaro,clerigo}/static.png`
-- **Tamaño actual:** 22×33 a 32×38 px — demasiado chico para un subjefe (se ve borroso).
-- **Qué se mantiene:** silueta shapeshifter oscura con acentos violeta/verde por variante
-  (guerrero con espadón, arquera con arco, pícaro sigiloso, clérigo con bastón).
-  Cada uno ya tiene su nombre/tema — conservar la variante de color y arma por clase.
-  Rank: subjefe (Bosque). No confundir con un jefe: escala intermedia, similar a Guardián del
-  Laberinto o Kraken Joven (que sí están en buena resolución) como referencia de tamaño.
-- **Formato pedido:** un `static.png` (o pose idle) de ~90–150px de alto, mismo criterio que
-  `angel_hielo`/`demonio_hielo_fuego` (ICE_REAL, un solo frame con "bob" por código).
-
-### 11. Dama del Bosque
-- **Dónde:** `assets/sprites/enemies/bosque/dama_bosque/static.png`
-- **Tamaño actual:** 20×31 px — el más chico/borroso del roster de enemigos.
-- **Qué se mantiene:** silueta oscura tipo dríade/entidad del bosque (rank elite).
-- **Formato pedido:** igual criterio que arriba, ~90–130px de alto.
-
----
+## Opcional (no bloquea)
+- Lobo Espectral de La Cazadora: la hoja nueva trae un lobo del mismo estilo; el actual es PASS.
+- Doppelgänger — golpe: la hoja no tiene fila de "recibir daño" (hoy usa idle + destello).
 
 ## Cómo se usará
 
 Cuando llegue el arte nuevo: recortarlo al mismo naming/formato de frames indicado arriba,
-correr `python3 tools/art/scan_sprites.py --dir champions/<clave> --apply` (limpieza técnica,
-no de diseño) y agregarlo a `ASSET_MANIFEST`/los loaders (`js/assets/champion-sprites.js`,
+correr `python3 tools/art/redraw/build_all.py` (agregando la hoja a `art-source/redraw/` y sus
+coordenadas a `tools/art/redraw/sheets.py`) y agregarlo a `ASSET_MANIFEST`/los loaders (`js/assets/champion-sprites.js`,
 `js/assets/enemy-sprites.js`) sin tocar nada de `js/data/champions.js` ni `js/data/enemies.js`
 (estadísticas y habilidades no cambian). Después, repetir el Roster Visual Test para confirmar
 PASS.

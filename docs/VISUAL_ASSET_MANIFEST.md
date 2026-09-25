@@ -18,17 +18,35 @@ técnico (`tools/art/scan_sprites.py`).
 | Guerrero (Asesino) | **PASS** | Misma familia chibi que la referencia | Mantener |
 | Mago | **PASS** | Misma familia chibi | Mantener |
 | Soporte | **PASS** | Misma familia chibi | Mantener |
-| Segador Olvidado | **REDRAW** | Proporciones "heroicas" pintadas (no chibi), densidad de píxel y sombreado incompatibles con la referencia | Ver cola de reemplazo |
-| Axiom | **REDRAW** | Ídem — armadura muy detallada, proporciones altas | Ver cola de reemplazo |
-| La Profeta | **REDRAW** | Ídem — estilo más ilustrado/anime, proporciones altas | Ver cola de reemplazo |
-| Musashi | **REDRAW** | Ídem — proporciones adultas realistas | Ver cola de reemplazo |
-| Sylva (Cazadora) | **REDRAW** | Ídem — proporciones adultas realistas | Ver cola de reemplazo |
-| Nigromante | **REDRAW** | Ídem — tinta/pintado, proporciones altas; además cortado por el borde en varios frames (ver abajo) | Ver cola de reemplazo |
+| Segador Olvidado | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
+| Axiom | **REDRAW** | Proporciones altas, armadura muy detallada/pintada | Hoja nueva pendiente (próxima entrega) |
+| La Profeta | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
+| Musashi | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
+| La Cazadora (antes "Sylva") | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
+| Nigromante | **REDRAW** | Tinta/pintado, proporciones altas; frames cortados por el borde | Hoja nueva pendiente (próxima entrega) |
 
-**Conclusión del roster:** el juego tiene HOY dos familias de proporción conviviendo (chibi:
-Tanque/Guerrero/Mago/Soporte — y "heroica pintada": los otros 6). La Art Bible fija la chibi
-como canon porque es la del Master Reference. Esto es lo que un jugador nuevo notaría primero
-("no parecen del mismo juego"): 6 de 10 campeones necesitan redibujarse para unificar.
+**Conclusión del roster:** 8 de 10 campeones ya son de la misma familia chibi del Master Reference
+(Roster Visual Test + prueba en partida real junto a bots Tanque/Mago/Soporte). Quedan Axiom y
+Nigromante, con hoja nueva anunciada.
+
+### Redraw integrado (hojas "La Horda — estilo oficial")
+Recortadas con `tools/art/redraw/` desde `art-source/redraw/` → un atlas por entidad en
+`assets/sprites/.../v2/atlas.png`. FIX aplicado (solo técnico): fondo cuadriculado rasterizado,
+rótulos, divisores de celda, sombras de piso pintadas, halo de glow sobre gris (el glow se convirtió
+en brillo translúcido, no se borró). Cuerpo por estado: idle, caminar ↓/←/→/↑ (izquierda con sus
+propios cuadros, no espejo), ataque básico, lanzamiento de habilidad (hab. 1 "preparación" de cada
+hoja), golpe, muerte; La Cazadora además "Apuntando" mientras carga Flecha Perforante.
+- **Mapeo por el código, no por los títulos de la hoja:** cualquier habilidad usa la pose de
+  lanzamiento; los VFX de cada habilidad siguen siendo los del código (no se reemplazaron).
+- **No integrado a propósito:** cuadros de VFX/impacto de las hojas (el juego ya los tiene), summons
+  que no existen en el código (esqueletos del Segador, ángel/espada/espíritu de La Profeta), las
+  posturas de Musashi (vienen dibujadas ~15% más grandes que su cuerpo: saltaría de tamaño) y la
+  escena del tatami (panel con fondo opaco; la arena de duelo existente se mantiene).
+- **Arte viejo apagado para no mezclar estilos:** banners `musashiRoninImpact`/`musashiFinish` y
+  `sylvaPiercingCrit` (dibujaban al Musashi/Sylva viejos); la estela de Paso Fantasma ahora es una
+  copia translúcida del cuerpo nuevo. Los PNG viejos quedan solo como respaldo si el atlas no carga.
+- **La Profeta:** la hoja nueva cambia pelo (claro) y arma (báculo dorado en vez de hojas turquesa):
+  es arte entregado por el equipo como canon, se integró tal cual.
 
 ### FIX aplicados a campeones REDRAW (mientras no hay arte nuevo, no deben verse peor)
 - Nigromante: halo del fondo quitado, agujeros rellenados, alfa nítido, contorno 1px (sprint anterior).
@@ -58,12 +76,12 @@ como canon porque es la del Master Reference. Esto es lo que un jugador nuevo no
 | Esfinge | Laberinto | **PASS (FIX)** | halo limpiado |
 | Druida de Arena | Laberinto | **PASS (FIX)** | halo limpiado |
 | Medusa | Laberinto | **PASS (FIX)** | halo limpiado |
-| Doblador — Guerrero/Arquera/Pícaro/Clérigo (los 4 "Dobladores") | Bosque | **REDRAW** | fuente muy chica (22–32px) y borrosa incluso ampliada — ver cola |
+| Doppelgänger — Guerrero/Arquera/Pícaro/Clérigo | Bosque | **PASS (FIX)** | redraw integrado (antes "Dobladores"). Mapeo por mecánica: guerrero→Caballero, pícaro→Guerrero, arquera→Arquero, clérigo→Soporte; el Doppelgänger Mago de la hoja no se usó (no existe en el código). Sin fila de "golpe" en la hoja: usa idle + el destello de golpe del motor. Residual menor: tinte translúcido dentro del arco del Arquero (es el glow del dibujo) |
 | Ángel de Hielo y Cristal | Hielo | **PASS (FIX)** | halo limpiado, es pálido por diseño (hielo), no confundir con halo |
 | Golem de Hielo | Hielo | **PASS (FIX)** | tenía un parche gris grande de fondo, quitado |
 | Demonio de Hielo y Fuego | Hielo | **PASS (FIX)** | ídem, era el más afectado (parche gris visible detrás del personaje) |
 | Tiburón Blanco | Acuática | **PASS (FIX)** | halo menor |
-| Dama del Bosque | Bosque | **REDRAW** | fuente de 20×31px, ilegible incluso ampliada — ver cola |
+| Dama del Bosque | Bosque | **PASS (FIX)** | redraw integrado: idle/caminar/ataque/golpe/muerte. Sigue siendo élite ranged (no se le agregaron las habilidades de jefa que sugiere la hoja: látigo, invocación, tormenta, forma espectral) |
 
 ## 4. Enemigos comunes / normales
 

@@ -177,8 +177,9 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
   actual del roster: `docs/VISUAL_ASSET_MANIFEST.md`. Pedido exacto de arte nuevo (campeones y
   subjefes en REDRAW): `docs/ART_REPLACEMENT_QUEUE.md`. Escaneo técnico reproducible (halo,
   alfa, fragmentos — nunca decide estilo, eso lo decide una persona mirando la referencia):
-  `python3 tools/art/scan_sprites.py [--dir carpeta] [--apply]`. Auditoría/normalización previa
-  (sprint anterior): `VISUAL_ART_REWORK.md`, `tools/art/normalize_sprites.py` (`--check`).
+  `python3 tools/art/scan_sprites.py [--dir carpeta] [--apply]`. Hojas nuevas de arte → atlas:
+  `python3 tools/art/redraw/build_all.py` (fuente en `art-source/redraw/`). Auditoría/normalización
+  previa (sprint anterior): `VISUAL_ART_REWORK.md`, `tools/art/normalize_sprites.py` (`--check`).
 - Timers de la partida: usar `runLater(ms, fn)` (`js/core/run.js`) en vez de `setTimeout`; se
   cancelan solos al abandonar o reiniciar.
 

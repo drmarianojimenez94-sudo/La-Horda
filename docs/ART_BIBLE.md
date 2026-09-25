@@ -101,6 +101,8 @@ documenta qué hace falta; el arte nuevo lo produce una persona usando el diseñ
 canon, y el recorte/integración técnica sí la hace la IA después.
 
 **Herramientas del Gate:**
+- `python3 tools/art/redraw/build_all.py` — hoja de sprites (PNG con cuadriculado rasterizado) →
+  cuadros limpios → un atlas por entidad con los pies alineados. Fuente en `art-source/redraw/`.
 - `python3 tools/art/scan_sprites.py [--dir carpeta] [--apply]` — escaneo técnico (halo, alfa,
   fragmentos) sobre `assets/sprites/`. Solo detecta defectos técnicos, nunca decide estilo.
 - **Roster Visual Test** — hoja de contacto de todos los campeones/enemigos importantes, misma
