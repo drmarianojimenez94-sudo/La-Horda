@@ -95,10 +95,12 @@ function spawnEnemy(type, atBoss, champion){
   // Un "campeón" es una versión agrandada de una criatura, usada como subjefe
   const champHp = champion ? 5.5 : 1, champScale = champion ? 1.45 : 1;
   const pls = partyLevelScale(); // dificultad extra por nivel de cuenta de los héroes en la partida
+  const arenaHp = arenaMods().enemyHpMult || 1; // perilla por arena (el Laberinto la usa para no ser un muro)
+  const hp0 = Math.round(base.hp*hpScale*champHp*pls.hp*((champion||base.rank==="subjefe")?DIFF.subbossHp:1)*arenaHp);
   const e = {
     type, name: base.name, rank: champion ? "subjefe" : base.rank,
     x, y, radius: base.radius*champScale,
-    hp: Math.round(base.hp*hpScale*champHp*pls.hp*((champion||base.rank==="subjefe")?DIFF.subbossHp:1)), maxHp: Math.round(base.hp*hpScale*champHp*pls.hp*((champion||base.rank==="subjefe")?DIFF.subbossHp:1)),
+    hp: hp0, maxHp: hp0,
     dmg: (champion||base.rank==="subjefe") ? Math.round(pls.avgHp*DIFF.subbossDmgPct*(1+(runLevel-1)*0.03)) : Math.round(base.dmg*(1+(runLevel-1)*arenaMods().enemyDmgPerWave)*pls.dmg),
     speed: base.speed*(champion?0.9:1), color: base.color,
     ranged: base.ranged||false, range: base.range||0, projSpeed: base.projSpeed||0,

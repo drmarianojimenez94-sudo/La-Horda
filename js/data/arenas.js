@@ -11,7 +11,8 @@
    Cada arena tiene su propia mecánica de firma para que no se sientan iguales entre sí:
    Bosque = regeneración enemiga + niebla; Hielo = novas gélidas + enfriamientos más largos;
    Laberinto = MUROS que bloquean el paso + sismos + maná muy castigado; Infernal = ignición +
-   habilidades mucho más débiles. Los multiplicadores de daño de héroe se repiten como NÚMERO
+   habilidades mucho más débiles. potionMult/enemyHpMult (opcionales, 1 si faltan): pociones que
+   caen y vida de todo lo que aparece en esa arena. Los multiplicadores de daño de héroe se repiten como NÚMERO
    en varias arenas (es solo una perilla de dificultad), pero el peligro ambiental y el roster
    nunca se repiten entre arenas.
    Ruinas del Bosque, Hielo y Laberinto todavía no tienen monstruos 100% propios en los tramos
@@ -27,7 +28,10 @@ const ARENA_MODS = {
               heroSpeedMult:0.90, heroCdMult:1.10, heroEnergyRegenMult:0.85, abilityDmgMult:1.0, heroDmgMult:0.85, enemyRegenPct:0, hazard:"nova_gelida", hasWalls:false },
   laberinto:{ label:"Laberinto Maldito", icon:"🗿", desc:"Muros que dividen la arena, sismos y maná escaso. Más dura que el Hielo.", hazardName:"Maldición del Minotauro",
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0.18, unlockLevel:0,
-              heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:0.50, abilityDmgMult:1.0, heroDmgMult:0.85, enemyRegenPct:0, hazard:"sismo", hasWalls:true },
+              heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:0.50, abilityDmgMult:1.0, heroDmgMult:0.85, enemyRegenPct:0, hazard:"sismo", hasWalls:true,
+              // Era un muro (~12% de victorias a nivel 30 vs ~37-40% en Hielo/Infernal): más pociones
+              // (vida y maná, x2.2) y -20% de vida a todo lo que aparece -> ~33% en 40 partidas.
+              potionMult:2.2, enemyHpMult:0.8 },
   infernal: { label:"Arena Infernal",    icon:"🔥", desc:"La arena final. Extremadamente dura.", hazardName:"Ignición Eterna",
               fireDmgMult:0.8,  iceDmgMult:1.25, enemyDmgPerWave:0.22, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:0.6, heroDmgMult:1.0, enemyRegenPct:0, hazard:"ignicion", hasWalls:false },

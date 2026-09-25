@@ -24,7 +24,7 @@ let activeChampion = null; // subjefe/jefe activo: mientras exista, se detiene l
 
 // Vida/daño del jefe: base de su ficha x poder del equipo (difficulty.js) x perilla de jefes.
 function scaleBossStats(e, type){
-  e.hp = e.maxHp = Math.round(ENEMY_BASE[type].hp * runDifficulty.hp * DIFF.bossHp * (DIFF.bossHpType[type]||1));
+  e.hp = e.maxHp = Math.round(ENEMY_BASE[type].hp * runDifficulty.hp * DIFF.bossHp * (DIFF.bossHpType[type]||1) * (arenaMods().enemyHpMult||1));
   e.dmg = Math.round(runDifficulty.avgHp * (DIFF.bossDmgPct[currentArena]||0.12));
   e.basicMult = DIFF.bossBasicMult;
 }
