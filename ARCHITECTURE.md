@@ -143,7 +143,7 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Puntaje por rol y rareza de recompensas | `js/data/rewards.js` | `SCORE_CONFIG`, `RARITY_WEIGHTS_*` |
 | Refuerzos entre niveles | `js/data/buffs.js` | `BUFF_POOL` |
 | Arena Divina | `js/data/divina.js` | `DIVINA_*` |
-| Curva de XP, castigo por abandonar | `js/systems/progression.js` | `xpToNext`, `ARENA_FAIL_PENALTY_PCT`, `DEV_XP_MULT` |
+| Curva de XP, castigo por abandonar | `js/systems/progression.js` | `xpToNext`, `ARENA_FAIL_PENALTY_PCT` |
 | Maestría de habilidades | `js/systems/mastery.js` | `TALENT_MAX`, `useXpThreshold` |
 | Radio de arena, niveles por arena, cámara | `js/core/constants.js` | `ARENA_RADIUS`, `LEVEL_COUNT`, `CAM_ZOOM` |
 
@@ -160,8 +160,11 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Sets (piezas, bonus 2/3/completo) y su comportamiento en combate | `js/data/sets.js`, `js/systems/set-effects.js` | `SET_DB`, `set*` hooks |
 | Viewport del juego / escala de cámara | `js/core/constants.js`, `js/core/canvas.js` | `VIEW_WORLD_SHORT`, `VIEW_WORLD_LONG_MAX` |
 
-⚠ `DEV_XP_MULT` (en `js/systems/progression.js`) vale **10** (antes 100): es un multiplicador de
-**prueba**. Hay que volverlo a 1 antes de publicar una versión "real".
+Modo campaña: ya no hay multiplicador de XP de prueba (`DEV_XP_MULT` se eliminó); la curva
+`xpToNext` está calibrada con campañas simuladas (`tools/playtest`) para terminar las 6 arenas
+cerca del nivel 40. Campeón de regalo al empezar (`js/ui/starter-select.js`), el resto en la Tienda
+a `CHAMPION_PRICE_GOLD` (1.000); el reinicio a nivel 1 es `campaignResetV1` en
+`js/storage/save.js`.
 
 ### Game feel (dónde está cada cosa)
 

@@ -9,8 +9,8 @@ importante. Nada de esto está hecho.
 1. **La pantalla de victoria siempre dice "Arena Infernal — Completada"**, aunque ganes en
    Bosque, Hielo, Laberinto o Acuática. Es un texto fijo en `VICTORY_STEPS`
    (`js/ui/end-screens.js`). Arreglo sugerido: usar `ARENA_MODS[currentArena].label`.
-2. **`DEV_XP_MULT = 100`** (`js/systems/progression.js`): multiplicador de XP de prueba que el
-   propio código marca como temporal. Toda la XP rinde x100. Volver a 1 antes de publicar.
+2. ~~**`DEV_XP_MULT = 100`**~~ — resuelto: el multiplicador se eliminó y la curva de XP se
+   calibró para la campaña (nivel ~40 al terminarla).
 3. **Algunos efectos con demora usan `setTimeout`** (ruptura de 140 ms y onda del Tajo en
    `js/skills/abilities.js`, peligro ambiental en `js/arenas/hazards.js`, avisos de la Arena
    Divina). Si abandonás la partida justo en esa fracción de segundo, el efecto se aplica igual

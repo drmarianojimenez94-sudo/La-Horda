@@ -5,16 +5,22 @@ integrantes (los lugares libres los ocupan bots).
 
 ## Cómo se juega
 
+La única entrada es **JUGAR → Arena** (modo campaña): ya no hay pestaña MULTIJUGADOR aparte, así
+la sala online siempre respeta la arena y los campeones que cada uno tiene.
+
 **Crear sala (anfitrión)**
-1. MENÚ PRINCIPAL → **🌐 MULTIJUGADOR** → **Crear sala** → elegís una arena **desbloqueada** y tu
-   campeón → la sala se crea sola (también se puede desde la PRE-SALA con **🌐 Crear sala online**).
+1. MENÚ PRINCIPAL → **JUGAR → Arena** → elegís una arena **desbloqueada** y tu campeón → **SALA**
+   (pre-sala) → **🌐 Crear sala online**.
 2. Aparece el código (ej. `SALA QKL58J`), el enlace, **📋 Copiar enlace** y **📨 Invitar** (en
    iPhone abre el menú para compartir por WhatsApp).
 
 **Unirse (invitado)** — dos formas:
-- MENÚ PRINCIPAL → **🌐 MULTIJUGADOR** → elegís tu campeón → pegás **el enlace** o escribís **el
-  código** (sirve `QKL58J`, `qkl58j` o `SALA QKL58J`) → **Unirse**.
-- O abrís el enlace directamente → poné tu nombre → **Unirse a la sala**.
+- MENÚ PRINCIPAL → **JUGAR → Arena** → cualquier arena tuya y tu campeón → en la **SALA**, en
+  **Unirse a una sala**, pegás **el enlace** o escribís **el código** (sirve `QKL58J`, `qkl58j` o
+  `SALA QKL58J`; el botón 📋 pega lo copiado) → **Unirse**. Pasás a la sala del anfitrión, con su
+  arena.
+- O abrís el enlace directamente → poné tu nombre → **Unirse a la sala**. Si es tu primera vez,
+  antes elegís tu campeón de regalo.
 
 **En la sala** (todos): cada uno ve a los 4 lugares en tiempo real con su color **P1 naranja · P2
 azul · P3 verde · P4 violeta**. Cada jugador **elige su campeón ahí mismo** (los que usa otro
@@ -58,10 +64,16 @@ Sin crear sala, la pre-sala funciona igual que antes (vos + 3 bots) y no necesit
   **Recibir daño no interrumpe** (regla elegida para que revivir bajo presión sea posible).
 - El que cae ve un cartel **CAÍSTE** con quién lo está reviviendo y cuánto falta.
 
-## Playtest V1: 2.000 de oro
+## Modo campaña (reemplaza el bono de 2.000 de oro del Playtest V1)
 
-Cada jugador recibe **una sola vez** 2.000 de oro al abrir esta versión (queda marcado en su
-guardado; recargar no lo repite).
+- Todos los campeones vuelven a **nivel 1** (una sola vez, marca `campaignResetV1`; el guardado
+  anterior queda copiado entero en `localStorage["laHordaSave_v1_antesDeCampania"]`). También
+  vuelven a 0 el oro y el avance de arenas; los objetos se conservan.
+- Al entrar (Continuar o abrir un enlace de invitación) cada jugador **elige UN campeón de regalo**
+  (pantalla "Elegí tu campeón"; es para esta prueba y después se saca). Los demás aparecen
+  bloqueados y se compran en la **Tienda por 1.000 de oro**. En la sala solo se ofrecen los propios.
+- La XP ya no tiene multiplicador de prueba: la curva (`xpToNext`) está calibrada para terminar la
+  campaña cerca del **nivel 40** jugando bien (ver `js/systems/progression.js`).
 
 ## Arquitectura (decisión y por qué)
 
@@ -152,7 +164,7 @@ desarrollo: dispositivos reales en redes distintas (ver "Prueba manual" abajo).
 
 1. iPhone A con WiFi y teléfono B con datos móviles (redes distintas).
 2. A: crear sala en Ruinas del Bosque, copiar enlace, mandarlo por WhatsApp.
-3. B: MULTIJUGADOR → pegar el enlace → Unirse (o abrir el enlace), elegir campeón en la sala,
+3. B: JUGAR → Arena → SALA → pegar el enlace en "Unirse" (o abrir el enlace), elegir campeón en la sala,
    marcar LISTO. A: ver a B en P2 (azul), comenzar.
 4. Moverse los dos, usar habilidades, dejarse caer y revivirse (mantener ✚), pasar de nivel (cada
    uno elige refuerzo). Anotar el ping del panel B1.
