@@ -65,7 +65,10 @@ function drawMagoFallen(h, alpha){
    No se recibieron frames de muerte limpios: el Sanador caído sigue usando
    el sprite procedural existente (fallback ya presente en el motor).
    ============================================================ */
-const SOPORTE_ATLAS = {"image": "soporte_atlas.png", "imageSize": [818, 122], "referenceHeight": 114, "anchor": "bottom-center", "frames": [{"x": 4, "y": 4, "w": 147, "h": 114, "pivotX": 74}, {"x": 155, "y": 4, "w": 175, "h": 114, "pivotX": 88}, {"x": 334, "y": 4, "w": 130, "h": 114, "pivotX": 65}, {"x": 468, "y": 12, "w": 111, "h": 106, "pivotX": 56}, {"x": 583, "y": 12, "w": 114, "h": 106, "pivotX": 57}, {"x": 701, "y": 12, "w": 113, "h": 106, "pivotX": 56}], "animations": {"idle": {"frames": [0], "fps": 1, "loop": true}, "walk": {"frames": [0, 1, 2], "fps": 7, "loop": true}, "cast": {"frames": [3, 4, 5], "fps": 8, "loop": false}, "hurt": {"frames": [0], "fps": 6, "loop": false}}};
+const SOPORTE_ATLAS = {"image": "soporte_atlas.png", "imageSize": [818, 122], "referenceHeight": 114, "anchor": "bottom-center", "frames": [{"x": 4, "y": 4, "w": 147, "h": 114, "pivotX": 74}, {"x": 155, "y": 4, "w": 175, "h": 114, "pivotX": 88}, {"x": 334, "y": 4, "w": 130, "h": 114, "pivotX": 65}, {"x": 468, "y": 12, "w": 111, "h": 106, "pivotX": 56}, {"x": 583, "y": 12, "w": 114, "h": 106, "pivotX": 57}, {"x": 701, "y": 12, "w": 113, "h": 106, "pivotX": 56}], "animations": {"idle": {"frames": [0], "fps": 1, "loop": true}, "walk": {"frames": [0, 1, 2], "fps": 7, "loop": true}, "cast": {"frames": [1, 0], "fps": 8, "loop": false}, "hurt": {"frames": [0], "fps": 6, "loop": false}}};
+// (Consistencia visual V1: los cuadros 3-5 del atlas -lanzar- son otro dibujo -cara, bastón y
+// halo blanco distintos-. Mientras no haya arte de lanzamiento en el mismo estilo, lanzar usa
+// sus propios cuadros de reposo/caminata + el efecto de lanzamiento del juego. VISUAL_ART_REWORK.md)
 const SOPORTE_TARGET_HEIGHT = 70; // mismo criterio de tamaño en pantalla que el Mago
 
 // Migrado al motor genérico AnimAtlas (ver más arriba, junto al Mago) — mismo esquema,
@@ -302,8 +305,9 @@ function drawMusashiReal(h, drawScale, alpha){
     const progress = Math.max(0, Math.min(0.999, 1 - h.attackAnim/(h.musashiCastDur||400)));
     img = MUSASHI_REAL_IMG[seq[Math.floor(progress*seq.length)]];
   } else if(h.attackAnim>0 && MUSASHI_REAL_READY.basic1){
-    // (basic1 venía cortado por el borde del recorte: el tajo arranca desde basic2)
-    const seq = ["basic2","basic3","basic4","basic5"];
+    // (basic1-3 vienen cortados por el borde del recorte -medio cuerpo-: el tajo usa los dos
+    // cuadros completos. Ver VISUAL_ART_REWORK.md)
+    const seq = ["basic4","basic5"];
     const progress = Math.max(0, Math.min(0.999, 1 - h.attackAnim/190));
     const n = Math.floor(progress*seq.length);
     const key = seq[n] || seq[seq.length-1];
@@ -342,7 +346,7 @@ function drawMusashiAfterimages(){
 // transformacion de la ultimate (h.nigroTransformTimer, ver enterAbyssForm).
 function drawNigromanteReal(h, drawScale, alpha){
   if(!NIGRO_READY.idle) return false;
-  let img;
+  let img, clipW = 0;
   if(h.nigroTransformTimer>0 && NIGRO_READY.ultTransform1){
     const seq = ["ultTransform1","ultTransform2","ultTransform3","ultTransform4"];
     const progress = Math.max(0, Math.min(0.999, 1-h.nigroTransformTimer/NIGRO_TRANSFORM_MS));
@@ -362,11 +366,11 @@ function drawNigromanteReal(h, drawScale, alpha){
     const seq = ["castPlague1","castPlague2"];
     const progress = Math.max(0, Math.min(0.999, 1-h.attackAnim/320));
     img = NIGRO_IMG[seq[Math.floor(progress*seq.length)]];
-  } else if(h.attackAnim>0 && NIGRO_READY.basic1){
-    const seq = ["basic1","basic2","basic3","basic4","basic5"];
-    const progress = Math.max(0, Math.min(0.999, 1-h.attackAnim/190));
-    const key = seq[Math.floor(progress*seq.length)] || seq[seq.length-1];
-    img = NIGRO_READY[key] ? NIGRO_IMG[key] : NIGRO_IMG.idle;
+  } else if(h.attackAnim>0 && NIGRO_READY.basic5){
+    // (basic1-4 vienen cortados por el borde izquierdo y basic1 trae una línea de la grilla:
+    // el ataque usa el único cuadro completo, basic5, recortado al cuerpo -sin el proyectil
+    // pintado, que el juego ya dibuja aparte-. Ver VISUAL_ART_REWORK.md)
+    img = NIGRO_IMG.basic5; clipW = 99;
   } else if(h.moving && NIGRO_READY.walkA6){
     // Ciclo de caminata real de 6 frames (antes solo 2, walk1/walk2) -mismo zip, sin usar-.
     const seq = ["walkA1","walkA2","walkA3","walkA4","walkA5","walkA6"];
@@ -384,9 +388,9 @@ function drawNigromanteReal(h, drawScale, alpha){
   }
   const flip = (h.fx||0) < -0.12;
   const targetH = h.radius*2.7*(drawScale/(h.scale||2.0));
-  const s = targetH/img.height;
-  const clip = { frames: [{x:0, y:0, w:img.width, h:img.height}] };
-  drawAnimFrameSized(img, clip, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, flip, alpha);
+  const s = targetH/img.height, w = clipW || img.width;
+  const clip = { frames: [{x:0, y:0, w, h:img.height}] };
+  drawAnimFrameSized(img, clip, 0, h.x, h.y, w*s, img.height*s, 0.5, 0.94, flip, alpha);
   return true;
 }
 // Nigromante transformado — "Demonio Nigromántico" (Encarnación del Abismo). Reemplaza el

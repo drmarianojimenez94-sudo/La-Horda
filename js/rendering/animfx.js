@@ -285,7 +285,10 @@ function animPose(ent, prof, isHero){
     const kb = (isHero?4:6)*h*h*Math.min(1.4, 1.2/prof.weight)*K;
     P.ox += an.hdx*kb; P.oy += an.hdy*kb*0.6;
     P.sx += 0.05*h; P.sy -= 0.05*h;
-    P.flash = Math.max(P.flash, Math.max(0, (h-0.35)/0.65)*(isHero?0.45:0.6));
+    // los jefes reciben golpes todo el tiempo: con el destello completo se veían casi blancos
+    // durante toda la pelea (perdían sus colores). Destello tenue para jefes/subjefes.
+    const flashMax = isHero ? 0.45 : (prof.isBoss || ent.rank==="subjefe" ? 0.22 : 0.6);
+    P.flash = Math.max(P.flash, Math.max(0, (h-0.35)/0.65)*flashMax);
   }
 
   // estela de velocidad (cargas, dashes, embestidas)
