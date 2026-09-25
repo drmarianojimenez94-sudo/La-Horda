@@ -148,6 +148,10 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Pasivas de objetos por rareza, efectos únicos de legendarios | `js/data/items.js` | `PASSIVE_RARITY_MULT`, `LEGEND_PROCS`, `LEGEND_PROC_POWER` |
 | Apuntado de habilidades (alcance, tipo de previsualización) | `js/skills/aim-targeting.js` | `AIM_PROFILES` |
 | Música por modo, efectos, prioridades | `js/audio/audio.js` | `MUSIC_MODES`, `SFX_CFG` |
+| Botín por arena/calificación, cantidad, protección contra la mala suerte, afinidad de sets | `js/data/loot.js` | `ARENA_LOOT`, `GRADE_LOOT`, `LOOT_PITY`, `SET_ARENA_WEIGHTS` |
+| Calificación personal por rol (C/B/A/S/S+) | `js/systems/performance.js` | `PERF_ROLES`, `PERF_GRADES` |
+| Sets (piezas, bonus 2/3/completo) y su comportamiento en combate | `js/data/sets.js`, `js/systems/set-effects.js` | `SET_DB`, `set*` hooks |
+| Viewport del juego / escala de cámara | `js/core/constants.js`, `js/core/canvas.js` | `VIEW_WORLD_SHORT`, `VIEW_WORLD_LONG_MAX` |
 
 ⚠ `DEV_XP_MULT` (en `js/systems/progression.js`) vale **10** (antes 100): es un multiplicador de
 **prueba**. Hay que volverlo a 1 antes de publicar una versión "real".
@@ -164,6 +168,10 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 - `js/systems/item-procs.js` — efectos únicos de los legendarios en combate.
 - `js/ai/bot-brain.js` — bots por rol, esquivar avisos, revivir entre ellos, marcador de caído.
 - `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
+- `js/systems/loot.js` — botín del cofre del jefe (`rollLoot` pura, `grantEndOfRunLoot`) y reforja
+  de piezas repetidas de set. Simulación: `tools/balance/`.
+- Arte: dirección visual y lista de arte a rehacer en `VISUAL_ART_REWORK.md`; normalización de
+  sprites reproducible en `tools/art/normalize_sprites.py` (`--check`).
 - Timers de la partida: usar `runLater(ms, fn)` (`js/core/run.js`) en vez de `setTimeout`; se
   cancelan solos al abandonar o reiniciar.
 
