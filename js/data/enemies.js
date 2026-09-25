@@ -46,10 +46,10 @@ const ENEMY_BASE = {
 
   // Subjefes del nivel 9: 4 "dobladores" espectrales aparecen JUNTOS (no de a uno), copiando
   // el rol de un guerrero/arquera/pícaro/clérigo. Ver el spawn especial en update().
-  doblador_guerrero:{name:"Doblador — Guerrero", rank:"subjefe", hp:260, dmg:16, speed:80,  radius:26, xp:26, gold:10, scale:3.8, color:"#8a8a8a", ranged:false, visualAlias:"esqueleto_h"},
-  doblador_arquera: {name:"Doblador — Arquera",  rank:"subjefe", hp:190, dmg:14, speed:74,  radius:24, xp:26, gold:10, scale:3.8, color:"#9a9a9a", ranged:true, range:300, projSpeed:260, visualAlias:"demonio_menor"},
-  doblador_picaro:  {name:"Doblador — Pícaro",   rank:"subjefe", hp:170, dmg:15, speed:128, radius:23, xp:26, gold:10, scale:3.7, color:"#707070", ranged:false, visualAlias:"demonio_mago"},
-  doblador_clerigo: {name:"Doblador — Clérigo",  rank:"subjefe", hp:200, dmg:12, speed:70,  radius:24, xp:26, gold:10, scale:3.8, color:"#b0b0b0", ranged:true, range:280, projSpeed:230, visualAlias:"golem"},
+  doblador_guerrero:{name:"Doppelgänger — Guerrero", rank:"subjefe", hp:260, dmg:16, speed:80,  radius:26, xp:26, gold:10, scale:3.8, color:"#8a8a8a", ranged:false, visualAlias:"esqueleto_h"},
+  doblador_arquera: {name:"Doppelgänger — Arquera",  rank:"subjefe", hp:190, dmg:14, speed:74,  radius:24, xp:26, gold:10, scale:3.8, color:"#9a9a9a", ranged:true, range:300, projSpeed:260, visualAlias:"demonio_menor"},
+  doblador_picaro:  {name:"Doppelgänger — Pícaro",   rank:"subjefe", hp:170, dmg:15, speed:128, radius:23, xp:26, gold:10, scale:3.7, color:"#707070", ranged:false, visualAlias:"demonio_mago"},
+  doblador_clerigo: {name:"Doppelgänger — Clérigo",  rank:"subjefe", hp:200, dmg:12, speed:70,  radius:24, xp:26, gold:10, scale:3.8, color:"#b0b0b0", ranged:true, range:280, projSpeed:230, visualAlias:"golem"},
 
   // Jefe final (nivel 10): Jinete Sin Cabeza. "Resurrección Eterna": la primera vez que
   // llega a 0 de vida no muere -renace con la vida al máximo y +30% de daño hecho Y

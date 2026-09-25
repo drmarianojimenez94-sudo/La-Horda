@@ -765,3 +765,21 @@ acua2Load('fxVortex', ["assets/vfx/acuatica/vortex_01.png"]);
 acua2Load('fxWave', ["assets/vfx/acuatica/wave_01.png"]);
 acua2Load('fxSpark', ["assets/vfx/acuatica/spark_01.png"]);
 acua2Load('fxBolt', ["assets/vfx/acuatica/bolt_01.png"]);
+
+/* REDRAW del Bosque (hoja "Dama del Bosque / Doppelgängers"): un atlas por tipo, cuadros del mismo
+   tamaño con los pies alineados (anchor). Se dibuja con drawPackSprite; el arte viejo (static.png)
+   queda solo de respaldo si el atlas no cargara. Mapeo por mecánica real, no por el título de la
+   hoja: guerrero->Caballero, pícaro->Guerrero, arquera->Arquero, clérigo->Soporte (sin Mago). */
+const ENEMY_ATLAS_PACK = {};
+function enemyAtlasPackLoad(type, src, meta){
+  const img = new Image();
+  const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:meta.sets, ready:false };
+  img.onload = ()=>{ P.ready = true; };
+  img.src = src;
+  ENEMY_ATLAS_PACK[type] = P;
+}
+enemyAtlasPackLoad("dama_bosque", "assets/sprites/enemies/bosque/dama_bosque/v2/atlas.png", {"w":120,"h":112,"cols":8,"refH":102,"anchor":0.9375,"sets":{"idle":[14,15,16,17],"walk":[18,19,20,21],"atk":[0,1,2,3],"hit":[10,11,12,13],"death":[4,5,6,7,8,9]}});
+enemyAtlasPackLoad("doblador_guerrero", "assets/sprites/bosses/bosque/doblador_guerrero/v2/atlas.png", {"w":58,"h":61,"cols":8,"refH":53,"anchor":0.9344,"sets":{"idle":[8,9,10,11],"walk":[12,13,14,15],"atk":[0,1,2,3],"hit":[8],"death":[4,5,6,7]}});
+enemyAtlasPackLoad("doblador_picaro", "assets/sprites/bosses/bosque/doblador_picaro/v2/atlas.png", {"w":57,"h":61,"cols":8,"refH":53,"anchor":0.9344,"sets":{"idle":[8,9,10,11],"walk":[12,13,14,15],"atk":[0,1,2,3],"hit":[8],"death":[4,5,6,7]}});
+enemyAtlasPackLoad("doblador_arquera", "assets/sprites/bosses/bosque/doblador_arquera/v2/atlas.png", {"w":55,"h":61,"cols":8,"refH":54,"anchor":0.9344,"sets":{"idle":[8,9,10,11],"walk":[12,13,14,15],"atk":[0,1,2,3],"hit":[8],"death":[4,5,6,7]}});
+enemyAtlasPackLoad("doblador_clerigo", "assets/sprites/bosses/bosque/doblador_clerigo/v2/atlas.png", {"w":55,"h":63,"cols":8,"refH":54,"anchor":0.9365,"sets":{"idle":[8,9,10,11],"walk":[12,13,14,15],"atk":[0,1,2,3],"hit":[8],"death":[4,5,6,7]}});

@@ -147,7 +147,34 @@ const PACK_ANIM = {
     walk:["walk1", "walk2", "walk3", "walk4"], idle:["idle1", "idle2", "idle3", "idle4"],
     atk:["atk1", "atk2", "atk3", "atk4"], hit:["hit1", "hit2"], death:["death1", "death2", "death3", "death4", "death5"] },
 };
+// Atlas del redraw (Dama del Bosque / Doppelgängers): mismas reglas de estado que el pack de abajo.
+function drawEnemyAtlasPack(e){
+  const P = ENEMY_ATLAS_PACK[e.type];
+  if(!P || !P.ready) return false;
+  if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;
+  e._pkAtkLast = e.attackAnim;
+  let arr, n;
+  if(!e.alive){
+    arr = P.sets.death;
+    if(e._dyingP != null) n = Math.floor(e._dyingP*arr.length*1.25);
+    else { if(!e._diedAt) e._diedAt = animNow; n = Math.floor((animNow-e._diedAt)/220); }
+  } else if(e.attackAnim>0){
+    arr = P.sets.atk; n = Math.floor(Math.max(0, Math.min(0.999, 1 - e.attackAnim/(e._pkAtkMax||280)))*arr.length);
+  } else if(e.hitFlash>55){
+    arr = P.sets.hit; n = 0;
+  } else if(e.stunTimer>0){
+    arr = P.sets.idle; n = Math.floor((e.animT||0)/220);
+  } else {
+    arr = P.sets.walk; n = Math.floor((e.animT||0)/140);
+  }
+  const v = e.alive ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
+  const s = e.radius*2.6/P.refH;
+  const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
+  drawAnimFrameSized(P.atlas, clip, 0, e.x, e.y, P.fw*s, P.fh*s, 0.5, P.anchor, e.fx < -0.12, undefined);
+  return true;
+}
 function drawPackSprite(e){
+  if(drawEnemyAtlasPack(e)) return true;
   const d = PACK_ANIM[e.type];
   if(!d || !d.ready.walk1) return false;
   let key;

@@ -21,7 +21,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await sleep(500);
   const dims = await page.evaluate(() => {
     buildSprites(); selectedClass = 'guerrero'; currentArena = 'bosque'; startRun(1); state = 'paused';
-    const TYPES = ["mago_hielo_cristal", "angel_caido_hielo", "demonio_mayor", "jinete_sin_cabeza", "minotauro", "leviatan", "esqueleto_h", "dragon_hielo", "kraken_joven", "guardian_laberinto", "golem", "demonio_menor", "esqueleto", "zombie", "duende_bosque", "dama_bosque", "esfinge", "golem_hielo", "lobo_artico", "demonio_mago", "tiburon_blanco", "sirena_abisal"];
+    const TYPES = ["mago_hielo_cristal", "angel_caido_hielo", "demonio_mayor", "jinete_sin_cabeza", "minotauro", "leviatan", "esqueleto_h", "dragon_hielo", "kraken_joven", "guardian_laberinto", "golem", "demonio_menor", "esqueleto", "zombie", "duende_bosque", "dama_bosque", "doblador_guerrero", "doblador_picaro", "doblador_arquera", "doblador_clerigo", "esfinge", "golem_hielo", "lobo_artico", "demonio_mago", "tiburon_blanco", "sirena_abisal"];
     const COLS = [["idle", e => {}], ["walk", e => { e.moving = true; e.animT = 200; e.fx = 1; e.fy = 0; }], ["attack", e => { e.attackAnim = 200; }]];
     const CW = 260, CH = 260, per = Math.ceil(TYPES.length / 2);
     const cvs = document.createElement('canvas'); cvs.id = 'lab'; cvs.width = CW * COLS.length * 2 + 30; cvs.height = CH * per + 20;

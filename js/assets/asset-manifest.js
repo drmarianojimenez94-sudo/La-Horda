@@ -3,6 +3,11 @@
    La usa js/assets/preload.js para saber cuándo terminó de cargar todo. Si agregás una imagen
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
+  "assets/sprites/enemies/bosque/dama_bosque/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_guerrero/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_picaro/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_arquera/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_clerigo/v2/atlas.png",
   "assets/sprites/champions/segador/v2/atlas.png",
   "assets/sprites/champions/musashi/v2/atlas.png",
   "assets/sprites/champions/profeta/v2/atlas.png",
