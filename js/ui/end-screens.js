@@ -76,8 +76,9 @@ function buildVictoryData(){
   const loot = grantEndOfRunLoot(classKey, perf, true);
   const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
-  // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño.
-  const victoryXpBonus = Math.round(20 * perf.score * (1 + perf.score/100));
+  // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño. Es lo que
+  // separa a quien juega bien (pocas derrotas) en la curva de la campaña (ver xpToNext).
+  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
   grantXP(classKey, victoryXpBonus);
   return {
     classKey, perf, score:perf.score, rewards:loot.items, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
