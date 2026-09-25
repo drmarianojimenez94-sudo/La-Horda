@@ -19,15 +19,14 @@ técnico (`tools/art/scan_sprites.py`).
 | Mago | **PASS** | Misma familia chibi | Mantener |
 | Soporte | **PASS** | Misma familia chibi | Mantener |
 | Segador Olvidado | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
-| Axiom | **REDRAW** | Proporciones altas, armadura muy detallada/pintada | Hoja nueva pendiente (próxima entrega) |
+| Axiom | **PASS** (redraw integrado) | — hoja nueva; FIX técnico: neblina violeta horneada sobre el gris convertida en brillo translúcido, pelo blanco protegido del recorte | Mantener |
 | La Profeta | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
 | Musashi | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
 | La Cazadora (antes "Sylva") | **PASS** (redraw integrado) | — hoja nueva, FIX técnico al recortar | Mantener |
-| Nigromante | **REDRAW** | Tinta/pintado, proporciones altas; frames cortados por el borde | Hoja nueva pendiente (próxima entrega) |
+| Nigromante | **PASS** (redraw integrado) | — hoja nueva; FIX: las filas de caminar de la hoja estaban mal rotuladas ("izquierda" miraba a la derecha y viceversa), se reordenaron por la dirección real | Mantener |
 
-**Conclusión del roster:** 8 de 10 campeones ya son de la misma familia chibi del Master Reference
-(Roster Visual Test + prueba en partida real junto a bots Tanque/Mago/Soporte). Quedan Axiom y
-Nigromante, con hoja nueva anunciada.
+**Conclusión del roster:** los 10 campeones son de la misma familia chibi del Master Reference
+(Roster Visual Test + prueba en partida real junto a bots Tanque/Guerrero/Mago/Soporte).
 
 ### Redraw integrado (hojas "La Horda — estilo oficial")
 Recortadas con `tools/art/redraw/` desde `art-source/redraw/` → un atlas por entidad en
@@ -46,7 +45,9 @@ hoja), golpe, muerte; La Cazadora además "Apuntando" mientras carga Flecha Perf
   `sylvaPiercingCrit` (dibujaban al Musashi/Sylva viejos); la estela de Paso Fantasma ahora es una
   copia translúcida del cuerpo nuevo. Los PNG viejos quedan solo como respaldo si el atlas no carga.
 - **La Profeta:** la hoja nueva cambia pelo (claro) y arma (báculo dorado en vez de hojas turquesa):
-  es arte entregado por el equipo como canon, se integró tal cual.
+  confirmado por el equipo, es el diseño canon nuevo.
+- **No integrado del Nigromante/Axiom:** lobos espectrales, esqueleto arquero, orbe/tótem/constructo
+  de Axiom (no existen en el código); los VFX de habilidad de las hojas (el juego usa los suyos).
 
 ### FIX aplicados a campeones REDRAW (mientras no hay arte nuevo, no deben verse peor)
 - Nigromante: halo del fondo quitado, agujeros rellenados, alfa nítido, contorno 1px (sprint anterior).
@@ -76,7 +77,7 @@ hoja), golpe, muerte; La Cazadora además "Apuntando" mientras carga Flecha Perf
 | Esfinge | Laberinto | **PASS (FIX)** | halo limpiado |
 | Druida de Arena | Laberinto | **PASS (FIX)** | halo limpiado |
 | Medusa | Laberinto | **PASS (FIX)** | halo limpiado |
-| Doppelgänger — Guerrero/Arquera/Pícaro/Clérigo | Bosque | **PASS (FIX)** | redraw integrado (antes "Dobladores"). Mapeo por mecánica: guerrero→Caballero, pícaro→Guerrero, arquera→Arquero, clérigo→Soporte; el Doppelgänger Mago de la hoja no se usó (no existe en el código). Sin fila de "golpe" en la hoja: usa idle + el destello de golpe del motor. Residual menor: tinte translúcido dentro del arco del Arquero (es el glow del dibujo) |
+| Doppelgänger — Guerrero/Arquera/Pícaro/Clérigo | Bosque | **PASS (FIX)** | redraw integrado (antes "Dobladores"). Mapeo por mecánica: guerrero→Caballero, pícaro→Guerrero, arquera→Arquero, clérigo→Soporte; el Doppelgänger Mago de la hoja no se usó (no existe en el código). Sin fila de "golpe" en la hoja: usa idle + el destello de golpe del motor. Arquero: el semicírculo gris dentro del arco (fondo atrapado) se eliminó |
 | Ángel de Hielo y Cristal | Hielo | **PASS (FIX)** | halo limpiado, es pálido por diseño (hielo), no confundir con halo |
 | Golem de Hielo | Hielo | **PASS (FIX)** | tenía un parche gris grande de fondo, quitado |
 | Demonio de Hielo y Fuego | Hielo | **PASS (FIX)** | ídem, era el más afectado (parche gris visible detrás del personaje) |
@@ -99,9 +100,9 @@ hoja), golpe, muerte; La Cazadora además "Apuntando" mientras carga Flecha Perf
 
 | Entidad | Campeón | Estado | Nota |
 |---|---|---|---|
-| Esqueleto guerrero/mago | Nigromante | **PASS** | arte propio, ya normalizado |
-| Gólem del Nigromante | Nigromante | **PASS** | |
-| Forma Demonio (Encarnación del Abismo) | Nigromante | **PASS** | |
+| Esqueleto guerrero/mago | Nigromante | **PASS** | redraw: esqueletos de la hoja nueva del Nigromante (quieto/caminar/ataque); la ráfaga de aparición vieja se apaga para no mezclar estilos |
+| Gólem del Nigromante | Nigromante | **PASS (revisar)** | arte anterior; la hoja nueva no trae gólem. Encaja como invocación grande pero es de la familia pintada |
+| Forma Demonio (Encarnación del Abismo) | Nigromante | **REDRAW (menor)** | arte pintado anterior, más detallado que el chibi; la hoja nueva no trae la forma demoníaca (sí la pose de transformación, ya integrada). Se ve 13 s por ulti |
 | Lobo Espectral | Sylva | **PASS** | |
 | Guardianes de Cristal | Mago de Hielo (jefe) | **PASS** | reusa el gólem de hielo |
 

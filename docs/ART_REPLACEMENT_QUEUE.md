@@ -14,26 +14,25 @@ equipo técnico después — acá solo se pide el arte.
 
 ## Estado
 
-**Integrados (PASS):** Segador Olvidado, La Profeta, Musashi, La Cazadora, Dama del Bosque y los 4
-Doppelgängers — ver `docs/VISUAL_ASSET_MANIFEST.md` ("Redraw integrado").
+**Integrados (PASS):** los 10 campeones (Segador, Axiom, La Profeta, Musashi, La Cazadora,
+Nigromante + la familia original), Dama del Bosque, los 4 Doppelgängers y los esqueletos del
+Nigromante — ver `docs/VISUAL_ASSET_MANIFEST.md`.
 
-## PENDIENTE — Campeones (2)
+## PENDIENTE (menor, no bloquea)
 
-### Axiom
-- **Qué se mantiene:** armadura dorada/ornamentada, capa/escudo azul, temática "código/glitch".
-- **Frames que usa el motor** (misma grilla que las hojas ya integradas): caminar ↓/←/→/↑ ×4,
-  idle ×4, ataque básico ×4, golpe ×4, muerte ×6, y una fila de "preparación" de habilidad (×3).
-  El glitch/teletransporte/Error 404/Force Quit siguen siendo VFX del código.
+### Forma demoníaca del Nigromante (Encarnación del Abismo)
+- Hoy: arte pintado anterior. Pedido: el mismo demonio (cuernos, alas, fuego de almas verde) en la
+  gramática chibi, más grande que un campeón (es una transformación, ~1.4× de alto). Estados que usa
+  el código: quieto, ataque (2 golpes), lanzar fuego de almas, golpe al piso, tajo.
 
-### Nigromante
-- **Qué se mantiene:** túnica/capucha negra, cetro con orbe verde, invocador.
-- **Frames:** los mismos que Axiom. Las invocaciones (esqueletos guerrero/mago, gólem) y la forma
-  demoníaca de Encarnación del Abismo tienen arte propio que ya pasa el Gate; si la hoja nueva las
-  trae, se evalúan aparte (no se reemplazan si no pasan).
+### Gólem del Nigromante (piel piedra / fuego / hielo)
+- Hoy: arte pintado anterior. Pedido: gólem chibi grande, 3 pieles (piedra, fuego, hielo), quieto +
+  ataque (+ aparición opcional).
 
-## Opcional (no bloquea)
-- Lobo Espectral de La Cazadora: la hoja nueva trae un lobo del mismo estilo; el actual es PASS.
-- Doppelgänger — golpe: la hoja no tiene fila de "recibir daño" (hoy usa idle + destello).
+### Opcional
+- Lobo Espectral de La Cazadora (la hoja del Nigromante trae lobos del estilo nuevo, pero el lobo
+  pertenece a La Cazadora: se puede reutilizar si se confirma).
+- Doppelgänger — golpe: la hoja no tiene fila de "recibir daño".
 
 ## Cómo se usará
 
