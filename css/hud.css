@@ -277,3 +277,10 @@
 .skill-lvl-pip{position:absolute; bottom:-4px; right:-4px; min-width:16px; height:16px; padding:0 3px; border-radius:8px;
   background:#1a1004; border:1px solid #d9b25a; color:#ffcf5c; font-size:0.58rem; line-height:14px; text-align:center; pointer-events:none;}
 .skill-lvl-pip:empty{display:none;}
+/* B1 cooperativo: cartel de "caíste" con el progreso real del revivir */
+#downed-overlay{ position:absolute; left:50%; top:30%; transform:translateX(-50%); z-index:6; pointer-events:none;
+  background:rgba(20,6,4,0.78); border:1px solid #c62828; border-radius:10px; padding:10px 18px; text-align:center; min-width:230px; }
+#downed-overlay .dw-title{ font:bold 22px monospace; color:#ff6a4a; letter-spacing:3px; }
+#downed-overlay .dw-sub{ font:13px monospace; color:#ffd9c8; margin:4px 0 8px; }
+#downed-overlay .dw-bar{ height:7px; background:rgba(255,255,255,0.12); border-radius:4px; overflow:hidden; }
+#downed-overlay .dw-bar i{ display:block; height:100%; width:0; background:#8effb4; transition:width .1s linear; }

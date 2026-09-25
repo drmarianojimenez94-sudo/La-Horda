@@ -61,8 +61,19 @@ function pickLobbyAllies(mine){
 function lobbyAlliesValid(mine){
   return Array.isArray(lobbyAllies) && lobbyAllies.length>0 && lobbyAllies.every(k=>CLASSES[k] && k!==mine);
 }
+// Estado TEMPORAL de una partida que no vivía en los arrays de arriba: se limpia al empezar cada
+// partida (reintentar / volver a jugar desde la sala) para que nada de la anterior se filtre:
+// congelamiento de Axiom, cortes demorados y duelos de Musashi, efectos, pulsos del jefe.
+function resetRunTransients(){
+  axiomForceQuitFlash = 0; axiomFreezeTimer = 0; axiomFreezeCaster = null; axiomForceQuitPending = null;
+  if(typeof canvas!=="undefined" && canvas && canvas.style) canvas.style.filter = "";
+  musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];
+  activeAxiomVfx = []; bossDangerPulse = 0;
+  boss = null; bossActive = false; activeChampion = null; midBossSpawned = false; levelClearing = 0;
+}
 function startRun(fromLevel){
   runLevel = fromLevel || 1;
+  resetRunTransients();
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
   runEnding = false;

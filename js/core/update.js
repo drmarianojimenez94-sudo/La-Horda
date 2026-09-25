@@ -466,6 +466,7 @@ function update(dt){
   for(const em of embers){ em.y += em.vy*dt/1000; em.phase += dt/1000; if(em.y < player.y-700) em.y = player.y+700; }
 
   updateAllies(dt);
+  updateRevives(dt);
   updatePotions(dt);
   updateFireWalls(dt);
   updateTraps(dt);

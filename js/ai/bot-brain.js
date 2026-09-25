@@ -91,7 +91,7 @@ function botWard(h){
 function botDownedNear(h, range){
   if(divinaMode) return null;
   let best = null, bd = range;
-  for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
+  for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h || reviveBusyFor(a, h)) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
   return best;
 }
 // Movimiento de un bot. Devuelve {mx, my, target}. Llamada desde updateAllies().
@@ -114,8 +114,7 @@ function botMove(h, dt){
   if(down){
     const d = distance(h, down);
     if(d > 46){ return {mx:(down.x-h.x)/d, my:(down.y-h.y)/d, target}; }
-    down._reviveBy = h; down._reviveT = (down._reviveT||0) + dt;
-    if(down._reviveT >= BOT_REVIVE_MS){ down._reviveT = 0; down._reviveBy = null; reviveHero(down, h); }
+    if(reviverCanAct(h)) reviveStep(down, h, BOT_REVIVE_MS, dt);
     return {mx:0, my:0, target, reviving:true};
   }
   // 3) reagruparse si se alejó mucho del jugador
@@ -156,26 +155,34 @@ function botMove(h, dt){
 // cerca, y anillo de progreso cuando alguien lo está reviviendo.
 function drawDownedMarkers(){
   if(divinaMode) return;
-  for(const a of allies){
-    if(a.alive) { a._reviveT = 0; continue; }
+  for(const a of heroes){
+    if(a===player) continue;
+    if(a.alive) continue;
     if(!inView(a.x, a.y, 80)) continue;
     const pulse = 0.5 + 0.5*Math.sin(animNow/180);
     const dP = distance(player, a);
+    const busy = reviveBusyFor(a, player);
     ctx.save();
-    if(dP < REVIVE_RANGE*2.4){
+    if(dP < REVIVE_RANGE*2.4 && player.alive){
       ctx.setLineDash([8,6]); ctx.lineDashOffset = -animNow/40;
-      ctx.strokeStyle = dP < REVIVE_RANGE ? "rgba(140,255,180,0.9)" : "rgba(140,255,180,0.35)"; ctx.lineWidth = 2.5;
+      ctx.strokeStyle = dP < REVIVE_RANGE && !busy ? "rgba(140,255,180,0.9)" : "rgba(140,255,180,0.35)"; ctx.lineWidth = 2.5;
       ctx.beginPath(); ctx.arc(a.x, a.y, REVIVE_RANGE, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     }
-    // progreso (bot reviviendo, o el jugador manteniendo el botón)
-    let prog = 0;
-    if(a._reviveBy && a._reviveBy.alive && a._reviveT>0) prog = a._reviveT/BOT_REVIVE_MS;
-    if(typeof reviveBtnTarget!=="undefined" && reviveBtnTarget===a && typeof reviveBtnHoldStart==="number") prog = Math.max(prog, (performance.now()-reviveBtnHoldStart)/REVIVE_BTN_HOLD_MS);
+    // progreso real (el que lleva la simulación: bot o humano reviviendo, ver updateRevives)
+    const prog = a._reviveBy && a._reviveT>0 ? a._reviveT/(a._reviveDur||BOT_REVIVE_MS) : 0;
     const y = a.y - 62 - pulse*4;
     ctx.fillStyle = "rgba(10,30,16,0.75)"; ctx.beginPath(); ctx.arc(a.x, y, 15, 0, Math.PI*2); ctx.fill();
     if(prog > 0){ ctx.strokeStyle = "#8effb4"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(a.x, y, 15, -Math.PI/2, -Math.PI/2 + Math.PI*2*Math.min(1, prog)); ctx.stroke(); }
     else { ctx.strokeStyle = `rgba(142,255,180,${0.5+0.5*pulse})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(a.x, y, 15, 0, Math.PI*2); ctx.stroke(); }
     ctx.fillStyle = "#8effb4"; ctx.fillRect(a.x-2.5, y-8, 5, 16); ctx.fillRect(a.x-8, y-2.5, 16, 5);
+    // cooperativo: quién cayó y quién lo está reviviendo (lo mismo en todas las pantallas)
+    if(netMatch){
+      ctx.font = "bold 12px monospace"; ctx.textAlign = "center";
+      const line = prog > 0 ? `↻ ${heroLabel(a._reviveBy)} ${Math.round(Math.min(1,prog)*100)}%` : `${heroLabel(a)} · CAÍDO`;
+      const w = ctx.measureText(line).width + 10;
+      ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(a.x - w/2, y - 34, w, 16);
+      ctx.fillStyle = prog > 0 ? "#8effb4" : "#ffb09a"; ctx.fillText(line, a.x, y - 22);
+    }
     ctx.restore();
   }
 }

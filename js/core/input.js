@@ -75,42 +75,56 @@ function sylvaChargeRelease(aim){
   player.sylvaChargeTimer = 0;
 }
 
-/* ---- Botón dedicado de revivir (cerca de las habilidades) ---- */
+/* ---- Botón dedicado de revivir (cerca de las habilidades) ----
+   Mantenerlo apretado = "estoy reviviendo a X". El progreso y el resultado los decide la
+   simulación (updateRevives en allies.js; en cooperativo, el anfitrión): el botón solo muestra
+   el progreso real y se suelta solo si el revivir deja de ser válido. */
 const REVIVE_BTN_HOLD_MS = 1300; // demo: 1.3s en vez de 2s
-let reviveBtnHoldRaf = null, reviveBtnHoldStart = 0, reviveBtnTarget = null;
+let reviveBtnHoldRaf = null, reviveBtnTarget = null;
+function reviveTargetValid(a){
+  return !!(a && !a.alive && a!==player && player && player.alive && !(player.stunTimer>0) && state==="playing" && !runEnding && !divinaMode
+    && distance(player, a) < REVIVE_RANGE && !reviveBusyFor(a, player));
+}
 function nearestDownedAlly(){
   if(divinaMode) return null; // la muerte es definitiva en el asedio: nadie revive a nadie
   let best = null, bestD = Infinity;
   for(const a of allies){
-    if(a.alive) continue;
+    if(!reviveTargetValid(a)) continue;
     const d = distance(player, a);
-    if(d < REVIVE_RANGE && d < bestD){ bestD = d; best = a; }
+    if(d < bestD){ bestD = d; best = a; }
   }
   return best;
+}
+function setReviveHold(target){
+  if(netIsGuest()){
+    if(target) netSendToHost({k:"revive", slot:target._netSlot, on:1});
+    else netSendToHost({k:"revive", on:0});
+    return;
+  }
+  if(player) player._revHold = target ? heroes.indexOf(target) : -1;
 }
 function stopReviveBtnHold(){
   if(reviveBtnHoldRaf) cancelAnimationFrame(reviveBtnHoldRaf);
   reviveBtnHoldRaf = null;
   const btn = document.getElementById("btn-revive");
+  const wasHolding = btn && btn.dataset.holding==="1";
   if(btn){
     btn.dataset.holding = "0";
     btn.classList.remove("holding");
     const ico = btn.querySelector(".ico");
     if(ico) ico.textContent = "✚";
   }
+  if(wasHolding) setReviveHold(null);
   reviveBtnTarget = null;
 }
 function reviveBtnTick(){
-  if(!reviveBtnTarget || reviveBtnTarget.alive || distance(player, reviveBtnTarget) >= REVIVE_RANGE){ stopReviveBtnHold(); return; }
-  const elapsed = performance.now() - reviveBtnHoldStart;
+  const a = reviveBtnTarget;
+  if(!a || a.alive || !reviveTargetValid(a)){ stopReviveBtnHold(); return; }
   const btn = document.getElementById("btn-revive");
   const ico = btn ? btn.querySelector(".ico") : null;
-  if(ico) ico.textContent = Math.ceil((REVIVE_BTN_HOLD_MS-elapsed)/1000)+"s";
-  if(elapsed >= REVIVE_BTN_HOLD_MS){
-    stopReviveBtnHold();
-    tryReviveAlly(reviveBtnTarget);
-    return;
-  }
+  const mine = a._reviveBy===player && a._reviveT>0;
+  const dur = a._reviveDur || REVIVE_BTN_HOLD_MS;
+  if(ico) ico.textContent = mine ? Math.round(Math.min(1, a._reviveT/dur)*100)+"%" : "…";
   reviveBtnHoldRaf = requestAnimationFrame(reviveBtnTick);
 }
 const reviveBtn = document.getElementById("btn-revive");
@@ -119,21 +133,23 @@ reviveBtn.addEventListener("pointerdown", (ev)=>{
   const target = nearestDownedAlly();
   if(!target) return;
   reviveBtnTarget = target;
-  reviveBtnHoldStart = performance.now();
   reviveBtn.dataset.holding = "1";
   reviveBtn.classList.add("holding");
+  setReviveHold(target);
   reviveBtnHoldRaf = requestAnimationFrame(reviveBtnTick);
 });
 ["pointerup","pointercancel","pointerleave"].forEach(evt=>{
   reviveBtn.addEventListener(evt, (ev)=>{ ev.stopPropagation(); stopReviveBtnHold(); });
 });
-// Muestra/oculta el botón según si hay algún aliado caído al alcance ahora mismo
+// Muestra/oculta el botón según si hay algún aliado caído al alcance que se pueda revivir ahora
+// (vivo, en rango, nadie más lo está reviviendo, partida en curso).
 function updateReviveBtn(){
   const btn = document.getElementById("btn-revive");
   if(!btn) return;
-  const hasTarget = !!nearestDownedAlly();
+  const holding = btn.dataset.holding==="1";
+  const hasTarget = holding ? reviveTargetValid(reviveBtnTarget) : !!nearestDownedAlly();
   btn.classList.toggle("ready", hasTarget);
-  if(!hasTarget && btn.dataset.holding==="1") stopReviveBtnHold();
+  if(!hasTarget && holding) stopReviveBtnHold();
 }
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{

@@ -27,11 +27,25 @@ function showBanner(text){
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
 }
 
+// Cooperativo: cuando caés, un cartel claro con quién te está reviviendo y cuánto le falta (el
+// progreso es el real, el que lleva el anfitrión).
+function updateDownedOverlay(){
+  const el = document.getElementById("downed-overlay"); if(!el) return;
+  const show = !!(netMatch && player && !player.alive && state==="playing" && !runEnding);
+  el.classList.toggle("hidden", !show);
+  if(!show) return;
+  const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
+  const alive = heroes.filter(h=>h.alive).length;
+  document.getElementById("downed-sub").textContent = prog>0 ? `${heroLabel(by)} te está reviviendo… ${Math.round(prog*100)}%`
+    : (alive ? "Tus aliados pueden revivirte: que se acerquen y mantengan ✚" : "Todo el equipo cayó");
+  document.getElementById("downed-bar").style.width = Math.round(prog*100)+"%";
+}
 /* ============================================================
    HUD UPDATE
    ============================================================ */
 function updateHUD(){
   updateReviveBtn(); // antes nunca se llamaba: el botón quedaba inactivo para siempre
+  updateDownedOverlay();
   // Barra de vida con escudo: la capacidad total de referencia es vida máx + escudo máx
   // de ítems (fijo por equipamiento), así el segmento de escudo nunca se sale de la barra
   // y, si no hay escudo equipado, se comporta exactamente igual que antes (sin regresión).

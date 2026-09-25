@@ -52,7 +52,9 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   // internos de la IA/navegación del anfitrión: el invitado no los usa
   "_navT","_nmx","_nmy","_navBlocked","_tgt","_tgtT","_dangerT","atkCd","recentDamage","_hitSfxAt","_hurtSfxAt","_setFrame","path",
   // estado de animación que calcula el propio renderizador de cada cliente
-  "_an"]);
+  "_an",
+  // revivir: el candado/progreso viaja (_reviveBy/_reviveT/_reviveDur); esto es interno del anfitrión
+  "_revTouch","_revHold"]);
 // Se mandan solo en los snapshots completos (cada ~4 s y al terminar): cambian todo el tiempo y
 // solo hacen falta para la pantalla final (estadísticas de rendimiento).
 const NET_KEYFRAME_ONLY = new Set(["stats"]);
@@ -167,10 +169,11 @@ function netDrawNameTags(){
     const s = netMatch.slots && netMatch.slots[i];
     if(!s || s.kind!=="human" || h===player) return;
     const y = h.y - 74;
-    ctx.fillStyle = "rgba(0,0,0,0.55)"; const w = ctx.measureText(s.name).width + 10;
+    const label = `P${i+1} ${s.name}`;
+    ctx.fillStyle = "rgba(0,0,0,0.55)"; const w = ctx.measureText(label).width + 10;
     ctx.fillRect(h.x - w/2, y - 12, w, 16);
-    ctx.fillStyle = h.alive ? "#8fe0ff" : "#ff9a7a";
-    ctx.fillText(s.name, h.x, y);
+    ctx.fillStyle = h.alive ? (NET_SLOT_COLORS[i]||"#8fe0ff") : "#ff9a7a";
+    ctx.fillText(label, h.x, y);
   });
   ctx.restore();
 }
@@ -273,6 +276,7 @@ function netHostStartGame(){
     backups:null, recording:false, lastSnapAt:0, lastKeyAt:0, snapN:0, last:{}, lastG:{}, lastH:[{},{},{},{}], ents:new Map(),
     buffPicks:null, ended:false, startedAt:performance.now()};
   netSend({t:"start"});
+  netLobby.matches++;
   netApplyGuestLoadouts();
   lobbyAllies = slots.slice(1).map(s=>s.champ);
   startRun(1);
@@ -325,12 +329,25 @@ function netHostUpdateRemotes(dt){
   }
   if(player) player._spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0));
 }
-// Derrota compartida: termina cuando TODOS los humanos están caídos.
+// TEAM WIPE (derrota compartida): todos los humanos ACTIVOS (conectados) están caídos y no hay
+// ningún revivir de un humano en curso. Mientras quede un humano activo en pie, la partida sigue.
+// (Un invitado desconectado no cuenta: su héroe lo maneja un bot hasta que vuelva.)
+function netTeamWiped(){
+  let aliveHumans = 0, reviving = false;
+  heroes.forEach((h,i)=>{
+    const s = netMatch.slots[i]; if(!s || s.kind!=="human") return;
+    const active = i===0 || !!(h._net && h._net.connected);
+    if(active && h.alive) aliveHumans++;
+    if(!h.alive && h._reviveBy && h._reviveBy.alive && h._reviveT>0) reviving = true;
+  });
+  return aliveHumans===0 && !reviving;
+}
 function netHostCheckDefeat(){
   if(!netIsHost() || runEnding) return;
-  const anyHumanAlive = heroes.some((h,i)=> netMatch.slots[i] && netMatch.slots[i].kind==="human" && h.alive);
-  if(!anyHumanAlive){
-    runEnding = true;
+  if(netTeamWiped()){
+    runEnding = true; // corta aparición de enemigos, refuerzos y revivir (ver update/updateRevives)
+    netLog("TEAM_WIPE", {level:runLevel});
+    showBanner("TEAM WIPE — todo el equipo cayó");
     runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });
   }
 }
@@ -352,20 +369,20 @@ function netHostOnMsg(from, d){
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(d.aim||null); });
       return;
-    case "revive": {
-      const a = heroes[d.slot|0];
-      if(a && !a.alive && state==="playing" && h.alive && distance(h, a) < REVIVE_RANGE+20) reviveHero(a, h);
+    case "revive": // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)
+      if(!d.on){ h._revHold = -1; return; }
+      if(heroes[d.slot|0] && heroes[d.slot|0]!==h) h._revHold = d.slot|0;
       return;
-    }
     case "invest": investTalentPoint(h.classKey, d.idx==="ult" ? "ult" : (d.idx|0)); return;
     case "buff": netHostBuffPicked(from, d.id); return;
     case "needFull": netSendTo(from, netStartMessage()); return;
     case "quit":
-      n.connected = false; h.isRemote = false; // lo sigue un bot hasta el final
+      n.connected = false; h.isRemote = false; h._revHold = -1; netCancelRevivesBy(h); // lo sigue un bot hasta el final
       showBanner(`${h.netName||h.cls.name} abandonó la partida (lo controla un bot)`);
       return;
   }
 }
+function netCancelRevivesBy(r){ for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
 // Cambios de la sala en plena partida: desconexiones / reconexiones.
 function netHostOnRoom(room){
   if(!netMatch || netMatch.ended) return;
@@ -374,7 +391,8 @@ function netHostOnRoom(room){
     const s = room.slots[i];
     const connected = !!(s && s.connected);
     if(!connected && h._net.connected){
-      h._net.connected = false; h.isRemote = false;
+      h._net.connected = false; h.isRemote = false; h._revHold = -1;
+      netCancelRevivesBy(h); // desconectarse interrumpe su revivir (el bot, si quiere, empieza de cero)
       showBanner(`${h.netName} se desconectó — lo controla un bot`);
     } else if(connected && !h._net.connected){
       h._net.connected = true; h.isRemote = true; h._net.in = null; h._net.posAuth++;
@@ -522,7 +540,7 @@ function netGuestStartRun(msg){
   const mine = msg.slots[net.slot];
   if(mine) selectedClass = mine.champ;
   if(!reconnecting) markRunStartProgress(selectedClass);
-  clearRunTimers(); runEnding = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
+  clearRunTimers(); resetRunTransients(); runEnding = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
   runStats = freshRunStats();
   iceWalls.length = 0; bossStrikes.length = 0;
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];

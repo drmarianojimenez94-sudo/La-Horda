@@ -140,13 +140,55 @@ function botTryAbilities(h){
   }
 }
 
-// Revive a un aliado caído si el jugador está lo bastante cerca
+/* ---------------- REVIVIR (autoritativo) ----------------
+   Lo decide SIEMPRE la simulación (la partida local o el anfitrión en cooperativo), nunca la
+   pantalla de quien revive:
+   - Un caído tiene a lo sumo UN reanimador a la vez (candado): a._reviveBy / a._reviveT (ms
+     acumulados) / a._reviveDur (humano 1,3 s con el botón, bot 2,4 s). Todos lo ven igual.
+   - Cada cuadro en que el reanimador sigue siendo válido "toca" el progreso. Si un cuadro no lo
+     toca (soltó el botón, se alejó, cayó, quedó aturdido, se desconectó, el caído ya no es
+     válido o la partida terminó) el progreso vuelve a 0: nunca queda un "reviviendo" fantasma.
+   - Recibir daño NO interrumpe (el aturdimiento sí).
+   - Los humanos mantienen el botón: h._revHold = índice (en heroes) del caído; el invitado lo
+     pide con {k:"revive", slot, on}. Los bots avanzan desde botMove (bot-brain.js). */
+let reviveFrame = 0;
+function reviveBusyFor(a, r){
+  if(!a || !a._reviveBy || a._reviveBy===r) return false;
+  if(netIsGuest()) return a._reviveT > 0; // el invitado solo ve lo que manda el anfitrión
+  return a._reviveBy.alive && (a._revTouch|0) >= reviveFrame-1;
+}
+function reviverCanAct(r){ return !!(r && r.alive && !(r.stunTimer>0) && !r.fused); }
+// Un cuadro de progreso de r sobre a. Devuelve true si lo terminó de revivir.
+function reviveStep(a, r, dur, dt){
+  if(a._reviveBy!==r){ a._reviveBy = r; a._reviveT = 0; }
+  a._reviveDur = dur; a._revTouch = reviveFrame;
+  a._reviveT = (a._reviveT||0) + dt;
+  if(a._reviveT >= dur){ reviveHero(a, r); return true; }
+  return false;
+}
+function updateRevives(dt){
+  for(const r of heroes){
+    if(r._revHold===undefined || r._revHold<0) continue;
+    const a = heroes[r._revHold];
+    const ok = state==="playing" && !runEnding && !divinaMode && reviverCanAct(r) && a && a!==r && !a.alive
+      && distance(r, a) < REVIVE_RANGE + (r.isRemote ? 20 : 0) && !reviveBusyFor(a, r);
+    if(!ok){ r._revHold = -1; continue; }
+    if(reviveStep(a, r, REVIVE_BTN_HOLD_MS, dt)) r._revHold = -1;
+  }
+  for(const a of heroes){
+    if(a.alive){ if(a._reviveBy || a._reviveT){ a._reviveBy = null; a._reviveT = 0; } continue; }
+    if(a._reviveBy && (a._revTouch!==reviveFrame || runEnding || !a._reviveBy.alive)){ a._reviveBy = null; a._reviveT = 0; }
+  }
+  reviveFrame++;
+}
+// Revive al instante (lo usan las pruebas y herramientas); el botón usa el progreso de arriba.
 function tryReviveAlly(a){
   if(state!=="playing" || !a || a.alive) return;
   if(distance(player, a) >= REVIVE_RANGE) return;
-  if(netIsGuest()){ netSendToHost({k:"revive", slot:a._netSlot}); return; }
+  if(netIsGuest()) return;
   reviveHero(a, player);
 }
+function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : h.cls.name) : ""; }
 // Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
 function reviveHero(a, by){
   if(state!=="playing" || !a || a.alive) return;
@@ -167,7 +209,7 @@ function reviveHero(a, by){
   for(let i=0;i<14;i++) particles.push({x:a.x,y:a.y, vx:(Math.random()-0.5)*90, vy:-40-Math.random()*70, life:650, color:"#8effb4"});
   particles.push({x:a.x,y:a.y, life:650, ring:true, maxLife:650, maxR:64, color:"#8effb4"});
   particles.push({x:a.x,y:a.y, life:650, maxLife:650, spin:true, radius:44, color:"#8effb4"});
-  showBanner(by && by!==player ? `${by.cls.name} revivió a ${a.cls.name}` : `${a.cls.name} ha revivido`);
+  showBanner(by && by!==player ? `${heroLabel(by)} revivió a ${heroLabel(a)}` : `${heroLabel(a)} ha revivido`);
 }
 
 function updateAllies(dt){
