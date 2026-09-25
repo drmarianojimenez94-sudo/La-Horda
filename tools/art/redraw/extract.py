@@ -10,6 +10,7 @@ def satd(a): return a.max(-1)-a.min(-1)
 
 def cell_rgba(a, x0, y0, x1, y1, inset=4, opts=None):
     opts = opts or {}
+    protected = None
     c = a[y0:y1, x0:x1].copy()
     l = lumof(c); sd = satd(c)
     # the two checker tones differ per sheet: estimate them from the cell margin (mostly background)
@@ -48,6 +49,8 @@ def cell_rgba(a, x0, y0, x1, y1, inset=4, opts=None):
     # Grown only outward from the background, so interior colours (skin, bone, cloth) are never touched.
     R, G, B = c[...,0], c[...,1], c[...,2]
     glowtint = ((R > G+10) & (B >= G-8)) | ((G > R+10) & (np.abs(B-R) < 15))   # red/pink or green glow, never beige/gold/navy
+    if opts.get('teal_glow'): glowtint |= (G > R+15) & (B > R) & (B <= G+15)   # necro teal-green glow
+    if opts.get('violet_glow'): glowtint |= (B > G+10) & (R >= G-5)   # arcane violet/lilac glow
     haze = (l > 60) & (l < 165) & (G >= 55) & (B >= 50) & (sd >= 14) & (sd < 75) & glowtint
     for _ in range(40):
         grow = ndimage.binary_dilation(bg, N8) & haze & ~bg
@@ -71,6 +74,21 @@ def cell_rgba(a, x0, y0, x1, y1, inset=4, opts=None):
         grow = ndimage.binary_dilation(bg, N8) & warm & ~bg
         if not grow.any(): break
         bg |= grow
+    if opts.get('protect_light'):   # white hair etc.: its grey shading must not be flooded as checker
+        light = (l > 150) & (sd < 45)
+        ll, ln = ndimage.label(light)
+        if ln:
+            sizes = ndimage.sum(np.ones_like(ll), ll, range(1, ln+1))
+            big = np.isin(ll, [i+1 for i, sz in enumerate(sizes) if sz >= 25])
+            protected = ndimage.binary_dilation(big, N8, iterations=3)
+            bg &= ~protected
+    if opts.get('kill_mid_grey'):   # enclosed checker trapped by the subject (e.g. inside a drawn bow)
+        mg2 = (l > 80) & (l < 150) & (sd < opts.get('mid_grey_sd', 24)) & ~bg
+        ml, mn = ndimage.label(mg2)
+        for i, sl in enumerate(ndimage.find_objects(ml), 1):
+            if sl is None: continue
+            reg = ml[sl] == i
+            if reg.sum() >= 8: bg[sl] |= reg
     # enclosed smears (motion blur baked over the checker inside a swing arc): faint tint only
     hl, hn = ndimage.label(haze & ~bg)
     for i, sl in enumerate(ndimage.find_objects(hl), 1):
@@ -112,12 +130,19 @@ def cell_rgba(a, x0, y0, x1, y1, inset=4, opts=None):
     dist = ndimage.distance_transform_edt(fg)
     nearline = ndimage.binary_dilation(l < 45, N8, iterations=2)
     glowish = fg & (dist <= 8) & ~nearline & (l > 95) & (l < 178) & (sd <= 42) & (c.max(-1) > g0+8) & (glowtint | warm | (sd < 14))
+    if protected is not None: glowish &= ~protected
     if glowish.any():
         mx = c.max(-1).astype(float)
         a = np.clip((mx - g0) / (255.0 - g0), 0.08, 1.0)
         G = np.clip(g0 + (c - g0) / a[..., None], 0, 255)
         out[..., :3] = np.where(glowish[..., None], G, out[..., :3])
         out[..., 3] = np.where(glowish, (a*255).astype(np.uint8), out[..., 3])
+    # translucent glow that runs into the cell edge was cut straight by the sheet: fade it out instead
+    yy, xx = np.mgrid[0:H, 0:W]
+    edge_d = np.minimum(np.minimum(xx, W-1-xx), np.minimum(yy, H-1-yy)).astype(float)
+    ramp = np.clip(edge_d / 10.0, 0, 1)
+    soft = out[..., 3] < 255
+    out[..., 3] = np.where(soft, (out[..., 3] * ramp).astype(np.uint8), out[..., 3])
     return out
 
 N8 = np.ones((3,3), bool)
