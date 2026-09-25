@@ -91,7 +91,7 @@ function botWard(h){
 function botDownedNear(h, range){
   if(divinaMode) return null;
   let best = null, bd = range;
-  for(const a of allies){ if(a.alive || a===h) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } }
+  for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
   return best;
 }
 // Movimiento de un bot. Devuelve {mx, my, target}. Llamada desde updateAllies().

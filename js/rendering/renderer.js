@@ -118,6 +118,7 @@ function render(){
     }
   }
   for(const h of heroes){ if(h.wolf) drawSpectralWolf(h.wolf); }
+  if(netMatch) netDrawNameTags(); // B1: nombre de cada amigo sobre su campeón
   drawMusashiAfterimages();
   drawDownedMarkers();
   for(const h of heroes){

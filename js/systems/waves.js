@@ -76,6 +76,7 @@ function beginLevelClear(){
     o.alive = false; o.hp = 0; n++;
     kills++;
     grantXP(player.classKey, Math.round(o.xp*0.5));
+    if(netIsHost()) for(const h of heroes) if(h.isRemote) netEmitTo(h._netSlot, "xp", [Math.round(o.xp*0.5)]);
     vfxOnDeath(o);
   }
   enemies = enemies.filter(o=>o.alive);

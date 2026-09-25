@@ -20,6 +20,8 @@ function openBuffChoice(){
     el.addEventListener("click", ()=>{
       b.apply(runStats);
       refreshEquippedStats(); // refuerzos de vida máxima (Vitalidad, Baluarte, Cañón de Cristal) aplican ya, no recién en la próxima partida
+      // B1: en cooperativo cada humano elige el suyo; se sigue cuando eligieron todos
+      if(netIsHost()){ cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>.</div>`; netHostPickedLocal(); return; }
       runLevel++;
       player.hp = Math.min(player.maxHp, player.hp + player.maxHp*0.25);
       player.energy = player.maxEnergy;
@@ -28,4 +30,5 @@ function openBuffChoice(){
     });
     cards.appendChild(el);
   });
+  if(netIsHost()) netHostOpenBuffs();
 }

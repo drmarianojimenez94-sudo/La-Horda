@@ -62,6 +62,7 @@ function sylvaChargeStart(){
   const sk = player.cls.skills[0];
   if(sk.kind!=="piercing_shot") return false;
   if(player.cds[0]>0 || player.energy < sk.cost) return false;
+  if(netIsGuest()) netSendToHost({k:"sylva", on:true});
   player.sylvaCharging = true;
   player.sylvaChargeTimer = 0;
   return true;
@@ -69,6 +70,7 @@ function sylvaChargeStart(){
 function sylvaChargeRelease(aim){
   if(player.classKey!=="cazadora" || !player.sylvaCharging) return;
   player.sylvaCharging = false;
+  if(netIsGuest()){ netSendToHost({k:"sylva", on:false, aim: aim ? {x:Math.round(aim.x), y:Math.round(aim.y), dx:aim.dx, dy:aim.dy} : null}); player.sylvaChargeTimer = 0; return; }
   useSylvaPiercingShot(player, player.sylvaChargeTimer, aim);
   player.sylvaChargeTimer = 0;
 }
@@ -135,9 +137,14 @@ function updateReviveBtn(){
 }
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{
+  // B1: en una partida online no hay pausa: el menú se abre encima y la partida sigue
+  if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); return; }
   if(state==="playing"){ setState("paused"); renderStatsPanel(); }
 });
-document.getElementById("resume-btn").addEventListener("click", ()=> setState("playing"));
+document.getElementById("resume-btn").addEventListener("click", ()=>{
+  if(netMatch){ document.getElementById("pause-screen").classList.add("hidden"); return; }
+  setState("playing");
+});
 document.getElementById("quit-btn").addEventListener("click", ()=>{
   if(divinaMode){
     divinaMode = false;
@@ -145,8 +152,11 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
     return;
   }
   const lootMsg = runLevel >= DEFEAT_LOOT.minLevel ? " Igual te llevás un objeto por haber llegado al nivel "+runLevel+"." : "";
+  if(netIsHost() && !confirm("Sos el anfitrión: si abandonás, la partida termina para todos. ¿Seguir?")) return;
   if(!confirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg)) return;
   applyArenaFailurePenalty(player.classKey);
   if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
+  document.getElementById("pause-screen").classList.add("hidden");
+  if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
   setState("menu"); renderChampGrid(); renderSaveLine();
 });

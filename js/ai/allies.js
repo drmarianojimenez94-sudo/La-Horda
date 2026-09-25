@@ -144,6 +144,7 @@ function botTryAbilities(h){
 function tryReviveAlly(a){
   if(state!=="playing" || !a || a.alive) return;
   if(distance(player, a) >= REVIVE_RANGE) return;
+  if(netIsGuest()){ netSendToHost({k:"revive", slot:a._netSlot}); return; }
   reviveHero(a, player);
 }
 // Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
@@ -172,6 +173,7 @@ function reviveHero(a, by){
 function updateAllies(dt){
   for(const h of allies){
     if(!h.alive) continue;
+    if(h.isRemote) continue; // B1: lo maneja su dueño (netHostUpdateRemotes), no la IA
     if(axiomFreezeTimer>0 && h!==axiomFreezeCaster) continue; // Force Quit: nadie mas actua
     if(h.stunTimer>0){ h.stunTimer-=dt; continue; } // congelado (p.ej. Nova de Escarcha): no actúa
     h.basicCd = Math.max(0, h.basicCd-dt);

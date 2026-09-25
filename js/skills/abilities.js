@@ -7,6 +7,7 @@
 
 function triggerBasic(caster){
   caster = caster || player;
+  if(caster===player && netIsGuest()) return; // B1: el básico del invitado lo ejecuta el anfitrión (input "b")
   if(caster.basicCd>0 || !caster.alive) return;
   if(caster===player && state!=="playing") return;
   if(axiomFreezeTimer>0 && caster!==axiomFreezeCaster) return; // Force Quit: nadie mas actua
@@ -232,6 +233,7 @@ function spawnSlash(caster){
 
 function useSkill(idx, aim){
   if(!player.alive || state!=="playing") return false;
+  if(netIsGuest()) return netGuestCast(idx, aim); // B1: intención al anfitrión
   const sk = player.cls.skills[idx];
   if(player.cds[idx]>0 || player.energy < sk.cost) return false;
   player.energy -= sk.cost;
@@ -268,6 +270,7 @@ function useSylvaPiercingShot(caster, chargeMs, aim){
 
 function useUltimate(){
   if(!player.alive || state!=="playing") return;
+  if(netIsGuest()){ if(player.ultCharge>=player.ultMax && player.ultCd<=0 && runLevel>=ULT_MIN_ARENA_LEVEL) netSendToHost({k:"ult"}); return; }
   if(player.ultCharge < player.ultMax) return;
   if(player.ultCd > 0) return; // antes no se chequeaba: la ulti podía saltarse su propio enfriamiento
   if(runLevel < ULT_MIN_ARENA_LEVEL) return; // no disponible hasta cierto punto de la arena

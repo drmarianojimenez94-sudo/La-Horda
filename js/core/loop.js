@@ -19,6 +19,7 @@ function loop(t){
     ensureCanvasSize(); // iOS a veces no avisa el cambio de tamaño: se verifica la caja real
     const k = state==="playing" ? gameTimeScale(dt) : 1;
     update(dt*k);
+    if(typeof netTick==="function") netTick(dt); // B1: estado compartido / derrota del equipo
     updateFeedback(dt);
     render();
   }catch(err){

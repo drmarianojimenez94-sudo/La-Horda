@@ -44,8 +44,10 @@ function damageEnemy(e, amount, opts){
     if(!opts.fromBasic) src.stats.abilityHits = (src.stats.abilityHits||0)+1;
   }
   e.lastHitBy = src;
-  if(src===player) floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null);
-  if(src===player && (!player._hitSfxAt || performance.now()-player._hitSfxAt>90)){
+  // B1: los números de daño de un invitado se ven solo en SU pantalla
+  if(src && src.isRemote){ netEmitTo(src._netSlot, "floatText", [e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null]); }
+  else if(src===player) netQuiet(()=>floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null));
+  if(src===player && !src.isRemote && (!player._hitSfxAt || performance.now()-player._hitSfxAt>90)){
     player._hitSfxAt = performance.now();
     playSfx(crit ? "crit" : "hit");
   }
@@ -162,13 +164,22 @@ function killEnemy(e){
   if(e.lastHitBy && e.lastHitBy.classKey){ itemProcsOnKill(e.lastHitBy, e); setsOnKill(e.lastHitBy, e); trackKillPerformance(e.lastHitBy, e); }
   // Ahora la XP la gana quien dio el golpe final, sea el jugador o un aliado — así los
   // bots también suben de nivel durante la partida, simulando a otros jugadores.
-  if(e.lastHitBy && e.lastHitBy.classKey){
-    const leveledUp = grantXP(e.lastHitBy.classKey, Math.round(e.xp*(runStats.xpMult||1)));
-    if(leveledUp && e.lastHitBy!==player) autoInvestTalentPoints(e.lastHitBy.classKey);
+  // B1: si el que remató es un invitado, la XP/oro van a SU guardado (el anfitrión se lo avisa)
+  // y se calculan con SUS refuerzos; el registro local de su campeón solo sigue la partida.
+  const killer = e.lastHitBy && e.lastHitBy.classKey ? e.lastHitBy : null;
+  const krs = (killer && killer._net) ? killer._net.runStats : runStats;
+  if(killer){
+    const xpAmt = Math.round(e.xp*(krs.xpMult||1));
+    const leveledUp = grantXP(killer.classKey, xpAmt);
+    if(killer.isRemote) netEmitTo(killer._netSlot, "xp", [xpAmt]);
+    else if(leveledUp && killer!==player && !killer._net) autoInvestTalentPoints(killer.classKey);
   } else {
     grantXP(player.classKey, Math.round(e.xp*(runStats.xpMult||1)));
   }
-  if(Math.random()<0.6) grantGold(Math.round(e.gold*(runStats.goldMult||1)));
+  if(Math.random()<0.6){
+    const g = Math.round(e.gold*(krs.goldMult||1));
+    if(killer && killer.isRemote) netEmitTo(killer._netSlot, "gold", [g]); else grantGold(g);
+  }
   if(e.dropsItem && Math.random()<0.42){
     const kinds = ["hp","dmg","def","vel"];
     grantRelic(kinds[Math.floor(Math.random()*kinds.length)]);
@@ -252,7 +263,8 @@ function damageHero(h, amount, src){
   if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }
   if(dmg>0) itemProcsOnHurt(h, dmg);
   setsOnHurt(h, Math.max(0,dmg), mitigated, absorbed);
-  if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);
+  if(h.isRemote && dmg>0.5) netEmitTo(h._netSlot, "hurt", [dmg, src && src.x, src && src.y]);
+  else if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);
   // Historial de daño reciente (solo lo consume Destino Restaurado, de La Profeta): guarda
   // el daño YA mitigado, con timestamp, y se poda a los pocos segundos para no crecer sin
   // límite en partidas largas -ver el filtrado por ventana de tiempo en castAbility.
@@ -262,7 +274,7 @@ function damageHero(h, amount, src){
     if(h.recentDamage.length>20) h.recentDamage.shift();
   }
   if(dmg>0.5) h.hurtTimer = 160;
-  if(dmg>0.5 && h===player && (!player._hurtSfxAt || performance.now()-player._hurtSfxAt>220)){
+  if(dmg>0.5 && h===player && !h.isRemote && (!player._hurtSfxAt || performance.now()-player._hurtSfxAt>220)){
     player._hurtSfxAt = performance.now();
     playSfx("hurt");
   }
@@ -289,7 +301,8 @@ function damageHero(h, amount, src){
     }
   }
   if(dmg>0.5){
-    if(h===player) floatText(h.x, h.y-30, "-"+Math.round(dmg));
+    if(h.isRemote) netEmitTo(h._netSlot, "floatText", [h.x, h.y-30, "-"+Math.round(dmg)]);
+    else if(h===player) netQuiet(()=>floatText(h.x, h.y-30, "-"+Math.round(dmg)));
     vfxBurst(h.x, h.y-20, 3, "blood", 80, 200, 3, h===player?2:1, -20, 0);
   }
   if(h.hp<=0){

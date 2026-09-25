@@ -100,7 +100,10 @@ function loadSave(){
 let _persistTimer = null;
 function persistNow(){
   if(_persistTimer){ clearTimeout(_persistTimer); _persistTimer = null; }
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){ /* storage unavailable, continue in-memory */ }
+  // B1: mientras el anfitrión simula a un invitado, su campeón usa los datos del invitado;
+  // netPersistView escribe siempre los datos propios del anfitrión.
+  const data = (typeof netPersistView==="function") ? netPersistView(save) : save;
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }catch(e){ /* storage unavailable, continue in-memory */ }
 }
 function persist(){
   if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();

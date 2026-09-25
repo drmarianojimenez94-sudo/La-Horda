@@ -8,9 +8,11 @@
    END SCREENS
    ============================================================ */
 function showGameOverScreen(divinaOutcome){
+  if(netIsHost()) netHostAnnounceEnd(false); // B1: la derrota es de todo el equipo
   setState("gameover");
   const title = document.getElementById("go-title");
   const retryBtn = document.getElementById("retry-btn");
+  retryBtn.classList.remove("hidden");
   if(divinaMode || divinaOutcome){
     divinaMode = false;
     if(divinaOutcome==="victory"){
@@ -39,7 +41,7 @@ function showGameOverScreen(divinaOutcome){
   }
   title.textContent = "La Horda te ha consumido";
   title.style.color = "#c62828";
-  retryBtn.textContent = "Reintentar desde el Nivel 1";
+  retryBtn.textContent = netMatch ? "Volver a la sala" : "Reintentar desde el Nivel 1";
   const penalty = applyArenaFailurePenalty(player.classKey);
   // Derrota: la performance igual se muestra, y a veces hay un objeto de consuelo (ver DEFEAT_LOOT)
   const perf = computePerformance(player);
@@ -200,6 +202,7 @@ function renderVictoryStep(){
   const isLast = victoryStep === VICTORY_STEPS.length-1;
   nextBtn.textContent = isLast ? "Continuar" : "Continuar";
   nextBtn.classList.toggle("hidden", false);
+  document.getElementById("again-btn").textContent = (netMatch || netInRoom()) ? "Volver a la sala" : "Volver a entrar";
   document.getElementById("again-btn").classList.toggle("hidden", !isLast);
   document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
   if(isLast) nextBtn.classList.add("hidden");
@@ -218,6 +221,7 @@ function renderVictoryStep(){
 }
 
 function showVictoryScreen(){
+  if(netIsHost()) netHostAnnounceEnd(true); // B1: todos terminan la misma partida
   setState("victory");
   playSfx("victory");
   victoryData = buildVictoryData();

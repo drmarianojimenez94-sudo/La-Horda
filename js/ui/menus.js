@@ -218,6 +218,13 @@ function updateMenuBrandSub(){
   if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
+  // B1: dentro de una sala online la elección de campeón vuelve a la misma sala
+  if(netInRoom()){
+    setState("prep"); renderPrepSummary();
+    if(net.role==="guest") netSendLoadout(true);
+    else netSend({t:"update", champ:selectedClass, level:save.champions[selectedClass].level});
+    return;
+  }
   lobbyAllies = pickLobbyAllies(selectedClass);
   setState("prep");
   renderPrepSummary();
@@ -226,11 +233,22 @@ document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
 document.getElementById("prep-back-btn").addEventListener("click", ()=>{
+  if(netInRoom()){
+    if(net.role==="host" && netHumanCount()>1 && !confirm("¿Salir? La sala se cierra para tus amigos.")) return;
+    netLeaveRoom();
+  }
   lobbyAllies = null;
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
   try{
+    if(netInRoom()){
+      if(net.role!=="host") return; // el anfitrión decide cuándo comenzar
+      if(netDuplicateChamps().length){ netRenderLobbyBar(); return; }
+      if(!isArenaUnlocked(currentArena)){ alert("Esa arena todavía no la desbloqueaste."); return; }
+      netHostStartGame();
+      return;
+    }
     startRun(1);
   }catch(err){
     console.error("Error al arrancar la partida:", err);
@@ -243,7 +261,20 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
 function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
-  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los ocupan bots (pronto: amigos)";
+  netRenderLobbyBar();
+  if(netInRoom()){
+    // B1: sala online real: lugares en tiempo real (vos, amigos, esperando)
+    document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
+    netRenderLobbySlots();
+    const box = document.getElementById("prep-summary");
+    const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
+    box.innerHTML = `<div class="lobby-equip-title">${cls.name} · Nv. ${champ.level}</div><div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>`;
+    renderPrepTabs();
+    if(net.role==="guest") netSendLoadout(false);
+    return;
+  }
+  const sb = document.getElementById("prep-start-btn"); if(sb){ sb.disabled = false; sb.textContent = "Comenzar"; }
+  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los ocupan bots (o tus amigos, con una sala online)";
   const slots = document.getElementById("lobby-slots");
   const team = [selectedClass, ...(lobbyAllies||[])];
   const ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
@@ -377,13 +408,25 @@ function renderChampInventory(panel, classKey, rerender){
     rerender();
   });
 }
+function netBackToRoomIfAny(){
+  // B1: al terminar una partida online, "volver a la sala" mantiene el mismo código
+  if(!netMatch && !netInRoom()) return false;
+  netFinishMatch();
+  if(netInRoom()){ setState("prep"); renderPrepSummary(); return true; }
+  return false;
+}
 document.getElementById("retry-btn").addEventListener("click", ()=>{
+  if(netBackToRoomIfAny()) return;
   if(currentArena==="divina"){ startDivinaExploration(); return; }
   startRun(1);
 });
 document.getElementById("menu-btn-1").addEventListener("click", ()=>{
+  if(netMatch || netInRoom()){ netFinishMatch(); if(netInRoom()) netLeaveRoom(); }
   if(currentArena==="divina"){ setState("divina"); return; }
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
-document.getElementById("again-btn").addEventListener("click", ()=> startRun(1));
-document.getElementById("menu-btn-2").addEventListener("click", ()=>{ setState("menu"); renderChampGrid(); renderSaveLine(); });
+document.getElementById("again-btn").addEventListener("click", ()=>{ if(netBackToRoomIfAny()) return; startRun(1); });
+document.getElementById("menu-btn-2").addEventListener("click", ()=>{
+  if(netMatch || netInRoom()){ netFinishMatch(); if(netInRoom()) netLeaveRoom(); }
+  setState("menu"); renderChampGrid(); renderSaveLine();
+});

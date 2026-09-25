@@ -99,7 +99,8 @@ function startRun(fromLevel){
   others.forEach((k,i)=>{
     autoEquipBest(k); // el bot se pone lo mejor que tenga disponible de partidas anteriores
     const ang = (i/others.length)*Math.PI*2 + Math.PI/4;
-    allies.push(makeHero(k, true, Math.cos(ang)*70, Math.sin(ang)*70));
+    // B1: los campeones de amigos conectados entran como humanos (sin los ajustes de bot)
+    allies.push(makeHero(k, !netIsHumanChamp(k), Math.cos(ang)*70, Math.sin(ang)*70));
   });
   heroes = [player, ...allies];
   for(const h of heroes) resetSetRunState(h);
@@ -108,7 +109,8 @@ function startRun(fromLevel){
   partyBuilt = false;
   if(floorPatterns[currentArena]){ floorPattern = floorPatterns[currentArena]; } else { buildFloorTile(); }
   if(!SPRITES.guerrero){ buildSprites(); }
-  buildArenaDecor();
+  // B1: en cooperativo el escenario sale de una semilla compartida (idéntico para todos)
+  if(netMatch) netWithSeed(netMatch.seed, ()=> buildArenaDecor()); else buildArenaDecor();
   for(let i=0;i<60;i++) embers.push(spawnEmber());
   updateAbilityButtons();
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
@@ -205,6 +207,9 @@ function onBossDefeated(){
 
 function onPlayerDeath(){
   player.alive = false;
+  // B1: en cooperativo caer no termina la partida mientras quede algún humano en pie (te
+  // pueden revivir); la derrota la decide netHostCheckDefeat.
+  if(netIsHost()){ showBanner(`${player.netName||player.cls.name} ha caído`); return; }
   if(runEnding) return; // la victoria ya estaba en camino: no se pisa con una derrota
   runEnding = true;
   runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });

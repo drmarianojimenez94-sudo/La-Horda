@@ -198,7 +198,7 @@ function renderParty(){
       row.innerHTML = `
         <div class="ally-badge" style="color:${a.cls.color};background:${a.cls.color}22;">${a.cls.icon}</div>
         <div class="ally-meta">
-          <div class="ally-name">${a.cls.name}</div>
+          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+a.cls.name : a.cls.name}</div>
           <div class="ally-hp-track"><div class="ally-hp-fill shield-seg" id="ally-shieldbar-${i}"></div><div class="ally-hp-fill" id="ally-hp-${i}"></div></div>
         </div>
         <span class="status-badge atk hidden" id="ally-atk-${i}">⚔</span>
@@ -246,6 +246,7 @@ function buildSkillPlusButtons(){
       ev.preventDefault(); ev.stopPropagation();
       if(!player || state!=="playing") return;
       if(investTalentPoint(player.classKey, idx)){
+        if(netIsGuest()) netSendToHost({k:"invest", idx}); // B1: el anfitrión aplica el mismo punto en la partida
         playSfx && playSfx("levelup");
         const btn = document.getElementById(btnId);
         if(btn){ btn.classList.remove("ready-pop"); void btn.offsetWidth; btn.classList.add("ready-pop"); }

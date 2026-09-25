@@ -21,6 +21,9 @@
 </div>
 <div id="stage">
   <canvas id="game"></canvas>
+  <!-- B1: panel de desarrollo de red (ocultable) -->
+  <button id="net-debug-btn" title="Panel de red B1">B1</button>
+  <div id="net-debug-panel" class="hidden"></div>
 
   <div id="hud" class="hidden">
     <div id="player-status">
@@ -92,6 +95,11 @@
     <div class="brand title-brand">LA HORDA</div>
     <div class="brand-sub">UN CAMINO AL INFIERNO, LLENO DE MONSTRUOS</div>
     <button class="btn wide" id="title-continue-btn">Toca para continuar</button>
+    <!-- B1: invitación a una sala online (?room=CÓDIGO en la URL) -->
+    <label class="hidden" id="title-join-name">Tu nombre <input maxlength="16" placeholder="Jugador"></label>
+    <button class="btn wide hidden" id="title-join-btn">Unirse a la sala</button>
+    <div class="title-join-status" id="title-join-status"></div>
+    <div class="build-tag">LA HORDA — B1 COOPERATIVE PLAYTEST</div>
   </div>
 
   <!-- MODO DE JUEGO -->
@@ -193,6 +201,7 @@
   <div id="prep-screen" class="screen hidden">
     <div class="arena-title" id="lobby-title">Sala</div>
     <div class="lobby-sub" id="lobby-sub"></div>
+    <div id="net-bar"></div>
     <div id="lobby-slots"></div>
     <div id="prep-summary"></div>
     <div class="hub-tabs" id="prep-tabs">
@@ -358,6 +367,11 @@
 <script src="js/core/run.js"></script>
 <script src="js/core/update.js"></script>
 <script src="js/core/loop.js"></script>
+<script src="js/net/net-config.js"></script>
+<script src="js/net/net-core.js"></script>
+<script src="js/net/net-game.js"></script>
+<script src="js/net/net-lobby.js"></script>
+<script src="js/net/net-debug.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
