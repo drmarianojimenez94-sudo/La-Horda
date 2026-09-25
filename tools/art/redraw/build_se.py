@@ -52,10 +52,27 @@ EREN_TITAN = {
 EREN_FX = ['fx_hook_01','fx_cable_01','fx_slash_01','fx_wind_01','fx_impact_01','fx_dust_l_01','fx_rocks_01','fx_crack_01','fx_crack_02','fx_crack_03',
            'fx_bolt_01','fx_bolt_02','fx_blood_01','fx_blood_02','fx_steam_01','fx_steam_02','fx_steam_03','fx_steam_04','step_01','step_02','step_03','shadows_01']
 
+def ghost_clean(im):
+    """FX 'espectrales' (granaderos fantasma, escarcha): en la hoja están pintados semitransparentes
+    sobre el damero, así que la niebla quedó mezclada con su gris. Se baja el alfa de lo gris (poca
+    saturación, tono medio) y se conserva la figura azul/blanca. No agrega píxeles: solo quita."""
+    import numpy as np
+    a = np.array(im.convert('RGBA')).astype(np.float32)
+    rgb = a[:, :, :3]; mx = rgb.max(2); chroma = mx - rgb.min(2)
+    blue = rgb[:, :, 2] - (rgb[:, :, 0] + rgb[:, :, 1]) / 2
+    keep = np.clip((chroma - 14) / 26, 0, 1)
+    keep = np.maximum(keep, np.clip((blue - 10) / 20, 0, 1))
+    keep = np.maximum(keep, np.clip((mx - 205) / 30, 0, 1))
+    a[:, :, 3] = a[:, :, 3] * keep
+    a[:, :, 3][a[:, :, 3] < 40] = 0
+    return Image.fromarray(a.astype(np.uint8))
+
 def fx_out(d, names, dest):
     os.makedirs(dest, exist_ok=True)
     for n in names:
-        im = Image.open(os.path.join(d, n + '.png')); bb = im.getbbox()
+        im = Image.open(os.path.join(d, n + '.png'))
+        if n.startswith('spectral_') or n.startswith('frost_'): im = ghost_clean(im)
+        bb = im.getbbox()
         if bb: im = im.crop(bb)
         im.save(os.path.join(dest, n + '.png'), optimize=True)
 
