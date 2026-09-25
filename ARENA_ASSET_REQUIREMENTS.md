@@ -9,7 +9,7 @@ que los personajes).
 
 ## Diagnóstico honesto (test de "sacale el color")
 
-Las 4 arenas de oleadas (`drawArena()` en `index.html`) comparten **la misma geometría base**:
+Las 4 arenas de oleadas (`drawArena()`, hoy en `js/rendering/arena.js`) comparten **la misma geometría base**:
 un octágono con 3 anillos concéntricos, 8 radios de piedra, y un círculo de runas central de
 260px de radio, siempre en el mismo lugar. La diferencia entre arenas hoy es, en su mayoría,
 **paleta de color** (`arenaVeinColors()`) más un puñado de detalles puntuales (follaje vs.

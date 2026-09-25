@@ -1,0 +1,324 @@
+"use strict";
+/* ============================================================
+   js/ai/allies.js
+   IA de los aliados controlados por bots: uso de habilidades, revivir y movimiento.
+   ============================================================ */
+
+/* ============================================================
+   ALIADOS CONTROLADOS POR IA (los otros 3 campeones)
+   ============================================================ */
+function botTryAbilities(h){
+  const passiveCdMult = Math.max(0.4, 1 - passiveSum(h.classKey,"cd_mult"));
+  // Musashi (IA, sección 27): nunca desperdicia Último Duelo sin una Marca válida, y prioriza
+  // objetivos valiosos (élite/subjefe/jefe) o una presa ya baja de vida (posibilidad real de
+  // ejecución) en vez de tirarlo contra cualquier chusma en cuanto se carga.
+  if(h.classKey==="musashi" && h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
+    const t = h.duelTarget;
+    const worthIt = t && t.alive && !t.isDuelLocked && (t.rank==="jefe"||t.rank==="subjefe"||t.rank==="elite" || t.hp/t.maxHp < 0.45);
+    if(worthIt){
+      castAbility(h, h.cls.ultimate, true);
+      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+      return;
+    }
+    // objetivo no vale la pena todavía: sigue acumulando Concentración con habilidades normales
+  } else if(h.classKey==="cazadora" && h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
+    // Sylva (IA): reserva Cacería Salvaje para grupos o para una Presa de alto valor, en vez
+    // de gastarla contra un único enemigo débil.
+    const nearCountUlt = enemies.filter(e=>e.alive && distance(h,e)<=260).length;
+    const worthIt = nearCountUlt>=3 || (h.huntTarget && h.huntTarget.alive && (h.huntTarget.rank==="jefe"||h.huntTarget.rank==="subjefe"||h.huntTarget.rank==="elite"));
+    if(worthIt){
+      castAbility(h, h.cls.ultimate, true);
+      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+      return;
+    }
+  } else if(h.classKey==="nigromante" && h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
+    // Nigromante (IA): reserva Encarnación del Abismo para amenazas grandes -sacrifica
+    // temporalmente su ejército, así que no vale la pena tirarla contra chusma suelta-.
+    const nearCountUlt = enemies.filter(e=>e.alive && distance(h,e)<=300).length;
+    const bigThreat = enemies.some(e=>e.alive && (e.rank==="jefe"||e.rank==="subjefe") && distance(h,e)<=420);
+    if(nearCountUlt>=4 || bigThreat){
+      castAbility(h, h.cls.ultimate, true);
+      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+      return;
+    }
+  } else if(h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
+    castAbility(h, h.cls.ultimate, true);
+    h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+    return;
+  }
+  // Musashi (IA): prioridad simple en vez del orden aleatorio genérico -Paso Fantasma para
+  // escapar con poca vida, Mil Cortes contra grupos, si no Corte del Rōnin para acumular
+  // Concentración contra su Marca (sección 27: "mantener el mismo objetivo").
+  if(h.classKey==="musashi"){
+    const nearCount = enemies.filter(e=>e.alive && !(e.isDuelLocked&&e.duelOwner!==h) && distance(h,e)<=150).length;
+    let priority = [0,1,2];
+    if(h.hp/h.maxHp < 0.45) priority = [1,0,2];
+    else if(nearCount>=3) priority = [2,0,1];
+    else priority = [0,2,1];
+    for(const idx of priority){
+      const sk = h.cls.skills[idx];
+      if(h.cds[idx]>0 || h.energy < sk.cost) continue;
+      if(!nearestEnemyTo(h, 260) && !h.duelTarget) continue;
+      h.energy -= sk.cost;
+      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+      if(sk.kind==="ghost_step" && h.duelActive) h.cds[idx] *= musashiGhostStepCdMult(h);
+      castAbility(h, sk, false, idx);
+      return;
+    }
+    return;
+  }
+  // Sylva (IA): Trampa del Bosque si algo cuerpo a cuerpo está encima, Lluvia de la Cazadora
+  // contra grupos, si no Flecha Perforante (siempre disparada al máximo de carga: la IA no
+  // necesita el detalle de mantener apretado el botón, ver useSylvaPiercingShot).
+  if(h.classKey==="cazadora"){
+    const nearCount = enemies.filter(e=>e.alive && distance(h,e)<=220).length;
+    const meleeThreat = enemies.some(e=>e.alive && !e.ranged && distance(h,e)<=90);
+    let priority;
+    if(meleeThreat) priority = [1,0,2];
+    else if(nearCount>=3) priority = [2,0,1];
+    else priority = [0,1,2];
+    for(const idx of priority){
+      const sk = h.cls.skills[idx];
+      if(h.cds[idx]>0 || h.energy < sk.cost) continue;
+      if(!nearestEnemyTo(h, 320) && !h.huntTarget) continue;
+      h.energy -= sk.cost;
+      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+      if(sk.kind==="piercing_shot") h.pendingChargeMs = SYLVA_CHARGE_MAX_MS;
+      castAbility(h, sk, false, idx);
+      return;
+    }
+    return;
+  }
+  // Nigromante (IA, sección 3 del diseño): mantener el ejército al máximo primero, invocar
+  // gólem si no tiene, Plaga contra grupos, y si está transformado solo puede usar Plaga (las
+  // otras dos quedan reemplazadas por las habilidades demoníacas del básico).
+  if(h.classKey==="nigromante"){
+    if(h.nigroDemonForm){
+      const sk = h.cls.skills[2];
+      if(h.cds[2]<=0 && h.energy>=sk.cost && nearestEnemyTo(h, sk.range||300)){
+        h.energy -= sk.cost;
+        h.cds[2] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, 2)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, 2);
+        castAbility(h, sk, false, 2);
+      }
+      return;
+    }
+    const maxCount = nigromanteMaxSkeletons(masteryOf(h.classKey, 0));
+    const nearCount = enemies.filter(e=>e.alive && distance(h,e)<=260).length;
+    let priority = [];
+    if(h.skeletons.length < maxCount) priority.push(0);
+    if(!h.golem) priority.push(1);
+    if(nearCount>=2) priority.push(2);
+    for(const idx of priority){
+      const sk = h.cls.skills[idx];
+      if(h.cds[idx]>0 || h.energy < sk.cost) continue;
+      if(idx===2 && !nearestEnemyTo(h, sk.range||300)) continue;
+      h.energy -= sk.cost;
+      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+      castAbility(h, sk, false, idx);
+      return;
+    }
+    return;
+  }
+  const order = [0,1,2].sort(()=>Math.random()-0.5);
+  for(const idx of order){
+    const sk = h.cls.skills[idx];
+    if(h.cds[idx]>0 || h.energy < sk.cost) continue;
+    const supportKinds = ["team_heal","sacrifice","team_regen","retro_heal","brief_immunity"];
+    const isSupport = supportKinds.includes(sk.kind);
+    const teamHurt = heroes.some(o=>o.alive && o.hp/o.maxHp<0.62);
+    if(isSupport && !teamHurt) continue;
+    if(!isSupport && !(divinaMode ? divinaHostiles("player", h.x, h.y, 300) : nearestEnemyTo(h, 300))) continue;
+    h.energy -= sk.cost;
+    h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+    if(sk.kind==="teleport_blink") h.cds[idx] = resolveTeleportCd(h, h.cds[idx]);
+    if(sk.kind==="ghost_step" && h.duelActive) h.cds[idx] *= musashiGhostStepCdMult(h);
+    castAbility(h, sk, false, idx);
+    return;
+  }
+}
+
+// Revive a un aliado caído si el jugador está lo bastante cerca
+function tryReviveAlly(a){
+  if(state!=="playing" || !a || a.alive) return;
+  if(distance(player, a) >= REVIVE_RANGE) return;
+  if(player.stats) player.stats.revives++;
+  a.alive = true;
+  a.hp = Math.max(1, Math.round(a.maxHp*0.4));
+  a.stunTimer=0; a.shield=0; a.shieldTimer=0; a.itemShield = a.itemMaxShield||0;
+  a.buffDmgMult=1; a.buffAtkSpeedMult=1; a.buffDefMult=1; a.buffLifesteal=0; a.buffBleedOnHit=false; a.buffTimer=0;
+  a.regenTimer=0; a.regenPerSec=0;
+  a.spinTimer=0; a.stormTimer=0; a.stealthTimer=0; a.stealthPending=false;
+  a.colossalTimer=0; a.pendingHpBonus=0; a.atkAuraTimer=0; a.shieldAuraTimer=0; a.growTimer=0; a.growScale=1; a.sigilTimer=0;
+  a.basicCd=0; a.cds=[0,0,0]; a.ultCd=0;
+  a.presagioCharges=0; a.presagioComboTimer=0; a.profetaSpinFxTimer=0; a.recentDamage=[];
+  a.visionImmortalTimer=0; a.ascensionTimer=0; a.ascensionMaxTimer=0; a.ascensionFusedWith=null; a.fused=false;
+  a.moving=false; a.animT=0; a.attackAnim=0;
+  for(let i=0;i<14;i++) particles.push({x:a.x,y:a.y, vx:(Math.random()-0.5)*90, vy:-40-Math.random()*70, life:650, color:"#8effb4"});
+  particles.push({x:a.x,y:a.y, life:650, ring:true, maxLife:650, maxR:64, color:"#8effb4"});
+  particles.push({x:a.x,y:a.y, life:650, maxLife:650, spin:true, radius:44, color:"#8effb4"});
+  showBanner(`${a.cls.name} ha revivido`);
+}
+
+function updateAllies(dt){
+  for(const h of allies){
+    if(!h.alive) continue;
+    if(axiomFreezeTimer>0 && h!==axiomFreezeCaster) continue; // Force Quit: nadie mas actua
+    if(h.stunTimer>0){ h.stunTimer-=dt; continue; } // congelado (p.ej. Nova de Escarcha): no actúa
+    h.basicCd = Math.max(0, h.basicCd-dt);
+    for(let i=0;i<3;i++) h.cds[i] = Math.max(0, h.cds[i]-dt);
+    h.ultCd = Math.max(0, h.ultCd-dt);
+    h.energy = Math.min(h.maxEnergy, h.energy + h.cls.energyRegen*arenaMods().heroEnergyRegenMult*dt/1000);
+    if(h.shieldTimer>0){ h.shieldTimer-=dt; if(h.shieldTimer<=0) h.shield=0; }
+    if(h.stats) sampleTankPresence(h, dt);
+    if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp-=h.pendingHpBonus; h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
+    if(h.furyArmorTimer>0){
+      h.furyArmorTimer -= dt;
+      // Ojos y aura carmesí: partículas oscuras/rojas mientras dura la Armadura de la Furia
+      if(Math.random()<0.55) particles.push({x:h.x+(Math.random()-0.5)*22, y:h.y-8+(Math.random()-0.5)*12, vx:(Math.random()-0.5)*14, vy:-16-Math.random()*12, life:320, color:Math.random()<0.5?"#c62828":"#1a1414"});
+      if(h.furyArmorTimer<=0 && h.furyFinalSlash){ triggerFuryFinalSlash(h); h.furyFinalSlash=false; }
+    }
+    if(h.berserkTimer>0) h.berserkTimer -= dt;
+    if(h.dashFxTimer>0) h.dashFxTimer -= dt;
+    if(h.burnTimer>0){ h.burnTimer-=dt; h.hp = Math.max(0, h.hp - h.burnDmg*dt/1000); if(h.hp<=0 && h.alive){ h.alive=false; if(h===player) onPlayerDeath(); } }
+    if(h.slowTimer>0){ h.slowTimer-=dt; if(h.slowTimer<=0) h.slowAmt=0; }
+    if(h.invulnTimer>0) h.invulnTimer-=dt;
+    if(h.teleportChargeTimer>0){
+      h.teleportChargeTimer -= dt;
+      if(h.teleportChargeTimer<=0 && h.teleportChargesBanked<h.teleportChargeMax){
+        h.teleportChargesBanked++;
+        h.teleportChargeTimer = h.teleportChargesBanked<h.teleportChargeMax ? TELEPORT_CHARGE_RECHARGE_MS : 0;
+      }
+    }
+    // La Profeta: ver los mismos campos espejados en update() (jugador) más abajo -comentados
+    // ahí con más detalle- para Danza del Presagio, Visión del Inmortal y Ascensión del Elegido.
+    if(h.presagioComboTimer>0){ h.presagioComboTimer-=dt; if(h.presagioComboTimer<=0) h.presagioCharges=0; }
+    if(h.profetaSpinFxTimer>0) h.profetaSpinFxTimer-=dt;
+    // Musashi: ver los mismos campos espejados en update() (jugador) más abajo.
+    if(h.comboTimer>0){ h.comboTimer-=dt; if(h.comboTimer<=0) h.comboCharges=0; }
+    if(h.ghostStepCritTimer>0) h.ghostStepCritTimer-=dt;
+    if(h.visionImmortalTimer>0){ h.visionImmortalTimer-=dt; if(h.visionImmortalTimer<=0){ h.regenTimer=Math.max(h.regenTimer||0,2000); h.regenPerSec=h.maxHp*(h.visionImmortalRegenPct||0.05); } }
+    if(h.ascensionTimer>0){
+      h.ascensionTimer -= dt;
+      h.cds[0]=Math.min(h.cds[0],60); h.cds[1]=Math.min(h.cds[1],60); h.cds[2]=Math.min(h.cds[2],60); h.ultCd=Math.min(h.ultCd,60);
+      if(h.ascensionTimer<=0) h.ascensionMaxTimer=0;
+    }
+    if(h.ascensionFusedWith){
+      if(h.stealthTimer>0 && h.ascensionFusedWith.alive){ h.x=h.ascensionFusedWith.x; h.y=h.ascensionFusedWith.y; }
+      else { h.ascensionFusedWith=null; h.fused=false; }
+    }
+    if(h.colossalTimer>0) h.colossalTimer -= dt;
+    if(h.growTimer>0){ h.growTimer -= dt; if(h.growTimer<=0) h.growScale=1; }
+    if(h.atkAuraTimer>0) h.atkAuraTimer -= dt;
+    if(h.shieldAuraTimer>0) h.shieldAuraTimer -= dt;
+    if(h.sigilTimer>0) h.sigilTimer -= dt;
+    if(h.stealthTimer>0){
+      h.stealthTimer -= dt;
+      if(h.stealthTimer<=0 && h.stealthPending){ h.stealthPending=false; performShadowStrike(h); }
+    }
+    if(h.spinTimer>0){
+      h.spinTimer -= dt; h.spinTick -= dt;
+      if(h.spinTick<=0){
+        h.spinTick = h.spinTickInterval;
+        for(const e of enemies){
+          if(!e.alive) continue;
+          if(distance(h,e) <= h.spinRadius) damageEnemy(e, h.spinDmg, {src:h});
+        }
+        for(let i=0;i<4;i++) particles.push({x:h.x+(Math.random()-0.5)*24, y:h.y+(Math.random()-0.5)*24, vx:0, vy:-14, life:220, color:"#9fe3ff"});
+      }
+    }
+    if(h.stormTimer>0){
+      h.stormTimer -= dt; h.stormTick -= dt;
+      // Armadura de fuego: aura de brasas constante mientras dura el Cataclismo (cosmético;
+      // el bonus real de defensa ya se aplicó como buff al lanzar la habilidad)
+      if(Math.random()<0.5) particles.push({x:h.x+(Math.random()-0.5)*20, y:h.y-10+(Math.random()-0.5)*10, vx:(Math.random()-0.5)*10, vy:-18-Math.random()*10, life:340, color:"#ff8a3d"});
+      // Campo de hielo: cristales que emergen del suelo dentro del área
+      if(Math.random()<0.10){
+        const ca=Math.random()*Math.PI*2, cr=Math.random()*h.stormRadius;
+        particles.push({x:h.x+Math.cos(ca)*cr, y:h.y+Math.sin(ca)*cr*0.55, life:700, maxLife:700, crystal:true, size:7+Math.random()*6, angle:Math.random()*Math.PI, color:"#bfe8ff"});
+      }
+      // 2ª y 3ª nova de hielo del Cataclismo, repartidas en el tiempo
+      if(h.stormNovaLeft>0){
+        h.stormNovaTimer -= dt;
+        if(h.stormNovaTimer<=0){
+          h.stormNovaTimer = h.stormNovaInterval;
+          h.stormNovaLeft--;
+          for(const e of enemies){
+            if(!e.alive) continue;
+            if(distance(h,e) <= h.stormRadius) damageEnemy(e, h.stormNovaDmg, {slow:h.stormNovaFreeze, slowDur:h.stormNovaFreezeDur, src:h});
+          }
+          frostNovaVFX(h, h.stormRadius*0.85, 8); // la ulti siempre se ve al máximo nivel visual
+        }
+      }
+      if(h.stormTick<=0){
+        h.stormTick = h.stormTickInterval;
+        const near = enemies.filter(e=>e.alive && distance(h,e)<=h.stormRadius);
+        if(near.length){
+          const target = near[(Math.random()*near.length)|0];
+          damageEnemy(target, h.stormDmg, {src:h, slow:0.3, slowDur:900});
+          pushChainBolt(target.x, target.y-180, target.x, target.y, 30, 360);
+          pushSpark("impacto", target.x, target.y, 60, 320);
+          target.electrifiedTimer = 420; target.electrifiedSize = 60;
+        }
+      }
+    }
+    if(h.regenTimer>0){ h.regenTimer-=dt; h.hp = Math.min(h.maxHp, h.hp + (h.regenPerSec||0)*dt/1000); }
+    if(h.attackAnim>0) h.attackAnim -= dt;
+    if(h.hurtTimer>0) h.hurtTimer -= dt;
+
+    // En la Arena Divina no hay nada en `enemies` (los monstruos comunes viven en
+    // divinaMinions): sin esto, tus 3 aliados nunca encontraban a quién perseguir y se
+    // quedaban solo siguiendo al jugador sin pelear.
+    const divinaHit = divinaMode ? divinaHostiles("player", h.x, h.y, 620) : null;
+    const target = divinaHit ? divinaHit.ref : nearestEnemyTo(h, 620);
+    const desired = h.cls.ranged ? 190 : (h.cls.basicRange*0.7);
+    let mx=0, my=0;
+    // Si está herido, prioriza ir a buscar la poción más cercana (antes ningún aliado las
+    // buscaba activamente: solo perseguían enemigos, así que en la práctica casi siempre
+    // terminaba agarrándola quien estaba parado ahí al matar al enemigo).
+    let seekPotion = null;
+    if((h.hp < h.maxHp*0.75 || h.energy < h.maxEnergy*0.3) && potions.length){
+      let bd = Infinity;
+      for(const p of potions){
+        if(p.type==="mana" && h.energy >= h.maxEnergy*0.3) continue;
+        if(p.type!=="mana" && h.hp >= h.maxHp*0.75) continue;
+        const d = distance(h,p);
+        if(d < 420 && d < bd){ bd = d; seekPotion = p; }
+      }
+    }
+    const leash = Math.hypot(h.x-player.x, h.y-player.y);
+    if(seekPotion){
+      const dx = seekPotion.x-h.x, dy = seekPotion.y-h.y, l = Math.hypot(dx,dy)||1;
+      mx = dx/l; my = dy/l; h.fx = mx; h.fy = my;
+    } else if(leash > 300){
+      const dx = player.x-h.x, dy = player.y-h.y, l = Math.hypot(dx,dy)||1;
+      mx = dx/l; my = dy/l;
+    } else if(target){
+      const dx = target.x-h.x, dy = target.y-h.y, l = Math.hypot(dx,dy)||1;
+      if(l > desired+10){ mx = dx/l; my = dy/l; }
+      else if(l < desired-40){ mx = -dx/l; my = -dy/l; }
+      h.fx = dx/l; h.fy = dy/l;
+    } else {
+      const dx = player.x-h.x, dy = player.y-h.y, l = Math.hypot(dx,dy)||1;
+      if(l > 120){ mx = dx/l; my = dy/l; }
+    }
+    for(const o of heroes){
+      if(o===h || !o.alive) continue;
+      const d = distance(h,o);
+      if(d < 34 && d > 0.01){ mx += (h.x-o.x)/d*0.6; my += (h.y-o.y)/d*0.6; }
+    }
+    const ml = Math.hypot(mx,my);
+    h.moving = ml > 0.05 && !h.fused;
+    if(h.moving){
+      mx/=ml; my/=ml;
+      const nd = aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; }
+      const spd = h.baseSpeed * runStats.speedMult * (1-Math.min(0.8,h.slowAmt||0));
+      h.x += mx*spd*dt/1000; h.y += my*spd*dt/1000;
+      if(!target){ h.fx = mx; h.fy = my; }
+      clampToArena(h);
+      resolveWallCollision(h);
+      h.animT += dt;
+    }
+    triggerBasic(h);
+    if(Math.random() < dt/650) botTryAbilities(h);
+  }
+}

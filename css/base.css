@@ -1,0 +1,33 @@
+/* css/base.css — Variables de color, fuentes, cuerpo de la página y canvas del juego. */
+:root{
+  --bg:#0b0705;
+  --ember1:#ff7a2e;
+  --ember2:#ff3d1f;
+  --ember3:#ffcf5c;
+  --panel:#1a0f0a;
+  --panel-b:#3a1c10;
+  --text:#f2e3d3;
+  --text-dim:#b89a86;
+  --hp:#c62828;
+  --hp-dim:#4a1414;
+  --energy:#2f8fd6;
+  --energy-dim:#173a52;
+  --ult:#ffb300;
+  --font-pixel:'Press Start 2P', 'Georgia', monospace;
+  --font-retro:'VT323', 'Georgia', monospace;
+  box-sizing:border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{
+  margin:0; padding:0; width:100%; height:100%;
+  background:var(--bg); color:var(--text);
+  font-family:'Georgia','Iowan Old Style', 'Times New Roman', serif;
+  overflow:hidden; overscroll-behavior:none; touch-action:none;
+}
+html{scroll-padding-top: env(safe-area-inset-top, 0px);}
+#stage{position:fixed; inset:0; height:100%; width:100%;}
+canvas{display:block; width:100%; height:100%; background:radial-gradient(ellipse at center, #150a06 0%, #070403 70%, #030202 100%);}
+
+.hidden{display:none !important;}

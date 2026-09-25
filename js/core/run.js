@@ -1,0 +1,160 @@
+"use strict";
+/* ============================================================
+   js/core/run.js
+   Ciclo de vida de una partida: arrancar (Horda o Arena Divina), derrota del jefe
+   final y muerte del jugador.
+   ============================================================ */
+
+/* ============================================================
+   START RUN
+   ============================================================ */
+// Arena Divina - Fase 1: reusa toda la infraestructura de startRun (aliados por rol, piso,
+// decoración, cámara, controles) pero con divinaMode=true, que corta la generación de
+// oleadas. Todavía no hay objetivo ni combate: es para poder caminar por el escenario nuevo
+// y verlo de verdad, con tu equipo de 4, antes de construir el asedio encima.
+function startDivinaExploration(){
+  divinaMode = true;
+  currentArena = "divina";
+  divinaMinions = [];
+  divinaStructProjectiles = [];
+  divinaWaveTimer = 9000; // primera oleada recién a los 9s, para dar tiempo a acomodarse
+  startRun(1);
+  spawnDivinaEnemyTeam(); // después de startRun: necesita runStats ya inicializado
+  // buildDivinaStructures también va después de startRun: necesita `heroes` ya poblado para
+  // poder escalar la vida de las estructuras con partyLevelScale() (ver esa función).
+  buildDivinaStructures();
+}
+function startRun(fromLevel){
+  runLevel = fromLevel || 1;
+  kills = 0;
+  runElapsedMs = 0;
+  subjefesDefeated = 0; // Fase 3.1: un objeto por cada subjefe derrotado en esta partida
+  arenaHazardTimer = 6000; // primer peligro ambiental recién a los 6s, para no golpear apenas arranca
+  screenShake = 0;
+  const hudArenaEl = document.getElementById("hud-arena");
+  if(hudArenaEl) hudArenaEl.textContent = (ARENA_MODS[currentArena]||{}).label || "";
+  runStats = freshRunStats();
+  iceWalls.length = 0; bossStrikes.length = 0;
+  enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
+  acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
+  vfxResetRun();
+  player = makePlayer();
+  // Talentos de crítico (sección 4/32): a diferencia de dmg/cd/def/lifesteal -que se consultan
+  // en caliente vía passiveSum en cada fórmula-, crítico vive en runStats (igual que los buffs
+  // de nivel de la Horda), así que el bonus permanente del campeón se suma una sola vez acá,
+  // al arrancar la partida.
+  runStats.critChance += passiveSum(player.classKey, "crit_chance_add");
+  runStats.critMult = (runStats.critMult||1.8) + passiveSum(player.classKey, "crit_mult_add");
+  // Los otros tres campeones entran a la arena junto al jugador (bots aliados por ahora).
+  // Se arma SIEMPRE por rol: un aliado de cada uno de los otros 3 roles (Tanque/Asesino/Mago/
+  // Soporte, el que no sea el tuyo), sorteando al azar si en el futuro hay más de un campeón
+  // dentro de un mismo rol (como pasa ahora entre Tanque y Segador Olvidado, ambos "tanque").
+  allies = [];
+  const ROLE_ORDER = ["tanque","asesino","mago","soporte"];
+  const myRole = CLASSES[selectedClass].roleCategory;
+  const others = [];
+  ROLE_ORDER.filter(r=>r!==myRole).forEach(role=>{
+    const pool = Object.keys(CLASSES).filter(k=>k!==selectedClass && CLASSES[k].roleCategory===role);
+    if(pool.length) others.push(pool[(Math.random()*pool.length)|0]);
+  });
+  others.forEach((k,i)=>{
+    autoEquipBest(k); // el bot se pone lo mejor que tenga disponible de partidas anteriores
+    const ang = (i/others.length)*Math.PI*2 + Math.PI/4;
+    allies.push(makeHero(k, true, Math.cos(ang)*70, Math.sin(ang)*70));
+  });
+  heroes = [player, ...allies];
+  partyBuilt = false;
+  if(floorPatterns[currentArena]){ floorPattern = floorPatterns[currentArena]; } else { buildFloorTile(); }
+  if(!SPRITES.guerrero){ buildSprites(); }
+  buildArenaDecor();
+  for(let i=0;i<60;i++) embers.push(spawnEmber());
+  updateAbilityButtons();
+  beginLevel();
+  setState("playing");
+}
+
+function spawnEmber(){
+  return {x:(Math.random()-0.5)*2000, y:(Math.random()-0.5)*2000, r:1+Math.random()*2, vy:-10-Math.random()*20, a:0.2+Math.random()*0.4, phase:Math.random()*Math.PI*2};
+}
+
+function onBossDefeated(){
+  // Arena de Hielo: jefe final en 2 fases. Al vaciar la vida del Mago de Hielo y Cristal
+  // (fase 1) no termina la pelea todavía: se transforma en el Ángel Caído de Hielo (fase 2,
+  // mucho más grande y agresivo). Recién al derrotar la fase 2 se gana la partida.
+  if(currentArena==="hielo" && boss && boss.type==="mago_hielo_cristal"){
+    const px = boss.x, py = boss.y;
+    particles.push({x:px,y:py, life:900, ring:true, maxLife:900, maxR:140, color:"#bfe0f5"});
+    for(let i=0;i<16;i++){
+      const a = Math.random()*Math.PI*2;
+      particles.push({x:px,y:py, vx:Math.cos(a)*90, vy:Math.sin(a)*90-20, life:600, color:"#c9e6ff"});
+    }
+    boss = spawnEnemy("angel_caido_hielo", true);
+    boss.x = px; boss.y = py;
+    boss.hp = boss.maxHp = Math.round(ENEMY_BASE.angel_caido_hielo.hp * (1+ (save.champions[player.classKey].level)*0.01));
+    boss.breathCd = 3800; boss.waveCd = 6500; boss.regenUsed = false; boss.regenTimer = 0;
+    boss.bossPhase = 2;
+    animTrigger(boss, "bossPhaseTransition", 1300);
+    showBanner("¡EL MAGO SE TRANSFORMA EN EL ÁNGEL CAÍDO DE HIELO!");
+    return; // sigue la pelea de jefe, todavía no termina la partida
+  }
+  // Ruinas del Bosque: "Resurrección Eterna". La primera vez que el Jinete Sin Cabeza llega a
+  // 0 de vida no muere: renace con la vida al máximo y +30% de daño hecho Y recibido (una
+  // fase de furia más letal, pero también más frágil). Recién la segunda "muerte" termina la
+  // pelea de verdad.
+  if(currentArena==="bosque" && boss && boss.type==="jinete_sin_cabeza" && !boss.resurrected){
+    boss.alive = true;
+    boss.resurrected = true;
+    boss.hp = boss.maxHp;
+    boss.dmg = Math.round(boss.dmg*1.3);
+    boss.dmgTakenMult = 1.3;
+    boss.xp = 340; boss.gold = 160; // recién la muerte final da la recompensa real
+    particles.push({x:boss.x,y:boss.y, life:900, ring:true, maxLife:900, maxR:150, color:"#ffd76a"});
+    for(let i=0;i<18;i++){
+      const a = Math.random()*Math.PI*2;
+      particles.push({x:boss.x,y:boss.y, vx:Math.cos(a)*100, vy:Math.sin(a)*100-24, life:650, color:Math.random()<0.5?"#ffd76a":"#ff6a3d"});
+    }
+    animTrigger(boss, "bossPhaseTransition", 1300);
+    showBanner("¡RESURRECCIÓN ETERNA! EL JINETE RENACE MÁS FURIOSO");
+    return; // sigue la pelea de jefe, todavía no termina la partida
+  }
+  // Arena Acuática: el Leviatán tiene 3 fases (mismo criterio que la Resurrección Eterna del
+  // Jinete -no muere de verdad hasta la tercera vez-, en vez de transformarse en otra criatura
+  // como el Mago de Hielo). Cada fase lo vuelve más agresivo; en la fase 3 además se oscurece
+  // el escenario y aumentan las partículas (ver drawArena/render), pero los ataques siguen
+  // siendo siempre telegrafiados -la dificultad sube por velocidad/cantidad, nunca por golpes
+  // imposibles de leer-.
+  if(currentArena==="acuatica" && boss && boss.type==="leviatan" && (boss.acuaticaPhase||1) < 3){
+    boss.alive = true;
+    boss.acuaticaPhase = (boss.acuaticaPhase||1) + 1;
+    boss.hp = boss.maxHp;
+    boss.dmg = Math.round(boss.dmg*1.22);
+    boss.speed = Math.round(boss.speed*1.15);
+    boss.biteCd = Math.min(boss.biteCd, 1200); boss.chargeCd = Math.min(boss.chargeCd, 2000);
+    boss.tailCd = Math.min(boss.tailCd, 1800); boss.waveCd2 = Math.min(boss.waveCd2, 2400);
+    particles.push({x:boss.x,y:boss.y, life:900, ring:true, maxLife:900, maxR:160, color:"#4ac8e0"});
+    for(let i=0;i<20;i++){
+      const a = Math.random()*Math.PI*2;
+      particles.push({x:boss.x,y:boss.y, vx:Math.cos(a)*100, vy:Math.sin(a)*100-20, life:700, color:"#7fe0f0"});
+    }
+    animTrigger(boss, "bossPhaseTransition", 1300);
+    vfxSprite("fxVortex", 0, boss.x, boss.y+20, 170, 1300, boss, 0.3, false, 0.6);
+    showBanner(boss.acuaticaPhase===2 ? "¡EL LEVIATÁN SE ENFURECE!" : "¡EL LEVIATÁN DESATA TODO SU PODER!");
+    return; // sigue la pelea de jefe, todavía no termina la partida
+  }
+  bossActive = false;
+  grantGold(80);
+  // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
+  // save.arenasCleared trackea cada una de verdad y persiste.
+  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false};
+  save.arenasCleared[currentArena] = true;
+  if(ARENA_ORDER.every(a=>save.arenasCleared[a]) && !save.divineArenaUnlocked){
+    save.divineArenaUnlocked = true;
+  }
+  persist();
+  setTimeout(()=>{ showVictoryScreen(); }, 700);
+}
+
+function onPlayerDeath(){
+  player.alive = false;
+  setTimeout(()=>{ showGameOverScreen(); }, 500);
+}

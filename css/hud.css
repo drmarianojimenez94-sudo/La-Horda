@@ -1,0 +1,196 @@
+/* css/hud.css — HUD en partida: barras, aliados, avisos y controles táctiles (joystick y botones). */
+/* ---------- HUD ---------- */
+#hud{position:fixed; inset:0; z-index:10; pointer-events:none;}
+/* Todo el HUD superior (pausa, Arena/Nivel/Bajas, vida, energía, aliados) queda ahora
+   anclado arriba a la izquierda, apilado en una sola columna angosta. Antes el botón de
+   pausa y el contador de Arena/Nivel/Bajas estaban centrados horizontalmente, justo en la
+   misma columna donde la cámara mantiene siempre al héroe -> quedaban tapándolo. Al moverlos
+   a la izquierda, el centro y la derecha de la pantalla quedan totalmente libres. */
+#hud .top{
+  position:absolute; top:calc(106px + env(safe-area-inset-top,0px)); left:calc(10px + env(safe-area-inset-left,0px));
+  right:auto; width:150px;
+  display:flex; flex-direction:column; align-items:flex-start; gap:4px; pointer-events:none;
+}
+.top-pill{
+  background:rgba(10,6,4,0.72); border:1px solid var(--panel-b); border-radius:12px;
+  padding:6px 10px; font-size:0.68rem; letter-spacing:0.02em; color:var(--ember3);
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:100%; box-sizing:border-box;
+}
+.top-pill span b{color:var(--text);}
+#wave-timer-wrap{width:130px; height:6px; background:var(--panel-b); border-radius:4px; overflow:hidden; margin-top:2px;}
+#wave-timer-bar{height:100%; width:0%; background:linear-gradient(90deg, var(--ember1), var(--ember3));}
+
+#player-status{
+  position:absolute; top:calc(10px + env(safe-area-inset-top,0px)); left:calc(10px + env(safe-area-inset-left,0px));
+  background:rgba(10,6,4,0.72); border:1px solid var(--panel-b); border-radius:12px;
+  padding:8px 10px; width:150px; pointer-events:none;
+}
+.bar-row{display:flex; align-items:center; gap:6px; margin-bottom:5px;}
+.status-badge{
+  width:15px; height:15px; border-radius:4px; flex:none; display:flex; align-items:center; justify-content:center;
+  font-size:0.62rem; line-height:1;
+}
+.status-badge.atk{background:rgba(255,74,61,0.25); border:1px solid #ff8a70; box-shadow:0 0 5px rgba(255,74,61,0.6);}
+.status-badge.shield{background:rgba(95,176,255,0.25); border:1px solid #8fd0ff; box-shadow:0 0 5px rgba(95,176,255,0.6);}
+.revive-btn{
+  display:none; pointer-events:auto; flex:none; margin-left:2px;
+  position:relative; overflow:hidden;
+  font-family:inherit; font-size:0.58rem; font-weight:700; color:#eafff0; letter-spacing:0.01em;
+  background:linear-gradient(180deg,#2f7a48,#173d24); border:1px solid #6fdc8c; border-radius:6px;
+  padding:4px 6px; cursor:pointer; white-space:nowrap;
+}
+.revive-fill{
+  position:absolute; left:0; top:0; bottom:0; width:0%;
+  background:rgba(255,255,255,0.35); pointer-events:none; transition:width 0.05s linear;
+}
+.revive-label{ position:relative; z-index:1; }
+.revive-btn.holding{ box-shadow:0 0 10px rgba(255,255,255,0.7); }
+.ally-row.down .revive-btn{display:block;}
+.ally-row.down .ally-hp-track, .ally-row.down .ally-name{opacity:0.7;}
+.revive-btn:disabled{opacity:0.45; filter:grayscale(0.7); cursor:default;}
+.revive-btn.ready{box-shadow:0 0 9px rgba(111,220,140,0.9); animation:reviveGlow 1.1s ease-in-out infinite;}
+@keyframes reviveGlow{0%,100%{transform:scale(1);} 50%{transform:scale(1.07);}}
+.bar-label{font-size:0.62rem; width:16px; color:var(--text-dim);}
+.bar-track{flex:1; height:9px; border-radius:5px; overflow:hidden; background:var(--hp-dim); position:relative;}
+.bar-track.energy{background:var(--energy-dim);}
+.bar-fill{position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg,#8c1c1c,var(--hp));}
+.bar-fill.shield-seg{left:0; background:linear-gradient(90deg,#2f6fa8,#8fd0ff);}
+.bar-fill.energy{background:linear-gradient(90deg,#0f5a8c,var(--energy));}
+#plevel{font-size:0.68rem; color:var(--text-dim); text-align:right;}
+#musashi-hud{ text-align:right; font-size:0.6rem; margin-top:2px; line-height:1.35; }
+#musashi-conc-row{ color:#bfe4ff; }
+#musashi-conc-row.perfect{ color:#ff5c4a; font-weight:700; text-shadow:0 0 6px rgba(255,92,74,0.7); }
+#musashi-victories-row{ color:#ffce6b; }
+#sylva-hud{ text-align:right; font-size:0.6rem; margin-top:2px; line-height:1.35; }
+#sylva-track-row{ color:#c8f0a8; }
+#sylva-track-row.cornered{ color:#ffb84a; font-weight:700; text-shadow:0 0 6px rgba(255,184,74,0.7); }
+#sylva-momentum-row{ color:#8fd45a; }
+#sylva-momentum-row.locked{ color:#5ad0c8; font-weight:700; text-shadow:0 0 6px rgba(90,208,200,0.7); }
+#nigromante-hud{ text-align:right; font-size:0.6rem; margin-top:2px; line-height:1.35; }
+#nigro-skeleton-row{ color:#8ef0c8; }
+#nigro-golem-row{ color:#a8c98a; }
+#nigro-golem-row.active{ color:#ffd76b; font-weight:700; }
+#nigro-demon-row{ color:#50e68c; font-weight:700; text-shadow:0 0 6px rgba(80,230,140,0.7); }
+
+#ult-meter{
+  position:absolute; top:calc(10px + env(safe-area-inset-top,0px)); right:calc(10px + env(safe-area-inset-right,0px));
+  background:rgba(10,6,4,0.72); border:1px solid var(--panel-b); border-radius:12px;
+  padding:7px 10px; width:88px; text-align:center; pointer-events:none;
+}
+#ult-ring{width:40px; height:40px; margin:0 auto 3px; border-radius:50%; background:conic-gradient(var(--ult) 0deg, #2a1c10 0deg); display:flex; align-items:center; justify-content:center;}
+#ult-ring-inner{width:32px;height:32px;border-radius:50%;background:#150c08;display:flex;align-items:center;justify-content:center;font-size:0.9rem;}
+#ult-label{font-size:0.6rem; color:var(--text-dim);}
+
+/* ---------- Party panel (aliados) ---------- */
+/* La franja de botones de habilidad ocupa el 56% inferior de la pantalla a la derecha
+   (#skillzone). Con 3-4 aliados, el panel de arriba podía llegar a invadir esa zona en
+   pantallas de celular en horizontal -normales, no solo las bajitas- así que además de
+   angostar cada fila, le pongo un tope de altura real calculado contra esa franja, con
+   scroll propio como red de seguridad si aun así no entra completo. */
+#party{
+  position:absolute; top:calc(210px + env(safe-area-inset-top,0px)); left:calc(10px + env(safe-area-inset-left,0px)); right:auto;
+  width:150px; display:flex; flex-direction:column; gap:3px; pointer-events:none;
+  max-height:140px; overflow:hidden;
+}
+.ally-row{
+  background:rgba(10,6,4,0.70); border:1px solid var(--panel-b); border-radius:9px;
+  padding:3px 5px; display:flex; align-items:center; gap:5px;
+}
+.ally-row.down{background:rgba(30,10,8,0.72); border-color:#5a2a24;}
+.ally-badge{
+  width:16px; height:16px; border-radius:4px; flex:none;
+  display:flex; align-items:center; justify-content:center; font-size:0.6rem;
+  border:1.5px solid currentColor;
+}
+.ally-meta{flex:1; min-width:0;}
+.ally-name{font-size:0.52rem; color:var(--text-dim); line-height:1; margin-bottom:1px;}
+.ally-hp-track{height:5px; border-radius:3px; background:var(--hp-dim); overflow:hidden; position:relative;}
+.ally-hp-fill{position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg,#8c1c1c,var(--hp));}
+.ally-hp-fill.shield-seg{background:linear-gradient(90deg,#2f6fa8,#8fd0ff);}
+
+#player-status{padding:9px 10px 8px;}
+.bar-track{height:12px;}
+.bar-label{font-size:0.7rem; width:14px;}
+
+/* buff / dot notices */
+#floaters{position:absolute; inset:0; pointer-events:none;}
+.float-text{position:absolute; font-size:0.85rem; font-weight:700; color:var(--ember3); text-shadow:0 0 4px #000; animation:floatUp 0.9s ease-out forwards;}
+.float-text.heal{color:#6fdc8c;}
+.float-text.crit{color:#fff; font-size:1.05rem;}
+@keyframes floatUp{ from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(-46px);} }
+
+#center-banner{
+  position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
+  font-size:1.4rem; color:var(--ember3); text-shadow:0 0 16px rgba(255,122,46,0.7);
+  opacity:0; pointer-events:none; text-align:center; letter-spacing:0.05em;
+}
+#center-banner.show{animation:bannerPop 2.1s ease-out forwards;}
+@keyframes bannerPop{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.85);} 12%{opacity:1; transform:translate(-50%,-50%) scale(1);} 78%{opacity:1;} 100%{opacity:0;} }
+
+/* ---------- Controls ---------- */
+#controls{position:fixed; inset:0; z-index:15; pointer-events:none;}
+.zone{position:absolute; pointer-events:auto;}
+#joyzone{left:0; bottom:0; width:46%; height:46%;}
+#joy-base{
+  position:absolute; width:92px; height:92px; border-radius:50%;
+  background:rgba(40,20,10,0.35); border:2px solid rgba(255,122,46,0.35);
+  left:calc(24px + env(safe-area-inset-left,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px));
+}
+#joy-knob{
+  position:absolute; width:42px; height:42px; border-radius:50%;
+  background:rgba(255,122,46,0.55); border:2px solid rgba(255,207,92,0.8);
+  left:calc(24px + env(safe-area-inset-left,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  transform:translate(25px,25px);
+}
+
+#skillzone{right:0; bottom:0; width:54%; height:56%;}
+.ability-btn{
+  position:absolute; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; color:var(--text); font-size:0.62rem; font-weight:700;
+  background:radial-gradient(circle at 35% 30%, #3a1c10, #170b06 75%);
+  border:2px solid var(--ember1); box-shadow:0 0 10px rgba(255,122,46,0.25);
+  user-select:none;
+}
+.ability-btn .ico{font-size:1.25rem; line-height:1;}
+.ability-btn.basic{width:72px; height:72px; right:calc(16px + env(safe-area-inset-right,0px)); bottom:calc(14px + env(safe-area-inset-bottom,0px)); border-color:#e0824a;}
+.ability-btn.s1{width:54px; height:54px; right:calc(96px + env(safe-area-inset-right,0px)); bottom:calc(16px + env(safe-area-inset-bottom,0px));}
+.ability-btn.s2{width:54px; height:54px; right:calc(138px + env(safe-area-inset-right,0px)); bottom:calc(70px + env(safe-area-inset-bottom,0px));}
+.ability-btn.s3{width:54px; height:54px; right:calc(96px + env(safe-area-inset-right,0px)); bottom:calc(124px + env(safe-area-inset-bottom,0px));}
+.ability-btn.ult{
+  width:60px; height:60px; right:calc(16px + env(safe-area-inset-right,0px)); bottom:calc(132px + env(safe-area-inset-bottom,0px));
+  border-color:#5a3a10; background:radial-gradient(circle at 35% 30%, #2a1c0a, #120c05 75%); opacity:0.55;
+}
+.ability-btn.ult.ready{opacity:1; border-color:var(--ult); box-shadow:0 0 18px rgba(255,179,0,0.6); animation:ultPulse 1.4s ease-in-out infinite;}
+.ability-btn.ult.locked{opacity:0.3;}
+@keyframes ultPulse{ 0%,100%{box-shadow:0 0 10px rgba(255,179,0,0.4);} 50%{box-shadow:0 0 22px rgba(255,179,0,0.85);} }
+/* Botón dedicado de revivir: antes estaba metido en el amontonamiento de botones de
+   habilidad (5 círculos peleando espacio) y quedaba en un lugar raro/difícil de acertar.
+   Ahora va arriba al centro, solo, bien visible, y aparece únicamente cuando hay un
+   aliado caído al alcance -- nadie más ocupa esa zona de la pantalla. */
+.ability-btn.revive{
+  position:fixed; left:50%; transform:translateX(-50%);
+  top:calc(10px + env(safe-area-inset-top,0px)); right:auto; bottom:auto;
+  width:64px; height:64px; z-index:17;
+  border-color:#2f6b40; background:radial-gradient(circle at 35% 30%, #142a1c, #0a140d 75%); opacity:0; pointer-events:none;
+}
+.ability-btn.revive.ready{
+  opacity:1; pointer-events:auto; border-color:#6fdc8c; box-shadow:0 0 16px rgba(111,220,140,0.6);
+  animation:reviveBtnPulse 1.3s ease-in-out infinite;
+}
+.ability-btn.revive.holding{ animation:none; box-shadow:0 0 20px rgba(111,220,140,0.9); }
+@keyframes reviveBtnPulse{ 0%,100%{box-shadow:0 0 10px rgba(111,220,140,0.4);} 50%{box-shadow:0 0 20px rgba(111,220,140,0.8);} }
+.cd-overlay{
+  position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,0.62);
+  display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; color:#fff;
+}
+
+#pause-btn{
+  position:fixed; top:calc(10px + env(safe-area-inset-top,0px)); left:calc(170px + env(safe-area-inset-left,0px));
+  z-index:16; pointer-events:auto; background:rgba(10,6,4,0.6); border:1px solid var(--panel-b);
+  color:var(--text-dim); font-size:0.9rem; border-radius:8px; padding:4px 10px;
+}
+#mute-btn{
+  position:fixed; top:calc(10px + env(safe-area-inset-top,0px)); left:calc(224px + env(safe-area-inset-left,0px));
+  z-index:16; pointer-events:auto; background:rgba(10,6,4,0.6); border:1px solid var(--panel-b);
+  color:var(--text-dim); font-size:0.9rem; border-radius:8px; padding:4px 10px;
+}

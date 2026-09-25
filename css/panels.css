@@ -1,0 +1,177 @@
+/* css/panels.css — Paneles de pausa (habilidades, talentos, inventario, estadísticas) y pantalla de victoria. */
+/* ---------- Panel de maestría de habilidades (pantalla de pausa) ---------- */
+#mastery-panel{ width:100%; max-width:380px; margin-bottom:16px; }
+
+/* ---------- Pestañas de la pantalla de pausa (Fase 1: Habilidades / Inventario) ---------- */
+#pause-tabs{ display:flex; gap:8px; width:100%; max-width:380px; margin-bottom:12px; }
+.pause-tab{
+  flex:1; padding:8px 6px; border-radius:9px; border:1px solid var(--panel-b);
+  background:var(--panel-a); color:var(--text-dim); font-family:inherit; font-weight:700;
+  font-size:0.78rem; cursor:pointer;
+}
+.pause-tab.active{ color:var(--ember3); border-color:var(--ember1); background:rgba(255,122,46,0.10); }
+
+#inventory-panel{ width:100%; max-width:380px; margin-bottom:16px; }
+.inv-slots{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.inv-slot{
+  flex:1 1 30%; min-width:88px; border:1px dashed var(--panel-b); border-radius:10px; padding:8px 6px; text-align:center;
+  background:var(--panel-a); font-size:0.62rem; color:var(--text-dim);
+}
+.set-panel{ background:rgba(176,106,255,0.08); border:1px solid #6a4a8a; border-radius:10px; padding:8px 10px; margin-bottom:10px; }
+.set-panel .set-title{ color:#c88cff; font-weight:700; font-size:0.72rem; margin-bottom:4px; }
+.set-panel .set-thr{ font-size:0.62rem; color:var(--text-dim); padding:1px 0; }
+.set-panel .set-thr.active{ color:#7dffa8; }
+.fuse-bar{ display:flex; flex-direction:column; gap:6px; background:var(--panel-a); border:1px solid var(--panel-b); border-radius:8px; padding:6px 8px; margin-bottom:8px; font-size:0.62rem; }
+.fuse-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.fuse-row button{ flex:none; padding:3px 8px; border-radius:6px; border:1px solid #7dffa8; background:rgba(125,255,168,0.12); color:#7dffa8; font-size:0.58rem; cursor:pointer; }
+.set-badge{ display:inline-block; font-size:0.5rem; font-weight:700; color:#1a0e06; background:#3ddc71; border-radius:4px; padding:0 3px; margin-left:3px; vertical-align:middle; }
+.inv-card .item-desc{ font-size:0.56rem; color:var(--text-dim); font-style:italic; margin-top:2px; }
+.inv-card.set-item{ border-left-width:3px; }
+.inv-slot.filled{ border-style:solid; }
+.inv-slot .slot-icon{ font-size:1.1rem; display:block; margin-bottom:3px; }
+.inv-slot .slot-item-name{ font-size:0.58rem; line-height:1.25; display:block; margin:3px 0; min-height:2.2em; }
+.inv-slot button{
+  margin-top:4px; font-size:0.58rem; padding:3px 6px; border-radius:6px; border:1px solid var(--panel-b);
+  background:var(--panel-b); color:var(--text); font-family:inherit; cursor:pointer;
+}
+.inv-list{ display:flex; flex-direction:column; gap:7px; max-height:38vh; overflow-y:auto; }
+.inv-card{
+  display:flex; align-items:center; gap:8px; border-radius:9px; padding:7px 9px;
+  background:var(--panel-a); border:1px solid var(--panel-b); border-left-width:4px;
+}
+.inv-card .item-icon{ font-size:1.15rem; flex:none; }
+.inv-card .item-meta{ flex:1; min-width:0; }
+.inv-card .item-name{ font-size:0.68rem; font-weight:700; line-height:1.2; }
+.inv-card .item-stat{ font-size:0.6rem; color:var(--text-dim); margin-top:1px; }
+.inv-card .item-passives{ font-size:0.56rem; color:#8fb8ff; margin-top:2px; }
+.inv-card button{
+  flex:none; font-size:0.6rem; padding:5px 8px; border-radius:7px; border:1px solid var(--panel-b);
+  background:var(--panel-b); color:var(--text); font-family:inherit; font-weight:700; cursor:pointer;
+}
+.inv-card button.equipped{ background:var(--ember1); color:#1a0e06; border-color:var(--ember1); }
+.inv-empty{ text-align:center; color:var(--text-dim); font-size:0.72rem; padding:18px 10px; }
+.inv-debug-btn{
+  width:100%; margin-top:10px; padding:8px; border-radius:9px; border:1px dashed var(--panel-b);
+  background:transparent; color:var(--text-dim); font-family:inherit; font-size:0.62rem; cursor:pointer;
+}
+.inv-debug-btn:disabled{ opacity:0.4; cursor:default; }
+.inv-capacity{ text-align:right; font-size:0.62rem; color:var(--text-dim); margin-bottom:6px; }
+.inv-card{ cursor:pointer; }
+
+/* ---------- Fase 4: pestaña Estadísticas ---------- */
+#stats-panel{ width:100%; max-width:380px; margin-bottom:16px; }
+.stat-block{
+  background:var(--panel-a); border:1px solid var(--panel-b); border-radius:10px;
+  padding:8px 10px; margin-bottom:10px;
+}
+.stat-block-title{ font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:5px; }
+.stat-row{ display:flex; justify-content:space-between; font-size:0.74rem; padding:3px 0; }
+.stat-row span{ color:var(--text-dim); }
+.stat-row b{ color:var(--text); }
+.stat-row.highlight b{ color:#8fb8ff; }
+.stat-row.total{ border-top:1px solid var(--panel-b); margin-top:3px; padding-top:5px; font-size:0.82rem; }
+.stat-row.total b{ color:var(--ember3); }
+
+/* ---------- Fase 4: comparación de objetos (Inventario) ---------- */
+.item-compare{
+  margin-top:8px; padding-top:8px; border-top:1px dashed var(--panel-b);
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.6rem;
+}
+.item-compare .compare-col-title{ font-size:0.56rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:3px; }
+.item-compare .compare-line{ padding:2px 0; }
+.item-compare .compare-line.up{ color:#7dffa8; }
+.item-compare .compare-line.down{ color:#ff7a6a; }
+.item-compare .compare-line.neutral{ color:var(--text-dim); }
+
+/* ---------- Fase 3: secuencia de la pantalla de Victoria ---------- */
+#victory-step-body{ width:100%; max-width:380px; text-align:left; }
+.vic-sub{ text-align:center; color:var(--text-dim); font-size:0.78rem; margin-bottom:14px; }
+.vic-role-line{ text-align:center; font-size:0.9rem; margin-bottom:10px; }
+.vic-role-line b{ color:var(--ember3); }
+.score-big{ text-align:center; font-size:2.2rem; font-weight:800; color:var(--ember3); line-height:1; }
+.score-big span{ font-size:1rem; color:var(--text-dim); font-weight:400; }
+.score-bar-track{ width:100%; height:10px; border-radius:6px; background:var(--panel-b); overflow:hidden; margin:10px 0 16px; }
+.score-bar-fill{ height:100%; background:linear-gradient(90deg, var(--ember1), var(--ember3)); }
+.score-row{ display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; padding:6px 0; border-bottom:1px solid var(--panel-b); }
+.score-row .score-row-label{ color:var(--text-dim); }
+.score-row .score-row-val{ color:var(--text); font-weight:700; }
+.vic-party-title{ font-size:0.66rem; color:var(--text-dim); margin:16px 0 6px; text-transform:uppercase; letter-spacing:0.04em; }
+.vic-party-row{ display:flex; align-items:center; gap:8px; padding:5px 0; font-size:0.72rem; }
+.vic-party-row .vp-icon{ width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex:none; font-size:0.78rem; }
+.vic-party-row .vp-name{ flex:1; color:var(--text-dim); }
+.vic-party-row .vp-score{ font-weight:700; color:var(--ember3); }
+.vic-reward-note{ text-align:center; color:var(--text-dim); font-size:0.7rem; margin-bottom:10px; }
+.vic-item-actions{ display:flex; gap:6px; margin-top:6px; }
+.vic-item-actions button{
+  flex:1; font-size:0.6rem; padding:6px 4px; border-radius:7px; border:1px solid var(--panel-b);
+  background:var(--panel-b); color:var(--text); font-family:inherit; font-weight:700; cursor:pointer;
+}
+.vic-item-actions button.primary{ background:var(--ember1); color:#1a0e06; border-color:var(--ember1); }
+.vic-item-actions button:disabled{ opacity:0.5; cursor:default; }
+.vic-xp-row{ display:flex; justify-content:space-between; font-size:0.8rem; padding:8px 0; border-bottom:1px solid var(--panel-b); }
+.vic-xp-row b{ color:var(--ember3); }
+.talent-points{
+  font-size:0.78rem; color:var(--ember3); text-align:center; margin-bottom:10px;
+  background:rgba(255,122,46,0.08); border:1px solid var(--panel-b); border-radius:8px; padding:6px;
+}
+.mastery-list{ display:flex; flex-direction:column; gap:6px; }
+.mastery-row{
+  display:flex; align-items:center; gap:8px;
+  background:linear-gradient(160deg, var(--panel), #0f0805);
+  border:1px solid var(--panel-b); border-radius:10px; padding:6px 8px;
+}
+.mastery-icon{
+  width:30px; height:30px; border-radius:7px; flex:none; display:flex; align-items:center; justify-content:center;
+  font-size:1rem; background:rgba(255,122,46,0.12); border:1px solid var(--panel-b);
+}
+.mastery-info{ flex:1; min-width:0; text-align:left; }
+.mastery-name{ font-size:0.72rem; display:flex; justify-content:space-between; gap:6px; margin-bottom:3px; }
+.mastery-lvl{ color:var(--ember3); font-weight:700; flex:none; }
+.mastery-bar-track{ height:6px; border-radius:4px; background:var(--panel-b); overflow:hidden; }
+.mastery-bar-fill{ height:100%; background:linear-gradient(90deg, var(--ember1), var(--ember3)); }
+.mastery-stats{ font-size:0.6rem; color:var(--text-dim); margin-top:3px; line-height:1.4; }
+.mastery-stats b{ color:var(--ember3); font-weight:700; }
+.mastery-next{ color:#7dc98a; }
+.mastery-use{ font-size:0.58rem; color:#8fb8ff; margin-top:2px; }
+.mastery-plus{
+  width:26px; height:26px; border-radius:7px; flex:none; font-size:1rem; font-weight:700;
+  background:#141010; border:1px solid #4a3a2e; color:var(--text-dim); cursor:default;
+}
+.mastery-plus.ready{
+  background:linear-gradient(180deg,#4a2210,#2a1208); border-color:var(--ember1); color:var(--text);
+  cursor:pointer; box-shadow:0 0 8px rgba(255,122,46,0.5);
+}
+.mastery-plus:disabled{ opacity:0.5; }
+
+/* ---------- Talentos y Maestría (ver TALENT_TREES / renderTalentsPanel) ---------- */
+.talent-lock-banner{
+  font-size:0.72rem; color:#ffb08a; text-align:center; margin-bottom:10px; line-height:1.5;
+  background:rgba(255,90,60,0.10); border:1px solid #6a2e1e; border-radius:8px; padding:8px;
+}
+.talent-branch-title{
+  font-size:0.7rem; color:var(--ember3); text-transform:uppercase; letter-spacing:0.05em;
+  margin:10px 0 5px; padding-bottom:3px; border-bottom:1px solid var(--panel-b); display:flex; justify-content:space-between;
+}
+.talent-branch-title span.inv{ color:var(--text-dim); text-transform:none; letter-spacing:0; font-weight:400; }
+.talent-row.locked{ opacity:0.62; }
+.talent-row.special{ border-color:#6a4a1e; }
+.talent-row.special .mastery-icon{ background:rgba(255,207,92,0.14); border-color:#8a6a2e; }
+.talent-row.maxed{ border-color:#2e6a3a; }
+.talent-badge{
+  font-size:0.55rem; padding:1px 5px; border-radius:5px; background:var(--panel-b); color:var(--text-dim);
+  text-transform:uppercase; letter-spacing:0.03em; flex:none;
+}
+.talent-badge.special{ background:rgba(255,207,92,0.18); color:#ffcf5c; }
+.talent-lock-reason{ font-size:0.58rem; color:#ff9a7a; margin-top:2px; }
+.mastery-section{ margin-top:14px; padding-top:10px; border-top:2px solid var(--panel-b); }
+.mastery-choice-card{
+  background:linear-gradient(160deg, var(--panel), #0f0805); border:1px solid var(--panel-b); border-radius:10px;
+  padding:8px 10px; margin-bottom:8px; text-align:left;
+}
+.mastery-choice-card.eligible{ border-color:var(--ember1); }
+.mastery-choice-card .mc-name{ font-size:0.78rem; color:var(--ember3); font-weight:700; margin-bottom:2px; }
+.mastery-choice-card .mc-desc{ font-size:0.65rem; color:var(--text-dim); margin-bottom:6px; line-height:1.4; }
+.mastery-emblem{
+  display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:4px;
+  background:rgba(255,207,92,0.22); border:1px solid #ffcf5c; font-size:0.62rem; margin-left:4px; vertical-align:middle;
+}
