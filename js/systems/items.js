@@ -169,7 +169,7 @@ function passiveSum(champKey, effect){
 // Poder legendario de un objeto (ver LEGEND_PROCS): el guardado en el objeto si lo tiene, o uno
 // determinístico según su uid para objetos anteriores a este sistema.
 function legendProcOf(it){
-  if(!it || !LEGEND_PROC_POWER[it.rarity]) return null;
+  if(!it || it.set || !LEGEND_PROC_POWER[it.rarity]) return null; // las piezas de set valen por el set
   if(it.legendProc && LEGEND_PROCS[it.legendProc]) return it.legendProc;
   let h = 0; const s = String(it.uid||it.name||"");
   for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;

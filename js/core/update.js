@@ -69,7 +69,7 @@ function update(dt){
     facing = {x:joyVec.x, y:joyVec.y};
     const l = Math.hypot(facing.x,facing.y); facing.x/=l; facing.y/=l;
     player.fx = facing.x; player.fy = facing.y;
-    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1);
+    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1);
     player.x += joyVec.x*spd*dt/1000;
     player.y += joyVec.y*spd*dt/1000;
     clampToArena(player);
@@ -77,7 +77,7 @@ function update(dt){
     player.moving = !player.fused;
     player.animT += dt;
   }
-  for(const h of heroes) updateItemProcTimers(h, dt);
+  for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); samplePerformance(h, dt); }
   if(player.attackAnim>0) player.attackAnim -= dt;
   if(player.hurtTimer>0) player.hurtTimer -= dt;
   if(basicHeld) triggerBasic(player);

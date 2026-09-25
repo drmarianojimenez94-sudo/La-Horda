@@ -25,6 +25,7 @@ function trackHeal(caster, target, amount){
   const restored = Math.max(0, after - before);
   caster.stats.healDone += amount;
   caster.stats.healEffective += restored;
+  setsOnHeal(caster, restored);
   const danger = target.maxHp*0.35;
   if(before < danger && after >= danger) caster.stats.alliesSaved++;
 }
@@ -44,7 +45,7 @@ function applyHealOverheal(caster, target, amount){
 }
 // Cada ~1s, si el Tanque tiene 2+ enemigos cerca, suma un "tick" de presencia/control de área.
 function sampleTankPresence(h, dt){
-  if(h.classKey!=="tanque") return;
+  if(perfRoleOf(h.classKey)!=="tanque") return; // Tanque y Segador (rol tanque), jugador o bot
   h.stats.statSampleTimer -= dt;
   if(h.stats.statSampleTimer>0) return;
   h.stats.statSampleTimer = 1000;

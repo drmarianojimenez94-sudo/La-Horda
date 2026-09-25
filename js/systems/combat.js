@@ -27,8 +27,10 @@ function damageEnemy(e, amount, opts){
   // a golpe según Concentración y Senda del Rōnin (ver musashiCombatMods), algo que el sistema
   // genérico runStats.critChance/critMult -fijo para toda la partida- no puede representar.
   // Sin overrides, el comportamiento de siempre queda idéntico.
-  const critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
-  const critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
+  dmg *= setDamageMult(src, e, opts); // bonus de sets (Glaciar, Cazador, Frenesí, Resonancia, Impulso…)
+  let critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
+  let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
+  const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
   const crit = opts.forceCrit || Math.random() < critChance;
   if(crit) dmg *= critMult;
   e.hp -= dmg;
@@ -46,7 +48,11 @@ function damageEnemy(e, amount, opts){
   }
   vfxHit(e, src, opts, crit);
   if(src===player && !opts.fromProc) impactFeedback(e, dmg, crit, opts);
-  if(src && src.classKey && !opts.fromProc) itemProcsOnHit(src, e, dmg, crit, opts);
+  if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); }
+  if(src && src.stats){
+    if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + dmg;
+    if(opts.slow || opts.stun || opts.freeze || opts.knockback) src.stats.ccApplied = (src.stats.ccApplied||0) + 1;
+  }
   // Antes cargaba con el 10% del daño ya escalado por maestría/nivel/buffs, así que al final
   // de la partida (con el daño multiplicado varias veces) un solo golpe llenaba casi toda la
   // barra. Ahora se normaliza contra el daño BASE del propio héroe: siempre hacen falta más o
@@ -67,7 +73,7 @@ function damageEnemy(e, amount, opts){
   if(runStats.lifesteal>0 && opts.fromBasic){
     src.hp = Math.min(src.maxHp, src.hp + dmg*runStats.lifesteal*arenaRuleHealMult());
   }
-  const passiveLifesteal = (src.buffLifesteal||0) + (src.classKey ? passiveSum(src.classKey,"lifesteal_add") : 0);
+  const passiveLifesteal = (src.buffLifesteal||0) + (src.classKey ? passiveSum(src.classKey,"lifesteal_add") : 0) + setLifestealAdd(src);
   if(passiveLifesteal>0){
     const healAmt = dmg*passiveLifesteal*arenaRuleHealMult(), before = src.hp;
     src.hp = Math.min(src.maxHp, src.hp + healAmt);
@@ -150,7 +156,7 @@ function killEnemy(e){
     }
   }
   if(activeChampion === e) activeChampion = null;
-  if(e.lastHitBy && e.lastHitBy.classKey) itemProcsOnKill(e.lastHitBy, e);
+  if(e.lastHitBy && e.lastHitBy.classKey){ itemProcsOnKill(e.lastHitBy, e); setsOnKill(e.lastHitBy, e); trackKillPerformance(e.lastHitBy, e); }
   // Ahora la XP la gana quien dio el golpe final, sea el jugador o un aliado — así los
   // bots también suben de nivel durante la partida, simulando a otros jugadores.
   if(e.lastHitBy && e.lastHitBy.classKey){
@@ -203,12 +209,13 @@ function damageHero(h, amount, src){
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
-    amount *= arenaRuleDmgTakenMult();
+    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h);
   }
   if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
   const defBonus = (h===player) ? runStats.defBonus : 0;
   const passiveDef = h.classKey ? Math.min(0.5, passiveSum(h.classKey,"def_add")) : 0; // "Piel de Brasa"
   let dmg = amount * (1 - h.def) * (1 - defBonus) * (1-(h.buffDefMult?(1-h.buffDefMult):0)) * (1-passiveDef);
+  const mitigated = Math.max(0, amount - dmg), dmgBeforeShields = dmg;
   if(h.shield>0){
     const absorbed = Math.min(h.shield, dmg);
     h.shield -= absorbed;
@@ -233,7 +240,10 @@ function damageHero(h, amount, src){
     }
   }
   h.hp -= dmg;
+  const absorbed = Math.max(0, dmgBeforeShields - dmg);
+  if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }
   if(dmg>0) itemProcsOnHurt(h, dmg);
+  setsOnHurt(h, Math.max(0,dmg), mitigated, absorbed);
   if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);
   // Historial de daño reciente (solo lo consume Destino Restaurado, de La Profeta): guarda
   // el daño YA mitigado, con timestamp, y se poda a los pocos segundos para no crecer sin

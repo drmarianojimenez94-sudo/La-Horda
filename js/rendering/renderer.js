@@ -36,6 +36,7 @@ function render(){
   drawAcuaAmbience();
   drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   vfxDrawGround(); // telegraphs de zonas peligrosas + ondas de choque
+  drawSetAuras(); // aura discreta de los sets completos (color del set, más intensa con su carga)
   drawAimPreview(); // previsualización de la habilidad que se está apuntando
   drawBossTethers(); // cadenas de hielo entre el Mago y sus guardianes
   vfxDrawSprites(true); // efectos de sprite real "de suelo" (bajo las entidades)

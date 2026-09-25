@@ -89,6 +89,8 @@ function startRun(fromLevel){
     allies.push(makeHero(k, true, Math.cos(ang)*70, Math.sin(ang)*70));
   });
   heroes = [player, ...allies];
+  for(const h of heroes) resetSetRunState(h);
+  resetPerformanceRun();
   setupRunDifficulty();
   partyBuilt = false;
   if(floorPatterns[currentArena]){ floorPattern = floorPatterns[currentArena]; } else { buildFloorTile(); }

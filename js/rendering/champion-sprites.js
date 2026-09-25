@@ -472,7 +472,7 @@ function drawSkeletonMinion(sk){
   }
   else { img = isMage ? NIGRO_SKEL_IMG.mage : NIGRO_SKEL_IMG.warrior; }
   const flip = (sk.fx||0) < -0.12;
-  const targetH = 46;
+  const targetH = 46*(sk.scale||1); // (Réquiem del Sepulturero: el Esqueleto Élite es más grande)
   const s = targetH/img.height;
   const clip = { frames: [{x:0,y:0,w:img.width,h:img.height}] };
   drawShadow(sk.x, sk.y, 16);

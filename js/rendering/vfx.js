@@ -213,8 +213,9 @@ function vfxUpdate(dt){
     s.t += dt;
     if(s.follow){ if(s.follow.alive===false){ s.on = false; continue; } s.x = s.follow.x; s.y = s.follow.y; }
     if(s.aimAt){ const dx=s.aimAt.x-s.x, dy=s.aimAt.y-s.y, dl=Math.hypot(dx,dy)||1; s.dx=dx/dl; s.dy=dy/dl; }
-    if(s.link){ if(!s.link.alive || !s.link.bossWind){ s.on = false; continue; } }
-    else if(s.t>=s.dur) s.on = false;
+    // al resolverse un aviso, quien estaba cerca pero afuera lo "esquivó" (Rey del Laberinto)
+    if(s.link){ if(!s.link.alive || !s.link.bossWind){ s.on = false; if(s.link.alive) setsOnTelegraphEnd(s); continue; } }
+    else if(s.t>=s.dur){ s.on = false; setsOnTelegraphEnd(s); }
   }
   for(let i=0;i<VFX_SPR_MAX;i++){
     const s = vfxSprites[i]; if(!s.on) continue;

@@ -152,7 +152,8 @@ function reviveHero(a, by){
   if(by && by.stats) by.stats.revives++;
   a._reviveT = 0; a._reviveBy = null;
   a.alive = true;
-  a.hp = Math.max(1, Math.round(a.maxHp*0.4));
+  a.hp = Math.max(1, Math.round(a.maxHp*setReviveHpPct(by)));
+  setsOnRevive(by);
   a.stunTimer=0; a.shield=0; a.shieldTimer=0; a.itemShield = a.itemMaxShield||0;
   a.buffDmgMult=1; a.buffAtkSpeedMult=1; a.buffDefMult=1; a.buffLifesteal=0; a.buffBleedOnHit=false; a.buffTimer=0;
   a.regenTimer=0; a.regenPerSec=0;
@@ -178,7 +179,6 @@ function updateAllies(dt){
     h.ultCd = Math.max(0, h.ultCd-dt);
     h.energy = Math.min(h.maxEnergy, h.energy + h.cls.energyRegen*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
     if(h.shieldTimer>0){ h.shieldTimer-=dt; if(h.shieldTimer<=0) h.shield=0; }
-    if(h.stats) sampleTankPresence(h, dt);
     if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp-=h.pendingHpBonus; h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
     if(h.furyArmorTimer>0){
       h.furyArmorTimer -= dt;
@@ -307,7 +307,7 @@ function updateAllies(dt){
     if(h.moving){
       mx/=ml; my/=ml;
       const nd = aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; }
-      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * (1-Math.min(0.8,h.slowAmt||0));
+      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0));
       h.x += mx*spd*dt/1000; h.y += my*spd*dt/1000;
       if(!target){ h.fx = mx; h.fy = my; }
       clampToArena(h);

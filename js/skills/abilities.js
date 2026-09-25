@@ -13,7 +13,7 @@ function triggerBasic(caster){
   if(caster.fused) return; // La Profeta fusionada (Ascensión del Elegido): no actúa ella misma
   const cls = caster.cls;
   const mythicBonus = mythicExecuteBonus(caster); // Sobrecarga Mítica: bonus si vida<50%
-  const aspd = 1 + passiveSum(caster.classKey,"atkspeed_mult") + mythicBonus;
+  const aspd = (1 + passiveSum(caster.classKey,"atkspeed_mult") + mythicBonus) * setAtkSpeedMult(caster);
 
   // La Profeta — Danza del Presagio: su básico es siempre cuerpo a cuerpo (mismo criterio de
   // rango/objetivo que el resto de las clases melee) pero cada golpe acumula una carga de
@@ -307,7 +307,7 @@ function castAbility(caster, sk, isUlt, idx){
     playSfx(isUlt?"ult":"cast");
   }
   if(caster.alive) vfxShock(caster.x, caster.y, 8, isUlt ? 70 : 44, hexToRgb(caster.cls.glow||"#ffffff"), isUlt ? 420 : 260, caster===player ? 1 : 0);
-  if(caster.classKey && caster.alive) itemProcsOnCast(caster, sk, isUlt);
+  if(caster.classKey && caster.alive){ itemProcsOnCast(caster, sk, isUlt); setsOnCast(caster, sk, isUlt); if(caster.stats) caster.stats.skillCasts = (caster.stats.skillCasts||0) + 1; }
   caster.attackAnim = isUlt ? 320 : 240;
   caster._animCastKind = isUlt ? 2 : 1; // el sistema de animación lo lee como CAST (ulti = CAST fuerte)
   // animaciones del Pack 1 (Segador/Axiom): pose de cast mientras dura este attackAnim; el Tajo
@@ -1094,7 +1094,7 @@ function castAbility(caster, sk, isUlt, idx){
         h.atkAuraTimer = (sk.duration*DUR);
         buffed++;
       }
-      if(caster.stats && buffed>0) caster.stats.buffsGranted += buffed;
+      if(caster.stats && buffed>0){ caster.stats.buffsGranted += buffed; setsOnSupport(caster, buffed); }
       caster.sigilTimer = caster.sigilMaxTimer = (sk.duration*DUR);
       caster.sigilRadius = (sk.radius*AREA)*0.6; caster.sigilColor = "#ff4a3d"; caster.sigilTier = tierOf(allocLevel(mastery));
       particles.push({x:caster.x,y:caster.y, life:600, ring:true, maxLife:600, maxR:(sk.radius*AREA), color:"#ff4a3d"});
@@ -1125,7 +1125,7 @@ function castAbility(caster, sk, isUlt, idx){
         h.shieldAuraTimer = (sk.duration*DUR);
         buffed++;
       }
-      if(caster.stats && buffed>0) caster.stats.buffsGranted += buffed;
+      if(caster.stats && buffed>0){ caster.stats.buffsGranted += buffed; setsOnSupport(caster, buffed); }
       caster.sigilTimer = caster.sigilMaxTimer = (sk.duration*DUR);
       caster.sigilRadius = (sk.radius*AREA)*0.6; caster.sigilColor = "#5fb0ff"; caster.sigilTier = tierOf(allocLevel(mastery));
       particles.push({x:caster.x,y:caster.y, life:600, ring:true, maxLife:600, maxR:(sk.radius*AREA), color:"#5fb0ff"});
@@ -1150,7 +1150,7 @@ function castAbility(caster, sk, isUlt, idx){
         if(newfxReady('holyHealBurst')) vfxSprite("fxHolyHealBurst", 0, h.x, h.y, 96, 480, h, 0, false, 0.95, 8);
         buffed++;
       }
-      if(caster.stats && buffed>0) caster.stats.buffsGranted += buffed;
+      if(caster.stats && buffed>0){ caster.stats.buffsGranted += buffed; setsOnSupport(caster, buffed); }
       caster.sigilTimer = caster.sigilMaxTimer = (sk.duration*DUR);
       caster.sigilRadius = (sk.radius*AREA)*0.55; caster.sigilColor = "#c88cff"; caster.sigilTier = tierOf(allocLevel(mastery));
       particles.push({x:caster.x,y:caster.y, life:800, ring:true, maxLife:800, maxR:(sk.radius*AREA), color:"#c88cff"});
