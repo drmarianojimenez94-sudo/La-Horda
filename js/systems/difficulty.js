@@ -10,7 +10,8 @@
    >>> Perillas generales de balance: DIFF.
    ============================================================ */
 const DIFF = {
-  hpFollow: 0.66,   // cuánto del poder ofensivo del equipo se traslada a la vida enemiga
+  hpFollow: 0.4,    // cuánto del poder ofensivo del equipo se traslada a la vida enemiga (menos = el nivel del campeón pesa más;
+                    // era 0.66: con 0.4, en campañas de prueba el nivel 30 gana ~52% vs ~40% y el nivel 10 no cambia)
   dmgFollow: 0.45,  // cuánto de la vida del equipo se traslada al daño enemigo
   // Dificultad general: sube con el nivel promedio de los campeones (de x1.0 en nivel 1 hasta
   // el valor indicado desde el nivel 10). Con campeones nuevos no se castiga de más.

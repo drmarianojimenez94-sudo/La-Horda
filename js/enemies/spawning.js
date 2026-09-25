@@ -28,7 +28,7 @@ function spawnPoolFor(level){
 function spawnPoolForLaberinto(level){
   const pool = [{t:"escorpion_gigante", w:10}];
   if(level >= 2) pool.push({t:"golem_piedra", w:6});
-  if(level >= 3) pool.push({t:"medusa", w:5});
+  if(level >= 5) pool.push({t:"medusa", w:5});
   if(level >= 5) pool.push({t:"druida_arena", w:4});
   if(level >= 7) pool.push({t:"esfinge", w:3});
   if(level >= 8){ pool[0].w = 6; }
