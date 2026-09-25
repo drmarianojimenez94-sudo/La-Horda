@@ -13,7 +13,7 @@ function triggerBasic(caster){
   if(caster.fused) return; // La Profeta fusionada (Ascensión del Elegido): no actúa ella misma
   const cls = caster.cls;
   const mythicBonus = mythicExecuteBonus(caster); // Sobrecarga Mítica: bonus si vida<50%
-  const aspd = (1 + passiveSum(caster.classKey,"atkspeed_mult") + mythicBonus) * setAtkSpeedMult(caster);
+  const aspd = (1 + passiveSum(caster.classKey,"atkspeed_mult") + mythicBonus) * setAtkSpeedMult(caster) * (runStats.atkSpeedMult||1);
 
   // La Profeta — Danza del Presagio: su básico es siempre cuerpo a cuerpo (mismo criterio de
   // rango/objetivo que el resto de las clases melee) pero cada golpe acumula una carga de

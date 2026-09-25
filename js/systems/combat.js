@@ -28,6 +28,9 @@ function damageEnemy(e, amount, opts){
   // genérico runStats.critChance/critMult -fijo para toda la partida- no puede representar.
   // Sin overrides, el comportamiento de siempre queda idéntico.
   dmg *= setDamageMult(src, e, opts); // bonus de sets (Glaciar, Cazador, Frenesí, Resonancia, Impulso…)
+  // refuerzos de la partida: rematar (enemigo bajo 30% de vida) y cazador de élites/jefes
+  if(runStats.executeBonus && e.hp < e.maxHp*0.3) dmg *= 1 + runStats.executeBonus;
+  if(runStats.eliteDmgMult!==1 && (e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) dmg *= runStats.eliteDmgMult;
   let critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
   let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
   const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
@@ -57,7 +60,7 @@ function damageEnemy(e, amount, opts){
   // de la partida (con el daño multiplicado varias veces) un solo golpe llenaba casi toda la
   // barra. Ahora se normaliza contra el daño BASE del propio héroe: siempre hacen falta más o
   // menos la misma cantidad de golpes para cargar la ulti, sin importar cuánto haya escalado.
-  src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6);
+  src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1));
   if(opts.burn){ e.burnTimer = 2600; e.burnDmg = amount*0.12; }
   if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; }
   if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; }
@@ -160,12 +163,12 @@ function killEnemy(e){
   // Ahora la XP la gana quien dio el golpe final, sea el jugador o un aliado — así los
   // bots también suben de nivel durante la partida, simulando a otros jugadores.
   if(e.lastHitBy && e.lastHitBy.classKey){
-    const leveledUp = grantXP(e.lastHitBy.classKey, e.xp);
+    const leveledUp = grantXP(e.lastHitBy.classKey, Math.round(e.xp*(runStats.xpMult||1)));
     if(leveledUp && e.lastHitBy!==player) autoInvestTalentPoints(e.lastHitBy.classKey);
   } else {
-    grantXP(player.classKey, e.xp);
+    grantXP(player.classKey, Math.round(e.xp*(runStats.xpMult||1)));
   }
-  if(Math.random()<0.6) grantGold(e.gold);
+  if(Math.random()<0.6) grantGold(Math.round(e.gold*(runStats.goldMult||1)));
   if(e.dropsItem && Math.random()<0.42){
     const kinds = ["hp","dmg","def","vel"];
     grantRelic(kinds[Math.floor(Math.random()*kinds.length)]);
@@ -212,6 +215,8 @@ function damageHero(h, amount, src){
     amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h);
   }
   if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
+  // Espinas (refuerzo): devuelve parte del golpe a quien pegó cuerpo a cuerpo al jugador
+  if(h===player && runStats.thorns>0 && src && src.type && src.alive && src.hp>0 && typeof src.maxHp==="number") damageEnemy(src, amount*runStats.thorns, {src:player});
   const defBonus = (h===player) ? runStats.defBonus : 0;
   const passiveDef = h.classKey ? Math.min(0.5, passiveSum(h.classKey,"def_add")) : 0; // "Piel de Brasa"
   let dmg = amount * (1 - h.def) * (1 - defBonus) * (1-(h.buffDefMult?(1-h.buffDefMult):0)) * (1-passiveDef);

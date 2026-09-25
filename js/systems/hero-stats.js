@@ -6,7 +6,8 @@
 
 function freshRunStats(){
   // Demo: daño de todos los héroes +10% (multiplicador global, fácil de revertir a 1 después)
-  return { dmgMult:1.10, hpMult:1, speedMult:1, cdMult:1, lifesteal:0, energyRegenMult:1, critChance:0.04, critMult:1.8, defBonus:0, potionRateMult:1 };
+  return { dmgMult:1.10, hpMult:1, speedMult:1, cdMult:1, lifesteal:0, energyRegenMult:1, critChance:0.04, critMult:1.8, defBonus:0, potionRateMult:1,
+    atkSpeedMult:1, goldMult:1, xpMult:1, executeBonus:0, eliteDmgMult:1, thorns:0, regenPct:0, ultChargeMult:1 };
 }
 
 function relicBonus(kind){ return (save.relics[kind]||0)*0.015; } // 1.5% per relic, capped by relic cap

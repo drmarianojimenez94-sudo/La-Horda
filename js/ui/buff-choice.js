@@ -19,6 +19,7 @@ function openBuffChoice(){
     el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>`;
     el.addEventListener("click", ()=>{
       b.apply(runStats);
+      refreshEquippedStats(); // refuerzos de vida máxima (Vitalidad, Baluarte, Cañón de Cristal) aplican ya, no recién en la próxima partida
       runLevel++;
       player.hp = Math.min(player.maxHp, player.hp + player.maxHp*0.25);
       player.energy = player.maxEnergy;

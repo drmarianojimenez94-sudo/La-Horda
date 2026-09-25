@@ -87,6 +87,7 @@ function update(dt){
   for(let i=0;i<3;i++) player.cds[i] = Math.max(0, player.cds[i]-dt);
   player.ultCd = Math.max(0, player.ultCd-dt);
   player.energy = Math.min(player.maxEnergy, player.energy + player.cls.energyRegen*runStats.energyRegenMult*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
+  if(runStats.regenPct>0 && player.alive) player.hp = Math.min(player.maxHp, player.hp + player.maxHp*runStats.regenPct*arenaRuleHealMult()*dt/1000);
   if(player.shieldTimer>0){ player.shieldTimer-=dt; if(player.shieldTimer<=0) player.shield=0; }
   if(player.stats) sampleTankPresence(player, dt);
   if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp-=player.pendingHpBonus; player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
