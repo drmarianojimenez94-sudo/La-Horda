@@ -133,18 +133,18 @@ const CLASSES = {
   musashi:{
     name:"Musashi", icon:"⚔", color:"#5aa8d8", glow:"#bfe4ff",
     role:"Duelista. Daño físico single-target y ejecución: elige un rival y se vuelve cada vez más peligroso contra él.", roleCategory:"asesino",
-    // Vida media-baja y defensa baja (guerrero:120/0.10 es la referencia más cercana; Musashi
-    // queda un poco por debajo de vida/defensa y un poco por encima de daño/velocidad de
-    // ataque -su supervivencia depende de Paso Fantasma y de matar rápido, no de aguantar-).
-    baseHP:112, baseDmg:14, baseDef:0.08, baseSpeed:172, energyMax:100, energyRegen:10.5, hpGrowthMult:0.85, dmgGrowthMult:1.35,
-    basicRange:60, basicCd:380, basicArc:false,
+    // Asesino de velocidad: poca vida y poca defensa, pero muchísimos golpes (básico cada 260ms,
+    // menos daño por golpe) y habilidades de enfriamiento bajo. Sobrevive matando rápido y con
+    // Paso Fantasma, no aguantando.
+    baseHP:100, baseDmg:11, baseDef:0.06, baseSpeed:176, energyMax:100, energyRegen:12.5, hpGrowthMult:0.8, dmgGrowthMult:1.35,
+    basicRange:60, basicCd:260, basicArc:false,
     isDuelist:true, // Musashi tiene su propio bloque de básico/pasivas en triggerBasic/castAbility
     skills:[
-      {name:"Corte del Rōnin", ico:"⚔", cost:28, cd:5200, kind:"ronin_slash", range:120, dmgMult:1.9, desc:"Avanza y ejecuta un corte horizontal único y extremadamente rápido"},
-      {name:"Paso Fantasma", ico:"👻", cost:26, cd:7000, kind:"ghost_step", range:190, critBonus:0.35, desc:"Atraviesa a un enemigo y aparece detrás suyo; el siguiente básico gana probabilidad de crítico. Si se activa justo antes de recibir un golpe, es un Paso Perfecto: lo evita por completo"},
-      {name:"Mil Cortes", ico:"🌀", cost:42, cd:10500, kind:"thousand_cuts", radius:150, totalHits:10, dmgMult:0.30, desc:"Ráfaga de cortes alrededor suyo que prioriza a su objetivo de duelo; cuantos menos enemigos haya, más cortes recibe cada uno"}
+      {name:"Corte del Rōnin", ico:"⚔", cost:22, cd:3800, kind:"ronin_slash", range:120, dmgMult:1.9, desc:"Avanza y ejecuta un corte horizontal único y extremadamente rápido"},
+      {name:"Paso Fantasma", ico:"👻", cost:20, cd:5500, kind:"ghost_step", range:190, critBonus:0.35, desc:"Atraviesa a un enemigo y aparece detrás suyo; el siguiente básico gana probabilidad de crítico. Si se activa justo antes de recibir un golpe, es un Paso Perfecto: lo evita por completo"},
+      {name:"Mil Cortes", ico:"🌀", cost:34, cd:8000, kind:"thousand_cuts", radius:150, totalHits:14, dmgMult:0.24, desc:"Ráfaga de cortes alrededor suyo que prioriza a su objetivo de duelo; cuantos menos enemigos haya, más cortes recibe cada uno"}
     ],
-    ultimate:{name:"Último Duelo", ico:"★", cd:34000, kind:"last_duel_ult", duration:13000, speedMult:1.25, atkSpeedMult:1.35, dmgMult:1.25, critChanceBonus:0.15, critMultBonus:0.4, ghostStepCdMult:0.4, desc:"Se transporta con su objetivo de duelo a una arena privada: 1 contra 1 hasta que uno de los dos caiga o se acabe el tiempo"}
+    ultimate:{name:"Último Duelo", ico:"★", cd:28000, kind:"last_duel_ult", duration:13000, speedMult:1.25, atkSpeedMult:1.35, dmgMult:1.25, critChanceBonus:0.15, critMultBonus:0.4, ghostStepCdMult:0.4, desc:"Se transporta con su objetivo de duelo a una arena privada: 1 contra 1 hasta que uno de los dos caiga o se acabe el tiempo"}
   },
   cazadora:{
     name:"La Cazadora", icon:"🏹", color:"#5c9a4a", glow:"#c8f0a8",
