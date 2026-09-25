@@ -73,6 +73,7 @@ async function runOne(page, job) {
     await page.goto(`http://127.0.0.1:${port}/index.html`, { waitUntil: 'load' });
     for (let i = 0; i < 300; i++) { const ok = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; }); if (ok) break; await sleep(100); }
     await page.addScriptTag({ path: path.join(__dirname, 'autopilot.js') });
+    await page.evaluate(require('../fortaleza/sim-helpers.js'));
     await page.evaluate(HOOKS);
   };
   for (const job of jobs) {

@@ -42,6 +42,14 @@ const ARENA_MODS = {
   acuatica: { label:"Arena Acuática",    icon:"🌊", desc:"Ruinas hundidas. Más dura que el Bosque, más suave que el Hielo.", hazardName:"Corriente Profunda",
               fireDmgMult:1.15, iceDmgMult:0.9, enemyDmgPerWave:0.14, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.88, enemyRegenPct:0, hazard:"corriente_acuatica", hasWalls:false },
+  // ARENA III (tercera en la campaña, entre la Acuática y el Hielo). Su peligro no es un hazard de
+  // piso sino el MAPA: un recorrido largo por sectores con puentes que se reconfiguran y el Ciclo
+  // Mecánico de trampas (js/arenas/fortaleza/). Roster más pesado (élites y subélites desde temprano)
+  // con menos enemigos por minuto: la dificultad sube por composición, no por vida.
+  fortaleza:{ label:"La Fortaleza Sin Fin", icon:"⚙", desc:"Arena III. Una fortaleza viva: puentes que se mueven, trampas y un Caballero que no perdona.", hazardName:"Ciclo Mecánico",
+              fireDmgMult:1.1, iceDmgMult:1.0, enemyDmgPerWave:0.145, unlockLevel:0,
+              heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.87, enemyRegenPct:0, hazard:null, hasWalls:false,
+              potionMult:1.25 },
   // Arena Divina: la de asedio 4v4. Todavía sin combate (Fase 1: solo el escenario), así que
   // sin debuffs propios por ahora -esto se termina de calibrar cuando exista el combate de
   // verdad. NO va en ARENA_ORDER a propósito: no tiene que aparecer en la selección normal
@@ -50,4 +58,4 @@ const ARENA_MODS = {
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:1.0, enemyRegenPct:0, hazard:null, hasWalls:false }
 };
-const ARENA_ORDER = ["bosque","acuatica","hielo","laberinto","infernal"];
+const ARENA_ORDER = ["bosque","acuatica","fortaleza","hielo","laberinto","infernal"];

@@ -14,7 +14,7 @@ let divinaEnemies = [];
 function pickDivinaTeamClasses(){
   const ROLE_ORDER = ["tanque","asesino","mago","soporte"];
   return ROLE_ORDER.map(role=>{
-    const pool = Object.keys(CLASSES).filter(k=>CLASSES[k].roleCategory===role);
+    const pool = Object.keys(CLASSES).filter(k=>CLASSES[k].roleCategory===role && !CLASSES[k].noDivinaFoe);
     return pool[(Math.random()*pool.length)|0];
   });
 }
@@ -322,7 +322,7 @@ function divinaWavePool(){
   if(!_divinaWavePoolCache){
     _divinaWavePoolCache = Object.keys(ENEMY_BASE).filter(k=>{
       const r = ENEMY_BASE[k].rank;
-      return r!=="jefe" && r!=="subjefe";
+      return r!=="jefe" && r!=="subjefe" && !ENEMY_BASE[k].noDivina; // (Engendro: solo nace de un Prisionero)
     });
   }
   return _divinaWavePoolCache;

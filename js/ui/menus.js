@@ -17,6 +17,8 @@ document.addEventListener("touchstart", startMusic, {once:true, capture:true});
 document.addEventListener("click", startMusic, {once:true, capture:true});
 document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   startMusic();
+  // modo campaña: la primera vez se elige el campeón de regalo
+  if(needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   setState("mainmenu");
   renderMainMenu();
 });
@@ -38,7 +40,23 @@ document.getElementById("shop-back-btn").addEventListener("click", ()=>{
 document.getElementById("champdetail-back-btn").addEventListener("click", ()=>{
   setState("shop"); renderShop();
 });
+// PLAYTEST V1: bono único de 2.000 de oro para cada jugador (una sola vez por guardado, nunca
+// se repite: queda marcado en save.playtestV1Bonus).
+const PLAYTEST_V1_GOLD = 2000;
+let playtestBonusJustGranted = false;
+// OJO: se llama desde main.js DESPUÉS de loadSave() (antes de eso `save` es el guardado vacío por
+// defecto y persistirlo pisaría el progreso real del jugador).
+function grantPlaytestV1Bonus(){
+  try{
+    if(save.playtestV1Bonus) return;
+    save.playtestV1Bonus = true;
+    save.gold = (save.gold||0) + PLAYTEST_V1_GOLD;
+    playtestBonusJustGranted = true;
+    persist();
+  }catch(e){}
+}
 function renderMainMenu(){
+  if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
@@ -56,7 +74,15 @@ function startChampAnimLoop(){
     for(const cvs of list){
       const g = cvs.getContext("2d");
       g.clearRect(0,0,cvs.width,cvs.height);
-      drawChampFigure(g, cvs.dataset.classKey, cvs.width/2, cvs.height*0.92, cvs.height/40, 1, t, true);
+      if(cvs.dataset.idle){
+        // quieto y RESPIRANDO: animación de reposo + el pecho que sube y baja (cada uno a su ritmo)
+        const ph = (cvs.dataset.classKey.length*1.7 + (cvs.dataset.ph||0)) % 6.283;
+        const br = Math.sin(t/620 + ph);
+        const bx = cvs.width/2, by = cvs.height*0.92;
+        g.save(); g.translate(bx, by); g.scale(1 - 0.012*br, 1 + 0.028*br); g.translate(-bx, -by);
+        drawChampFigure(g, cvs.dataset.classKey, bx, by, cvs.height/40, 1, t, false);
+        g.restore();
+      } else drawChampFigure(g, cvs.dataset.classKey, cvs.width/2, cvs.height*0.92, cvs.height/40, 1, t, true);
     }
     requestAnimationFrame(tick);
   }
@@ -218,6 +244,14 @@ function updateMenuBrandSub(){
   if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
+  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese campeón está bloqueado: desbloquealo en la Tienda."); return; }
+  // B1: dentro de una sala online la elección de campeón vuelve a la misma sala
+  if(netInRoom()){
+    setState("prep"); renderPrepSummary();
+    if(net.role==="guest") netSendLoadout(true);
+    else netSend({t:"update", champ:selectedClass, level:save.champions[selectedClass].level});
+    return;
+  }
   lobbyAllies = pickLobbyAllies(selectedClass);
   setState("prep");
   renderPrepSummary();
@@ -226,11 +260,24 @@ document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
 document.getElementById("prep-back-btn").addEventListener("click", ()=>{
+  if(netInRoom()){
+    if(net.role==="host" && netHumanCount()>1 && !confirm("¿Salir? La sala se cierra para tus amigos.")) return;
+    netLeaveRoom();
+  }
   lobbyAllies = null;
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
   try{
+    if(netInRoom()){
+      if(net.role!=="host") return; // el anfitrión decide cuándo comenzar
+      if(netDuplicateChamps().length){ netRenderLobbyBar(); return; }
+      if(!isArenaUnlocked(currentArena)){ alert("Esa arena todavía no la desbloqueaste."); return; }
+      const nr = netNotReady();
+      if(nr.length && !confirm(`${nr.map(s=>s.name).join(", ")} todavía no ${nr.length>1?"están":"está"} LISTO. ¿Comenzar igual?`)) return;
+      netHostStartGame();
+      return;
+    }
     startRun(1);
   }catch(err){
     console.error("Error al arrancar la partida:", err);
@@ -243,7 +290,20 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
 function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
-  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los ocupan bots (pronto: amigos)";
+  netRenderLobbyBar();
+  if(netInRoom()){
+    // B1: sala online real: lugares en tiempo real (vos, amigos, esperando)
+    document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
+    netRenderLobbySlots();
+    const box = document.getElementById("prep-summary");
+    const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
+    box.innerHTML = `<div class="lobby-equip-title">${cls.name} · Nv. ${champ.level}</div><div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>`;
+    renderPrepTabs();
+    if(net.role==="guest") netSendLoadout(false);
+    return;
+  }
+  const sb = document.getElementById("prep-start-btn"); if(sb){ sb.disabled = false; sb.textContent = "Comenzar"; }
+  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los ocupan bots (o tus amigos, con una sala online)";
   const slots = document.getElementById("lobby-slots");
   const team = [selectedClass, ...(lobbyAllies||[])];
   const ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
@@ -253,7 +313,7 @@ function renderPrepSummary(){
     const cls = CLASSES[key], lv = save.champions[key].level, you = i===0;
     return `<div class="lobby-slot ${you?"you":""}">
       <div class="lobby-tag ${you?"you":"bot"}">${you?"VOS":"BOT"}</div>
-      <canvas class="champ-anim lobby-anim" width="88" height="88" data-class-key="${key}" style="background:${cls.color}1c;"></canvas>
+      <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
       <div class="lobby-name">${cls.name}</div>
       <div class="lobby-meta">${ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv}</div>
@@ -377,13 +437,36 @@ function renderChampInventory(panel, classKey, rerender){
     rerender();
   });
 }
+function netBackToRoomIfAny(){
+  // B1: al terminar una partida online, "volver a la sala" mantiene el mismo código
+  netCancelAutoReturn();
+  if(netLobby.roomGone && !netInRoom()){ netLobby.roomGone = false; netMatch = null; setState("mainmenu"); renderMainMenu(); return true; }
+  if(!netMatch && !netInRoom()) return false;
+  netFinishMatch();
+  if(netInRoom()){ setState("prep"); renderPrepSummary(); return true; }
+  return false;
+}
 document.getElementById("retry-btn").addEventListener("click", ()=>{
+  if(netBackToRoomIfAny()) return;
   if(currentArena==="divina"){ startDivinaExploration(); return; }
   startRun(1);
 });
+function netLeaveAfterMatch(){
+  // "Salir de la sala" / "Cerrar la sala y salir" desde los resultados
+  netCancelAutoReturn();
+  const gone = netLobby.roomGone; netLobby.roomGone = false;
+  if(netMatch || netInRoom()){ netFinishMatch(); if(netInRoom()) netLeaveRoom(); return true; }
+  return gone;
+}
 document.getElementById("menu-btn-1").addEventListener("click", ()=>{
+  if(net.role==="host" && netHumanCount()>1 && !confirm("¿Cerrar la sala? Tus amigos vuelven al menú.")) return;
+  if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
   if(currentArena==="divina"){ setState("divina"); return; }
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
-document.getElementById("again-btn").addEventListener("click", ()=> startRun(1));
-document.getElementById("menu-btn-2").addEventListener("click", ()=>{ setState("menu"); renderChampGrid(); renderSaveLine(); });
+document.getElementById("again-btn").addEventListener("click", ()=>{ if(netBackToRoomIfAny()) return; startRun(1); });
+document.getElementById("menu-btn-2").addEventListener("click", ()=>{
+  if(net.role==="host" && netHumanCount()>1 && !confirm("¿Cerrar la sala? Tus amigos vuelven al menú.")) return;
+  if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
+  setState("menu"); renderChampGrid(); renderSaveLine();
+});

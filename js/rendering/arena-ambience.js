@@ -10,7 +10,7 @@ const aidAmb = [];
 for(let i=0;i<AID_AMB_MAX;i++) aidAmb.push({on:false, x:0, y:0, vx:0, vy:0, life:0, max:1, k:0, s:1, ph:0});
 let aidAmbN = 0, aidEruptT = 0, aidWind = 0;
 // presupuesto base por arena (se multiplica por vfxLoad: con hordas o FPS bajos, baja solo)
-const AID_AMB_BUDGET = { infernal:70, hielo:120, bosque:60, laberinto:50, acuatica:60, divina:60 };
+const AID_AMB_BUDGET = { infernal:70, hielo:120, bosque:60, laberinto:50, acuatica:60, divina:60, fortaleza:80 };
 function aidAmbReset(){ for(const p of aidAmb) p.on = false; aidAmbN = 0; aidEruptT = 1500; }
 // kinds: 1 ceniza, 2 copo de nieve, 3 ráfaga (línea de viento), 4 hoja, 5 luciérnaga, 6 polvo,
 // 7 mota marina, 8 mota sagrada (dorada), 9 brasa infernal (divina norte)
@@ -23,6 +23,7 @@ function aidAmbSpawn(p, A, fresh){
   else if(A==="bosque"){ if(Math.random()<0.45){ p.k = 4; p.vx = 14+Math.random()*16; p.vy = 26+Math.random()*18; p.s = 2+Math.random()*2; p.max = 6000+Math.random()*3000; } else { p.k = 5; p.vx = (Math.random()-0.5)*14; p.vy = (Math.random()-0.5)*14; p.s = 2; p.max = 4000+Math.random()*3000; } }
   else if(A==="laberinto"){ p.k = 6; p.vx = 6+Math.random()*10; p.vy = (Math.random()-0.5)*6; p.s = 1+Math.random()*1.5; p.max = 5000+Math.random()*4000; }
   else if(A==="acuatica"){ p.k = 7; p.vx = (Math.random()-0.5)*8; p.vy = -4-Math.random()*8; p.s = 1+Math.random()*1.6; p.max = 6000+Math.random()*4000; }
+  else if(A==="fortaleza"){ if(Math.random()<0.55){ p.k = 9; p.vy = -30-Math.random()*30; p.vx = (Math.random()-0.5)*16; p.s = 1.5+Math.random()*1.5; p.max = 2500+Math.random()*2500; } else { p.k = 1; p.vx = 6+Math.random()*10; p.vy = 10+Math.random()*14; p.s = 1.5+Math.random()*1.5; p.max = 5000+Math.random()*4000; } }
   else if(A==="divina"){ if(ry > 0){ p.k = 8; p.vy = -18-Math.random()*20; } else { p.k = 9; p.vy = -24-Math.random()*22; } p.vx = (Math.random()-0.5)*10; p.s = 1.5+Math.random()*1.5; p.max = 3500+Math.random()*3000; }
   p.life = fresh ? p.max*Math.random() : p.max;
 }
@@ -124,6 +125,14 @@ function aidGrade(now){
       ctx.fillStyle = `rgba(150,230,240,${a})`;
       ctx.beginPath(); ctx.moveTo(bx, y0); ctx.lineTo(bx+50, y0); ctx.lineTo(bx+190, y0+H); ctx.lineTo(bx+110, y0+H); ctx.closePath(); ctx.fill();
     }
+  } else if(A==="fortaleza"){
+    // calor de la lava desde abajo + bordes oscuros (la fortaleza es un lugar cerrado y hostil)
+    const g = ctx.createLinearGradient(0, y0+H, 0, y0);
+    g.addColorStop(0, "rgba(140,40,8,0.20)"); g.addColorStop(0.5, "rgba(60,16,4,0.05)"); g.addColorStop(1, "rgba(0,0,0,0.16)");
+    ctx.fillStyle = g; ctx.fillRect(x0, y0, W, H);
+    const v = ctx.createRadialGradient(player.x, player.y, hh*0.55, player.x, player.y, Math.max(hw,hh)*1.2);
+    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(8,4,2,0.42)");
+    ctx.fillStyle = v; ctx.fillRect(x0, y0, W, H);
   } else if(A==="divina"){
     // norte corrupto (rojizo) / sur celestial (dorado), según dónde está la cámara
     const g = ctx.createLinearGradient(0, -900, 0, 900);

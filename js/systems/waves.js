@@ -18,6 +18,7 @@ function beginLevel(){
   updateArenaRuleChip();
   const ruleTxt = arenaRuleStacks()>0 ? " · " + arenaRuleLevelText() : "";
   showBanner(runLevel===LEVEL_COUNT ? "NIVEL 10 — EL JEFE ESPERA" + ruleTxt : `NIVEL ${runLevel}` + ruleTxt);
+  if(arenaHas("beginLevel")) arenaHook("beginLevel"); // puertas, sectores y jefes de la arena
 }
 let midBossSpawned = false;
 let activeChampion = null; // subjefe/jefe activo: mientras exista, se detiene la aparición normal de monstruos
@@ -76,6 +77,7 @@ function beginLevelClear(){
     o.alive = false; o.hp = 0; n++;
     kills++;
     grantXP(player.classKey, Math.round(o.xp*0.5));
+    if(netIsHost()) for(const h of heroes) if(h.isRemote) netEmitTo(h._netSlot, "xp", [Math.round(o.xp*0.5)]);
     vfxOnDeath(o);
   }
   enemies = enemies.filter(o=>o.alive);

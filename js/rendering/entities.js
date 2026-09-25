@@ -41,6 +41,7 @@ function drawHero(h){
 // Cuerpo del campeón según su arte real (atlas / poses recortadas / procedural de respaldo).
 // Lo comparten el dibujo normal, el hit flash y la caída al morir.
 function drawHeroBody(h, drawScale, spinning, stealthed){
+  if(champPackPending(h.classKey)) return; // nunca el arte viejo mientras baja el redibujado
   // El Mago usa su propio atlas de sprites (arte provisto por el usuario) en vez del sprite
   // procedural; el resto de las clases sigue exactamente igual que antes.
   if(h.classKey==="mago" && drawMagoAtlas(h, drawScale, stealthed?0.32:1)){
@@ -58,6 +59,10 @@ function drawHeroBody(h, drawScale, spinning, stealthed){
     // Musashi: dibujado con éxito desde sus sprites reales recortados (idle/run/ataque/hurt).
   } else if(h.classKey==="cazadora" && drawSylvaReal(h, drawScale, stealthed?0.32:1)){
     // Sylva: dibujado con éxito desde sus sprites reales recortados.
+  } else if(h.classKey==="libertador" && drawLibertador(h, drawScale, stealthed?0.32:1)){
+    // El Libertador: a pie / a caballo (js/champions/libertador.js)
+  } else if(h.classKey==="eren" && drawEren(h, drawScale, stealthed?0.32:1)){
+    // Eren: humano / El Portador (js/champions/eren.js)
   } else if(h.classKey==="nigromante" && h.nigroDemonForm && drawNigromanteDemon(h, drawScale, stealthed?0.32:1)){
     // Nigromante transformado (Encarnación del Abismo): Demonio Nigromántico.
   } else if(h.classKey==="nigromante" && drawNigromanteReal(h, drawScale, stealthed?0.32:1)){
@@ -446,6 +451,7 @@ function _entPush(y, e, h, w, p){
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){
+  if(p.fortSpr && arenaHook("drawProjectile", p)) return;
   if(p.lob){
     // tiro en arco: sombra en el piso + proyectil elevado según la altura del arco
     ctx.save(); ctx.globalAlpha = 0.35; ctx.fillStyle = "#000";

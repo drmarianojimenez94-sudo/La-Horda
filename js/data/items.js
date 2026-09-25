@@ -49,7 +49,7 @@ const EQUIP_SLOT_TYPES = Object.keys(ITEM_TYPES); // ["arma","escudo","casco","p
 const CLASS_WEAPON_LABEL = {
   tanque:"Espada", guerrero:"Daga", mago:"Bastón", soporte:"Báculo",
   segador:"Hoja", axiom:"Núcleo", profeta:"Hoja Ceremonial", musashi:"Bokken", cazadora:"Arco Largo",
-  nigromante:"Cetro de Hueso"
+  nigromante:"Cetro de Hueso", libertador:"Fusil de Granadero", eren:"Doble Hoja"
 };
 // Configuración central de balance: TODO objeto sale de estas tablas, nunca de un
 // número suelto escrito en otra parte. Fácil de rebalancear después. arma/guantes ->

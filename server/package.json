@@ -1,0 +1,10 @@
+{
+  "name": "la-horda-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LA HORDA — B1 cooperative playtest: servidor de salas (rooms) y relay WebSocket. No corre lógica de juego: la partida la simula el anfitrión.",
+  "main": "relay.js",
+  "scripts": { "start": "node relay.js", "test": "node test-relay.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "ws": "^8.18.0" }
+}

@@ -252,9 +252,13 @@ function champPackLoadAtlas(key, src, meta){
   const img = new Image();
   const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:meta.sets, ready:false };
   img.onload = ()=>{ P.ready = true; };
+  img.onerror = ()=>{ P.failed = true; }; // solo entonces se usa el arte anterior como respaldo
   img.src = src;
   CHAMP_PACK[key] = P;
 }
+// El arte redibujado de este campeón todavía está bajando: no se dibuja NADA (antes se veía un
+// instante el arte viejo descartado, ej. en el título mientras decía "Cargando…").
+function champPackPending(key){ const P = CHAMP_PACK[key]; return !!(P && !P.ready && !P.failed); }
 champPackLoadAtlas("segador", "assets/sprites/champions/segador/v2/atlas.png", {"w":91,"h":107,"cols":8,"refH":75,"anchor":0.9439,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("musashi", "assets/sprites/champions/musashi/v2/atlas.png", {"w":91,"h":91,"cols":8,"refH":84,"anchor":0.9451,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("profeta", "assets/sprites/champions/profeta/v2/atlas.png", {"w":93,"h":133,"cols":8,"refH":76,"anchor":0.9098,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
@@ -262,6 +266,19 @@ champPackLoadAtlas("cazadora", "assets/sprites/champions/cazadora/v2/atlas.png",
 champPackLoadAtlas("axiom", "assets/sprites/champions/axiom/v2/atlas.png", {"w":88,"h":99,"cols":8,"refH":76,"anchor":0.9394,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});
 champPackLoadAtlas("nigromante", "assets/sprites/champions/nigromante/v2/atlas.png", {"w":161,"h":114,"cols":8,"refH":82,"anchor":0.9386,"sets":{"idle_down":[18,19,20,21],"idle_side":[31],"idle_left":[34],"idle_up":[37],"walk_down":[26,27,28,29,30],"walk_side":[31,32,33],"walk_left":[34,35,36],"walk_up":[37,38,41],"walk_up_left":[39,40],"attack_side":[0,1,2,3],"cast_side":[4,5,6,7],"hit_down":[14,15,16,17],"death_down":[8,9,10,11,12,13],"ult":[22,23,24,25]}});
 champPackLoadAtlas("nigro_skel", "assets/sprites/champions/nigromante/skeleton/v2/atlas.png", {"w":63,"h":95,"cols":6,"refH":75,"anchor":0.9368,"sets":{"warrior_idle":[4],"warrior_walk":[4,5],"warrior_atk":[3],"mage_idle":[1],"mage_walk":[1,2],"mage_atk":[0]}});
+
+// El Libertador (José de San Martín) y Eren: tools/art/redraw/build_se.py (hojas en art-source/redraw/).
+// libertador_horse = a caballo (Carga de San Lorenzo / forma montada); eren_titan = El Portador.
+champPackLoadAtlas("libertador", "assets/sprites/champions/libertador/v2/atlas.png", {"w":103,"h":98,"cols":8,"refH":79,"anchor":0.9388,"sets":{"idle_down":[34,35,36,37],"idle_side":[53],"idle_left":[49],"idle_up":[57],"walk_down":[45,46,47,48],"walk_side":[53,54,55,56],"walk_left":[49,50,51,52],"walk_up":[57,58,59,60],"attack_side":[30,31,32,33],"cast_side":[25,26,27],"aim":[0,1,2,3],"fire":[30,31,32,33],"reload":[38,39,40,41,42,43],"bayo_pre":[12,13,14,15],"bayo_emb":[4,5,6,7],"bayo_imp":[8,9,10,11],"bayo_rem":[16,17,18,19],"command":[25,26,27,28,29],"cabral":[20,21,22,23,24],"ult_cast":[44]}});
+champPackLoadAtlas("libertador_horse", "assets/sprites/champions/libertador/v2/horse.png", {"w":125,"h":102,"cols":8,"refH":91,"anchor":0.9412,"sets":{"mount":[9,10,11,12],"charge":[0,1,2,3,4],"dismount":[5,6,7,8],"m_idle":[13],"m_atk":[14,15,16],"m_run":[17,1,2]}});
+champPackLoadAtlas("eren", "assets/sprites/champions/eren/v2/atlas.png", {"w":128,"h":111,"cols":8,"refH":68,"anchor":0.8919,"sets":{"idle_down":[31,32,33],"idle_side":[52],"idle_left":[47],"idle_up":[57],"walk_down":[42,43,44,45,46],"walk_side":[52,53,54,55,56],"walk_left":[47,48,49,50,51],"walk_up":[57,58,59,60,61],"run":[38,39,40,41],"attack_side":[6,7,8,9],"cast_side":[3,4,5],"aim":[3,4,5],"hit_down":[20,21],"death_down":[14,15,16],"hook_prep":[27,28],"hook_launch":[26],"hook_fly":[22,23,24],"hook_slash":[29,30],"hook_land":[25],"instinct":[34,35,36,37],"advance":[0,1,2],"bite":[10,11,12,13],"exhausted":[17,18,19]}});
+champPackLoadAtlas("eren_titan", "assets/sprites/champions/eren/v2/titan.png", {"w":148,"h":136,"cols":8,"refH":126,"anchor":0.9412,"sets":{"idle_down":[20,21],"walk_down":[20,21],"walk_side":[22,23,24],"walk_up":[25,26,27],"atk":[28,29,30],"sismo":[6,7,8,9],"terremoto":[10,11,12,13],"retumbar":[0,1,2,3,4],"roar":[5],"tf":[14,15,16,17,18,19]}});
+// Efectos recortados de las mismas hojas (imágenes sueltas): SE_FX.<nombre>, ver seFx().
+const SE_FX = {};
+function seFxLoad(dir, names){ for(const n of names){ const im = new Image(); im.src = dir + n + ".png"; SE_FX[n] = im; } }
+seFxLoad("assets/sprites/champions/libertador/v2/fx/", ["blood_01", "blood_02", "buff_icon_01", "buff_icon_02", "buff_icon_03", "buff_icon_04", "dust_01", "dust_02", "dust_03", "frost_01", "frost_02", "shot_01", "smoke_04", "spectral_01", "spectral_02", "spectral_03", "spectral_04", "spectral_05"]);
+seFxLoad("assets/sprites/champions/eren/v2/fx/", ["fx_blood_01", "fx_blood_02", "fx_bolt_01", "fx_bolt_02", "fx_cable_01", "fx_crack_01", "fx_crack_02", "fx_crack_03", "fx_dust_l_01", "fx_hook_01", "fx_impact_01", "fx_rocks_01", "fx_slash_01", "fx_steam_01", "fx_steam_02", "fx_steam_03", "fx_steam_04", "fx_wind_01", "shadows_01", "step_01", "step_02", "step_03"]);
+function seFx(n){ const im = SE_FX[n]; return im && im.complete && im.naturalWidth ? im : null; }
 
 // Sylva, La Cazadora del Bosque: mismo patrón (una imagen por estado). El combo básico cicla
 // 6 frames durante attackAnim -se acelera solo porque attackAnim ya dura menos con más

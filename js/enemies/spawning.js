@@ -7,6 +7,7 @@
 
 // Qué criaturas pueden aparecer en cada nivel de arena (dificultad creciente)
 function spawnPoolFor(level){
+  if(arenaHas("spawnPool")) return arenaHook("spawnPool", level);
   if(currentArena==="hielo") return spawnPoolForHielo(level);
   if(currentArena==="bosque") return spawnPoolForBosque(level);
   if(currentArena==="laberinto") return spawnPoolForLaberinto(level);
@@ -117,6 +118,7 @@ function spawnEnemy(type, atBoss, champion){
   if(type==="dragon_hielo"){ e.alientoCd = 3000+Math.random()*1500; e.novaCd = 6000+Math.random()*1500; }
   if(type==="demonio_hielo_fuego"){ e.escarchaCd = 2500+Math.random()*2500; }
   enemies.push(e);
+  if(arenaHas("placeSpawn")) arenaHook("placeSpawn", e, atBoss, champion); // puertas/túneles propios de la arena
   // Un campeón (subjefe) detiene la aparición normal de monstruos mientras esté vivo,
   // salvo que se marque explícitamente como "caótico" (permite que sigan apareciendo).
   if(champion && !e.allowChaosSpawn) activeChampion = e;

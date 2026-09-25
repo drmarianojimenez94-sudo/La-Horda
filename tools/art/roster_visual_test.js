@@ -22,7 +22,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const dims = await page.evaluate(() => {
     if (typeof buildSprites === 'function') buildSprites();
     selectedClass = 'guerrero'; currentArena = 'bosque'; startRun(1); state = 'paused';
-    const KEYS = ["tanque", "guerrero", "mago", "soporte", "segador", "axiom", "profeta", "musashi", "cazadora", "nigromante"];
+    const KEYS = ["tanque", "guerrero", "mago", "soporte", "segador", "axiom", "profeta", "musashi", "cazadora", "nigromante", "libertador", "eren"];
     const COLS = [["idle_front", h => { h.fx = 0; h.fy = 1; }], ["idle_side", h => { h.fx = 1; h.fy = 0; }], ["walk_side", h => { h.moving = true; h.animT = 180; h.fx = 1; h.fy = 0; }], ["walk_down", h => { h.moving = true; h.animT = 180; h.fx = 0; h.fy = 1; }], ["attack", h => { h._aDur = 300; h._aPrev = 300; h.attackAnim = 150; }], ["hurt", h => { h.hurtTimer = 100; }]];
     const CW = 180, CH = 200, LH = 20;
     const cvs = document.createElement('canvas'); cvs.id = 'lab'; cvs.width = 110 + CW * COLS.length; cvs.height = LH + CH * KEYS.length;

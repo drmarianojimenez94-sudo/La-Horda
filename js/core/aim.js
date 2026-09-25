@@ -21,6 +21,7 @@ const aimKnob = document.getElementById("aim-knob");
 function _skillReadyFor(idx){
   const sk = player && player.cls && player.cls.skills[idx];
   if(!sk || !player.alive || state!=="playing") return false;
+  if(idx===0 && erenHookCanRedirect(player)) return true; // Eren: segundo gancho en vuelo
   return player.cds[idx]<=0 && player.energy >= sk.cost;
 }
 function _denyFeedback(el, idx){

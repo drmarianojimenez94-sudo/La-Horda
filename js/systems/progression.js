@@ -5,16 +5,16 @@
    abandonar la arena.
    ============================================================ */
 
-// Curva de experiencia MUY empinada a propósito: subir de nivel de personaje es permanente,
-// así que debe costar un esfuerzo enorme, sobre todo pasados los primeros niveles.
-function xpToNext(level){ return Math.round(80 + level*55 + Math.pow(level,2.3)*4); }
-// ⚠️ MULTIPLICADOR TEMPORAL DE TESTEO: mientras se está explorando/balanceando el juego, toda la
-// XP ganada se multiplica x10 para poder ver progresión y desbloqueos rápido. Antes de publicar
-// una build real, volver este valor a 1 para que la curva dura de arriba tenga efecto real.
-const DEV_XP_MULT = 10;
+// Curva de experiencia empinada a propósito: subir de nivel de personaje es permanente, así que
+// cuesta cada vez más pasados los primeros niveles. Sin multiplicadores: la XP que se gana es la
+// real de los enemigos y de la victoria. Calibrada con campañas simuladas desde cero (nivel 1,
+// 6 arenas en orden, tools/playtest): quien juega bien termina la campaña cerca del nivel 40
+// (unos 80.000 XP en total); quien pierde muchas partidas llega un poco más abajo, porque perder
+// solo conserva la mitad de lo ganado.
+function xpToNext(level){ return Math.round(200 + level*50 + Math.pow(level,2.3)*0.6); }
 function grantXP(champKey, amount){
   const c = save.champions[champKey];
-  c.xp += amount * DEV_XP_MULT;
+  c.xp += amount;
   let leveled = false;
   while(c.level < 99 && c.xp >= xpToNext(c.level)){
     c.xp -= xpToNext(c.level);

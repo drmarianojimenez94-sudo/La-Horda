@@ -19,7 +19,7 @@ const _bh = {};
 function _bhEl(id){ return _bh[id] || (_bh[id] = document.getElementById(id)); }
 function bossHudShow(e){
   hudBoss = e; _bossChip = 1;
-  const d = (typeof BOSS_DESIGNS!=="undefined" && BOSS_DESIGNS[e.type]) || SUBBOSS_TIPS[e.type] || null;
+  const d = (typeof BOSS_DESIGNS!=="undefined" && BOSS_DESIGNS[e.type]) || SUBBOSS_TIPS[e.type] || ARENA_BOSS_TIPS[e.type] || null;
   const isSub = e.rank!=="jefe";
   const hud = _bhEl("boss-hud");
   hud.classList.remove("hidden"); hud.classList.toggle("sub", isSub);
@@ -39,6 +39,8 @@ function bossHudShow(e){
     intro.classList.add("hidden");
     // el jefe entra con su cartel grande: la guía espera a que termine para no pisarlo
     _bossIntroDelay = isSub ? 300 : 2100;
+    // si hay un cartel grande de presentación (arenaTitleCard), la guía espera a que se vaya
+    _bossIntroDelay = Math.max(_bossIntroDelay, _arenaTitleUntil - performance.now() + 200);
     _bossIntroT = isSub ? 4600 : 7500;
   } else { _bossIntroDelay = 0; _bossIntroT = 0; }
   bossHudHint("", "");

@@ -9,6 +9,9 @@
    ============================================================ */
 function botTryAbilities(h){
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(h.classKey,"cd_mult"));
+  // El Libertador / Eren: IA propia (js/champions/libertador.js, eren.js)
+  if(h.classKey==="libertador" && !divinaMode){ botLibertador(h, passiveCdMult); return; }
+  if(h.classKey==="eren" && !divinaMode){ botEren(h, passiveCdMult); return; }
   // Musashi (IA, sección 27): nunca desperdicia Último Duelo sin una Marca válida, y prioriza
   // objetivos valiosos (élite/subjefe/jefe) o una presa ya baja de vida (posibilidad real de
   // ejecución) en vez de tirarlo contra cualquier chusma en cuanto se carga.
@@ -140,12 +143,59 @@ function botTryAbilities(h){
   }
 }
 
-// Revive a un aliado caído si el jugador está lo bastante cerca
+/* ---------------- REVIVIR (autoritativo) ----------------
+   Lo decide SIEMPRE la simulación (la partida local o el anfitrión en cooperativo), nunca la
+   pantalla de quien revive:
+   - Un caído tiene a lo sumo UN reanimador a la vez (candado): a._reviveBy / a._reviveT (ms
+     acumulados) / a._reviveDur (humano 1,3 s con el botón, bot 2,4 s). Todos lo ven igual.
+   - El progreso vuelve a 0 al instante si el reanimador suelta el botón, se aleja, cae, queda
+     aturdido, se desconecta, el caído deja de ser válido o la partida termina; y si un bot deja
+     de revivirlo más de REVIVE_GRACE_MS. Nunca queda un "reviviendo" fantasma.
+   - Recibir daño NO interrumpe (el aturdimiento sí).
+   - Los humanos mantienen el botón: h._revHold = índice (en heroes) del caído; el invitado lo
+     pide con {k:"revive", slot, on}. Los bots avanzan desde botMove (bot-brain.js). */
+// Un bot que esquiva un aviso un instante no pierde lo avanzado; si deja de revivir más de esto,
+// vuelve a 0. Las interrupciones de un humano (soltar, alejarse, caer, aturdido, desconexión) son
+// inmediatas (cancelRevivesBy).
+const REVIVE_GRACE_MS = 350;
+function reviveBusyFor(a, r){
+  if(!a || !a._reviveBy || a._reviveBy===r) return false;
+  if(netIsGuest()) return a._reviveT > 0; // el invitado solo ve lo que manda el anfitrión
+  return a._reviveBy.alive && runElapsedMs - (a._revTouchAt||0) <= REVIVE_GRACE_MS;
+}
+function reviverCanAct(r){ return !!(r && r.alive && !(r.stunTimer>0) && !r.fused); }
+function cancelRevivesBy(r){ if(!r || !heroes) return; for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
+// Un cuadro de progreso de r sobre a. Devuelve true si lo terminó de revivir.
+function reviveStep(a, r, dur, dt){
+  if(a._reviveBy!==r){ a._reviveBy = r; a._reviveT = 0; }
+  a._reviveDur = dur; a._revTouchAt = runElapsedMs;
+  a._reviveT = (a._reviveT||0) + dt;
+  if(a._reviveT >= dur){ reviveHero(a, r); return true; }
+  return false;
+}
+function updateRevives(dt){
+  for(const r of heroes){
+    if(r._revHold===undefined || r._revHold<0) continue;
+    const a = heroes[r._revHold];
+    const ok = state==="playing" && !runEnding && !divinaMode && reviverCanAct(r) && a && a!==r && !a.alive
+      && distance(r, a) < REVIVE_RANGE + (r.isRemote ? 20 : 0) && !reviveBusyFor(a, r);
+    if(!ok){ r._revHold = -1; cancelRevivesBy(r); continue; }
+    if(reviveStep(a, r, REVIVE_BTN_HOLD_MS, dt)) r._revHold = -1;
+  }
+  for(const a of heroes){
+    if(a.alive){ if(a._reviveBy || a._reviveT){ a._reviveBy = null; a._reviveT = 0; } continue; }
+    const by = a._reviveBy;
+    if(by && (runEnding || !reviverCanAct(by) || runElapsedMs - (a._revTouchAt||0) > REVIVE_GRACE_MS)){ a._reviveBy = null; a._reviveT = 0; }
+  }
+}
+// Revive al instante (lo usan las pruebas y herramientas); el botón usa el progreso de arriba.
 function tryReviveAlly(a){
   if(state!=="playing" || !a || a.alive) return;
   if(distance(player, a) >= REVIVE_RANGE) return;
+  if(netIsGuest()) return;
   reviveHero(a, player);
 }
+function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : h.cls.name) : ""; }
 // Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
 function reviveHero(a, by){
   if(state!=="playing" || !a || a.alive) return;
@@ -166,12 +216,13 @@ function reviveHero(a, by){
   for(let i=0;i<14;i++) particles.push({x:a.x,y:a.y, vx:(Math.random()-0.5)*90, vy:-40-Math.random()*70, life:650, color:"#8effb4"});
   particles.push({x:a.x,y:a.y, life:650, ring:true, maxLife:650, maxR:64, color:"#8effb4"});
   particles.push({x:a.x,y:a.y, life:650, maxLife:650, spin:true, radius:44, color:"#8effb4"});
-  showBanner(by && by!==player ? `${by.cls.name} revivió a ${a.cls.name}` : `${a.cls.name} ha revivido`);
+  showBanner(by && by!==player ? `${heroLabel(by)} revivió a ${heroLabel(a)}` : `${heroLabel(a)} ha revivido`);
 }
 
 function updateAllies(dt){
   for(const h of allies){
     if(!h.alive) continue;
+    if(h.isRemote) continue; // B1: lo maneja su dueño (netHostUpdateRemotes), no la IA
     if(axiomFreezeTimer>0 && h!==axiomFreezeCaster) continue; // Force Quit: nadie mas actua
     if(h.stunTimer>0){ h.stunTimer-=dt; continue; } // congelado (p.ej. Nova de Escarcha): no actúa
     h.basicCd = Math.max(0, h.basicCd-dt);
@@ -287,7 +338,7 @@ function updateAllies(dt){
         if(p.type==="mana" && h.energy >= h.maxEnergy*0.3) continue;
         if(p.type!=="mana" && h.hp >= h.maxHp*0.75) continue;
         const d = distance(h,p);
-        if(d < 420 && d < bd){ bd = d; seekPotion = p; }
+        if(d < 420 && d < bd && (!arenaHas("heroReachable") || arenaHook("heroReachable", h, p))){ bd = d; seekPotion = p; }
       }
     }
     if(seekPotion){
@@ -307,7 +358,7 @@ function updateAllies(dt){
     if(h.moving){
       mx/=ml; my/=ml;
       const nd = aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; }
-      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0));
+      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0)) * heroSpeedMult(h);
       h.x += mx*spd*dt/1000; h.y += my*spd*dt/1000;
       if(!target){ h.fx = mx; h.fy = my; }
       clampToArena(h);

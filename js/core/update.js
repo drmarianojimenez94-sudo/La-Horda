@@ -7,6 +7,8 @@
 
 function update(dt){
   if(state!=="playing") return;
+  // B1 cooperativo: el invitado no simula la partida, la reconstruye con lo que manda el anfitrión
+  if(netMatch && netMatch.role==="guest"){ netGuestUpdate(dt); return; }
   runElapsedMs += dt;
   invalidatePassiveCache();
   updateRunTimers(dt);
@@ -21,10 +23,14 @@ function update(dt){
   updateBossSkillWorld(dt);
   for(const h of heroes){ updateSylvaMomentum(h, dt); updateSylvaWolf(h, dt); }
   for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); }
+  // El Libertador / Eren (+ buffs de equipo que dan): js/champions/champ-shared.js
+  for(const h of heroes) updateChampExtras(h, dt);
+  updateChampFx(dt);
   updateArenaHazards(dt);
   updateAcuaCurrent(dt);
   updateAcuaAmbience(dt);
   aidNavUpdate(dt); aidAmbUpdate(dt);
+  if(arenaHas("update")) arenaHook("update", dt); // mecanismos propios de la arena (La Fortaleza)
   if(axiomForceQuitFlash>0){
     axiomForceQuitFlash -= dt;
     canvas.style.filter = "invert(1)";
@@ -63,134 +69,9 @@ function update(dt){
     if(divinaWaveTimer<=0){ divinaWaveTimer = DIVINA_WAVE_INTERVAL; spawnDivinaWave(); }
   }
 
-  // player movement
-  player.moving = false;
-  if(Math.hypot(joyVec.x,joyVec.y) > 0.08){
-    facing = {x:joyVec.x, y:joyVec.y};
-    const l = Math.hypot(facing.x,facing.y); facing.x/=l; facing.y/=l;
-    player.fx = facing.x; player.fy = facing.y;
-    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1);
-    player.x += joyVec.x*spd*dt/1000;
-    player.y += joyVec.y*spd*dt/1000;
-    clampToArena(player);
-    resolveWallCollision(player);
-    player.moving = !player.fused;
-    player.animT += dt;
-  }
-  for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); samplePerformance(h, dt); }
-  if(player.attackAnim>0) player.attackAnim -= dt;
-  if(player.hurtTimer>0) player.hurtTimer -= dt;
-  if(basicHeld) triggerBasic(player);
-
-  // timers
-  player.basicCd = Math.max(0, player.basicCd-dt);
-  for(let i=0;i<3;i++) player.cds[i] = Math.max(0, player.cds[i]-dt);
-  player.ultCd = Math.max(0, player.ultCd-dt);
-  player.energy = Math.min(player.maxEnergy, player.energy + player.cls.energyRegen*runStats.energyRegenMult*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
-  if(runStats.regenPct>0 && player.alive) player.hp = Math.min(player.maxHp, player.hp + player.maxHp*runStats.regenPct*arenaRuleHealMult()*dt/1000);
-  if(player.shieldTimer>0){ player.shieldTimer-=dt; if(player.shieldTimer<=0) player.shield=0; }
-  if(player.stats) sampleTankPresence(player, dt);
-  if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp-=player.pendingHpBonus; player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
-  if(player.furyArmorTimer>0){
-    player.furyArmorTimer -= dt;
-    if(Math.random()<0.55) particles.push({x:player.x+(Math.random()-0.5)*22, y:player.y-8+(Math.random()-0.5)*12, vx:(Math.random()-0.5)*14, vy:-16-Math.random()*12, life:320, color:Math.random()<0.5?"#c62828":"#1a1414"});
-    if(player.furyArmorTimer<=0 && player.furyFinalSlash){ triggerFuryFinalSlash(player); player.furyFinalSlash=false; }
-  }
-  if(player.berserkTimer>0) player.berserkTimer -= dt;
-  if(player.dashFxTimer>0) player.dashFxTimer -= dt;
-  if(player.burnTimer>0){ player.burnTimer-=dt; damageHero(player, player.burnDmg*dt/1000); }
-  if(player.colossalTimer>0) player.colossalTimer -= dt;
-  if(player.growTimer>0){ player.growTimer -= dt; if(player.growTimer<=0) player.growScale=1; }
-  if(player.atkAuraTimer>0) player.atkAuraTimer -= dt;
-  if(player.shieldAuraTimer>0) player.shieldAuraTimer -= dt;
-  if(player.sigilTimer>0) player.sigilTimer -= dt;
-  if(player.stealthTimer>0){
-    player.stealthTimer -= dt;
-    if(player.stealthTimer<=0 && player.stealthPending){ player.stealthPending=false; performShadowStrike(player); }
-  }
-  if(player.spinTimer>0){
-    player.spinTimer -= dt; player.spinTick -= dt;
-    if(player.spinTick<=0){
-      player.spinTick = player.spinTickInterval;
-      for(const e of enemies){
-        if(!e.alive) continue;
-        if(distance(player,e) <= player.spinRadius) damageEnemy(e, player.spinDmg, {src:player});
-      }
-      for(let i=0;i<4;i++) particles.push({x:player.x+(Math.random()-0.5)*24, y:player.y+(Math.random()-0.5)*24, vx:0, vy:-14, life:220, color:"#9fe3ff"});
-    }
-  }
-  if(player.stormTimer>0){
-    player.stormTimer -= dt; player.stormTick -= dt;
-    // Armadura de fuego: aura de brasas constante mientras dura el Cataclismo (cosmético;
-    // el bonus real de defensa ya se aplicó como buff al lanzar la habilidad)
-    if(Math.random()<0.5) particles.push({x:player.x+(Math.random()-0.5)*20, y:player.y-10+(Math.random()-0.5)*10, vx:(Math.random()-0.5)*10, vy:-18-Math.random()*10, life:340, color:"#ff8a3d"});
-    // Campo de hielo: cristales que emergen del suelo dentro del área
-    if(Math.random()<0.10){
-      const ca=Math.random()*Math.PI*2, cr=Math.random()*player.stormRadius;
-      particles.push({x:player.x+Math.cos(ca)*cr, y:player.y+Math.sin(ca)*cr*0.55, life:700, maxLife:700, crystal:true, size:7+Math.random()*6, angle:Math.random()*Math.PI, color:"#bfe8ff"});
-    }
-    // 2ª y 3ª nova de hielo del Cataclismo, repartidas en el tiempo
-    if(player.stormNovaLeft>0){
-      player.stormNovaTimer -= dt;
-      if(player.stormNovaTimer<=0){
-        player.stormNovaTimer = player.stormNovaInterval;
-        player.stormNovaLeft--;
-        for(const e of enemies){
-          if(!e.alive) continue;
-          if(distance(player,e) <= player.stormRadius) damageEnemy(e, player.stormNovaDmg, {slow:player.stormNovaFreeze, slowDur:player.stormNovaFreezeDur, src:player});
-        }
-        frostNovaVFX(player, player.stormRadius*0.85, 8); // la ulti siempre se ve al máximo nivel visual
-      }
-    }
-    if(player.stormTick<=0){
-      player.stormTick = player.stormTickInterval;
-      const near = enemies.filter(e=>e.alive && distance(player,e)<=player.stormRadius);
-      if(near.length){
-        const target = near[(Math.random()*near.length)|0];
-        damageEnemy(target, player.stormDmg, {src:player, slow:0.3, slowDur:900});
-        pushChainBolt(target.x, target.y-180, target.x, target.y, 30, 360);
-        pushSpark("impacto", target.x, target.y, 60, 320);
-        target.electrifiedTimer = 420; target.electrifiedSize = 60;
-      }
-    }
-  }
-  if(player.regenTimer>0){ player.regenTimer-=dt; player.hp = Math.min(player.maxHp, player.hp + (player.regenPerSec||0)*dt/1000); }
-  if(player.stunTimer>0) player.stunTimer-=dt;
-  if(player.slowTimer>0){ player.slowTimer-=dt; if(player.slowTimer<=0) player.slowAmt=0; }
-  if(player.invulnTimer>0) player.invulnTimer-=dt;
-  if(player.teleportChargeTimer>0){
-    player.teleportChargeTimer -= dt;
-    if(player.teleportChargeTimer<=0 && player.teleportChargesBanked<player.teleportChargeMax){
-      player.teleportChargesBanked++;
-      player.teleportChargeTimer = player.teleportChargesBanked<player.teleportChargeMax ? TELEPORT_CHARGE_RECHARGE_MS : 0;
-    }
-  }
-  // La Profeta — Danza del Presagio: si deja pasar demasiado tiempo sin conectar un básico,
-  // pierde las cargas de Presagio acumuladas (ver PROFETA_COMBO_WINDOW_MS en triggerBasic).
-  if(player.presagioComboTimer>0){ player.presagioComboTimer-=dt; if(player.presagioComboTimer<=0) player.presagioCharges=0; }
-  if(player.comboTimer>0){ player.comboTimer-=dt; if(player.comboTimer<=0) player.comboCharges=0; }
-  if(player.ghostStepCritTimer>0) player.ghostStepCritTimer-=dt;
-  if(player.profetaSpinFxTimer>0) player.profetaSpinFxTimer-=dt;
-  // Visión del Inmortal: al terminar la inmunidad que ella concedió, una pequeña regeneración
-  // (reusa los mismos regenTimer/regenPerSec genéricos que ya aplica cualquier otro heal-over-time).
-  if(player.visionImmortalTimer>0){ player.visionImmortalTimer-=dt; if(player.visionImmortalTimer<=0){ player.regenTimer=Math.max(player.regenTimer||0,2000); player.regenPerSec=player.maxHp*(player.visionImmortalRegenPct||0.05); } }
-  // Ascensión del Elegido: mientras dura, sus cooldowns quedan pisados a un mínimo casi nulo
-  // cuadro a cuadro (así una habilidad ya en curso de enfriamiento también se ve beneficiada,
-  // no solo las que se lancen después). El resto del empoderamiento (daño/velocidad/defensa/
-  // robo de vida) usa los buffDmgMult/buffAtkSpeedMult/buffDefMult/buffLifesteal de siempre y
-  // se revierte solo, junto con esto, cuando buffTimer llega a 0 (ver más arriba).
-  if(player.ascensionTimer>0){
-    player.ascensionTimer -= dt;
-    player.cds[0]=Math.min(player.cds[0],60); player.cds[1]=Math.min(player.cds[1],60); player.cds[2]=Math.min(player.cds[2],60); player.ultCd=Math.min(player.ultCd,60);
-    if(player.ascensionTimer<=0) player.ascensionMaxTimer=0;
-  }
-  // Mientras está fusionada con el aliado (invisible/invulnerable), su posición sigue a la de
-  // él cuadro a cuadro; al terminar la fusión (stealthTimer llega a 0) vuelve a responder a
-  // sus propios controles justo donde haya quedado el aliado.
-  if(player.ascensionFusedWith){
-    if(player.stealthTimer>0 && player.ascensionFusedWith.alive){ player.x=player.ascensionFusedWith.x; player.y=player.ascensionFusedWith.y; }
-    else { player.ascensionFusedWith=null; player.fused=false; }
-  }
+  updateControlledHero(dt);
+  // B1 cooperativo: los héroes de los invitados usan exactamente el mismo código (ver net-game.js)
+  if(netMatch && netMatch.role==="host") netHostUpdateRemotes(dt);
 
   // enemies
   for(const e of enemies){
@@ -229,7 +110,7 @@ function update(dt){
     // El enemigo persigue al héroe vivo más cercano (jugador o aliado), salvo que esté provocado
     let tgt;
     if(e.tauntedBy && e.tauntedBy.alive && e.tauntTimer>0){ tgt = e.tauntedBy; e.tauntTimer -= dt; }
-    else { tgt = nearestHeroTo(e.x, e.y); }
+    else { tgt = arenaHas("enemyTarget") ? arenaHook("enemyTarget", e) : nearestHeroTo(e.x, e.y); }
     if(!tgt) continue;
     const dx = tgt.x-e.x, dy = tgt.y-e.y;
     const dist = Math.hypot(dx,dy)||1;
@@ -322,6 +203,9 @@ function update(dt){
     // ---- Habilidades especiales de jefes/subjefes (módulo updateBossSkills): mientras un
     // enemigo canaliza o embiste, no se mueve ni ataca de la forma normal. ----
     if(BOSS_SKILL_TYPES[e.type] && updateBossSkills(e, dt, tgt, dist)) continue;
+
+    // ---- IA propia de la arena (ARENA_DEFS[arena].enemyAI[tipo]): true = ya actuó este cuadro ----
+    { const aai = arenaEnemyAI(e.type); if(aai && aai(e, dt, tgt, dist)) continue; }
 
     // ---- Arena Acuática: habilidades de los enemigos propios (mismo criterio que el resto del
     // roster de jefes/subjefes de arriba -bloques por e.type, cooldowns propios en el propio
@@ -559,6 +443,7 @@ function update(dt){
   }
   enemies = enemies.filter(e=>e.alive || e.hp>-9999);
   enemies = enemies.filter(e=>e.alive);
+  if(arenaHas("afterEnemies")) arenaHook("afterEnemies"); // p.ej. nadie queda sobre la lava tras un empujón
 
   // projectiles
   for(const p of projectiles){
@@ -583,31 +468,13 @@ function update(dt){
       }
     }
   }
-  projectiles = projectiles.filter(p=>p.life>0 && Math.hypot(p.x-player.x,p.y-player.y)<2200);
+  projectiles = projectiles.filter(p=>p.life>0 && (Math.hypot(p.x-player.x,p.y-player.y)<2200 || (arenaDef() && heroes.some(h=>Math.hypot(p.x-h.x,p.y-h.y)<2200))));
 
-  // particles
-  let _pw = 0;
-  for(let i=0;i<particles.length;i++){
-    const pt = particles[i];
-    pt.life -= dt;
-    if(pt.x!==undefined && pt.vx!==undefined){ pt.x+=pt.vx*dt/1000; pt.y+=pt.vy*dt/1000; }
-    if(pt.life>0) particles[_pw++] = pt;
-  }
-  particles.length = _pw;
-  if(particles.length > 900){
-    // tope dinámico: se descartan primero las chispas simples más viejas (nunca anillos/telegraphs)
-    let drop = particles.length - 650, w2 = 0;
-    for(let i=0;i<particles.length;i++){
-      const pt = particles[i];
-      const plain = !pt.ring && !pt.warnRing && !pt.corpse && !pt.bolt && !pt.spin && !pt.slash && !pt.crystal && !pt.runeRing;
-      if(drop>0 && plain){ drop--; continue; }
-      particles[w2++] = pt;
-    }
-    particles.length = w2;
-  }
+  stepParticles(dt);
   for(const em of embers){ em.y += em.vy*dt/1000; em.phase += dt/1000; if(em.y < player.y-700) em.y = player.y+700; }
 
   updateAllies(dt);
+  updateRevives(dt);
   updatePotions(dt);
   updateFireWalls(dt);
   updateTraps(dt);
@@ -627,7 +494,7 @@ function update(dt){
     // El nivel de cuenta de los héroes acorta más este intervalo (partyLevelScale) -sobre
     // el piso ya reducido a 560ms-, para que una cuenta veterana enfrente más enemigos por
     // minuto sin depender solo del nivel de la arena en esta partida puntual.
-    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate);
+    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1));
     if(spawnTimer<=0 && !activeChampion){
       spawnTimer = spawnInterval;
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo
@@ -639,7 +506,7 @@ function update(dt){
     } else if(spawnTimer<=0){
       spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el campeón caiga
     }
-    const subBossLevels = (currentArena==="hielo"||currentArena==="laberinto"||currentArena==="acuatica") ? [6] : (currentArena==="bosque" ? [9] : [4,7,9]);
+    const subBossLevels = arenaDef() ? (arenaDef().subBossLevels||[]) : ((currentArena==="hielo"||currentArena==="laberinto"||currentArena==="acuatica") ? [6] : (currentArena==="bosque" ? [9] : [4,7,9]));
     if(subBossLevels.includes(runLevel) && !midBossSpawned && levelTimer > levelDuration*0.45){
       midBossSpawned = true;
       if(currentArena==="bosque"){
@@ -674,7 +541,7 @@ function update(dt){
       }
     }
     levelTimer += dt;
-    if(levelTimer >= levelDuration && !levelClearing){
+    if(levelTimer >= levelDuration && !levelClearing && !arenaHook("holdLevel")){
       if(runLevel === LEVEL_COUNT){
         startBossFight();
       } else {
@@ -687,4 +554,160 @@ function update(dt){
 
   updateBossHud(dt);
   updateHUD();
+}
+
+// Controles, temporizadores y efectos por tiempo del héroe que maneja una persona (`player`).
+// En multijugador el anfitrión la usa también para cada invitado (netWithHero presta `player`).
+function updateControlledHero(dt){
+  // player movement
+  player.moving = false;
+  if(Math.hypot(joyVec.x,joyVec.y) > 0.08){
+    facing = {x:joyVec.x, y:joyVec.y};
+    const l = Math.hypot(facing.x,facing.y); facing.x/=l; facing.y/=l;
+    player.fx = facing.x; player.fy = facing.y;
+    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1) * heroSpeedMult(player);
+    player.x += joyVec.x*spd*dt/1000;
+    player.y += joyVec.y*spd*dt/1000;
+    clampToArena(player);
+    resolveWallCollision(player);
+    player.moving = !player.fused;
+    player.animT += dt;
+  }
+  // objetos/sets/rendimiento de TODO el equipo: una sola vez por cuadro (no por cada invitado)
+  if(!player.isRemote) for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); samplePerformance(h, dt); }
+  if(player.attackAnim>0) player.attackAnim -= dt;
+  if(player.hurtTimer>0) player.hurtTimer -= dt;
+  if(basicHeld) triggerBasic(player);
+
+  // timers
+  player.basicCd = Math.max(0, player.basicCd-dt);
+  for(let i=0;i<3;i++) player.cds[i] = Math.max(0, player.cds[i]-dt);
+  player.ultCd = Math.max(0, player.ultCd-dt);
+  player.energy = Math.min(player.maxEnergy, player.energy + player.cls.energyRegen*runStats.energyRegenMult*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
+  if(runStats.regenPct>0 && player.alive) player.hp = Math.min(player.maxHp, player.hp + player.maxHp*runStats.regenPct*arenaRuleHealMult()*dt/1000);
+  if(player.shieldTimer>0){ player.shieldTimer-=dt; if(player.shieldTimer<=0) player.shield=0; }
+  if(player.stats) sampleTankPresence(player, dt);
+  if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp-=player.pendingHpBonus; player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
+  if(player.furyArmorTimer>0){
+    player.furyArmorTimer -= dt;
+    if(Math.random()<0.55) particles.push({x:player.x+(Math.random()-0.5)*22, y:player.y-8+(Math.random()-0.5)*12, vx:(Math.random()-0.5)*14, vy:-16-Math.random()*12, life:320, color:Math.random()<0.5?"#c62828":"#1a1414"});
+    if(player.furyArmorTimer<=0 && player.furyFinalSlash){ triggerFuryFinalSlash(player); player.furyFinalSlash=false; }
+  }
+  if(player.berserkTimer>0) player.berserkTimer -= dt;
+  if(player.dashFxTimer>0) player.dashFxTimer -= dt;
+  if(player.burnTimer>0){ player.burnTimer-=dt; damageHero(player, player.burnDmg*dt/1000); }
+  if(player.colossalTimer>0) player.colossalTimer -= dt;
+  if(player.growTimer>0){ player.growTimer -= dt; if(player.growTimer<=0) player.growScale=1; }
+  if(player.atkAuraTimer>0) player.atkAuraTimer -= dt;
+  if(player.shieldAuraTimer>0) player.shieldAuraTimer -= dt;
+  if(player.sigilTimer>0) player.sigilTimer -= dt;
+  if(player.stealthTimer>0){
+    player.stealthTimer -= dt;
+    if(player.stealthTimer<=0 && player.stealthPending){ player.stealthPending=false; performShadowStrike(player); }
+  }
+  if(player.spinTimer>0){
+    player.spinTimer -= dt; player.spinTick -= dt;
+    if(player.spinTick<=0){
+      player.spinTick = player.spinTickInterval;
+      for(const e of enemies){
+        if(!e.alive) continue;
+        if(distance(player,e) <= player.spinRadius) damageEnemy(e, player.spinDmg, {src:player});
+      }
+      for(let i=0;i<4;i++) particles.push({x:player.x+(Math.random()-0.5)*24, y:player.y+(Math.random()-0.5)*24, vx:0, vy:-14, life:220, color:"#9fe3ff"});
+    }
+  }
+  if(player.stormTimer>0){
+    player.stormTimer -= dt; player.stormTick -= dt;
+    // Armadura de fuego: aura de brasas constante mientras dura el Cataclismo (cosmético;
+    // el bonus real de defensa ya se aplicó como buff al lanzar la habilidad)
+    if(Math.random()<0.5) particles.push({x:player.x+(Math.random()-0.5)*20, y:player.y-10+(Math.random()-0.5)*10, vx:(Math.random()-0.5)*10, vy:-18-Math.random()*10, life:340, color:"#ff8a3d"});
+    // Campo de hielo: cristales que emergen del suelo dentro del área
+    if(Math.random()<0.10){
+      const ca=Math.random()*Math.PI*2, cr=Math.random()*player.stormRadius;
+      particles.push({x:player.x+Math.cos(ca)*cr, y:player.y+Math.sin(ca)*cr*0.55, life:700, maxLife:700, crystal:true, size:7+Math.random()*6, angle:Math.random()*Math.PI, color:"#bfe8ff"});
+    }
+    // 2ª y 3ª nova de hielo del Cataclismo, repartidas en el tiempo
+    if(player.stormNovaLeft>0){
+      player.stormNovaTimer -= dt;
+      if(player.stormNovaTimer<=0){
+        player.stormNovaTimer = player.stormNovaInterval;
+        player.stormNovaLeft--;
+        for(const e of enemies){
+          if(!e.alive) continue;
+          if(distance(player,e) <= player.stormRadius) damageEnemy(e, player.stormNovaDmg, {slow:player.stormNovaFreeze, slowDur:player.stormNovaFreezeDur, src:player});
+        }
+        frostNovaVFX(player, player.stormRadius*0.85, 8); // la ulti siempre se ve al máximo nivel visual
+      }
+    }
+    if(player.stormTick<=0){
+      player.stormTick = player.stormTickInterval;
+      const near = enemies.filter(e=>e.alive && distance(player,e)<=player.stormRadius);
+      if(near.length){
+        const target = near[(Math.random()*near.length)|0];
+        damageEnemy(target, player.stormDmg, {src:player, slow:0.3, slowDur:900});
+        pushChainBolt(target.x, target.y-180, target.x, target.y, 30, 360);
+        pushSpark("impacto", target.x, target.y, 60, 320);
+        target.electrifiedTimer = 420; target.electrifiedSize = 60;
+      }
+    }
+  }
+  if(player.regenTimer>0){ player.regenTimer-=dt; player.hp = Math.min(player.maxHp, player.hp + (player.regenPerSec||0)*dt/1000); }
+  if(player.stunTimer>0) player.stunTimer-=dt;
+  if(player.slowTimer>0){ player.slowTimer-=dt; if(player.slowTimer<=0) player.slowAmt=0; }
+  if(player.invulnTimer>0) player.invulnTimer-=dt;
+  if(player.teleportChargeTimer>0){
+    player.teleportChargeTimer -= dt;
+    if(player.teleportChargeTimer<=0 && player.teleportChargesBanked<player.teleportChargeMax){
+      player.teleportChargesBanked++;
+      player.teleportChargeTimer = player.teleportChargesBanked<player.teleportChargeMax ? TELEPORT_CHARGE_RECHARGE_MS : 0;
+    }
+  }
+  // La Profeta — Danza del Presagio: si deja pasar demasiado tiempo sin conectar un básico,
+  // pierde las cargas de Presagio acumuladas (ver PROFETA_COMBO_WINDOW_MS en triggerBasic).
+  if(player.presagioComboTimer>0){ player.presagioComboTimer-=dt; if(player.presagioComboTimer<=0) player.presagioCharges=0; }
+  if(player.comboTimer>0){ player.comboTimer-=dt; if(player.comboTimer<=0) player.comboCharges=0; }
+  if(player.ghostStepCritTimer>0) player.ghostStepCritTimer-=dt;
+  if(player.profetaSpinFxTimer>0) player.profetaSpinFxTimer-=dt;
+  // Visión del Inmortal: al terminar la inmunidad que ella concedió, una pequeña regeneración
+  // (reusa los mismos regenTimer/regenPerSec genéricos que ya aplica cualquier otro heal-over-time).
+  if(player.visionImmortalTimer>0){ player.visionImmortalTimer-=dt; if(player.visionImmortalTimer<=0){ player.regenTimer=Math.max(player.regenTimer||0,2000); player.regenPerSec=player.maxHp*(player.visionImmortalRegenPct||0.05); } }
+  // Ascensión del Elegido: mientras dura, sus cooldowns quedan pisados a un mínimo casi nulo
+  // cuadro a cuadro (así una habilidad ya en curso de enfriamiento también se ve beneficiada,
+  // no solo las que se lancen después). El resto del empoderamiento (daño/velocidad/defensa/
+  // robo de vida) usa los buffDmgMult/buffAtkSpeedMult/buffDefMult/buffLifesteal de siempre y
+  // se revierte solo, junto con esto, cuando buffTimer llega a 0 (ver más arriba).
+  if(player.ascensionTimer>0){
+    player.ascensionTimer -= dt;
+    player.cds[0]=Math.min(player.cds[0],60); player.cds[1]=Math.min(player.cds[1],60); player.cds[2]=Math.min(player.cds[2],60); player.ultCd=Math.min(player.ultCd,60);
+    if(player.ascensionTimer<=0) player.ascensionMaxTimer=0;
+  }
+  // Mientras está fusionada con el aliado (invisible/invulnerable), su posición sigue a la de
+  // él cuadro a cuadro; al terminar la fusión (stealthTimer llega a 0) vuelve a responder a
+  // sus propios controles justo donde haya quedado el aliado.
+  if(player.ascensionFusedWith){
+    if(player.stealthTimer>0 && player.ascensionFusedWith.alive){ player.x=player.ascensionFusedWith.x; player.y=player.ascensionFusedWith.y; }
+    else { player.ascensionFusedWith=null; player.fused=false; }
+  }
+}
+// Partículas simples (chispas, anillos, cadáveres...): avanzan y se descartan al terminar.
+function stepParticles(dt){
+  let _pw = 0;
+  for(let i=0;i<particles.length;i++){
+    const pt = particles[i];
+    pt.life -= dt;
+    if(pt.x!==undefined && pt.vx!==undefined){ pt.x+=pt.vx*dt/1000; pt.y+=pt.vy*dt/1000; }
+    if(pt.life>0) particles[_pw++] = pt;
+  }
+  particles.length = _pw;
+  if(particles.length > 900){
+    // tope dinámico: se descartan primero las chispas simples más viejas (nunca anillos/telegraphs)
+    let drop = particles.length - 650, w2 = 0;
+    for(let i=0;i<particles.length;i++){
+      const pt = particles[i];
+      const plain = !pt.ring && !pt.warnRing && !pt.corpse && !pt.bolt && !pt.spin && !pt.slash && !pt.crystal && !pt.runeRing;
+      if(drop>0 && plain){ drop--; continue; }
+      particles[w2++] = pt;
+    }
+    particles.length = w2;
+  }
 }

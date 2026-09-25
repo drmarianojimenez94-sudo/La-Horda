@@ -1,0 +1,16 @@
+# LA HORDA — B1 COOPERATIVE PLAYTEST: servidor de salas (server/relay.js) en Render.
+# Render lo lee solo al crear un "Blueprint" desde este repositorio (ver docs/MULTIPLAYER_B1.md).
+# No contiene secretos: el servidor no necesita claves ni base de datos.
+services:
+  - type: web
+    name: la-horda-relay
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node relay.js
+    healthCheckPath: /health
+    envVars:
+      # desde qué páginas se puede usar el servidor (las previews del juego)
+      - key: ALLOWED_ORIGINS
+        value: https://rawcdn.githack.com,https://raw.githack.com

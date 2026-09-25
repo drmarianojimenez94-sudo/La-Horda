@@ -8,9 +8,11 @@
    END SCREENS
    ============================================================ */
 function showGameOverScreen(divinaOutcome){
+  if(netIsHost()) netHostAnnounceEnd(false); // B1: la derrota es de todo el equipo
   setState("gameover");
   const title = document.getElementById("go-title");
   const retryBtn = document.getElementById("retry-btn");
+  retryBtn.classList.remove("hidden");
   if(divinaMode || divinaOutcome){
     divinaMode = false;
     if(divinaOutcome==="victory"){
@@ -39,7 +41,8 @@ function showGameOverScreen(divinaOutcome){
   }
   title.textContent = "La Horda te ha consumido";
   title.style.color = "#c62828";
-  retryBtn.textContent = "Reintentar desde el Nivel 1";
+  retryBtn.textContent = netMatch ? "VOLVER AL LOBBY" : "Reintentar desde el Nivel 1";
+  if(netMatch) netOnEndScreen(false); else netEndLabels();
   const penalty = applyArenaFailurePenalty(player.classKey);
   // Derrota: la performance igual se muestra, y a veces hay un objeto de consuelo (ver DEFEAT_LOOT)
   const perf = computePerformance(player);
@@ -73,8 +76,9 @@ function buildVictoryData(){
   const loot = grantEndOfRunLoot(classKey, perf, true);
   const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
-  // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño.
-  const victoryXpBonus = Math.round(20 * perf.score * (1 + perf.score/100));
+  // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño. Es lo que
+  // separa a quien juega bien (pocas derrotas) en la curva de la campaña (ver xpToNext).
+  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
   grantXP(classKey, victoryXpBonus);
   return {
     classKey, perf, score:perf.score, rewards:loot.items, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
@@ -200,6 +204,8 @@ function renderVictoryStep(){
   const isLast = victoryStep === VICTORY_STEPS.length-1;
   nextBtn.textContent = isLast ? "Continuar" : "Continuar";
   nextBtn.classList.toggle("hidden", false);
+  document.getElementById("again-btn").textContent = (netMatch || netInRoom()) ? "VOLVER AL LOBBY" : "Volver a entrar";
+  netEndLabels();
   document.getElementById("again-btn").classList.toggle("hidden", !isLast);
   document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
   if(isLast) nextBtn.classList.add("hidden");
@@ -218,11 +224,13 @@ function renderVictoryStep(){
 }
 
 function showVictoryScreen(){
+  if(netIsHost()) netHostAnnounceEnd(true); // B1: todos terminan la misma partida
   setState("victory");
   playSfx("victory");
   victoryData = buildVictoryData();
   victoryStep = 0;
   renderVictoryStep();
+  if(netMatch) netOnEndScreen(true);
 }
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
   if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); }

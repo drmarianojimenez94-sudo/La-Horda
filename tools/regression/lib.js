@@ -7,8 +7,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function seedSave(opts = {}) {
   const champs = ["tanque","guerrero","mago","soporte","segador","axiom","profeta","musashi","cazadora","nigromante"];
-  const save = { champions:{}, gold: opts.gold ?? 500, gems:0, divineArenaUnlocked: opts.divina ?? true, itemSchemaV:2,
-    arenasCleared: opts.cleared || {bosque:true,hielo:true,laberinto:true,infernal:true}, relics:{hp:0,dmg:0,def:0,vel:0} };
+  const save = { champions:{}, gold: opts.gold ?? 500, gems:0, playtestV1Bonus: opts.bonus ?? true, campaignResetV1:true, starterChosen:true, divineArenaUnlocked: opts.divina ?? true, itemSchemaV:2,
+    arenasCleared: opts.cleared || {bosque:true,acuatica:true,hielo:true,laberinto:true,infernal:true}, relics:{hp:0,dmg:0,def:0,vel:0} };
   champs.forEach(c => { save.champions[c] = { level: opts.level ?? 20, xp:0, talentPoints: opts.tp ?? 0, unlocked:true,
     skillMastery:[{useXp:0,useLvl:1,alloc:opts.alloc ?? 10},{useXp:0,useLvl:1,alloc:opts.alloc ?? 10},{useXp:0,useLvl:1,alloc:opts.alloc ?? 10}],
     ultMastery:{useXp:0,useLvl:1,alloc:opts.alloc ?? 10}, inventory:[], equipment:{} }; });

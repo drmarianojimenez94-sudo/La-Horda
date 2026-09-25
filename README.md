@@ -36,8 +36,10 @@ tocar el balance: ver [ARCHITECTURE.md](ARCHITECTURE.md).**
 
 ## Contenido actual
 
-- **Arena** (modo horda): 5 escenarios — Ruinas del Bosque, Arena Acuática, Arena de Hielo,
-  Laberinto Maldito y Arena Infernal —, 10 niveles cada uno, subjefes y jefe final por arena.
+- **Arena** (modo horda): 6 escenarios — Ruinas del Bosque, Arena Acuática, **La Fortaleza Sin
+  Fin** (Arena III: mapa grande por sectores con puentes que se reconfiguran y trampas; ver
+  `docs/arena-identity/fortaleza.md`), Arena de Hielo, Laberinto Maldito y Arena Infernal —,
+  10 niveles cada uno, subjefes y jefe final por arena.
 - **10 campeones**: Tanque, Asesino, Mago, Soporte, Segador Olvidado, Axiom, La Profeta,
   Musashi, Sylva (Cazadora del Bosque) y Nigromante, cada uno con 3 habilidades y ulti.
 - **Arena Divina**: asedio 4v4 con torres, castillos, minions y campeones divinos.

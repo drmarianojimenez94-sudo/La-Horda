@@ -158,6 +158,11 @@ function drawEnemyAtlasPack(e){
     arr = P.sets.death;
     if(e._dyingP != null) n = Math.floor(e._dyingP*arr.length*1.25);
     else { if(!e._diedAt) e._diedAt = animNow; n = Math.floor((animNow-e._diedAt)/220); }
+  } else if(e.packSet && e.packTimer>0 && P.sets[e.packSet]){
+    // animación de habilidad pedida por la IA (cadena, aliento, embestida, fases del jefe...)
+    arr = P.sets[e.packSet];
+    const q = e.packDur ? 1 - e.packTimer/e.packDur : 0;
+    n = arr.length > 1 && e.packDur > 1500 ? Math.floor((e.animT||0)/150) : Math.floor(Math.max(0, Math.min(0.999, q))*arr.length);
   } else if(e.attackAnim>0){
     arr = P.sets.atk; n = Math.floor(Math.max(0, Math.min(0.999, 1 - e.attackAnim/(e._pkAtkMax||280)))*arr.length);
   } else if(e.hitFlash>55){
@@ -168,9 +173,10 @@ function drawEnemyAtlasPack(e){
     arr = P.sets.walk; n = Math.floor((e.animT||0)/140);
   }
   const v = e.alive ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
-  const s = e.radius*2.6/P.refH;
+  const s = e.radius*(P.hMul||2.6)/P.refH;
   const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
-  drawAnimFrameSized(P.atlas, clip, 0, e.x, e.y, P.fw*s, P.fh*s, 0.5, P.anchor, e.fx < -0.12, undefined);
+  // voladores (Dragones de la Fortaleza): el cuerpo se dibuja en el aire, la sombra queda en el piso
+  drawAnimFrameSized(P.atlas, clip, 0, e.x, e.y + (e.hover||0), P.fw*s, P.fh*s, 0.5, P.anchor, e.fx < -0.12, undefined);
   return true;
 }
 function drawPackSprite(e){

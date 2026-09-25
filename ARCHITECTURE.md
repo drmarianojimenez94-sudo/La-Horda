@@ -109,6 +109,9 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
    la partida también está **Mis Campeones** (`js/ui/champions-hub.js`) con lo mismo por campeón.
    Objetos y talentos se cambian SOLO ahí (el juego es multijugador: en partida no hay pausa);
    las habilidades se suben en partida con los "+" del HUD (`js/ui/hud.js`).
+   **Multijugador cooperativo B1** (`js/net/`, servidor en `server/`): la pre-sala puede crear
+   una sala online real (hasta 4 humanos); el anfitrión simula la única partida y los invitados
+   la reciben y mandan sus intenciones. Ver `docs/MULTIPLAYER_B1.md`.
 4. **Comenzar** → `startRun()` en `js/core/run.js` crea al jugador y los 3 aliados
    (`js/champions/hero-factory.js`), arma el escenario (`js/arenas/arena-identity.js`) y arranca
    el nivel (`beginLevel` en `js/systems/waves.js`). La Arena Divina entra por
@@ -140,7 +143,7 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Puntaje por rol y rareza de recompensas | `js/data/rewards.js` | `SCORE_CONFIG`, `RARITY_WEIGHTS_*` |
 | Refuerzos entre niveles | `js/data/buffs.js` | `BUFF_POOL` |
 | Arena Divina | `js/data/divina.js` | `DIVINA_*` |
-| Curva de XP, castigo por abandonar | `js/systems/progression.js` | `xpToNext`, `ARENA_FAIL_PENALTY_PCT`, `DEV_XP_MULT` |
+| Curva de XP, castigo por abandonar | `js/systems/progression.js` | `xpToNext`, `ARENA_FAIL_PENALTY_PCT` |
 | Maestría de habilidades | `js/systems/mastery.js` | `TALENT_MAX`, `useXpThreshold` |
 | Radio de arena, niveles por arena, cámara | `js/core/constants.js` | `ARENA_RADIUS`, `LEVEL_COUNT`, `CAM_ZOOM` |
 
@@ -157,8 +160,11 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Sets (piezas, bonus 2/3/completo) y su comportamiento en combate | `js/data/sets.js`, `js/systems/set-effects.js` | `SET_DB`, `set*` hooks |
 | Viewport del juego / escala de cámara | `js/core/constants.js`, `js/core/canvas.js` | `VIEW_WORLD_SHORT`, `VIEW_WORLD_LONG_MAX` |
 
-⚠ `DEV_XP_MULT` (en `js/systems/progression.js`) vale **10** (antes 100): es un multiplicador de
-**prueba**. Hay que volverlo a 1 antes de publicar una versión "real".
+Modo campaña: ya no hay multiplicador de XP de prueba (`DEV_XP_MULT` se eliminó); la curva
+`xpToNext` está calibrada con campañas simuladas (`tools/playtest`) para terminar las 6 arenas
+cerca del nivel 40. Campeón de regalo al empezar (`js/ui/starter-select.js`), el resto en la Tienda
+a `CHAMPION_PRICE_GOLD` (1.000); el reinicio a nivel 1 es `campaignResetV1` en
+`js/storage/save.js`.
 
 ### Game feel (dónde está cada cosa)
 
@@ -241,6 +247,11 @@ Si falta el arte real, el juego dibuja un pixel art de respaldo desde `js/data/p
 4. Uso por bots: `js/ai/allies.js`.
 
 ## 9. Cómo agregar una arena
+
+**Camino recomendado (desde la Arena III):** carpeta propia `js/arenas/<clave>/` registrada en
+`ARENA_DEFS` (`js/arenas/common/arena-registry.js`), sin tocar el motor: ver
+`docs/arena-identity/README.md` y, como ejemplo completo, `js/arenas/fortaleza/`. El camino
+clásico de abajo es el que siguen las 5 arenas originales.
 
 1. `js/data/arenas.js`: entrada en `ARENA_MODS` (nombre, modificadores) y en `ARENA_ORDER`.
 2. `js/enemies/spawning.js`: su `spawnPoolFor...` y que `spawnPoolFor()` la use.

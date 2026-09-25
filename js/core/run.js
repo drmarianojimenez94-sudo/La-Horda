@@ -61,8 +61,19 @@ function pickLobbyAllies(mine){
 function lobbyAlliesValid(mine){
   return Array.isArray(lobbyAllies) && lobbyAllies.length>0 && lobbyAllies.every(k=>CLASSES[k] && k!==mine);
 }
+// Estado TEMPORAL de una partida que no vivía en los arrays de arriba: se limpia al empezar cada
+// partida (reintentar / volver a jugar desde la sala) para que nada de la anterior se filtre:
+// congelamiento de Axiom, cortes demorados y duelos de Musashi, efectos, pulsos del jefe.
+function resetRunTransients(){
+  axiomForceQuitFlash = 0; axiomFreezeTimer = 0; axiomFreezeCaster = null; axiomForceQuitPending = null;
+  if(typeof canvas!=="undefined" && canvas && canvas.style) canvas.style.filter = "";
+  musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];
+  activeAxiomVfx = []; bossDangerPulse = 0; champFx = [];
+  boss = null; bossActive = false; activeChampion = null; midBossSpawned = false; levelClearing = 0;
+}
 function startRun(fromLevel){
   runLevel = fromLevel || 1;
+  resetRunTransients();
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
   runEnding = false;
@@ -81,6 +92,7 @@ function startRun(fromLevel){
   resetFeedback();
   hazardZones = []; arenaRuleTimer = 8000; resetArenaRule();
   bossHudHide();
+  if(typeof arenaTitleCardHide==="function") arenaTitleCardHide();
   player = makePlayer();
   // Talentos de crítico (sección 4/32): a diferencia de dmg/cd/def/lifesteal -que se consultan
   // en caliente vía passiveSum en cada fórmula-, crítico vive en runStats (igual que los buffs
@@ -99,7 +111,8 @@ function startRun(fromLevel){
   others.forEach((k,i)=>{
     autoEquipBest(k); // el bot se pone lo mejor que tenga disponible de partidas anteriores
     const ang = (i/others.length)*Math.PI*2 + Math.PI/4;
-    allies.push(makeHero(k, true, Math.cos(ang)*70, Math.sin(ang)*70));
+    // B1: los campeones de amigos conectados entran como humanos (sin los ajustes de bot)
+    allies.push(makeHero(k, !netIsHumanChamp(k), Math.cos(ang)*70, Math.sin(ang)*70));
   });
   heroes = [player, ...allies];
   for(const h of heroes) resetSetRunState(h);
@@ -108,10 +121,12 @@ function startRun(fromLevel){
   partyBuilt = false;
   if(floorPatterns[currentArena]){ floorPattern = floorPatterns[currentArena]; } else { buildFloorTile(); }
   if(!SPRITES.guerrero){ buildSprites(); }
-  buildArenaDecor();
+  // B1: en cooperativo el escenario sale de una semilla compartida (idéntico para todos)
+  if(netMatch) netWithSeed(netMatch.seed, ()=> buildArenaDecor()); else buildArenaDecor();
   for(let i=0;i<60;i++) embers.push(spawnEmber());
   updateAbilityButtons();
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
+  if(arenaHas("runStart")) arenaHook("runStart"); // mapa propio: estado inicial y héroes en la entrada
   beginLevel();
   setState("playing");
 }
@@ -193,7 +208,7 @@ function onBossDefeated(){
   grantGold(80);
   // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
   // save.arenasCleared trackea cada una de verdad y persiste.
-  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false};
+  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false};
   save.arenasCleared[currentArena] = true;
   if(ARENA_ORDER.every(a=>save.arenasCleared[a]) && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;
@@ -205,6 +220,9 @@ function onBossDefeated(){
 
 function onPlayerDeath(){
   player.alive = false;
+  // B1: en cooperativo caer no termina la partida mientras quede algún humano en pie (te
+  // pueden revivir); la derrota la decide netHostCheckDefeat.
+  if(netIsHost()){ showBanner(`${player.netName||player.cls.name} ha caído`); return; }
   if(runEnding) return; // la victoria ya estaba en camino: no se pisa con una derrota
   runEnding = true;
   runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });

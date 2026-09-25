@@ -73,6 +73,7 @@ function render(){
   drawAxiomZones();
   drawSylvaRainZones();
   drawAxiomVfxActive();
+  drawChampFxGround(); // El Libertador / Eren: escarcha, grietas, avisos de pisada
 
   // héroes caídos (se dibujan bajo los vivos); en la Arena Divina también los campeones rivales,
   // que antes desaparecían en el acto al morir
@@ -118,6 +119,7 @@ function render(){
     }
   }
   for(const h of heroes){ if(h.wolf) drawSpectralWolf(h.wolf); }
+  if(netMatch) netDrawNameTags(); // B1: nombre de cada amigo sobre su campeón
   drawMusashiAfterimages();
   drawDownedMarkers();
   for(const h of heroes){
@@ -127,6 +129,8 @@ function render(){
   drawAcua2Overlays();
   drawBossSkillOverlay();
   vfxDrawSprites();
+  if(arenaHas("drawTop")) arenaHook("drawTop");
+  drawChampFxTop(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
 
   // proyectiles: núcleo + glow cacheado + estela (sin shadowBlur, que es caro en mobile)
   for(const p of projectiles){
@@ -229,5 +233,7 @@ function render(){
   drawFloatTexts();          // números de daño/curación y avisos, por encima de todo el mundo
 
   ctx.restore();
+  if(arenaHas("drawScreen")) arenaHook("drawScreen"); // minimapa de las arenas grandes
+  drawChampFxScreen();       // Cruce de los Andes (Cordillera + nieve) y siluetas de El Retumbar
   drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }

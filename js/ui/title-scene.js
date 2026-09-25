@@ -6,7 +6,7 @@
    ojos rojos. Brasas que suben y resplandor de fuego. Solo se anima mientras el título está a
    la vista (~30 fps) y se ajusta al tamaño/densidad de la pantalla.
    ============================================================ */
-const TITLE_HERO_KEYS = ["guerrero","tanque","mago","soporte","segador","axiom","profeta","musashi","cazadora","nigromante"];
+const TITLE_HERO_KEYS = ["guerrero","tanque","mago","soporte","segador","axiom","profeta","musashi","cazadora","nigromante","libertador","eren"];
 let _titleRaf = null, _titleLast = 0, _titleCast = null, _titleEmbers = [], _titleEyes = [];
 // Cada set de arte viene a otra escala: se mide la altura real (píxeles opacos) de cada campeón
 // una vez cargado su arte y se normaliza, para que el ejército se vea parejo.
@@ -84,8 +84,13 @@ function _titleFrame(now){
   }
   // ejército de héroes marchando (caminata en el lugar + avance lento que da la vuelta); las
   // filas de atrás, más chicas y más transparentes, dan profundidad.
-  if(now - _titleNormAt > 800 && TITLE_HERO_KEYS.some(k=>!_titleNorm[k])){ _titleNormAt = now; _titleMeasure(); }
+  // mientras dice "Cargando…" no se dibuja ningún campeón: así nunca aparece un arte a medio
+  // cargar (o el respaldo viejo); el ejército entra recién con el arte definitivo.
+  const contBtn = document.getElementById("title-continue-btn");
+  const loading = !!(contBtn && contBtn.disabled && /Cargando/.test(contBtn.textContent));
+  if(!loading && now - _titleNormAt > 800 && TITLE_HERO_KEYS.some(k=>!_titleNorm[k])){ _titleNormAt = now; _titleMeasure(); }
   for(const c of _titleCast){
+    if(loading) break;
     c.t += dt;
     const drift = ((c.t*c.spd/1000) % (W*0.08)) - W*0.04;
     const x = c.baseX + drift, bob = Math.sin(c.t/160 + c.ph)*1.2;
