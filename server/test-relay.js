@@ -70,6 +70,26 @@ function client(){
   back.send({ t: "join", protocol: 1, code, name: "Tercero", clientId: "G2", build: "b1" });
   const rj = await back.wait(m => m.t === "joined" || m.t === "error");
   check("reconnect.same_slot", rj.t === "joined" && rj.slot === 3 && rj.reconnect, rj);
+  // en partida, LISTO no cuenta (se marca en la sala)
+  guests[1].send({ t: "update", ready: true });
+  const rp = await host.wait(m => m.t === "room" && m.room.slots[2]);
+  check("ready.ignored_while_playing", rp.room.slots[2].ready === false, rp.room.slots[2]);
+  // fin de partida: la MISMA sala vuelve a esperar, todos siguen, LISTO en NO
+  host.inbox.length = 0; guests[0].inbox.length = 0;
+  host.send({ t: "lobby" });
+  const lb = await host.wait(m => m.t === "room" && m.room.state === "lobby");
+  check("lobby.same_room_back", lb.room.code === code && lb.room.slots.filter(Boolean).length === 4, lb.room.slots.map(s => s && s.name));
+  check("lobby.ready_reset", lb.room.slots.slice(1).every(s => s && s.ready === false));
+  // el anfitrión cambia la arena desde la sala; un invitado no puede
+  guests[0].send({ t: "update", arena: "infernal" });
+  host.send({ t: "update", arena: "acuatica" });
+  const ar = await guests[0].wait(m => m.t === "room" && m.room.arena === "acuatica");
+  check("lobby.host_changes_arena", !!ar);
+  check("lobby.guest_cannot_change_arena", ar.room.arena === "acuatica");
+  // y se puede volver a comenzar con los mismos jugadores
+  host.send({ t: "start" });
+  const again = await host.wait(m => m.t === "room" && m.room.state === "playing");
+  check("lobby.restart_same_players", again.room.slots.filter(Boolean).length === 4);
   // el anfitrión se va: la sala se cierra para todos
   host.ws.close();
   const closed = await Promise.all([guests[0], guests[1], back].map(g => g.wait(m => m.t === "closed")));

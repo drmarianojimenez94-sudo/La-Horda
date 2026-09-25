@@ -5,18 +5,63 @@ integrantes (los lugares libres los ocupan bots).
 
 ## Cómo se juega
 
-1. MODO DE JUEGO → ARENA → elegís una arena **desbloqueada** → elegís campeón → **PRE-SALA**.
-2. En la pre-sala preparás tu equipo (Equipamiento / Talentos / Habilidades: es el inventario
-   real, lo que cambiás ahí es con lo que entrás).
-3. **🌐 Crear sala online** → aparece el código (ej. `SALA QKL58J`) y **📋 Copiar enlace** /
-   **📨 Invitar** (en iPhone abre el menú para compartir por WhatsApp).
-4. Tu amigo abre el enlace → pone su nombre → **Unirse** → entra directo a TU pre-sala (la arena
-   es la tuya). Prepara su equipo y marca **LISTO**.
-5. Ves a cada amigo aparecer en su lugar en tiempo real (nombre, campeón, nivel, estado).
-6. **Comenzar** cuando quieras: los lugares vacíos pasan a ser bots. Todos entran a la misma
-   arena.
+**Crear sala (anfitrión)**
+1. MENÚ PRINCIPAL → **🌐 MULTIJUGADOR** → **Crear sala** → elegís una arena **desbloqueada** y tu
+   campeón → la sala se crea sola (también se puede desde la PRE-SALA con **🌐 Crear sala online**).
+2. Aparece el código (ej. `SALA QKL58J`), el enlace, **📋 Copiar enlace** y **📨 Invitar** (en
+   iPhone abre el menú para compartir por WhatsApp).
+
+**Unirse (invitado)** — dos formas:
+- MENÚ PRINCIPAL → **🌐 MULTIJUGADOR** → elegís tu campeón → pegás **el enlace** o escribís **el
+  código** (sirve `QKL58J`, `qkl58j` o `SALA QKL58J`) → **Unirse**.
+- O abrís el enlace directamente → poné tu nombre → **Unirse a la sala**.
+
+**En la sala** (todos): cada uno ve a los 4 lugares en tiempo real con su color **P1 naranja · P2
+azul · P3 verde · P4 violeta**. Cada jugador **elige su campeón ahí mismo** (los que usa otro
+jugador aparecen bloqueados), prepara su equipo (Equipamiento / Talentos / Habilidades) y marca
+**LISTO**. El anfitrión puede cambiar la **arena** desde la sala. **Comenzar** muestra cuántos
+faltan marcar LISTO (si igual quiere empezar, pide confirmación). Los lugares vacíos pasan a ser bots.
 
 Sin crear sala, la pre-sala funciona igual que antes (vos + 3 bots) y no necesita Internet.
+
+## El ciclo de la sala (PLAYTEST V1, P0)
+
+`SALA → preparación → LISTO → partida → victoria/derrota → resultados → LA MISMA SALA → …`
+
+- **Team wipe** = todos los humanos **activos** (conectados) están caídos y nadie está terminando
+  de revivir a un humano. En ese momento se corta la partida (no aparecen más enemigos, no se
+  abren refuerzos, se cancela todo revivir), todos ven la derrota y sus resultados, y cada uno
+  guarda solo lo que corresponde (el castigo de derrota se aplica **una vez**, en su guardado).
+  Mientras quede un humano activo en pie, **no** es derrota.
+- **VOLVER AL LOBBY**: el anfitrión vuelve con el botón (o solo, a los 20 s en una derrota). Los
+  invitados que siguen en los resultados **vuelven solos** a los 4 s; si alguno vuelve antes, lo
+  espera en la sala ("el anfitrión todavía está en los resultados").
+- Se conserva: la sala, el código/enlace, la conexión, los jugadores y sus lugares/colores,
+  nombres, campeones, equipo, inventario, talentos, nivel, XP y oro, y **la misma arena**.
+- Se reinicia: **LISTO vuelve a NO LISTO** para todos (lo resetea el servidor); cada uno puede
+  cambiar campeón/equipo/talentos y marcar LISTO de nuevo. El botón pasa a **Reintentar · Arena**.
+- Cada reintento es una **instancia nueva y limpia**: nivel 1, sin enemigos, proyectiles, zonas,
+  trampas, invocaciones, jefes, oleadas, temporizadores ni refuerzos de la partida anterior
+  (`resetRunTransients` + los reinicios de `startRun`).
+
+## Revivir (autoritativo)
+
+- Lo decide siempre el anfitrión (`updateRevives`, js/ai/allies.js). Mantener **✚ Revivir** =
+  "estoy reviviendo a X"; el progreso (1,3 s humano, 2,4 s bot) lo lleva la simulación y lo ven
+  todos igual: anillo de progreso y "↻ Nombre 60%" sobre el caído.
+- **Un solo reanimador por caído** (candado): si otro ya lo está reviviendo, el botón no aparece
+  para vos; nunca hay doble revivir ni doble vida.
+- El botón solo aparece si es válido: vos en pie, el caído en rango, nadie más revíviéndolo y la
+  partida en curso.
+- **Se interrumpe** (vuelve a 0, sin "reviviendo" fantasma) si: soltás el botón, te alejás,
+  caés, quedás aturdido, te desconectás, el caído deja de ser válido o la partida termina.
+  **Recibir daño no interrumpe** (regla elegida para que revivir bajo presión sea posible).
+- El que cae ve un cartel **CAÍSTE** con quién lo está reviviendo y cuánto falta.
+
+## Playtest V1: 2.000 de oro
+
+Cada jugador recibe **una sola vez** 2.000 de oro al abrir esta versión (queda marcado en su
+guardado; recargar no lo repite).
 
 ## Arquitectura (decisión y por qué)
 
@@ -47,8 +92,8 @@ Sin crear sala, la pre-sala funciona igual que antes (vos + 3 bots) y no necesit
 - **Fuego amigo apagado** en la Arena PvE (`MODE_RULES.arena_pve.friendlyFire = false`):
   ni básicos, proyectiles, áreas, invocaciones ni efectos de un aliado dañan a otro aliado.
   Curas, escudos, buffs y revivir no se tocan. Un modo PvP futuro solo cambia esa bandera.
-- Caer no termina la partida mientras quede un humano en pie: te pueden revivir (humanos o
-  bots). La derrota es cuando caen **todos los humanos**.
+- Caer no termina la partida mientras quede un humano activo en pie: te pueden revivir (humanos
+  o bots). La derrota es el **team wipe** (ver arriba).
 - Entre niveles **cada humano elige su refuerzo** (30 s; si no elige, uno automático).
 - **Progresión de cada uno en su propio guardado**: XP y oro de lo que vos rematás, XP del
   fin de nivel, botín, bonus y castigo de derrota se aplican en tu dispositivo. El anfitrión
@@ -57,7 +102,7 @@ Sin crear sala, la pre-sala funciona igual que antes (vos + 3 bots) y no necesit
   superar la anterior (`ARENA_ORDER`). El anfitrión solo puede crear salas para arenas que
   tiene abiertas. Un invitado puede sumarse a la arena de un amigo, pero la victoria solo le
   cuenta como "superada" si él ya la tenía abierta (el multijugador no saltea la campaña).
-- Cada humano usa un campeón distinto (si se repite, no se puede comenzar).
+- Cada humano usa un campeón distinto (en la sala, los ya elegidos aparecen bloqueados).
 - En partida online **no hay pausa**: el menú se abre encima y la partida sigue.
 
 ## Desconexiones
@@ -107,6 +152,9 @@ desarrollo: dispositivos reales en redes distintas (ver "Prueba manual" abajo).
 
 1. iPhone A con WiFi y teléfono B con datos móviles (redes distintas).
 2. A: crear sala en Ruinas del Bosque, copiar enlace, mandarlo por WhatsApp.
-3. B: abrir el enlace, unirse, marcar LISTO. A: ver a B en el lugar 2, comenzar.
-4. Moverse los dos, usar habilidades, dejarse caer y revivirse, pasar de nivel (cada uno elige
-   refuerzo), llegar al jefe y terminar la partida. Anotar el ping del panel B1.
+3. B: MULTIJUGADOR → pegar el enlace → Unirse (o abrir el enlace), elegir campeón en la sala,
+   marcar LISTO. A: ver a B en P2 (azul), comenzar.
+4. Moverse los dos, usar habilidades, dejarse caer y revivirse (mantener ✚), pasar de nivel (cada
+   uno elige refuerzo). Anotar el ping del panel B1.
+5. Dejarse caer los dos (team wipe) → derrota → A toca VOLVER AL LOBBY → B vuelve solo a la misma
+   sala. Cambiar de campeón, LISTO, Reintentar. Repetir 2-3 veces sin recargar.
