@@ -50,6 +50,9 @@ function defaultSave(){
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
+    campaignResetV1:true,   // modo campaña: ver campaignResetV1() en loadSave
+    starterChosen:false,    // todavía no eligió su campeón de regalo (pantalla "Tu primer campeón")
+    playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0} // protección suave contra la mala suerte (oculta), ver js/data/loot.js
   };
@@ -89,6 +92,11 @@ function loadSave(){
       save.arenasCleared = Object.assign(defaultSave().arenasCleared, parsed.arenasCleared||{});
       // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
       // Acuática tenía abierto el Hielo, y lo conserva (una sola vez, al cargar por primera vez).
+      // MODO CAMPAÑA (una sola vez): la prueba de campaña arranca de cero para todos -todos los
+      // campeones a nivel 1, sin talentos ni maestría, bloqueados (se elige uno de regalo y el resto
+      // se compra), campaña y oro en cero-. Los objetos se conservan. El guardado anterior queda
+      // copiado entero en localStorage (SAVE_KEY + "_antesDeCampania") por si hay que volver atrás.
+      if(!parsed.campaignResetV1){ campaignResetV1(raw); }
       if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
@@ -97,6 +105,28 @@ function loadSave(){
       if(needsRarityMigration) persist();
     }
   }catch(e){ save = defaultSave(); }
+}
+function campaignResetV1(raw){
+  try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeCampania")) localStorage.setItem(SAVE_KEY+"_antesDeCampania", raw); }catch(e){}
+  for(const k in save.champions){
+    const c = save.champions[k];
+    c.level = 1; c.xp = 0; c.talentPoints = 0; c.unlocked = false;
+    c.skillMastery = [mkMastery(), mkMastery(), mkMastery()]; c.ultMastery = mkMastery();
+    c.talents = mkTalentState();
+  }
+  save.gold = 0;
+  save.arenasCleared = defaultSave().arenasCleared;
+  save.legacyHieloOpen = false; save.fortalezaMigrated = true;
+  save.divineArenaUnlocked = false;
+  save.starterChosen = false; save.lastChamp = null;
+  save.playtestV1Bonus = true;
+  save.campaignResetV1 = true;
+  persist();
+}
+// ¿Tiene que elegir todavía su campeón de regalo? Solo mientras no tenga ningún campeón propio
+// (save.starterChosen queda como registro de que ya lo eligió).
+function needsStarterChampion(){
+  return !Object.keys(save.champions).some(k=>save.champions[k].unlocked);
 }
 // Durante la partida se guarda como mucho una vez cada 1.5 s: antes cada baja (XP + oro)
 // serializaba el guardado completo -con los inventarios de los 10 campeones- y lo escribía en

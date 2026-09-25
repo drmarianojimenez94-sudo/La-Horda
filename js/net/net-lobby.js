@@ -8,7 +8,7 @@
      arena (la arena es la del anfitrión) -> prepara su equipo -> LISTO -> espera el comienzo.
    Sin sala, la pre-sala funciona exactamente como antes (vos + 3 bots, sin conexión).
    ============================================================ */
-const netLobby = { loadouts:{}, pendingJoin:null, loadoutTimer:null, lastError:"", matches:0, autoCreate:false, autoTimer:null, roomGone:false };
+const netLobby = { loadouts:{}, pendingJoin:null, loadoutTimer:null, lastError:"", matches:0, autoTimer:null, roomGone:false };
 // Color de cada jugador (P1-P4): sala, nombres sobre el personaje y marcadores.
 const NET_SLOT_COLORS = ["#ff7a2e","#3fa7ff","#4fd16a","#c77dff"];
 const NET_ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
@@ -41,7 +41,12 @@ function netRenderLobbyBar(){
     } else {
       bar.innerHTML = `<div class="net-row">${nameInput}<button class="btn small" id="net-create-btn">🌐 Crear sala online</button></div>
         <div class="net-hint">Creá una sala para invitar hasta 3 amigos. Si no invitás a nadie, jugás con bots como siempre.</div>
-        ${netLobby.lastError ? `<div class="net-err">${netLobby.lastError}</div>` : ""}`;
+        <div class="net-join-box">
+          <div class="net-hint"><b>¿Te invitaron?</b> Pegá el enlace o el código de la sala de tu amigo (entrás a SU arena, con el campeón que elegiste):</div>
+          <div class="net-row"><input id="net-join-code" class="multi-input" placeholder="Enlace de invitación o código (ej. QKL58J)" autocomplete="off" autocapitalize="characters">
+            <button class="btn small" id="net-paste-btn">📋 Pegar</button><button class="btn small" id="net-join-btn">Unirse</button></div>
+        </div>
+        ${netLobby.lastError ? `<div class="net-err" id="net-join-status">${netLobby.lastError}</div>` : `<div class="net-err" id="net-join-status"></div>`}`;
     }
   } else if(net.role==="host"){
     const url = netInviteUrl();
@@ -52,7 +57,7 @@ function netRenderLobbyBar(){
         ${navigator.share ? `<button class="btn small" id="net-share-btn">📨 Invitar</button>` : ""}
         <button class="btn secondary small" id="net-close-btn">Cerrar sala</button></div>
       <div class="net-row"><label class="net-name net-arena">Arena <select id="net-arena-sel">${arenaOpts}</select></label></div>
-      <div class="net-hint">Mandá el enlace (o el código <b>${net.code}</b>) a tus amigos: lo pegan en MULTIJUGADOR → Unirse. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots.</div>
+      <div class="net-hint">Mandá el enlace (o el código <b>${net.code}</b>) a tus amigos: lo pegan en su Sala (Arena → elegir arena y campeón → Unirse). Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots.</div>
       <div class="net-link">${url}</div>
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Hay campeones repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
@@ -78,6 +83,15 @@ function netRenderLobbyBar(){
     const ni2 = document.getElementById("net-name-input"); if(ni2) netSetPlayerName(ni2.value);
     try{ await netCreateRoom(currentArena, selectedClass, save.champions[selectedClass].level); }
     catch(e){ netLobby.lastError = "No se pudo conectar al servidor online: "+(e.message||e); netLog("NETWORK_ERROR", {create:String(e.message||e)}); netRenderLobbyBar(); }
+  });
+  const jb = document.getElementById("net-join-btn");
+  if(jb) jb.addEventListener("click", netJoinFromInput);
+  const jc = document.getElementById("net-join-code");
+  if(jc) jc.addEventListener("keydown", (e)=>{ if(e.key==="Enter") netJoinFromInput(); });
+  const jp = document.getElementById("net-paste-btn");
+  if(jp) jp.addEventListener("click", async ()=>{
+    try{ const t = await navigator.clipboard.readText(); if(t && jc) jc.value = t.trim(); }
+    catch(e){ if(jc) jc.focus(); showNetToast("Mantené apretado el cuadro y elegí Pegar."); }
   });
   const cp = document.getElementById("net-copy-btn");
   if(cp) cp.addEventListener("click", ()=> netCopy(netInviteUrl(), cp));
@@ -144,7 +158,7 @@ function netRenderLobbySlots(){
     const st = !s.connected ? `<div class="lobby-ready off">⚠ Sin conexión</div>` : (i===0 ? `<div class="lobby-ready">● Conectado</div>` : (s.ready ? `<div class="lobby-ready">✔ Listo</div>` : `<div class="lobby-ready wait">● Conectado</div>`));
     return `<div class="lobby-slot pc${i} ${you?"you":""}">
       <div class="lobby-tag p${i}">${tag}</div>
-      <canvas class="champ-anim lobby-anim" width="88" height="88" data-class-key="${key}" style="background:${cls.color}1c;"></canvas>
+      <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
       <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>
       <div class="lobby-meta">${cls.name} · ${NET_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv||1}</div>
@@ -224,8 +238,6 @@ netOn("error", (m)=>{
   if(state==="prep") netRenderLobbyBar();
   const tj = document.getElementById("title-join-status");
   if(tj) tj.textContent = netLobby.lastError;
-  const ms = document.getElementById("multi-status");
-  if(ms && state==="multi") ms.textContent = netLobby.lastError;
   showNetToast(netLobby.lastError);
 });
 function showNetToast(text){
@@ -253,11 +265,17 @@ function showNetToast(text){
   // se habilita recién cuando terminó de cargar el arte (igual que "Toca para continuar")
   btn.disabled = true;
   const waitReady = setInterval(()=>{ if(cont && !cont.disabled){ btn.disabled = false; clearInterval(waitReady); } }, 200);
-  btn.addEventListener("click", async ()=>{
+  btn.addEventListener("click", ()=>{
     if(btn.disabled) return;
     try{ startMusic(); }catch(e){}
     const inp = document.querySelector("#title-join-name input");
     if(inp) netSetPlayerName(inp.value);
+    // modo campaña: un invitado nuevo también elige primero su campeón de regalo, y recién ahí entra
+    if(typeof needsStarterChampion==="function" && needsStarterChampion()){ openStarterSelect(()=>{ setState("title"); doJoin(); }); return; }
+    doJoin();
+  });
+  async function doJoin(){
+    if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
     btn.disabled = true; btn.textContent = "Conectando… (hasta 1 minuto si el servidor dormía)";
     try{
       await netJoinRoom(code, selectedClass, (save.champions[selectedClass]||{}).level||1);
@@ -266,7 +284,7 @@ function showNetToast(text){
       netLog("NETWORK_ERROR", {join:String(e.message||e)});
     }
     btn.disabled = false; btn.textContent = `Unirse a la sala ${code}`;
-  });
+  }
 })();
 
 function netIsGuestPlaying(){ return !!(netMatch && netMatch.role==="guest" && !netMatch.ended); }
@@ -317,7 +335,10 @@ function netOnEndScreen(victory){
   if(net.role==="guest" && net.room && net.room.state==="lobby") netStartAutoReturn(4, "El anfitrión ya volvió a la sala");
 }
 
-/* ---------------- MULTIJUGADOR: crear sala / unirse pegando el enlace o el código ---------------- */
+/* ---------------- UNIRSE pegando el enlace o el código (desde la Sala) ----------------
+   La única entrada al cooperativo es la Arena (modo campaña): Arena -> elegir arena -> campeón ->
+   Sala. Ahí se crea la sala online o se pega el enlace/código de la sala de un amigo (también
+   sigue andando abrir directamente el enlace de invitación: ver netSetupJoinFromUrl). */
 // Acepta el enlace completo (…index.html?room=QKL58J[&server=…]), "SALA QKL58J" o el código solo.
 function netParseInvite(txt){
   txt = String(txt||"").trim();
@@ -335,66 +356,29 @@ function netParseInvite(txt){
   if(!code) return null;
   return {code: code.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0,8), server};
 }
-function renderMultiScreen(){
-  if(netAvailable()) netWarmup();
-  const nm = document.getElementById("multi-name");
-  if(nm) nm.value = netPlayerName()==="Jugador" ? "" : netPlayerName();
-  const sel = document.getElementById("multi-champ");
-  if(sel){
-    sel.innerHTML = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false)
-      .map(k=>`<option value="${k}" ${k===selectedClass?"selected":""}>${CLASSES[k].name} · Nv. ${save.champions[k].level}</option>`).join("");
-  }
-  const st = document.getElementById("multi-status");
-  if(st) st.textContent = netAvailable() ? "" : "El modo online no está configurado en esta versión.";
-}
 async function netJoinFromInput(){
-  const st = document.getElementById("multi-status");
-  const btn = document.getElementById("multi-join-btn");
-  const inv = netParseInvite((document.getElementById("multi-code")||{}).value);
+  const st = document.getElementById("net-join-status");
+  const btn = document.getElementById("net-join-btn");
+  const inv = netParseInvite((document.getElementById("net-join-code")||{}).value);
   if(!inv){ if(st) st.textContent = "Pegá el enlace de invitación o escribí el código de 6 letras."; return; }
   if(inv.server) net.serverOverride = inv.server;
   if(!netAvailable()){ if(st) st.textContent = "El modo online no está configurado en esta versión."; return; }
-  const nm = document.getElementById("multi-name"); if(nm) netSetPlayerName(nm.value);
-  const sel = document.getElementById("multi-champ");
-  if(sel && sel.value && save.champions[sel.value]){ selectedClass = sel.value; netRememberChamp(selectedClass); }
+  const ni = document.getElementById("net-name-input"); if(ni) netSetPlayerName(ni.value);
+  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(st) st.textContent = "Elegí primero un campeón tuyo."; return; }
   if(netInRoom()) netLeaveRoom();
   netLobby.lastError = "";
   if(btn){ btn.disabled = true; btn.textContent = "Conectando… (hasta 1 minuto si el servidor dormía)"; }
   if(st) st.textContent = "";
   try{ await netJoinRoom(inv.code, selectedClass, (save.champions[selectedClass]||{}).level||1); }
   catch(e){ if(st) st.textContent = "No se pudo conectar: "+(e.message||e); netLog("NETWORK_ERROR", {join:String(e.message||e)}); }
-  if(btn){ btn.disabled = false; btn.textContent = "Unirse"; }
+  if(btn && btn.isConnected){ btn.disabled = false; btn.textContent = "Unirse"; }
 }
-(function netSetupMultiScreen(){
-  const open = document.getElementById("mainmenu-multi-btn");
-  if(open) open.addEventListener("click", ()=>{ setState("multi"); renderMultiScreen(); });
-  const back = document.getElementById("multi-back-btn");
-  if(back) back.addEventListener("click", ()=>{ setState("mainmenu"); renderMainMenu(); });
-  const join = document.getElementById("multi-join-btn");
-  if(join) join.addEventListener("click", netJoinFromInput);
-  const code = document.getElementById("multi-code");
-  if(code) code.addEventListener("keydown", (e)=>{ if(e.key==="Enter") netJoinFromInput(); });
-  const paste = document.getElementById("multi-paste-btn");
-  if(paste) paste.addEventListener("click", async ()=>{
-    try{ const t = await navigator.clipboard.readText(); if(t && code) code.value = t.trim(); }
-    catch(e){ if(code) code.focus(); showNetToast("Mantené apretado el cuadro y elegí Pegar."); }
-  });
-  const sel = document.getElementById("multi-champ");
-  if(sel) sel.addEventListener("change", ()=>{ if(save.champions[sel.value]){ selectedClass = sel.value; netRememberChamp(selectedClass); } });
-  const nm = document.getElementById("multi-name");
-  if(nm) nm.addEventListener("change", ()=> netSetPlayerName(nm.value));
-  const create = document.getElementById("multi-create-btn");
-  if(create) create.addEventListener("click", ()=>{
-    if(nm) netSetPlayerName(nm.value);
-    netLobby.autoCreate = true;
-    setState("arenaselect"); renderArenaGrid();
-  });
-})();
-// El campeón elegido la última vez (en la selección, la sala o Multijugador) queda recordado.
+// El campeón elegido la última vez (en la selección o la sala) queda recordado.
 // Se llama desde main.js después de loadSave().
 function netRestoreLastChamp(){
   try{
     const k = save.lastChamp;
     if(k && CLASSES[k] && save.champions[k] && save.champions[k].unlocked!==false) selectedClass = k;
+    if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
   }catch(e){}
 }

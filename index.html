@@ -113,12 +113,7 @@
     <button class="mode-card mainmenu-play" id="mainmenu-jugar-btn">
       <div class="mode-card-icon">⚔</div>
       <div class="mode-card-title">MODOS DE JUEGO</div>
-      <div class="mode-card-desc">Arena (y, más adelante, el modo 4 contra 4).</div>
-    </button>
-    <button class="mode-card" id="mainmenu-multi-btn">
-      <div class="mode-card-icon">🌐</div>
-      <div class="mode-card-title">MULTIJUGADOR</div>
-      <div class="mode-card-desc">Crear una sala para tus amigos o unirte a una con el enlace/código.</div>
+      <div class="mode-card-desc">Arena (campaña, sola o con amigos: la sala online se arma después de elegir la arena).</div>
     </button>
     <button class="mode-card" id="mainmenu-campeones-btn">
       <div class="mode-card-icon">🛡</div>
@@ -134,26 +129,15 @@
     <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
   </div>
 
-  <!-- B1: MULTIJUGADOR — crear sala o UNIRSE pegando el enlace / código de invitación -->
-  <div id="multi-screen" class="screen hidden">
-    <div class="arena-title">Multijugador</div>
-    <div class="lobby-sub">Cooperativo de 1 a 4 jugadores (los lugares libres los ocupan bots).</div>
-    <div class="multi-box">
-      <label class="net-name">Tu nombre <input id="multi-name" maxlength="16" placeholder="Jugador"></label>
-      <label class="net-name">Tu campeón <select id="multi-champ"></select></label>
+  <!-- MODO CAMPAÑA: el campeón de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
+  <div id="starter-screen" class="screen hidden">
+    <div class="arena-title">Tu primer campeón</div>
+    <div class="lobby-sub">Elegí uno: es tu regalo para empezar la campaña. Los demás se desbloquean en la Tienda por <b id="starter-price">1.000</b> de oro.</div>
+    <div id="starter-grid"></div>
+    <div class="starter-confirm hidden" id="starter-confirm">
+      <div id="starter-confirm-text"></div>
+      <div class="net-row" style="justify-content:center;"><button class="btn" id="starter-yes-btn">¡Lo quiero!</button><button class="btn secondary" id="starter-no-btn">Elegir otro</button></div>
     </div>
-    <div class="multi-box">
-      <div class="multi-title">Unirse a una sala</div>
-      <input id="multi-code" class="multi-input" placeholder="Pegá acá el enlace de invitación o el código (ej. QKL58J)" autocomplete="off" autocapitalize="characters">
-      <div class="net-row"><button class="btn small" id="multi-paste-btn">📋 Pegar</button><button class="btn" id="multi-join-btn">Unirse</button></div>
-      <div class="net-err" id="multi-status"></div>
-    </div>
-    <div class="multi-box">
-      <div class="multi-title">Crear una sala</div>
-      <div class="net-hint">Elegís la arena y tu campeón; la sala se crea sola y te da el enlace para invitar.</div>
-      <button class="btn" id="multi-create-btn">🌐 Crear sala</button>
-    </div>
-    <button class="btn secondary" id="multi-back-btn">Volver</button>
   </div>
 
   <!-- MIS CAMPEONES: inventario de campeones propios (hoy todos; más adelante 4 de arranque y el
@@ -405,6 +389,7 @@
 <script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/menus.js"></script>
 <script src="js/ui/champions-hub.js"></script>
+<script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/end-screens.js"></script>
 <script src="js/core/run.js"></script>

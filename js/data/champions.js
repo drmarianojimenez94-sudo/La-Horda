@@ -7,24 +7,24 @@
    ============================================================ */
 
 // Catálogo de campeones: estructura de datos separada del progreso guardado, para poder
-// agregar campeones nuevos sin tocar la interfaz de la Galería/Tienda. Los 5 actuales ya
-// estaban siempre desbloqueados (así jugaba todo el mundo hasta ahora), así que quedan con
-// priceGold:0 y unlockedByDefault:true para no romper ninguna partida ya guardada. Para
-// agregar un campeón nuevo bloqueado en el futuro, alcanza con sumar una fila acá:
-// {id:"berserker", priceGold:1000, unlockedByDefault:false, lore:"..."}
+// agregar campeones nuevos sin tocar la interfaz de la Galería/Tienda.
+// MODO CAMPAÑA (prueba): cada jugador ELIGE UN campeón de regalo al empezar (pantalla "Tu primer
+// campeón", js/ui/starter-select.js); todos los demás arrancan bloqueados y se compran en la
+// Tienda por CHAMPION_PRICE_GOLD de oro. Para agregar un campeón nuevo alcanza con sumar una fila.
+const CHAMPION_PRICE_GOLD = 1000;
 const CHAMPION_CATALOG = [
-  {id:"tanque",   priceGold:99999, unlockedByDefault:true, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
-  {id:"guerrero", priceGold:99999, unlockedByDefault:true, lore:"Rápido, letal, sin piedad. Golpea antes de que lo vean venir."},
-  {id:"mago",     priceGold:99999, unlockedByDefault:true, lore:"Domina el fuego y el hielo. El área alrededor suyo es territorio enemigo."},
-  {id:"soporte",  priceGold:99999, unlockedByDefault:true, lore:"Mientras respire, nadie de su equipo cae para siempre."},
-  {id:"segador",  priceGold:99999, unlockedByDefault:true, lore:"Cuanto más cerca de la muerte, más peligroso se vuelve."},
-  {id:"axiom",    priceGold:99999, unlockedByDefault:true, lore:"Descubrió que la realidad está construida con reglas y código. No lanza hechizos: reescribe las reglas."},
-  {id:"profeta",  priceGold:99999, unlockedByDefault:true, lore:"Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo."},
-  {id:"musashi",  priceGold:99999, unlockedByDefault:true, lore:"Un rōnin veterano que carga un bokken en vez de una katana. Cree que cualquier arma alcanza contra un rival al que se entiende de verdad."},
-  {id:"cazadora", priceGold:99999, unlockedByDefault:true, lore:"Una tiradora extremadamente móvil que gana velocidad mientras persigue a su presa."},
-  {id:"nigromante", priceGold:99999, unlockedByDefault:true, lore:"No pelea solo. Levanta a los caídos, crea un coloso de piedra y, si hace falta, se convierte él mismo en un demonio."},
-  {id:"libertador", priceGold:99999, unlockedByDefault:true, lore:"Un comandante legendario que castiga a sus enemigos con disparos devastadores y lidera cargas capaces de quebrar ejércitos."},
-  {id:"eren", priceGold:99999, unlockedByDefault:true, lore:"Un guerrero que convierte el peligro en furia. Domina el campo mediante movilidad extrema hasta liberar una fuerza monstruosa capaz de hacer temblar la arena."}
+  {id:"tanque",   priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
+  {id:"guerrero", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Rápido, letal, sin piedad. Golpea antes de que lo vean venir."},
+  {id:"mago",     priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Domina el fuego y el hielo. El área alrededor suyo es territorio enemigo."},
+  {id:"soporte",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Mientras respire, nadie de su equipo cae para siempre."},
+  {id:"segador",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Cuanto más cerca de la muerte, más peligroso se vuelve."},
+  {id:"axiom",    priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Descubrió que la realidad está construida con reglas y código. No lanza hechizos: reescribe las reglas."},
+  {id:"profeta",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo."},
+  {id:"musashi",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Un rōnin veterano que carga un bokken en vez de una katana. Cree que cualquier arma alcanza contra un rival al que se entiende de verdad."},
+  {id:"cazadora", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Una tiradora extremadamente móvil que gana velocidad mientras persigue a su presa."},
+  {id:"nigromante", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"No pelea solo. Levanta a los caídos, crea un coloso de piedra y, si hace falta, se convierte él mismo en un demonio."},
+  {id:"libertador", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Un comandante legendario que castiga a sus enemigos con disparos devastadores y lidera cargas capaces de quebrar ejércitos."},
+  {id:"eren", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Un guerrero que convierte el peligro en furia. Domina el campo mediante movilidad extrema hasta liberar una fuerza monstruosa capaz de hacer temblar la arena."}
 ];
 
 const CLASSES = {

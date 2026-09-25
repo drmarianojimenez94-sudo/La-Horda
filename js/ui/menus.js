@@ -17,6 +17,8 @@ document.addEventListener("touchstart", startMusic, {once:true, capture:true});
 document.addEventListener("click", startMusic, {once:true, capture:true});
 document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   startMusic();
+  // modo campaña: la primera vez se elige el campeón de regalo
+  if(needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   setState("mainmenu");
   renderMainMenu();
 });
@@ -72,7 +74,15 @@ function startChampAnimLoop(){
     for(const cvs of list){
       const g = cvs.getContext("2d");
       g.clearRect(0,0,cvs.width,cvs.height);
-      drawChampFigure(g, cvs.dataset.classKey, cvs.width/2, cvs.height*0.92, cvs.height/40, 1, t, true);
+      if(cvs.dataset.idle){
+        // quieto y RESPIRANDO: animación de reposo + el pecho que sube y baja (cada uno a su ritmo)
+        const ph = (cvs.dataset.classKey.length*1.7 + (cvs.dataset.ph||0)) % 6.283;
+        const br = Math.sin(t/620 + ph);
+        const bx = cvs.width/2, by = cvs.height*0.92;
+        g.save(); g.translate(bx, by); g.scale(1 - 0.012*br, 1 + 0.028*br); g.translate(-bx, -by);
+        drawChampFigure(g, cvs.dataset.classKey, bx, by, cvs.height/40, 1, t, false);
+        g.restore();
+      } else drawChampFigure(g, cvs.dataset.classKey, cvs.width/2, cvs.height*0.92, cvs.height/40, 1, t, true);
     }
     requestAnimationFrame(tick);
   }
@@ -234,6 +244,7 @@ function updateMenuBrandSub(){
   if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
+  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese campeón está bloqueado: desbloquealo en la Tienda."); return; }
   // B1: dentro de una sala online la elección de campeón vuelve a la misma sala
   if(netInRoom()){
     setState("prep"); renderPrepSummary();
@@ -244,8 +255,6 @@ document.getElementById("start-btn").addEventListener("click", ()=>{
   lobbyAllies = pickLobbyAllies(selectedClass);
   setState("prep");
   renderPrepSummary();
-  // Multijugador -> Crear sala: al llegar a la sala se crea sola (con la arena y el campeón elegidos)
-  if(netLobby.autoCreate){ netLobby.autoCreate = false; const cb = document.getElementById("net-create-btn"); if(cb) cb.click(); }
 });
 document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
@@ -304,7 +313,7 @@ function renderPrepSummary(){
     const cls = CLASSES[key], lv = save.champions[key].level, you = i===0;
     return `<div class="lobby-slot ${you?"you":""}">
       <div class="lobby-tag ${you?"you":"bot"}">${you?"VOS":"BOT"}</div>
-      <canvas class="champ-anim lobby-anim" width="88" height="88" data-class-key="${key}" style="background:${cls.color}1c;"></canvas>
+      <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
       <div class="lobby-name">${cls.name}</div>
       <div class="lobby-meta">${ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv}</div>

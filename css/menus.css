@@ -227,7 +227,7 @@
 .lobby-slot.you{ border-color:var(--ember1); }
 .lobby-slot.empty{ opacity:0.55; justify-content:center; }
 .lobby-empty{ font-size:1.6rem; color:var(--text-dim); }
-.lobby-anim{ width:100%; max-width:64px; height:auto; aspect-ratio:1/1; }
+.lobby-anim{ width:100%; max-width:96px; height:auto; aspect-ratio:1/1; }
 .lobby-tag{ position:absolute; top:3px; left:50%; transform:translateX(-50%); font-size:0.62rem; letter-spacing:0.06em; padding:0 5px; border:1px solid #000; }
 .lobby-tag.you{ background:var(--ember1); color:#1a0c05; }
 .lobby-tag.bot{ background:#2a2f3a; color:#b9c4d8; }
@@ -285,8 +285,7 @@
 #net-debug-panel .nd-row span:last-child{ text-align:right; word-break:break-all; }
 #net-debug-panel .nd-log{ margin-top:6px; color:#9fb8cf; }
 #prep-screen{ justify-content:flex-start; } /* contenido alto (equipo/árbol): que se pueda scrollear desde arriba */
-/* B1: pantalla Multijugador (unirse pegando el enlace/código) */
-#multi-screen{ justify-content:flex-start; overflow-y:auto; }
+/* B1: cuadro para unirse pegando el enlace/código (ahora dentro de la Sala) */
 .multi-box{ font-family:var(--font-retro); width:min(560px, 92vw); background:rgba(20,12,8,0.7); border:2px solid #000; box-shadow:inset 0 0 0 1px rgba(255,160,90,0.15);
   padding:10px 12px; margin:6px 0; display:flex; flex-direction:column; gap:6px; }
 .multi-title{ font-family:var(--font-retro); color:var(--ember3); font-size:0.85rem; }
@@ -308,3 +307,16 @@
 .screen:not(#title-screen){ justify-content:flex-start; }
 .screen:not(#title-screen) > :first-child{ margin-top:auto; }
 .screen:not(#title-screen) > :last-child{ margin-bottom:auto; }
+/* Sala: unirse a la sala de un amigo pegando el enlace o el código */
+.net-join-box{ margin-top:8px; padding:6px 8px; border:1px dashed rgba(255,160,90,0.35); background:rgba(20,12,8,0.45); }
+.net-join-box .net-row{ flex-wrap:nowrap; }
+.net-join-box .multi-input{ flex:1; min-width:0; width:auto; }
+/* Modo campaña: "Tu primer campeón" (regalo) */
+#starter-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(128px, 1fr)); gap:10px; width:min(900px, 94vw); margin:10px auto; }
+.starter-card{ display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 6px; }
+.starter-card.sel{ outline:3px solid #ffcf5c; box-shadow:0 0 18px rgba(255,190,80,0.45); }
+.starter-anim{ width:110px; height:110px; image-rendering:pixelated; }
+.starter-lore{ font-size:0.56rem; line-height:1.25; color:var(--text-dim); text-align:center; }
+.starter-confirm{ position:sticky; bottom:8px; margin:8px auto; padding:10px 14px; width:min(420px, 92vw); text-align:center;
+  background:rgba(20,12,8,0.94); border:2px solid #ffcf5c; }
+.champ-card.locked{ opacity:0.55; filter:grayscale(0.7); }

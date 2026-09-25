@@ -10,18 +10,24 @@
 function renderChampGrid(){
   const grid = document.getElementById("champ-grid");
   grid.innerHTML = "";
+  if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
   Object.keys(CLASSES).forEach(key=>{
     const cls = CLASSES[key];
     const champ = save.champions[key];
+    const owned = champ.unlocked!==false;
     const card = document.createElement("div");
-    card.className = "champ-card" + (key===selectedClass ? " selected":"");
+    card.className = "champ-card" + (key===selectedClass && owned ? " selected":"") + (owned ? "" : " locked");
     card.innerHTML = `
       <canvas class="champ-preview" width="104" height="104" style="background:${cls.color}22;" data-class-key="${key}"></canvas>
       <div class="champ-name">${cls.name}</div>
       <div class="champ-role">${cls.role}</div>
-      <div class="champ-lvl">Nv. ${champ.level}</div>
+      <div class="champ-lvl">${owned ? `Nv. ${champ.level}` : `🔒 Tienda · 🪙 ${typeof fmtGold==="function" ? fmtGold(CHAMPION_PRICE_GOLD) : CHAMPION_PRICE_GOLD}`}</div>
     `;
-    card.addEventListener("click", ()=>{ selectedClass = key; if(typeof netRememberChamp==="function") netRememberChamp(key); renderChampGrid(); });
+    card.addEventListener("click", ()=>{
+      // modo campaña: los campeones que no tenés se compran en la Tienda
+      if(!owned){ if(typeof showNetToast==="function") showNetToast(`${cls.name} está bloqueado: se desbloquea en la Tienda por ${CHAMPION_PRICE_GOLD} de oro.`); return; }
+      selectedClass = key; if(typeof netRememberChamp==="function") netRememberChamp(key); renderChampGrid();
+    });
     grid.appendChild(card);
   });
   startChampPreviewLoop();
