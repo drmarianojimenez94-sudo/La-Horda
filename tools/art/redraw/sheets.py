@@ -1,0 +1,31 @@
+# (x0, x1, y0, y1, n) per section, measured on the 1536x1024 sheets (see probe.py)
+BODY = {
+ 'segador': {
+  'walk_down':(12,376,104,197,4), 'walk_left':(388,761,104,197,4), 'walk_right':(774,1156,104,197,4), 'walk_up':(1167,1524,104,197,4),
+  'idle':(12,376,256,355,4), 'attack':(386,762,256,355,4), 'hit':(775,1081,256,355,4), 'death':(1089,1524,256,355,6)},
+ 'musashi': {
+  'walk_down':(15,366,102,194,4), 'walk_left':(385,765,102,194,4), 'walk_right':(777,1151,102,194,4), 'walk_up':(1173,1521,102,194,4),
+  'idle':(13,362,251,345,4), 'attack':(379,750,251,345,4), 'hit':(770,1065,251,345,4), 'death':(1082,1521,251,345,6)},
+ 'profeta': {
+  'walk_down':(13,368,104,197,4), 'walk_left':(385,760,104,197,4), 'walk_right':(778,1153,104,197,4), 'walk_up':(1170,1522,104,197,4),
+  'idle':(13,357,256,355,4), 'attack':(375,760,256,355,4), 'hit':(774,1077,256,355,4), 'death':(1091,1522,256,355,6)},
+ 'cazadora': {
+  'walk_down':(13,366,102,192,4), 'walk_left':(384,758,102,192,4), 'walk_right':(771,1149,102,192,4), 'walk_up':(1164,1521,102,192,4),
+  'idle':(13,355,247,334,4), 'attack':(371,744,247,334,4), 'hit':(766,1071,247,334,4), 'death':(1083,1520,247,334,6)},
+}
+BODY['segador']['cast'] = (15,222,418,541,3)
+BODY['musashi']['cast'] = (18,191,410,524,3)
+BODY['musashi']['pose'] = [(17,835,112,969),(117,835,226,969),(231,835,342,969),(348,835,459,969),(464,835,573,969)]      # neutral, ofensiva, defensiva, carga de ki, contragolpe
+BODY['profeta']['cast'] = (15,221,421,543,3)
+BODY['cazadora']['cast'] = (15,242,391,491,3)
+BODY['cazadora']['pose'] = [(17,910,105,996),(110,910,216,996),(220,910,325,996),(326,910,431,996),(436,910,536,996)]     # apuntando, corriendo, deslizamiento, esquiva, carga de hab.
+BODY['dama'] = {'idle':(13,377,86,197,4), 'walk':(390,769,86,197,4), 'hit':(782,1092,86,197,4), 'death':(1105,1526,86,197,6),
+                'attack':[(13,229,92,347),(96,229,174,347),(177,229,255,347),(256,229,380,347)]}
+# Doppelgänger blocks: (frames x0, x1) after the 52px label column; rows idle / walk / attack / death
+_DOP_ROWS = [('idle',744,802), ('walk',805,866), ('attack',869,931), ('death',934,996)]
+_DOP_X = {'caballero':(65,313), 'guerrero':(373,616), 'mago':(677,917), 'arquero':(977,1221), 'soporte':(1285,1526)}
+for _k, (_x0, _x1) in _DOP_X.items():
+    BODY['dop_'+_k] = {r:(_x0,_x1,y0,y1,4) for r,y0,y1 in _DOP_ROWS}
+_DOP_CELLS = {'arquero':[(985,1041),(1045,1102),(1105,1164),(1165,1218)], 'soporte':[(1292,1352),(1353,1416),(1419,1471),(1474,1523)]}
+for _k, _cells in _DOP_CELLS.items():
+    BODY['dop_'+_k] = {r:[(x0,y0,x1,y1) for (x0,x1) in _cells] for r,y0,y1 in _DOP_ROWS}

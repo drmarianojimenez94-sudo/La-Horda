@@ -181,6 +181,7 @@ function profetaResolveClip(h){
   return "idle";
 }
 function drawProfetaAtlas(h, drawScale, alpha){
+  if(drawChampPack("profeta", h, drawScale, alpha)) return true;
   return drawAnimAtlas(PROFETA_ANIM_ATLAS, profetaResolveClip(h), h, drawScale, alpha);
 }
 
@@ -224,7 +225,27 @@ function champPackDir(h){
   return dir;
 }
 function champPackScale(P, h, drawScale){
-  return h.radius*2.7*(drawScale/(h.scale||2.0))/P.sets.idle_down[0].height;
+  return h.radius*2.7*(drawScale/(h.scale||2.0))/(P.refH || P.sets.idle_down[0].height);
+}
+// Set para estado+dirección: perfil izquierdo propio si existe (si no, espejo del derecho), y si falta
+// la dirección se usa el perfil y después el de frente (p.ej. golpe/muerte dibujados de una sola vista).
+function champPackSet(P, st, dir, h){
+  if(P.sets[st] && !P.sets[st+"_down"]) return {arr:P.sets[st], flip:!!h._pleft};
+  if(dir==="side" && h._pleft && P.sets[st+"_left"]) return {arr:P.sets[st+"_left"], flip:false};
+  for(const d of [dir, "side", "down"]){
+    const arr = P.sets[st+"_"+d];
+    if(arr) return {arr, flip: d==="side" && !!h._pleft};
+  }
+  return null;
+}
+// Un cuadro del pack: en modo atlas `arr` guarda índices de la grilla; en el modo viejo (Axiom), imágenes.
+function champPackDrawFrame(P, v, x, y, s, flip, alpha){
+  if(P.atlas){
+    const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
+    drawAnimFrameSized(P.atlas, clip, 0, x, y, P.fw*s, P.fh*s, 0.5, P.anchor, flip, alpha);
+  } else {
+    drawAnimFrameSized(v, {frames:[{x:0, y:0, w:v.width, h:v.height}]}, 0, x, y, v.width*s, v.height*s, 0.5, 0.94, flip, alpha);
+  }
 }
 function drawChampPack(key, h, drawScale, alpha){
   const P = CHAMP_PACK[key];
@@ -237,14 +258,15 @@ function drawChampPack(key, h, drawScale, alpha){
   let st, prog = null;
   if(h.hurtTimer>0){ st = "hit"; prog = 1 - h.hurtTimer/160; }
   else if(a>0){ st = animNow < (h._packCastUntil||0) ? "cast" : "attack"; prog = 1 - a/(h._aDur||a); }
+  else if(h.sylvaCharging && P.sets.aim) st = "aim";
   else st = h.moving ? "walk" : "idle";
-  const arr = P.sets[st+"_"+dir] || P.sets["idle_"+dir];
+  const pick = champPackSet(P, st, dir, h) || (st==="cast" && champPackSet(P, "attack", dir, h)) || champPackSet(P, "idle", dir, h);
+  const arr = pick.arr;
   let n;
   if(prog!==null) n = Math.min(arr.length-1, Math.max(0, Math.floor(prog*arr.length)));
   else if(st==="walk") n = Math.floor((h.animT||0)/130) % arr.length;
   else n = Math.floor(animNow/230) % arr.length;
-  const img = arr[n], s = champPackScale(P, h, drawScale);
-  drawAnimFrameSized(img, {frames:[{x:0, y:0, w:img.width, h:img.height}]}, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, dir==="side" && h._pleft, alpha);
+  champPackDrawFrame(P, arr[n], h.x, h.y, champPackScale(P, h, drawScale), pick.flip, alpha);
   return true;
 }
 // Muerte con los frames reales (en vez del sprite de pie rotado): queda tendido semitransparente.
@@ -252,11 +274,11 @@ function drawChampPackDeath(h){
   const P = CHAMP_PACK[h.classKey];
   if(!P || !P.ready) return false;
   if(!h._deadAt){ h._deadAt = animNow; vfxBurst(h.x, h.y-20, 12, "blood", 120, 420, 3, 2, -30, 0); }
-  const dir = h._pdir || "down", arr = P.sets["death_"+dir] || P.sets.death_down;
-  const t = animNow - h._deadAt, n = Math.min(arr.length-1, Math.floor(t/170));
-  const done = t > arr.length*170, alpha = done ? 0.55 : 1;
-  const img = arr[n], s = champPackScale(P, h, h.scale||2.0);
-  drawAnimFrameSized(img, {frames:[{x:0, y:0, w:img.width, h:img.height}]}, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, dir==="side" && h._pleft, alpha);
+  const pick = champPackSet(P, "death", h._pdir || "down", h);
+  if(!pick) return false;
+  const arr = pick.arr, t = animNow - h._deadAt, n = Math.min(arr.length-1, Math.floor(t/170));
+  const done = t > arr.length*170;
+  champPackDrawFrame(P, arr[n], h.x, h.y, champPackScale(P, h, h.scale||2.0), pick.flip, done ? 0.55 : 1);
   return true;
 }
 
@@ -288,6 +310,7 @@ function drawSegadorReal(h, drawScale, alpha){
 // base (idle) no cargó todavía, devuelve false y drawHero() cae al sprite procedural de
 // respaldo (GRIDS.musashi/PAL.musashi) en vez de dejar al personaje invisible.
 function drawMusashiReal(h, drawScale, alpha){
+  if(drawChampPack("musashi", h, drawScale, alpha)) return true;
   if(!MUSASHI_REAL_READY.idle) return false;
   let img;
   if(h.hurtTimer>0 && MUSASHI_REAL_READY.hurt){
@@ -328,6 +351,16 @@ function drawMusashiReal(h, drawScale, alpha){
 // acumulándose en la lista pero nunca se dibujaban -bug real, la habilidad no mostraba nada
 // distinto al cruzar al enemigo-. Arte real (ghost1, silueta borrosa) con fundido de salida.
 function drawMusashiAfterimages(){
+  const P = CHAMP_PACK.musashi;
+  if(P && P.ready){
+    const s = 78/P.refH;
+    for(const a of musashiAfterimages){
+      const alpha = Math.max(0, a.life/a.maxLife) * 0.45;
+      if(alpha<=0.02) continue;
+      champPackDrawFrame(P, P.sets.walk_side[1], a.x, a.y, s, a.fx<-0.12, alpha);
+    }
+    return;
+  }
   if(!MUSASHI_REAL_READY.ghost1) return;
   const img = MUSASHI_REAL_IMG.ghost1;
   const s = 78/img.height; // mismo orden de tamaño que el cuerpo real de Musashi
@@ -512,6 +545,7 @@ function drawGolemReal(g){
 }
 
 function drawSylvaReal(h, drawScale, alpha){
+  if(drawChampPack("cazadora", h, drawScale, alpha)) return true;
   if(!SYLVA_REAL_READY.idle) return false;
   let img;
   if(h.sylvaCharging && SYLVA_REAL_READY.chargeAim){
