@@ -12,10 +12,15 @@ function render(){
   ANIM_ALPHA_MUL = 1; // resguardo: si un frame anterior se cortó a mitad de un fade, no arrastra el alpha
 
   ctx.save();
+  ctx.imageSmoothingEnabled = false; // pixel art: siempre vecino más cercano
   ctx.scale(CAM_ZOOM, CAM_ZOOM);
   const shakeX = screenShake>0 ? (Math.random()-0.5)*screenShake : 0;
   const shakeY = screenShake>0 ? (Math.random()-0.5)*screenShake : 0;
-  ctx.translate(VW/2/CAM_ZOOM - player.x + shakeX, (VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - player.y + shakeY);
+  // cámara alineada a píxeles del dispositivo: sin temblor de medio píxel en el pixel art
+  const _pxW = CAM_ZOOM*DPR;
+  const camTX = Math.round((VW/2/CAM_ZOOM - player.x + shakeX)*_pxW)/_pxW;
+  const camTY = Math.round(((VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - player.y + shakeY)*_pxW)/_pxW;
+  ctx.translate(camTX, camTY);
 
   // Escenario: suelo, lava, muros, braseros
   drawArena();

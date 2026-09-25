@@ -86,7 +86,9 @@ function spawnEnemy(type, atBoss, champion){
   const base = ENEMY_BASE[type];
   const scale = 1 + (runLevel-1)*0.17;
   const ang = Math.random()*Math.PI*2;
-  const dist = Math.max(VW,VH)/2/DPR/CAM_ZOOM + 140 + Math.random()*100;
+  // distancia fija en el MUNDO (antes dependía del devicePixelRatio: en cada pantalla aparecían a
+  // otra distancia). Equivale a lo que se veía en iPhone: justo afuera del borde de arriba/abajo.
+  const dist = VIEW_WORLD_SHORT/2 + 170 + Math.random()*100;
   const x = player.x + Math.cos(ang)*dist;
   const y = player.y + Math.sin(ang)*dist;
   const hpScale = atBoss ? scale*1.0 : scale;

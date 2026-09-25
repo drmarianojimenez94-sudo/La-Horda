@@ -16,6 +16,7 @@ function loop(t){
   try{
     // hit-stop / cámara lenta (ver js/rendering/feedback.js): solo frenan la simulación; la
     // animación de dibujo y los avisos en pantalla siguen con el reloj real.
+    ensureCanvasSize(); // iOS a veces no avisa el cambio de tamaño: se verifica la caja real
     const k = state==="playing" ? gameTimeScale(dt) : 1;
     update(dt*k);
     updateFeedback(dt);
