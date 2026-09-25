@@ -22,7 +22,9 @@ const CHAMPION_CATALOG = [
   {id:"profeta",  priceGold:99999, unlockedByDefault:true, lore:"Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo."},
   {id:"musashi",  priceGold:99999, unlockedByDefault:true, lore:"Un rōnin veterano que carga un bokken en vez de una katana. Cree que cualquier arma alcanza contra un rival al que se entiende de verdad."},
   {id:"cazadora", priceGold:99999, unlockedByDefault:true, lore:"Una tiradora extremadamente móvil que gana velocidad mientras persigue a su presa."},
-  {id:"nigromante", priceGold:99999, unlockedByDefault:true, lore:"No pelea solo. Levanta a los caídos, crea un coloso de piedra y, si hace falta, se convierte él mismo en un demonio."}
+  {id:"nigromante", priceGold:99999, unlockedByDefault:true, lore:"No pelea solo. Levanta a los caídos, crea un coloso de piedra y, si hace falta, se convierte él mismo en un demonio."},
+  {id:"libertador", priceGold:99999, unlockedByDefault:true, lore:"Un comandante legendario que castiga a sus enemigos con disparos devastadores y lidera cargas capaces de quebrar ejércitos."},
+  {id:"eren", priceGold:99999, unlockedByDefault:true, lore:"Un guerrero que convierte el peligro en furia. Domina el campo mediante movilidad extrema hasta liberar una fuerza monstruosa capaz de hacer temblar la arena."}
 ];
 
 const CLASSES = {
@@ -178,5 +180,47 @@ const CLASSES = {
       {name:"Plaga de los Condenados", ico:"☠", cost:44, cd:13000, kind:"condemned_plague", range:300, radius:150, dmgMult:0.22, defTakenPct:0.3, duration:6000, desc:"Maldice un área: daño continuo y más daño recibido; si un maldito muere, contagia a los cercanos"}
     ],
     ultimate:{name:"Encarnación del Abismo", ico:"★", cd:38000, kind:"abyss_incarnation_ult", duration:11000, hpMult:1.9, dmgMult:1.8, desc:"Absorbe temporalmente a todo tu ejército y te transforma en un Demonio Nigromántico; tu poder escala con cuántos absorbiste"}
+  },
+  libertador:{
+    name:"El Libertador", icon:"🎖", color:"#2f4f9a", glow:"#9fc4ff",
+    role:"Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta, mando y caballería.", roleCategory:"asesino",
+    // José de San Martín. Tirador pesado: MUY pocos disparos (recarga larga, SM_CFG.musket) con
+    // mucho daño cada uno; vida y defensa de guerrero liviano porque también entra cuerpo a cuerpo.
+    baseHP:120, baseDmg:24, baseDef:0.10, baseSpeed:160, energyMax:100, energyRegen:10, hpGrowthMult:1.0, dmgGrowthMult:1.05,
+    basicRange:380, basicCd:1450, basicArc:false, ranged:true,
+    isLibertador:true, noDivinaFoe:true, // su kit (montura/definitiva) no está pensado como rival divino
+    skills:[
+      {name:"Bayoneta", ico:"🗡", cost:24, cd:5500, kind:"sm_bayonet", range:190, dmgMult:2.5, desc:"Mantené para apuntar y soltá: embestida corta con la bayoneta. Mucho daño, sangrado y un pequeño tambaleo; se detiene al conectar"},
+      {name:"¡Granaderos, a la carga!", ico:"📯", cost:36, cd:16000, kind:"sm_granaderos", radius:430, duration:8000, desc:"Levanta el sable, suena el clarín y aparecen Granaderos espectrales: +velocidad, +velocidad de ataque, +daño y resistencia al control para vos y tus aliados cercanos"},
+      {name:"Carga de San Lorenzo", ico:"🐎", cost:40, cd:12000, kind:"sm_san_lorenzo", range:430, dmgMult:1.9, desc:"Monta su caballo blanco y carga en línea: atraviesa y empuja a los comunes, aturde a los élite y baja la defensa de los jefes"}
+    ],
+    ultimate:{name:"Cruce de los Andes", ico:"★", cd:45000, kind:"sm_andes_ult", dmgMult:4.2, duration:10000, desc:"La Cordillera se alza alrededor de la arena: nieve, viento y escarcha. Carga con una formación de Granaderos espectrales montados y queda 10 s a caballo (sable corvo, +velocidad, +daño, -daño recibido)"}
+  },
+  eren:{
+    name:"Eren", icon:"⚔", color:"#7a3b2e", glow:"#ff7a55",
+    role:"Guerrero / Berserker: movilidad extrema con ganchos, gana Furia con el riesgo y se transforma en El Portador.", roleCategory:"asesino",
+    // Recurso FURIA = barra de la definitiva (sube pegando, recibiendo daño y con poca vida,
+    // EREN_CFG.fury). Guerrero ágil y frágil en forma humana; la forma monstruosa es su pico.
+    baseHP:128, baseDmg:11, baseDef:0.08, baseSpeed:178, energyMax:100, energyRegen:11, hpGrowthMult:1.05, dmgGrowthMult:1.0,
+    basicRange:84, basicCd:380, basicArc:true,
+    isEren:true, isFuryClass:false, noDivinaFoe:true,
+    skills:[
+      {name:"Equipo de Maniobras", ico:"🪝", cost:22, cd:7000, kind:"eren_hook", range:360, dmgMult:1.4, desc:"Mantené para apuntar y soltá: dispara los ganchos y sale volando. Durante el vuelo, volvé a usarla para un SEGUNDO gancho con cambio de dirección. Corta a los que pasan cerca"},
+      {name:"Instinto de Supervivencia", ico:"⚡", cost:25, cd:14000, kind:"eren_instinct", duration:3500, desc:"Por un momento recibís menos daño y cada golpe que te dan carga MUCHA más Furia. No es invulnerabilidad: es exponerse para transformarse antes"},
+      {name:"¡Avancen!", ico:"📢", cost:30, cd:15000, kind:"eren_advance", duration:7000, desc:"Grito de guerra: más velocidad, daño y Furia (más fuerte con poca vida). Los aliados cercanos reciben una parte"}
+    ],
+    ultimate:{name:"El Portador", ico:"★", cd:40000, kind:"eren_titan_ult", duration:22000, desc:"Con la Furia llena: se muerde la mano, cae un rayo y surge la forma monstruosa (golpes en área, Sismo, Terremoto, Retumbar, regeneración con vapor). Si llenás la Furia otra vez transformado, se desbloquea algo más"}
   }
 };
+// Eren transformado usa esta "clase" mientras dura El Portador (h.cls apunta acá): así todo lo que
+// ya lee h.cls (botones, IA, apuntado, HUD, cooldowns) muestra y usa el kit del titán sin tocar nada
+// más. Las habilidades comparten el índice (y la maestría/talentos) de la habilidad humana 0/1/2.
+const EREN_TITAN_CLS = Object.assign({}, CLASSES.eren, {
+  name:"El Portador", icon:"👹", basicRange:112, basicCd:950, basicArc:true, ranged:false, isTitanForm:true,
+  skills:[
+    {name:"Sismo", ico:"💥", cost:0, cd:6500, kind:"titan_sismo", radius:230, dmgMult:3.2, desc:"Golpe violento al suelo: onda expansiva circular, muchísimo daño en el centro"},
+    {name:"Terremoto", ico:"🌋", cost:0, cd:13000, kind:"titan_terremoto", radius:250, dmgMult:1.25, desc:"Canalizada: planta los pies y revienta el suelo en 4 pulsos. Mientras dura recibís más daño"},
+    {name:"Retumbar", ico:"🦶", cost:0, cd:14000, kind:"titan_retumbar", radius:160, dmgMult:1.35, desc:"Avanza pisando: cada paso es una onda de destrucción. Control de dirección limitado"}
+  ],
+  ultimate:{name:"El Retumbar", ico:"☠", cd:0, kind:"eren_rumbling_ult", desc:"Tres pisadas colosales sobre la arena, con aviso. Después, Eren vuelve agotado"}
+});

@@ -39,6 +39,8 @@ const ANIM_PROFILES = {
   musashi:    {speed:1.4, weight:0.8, amp:0.8, recoil:0.7, lunge:18, cast:0.9, impact:1.2, particle:"steel",  basic:"melee",  tier:"static"},
   cazadora:   {speed:1.2, weight:0.8, amp:0.8, recoil:1.0, lunge:4,  cast:1.0, impact:1.0, particle:"leaf",   basic:"ranged", tier:"static"},
   nigromante: {speed:0.8, weight:1.0, amp:0.45,recoil:0.5, lunge:3,  cast:1.5, impact:1.1, particle:"necro",  basic:"cast",   tier:"static"},
+  libertador: {speed:0.9, weight:1.2, amp:0.5, recoil:1.6, lunge:6,  cast:1.1, impact:1.4, particle:"spark",  basic:"ranged", tier:"static"},
+  eren:       {speed:1.4, weight:0.9, amp:0.8, recoil:0.8, lunge:14, cast:1.0, impact:1.3, particle:"blood",  basic:"melee",  tier:"static"},
   // ---- invocaciones ----
   nigro_skel: {speed:1.4, weight:0.6, amp:1.1, lunge:8,  impact:0.8, particle:"bone", material:"bone", tier:"static"},
   nigro_golem:{speed:0.55,weight:2.4, amp:0.6, lunge:12, impact:2.0, particle:"rock", material:"rock", tier:"static"},

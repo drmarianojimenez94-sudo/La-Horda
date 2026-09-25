@@ -52,6 +52,8 @@ SCORE_CONFIG.segador = SCORE_CONFIG.tanque;
 SCORE_CONFIG.musashi = SCORE_CONFIG.guerrero;
 SCORE_CONFIG.cazadora = SCORE_CONFIG.guerrero;
 SCORE_CONFIG.nigromante = SCORE_CONFIG.mago;
+SCORE_CONFIG.libertador = SCORE_CONFIG.guerrero; // tirador / guerrero (daño a objetivos prioritarios)
+SCORE_CONFIG.eren = SCORE_CONFIG.guerrero;
 
 // Probabilidades de rareza: se interpola entre una tabla "puntaje bajo" y una tabla
 // "puntaje alto" según el desempeño (0-100). El azar sigue existiendo siempre: incluso con
@@ -75,5 +77,7 @@ const CHAMP_ITEM_AFFINITY = {
   profeta:  {arma:0.16, escudo:0.14, casco:0.16, pechera:0.18, guantes:0.16, botas:0.20},
   musashi:  {arma:0.34, escudo:0.06, casco:0.10, pechera:0.12, guantes:0.20, botas:0.18},
   cazadora: {arma:0.30, escudo:0.06, casco:0.10, pechera:0.12, guantes:0.20, botas:0.22},
-  nigromante: {arma:0.22, escudo:0.10, casco:0.14, pechera:0.16, guantes:0.16, botas:0.22}
+  nigromante: {arma:0.22, escudo:0.10, casco:0.14, pechera:0.16, guantes:0.16, botas:0.22},
+  libertador: {arma:0.30, escudo:0.08, casco:0.12, pechera:0.14, guantes:0.20, botas:0.16},
+  eren:       {arma:0.30, escudo:0.06, casco:0.10, pechera:0.14, guantes:0.20, botas:0.20}
 };

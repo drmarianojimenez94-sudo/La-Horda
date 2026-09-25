@@ -285,6 +285,11 @@ GRIDS.cazadora = GRIDS.guerrero;
 // principal es su sprite real (NIGRO_IMG, ver más abajo), esto solo se ve si algo no cargara.
 PAL.nigromante = {a:"#0a0f0c", b:"#243024", c:"#3a4a3a", d:"#141c14", e:"#50e68c", f:"#2a8a5a", g:"#1c2a1c", h:"#0e140e", i:"#0a0c0a", j:"#3a2a1e", k:"#5a4a2e", l:"#7a6840", m:"#8ea87a", n:"#c8e8d8", o:"#4a6a5a", p:"#243a30"};
 GRIDS.nigromante = GRIDS.guerrero;
+// El Libertador / Eren: mismo respaldo silencioso (su arte real es CHAMP_PACK.libertador / .eren).
+PAL.libertador = Object.assign({}, PAL.nigromante, {b:"#1c2a5a", c:"#2f4f9a", d:"#141c3a", e:"#f0e0b0", f:"#c8a040", g:"#1a2440"});
+GRIDS.libertador = GRIDS.guerrero;
+PAL.eren = Object.assign({}, PAL.nigromante, {b:"#3a4a2a", c:"#5a6a3a", d:"#2a3420", e:"#e0d0c0", f:"#8a4a2e", g:"#2e3a22"});
+GRIDS.eren = GRIDS.guerrero;
 
 // El Segador Olvidado reutiliza la silueta del Asesino (misma malla de píxeles) con una paleta
 // propia oscura y roja: armadura pesada de hierro ennegrecido y ojos/aura carmesí. Es un
