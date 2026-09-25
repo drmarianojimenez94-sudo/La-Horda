@@ -29,6 +29,7 @@ function netDuplicateChamps(){
 /* ---------------- barra online de la pre-sala ---------------- */
 function netRenderLobbyBar(){
   const bar = document.getElementById("net-bar"); if(!bar) return;
+  if(netAvailable() && !netInRoom()) netWarmup();
   const nameVal = netPlayerName()==="Jugador" ? "" : netPlayerName();
   const nameInput = `<label class="net-name">Tu nombre <input id="net-name-input" maxlength="16" placeholder="Jugador" value="${nameVal.replace(/"/g,"")}"></label>`;
   if(!netInRoom()){
@@ -65,7 +66,7 @@ function netRenderLobbyBar(){
   const c = document.getElementById("net-create-btn");
   if(c) c.addEventListener("click", async ()=>{
     if(!isArenaUnlocked(currentArena)){ netLobby.lastError = "Esa arena todavía no la desbloqueaste."; netRenderLobbyBar(); return; }
-    c.disabled = true; c.textContent = "Conectando…"; netLobby.lastError = "";
+    c.disabled = true; c.textContent = "Conectando… (si el servidor dormía, hasta 1 minuto)"; netLobby.lastError = "";
     const ni2 = document.getElementById("net-name-input"); if(ni2) netSetPlayerName(ni2.value);
     try{ await netCreateRoom(currentArena, selectedClass, save.champions[selectedClass].level); }
     catch(e){ netLobby.lastError = "No se pudo conectar al servidor online: "+(e.message||e); netLog("NETWORK_ERROR", {create:String(e.message||e)}); netRenderLobbyBar(); }
@@ -189,6 +190,7 @@ function showNetToast(text){
   btn.classList.remove("hidden");
   const status = document.getElementById("title-join-status");
   if(status) status.textContent = netAvailable() ? "Te invitaron a jugar. Poné tu nombre y tocá Unirse." : "Este enlace necesita el servidor online (no configurado en esta versión).";
+  if(netAvailable()) netWarmup();
   const nameBox = document.getElementById("title-join-name");
   if(nameBox){ nameBox.classList.remove("hidden"); const inp = nameBox.querySelector("input"); if(inp) inp.value = netPlayerName()==="Jugador" ? "" : netPlayerName(); }
   if(cont) cont.classList.add("secondary-join");
@@ -200,7 +202,7 @@ function showNetToast(text){
     try{ startMusic(); }catch(e){}
     const inp = document.querySelector("#title-join-name input");
     if(inp) netSetPlayerName(inp.value);
-    btn.disabled = true; btn.textContent = "Conectando…";
+    btn.disabled = true; btn.textContent = "Conectando… (hasta 1 minuto si el servidor dormía)";
     try{
       await netJoinRoom(code, selectedClass, (save.champions[selectedClass]||{}).level||1);
     }catch(e){

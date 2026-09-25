@@ -109,6 +109,9 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
    la partida también está **Mis Campeones** (`js/ui/champions-hub.js`) con lo mismo por campeón.
    Objetos y talentos se cambian SOLO ahí (el juego es multijugador: en partida no hay pausa);
    las habilidades se suben en partida con los "+" del HUD (`js/ui/hud.js`).
+   **Multijugador cooperativo B1** (`js/net/`, servidor en `server/`): la pre-sala puede crear
+   una sala online real (hasta 4 humanos); el anfitrión simula la única partida y los invitados
+   la reciben y mandan sus intenciones. Ver `docs/MULTIPLAYER_B1.md`.
 4. **Comenzar** → `startRun()` en `js/core/run.js` crea al jugador y los 3 aliados
    (`js/champions/hero-factory.js`), arma el escenario (`js/arenas/arena-identity.js`) y arranca
    el nivel (`beginLevel` en `js/systems/waves.js`). La Arena Divina entra por

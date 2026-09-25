@@ -39,6 +39,14 @@ function netServerUrl(){
   return NET_CONFIG.serverUrl || "";
 }
 function netAvailable(){ return !!netServerUrl(); }
+// Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min
+// sin uso y tarda ~1 minuto en arrancar): así, para cuando tocás "Crear sala", ya está listo.
+let _netWarmAt = 0;
+function netWarmup(){
+  const u = netServerUrl(); if(!u || performance.now() - _netWarmAt < 60000) return;
+  _netWarmAt = performance.now();
+  try{ fetch(u.replace(/^ws/, "http").replace(/\/$/, "") + "/health", {mode:"no-cors", cache:"no-store"}).catch(()=>{}); }catch(e){}
+}
 function netClientId(){
   // Identidad anónima de este navegador: permite volver a la misma sala tras perder conexión.
   // sessionStorage: dos pestañas del mismo navegador cuentan como dos jugadores distintos.
@@ -75,7 +83,8 @@ function netConnect(){
     let ws;
     try{ ws = new WebSocket(url); }catch(e){ net.status = "error"; reject(e); return; }
     net.ws = ws;
-    const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.close(); }catch(e){} reject(new Error("No se pudo conectar al servidor (tiempo agotado)")); } }, 12000);
+    // Hosting gratuito (Render): el servidor se duerme sin uso y tarda ~1 minuto en despertar.
+    const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.close(); }catch(e){} reject(new Error("No se pudo conectar al servidor (tiempo agotado)")); } }, 75000);
     ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url}); resolve(); };
     ws.onerror = ()=>{ netLog("NETWORK_ERROR", {where:"socket"}); };
     ws.onclose = ()=>{
