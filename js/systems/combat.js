@@ -200,7 +200,11 @@ function killEnemy(e){
 function damageHero(h, amount, src){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
-  if(!h.isDivineFoe) amount *= arenaRuleDmgTakenMult();
+  if(!h.isDivineFoe){
+    const cap = src && src.rank && DIFF.hitCap[src.rank];
+    if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
+    amount *= arenaRuleDmgTakenMult();
+  }
   if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
   const defBonus = (h===player) ? runStats.defBonus : 0;
   const passiveDef = h.classKey ? Math.min(0.5, passiveSum(h.classKey,"def_add")) : 0; // "Piel de Brasa"

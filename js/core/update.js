@@ -542,10 +542,7 @@ function update(dt){
       }
       e.atkCd -= dt;
       if(dist <= e.range && e.atkCd<=0){
-        e.atkCd = 1500;
-        e.attackAnim = 320;
-        projectiles.push({x:e.x,y:e.y, vx:dx/dist*e.projSpeed, vy:dy/dist*e.projSpeed, dmg:e.dmg*(e.basicMult||1), life:2200, radius:7, color:ENEMY_PROJ_COLOR[e.type]||"#ff5a3d", enemy:true,
-          sprite: e.type==="sirena_abisal" ? "orb" : undefined});
+        e.atkCd = enemyRangedAttack(e, tgt, dx, dy, dist); // cada familia dispara a su manera (ranged-styles.js)
       }
     } else {
       if(dist > e.radius+tgt.radius-4){
@@ -566,9 +563,10 @@ function update(dt){
   for(const p of projectiles){
     p.x += p.vx*dt/1000; p.y += p.vy*dt/1000; p.life -= dt;
     if(p.enemy){
+      if((p.wave || p.lob) && updateEnemyProjectileStyle(p, dt)) continue; // el tiro en arco solo pega al caer
       for(const h of heroes){
         if(!h.alive) continue;
-        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
+        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25, rank:p.rank}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
       }
     } else {
       for(const e of enemies){

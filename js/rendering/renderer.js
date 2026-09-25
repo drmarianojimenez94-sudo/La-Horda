@@ -113,6 +113,7 @@ function render(){
   }
   for(const h of heroes){ if(h.wolf) drawSpectralWolf(h.wolf); }
   drawMusashiAfterimages();
+  drawDownedMarkers();
   for(const h of heroes){
     if(h.golem) drawGolemReal(h.golem);
     if(h.skeletons && h.skeletons.length) for(const sk of h.skeletons) drawSkeletonMinion(sk);

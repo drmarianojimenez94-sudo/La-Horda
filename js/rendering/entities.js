@@ -446,6 +446,15 @@ function _entPush(y, e, h, w, p){
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){
+  if(p.lob){
+    // tiro en arco: sombra en el piso + proyectil elevado según la altura del arco
+    ctx.save(); ctx.globalAlpha = 0.35; ctx.fillStyle = "#000";
+    ctx.beginPath(); ctx.ellipse(p.x, p.y, 10, 5, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
+    const y0 = p.y; p.y = y0 - (p.lobH||0); _drawProjCore(p); p.y = y0; return;
+  }
+  _drawProjCore(p);
+}
+function _drawProjCore(p){
   const rgb = hexToRgb(p.color);
   const r = Math.max(3, p.radius);
   const sp = Math.hypot(p.vx||0, p.vy||0)||1;

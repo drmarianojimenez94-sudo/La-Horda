@@ -10,11 +10,16 @@
    >>> Perillas generales de balance: DIFF.
    ============================================================ */
 const DIFF = {
-  hpFollow: 0.62,   // cuánto del poder ofensivo del equipo se traslada a la vida enemiga
-  dmgFollow: 0.72,  // cuánto de la vida del equipo se traslada al daño enemigo
-  enemyDmg: 1.22,   // dificultad general: +22% de daño enemigo base
-  enemyHp: 1.10,    // dificultad general: +10% de vida enemiga base
+  hpFollow: 0.66,   // cuánto del poder ofensivo del equipo se traslada a la vida enemiga
+  dmgFollow: 0.45,  // cuánto de la vida del equipo se traslada al daño enemigo
+  // Dificultad general: sube con el nivel promedio de los campeones (de x1.0 en nivel 1 hasta
+  // el valor indicado desde el nivel 10). Con campeones nuevos no se castiga de más.
+  enemyDmg: 1.22,   // +22% de daño enemigo
+  enemyHp: 1.12,    // +12% de vida enemiga
   spawn: 0.86,      // intervalo entre apariciones (menor = más enemigos)
+  // Tope por golpe de enemigos comunes y de élite (% de la vida máx. del héroe, antes de
+  // defensa): la horda mata por cantidad y por no moverse, nunca de 2-3 golpes sueltos.
+  hitCap: {normal:0.12, subelite:0.2},
   bossHp: 2.3,      // jefes: mucho más duraderos (pelean contra 4 héroes)
   subbossHp: 1.6,   // subjefes
   // Ajuste por jefe para que las peleas duren parecido: el Leviatán tiene 3 vidas y el Jinete 2
@@ -45,10 +50,10 @@ function computePartyPower(){
 function setupRunDifficulty(){
   const p = computePartyPower();
   const avgLevel = heroes.length ? heroes.reduce((s,h)=> s + ((save.champions[h.classKey]||{}).level||1), 0) / heroes.length : 1;
-  const over = Math.max(0, avgLevel-1);
+  const over = Math.max(0, avgLevel-1), ramp = Math.min(1, over/9);
   runDifficulty = {
-    hp: DIFF.enemyHp * (1 + Math.max(0, p.off-1)*DIFF.hpFollow),
-    dmg: DIFF.enemyDmg * (1 + Math.max(0, p.def-1)*DIFF.dmgFollow),
+    hp: (1 + (DIFF.enemyHp-1)*ramp) * (1 + Math.max(0, p.off-1)*DIFF.hpFollow),
+    dmg: (1 + (DIFF.enemyDmg-1)*ramp) * (1 + Math.max(0, p.def-1)*DIFF.dmgFollow),
     spawnRate: DIFF.spawn * (1 - Math.min(0.3, over*0.008)),
     xp: 1 + Math.min(1.5, over*0.022),
     off: p.off, def: p.def,
