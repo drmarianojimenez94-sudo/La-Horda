@@ -180,6 +180,9 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
   `python3 tools/art/scan_sprites.py [--dir carpeta] [--apply]`. Hojas nuevas de arte → atlas:
   `python3 tools/art/redraw/build_all.py` (fuente en `art-source/redraw/`). Auditoría/normalización
   previa (sprint anterior): `VISUAL_ART_REWORK.md`, `tools/art/normalize_sprites.py` (`--check`).
+- Playtest automatizado (sin tocar el juego): `tools/playtest/` — `make_jobs.py` + `campaign.js`
+  corren partidas completas con un piloto automático (resultado, nivel alcanzado, qué te mata, jefe,
+  botín) para comparar balance antes/después de un cambio.
 - Timers de la partida: usar `runLater(ms, fn)` (`js/core/run.js`) en vez de `setTimeout`; se
   cancelan solos al abandonar o reiniciar.
 
