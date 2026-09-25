@@ -140,8 +140,32 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Maestría de habilidades | `js/systems/mastery.js` | `TALENT_MAX`, `useXpThreshold` |
 | Radio de arena, niveles por arena, cámara | `js/core/constants.js` | `ARENA_RADIUS`, `LEVEL_COUNT`, `CAM_ZOOM` |
 
-⚠ `DEV_XP_MULT` (en `js/systems/progression.js`) vale **100**: es un multiplicador de
-**prueba** que ya estaba así. Hay que volverlo a 1 antes de publicar una versión "real".
+| Dificultad general (según el poder real del equipo), tope por golpe, vida/daño de jefes | `js/systems/difficulty.js` | `DIFF` |
+| Regla creciente de cada arena (debuffs por nivel y durante el jefe) | `js/arenas/arena-rules.js` | `ARENA_RULES`, `arenaRule*Mult()` |
+| Fases, rotaciones y ataques de cada jefe + guía de 3 consejos | `js/skills/boss-patterns.js` | `BOSS_DESIGNS`, `BOSS_ATTACKS` |
+| Consejos de los subjefes | `js/ui/boss-hud.js` | `SUBBOSS_TIPS` |
+| Disparo de cada familia de enemigos a distancia | `js/enemies/ranged-styles.js` | `RANGED_STYLE` |
+| Pasivas de objetos por rareza, efectos únicos de legendarios | `js/data/items.js` | `PASSIVE_RARITY_MULT`, `LEGEND_PROCS`, `LEGEND_PROC_POWER` |
+| Apuntado de habilidades (alcance, tipo de previsualización) | `js/skills/aim-targeting.js` | `AIM_PROFILES` |
+| Música por modo, efectos, prioridades | `js/audio/audio.js` | `MUSIC_MODES`, `SFX_CFG` |
+
+⚠ `DEV_XP_MULT` (en `js/systems/progression.js`) vale **10** (antes 100): es un multiplicador de
+**prueba**. Hay que volverlo a 1 antes de publicar una versión "real".
+
+### Game feel (dónde está cada cosa)
+
+- `js/rendering/feedback.js` — hit-stop, cámara lenta, impacto por nivel (liviano → jefe),
+  viñeta y flechas de dirección del daño recibido, flechas a élites/jefes fuera de pantalla.
+- `js/rendering/effects.js` — textos flotantes en canvas (con pool).
+- `js/core/aim.js` — botones 1/2/3: tocar = automático, mantener = previsualizar,
+  arrastrar = elegir; `drawAimPreview()`.
+- `js/ui/hud.js` — estados de los botones (listo / activo / enfriamiento / sin recurso).
+- `js/ui/boss-hud.js` — barra grande del jefe, fases, estado, aviso del ataque en curso, guía.
+- `js/systems/item-procs.js` — efectos únicos de los legendarios en combate.
+- `js/ai/bot-brain.js` — bots por rol, esquivar avisos, revivir entre ellos, marcador de caído.
+- `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
+- Timers de la partida: usar `runLater(ms, fn)` (`js/core/run.js`) en vez de `setTimeout`; se
+  cancelan solos al abandonar o reiniciar.
 
 ---
 
