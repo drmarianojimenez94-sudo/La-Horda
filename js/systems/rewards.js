@@ -33,6 +33,7 @@ function trackHeal(caster, target, amount){
 // desperdiciado por estar ya en vida máxima en un escudo para el objetivo -mismo criterio que
 // ya usa el robo de vida del propio golpeador, ver damageEnemy-.
 function applyHealOverheal(caster, target, amount){
+  amount *= arenaRuleHealMult();
   const before = target.hp;
   target.hp = Math.min(target.maxHp, target.hp + amount);
   const overheal = amount - (target.hp-before);

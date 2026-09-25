@@ -25,6 +25,7 @@ const screens = {
 };
 function setState(s){
   state = s;
+  if(s!=="playing" && typeof _persistTimer!=="undefined" && _persistTimer) persistNow();
   Object.values(screens).forEach(el=>el.classList.add("hidden"));
   const hud = document.getElementById("hud");
   const controls = document.getElementById("controls");

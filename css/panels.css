@@ -44,6 +44,7 @@
 .inv-card .item-name{ font-size:0.68rem; font-weight:700; line-height:1.2; }
 .inv-card .item-stat{ font-size:0.6rem; color:var(--text-dim); margin-top:1px; }
 .inv-card .item-passives{ font-size:0.56rem; color:#8fb8ff; margin-top:2px; }
+.inv-card .item-proc{ color:#ffb020; font-weight:700; }
 .inv-card button{
   flex:none; font-size:0.6rem; padding:5px 8px; border-radius:7px; border:1px solid var(--panel-b);
   background:var(--panel-b); color:var(--text); font-family:inherit; font-weight:700; cursor:pointer;

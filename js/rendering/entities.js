@@ -226,14 +226,29 @@ function drawEnemy(e){
     ctx.restore();
   }
   if(e.rank!=="normal"){
-    // aura sutil según el rango: marca la jerarquía normal < subélite < élite < subjefe < jefe
-    // (se muestra siempre, venga el sprite del atlas real o del procedural de respaldo)
+    // Jerarquía legible dentro de la horda: subélite = aro tenue; élite = aro dorado grueso que
+    // gira (se encuentra de un vistazo entre 40 enemigos); subjefe = doble aro naranja; jefe =
+    // aro ancho con brillo. No depende del sprite (atlas real o procedural de respaldo).
     const rankColor = e.rank==="jefe" ? "#ffb300" : (e.rank==="subjefe" ? "#ff8a3d" : (e.rank==="elite" ? "#ffe36a" : "#c9bd9c"));
-    const pulse = 0.5+0.5*Math.sin(performance.now()/260 + e.animT);
+    const t = animNow/1000, pulse = 0.5+0.5*Math.sin(t*4 + e.animT*0.01);
+    const rx = e.radius*1.15, ry = e.radius*0.55;
     ctx.save();
-    ctx.globalAlpha = 0.18+0.10*pulse;
-    ctx.strokeStyle = rankColor; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.ellipse(e.x, e.y+4, e.radius*1.15, e.radius*0.55, 0, 0, Math.PI*2); ctx.stroke();
+    if(e.rank==="subelite"){
+      ctx.globalAlpha = 0.2+0.1*pulse; ctx.strokeStyle = rankColor; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(e.x, e.y+4, rx, ry, 0, 0, Math.PI*2); ctx.stroke();
+    } else {
+      const big = e.rank==="jefe" || e.rank==="subjefe";
+      ctx.globalCompositeOperation = "lighter";
+      ctx.globalAlpha = 0.18+0.12*pulse;
+      ctx.fillStyle = rankColor;
+      ctx.beginPath(); ctx.ellipse(e.x, e.y+4, rx*1.05, ry*1.05, 0, 0, Math.PI*2); ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 0.55+0.3*pulse; ctx.strokeStyle = rankColor; ctx.lineWidth = big ? 4 : 3;
+      ctx.setLineDash([10, 7]); ctx.lineDashOffset = -t*30;
+      ctx.beginPath(); ctx.ellipse(e.x, e.y+4, rx, ry, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+      if(big){ ctx.globalAlpha = 0.35; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(e.x, e.y+4, rx*1.22, ry*1.22, 0, 0, Math.PI*2); ctx.stroke(); }
+    }
     ctx.restore();
   }
   // Cuerpo con la pose del sistema de animación (solo transformación visual: la hitbox no se mueve).
@@ -390,11 +405,31 @@ function drawEnemyOverlays(e){
     ctx.fillText(e.name, e.x, e.y-e.radius-22);
     ctx.restore();
   }
-  const bw = Math.max(e.radius*2, 26);
-  const by = e.y - e.radius - 14;
-  ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(e.x-bw/2, by, bw, 5);
-  ctx.fillStyle = (e.rank==="jefe"||e.rank==="subjefe") ? "#ffb300" : "#e04a3a";
-  ctx.fillRect(e.x-bw/2, by, bw*Math.max(0,e.hp/e.maxHp), 5);
+  // Barras de vida: las comunes solo aparecen cuando ya recibieron daño (menos ruido en la
+  // horda); élites y subjefes siempre, más gruesas y con marco; el jefe usa la barra grande de
+  // arriba de la pantalla (ver boss-hud.js).
+  const hpPct = Math.max(0, e.hp/e.maxHp);
+  if(e.rank==="jefe" && e===boss){ /* barra grande de jefe en el HUD */ }
+  else if(e.rank==="elite" || e.rank==="subjefe"){
+    const big = e.rank==="subjefe";
+    const bw = Math.max(e.radius*2.2, big ? 70 : 44), bh = big ? 8 : 6;
+    const by = e.y - e.radius - (big ? 16 : 14);
+    ctx.fillStyle = "rgba(0,0,0,0.75)"; ctx.fillRect(e.x-bw/2-2, by-2, bw+4, bh+4);
+    ctx.fillStyle = big ? "#ff8a3d" : "#e0b43a"; ctx.fillRect(e.x-bw/2, by, bw*hpPct, bh);
+    ctx.fillStyle = "rgba(255,255,255,0.25)"; ctx.fillRect(e.x-bw/2, by, bw*hpPct, 2);
+    if(!big){
+      // gema de élite sobre la barra
+      ctx.fillStyle = "#ffe36a"; ctx.strokeStyle = "rgba(0,0,0,0.8)"; ctx.lineWidth = 1.5;
+      const gx = e.x, gy = by-8;
+      ctx.beginPath(); ctx.moveTo(gx, gy-6); ctx.lineTo(gx+5, gy); ctx.lineTo(gx, gy+5); ctx.lineTo(gx-5, gy); ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+  } else if(hpPct < 0.999){
+    const bw = Math.max(e.radius*1.7, 24);
+    const by = e.y - e.radius - 12;
+    ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(e.x-bw/2, by, bw, 4);
+    ctx.fillStyle = e.rank==="jefe" ? "#ffb300" : "#e04a3a";
+    ctx.fillRect(e.x-bw/2, by, bw*hpPct, 4);
+  }
   if(e.electrifiedTimer>0){
     // Aura eléctrica real (sprite) de Cadena de Relámpagos mientras dura el efecto
     const age = (e.electrifiedSize!==undefined ? 1 : 0); // solo para evitar warnings; usa reloj global

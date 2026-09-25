@@ -24,7 +24,7 @@ function updatePotions(dt){
           break;
         }
       } else if(Math.hypot(h.x-p.x, h.y-p.y) < 46 && h.hp < h.maxHp){
-        const amt = h.maxHp*0.28;
+        const amt = h.maxHp*0.28*arenaRuleHealMult();
         h.hp = Math.min(h.maxHp, h.hp + amt);
         floatText(h.x, h.y-34, "+"+Math.round(amt), "heal");
         particles.push({x:p.x, y:p.y, life:300, ring:true, maxLife:300, maxR:38, color:"#ff5f7a"});

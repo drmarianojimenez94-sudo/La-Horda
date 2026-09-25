@@ -230,33 +230,40 @@ function spawnSlash(caster){
   particles.push({x:caster.x+caster.fx*38, y:caster.y+caster.fy*38-10, vx:0, vy:0, life:140, slash:true, color:caster.cls.glow});
 }
 
-function useSkill(idx){
-  if(!player.alive || state!=="playing") return;
+function useSkill(idx, aim){
+  if(!player.alive || state!=="playing") return false;
   const sk = player.cls.skills[idx];
-  if(player.cds[idx]>0 || player.energy < sk.cost) return;
+  if(player.cds[idx]>0 || player.energy < sk.cost) return false;
   player.energy -= sk.cost;
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(player.classKey,"cd_mult")); // "Mente Ágil"
-  player.cds[idx] = sk.cd * runStats.cdMult * cdMultFor(sk, masteryOf(player.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(player.classKey, idx);
+  player.cds[idx] = sk.cd * runStats.cdMult * cdMultFor(sk, masteryOf(player.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(player.classKey, idx);
   if(sk.kind==="teleport_blink") player.cds[idx] = resolveTeleportCd(player, player.cds[idx]);
   if(sk.kind==="ghost_step" && player.duelActive) player.cds[idx] *= musashiGhostStepCdMult(player);
+  if(!player.cdTotal) player.cdTotal = [1,1,1];
+  player.cdTotal[idx] = player.cds[idx];
   gainSkillUseXp(player.classKey, idx);
-  castAbility(player, sk, false, idx);
+  player.aim = aim || null;
+  try{ castAbility(player, sk, false, idx); } finally { player.aim = null; }
+  return true;
 }
 
 // Sylva — Flecha Perforante ya cargada (ver sylvaChargeRelease): mismo descuento de
 // energía/cooldown que useSkill(0), pero pasando cuánto se mantuvo cargada para elegir el tier
 // dentro del case "piercing_shot" de castAbility.
-function useSylvaPiercingShot(caster, chargeMs){
+function useSylvaPiercingShot(caster, chargeMs, aim){
   if(!caster.alive || state!=="playing") return;
   const idx = 0;
   const sk = caster.cls.skills[idx];
   if(caster.cds[idx]>0 || caster.energy < sk.cost) return;
   caster.energy -= sk.cost;
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(caster.classKey,"cd_mult"));
-  caster.cds[idx] = sk.cd * runStats.cdMult * cdMultFor(sk, masteryOf(caster.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(caster.classKey, idx);
+  caster.cds[idx] = sk.cd * runStats.cdMult * cdMultFor(sk, masteryOf(caster.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(caster.classKey, idx);
+  if(!caster.cdTotal) caster.cdTotal = [1,1,1];
+  caster.cdTotal[idx] = caster.cds[idx];
   gainSkillUseXp(caster.classKey, idx);
   caster.pendingChargeMs = chargeMs;
-  castAbility(caster, sk, false, idx);
+  caster.aim = aim || null;
+  try{ castAbility(caster, sk, false, idx); } finally { caster.aim = null; }
 }
 
 function useUltimate(){
@@ -267,7 +274,7 @@ function useUltimate(){
   const ult = player.cls.ultimate;
   player.ultCharge = 0;
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(player.classKey,"cd_mult"));
-  player.ultCd = ult.cd * masteryCdMult(masteryOf(player.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(player.classKey, "ult");
+  player.ultCd = ult.cd * masteryCdMult(masteryOf(player.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(player.classKey, "ult");
   gainSkillUseXp(player.classKey, "ult");
   castAbility(player, ult, true);
 }
@@ -293,12 +300,22 @@ function castAbility(caster, sk, isUlt, idx){
   const dmg0 = caster.baseDmg * runStats.dmgMult * (caster.buffDmgMult||1) * (sk.dmgMult||0) * POWER * furyMissingHpMult(caster) * arenaMods().heroDmgMult * (1+passiveDmg);
   const dmgElem = sk.element==="fire" ? dmg0*arenaMods().fireDmgMult : sk.element==="ice" ? dmg0*arenaMods().iceDmgMult : dmg0;
   const dmg = dmgElem * (arenaMods().abilityDmgMult!==undefined ? arenaMods().abilityDmgMult : 1);
-  if(caster===player){ showBanner((isUlt?"★ ":"")+sk.name); playSfx(isUlt?"ult":"cast"); }
+  // Activación: la ulti se anuncia en grande; las habilidades normales ya no tapan la pantalla
+  // con su nombre (el botón y el efecto lo comunican), solo un anillo del color del campeón.
+  if(caster===player){
+    if(isUlt){ showBanner("★ "+sk.name); flashScreen(0.22, hexToRgb(caster.cls.glow)); }
+    playSfx(isUlt?"ult":"cast");
+  }
+  if(caster.alive) vfxShock(caster.x, caster.y, 8, isUlt ? 70 : 44, hexToRgb(caster.cls.glow||"#ffffff"), isUlt ? 420 : 260, caster===player ? 1 : 0);
+  if(caster.classKey && caster.alive) itemProcsOnCast(caster, sk, isUlt);
   caster.attackAnim = isUlt ? 320 : 240;
   caster._animCastKind = isUlt ? 2 : 1; // el sistema de animación lo lee como CAST (ulti = CAST fuerte)
   // animaciones del Pack 1 (Segador/Axiom): pose de cast mientras dura este attackAnim; el Tajo
   // del Segador es un golpe de guadaña, así que usa la pose de ataque
   caster._packCastUntil = sk.kind==="cone_slash" ? 0 : animNow + caster.attackAnim;
+  const _prevCastCtx = _castCtx;
+  if(caster===player){ _castCtx = {ult:!!isUlt}; if(isUlt) _ultImpactDone = false; }
+  try{
   switch(sk.kind){
 
     case "placeholder": {
@@ -312,7 +329,7 @@ function castAbility(caster, sk, isUlt, idx){
       // Musashi — Corte del Rōnin: avanza y da un único corte fuerte y rápido. Golpear a la
       // Marca de Duelo (o crear una nueva si no había) da +2 Concentración; en Duelo Perfecto
       // (10 cargas) aparece un segundo corte demorado sobre el mismo rival (sección 9).
-      const target = (caster.duelTarget && caster.duelTarget.alive) ? caster.duelTarget : nearestEnemyTo(caster, sk.range*AREA);
+      const target = (caster.aim && aimTarget(caster, sk.range*AREA)) || ((caster.duelTarget && caster.duelTarget.alive) ? caster.duelTarget : nearestEnemyTo(caster, sk.range*AREA));
       if(!target){ if(caster===player) floatText(caster.x, caster.y-40, "Sin objetivo", null); break; }
       const dx0 = target.x-caster.x, dy0 = target.y-caster.y, dlen = Math.hypot(dx0,dy0)||1;
       caster.fx = dx0/dlen; caster.fy = dy0/dlen;
@@ -347,8 +364,8 @@ function castAbility(caster, sk, isUlt, idx){
       // de golpearlo (atkCd bajo, mismo umbral que usa la IA enemiga para decidir "ya puedo
       // pegar"), además evita ese golpe por completo y da +3 Concentración contra él -mezcla
       // de esquive+parry, ventana corta a propósito, no arma un sistema de parry genérico-.
-      const target = (caster.duelTarget && caster.duelTarget.alive && distance(caster,caster.duelTarget)<=sk.range*AREA)
-        ? caster.duelTarget : nearestEnemyTo(caster, sk.range*AREA);
+      const target = (caster.aim && aimTarget(caster, sk.range*AREA)) || ((caster.duelTarget && caster.duelTarget.alive && distance(caster,caster.duelTarget)<=sk.range*AREA)
+        ? caster.duelTarget : nearestEnemyTo(caster, sk.range*AREA));
       let perfectSource = null;
       // Talento "Instinto Filoso"/"Instinto Absoluto": ventana de Paso Perfecto más generosa.
       const perfectWindow = MUSASHI_PERFECT_STEP_WINDOW * (1+(tSkill.flags.perfectStepWindowPct||0));
@@ -445,7 +462,8 @@ function castAbility(caster, sk, isUlt, idx){
       caster.pendingChargeMs = 0;
       const tier = chargeMs >= SYLVA_CHARGE_MAX_MS*0.85 ? 3 : chargeMs >= SYLVA_CHARGE_MAX_MS*0.35 ? 2 : 1;
       const mods3 = sylvaCombatMods(caster);
-      const target = (caster.huntTarget && caster.huntTarget.alive) ? caster.huntTarget : nearestEnemyTo(caster, sk.range*AREA);
+      const target = caster.aim ? null : ((caster.huntTarget && caster.huntTarget.alive) ? caster.huntTarget : nearestEnemyTo(caster, sk.range*AREA));
+      if(caster.aim) aimDir(caster, sk.range*AREA);
       let dx3=caster.fx, dy3=caster.fy;
       if(target){ dx3=target.x-caster.x; dy3=target.y-caster.y; const l3=Math.hypot(dx3,dy3)||1; dx3/=l3; dy3/=l3; caster.fx=dx3; caster.fy=dy3; }
       const tierDmgMult = [0,1,1.5,2.3][tier];
@@ -481,7 +499,7 @@ function castAbility(caster, sk, isUlt, idx){
       // sumándole un nuevo kind:"forest_root" (ver triggerTrap) en vez de duplicar el sistema
       // que ya usa el Guerrero. Enraíza a enemigos normales, reduce la duración en élites y
       // solo ralentiza (nunca inmoviliza del todo) a subjefes/jefes.
-      const tx3 = caster.x + caster.fx*(sk.range*AREA), ty3 = caster.y + caster.fy*(sk.range*AREA);
+      const _ftp = aimPoint(caster, sk.range*AREA, sk.radius*AREA*1.4), tx3 = _ftp.x, ty3 = _ftp.y;
       // Talento "Impulso de Caza": guardado en el propio héroe (no en la trampa) porque el
       // impulso de velocidad se aplica sobre quien la colocó, sin importar quién la dispare.
       caster.sylvaTrapBurstBonus = tSkill.flags.trapBurstBonus||0;
@@ -495,7 +513,7 @@ function castAbility(caster, sk, isUlt, idx){
     case "hunter_rain": {
       // Sylva — Lluvia de la Cazadora: AoE con demora que converge sobre la Presa si está en
       // el área (ver updateSylvaRainZones), mismo patrón que las zonas con demora de Axiom.
-      const tx4 = caster.x + caster.fx*(sk.range||220)*AREA, ty4 = caster.y + caster.fy*(sk.range||220)*AREA;
+      const _hp = aimPoint(caster, (sk.range||220)*AREA, sk.radius*AREA), tx4 = _hp.x, ty4 = _hp.y;
       // Talento "Diluvio"/"Aljaba sin Fondo": impactos adicionales repartidos en la lluvia.
       const totalHitsRain = Math.round((sk.totalHits||12)*(1+ (POWER-1)*0.5)) + (tSkill.flags.extraHits||0);
       sylvaRainZones.push({x:tx4, y:ty4, radius:sk.radius*AREA, timer:900, exploded:false,
@@ -554,7 +572,7 @@ function castAbility(caster, sk, isUlt, idx){
       // maldito muere, contagia a los cercanos (nigromantePlagueDeathSpread), con un tope de
       // generaciones (maxGen) que "Peste Negra" sube en 1 -nunca una cadena infinita-. Sigue
       // disponible incluso transformado (sección 6).
-      const tx = caster.x + caster.fx*(sk.range*AREA), ty = caster.y + caster.fy*(sk.range*AREA);
+      const _pp = aimPoint(caster, sk.range*AREA, sk.radius*AREA), tx = _pp.x, ty = _pp.y;
       const radius = sk.radius*AREA;
       const defPct = sk.defTakenPct + (tSkill.flags.defTakenBonusPct||0);
       const durationMs = sk.duration*DUR;
@@ -592,7 +610,7 @@ function castAbility(caster, sk, isUlt, idx){
 
     case "glitch_delay_nova": {
       // Axiom — Error 404: marca una zona; tras una demora, colapsa (daño + ralentización).
-      const tx = caster.x + caster.fx*(sk.range*AREA), ty = caster.y + caster.fy*(sk.range*AREA);
+      const _gp = aimPoint(caster, sk.range*AREA, sk.radius*AREA), tx = _gp.x, ty = _gp.y;
       axiomZones.push({
         x:tx, y:ty, radius:sk.radius*AREA, timer:sk.delay, mode:"delay", exploded:false,
         dmg, slow:sk.slow, slowDur:sk.slowDur, src:caster, bannerText:"ERROR 404"
@@ -616,7 +634,7 @@ function castAbility(caster, sk, isUlt, idx){
       // contagio salta a los enemigos cercanos (más saltos y más daño al mejorar la
       // habilidad, vía JUMP_BONUS/POWER — mismo sistema que usa "Cadena de Relámpago").
       // Cada infectado además sigue sangrando código corrupto un rato (bleedTimer/bleedDmg).
-      let cur = nearestEnemyTo(caster, sk.range||300);
+      let cur = aimTarget(caster, sk.range||300);
       const hitList = [];
       let curDmg = dmg;
       let px_ = caster.x, py_ = caster.y-14;
@@ -654,8 +672,9 @@ function castAbility(caster, sk, isUlt, idx){
       // como pide el diseño original. A niveles altos el cooldown cae hasta casi 0 (ver
       // masteryTeleportCdMult, usado en vez del masteryCdMult genérico solo para esta skill).
       drawAxiomVfxBurst(caster.x, caster.y, "teleport_out");
-      caster.x += caster.fx*(sk.range*AREA);
-      caster.y += caster.fy*(sk.range*AREA);
+      const _tpDest = aimPoint(caster, sk.range*AREA, 0, true);
+      caster.x = _tpDest.x;
+      caster.y = _tpDest.y;
       clampToArena(caster);
       resolveWallCollision(caster);
       caster.invulnTimer = Math.max(caster.invulnTimer||0, sk.invulnDur||250);
@@ -729,6 +748,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "dash": {
+      aimDir(caster, sk.range*AREA);
       const dx=caster.fx, dy=caster.fy;
       const dist = (sk.range*AREA);
       const steps = 8;
@@ -746,6 +766,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "projectile": {
+      aimDir(caster, 420);
       const col = elementColor(sk, "#8fd0ff");
       projectiles.push({x:caster.x,y:caster.y-14, vx:caster.fx*380, vy:caster.fy*380, dmg, life:1400, radius:10, color:col,
         pierce:sk.pierce, slow:sk.slow, burn:sk.burn, src:caster, hitSet:new Set()});
@@ -753,7 +774,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "chain": {
-      let cur = nearestEnemyTo(caster, 340);
+      let cur = aimTarget(caster, 340);
       const hitList = [];
       let curDmg = dmg;
       let px_ = caster.x, py_ = caster.y-14;
@@ -780,7 +801,7 @@ function castAbility(caster, sk, isUlt, idx){
         // eléctrico mucho más grande. Inspirado en el estado E4 de referencia.
         if(!next && chainTier>=4 && cur && cur.alive){
           const ruptureTarget = cur, ruptureDmg = curDmg*0.9;
-          setTimeout(()=>{ if(ruptureTarget.alive) damageEnemy(ruptureTarget, ruptureDmg, {src:caster}); }, 140);
+          runLater(140, ()=>{ if(ruptureTarget.alive) damageEnemy(ruptureTarget, ruptureDmg, {src:caster}); });
           pushSpark("impacto", cur.x, cur.y, sparkSize*1.6, 460);
           for(let s=0;s<10;s++){
             const a = Math.random()*Math.PI*2;
@@ -793,7 +814,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "bleed_hit": {
-      const t = nearestEnemyTo(caster, caster.cls.basicRange+70);
+      const t = aimTarget(caster, caster.cls.basicRange+70);
       if(t){
         damageEnemy(t, dmg, {src:caster, bleed:true, bleedDur:(sk.bleedDur*DUR)});
         tieredBurstVFX(t.x, t.y, 30, allocLevel(mastery), "#c62828", "#ff6a5a");
@@ -909,6 +930,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "charge_drag": {
+      aimDir(caster, sk.range*AREA);
       const dx=caster.fx, dy=caster.fy, dist=(sk.range*AREA), steps=8;
       let hitEnemy = null;
       for(let i=1;i<=steps && !hitEnemy;i++){
@@ -988,7 +1010,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "fire_wall": {
-      const tx = caster.x + caster.fx*(sk.range*AREA), ty = caster.y + caster.fy*(sk.range*AREA);
+      const _fp = aimPoint(caster, sk.range*AREA, sk.outerR*AREA), tx = _fp.x, ty = _fp.y;
       const twTier = allocLevel(mastery)>=7 ? 4 : allocLevel(mastery)>=4 ? 3 : allocLevel(mastery)>=2 ? 2 : 1;
       fireWalls.push({x:tx, y:ty, innerR:(sk.innerR*AREA), outerR:(sk.outerR*AREA), timer:(sk.duration*DUR), maxTimer:(sk.duration*DUR), tick:0, tickInterval:sk.tick, dmg, src:caster, tier:twTier});
       particles.push({x:tx,y:ty, life:500, warnRing:true, maxR:(sk.outerR*AREA), color:"#ff6a3d"});
@@ -1138,7 +1160,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "triple_hit": {
-      const t = nearestEnemyTo(caster, caster.cls.basicRange+50);
+      const t = aimTarget(caster, caster.cls.basicRange+50);
       if(t){
         damageEnemy(t, dmg, {src:caster});
         particles.push({x:t.x-6,y:t.y-8, life:150, slash:true, color:"#8fd0ff"});
@@ -1157,7 +1179,7 @@ function castAbility(caster, sk, isUlt, idx){
     }
 
     case "area_trap": {
-      const tx = caster.x + caster.fx*(sk.range*AREA), ty = caster.y + caster.fy*(sk.range*AREA);
+      const _tp = aimPoint(caster, sk.range*AREA, sk.radius*AREA*1.6), tx = _tp.x, ty = _tp.y;
       // Cantidad de trampas escala con el talento invertido: 1 en tier1, hasta 4 en tier4 (máx).
       // Se reparten en abanico perpendicular a la dirección de lanzamiento, cubriendo un paso
       // más ancho cuanto más trampas se colocan.
@@ -1192,6 +1214,7 @@ function castAbility(caster, sk, isUlt, idx){
       // daño que ya se aplica por buffDmgMult (ver case "fury_armor").
       const furyArea = caster.furyArmorTimer>0 ? (caster.furyAreaMult||1) : 1;
       const range = sk.range*AREA*furyArea;
+      aimDir(caster, range+60);
       const halfArc = sk.arc;
       const facing = Math.atan2(caster.fy, caster.fx);
       const slashTier = tierOf(allocLevel(mastery));
@@ -1217,13 +1240,13 @@ function castAbility(caster, sk, isUlt, idx){
       // Talento alto (nivel 9-10): onda de choque corta después del golpe
       if(slashTier>=4){
         const shockX=caster.x, shockY=caster.y, shockR=range*0.75, shockDmg=dmg*0.4;
-        setTimeout(()=>{
+        runLater(170, ()=>{
           for(const e of enemies){
             if(!e.alive) continue;
             if(distance({x:shockX,y:shockY},e) <= shockR) damageEnemy(e, shockDmg, {src:caster});
           }
           particles.push({x:shockX,y:shockY, life:420, ring:true, maxLife:420, maxR:shockR, color:"#ff5c4a"});
-        }, 170);
+        });
       }
       break;
     }
@@ -1407,4 +1430,5 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
   }
+  } finally { _castCtx = _prevCastCtx; }
 }

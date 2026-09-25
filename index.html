@@ -45,9 +45,9 @@
     <div class="top">
       <div class="top-pill">
         <span id="hud-arena-line"><b id="hud-arena">Ruinas del Bosque</b></span>
-        <span>Nivel <b id="hud-level">1</b>/10</span>
-        <span>Bajas <b id="hud-kills">0</b></span>
+        <span>Nivel <b id="hud-level">1</b>/10 · Bajas <b id="hud-kills">0</b></span>
         <span>⏱ <b id="hud-timer">0:00</b></span>
+        <span id="arena-rule-chip" class="hidden"></span>
       </div>
       <div id="wave-timer-wrap"><div id="wave-timer-bar"></div></div>
     </div>
@@ -55,6 +55,13 @@
       <div id="ult-ring"><div id="ult-ring-inner">★</div></div>
       <div id="ult-label">Ultimate</div>
     </div>
+    <div id="boss-hud" class="hidden">
+      <div id="boss-name-row"><span id="boss-name"></span><span id="boss-epithet"></span></div>
+      <div id="boss-bar"><div id="boss-chip"></div><div id="boss-fill"></div><div id="boss-ticks"></div></div>
+      <div id="boss-status"></div>
+      <div id="boss-hint"></div>
+    </div>
+    <div id="boss-intro" class="hidden"><div class="bi-name"></div><div class="bi-epithet"></div><ul class="bi-tips"></ul></div>
     <div id="floaters"></div>
     <div id="center-banner"></div>
   </div>
@@ -67,6 +74,7 @@
       <div id="joy-base"></div>
       <div id="joy-knob"></div>
     </div>
+    <div id="aim-pad" class="hidden"><div id="aim-knob"></div></div>
     <div id="skillzone" class="zone">
       <div class="ability-btn ult" id="btn-ult"><div class="ico">★</div><div>ULT</div></div>
       <div class="ability-btn revive" id="btn-revive"><div class="ico">✚</div><div>Revivir</div></div>
@@ -278,6 +286,7 @@
 <script src="js/rendering/divina.js"></script>
 <script src="js/rendering/camera.js"></script>
 <script src="js/rendering/effects.js"></script>
+<script src="js/rendering/feedback.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
 <script src="js/rendering/entities.js"></script>
@@ -286,8 +295,10 @@
 <script src="js/systems/mastery.js"></script>
 <script src="js/systems/talents.js"></script>
 <script src="js/systems/items.js"></script>
+<script src="js/systems/item-procs.js"></script>
 <script src="js/systems/rewards.js"></script>
 <script src="js/systems/hero-stats.js"></script>
+<script src="js/systems/difficulty.js"></script>
 <script src="js/systems/waves.js"></script>
 <script src="js/systems/combat.js"></script>
 <script src="js/systems/potions.js"></script>
@@ -300,9 +311,11 @@
 <script src="js/champions/profeta.js"></script>
 <script src="js/champions/musashi.js"></script>
 <script src="js/champions/nigromante.js"></script>
+<script src="js/skills/aim-targeting.js"></script>
 <script src="js/skills/abilities.js"></script>
 <script src="js/skills/ability-vfx.js"></script>
 <script src="js/skills/boss-skills.js"></script>
+<script src="js/skills/boss-patterns.js"></script>
 <script src="js/enemies/spawning.js"></script>
 <script src="js/arenas/arena-rules.js"></script>
 <script src="js/arenas/arena-identity.js"></script>
@@ -316,10 +329,12 @@
 <script src="js/storage/save-code.js"></script>
 <script src="js/ui/champion-select.js"></script>
 <script src="js/core/input.js"></script>
+<script src="js/core/aim.js"></script>
 <script src="js/ui/screens.js"></script>
 <script src="js/ui/panels-skills.js"></script>
 <script src="js/ui/panels-inventory.js"></script>
 <script src="js/ui/hud.js"></script>
+<script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/menus.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/end-screens.js"></script>

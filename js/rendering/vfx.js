@@ -126,7 +126,7 @@ function vfxShock(x, y, r0, r1, rgb, dur, prio){
   if(!s){ if(prio<2) return; s = vfxShocks[0]; }
   s.on = true; s.x = x; s.y = y; s.r0 = r0; s.r1 = r1; s.t = 0; s.dur = dur; s.rgb = rgb;
 }
-const VFX_TELE_MAX = 24, vfxTeles = [];
+const VFX_TELE_MAX = 96, vfxTeles = [];
 for(let i=0;i<VFX_TELE_MAX;i++) vfxTeles.push({on:false, x:0, y:0, r:0, t:0, dur:0, rgb:"255,70,50", shape:0, dx:1, dy:0, arc:0.8, len:0, follow:null, link:null, aimAt:null});
 // Telegraph de zona peligrosa: shape 0 = círculo, 1 = cono (dx,dy,arc), 2 = línea (dx,dy,len, r = medio ancho).
 // `follow` = entidad cuyo x/y sigue; `link` = entidad con bossWind cuyo progreso real sincroniza la barra.
@@ -135,7 +135,7 @@ function vfxTelegraph(o){
   for(let i=0;i<VFX_TELE_MAX;i++){ if(!vfxTeles[i].on){ s = vfxTeles[i]; break; } }
   if(!s) s = vfxTeles[0];
   s.on = true; s.t = 0; s.dur = o.dur||700; s.r = o.r||100; s.rgb = o.rgb||"255,70,50"; s.shape = o.shape||0;
-  s.dx = o.dx||1; s.dy = o.dy||0; s.arc = o.arc||0.8; s.len = o.len||0; s.follow = o.follow||null; s.link = o.link||null; s.aimAt = o.aimAt||null;
+  s.dx = o.dx||1; s.dy = o.dy||0; s.arc = o.arc||0.8; s.len = o.len||0; s.r2 = o.r2||0; s.follow = o.follow||null; s.link = o.link||null; s.aimAt = o.aimAt||null;
   s.x = o.x!==undefined ? o.x : (s.follow ? s.follow.x : 0); s.y = o.y!==undefined ? o.y : (s.follow ? s.follow.y : 0);
   return s;
 }
@@ -234,10 +234,26 @@ function vfxDrawGround(){
     const q = s.link && s.link.bossWind ? Math.min(1, s.link.bossWind.t/s.link.bossWind.dur) : Math.min(1, s.t/s.dur);
     const pulse = 0.5+0.5*Math.sin(animNow/70);
     ctx.save();
+    // Se dibujan como círculos reales (antes aplastados al 55% en vertical): el daño se calcula
+    // con distancia real, así que un aviso aplastado dejaba "afuera" en pantalla a quien en
+    // realidad iba a recibir el golpe estando arriba o abajo del jefe.
     ctx.translate(s.x, s.y+6);
-    ctx.scale(1, 0.55);
+    if(s.shape===4){
+      // ZONA SEGURA (verde): lo único que salva de un ataque a toda la arena
+      const pulseS = 0.5+0.5*Math.sin(animNow/110);
+      ctx.beginPath(); ctx.arc(0, 0, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${s.rgb},${0.18+0.12*pulseS})`; ctx.fill();
+      ctx.lineWidth = 5; ctx.strokeStyle = `rgba(${s.rgb},${0.75+0.25*pulseS})`; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, s.r*(1-q)+4, 0, Math.PI*2); ctx.lineWidth = 2; ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.stroke();
+      ctx.font = "bold 18px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = "rgba(230,255,235,0.95)"; ctx.fillText("SEGURO", 0, 6);
+      ctx.restore();
+      continue;
+    }
     ctx.beginPath();
-    if(s.shape===1){
+    if(s.shape===3){
+      // anillo: peligro entre r2 y r (el centro es seguro)
+      ctx.arc(0, 0, s.r, 0, Math.PI*2); ctx.moveTo(s.r2, 0); ctx.arc(0, 0, s.r2, 0, Math.PI*2, true);
+    } else if(s.shape===1){
       const ang = Math.atan2(s.dy, s.dx);
       ctx.moveTo(0,0); ctx.arc(0, 0, s.r, ang-s.arc, ang+s.arc); ctx.closePath();
     } else if(s.shape===2){
@@ -246,11 +262,17 @@ function vfxDrawGround(){
     } else {
       ctx.arc(0, 0, s.r, 0, Math.PI*2);
     }
-    ctx.fillStyle = `rgba(${s.rgb},${0.10+0.10*q})`; ctx.fill();
-    ctx.lineWidth = 4; ctx.strokeStyle = `rgba(${s.rgb},${0.55+0.35*pulse})`; ctx.stroke();
+    // El peligro se vuelve más evidente cuanto más cerca está el golpe: en el último tramo el
+    // borde engrosa, late más rápido y aparece un filo blanco.
+    const hot = q>0.72 ? (q-0.72)/0.28 : 0;
+    const pulse2 = hot>0 ? 0.5+0.5*Math.sin(animNow/(70-40*hot)) : pulse;
+    ctx.fillStyle = `rgba(${s.rgb},${0.10+0.12*q+0.10*hot})`; ctx.fill();
+    ctx.lineWidth = 4+3*hot; ctx.strokeStyle = `rgba(${s.rgb},${0.55+0.35*pulse2})`; ctx.stroke();
+    if(hot>0){ ctx.lineWidth = 2; ctx.strokeStyle = `rgba(255,255,255,${0.3+0.55*hot*pulse2})`; ctx.stroke(); }
     // relleno que avanza: cuánto falta para el golpe
     ctx.beginPath();
-    if(s.shape===1){ const ang = Math.atan2(s.dy, s.dx); ctx.moveTo(0,0); ctx.arc(0, 0, s.r*q, ang-s.arc, ang+s.arc); ctx.closePath(); }
+    if(s.shape===3){ const rr = s.r2 + (s.r-s.r2)*q; ctx.arc(0, 0, rr, 0, Math.PI*2); ctx.moveTo(s.r2, 0); ctx.arc(0, 0, s.r2, 0, Math.PI*2, true); }
+    else if(s.shape===1){ const ang = Math.atan2(s.dy, s.dx); ctx.moveTo(0,0); ctx.arc(0, 0, s.r*q, ang-s.arc, ang+s.arc); ctx.closePath(); }
     else if(s.shape===2){ ctx.rect(0, -s.r, s.len*q, s.r*2); }
     else ctx.arc(0, 0, s.r*q, 0, Math.PI*2);
     ctx.fillStyle = `rgba(${s.rgb},${0.16+0.14*q})`; ctx.fill();
@@ -364,6 +386,7 @@ function vfxDrawDying(){
 }
 function vfxResetRun(){
   vCount = 0; vfxDyingN = 0;
+  if(typeof floatTexts!=="undefined") for(const f of floatTexts) f.on = false;
   for(const s of vfxShocks) s.on = false;
   for(const s of vfxTeles) s.on = false;
   for(const s of vfxSprites) s.on = false;

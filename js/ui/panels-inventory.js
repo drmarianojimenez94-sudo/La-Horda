@@ -179,9 +179,7 @@ function renderInventoryPanel(){
     champ.inventory.slice().reverse().forEach(it=>{
       const rm = RARITY_META[it.rarity];
       const equipped = champ.equipment[it.type] === it.uid;
-      const passiveNames = it.passives.map(p=>p.name);
-      if(it.mythicPassive) passiveNames.push("★ "+it.mythicPassive.name);
-      const passiveTxt = passiveNames.join(", ");
+      const passiveTxt = itemPassivesHTML(it);
       const comparing = compareOpenUid === it.uid;
       html += `<div class="inv-card ${it.set?"set-item":""}" data-compare-toggle="${it.uid}" style="border-left-color:${it.set?"#3ddc71":rm.color};">
         <span class="item-icon">${it.icon}</span>

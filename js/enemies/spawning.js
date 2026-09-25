@@ -81,24 +81,7 @@ function pickFromPool(pool){
   return pool[0].t;
 }
 
-// Dificultad extra por progreso de CUENTA (no confundir con `runLevel`, el nivel de la
-// arena EN esta partida: acá es el nivel permanente de los campeones que la están jugando,
-// save.champions[classKey].level, el mismo que sube de nivel en nivel entre partidas). Una
-// cuenta veterana con campeones muy subidos de nivel enfrenta una horda más numerosa, más
-// resistente y que también da más experiencia -así seguir jugando con campeones ya fuertes
-// no se vuelve trivial, y de paso el progreso tardío sigue rindiendo-. Techos prudentes en
-// cada campo para que esto siga siendo jugable en cuentas muy avanzadas (no es un multiplicador
-// libre sin límite). Devuelve 1 (neutral) si todavía no hay una partida en curso.
-function partyLevelScale(){
-  if(typeof heroes==="undefined" || !heroes || !heroes.length) return {hp:1, spawnRate:1, xp:1};
-  const avgLevel = heroes.reduce((s,h)=> s + ((save.champions[h.classKey]||{}).level||1), 0) / heroes.length;
-  const over = Math.max(0, avgLevel-1);
-  return {
-    hp: 1 + Math.min(1.2, over*0.018),        // hasta +120% de vida en cuentas muy avanzadas
-    spawnRate: 1 - Math.min(0.35, over*0.01), // hasta -35% de intervalo entre apariciones (más enemigos por minuto)
-    xp: 1 + Math.min(1.5, over*0.022)         // hasta +150% de experiencia por baja
-  };
-}
+// (La dificultad por poder del equipo vive ahora en js/systems/difficulty.js: partyLevelScale.)
 function spawnEnemy(type, atBoss, champion){
   const base = ENEMY_BASE[type];
   const scale = 1 + (runLevel-1)*0.17;
@@ -113,8 +96,8 @@ function spawnEnemy(type, atBoss, champion){
   const e = {
     type, name: base.name, rank: champion ? "subjefe" : base.rank,
     x, y, radius: base.radius*champScale,
-    hp: Math.round(base.hp*hpScale*champHp*pls.hp), maxHp: Math.round(base.hp*hpScale*champHp*pls.hp),
-    dmg: Math.round(base.dmg*(1+(runLevel-1)*arenaMods().enemyDmgPerWave)*(champion?1.4:1)),
+    hp: Math.round(base.hp*hpScale*champHp*pls.hp*((champion||base.rank==="subjefe")?DIFF.subbossHp:1)), maxHp: Math.round(base.hp*hpScale*champHp*pls.hp*((champion||base.rank==="subjefe")?DIFF.subbossHp:1)),
+    dmg: (champion||base.rank==="subjefe") ? Math.round(pls.avgHp*DIFF.subbossDmgPct*(1+(runLevel-1)*0.03)) : Math.round(base.dmg*(1+(runLevel-1)*arenaMods().enemyDmgPerWave)*pls.dmg),
     speed: base.speed*(champion?0.9:1), color: base.color,
     ranged: base.ranged||false, range: base.range||0, projSpeed: base.projSpeed||0,
     atkCd:0, xp: Math.round(base.xp*(champion?7:1)*pls.xp), gold: base.gold*(champion?7:1),

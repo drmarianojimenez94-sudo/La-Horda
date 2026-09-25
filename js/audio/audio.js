@@ -69,10 +69,6 @@ function startMusic(){
   // Diagnóstico visible: mostrar el estado real del audio ~400ms después de intentar
   // resumirlo (le da tiempo a resume() a resolver), para saber de verdad qué está pasando
   // en vez de seguir adivinando arreglos a ciegas.
-  setTimeout(()=>{
-    if(audioCtx.state==="running") showBanner("🔊 Audio activo");
-    else showBanner("🔇 Audio: "+audioCtx.state+" (avisame este mensaje)");
-  }, 400);
   if(musicStarted) return;
   musicStarted = true;
   const root = 55; // La grave, drone sostenido de fondo

@@ -7,7 +7,7 @@
 function damageEnemy(e, amount, opts){
   opts = opts || {};
   const src = opts.src || player;
-  let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1);
+  let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
   // e.fy ya apuntan hacia donde está mirando (su objetivo actual), así que compara contra eso
   // en vez de armar un sistema de facing nuevo-.
@@ -39,12 +39,14 @@ function damageEnemy(e, amount, opts){
     if(!opts.fromBasic) src.stats.abilityHits = (src.stats.abilityHits||0)+1;
   }
   e.lastHitBy = src;
-  if(src===player || Math.random()<0.35) floatText(e.x, e.y-20, Math.round(dmg), crit?"crit":null);
+  if(src===player) floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null);
   if(src===player && (!player._hitSfxAt || performance.now()-player._hitSfxAt>90)){
     player._hitSfxAt = performance.now();
     playSfx(crit ? "crit" : "hit");
   }
   vfxHit(e, src, opts, crit);
+  if(src===player && !opts.fromProc) impactFeedback(e, dmg, crit, opts);
+  if(src && src.classKey && !opts.fromProc) itemProcsOnHit(src, e, dmg, crit, opts);
   // Antes cargaba con el 10% del daño ya escalado por maestría/nivel/buffs, así que al final
   // de la partida (con el daño multiplicado varias veces) un solo golpe llenaba casi toda la
   // barra. Ahora se normaliza contra el daño BASE del propio héroe: siempre hacen falta más o
@@ -63,11 +65,11 @@ function damageEnemy(e, amount, opts){
     e.x += Math.cos(ang)*36; e.y += Math.sin(ang)*36;
   }
   if(runStats.lifesteal>0 && opts.fromBasic){
-    src.hp = Math.min(src.maxHp, src.hp + dmg*runStats.lifesteal);
+    src.hp = Math.min(src.maxHp, src.hp + dmg*runStats.lifesteal*arenaRuleHealMult());
   }
   const passiveLifesteal = (src.buffLifesteal||0) + (src.classKey ? passiveSum(src.classKey,"lifesteal_add") : 0);
   if(passiveLifesteal>0){
-    const healAmt = dmg*passiveLifesteal, before = src.hp;
+    const healAmt = dmg*passiveLifesteal*arenaRuleHealMult(), before = src.hp;
     src.hp = Math.min(src.maxHp, src.hp + healAmt);
     // Talento "exceso de curación -> escudo" (Segador/Sanadora): lo que el robo de vida no pudo
     // curar por estar ya en vida máxima se convierte en un escudo, en vez de perderse sin más.
@@ -81,10 +83,10 @@ function damageEnemy(e, amount, opts){
     e.bleedTimer = Math.max(e.bleedTimer, 2400); e.bleedDmg = Math.max(e.bleedDmg||0, dmg*0.18);
   }
   // Pasiva "Descarga": probabilidad de electrocutar al golpear (objetos con effect:onhit_proc)
-  if(src && src.classKey && opts.fromBasic){
-    const procChance = passiveSum(src.classKey,"onhit_proc");
+  if(src && src.classKey && opts.fromBasic && !opts.fromProc){
+    const procChance = Math.min(0.45, passiveSum(src.classKey,"onhit_proc"));
     if(procChance>0 && Math.random()<procChance){
-      damageEnemy(e, dmg*0.6, {src, forceCrit:false});
+      damageEnemy(e, dmg*0.6, {src, forceCrit:false, fromProc:true});
       e.stunTimer = Math.max(e.stunTimer||0, 260);
       pushSpark("impacto", e.x, e.y, 50, 300);
     }
@@ -130,6 +132,7 @@ function killEnemy(e){
   // nuevo Rastreo" -acá el cambio es forzado porque ya no hay a quién rastrear-).
   for(const h of heroes){ if(h.huntTarget===e){ sylvaClearTrack(h); } }
   kills++;
+  if(e.lastHitBy && e.lastHitBy.classKey && (e.lastHitBy===player || inView(e.x, e.y, 0))) killFeedback(e, e.lastHitBy===player);
   if(e.rank==="subjefe") subjefesDefeated++;
   if(e.lastHitBy && e.lastHitBy.stats) e.lastHitBy.stats.kills++;
   if(e.lastHitBy && e.lastHitBy.classKey==="segador"){
@@ -147,6 +150,7 @@ function killEnemy(e){
     }
   }
   if(activeChampion === e) activeChampion = null;
+  if(e.lastHitBy && e.lastHitBy.classKey) itemProcsOnKill(e.lastHitBy, e);
   // Ahora la XP la gana quien dio el golpe final, sea el jugador o un aliado — así los
   // bots también suben de nivel durante la partida, simulando a otros jugadores.
   if(e.lastHitBy && e.lastHitBy.classKey){
@@ -193,9 +197,10 @@ function killEnemy(e){
   }
 }
 
-function damageHero(h, amount){
+function damageHero(h, amount, src){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
+  if(!h.isDivineFoe) amount *= arenaRuleDmgTakenMult();
   if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
   const defBonus = (h===player) ? runStats.defBonus : 0;
   const passiveDef = h.classKey ? Math.min(0.5, passiveSum(h.classKey,"def_add")) : 0; // "Piel de Brasa"
@@ -213,7 +218,7 @@ function damageHero(h, amount){
   // Guardián Mítico: si el golpe deja el escudo en 0, genera un escudo de emergencia una vez
   // por partida (objetos con effect:mythic_emergency_shield).
   if(dmg>0 && h.shield<=0 && h.itemShield<=0 && !h.emergencyShieldUsed && h.classKey){
-    const guardianVal = equippedPassives(h.classKey).filter(p=>p.effect==="mythic_emergency_shield").reduce((s,p)=>s+p.value,0);
+    const guardianVal = passiveSum(h.classKey, "mythic_emergency_shield");
     if(guardianVal>0){
       h.itemShield = h.maxHp*guardianVal;
       h.itemMaxShield = Math.max(h.itemMaxShield||0, h.itemShield);
@@ -224,6 +229,8 @@ function damageHero(h, amount){
     }
   }
   h.hp -= dmg;
+  if(dmg>0) itemProcsOnHurt(h, dmg);
+  if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);
   // Historial de daño reciente (solo lo consume Destino Restaurado, de La Profeta): guarda
   // el daño YA mitigado, con timestamp, y se poda a los pocos segundos para no crecer sin
   // límite en partidas largas -ver el filtrado por ventana de tiempo en castAbility.

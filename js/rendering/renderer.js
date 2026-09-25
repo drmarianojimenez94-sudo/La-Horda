@@ -29,7 +29,10 @@ function render(){
     ctx.fillRect(em.x, em.y, 2, 2);
   }
   drawAcuaAmbience();
+  drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   vfxDrawGround(); // telegraphs de zonas peligrosas + ondas de choque
+  drawAimPreview(); // previsualización de la habilidad que se está apuntando
+  drawBossTethers(); // cadenas de hielo entre el Mago y sus guardianes
   vfxDrawSprites(true); // efectos de sprite real "de suelo" (bajo las entidades)
 
   // anillos de habilidad en el suelo
@@ -41,7 +44,7 @@ function render(){
       if(r <= 0) continue;
       ctx.strokeStyle = pt.warnRing ? "rgba(255,90,40,0.85)" : (pt.color+"cc");
       ctx.lineWidth = pt.warnRing?3:5;
-      ctx.beginPath(); ctx.ellipse(pt.x,pt.y+6,r,r*0.55,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(pt.x,pt.y+6,r,0,Math.PI*2); ctx.stroke(); // radio real del efecto (antes aplastado)
     }
   }
 
@@ -216,6 +219,8 @@ function render(){
 
   aidAmbDraw(animNow/1000); // ambiente de primer plano: ceniza, nieve, hojas, polvo, motas
   aidGrade(animNow/1000);   // luz/color propio de la arena (debajo del HUD)
+  drawFloatTexts();          // números de daño/curación y avisos, por encima de todo el mundo
 
   ctx.restore();
+  drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }

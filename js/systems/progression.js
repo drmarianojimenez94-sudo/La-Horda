@@ -9,9 +9,9 @@
 // así que debe costar un esfuerzo enorme, sobre todo pasados los primeros niveles.
 function xpToNext(level){ return Math.round(80 + level*55 + Math.pow(level,2.3)*4); }
 // ⚠️ MULTIPLICADOR TEMPORAL DE TESTEO: mientras se está explorando/balanceando el juego, toda la
-// XP ganada se multiplica x100 para poder ver progresión y desbloqueos rápido. Antes de publicar
+// XP ganada se multiplica x10 para poder ver progresión y desbloqueos rápido. Antes de publicar
 // una build real, volver este valor a 1 para que la curva dura de arriba tenga efecto real.
-const DEV_XP_MULT = 100;
+const DEV_XP_MULT = 10;
 function grantXP(champKey, amount){
   const c = save.champions[champKey];
   c.xp += amount * DEV_XP_MULT;

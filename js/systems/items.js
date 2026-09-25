@@ -112,6 +112,7 @@ function makeItem(type, rarity, champKey){
     icon: ITEM_TYPES[type].icon,
     statKey: type, value,
     passives, mythicPassive,
+    legendProc: LEGEND_PROC_POWER[rarity] ? LEGEND_PROC_IDS[(Math.random()*LEGEND_PROC_IDS.length)|0] : undefined,
     champion: champKey || null,
     placeholder: isPlaceholder,
     desc: isPlaceholder
@@ -133,7 +134,8 @@ function equippedPassives(champKey){
   EQUIP_SLOT_TYPES.forEach(type=>{
     const it = equippedItem(champKey, type);
     if(!it) return;
-    (it.passives||[]).forEach(p=>list.push(p));
+    const mult = it.designed ? 1 : (PASSIVE_RARITY_MULT[it.rarity]||1);
+    (it.passives||[]).forEach(p=>list.push(mult===1 ? p : {id:p.id, name:p.name, effect:p.effect, value:p.value*mult}));
     if(it.mythicPassive) list.push(it.mythicPassive);
     const guaranteedEffect = SLOT_GUARANTEED_EFFECT[type];
     if(guaranteedEffect) list.push({id:"slot_"+type, name:ITEM_TYPES[type].label, effect:guaranteedEffect, value:it.value});
@@ -142,28 +144,82 @@ function equippedPassives(champKey){
   return list;
 }
 // Suma el valor de todas las pasivas equipadas que coincidan con un efecto dado (p.ej. "dmg_mult").
-function passiveSum(champKey, effect){
+// Caché por cuadro: passiveSum se consulta decenas de veces por cada golpe (daño, crítico,
+// robo de vida, cooldown...) y antes rearmaba la lista de objetos+talentos en cada consulta.
+// Ahora se arma una vez por campeón y por cuadro (update() llama a invalidatePassiveCache), y
+// también al equipar/comprar talentos fuera de la partida.
+let _passiveFrame = 1;
+const _passiveCache = {};
+function invalidatePassiveCache(){ _passiveFrame++; }
+function _passiveBucket(champKey){
+  let c = _passiveCache[champKey];
+  if(c && c.frame===_passiveFrame) return c;
+  c = _passiveCache[champKey] = {frame:_passiveFrame, sums:{}, procs:null};
   // Objeto equipado + talentos permanentes: mismo balde, mismo formato {effect,value} -así
   // TODA fórmula que ya consultaba pasivas de objeto (daño, cd, crítico, def, lifesteal, etc.)
   // automáticamente respeta también los talentos, sin que esa fórmula se entere de que existen.
-  const talents = champKey ? talentPassives(champKey) : [];
-  return equippedPassives(champKey).concat(talents).filter(p=>p.effect===effect).reduce((s,p)=>s+p.value,0);
+  const all = equippedPassives(champKey).concat(talentPassives(champKey));
+  for(const p of all) c.sums[p.effect] = (c.sums[p.effect]||0) + p.value;
+  return c;
+}
+function passiveSum(champKey, effect){
+  if(!champKey || !save || !save.champions[champKey]) return 0;
+  return _passiveBucket(champKey).sums[effect] || 0;
+}
+// Poder legendario de un objeto (ver LEGEND_PROCS): el guardado en el objeto si lo tiene, o uno
+// determinístico según su uid para objetos anteriores a este sistema.
+function legendProcOf(it){
+  if(!it || !LEGEND_PROC_POWER[it.rarity]) return null;
+  if(it.legendProc && LEGEND_PROCS[it.legendProc]) return it.legendProc;
+  let h = 0; const s = String(it.uid||it.name||"");
+  for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;
+  return LEGEND_PROC_IDS[h % LEGEND_PROC_IDS.length];
+}
+// Poderes legendarios activos de un campeón: {procId: potencia} (se suman si dos objetos
+// traen el mismo). Mismo caché por cuadro que passiveSum.
+function heroProcs(champKey){
+  if(!champKey || !save || !save.champions[champKey]) return null;
+  const c = _passiveBucket(champKey);
+  if(!c.procs){
+    c.procs = {};
+    EQUIP_SLOT_TYPES.forEach(type=>{
+      const it = equippedItem(champKey, type);
+      const id = legendProcOf(it);
+      if(id) c.procs[id] = (c.procs[id]||0) + LEGEND_PROC_POWER[it.rarity];
+    });
+  }
+  return c.procs;
+}
+// Texto de pasivas para la UI (inventario, recompensas): con su valor REAL (ya multiplicado por
+// la rareza del objeto) y el poder legendario, si lo tiene.
+const PASSIVE_PCT_EFFECTS = {dmg_mult:1, atkspeed_mult:1, cd_mult:1, lifesteal_add:1, heal_mult:1, def_add:1, skilldmg_mult:1, onhit_proc:1,
+  hp_mult:1, speed_mult:1, crit_chance_add:1, crit_mult_add:1, energy_mult:1, overheal_shield_pct:1, mythic_execute:1, mythic_emergency_shield:1};
+function itemPassivesHTML(it){
+  const mult = it.designed ? 1 : (PASSIVE_RARITY_MULT[it.rarity]||1);
+  const parts = (it.passives||[]).map(p=> PASSIVE_PCT_EFFECTS[p.effect] ? `${p.name} +${Math.round(p.value*mult*100)}%` : p.name);
+  if(it.mythicPassive) parts.push("★ "+it.mythicPassive.name);
+  let html = parts.join(" · ");
+  const proc = legendProcOf(it);
+  if(proc) html += `${html?"<br>":""}<span class="item-proc">✦ ${LEGEND_PROCS[proc].name}: ${LEGEND_PROCS[proc].desc}</span>`;
+  return html;
 }
 // Sobrecarga Mítica: bonus de daño/velocidad mientras la vida esté por debajo del 50%.
 function mythicExecuteBonus(h){
-  if(!h.hp || !h.maxHp || h.hp >= h.maxHp*0.5) return 0;
-  return equippedPassives(h.classKey).filter(p=>p.effect==="mythic_execute").reduce((s,p)=>s+p.value,0);
+  if(!h.hp || !h.maxHp || h.hp >= h.maxHp*0.5 || !h.classKey) return 0;
+  return passiveSum(h.classKey, "mythic_execute");
 }
 function equipItem(champKey, uid){
   const champ = save.champions[champKey];
   const item = (champ.inventory||[]).find(it=>it.uid===uid);
   if(!item) return;
   champ.equipment[item.type] = uid; // reemplaza lo que hubiera en esa ranura, sin duplicar bonificación
+  invalidatePassiveCache();
   persist();
 }
 function unequipItem(champKey, type){
   const champ = save.champions[champKey];
   champ.equipment[type] = null;
+  invalidatePassiveCache();
   persist();
 }
 function addItemToInventory(champKey, item){

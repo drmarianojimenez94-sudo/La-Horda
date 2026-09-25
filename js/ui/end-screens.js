@@ -87,7 +87,7 @@ function buildVictoryData(){
   const victoryXpBonus = Math.round(20 * score * (1 + score/100));
   grantXP(classKey, victoryXpBonus);
   return {
-    classKey, score, rewards, partyScores, inventoryFull, victoryXpBonus,
+    classKey, score, rewards, partyScores, inventoryFull, victoryXpBonus, arena: currentArena,
     kills, gold: save.gold,
     level: save.champions[classKey].level,
     stats: player.stats
@@ -98,7 +98,7 @@ const VICTORY_STEPS = [
   // 0. VICTORIA
   function(){
     document.getElementById("victory-step-title").textContent = "¡Victoria!";
-    return `<div class="vic-sub">Arena Infernal — Completada</div>
+    return `<div class="vic-sub">${(ARENA_MODS[victoryData.arena]||{}).label||"Arena"} — Completada</div>
       <div class="vic-role-line">Jugaste como <b>${CLASSES[victoryData.classKey].name}</b></div>
       <div class="vic-sub">Bajas totales: <b style="color:var(--text);">${victoryData.kills}</b> &nbsp;·&nbsp; Nivel de campeón: <b style="color:var(--text);">${victoryData.level}</b></div>`;
   },
@@ -129,8 +129,7 @@ const VICTORY_STEPS = [
     document.getElementById("victory-step-title").textContent = "Recompensas";
     let cards = victoryData.rewards.map(item=>{
       const rm = RARITY_META[item.rarity];
-      const passiveNames = item.passives.map(p=>p.name);
-      if(item.mythicPassive) passiveNames.push("★ "+item.mythicPassive.name);
+      const passiveTxt = itemPassivesHTML(item);
       const equipped = save.champions[victoryData.classKey].equipment[item.type] === item.uid;
       const color = item.set ? "#3ddc71" : rm.color;
       return `<div class="inv-card ${item.set?"set-item":""}" style="border-left-color:${color}; margin-bottom:8px;">
@@ -139,7 +138,7 @@ const VICTORY_STEPS = [
           <div class="item-name" style="color:${color};">${item.name}${item.set?' <span class="set-badge">SET</span>':""}</div>
           <div class="item-stat">${rm.label} · +${Math.round(item.value*100)}% ${ITEM_TYPES[item.type].statLabel}</div>
           ${item.desc?`<div class="item-desc">${item.desc}</div>`:""}
-          ${passiveNames.length?`<div class="item-passives">${passiveNames.join(", ")}</div>`:""}
+          ${passiveTxt?`<div class="item-passives">${passiveTxt}</div>`:""}
           <div class="vic-item-actions">
             <button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>
             <button data-vic-keep="${item.uid}">Guardar en inventario</button>
@@ -154,7 +153,7 @@ const VICTORY_STEPS = [
   function(){
     document.getElementById("victory-step-title").textContent = "XP y recursos";
     const champ = save.champions[victoryData.classKey];
-    const need = Math.round(40 + champ.level*16 + champ.level*champ.level*0.6);
+    const need = xpToNext(champ.level);
     const pct = Math.min(100, Math.round(champ.xp/need*100));
     return `
       <div class="vic-xp-row"><span>Campeón</span><b>${CLASSES[victoryData.classKey].name}</b></div>

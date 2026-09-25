@@ -92,6 +92,22 @@ function loadSave(){
     }
   }catch(e){ save = defaultSave(); }
 }
-function persist(){
+// Durante la partida se guarda como mucho una vez cada 1.5 s: antes cada baja (XP + oro)
+// serializaba el guardado completo -con los inventarios de los 10 campeones- y lo escribía en
+// localStorage, varias veces por cuadro en las peleas grandes. Fuera de la partida (menús,
+// pausa, fin de partida) se sigue guardando al instante, igual que siempre.
+let _persistTimer = null;
+function persistNow(){
+  if(_persistTimer){ clearTimeout(_persistTimer); _persistTimer = null; }
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){ /* storage unavailable, continue in-memory */ }
 }
+function persist(){
+  if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
+  if(typeof state!=="undefined" && state==="playing"){
+    if(!_persistTimer) _persistTimer = setTimeout(persistNow, 1500);
+    return;
+  }
+  persistNow();
+}
+window.addEventListener("pagehide", ()=>{ if(_persistTimer) persistNow(); });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden" && _persistTimer) persistNow(); });

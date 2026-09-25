@@ -32,14 +32,16 @@ const ICE_WALL_MAX = 30;
 // Tipos con kit propio en updateBossSkills. Los subjefes "campeón" genéricos de la Arena
 // Infernal (esqueleto_h / demonio_menor / golem agrandados) también reciben uno, pero solo
 // cuando realmente son campeones (rank subjefe), nunca en su versión común.
-const BOSS_SKILL_TYPES = {demonio_hielo_fuego:1, angel_caido_hielo:1, jinete_sin_cabeza:1, doblador_guerrero:1,
-  doblador_arquera:1, doblador_picaro:1, doblador_clerigo:1, guardian_laberinto:1, minotauro:1,
+// (Los jefes finales -Jinete, Ángel, Minotauro, Demonio Mayor, Mago, Leviatán- ahora los maneja
+// el director de fases de boss-patterns.js; acá quedan subjefes y élites con kit propio.)
+const BOSS_SKILL_TYPES = {demonio_hielo_fuego:1, doblador_guerrero:1,
+  doblador_arquera:1, doblador_picaro:1, doblador_clerigo:1, guardian_laberinto:1,
   esqueleto_h:1, demonio_menor:1, golem:1};
 
 // Los telegraphs de suelo se dibujan aplastados en vertical (perspectiva, ver vfxDrawGround):
 // para que una línea/cono apunte en pantalla exactamente hacia donde va a pegar, la dirección
 // que se le pasa se compensa por ese mismo aplastamiento.
-function teleDir(dx, dy){ const ny = dy/0.55, l = Math.hypot(dx, ny)||1; return {dx:dx/l, dy:ny/l, k:l}; }
+function teleDir(dx, dy){ const l = Math.hypot(dx, dy)||1; return {dx:dx/l, dy:dy/l, k:1}; }
 
 function addFrost(h, n){
   if(!h.alive || h.invulnTimer>0) return;
@@ -57,7 +59,7 @@ function addFrost(h, n){
 // Golpe de una habilidad de jefe sobre un campeón, con sus efectos de control opcionales.
 function bossHitHero(h, dmg, o){
   if(!h || !h.alive) return;
-  damageHero(h, dmg);
+  damageHero(h, dmg, o && o.from);
   if(!h.alive || h.invulnTimer>0 || !o) return;
   if(o.slow){ h.slowAmt = Math.max(h.slowAmt||0, o.slow); h.slowTimer = Math.max(h.slowTimer||0, o.slowDur||1500); }
   if(o.stun){ h.stunTimer = Math.max(h.stunTimer||0, o.stun); }
@@ -66,6 +68,10 @@ function bossHitHero(h, dmg, o){
     h.x += dx/d*o.knock; h.y += dy/d*o.knock; clampToArena(h); resolveWallCollision(h);
   }
   if(o.frost) addFrost(h, o.frost);
+  if(o.pull && o.from){
+    const dx = o.from.x-h.x, dy = o.from.y-h.y, d = Math.hypot(dx,dy)||1;
+    const k = Math.min(d, 46); h.x += dx/d*k; h.y += dy/d*k; clampToArena(h); resolveWallCollision(h);
+  }
   if(o.burn){ h.burnTimer = Math.max(h.burnTimer||0, 2400); h.burnDmg = Math.max(h.burnDmg||0, o.burn); }
 }
 function inBossCone(e, h, dx, dy, r, cosA){
@@ -76,9 +82,9 @@ function bossSkillLabel(e, text){
   if(e.rank==="jefe") showBanner(text);
   else if(inView(e.x, e.y, 60)) floatText(e.x, e.y - e.radius*2.2, text, null);
 }
-const BOSS_STRIKE_RGB = {ice:"160,220,255", rock:"200,160,110", fire:"255,120,40", holy:"255,230,140"};
+const BOSS_STRIKE_RGB = {ice:"160,220,255", rock:"200,160,110", fire:"255,120,40", holy:"255,230,140", root:"120,220,90", water:"90,200,230"};
 function bossStrike(x, y, r, delay, dmg, kind, o){
-  if(bossStrikes.length >= 60) return;
+  if(bossStrikes.length >= 140) return;
   const c = {x, y}; clampToArena(c);
   bossStrikes.push({x:c.x, y:c.y, r, t:0, delay, dmg, kind, o:o||null});
   vfxTelegraph({shape:0, r, x:c.x, y:c.y, follow:null, dur:delay, rgb:BOSS_STRIKE_RGB[kind]||"255,70,50"});
@@ -132,7 +138,7 @@ function updateBossSkillWorld(dt){
       if(s.t >= s.delay){
         const o = s.o ? Object.assign({from:s}, s.o) : null;
         for(const h of heroes){ if(h.alive && Math.hypot(h.x-s.x, h.y-s.y) <= s.r + (h.radius||18)*0.5) bossHitHero(h, s.dmg, o); }
-        const pal = s.kind==="rock" ? "rock" : (s.kind==="fire" ? "ember" : (s.kind==="holy" ? "holy" : "ice"));
+        const pal = s.kind==="rock" ? "rock" : (s.kind==="fire" ? "ember" : (s.kind==="holy" ? "holy" : (s.kind==="root" ? "leaf" : (s.kind==="water" ? "water" : "ice"))));
         vfxBurst(s.x, s.y-8, 12, pal, 150, 420, 3, 1, -60, 0);
         vfxShock(s.x, s.y, s.r*0.3, s.r*1.2, BOSS_STRIKE_RGB[s.kind]||"255,255,255", 360, 1);
         if(player && Math.hypot(player.x-s.x, player.y-s.y) < 420) vfxShake(s.kind==="rock" ? 5 : 3);
@@ -185,7 +191,14 @@ function skCharge(e, dist, maxLen, speed, mult, o, rgb, label){
   if(label) bossSkillLabel(e, label);
 }
 function skStrikes(e, pts, R, delay, mult, kind, o, label){
-  for(const p of pts) bossStrike(p.x, p.y, R, delay, e.dmg*mult, kind, o);
+  // Sin superposiciones: varios círculos apilados sobre el mismo lugar formaban una trampa sin
+  // salida (y un solo paso en falso sumaba 3-4 golpes). Cada impacto necesita su propio espacio.
+  const placed = [];
+  for(const p of pts){
+    if(placed.some(q=>Math.hypot(q.x-p.x, q.y-p.y) < R*1.5)) continue;
+    placed.push(p);
+    bossStrike(p.x, p.y, R, delay, e.dmg*mult, kind, o);
+  }
   animTrigger(e, "bossCast", 700, 0.5);
   e.attackAnim = 400;
   if(label) bossSkillLabel(e, label);
@@ -204,7 +217,7 @@ let dt_boss = 0;
 
 // Llamado desde el loop de enemigos. Devuelve true si el enemigo está ocupado (canalizando o
 // embistiendo): en ese caso no se mueve ni ataca de la forma normal este frame.
-function updateBossSkills(e, dt, tgt, dist){
+function updateBossSkills(e, dt, tgt, dist, execOnly){
   dt_boss = dt;
   // --- ataque sostenido en curso (Lanzallamas de Hielo) ---
   if(e.channel){
@@ -215,9 +228,13 @@ function updateBossSkills(e, dt, tgt, dist){
     c.dx = Math.cos(na); c.dy = Math.sin(na);
     e.fx = c.dx; e.fy = c.dy;
     c.tick -= dt;
+    if(c.burn && Math.random() < dt/30){
+      const a = Math.atan2(c.dy, c.dx) + (Math.random()-0.5)*1.0, r = 40 + Math.random()*c.r*0.9;
+      vfxBurst(e.x + Math.cos(a)*r, e.y + Math.sin(a)*r - 10, 2, "ember", 60, 340, 3.5, 1, -50, 1);
+    }
     if(c.tick <= 0){
       c.tick += c.tickMs;
-      for(const h of heroes){ if(h.alive && inBossCone(e, h, c.dx, c.dy, c.r, c.cosA)) bossHitHero(h, e.dmg*c.mult, {frost:1}); }
+      for(const h of heroes){ if(h.alive && inBossCone(e, h, c.dx, c.dy, c.r, c.cosA)) bossHitHero(h, e.dmg*c.mult, c.burn ? {from:e, burn:e.dmg*0.08} : {from:e, frost:1}); }
     }
     e.attackAnim = Math.max(e.attackAnim, 150);
     if(c.t >= c.dur) e.channel = null;
@@ -227,8 +244,21 @@ function updateBossSkills(e, dt, tgt, dist){
   if(e.bossCharge){
     const c = e.bossCharge; c.t += dt;
     const step = c.speed*dt/1000;
-    e.x += c.dx*step; e.y += c.dy*step; clampToArena(e);
+    const bx = e.x + c.dx*step, by = e.y + c.dy*step;
+    e.x = bx; e.y = by; clampToArena(e);
     e.fx = c.dx; e.fy = c.dy;
+    // Minotauro: si la embestida lo estampa contra un muro (o el borde de la arena), queda
+    // aturdido y VULNERABLE -contrajuego del Laberinto: pararse delante de una pared-.
+    if(e.minoCharge && (Math.abs(e.x-bx) + Math.abs(e.y-by) > 2 || bossInWall(e))){
+      e.bossCharge = null; e.minoCharge = false; e.chargeQueue = 0;
+      e.stunTimer = 2200; e.crashTimer = 2200; e.crashVuln = true;
+      vfxShock(e.x, e.y, e.radius*0.3, e.radius*2.2, "220,190,140", 520, 2);
+      vfxBurst(e.x, e.y-e.radius*0.6, 22, "rock", 190, 520, 4, 2, -50, 0);
+      vfxShake(12); hitStop(80, true); playSfx("heavy");
+      showBanner("¡SE ESTRELLÓ! — ¡ATACALO AHORA!");
+      if(e.rank==="jefe") bossHudHint("Aturdido", "¡daño extra por 2 segundos!");
+      return true;
+    }
     for(const h of heroes){
       if(!h.alive || c.hit.has(h)) continue;
       if(Math.hypot(h.x-e.x, h.y-e.y) < e.radius*0.75 + (h.radius||18)){
@@ -242,9 +272,12 @@ function updateBossSkills(e, dt, tgt, dist){
       e.bossCharge = null;
       vfxShock(e.x, e.y, e.radius*0.3, e.radius*1.6, c.rgb, 360, 1);
       if(player && distance(e, player) < 500) vfxShake(4);
+      if(!e.chargeQueue) e.minoCharge = false;
+      bossChargeEnded(e);
     }
     return true;
   }
+  if(execOnly) return false;
   if(e.bossWind) return false;
   const t = e.type, jefe = e.rank==="jefe";
 
@@ -461,10 +494,11 @@ function drawBossSkillOverlay(){
     const ang = Math.atan2(c.dy, c.dx), ox = e.x + c.dx*e.radius*0.5, oy = e.y - e.radius*1.1;
     // zona real de daño (sector circular, sin el aplastamiento de los telegraphs de suelo)
     ctx.save(); ctx.globalAlpha = 0.16 + 0.06*Math.sin(animNow/60);
-    ctx.fillStyle = "#9fdcff"; ctx.beginPath(); ctx.moveTo(e.x, e.y);
-    ctx.arc(e.x, e.y, c.r, ang-0.5, ang+0.5); ctx.closePath(); ctx.fill(); ctx.restore();
+    const half = Math.acos(c.cosA||Math.cos(0.5));
+    ctx.fillStyle = c.burn ? "#ff7a2a" : "#9fdcff"; ctx.beginPath(); ctx.moveTo(e.x, e.y);
+    ctx.arc(e.x, e.y, c.r, ang-half, ang+half); ctx.closePath(); ctx.fill(); ctx.restore();
     const fi = Math.floor(animNow/90)%3;
-    if(FROST_BEAM_READY[fi]){
+    if(!c.burn && FROST_BEAM_READY[fi]){
       const img = FROST_BEAM_IMG[fi], len = c.r*1.05, s = len/img.width, hh = img.height*s;
       const grow = Math.min(1, c.t/160), fade = c.dur - c.t < 200 ? (c.dur-c.t)/200 : 1;
       ctx.save(); ctx.globalAlpha = 0.95*fade; ctx.imageSmoothingEnabled = false;
@@ -483,6 +517,18 @@ function drawBossSkillOverlay(){
     } else if(s.kind==="rock"){
       ctx.fillStyle = "#8a7a62"; ctx.strokeStyle = "#4a3e2e"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(x, y-14, 15, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    } else if(s.kind==="water"){
+      const g = q;
+      ctx.strokeStyle = `rgba(120,210,230,${0.4+0.5*g})`; ctx.lineWidth = 3;
+      for(let k=0;k<3;k++){ ctx.beginPath(); ctx.arc(s.x, s.y+6, s.r*(0.3+0.22*k)*(0.6+0.4*g), animNow/200+k*2, animNow/200+k*2+3.6); ctx.stroke(); }
+    } else if(s.kind==="root"){
+      // raíces que asoman del suelo y crecen justo antes de cerrarse
+      const g = q*q;
+      ctx.strokeStyle = "#3e6b2e"; ctx.fillStyle = "#7ac44a"; ctx.lineWidth = 3;
+      for(let k=0;k<5;k++){
+        const a = k/5*Math.PI*2 + s.x*0.01, rx = s.x + Math.cos(a)*s.r*0.55, ry = s.y + Math.sin(a)*s.r*0.3;
+        ctx.beginPath(); ctx.moveTo(rx-5, ry); ctx.lineTo(rx + Math.cos(a)*6, ry - 8 - 26*g); ctx.lineTo(rx+5, ry); ctx.closePath(); ctx.fill(); ctx.stroke();
+      }
     } else if(s.kind==="fire"){
       const g = 24; ctx.globalCompositeOperation = "lighter";
       ctx.drawImage(glowSprite("255,120,40"), x-g, y-14-g, g*2, g*2);

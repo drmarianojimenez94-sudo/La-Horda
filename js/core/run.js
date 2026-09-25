@@ -6,6 +6,27 @@
    ============================================================ */
 
 /* ============================================================
+   TEMPORIZADORES DE PARTIDA
+   Efectos con demora (una descarga extra, una nova que cae, la pantalla de victoria...) que
+   antes usaban setTimeout: si abandonabas o reiniciabas en ese instante, podían disparar
+   dentro de la partida SIGUIENTE. Ahora viven en esta lista, corren con el reloj del juego
+   (se pausan con la pausa), y cada partida nueva los descarta todos.
+   ============================================================ */
+let runTimers = [];
+let runEnding = false; // true desde que el jefe final cae (o el jugador muere) hasta salir de la partida
+function runLater(ms, fn){ runTimers.push({t:ms, fn}); }
+function clearRunTimers(){ runTimers.length = 0; }
+function updateRunTimers(dt){
+  if(!runTimers.length) return;
+  const due = [];
+  for(let i=runTimers.length-1;i>=0;i--){
+    const r = runTimers[i]; r.t -= dt;
+    if(r.t <= 0){ due.push(r.fn); runTimers.splice(i,1); }
+  }
+  for(let i=due.length-1;i>=0;i--){ try{ due[i](); }catch(e){ console.error("Error en efecto con demora:", e); } }
+}
+
+/* ============================================================
    START RUN
    ============================================================ */
 // Arena Divina - Fase 1: reusa toda la infraestructura de startRun (aliados por rol, piso,
@@ -26,6 +47,8 @@ function startDivinaExploration(){
 }
 function startRun(fromLevel){
   runLevel = fromLevel || 1;
+  clearRunTimers();
+  runEnding = false;
   kills = 0;
   runElapsedMs = 0;
   subjefesDefeated = 0; // Fase 3.1: un objeto por cada subjefe derrotado en esta partida
@@ -38,6 +61,9 @@ function startRun(fromLevel){
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
   vfxResetRun();
+  resetFeedback();
+  hazardZones = []; arenaRuleTimer = 8000; resetArenaRule();
+  bossHudHide();
   player = makePlayer();
   // Talentos de crítico (sección 4/32): a diferencia de dmg/cd/def/lifesteal -que se consultan
   // en caliente vía passiveSum en cada fórmula-, crítico vive en runStats (igual que los buffs
@@ -63,6 +89,7 @@ function startRun(fromLevel){
     allies.push(makeHero(k, true, Math.cos(ang)*70, Math.sin(ang)*70));
   });
   heroes = [player, ...allies];
+  setupRunDifficulty();
   partyBuilt = false;
   if(floorPatterns[currentArena]){ floorPattern = floorPatterns[currentArena]; } else { buildFloorTile(); }
   if(!SPRITES.guerrero){ buildSprites(); }
@@ -90,10 +117,12 @@ function onBossDefeated(){
     }
     boss = spawnEnemy("angel_caido_hielo", true);
     boss.x = px; boss.y = py;
-    boss.hp = boss.maxHp = Math.round(ENEMY_BASE.angel_caido_hielo.hp * (1+ (save.champions[player.classKey].level)*0.01));
-    boss.breathCd = 3800; boss.waveCd = 6500; boss.regenUsed = false; boss.regenTimer = 0;
+    scaleBossStats(boss, "angel_caido_hielo");
+    boss.regenUsed = false; boss.regenTimer = 0; boss.bd = null;
     boss.bossPhase = 2;
+    bossHudShow(boss);
     animTrigger(boss, "bossPhaseTransition", 1300);
+    bossPhaseFeedback();
     showBanner("¡EL MAGO SE TRANSFORMA EN EL ÁNGEL CAÍDO DE HIELO!");
     return; // sigue la pelea de jefe, todavía no termina la partida
   }
@@ -114,6 +143,7 @@ function onBossDefeated(){
       particles.push({x:boss.x,y:boss.y, vx:Math.cos(a)*100, vy:Math.sin(a)*100-24, life:650, color:Math.random()<0.5?"#ffd76a":"#ff6a3d"});
     }
     animTrigger(boss, "bossPhaseTransition", 1300);
+    bossPhaseFeedback();
     showBanner("¡RESURRECCIÓN ETERNA! EL JINETE RENACE MÁS FURIOSO");
     return; // sigue la pelea de jefe, todavía no termina la partida
   }
@@ -129,8 +159,6 @@ function onBossDefeated(){
     boss.hp = boss.maxHp;
     boss.dmg = Math.round(boss.dmg*1.22);
     boss.speed = Math.round(boss.speed*1.15);
-    boss.biteCd = Math.min(boss.biteCd, 1200); boss.chargeCd = Math.min(boss.chargeCd, 2000);
-    boss.tailCd = Math.min(boss.tailCd, 1800); boss.waveCd2 = Math.min(boss.waveCd2, 2400);
     particles.push({x:boss.x,y:boss.y, life:900, ring:true, maxLife:900, maxR:160, color:"#4ac8e0"});
     for(let i=0;i<20;i++){
       const a = Math.random()*Math.PI*2;
@@ -138,10 +166,14 @@ function onBossDefeated(){
     }
     animTrigger(boss, "bossPhaseTransition", 1300);
     vfxSprite("fxVortex", 0, boss.x, boss.y+20, 170, 1300, boss, 0.3, false, 0.6);
+    bossPhaseFeedback();
     showBanner(boss.acuaticaPhase===2 ? "¡EL LEVIATÁN SE ENFURECE!" : "¡EL LEVIATÁN DESATA TODO SU PODER!");
     return; // sigue la pelea de jefe, todavía no termina la partida
   }
   bossActive = false;
+  if(typeof setMusicMode==="function") setMusicMode("victory");
+  bossDeathFeedback();
+  showBanner("¡"+String(boss.name||"EL JEFE").toUpperCase()+" HA CAÍDO!");
   grantGold(80);
   // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
   // save.arenasCleared trackea cada una de verdad y persiste.
@@ -151,10 +183,13 @@ function onBossDefeated(){
     save.divineArenaUnlocked = true;
   }
   persist();
-  setTimeout(()=>{ showVictoryScreen(); }, 700);
+  runEnding = true;
+  runLater(900, ()=>{ if(state==="playing") showVictoryScreen(); });
 }
 
 function onPlayerDeath(){
   player.alive = false;
-  setTimeout(()=>{ showGameOverScreen(); }, 500);
+  if(runEnding) return; // la victoria ya estaba en camino: no se pisa con una derrota
+  runEnding = true;
+  runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });
 }
