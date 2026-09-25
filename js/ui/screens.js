@@ -25,6 +25,7 @@ const screens = {
 };
 function setState(s){
   state = s;
+  if(typeof musicOnState==="function") musicOnState(s); // clima musical de cada pantalla
   if(s!=="playing" && typeof _persistTimer!=="undefined" && _persistTimer) persistNow();
   Object.values(screens).forEach(el=>el.classList.add("hidden"));
   const hud = document.getElementById("hud");
