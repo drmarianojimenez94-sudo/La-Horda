@@ -170,8 +170,15 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 - `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
 - `js/systems/loot.js` — botín del cofre del jefe (`rollLoot` pura, `grantEndOfRunLoot`) y reforja
   de piezas repetidas de set. Simulación: `tools/balance/`.
-- Arte: dirección visual y lista de arte a rehacer en `VISUAL_ART_REWORK.md`; normalización de
-  sprites reproducible en `tools/art/normalize_sprites.py` (`--check`).
+- **Arte — LA HORDA VISUAL GATE (regla permanente):** antes de integrar cualquier sprite/asset
+  visual nuevo (campeón, enemigo, invocación, jefe), clasificarlo contra `docs/ART_BIBLE.md`
+  (Master Reference: el Caballero/Tanque). Si el status no es PASS, no se integra al set visual
+  de producción — ver el propio `docs/ART_BIBLE.md` §8 para PASS/FIX/REDRAW/REJECT. Estado
+  actual del roster: `docs/VISUAL_ASSET_MANIFEST.md`. Pedido exacto de arte nuevo (campeones y
+  subjefes en REDRAW): `docs/ART_REPLACEMENT_QUEUE.md`. Escaneo técnico reproducible (halo,
+  alfa, fragmentos — nunca decide estilo, eso lo decide una persona mirando la referencia):
+  `python3 tools/art/scan_sprites.py [--dir carpeta] [--apply]`. Auditoría/normalización previa
+  (sprint anterior): `VISUAL_ART_REWORK.md`, `tools/art/normalize_sprites.py` (`--check`).
 - Timers de la partida: usar `runLater(ms, fn)` (`js/core/run.js`) en vez de `setTimeout`; se
   cancelan solos al abandonar o reiniciar.
 
