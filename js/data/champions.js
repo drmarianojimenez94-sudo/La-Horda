@@ -13,16 +13,16 @@
 // agregar un campeón nuevo bloqueado en el futuro, alcanza con sumar una fila acá:
 // {id:"berserker", priceGold:1000, unlockedByDefault:false, lore:"..."}
 const CHAMPION_CATALOG = [
-  {id:"tanque",   priceGold:0, unlockedByDefault:true, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
-  {id:"guerrero", priceGold:0, unlockedByDefault:true, lore:"Rápido, letal, sin piedad. Golpea antes de que lo vean venir."},
-  {id:"mago",     priceGold:0, unlockedByDefault:true, lore:"Domina el fuego y el hielo. El área alrededor suyo es territorio enemigo."},
-  {id:"soporte",  priceGold:0, unlockedByDefault:true, lore:"Mientras respire, nadie de su equipo cae para siempre."},
-  {id:"segador",  priceGold:0, unlockedByDefault:true, lore:"Cuanto más cerca de la muerte, más peligroso se vuelve."},
-  {id:"axiom",    priceGold:0, unlockedByDefault:true, lore:"Descubrió que la realidad está construida con reglas y código. No lanza hechizos: reescribe las reglas."},
-  {id:"profeta",  priceGold:0, unlockedByDefault:true, lore:"Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo."},
-  {id:"musashi",  priceGold:0, unlockedByDefault:true, lore:"Un rōnin veterano que carga un bokken en vez de una katana. Cree que cualquier arma alcanza contra un rival al que se entiende de verdad."},
-  {id:"cazadora", priceGold:0, unlockedByDefault:true, lore:"Una tiradora extremadamente móvil que gana velocidad mientras persigue a su presa."},
-  {id:"nigromante", priceGold:0, unlockedByDefault:true, lore:"No pelea solo. Levanta a los caídos, crea un coloso de piedra y, si hace falta, se convierte él mismo en un demonio."}
+  {id:"tanque",   priceGold:99999, unlockedByDefault:true, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
+  {id:"guerrero", priceGold:99999, unlockedByDefault:true, lore:"Rápido, letal, sin piedad. Golpea antes de que lo vean venir."},
+  {id:"mago",     priceGold:99999, unlockedByDefault:true, lore:"Domina el fuego y el hielo. El área alrededor suyo es territorio enemigo."},
+  {id:"soporte",  priceGold:99999, unlockedByDefault:true, lore:"Mientras respire, nadie de su equipo cae para siempre."},
+  {id:"segador",  priceGold:99999, unlockedByDefault:true, lore:"Cuanto más cerca de la muerte, más peligroso se vuelve."},
+  {id:"axiom",    priceGold:99999, unlockedByDefault:true, lore:"Descubrió que la realidad está construida con reglas y código. No lanza hechizos: reescribe las reglas."},
+  {id:"profeta",  priceGold:99999, unlockedByDefault:true, lore:"Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo."},
+  {id:"musashi",  priceGold:99999, unlockedByDefault:true, lore:"Un rōnin veterano que carga un bokken en vez de una katana. Cree que cualquier arma alcanza contra un rival al que se entiende de verdad."},
+  {id:"cazadora", priceGold:99999, unlockedByDefault:true, lore:"Una tiradora extremadamente móvil que gana velocidad mientras persigue a su presa."},
+  {id:"nigromante", priceGold:99999, unlockedByDefault:true, lore:"No pelea solo. Levanta a los caídos, crea un coloso de piedra y, si hace falta, se convierte él mismo en un demonio."}
 ];
 
 const CLASSES = {

@@ -29,51 +29,62 @@ document.getElementById("mainmenu-jugar-btn").addEventListener("click", ()=>{
 document.getElementById("mainmenu-back-btn").addEventListener("click", ()=>{
   setState("title");
 });
-document.getElementById("mainmenu-campeones-btn").addEventListener("click", ()=>{
-  setState("gallery"); renderGallery();
-});
 document.getElementById("mainmenu-tienda-btn").addEventListener("click", ()=>{
-  setState("shop");
-  document.getElementById("shop-gold-line").innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
+  setState("shop"); renderShop();
 });
 document.getElementById("shop-back-btn").addEventListener("click", ()=>{
   setState("mainmenu"); renderMainMenu();
 });
-document.getElementById("gallery-back-btn").addEventListener("click", ()=>{
-  setState("mainmenu"); renderMainMenu();
-});
 document.getElementById("champdetail-back-btn").addEventListener("click", ()=>{
-  setState("gallery"); renderGallery();
+  setState("shop"); renderShop();
 });
 function renderMainMenu(){
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
-// Galería de Campeones: recorre CHAMPION_CATALOG (no una lista fija en el HTML), así que
-// agregar un campeón nuevo -bloqueado o no- no requiere tocar esta función.
-function renderGallery(){
-  const grid = document.getElementById("gallery-grid");
+// Vista previa animada genérica: cualquier <canvas class="champ-anim" data-class-key="..."> visible
+// dibuja al campeón con su arte real (drawChampFigure) caminando. Un solo bucle para toda la UI;
+// se apaga solo cuando no queda ninguno visible.
+let champAnimLoopRunning = false;
+function startChampAnimLoop(){
+  if(champAnimLoopRunning) return;
+  champAnimLoopRunning = true;
+  function tick(){
+    const list = [...document.querySelectorAll("canvas.champ-anim")].filter(c=>c.offsetParent!==null);
+    if(!list.length){ champAnimLoopRunning = false; return; }
+    const t = performance.now()%100000;
+    for(const cvs of list){
+      const g = cvs.getContext("2d");
+      g.clearRect(0,0,cvs.width,cvs.height);
+      drawChampFigure(g, cvs.dataset.classKey, cvs.width/2, cvs.height*0.92, cvs.height/40, 1, t, true);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+function fmtGold(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+// Tienda: catálogo de campeones (CHAMPION_CATALOG) con el personaje animado, precio y estado.
+// Tocar una tarjeta abre su ficha (renderChampDetail), que tiene la compra real si está bloqueado.
+function renderShop(){
+  document.getElementById("shop-gold-line").innerHTML = `Oro: <b>${fmtGold(save.gold)}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
+  const grid = document.getElementById("shop-champ-grid");
   if(!grid) return;
   grid.innerHTML = CHAMPION_CATALOG.map(c=>{
-    const cls = CLASSES[c.id];
-    const champ = save.champions[c.id];
-    const locked = !champ.unlocked;
-    return `<button class="gallery-card ${locked?"locked":""}" data-champ="${c.id}" style="color:${cls?cls.color:"#fff"};">
-      ${locked ? '<span class="gallery-card-lock">🔒</span>' : ''}
-      <div class="gallery-card-icon">${cls?cls.icon:"❓"}</div>
-      <div class="gallery-card-name" style="color:var(--text);">${cls?cls.name:c.id}</div>
-      <div class="gallery-card-role">${cls?cls.role:""}</div>
-      ${locked
-        ? `<div class="gallery-card-price">🔒 Precio: ${c.priceGold} oro</div>`
-        : `<div class="gallery-card-lvl">Nv. ${champ.level}</div>`}
+    const cls = CLASSES[c.id], champ = save.champions[c.id], owned = champ.unlocked;
+    return `<button class="gallery-card shop-champ-card ${owned?"":"locked"}" data-champ="${c.id}">
+      <canvas class="champ-anim shop-champ-anim" width="96" height="96" data-class-key="${c.id}" style="background:${cls.color}1c;"></canvas>
+      <div class="gallery-card-name">${cls.name}</div>
+      <div class="gallery-card-price">🪙 ${fmtGold(c.priceGold)}</div>
+      ${owned ? `<div class="shop-owned">✔ Tuyo · Nv. ${champ.level}</div>` : `<div class="shop-owned locked">🔒 Bloqueado</div>`}
     </button>`;
   }).join("");
-  grid.querySelectorAll(".gallery-card").forEach(card=>{
+  grid.querySelectorAll(".shop-champ-card").forEach(card=>{
     card.addEventListener("click", ()=>{
       renderChampDetail(card.getAttribute("data-champ"));
       setState("champdetail");
     });
   });
+  startChampAnimLoop();
 }
 // Ficha individual: si está bloqueado, muestra precio y botón funcional de desbloqueo real
 // (descuenta oro de verdad y persiste); si no, muestra sus datos de progreso reales.
@@ -86,7 +97,7 @@ function renderChampDetail(champId){
   const locked = !champ.unlocked;
   let html = `
     <div class="cd-header">
-      <div class="cd-icon" style="color:${cls.color};">${cls.icon}</div>
+      <canvas class="champ-anim cd-anim" width="84" height="84" data-class-key="${champId}" style="background:${cls.color}1c;"></canvas>
       <div>
         <div class="cd-title">${cls.name}</div>
         <div class="cd-role">${cls.role}</div>
@@ -98,13 +109,15 @@ function renderChampDetail(champId){
     html += `
       <div class="cd-section cd-unlock-box">
         <div>🔒 Campeón bloqueado</div>
-        <div class="cd-unlock-price">${catEntry.priceGold} 🪙</div>
+        <div class="cd-unlock-price">${fmtGold(catEntry.priceGold)} 🪙</div>
         ${canAfford
           ? `<button class="btn wide" id="cd-unlock-btn">Desbloquear</button>`
           : `<div style="font-size:0.72rem; color:var(--text-dim);">Tenés ${save.gold} oro — te faltan ${catEntry.priceGold-save.gold}.</div>`}
       </div>`;
   } else {
     const need = xpToNext(champ.level);
+    html += `
+      <div class="cd-section cd-owned-line">✔ Ya es tuyo &nbsp;·&nbsp; Precio en tienda: <b>${fmtGold(catEntry.priceGold)} 🪙</b></div>`;
     html += `
       <div class="cd-section">
         <div class="cd-section-title">Progreso</div>
@@ -140,6 +153,7 @@ function renderChampDetail(champId){
       renderChampDetail(champId);
     });
   }
+  startChampAnimLoop();
 }
 document.getElementById("mode-arena-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
@@ -204,6 +218,7 @@ function updateMenuBrandSub(){
   if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
+  lobbyAllies = pickLobbyAllies(selectedClass);
   setState("prep");
   renderPrepSummary();
 });
@@ -211,6 +226,7 @@ document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
 document.getElementById("prep-back-btn").addEventListener("click", ()=>{
+  lobbyAllies = null;
   setState("menu"); renderChampGrid(); renderSaveLine();
 });
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
@@ -221,23 +237,34 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
     alert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
   }
 });
-// Pantalla breve antes de entrar a la arena: resumen del campeón elegido y su equipamiento
-// actual, con la opción de volver atrás a elegir otro. Los objetos/preajustes de partida en
-// sí se administran desde Pausa → Inventario, tal como ya existe.
+// SALA (lobby) antes de entrar a la arena: 4 lugares -pensada para multijugador; hoy el lugar 1 es
+// el jugador y los otros 3 los ocupan bots, uno por cada rol que falta, igual que siempre-, y
+// debajo el equipamiento completo del campeón elegido. "Comenzar" arranca la partida con ESE equipo.
 function renderPrepSummary(){
-  const box = document.getElementById("prep-summary");
-  if(!box) return;
-  const cls = CLASSES[selectedClass];
-  const champ = save.champions[selectedClass];
-  box.innerHTML = `
-    <div class="prep-row">
-      <div class="prep-icon" style="color:${cls.color};">${cls.icon}</div>
-      <div>
-        <div class="prep-title">${cls.name} — Nv. ${champ.level}</div>
-        <div class="prep-sub">${cls.role}</div>
-      </div>
+  const a = ARENA_MODS[currentArena]||{};
+  document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
+  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los ocupan bots (pronto: amigos)";
+  const slots = document.getElementById("lobby-slots");
+  const team = [selectedClass, ...(lobbyAllies||[])];
+  const ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
+  slots.innerHTML = [0,1,2,3].map(i=>{
+    const key = team[i];
+    if(!key) return `<div class="lobby-slot empty"><div class="lobby-empty">＋</div><div class="lobby-name">Esperando jugador…</div></div>`;
+    const cls = CLASSES[key], lv = save.champions[key].level, you = i===0;
+    return `<div class="lobby-slot ${you?"you":""}">
+      <div class="lobby-tag ${you?"you":"bot"}">${you?"VOS":"BOT"}</div>
+      <canvas class="champ-anim lobby-anim" width="88" height="88" data-class-key="${key}" style="background:${cls.color}1c;"></canvas>
+      <div class="lobby-name">${cls.name}</div>
+      <div class="lobby-meta">${ROLE_LABEL[cls.roleCategory]||""}</div>
+      <div class="lobby-meta">Nv. ${lv}</div>
+      <div class="lobby-ready">✔ Listo</div>
     </div>`;
+  }).join("");
+  const box = document.getElementById("prep-summary");
+  const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
+  box.innerHTML = `<div class="lobby-equip-title">Equipamiento de ${cls.name} (Nv. ${champ.level})</div>`;
   renderPrepInventory();
+  startChampAnimLoop();
 }
 let prepCompareOpenUid = null; // qué tarjeta tiene la comparación abierta, en esta pantalla
 // Pestaña de equipamiento previa a entrar a la arena: mismo comportamiento que Pausa →

@@ -45,6 +45,22 @@ function startDivinaExploration(){
   // poder escalar la vida de las estructuras con partyLevelScale() (ver esa función).
   buildDivinaStructures();
 }
+// Bots que acompañan al jugador: uno de cada uno de los otros 3 roles (Tanque/Asesino/Mago/
+// Soporte, el que no sea el tuyo), sorteando si hay más de un campeón en un mismo rol.
+let lobbyAllies = null;
+function pickLobbyAllies(mine){
+  const ROLE_ORDER = ["tanque","asesino","mago","soporte"];
+  const myRole = CLASSES[mine].roleCategory;
+  const others = [];
+  ROLE_ORDER.filter(r=>r!==myRole).forEach(role=>{
+    const pool = Object.keys(CLASSES).filter(k=>k!==mine && CLASSES[k].roleCategory===role);
+    if(pool.length) others.push(pool[(Math.random()*pool.length)|0]);
+  });
+  return others;
+}
+function lobbyAlliesValid(mine){
+  return Array.isArray(lobbyAllies) && lobbyAllies.length>0 && lobbyAllies.every(k=>CLASSES[k] && k!==mine);
+}
 function startRun(fromLevel){
   runLevel = fromLevel || 1;
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
@@ -77,13 +93,9 @@ function startRun(fromLevel){
   // Soporte, el que no sea el tuyo), sorteando al azar si en el futuro hay más de un campeón
   // dentro de un mismo rol (como pasa ahora entre Tanque y Segador Olvidado, ambos "tanque").
   allies = [];
-  const ROLE_ORDER = ["tanque","asesino","mago","soporte"];
-  const myRole = CLASSES[selectedClass].roleCategory;
-  const others = [];
-  ROLE_ORDER.filter(r=>r!==myRole).forEach(role=>{
-    const pool = Object.keys(CLASSES).filter(k=>k!==selectedClass && CLASSES[k].roleCategory===role);
-    if(pool.length) others.push(pool[(Math.random()*pool.length)|0]);
-  });
+  // El equipo lo arma la Sala (lobby) antes de entrar; si se arranca por otro camino (reintentar,
+  // pruebas) y no hay un equipo válido, se sortea igual que siempre.
+  const others = lobbyAlliesValid(selectedClass) ? lobbyAllies.slice() : pickLobbyAllies(selectedClass);
   others.forEach((k,i)=>{
     autoEquipBest(k); // el bot se pone lo mejor que tenga disponible de partidas anteriores
     const ang = (i/others.length)*Math.PI*2 + Math.PI/4;

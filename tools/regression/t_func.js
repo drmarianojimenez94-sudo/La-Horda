@@ -68,17 +68,16 @@ async function canvasNonBlank(page) {
     check('boot.images_all_loaded', img.total && img.done === img.total && !img.broken.length, img);
     await page.click('#title-continue-btn');
     check('nav.mainmenu', await vis(page, '#mainmenu-screen'));
-    await page.click('#mainmenu-campeones-btn');
-    const gcount = await page.locator('#gallery-grid .gallery-card').count();
+    // el catálogo de campeones vive dentro de la Tienda
+    await page.click('#mainmenu-tienda-btn');
+    check('nav.shop', await vis(page, '#shop-screen'));
+    const gcount = await page.locator('#shop-champ-grid .gallery-card').count();
     check('nav.gallery_cards', gcount >= 10, gcount);
-    await page.locator('#gallery-grid .gallery-card').first().click().catch(() => {});
+    await page.locator('#shop-champ-grid .gallery-card').first().click().catch(() => {});
     await sleep(200);
     check('nav.champdetail', await vis(page, '#champdetail-screen'));
     await page.click('#champdetail-back-btn').catch(async () => { await page.click('text=Volver').catch(() => {}); });
     await sleep(150);
-    await page.click('#gallery-back-btn').catch(() => {});
-    await page.click('#mainmenu-tienda-btn');
-    check('nav.shop', await vis(page, '#shop-screen'));
     await page.click('#shop-back-btn');
     await page.click('#mainmenu-jugar-btn');
     check('nav.modeselect', await vis(page, '#modeselect-screen'));
@@ -240,8 +239,8 @@ async function canvasNonBlank(page) {
     const { ctx, page, errors } = await newPage(browser, site, { save: legacy });
     const s = await page.evaluate(() => window.__T.ev('({gold: save.gold, tl: save.champions.tanque.level, talents: !!save.champions.tanque.talents, eq: !!save.champions.tanque.equipment, n: Object.keys(save.champions).length, schema: save.itemSchemaV})'));
     check('save.legacy_migrates', s.gold === 321 && s.tl === 7 && s.talents && s.eq && s.n === 10, s);
-    await page.click('#title-continue-btn'); await page.click('#mainmenu-campeones-btn');
-    check('save.legacy_gallery', (await page.locator('#gallery-grid .gallery-card').count()) >= 10);
+    await page.click('#title-continue-btn'); await page.click('#mainmenu-tienda-btn');
+    check('save.legacy_gallery', (await page.locator('#shop-champ-grid .gallery-card').count()) >= 10);
     const errs = await gameErrors(page, errors);
     check('save.legacy_no_errors', errs.length === 0, errs);
     await ctx.close();

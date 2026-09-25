@@ -104,47 +104,29 @@
       <div class="mode-card-title">MODOS DE JUEGO</div>
       <div class="mode-card-desc">Arena (y, más adelante, el modo 4 contra 4).</div>
     </button>
-    <button class="mode-card" id="mainmenu-campeones-btn">
-      <div class="mode-card-icon">🛡</div>
-      <div class="mode-card-title">CAMPEONES</div>
-      <div class="mode-card-desc">Mirá a todos los campeones, desbloqueados o no.</div>
-    </button>
     <button class="mode-card" id="mainmenu-tienda-btn">
       <div class="mode-card-icon">🪙</div>
       <div class="mode-card-title">TIENDA</div>
-      <div class="mode-card-desc">Campeones, skins, armas, armaduras y mascotas.</div>
+      <div class="mode-card-desc">Todos los campeones (con su ficha) y, más adelante, skins, armas y mascotas.</div>
     </button>
     <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
     <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
   </div>
 
-  <!-- GALERÍA DE CAMPEONES -->
-  <div id="gallery-screen" class="screen hidden">
-    <div class="arena-title">Campeones</div>
-    <div id="gallery-grid"></div>
-    <button class="btn secondary" id="gallery-back-btn">Volver</button>
-  </div>
-
   <!-- FICHA INDIVIDUAL DE CAMPEÓN -->
   <div id="champdetail-screen" class="screen hidden">
     <div id="champdetail-body"></div>
-    <button class="btn secondary" id="champdetail-back-btn">Volver a la galería</button>
+    <button class="btn secondary" id="champdetail-back-btn">Volver a la tienda</button>
   </div>
 
-  <!-- TIENDA (todavía en construcción: campeones/skins/armas/armaduras/mascotas) -->
+  <!-- TIENDA: catálogo de campeones (animados, con precio y ficha) + resto de la tienda más adelante -->
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
-    <div class="save-line" id="shop-gold-line" style="margin-bottom:18px;"></div>
-    <div class="shop-soon-box">
-      <div style="font-size:2rem; margin-bottom:10px;">🚧</div>
-      <div style="font-weight:700; margin-bottom:8px;">Todavía en construcción</div>
-      <div style="font-size:0.78rem; color:var(--text-dim); line-height:1.5; max-width:320px;">
-        Acá van a estar los campeones, skins, armas, armaduras y mascotas para comprar con oro.
-        La galería de Campeones y el oro ya funcionan de verdad — la tienda en sí la termino
-        en la próxima vuelta, con tiempo para probarla bien antes de publicarla.
-      </div>
-    </div>
-    <button class="btn secondary" id="shop-back-btn" style="margin-top:20px;">Volver</button>
+    <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
+    <div class="shop-section-title">Campeones</div>
+    <div id="shop-champ-grid"></div>
+    <div class="shop-soon-box shop-soon-small">Skins, armas, armaduras y mascotas: próximamente.</div>
+    <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
   <div id="modeselect-screen" class="screen hidden">
@@ -182,9 +164,12 @@
     <button class="btn secondary" id="arenaselect-back-btn">Volver</button>
   </div>
 
-  <!-- PREPARACIÓN (previa a entrar a la arena) -->
+  <!-- SALA / LOBBY (previa a entrar a la arena): 4 lugares -pensados para multijugador; por ahora
+       los otros 3 los ocupan bots- y el equipamiento del campeón elegido. -->
   <div id="prep-screen" class="screen hidden">
-    <div class="arena-title">Preparando la Arena…</div>
+    <div class="arena-title" id="lobby-title">Sala</div>
+    <div class="lobby-sub" id="lobby-sub"></div>
+    <div id="lobby-slots"></div>
     <div id="prep-summary"></div>
     <div id="prep-inventory-panel"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>

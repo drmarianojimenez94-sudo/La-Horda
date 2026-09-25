@@ -199,3 +199,51 @@
   .buff-desc{ font-size:0.62rem; }
   #vote-note{ margin-top:8px; font-size:0.58rem; }
 }
+
+/* ---------- Tienda: catálogo de campeones ---------- */
+.shop-section-title{ font-family:var(--font-retro); color:var(--ember3); font-size:1.1rem; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:8px; }
+#shop-champ-grid{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:10px; width:100%; max-width:440px;
+  max-height:58vh; overflow-y:auto; padding:4px; margin-bottom:12px;
+}
+.shop-champ-card{ display:flex; flex-direction:column; align-items:center; padding:10px 8px; }
+.shop-champ-anim, .cd-anim, .lobby-anim{ border:2px solid #000; image-rendering:pixelated; image-rendering:crisp-edges; }
+.shop-champ-anim{ width:72px; height:72px; margin-bottom:6px; }
+.shop-owned{ font-size:0.8rem; color:#7dffa0; margin-top:3px; }
+.shop-owned.locked{ color:var(--text-dim); }
+.shop-soon-small{ padding:10px 14px; font-size:0.85rem; color:var(--text-dim); }
+.cd-anim{ width:64px; height:64px; flex:none; }
+.cd-owned-line{ font-size:0.95rem; color:#7dffa0; }
+
+/* ---------- Sala (lobby) previa a la partida ---------- */
+.lobby-sub{ font-family:var(--font-retro); font-size:0.9rem; color:var(--text-dim); margin:-6px 0 10px; }
+#lobby-slots{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; width:100%; max-width:440px; margin-bottom:12px; }
+.lobby-slot{
+  position:relative; background:linear-gradient(160deg, var(--panel), #0f0805); border:3px solid #000;
+  padding:18px 4px 8px; text-align:center; font-family:var(--font-retro);
+  box-shadow: inset 1px 1px 0 rgba(255,180,120,0.18), 3px 3px 0 #000;
+  display:flex; flex-direction:column; align-items:center; min-width:0;
+}
+.lobby-slot.you{ border-color:var(--ember1); }
+.lobby-slot.empty{ opacity:0.55; justify-content:center; }
+.lobby-empty{ font-size:1.6rem; color:var(--text-dim); }
+.lobby-anim{ width:100%; max-width:64px; height:auto; aspect-ratio:1/1; }
+.lobby-tag{ position:absolute; top:3px; left:50%; transform:translateX(-50%); font-size:0.62rem; letter-spacing:0.06em; padding:0 5px; border:1px solid #000; }
+.lobby-tag.you{ background:var(--ember1); color:#1a0c05; }
+.lobby-tag.bot{ background:#2a2f3a; color:#b9c4d8; }
+.lobby-name{ font-size:0.85rem; margin-top:4px; line-height:1.1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; }
+.lobby-meta{ font-size:0.7rem; color:var(--text-dim); }
+.lobby-ready{ font-size:0.7rem; color:#7dffa0; margin-top:2px; }
+.lobby-equip-title{ font-family:var(--font-retro); color:var(--ember3); font-size:1rem; text-transform:uppercase; letter-spacing:0.03em; margin:4px 0 6px; text-align:left; }
+@media (max-width: 380px){
+  #lobby-slots{ gap:5px; }
+  .lobby-name{ font-size:0.72rem; }
+}
+@media (orientation: landscape) and (max-height: 520px){
+  #shop-champ-grid{ grid-template-columns:repeat(5,1fr); max-width:760px; max-height:64vh; gap:8px; }
+  .shop-champ-card{ padding:6px 4px; }
+  .shop-champ-anim{ width:60px; height:60px; }
+  .shop-champ-card .gallery-card-name{ font-size:0.9rem; }
+  .shop-champ-card .gallery-card-price, .shop-owned{ font-size:0.72rem; }
+  #lobby-slots{ max-width:560px; }
+}
