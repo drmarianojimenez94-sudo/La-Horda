@@ -28,7 +28,7 @@ function spawnPoolFor(level){
 function spawnPoolForLaberinto(level){
   const pool = [{t:"escorpion_gigante", w:10}];
   if(level >= 2) pool.push({t:"golem_piedra", w:6});
-  if(level >= 3) pool.push({t:"medusa", w:5});
+  if(level >= 5) pool.push({t:"medusa", w:5});
   if(level >= 5) pool.push({t:"druida_arena", w:4});
   if(level >= 7) pool.push({t:"esfinge", w:3});
   if(level >= 8){ pool[0].w = 6; }
@@ -81,40 +81,27 @@ function pickFromPool(pool){
   return pool[0].t;
 }
 
-// Dificultad extra por progreso de CUENTA (no confundir con `runLevel`, el nivel de la
-// arena EN esta partida: acá es el nivel permanente de los campeones que la están jugando,
-// save.champions[classKey].level, el mismo que sube de nivel en nivel entre partidas). Una
-// cuenta veterana con campeones muy subidos de nivel enfrenta una horda más numerosa, más
-// resistente y que también da más experiencia -así seguir jugando con campeones ya fuertes
-// no se vuelve trivial, y de paso el progreso tardío sigue rindiendo-. Techos prudentes en
-// cada campo para que esto siga siendo jugable en cuentas muy avanzadas (no es un multiplicador
-// libre sin límite). Devuelve 1 (neutral) si todavía no hay una partida en curso.
-function partyLevelScale(){
-  if(typeof heroes==="undefined" || !heroes || !heroes.length) return {hp:1, spawnRate:1, xp:1};
-  const avgLevel = heroes.reduce((s,h)=> s + ((save.champions[h.classKey]||{}).level||1), 0) / heroes.length;
-  const over = Math.max(0, avgLevel-1);
-  return {
-    hp: 1 + Math.min(1.2, over*0.018),        // hasta +120% de vida en cuentas muy avanzadas
-    spawnRate: 1 - Math.min(0.35, over*0.01), // hasta -35% de intervalo entre apariciones (más enemigos por minuto)
-    xp: 1 + Math.min(1.5, over*0.022)         // hasta +150% de experiencia por baja
-  };
-}
+// (La dificultad por poder del equipo vive ahora en js/systems/difficulty.js: partyLevelScale.)
 function spawnEnemy(type, atBoss, champion){
   const base = ENEMY_BASE[type];
   const scale = 1 + (runLevel-1)*0.17;
   const ang = Math.random()*Math.PI*2;
-  const dist = Math.max(VW,VH)/2/DPR/CAM_ZOOM + 140 + Math.random()*100;
+  // distancia fija en el MUNDO (antes dependía del devicePixelRatio: en cada pantalla aparecían a
+  // otra distancia). Equivale a lo que se veía en iPhone: justo afuera del borde de arriba/abajo.
+  const dist = VIEW_WORLD_SHORT/2 + 170 + Math.random()*100;
   const x = player.x + Math.cos(ang)*dist;
   const y = player.y + Math.sin(ang)*dist;
   const hpScale = atBoss ? scale*1.0 : scale;
   // Un "campeón" es una versión agrandada de una criatura, usada como subjefe
   const champHp = champion ? 5.5 : 1, champScale = champion ? 1.45 : 1;
   const pls = partyLevelScale(); // dificultad extra por nivel de cuenta de los héroes en la partida
+  const arenaHp = arenaMods().enemyHpMult || 1; // perilla por arena (el Laberinto la usa para no ser un muro)
+  const hp0 = Math.round(base.hp*hpScale*champHp*pls.hp*((champion||base.rank==="subjefe")?DIFF.subbossHp:1)*arenaHp);
   const e = {
     type, name: base.name, rank: champion ? "subjefe" : base.rank,
     x, y, radius: base.radius*champScale,
-    hp: Math.round(base.hp*hpScale*champHp*pls.hp), maxHp: Math.round(base.hp*hpScale*champHp*pls.hp),
-    dmg: Math.round(base.dmg*(1+(runLevel-1)*arenaMods().enemyDmgPerWave)*(champion?1.4:1)),
+    hp: hp0, maxHp: hp0,
+    dmg: (champion||base.rank==="subjefe") ? Math.round(pls.avgHp*DIFF.subbossDmgPct*(1+(runLevel-1)*0.03)) : Math.round(base.dmg*(1+(runLevel-1)*arenaMods().enemyDmgPerWave)*pls.dmg),
     speed: base.speed*(champion?0.9:1), color: base.color,
     ranged: base.ranged||false, range: base.range||0, projSpeed: base.projSpeed||0,
     atkCd:0, xp: Math.round(base.xp*(champion?7:1)*pls.xp), gold: base.gold*(champion?7:1),

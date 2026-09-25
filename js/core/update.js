@@ -8,8 +8,11 @@
 function update(dt){
   if(state!=="playing") return;
   runElapsedMs += dt;
+  invalidatePassiveCache();
+  updateRunTimers(dt);
   vfxFrame(dt);
   vfxUpdate(dt);
+  updateFloatTexts(dt);
   // Musashi — Último Duelo: se procesa para los 4 héroes SIEMPRE, antes que cualquier otro
   // corte por aturdimiento/muerte de updateAllies (que hace "continue" en esos casos y nunca
   // llegaría a decrementar el temporizador del duelo si viviera adentro de ese bucle).
@@ -66,7 +69,7 @@ function update(dt){
     facing = {x:joyVec.x, y:joyVec.y};
     const l = Math.hypot(facing.x,facing.y); facing.x/=l; facing.y/=l;
     player.fx = facing.x; player.fy = facing.y;
-    const spd = player.baseSpeed * runStats.speedMult * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1);
+    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1);
     player.x += joyVec.x*spd*dt/1000;
     player.y += joyVec.y*spd*dt/1000;
     clampToArena(player);
@@ -74,6 +77,7 @@ function update(dt){
     player.moving = !player.fused;
     player.animT += dt;
   }
+  for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); samplePerformance(h, dt); }
   if(player.attackAnim>0) player.attackAnim -= dt;
   if(player.hurtTimer>0) player.hurtTimer -= dt;
   if(basicHeld) triggerBasic(player);
@@ -82,7 +86,8 @@ function update(dt){
   player.basicCd = Math.max(0, player.basicCd-dt);
   for(let i=0;i<3;i++) player.cds[i] = Math.max(0, player.cds[i]-dt);
   player.ultCd = Math.max(0, player.ultCd-dt);
-  player.energy = Math.min(player.maxEnergy, player.energy + player.cls.energyRegen*runStats.energyRegenMult*arenaMods().heroEnergyRegenMult*dt/1000);
+  player.energy = Math.min(player.maxEnergy, player.energy + player.cls.energyRegen*runStats.energyRegenMult*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
+  if(runStats.regenPct>0 && player.alive) player.hp = Math.min(player.maxHp, player.hp + player.maxHp*runStats.regenPct*arenaRuleHealMult()*dt/1000);
   if(player.shieldTimer>0){ player.shieldTimer-=dt; if(player.shieldTimer<=0) player.shield=0; }
   if(player.stats) sampleTankPresence(player, dt);
   if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp-=player.pendingHpBonus; player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
@@ -203,7 +208,7 @@ function update(dt){
     }
     if(e.hitFlash>0) e.hitFlash -= dt;
     if(e.electrifiedTimer>0) e.electrifiedTimer -= dt;
-    if(arenaMods().enemyRegenPct && e.hp<e.maxHp){ e.hp = Math.min(e.maxHp, e.hp + e.maxHp*arenaMods().enemyRegenPct*dt/1000); }
+    if(arenaMods().enemyRegenPct && e.hp<e.maxHp && e.rank!=="jefe" && e.rank!=="subjefe"){ e.hp = Math.min(e.maxHp, e.hp + e.maxHp*arenaMods().enemyRegenPct*arenaRuleEnemyRegenMult()*dt/1000); }
     if(e.attackAnim>0) e.attackAnim -= dt;
     if(e.skillAnim) e.skillAnim.t += dt;
     if(e.fxAnim) e.fxAnim.t += dt;
@@ -236,108 +241,11 @@ function update(dt){
       if(e.bossWind.t >= e.bossWind.dur){ const w = e.bossWind; e.bossWind = null; w.fn(); }
     }
 
-    // ---- Habilidades del jefe final (Demonio Mayor) ----
-    if(e.type==="demonio_mayor"){
-      if(e.breathCd>0) e.breathCd -= dt;
-      if(e.waveCd>0) e.waveCd -= dt;
-      if(e.regenTimer>0){
-        e.regenTimer -= dt;
-        e.hp = Math.min(e.maxHp, e.hp + e.maxHp*0.012*dt/1000);
-      }
-      if(!e.regenUsed && e.hp < e.maxHp*0.4){
-        e.regenUsed = true; e.regenTimer = 5000;
-        showBanner("¡Regeneración Oscura!");
-      }
-      if(e.bossWind){
-        // cargando un golpe: no arranca otra habilidad hasta resolverlo
-      } else if(e.breathCd<=0 && dist < 260){
-        e.breathCd = 4200;
-        const lfx = e.fx, lfy = e.fy; // la dirección del cono queda fija al empezar el aviso
-        bossWindup(e, 750, "bossCast", {shape:1, r:230, dx:lfx, dy:lfy, arc:0.99, rgb:"255,90,40"}, ()=>{
-          e.attackAnim = 500;
-          const targets = [player, ...allies].filter(h=>h.alive);
-          for(const h of targets){
-            const hdx=h.x-e.x, hdy=h.y-e.y, hd=Math.hypot(hdx,hdy)||1;
-            const dot = (hdx/hd)*lfx + (hdy/hd)*lfy; // dentro del cono frontal
-            if(hd < 230 && dot > 0.55){ damageHero(h, e.dmg*1.3); h.bleedTimer=Math.max(h.bleedTimer||0,0); }
-          }
-          for(let i=0;i<16;i++){
-            const spread=(Math.random()-0.5)*0.9, dist2=60+Math.random()*170;
-            particles.push({x:e.x, y:e.y, vx:(lfx*Math.cos(spread)-lfy*Math.sin(spread))*dist2*2,
-              vy:(lfx*Math.sin(spread)+lfy*Math.cos(spread))*dist2*2, life:380, color:Math.random()<0.5?"#ff6a3d":"#ffcf5c"});
-          }
-        });
-        showBanner("Lanzallamas Demoníaco");
-      } else if(e.waveCd<=0){
-        e.waveCd = 7200;
-        const R = 240;
-        bossWindup(e, 900, "bossGroundSlam", {shape:0, r:R, rgb:"255,90,40"}, ()=>{
-          e.attackAnim = 500;
-          const targets = [player, ...allies].filter(h=>h.alive);
-          for(const h of targets){ if(distance(e,h) <= R) damageHero(h, e.dmg*1.1); }
-          particles.push({x:e.x,y:e.y, life:650, ring:true, maxLife:650, maxR:R, color:"#ff6a3d"});
-          particles.push({x:e.x,y:e.y, life:800, ring:true, maxLife:800, maxR:R*0.7, color:"#ffcf5c"});
-        });
-        showBanner("¡Onda de Fuego Infernal!");
-      }
-    }
-
-    // ---- Habilidades del jefe final (Mago de Hielo y Cristal, fase 1 de la Arena de Hielo) ----
-    if(e.type==="mago_hielo_cristal"){
-      if(e.novaCd>0) e.novaCd -= dt;
-      if(e.ventiscaCd>0) e.ventiscaCd -= dt;
-      if(e.armorCd>0) e.armorCd -= dt;
-      if(e.armorTimer>0){
-        e.armorTimer -= dt;
-        if(e.armorTimer<=0) e.dmgTakenMult = 1;
-      }
-      if(e.bossWind){
-        // cargando un golpe: no arranca otra habilidad hasta resolverlo
-      } else if(e.armorCd<=0 && !(e.armorTimer>0)){
-        // Armadura de Hielo: se blinda un rato, reduce el daño que recibe a la mitad
-        e.armorCd = 13000; e.armorTimer = 5000; e.dmgTakenMult = 0.5;
-        e.skillAnim = {name:"armadura_hielo", t:0};
-        animTrigger(e, "bossCast", 700, 0.45);
-        showBanner("¡Armadura de Hielo!");
-      } else if(e.novaCd<=0 && dist < 230){
-        // Nova de Hielo: estallido de daño en área alrededor del jefe
-        e.novaCd = 6500;
-        const R = 190;
-        bossWindup(e, 700, "bossCast", {shape:0, r:R, rgb:"150,220,255"}, ()=>{
-          e.attackAnim = 500;
-          const targets = [player, ...allies].filter(h=>h.alive);
-          for(const h of targets){ if(distance(e,h) <= R) damageHero(h, e.dmg*1.4); }
-          particles.push({x:e.x,y:e.y, life:600, ring:true, maxLife:600, maxR:R, color:"#bfe6ff"});
-          particles.push({x:e.x,y:e.y, life:780, ring:true, maxLife:780, maxR:R*0.65, color:"#eaf7ff"});
-          e.skillAnim = {name:"nova_hielo", t:0};
-        });
-        showBanner("¡Nova de Hielo!");
-      } else if(e.ventiscaCd<=0){
-        // Ventisca: área más ancha que empuja a los héroes hacia afuera y los ralentiza
-        e.ventiscaCd = 9000;
-        const R = 260;
-        bossWindup(e, 850, "bossCast", {shape:0, r:R, rgb:"200,235,255"}, ()=>{
-          e.attackAnim = 500;
-          const targets = [player, ...allies].filter(h=>h.alive);
-          for(const h of targets){
-            const hd = distance(e,h);
-            if(hd <= R){
-              damageHero(h, e.dmg*0.6);
-              h.slowAmt = Math.max(h.slowAmt||0, 0.55); h.slowTimer = Math.max(h.slowTimer||0, 2400);
-              const kx=(h.x-e.x)/(hd||1), ky=(h.y-e.y)/(hd||1);
-              h.x += kx*46; h.y += ky*46;
-              clampToArena(h); resolveWallCollision(h);
-            }
-          }
-          particles.push({x:e.x,y:e.y, life:900, ring:true, maxLife:900, maxR:R, color:"#dff3ff"});
-          for(let i=0;i<20;i++){
-            const a = Math.random()*Math.PI*2, d=40+Math.random()*R;
-            particles.push({x:e.x+Math.cos(a)*d, y:e.y+Math.sin(a)*d, vx:Math.cos(a)*40, vy:Math.sin(a)*40-10, life:500, color:"#eaf7ff"});
-          }
-          e.skillAnim = {name:"ventisca", t:0};
-        });
-        showBanner("¡Ventisca!");
-      }
+    // ---- Jefes finales: director de fases y rotación de ataques (js/skills/boss-patterns.js).
+    // El Leviatán además orbita el borde (su bloque de más abajo). ----
+    if(BOSS_DESIGNS[e.type] && e.type!=="leviatan"){
+      if(e.type==="demonio_mayor") demonRegenCheck(e, dt);
+      if(updateBossDirector(e, dt, tgt, dist)) continue;
     }
 
     // ---- Habilidades del Dragón de Hielo (Tundraverx, subjefe de la Arena de Hielo) ----
@@ -359,7 +267,7 @@ function update(dt){
             const hdx=h.x-e.x, hdy=h.y-e.y, hd=Math.hypot(hdx,hdy)||1;
             const dot = (hdx/hd)*lfx + (hdy/hd)*lfy;
             if(hd < 260 && dot > 0.6){
-              damageHero(h, e.dmg*1.2);
+              damageHero(h, e.dmg*1.2, e);
               h.slowAmt = Math.max(h.slowAmt||0, 0.4); h.slowTimer = Math.max(h.slowTimer||0, 1600);
               addFrost(h, 2); // Aliento gélido: 2 cargas de escarcha (dos alientos seguidos congelan)
             }
@@ -397,7 +305,7 @@ function update(dt){
           for(const h of targets){
             const hd = distance(e,h);
             if(hd <= R){
-              damageHero(h, e.dmg*1.2);
+              damageHero(h, e.dmg*1.2, e);
               h.slowAmt = Math.max(h.slowAmt||0, 0.5); h.slowTimer = Math.max(h.slowTimer||0, 2000);
               if(hd <= Rinner){ h.stunTimer = Math.max(h.stunTimer||0, 700); }
             }
@@ -425,7 +333,7 @@ function update(dt){
         e.x += e.chargeDx*(isElite?420:380)*dt/1000; e.y += e.chargeDy*(isElite?420:380)*dt/1000;
         clampToArena(e);
         if(!e.chargeHit && distance(e,tgt) <= e.radius+tgt.radius+10){
-          damageHero(tgt, e.dmg*(isElite?1.8:1.5));
+          damageHero(tgt, e.dmg*(isElite?1.8:1.5), e);
           if(isElite){ tgt.bleedTimer = Math.max(tgt.bleedTimer||0, 3000); tgt.bleedDmg = Math.max(tgt.bleedDmg||0, e.dmg*0.25); }
           e.chargeHit = true;
         }
@@ -460,7 +368,7 @@ function update(dt){
           const R = 95;
           const targets = [player,...allies].filter(h=>h.alive);
           for(const h of targets){
-            if(distance(e,h) <= R){ damageHero(h, e.dmg); h.slowAmt=Math.max(h.slowAmt||0,0.5); h.slowTimer=Math.max(h.slowTimer||0,900); }
+            if(distance(e,h) <= R){ damageHero(h, e.dmg, e); h.slowAmt=Math.max(h.slowAmt||0,0.5); h.slowTimer=Math.max(h.slowTimer||0,900); }
           }
           particles.push({x:e.x,y:e.y, life:340, ring:true, maxLife:340, maxR:R, color:"#8fd0ff"});
           vfxBurst(e.x, e.y-20, 10, "shock", 150, 260, 3, 1, 0, 1);
@@ -485,7 +393,7 @@ function update(dt){
           for(const h of targets){
             const hd = distance(e,h);
             if(hd <= R){
-              damageHero(h, e.dmg*1.3);
+              damageHero(h, e.dmg*1.3, e);
               const kx=(h.x-e.x)/(hd||1), ky=(h.y-e.y)/(hd||1);
               h.x += kx*30; h.y += ky*30; clampToArena(h);
             }
@@ -549,7 +457,7 @@ function update(dt){
         e.tentacleTelegraph -= dt;
         if(e.tentacleTelegraph<=0){
           e.attackAnim = 350;
-          if(e.tentacleTarget && e.tentacleTarget.alive && distance(e,e.tentacleTarget)<=300) damageHero(e.tentacleTarget, e.dmg);
+          if(e.tentacleTarget && e.tentacleTarget.alive && distance(e,e.tentacleTarget)<=300) damageHero(e.tentacleTarget, e.dmg, e);
           particles.push({x:e.x,y:e.y, life:260, ring:true, maxLife:260, maxR:40, color:"#c98fe0"});
           if(e.tentacleTarget){
             const tt = e.tentacleTarget;
@@ -578,14 +486,14 @@ function update(dt){
       }
       if(e.grabbedHero){
         if(!e.grabbedHero.alive || e.grabbedHero.stunTimer<=0){ e.grabbedHero = null; }
-        else damageHero(e.grabbedHero, e.dmg*0.25*dt/1000);
+        else damageHero(e.grabbedHero, e.dmg*0.25*dt/1000, e);
       }
       e.sweepCd -= dt;
       if(e.sweepTelegraph>0){
         e.sweepTelegraph -= dt;
         if(e.sweepTelegraph<=0){
           e.attackAnim = 500;
-          for(const h of targets){ if(distance(e,h) <= 260) damageHero(h, e.dmg*1.2); }
+          for(const h of targets){ if(distance(e,h) <= 260) damageHero(h, e.dmg*1.2, e); }
           particles.push({x:e.x,y:e.y, life:500, ring:true, maxLife:500, maxR:260, color:"#8a5aa8"});
           for(let k=0;k<6;k++){
             const a = k/6*Math.PI*2 + Math.random()*0.3;
@@ -614,94 +522,16 @@ function update(dt){
     }
 
     if(e.type==="leviatan"){
+      // Ronda el borde del escenario (no entra del todo): órbita fija alrededor del centro. Tras
+      // una embestida vuelve nadando a su órbita en vez de teletransportarse a ella.
       const acuaPhase = e.acuaticaPhase||1;
-      if(!e.charging2){
-        e.orbitAngle = (e.orbitAngle||0) + (dt/1000) * (0.12 + (acuaPhase-1)*0.05);
-        e.x = Math.cos(e.orbitAngle)*LEVIATAN_ORBIT_R; e.y = Math.sin(e.orbitAngle)*LEVIATAN_ORBIT_R;
-      }
-      // la cara sigue mirando al objetivo real (ya calculado arriba para todo enemigo), no al
-      // centro de la órbita -así el mordisco/coletazo se telegrafían hacia donde de verdad pega-
-      const targets = [player,...allies].filter(h=>h.alive);
-
-      e.biteCd -= dt;
-      if(e.biteTelegraph>0){
-        e.biteTelegraph -= dt;
-        if(e.biteTelegraph<=0){
-          e.attackAnim = 400; e._lastAtk = "bite";
-          for(const h of targets){ if(distance(e,h) <= 220) damageHero(h, e.dmg); }
-          particles.push({x:e.x,y:e.y, life:300, ring:true, maxLife:300, maxR:220, color:"#3a8aa0"});
-          vfxSprite("fxSpike", 0, e.x+e.fx*60, e.y+e.fy*40, 110, 420, null, 0.12, false, 0.95);
-          vfxBurst(e.x+e.fx*60, e.y+e.fy*40, 14, "water", 170, 420, 3, 2, -70, 0);
-          e.biteCd = 3400;
-        }
-      } else if(e.biteCd<=0){
-        let near = targets.some(h=>distance(e,h)<=280);
-        if(near){ e.biteTelegraph=550; particles.push({x:e.x,y:e.y, life:550, ring:true, maxLife:550, maxR:220, color:"#7fd0e0"});
-          vfxTelegraph({shape:0, r:220, follow:e, dur:550, rgb:"120,210,230"}); animTrigger(e, "bossHeavyAttack", 950, 0.58); }
-      }
-
-      e.chargeCd -= dt;
-      if(e.chargeTelegraph2>0){
-        e.chargeTelegraph2 -= dt;
-        if(e.chargeTelegraph2<=0){
-          e.charging2 = true; e.chargeTimer2 = 900; e.chargeHitSet = new Set();
-          vfxBurst(e.x, e.y, 16, "water", 180, 420, 3, 2, -40, 0);
-          const tx=player.x-e.x, ty=player.y-e.y, tl=Math.hypot(tx,ty)||1;
-          e.chargeDx2 = tx/tl; e.chargeDy2 = ty/tl;
-        }
-      } else if(e.charging2){
-        e.chargeTimer2 -= dt;
-        e.x += e.chargeDx2*520*dt/1000; e.y += e.chargeDy2*520*dt/1000;
-        for(const h of targets){ if(!e.chargeHitSet.has(h) && distance(e,h)<=100){ damageHero(h, e.dmg*1.3); e.chargeHitSet.add(h); } }
-        if(e.chargeTimer2<=0){ e.charging2 = false; e.chargeCd = 8000; e.orbitAngle = Math.atan2(e.y, e.x); }
-      } else if(e.chargeCd<=0){
-        e.chargeTelegraph2 = 700;
-        particles.push({x:e.x,y:e.y, life:700, ring:true, maxLife:700, maxR:50, color:"#ff8a5a"});
-        // carril de la embestida: apunta al jugador en vivo, igual que la dirección real al salir
-        vfxTelegraph({shape:2, r:100, len:520*0.9, follow:e, aimAt:player, dur:700, rgb:"255,120,90"});
-        animTrigger(e, "bossCharge", 1600, 0.44);
-        showBanner("¡El Leviatán embiste!");
-      }
-
-      e.tailCd -= dt;
-      if(e.tailTelegraph>0){
-        e.tailTelegraph -= dt;
-        if(e.tailTelegraph<=0){
-          e.attackAnim = 450; e._lastAtk = "tail";
-          for(const h of targets){
-            const hd = distance(e,h);
-            if(hd <= 260){ damageHero(h, e.dmg*1.1); const kx=(h.x-e.x)/(hd||1), ky=(h.y-e.y)/(hd||1); h.x+=kx*50; h.y+=ky*50; clampToArena(h); }
-          }
-          particles.push({x:e.x,y:e.y, life:450, ring:true, maxLife:450, maxR:260, color:"#5ab0c8"});
-          vfxSprite("fxSplash", 0, e.x-e.fx*80, e.y-e.fy*50, 100, 520, null, 0.15, false, 0.95);
-          vfxShock(e.x, e.y, 40, 270, "120,210,230", 460, 2);
-          e.tailCd = 6200;
-        }
-      } else if(e.tailCd<=0){
-        e.tailTelegraph = 600;
-        particles.push({x:e.x,y:e.y, life:600, ring:true, maxLife:600, maxR:260, color:"#8fd8ec"});
-        vfxTelegraph({shape:0, r:260, follow:e, dur:600, rgb:"120,210,230"});
-        animTrigger(e, "bossGroundSlam", 950, 0.63);
-      }
-
-      e.waveCd2 -= dt;
-      if(e.waveTelegraph>0){
-        e.waveTelegraph -= dt;
-        if(e.waveTelegraph<=0){
-          e.attackAnim = 500; e._lastAtk = "wave";
-          for(const h of targets) damageHero(h, e.dmg*0.9);
-          particles.push({x:player.x,y:player.y, life:600, ring:true, maxLife:600, maxR:400, color:"#3a8aa0"});
-          for(let k=0;k<4;k++){ const a = k*Math.PI/2+0.4; vfxSprite("fxWave", 0, player.x+Math.cos(a)*120, player.y+Math.sin(a)*80, 110, 520, null, 0.1, Math.cos(a)>0, 0.9); }
-          vfxShake(8);
-          e.waveCd2 = 9000;
-        }
-      } else if(e.waveCd2<=0){
-        e.waveTelegraph = 1100;
-        // la Oleada alcanza a todos: el aviso es global (olas que se acercan desde los costados)
-        vfxTelegraph({shape:0, r:400, follow:player, dur:1100, rgb:"90,200,230"});
-        for(let k=0;k<4;k++){ const a = k*Math.PI/2+0.4; vfxSprite("fxWave", 0, player.x+Math.cos(a)*420, player.y+Math.sin(a)*280, 120, 1100, null, 0.5, Math.cos(a)>0, 0.9, 0, -Math.cos(a)*270, -Math.sin(a)*180); }
-        animTrigger(e, "bossCast", 1500, 0.73);
-        showBanner("¡Oleada de Agua!");
+      const busy = updateBossDirector(e, dt, tgt, dist);
+      if(!busy && !e.bossCharge){
+        e.orbitAngle = (e.orbitAngle===undefined ? Math.atan2(e.y, e.x) : e.orbitAngle) + (dt/1000) * (0.12 + (acuaPhase-1)*0.05);
+        const ox = Math.cos(e.orbitAngle)*LEVIATAN_ORBIT_R, oy = Math.sin(e.orbitAngle)*LEVIATAN_ORBIT_R;
+        const ddx = ox-e.x, ddy = oy-e.y, dd = Math.hypot(ddx, ddy);
+        if(dd > 8){ const k = Math.min(1, 340*dt/1000/dd); e.x += ddx*k; e.y += ddy*k; } else { e.x = ox; e.y = oy; }
+        if(e.levCharging){ e.levCharging = false; e.orbitAngle = Math.atan2(e.y, e.x); }
       }
       continue;
     }
@@ -713,10 +543,7 @@ function update(dt){
       }
       e.atkCd -= dt;
       if(dist <= e.range && e.atkCd<=0){
-        e.atkCd = 1500;
-        e.attackAnim = 320;
-        projectiles.push({x:e.x,y:e.y, vx:dx/dist*e.projSpeed, vy:dy/dist*e.projSpeed, dmg:e.dmg, life:2200, radius:7, color:ENEMY_PROJ_COLOR[e.type]||"#ff5a3d", enemy:true,
-          sprite: e.type==="sirena_abisal" ? "orb" : undefined});
+        e.atkCd = enemyRangedAttack(e, tgt, dx, dy, dist); // cada familia dispara a su manera (ranged-styles.js)
       }
     } else {
       if(dist > e.radius+tgt.radius-4){
@@ -726,7 +553,7 @@ function update(dt){
       if(dist <= e.radius+tgt.radius+6 && e.atkCd<=0){
         e.atkCd = 900;
         e.attackAnim = 280;
-        damageHero(tgt, e.dmg);
+        damageHero(tgt, e.dmg*(e.basicMult||1), e);
       }
     }
   }
@@ -737,9 +564,10 @@ function update(dt){
   for(const p of projectiles){
     p.x += p.vx*dt/1000; p.y += p.vy*dt/1000; p.life -= dt;
     if(p.enemy){
+      if((p.wave || p.lob) && updateEnemyProjectileStyle(p, dt)) continue; // el tiro en arco solo pega al caer
       for(const h of heroes){
         if(!h.alive) continue;
-        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
+        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25, rank:p.rank}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
       }
     } else {
       for(const e of enemies){
@@ -788,7 +616,10 @@ function update(dt){
   updateAxiomVfx(dt);
 
   // spawn logic
-  if(!divinaMode && !bossActive){
+  if(levelClearing > 0){
+    levelClearing -= dt;
+    if(levelClearing <= 0){ levelClearing = 0; if(state==="playing" && !runEnding) openBuffChoice(); }
+  } else if(!divinaMode && !bossActive && !runEnding){
     spawnTimer -= dt;
     // Más enemigos desde la Horda 1, y el ritmo deja de acelerar a partir del nivel ~5
     // (antes seguía acelerando sin techo real y se acumulaba un "masacote" hacia el final).
@@ -843,17 +674,17 @@ function update(dt){
       }
     }
     levelTimer += dt;
-    if(levelTimer >= levelDuration){
+    if(levelTimer >= levelDuration && !levelClearing){
       if(runLevel === LEVEL_COUNT){
         startBossFight();
       } else {
-        // clear remaining trash before showing buff choice, but don't hard-block
-        openBuffChoice();
+        beginLevelClear(); // la horda restante cae, respiro corto, y después la elección de refuerzo
       }
     }
   } else {
     if(boss && !boss.alive){ /* handled in killEnemy */ }
   }
 
+  updateBossHud(dt);
   updateHUD();
 }

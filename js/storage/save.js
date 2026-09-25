@@ -49,7 +49,8 @@ function defaultSave(){
     gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false},
-    relics:{hp:0,dmg:0,def:0,vel:0} // permanent small stat items found from élite+ enemies
+    relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
+    lootPity:{legendario:0, set:0, mitico:0} // protección suave contra la mala suerte (oculta), ver js/data/loot.js
   };
 }
 let save = defaultSave();
@@ -92,6 +93,22 @@ function loadSave(){
     }
   }catch(e){ save = defaultSave(); }
 }
-function persist(){
+// Durante la partida se guarda como mucho una vez cada 1.5 s: antes cada baja (XP + oro)
+// serializaba el guardado completo -con los inventarios de los 10 campeones- y lo escribía en
+// localStorage, varias veces por cuadro en las peleas grandes. Fuera de la partida (menús,
+// pausa, fin de partida) se sigue guardando al instante, igual que siempre.
+let _persistTimer = null;
+function persistNow(){
+  if(_persistTimer){ clearTimeout(_persistTimer); _persistTimer = null; }
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){ /* storage unavailable, continue in-memory */ }
 }
+function persist(){
+  if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
+  if(typeof state!=="undefined" && state==="playing"){
+    if(!_persistTimer) _persistTimer = setTimeout(persistNow, 1500);
+    return;
+  }
+  persistNow();
+}
+window.addEventListener("pagehide", ()=>{ if(_persistTimer) persistNow(); });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden" && _persistTimer) persistNow(); });

@@ -33,47 +33,48 @@ function renderChampGrid(){
 // siempre sobre el canvas principal) para que apunte al canvas chiquito de la tarjeta.
 let champPreviewLoopRunning = false;
 function drawChampionPreviewFrame(cvs, key){
-  const cls = CLASSES[key];
-  if(!cls) return;
   const pctx = cvs.getContext("2d");
   pctx.clearRect(0,0,cvs.width,cvs.height);
+  drawChampFigure(pctx, key, cvs.width/2, cvs.height*0.86, 2.0, 1, performance.now()%100000, true);
+}
+// Dibuja a un campeón con su arte real sobre cualquier canvas (vista previa de la selección y
+// la pantalla de título). `fx` = hacia dónde mira (1 derecha, -1 izquierda).
+function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving){
+  const cls = CLASSES[key];
+  if(!cls) return;
   const fake = {
-    x: cvs.width/2, y: cvs.height*0.86, fx:1, fy:0, moving:true,
-    animT: performance.now()%100000, attackAnim:0, hurtTimer:0,
-    classKey:key, cls, scale:2.0, radius:24,
+    x, y, fx, fy:0, moving,
+    animT, attackAnim:0, hurtTimer:0,
+    classKey:key, cls, scale, radius:12*scale, // algunos sets (Musashi, Sylva, Nigromante) se dimensionan por el radio
     colossalTimer:0, growTimer:0, spinTimer:0, stealthTimer:0
   };
   const saved = ctx;
   ctx = pctx;
   try{
-    if(key==="mago") drawMagoAtlas(fake, 2.0, 1);
-    else if(key==="soporte") drawSoporteAtlas(fake, 2.0, 1);
-    else if(key==="segador") drawSegadorReal(fake, 2.0, 1);
-    else if(key==="axiom") drawAxiomReal(fake, 2.0, 1);
-    else if(key==="profeta") drawProfetaAtlas(fake, 2.0, 1);
-    else if(key==="musashi" && drawMusashiReal(fake, 2.0, 1)){
-      // Musashi: vista previa con su sprite real (idle), igual que en partida.
+    if(key==="mago") drawMagoAtlas(fake, scale, 1);
+    else if(key==="soporte") drawSoporteAtlas(fake, scale, 1);
+    else if(key==="segador") drawSegadorReal(fake, scale, 1);
+    else if(key==="axiom") drawAxiomReal(fake, scale, 1);
+    else if(key==="profeta") drawProfetaAtlas(fake, scale, 1);
+    else if(key==="musashi" && drawMusashiReal(fake, scale, 1)){
+      // Musashi: con su sprite real, igual que en partida.
     }
-    else if(key==="cazadora" && drawSylvaReal(fake, 2.0, 1)){
-      // Sylva: vista previa con su sprite real (idle), igual que en partida.
+    else if(key==="cazadora" && drawSylvaReal(fake, scale, 1)){
+      // Sylva: con su sprite real, igual que en partida.
     }
-    else if(key==="nigromante" && drawNigromanteReal(fake, 2.0, 1)){
-      // Nigromante: vista previa con su sprite real (idle), igual que en partida.
+    else if(key==="nigromante" && drawNigromanteReal(fake, scale, 1)){
+      // Nigromante: con su sprite real, igual que en partida.
     }
-    else if(DIR_ATLASES[key]) drawDirAtlasHero(DIR_ATLASES[key], fake, 2.0, 1);
+    else if(DIR_ATLASES[key]) drawDirAtlasHero(DIR_ATLASES[key], fake, scale, 1);
     else {
       // Campeones sin atlas de bitmap propio usan el sprite procedural genérico (GRIDS/PAL,
-      // ver buildSprites) -mismo camino que ya usa drawHero() para la partida real-. BUG real
-      // encontrado en testing: buildSprites()
-      // hasta ahora solo se llamaba de forma perezosa desde startRun(), así que en la
-      // PRIMERA visita a la pantalla de selección (antes de arrancar cualquier partida)
-      // SPRITES todavía no existía y la vista previa quedaba en negro. Mismo guard perezoso
-      // que ya usa startRun(), disparado acá también.
+      // ver buildSprites). buildSprites() antes solo se llamaba desde startRun(): en la primera
+      // visita a un menú SPRITES todavía no existía y la figura quedaba en negro.
       if(!SPRITES[key]) buildSprites();
       const img = heroFrame(fake);
       if(img){
-        drawOutline(SPRITES[key], fake.x, fake.y, 2.0, false);
-        drawSprite(img, fake.x, fake.y, 2.0, false);
+        drawOutline(SPRITES[key], fake.x, fake.y, scale, fx < 0);
+        drawSprite(img, fake.x, fake.y, scale, fx < 0);
       }
     }
   } finally {

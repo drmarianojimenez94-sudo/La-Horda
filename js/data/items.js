@@ -84,6 +84,27 @@ const PASSIVE_DB = [
   {id:"pas_energia",  name:"Pozo Interior",    desc:"Aumenta el recurso máximo y su regeneración", condition:"siempre",   effect:"energy_mult",     valueBase:0.05, growth:0.02},
   {id:"pas_overheal", name:"Sobreabundancia",  desc:"El exceso de curación/robo de vida se convierte en escudo", condition:"al curar de más", effect:"overheal_shield_pct", valueBase:0.10, growth:0.04}
 ];
+// Potencia real de las pasivas según la rareza del objeto que las trae. Antes una pasiva valía
+// lo mismo en un Raro que en un Mítico (4% de daño, casi imperceptible en combate): ahora un
+// objeto de rareza alta se siente de verdad. Se aplica al LEER (equippedPassives), así que los
+// objetos ya guardados también se benefician sin tocar el save.
+const PASSIVE_RARITY_MULT = {comun:1, raro:2.5, muyraro:2.3, legendario:2.7, mitico:3.1, unico:3.3};
+// Poderes de objeto legendario/mítico/único: efectos VISIBLES en combate (no un % más). Cada
+// objeto de esas rarezas tiene uno; los objetos viejos reciben el suyo de forma determinística
+// según su identificador (siempre el mismo para el mismo objeto), sin modificar el guardado.
+// "power" escala por rareza (mítico/único pegan más fuerte que legendario).
+const LEGEND_PROCS = {
+  kill_explode: {name:"Estallido Ígneo",     desc:"Al matar, el enemigo puede estallar en llamas y dañar a los cercanos"},
+  basic_chain:  {name:"Tormenta Encadenada", desc:"Cada 4 golpes básicos sale un rayo que salta entre enemigos"},
+  skill_nova:   {name:"Resonancia Arcana",   desc:"Al lanzar una habilidad, una onda de energía golpea a tu alrededor"},
+  kill_heal:    {name:"Festín de Almas",     desc:"Cada baja te cura; las bajas de élite curan mucho más"},
+  hit_shield:   {name:"Égida",               desc:"Un golpe fuerte recibido te da un escudo (cada 8 s)"},
+  basic_freeze: {name:"Escarcha Viva",       desc:"Tus básicos ralentizan; cada 6 golpes congelan al objetivo"},
+  combo_ramp:   {name:"Furia Creciente",     desc:"Golpear seguido acumula daño y velocidad de ataque (hasta 10)"},
+  crit_quake:   {name:"Golpe Sísmico",       desc:"Los críticos generan una onda de choque que aturde"}
+};
+const LEGEND_PROC_IDS = Object.keys(LEGEND_PROCS);
+const LEGEND_PROC_POWER = {legendario:1, mitico:1.45, unico:1.7};
 const PASSIVE_DB_MYTHIC = [
   {id:"pasm_overload",  name:"Sobrecarga Mítica",  desc:"Bonificación adicional de daño y velocidad al bajar de 50% de vida", condition:"vida<50%", effect:"mythic_execute",  valueBase:0.15, growth:0},
   {id:"pasm_guardian",  name:"Guardián Mítico",    desc:"Al quedar sin escudo, genera un escudo de emergencia una vez por combate", condition:"escudo=0 (1 vez)", effect:"mythic_emergency_shield", valueBase:0.20, growth:0}

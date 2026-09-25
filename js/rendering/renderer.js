@@ -12,10 +12,15 @@ function render(){
   ANIM_ALPHA_MUL = 1; // resguardo: si un frame anterior se cortó a mitad de un fade, no arrastra el alpha
 
   ctx.save();
+  ctx.imageSmoothingEnabled = false; // pixel art: siempre vecino más cercano
   ctx.scale(CAM_ZOOM, CAM_ZOOM);
   const shakeX = screenShake>0 ? (Math.random()-0.5)*screenShake : 0;
   const shakeY = screenShake>0 ? (Math.random()-0.5)*screenShake : 0;
-  ctx.translate(VW/2/CAM_ZOOM - player.x + shakeX, (VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - player.y + shakeY);
+  // cámara alineada a píxeles del dispositivo: sin temblor de medio píxel en el pixel art
+  const _pxW = CAM_ZOOM*DPR;
+  const camTX = Math.round((VW/2/CAM_ZOOM - player.x + shakeX)*_pxW)/_pxW;
+  const camTY = Math.round(((VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - player.y + shakeY)*_pxW)/_pxW;
+  ctx.translate(camTX, camTY);
 
   // Escenario: suelo, lava, muros, braseros
   drawArena();
@@ -29,7 +34,11 @@ function render(){
     ctx.fillRect(em.x, em.y, 2, 2);
   }
   drawAcuaAmbience();
+  drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   vfxDrawGround(); // telegraphs de zonas peligrosas + ondas de choque
+  drawSetAuras(); // aura discreta de los sets completos (color del set, más intensa con su carga)
+  drawAimPreview(); // previsualización de la habilidad que se está apuntando
+  drawBossTethers(); // cadenas de hielo entre el Mago y sus guardianes
   vfxDrawSprites(true); // efectos de sprite real "de suelo" (bajo las entidades)
 
   // anillos de habilidad en el suelo
@@ -41,7 +50,7 @@ function render(){
       if(r <= 0) continue;
       ctx.strokeStyle = pt.warnRing ? "rgba(255,90,40,0.85)" : (pt.color+"cc");
       ctx.lineWidth = pt.warnRing?3:5;
-      ctx.beginPath(); ctx.ellipse(pt.x,pt.y+6,r,r*0.55,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(pt.x,pt.y+6,r,0,Math.PI*2); ctx.stroke(); // radio real del efecto (antes aplastado)
     }
   }
 
@@ -110,6 +119,7 @@ function render(){
   }
   for(const h of heroes){ if(h.wolf) drawSpectralWolf(h.wolf); }
   drawMusashiAfterimages();
+  drawDownedMarkers();
   for(const h of heroes){
     if(h.golem) drawGolemReal(h.golem);
     if(h.skeletons && h.skeletons.length) for(const sk of h.skeletons) drawSkeletonMinion(sk);
@@ -216,6 +226,8 @@ function render(){
 
   aidAmbDraw(animNow/1000); // ambiente de primer plano: ceniza, nieve, hojas, polvo, motas
   aidGrade(animNow/1000);   // luz/color propio de la arena (debajo del HUD)
+  drawFloatTexts();          // números de daño/curación y avisos, por encima de todo el mundo
 
   ctx.restore();
+  drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }

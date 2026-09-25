@@ -17,7 +17,7 @@ function botTryAbilities(h){
     const worthIt = t && t.alive && !t.isDuelLocked && (t.rank==="jefe"||t.rank==="subjefe"||t.rank==="elite" || t.hp/t.maxHp < 0.45);
     if(worthIt){
       castAbility(h, h.cls.ultimate, true);
-      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
       return;
     }
     // objetivo no vale la pena todavía: sigue acumulando Concentración con habilidades normales
@@ -28,7 +28,7 @@ function botTryAbilities(h){
     const worthIt = nearCountUlt>=3 || (h.huntTarget && h.huntTarget.alive && (h.huntTarget.rank==="jefe"||h.huntTarget.rank==="subjefe"||h.huntTarget.rank==="elite"));
     if(worthIt){
       castAbility(h, h.cls.ultimate, true);
-      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
       return;
     }
   } else if(h.classKey==="nigromante" && h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
@@ -38,12 +38,12 @@ function botTryAbilities(h){
     const bigThreat = enemies.some(e=>e.alive && (e.rank==="jefe"||e.rank==="subjefe") && distance(h,e)<=420);
     if(nearCountUlt>=4 || bigThreat){
       castAbility(h, h.cls.ultimate, true);
-      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
       return;
     }
   } else if(h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
     castAbility(h, h.cls.ultimate, true);
-    h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, "ult");
+    h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
     return;
   }
   // Musashi (IA): prioridad simple en vez del orden aleatorio genérico -Paso Fantasma para
@@ -60,7 +60,7 @@ function botTryAbilities(h){
       if(h.cds[idx]>0 || h.energy < sk.cost) continue;
       if(!nearestEnemyTo(h, 260) && !h.duelTarget) continue;
       h.energy -= sk.cost;
-      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, idx);
       if(sk.kind==="ghost_step" && h.duelActive) h.cds[idx] *= musashiGhostStepCdMult(h);
       castAbility(h, sk, false, idx);
       return;
@@ -82,7 +82,7 @@ function botTryAbilities(h){
       if(h.cds[idx]>0 || h.energy < sk.cost) continue;
       if(!nearestEnemyTo(h, 320) && !h.huntTarget) continue;
       h.energy -= sk.cost;
-      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, idx);
       if(sk.kind==="piercing_shot") h.pendingChargeMs = SYLVA_CHARGE_MAX_MS;
       castAbility(h, sk, false, idx);
       return;
@@ -97,7 +97,7 @@ function botTryAbilities(h){
       const sk = h.cls.skills[2];
       if(h.cds[2]<=0 && h.energy>=sk.cost && nearestEnemyTo(h, sk.range||300)){
         h.energy -= sk.cost;
-        h.cds[2] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, 2)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, 2);
+        h.cds[2] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, 2)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, 2);
         castAbility(h, sk, false, 2);
       }
       return;
@@ -113,7 +113,7 @@ function botTryAbilities(h){
       if(h.cds[idx]>0 || h.energy < sk.cost) continue;
       if(idx===2 && !nearestEnemyTo(h, sk.range||300)) continue;
       h.energy -= sk.cost;
-      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+      h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, idx);
       castAbility(h, sk, false, idx);
       return;
     }
@@ -123,13 +123,16 @@ function botTryAbilities(h){
   for(const idx of order){
     const sk = h.cls.skills[idx];
     if(h.cds[idx]>0 || h.energy < sk.cost) continue;
-    const supportKinds = ["team_heal","sacrifice","team_regen","retro_heal","brief_immunity"];
+    const supportKinds = ["team_heal","team_heal_aoe","team_shield_buff","sacrifice","team_regen","retro_heal","brief_immunity"];
     const isSupport = supportKinds.includes(sk.kind);
-    const teamHurt = heroes.some(o=>o.alive && o.hp/o.maxHp<0.62);
-    if(isSupport && !teamHurt) continue;
+    // curas: solo si alguien al alcance está herido; escudos: también cuando un jefe carga un golpe
+    const R = sk.radius || 9999;
+    const teamHurt = heroes.some(o=>o.alive && o.hp/o.maxHp<0.62 && distance(h,o) <= R);
+    const bossThreat = sk.kind==="team_shield_buff" && boss && boss.alive && boss.bossWind && heroes.some(o=>o.alive && distance(h,o)<=R && distance(boss,o) < 360);
+    if(isSupport && !teamHurt && !bossThreat) continue;
     if(!isSupport && !(divinaMode ? divinaHostiles("player", h.x, h.y, 300) : nearestEnemyTo(h, 300))) continue;
     h.energy -= sk.cost;
-    h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult * talentSkillCdMult(h.classKey, idx);
+    h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, idx);
     if(sk.kind==="teleport_blink") h.cds[idx] = resolveTeleportCd(h, h.cds[idx]);
     if(sk.kind==="ghost_step" && h.duelActive) h.cds[idx] *= musashiGhostStepCdMult(h);
     castAbility(h, sk, false, idx);
@@ -141,9 +144,16 @@ function botTryAbilities(h){
 function tryReviveAlly(a){
   if(state!=="playing" || !a || a.alive) return;
   if(distance(player, a) >= REVIVE_RANGE) return;
-  if(player.stats) player.stats.revives++;
+  reviveHero(a, player);
+}
+// Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
+function reviveHero(a, by){
+  if(state!=="playing" || !a || a.alive) return;
+  if(by && by.stats) by.stats.revives++;
+  a._reviveT = 0; a._reviveBy = null;
   a.alive = true;
-  a.hp = Math.max(1, Math.round(a.maxHp*0.4));
+  a.hp = Math.max(1, Math.round(a.maxHp*setReviveHpPct(by)));
+  setsOnRevive(by);
   a.stunTimer=0; a.shield=0; a.shieldTimer=0; a.itemShield = a.itemMaxShield||0;
   a.buffDmgMult=1; a.buffAtkSpeedMult=1; a.buffDefMult=1; a.buffLifesteal=0; a.buffBleedOnHit=false; a.buffTimer=0;
   a.regenTimer=0; a.regenPerSec=0;
@@ -156,7 +166,7 @@ function tryReviveAlly(a){
   for(let i=0;i<14;i++) particles.push({x:a.x,y:a.y, vx:(Math.random()-0.5)*90, vy:-40-Math.random()*70, life:650, color:"#8effb4"});
   particles.push({x:a.x,y:a.y, life:650, ring:true, maxLife:650, maxR:64, color:"#8effb4"});
   particles.push({x:a.x,y:a.y, life:650, maxLife:650, spin:true, radius:44, color:"#8effb4"});
-  showBanner(`${a.cls.name} ha revivido`);
+  showBanner(by && by!==player ? `${by.cls.name} revivió a ${a.cls.name}` : `${a.cls.name} ha revivido`);
 }
 
 function updateAllies(dt){
@@ -167,9 +177,8 @@ function updateAllies(dt){
     h.basicCd = Math.max(0, h.basicCd-dt);
     for(let i=0;i<3;i++) h.cds[i] = Math.max(0, h.cds[i]-dt);
     h.ultCd = Math.max(0, h.ultCd-dt);
-    h.energy = Math.min(h.maxEnergy, h.energy + h.cls.energyRegen*arenaMods().heroEnergyRegenMult*dt/1000);
+    h.energy = Math.min(h.maxEnergy, h.energy + h.cls.energyRegen*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
     if(h.shieldTimer>0){ h.shieldTimer-=dt; if(h.shieldTimer<=0) h.shield=0; }
-    if(h.stats) sampleTankPresence(h, dt);
     if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp-=h.pendingHpBonus; h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
     if(h.furyArmorTimer>0){
       h.furyArmorTimer -= dt;
@@ -265,18 +274,14 @@ function updateAllies(dt){
     if(h.attackAnim>0) h.attackAnim -= dt;
     if(h.hurtTimer>0) h.hurtTimer -= dt;
 
-    // En la Arena Divina no hay nada en `enemies` (los monstruos comunes viven en
-    // divinaMinions): sin esto, tus 3 aliados nunca encontraban a quién perseguir y se
-    // quedaban solo siguiendo al jugador sin pelear.
-    const divinaHit = divinaMode ? divinaHostiles("player", h.x, h.y, 620) : null;
-    const target = divinaHit ? divinaHit.ref : nearestEnemyTo(h, 620);
-    const desired = h.cls.ranged ? 190 : (h.cls.basicRange*0.7);
-    let mx=0, my=0;
-    // Si está herido, prioriza ir a buscar la poción más cercana (antes ningún aliado las
-    // buscaba activamente: solo perseguían enemigos, así que en la práctica casi siempre
-    // terminaba agarrándola quien estaba parado ahí al matar al enemigo).
+    // Movimiento por ROL (bot-brain.js): esquivar avisos, revivir, reagruparse, interceptar,
+    // cazar élites, buscar grupos o cuidar al más herido. La poción sigue teniendo prioridad
+    // si está herido y no hay peligro encima.
+    const bm = botMove(h, dt);
+    const target = bm.target;
+    let mx = bm.mx, my = bm.my;
     let seekPotion = null;
-    if((h.hp < h.maxHp*0.75 || h.energy < h.maxEnergy*0.3) && potions.length){
+    if(!bm.dodging && !bm.reviving && (h.hp < h.maxHp*0.75 || h.energy < h.maxEnergy*0.3) && potions.length){
       let bd = Infinity;
       for(const p of potions){
         if(p.type==="mana" && h.energy >= h.maxEnergy*0.3) continue;
@@ -285,21 +290,12 @@ function updateAllies(dt){
         if(d < 420 && d < bd){ bd = d; seekPotion = p; }
       }
     }
-    const leash = Math.hypot(h.x-player.x, h.y-player.y);
     if(seekPotion){
       const dx = seekPotion.x-h.x, dy = seekPotion.y-h.y, l = Math.hypot(dx,dy)||1;
       mx = dx/l; my = dy/l; h.fx = mx; h.fy = my;
-    } else if(leash > 300){
-      const dx = player.x-h.x, dy = player.y-h.y, l = Math.hypot(dx,dy)||1;
-      mx = dx/l; my = dy/l;
-    } else if(target){
+    } else if(target && !bm.dodging){
       const dx = target.x-h.x, dy = target.y-h.y, l = Math.hypot(dx,dy)||1;
-      if(l > desired+10){ mx = dx/l; my = dy/l; }
-      else if(l < desired-40){ mx = -dx/l; my = -dy/l; }
       h.fx = dx/l; h.fy = dy/l;
-    } else {
-      const dx = player.x-h.x, dy = player.y-h.y, l = Math.hypot(dx,dy)||1;
-      if(l > 120){ mx = dx/l; my = dy/l; }
     }
     for(const o of heroes){
       if(o===h || !o.alive) continue;
@@ -311,7 +307,7 @@ function updateAllies(dt){
     if(h.moving){
       mx/=ml; my/=ml;
       const nd = aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; }
-      const spd = h.baseSpeed * runStats.speedMult * (1-Math.min(0.8,h.slowAmt||0));
+      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0));
       h.x += mx*spd*dt/1000; h.y += my*spd*dt/1000;
       if(!target){ h.fx = mx; h.fy = my; }
       clampToArena(h);

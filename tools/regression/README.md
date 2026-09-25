@@ -14,6 +14,12 @@ de forma automática, que un cambio de código no altera el comportamiento: comp
   muerte, subida de nivel con refuerzos, revivir, objetos, talentos y guardado. Registra estado
   cada 30 cuadros y un hash de los píxeles del canvas. Dos versiones con el mismo
   comportamiento dan trazas idénticas.
+- `t_camera.js` — **cámara/resolución** (7 pantallas: iPhone horizontal/vertical DPR 3, iPhone SE,
+  zoom de página de Safari, iPad, escritorio, ultraancha + recarga, rotación y tamaño viejo que
+  iOS no avisa): buffer con la misma proporción que la caja, resolución = caja × DPR, siempre 650
+  unidades de mundo en el lado corto, el héroe ocupa la misma fracción de pantalla y sin
+  suavizado. Se puede correr sobre el repo servido tal cual:
+  `REGRESSION_BASE_URL=http://127.0.0.1:8000 node t_camera.js . /tmp/out`
 - `t_func.js` — ~95 chequeos de UI real en tiempo real: navegación por menús, las 5 arenas por
   la interfaz, pausa y pestañas, talentos, inventario, muerte y reintento, cambios de arena,
   saves corruptos/viejos, persistencia, y iPhone emulado (vertical y horizontal con toques).

@@ -25,6 +25,7 @@ function trackHeal(caster, target, amount){
   const restored = Math.max(0, after - before);
   caster.stats.healDone += amount;
   caster.stats.healEffective += restored;
+  setsOnHeal(caster, restored);
   const danger = target.maxHp*0.35;
   if(before < danger && after >= danger) caster.stats.alliesSaved++;
 }
@@ -33,6 +34,7 @@ function trackHeal(caster, target, amount){
 // desperdiciado por estar ya en vida máxima en un escudo para el objetivo -mismo criterio que
 // ya usa el robo de vida del propio golpeador, ver damageEnemy-.
 function applyHealOverheal(caster, target, amount){
+  amount *= arenaRuleHealMult();
   const before = target.hp;
   target.hp = Math.min(target.maxHp, target.hp + amount);
   const overheal = amount - (target.hp-before);
@@ -43,7 +45,7 @@ function applyHealOverheal(caster, target, amount){
 }
 // Cada ~1s, si el Tanque tiene 2+ enemigos cerca, suma un "tick" de presencia/control de área.
 function sampleTankPresence(h, dt){
-  if(h.classKey!=="tanque") return;
+  if(perfRoleOf(h.classKey)!=="tanque") return; // Tanque y Segador (rol tanque), jugador o bot
   h.stats.statSampleTimer -= dt;
   if(h.stats.statSampleTimer>0) return;
   h.stats.statSampleTimer = 1000;

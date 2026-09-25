@@ -19,6 +19,9 @@
 .top-pill span b{color:var(--text);}
 #wave-timer-wrap{width:130px; height:6px; background:var(--panel-b); border-radius:4px; overflow:hidden; margin-top:2px;}
 #wave-timer-bar{height:100%; width:0%; background:linear-gradient(90deg, var(--ember1), var(--ember3));}
+/* Regla creciente de la arena (ver js/arenas/arena-rules.js): chip chico bajo el nivel. */
+#arena-rule-chip{font-size:0.6rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
+#arena-rule-chip b{color:#ff9a5a;}
 
 #player-status{
   position:absolute; top:calc(10px + env(safe-area-inset-top,0px)); left:calc(10px + env(safe-area-inset-left,0px));
@@ -125,7 +128,52 @@
   opacity:0; pointer-events:none; text-align:center; letter-spacing:0.05em;
 }
 #center-banner.show{animation:bannerPop 2.1s ease-out forwards;}
+#center-banner.low{top:47%;}
 @keyframes bannerPop{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.85);} 12%{opacity:1; transform:translate(-50%,-50%) scale(1);} 78%{opacity:1;} 100%{opacity:0;} }
+
+/* ---------- Jefes (js/ui/boss-hud.js) ---------- */
+#boss-hud{
+  position:absolute; top:calc(8px + env(safe-area-inset-top,0px)); left:calc(50% + 46px); transform:translateX(-50%);
+  width:min(44vw, 380px); pointer-events:none; text-align:center;
+}
+#boss-name-row{display:flex; justify-content:center; align-items:baseline; gap:8px; margin-bottom:3px;}
+#boss-name{font-size:0.95rem; font-weight:700; color:#ffcf5c; letter-spacing:0.06em; text-shadow:0 0 8px rgba(255,120,40,0.8), 0 2px 2px #000;}
+#boss-epithet{font-size:0.62rem; color:#d8b89a; font-style:italic; text-shadow:0 1px 2px #000;}
+#boss-bar{position:relative; height:14px; border-radius:4px; overflow:hidden;
+  background:#1a0806; border:2px solid #b8742a; box-shadow:0 0 12px rgba(255,120,40,0.45), inset 0 0 6px #000;}
+#boss-chip{position:absolute; left:0; top:0; bottom:0; width:100%; background:#fff3d0; opacity:0.85;}
+#boss-fill{position:absolute; left:0; top:0; bottom:0; width:100%; background:linear-gradient(180deg,#ff7a4a,#c62828 60%,#8a1010);}
+#boss-ticks i{position:absolute; top:-1px; bottom:-1px; width:2px; margin-left:-1px; background:rgba(255,230,160,0.95); box-shadow:0 0 4px #000;}
+#boss-hud.armored #boss-bar{border-color:#8fd0ff; box-shadow:0 0 14px rgba(143,208,255,0.8), inset 0 0 6px #000;}
+#boss-hud.armored #boss-fill{background:linear-gradient(180deg,#bfe8ff,#5fa8e0 60%,#2e6aa0);}
+#boss-hud.vuln #boss-bar{border-color:#ffe36a; animation:bossVuln 0.35s ease-in-out infinite alternate;}
+@keyframes bossVuln{ from{box-shadow:0 0 8px rgba(255,227,106,0.6);} to{box-shadow:0 0 22px rgba(255,227,106,1);} }
+#boss-status{font-size:0.58rem; color:#e8d0b0; margin-top:2px; min-height:0.7rem; text-shadow:0 1px 2px #000;}
+#boss-status .bs-armor{color:#8fd0ff; font-weight:700;} #boss-status .bs-vuln{color:#ffe36a; font-weight:700;}
+#boss-status .bs-regen{color:#6fdc8c; font-weight:700;} #boss-status .bs-rage{color:#ff6a4a; font-weight:700;}
+#boss-hint{margin-top:3px; font-size:0.7rem; color:#fff; opacity:0; text-shadow:0 0 6px #000, 0 1px 2px #000;
+  background:rgba(60,10,4,0.55); border-radius:8px; padding:2px 8px; display:inline-block;}
+#boss-hint b{color:#ffcf5c;}
+#boss-hint.show{animation:bossHint 2.8s ease-out forwards;}
+@keyframes bossHint{ 0%{opacity:0; transform:scale(1.15);} 8%{opacity:1; transform:scale(1);} 80%{opacity:1;} 100%{opacity:0;} }
+#boss-hud.sub{width:min(34vw, 290px);}
+#boss-hud.sub #boss-name{font-size:0.8rem; color:#ffb070;}
+#boss-hud.sub #boss-bar{height:10px; border-color:#a0582a;}
+#boss-hud.sub #boss-fill{background:linear-gradient(180deg,#ffb070,#e06a2a 60%,#a0401a);}
+/* Guía de aparición del jefe: 3 consejos compactos bajo la barra, translúcida y sin bloquear toques.
+   Aparece después del cartel de entrada (no se pisan) y se desvanece sola. */
+#boss-intro{
+  position:absolute; top:calc(84px + env(safe-area-inset-top,0px)); left:calc(50% + 46px); transform:translateX(-50%);
+  width:min(46vw, 380px); pointer-events:none; text-align:left;
+  background:rgba(24,8,4,0.58); border:1px solid rgba(184,116,42,0.7); border-radius:10px;
+  padding:5px 10px 6px; animation:bossIntroIn 0.45s ease-out;
+}
+#boss-intro.fade{opacity:0; transition:opacity 0.6s;}
+@keyframes bossIntroIn{ from{opacity:0; transform:translate(-50%,-10px);} to{opacity:1; transform:translate(-50%,0);} }
+#boss-intro .bi-name{font-size:0.58rem; font-weight:700; letter-spacing:1px; color:#ffcf5c; text-align:center; margin-bottom:2px;}
+#boss-intro .bi-epithet{display:none;}
+#boss-intro .bi-tips{margin:0; padding-left:14px; font-size:0.6rem; line-height:1.3; color:#f2e3d3; text-shadow:0 1px 2px #000;}
+#boss-intro .bi-tips li::marker{color:#ff9a5a;}
 
 /* ---------- Controls ---------- */
 #controls{position:fixed; inset:0; z-index:15; pointer-events:none;}
@@ -169,7 +217,7 @@
    aliado caído al alcance -- nadie más ocupa esa zona de la pantalla. */
 .ability-btn.revive{
   position:fixed; left:50%; transform:translateX(-50%);
-  top:calc(10px + env(safe-area-inset-top,0px)); right:auto; bottom:auto;
+  top:calc(84px + env(safe-area-inset-top,0px)); right:auto; bottom:auto;
   width:64px; height:64px; z-index:17;
   border-color:#2f6b40; background:radial-gradient(circle at 35% 30%, #142a1c, #0a140d 75%); opacity:0; pointer-events:none;
 }
@@ -179,10 +227,35 @@
 }
 .ability-btn.revive.holding{ animation:none; box-shadow:0 0 20px rgba(111,220,140,0.9); }
 @keyframes reviveBtnPulse{ 0%,100%{box-shadow:0 0 10px rgba(111,220,140,0.4);} 50%{box-shadow:0 0 20px rgba(111,220,140,0.8);} }
+/* Apuntado de habilidades (js/core/aim.js): aro + perilla sobre el botón mientras se arrastra. */
+#aim-pad{position:fixed; width:120px; height:120px; border-radius:50%; pointer-events:none; z-index:16;
+  border:2px dashed rgba(255,207,92,0.55); background:radial-gradient(circle, rgba(255,207,92,0.10), rgba(0,0,0,0) 70%);}
+#aim-knob{position:absolute; left:44px; top:44px; width:32px; height:32px; border-radius:50%;
+  background:rgba(255,207,92,0.55); border:2px solid rgba(255,240,200,0.9);}
+.ability-btn.aiming{transform:scale(1.08); box-shadow:0 0 18px rgba(255,207,92,0.7);}
+.ability-btn.aim-cancel{border-color:#ff5a4a !important; box-shadow:0 0 16px rgba(255,90,70,0.8) !important;}
+.ability-btn.deny{animation:denyShake 0.28s linear;}
+@keyframes denyShake{ 0%,100%{margin-left:0;} 25%{margin-left:-4px;} 75%{margin-left:4px;} }
+/* Estados de habilidad: LISTA (borde dorado encendido) / ENFRIAMIENTO (barrido radial que
+   se vacía + segundos) / SIN RECURSO (azul apagado) / ACTIVA (verde, el efecto sigue en curso).
+   Al volver a estar lista, un "pop" corto (ver updateSkillButtonStates). */
 .cd-overlay{
-  position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,0.62);
-  display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; color:#fff;
+  position:absolute; inset:0; border-radius:50%; display:none; pointer-events:none;
+  background:conic-gradient(rgba(0,0,0,0.74) calc(var(--cdp,0)*360deg), rgba(0,0,0,0.12) 0);
+  align-items:center; justify-content:center; font-size:0.95rem; font-weight:700; color:#fff;
+  text-shadow:0 0 4px #000, 0 0 2px #000;
 }
+.ability-btn.cd .cd-overlay, .ability-btn.active .cd-overlay{display:flex;}
+.ability-btn.active .cd-overlay{background:conic-gradient(rgba(0,40,20,0.55) calc(var(--cdp,0)*360deg), rgba(0,0,0,0.05) 0); color:#c8ffd8;}
+.ability-btn.cd{border-color:#5a3a24; box-shadow:none;}
+.ability-btn.cd .ico{opacity:0.5; filter:grayscale(0.6);}
+.ability-btn.noen{border-color:#3a6aa8; box-shadow:0 0 6px rgba(60,120,220,0.35);}
+.ability-btn.noen .ico{opacity:0.45; filter:grayscale(1);}
+.ability-btn.noen::after{content:"✦"; position:absolute; top:3px; right:7px; color:#6fb8ff; font-size:0.62rem;}
+.ability-btn.ready:not(.basic):not(.ult):not(.revive){border-color:#ffcf5c; box-shadow:0 0 12px rgba(255,190,80,0.5);}
+.ability-btn.active{border-color:#7dffa0; box-shadow:0 0 14px rgba(125,255,160,0.7);}
+.ability-btn.ready-pop{animation:readyPop 0.45s ease-out;}
+@keyframes readyPop{ 0%{transform:scale(1.2); box-shadow:0 0 26px rgba(255,220,120,1);} 100%{transform:scale(1);} }
 
 #pause-btn{
   position:fixed; top:calc(10px + env(safe-area-inset-top,0px)); left:calc(170px + env(safe-area-inset-left,0px));
@@ -194,3 +267,13 @@
   z-index:16; pointer-events:auto; background:rgba(10,6,4,0.6); border:1px solid var(--panel-b);
   color:var(--text-dim); font-size:0.9rem; border-radius:8px; padding:4px 10px;
 }
+/* Subir habilidades en partida (js/ui/hud.js): "+" delante de cada botón con puntos disponibles. */
+.skill-plus{position:fixed; z-index:18; width:26px; height:26px; border-radius:50%; padding:0;
+  font:700 1rem/1 inherit; color:#1a1004; background:#d9b25a; border:2px solid #fff3c4;
+  box-shadow:0 0 6px rgba(0,0,0,0.6); pointer-events:auto; touch-action:none;}
+.skill-plus.suggested{background:#ffcf2e; animation:skillPlusPulse 0.9s ease-in-out infinite;}
+.skill-plus.hidden{display:none;}
+@keyframes skillPlusPulse{ 0%,100%{box-shadow:0 0 4px rgba(255,207,46,0.5); transform:scale(1);} 50%{box-shadow:0 0 16px rgba(255,207,46,1); transform:scale(1.15);} }
+.skill-lvl-pip{position:absolute; bottom:-4px; right:-4px; min-width:16px; height:16px; padding:0 3px; border-radius:8px;
+  background:#1a1004; border:1px solid #d9b25a; color:#ffcf5c; font-size:0.58rem; line-height:14px; text-align:center; pointer-events:none;}
+.skill-lvl-pip:empty{display:none;}

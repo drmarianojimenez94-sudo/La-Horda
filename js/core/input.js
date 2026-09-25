@@ -44,14 +44,8 @@ function bindAbilityButton(el, handler){
   el.addEventListener("pointerdown", e=>{ e.preventDefault(); handler(); });
 }
 bindAbilityButton(document.getElementById("btn-basic"), ()=> triggerBasic(player));
-bindAbilityButton(document.getElementById("btn-s1"), ()=> {
-  // Sylva — Flecha Perforante se dispara al soltar el botón (ver listeners de carga más abajo),
-  // no al apretarlo: para ella este disparo instantáneo genérico queda anulado.
-  if(player.classKey==="cazadora" && player.cls.skills[0].kind==="piercing_shot") return;
-  useSkill(0);
-});
-bindAbilityButton(document.getElementById("btn-s2"), ()=> useSkill(1));
-bindAbilityButton(document.getElementById("btn-s3"), ()=> useSkill(2));
+// Las 3 habilidades (btn-s1/s2/s3) se manejan en js/core/aim.js: tocar = lanzar al mejor
+// objetivo; mantener y arrastrar = apuntar con previsualización del área.
 bindAbilityButton(document.getElementById("btn-ult"), ()=> useUltimate());
 
 let basicHeld = false;
@@ -60,28 +54,24 @@ basicBtn.addEventListener("pointerdown", ()=> basicHeld=true);
 basicBtn.addEventListener("pointerup", ()=> basicHeld=false);
 basicBtn.addEventListener("pointercancel", ()=> basicHeld=false);
 
-// Sylva — Flecha Perforante: única habilidad "mantener apretado para cargar" del juego, así que
-// se resuelve con un listener dedicado sobre el mismo botón #btn-s1 en vez de generalizar
-// bindAbilityButton para todos los campeones (ver useSylvaPiercingShot).
-const s1Btn = document.getElementById("btn-s1");
-function sylvaChargeStart(e){
-  if(player.classKey!=="cazadora" || !player.alive || state!=="playing") return;
+// Sylva — Flecha Perforante: única habilidad "mantener apretado para cargar" del juego. La carga
+// arranca al apretar #btn-s1 y el disparo sale al soltar (ver js/core/aim.js, que además
+// permite apuntar la flecha arrastrando mientras carga).
+function sylvaChargeStart(){
+  if(player.classKey!=="cazadora" || !player.alive || state!=="playing") return false;
   const sk = player.cls.skills[0];
-  if(sk.kind!=="piercing_shot") return;
-  if(player.cds[0]>0 || player.energy < sk.cost) return;
-  e.preventDefault();
+  if(sk.kind!=="piercing_shot") return false;
+  if(player.cds[0]>0 || player.energy < sk.cost) return false;
   player.sylvaCharging = true;
   player.sylvaChargeTimer = 0;
+  return true;
 }
-function sylvaChargeRelease(){
+function sylvaChargeRelease(aim){
   if(player.classKey!=="cazadora" || !player.sylvaCharging) return;
   player.sylvaCharging = false;
-  useSylvaPiercingShot(player, player.sylvaChargeTimer);
+  useSylvaPiercingShot(player, player.sylvaChargeTimer, aim);
   player.sylvaChargeTimer = 0;
 }
-s1Btn.addEventListener("pointerdown", sylvaChargeStart);
-s1Btn.addEventListener("pointerup", sylvaChargeRelease);
-s1Btn.addEventListener("pointercancel", sylvaChargeRelease);
 
 /* ---- Botón dedicado de revivir (cerca de las habilidades) ---- */
 const REVIVE_BTN_HOLD_MS = 1300; // demo: 1.3s en vez de 2s
@@ -145,7 +135,7 @@ function updateReviveBtn(){
 }
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{
-  if(state==="playing"){ setState("paused"); renderMasteryPanel(); renderTalentsPanel(); renderInventoryPanel(); renderStatsPanel(); }
+  if(state==="playing"){ setState("paused"); renderStatsPanel(); }
 });
 document.getElementById("resume-btn").addEventListener("click", ()=> setState("playing"));
 document.getElementById("quit-btn").addEventListener("click", ()=>{
@@ -154,21 +144,9 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
     setState("divina");
     return;
   }
-  if(!confirm("¿Abandonar la arena? Vas a perder el 50% de la XP acumulada del campeón y el 50% de tu oro, igual que si perdieras.")) return;
+  const lootMsg = runLevel >= DEFEAT_LOOT.minLevel ? " Igual te llevás un objeto por haber llegado al nivel "+runLevel+"." : "";
+  if(!confirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg)) return;
   applyArenaFailurePenalty(player.classKey);
+  if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
   setState("menu"); renderChampGrid(); renderSaveLine();
-});
-document.querySelectorAll(".pause-tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".pause-tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    const which = tab.dataset.tab;
-    document.getElementById("mastery-panel").classList.toggle("hidden", which!=="skills");
-    document.getElementById("talents-panel").classList.toggle("hidden", which!=="talents");
-    document.getElementById("inventory-panel").classList.toggle("hidden", which!=="inventory");
-    document.getElementById("stats-panel").classList.toggle("hidden", which!=="stats");
-    if(which==="talents") renderTalentsPanel();
-    if(which==="inventory") renderInventoryPanel();
-    if(which==="stats") renderStatsPanel();
-  });
 });

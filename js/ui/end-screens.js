@@ -41,10 +41,15 @@ function showGameOverScreen(divinaOutcome){
   title.style.color = "#c62828";
   retryBtn.textContent = "Reintentar desde el Nivel 1";
   const penalty = applyArenaFailurePenalty(player.classKey);
-  document.getElementById("go-stats").textContent = `Nivel ${runLevel} · ${kills} bajas`;
+  // Derrota: la performance igual se muestra, y a veces hay un objeto de consuelo (ver DEFEAT_LOOT)
+  const perf = computePerformance(player);
+  const loot = grantEndOfRunLoot(player.classKey, perf, false);
+  const lootLine = loot.items.length ? loot.items.map(it=>{ const tm = LOOT_TIER_META[itemTier(it)]; return `<b style="color:${tm.color};">${it.name}</b>`; }).join(", ") : (runLevel>=DEFEAT_LOOT.minLevel ? "inventario lleno" : `sin botín (desde el nivel ${DEFEAT_LOOT.minLevel} te llevás un objeto aunque pierdas)`);
+  document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} bajas · Performance <b style="color:${perf.color};">${perf.grade}</b>`;
   document.getElementById("go-progress").innerHTML =
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
-    <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de la XP acumulada${penalty.afterLevel<penalty.beforeLevel?` (bajaste de Nv. ${penalty.beforeLevel} a Nv. ${penalty.afterLevel})`:""} y ${penalty.goldLost} de oro.</b>`;
+    Botín: ${lootLine}<br>
+    <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de lo ganado en esta partida (${penalty.xpLost} de XP${penalty.afterLevel<penalty.beforeLevel?`, volviste a Nv. ${penalty.afterLevel}`:""} y ${penalty.goldLost} de oro).</b>`;
 }
 /* ============================================================
    FASE 3 — PANTALLA DE VICTORIA COMPLETA
@@ -61,104 +66,121 @@ const STAT_LABELS = {
 let victoryData = null; // se arma una sola vez al entrar a la pantalla; los pasos solo lo muestran
 let victoryStep = 0;
 
+const ROLE_LABEL = {tanque:"Tanque", soporte:"Soporte", asesino:"Asesino / daño a un objetivo", mago:"Mago / área"};
 function buildVictoryData(){
   const classKey = player.classKey;
-  const score = computeRoleScore(player);
-  // Cantidad de recompensas: 1 objeto por cada subjefe derrotado en esta partida (la arena
-  // tiene 3) + 2 o 3 objetos del jefe final (al azar), ya que llegar a la victoria implica
-  // haber derrotado al jefe. El puntaje de desempeño sigue influyendo en la CALIDAD (rareza)
-  // de cada uno de esos objetos, no en la cantidad.
-  const bossRewardCount = 2 + (Math.random()<0.5 ? 1 : 0); // 2 o 3
-  const rewardCount = subjefesDefeated + bossRewardCount;
-  const rewards = [];
-  let inventoryFull = false;
-  for(let i=0;i<rewardCount;i++){
-    const champ = save.champions[classKey];
-    if((champ.inventory||[]).length >= INVENTORY_CAPACITY){ inventoryFull = true; break; }
-    const item = generateReward(classKey, score);
-    addItemToInventory(classKey, item); // guarda de verdad en el inventario permanente
-    rewards.push(item);
-  }
-  const partyScores = heroes.map(h=>({classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
-    color:CLASSES[h.classKey].color, score:computeRoleScore(h), isPlayer: h===player}));
-  // Bonus de XP por completar la arena: además de la XP ganada pelea a pelea, la victoria en
-  // sí misma da un extra que crece cada vez más rápido cuanto mejor el desempeño — así sacarse
-  // el máximo puntaje (ya bastante difícil, ver SCORE_CONFIG) vale mucho la pena de verdad.
-  const victoryXpBonus = Math.round(20 * score * (1 + score/100));
+  const perf = computePerformance(player);
+  const loot = grantEndOfRunLoot(classKey, perf, true);
+  const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
+    color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
+  // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño.
+  const victoryXpBonus = Math.round(20 * perf.score * (1 + perf.score/100));
   grantXP(classKey, victoryXpBonus);
   return {
-    classKey, score, rewards, partyScores, inventoryFull, victoryXpBonus,
-    kills, gold: save.gold,
+    classKey, perf, score:perf.score, rewards:loot.items, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
+    kills, gold: save.gold, subjefes: subjefesDefeated,
     level: save.champions[classKey].level,
     stats: player.stats
   };
 }
+// Tarjeta de un objeto obtenido, con presentación según su categoría (común simple … mítico máximo).
+function lootCardHTML(item, classKey, idx){
+  const tier = itemTier(item), tm = LOOT_TIER_META[tier];
+  const passiveTxt = itemPassivesHTML(item);
+  const equipped = save.champions[classKey].equipment[item.type] === item.uid;
+  let setLine = "";
+  if(item.set){
+    const S = SET_DB[item.set], owned = ownedDesignIds(classKey), total = setPieceCount(item.set);
+    const have = setPieceIds(item.set).filter(id=>owned.has(id)).length;
+    setLine = `<div class="loot-set-line">SET: ${S.name} · ${have}/${total} piezas${have<total?` · te falta${total-have>1?"n":""} ${total-have}`:" · ¡COMPLETO!"}</div>`;
+  }
+  return `<div class="loot-card tier-${tier}" style="--tc:${tm.color}; animation-delay:${idx*0.9}s" data-tier="${tier}">
+    <div class="loot-tier">${tm.label}${item.set?"":""}</div>
+    <div class="loot-main"><span class="item-icon">${item.icon}</span>
+      <div class="item-meta">
+        <div class="item-name" style="color:${tm.color};">${item.name}</div>
+        <div class="item-stat">+${Math.round(item.value*100)}% ${ITEM_TYPES[item.type].statLabel}</div>
+        ${setLine}
+        ${passiveTxt?`<div class="item-passives">${passiveTxt}</div>`:""}
+        <div class="vic-item-actions">
+          <button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>
+          <button data-vic-keep="${item.uid}">Guardar</button>
+        </div>
+      </div></div>
+  </div>`;
+}
+const LOOT_TIER_SFX = {comun:null, raro:"ready", muyraro:"heal", legendario:"clear", set:"shield", mitico:"bigKill"};
+function revealLootSfx(body){
+  body.querySelectorAll(".loot-card").forEach((el, i)=>{
+    const t = el.getAttribute("data-tier");
+    setTimeout(()=>{
+      if(state!=="victory" && state!=="gameover") return;
+      const sfx = LOOT_TIER_SFX[t]; if(sfx) playSfx(sfx);
+      if(t==="set") setTimeout(()=>playSfx("clear"), 160);
+      if(t==="mitico" || t==="legendario") document.getElementById("victory-screen").classList.add("loot-flash-"+t);
+      setTimeout(()=>document.getElementById("victory-screen").classList.remove("loot-flash-legendario","loot-flash-mitico"), 900);
+    }, i*900 + 250);
+  });
+}
 
 const VICTORY_STEPS = [
-  // 0. VICTORIA
+  // 0. RESULTADO
   function(){
     document.getElementById("victory-step-title").textContent = "¡Victoria!";
-    return `<div class="vic-sub">Arena Infernal — Completada</div>
-      <div class="vic-role-line">Jugaste como <b>${CLASSES[victoryData.classKey].name}</b></div>
-      <div class="vic-sub">Bajas totales: <b style="color:var(--text);">${victoryData.kills}</b> &nbsp;·&nbsp; Nivel de campeón: <b style="color:var(--text);">${victoryData.level}</b></div>`;
+    const A = ARENA_MODS[victoryData.arena]||{};
+    return `<div class="vic-sub">${A.label||"Arena"} — Completada</div>
+      <div class="res-rows">
+        <div class="res-row"><span>Resultado</span><b style="color:#7dffa0;">VICTORIA</b></div>
+        <div class="res-row"><span>Arena</span><b>${A.label||"—"}</b></div>
+        <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
+        <div class="res-row"><span>Campeón</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
+        <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
+      </div>`;
   },
-  // 1. EVALUACIÓN DEL DESEMPEÑO
+  // 1. PERFORMANCE
   function(){
-    document.getElementById("victory-step-title").textContent = "Evaluación del desempeño";
-    const cfg = SCORE_CONFIG[victoryData.classKey] || [];
-    let rows = cfg.map(c=>{
-      const raw = Math.round((victoryData.stats[c.stat]||0));
-      return `<div class="score-row"><span class="score-row-label">${STAT_LABELS[c.stat]||c.stat}</span><span class="score-row-val">${raw}</span></div>`;
-    }).join("");
-    let partyRows = victoryData.partyScores.map(p=>`
+    document.getElementById("victory-step-title").textContent = "Performance";
+    const P = victoryData.perf;
+    const rows = P.parts.map(p=>`<div class="perf-row"><span class="perf-label">${p.label}</span>
+      <div class="perf-bar"><i style="width:${Math.round(p.value*100)}%"></i></div></div>`).join("");
+    const partyRows = victoryData.partyScores.map(p=>`
       <div class="vic-party-row">
         <div class="vp-icon" style="color:${p.color}; background:${p.color}22; border:1px solid ${p.color};">${p.icon}</div>
         <div class="vp-name">${p.name}${p.isPlayer?" (vos)":""}</div>
-        <div class="vp-score">${p.score}/100</div>
+        <div class="vp-score" style="color:${p.gradeColor}; font-weight:700;">${p.grade}</div>
       </div>`).join("");
-    return `
-      <div class="vic-role-line">Rol evaluado: <b>${CLASSES[victoryData.classKey].name}</b></div>
-      <div class="score-big">${victoryData.score}<span>/100</span></div>
-      <div class="score-bar-track"><div class="score-bar-fill" style="width:${victoryData.score}%;"></div></div>
+    return `<div class="perf-grade" style="--gc:${P.color}">${P.grade}</div>
+      <div class="vic-role-line">Rol: <b>${ROLE_LABEL[P.role]||P.role}</b> · ${P.score}/100</div>
+      <div class="perf-note">Se mide lo que aporta tu rol, comparado con tu equipo.</div>
       ${rows}
       <div class="vic-party-title">Todo el equipo</div>
       ${partyRows}`;
   },
-  // 2. RECOMPENSAS / OBJETOS OBTENIDOS
+  // 2. BONUS DE RECOMPENSA + BOTÍN
   function(){
     document.getElementById("victory-step-title").textContent = "Recompensas";
-    let cards = victoryData.rewards.map(item=>{
-      const rm = RARITY_META[item.rarity];
-      const passiveNames = item.passives.map(p=>p.name);
-      if(item.mythicPassive) passiveNames.push("★ "+item.mythicPassive.name);
-      const equipped = save.champions[victoryData.classKey].equipment[item.type] === item.uid;
-      const color = item.set ? "#3ddc71" : rm.color;
-      return `<div class="inv-card ${item.set?"set-item":""}" style="border-left-color:${color}; margin-bottom:8px;">
-        <span class="item-icon">${item.icon}</span>
-        <div class="item-meta">
-          <div class="item-name" style="color:${color};">${item.name}${item.set?' <span class="set-badge">SET</span>':""}</div>
-          <div class="item-stat">${rm.label} · +${Math.round(item.value*100)}% ${ITEM_TYPES[item.type].statLabel}</div>
-          ${item.desc?`<div class="item-desc">${item.desc}</div>`:""}
-          ${passiveNames.length?`<div class="item-passives">${passiveNames.join(", ")}</div>`:""}
-          <div class="vic-item-actions">
-            <button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>
-            <button data-vic-keep="${item.uid}">Guardar en inventario</button>
-          </div>
-        </div>
+    const P = victoryData.perf, G = GRADE_LOOT[P.grade];
+    const bonusPct = Math.round((Math.pow(G.factor, 1.5) - 1)*100);
+    const A = ARENA_MODS[victoryData.arena]||{};
+    const summary = `<div class="res-rows">
+        <div class="res-row"><span>Performance</span><b style="color:${P.color};">${P.grade}</b></div>
+        <div class="res-row"><span>Arena</span><b>${A.label||"—"} · ${ARENA_LOOT_LABEL[victoryData.arena]||""}</b></div>
+        <div class="res-row"><span>Resultado</span><b style="color:#7dffa0;">Victoria</b></div>
+        <div class="res-row"><span>Bonus de recompensa</span><b style="color:${bonusPct>=0?"#ffcf5c":"#b8a898"};">${bonusPct>=0?"+":""}${bonusPct}% rarezas altas${victoryData.subjefes?` · +${victoryData.subjefes*10}% objeto extra`:""}</b></div>
       </div>`;
-    }).join("");
-    const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} objetos) — algunas recompensas no se pudieron guardar. Liberá espacio desde Pausa → Inventario.</div>` : "";
-    return `<div class="vic-reward-note">Objeto${victoryData.rewards.length>1?"s":""} obtenido${victoryData.rewards.length>1?"s":""} según tu desempeño (${victoryData.score}/100) — ya está guardado en tu inventario permanente, elegí si lo equipás ahora.</div>${fullNote}${cards}`;
+    const cards = victoryData.rewards.map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
+    const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} objetos): algunas recompensas no se pudieron guardar.</div>` : "";
+    return `${summary}${fullNote}<div class="loot-reveal">${cards}</div>`;
   },
   // 3. XP / RECURSOS
   function(){
     document.getElementById("victory-step-title").textContent = "XP y recursos";
     const champ = save.champions[victoryData.classKey];
-    const need = Math.round(40 + champ.level*16 + champ.level*champ.level*0.6);
+    const need = xpToNext(champ.level);
     const pct = Math.min(100, Math.round(champ.xp/need*100));
     return `
       <div class="vic-xp-row"><span>Campeón</span><b>${CLASSES[victoryData.classKey].name}</b></div>
-      <div class="vic-xp-row"><span>Bonus de XP por victoria (desempeño ${victoryData.score}/100)</span><b style="color:var(--ember3);">+${victoryData.victoryXpBonus}</b></div>
+      <div class="vic-xp-row"><span>Bonus de XP por victoria (performance ${victoryData.perf.grade})</span><b style="color:var(--ember3);">+${victoryData.victoryXpBonus}</b></div>
       <div class="vic-xp-row"><span>Nivel actual</span><b>${champ.level}</b></div>
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%;"></div></div>
       <div class="vic-sub" style="margin-top:-6px;">${champ.xp} / ${need} XP para el próximo nivel</div>
@@ -170,6 +192,10 @@ const VICTORY_STEPS = [
 function renderVictoryStep(){
   const body = document.getElementById("victory-step-body");
   body.innerHTML = VICTORY_STEPS[victoryStep]();
+  if(victoryStep===2){
+    if(!victoryData._revealed){ victoryData._revealed = true; revealLootSfx(body); }
+    else body.classList.add("loot-shown"); // al equipar se vuelve a dibujar: sin repetir la revelación
+  } else body.classList.remove("loot-shown");
   const nextBtn = document.getElementById("victory-next-btn");
   const isLast = victoryStep === VICTORY_STEPS.length-1;
   nextBtn.textContent = isLast ? "Continuar" : "Continuar";

@@ -68,18 +68,33 @@ async function canvasNonBlank(page) {
     check('boot.images_all_loaded', img.total && img.done === img.total && !img.broken.length, img);
     await page.click('#title-continue-btn');
     check('nav.mainmenu', await vis(page, '#mainmenu-screen'));
-    await page.click('#mainmenu-campeones-btn');
-    const gcount = await page.locator('#gallery-grid .gallery-card').count();
+    // el catálogo de campeones vive dentro de la Tienda
+    await page.click('#mainmenu-tienda-btn');
+    check('nav.shop', await vis(page, '#shop-screen'));
+    const gcount = await page.locator('#shop-champ-grid .gallery-card').count();
     check('nav.gallery_cards', gcount >= 10, gcount);
-    await page.locator('#gallery-grid .gallery-card').first().click().catch(() => {});
+    await page.locator('#shop-champ-grid .gallery-card').first().click().catch(() => {});
     await sleep(200);
     check('nav.champdetail', await vis(page, '#champdetail-screen'));
     await page.click('#champdetail-back-btn').catch(async () => { await page.click('text=Volver').catch(() => {}); });
     await sleep(150);
-    await page.click('#gallery-back-btn').catch(() => {});
-    await page.click('#mainmenu-tienda-btn');
-    check('nav.shop', await vis(page, '#shop-screen'));
     await page.click('#shop-back-btn');
+    // Mis Campeones: inventario de campeones -> ficha con equipo / talentos (árbol) / habilidades
+    await page.click('#mainmenu-campeones-btn');
+    check('nav.mychamps', await vis(page, '#champions-screen'));
+    const mcount = await page.locator('#mychamps-grid .mychamp-card').count();
+    check('nav.mychamps_cards', mcount >= 10, mcount);
+    await page.locator('#mychamps-grid .mychamp-card').first().click();
+    check('nav.champhub', await vis(page, '#champhub-screen'));
+    await page.click('#champhub-tabs .hub-tab[data-tab="talentos"]');
+    const tnodes = await page.locator('#champhub-panel .tt-node').count();
+    check('nav.champhub_tree', tnodes >= 12 && (await page.locator('#champhub-panel .tt-col').count()) === 3, tnodes);
+    await page.click('#champhub-tabs .hub-tab[data-tab="habilidades"]');
+    check('nav.champhub_skills', (await page.locator('#champhub-panel .mastery-row').count()) === 4);
+    await page.click('#champhub-tabs .hub-tab[data-tab="equipo"]');
+    check('nav.champhub_equip', (await page.locator('#champhub-panel .inv-capacity').count()) === 1);
+    await page.click('#champhub-back-btn');
+    await page.click('#champions-back-btn');
     await page.click('#mainmenu-jugar-btn');
     check('nav.modeselect', await vis(page, '#modeselect-screen'));
     await page.click('#mode-arena-btn');
@@ -114,15 +129,11 @@ async function canvasNonBlank(page) {
     check(`play.${arena}.canvas_drawn`, (await canvasNonBlank(page)) > 50);
     const stats = await T(page, 'stats');
     check(`play.${arena}.world_alive`, stats.enemies > 0, stats);
-    // pause menu tabs
+    // pausa (solo pruebas): nada de equipo/talentos/habilidades, solo estadísticas
     await page.click('#pause-btn');
     check(`pause.${arena}.open`, await vis(page, '#pause-screen'));
-    for (const tab of ['mastery', 'talents', 'inventory', 'stats']) {
-      await page.click(`.pause-tab[data-tab="${tab}"]`).catch(() => {});
-      await sleep(120);
-      const len = await page.evaluate(t => { const el = document.getElementById(t + '-panel'); return el ? el.innerHTML.length : -1; }, tab);
-      check(`pause.${arena}.tab_${tab}`, len > 20, len);
-    }
+    const pz = await page.evaluate(() => ({ tabs: document.querySelectorAll('.pause-tab').length, inv: !!document.getElementById('inventory-panel'), stats: (document.getElementById('stats-panel') || {}).innerHTML.length || 0 }));
+    check(`pause.${arena}.stats_only`, pz.tabs === 0 && !pz.inv && pz.stats > 20, pz);
     await page.click('#resume-btn');
     check(`pause.${arena}.resumed`, (await T(page, 'state')) === 'playing');
     const errs = await gameErrors(page, errors);
@@ -150,35 +161,53 @@ async function canvasNonBlank(page) {
     await ctx.close();
   }
 
-  // F5 talents UI purchase
+  // F5 talents UI purchase (Mis Campeones -> ficha -> Talentos, árbol)
   {
     const { ctx, page, errors } = await newPage(browser, site, { save: seedSave({ level: 95, tp: 60, alloc: 0 }) });
     await waitImages(page);
-    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Nigromante'); await startFromSelect(page);
-    await page.click('#pause-btn'); await page.click('.pause-tab[data-tab="talents"]'); await sleep(200);
+    await page.click('#title-continue-btn'); await page.click('#mainmenu-campeones-btn');
+    await page.click('#mychamps-grid .mychamp-card[data-champ="nigromante"]');
+    await page.click('#champhub-tabs .hub-tab[data-tab="talentos"]'); await sleep(200);
     const before = await page.evaluate(() => window.__T.ev('save.champions.nigromante.talentPoints'));
-    const ready = await page.locator('.mastery-plus.ready').all();
-    for (let i = 0; i < Math.min(6, ready.length); i++) { await ready[i].click({ timeout: 800 }).catch(() => {}); await sleep(60); }
+    let bought = 0;
+    for (let i = 0; i < 6; i++) { const b = page.locator('#champhub-panel .tt-buy').first(); if (!(await b.count())) break; await b.click({ timeout: 800 }).catch(() => {}); bought++; await sleep(60); }
     const after = await page.evaluate(() => window.__T.ev('save.champions.nigromante.talentPoints'));
-    check('talents.buy_ui', ready.length > 0 && after < before, { ready: ready.length, before, after });
+    check('talents.buy_ui', bought > 0 && after < before, { bought, before, after });
     const errs = await gameErrors(page, errors);
     check('talents.no_errors', errs.length === 0, errs);
     await ctx.close();
   }
 
-  // F6 inventory UI equip
+  // F5b subir habilidades en partida con el "+" sobre los botones (la ulti recién desde el nivel 20)
+  {
+    const { ctx, page, errors } = await newPage(browser, site, { save: seedSave({ level: 12, tp: 3, alloc: 0 }) });
+    await waitImages(page);
+    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Mago'); await startFromSelect(page);
+    await sleep(600);
+    const ui = await page.evaluate(() => ({ vis: [...document.querySelectorAll('.skill-plus:not(.hidden)')].map(b => b.dataset.idx), sug: (document.querySelector('.skill-plus.suggested') || {}).dataset }));
+    check('skillup.plus_visible', ui.vis.length === 3 && !ui.vis.includes('ult'), ui);
+    await page.dispatchEvent('.skill-plus.suggested', 'pointerdown').catch(() => {});
+    await sleep(200);
+    const after = await page.evaluate(() => window.__T.ev('({tp: save.champions.mago.talentPoints, alloc: save.champions.mago.skillMastery.map(m=>m.alloc)})'));
+    check('skillup.invested', after.tp === 2 && after.alloc.reduce((a, b) => a + b, 0) === 1, after);
+    const errs = await gameErrors(page, errors);
+    check('skillup.no_errors', errs.length === 0, errs);
+    await ctx.close();
+  }
+
+  // F6 inventory UI equip (en la Sala, antes de entrar: en partida no se puede)
   {
     const { ctx, page, errors } = await newPage(browser, site);
     await waitImages(page);
-    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Mago'); await startFromSelect(page);
-    await T(page, 'itemGen', 'arma', 'legendario'); await T(page, 'itemGen', 'casco', 'raro');
-    await page.click('#pause-btn'); await page.click('.pause-tab[data-tab="inventory"]'); await sleep(200);
-    const html = await page.locator('#inventory-panel').innerHTML();
-    const btns = await page.locator('#inventory-panel button').all();
-    let clicked = 0;
-    for (const b of btns.slice(0, 4)) { const t = (await b.textContent() || '').trim(); if (/equip/i.test(t)) { await b.click().catch(() => {}); clicked++; await sleep(100); break; } }
-    const eq = await T(page, 'inv');
-    check('inventory.ui', html.length > 100 && eq.len >= 2, { btns: btns.length, clicked, equipment: eq.equipment });
+    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Mago');
+    await page.click('#start-btn'); await sleep(300);
+    await page.evaluate(() => window.__T.ev('(addItemToInventory(selectedClass, makeItem("arma","legendario",selectedClass)), addItemToInventory(selectedClass, makeItem("casco","raro",selectedClass)), renderPrepSummary(), 1)'));
+    await sleep(100);
+    const html = await page.locator('#prep-inventory-panel').innerHTML();
+    await page.locator('#prep-inventory-panel [data-prep-equip]').first().click().catch(() => {});
+    await sleep(150);
+    const eq = await page.evaluate(() => window.__T.ev('({len: save.champions.mago.inventory.length, equipped: Object.values(save.champions.mago.equipment).filter(Boolean).length})'));
+    check('inventory.ui', html.length > 100 && eq.len >= 2 && eq.equipped >= 1, eq);
     const errs = await gameErrors(page, errors);
     check('inventory.no_errors', errs.length === 0, errs);
     await ctx.close();
@@ -240,8 +269,8 @@ async function canvasNonBlank(page) {
     const { ctx, page, errors } = await newPage(browser, site, { save: legacy });
     const s = await page.evaluate(() => window.__T.ev('({gold: save.gold, tl: save.champions.tanque.level, talents: !!save.champions.tanque.talents, eq: !!save.champions.tanque.equipment, n: Object.keys(save.champions).length, schema: save.itemSchemaV})'));
     check('save.legacy_migrates', s.gold === 321 && s.tl === 7 && s.talents && s.eq && s.n === 10, s);
-    await page.click('#title-continue-btn'); await page.click('#mainmenu-campeones-btn');
-    check('save.legacy_gallery', (await page.locator('#gallery-grid .gallery-card').count()) >= 10);
+    await page.click('#title-continue-btn'); await page.click('#mainmenu-tienda-btn');
+    check('save.legacy_gallery', (await page.locator('#shop-champ-grid .gallery-card').count()) >= 10);
     const errs = await gameErrors(page, errors);
     check('save.legacy_no_errors', errs.length === 0, errs);
     await ctx.close();

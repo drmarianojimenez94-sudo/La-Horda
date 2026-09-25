@@ -45,9 +45,9 @@
     <div class="top">
       <div class="top-pill">
         <span id="hud-arena-line"><b id="hud-arena">Ruinas del Bosque</b></span>
-        <span>Nivel <b id="hud-level">1</b>/10</span>
-        <span>Bajas <b id="hud-kills">0</b></span>
+        <span>Nivel <b id="hud-level">1</b>/10 · Bajas <b id="hud-kills">0</b></span>
         <span>⏱ <b id="hud-timer">0:00</b></span>
+        <span id="arena-rule-chip" class="hidden"></span>
       </div>
       <div id="wave-timer-wrap"><div id="wave-timer-bar"></div></div>
     </div>
@@ -55,6 +55,13 @@
       <div id="ult-ring"><div id="ult-ring-inner">★</div></div>
       <div id="ult-label">Ultimate</div>
     </div>
+    <div id="boss-hud" class="hidden">
+      <div id="boss-name-row"><span id="boss-name"></span><span id="boss-epithet"></span></div>
+      <div id="boss-bar"><div id="boss-chip"></div><div id="boss-fill"></div><div id="boss-ticks"></div></div>
+      <div id="boss-status"></div>
+      <div id="boss-hint"></div>
+    </div>
+    <div id="boss-intro" class="hidden"><div class="bi-name"></div><div class="bi-epithet"></div><ul class="bi-tips"></ul></div>
     <div id="floaters"></div>
     <div id="center-banner"></div>
   </div>
@@ -67,6 +74,7 @@
       <div id="joy-base"></div>
       <div id="joy-knob"></div>
     </div>
+    <div id="aim-pad" class="hidden"><div id="aim-knob"></div></div>
     <div id="skillzone" class="zone">
       <div class="ability-btn ult" id="btn-ult"><div class="ico">★</div><div>ULT</div></div>
       <div class="ability-btn revive" id="btn-revive"><div class="ico">✚</div><div>Revivir</div></div>
@@ -80,7 +88,7 @@
   <!-- TÍTULO -->
   <div id="title-screen" class="screen">
     <div class="title-fire-glow"></div>
-    <div class="title-monsters">👹&nbsp;💀&nbsp;🐺&nbsp;❄️&nbsp;🧌&nbsp;🌲</div>
+    <canvas id="title-canvas"></canvas>
     <div class="brand title-brand">LA HORDA</div>
     <div class="brand-sub">UN CAMINO AL INFIERNO, LLENO DE MONSTRUOS</div>
     <button class="btn wide" id="title-continue-btn">Toca para continuar</button>
@@ -98,45 +106,51 @@
     </button>
     <button class="mode-card" id="mainmenu-campeones-btn">
       <div class="mode-card-icon">🛡</div>
-      <div class="mode-card-title">CAMPEONES</div>
-      <div class="mode-card-desc">Mirá a todos los campeones, desbloqueados o no.</div>
+      <div class="mode-card-title">MIS CAMPEONES</div>
+      <div class="mode-card-desc">Tus campeones: equipamiento, habilidades y árbol de talentos.</div>
     </button>
     <button class="mode-card" id="mainmenu-tienda-btn">
       <div class="mode-card-icon">🪙</div>
       <div class="mode-card-title">TIENDA</div>
-      <div class="mode-card-desc">Campeones, skins, armas, armaduras y mascotas.</div>
+      <div class="mode-card-desc">Todos los campeones (con su ficha) y, más adelante, skins, armas y mascotas.</div>
     </button>
     <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
     <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
   </div>
 
-  <!-- GALERÍA DE CAMPEONES -->
-  <div id="gallery-screen" class="screen hidden">
-    <div class="arena-title">Campeones</div>
-    <div id="gallery-grid"></div>
-    <button class="btn secondary" id="gallery-back-btn">Volver</button>
+  <!-- MIS CAMPEONES: inventario de campeones propios (hoy todos; más adelante 4 de arranque y el
+       resto se compra en la Tienda). Cada uno abre su ficha con equipo, habilidades y talentos. -->
+  <div id="champions-screen" class="screen hidden">
+    <div class="arena-title">Mis Campeones</div>
+    <div class="lobby-sub" id="champions-sub"></div>
+    <div id="mychamps-grid"></div>
+    <button class="btn secondary" id="champions-back-btn">Volver</button>
+  </div>
+  <div id="champhub-screen" class="screen hidden">
+    <div id="champhub-head"></div>
+    <div class="hub-tabs" id="champhub-tabs">
+      <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
+      <button class="hub-tab" data-tab="talentos">Talentos</button>
+      <button class="hub-tab" data-tab="habilidades">Habilidades</button>
+    </div>
+    <div id="champhub-panel"></div>
+    <button class="btn secondary" id="champhub-back-btn">Volver a Mis Campeones</button>
   </div>
 
   <!-- FICHA INDIVIDUAL DE CAMPEÓN -->
   <div id="champdetail-screen" class="screen hidden">
     <div id="champdetail-body"></div>
-    <button class="btn secondary" id="champdetail-back-btn">Volver a la galería</button>
+    <button class="btn secondary" id="champdetail-back-btn">Volver a la tienda</button>
   </div>
 
-  <!-- TIENDA (todavía en construcción: campeones/skins/armas/armaduras/mascotas) -->
+  <!-- TIENDA: catálogo de campeones (animados, con precio y ficha) + resto de la tienda más adelante -->
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
-    <div class="save-line" id="shop-gold-line" style="margin-bottom:18px;"></div>
-    <div class="shop-soon-box">
-      <div style="font-size:2rem; margin-bottom:10px;">🚧</div>
-      <div style="font-weight:700; margin-bottom:8px;">Todavía en construcción</div>
-      <div style="font-size:0.78rem; color:var(--text-dim); line-height:1.5; max-width:320px;">
-        Acá van a estar los campeones, skins, armas, armaduras y mascotas para comprar con oro.
-        La galería de Campeones y el oro ya funcionan de verdad — la tienda en sí la termino
-        en la próxima vuelta, con tiempo para probarla bien antes de publicarla.
-      </div>
-    </div>
-    <button class="btn secondary" id="shop-back-btn" style="margin-top:20px;">Volver</button>
+    <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
+    <div class="shop-section-title">Campeones</div>
+    <div id="shop-champ-grid"></div>
+    <div class="shop-soon-box shop-soon-small">Skins, armas, armaduras y mascotas: próximamente.</div>
+    <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
   <div id="modeselect-screen" class="screen hidden">
@@ -174,11 +188,21 @@
     <button class="btn secondary" id="arenaselect-back-btn">Volver</button>
   </div>
 
-  <!-- PREPARACIÓN (previa a entrar a la arena) -->
+  <!-- SALA / LOBBY (previa a entrar a la arena): 4 lugares -pensados para multijugador; por ahora
+       los otros 3 los ocupan bots- y el equipamiento del campeón elegido. -->
   <div id="prep-screen" class="screen hidden">
-    <div class="arena-title">Preparando la Arena…</div>
+    <div class="arena-title" id="lobby-title">Sala</div>
+    <div class="lobby-sub" id="lobby-sub"></div>
+    <div id="lobby-slots"></div>
     <div id="prep-summary"></div>
+    <div class="hub-tabs" id="prep-tabs">
+      <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
+      <button class="hub-tab" data-tab="talentos">Talentos</button>
+      <button class="hub-tab" data-tab="habilidades">Habilidades</button>
+    </div>
     <div id="prep-inventory-panel"></div>
+    <div id="prep-talents-panel" class="hidden"></div>
+    <div id="prep-skills-panel" class="hidden"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>
     <button class="btn secondary" id="prep-back-btn">Volver a elegir campeón</button>
   </div>
@@ -227,16 +251,8 @@
   <!-- PAUSE -->
   <div id="pause-screen" class="screen hidden">
     <div class="arena-title">Pausa</div>
-    <div id="pause-tabs">
-      <button class="pause-tab active" data-tab="skills">Habilidades</button>
-      <button class="pause-tab" data-tab="talents">Talentos</button>
-      <button class="pause-tab" data-tab="inventory">Inventario</button>
-      <button class="pause-tab" data-tab="stats">Estadísticas</button>
-    </div>
-    <div id="mastery-panel"></div>
-    <div id="talents-panel" class="hidden"></div>
-    <div id="inventory-panel" class="hidden"></div>
-    <div id="stats-panel" class="hidden"></div>
+    <div class="pause-note">Pausa solo para pruebas: en multijugador no va a haber pausa. Objetos y talentos se cambian en la Sala antes de entrar; las habilidades se suben en partida con el <b>+</b> que aparece sobre cada botón.</div>
+    <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
     <button class="btn secondary" id="quit-btn">Abandonar arena</button>
   </div>
@@ -250,6 +266,8 @@
 <script src="js/data/champions.js"></script>
 <script src="js/data/talent-trees.js"></script>
 <script src="js/data/items.js"></script>
+<script src="js/data/sets.js"></script>
+<script src="js/data/loot.js"></script>
 <script src="js/data/rewards.js"></script>
 <script src="js/data/arenas.js"></script>
 <script src="js/data/pixel-art.js"></script>
@@ -278,6 +296,7 @@
 <script src="js/rendering/divina.js"></script>
 <script src="js/rendering/camera.js"></script>
 <script src="js/rendering/effects.js"></script>
+<script src="js/rendering/feedback.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
 <script src="js/rendering/entities.js"></script>
@@ -286,8 +305,13 @@
 <script src="js/systems/mastery.js"></script>
 <script src="js/systems/talents.js"></script>
 <script src="js/systems/items.js"></script>
+<script src="js/systems/item-procs.js"></script>
+<script src="js/systems/set-effects.js"></script>
+<script src="js/systems/performance.js"></script>
+<script src="js/systems/loot.js"></script>
 <script src="js/systems/rewards.js"></script>
 <script src="js/systems/hero-stats.js"></script>
+<script src="js/systems/difficulty.js"></script>
 <script src="js/systems/waves.js"></script>
 <script src="js/systems/combat.js"></script>
 <script src="js/systems/potions.js"></script>
@@ -300,10 +324,13 @@
 <script src="js/champions/profeta.js"></script>
 <script src="js/champions/musashi.js"></script>
 <script src="js/champions/nigromante.js"></script>
+<script src="js/skills/aim-targeting.js"></script>
 <script src="js/skills/abilities.js"></script>
 <script src="js/skills/ability-vfx.js"></script>
 <script src="js/skills/boss-skills.js"></script>
+<script src="js/skills/boss-patterns.js"></script>
 <script src="js/enemies/spawning.js"></script>
+<script src="js/enemies/ranged-styles.js"></script>
 <script src="js/arenas/arena-rules.js"></script>
 <script src="js/arenas/arena-identity.js"></script>
 <script src="js/arenas/divina.js"></script>
@@ -311,16 +338,21 @@
 <script src="js/arenas/collision.js"></script>
 <script src="js/arenas/hazards.js"></script>
 <script src="js/ai/navigation.js"></script>
+<script src="js/ai/bot-brain.js"></script>
 <script src="js/ai/allies.js"></script>
 <script src="js/audio/audio.js"></script>
 <script src="js/storage/save-code.js"></script>
 <script src="js/ui/champion-select.js"></script>
+<script src="js/ui/title-scene.js"></script>
 <script src="js/core/input.js"></script>
+<script src="js/core/aim.js"></script>
 <script src="js/ui/screens.js"></script>
 <script src="js/ui/panels-skills.js"></script>
 <script src="js/ui/panels-inventory.js"></script>
 <script src="js/ui/hud.js"></script>
+<script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/menus.js"></script>
+<script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/end-screens.js"></script>
 <script src="js/core/run.js"></script>

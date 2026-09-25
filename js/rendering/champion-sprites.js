@@ -65,7 +65,10 @@ function drawMagoFallen(h, alpha){
    No se recibieron frames de muerte limpios: el Sanador caído sigue usando
    el sprite procedural existente (fallback ya presente en el motor).
    ============================================================ */
-const SOPORTE_ATLAS = {"image": "soporte_atlas.png", "imageSize": [818, 122], "referenceHeight": 114, "anchor": "bottom-center", "frames": [{"x": 4, "y": 4, "w": 147, "h": 114, "pivotX": 74}, {"x": 155, "y": 4, "w": 175, "h": 114, "pivotX": 88}, {"x": 334, "y": 4, "w": 130, "h": 114, "pivotX": 65}, {"x": 468, "y": 12, "w": 111, "h": 106, "pivotX": 56}, {"x": 583, "y": 12, "w": 114, "h": 106, "pivotX": 57}, {"x": 701, "y": 12, "w": 113, "h": 106, "pivotX": 56}], "animations": {"idle": {"frames": [0], "fps": 1, "loop": true}, "walk": {"frames": [0, 1, 2], "fps": 7, "loop": true}, "cast": {"frames": [3, 4, 5], "fps": 8, "loop": false}, "hurt": {"frames": [0], "fps": 6, "loop": false}}};
+const SOPORTE_ATLAS = {"image": "soporte_atlas.png", "imageSize": [818, 122], "referenceHeight": 114, "anchor": "bottom-center", "frames": [{"x": 4, "y": 4, "w": 147, "h": 114, "pivotX": 74}, {"x": 155, "y": 4, "w": 175, "h": 114, "pivotX": 88}, {"x": 334, "y": 4, "w": 130, "h": 114, "pivotX": 65}, {"x": 468, "y": 12, "w": 111, "h": 106, "pivotX": 56}, {"x": 583, "y": 12, "w": 114, "h": 106, "pivotX": 57}, {"x": 701, "y": 12, "w": 113, "h": 106, "pivotX": 56}], "animations": {"idle": {"frames": [0], "fps": 1, "loop": true}, "walk": {"frames": [0, 1, 2], "fps": 7, "loop": true}, "cast": {"frames": [1, 0], "fps": 8, "loop": false}, "hurt": {"frames": [0], "fps": 6, "loop": false}}};
+// (Consistencia visual V1: los cuadros 3-5 del atlas -lanzar- son otro dibujo -cara, bastón y
+// halo blanco distintos-. Mientras no haya arte de lanzamiento en el mismo estilo, lanzar usa
+// sus propios cuadros de reposo/caminata + el efecto de lanzamiento del juego. VISUAL_ART_REWORK.md)
 const SOPORTE_TARGET_HEIGHT = 70; // mismo criterio de tamaño en pantalla que el Mago
 
 // Migrado al motor genérico AnimAtlas (ver más arriba, junto al Mago) — mismo esquema,
@@ -178,6 +181,7 @@ function profetaResolveClip(h){
   return "idle";
 }
 function drawProfetaAtlas(h, drawScale, alpha){
+  if(drawChampPack("profeta", h, drawScale, alpha)) return true;
   return drawAnimAtlas(PROFETA_ANIM_ATLAS, profetaResolveClip(h), h, drawScale, alpha);
 }
 
@@ -221,7 +225,28 @@ function champPackDir(h){
   return dir;
 }
 function champPackScale(P, h, drawScale){
-  return h.radius*2.7*(drawScale/(h.scale||2.0))/P.sets.idle_down[0].height;
+  return h.radius*2.7*(drawScale/(h.scale||2.0))/(P.refH || P.sets.idle_down[0].height);
+}
+// Set para estado+dirección: perfil izquierdo propio si existe (si no, espejo del derecho), y si falta
+// la dirección se usa el perfil y después el de frente (p.ej. golpe/muerte dibujados de una sola vista).
+function champPackSet(P, st, dir, h){
+  if(P.sets[st] && !P.sets[st+"_down"]) return {arr:P.sets[st], flip:!!h._pleft};
+  if(dir==="side" && h._pleft && P.sets[st+"_left"]) return {arr:P.sets[st+"_left"], flip:false};
+  if(dir==="up" && h._pleft && P.sets[st+"_up_left"]) return {arr:P.sets[st+"_up_left"], flip:false};
+  for(const d of [dir, "side", "down"]){
+    const arr = P.sets[st+"_"+d];
+    if(arr) return {arr, flip: d==="side" && !!h._pleft};
+  }
+  return null;
+}
+// Un cuadro del pack: en modo atlas `arr` guarda índices de la grilla; en el modo viejo (Axiom), imágenes.
+function champPackDrawFrame(P, v, x, y, s, flip, alpha){
+  if(P.atlas){
+    const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
+    drawAnimFrameSized(P.atlas, clip, 0, x, y, P.fw*s, P.fh*s, 0.5, P.anchor, flip, alpha);
+  } else {
+    drawAnimFrameSized(v, {frames:[{x:0, y:0, w:v.width, h:v.height}]}, 0, x, y, v.width*s, v.height*s, 0.5, 0.94, flip, alpha);
+  }
 }
 function drawChampPack(key, h, drawScale, alpha){
   const P = CHAMP_PACK[key];
@@ -234,14 +259,15 @@ function drawChampPack(key, h, drawScale, alpha){
   let st, prog = null;
   if(h.hurtTimer>0){ st = "hit"; prog = 1 - h.hurtTimer/160; }
   else if(a>0){ st = animNow < (h._packCastUntil||0) ? "cast" : "attack"; prog = 1 - a/(h._aDur||a); }
+  else if(h.sylvaCharging && P.sets.aim) st = "aim";
   else st = h.moving ? "walk" : "idle";
-  const arr = P.sets[st+"_"+dir] || P.sets["idle_"+dir];
+  const pick = champPackSet(P, st, dir, h) || (st==="cast" && champPackSet(P, "attack", dir, h)) || champPackSet(P, "idle", dir, h);
+  const arr = pick.arr;
   let n;
   if(prog!==null) n = Math.min(arr.length-1, Math.max(0, Math.floor(prog*arr.length)));
   else if(st==="walk") n = Math.floor((h.animT||0)/130) % arr.length;
   else n = Math.floor(animNow/230) % arr.length;
-  const img = arr[n], s = champPackScale(P, h, drawScale);
-  drawAnimFrameSized(img, {frames:[{x:0, y:0, w:img.width, h:img.height}]}, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, dir==="side" && h._pleft, alpha);
+  champPackDrawFrame(P, arr[n], h.x, h.y, champPackScale(P, h, drawScale), pick.flip, alpha);
   return true;
 }
 // Muerte con los frames reales (en vez del sprite de pie rotado): queda tendido semitransparente.
@@ -249,11 +275,11 @@ function drawChampPackDeath(h){
   const P = CHAMP_PACK[h.classKey];
   if(!P || !P.ready) return false;
   if(!h._deadAt){ h._deadAt = animNow; vfxBurst(h.x, h.y-20, 12, "blood", 120, 420, 3, 2, -30, 0); }
-  const dir = h._pdir || "down", arr = P.sets["death_"+dir] || P.sets.death_down;
-  const t = animNow - h._deadAt, n = Math.min(arr.length-1, Math.floor(t/170));
-  const done = t > arr.length*170, alpha = done ? 0.55 : 1;
-  const img = arr[n], s = champPackScale(P, h, h.scale||2.0);
-  drawAnimFrameSized(img, {frames:[{x:0, y:0, w:img.width, h:img.height}]}, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, dir==="side" && h._pleft, alpha);
+  const pick = champPackSet(P, "death", h._pdir || "down", h);
+  if(!pick) return false;
+  const arr = pick.arr, t = animNow - h._deadAt, n = Math.min(arr.length-1, Math.floor(t/170));
+  const done = t > arr.length*170;
+  champPackDrawFrame(P, arr[n], h.x, h.y, champPackScale(P, h, h.scale||2.0), pick.flip, done ? 0.55 : 1);
   return true;
 }
 
@@ -285,6 +311,7 @@ function drawSegadorReal(h, drawScale, alpha){
 // base (idle) no cargó todavía, devuelve false y drawHero() cae al sprite procedural de
 // respaldo (GRIDS.musashi/PAL.musashi) en vez de dejar al personaje invisible.
 function drawMusashiReal(h, drawScale, alpha){
+  if(drawChampPack("musashi", h, drawScale, alpha)) return true;
   if(!MUSASHI_REAL_READY.idle) return false;
   let img;
   if(h.hurtTimer>0 && MUSASHI_REAL_READY.hurt){
@@ -302,8 +329,9 @@ function drawMusashiReal(h, drawScale, alpha){
     const progress = Math.max(0, Math.min(0.999, 1 - h.attackAnim/(h.musashiCastDur||400)));
     img = MUSASHI_REAL_IMG[seq[Math.floor(progress*seq.length)]];
   } else if(h.attackAnim>0 && MUSASHI_REAL_READY.basic1){
-    // (basic1 venía cortado por el borde del recorte: el tajo arranca desde basic2)
-    const seq = ["basic2","basic3","basic4","basic5"];
+    // (basic1-3 vienen cortados por el borde del recorte -medio cuerpo-: el tajo usa los dos
+    // cuadros completos. Ver VISUAL_ART_REWORK.md)
+    const seq = ["basic4","basic5"];
     const progress = Math.max(0, Math.min(0.999, 1 - h.attackAnim/190));
     const n = Math.floor(progress*seq.length);
     const key = seq[n] || seq[seq.length-1];
@@ -324,6 +352,16 @@ function drawMusashiReal(h, drawScale, alpha){
 // acumulándose en la lista pero nunca se dibujaban -bug real, la habilidad no mostraba nada
 // distinto al cruzar al enemigo-. Arte real (ghost1, silueta borrosa) con fundido de salida.
 function drawMusashiAfterimages(){
+  const P = CHAMP_PACK.musashi;
+  if(P && P.ready){
+    const s = 78/P.refH;
+    for(const a of musashiAfterimages){
+      const alpha = Math.max(0, a.life/a.maxLife) * 0.45;
+      if(alpha<=0.02) continue;
+      champPackDrawFrame(P, P.sets.walk_side[1], a.x, a.y, s, a.fx<-0.12, alpha);
+    }
+    return;
+  }
   if(!MUSASHI_REAL_READY.ghost1) return;
   const img = MUSASHI_REAL_IMG.ghost1;
   const s = 78/img.height; // mismo orden de tamaño que el cuerpo real de Musashi
@@ -341,8 +379,18 @@ function drawMusashiAfterimages(){
 // fija en cada case del switch de castAbility junto al attackAnim generico) y la secuencia de
 // transformacion de la ultimate (h.nigroTransformTimer, ver enterAbyssForm).
 function drawNigromanteReal(h, drawScale, alpha){
+  const P = CHAMP_PACK.nigromante;
+  if(P && P.ready){
+    // Encarnación del Abismo: la pose "especial/ultimate" de la hoja mientras dura la transformación
+    if(h.nigroTransformTimer>0 && P.sets.ult){
+      const arr = P.sets.ult, prog = Math.max(0, Math.min(0.999, 1-h.nigroTransformTimer/NIGRO_TRANSFORM_MS));
+      champPackDrawFrame(P, arr[Math.floor(prog*arr.length)], h.x, h.y, champPackScale(P, h, drawScale), (h.fx||0) < -0.12, alpha);
+      return true;
+    }
+    return drawChampPack("nigromante", h, drawScale, alpha);
+  }
   if(!NIGRO_READY.idle) return false;
-  let img;
+  let img, clipW = 0;
   if(h.nigroTransformTimer>0 && NIGRO_READY.ultTransform1){
     const seq = ["ultTransform1","ultTransform2","ultTransform3","ultTransform4"];
     const progress = Math.max(0, Math.min(0.999, 1-h.nigroTransformTimer/NIGRO_TRANSFORM_MS));
@@ -362,11 +410,11 @@ function drawNigromanteReal(h, drawScale, alpha){
     const seq = ["castPlague1","castPlague2"];
     const progress = Math.max(0, Math.min(0.999, 1-h.attackAnim/320));
     img = NIGRO_IMG[seq[Math.floor(progress*seq.length)]];
-  } else if(h.attackAnim>0 && NIGRO_READY.basic1){
-    const seq = ["basic1","basic2","basic3","basic4","basic5"];
-    const progress = Math.max(0, Math.min(0.999, 1-h.attackAnim/190));
-    const key = seq[Math.floor(progress*seq.length)] || seq[seq.length-1];
-    img = NIGRO_READY[key] ? NIGRO_IMG[key] : NIGRO_IMG.idle;
+  } else if(h.attackAnim>0 && NIGRO_READY.basic5){
+    // (basic1-4 vienen cortados por el borde izquierdo y basic1 trae una línea de la grilla:
+    // el ataque usa el único cuadro completo, basic5, recortado al cuerpo -sin el proyectil
+    // pintado, que el juego ya dibuja aparte-. Ver VISUAL_ART_REWORK.md)
+    img = NIGRO_IMG.basic5; clipW = 99;
   } else if(h.moving && NIGRO_READY.walkA6){
     // Ciclo de caminata real de 6 frames (antes solo 2, walk1/walk2) -mismo zip, sin usar-.
     const seq = ["walkA1","walkA2","walkA3","walkA4","walkA5","walkA6"];
@@ -384,9 +432,9 @@ function drawNigromanteReal(h, drawScale, alpha){
   }
   const flip = (h.fx||0) < -0.12;
   const targetH = h.radius*2.7*(drawScale/(h.scale||2.0));
-  const s = targetH/img.height;
-  const clip = { frames: [{x:0, y:0, w:img.width, h:img.height}] };
-  drawAnimFrameSized(img, clip, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, flip, alpha);
+  const s = targetH/img.height, w = clipW || img.width;
+  const clip = { frames: [{x:0, y:0, w, h:img.height}] };
+  drawAnimFrameSized(img, clip, 0, h.x, h.y, w*s, img.height*s, 0.5, 0.94, flip, alpha);
   return true;
 }
 // Nigromante transformado — "Demonio Nigromántico" (Encarnación del Abismo). Reemplaza el
@@ -455,8 +503,26 @@ function drawFallenHero(h){
 // mismo criterio que el Lobo Espectral de Sylva -objeto simple con x/y/hp/IA, dibujado y
 // actualizado aparte del pipeline de heroes/enemigos-.
 function drawSkeletonMinion(sk){
-  if(!NIGRO_SKEL_READY.warrior) return;
   const isMage = sk.type==="mage";
+  const SP = CHAMP_PACK.nigro_skel;
+  if(SP && SP.ready){
+    const pre = isMage ? "mage_" : "warrior_";
+    const arr = sk.attackAnim>0 ? SP.sets[pre+"atk"] : sk.moving ? SP.sets[pre+"walk"] : SP.sets[pre+"idle"];
+    const v = arr[Math.floor(animNow/180) % arr.length];
+    const targetH = 46*(sk.scale||1), s = targetH/SP.refH;
+    drawShadow(sk.x, sk.y, 16);
+    sk._animKey = "nigro_skel";
+    const Pk = animPose(sk, animProfileOf(sk), false);
+    ctx.save(); animApply(sk.x, sk.y, Pk);
+    champPackDrawFrame(SP, v, sk.x, sk.y, s, (sk.fx||0) < -0.12, sk.hitFlash>0?0.6:1);
+    ctx.restore();
+    if(sk.hp<sk.maxHp){
+      ctx.fillStyle="rgba(0,0,0,0.5)"; ctx.fillRect(sk.x-16,sk.y-targetH-10,32,4);
+      ctx.fillStyle="#7ad48a"; ctx.fillRect(sk.x-16,sk.y-targetH-10,32*Math.max(0,sk.hp/sk.maxHp),4);
+    }
+    return;
+  }
+  if(!NIGRO_SKEL_READY.warrior) return;
   let img;
   // (el recorte "mageAtk" mezcla pedazos de dos frames: atacando, el mago usa su pose normal
   // y el ataque se lee por el proyectil)
@@ -468,7 +534,7 @@ function drawSkeletonMinion(sk){
   }
   else { img = isMage ? NIGRO_SKEL_IMG.mage : NIGRO_SKEL_IMG.warrior; }
   const flip = (sk.fx||0) < -0.12;
-  const targetH = 46;
+  const targetH = 46*(sk.scale||1); // (Réquiem del Sepulturero: el Esqueleto Élite es más grande)
   const s = targetH/img.height;
   const clip = { frames: [{x:0,y:0,w:img.width,h:img.height}] };
   drawShadow(sk.x, sk.y, 16);
@@ -508,6 +574,7 @@ function drawGolemReal(g){
 }
 
 function drawSylvaReal(h, drawScale, alpha){
+  if(drawChampPack("cazadora", h, drawScale, alpha)) return true;
   if(!SYLVA_REAL_READY.idle) return false;
   let img;
   if(h.sylvaCharging && SYLVA_REAL_READY.chargeAim){

@@ -5,14 +5,56 @@
    pociones, sigilos en el piso y auras divinas.
    ============================================================ */
 
+// Textos flotantes (daño, curación, avisos) dibujados en el canvas con un pool fijo. Antes
+// cada número era un <div> nuevo en el DOM (con su propio temporizador): en las peleas grandes
+// eso eran cientos de nodos por segundo y trabas en el teléfono. Ahora siguen a la cámara y
+// no crean basura.
+const FT_MAX = 70;
+const floatTexts = [];
+for(let i=0;i<FT_MAX;i++) floatTexts.push({on:false, x:0, y:0, text:"", kind:0, t:0, dur:900, vx:0});
+let _ftNext = 0;
+// kind: 0 daño, 1 crítico, 2 curación, 3 daño recibido, 4 aviso/etiqueta
 function floatText(x,y,text,cls){
-  const el = document.createElement("div");
-  el.className = "float-text" + (cls?(" "+cls):"");
-  const sp = worldToScreen(x,y);
-  el.style.left = sp.x+"px"; el.style.top = sp.y+"px";
-  el.textContent = text;
-  document.getElementById("floaters").appendChild(el);
-  setTimeout(()=>el.remove(), 950);
+  let kind = 0;
+  const s = String(text);
+  if(cls==="crit") kind = /^[0-9]+$/.test(s) ? 1 : 4;
+  else if(cls==="heal") kind = 2;
+  else if(s.charAt(0)==="-") kind = 3;
+  else if(!/^[0-9]+$/.test(s)) kind = 4;
+  const f = floatTexts[_ftNext]; _ftNext = (_ftNext+1)%FT_MAX;
+  f.on = true; f.x = x + (kind<=1 ? (Math.random()-0.5)*18 : 0); f.y = y; f.text = s; f.kind = kind; f.t = 0;
+  f.dur = kind===4 ? 1300 : (kind===1 ? 1000 : 820);
+  f.vx = kind<=1 ? (Math.random()-0.5)*20 : 0;
+  f.cls = cls;
+}
+const FT_STYLE = [
+  {size:15, fill:"#ffcf5c", stroke:"rgba(0,0,0,0.85)"},
+  {size:22, fill:"#ffffff", stroke:"rgba(160,20,0,0.95)"},
+  {size:16, fill:"#6fdc8c", stroke:"rgba(0,40,10,0.9)"},
+  {size:17, fill:"#ff5a4a", stroke:"rgba(40,0,0,0.95)"},
+  {size:15, fill:"#ffe7a8", stroke:"rgba(0,0,0,0.9)"}
+];
+function updateFloatTexts(dt){
+  for(const f of floatTexts){ if(!f.on) continue; f.t += dt; if(f.t >= f.dur) f.on = false; }
+}
+function drawFloatTexts(){
+  ctx.save();
+  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
+  for(const f of floatTexts){
+    if(!f.on || !inView(f.x, f.y, 120)) continue;
+    const q = f.t/f.dur, st = FT_STYLE[f.kind];
+    // subida con desaceleración + "pop" inicial de los críticos
+    const rise = (f.kind===4 ? 30 : 46) * (1-(1-q)*(1-q));
+    const pop = f.kind===1 ? 1 + 0.5*Math.max(0, 1-q*6) : 1;
+    const a = q < 0.7 ? 1 : (1-q)/0.3;
+    const size = st.size*pop/CAM_ZOOM;
+    ctx.globalAlpha = a;
+    ctx.font = `bold ${size.toFixed(1)}px Georgia, serif`;
+    const x = f.x + f.vx*q, y = f.y - rise/CAM_ZOOM*0.9;
+    ctx.lineWidth = 3.5/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
+    ctx.fillStyle = st.fill; ctx.fillText(f.text, x, y);
+  }
+  ctx.restore();
 }
 
 // Cadena de Relámpagos y ráfagas eléctricas: efectos con sprites reales (paquete CadenaRelampagos).
@@ -58,6 +100,12 @@ function drawPotion(p){
   const liquidHi = isMana ? "#7ec8ff" : "#ff8090";
   const glow = isMana ? "70,150,255" : "255,70,90";
   ctx.save();
+  // parpadea los últimos 3 s antes de desaparecer, y se ve apagada si al jugador no le sirve
+  // (barra llena): así nunca parece una poción "trabada" en el piso
+  let a = 1;
+  if(p.life < 3000) a = (Math.floor(p.life/150)%2) ? 0.35 : 1;
+  if(player && typeof potionUseful==="function" && !potionUseful(player, p)) a *= 0.55;
+  ctx.globalAlpha = a;
   ctx.fillStyle = "#0e0608";
   ctx.fillRect(x-8, y-16, 16, 20);
   ctx.fillStyle = "#c9c2d6";

@@ -9,7 +9,7 @@
 // agruparse contra ellas. Mismo patrón de salto por proximidad que ya usa el resto del juego
 // (ver triggerTrap/chain), pero saltando entre HÉROES en vez de entre enemigos.
 function applyEelChain(e, first){
-  damageHero(first, e.dmg);
+  damageHero(first, e.dmg, e);
   if(acua2Ready("fxSpark")) vfxSprite("fxSpark", 0, first.x, first.y-18, 54, 240, null, 0.1, false, 0.5);
   particles.push({x:e.x,y:e.y, x2:first.x, y2:first.y, life:220, bolt:true, color:"#ffe86a"});
   const hitList = [first];
@@ -22,7 +22,7 @@ function applyEelChain(e, first){
       if(d < 170 && d < bd){ bd=d; next=h; }
     }
     if(!next) break;
-    damageHero(next, e.dmg*0.7);
+    damageHero(next, e.dmg*0.7, e);
     particles.push({x:cur.x,y:cur.y, x2:next.x, y2:next.y, life:220, bolt:true, color:"#ffe86a"});
     if(acua2Ready("fxBolt")) vfxSprite("fxBolt", 0, next.x, next.y-18, 60, 240, null, 0.1, false, 0.5);
     hitList.push(next); cur = next;
@@ -40,7 +40,7 @@ function updateAcuaCurrent(dt){
   if(!acuaCurrent.active) return;
   acuaCurrent.timer -= dt;
   if(acuaCurrent.timer<=0){ acuaCurrent.active=false; return; }
-  const push = 34;
+  const push = 34*(1+0.09*arenaRuleStacks());
   for(const h of heroes){
     if(!h.alive) continue;
     h.x += acuaCurrent.dx*push*dt/1000;

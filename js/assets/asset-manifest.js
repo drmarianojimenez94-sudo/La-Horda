@@ -3,6 +3,18 @@
    La usa js/assets/preload.js para saber cuándo terminó de cargar todo. Si agregás una imagen
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
+  "assets/sprites/champions/axiom/v2/atlas.png",
+  "assets/sprites/champions/nigromante/v2/atlas.png",
+  "assets/sprites/champions/nigromante/skeleton/v2/atlas.png",
+  "assets/sprites/enemies/bosque/dama_bosque/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_guerrero/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_picaro/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_arquera/v2/atlas.png",
+  "assets/sprites/bosses/bosque/doblador_clerigo/v2/atlas.png",
+  "assets/sprites/champions/segador/v2/atlas.png",
+  "assets/sprites/champions/musashi/v2/atlas.png",
+  "assets/sprites/champions/profeta/v2/atlas.png",
+  "assets/sprites/champions/cazadora/v2/atlas.png",
   "assets/vfx/vendor/cadena-relampagos.png",
   "assets/vfx/vendor/muro-fuego.png",
   "assets/vfx/vendor/caballerito-torbellino.png",

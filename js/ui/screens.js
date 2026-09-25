@@ -10,7 +10,8 @@
 const screens = {
   title: document.getElementById("title-screen"),
   mainmenu: document.getElementById("mainmenu-screen"),
-  gallery: document.getElementById("gallery-screen"),
+  champions: document.getElementById("champions-screen"),
+  champhub: document.getElementById("champhub-screen"),
   champdetail: document.getElementById("champdetail-screen"),
   shop: document.getElementById("shop-screen"),
   modeselect: document.getElementById("modeselect-screen"),
@@ -25,6 +26,9 @@ const screens = {
 };
 function setState(s){
   state = s;
+  if(typeof musicOnState==="function") musicOnState(s); // clima musical de cada pantalla
+  if(s==="title" && typeof startTitleScene==="function") requestAnimationFrame(startTitleScene);
+  if(s!=="playing" && typeof _persistTimer!=="undefined" && _persistTimer) persistNow();
   Object.values(screens).forEach(el=>el.classList.add("hidden"));
   const hud = document.getElementById("hud");
   const controls = document.getElementById("controls");

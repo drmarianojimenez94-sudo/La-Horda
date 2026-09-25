@@ -72,12 +72,12 @@ function nigromantePlagueDeathSpread(e){
 function spawnNigroSkeleton(h, type, mods){
   const baseHp = type==="mage" ? 46 : 62;
   const baseDmg = type==="mage" ? 7 : 9;
-  const hpMult = 1+(mods.skeletonHpPct||0);
+  const hpMult = (1+(mods.skeletonHpPct||0)) * setSummonMult(h);
   const ang = Math.random()*Math.PI*2;
   const sx = h.x+Math.cos(ang)*40, sy = h.y+Math.sin(ang)*40;
   h.skeletons.push({
     owner:h, type, x:sx, y:sy, fx:1, fy:0,
-    hp: baseHp*hpMult, maxHp: baseHp*hpMult, dmg: baseDmg, ranged: type==="mage",
+    hp: baseHp*hpMult, maxHp: baseHp*hpMult, dmg: baseDmg*setSummonMult(h), ranged: type==="mage",
     moving:false, attackAnim:0, hitFlash:0, atkCd:0, retargetCd:0, target:null, alive:true
   });
   // Ráfaga de materialización real (antes sin usar): el esqueleto emerge de la niebla verde.

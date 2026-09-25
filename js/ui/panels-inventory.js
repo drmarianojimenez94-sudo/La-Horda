@@ -1,11 +1,10 @@
 "use strict";
 /* ============================================================
    js/ui/panels-inventory.js
-   Pantalla de pausa: inventario, equipamiento, comparación, fusión y estadísticas.
+   Equipamiento (grilla, sets, comparación, fusión: lo usan la Sala y Mis Campeones) y la
+   pestaña de Estadísticas de la pausa.
    ============================================================ */
 
-// Pestaña "Inventario"/"Equipamiento": ranuras equipadas + lista de objetos del campeón.
-let compareOpenUid = null; // qué tarjeta tiene la comparación abierta
 
 // Foto completa de las estadísticas RESULTANTES de un campeón (sección 5: "qué gano y qué
 // pierdo"). Se apoya en las mismas fórmulas reales de combate (computePlayerStats/passiveSum),
@@ -116,17 +115,28 @@ function renderEquipmentGridHTML(classKey, unequipAttr){
 function renderSetPanelHTML(classKey){
   const activeIds = activeSetIdsFor(classKey);
   if(!activeIds.length) return "";
-  let html = '<div class="set-panel">';
-  activeIds.forEach(setId=>{
-    const prog = setProgressFor(classKey, setId);
-    const rm = RARITY_META[prog.set.rarity];
-    html += `<div class="set-title" style="color:${rm.color};">${prog.set.name} — ${prog.count}/${prog.total} piezas</div>`;
-    prog.thresholds.forEach(th=>{
-      html += `<div class="set-thr ${th.active?"active":""}">(${th.count}) ${th.desc}</div>`;
-    });
-  });
-  html += '</div>';
-  return html;
+  return activeIds.map(id=>setDetailHTML(classKey, id)).join("");
+}
+// Detalle de un set: piezas (✓ equipada · ◐ en el inventario · □ falta), bonus por cantidad de
+// piezas EQUIPADAS (los activos en verde) y, si hay repetidas, la reforja. Es el "me falta una".
+function setDetailHTML(classKey, setId){
+  const S = SET_DB[setId]; if(!S) return "";
+  const champ = save.champions[classKey];
+  const owned = ownedDesignIds(classKey);
+  const eqIds = new Set(EQUIP_SLOT_TYPES.map(t=>{ const it = equippedItem(classKey, t); return it && it.set===setId ? it.designId : null; }).filter(Boolean));
+  const n = eqIds.size, total = setPieceCount(setId);
+  const pieces = setPieceIds(setId).map(id=>{
+    const d = DESIGNED_ITEMS[id], st = eqIds.has(id) ? "✓" : (owned.has(id) ? "◐" : "□");
+    return `<div class="sp-piece ${owned.has(id)?"have":"miss"}">${st} ${d.name} <span style="opacity:.6">(${ITEM_TYPES[d.type].label})</span></div>`;
+  }).join("");
+  const bonuses = S.thresholds.map((th,i)=>{
+    const full = i===S.thresholds.length-1;
+    return `<div class="sp-bonus ${n>=th.count?"on":""}">${full?"SET COMPLETO":"BONUS"} ${th.count}/${total} — ${th.desc}</div>`;
+  }).join("");
+  const dup = setDuplicateInfo(classKey, setId);
+  const reforge = (dup.dupes.length>=2 && dup.missing.length) ? `<div class="sp-reforge"><button data-reforge="${setId}">Reforjar: 2 repetidas → 1 pieza que te falta</button></div>` : "";
+  return `<div class="set-panel"><div class="sp-title">SET: ${S.name} — ${n}/${total} equipadas</div>
+    ${S.theme?`<div class="sp-theme">${S.theme}</div>`:""}${pieces}${bonuses}${reforge}</div>`;
 }
 // Barra de fusión (sección 18): agrupa lo fusionable y ofrece un botón por grupo. fuseAttr
 // distingue el data- atributo entre las dos pantallas que la usan (igual que unequipAttr).
@@ -157,126 +167,6 @@ function handleFuseClick(classKey, groupKey){
   const result = fuseItems(classKey, uids);
   if(!result.ok) alert(result.reason||"No se pudo fusionar.");
 }
-function renderInventoryPanel(){
-  const panel = document.getElementById("inventory-panel");
-  if(!panel || !player) return;
-  const classKey = player.classKey;
-  const champ = save.champions[classKey];
-  champ.inventory = champ.inventory || [];
-  champ.equipment = Object.assign(mkEquipment(), champ.equipment||{});
-
-  let html = renderEquipmentGridHTML(classKey, "unequip");
-  html += renderSetPanelHTML(classKey);
-
-  const full = champ.inventory.length >= INVENTORY_CAPACITY;
-  html += `<div class="inv-capacity">Inventario: ${champ.inventory.length}/${INVENTORY_CAPACITY}${full?" — lleno":""}</div>`;
-  html += renderFusionHTML(classKey, "fuse");
-
-  if(!champ.inventory.length){
-    html += '<div class="inv-empty">Todavía no tenés objetos. Se obtienen al derrotar subjefes y al jefe final.</div>';
-  } else {
-    html += '<div class="inv-list">';
-    champ.inventory.slice().reverse().forEach(it=>{
-      const rm = RARITY_META[it.rarity];
-      const equipped = champ.equipment[it.type] === it.uid;
-      const passiveNames = it.passives.map(p=>p.name);
-      if(it.mythicPassive) passiveNames.push("★ "+it.mythicPassive.name);
-      const passiveTxt = passiveNames.join(", ");
-      const comparing = compareOpenUid === it.uid;
-      html += `<div class="inv-card ${it.set?"set-item":""}" data-compare-toggle="${it.uid}" style="border-left-color:${it.set?"#3ddc71":rm.color};">
-        <span class="item-icon">${it.icon}</span>
-        <div class="item-meta">
-          <div class="item-name" style="color:${it.set?"#3ddc71":rm.color};">${it.name}${it.set?' <span class="set-badge">SET</span>':""}</div>
-          <div class="item-stat">${rm.label} · +${Math.round(it.value*100)}% ${ITEM_TYPES[it.type].statLabel}</div>
-          ${it.desc ? `<div class="item-desc">${it.desc}</div>` : ""}
-          ${passiveTxt ? `<div class="item-passives">${passiveTxt}</div>` : ""}
-          ${(!equipped && comparing) ? compareItemsHTML(classKey, it) : ""}
-          <div class="vic-item-actions">
-            <button data-sell="${it.uid}">Vender (+${SELL_VALUE[it.rarity]||10}o)</button>
-            <button data-discard="${it.uid}">Descartar</button>
-          </div>
-        </div>
-        <button data-equip="${it.uid}" class="${equipped?"equipped":""}">${equipped?"Equipado":"Equipar"}</button>
-      </div>`;
-    });
-    html += '</div>';
-  }
-
-  html += `<button class="inv-debug-btn" id="inv-debug-gen" ${full?"disabled":""}>[Prueba] Generar objeto al azar — para testear sin esperar a derrotar un subjefe</button>`;
-
-  panel.innerHTML = html;
-
-  panel.querySelectorAll(".inv-card").forEach(card=>{
-    card.addEventListener("click", (ev)=>{
-      if(ev.target.closest("button")) return; // los botones tienen su propio manejador
-      const uid = card.getAttribute("data-compare-toggle");
-      compareOpenUid = (compareOpenUid===uid) ? null : uid;
-      renderInventoryPanel();
-    });
-  });
-  panel.querySelectorAll("[data-equip]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      equipItem(classKey, btn.getAttribute("data-equip"));
-      refreshEquippedStats();
-      compareOpenUid = null;
-      renderInventoryPanel();
-      renderStatsPanel();
-    });
-  });
-  panel.querySelectorAll("[data-unequip]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      unequipItem(classKey, btn.getAttribute("data-unequip"));
-      refreshEquippedStats();
-      renderInventoryPanel();
-      renderStatsPanel();
-    });
-  });
-  panel.querySelectorAll("[data-sell]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      const uid = btn.getAttribute("data-sell");
-      if(!confirm("¿Vender este objeto? No se puede deshacer.")) return;
-      sellItem(classKey, uid);
-      refreshEquippedStats();
-      compareOpenUid = null;
-      renderInventoryPanel();
-      renderStatsPanel();
-      renderSaveLine();
-    });
-  });
-  panel.querySelectorAll("[data-discard]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      const uid = btn.getAttribute("data-discard");
-      if(!confirm("¿Descartar este objeto sin recompensa? No se puede deshacer.")) return;
-      discardItem(classKey, uid);
-      refreshEquippedStats();
-      compareOpenUid = null;
-      renderInventoryPanel();
-      renderStatsPanel();
-    });
-  });
-  panel.querySelectorAll("[data-fuse]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      handleFuseClick(classKey, btn.getAttribute("data-fuse"));
-      refreshEquippedStats();
-      renderInventoryPanel();
-      renderStatsPanel();
-    });
-  });
-  const dbg = document.getElementById("inv-debug-gen");
-  if(dbg) dbg.addEventListener("click", ()=>{
-    const type = rollItemType(classKey);
-    const rarity = RARITIES[Math.floor(Math.random()*RARITIES.length)];
-    const item = makeItem(type, rarity, classKey);
-    addItemToInventory(classKey, item);
-    renderInventoryPanel();
-  });
-}
-
 // Fase 4: pestaña "Estadísticas" — desglosa base del campeón vs. bonus de objetos equipados.
 function renderStatsPanel(){
   const panel = document.getElementById("stats-panel");
