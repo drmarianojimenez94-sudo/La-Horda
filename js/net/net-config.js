@@ -9,6 +9,6 @@
    Para probar sin tocar este archivo: agregar ?server=wss://... a la URL del juego.
    ============================================================ */
 const NET_CONFIG = {
-  serverUrl: "",
+  serverUrl: "wss://la-horda-relay.onrender.com",
   build: "B1-1" // si el anfitrión y el invitado tienen builds distintos, el servidor no los junta
 };
