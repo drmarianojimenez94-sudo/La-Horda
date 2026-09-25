@@ -49,7 +49,8 @@ function defaultSave(){
     gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, hielo:false, laberinto:false, infernal:false},
-    relics:{hp:0,dmg:0,def:0,vel:0} // permanent small stat items found from élite+ enemies
+    relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
+    lootPity:{legendario:0, set:0, mitico:0} // protección suave contra la mala suerte (oculta), ver js/data/loot.js
   };
 }
 let save = defaultSave();
