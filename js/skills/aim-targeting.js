@@ -29,7 +29,12 @@ const AIM_PROFILES = {
   bleed_hit:        {type:"target", range:(sk,cls)=>cls.basicRange+70},
   triple_hit:       {type:"target", range:(sk,cls)=>cls.basicRange+50},
   ronin_slash:      {type:"target"},
-  ghost_step:       {type:"target"}
+  ghost_step:       {type:"target"},
+  // El Libertador / Eren
+  sm_bayonet:       {type:"dash", w:30},
+  sm_san_lorenzo:   {type:"dash", w:64},
+  eren_hook:        {type:"dash", w:24},
+  titan_retumbar:   {type:"dash", w:120}
 };
 function aimProfileOf(sk){ return sk ? AIM_PROFILES[sk.kind] || null : null; }
 // Multiplicador de área/alcance real de la habilidad (maestría + talentos), el mismo que usa castAbility.

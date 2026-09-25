@@ -9,6 +9,9 @@
    ============================================================ */
 function botTryAbilities(h){
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(h.classKey,"cd_mult"));
+  // El Libertador / Eren: IA propia (js/champions/libertador.js, eren.js)
+  if(h.classKey==="libertador" && !divinaMode){ botLibertador(h, passiveCdMult); return; }
+  if(h.classKey==="eren" && !divinaMode){ botEren(h, passiveCdMult); return; }
   // Musashi (IA, sección 27): nunca desperdicia Último Duelo sin una Marca válida, y prioriza
   // objetivos valiosos (élite/subjefe/jefe) o una presa ya baja de vida (posibilidad real de
   // ejecución) en vez de tirarlo contra cualquier chusma en cuanto se carga.
@@ -355,7 +358,7 @@ function updateAllies(dt){
     if(h.moving){
       mx/=ml; my/=ml;
       const nd = aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; }
-      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0));
+      const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0)) * heroSpeedMult(h);
       h.x += mx*spd*dt/1000; h.y += my*spd*dt/1000;
       if(!target){ h.fx = mx; h.fy = my; }
       clampToArena(h);

@@ -243,7 +243,10 @@ const SFX_CFG = {
   eliteKill:{p:3,gap:120}, bigKill:{p:4,gap:300}, bossRoar:{p:5,gap:700}, bossDeath:{p:5,gap:1500},
   hurt:{p:3,gap:140}, hurtHeavy:{p:4,gap:250}, ready:{p:2,gap:120}, deny:{p:2,gap:150}, boom:{p:3,gap:120},
   clear:{p:4,gap:800}, heal:{p:2,gap:200}, shield:{p:2,gap:200}, potion:{p:2,gap:120},
-  levelup:{p:4,gap:400}, victory:{p:5,gap:1000}, ult:{p:4,gap:300}
+  levelup:{p:4,gap:400}, victory:{p:5,gap:1000}, ult:{p:4,gap:300},
+  // El Libertador / Eren (sintetizados, sin archivos de audio)
+  musket:{p:3,gap:120}, musketOfficer:{p:4,gap:150}, blade:{p:1,gap:70}, bugle:{p:4,gap:800}, gallop:{p:3,gap:400},
+  hook:{p:2,gap:90}, roar:{p:4,gap:600}, stomp:{p:3,gap:140}, punch:{p:2,gap:90}, thunder:{p:5,gap:800}
 };
 const _sfxLast = {}; let _sfxVoices = [];
 const SFX_MAX_VOICES = 12;
@@ -304,6 +307,32 @@ function playSfx(type){
       o.type="sawtooth"; o.frequency.setValueAtTime(260,t0); o.frequency.exponentialRampToValueAtTime(520,t0+0.15);
       _env(g,t0,0.02,0.22,0,0.2); o.connect(f); f.connect(g); g.connect(D); o.start(t0); o.stop(t0+0.24); len=0.24; break;
     }
+    // ---- El Libertador ----
+    case "musket": case "musketOfficer": {
+      const big = type==="musketOfficer";
+      _noise(t0,big?0.32:0.22,big?0.5:0.4,"lowpass",big?1800:2400,0,D); _tone(t0,"sine",big?120:150,38,big?0.3:0.22,big?0.55:0.4,D);
+      _noise(t0+0.02,0.5,0.08,"highpass",3000,0,D); if(big) _tone(t0+0.03,"triangle",880,660,0.18,0.08,D);
+      len = big?0.5:0.4; break;
+    }
+    case "blade": _noise(t0,0.07,0.16,"bandpass",4200,2,D); _tone(t0,"triangle",1400,700,0.06,0.05,D); len=0.08; break;
+    case "bugle": {
+      // clarín: arpegio de caballería (do-mi-sol-do)
+      [392,523.25,659.25,783.99].forEach((f,i)=>{ _tone(t0+i*0.12,"square",f,f,0.14,0.06,D,0.01); _tone(t0+i*0.12,"sawtooth",f,f,0.14,0.035,D,0.01); });
+      _tone(t0+0.48,"square",783.99,783.99,0.42,0.07,D,0.02); len=0.95; break;
+    }
+    case "gallop": for(let i=0;i<6;i++){ _noise(t0+i*0.11,0.05,0.2,"lowpass",420,0,D); _tone(t0+i*0.11,"sine",90,60,0.06,0.2,D); } len=0.7; break;
+    // ---- Eren ----
+    case "hook": _noise(t0,0.18,0.12,"bandpass",2600,6,D); _tone(t0,"sawtooth",1800,520,0.16,0.04,D); len=0.2; break;
+    case "punch": _tone(t0,"sine",110,50,0.14,0.45,D); _noise(t0,0.1,0.2,"lowpass",800,0,D); len=0.16; break;
+    case "stomp": _tone(t0,"sine",70,32,0.35,0.6,D); _noise(t0,0.3,0.3,"lowpass",500,0,D); _duck(0.7,250); len=0.36; break;
+    case "roar": {
+      const o = audioCtx.createOscillator(); o.type="sawtooth"; o.frequency.setValueAtTime(110,t0); o.frequency.exponentialRampToValueAtTime(60,t0+0.9);
+      const f = audioCtx.createBiquadFilter(); f.type="lowpass"; f.frequency.value=700;
+      const g = audioCtx.createGain(); _env(g,t0,0.08,0.45,0.3,0.6);
+      o.connect(f); f.connect(g); g.connect(D); o.start(t0); o.stop(t0+1.0);
+      _noise(t0,0.8,0.2,"bandpass",600,0.8,D); _duck(0.5,800); len=1.0; break;
+    }
+    case "thunder": _noise(t0,1.1,0.55,"lowpass",1500,0,D); _tone(t0,"sine",60,28,1.0,0.6,D); _noise(t0,0.08,0.4,"highpass",2000,0,D); _duck(0.35,1000); len=1.1; break;
     case "ult":
       _tone(t0,"sawtooth",85,42,0.7,0.42,D,0.06); _noise(t0,0.6,0.18,"bandpass",900,0.7,D); _tone(t0+0.1,"triangle",660,990,0.5,0.08,D,0.05);
       _duck(0.5,700); len=0.75; break;

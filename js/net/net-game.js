@@ -109,7 +109,8 @@ const NET_COLLS = {
   bossStrikes:       [()=>bossStrikes, a=>{ bossStrikes = a; }],
   iceWalls:          [()=>iceWalls, a=>{ iceWalls = a; }],
   activeAxiomVfx:    [()=>activeAxiomVfx, a=>{ activeAxiomVfx = a; }],
-  musashiAfterimages:[()=>musashiAfterimages, a=>{ musashiAfterimages = a; }]
+  musashiAfterimages:[()=>musashiAfterimages, a=>{ musashiAfterimages = a; }],
+  champFx:           [()=>champFx, a=>{ champFx = a; }] // El Libertador / Eren: zonas, avisos de pisada, jinetes, escarcha
 };
 // Estado global de la partida (no-entidades) que los invitados necesitan para HUD/dibujo.
 const NET_GLOBALS = {
@@ -310,7 +311,7 @@ function netHostUpdateRemotes(dt){
     // ¿algo lo movió desde el cuadro pasado (empujón, embestida, tirón, fusión, duelo)? -> el
     // anfitrión manda: el invitado se corrige a esta posición (posAuth nuevo).
     if(Math.hypot(h.x-n.px, h.y-n.py) > 2) n.posAuth++;
-    const canMove = h.alive && !(h.stunTimer>0) && !h.fused && !(axiomFreezeTimer>0 && axiomFreezeCaster!==h) && !h.duelActive;
+    const canMove = h.alive && !(h.stunTimer>0) && !h.fused && !(axiomFreezeTimer>0 && axiomFreezeCaster!==h) && !h.duelActive && !heroMoveLocked(h);
     if(inp){
       h.fx = inp.fx; h.fy = inp.fy;
       if(canMove && inp.pa===n.posAuth){
@@ -324,10 +325,10 @@ function netHostUpdateRemotes(dt){
     h.moving = !!(inp && inp.mv) && canMove;
     if(h.moving) h.animT += dt;
     h._netPA = n.posAuth;
-    h._spd = h.baseSpeed * n.runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0)) * (canMove?1:0) * (h.sylvaCharging?0.55:1);
+    h._spd = h.baseSpeed * n.runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0)) * (canMove?1:0) * (h.sylvaCharging?0.55:1) * heroSpeedMult(h);
     n.px = h.x; n.py = h.y;
   }
-  if(player) player._spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0));
+  if(player) player._spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * heroSpeedMult(player);
 }
 // TEAM WIPE (derrota compartida): todos los humanos ACTIVOS (conectados) están caídos y no hay
 // ningún revivir de un humano en curso. Mientras quede un humano activo en pie, la partida sigue.
@@ -597,7 +598,7 @@ function netApplySnapshot(s){
     // posición propia: solo se corrige cuando el anfitrión dice que la movió él (posAuth nuevo)
     if(own && d._netPA!==undefined && d._netPA!==M.posAuth){ M.posAuth = d._netPA; if(h._hx!==undefined){ h.x = h._hx; h.y = h._hy; } }
     if(!own && h._tx!==undefined && (h._first===undefined)){ h.x = h._tx; h.y = h._ty; h._first = 1; }
-    h.cls = CLASSES[h.classKey] || h.cls;
+    h.cls = heroClsOf(h); // Eren transformado usa el kit del titán
   });
   // 4) colecciones: campos
   for(const name in colls){
@@ -706,6 +707,7 @@ function netGuestSendInput(force){
 }
 // Acciones del invitado -> intención al anfitrión (llamadas desde useSkill/useUltimate/etc.)
 function netGuestCast(idx, aim){
+  if(idx===0 && erenHookCanRedirect(player)){ netSendToHost({k:"cast", idx, aim: aim ? {x:Math.round(aim.x), y:Math.round(aim.y), dx:aim.dx, dy:aim.dy} : null}); return true; }
   const sk = player.cls.skills[idx];
   if(!player.alive || !sk || player.cds[idx]>0 || player.energy < sk.cost) return false;
   netSendToHost({k:"cast", idx, aim: aim ? {x:Math.round(aim.x), y:Math.round(aim.y), dx:aim.dx, dy:aim.dy} : null});

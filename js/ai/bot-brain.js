@@ -94,6 +94,8 @@ function botDownedNear(h, range){
   for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h || reviveBusyFor(a, h)) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
   return best;
 }
+// A distancia salvo El Libertador montado (sable corvo: caballería que carga cuerpo a cuerpo).
+function botRanged(h){ return !!h.cls.ranged && !h.smMounted; }
 // Movimiento de un bot. Devuelve {mx, my, target}. Llamada desde updateAllies().
 function botMove(h, dt){
   const role = botRole(h);
@@ -134,7 +136,7 @@ function botMove(h, dt){
     else if(target){ const dx = target.x-h.x, dy = target.y-h.y, l = Math.hypot(dx,dy)||1; if(l < 150){ mx = -dx/l*0.8; my = -dy/l*0.8; } }
     return {mx, my, target};
   }
-  if(role==="tanque" && target && !h.cls.ranged){
+  if(role==="tanque" && target && !botRanged(h)){
     // se para entre el jugador y la amenaza (un poco adelante de la amenaza)
     const px = player.x + (target.x-player.x)*0.8, py = player.y + (target.y-player.y)*0.8;
     const gx = target.rank==="jefe" ? target.x : px, gy = target.rank==="jefe" ? target.y : py;
@@ -144,11 +146,11 @@ function botMove(h, dt){
     return {mx, my, target};
   }
   if(target){
-    const desired = h.cls.ranged ? (target.rank==="jefe" ? 230 : 190) : (h.cls.basicRange*0.7);
+    const desired = botRanged(h) ? (target.rank==="jefe" ? 230 : 190) : (h.cls.basicRange*0.7);
     const dx = target.x-h.x, dy = target.y-h.y, l = Math.hypot(dx,dy)||1;
     if(l > desired+10){ mx = dx/l; my = dy/l; }
     else if(l < desired-40){ mx = -dx/l; my = -dy/l; }
-    else if(h.cls.ranged){ const s = (h._strafe || (h._strafe = Math.random()<0.5?1:-1)); mx = -dy/l*0.5*s; my = dx/l*0.5*s; }
+    else if(botRanged(h)){ const s = (h._strafe || (h._strafe = Math.random()<0.5?1:-1)); mx = -dy/l*0.5*s; my = dx/l*0.5*s; }
   } else {
     const dx = player.x-h.x, dy = player.y-h.y, l = Math.hypot(dx,dy)||1;
     if(l > 120){ mx = dx/l; my = dy/l; }

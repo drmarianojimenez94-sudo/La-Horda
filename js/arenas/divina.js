@@ -14,7 +14,7 @@ let divinaEnemies = [];
 function pickDivinaTeamClasses(){
   const ROLE_ORDER = ["tanque","asesino","mago","soporte"];
   return ROLE_ORDER.map(role=>{
-    const pool = Object.keys(CLASSES).filter(k=>CLASSES[k].roleCategory===role);
+    const pool = Object.keys(CLASSES).filter(k=>CLASSES[k].roleCategory===role && !CLASSES[k].noDivinaFoe);
     return pool[(Math.random()*pool.length)|0];
   });
 }

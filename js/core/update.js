@@ -23,6 +23,9 @@ function update(dt){
   updateBossSkillWorld(dt);
   for(const h of heroes){ updateSylvaMomentum(h, dt); updateSylvaWolf(h, dt); }
   for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); }
+  // El Libertador / Eren (+ buffs de equipo que dan): js/champions/champ-shared.js
+  for(const h of heroes) updateChampExtras(h, dt);
+  updateChampFx(dt);
   updateArenaHazards(dt);
   updateAcuaCurrent(dt);
   updateAcuaAmbience(dt);
@@ -557,7 +560,7 @@ function updateControlledHero(dt){
     facing = {x:joyVec.x, y:joyVec.y};
     const l = Math.hypot(facing.x,facing.y); facing.x/=l; facing.y/=l;
     player.fx = facing.x; player.fy = facing.y;
-    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1);
+    const spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * (player.stunTimer>0?0:1) * ((axiomFreezeTimer>0 && axiomFreezeCaster!==player)?0:1) * (player.fused?0:1) * (player.sylvaCharging?0.55:1) * heroSpeedMult(player);
     player.x += joyVec.x*spd*dt/1000;
     player.y += joyVec.y*spd*dt/1000;
     clampToArena(player);
