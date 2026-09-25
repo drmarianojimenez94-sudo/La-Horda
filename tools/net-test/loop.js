@@ -1,11 +1,12 @@
 // LA HORDA — PLAYTEST V1 (P0): el ciclo completo del cooperativo con 4 navegadores independientes.
 //
-//   FULL CYCLE: A abre el juego (recibe 2.000 de oro una sola vez), elige campeón, MULTIJUGADOR ->
-//   Crear sala; B/C/D abren el juego, eligen campeón, MULTIJUGADOR -> pegan el enlace -> Unirse ->
-//   sala. Todos LISTO -> partida -> alguien cae -> lo reviven -> REVIVE 1-5 -> TEAM WIPE ->
-//   derrota -> la MISMA sala (mismo código, misma arena, LISTO en NO) -> cambian campeón ->
-//   LISTO -> REINTENTAR (instancia limpia). Se repite RETRY_ROUNDS veces sin recargar la página
-//   ni recrear el servidor, y se mide que nada se degrade.
+//   FULL CYCLE (modo campaña): cada jugador abre el juego (todo en nivel 1, 0 de oro) y elige su
+//   campeón de REGALO; A: Jugar -> Arena -> Bosque -> campeón -> Sala -> Crear sala; B/C/D: Jugar ->
+//   Arena -> Sala -> pegan el enlace/código en "Unirse" -> sala de A. D compra un campeón en la
+//   Tienda (1.000 de oro). Todos LISTO -> partida -> alguien cae -> lo reviven -> REVIVE 1-5 ->
+//   TEAM WIPE -> derrota -> la MISMA sala (mismo código, misma arena, LISTO en NO) -> cambian
+//   campeón -> LISTO -> REINTENTAR (instancia limpia). Se repite RETRY_ROUNDS veces sin recargar
+//   la página ni recrear el servidor, y se mide que nada se degrade.
 //
 // uso: node tools/net-test/loop.js [rondas de reintento, default 3]
 //   requiere el sitio (python3 -m http.server 8771) y el relay (PORT=8799 node server/relay.js)
@@ -49,52 +50,71 @@ const UNCALM = () => { if (window.__calm) clearInterval(window.__calm); window._
   const [A, B, C, D] = all;
   const guests = [B, C, D];
 
-  // ---------------- 2.000 de oro de PLAYTEST V1 (una sola vez) ----------------
+  // ---------------- modo campaña: todo en nivel 1 y un campeón de regalo a elegir ----------------
   for (const c of all) {
+    const s0 = await ev(c, () => ({ gold: save.gold, lv: Object.values(save.champions).every(ch => ch.level === 1 && ch.xp === 0), owned: Object.keys(save.champions).filter(k => save.champions[k].unlocked), multi: !!document.getElementById('mainmenu-multi-btn') }));
+    check(`campaign.client${c.i}_fresh_level1_no_gold`, s0.gold === 0 && s0.lv && s0.owned.length === 0 && !s0.multi, s0);
     await c.page.click('#title-continue-btn');
-    const g = await ev(c, () => ({ gold: save.gold, flag: save.playtestV1Bonus, toast: (document.getElementById('net-toast') || {}).textContent || '' }));
-    check(`bonus.client${c.i}_2000_gold`, g.gold === 2000 && g.flag === true && /2\.000/.test(g.toast), g);
+    check(`starter.client${c.i}_screen`, await c.page.isVisible('#starter-screen'));
+    await c.page.click(`.starter-card[data-champ="${FIRST[c.i]}"]`);
+    await c.page.click('#starter-yes-btn');
+    const s1 = await ev(c, () => ({ state, owned: Object.keys(save.champions).filter(k => save.champions[k].unlocked), sel: selectedClass }));
+    check(`starter.client${c.i}_owns_only_gift`, s1.state === 'mainmenu' && s1.owned.join() === FIRST[c.i] && s1.sel === FIRST[c.i], s1);
   }
-  // recargar no lo vuelve a dar
+  // recargar no vuelve a regalar
   await A.page.reload({ waitUntil: 'load' });
   await waitFor(A, () => !document.getElementById('title-continue-btn').disabled, null, 30000);
-  check('bonus.not_twice_after_reload', await ev(A, () => save.gold) === 2000);
-  // un jugador que YA tenía progreso: conserva todo y recibe el bono una sola vez
-  await ev(A, () => { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); s.gold = 300; s.champions.tanque.level = 7; s.champions.tanque.xp = 55; delete s.playtestV1Bonus; localStorage.setItem(SAVE_KEY, JSON.stringify(s)); });
-  for (let r = 0; r < 2; r++) {
-    await A.page.reload({ waitUntil: 'load' });
-    await waitFor(A, () => !document.getElementById('title-continue-btn').disabled, null, 30000);
-  }
-  const kept = await ev(A, () => ({ gold: save.gold, lvl: save.champions.tanque.level, xp: save.champions.tanque.xp, disk: JSON.parse(localStorage.getItem(SAVE_KEY)).champions.tanque.level }));
-  check('bonus.existing_save_kept_plus_2000_once', kept.gold === 2300 && kept.lvl === 7 && kept.xp === 55 && kept.disk === 7, kept);
+  await A.page.click('#title-continue-btn');
+  check('starter.not_twice_after_reload', await ev(A, () => state === 'mainmenu' && Object.keys(save.champions).filter(k => save.champions[k].unlocked).length === 1));
+  // guardado VIEJO (con progreso, de antes de la campaña): vuelve a nivel 1, se respalda y se regala de nuevo
+  await ev(A, () => { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); s.gold = 300; for (const k in s.champions) { s.champions[k].level = 37; s.champions[k].xp = 55; s.champions[k].unlocked = true; } delete s.campaignResetV1; localStorage.setItem(SAVE_KEY, JSON.stringify(s)); localStorage.removeItem(SAVE_KEY + '_antesDeCampania'); });
+  await A.page.reload({ waitUntil: 'load' });
+  await waitFor(A, () => !document.getElementById('title-continue-btn').disabled, null, 30000);
+  const reset = await ev(A, () => ({ gold: save.gold, lv: Object.values(save.champions).every(ch => ch.level === 1 && ch.xp === 0), owned: Object.keys(save.champions).filter(k => save.champions[k].unlocked).length, backup: JSON.parse(localStorage.getItem(SAVE_KEY + '_antesDeCampania') || '{}').champions.tanque.level }));
+  check('campaign.old_save_reset_with_backup', reset.gold === 0 && reset.lv && reset.owned === 0 && reset.backup === 37, reset);
+  await A.page.click('#title-continue-btn');
+  await A.page.click(`.starter-card[data-champ="${FIRST[0]}"]`);
+  await A.page.click('#starter-yes-btn');
+  // D compra un campeón en la Tienda (1.000 de oro)
+  await ev(D, () => { save.gold = 1200; setState('shop'); renderShop(); });
+  await D.page.click('.shop-champ-card[data-champ="musashi"]');
+  await D.page.click('#cd-unlock-btn');
+  const buy = await ev(D, () => ({ gold: save.gold, owned: save.champions.musashi.unlocked }));
+  check('shop.champion_costs_1000', buy.gold === 200 && buy.owned === true, buy);
+  await ev(D, () => { setState('mainmenu'); renderMainMenu(); });
+  // para la prueba de red: nivel 12 y B tiene comprados los campeones a los que cambia en cada ronda
   await ev(A, () => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; } save.arenasCleared = { bosque: true }; persistNow(); });
   for (const c of guests) await ev(c, () => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; } persistNow(); });
+  await ev(B, () => { for (const k of ['axiom', 'segador', 'profeta', 'cazadora']) save.champions[k].unlocked = true; persistNow(); });
 
-  // ---------------- A: elige campeón -> MULTIJUGADOR -> Crear sala ----------------
-  await A.page.click('#title-continue-btn');
-  await A.page.click('#mainmenu-multi-btn');
-  check('multi.screen_visible', await A.page.isVisible('#multi-screen'));
-  await A.page.click('#multi-create-btn');
-  await A.page.click('.arena-card[data-arena="bosque"]');
-  await A.page.click(`.champ-card:nth-child(${await ev(A, (k) => Object.keys(CLASSES).indexOf(k) + 1, FIRST[0])})`);
-  await A.page.click('#start-btn');
+  // ---------------- A: Jugar -> Arena -> Bosque -> campeón -> Sala -> Crear sala ----------------
+  const toLobby = async (c, champ) => {
+    await c.page.click('#mainmenu-jugar-btn');
+    await c.page.click('#mode-arena-btn');
+    await c.page.click('.arena-card[data-arena="bosque"]');
+    await c.page.click(`#champ-grid .champ-card:nth-child(${await ev(c, (k) => Object.keys(CLASSES).indexOf(k) + 1, champ)})`);
+    await c.page.click('#start-btn');
+    return waitFor(c, () => state === 'prep', null, 8000);
+  };
+  check('lobby.host_in_prep', await toLobby(A, FIRST[0]));
+  check('lobby.join_box_visible', await A.page.isVisible('#net-join-code'));
+  await A.page.click('#net-create-btn');
   await waitFor(A, () => !!net.code, null, 15000);
   const code = await ev(A, () => net.code);
-  check('room.auto_created_from_multi', /^[A-Z2-9]{6}$/.test(code || ''), code);
+  check('room.created_from_lobby', /^[A-Z2-9]{6}$/.test(code || ''), code);
   check('room.host_champion', await ev(A, () => selectedClass) === FIRST[0]);
   const invite = await ev(A, () => netInviteUrl());
 
-  // ---------------- B/C/D: MULTIJUGADOR -> pegar enlace (o código) -> Unirse ----------------
+  // ---------------- B/C/D: Jugar -> Arena -> Sala -> pegar enlace (o código) -> Unirse ----------------
   for (const [n, c] of guests.entries()) {
-    await c.page.click('#mainmenu-multi-btn');
-    await c.page.selectOption('#multi-champ', FIRST[c.i]);
+    check(`lobby.client${c.i}_in_prep`, await toLobby(c, FIRST[c.i]));
     // B pega el enlace completo, C "SALA XXXXXX", D el código en minúsculas con espacios
     const paste = n === 0 ? invite : (n === 1 ? `SALA ${code}` : ` ${code.toLowerCase()} `);
-    await c.page.fill('#multi-code', paste);
-    await c.page.click('#multi-join-btn');
+    await c.page.fill('#net-join-code', paste);
+    await c.page.click('#net-join-btn');
     const ok = await waitFor(c, () => state === 'prep' && !!net.room && net.role === 'guest', null, 15000);
     const st = await ev(c, () => ({ state, slot: net.slot, code: net.code, champ: selectedClass, arena: currentArena }));
-    check(`join.client${c.i}_via_multi_menu`, ok && st.code === code && st.champ === FIRST[c.i] && st.arena === 'bosque', st);
+    check(`join.client${c.i}_via_lobby_code`, ok && st.code === code && st.champ === FIRST[c.i] && st.arena === 'bosque', st);
   }
   await sleep(500);
   const room0 = await ev(A, () => net.room.slots.map(s => s && `${s.name}:${s.champ}`));
@@ -102,12 +122,19 @@ const UNCALM = () => { if (window.__calm) clearInterval(window.__calm); window._
   // colores P1-P4 en la sala
   const tags = await A.page.$$eval('#lobby-slots .lobby-tag', els => els.map(e => e.className + '|' + e.textContent));
   check('lobby.p1_p4_tags', tags.length === 4 && tags.every((t, i) => t.includes('p' + i) && t.includes('P' + (i + 1))), tags);
-  // D cambia de campeón DENTRO de la sala; el de otro jugador aparece bloqueado
-  const takenDisabled = await D.page.$eval(`[data-net-champ="${FIRST[0]}"]`, b => b.disabled);
-  check('lobby.taken_champion_disabled', takenDisabled === true);
+  // héroes animados respirando en la sala
+  const anims = await A.page.$$eval('#lobby-slots canvas.lobby-anim[data-idle]', els => els.length);
+  check('lobby.breathing_heroes', anims === 4, anims);
+  // en la sala solo se ofrecen los campeones propios; D tiene el comprado
+  const dOffer = await D.page.$$eval('[data-net-champ]', els => els.map(e => e.getAttribute('data-net-champ')));
+  check('lobby.only_owned_champions_offered', dOffer.sort().join() === ['guerrero', 'musashi'].join(), dOffer);
   await D.page.click('[data-net-champ="musashi"]');
   await waitFor(A, () => net.room.slots[3] && net.room.slots[3].champ === 'musashi');
   check('lobby.guest_changes_champion_in_room', await ev(A, () => net.room.slots[3].champ) === 'musashi');
+  // el campeón de otro jugador aparece bloqueado (B tiene varios comprados; el de A no lo tiene)
+  await ev(B, () => { save.champions.tanque.unlocked = true; renderPrepSummary(); });
+  const takenDisabled = await B.page.$eval(`[data-net-champ="${FIRST[0]}"]`, b => b.disabled);
+  check('lobby.taken_champion_disabled', takenDisabled === true);
   // no se puede comenzar sin que estén todos LISTOS (pide confirmación): primero los LISTO
   const lbl0 = await ev(A, () => document.getElementById('prep-start-btn').textContent);
   check('lobby.start_label_shows_missing_ready', /faltan 3 LISTO/.test(lbl0), lbl0);

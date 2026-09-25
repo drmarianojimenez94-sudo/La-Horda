@@ -80,6 +80,8 @@
       AP._mv = l > 0.1 ? {x:mx/l, y:my/l} : {x:0,y:0};
     }
     joyVec = AP._mv || {x:0,y:0};
+    // La Fortaleza se recorre por sectores: el piloto de tools/fortaleza/sim-helpers.js sabe la ruta.
+    if(currentArena==="fortaleza" && window.__fs) window.__fs.autopilot(dt);
     // revive
     const nd = (typeof nearestDownedAlly==="function") ? nearestDownedAlly() : null;
     if(nd){ reviveHold += dt; if(reviveHold > 1300){ tryReviveAlly(nd); reviveHold = 0; } } else reviveHold = 0;
@@ -124,6 +126,7 @@
   AP.start = function(cls, arena, level){
     selectedClass = cls; currentArena = arena;
     startRun(level||1);
+    if(window.__fs) window.__fs.wi = 0;
     AP.on = true;
   };
 })();

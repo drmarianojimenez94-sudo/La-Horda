@@ -15,7 +15,7 @@ const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== 
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('dialog', d => d.accept());
     await p.goto(url);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const x = document.getElementById('title-continue-btn'); return x && !x.disabled; })) break; await sleep(100); }
-    await p.evaluate(([c]) => { for (const k in save.champions) save.champions[k].level = 10; selectedClass = c; }, [champ]);
+    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 10; save.champions[k].unlocked = true; } selectedClass = c; }, [champ]);
     return { ctx, p, errs };
   };
   const H = await mk(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, 'Mariano', 'tanque');
