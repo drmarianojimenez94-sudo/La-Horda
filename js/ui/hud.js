@@ -5,7 +5,8 @@
    ============================================================ */
 
 function updateAbilityButtons(){
-  const cls = CLASSES[selectedClass];
+  // el kit ACTIVO del héroe (Eren transformado muestra el del titán)
+  const cls = (player && player.cls && player.classKey===selectedClass) ? player.cls : CLASSES[selectedClass];
   const map = [["btn-s1",cls.skills[0]], ["btn-s2",cls.skills[1]], ["btn-s3",cls.skills[2]], ["btn-ult",cls.ultimate]];
   map.forEach(([id, sk])=>{
     const el = document.getElementById(id);
@@ -18,6 +19,7 @@ function updateAbilityButtons(){
   });
 }
 
+let _hudLastCls = null, _hudLastSe = null;
 function showBanner(text){
   const b = document.getElementById("center-banner");
   b.textContent = text;
@@ -71,6 +73,14 @@ function updateHUD(){
   document.getElementById("hud-timer").textContent = Math.floor(totalSec/60)+":"+String(totalSec%60).padStart(2,"0");
   document.getElementById("atk-badge").classList.toggle("hidden", player.atkAuraTimer<=0);
   document.getElementById("shield-badge").classList.toggle("hidden", player.shieldAuraTimer<=0);
+  // El Libertador / Eren: indicadores propios (Disparo de Oficial, Cabral, montura / Furia,
+  // Seguir Adelante, transformación, regeneración, El Retumbar, agotado). Solo se toca el DOM si cambió.
+  if(player.cls !== _hudLastCls){ _hudLastCls = player.cls; updateAbilityButtons(); }
+  const seHudEl = document.getElementById("se-hud");
+  if(seHudEl){
+    const html = player.classKey==="libertador" ? libertadorHudHtml(player) : player.classKey==="eren" ? erenHudHtml(player) : "";
+    if(html !== _hudLastSe){ _hudLastSe = html; seHudEl.innerHTML = html; seHudEl.classList.toggle("hidden", !html); }
+  }
   // Musashi: Concentración (0/10, sección 26) y Victorias de Duelo -discreto, no satura el HUD-.
   const musashiHudEl = document.getElementById("musashi-hud");
   if(player.classKey==="musashi"){
@@ -123,8 +133,9 @@ function updateHUD(){
   const ultPct = player.ultCharge/player.ultMax*100;
   document.getElementById("ult-ring").style.background = `conic-gradient(var(--ult) ${ultPct*3.6}deg, #2a1c10 0deg)`;
   const ultBtn = document.getElementById("btn-ult");
-  const ultReady = player.ultCharge>=player.ultMax && player.ultCd<=0 && runLevel>=ULT_MIN_ARENA_LEVEL;
+  const ultReady = (player.ultCharge>=player.ultMax && player.ultCd<=0 && runLevel>=ULT_MIN_ARENA_LEVEL && !(player.classKey==="eren" && erenUltBlocked(player))) || !!player.erenRumblingReady;
   ultBtn.classList.toggle("ready", ultReady);
+  ultBtn.classList.toggle("rumble", !!player.erenRumblingReady);
   ultBtn.classList.toggle("locked", runLevel<ULT_MIN_ARENA_LEVEL);
 
   renderParty();

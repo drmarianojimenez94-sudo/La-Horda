@@ -6,7 +6,7 @@
    ojos rojos. Brasas que suben y resplandor de fuego. Solo se anima mientras el título está a
    la vista (~30 fps) y se ajusta al tamaño/densidad de la pantalla.
    ============================================================ */
-const TITLE_HERO_KEYS = ["guerrero","tanque","mago","soporte","segador","axiom","profeta","musashi","cazadora","nigromante"];
+const TITLE_HERO_KEYS = ["guerrero","tanque","mago","soporte","segador","axiom","profeta","musashi","cazadora","nigromante","libertador","eren"];
 let _titleRaf = null, _titleLast = 0, _titleCast = null, _titleEmbers = [], _titleEyes = [];
 // Cada set de arte viene a otra escala: se mide la altura real (píxeles opacos) de cada campeón
 // una vez cargado su arte y se normaliza, para que el ejército se vea parejo.

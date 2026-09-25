@@ -284,3 +284,15 @@
 #downed-overlay .dw-sub{ font:13px monospace; color:#ffd9c8; margin:4px 0 8px; }
 #downed-overlay .dw-bar{ height:7px; background:rgba(255,255,255,0.12); border-radius:4px; overflow:hidden; }
 #downed-overlay .dw-bar i{ display:block; height:100%; width:0; background:#8effb4; transition:width .1s linear; }
+/* El Libertador / Eren: indicadores propios (discretos, mismo estilo que Musashi/Sylva) */
+#se-hud{ text-align:right; font-size:0.6rem; margin-top:2px; line-height:1.4; }
+#se-hud .se-ready{ color:#ffd66b; text-shadow:0 0 4px #b8860b; }
+#se-hud .se-on{ color:#9fe3c2; } #se-hud .se-off{ color:#9a8a80; } #se-hud .se-warn{ color:#ff6a5a; }
+#se-hud .se-rumble{ color:#ff3a22; font-weight:bold; animation: sePulse .6s infinite alternate; }
+#se-hud .se-bar{ display:inline-block; width:54px; height:5px; background:rgba(0,0,0,0.5); border:1px solid #000; vertical-align:middle; margin:0 3px; }
+#se-hud .se-bar i{ display:block; height:100%; background:#9fc4ff; }
+#se-hud .se-bar.fury i{ background:linear-gradient(90deg,#8a1a10,#ff5a2a); }
+#se-hud .se-bar.titan i{ background:#c86a4a; }
+#se-hud .se-fury{ color:#ffb09a; }
+#btn-ult.rumble{ box-shadow:0 0 14px 4px rgba(255,40,20,0.85); animation: sePulse .5s infinite alternate; }
+@keyframes sePulse{ from{ filter:brightness(1); } to{ filter:brightness(1.45); } }

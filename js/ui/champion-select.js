@@ -62,6 +62,8 @@ function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving){
     else if(key==="cazadora" && drawSylvaReal(fake, scale, 1)){
       // Sylva: con su sprite real, igual que en partida.
     }
+    else if(key==="libertador" && drawLibertador(fake, scale, 1)){}
+    else if(key==="eren" && drawEren(fake, scale, 1)){}
     else if(key==="nigromante" && drawNigromanteReal(fake, scale, 1)){
       // Nigromante: con su sprite real, igual que en partida.
     }
