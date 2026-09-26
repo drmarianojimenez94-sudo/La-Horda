@@ -46,7 +46,7 @@ function defaultSave(){
   return {
     champions,
     itemSchemaV: ITEM_SCHEMA_VERSION,
-    gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
+    gold:0, gems:0, // GEMAS: recurso ganado jugando, SOLO para subir el nivel de objetos (js/systems/gems.js). No es moneda premium: una futura moneda premium va en otro campo.
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)

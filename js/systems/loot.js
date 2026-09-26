@@ -116,7 +116,7 @@ function materializeLoot(spec, classKey, arena){
     const r = Math.random();
     if(r < LEGEND_SOURCE.named){ const id = _rollNamedLegendary(arena, owned); if(id) return makeDesignedItem(id); }
     else if(r < LEGEND_SOURCE.named + LEGEND_SOURCE.champion){ const id = _rollChampionDesigned(classKey, "legendario"); if(id) return makeDesignedItem(id); }
-    return makeItem(type, "legendario", classKey);
+    return makeItem(type, "legendario", classKey, {arena});
   }
   if(spec.tier==="mitico"){
     if(Math.random() < MYTHIC_SOURCE.recipe){
@@ -133,7 +133,7 @@ function materializeLoot(spec, classKey, arena){
     const list = byChamp[ch] || ids;
     return makeDesignedItem(list[(Math.random()*list.length)|0]);
   }
-  return makeItem(type, spec.tier, classKey);
+  return makeItem(type, spec.tier, classKey, {arena});
 }
 // designIds de todo lo que tiene la cuenta (inventario compartido).
 function ownedDesignIds(){
@@ -153,8 +153,9 @@ function grantEndOfRunLoot(classKey, perf, victory){
     addItemToInventory(classKey, it);
     items.push(it);
   }
+  const gems = grantRunGems(currentArena, res.grade, victory, runLevel); // Gemas: solo para mejorar objetos
   persist();
-  return {items, inventoryFull, grade:res.grade};
+  return {items, inventoryFull, grade:res.grade, gems};
 }
 // Categoría visible de un objeto (SET es verde aunque su poder base sea de legendario).
 function itemTier(it){ return it.set ? "set" : (LOOT_TIER_META[it.rarity] ? it.rarity : "comun"); }
