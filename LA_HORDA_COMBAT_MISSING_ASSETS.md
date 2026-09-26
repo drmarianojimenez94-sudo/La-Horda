@@ -210,6 +210,19 @@ wings made of light tendrils, not feathers), serene and benevolent pose holding 
 breathing loop with the light ribbons swaying, 256x256 per frame, front view
 ```
 
+### HS-01b — Ángel Corrompido (forma 1 del jefe final) — PRIORIDAD P0
+Hoy: el sprite del Hechicero recoloreado en código (oro → carmesí, blanco → hueso), alas corruptas dibujadas
+en código (plumas negras con vena encendida) y los cuatro cristales orbitando. Funciona, pero con arte real
+este es EL momento del juego. Si ya tenés las imágenes del ángel con alas y del ángel corrompido que
+mencionaste, mandalas: el recortador ya está listo (tools/art/hechicero/).
+```
+[prefijo] + fallen archangel boss, the same hooded sorcerer now corrupted: torn crimson and black robes, cracked
+golden halo turned blood-red, two huge black feathered wings with broken feathers and glowing ember-red veins,
+four small crystals orbiting him (violet, ice-blue, amber, white-gold), 3/4 top-down view; sheets: idle 4 frames
+(wings breathing), cast 6 frames (arms up, crystals flare), attack 4 frames, hit 2 frames, death 6 frames
+(wings shatter into feathers and ash), 256x256 per frame
+```
+
 ### HS-02 — Golem de Cuerpos (animaciones)
 Hoy: 3 poses estáticas de la hoja (se desliza al caminar).
 ```

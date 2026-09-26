@@ -1,6 +1,6 @@
 // Final de campaña (js/arenas/infernal/inf-hechicero.js): el Hechicero Supremo es el subjefe del
 // nivel 9 de la Infernal (huye en vez de morir) y el jefe final tiene 3 formas:
-// Hechicero (cinemática) -> Golem de Cuerpos -> Demonio Mayor.
+// Ángel Corrompido (le roba los cristales al jugador, poderes de los 4 Guardianes) -> Golem de Cuerpos -> Demonio Mayor.
 //   (python3 -m http.server 8771 &) ; node tools/items/t_hechicero.js
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
@@ -41,19 +41,37 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('HECH.usa_sus_habilidades', r1.atk > 5, r1);
   check('HECH.arte_cargado', r1.atlas, r1);
   check('HECH.huye_en_vez_de_morir', r1.dead && r1.dying === 0 && r1.champ, r1);
-  // ---- jefe final: 3 formas ----
-  const r2 = await E(() => { __start(10); runLevel = LEVEL_COUNT; levelTimer = levelDuration + 1; __step(32);
-    const g = boss; if (!g) return { none: true };
-    const t0 = g.type, hp0 = g.hp; damageEnemy(g, 500, {src:player}); const cineBlock = g.hp === hp0;
+  // ---- jefe final: 3 formas (Ángel Corrompido -> Golem de Cuerpos -> Demonio Mayor) ----
+  const r2 = await E(() => { __start(10);
+    save.crystals = {espora:true, escarcha:true, piedra:false};
+    const used = {}; for (const k of Object.keys(BOSS_ATTACKS)) { const f = BOSS_ATTACKS[k]; BOSS_ATTACKS[k] = function(){ const r = f.apply(this, arguments); if (r) used[k] = (used[k]||0) + 1; return r; }; }
+    runLevel = LEVEL_COUNT; levelTimer = levelDuration + 1; __step(32);
+    const a = boss; if (!a) return { none: true };
+    const t0 = a.type, hp0 = a.hp; damageEnemy(a, 500, {src:player}); const cineBlock = a.hp === hp0;
+    __step(1200); const stole = CRYSTAL_FX.on && CRYSTAL_FX.reverse;
+    __step(3000); const cineDone = !a.cine;
+    for (let i = 0; i < 900; i++){ __step(16); a.hp = Math.min(a.maxHp, Math.max(a.hp, a.maxHp*0.25)); if (i === 450) a.hp = a.maxHp*0.3; }
+    const angelMoves = Object.keys(used);
+    const hp1 = a.maxHp;
+    __kill(a); __step(32);
+    const g = boss; const t1 = g && g.type;
     const sets = []; for (let i = 0; i < 200; i++){ __step(16); if (g.packSet && !sets.includes(g.packSet)) sets.push(g.packSet); }
     let busy = 0; for (let i = 0; i < 500; i++){ __step(16); if (g.bossWind || g.channel || g.packSet) busy++; g.hp = Math.max(g.hp, g.maxHp*0.6); }
+    const hpG = g.maxHp;
     __kill(g); __step(32);
-    const b2 = boss; const t2 = b2 && b2.type, name2 = b2 && b2.name, alive2 = b2 && b2.alive, st2 = state;
+    const b2 = boss; const t2 = b2 && b2.type, name2 = b2 && b2.name, alive2 = b2 && b2.alive, st2 = state, dk = b2 && b2.designKey;
+    for (const k in used) delete used[k];
+    for (let i = 0; i < 2400; i++){ __step(16); b2.hp = Math.max(b2.hp, b2.maxHp*0.15); if (i === 800) b2.hp = b2.maxHp*0.5; if (i === 1600) b2.hp = b2.maxHp*0.2; }
+    const demonMoves = Object.keys(used), hpD = b2.maxHp;
     __kill(b2); __step(3000);
-    return { t0, cineBlock, sets, busy, t2, name2, alive2, st2, finalState: state, runEnding: typeof runEnding !== 'undefined' ? runEnding : null }; });
-  check('FINAL.forma2_golem_con_transformacion', r2.t0 === 'golem_cuerpos' && r2.cineBlock && r2.sets.includes('pre') && r2.sets.includes('tf'), r2);
+    return { t0, cineBlock, stole, cineDone, angelMoves, t1, sets, busy, t2, name2, alive2, st2, dk, demonMoves, hp:[hp1, hpG, hpD], finalState: state, runEnding: typeof runEnding !== 'undefined' ? runEnding : null }; });
+  check('FINAL.forma1_angel_corrompido_con_cinematica', r2.t0 === 'angel_corrompido' && r2.cineBlock && r2.cineDone, r2);
+  check('FINAL.te_arranca_los_cristales', r2.stole, r2);
+  check('FINAL.angel_usa_los_poderes_de_los_cuatro', ['acEspora','acEscarcha','acPiedra','acCuatro'].every(k => r2.angelMoves.includes(k)) && r2.angelMoves.some(k => /^hs/.test(k)), r2.angelMoves);
+  check('FINAL.forma2_golem_con_transformacion', r2.t1 === 'golem_cuerpos' && r2.sets.includes('pre') && r2.sets.includes('tf'), r2);
   check('FINAL.golem_ataca_despues', r2.busy > 20, r2);
-  check('FINAL.forma3_demonio_nace_del_golem', r2.t2 === 'demonio_mayor' && r2.alive2 && /Forma Final/.test(r2.name2) && r2.st2 === 'playing', r2);
+  check('FINAL.forma3_demonio_nace_del_golem', r2.t2 === 'demonio_mayor' && r2.alive2 && /Forma Final/.test(r2.name2) && r2.st2 === 'playing' && r2.dk === 'demonio_final', r2);
+  check('FINAL.forma3_usa_todo', r2.demonMoves.some(k => /^dem/.test(k)) && r2.demonMoves.some(k => /^ac/.test(k)) && r2.demonMoves.some(k => /^(hs|gc)/.test(k)), r2.demonMoves);
   check('FINAL.matar_la_forma3_gana', r2.finalState !== 'playing' || !!r2.runEnding, r2);
   check('HECH.sin_errores', errors.length === 0, errors);
   await browser.close();

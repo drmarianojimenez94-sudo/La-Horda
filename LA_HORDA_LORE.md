@@ -17,7 +17,7 @@ en la pantalla previa).
 
 | # | Guardián (antes) | Corrompido en | Dónde lo enfrentás | Cristal | Color |
 |---|---|---|---|---|---|
-| 1 | **La Madre Espora** — sanadora del bosque profundo, unía todo lo vivo con sus raíces | La colonia que infecta todo | Jefa del **Reino Micelial** | Cristal de Espora | verde bioluminiscente |
+| 1 | **La Madre Espora** — sanadora del bosque profundo, unía todo lo vivo con sus raíces | La colonia que infecta todo | Jefa del **Reino Micelial** | Cristal de Espora | violeta (el color de todo su arte) |
 | 2 | **El Mago de Hielo** — detenía a la Horda congelando sus caminos | El frío que le congeló el alma; cae como Ángel Caído de Hielo | Jefe de la **Arena de Hielo** | Cristal de Escarcha | celeste hielo |
 | 3 | **El Guardián del Laberinto** — cerraba los caminos por donde avanzaba la Horda | Se volvió parte de sus propios muros | Subjefe del **Laberinto** (nivel 6) | Cristal de Piedra | ámbar |
 | 4 | **El Hechicero Supremo** — el más sabio de los cuatro | La ambición: no quiere contener a la Horda, quiere **ser** la Horda | Te guía en toda la campaña; subjefe en la **Infernal** (nivel 9) y **jefe final** | Cristal del Juicio | oro blanco |

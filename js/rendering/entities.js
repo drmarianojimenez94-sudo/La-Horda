@@ -257,6 +257,7 @@ function drawEnemy(e){
     }
     ctx.restore();
   }
+  if(e.type==="angel_corrompido") hechDrawAngelBack(e, P); // alas corruptas detrás del cuerpo (inf-hechicero.js)
   // Cuerpo con la pose del sistema de animación (solo transformación visual: la hitbox no se mueve).
   ctx.save();
   animApply(e.x, e.y, P);
@@ -275,6 +276,7 @@ function drawEnemy(e){
     ctx.restore();
   }
   drawBossSkillAnim(e);
+  if(e.type==="angel_corrompido") hechDrawAngelFront(e); // los cuatro cristales orbitando
   drawEnemyOverlays(e);
 }
 // Dibujo del cuerpo del enemigo según qué arte real tenga (sin sombra/estado/barras): lo

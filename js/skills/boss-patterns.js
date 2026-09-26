@@ -305,7 +305,7 @@ const BOSS_DESIGNS = {
     ]
   }
 };
-function bossDesignFor(e){ return BOSS_DESIGNS[e.type] || null; }
+function bossDesignFor(e){ return BOSS_DESIGNS[e.designKey || e.type] || null; } // designKey: otra pelea con el mismo cuerpo (Demonio Mayor — Forma Final)
 
 // Demonio Mayor: una sola vez, al bajar del 40%, se regenera unos segundos (ventana para
 // meterle todo el daño posible antes de que recupere demasiado).

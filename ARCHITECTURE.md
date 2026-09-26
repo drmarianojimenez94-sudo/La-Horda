@@ -199,7 +199,8 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
   recetario y colección.
 - `js/net/net-chat.js` — chat de la Sala (el anti-spam real vive en `server/relay.js`).
 - `js/arenas/infernal/inf-hechicero.js` — el Hechicero Supremo: subjefe del nivel 9 de la Infernal (huye al caer)
-  y jefe final en 3 formas (Hechicero → Golem de Cuerpos → Demonio Mayor). Arte recortado con `tools/art/hechicero/`.
+  y jefe final en 3 formas (Ángel Corrompido con los poderes de los 4 Guardianes → Golem de Cuerpos → Demonio Mayor —
+  Forma Final, diseño `demonio_final`). Arte recortado con `tools/art/hechicero/`.
 - `js/ui/run-intro.js` — pantalla previa a la partida: el Hechicero angelical (alas de luz en canvas) y la ficha
   clara de la arena (`ARENA_BRIEF`: qué es, qué te mata, qué te ayuda, objetivo).
 - `js/rendering/fx-contrast.js` — pase de contraste de efectos: sombra de contraste por arena, modo brillo del

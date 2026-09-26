@@ -13,7 +13,7 @@
    Se guarda en save.crystals. En cooperativo el premio viaja como evento (cada uno lo guarda).
    ============================================================ */
 const CRYSTAL_DEFS = {
-  espora:   {name:"Cristal de Espora",   guardian:"la Madre Espora",          arena:"micelial",  rgb:"120,255,170", dark:"#1f6b48", mid:"#4fd08a", light:"#c8ffe0"},
+  espora:   {name:"Cristal de Espora",   guardian:"la Madre Espora",          arena:"micelial",  rgb:"200,120,255", dark:"#4a1f6b", mid:"#b06ae6", light:"#f0dcff"},
   escarcha: {name:"Cristal de Escarcha", guardian:"el Mago de Hielo",         arena:"hielo",     rgb:"150,225,255", dark:"#2a5f86", mid:"#6fc3ef", light:"#e4f7ff"},
   piedra:   {name:"Cristal de Piedra",   guardian:"el Guardián del Laberinto", arena:"laberinto", rgb:"255,196,110", dark:"#7a4d1c", mid:"#d99a48", light:"#ffe7bf"}
 };
