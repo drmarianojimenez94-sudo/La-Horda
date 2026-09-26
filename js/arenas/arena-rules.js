@@ -14,8 +14,8 @@ function isArenaUnlocked(key){
   const i = ARENA_ORDER.indexOf(key);
   if(i <= 0) return i===0;
   const cleared = save.arenasCleared || {};
-  // La Fortaleza se sumó como 3ra arena: quien ya tenía abierto el Hielo (Acuática superada ANTES
-  // de que existiera) lo conserva (save.legacyHieloOpen, ver loadSave).
+  // La Fortaleza (3ra) y el Reino Micelial (4ta) se sumaron después: quien ya tenía abierto el
+  // Hielo antes de que existieran lo conserva (save.legacyHieloOpen, ver loadSave).
   if(key==="hielo" && save.legacyHieloOpen) return true;
   return !!cleared[ARENA_ORDER[i-1]];
 }
@@ -43,7 +43,8 @@ const ARENA_RULES = {
   hielo:     {name:"Frío Creciente",      icon:"❄", summary:n=>`Velocidad −${(n*2.2).toFixed(0)}% · enfriamientos +${(n*2.5).toFixed(0)}%`},
   laberinto: {name:"Muros que se Cierran",icon:"🗿", summary:n=>`Daño recibido +${Math.round(n*2.5)}% · derrumbes`},
   infernal:  {name:"Tierra Maldita",      icon:"🔥", summary:n=>`Curación −${Math.round(Math.min(50,n*5))}% · pozos de lava`},
-  fortaleza: {name:"Engranajes Implacables", icon:"⚙", summary:n=>`Trampas +${n*5}% de daño · la Fortaleza acelera`}
+  fortaleza: {name:"Engranajes Implacables", icon:"⚙", summary:n=>`Trampas +${n*5}% de daño · la Fortaleza acelera`},
+  micelial:  {name:"La Colonia se Expande", icon:"🍄", summary:n=>`Núcleos crecen +${n*6}% más rápido · la Madre despierta`}
 };
 let arenaRuleBossTimer = 0, arenaRuleBossStacks = 0;
 function arenaRule(){ return (!divinaMode && ARENA_RULES[currentArena]) || null; }

@@ -10,7 +10,7 @@ const aidAmb = [];
 for(let i=0;i<AID_AMB_MAX;i++) aidAmb.push({on:false, x:0, y:0, vx:0, vy:0, life:0, max:1, k:0, s:1, ph:0});
 let aidAmbN = 0, aidEruptT = 0, aidWind = 0;
 // presupuesto base por arena (se multiplica por vfxLoad: con hordas o FPS bajos, baja solo)
-const AID_AMB_BUDGET = { infernal:70, hielo:120, bosque:60, laberinto:50, acuatica:60, divina:60, fortaleza:80 };
+const AID_AMB_BUDGET = { infernal:70, hielo:120, bosque:60, laberinto:50, acuatica:60, divina:60, fortaleza:80, micelial:0 }; // (el Reino Micelial tiene su propio polvillo de esporas, mic-render.js)
 function aidAmbReset(){ for(const p of aidAmb) p.on = false; aidAmbN = 0; aidEruptT = 1500; }
 // kinds: 1 ceniza, 2 copo de nieve, 3 ráfaga (línea de viento), 4 hoja, 5 luciérnaga, 6 polvo,
 // 7 mota marina, 8 mota sagrada (dorada), 9 brasa infernal (divina norte)
@@ -83,7 +83,7 @@ function aidGrade(now){
   if(!player || player.duelActive) return;
   const A = currentArena;
   const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM;
-  const x0 = player.x - hw - 40, y0 = player.y - hh - 40, W = hw*2+80, H = hh*2+80;
+  const x0 = player.x - hw - 40, y0 = player.y - CAM_LIFT - hh - 40, W = hw*2+80, H = hh*2+80; // (CAM_LIFT: ver camera.js)
   ctx.save();
   if(A==="infernal"){
     // calor que sube desde abajo + borde oscuro: hostil, pero sin teñir todo de rojo
@@ -132,6 +132,12 @@ function aidGrade(now){
     ctx.fillStyle = g; ctx.fillRect(x0, y0, W, H);
     const v = ctx.createRadialGradient(player.x, player.y, hh*0.55, player.x, player.y, Math.max(hw,hh)*1.2);
     v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(8,4,2,0.42)");
+    ctx.fillStyle = v; ctx.fillRect(x0, y0, W, H);
+  } else if(A==="micelial"){
+    // caverna cerrada: bordes oscuros teñidos por la etapa del Reino (sin tinte cuando está muerto)
+    const v = ctx.createRadialGradient(player.x, player.y - CAM_LIFT, hh*0.5, player.x, player.y - CAM_LIFT, Math.max(hw,hh)*1.2);
+    const rgb = (typeof micStageRgb==="function" && typeof micS!=="undefined" && micS && !micS.dead) ? micStageRgb() : "10,8,12";
+    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(0.75, `rgba(${rgb},0.05)`); v.addColorStop(1, "rgba(6,2,10,0.5)");
     ctx.fillStyle = v; ctx.fillRect(x0, y0, W, H);
   } else if(A==="divina"){
     // norte corrupto (rojizo) / sur celestial (dorado), según dónde está la cámara

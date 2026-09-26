@@ -279,7 +279,9 @@ function drawEnemy(e){
 // Dibujo del cuerpo del enemigo según qué arte real tenga (sin sombra/estado/barras): lo
 // comparten el dibujo normal, el hit flash y la animación de muerte.
 function drawEnemyBody(e){
-  if(drawBossFxReplace(e)){
+  if(arenaHas("drawEnemyBody") && arenaHook("drawEnemyBody", e)){
+    // cuerpo propio de la arena (El Reino Micelial: núcleos, raíces, la Madre por partes)
+  } else if(drawBossFxReplace(e)){
     // habilidad del Dragón de Hielo en curso: reemplaza al sprite normal, no dibujar nada más
   } else if(drawAcuaticaReal(e)){
     // dibujado con éxito desde los sprites reales de la Arena Acuática (tiburones/medusa/cangrejo/sirena)

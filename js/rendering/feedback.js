@@ -93,7 +93,7 @@ function resetFeedback(){ hurtFlash = 0; screenFlash = 0; hurtDirs.length = 0; h
 
 /* ---------------- Dibujo en pantalla ---------------- */
 function _edgePoint(ang, margin){
-  const cx = VW/2, cy = VH/2 - CAM_Y_ANCHOR;
+  const cx = VW/2, cy = VH/2 - CAM_Y_ANCHOR + CAM_LIFT*CAM_ZOOM;
   const hw = VW/2 - margin, hh = VH/2 - margin;
   const c = Math.cos(ang), s = Math.sin(ang);
   const t = Math.min(Math.abs(hw/(c||1e-6)), Math.abs(hh/(s||1e-6)));
@@ -134,7 +134,7 @@ function drawScreenFeedback(){
   // 2) Dirección del daño recibido: arcos rojos alrededor del jugador (y flecha en el borde si
   //    el atacante está fuera de cámara).
   if(hurtDirs.length){
-    const cx = VW/2, cy = VH/2 - CAM_Y_ANCHOR;
+    const cx = VW/2, cy = VH/2 - CAM_Y_ANCHOR + CAM_LIFT*CAM_ZOOM;
     ctx.save(); ctx.lineCap = "round";
     for(const d of hurtDirs){
       const a = 1 - d.t/d.dur;

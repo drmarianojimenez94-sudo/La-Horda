@@ -50,6 +50,14 @@ const ARENA_MODS = {
               fireDmgMult:1.1, iceDmgMult:1.0, enemyDmgPerWave:0.145, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.87, enemyRegenPct:0, hazard:null, hasWalls:false,
               potionMult:1.25 },
+  // ARENA IV (cuarta en la campaña, entre la Fortaleza y el Hielo). "EL ESCENARIO CRECE, MADURA Y
+  // MUERE": el mapa entero es un organismo (la Madre Espora) con ciclo de vida por etapas, Núcleos
+  // Miceliales que infectan territorio y un jefe que ES la estructura del centro
+  // (js/arenas/micelial/). Sin hazard de piso genérico: el peligro es la infección y la colonia.
+  micelial: { label:"El Reino Micelial", icon:"🍄", desc:"Arena IV. Una caverna viva que crece, madura y muere. La Madre ya te está mirando.", hazardName:"La Colonia",
+              fireDmgMult:1.15, iceDmgMult:1.0, enemyDmgPerWave:0.148, unlockLevel:0,
+              heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.87, enemyRegenPct:0, hazard:null, hasWalls:false,
+              potionMult:1.3 },
   // Arena Divina: la de asedio 4v4. Todavía sin combate (Fase 1: solo el escenario), así que
   // sin debuffs propios por ahora -esto se termina de calibrar cuando exista el combate de
   // verdad. NO va en ARENA_ORDER a propósito: no tiene que aparecer en la selección normal
@@ -58,4 +66,4 @@ const ARENA_MODS = {
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:1.0, enemyRegenPct:0, hazard:null, hasWalls:false }
 };
-const ARENA_ORDER = ["bosque","acuatica","fortaleza","hielo","laberinto","infernal"];
+const ARENA_ORDER = ["bosque","acuatica","fortaleza","micelial","hielo","laberinto","infernal"];
