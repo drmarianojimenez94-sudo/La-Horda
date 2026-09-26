@@ -488,6 +488,7 @@ function update(dt){
   ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);
   updateEmergency(dt); // curación de emergencia: la parte que entra de a poco
+  updateBreakables(dt); // urnas, barriles, ánforas... (breakables.js)
   updateFireWalls(dt);
   updateTraps(dt);
   updateAxiomZones(dt);

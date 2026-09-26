@@ -116,7 +116,8 @@ const NET_COLLS = {
   iceWalls:          [()=>iceWalls, a=>{ iceWalls = a; }],
   activeAxiomVfx:    [()=>activeAxiomVfx, a=>{ activeAxiomVfx = a; }],
   musashiAfterimages:[()=>musashiAfterimages, a=>{ musashiAfterimages = a; }],
-  champFx:           [()=>champFx, a=>{ champFx = a; }] // El Libertador / Eren: zonas, avisos de pisada, jinetes, escarcha
+  champFx:           [()=>champFx, a=>{ champFx = a; }], // El Libertador / Eren: zonas, avisos de pisada, jinetes, escarcha
+  breakables:        [()=>breakables, a=>{ breakables = a; }] // urnas, barriles, ánforas que estallan contra la horda
 };
 // Estado global de la partida (no-entidades) que los invitados necesitan para HUD/dibujo.
 const NET_GLOBALS = {

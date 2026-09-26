@@ -77,6 +77,7 @@ function damageEnemy(e, amount, opts){
   vfxHit(e, src, opts, crit);
   if(!opts.fromProc || pow>=3) impactFeedback(e, dmg, crit, opts, pow, src);
   if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); skillEvoOnHit(src, e, dmg, opts); }
+  if(breakables.length && src && src.classKey) breakablesOnHit(e, src); // golpe pegado a una urna/barril la arma (encadena)
   if(src && src.stats){
     if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + usefulDmg;
     if(opts.slow || opts.stun || opts.freeze || opts.knockback) src.stats.ccApplied = (src.stats.ccApplied||0) + 1;
