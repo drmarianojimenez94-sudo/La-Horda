@@ -237,6 +237,7 @@ function render(){
 
   ctx.restore();
   if(arenaHas("drawScreen")) arenaHook("drawScreen"); // minimapa de las arenas grandes
+  ctxDrawScreen(); // flechas hacia objetivos contextuales importantes fuera de cámara
   drawChampFxScreen();       // Cruce de los Andes (Cordillera + nieve) y siluetas de El Retumbar
   drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }

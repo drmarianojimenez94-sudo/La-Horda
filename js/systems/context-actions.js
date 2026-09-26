@@ -13,6 +13,7 @@
        onComplete(t, users)            al llenarse la barra (lo decide el anfitrión)
        botWorth(h, t)                  (opcional) cuánto le conviene a un bot ir (0 = nunca)
        decay                           (opcional) ms perdidos por ms sin nadie (por defecto 0.5)
+       pointer(t)                      (opcional) true = si está fuera de cámara, flecha en el borde
      }
    - MANTENER el botón contextual (el mismo de Revivir: revivir tiene prioridad) = h._ctxHold.
      El progreso lo lleva SOLO el anfitrión (ctxUpdate, después de updateRevives); el invitado
@@ -214,6 +215,29 @@ function ctxDraw(){
     }
     ctx.fillStyle = "#fff"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(k.icon, bx, by+1);
+    ctx.restore();
+  }
+}
+
+/* ---- Flechas en el borde de la pantalla hacia objetivos importantes fuera de cámara ---- */
+function ctxDrawScreen(){
+  const ts = ctxTargets(); if(!ts || !player || !player.alive) return;
+  const now = animNow/1000, m = 30;
+  for(const t of ts){
+    const k = CTX_KINDS[t.kind]; if(!k || !k.pointer || t.done || !k.pointer(t)) continue;
+    if(inView(t.x, t.y, -40) || Math.hypot(t.x-player.x, t.y-player.y) > 1600) continue;
+    const s = worldToScreen(t.x, t.y), cx = VW/2, cy = VH/2;
+    const dx = s.x-cx, dy = s.y-cy, l = Math.hypot(dx, dy)||1;
+    const kx = (VW/2 - m)/Math.abs(dx||1e-6), ky = (VH/2 - m)/Math.abs(dy||1e-6), kk = Math.min(kx, ky);
+    const x = cx + dx*kk, y = cy + dy*kk, a = Math.atan2(dy, dx);
+    ctx.save(); ctx.translate(x, y);
+    ctx.globalAlpha = 0.75 + 0.25*Math.sin(now*5);
+    ctx.fillStyle = "rgba(10,8,12,0.8)"; ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = k.color || "#ffcf5c"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.rotate(a); ctx.fillStyle = k.color || "#ffcf5c";
+    ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(14, -6); ctx.lineTo(14, 6); ctx.closePath(); ctx.fill();
+    ctx.rotate(-a); ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(t.kind==="lab_seal" ? LAB_NUM[t.n] : k.icon, 0, 1);
     ctx.restore();
   }
 }

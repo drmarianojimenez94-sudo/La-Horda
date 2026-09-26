@@ -117,6 +117,7 @@ function hieCtxTargets(){
 }
 CTX_KINDS.hie_brazier = {
   label:"Encender", icon:"🔥", color:"#ffb347",
+  pointer(){ return (player._cold||0) > 40 && !HIE.br.some(b=>b.lit); },
   onComplete(b, users){
     b.done = false; hieLight(b, "hero"); b.by = heroes.indexOf(users[0]);
     const who = users[0];

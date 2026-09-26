@@ -185,6 +185,7 @@ function infCtxTargets(){
 }
 CTX_KINDS.inf_fissure = {
   label:"Cerrar", icon:"✖", color:"#ff7a2a",
+  pointer(f){ return f.stage >= 2; },
   onTick(f, users, dt){
     for(const h of users){
       damageHero(h, h.maxHp*INF_CFG.heatPct*dt/1000, {x:f.x, y:f.y});

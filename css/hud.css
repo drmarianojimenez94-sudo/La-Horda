@@ -334,3 +334,11 @@
 #tut-panel .tut-goal{font-family:'VT323',monospace; font-size:1.1rem; color:#ffcf5c; margin-top:4px;}
 #tut-panel .tut-goal.done{color:#8effb4;}
 #tut-panel .tut-goal:empty{display:none;}
+/* celulares apaisados (poca altura): el cuadro del Hechicero más compacto para no tapar la horda */
+@media (max-height: 500px){
+  #tut-panel{ width:max(240px, min(340px, calc(100vw - 460px))); padding:5px 8px; gap:7px; }
+  #tut-panel .tut-face{ flex-basis:28px; height:28px; }
+  #tut-panel .tut-who{ font-size:0.42rem; margin-bottom:2px; }
+  #tut-panel .tut-text{ font-size:0.9rem; }
+  #tut-panel .tut-goal{ font-size:0.92rem; margin-top:2px; }
+}
