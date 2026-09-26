@@ -91,6 +91,7 @@ function startRun(fromLevel){
   vfxResetRun();
   resetFeedback();
   resetMythicPowers(); // suelo consagrado y otros efectos de objetos míticos
+  resetEnemyRoles(); // avisos de roles enemigos vistos
   hazardZones = []; arenaRuleTimer = 8000; resetArenaRule();
   bossHudHide();
   if(typeof arenaTitleCardHide==="function") arenaTitleCardHide();

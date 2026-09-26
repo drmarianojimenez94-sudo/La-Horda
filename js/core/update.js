@@ -114,6 +114,7 @@ function update(dt){
     // El enemigo persigue al héroe vivo más cercano (jugador o aliado), salvo que esté provocado
     let tgt;
     if(e.tauntedBy && e.tauntedBy.alive && e.tauntTimer>0){ tgt = e.tauntedBy; e.tauntTimer -= dt; }
+    else if(e.role==="cazador") tgt = roleHunterTarget(e) || nearestHeroTo(e.x, e.y); // va por el más frágil
     else { tgt = arenaHas("enemyTarget") ? arenaHook("enemyTarget", e) : nearestHeroTo(e.x, e.y); }
     if(!tgt) continue;
     const dx = tgt.x-e.x, dy = tgt.y-e.y;
@@ -125,6 +126,8 @@ function update(dt){
       e.bossWind.t += dt;
       if(e.bossWind.t >= e.bossWind.dur){ const w = e.bossWind; e.bossWind = null; w.fn(); }
     }
+    // Roles enemigos (js/enemies/enemy-roles.js): sanador, suicida, artillero... true = ya actuó.
+    if(e.role){ roleAnnounce(e); if(updateEnemyRole(e, dt, tgt, dist)) continue; }
 
     // ---- Jefes finales: director de fases y rotación de ataques (js/skills/boss-patterns.js).
     // El Leviatán además orbita el borde (su bloque de más abajo). ----
@@ -424,14 +427,17 @@ function update(dt){
       continue;
     }
 
-    const spd = e.bossWind ? 0 : e.speed*(1-e.slowAmt); // se planta mientras carga un golpe telegrafiado
+    const cmd = roleCommandBuff(e) ? ROLE_CFG.comandante : null; // un Comandante cerca: más rápidos y más fuertes
+    const spd = e.bossWind ? 0 : e.speed*(1-e.slowAmt)*(cmd ? 1+cmd.spdBuff : 1); // se planta mientras carga un golpe telegrafiado
     if(e.ranged){
       if(dist > e.range*0.7){
         aidEnemyStep(e, dx, dy, dist, spd, dt); // rodea muros/obstáculos si la arena los tiene
       }
       e.atkCd -= dt;
       if(dist <= e.range && e.atkCd<=0){
+        const d0 = e.dmg; if(cmd) e.dmg = d0*(1+cmd.dmgBuff);
         e.atkCd = enemyRangedAttack(e, tgt, dx, dy, dist); // cada familia dispara a su manera (ranged-styles.js)
+        e.dmg = d0;
       }
     } else {
       if(dist > e.radius+tgt.radius-4){
@@ -441,7 +447,7 @@ function update(dt){
       if(dist <= e.radius+tgt.radius+6 && e.atkCd<=0){
         e.atkCd = 900;
         e.attackAnim = 280;
-        damageHero(tgt, e.dmg*(e.basicMult||1), e);
+        damageHero(tgt, e.dmg*(e.basicMult||1)*(cmd ? 1+cmd.dmgBuff : 1), e);
       }
     }
   }
@@ -507,7 +513,7 @@ function update(dt){
       // más sensación de horda desde temprano). Se reduce a 1 desde el nivel 4 en adelante, así
       // que NO afecta el ritmo ya calibrado de niveles medios/tardíos ni la curva de dificultad.
       const burstSize = runLevel<=1 ? 3 : (runLevel<=3 ? 2 : 1);
-      for(let i=0;i<burstSize;i++) spawnEnemy(pickFromPool(spawnPoolFor(runLevel)), false);
+      for(let i=0;i<burstSize;i++) maybeAssignRole(spawnEnemy(pickFromPool(spawnPoolFor(runLevel)), false));
     } else if(spawnTimer<=0){
       spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el campeón caiga
     }

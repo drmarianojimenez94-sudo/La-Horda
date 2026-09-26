@@ -139,9 +139,19 @@ function drawScreenFeedback(){
   let n = 0;
   for(const e of enemies){
     if(n >= 6) break;
-    if(!e.alive || !(e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) continue;
+    // roles de apoyo (sanador, resucitador, invocador, comandante): "ese tiene que morir primero"
+    const sup = e.role && ROLE_OFFSCREEN[e.role];
+    if(!e.alive || !(sup || e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) continue;
     if(inView(e.x, e.y, -30)) continue;
     const ang = Math.atan2(e.y-player.y, e.x-player.x), p = _edgePoint(ang, 22);
+    if(sup){
+      if(Math.hypot(e.x-player.x, e.y-player.y) > 1100) continue;
+      const C = ROLE_CFG[e.role], col = `rgb(${C.rgb})`;
+      ctx.globalAlpha = 0.7 + 0.3*Math.sin(now/160 + n);
+      _arrow(p.x, p.y, ang, 11, col, "rgba(0,0,0,0.7)");
+      ctx.font = "bold 11px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = col; ctx.fillText(C.ico, p.x - Math.cos(ang)*20, p.y - Math.sin(ang)*20 + 4);
+      ctx.globalAlpha = 1; n++; continue;
+    }
     const col = e.rank==="jefe" ? "#ffb300" : (e.rank==="subjefe" ? "#ff8a3d" : "#ffe36a");
     const pulse = 0.7 + 0.3*Math.sin(now/180 + n);
     ctx.globalAlpha = pulse;

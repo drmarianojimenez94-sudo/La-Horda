@@ -41,7 +41,9 @@ function botDangerVec(x, y, pad){
   return hit ? {x:vx, y:vy} : null;
 }
 
-function _valueOf(e){ return e.rank==="jefe" ? 5 : e.rank==="subjefe" ? 4 : e.rank==="elite" ? 3 : e.rank==="subelite" ? 2 : 1; }
+// Roles enemigos de apoyo: los bots los priorizan como a un élite (matar al sanador primero).
+const BOT_ROLE_VALUE = {sanador:2.2, resucitador:2, invocador:2, comandante:2, artillero:1.5, protector:1.2, carcelero:1, cazador:1};
+function _valueOf(e){ return (e.rank==="jefe" ? 5 : e.rank==="subjefe" ? 4 : e.rank==="elite" ? 3 : e.rank==="subelite" ? 2 : 1) + (e.role ? BOT_ROLE_VALUE[e.role]||0 : 0); }
 // Objetivo según el rol. Devuelve un enemigo (o null).
 function botPickTarget(h, range){
   // prioridades propias de la arena (p.ej. el Chamán y los Núcleos del Reino Micelial)

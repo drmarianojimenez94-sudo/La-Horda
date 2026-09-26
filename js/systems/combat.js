@@ -8,6 +8,7 @@ function damageEnemy(e, amount, opts){
   opts = opts || {};
   const src = opts.src || player;
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
+  if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
   // e.fy ya apuntan hacia donde está mirando (su objetivo actual), así que compara contra eso
   // en vez de armar un sistema de facing nuevo-.
@@ -149,6 +150,7 @@ function killEnemy(e){
   e.alive = false;
   // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
   e._deathKind = goreDeathKind(e);
+  if(e.role) roleOnDeath(e);
   { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl); }
   // Nigromante — Plaga de los Condenados: el contagio al morir un maldito tiene que dispararse
   // sin importar QUÉ lo mató (antes solo se llamaba desde el tick de daño de la propia maldición,

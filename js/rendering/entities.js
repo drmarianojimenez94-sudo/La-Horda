@@ -330,6 +330,7 @@ function drawEnemyBody(e){
 }
 // Estados, nombre y barra de vida: fuera de la transformación, para que no bailen con la pose.
 function drawEnemyOverlays(e){
+  if(e.role) drawEnemyRoleMarks(e); // insignia + anillo del rol enemigo (enemy-roles.js)
   if(e.armorTimer>0){
     // Armadura de Hielo activa: aura celeste pulsante mientras dura la reducción de daño
     const pulse = 0.55+0.45*Math.sin(performance.now()/150);

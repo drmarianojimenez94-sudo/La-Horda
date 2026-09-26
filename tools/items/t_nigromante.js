@@ -20,7 +20,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     window.__start = (lv) => { for (const k of Object.keys(save.champions)) save.champions[k].unlocked = true; save.stash = []; for (const k in save.champions) save.champions[k].equipment = mkEquipment();
       selectedClass = 'nigromante'; currentArena = 'bosque'; lobbyAllies = ['tanque','guerrero','soporte']; startRun(lv || 3); spawnTimer = 1e12; enemies.length = 0; levelDuration = 9e9; invalidatePassiveCache(); };
     window.__foe = (dx, dy, t) => { const e = spawnEnemy(t || 'zombie', false); e.x = player.x + dx; e.y = player.y + dy; return e; };
-    window.__kill = (e) => damageEnemy(e, e.hp + 10, {src:player});
+    window.__kill = (e) => damageEnemy(e, e.hp*3 + 50, {src:player});
     window.__step = (ms) => { let t = 0; while (t < ms && state === 'playing') { for (const h of heroes) h.hp = Math.max(h.hp, h.maxHp*0.8); update(16); t += 16; } };
   });
 
