@@ -280,6 +280,18 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     await E(() => { __start('bosque', 1); __calm(); updateAllies = function(){}; __step(500); });
     t.again = await E(() => document.getElementById('tut-panel').classList.contains('hidden') || !/joystick/.test(document.querySelector('#tut-panel .tut-goal').textContent));
     await shot('tut_hechicero');
+    // conceptos de combate: aparecen cuando pasa la cosa, uno por vez, y no se repiten
+    const combat = [];
+    const waitTip = async (setup, key) => { await E(setup); for (let i = 0; i < 20; i++){ await sleep(400); await E(() => __step(32, false)); const k = await E(() => TUT.key); if (k === key){ combat.push(key); await E(() => { TUT.until = 0; }); await sleep(100); await E(() => __step(32, false)); return true; } if (k && k !== key){ await E(() => { TUT.until = 0; }); await sleep(100); await E(() => __step(32, false)); } } return false; };
+    await E(() => { save.tut = {basics:1, b_move:1, b_attack:1, b_skill:1, revive:1, rune:1, ambush:1}; __start('bosque', 1); __calm(); updateAllies = function(){}; });
+    await waitTip(() => {}, 'cooldown');
+    await waitTip(() => { player.hp = player.maxHp*0.3; }, 'hurt');
+    await waitTip(() => { player.hp = player.maxHp; player.energy = 0; }, 'energy');
+    await waitTip(() => { player.energy = player.maxEnergy; const e = spawnEnemy('bestia_bosque', false); e.rank = 'elite'; e.x = player.x + 200; e.y = player.y; e.speed = 0; e.dmg = 0; }, 'elite');
+    await waitTip(() => { enemies.length = 0; const e = spawnEnemy('bestia_bosque', false); e.rank = 'subjefe'; e.x = player.x + 200; e.y = player.y; e.speed = 0; e.dmg = 0; }, 'boss');
+    await waitTip(() => { enemies.length = 0; activeChampion = null; runLevel = 2; }, 'levelup');
+    const again2 = await E(() => { const s = Object.keys(save.tut).filter(k => ['cooldown','hurt','energy','elite','boss','levelup'].includes(k)).length; return s; });
+    check('TUT.conceptos_de_combate_cuando_aparecen', combat.join(',') === 'cooldown,hurt,energy,elite,boss,levelup' && again2 === 6, { combat, again2 });
     check('TUT.empieza_con_moverse', /joystick/.test(t.first) && t.vis, t);
     check('TUT.moverse_atacar_habilidad_en_orden', t.moved && /Ataque/.test(t.second) && t.attack && /habilidad/.test(t.third) && t.skill && t.basics, t);
     check('TUT.revivir_se_ensena_al_primer_caido', /✚/.test(t.revive) && t.reviveDone, t);

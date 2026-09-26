@@ -7,6 +7,8 @@
    cuando hace falta y cada concepto se enseña UNA vez, jugando. Lo aprendido se guarda en
    save.tut[concepto] (persistente): no se repite en la próxima partida.
    - Básicos (la primera partida, en orden): moverse -> atacar -> habilidad.
+   - Combate, la primera vez que aparece cada cosa: recarga, daño recibido, energía, enemigos
+     de más rango, jefes y sus avisos, refuerzo al subir de nivel, mejorar una habilidad.
    - Conceptos que aparecen cuando pasan: revivir (el primer caído), runas y emboscadas (Ruinas),
      fisuras (Infernal), frío y braseros (Gélida)... Las arenas llaman a tutSay().
    Cada cliente tiene el suyo (en cooperativo, cada jugador ve sus propios consejos).
@@ -19,8 +21,10 @@ function tutSeen(key){ return !!tutFlags()[key]; }
 function tutMark(key){ if(!tutSeen(key)){ tutFlags()[key] = 1; persist(); } }
 // Muestra una línea del Hechicero (si ese concepto no se enseñó todavía). `goal` = el objetivo
 // concreto ("Mantené ✚..."). `ms` = cuánto queda si nadie lo cumple (después se da por visto).
-function tutSay(key, text, goal, ms){
-  if(tutSeen(key) || (TUT.key && TUT.key!==key && performance.now() < TUT.until - 1500)) return false;
+// `urgent` = pasa por encima de un consejo que se esté mostrando (p.ej. revivir a un caído).
+function tutSay(key, text, goal, ms, urgent){
+  if(tutSeen(key) || (!urgent && TUT.key && TUT.key!==key && performance.now() < TUT.until - 1500)) return false;
+  if(urgent && TUT.key && TUT.key!==key && !TUT.key.startsWith("b_")) tutMark(TUT.key); // el que se tapa se da por visto
   const el = document.getElementById("tut-panel"); if(!el) return false;
   el.querySelector(".tut-text").textContent = text;
   const g = el.querySelector(".tut-goal"); g.textContent = goal ? "▶ " + goal : ""; g.classList.remove("done");
@@ -72,8 +76,20 @@ function tutTick(){
       tutSay("b_end", "Bien. Seguí. Todavía no es hora de que sepas lo que sé.", null, 5000);
     }
   }
+  // ---- conceptos de combate, cuando aparecen por primera vez (después de los básicos) ----
+  if(tutSeen("basics") && !TUT.key){
+    const near = (r)=>enemies.some(e=>e.alive && (Array.isArray(r) ? r.includes(e.rank) : e.rank===r) && Math.hypot(e.x-player.x, e.y-player.y) < 520);
+    if(!tutSeen("cooldown")) tutSay("cooldown", "Todo poder se recarga. Mirá cómo se llena el botón antes de volver a usarlo.", null, 6000);
+    else if(!tutSeen("hurt") && player.alive && player.hp < player.maxHp*0.5) tutSay("hurt", "Te están lastimando. Alejate de la horda… o buscá una poción roja.", null, 7000);
+    else if(!tutSeen("energy") && player.energy < player.maxEnergy*0.2) tutSay("energy", "Sin energía no hay habilidades. Vuelve sola… o con las pociones azules.", null, 7000);
+    else if(!tutSeen("elite") && near(["elite","subelite"])) tutSay("elite", "No todos son iguales. Los que brillan distinto valen más… y pegan más.", null, 7000);
+    else if(!tutSeen("boss") && near(["jefe","subjefe"])) tutSay("boss", "Los grandes avisan antes de golpear. Si el suelo se marca, no estés ahí.", null, 8000);
+    else if(!tutSeen("levelup") && runLevel >= 2) tutSay("levelup", "Cada nivel superado te deja elegir un refuerzo para esta partida. Elegí lo que te falta.", null, 7000);
+    else if(!tutSeen("skillup") && document.querySelector(".skill-plus:not(.hidden)")) tutSay("skillup", "Aprendiste algo. Hacé más fuerte una habilidad.", "Tocá el + junto a una habilidad", 12000);
+  }
+  if(TUT.key==="skillup" && !document.querySelector(".skill-plus:not(.hidden)")) tutDone("skillup");
   // ---- revivir: la primera vez que cae un compañero ----
   if(!tutSeen("revive") && TUT.key!=="revive" && player.alive && heroes.some(h=>h!==player && !h.alive))
-    tutSay("revive", "Nadie cae del todo mientras alguien lo sostenga.", "Mantené ✚ junto al caído para revivirlo", 12000);
+    tutSay("revive", "Nadie cae del todo mientras alguien lo sostenga.", "Mantené ✚ junto al caído para revivirlo", 12000, true);
   if(TUT.key==="revive" && (st.revives||0) > 0) tutDone("revive");
 }

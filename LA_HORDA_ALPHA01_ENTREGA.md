@@ -84,7 +84,7 @@ Documentos:
 | DESIGN ISSUE | La curva está despareja: las arenas 1-4 se pasan en 1-2 intentos. |
 | ASSET MISSING | El Hechicero y el Demonio de la Horda (P0): sin ellos no hay jefe final. Todo el arte de las mecánicas nuevas es provisorio (P1). Tres jefes con un solo frame (P1). |
 | DESIGN ISSUE | Ciudad Maldita, Abismo y Minas Profundas: **EN DESARROLLO**. Tampoco existen las 5 Pruebas de la Divina. |
-| DESIGN ISSUE | El tutorial cubre 7 de los 18 conceptos del documento. |
+| DESIGN ISSUE | El tutorial cubre 16 de los 18 conceptos del documento (faltan targeting y XP). |
 | BOT/AI ISSUE | El piloto automático de la simulación no usa las mecánicas nuevas, así que las simulaciones subestiman el poder del jugador que las usa. |
 | CODE BUG (flake preexistente) | `BOTS.vuelven_a_la_zona_segura` (Micelial) falla a veces porque `botDangerVec` suma avisos aleatorios que siguen activos. |
 | UI/UX ISSUE | Íconos de estado sobre los enemigos. |

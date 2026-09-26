@@ -73,7 +73,7 @@ Lo que sí es seguro es que **el Hielo sigue siendo la pared de la campaña** (�
 | Champions / composición | Tanque, Mago, Cazadora + 3 bots de roles distintos |
 | Duración | ≈ 5 min por partida (promedio de la simulación: 300-360 s) |
 | Resultado | Se pasa en 3-6 intentos desde el nivel 1 de cuenta |
-| Mechanics probadas | Runas (carga, activación con el botón real, atrapa y lastima alrededor, el jefe apenas se frena, recarga), emboscadas (aviso de 2,6 s, jauría desde la maleza, nunca en el nivel 1 ni con subjefe), fuego que quema la maleza, bots que usan runas con horda, tutorial del Hechicero (moverse → atacar → habilidad, revivir; no se repite) |
+| Mechanics probadas | Runas (carga, activación con el botón real, atrapa y lastima alrededor, el jefe apenas se frena, recarga), emboscadas (aviso de 2,6 s, jauría desde la maleza, nunca en el nivel 1 ni con subjefe), fuego que quema la maleza, bots que usan runas con horda, tutorial del Hechicero (moverse → atacar → habilidad, revivir con prioridad, y conceptos de combate cuando aparecen: recarga, daño recibido, energía, élites, jefes, refuerzo; no se repite) |
 | No probadas | Tutorial con una persona real (claridad del texto y del ritmo); "ocultamiento" de los héroes en la maleza (**EN DESARROLLO**, no implementado) |
 | Bugs | Corregido: el daño de la runa se multiplicaba por crítico y por procs → ahora es daño ambiental fijo |
 | Arena Identity | **Sí:** "el bosque caza (emboscadas), las piedras recuerdan (runas)" |
