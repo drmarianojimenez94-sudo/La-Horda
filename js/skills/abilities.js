@@ -277,6 +277,17 @@ function useSylvaPiercingShot(caster, chargeMs, aim){
   try{ castAbility(caster, sk, false, idx); } finally { caster.aim = null; }
 }
 
+/* Enfriamiento de la DEFINITIVA (BUGFIX 01, anti-spam): se multiplican maestría, pasivas, arena,
+   reglas y talentos como antes, pero con un PISO: nunca baja del 55% del enfriamiento base, por
+   más reducción que se apile. Además, durante 4 s la propia definitiva no carga su barra (una
+   ulti de área no puede rellenarse sola). Ningún efecto reinicia la definitiva (la Ascensión de
+   la Profeta solo acelera las habilidades 1-3). Lo usan jugador, bots, Eren y San Martín. */
+const ULT_CD_FLOOR = 0.55, ULT_SELF_CHARGE_LOCK_MS = 4000;
+function ultCooldownFor(h, baseCd, passiveCdMult){
+  const m = masteryCdMult(masteryOf(h.classKey, "ult")) * (passiveCdMult||1) * arenaMods().heroCdMult * arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+  h._ultLockUntil = runElapsedMs + ULT_SELF_CHARGE_LOCK_MS;
+  return baseCd * Math.max(ULT_CD_FLOOR, m);
+}
 function useUltimate(){
   if(!player.alive || state!=="playing") return;
   // Eren: agotado / ocupado no transforma; transformado, la ulti es El Retumbar (solo si se desbloqueó)
@@ -293,7 +304,7 @@ function useUltimate(){
   const ult = player.cls.ultimate;
   player.ultCharge = 0;
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(player.classKey,"cd_mult"));
-  player.ultCd = ult.cd * masteryCdMult(masteryOf(player.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(player.classKey, "ult");
+  player.ultCd = ultCooldownFor(player, ult.cd, passiveCdMult);
   gainSkillUseXp(player.classKey, "ult");
   castAbility(player, ult, true);
 }

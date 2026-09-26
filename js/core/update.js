@@ -703,7 +703,7 @@ function updateControlledHero(dt){
   // se revierte solo, junto con esto, cuando buffTimer llega a 0 (ver más arriba).
   if(player.ascensionTimer>0){
     player.ascensionTimer -= dt;
-    player.cds[0]=Math.min(player.cds[0],60); player.cds[1]=Math.min(player.cds[1],60); player.cds[2]=Math.min(player.cds[2],60); player.ultCd=Math.min(player.ultCd,60);
+    player.cds[0]=Math.min(player.cds[0],60); player.cds[1]=Math.min(player.cds[1],60); player.cds[2]=Math.min(player.cds[2],60); 
     if(player.ascensionTimer<=0) player.ascensionMaxTimer=0;
   }
   // Mientras está fusionada con el aliado (invisible/invulnerable), su posición sigue a la de

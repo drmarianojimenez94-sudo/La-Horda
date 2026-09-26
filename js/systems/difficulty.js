@@ -32,7 +32,13 @@ const DIFF = {
   // siempre PESA, pero nunca borra de un golpe. Sube con la dificultad de la arena.
   bossDmgPct: {bosque:0.09, acuatica:0.10, fortaleza:0.102, micelial:0.104, hielo:0.105, laberinto:0.11, infernal:0.12},
   subbossDmgPct: 0.065,
-  bossBasicMult: 0.5  // sus ataques comunes (proyectil/golpe) pegan la mitad que sus habilidades
+  bossBasicMult: 0.5, // sus ataques comunes (proyectil/golpe) pegan la mitad que sus habilidades
+  // REJUGAR / FARMEAR (BUGFIX 01): escalado dinámico PARCIAL. Si el grupo entra muy por encima del
+  // nivel esperado de la arena (campaña calibrada a ~nivel 40 al final), la horda sigue un poco más
+  // su poder: +0,6% de seguimiento por nivel de diferencia, con tope. Nunca 1:1: subir de nivel
+  // sigue haciendo más fácil la arena (se limpia más rápido), pero no la vuelve trivial.
+  arenaLevel: {bosque:1, acuatica:6, fortaleza:12, micelial:17, hielo:23, laberinto:28, infernal:34},
+  replayFollowPerLvl: 0.006, replayFollowMax: 0.15
 };
 let runDifficulty = {hp:1, dmg:1, spawnRate:1, xp:1, off:1, def:1};
 function computePartyPower(){
@@ -52,9 +58,14 @@ function setupRunDifficulty(){
   const p = computePartyPower();
   const avgLevel = heroes.length ? heroes.reduce((s,h)=> s + ((save.champions[h.classKey]||{}).level||1), 0) / heroes.length : 1;
   const over = Math.max(0, avgLevel-1), ramp = Math.min(1, over/9);
+  // medida de GRUPO: p (poder) y avgLevel ya promedian a TODOS los héroes de la partida (humanos
+  // remotos incluidos; los bots cuentan con su descuento), así el multijugador escala por el equipo
+  const gap = Math.max(0, avgLevel - ((typeof currentArena!=="undefined" && DIFF.arenaLevel[currentArena]) || 1));
+  const rf = Math.min(DIFF.replayFollowMax, gap*DIFF.replayFollowPerLvl);
   runDifficulty = {
-    hp: (1 + (DIFF.enemyHp-1)*ramp) * (1 + Math.max(0, p.off-1)*DIFF.hpFollow),
-    dmg: (1 + (DIFF.enemyDmg-1)*ramp) * (1 + Math.max(0, p.def-1)*DIFF.dmgFollow),
+    hp: (1 + (DIFF.enemyHp-1)*ramp) * (1 + Math.max(0, p.off-1)*(DIFF.hpFollow + rf)),
+    dmg: (1 + (DIFF.enemyDmg-1)*ramp) * (1 + Math.max(0, p.def-1)*(DIFF.dmgFollow + rf*0.75)),
+    replayGap: gap, replayFollow: rf,
     spawnRate: DIFF.spawn * (1 - Math.min(0.3, over*0.008)),
     xp: 1 + Math.min(1.5, over*0.022),
     off: p.off, def: p.def,

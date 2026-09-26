@@ -60,8 +60,19 @@ function erenAddFury(h, amt){
   h.ultCharge = Math.min(h.ultMax, (h.ultCharge||0) + amt);
   erenCheckRumbling(h);
 }
+// Condición especial de El Retumbar (aparte de la Furia): nunca por enfriamiento ni por reinicios.
+function erenRumblingCondition(h){
+  const R = EREN_CFG.rumbling, used = h.erenRumblingUses||0;
+  if(used >= R.maxPerRun) return false;
+  const bossUp = typeof boss!=="undefined" && boss && boss.alive && boss.rank==="jefe" && bossActive;
+  if(used === 0){
+    const danger = h.hp < h.maxHp*R.lowHpPct || heroes.some(o=>o!==h && !o.alive);
+    return bossUp || danger;
+  }
+  return bossUp && boss.hp <= boss.maxHp*R.bossHpPct2 && (runElapsedMs - (h.erenRumblingAt||-1e9)) >= R.gapMs2;
+}
 function erenCheckRumbling(h){
-  if(h.erenTitan && !h.erenRumblingReady && h.ultCharge >= h.ultMax && h.erenPhase!=="rumble"){
+  if(h.erenTitan && !h.erenRumblingReady && h.ultCharge >= h.ultMax && h.erenPhase!=="rumble" && erenRumblingCondition(h)){
     h.erenRumblingReady = true;
     if(h===player || h.isRemote) showBanner("☠ EL RETUMBAR — Ultimate II disponible");
     vfxShock(h.x, h.y, 10, 120, "255,60,40", 600, 2);
@@ -277,7 +288,9 @@ function erenExitTitan(h, died){
 /* ---------------- El Retumbar (Ultimate II) ---------------- */
 function erenStartRumbling(h, POWER){
   const R = EREN_CFG.rumbling;
+  if(!erenRumblingCondition(h)){ h.erenRumblingReady = false; return; }   // defensa: nunca fuera de su condición
   h.erenRumblingReady = false; h.ultCharge = 0;
+  h.erenRumblingUses = (h.erenRumblingUses||0) + 1; h.erenRumblingAt = runElapsedMs;
   const total = R.roarMs + 3*R.telegraphMs + 2*R.gapMs + 900;
   h.erenPhase = "rumble"; h.erenPhaseTimer = total; h.erenRumbleTotal = total;
   const base = erenBaseDmg(h, POWER) * (talentSkillMods(h.classKey,"ult").flags.rumblingDmgPct ? 1+talentSkillMods(h.classKey,"ult").flags.rumblingDmgPct : 1);
@@ -656,7 +669,7 @@ function botEren(h, passiveCdMult){
   const inDanger = h.hp/h.maxHp < 0.35 && near(200) >= 2;
   if(h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL && !erenUltBlocked(h) && (near(300) >= 5 || boss || elite || inDanger)){
     castAbility(h, h.cls.ultimate, true);
-    h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+    h.ultCharge = 0; h.ultCd = ultCooldownFor(h, h.cls.ultimate.cd, passiveCdMult);
     return true;
   }
   // Instinto: bajo presión, para cargar Furia
@@ -690,6 +703,10 @@ function erenHudHtml(p){
     rows.push(`<div>👹 ${Math.ceil(Math.max(0,p.erenTitanTimer)/1000)}s <div class="se-bar titan"><i style="width:${Math.round(100*Math.max(0,p.erenTitanTimer)/(p.erenTitanMax||1))}%"></i></div></div>`);
     if(p.erenRegenPool>1) rows.push(`<div class="se-on">♨ regenerando</div>`);
     if(p.erenRumblingReady) rows.push(`<div class="se-rumble">☠ EL RETUMBAR LISTO</div>`);
+    else if(p.erenTitan && p.ultCharge >= p.ultMax){
+      const used = p.erenRumblingUses||0, R = EREN_CFG.rumbling;
+      rows.push(`<div class="se-rumble" style="opacity:.7">☠ El Retumbar: ${used >= R.maxPerRun ? "ya no queda en esta partida" : (used ? "otra vez solo con el jefe debajo del 50%" : "solo contra un JEFE o al borde de la muerte")} (${used}/${R.maxPerRun})</div>`);
+    }
   }
   if(p.erenExhaustTimer>0) rows.push(`<div class="se-off">AGOTADO ${Math.ceil(p.erenExhaustTimer/1000)}s</div>`);
   else if(p.erenNoTfTimer>0 && !p.erenTitan) rows.push(`<div class="se-off">sin transformación ${Math.ceil(p.erenNoTfTimer/1000)}s</div>`);

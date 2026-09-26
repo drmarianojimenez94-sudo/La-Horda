@@ -395,7 +395,7 @@ function botLibertador(h, passiveCdMult){
     const t = bestClusterPoint(h, 420, 140) || bigThreat;
     if(t){ const dx=t.x-h.x, dy=t.y-h.y, l=Math.hypot(dx,dy)||1; h.fx=dx/l; h.fy=dy/l; }
     castAbility(h, h.cls.ultimate, true);
-    h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+    h.ultCharge = 0; h.ultCd = ultCooldownFor(h, h.cls.ultimate.cd, passiveCdMult);
     return true;
   }
   // Granaderos: con aliados cerca y una amenaza real

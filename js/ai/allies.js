@@ -21,7 +21,7 @@ function botTryAbilities(h){
     const worthIt = t && t.alive && !t.isDuelLocked && (t.rank==="jefe"||t.rank==="subjefe"||t.rank==="elite" || t.hp/t.maxHp < 0.45);
     if(worthIt){
       castAbility(h, h.cls.ultimate, true);
-      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+      h.ultCharge = 0; h.ultCd = ultCooldownFor(h, h.cls.ultimate.cd, passiveCdMult);
       return;
     }
     // objetivo no vale la pena todavía: sigue acumulando Concentración con habilidades normales
@@ -32,7 +32,7 @@ function botTryAbilities(h){
     const worthIt = nearCountUlt>=3 || (h.huntTarget && h.huntTarget.alive && (h.huntTarget.rank==="jefe"||h.huntTarget.rank==="subjefe"||h.huntTarget.rank==="elite"));
     if(worthIt){
       castAbility(h, h.cls.ultimate, true);
-      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+      h.ultCharge = 0; h.ultCd = ultCooldownFor(h, h.cls.ultimate.cd, passiveCdMult);
       return;
     }
   } else if(h.classKey==="nigromante" && h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
@@ -42,12 +42,12 @@ function botTryAbilities(h){
     const bigThreat = enemies.some(e=>e.alive && (e.rank==="jefe"||e.rank==="subjefe") && distance(h,e)<=420);
     if(nearCountUlt>=4 || bigThreat){
       castAbility(h, h.cls.ultimate, true);
-      h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+      h.ultCharge = 0; h.ultCd = ultCooldownFor(h, h.cls.ultimate.cd, passiveCdMult);
       return;
     }
   } else if(h.ultCharge >= h.ultMax && h.ultCd<=0 && runLevel >= ULT_MIN_ARENA_LEVEL){
     castAbility(h, h.cls.ultimate, true);
-    h.ultCharge = 0; h.ultCd = h.cls.ultimate.cd * masteryCdMult(masteryOf(h.classKey, "ult")) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, "ult");
+    h.ultCharge = 0; h.ultCd = ultCooldownFor(h, h.cls.ultimate.cd, passiveCdMult);
     return;
   }
   // Musashi (IA): prioridad simple en vez del orden aleatorio genérico -Paso Fantasma para
@@ -262,7 +262,7 @@ function updateAllies(dt){
     if(h.visionImmortalTimer>0){ h.visionImmortalTimer-=dt; if(h.visionImmortalTimer<=0){ h.regenTimer=Math.max(h.regenTimer||0,2000); h.regenPerSec=h.maxHp*(h.visionImmortalRegenPct||0.05); } }
     if(h.ascensionTimer>0){
       h.ascensionTimer -= dt;
-      h.cds[0]=Math.min(h.cds[0],60); h.cds[1]=Math.min(h.cds[1],60); h.cds[2]=Math.min(h.cds[2],60); h.ultCd=Math.min(h.ultCd,60);
+      h.cds[0]=Math.min(h.cds[0],60); h.cds[1]=Math.min(h.cds[1],60); h.cds[2]=Math.min(h.cds[2],60);
       if(h.ascensionTimer<=0) h.ascensionMaxTimer=0;
     }
     if(h.ascensionFusedWith){

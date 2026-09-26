@@ -324,6 +324,17 @@ const BOSS_DESIGNS = {
     ]
   }
 };
+/* Capa ÉPICA común a todos los jefes con diseño (BUGFIX 01):
+   - Protección de ráfaga: hasta que el director registra el cambio de fase, la vida no baja más
+     de un 2% por debajo del umbral siguiente (cada fase se juega; nadie la saltea de un golpe).
+   - Ventana VULNERABLE (x1,6) de 1,8 s después de cada cambio de fase (el rugido abre la guardia).
+   - Furia por pelea larga: a los 3 min el jefe pega +25%, se mueve +15% y encadena más rápido. */
+const BOSS_EPIC = { floorPad:0.02, phaseVulnMs:1800, softEnrageMs:180000, softEnrageDmg:1.25, softEnrageSpeed:1.15, softEnrageGap:0.75 };
+function bossPhaseFloor(e){
+  const d = bossDesignFor(e); if(!d || d.byLevPhase || !e.bd || e.bd.phase < 0) return null;
+  const phases = (e.resurrected && d.life2) ? d.life2 : d.phases, next = phases[e.bd.phase + 1];
+  return next ? e.maxHp*Math.max(0, next.hp - BOSS_EPIC.floorPad) : null;
+}
 function bossDesignFor(e){ return BOSS_DESIGNS[e.designKey || e.type] || null; } // designKey: otra pelea con el mismo cuerpo (Demonio Mayor — Forma Final)
 
 // Demonio Mayor: una sola vez, al bajar del 40%, se regenera unos segundos (ventana para
@@ -402,6 +413,7 @@ function updateBossDirector(e, dt, tgt, dist){
       if(P.banner) showBanner(P.banner);
       if(P.enrage && !e.enraged){ e.enraged = true; e.speed *= 1.3; }
       if(P.onEnter) P.onEnter(e);   // p.ej. transformación del Guardián Ancestral
+      else if(ph > 0){ e.crashVuln = true; e.crashTimer = BOSS_EPIC.phaseVulnMs; }   // el rugido abre su guardia
       // cambio de fase: rugido que empuja a todos + breve respiro
       animTrigger(e, "bossPhaseTransition", 1100);
       vfxShock(e.x, e.y, e.radius*0.4, e.radius*3, "255,210,140", 700, 2);
@@ -409,6 +421,12 @@ function updateBossDirector(e, dt, tgt, dist){
       if(ph>0) { vfxShake(9); playSfx("bossRoar"); }
       bossHudPhase(ph, phases.length);
     } else bossHudPhase(0, phases.length);
+  }
+  st.el = (st.el||0) + dt;
+  if(!e._softEnraged && st.el >= BOSS_EPIC.softEnrageMs){
+    e._softEnraged = true; e.dmg = Math.round(e.dmg*BOSS_EPIC.softEnrageDmg); e.speed *= BOSS_EPIC.softEnrageSpeed; e.enraged = true;
+    showBanner("¡SE ENFURECE! (la pelea se alarga)"); bossHudHint("Furia", "pega más fuerte y más seguido: terminalo ya");
+    vfxShock(e.x, e.y, e.radius*0.4, e.radius*3, "255,60,40", 700, 2); playSfx("bossRoar");
   }
   bossGuardCheck(e);
   if(e._gdTf > 0){ e.attackAnim = Math.max(e.attackAnim||0, 120); return true; }   // transformándose: quieto
@@ -422,7 +440,7 @@ function updateBossDirector(e, dt, tgt, dist){
     const fn = BOSS_ATTACKS[key];
     if(fn && fn(e, tgt, dist)){
       st.idx = (st.idx + k + 1) % rot.length;
-      st.gap = P.gap[0] + Math.random()*(P.gap[1]-P.gap[0]);
+      st.gap = (P.gap[0] + Math.random()*(P.gap[1]-P.gap[0])) * (e._softEnraged ? BOSS_EPIC.softEnrageGap : 1);
       return false;
     }
   }
