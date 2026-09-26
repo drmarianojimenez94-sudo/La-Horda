@@ -1,7 +1,7 @@
 # LA HORDA — Entrega Alpha 0.1
 
-Rama: `claude/horda-latest-updates-gv4tlf` (sin mergear a `main`).
-Para jugarla: <https://raw.githack.com/drmarianojimenez94-sudo/La-Horda/claude/horda-latest-updates-gv4tlf/index.html>
+Rama: `claude/horda-latest-updates-gv4tlf` (mergeada a `main`).
+Para jugarla: <https://raw.githack.com/drmarianojimenez94-sudo/La-Horda/main/index.html>
 (el modo prueba sigue activo: todos los campeones y arenas liberados).
 
 Documentos:
