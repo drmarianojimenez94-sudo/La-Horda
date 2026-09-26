@@ -59,7 +59,7 @@ function infTryOpen(){
     if(!aidInside(x, y, 110)) continue;
     if(INF.fis.some(f=>!f.done && Math.hypot(f.x-x, f.y-y) < 260)) continue;
     if(heroes.some(h=>h.alive && Math.hypot(h.x-x, h.y-y) < 170)) continue;
-    if(aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+60)) continue;
+    if(aidBlocked(x, y, 60)) continue; // obstáculos y muros
     const f = infMakeFissure(x, y);
     vfxShake(4); playSfx("infCrack");
     vfxTelegraph({shape:0, r:INF_CFG.radius[1], x, y, follow:null, dur:INF_CFG.openWarn, rgb:"255,110,30"});
@@ -79,7 +79,7 @@ function infGuestStart(){ infResetRun(); infPlaceMural(); }
 function infPlaceMural(){
   INF.mural = null;
   for(const [x, y] of [[0, -520], [-420, -430], [420, -430], [0, 560], [-560, 120], [560, 120]]){
-    if(!aidInside(x, y, 120) || aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+120)) continue;
+    if(!aidInside(x, y, 120) || aidBlocked(x, y, 120)) continue;
     INF.mural = {x, y}; return;
   }
 }

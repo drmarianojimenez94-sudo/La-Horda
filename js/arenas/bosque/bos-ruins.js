@@ -84,7 +84,7 @@ function bosStartAmbush(){
     // casi el mismo ángulo y la emboscada quedaba con un solo punto)
     const ang = base + made*(Math.PI*2/n) + (Math.random()-0.5)*(0.5 + fails*0.45), d = 270 + Math.random()*90 - Math.min(fails, 4)*14;
     const x = c.x + Math.cos(ang)*d, y = c.y + Math.sin(ang)*d*0.8;
-    if(!aidInside(x, y, 70) || aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+40) || BOS.amb.some(o=>o.t > 0 && Math.hypot(o.x-x, o.y-y) < 120)){ fails++; continue; }
+    if(!aidInside(x, y, 70) || aidBlocked(x, y, 40) || BOS.amb.some(o=>o.t > 0 && Math.hypot(o.x-x, o.y-y) < 120)){ fails++; continue; }
     fails = 0;
     BOS.amb.push({id:BOS.nextA++, x:Math.round(x), y:Math.round(y), t:BOS_CFG.ambushWarn, sprung:false, seed:(Math.random()*1e6)|0});
     made++;

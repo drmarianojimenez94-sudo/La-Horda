@@ -44,7 +44,7 @@ function spawnBreakables(){
     const p = {x:player.x + Math.cos(a)*d*1.15, y:player.y + Math.sin(a)*d*0.8, radius:16};
     clampToArena(p); resolveWallCollision(p); clampToArena(p);
     if(typeof aidInside==="function" && !aidInside(p.x, p.y, 40)) continue;
-    if(typeof aidSolids!=="undefined" && aidSolids.some(s=>Math.hypot(s.x-p.x, s.y-p.y) < s.r + 30)) continue;
+    if(typeof aidBlocked==="function" && aidBlocked(p.x, p.y, 30)) continue;
     if(heroes.some(h=>h.alive && Math.hypot(h.x-p.x, h.y-p.y) < BRK_CFG.minFromHero)) continue;
     if(breakables.some(b=>Math.hypot(b.x-p.x, b.y-p.y) < 180)) continue;
     breakables.push({id:_brkSeq++, kind:currentArena, x:Math.round(p.x), y:Math.round(p.y), fuse:0, by:-1});

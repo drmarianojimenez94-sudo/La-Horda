@@ -204,6 +204,11 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
   clara de la arena (`ARENA_BRIEF`: qué es, qué te mata, qué te ayuda, objetivo).
 - `js/rendering/fx-contrast.js` — pase de contraste de efectos: sombra de contraste por arena, modo brillo del
   primitivo de sprites (`FX_GLOW`), destello de lanzamiento y estrella de impacto.
+- `js/arenas/arena-blocks.js` — muros y bloques de las arenas abiertas (Ruinas, Acuática, Gélida, Infernal):
+  distribución por arena (`ARENA_BLOCK_LAYOUTS`, misma estructura que `labyrinthWalls`, así colisión y navegación
+  los usan sin cambios), estilo por arena (`WALL_STYLES`, horneado a canvas) y transparencia cuando un héroe queda
+  detrás. `aidBlocked(x,y,pad)` es la consulta "¿está libre?" para quien ubique cosas en el piso.
+  Gradación del mapa del Reino Micelial: `tools/art/micelial/grade_map.py`.
 - `js/ai/bot-brain.js` — bots por rol, esquivar avisos, revivir entre ellos, marcador de caído.
 - `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
 - `js/systems/loot.js` — botín del cofre del jefe (`rollLoot` pura, `grantEndOfRunLoot`) y reforja

@@ -23,19 +23,24 @@ function _rgb(a, f){ return `rgb(${Math.min(255,a[0]*f)|0},${Math.min(255,a[1]*f
 
 /* ---------------- pisos por tema ---------------- */
 // Adoquín irregular (patio / puentes de piedra): piedras de 5-8 px con mortero y brillo arriba.
+// Dirección de arte: antes era mortero casi negro + filas regulares con luz y sombra en cada piedra,
+// que en pantalla se leía como una PARED de ladrillo (no se distinguía piso de muro). Ahora:
+// piedras más grandes e irregulares, mortero cercano al tono de la piedra (poco contraste) y
+// manchas amplias de tierra: una superficie para caminar, no un paramento.
 function _fortCobble(g, w, h, rnd, tint, big){
-  g.fillStyle = FORT_PAL.mortar; g.fillRect(0, 0, w, h);
-  const sw = big ? 11 : 7, sh = big ? 8 : 5;
+  g.fillStyle = "#3a322b"; g.fillRect(0, 0, w, h);
+  const sw = big ? 15 : 11, sh = big ? 11 : 8;
   for(let y=0, row=0; y<h; y+=sh, row++){
-    for(let x=-(row%2)*sw/2; x<w; x+=sw){
-      const ww = sw - 1 - (rnd()*2|0), hh = sh - 1;
-      const base = FORT_PAL.stone[(rnd()*4)|0], f = (0.82 + rnd()*0.3)*(tint||1);
+    for(let x=-(row%2)*sw*0.45 - rnd()*3; x<w; x+=sw + (rnd()*3|0)){
+      const ww = sw - 1 - (rnd()*3|0), hh = sh - 1 - (rnd()*2|0);
+      const base = FORT_PAL.stone[(rnd()*4)|0], f = (0.9 + rnd()*0.14)*(tint||1);
       g.fillStyle = _rgb(base, f); g.fillRect(x+1, y+1, ww, hh);
-      g.fillStyle = _rgb(base, f*1.18); g.fillRect(x+1, y+1, ww, 1);
-      g.fillStyle = _rgb(base, f*0.72); g.fillRect(x+1, y+hh, ww, 1);
-      if(rnd() < 0.06){ g.fillStyle = "rgba(0,0,0,0.25)"; g.fillRect(x+2+(rnd()*3|0), y+2, 1, 2); }
+      g.fillStyle = _rgb(base, f*1.07); g.fillRect(x+1, y+1, ww, 1);
+      if(rnd() < 0.05){ g.fillStyle = "rgba(0,0,0,0.16)"; g.fillRect(x+2+(rnd()*3|0), y+2, 2, 1); }
     }
   }
+  // manchas amplias de tierra/desgaste: rompen la grilla y dicen "suelo pisado"
+  for(let i=0;i<Math.max(4, w*h/2600);i++){ const x = rnd()*w, y = rnd()*h; g.fillStyle = `rgba(${40+rnd()*20|0},${30+rnd()*14|0},${22+rnd()*10|0},${0.18+rnd()*0.18})`; g.beginPath(); g.ellipse(x, y, 10+rnd()*26, 5+rnd()*12, rnd()*3, 0, Math.PI*2); g.fill(); }
 }
 // Losas grandes (prisión / cámara): cuadradas, con manchas.
 function _fortFlags(g, w, h, rnd, cols, s){
