@@ -83,13 +83,16 @@ async function canvasNonBlank(page) {
     // el catálogo de campeones vive dentro de la Tienda
     await page.click('#mainmenu-tienda-btn');
     check('nav.shop', await vis(page, '#shop-screen'));
-    const gcount = await page.locator('#shop-champ-grid .gallery-card').count();
-    check('nav.gallery_cards', gcount >= 10, gcount);
-    await page.locator('#shop-champ-grid .gallery-card').first().click().catch(() => {});
-    await sleep(200);
-    check('nav.champdetail', await vis(page, '#champdetail-screen'));
-    await page.click('#champdetail-back-btn').catch(async () => { await page.click('text=Volver').catch(() => {}); });
+    // Tienda (BUGFIX 01): 3 pestañas; Campeones con fila animada por campeón, Objetos con todo el catálogo
+    const gcount = await page.locator('#shop-panel .shop-champ-row').count();
+    check('nav.shop_champions', gcount >= 10, gcount);
+    await page.click('#shop-tabs [data-shop-tab="objetos"]');
     await sleep(150);
+    const icount = await page.locator('#shop-panel .shop-item, #shop-panel .shop-set').count();
+    check('nav.shop_objects', icount >= 10, icount);
+    await page.click('#shop-tabs [data-shop-tab="skins"]');
+    await sleep(150);
+    check('nav.shop_skins', (await page.locator('#shop-panel .shop-skin').count()) >= 4);
     await page.click('#shop-back-btn');
     // Mis Campeones: inventario de campeones -> ficha con equipo / talentos (árbol) / habilidades
     await page.click('#mainmenu-campeones-btn');
@@ -283,14 +286,14 @@ async function canvasNonBlank(page) {
   {
     const legacy = { champions: { tanque: { level: 7, xp: 12, unlocked: true, skillMastery: [{ useXp: 3, useLvl: 2 }], ultMastery: { useXp: 0, useLvl: 1 } }, mago: { level: 3, xp: 0 } }, gold: 321, itemSchemaV: 1, arenasCleared: { bosque: true } };
     const { ctx, page, errors } = await newPage(browser, site, { save: legacy });
-    const s = await page.evaluate(() => window.__T.ev('({gold: save.gold, tl: save.champions.tanque.level, talents: !!save.champions.tanque.talents, eq: !!save.champions.tanque.equipment, n: Object.keys(save.champions).length, nClasses: Object.keys(CLASSES).length, schema: save.itemSchemaV, backup: JSON.parse(localStorage.getItem(SAVE_KEY + "_antesDeCampania")).champions.tanque.level})'));
+    const s = await page.evaluate(() => window.__T.ev('({gold: save.gold, tl: save.champions.tanque.level, talents: !!save.champions.tanque.talents, eq: !!save.champions.tanque.equipment, n: Object.keys(save.champions).length, nClasses: Object.keys(CLASSES).length, schema: save.itemSchemaV, backup: JSON.parse(localStorage.getItem(SAVE_KEY + "_antesDeCampania")).champions.tanque.level, gift: (typeof TEST_START_GOLD !== "undefined" ? TEST_START_GOLD : 0)})'));
     // modo campaña: el guardado viejo migra (un guardado por campeón existente) y vuelve a nivel 1
-    // y 0 de oro; el original queda respaldado entero
-    check('save.legacy_migrates', s.gold === 0 && s.tl === 1 && s.talents && s.eq && s.n === s.nClasses && s.backup === 7, s);
+    // y al oro de arranque (etapa de prueba, BUGFIX 01: el regalo único de 10.000); el original queda respaldado entero
+    check('save.legacy_migrates', s.gold === s.gift && s.tl === 1 && s.talents && s.eq && s.n === s.nClasses && s.backup === 7, s);
     await page.click('#title-continue-btn');
     await page.click('.starter-card[data-champ="tanque"]'); await page.click('#starter-yes-btn');
     await page.click('#mainmenu-tienda-btn');
-    check('save.legacy_gallery', (await page.locator('#shop-champ-grid .gallery-card').count()) >= 10);
+    check('save.legacy_gallery', (await page.locator('#shop-panel .shop-champ-row').count()) >= 10);
     const errs = await gameErrors(page, errors);
     check('save.legacy_no_errors', errs.length === 0, errs);
     await ctx.close();

@@ -1,5 +1,8 @@
 # Skin del set «La Manada» — La Cazadora
 
+> ✅ **INTEGRADA (BUGFIX 01)** — hoja en `art-source/skins_sets/`, atlas en `assets/sprites/champions/<campeón>/skins/<set>/`. Se ve con el set COMPLETO equipado. Pendiente solo si llega una hoja mejor: 4 cuadros por estado y vista (hoy 1-2).
+
+
 - **Set:** `manada` · Cazadora · marca → presa → lobo · aura rgb(140,220,120)
 - **Campeón:** La Cazadora (`cazadora`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.

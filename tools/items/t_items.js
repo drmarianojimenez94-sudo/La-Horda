@@ -29,7 +29,7 @@ async function boot(browser, initSave){
   // ---------- migración de un guardado viejo (inventario por campeón) ----------
   {
     const it = (uid, type, rar, extra) => Object.assign({ uid, type, rarity: rar, name: 'x', icon: '⚔', statKey: type, value: 0.2, passives: [], champion: 'mago' }, extra || {});
-    const legacy = { itemSchemaV: 2, campaignResetV1: true, campaignResetV2: true, campaignResetV3: true, fortalezaMigrated: true, micelialMigrated: true, starterChosen: true, gold: 500,
+    const legacy = { itemSchemaV: 2, testStageV1: true, campaignResetV1: true, campaignResetV2: true, campaignResetV3: true, fortalezaMigrated: true, micelialMigrated: true, starterChosen: true, gold: 500,
       champions: { mago: { level: 5, xp: 0, unlocked: true, inventory: [it('a1','arma','raro'), it('a2','casco','legendario'), it('a3','botas','unico',{placeholder:true})], equipment: { arma:'a1', casco:null, escudo:null, pechera:null, guantes:null, botas:null } },
                    tanque: { level: 3, xp: 0, unlocked: true, inventory: [it('b1','escudo','comun',{champion:'tanque'})], equipment: { arma:'zzz', escudo:'b1', casco:null, pechera:null, guantes:null, botas:null } } } };
     const { E, errors, page } = await boot(browser, legacy);
@@ -50,7 +50,7 @@ async function boot(browser, initSave){
     check('STASH.30_espacios_y_lo_equipado_no_ocupa', cap.full && cap.rejected && cap.used === 29 && !cap.after, cap);
     const sell = await E(() => { save.stash = []; save.gold = 0; const c = makeItem('arma','comun'), l = makeItem('arma','legendario'); addItemToInventory(null, c); addItemToInventory(null, l);
       sellItem(null, c.uid); const g1 = save.gold; sellItem(null, l.uid); const u = makeDesignedItem('uniq_yelmo_coloso'); stashItems().push(u); const su = sellItem(null, u.uid);
-      return { g1, g2: save.gold, uniqueStays: su === null && stashItems().includes(u), price: CHAMPION_PRICE_GOLD }; });
+      return { g1, g2: save.gold, uniqueStays: su === null && stashItems().includes(u), price: (typeof CHAMPION_PRICE_GOLD_FINAL!=='undefined' ? CHAMPION_PRICE_GOLD_FINAL : CHAMPION_PRICE_GOLD) }; });
     check('ECON.basura_casi_no_paga_y_legendario_duele', sell.g1 <= 5 && sell.g2 - sell.g1 >= 200 && sell.g2 < sell.price*0.2, sell);
     check('ECON.unico_no_se_vende', sell.uniqueStays, sell);
     const fu = await E(() => { save.stash = []; const mk = r => { const i = makeItem('casco', r); addItemToInventory(null, i); return i.uid; };
@@ -58,6 +58,21 @@ async function boot(browser, initSave){
       return { r1: r1.ok && r1.item.rarity, r2: r2.ok }; });
     check('ITEMS.fusion_solo_para_basura', fu.r1 === 'raro' && fu.r2 === false, fu);
     check('STASH.sin_errores', errors.length === 0, errors);
+    await page.context().close();
+  }
+  // ---------- etapa de prueba (BUGFIX 01): un guardado viejo pasa UNA vez por el reinicio ----------
+  {
+    const old = { itemSchemaV: 3, stashV1: true, campaignResetV1: true, campaignResetV2: true, campaignResetV3: true, fortalezaMigrated: true, micelialMigrated: true, starterChosen: true, gold: 123456,
+      arenasCleared: { bosque:true, acuatica:true, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false },
+      champions: { mago: { level: 25, xp: 0, unlocked: true, equipment: { arma:null, casco:null, escudo:null, pechera:null, guantes:null, botas:null } } }, stash: [] };
+    const { E, errors, page } = await boot(browser, old);
+    const r = await E(() => ({ gold: save.gold, lvl: save.champions.mago.level, open: ARENA_ORDER.filter(isArenaUnlocked), flag: save.testStageV1,
+      backup: !!localStorage.getItem(SAVE_KEY + '_antesDeEtapaPrueba') }));
+    check('TEST.reinicio_unico_de_la_etapa_de_prueba', r.gold === 10000 && r.lvl === 1 && r.open.join() === 'bosque' && r.flag === true, r);
+    check('TEST.respaldo_del_guardado_anterior', r.backup, r);
+    // volver a cargar el guardado (como al reabrir el juego): el regalo no se repite
+    check('TEST.el_regalo_no_se_repite_al_recargar', await E(() => { save.gold = 42; persist(); loadSave(); return save.gold; }) === 42, null);
+    check('TEST.sin_errores', errors.length === 0, errors);
     await page.context().close();
   }
 

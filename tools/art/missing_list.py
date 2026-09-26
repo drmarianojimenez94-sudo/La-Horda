@@ -11,11 +11,9 @@ STYLE = ('dark-fantasy detailed 16-bit pixel art, same grammar as LA HORDA (1px 
 
 # (id, prioridad, entidad, arena/rol, hoja completa a pedir, referencia a adjuntar, notas)
 TOTAL = [
-    ('GUA-ELF', 'P0', 'Guardián Élfico (uno de los Cuatro)', 'Ruinas del Bosque · Guardián',
-     'idle 4 · caminar abajo/perfil/arriba 4 c/u · ataque 4 · 2 habilidades 4 c/u · hurt 2 · muerte 6 · retrato 64×64',
-     'mural de los Cuatro (docs) + hoja 12 del Mago Gélido como referencia de escala y estilo de Guardián', 'Único Guardián sin arte. Será GUARDIAN_CANON al llegar.'),
-    ('SKIN-SET', 'P1', 'Skins de set (12 de campeón + universales)', 'Todas',
-     'ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt)', 'atlas canon de cada campeón', '12 hojas mínimas + 11 universales prioritarias.'),
+    ('SKIN-SET', 'P1', 'Skins de set (8 de campeón restantes + universales)', 'Todas',
+     'ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt)', 'atlas canon de cada campeón',
+     'Ya integradas (BUGFIX 01): Manada/Sylva Flecha de Fuego, Errante/Musashi Samurái Legendario, Legión/Eren Titán Bestia, Sistema/Axiom Skin Z.'),
     ('ITEM-ICON', 'P2', 'Íconos finales de objetos (169)', 'UI', 'ver LA_HORDA_ITEM_ASSET_MANIFEST.md', '—', 'Hoy se usan íconos procedurales provisorios.'),
     ('ARENA-CM', 'P2', 'Ciudad Maldita (arena completa)', 'Arena en desarrollo', 'set de arena: piso, muros, props, enemigos, jefe', '—', ''),
     ('ARENA-AB', 'P2', 'Abismo (arena completa + Entidad del Abismo)', 'Arena en desarrollo', 'set de arena + jefe', '—', ''),
@@ -57,10 +55,15 @@ PARTIAL = [
     ('Duende del Bosque / Zombi', 'packs actuales (idle1.png, walk1.png...)', 'set completo con 1 ataque', 'Duende: 2º ataque · Zombi: ataque propio (hoy usa la embestida)',
      'hoja completa de cada uno con el mismo diseño actual'),
     ('Madre Espora', 'art-source/micelial (atlas recortado)', 'retrato animado por partes', 'frames completos del cuerpo', 'ver BOSS-06 en LA_HORDA_MISSING_ASSETS.md'),
+    ('Guardián Ancestral Corrompido (jefe del Bosque)', 'art-source/guardian_elfico/guardian_elfico_ancestral.png', 'set completo + paleta FURIA + 14 VFX',
+     'caminar de perfil 4 (el panel dibuja 3) · hurt 2 propio', 'hoja completa del Guardián con: idle 4 · caminar abajo/perfil/arriba 4 c/u · básico 5 · golpe pesado 3 · raíces 6 · lanza 2 · transformación 6 · hurt 2 · muerte 7'),
+    ('Skins de set: Sylva · Musashi · Eren · Axiom', 'art-source/skins_sets/*.png', 'grilla de 6 vistas × idle/caminata/corrida/ataque/casteo/daño + muerte (1 cuadro por celda)',
+     'caminata de 4 cuadros por vista (hoy 2: caminata + corrida) · idle de 4 cuadros · Axiom: fila de casteo · Eren Titán: vistas de frente/espaldas', 'la hoja completa de cada skin con 4 cuadros por estado y vista'),
     ('Brasero de hielo (HIE-01)', 'brasero infernal actual', 'reusa el brasero infernal', 'versión de hielo: encendido (loop) · apagado · encendiéndose', 'hoja completa del brasero de hielo'),
 ]
 DONE = ['Mago de Hielo y Cristal (BOSS-01)', 'Ángel Caído (BOSS-02)', 'Jinete Sin Cabeza (BOSS-03)', 'Minotauro completo (BOSS-05, IMG 9)', 'Tundraverx (I4)',
         'Dragoncito de Hielo', 'Ángel de Hielo y Cristal élite', 'Enjambre de Hadas (salvo hurt)', 'Cù-Sìth (salvo idle)', 'Gólem de Cristal + esbirros',
+        'Guardián Élfico → Guardián Ancestral Corrompido (GUA-ELF, BUGFIX 01)', 'Skins de set: Manada · Errante · Legión · Sistema (BUGFIX 01)',
         'El Hechicero (NAR-01, sprint H1)', 'Demonio de la Horda (NAR-02): resuelto con el Demonio Mayor como forma final (H5)']
 
 def prompt(ent, ref, sheet):

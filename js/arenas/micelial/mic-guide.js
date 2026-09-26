@@ -18,7 +18,7 @@
    igual en los invitados.
    ============================================================ */
 MIC_CFG.nucleo.fromLevel = 2;
-const MIC_GUIDE_CFG = { pressurePerStage: 0.09, pressureCap: 1.9, pointerMax: 1900 };
+const MIC_GUIDE_CFG = { pressurePerStage: 0.07, pressureCap: 1.5, pointerMax: 1900 };   // tope moderado: más horda sin amontonar (rendimiento en celular y colisión con los hongos)
 
 (function(){
   const D = ARENA_DEFS.micelial; if(!D) return;

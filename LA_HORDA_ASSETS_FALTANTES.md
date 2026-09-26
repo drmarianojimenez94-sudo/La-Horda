@@ -12,16 +12,15 @@
 
 | Tipo | Cantidad |
 |---|---|
-| Faltantes totales (no existe arte) | 9 grupos |
-| Faltantes parciales (hay canon, faltan animaciones) | 17 entidades |
-| Resueltos en este pase | 12 |
+| Faltantes totales (no existe arte) | 8 grupos |
+| Faltantes parciales (hay canon, faltan animaciones) | 19 entidades |
+| Resueltos en este pase | 14 |
 
 ## Faltantes TOTALES
 
 | ID | Prioridad | Qué | Dónde | Hoja completa a pedir | Referencia | Notas |
 |---|---|---|---|---|---|---|
-| GUA-ELF | P0 | Guardián Élfico (uno de los Cuatro) | Ruinas del Bosque · Guardián | idle 4 · caminar abajo/perfil/arriba 4 c/u · ataque 4 · 2 habilidades 4 c/u · hurt 2 · muerte 6 · retrato 64×64 | mural de los Cuatro (docs) + hoja 12 del Mago Gélido como referencia de escala y estilo de Guardián | Único Guardián sin arte. Será GUARDIAN_CANON al llegar. |
-| SKIN-SET | P1 | Skins de set (12 de campeón + universales) | Todas | ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt) | atlas canon de cada campeón | 12 hojas mínimas + 11 universales prioritarias. |
+| SKIN-SET | P1 | Skins de set (8 de campeón restantes + universales) | Todas | ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt) | atlas canon de cada campeón | Ya integradas (BUGFIX 01): Manada/Sylva Flecha de Fuego, Errante/Musashi Samurái Legendario, Legión/Eren Titán Bestia, Sistema/Axiom Skin Z. |
 | ITEM-ICON | P2 | Íconos finales de objetos (169) | UI | ver LA_HORDA_ITEM_ASSET_MANIFEST.md | — | Hoy se usan íconos procedurales provisorios. |
 | ARENA-CM | P2 | Ciudad Maldita (arena completa) | Arena en desarrollo | set de arena: piso, muros, props, enemigos, jefe | — |  |
 | ARENA-AB | P2 | Abismo (arena completa + Entidad del Abismo) | Arena en desarrollo | set de arena + jefe | — |  |
@@ -50,6 +49,8 @@
 | Lobo Espectral (Cazadora) | `arte actual del lobo` | idle/ataque | **carrera 4** |
 | Duende del Bosque / Zombi | `packs actuales (idle1.png, walk1.png...)` | set completo con 1 ataque | **Duende: 2º ataque · Zombi: ataque propio (hoy usa la embestida)** |
 | Madre Espora | `art-source/micelial (atlas recortado)` | retrato animado por partes | **frames completos del cuerpo** |
+| Guardián Ancestral Corrompido (jefe del Bosque) | `art-source/guardian_elfico/guardian_elfico_ancestral.png` | set completo + paleta FURIA + 14 VFX | **caminar de perfil 4 (el panel dibuja 3) · hurt 2 propio** |
+| Skins de set: Sylva · Musashi · Eren · Axiom | `art-source/skins_sets/*.png` | grilla de 6 vistas × idle/caminata/corrida/ataque/casteo/daño + muerte (1 cuadro por celda) | **caminata de 4 cuadros por vista (hoy 2: caminata + corrida) · idle de 4 cuadros · Axiom: fila de casteo · Eren Titán: vistas de frente/espaldas** |
 | Brasero de hielo (HIE-01) | `brasero infernal actual` | reusa el brasero infernal | **versión de hielo: encendido (loop) · apagado · encendiéndose** |
 
 ### Prompts de hoja completa (parciales)
@@ -150,6 +151,18 @@ Full sprite sheet of Duende del Bosque / Zombi for LA HORDA — the EXACT SAME d
 Full sprite sheet of Madre Espora for LA HORDA — the EXACT SAME design as the attached reference (same body, proportions, palette, weapon, height). ALL animations in ONE sheet, one row per animation: ver BOSS-06 en LA_HORDA_MISSING_ASSETS.md. dark-fantasy detailed 16-bit pixel art, same grammar as LA HORDA (1px dark outline, 2-3 flat tones per color, limited palette, crisp alpha), transparent background, uniform grid, feet on the same baseline, side views facing right, NO text, NO labels, NO frames, NO grid lines, NO background panels.
 ```
 
+**Guardián Ancestral Corrompido (jefe del Bosque)** — adjuntar `art-source/guardian_elfico/guardian_elfico_ancestral.png`
+
+```
+Full sprite sheet of Guardián Ancestral Corrompido (jefe del Bosque) for LA HORDA — the EXACT SAME design as the attached reference (same body, proportions, palette, weapon, height). ALL animations in ONE sheet, one row per animation: hoja completa del Guardián con: idle 4 · caminar abajo/perfil/arriba 4 c/u · básico 5 · golpe pesado 3 · raíces 6 · lanza 2 · transformación 6 · hurt 2 · muerte 7. dark-fantasy detailed 16-bit pixel art, same grammar as LA HORDA (1px dark outline, 2-3 flat tones per color, limited palette, crisp alpha), transparent background, uniform grid, feet on the same baseline, side views facing right, NO text, NO labels, NO frames, NO grid lines, NO background panels.
+```
+
+**Skins de set: Sylva · Musashi · Eren · Axiom** — adjuntar `art-source/skins_sets/*.png`
+
+```
+Full sprite sheet of Skins de set: Sylva · Musashi · Eren · Axiom for LA HORDA — the EXACT SAME design as the attached reference (same body, proportions, palette, weapon, height). ALL animations in ONE sheet, one row per animation: la hoja completa de cada skin con 4 cuadros por estado y vista. dark-fantasy detailed 16-bit pixel art, same grammar as LA HORDA (1px dark outline, 2-3 flat tones per color, limited palette, crisp alpha), transparent background, uniform grid, feet on the same baseline, side views facing right, NO text, NO labels, NO frames, NO grid lines, NO background panels.
+```
+
 **Brasero de hielo (HIE-01)** — adjuntar `brasero infernal actual`
 
 ```
@@ -168,5 +181,7 @@ Full sprite sheet of Brasero de hielo (HIE-01) for LA HORDA — the EXACT SAME d
 - ~~Enjambre de Hadas (salvo hurt)~~ ✅
 - ~~Cù-Sìth (salvo idle)~~ ✅
 - ~~Gólem de Cristal + esbirros~~ ✅
+- ~~Guardián Élfico → Guardián Ancestral Corrompido (GUA-ELF, BUGFIX 01)~~ ✅
+- ~~Skins de set: Manada · Errante · Legión · Sistema (BUGFIX 01)~~ ✅
 - ~~El Hechicero (NAR-01, sprint H1)~~ ✅
 - ~~Demonio de la Horda (NAR-02): resuelto con el Demonio Mayor como forma final (H5)~~ ✅

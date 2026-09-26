@@ -52,7 +52,7 @@ function damageEnemy(e, amount, opts){
   dmg *= reactionMult(e, dmg, opts, src, _powPre, dmgKind);
   const _hpBefore = Math.max(0, e.hp);
   if(e.rank==="jefe" && e.bd && typeof bossPhaseFloor==="function"){   // una ráfaga no se saltea una fase del jefe
-    const fl = bossPhaseFloor(e); if(fl !== null && e.hp - dmg < fl) dmg = Math.max(0, e.hp - fl);
+    const fl = bossPhaseFloor(e); if(fl !== null && e.hp > fl && e.hp - dmg < fl) dmg = e.hp - fl;   // solo si el golpe CRUZA el umbral (un DoT que ya bajó la vida no lo vuelve inmortal)
   }
   e.hp -= dmg;
   // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede

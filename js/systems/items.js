@@ -133,7 +133,7 @@ function _pickFrom(arr){ return arr[(Math.random()*arr.length)|0]; }
 function _genderize(q, noun){ return q.replace("{o}", ITEM_NOUN_FEM[noun] ? (ITEM_NOUN_PLURAL[noun] ? "as" : "a") : (ITEM_NOUN_PLURAL[noun] ? "os" : "o")); }
 // Nombre de un objeto procedural: "Yelmo Templado", "Hoja de Karzul, del Golpe Sísmico"...
 function proceduralItemName(type, rarity, proc){
-  const noun = (opts.noun && (ITEM_NOUNS[type]||[]).includes(opts.noun)) ? opts.noun : _pickFrom(ITEM_NOUNS[type] || [ITEM_TYPES[type].label]); // la tienda de prueba pide un arquetipo exacto
+  const noun = _pickFrom(ITEM_NOUNS[type] || [ITEM_TYPES[type].label]);
   if(ITEM_QUALITY[rarity]) return noun + " " + _genderize(_pickFrom(ITEM_QUALITY[rarity]), noun);
   const proper = _pickFrom(LEGEND_PROPER_NAMES);
   return proc && LEGEND_PROC_EPITHET[proc] ? `${noun} de ${proper}, ${LEGEND_PROC_EPITHET[proc]}` : `${noun} de ${proper}`;

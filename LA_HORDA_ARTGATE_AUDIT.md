@@ -17,6 +17,7 @@
 | Entidad | Decisión | Canon | Alternativas descartadas |
 |---|---|---|---|
 | Mago de Hielo y Cristal (GUARDIÁN: el Mago Gélido, uno de los Cuatro) | CANONICAL_SET · REPLACE_FULL_SET | art-source/hielo_jefes/mago_hielo_cristal_sheet.png → assets/sprites/bosses/hielo/mago_hielo_cristal/v2/atlas.png | jefes_I1_I4 fila I2 → DUPLICATE (mismo diseño, menos animaciones) · static.png → reemplazado |
+| Guardián Élfico Ancestral (GUARDIÁN) → jefe del Bosque "Guardián Ancestral Corrompido" | CANONICAL_SET (BUGFIX 01) | art-source/guardian_elfico/guardian_elfico_ancestral.png → .../bosses/bosque/guardian_ancestral/atlas.png (+ atlas_furia.png) | — |
 | Ángel Caído de Hielo (jefe de Hielo, fase 2) | CANONICAL_SET · REPLACE_FULL_SET | art-source/hielo_jefes/angel_caido_hielo_sheet.png → .../angel_caido_hielo/v2/atlas.png | fila I3 → DUPLICATE · gárgola → reemplazada (el nombre pide un ángel) |
 | Jinete Sin Cabeza (jefe del Bosque) | CANON_SELECTED_BUT_INCOMPLETE · REPLACE_FULL_SET | art-source/hielo_jefes/jefes_I1_I4_sheet.png fila I1 → .../jinete_sin_cabeza/v2/atlas.png | static.png → reemplazado |
 | Minotauro (jefe del Laberinto) | CANONICAL_SET · REPLACE_FULL_SET | art-source/pack_canon/img7_img9 · IMG 9 → assets/sprites/bosses/laberinto/minotauro/v3/atlas.png | walk-strip → reemplazado (sin ataque ni muerte) · minotauro_sheet cuerpo → REJECT_INCONSISTENT (otro diseño, incompleto) · IMG 1 muerte → REJECT_INCONSISTENT (otro diseño) |
@@ -35,7 +36,6 @@
 | Entidad | Decisión | Canon | Qué se descartó y por qué |
 |---|---|---|---|
 | Guardián del Laberinto (GUARDIÁN) | USE (sin cambios) | assets/sprites/bosses/laberinto/guardian_laberinto/ (Pack 3, integrado antes) | — |
-| Guardián Élfico (GUARDIÁN) | FALTA TOTAL | — (no existe arte) | — |
 | El Hechicero (GUARDIÁN, sin revelar) | USE (sin cambios) | assets/sprites/bosses/infernal/hechicero/atlas.png (integrado en H1) | — |
 | Gólem de Hielo | USE (se conserva) | assets/sprites/enemies/hielo/golem_hielo/ (Pack 3) | variante → DUPLICATE (menos animaciones; y el Hielo ya tiene el Gólem de Cristal azul oscuro: con la variante habría dos gólems iguales) |
 | Dama del Bosque (jefa) | USE (se conserva) | assets/sprites/enemies/bosque/dama_bosque/v2/atlas.png (redraw RD6) | P34 → REJECT_INCONSISTENT (otro diseño: cambiaría la identidad de una jefa ya completa) |
@@ -69,14 +69,14 @@
 
 - **Mago de Hielo y Cristal (GUARDIÁN: el Mago Gélido, uno de los Cuatro)** — art-source/hielo_jefes/mago_hielo_cristal_sheet.png → assets/sprites/bosses/hielo/mago_hielo_cristal/v2/atlas.png (CANONICAL_SET · REPLACE_FULL_SET)
 - **Guardián del Laberinto (GUARDIÁN)** — assets/sprites/bosses/laberinto/guardian_laberinto/ (Pack 3, integrado antes) (USE (sin cambios))
-- **Guardián Élfico (GUARDIÁN)** — — (no existe arte) (FALTA TOTAL)
+- **Guardián Élfico Ancestral (GUARDIÁN) → jefe del Bosque "Guardián Ancestral Corrompido"** — art-source/guardian_elfico/guardian_elfico_ancestral.png → .../bosses/bosque/guardian_ancestral/atlas.png (+ atlas_furia.png) (CANONICAL_SET (BUGFIX 01))
 - **El Hechicero (GUARDIÁN, sin revelar)** — assets/sprites/bosses/infernal/hechicero/atlas.png (integrado en H1) (USE (sin cambios))
 
 ## Animaciones todavía faltantes (del canon elegido)
 
 - **Mago de Hielo y Cristal (GUARDIÁN: el Mago Gélido, uno de los Cuatro):** hurt dedicado (hoy usa un cuadro de la nova) · vista de espaldas/frente al caminar (la hoja trae espalda y perfil sueltos, sin ciclo)
 - **Guardián del Laberinto (GUARDIÁN):** habilidades propias con arte (hoy efectos de código)
-- **Guardián Élfico (GUARDIÁN):** set completo (idle, caminar 4 dir, ataque, 2 habilidades, hurt, muerte, retrato)
+- **Guardián Élfico Ancestral (GUARDIÁN) → jefe del Bosque "Guardián Ancestral Corrompido":** caminar de perfil izquierdo propio (se espeja el derecho; el recorte izquierdo 1 salió roto) · hurt propio (usa un cuadro de idle) · el panel dice 4 cuadros de caminata y dibuja 3
 - **Ángel Caído de Hielo (jefe de Hielo, fase 2):** vista de espaldas animada (hay 1 cuadro) · golpe descendente (el recorte trae la estela pegada; no se usa)
 - **Jinete Sin Cabeza (jefe del Bosque):** hurt · pose de "Resurrección Eterna" · espalda animada
 - **Tundraverx, Soberano de Hielo (élite/jefe intermedio):** hurt · espalda animada

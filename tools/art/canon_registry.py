@@ -35,9 +35,14 @@ ent(entity='Mago de Hielo y Cristal (GUARDIÁN: el Mago Gélido, uno de los Cuat
 ent(entity='Guardián del Laberinto (GUARDIÁN)', guardian=True, canon='assets/sprites/bosses/laberinto/guardian_laberinto/ (Pack 3, integrado antes)',
     status='USE (sin cambios)', artgate='PASS', available='idle 3 · caminar 4 · ataque 5 · golpe 2 · muerte 5', missing='habilidades propias con arte (hoy efectos de código)',
     vfx='de código', alternatives='ninguna en este lote', rejected='—', notes='GUARDIAN_CANON vigente. No vino arte nuevo.')
-ent(entity='Guardián Élfico (GUARDIÁN)', guardian=True, canon='— (no existe arte)', status='FALTA TOTAL', artgate='—', available='—',
-    missing='set completo (idle, caminar 4 dir, ataque, 2 habilidades, hurt, muerte, retrato)', vfx='—', alternatives='—', rejected='—',
-    notes='Solo aparece en el mural de los Cuatro. Es el próximo Guardián a producir: una sola hoja completa.')
+ent(entity='Guardián Élfico Ancestral (GUARDIÁN) → jefe del Bosque "Guardián Ancestral Corrompido"', guardian=True,
+    canon='art-source/guardian_elfico/guardian_elfico_ancestral.png → .../bosses/bosque/guardian_ancestral/atlas.png (+ atlas_furia.png)',
+    status='CANONICAL_SET (BUGFIX 01)', artgate='PASS (probado en partida: 3 fases, transformación, furia)',
+    available='idle 4 · caminar abajo/perfil/arriba 3 c/u · básico 5 · golpe pesado 3 · invocar raíces 6 · lanza 2 · transformación 6 · muerte 7 · paleta FURIA (fase 2)',
+    missing='caminar de perfil izquierdo propio (se espeja el derecho; el recorte izquierdo 1 salió roto) · hurt propio (usa un cuadro de idle) · el panel dice 4 cuadros de caminata y dibuja 3',
+    vfx='espinas del golpe pesado, ondas de espinas, lluvia de hojas, muralla de árboles, zona corrupta, impacto, hojas, raíces, espinas, aura, lanza, explosión, brillo, partículas (14)',
+    alternatives='Jinete Sin Cabeza (jefe anterior: queda en la Arena Divina con todo su arte)', rejected='—',
+    notes='La hoja vino en RGBA con el panel semitransparente: se aplanó a RGB y se recortó con máscara por distancia al fondo (u2net perdía las ramas finas).')
 ent(entity='El Hechicero (GUARDIÁN, sin revelar)', guardian=True, canon='assets/sprites/bosses/infernal/hechicero/atlas.png (integrado en H1)',
     status='USE (sin cambios)', artgate='PASS', available='idle 4 · caminar 12 · conjuro 8 · básico 4 · daño 5 · muerte 6 + Gólem de Cuerpos',
     missing='—', vfx='orbe, pilares, juicio, meteoros', alternatives='—', rejected='—', notes='GUARDIAN_CANON vigente.')

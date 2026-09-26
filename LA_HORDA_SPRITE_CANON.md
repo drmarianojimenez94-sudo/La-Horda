@@ -36,19 +36,19 @@ REJECTED_ASSETS / REJECTION_REASON: —
 NOTES:                GUARDIAN_CANON vigente. No vino arte nuevo.
 ```
 
-### Guardián Élfico (GUARDIÁN)
+### Guardián Élfico Ancestral (GUARDIÁN) → jefe del Bosque "Guardián Ancestral Corrompido"
 
 ```
-ENTITY:               Guardián Élfico (GUARDIÁN)
-CANON_ASSET:          — (no existe arte)
-STATUS:               FALTA TOTAL
-ARTGATE_STATUS:       —
-AVAILABLE_ANIMATIONS: —
-MISSING_ANIMATIONS:   set completo (idle, caminar 4 dir, ataque, 2 habilidades, hurt, muerte, retrato)
-VFX:                  —
-ALTERNATIVE_ASSETS:   —
+ENTITY:               Guardián Élfico Ancestral (GUARDIÁN) → jefe del Bosque "Guardián Ancestral Corrompido"
+CANON_ASSET:          art-source/guardian_elfico/guardian_elfico_ancestral.png → .../bosses/bosque/guardian_ancestral/atlas.png (+ atlas_furia.png)
+STATUS:               CANONICAL_SET (BUGFIX 01)
+ARTGATE_STATUS:       PASS (probado en partida: 3 fases, transformación, furia)
+AVAILABLE_ANIMATIONS: idle 4 · caminar abajo/perfil/arriba 3 c/u · básico 5 · golpe pesado 3 · invocar raíces 6 · lanza 2 · transformación 6 · muerte 7 · paleta FURIA (fase 2)
+MISSING_ANIMATIONS:   caminar de perfil izquierdo propio (se espeja el derecho; el recorte izquierdo 1 salió roto) · hurt propio (usa un cuadro de idle) · el panel dice 4 cuadros de caminata y dibuja 3
+VFX:                  espinas del golpe pesado, ondas de espinas, lluvia de hojas, muralla de árboles, zona corrupta, impacto, hojas, raíces, espinas, aura, lanza, explosión, brillo, partículas (14)
+ALTERNATIVE_ASSETS:   Jinete Sin Cabeza (jefe anterior: queda en la Arena Divina con todo su arte)
 REJECTED_ASSETS / REJECTION_REASON: —
-NOTES:                Solo aparece en el mural de los Cuatro. Es el próximo Guardián a producir: una sola hoja completa.
+NOTES:                La hoja vino en RGBA con el panel semitransparente: se aplanó a RGB y se recortó con máscara por distancia al fondo (u2net perdía las ramas finas).
 ```
 
 ### El Hechicero (GUARDIÁN, sin revelar)
