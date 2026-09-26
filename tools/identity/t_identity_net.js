@@ -114,6 +114,42 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('NET.acuatica.el_invitado_es_arrastrado', gx1 - gx0 > 80, { gx0: Math.round(gx0), gx1: Math.round(gx1), host: pa1.x });
     check('NET.acuatica.sin_correcciones_en_cadena', pa1.pa - pa0 <= 2, { pa0, pa1: pa1.pa });
   }
+  if (ARENA === 'laberinto') {
+    // sellos iguales en todos; el invitado activa el I y todos lo ven encendido
+    await H.p.evaluate(([gi]) => { ctxBotObjective = () => null; runLevel = 3; enemies.forEach(e => e.alive = false); LAB.seals = []; LAB.spawnT = 10; }, [gi]);
+    await sleep(1500);
+    const s0 = await Promise.all(all.map(c => c.p.evaluate(() => LAB.seals.map(s => [s.n, s.x, s.y, s.lit ? 1 : 0].join(':')).join('|'))));
+    check('NET.laberinto.sellos_iguales_en_todos', s0.every(x => x === s0[0] && x.length > 0), s0);
+    const p1 = await H.p.evaluate(() => { const s = LAB.seals.find(x => x.n === 1); return [s.x, s.y]; });
+    await H.p.evaluate(([gi, x, y]) => { const h = heroes[gi]; h.x = x - 80; h.y = y; }, [gi, p1[0], p1[1]]);
+    await goal(p1[0], p1[1] + 6);
+    await sleep(2500);
+    await goal(null);
+    const gb = await G[0].p.evaluate(() => { updateReviveBtn(); const b = document.getElementById('btn-revive'); return { ready: b.classList.contains('ready'), lbl: b.querySelector('.lbl').textContent }; });
+    check('NET.laberinto.invitado_ve_el_boton_sello', gb.ready && gb.lbl === 'Sello', gb);
+    await G[0].p.evaluate(() => document.getElementById('btn-revive').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
+    await sleep(1800);
+    await G[0].p.evaluate(() => document.getElementById('btn-revive').dispatchEvent(new PointerEvent('pointerup', { bubbles: true })));
+    await sleep(800);
+    const lit = await Promise.all(all.map(c => c.p.evaluate(() => ({ lit: LAB.seals.filter(s => s.lit).map(s => s.n).join(''), next: LAB.next }))));
+    check('NET.laberinto.el_invitado_enciende_el_I_y_todos_lo_ven', lit.every(l => l.lit === '1' && l.next === 2), lit);
+  }
+  if (ARENA === 'bosque') {
+    // runas y emboscadas iguales en todos; el invitado activa una runa
+    await H.p.evaluate(([gi]) => { ctxBotObjective = () => null; runLevel = 3; enemies.forEach(e => e.alive = false); for (const r of BOS.runes) r.charge = 0; BOS.runes[0].charge = 1; const r = BOS.runes[0]; const h = heroes[gi]; h.x = r.x - 90; h.y = r.y; BOS.ambT = 10; }, [gi]);
+    await sleep(1200);
+    const st = await Promise.all(all.map(c => c.p.evaluate(() => ({ r: BOS.runes.map(r => bosReady(r) ? 1 : 0).join(''), a: BOS.amb.map(a => a.x + ',' + a.y).join('|') }))));
+    check('NET.bosque.runas_y_emboscadas_iguales', st.every(x => x.r === st[0].r && x.a === st[0].a) && st[0].r === '1000' && st[0].a.length > 0, st);
+    const r0 = await H.p.evaluate(() => [BOS.runes[0].x, BOS.runes[0].y]);
+    await goal(r0[0], r0[1] + 4);
+    await sleep(2500); await goal(null);
+    await G[0].p.evaluate(() => { updateReviveBtn(); document.getElementById('btn-revive').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); });
+    await sleep(1600);
+    await G[0].p.evaluate(() => document.getElementById('btn-revive').dispatchEvent(new PointerEvent('pointerup', { bubbles: true })));
+    await sleep(700);
+    const used = await Promise.all(all.map(c => c.p.evaluate(() => +BOS.runes[0].charge.toFixed(2))));
+    check('NET.bosque.el_invitado_activa_la_runa', used.every(c => c < 0.2), used);
+  }
   await H.p.evaluate(() => { clearInterval(window.__calm); });
   }
   for (const c of all) check(`NET.sin_errores_J${c.i + 1}`, c.errs.length === 0, c.errs.slice(0, 4));
