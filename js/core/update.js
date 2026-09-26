@@ -97,6 +97,7 @@ function update(dt){
     if(e.electrifiedTimer>0) e.electrifiedTimer -= dt;
     if(arenaMods().enemyRegenPct && e.hp<e.maxHp && e.rank!=="jefe" && e.rank!=="subjefe"){ e.hp = Math.min(e.maxHp, e.hp + e.maxHp*arenaMods().enemyRegenPct*arenaRuleEnemyRegenMult()*dt/1000); }
     if(e.attackAnim>0) e.attackAnim -= dt;
+    bossSheetTick(e, dt); // animación de habilidad de las hojas de jefes + estela de fuego del Minotauro
     if(e.skillAnim) e.skillAnim.t += dt;
     if(e.fxAnim) e.fxAnim.t += dt;
     // Arrastrado por una Embestida: sigue al caballero en vez de actuar normalmente

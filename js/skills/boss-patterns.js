@@ -166,17 +166,19 @@ const BOSS_ATTACKS = {
   levTidal(e, t, d){ skSafeZones(e, 2000, 1.6, "90,200,230", {slow:0.45, slowDur:1500}); bossAnnounce(e, "OLEADA", "¡metete en una burbuja verde!"); return true; },
 
   // ---- Mago de Hielo y Cristal (fase 1 de Hielo) ----
-  magNova(e, t, d){ if(d > 250) return false; skCircleSlam(e, 195, 700, 1.4, {frost:1}, "150,220,255", null, "bossCast"); e.skillAnim = {name:"nova_hielo", t:0}; bossAnnounce(e, "Nova de Hielo", "alejate de él"); return true; },
+  magNova(e, t, d){ if(d > 250) return false; skCircleSlam(e, 195, 700, 1.4, {frost:1}, "150,220,255", null, "bossCast"); e.skillAnim = {name:"nova_hielo", t:0}; bossSheetPack(e, "nova", 900); bossAnnounce(e, "Nova de Hielo", "alejate de él"); return true; },
   magBolts(e, t, d){
     bossWindup(e, 550, "bossCast", null, ()=>{
       for(const h of heroTargets(3)){
         const dx=h.x-e.x, dy=h.y-e.y, l=Math.hypot(dx,dy)||1;
-        for(let k=-1;k<=1;k++){ const a = Math.atan2(dy,dx)+k*0.16; projectiles.push({x:e.x, y:e.y-20, vx:Math.cos(a)*300, vy:Math.sin(a)*300, dmg:e.dmg*0.7, life:2200, radius:8, color:"#bfe8ff", enemy:true, src:e, frost:1}); }
+        for(let k=-1;k<=1;k++){ const a = Math.atan2(dy,dx)+k*0.16; projectiles.push({x:e.x, y:e.y-20, vx:Math.cos(a)*300, vy:Math.sin(a)*300, dmg:e.dmg*0.7, life:2200, radius:8, color:"#bfe8ff", enemy:true, src:e, frost:1, sprite:"bsMagoLance"}); }
       }
     });
+    bossSheetPack(e, "cast", 800);
     bossAnnounce(e, "Lanzas de Cristal", "esquivá de costado"); return true; },
   magBlizzard(e, t, d){
     const R = 265;
+    bossSheetPack(e, "canal", 850); bossSheetFx("bsMagoRune", e.x, e.y + 4, e.radius * 2.6, 900, {grow:0.25});
     bossWindup(e, 850, "bossCast", {shape:0, r:R, rgb:"200,235,255"}, ()=>{
       e.attackAnim = 500;
       for(const h of heroes){ if(!h.alive || distance(e,h) > R) continue; bossHitHero(h, e.dmg*0.6, {from:e, knock:50, slow:0.55, slowDur:2200, frost:1}); }
@@ -184,12 +186,13 @@ const BOSS_ATTACKS = {
       e.skillAnim = {name:"ventisca", t:0};
     });
     bossAnnounce(e, "Ventisca", "alejate del área"); return true; },
-  magFrostLine(e, t, d){ skLineStrikes(e, t.x-e.x, t.y-e.y, 7, 70, 52, 600, 110, 1.0, "ice", {frost:1, slow:0.4, slowDur:1400}); bossAnnounce(e, "Grieta Helada", "correte de la línea"); return true; },
+  magFrostLine(e, t, d){ bossSheetPack(e, "muro", 700); skLineStrikes(e, t.x-e.x, t.y-e.y, 7, 70, 52, 600, 110, 1.0, "ice", {frost:1, slow:0.4, slowDur:1400}); bossAnnounce(e, "Grieta Helada", "correte de la línea"); return true; },
   magGuards(e, t, d){
     if(enemies.some(o=>o.alive && o.bossGuardOf===e)) return false;
+    bossSheetPack(e, "encase", 1100);
     bossWindup(e, 900, "bossCast", {shape:0, r:140, rgb:"160,220,255"}, ()=>{
       for(let i=0;i<2;i++){
-        const a = i*Math.PI + Math.random()*0.6, g = spawnEnemy("golem_hielo", false, false);
+        const a = i*Math.PI + Math.random()*0.6, g = spawnEnemy("golem_cristal", false, false);
         g.x = e.x + Math.cos(a)*170; g.y = e.y + Math.sin(a)*170; clampToArena(g);
         g.hp = g.maxHp = Math.round(e.maxHp*0.06); g.bossGuardOf = e; g.scale *= 1.25; g.radius *= 1.2;
         vfxBurst(g.x, g.y-10, 12, "ice", 130, 400, 3, 1, -40, 0);
@@ -197,26 +200,41 @@ const BOSS_ATTACKS = {
       e.armorTimer = 999999; e.dmgTakenMult = 0.35; e.skillAnim = {name:"armadura_hielo", t:0};
     });
     bossAnnounce(e, "Guardianes de Cristal", "¡rompé los gólems: lo protegen!"); return true; },
+  // Esbirros de Cristal: servos cuerpo a cuerpo + cristales voladores que disparan escarcha (fase 2 y 3)
+  magServants(e, t, d){
+    if(enemies.length > 40 || enemies.filter(o=>o.alive && o.bossMinionOf===e).length >= 3) return false;
+    bossSheetPack(e, "cast", 900);
+    bossWindup(e, 900, "bossCast", {shape:0, r:130, rgb:"160,210,255"}, ()=>{
+      const list = ["cristal_servo", "cristal_servo", "cristal_servo", "cristal_volador", "cristal_volador"];
+      list.forEach((type, i)=>{
+        const a = (i/list.length)*Math.PI*2 + Math.random()*0.4, m = spawnEnemy(type, false, false);
+        m.x = e.x + Math.cos(a)*(e.radius+70); m.y = e.y + Math.sin(a)*(e.radius+70); clampToArena(m);
+        m.bossMinionOf = e;
+        bossSheetFx("bsMagoCrystal", m.x, m.y - 14, 34, 520, {grow:0.3});
+      });
+    });
+    bossAnnounce(e, "Esbirros de Cristal", "los voladores disparan escarcha: rompelos primero"); return true; },
 
   // ---- Ángel Caído de Hielo (fase 2 de Hielo) ----
   angStalactites(e, t, d){
     const pts = []; for(const h of heroTargets()) pts.push({x:h.x+(Math.random()-0.5)*26, y:h.y+(Math.random()-0.5)*26});
     const extra = e.hp < e.maxHp*0.35 ? 5 : 2;
     for(let i=0;i<extra;i++){ const a = Math.random()*Math.PI*2, r = 70+Math.random()*110; pts.push({x:t.x+Math.cos(a)*r, y:t.y+Math.sin(a)*r}); }
-    skStrikes(e, pts, 60, 1200, 1.0, "ice", {slow:0.4, slowDur:1600, frost:1}, null); bossAnnounce(e, "Lluvia de Estalactitas", "movete"); return true; },
-  angCharge(e, t, d){ if(d < 150 || d > 560) return false; skCharge(e, d, 600, 980, 1.4, {knock:70, frost:2}, "190,235,255", null); bossAnnounce(e, "Juicio Gélido", "movete de costado"); return true; },
-  angWings(e, t, d){ if(!heroes.some(h=>h.alive && distance(e,h) < 150)) return false; skCircleSlam(e, 170, 550, 0.8, {knock:90, slow:0.45, slowDur:1800, frost:1}, "200,235,255", null, "bossCast"); bossAnnounce(e, "Alas de Ventisca", "¡alejate!"); return true; },
-  angDonut(e, t, d){ skDonut(e, 95, 330, 1100, 1.3, {frost:2}, "170,225,255"); bossAnnounce(e, "Tormenta Eterna", "¡pegate a él o alejate mucho!"); return true; },
+    skStrikes(e, pts, 60, 1200, 1.0, "ice", {slow:0.4, slowDur:1600, frost:1}, null); bossSheetPack(e, "cast", 900); bossAnnounce(e, "Lluvia de Estalactitas", "movete"); return true; },
+  angCharge(e, t, d){ if(d < 150 || d > 560) return false; skCharge(e, d, 600, 980, 1.4, {knock:70, frost:2}, "190,235,255", null); bossSheetPack(e, "fly", 1500); bossAnnounce(e, "Juicio Gélido", "movete de costado"); return true; },
+  angWings(e, t, d){ if(!heroes.some(h=>h.alive && distance(e,h) < 150)) return false; skCircleSlam(e, 170, 550, 0.8, {knock:90, slow:0.45, slowDur:1800, frost:1}, "200,235,255", null, "bossCast"); bossSheetPack(e, "wing", 800); bossSheetFx("bsAngelNova", e.x, e.y - e.radius*0.4, 340, 700, {grow:0.4}); bossAnnounce(e, "Alas de Ventisca", "¡alejate!"); return true; },
+  angDonut(e, t, d){ bossSheetPack(e, "aura", 1100); skDonut(e, 95, 330, 1100, 1.3, {frost:2}, "170,225,255"); bossAnnounce(e, "Tormenta Eterna", "¡pegate a él o alejate mucho!"); return true; },
   angCross(e, t, d){
     const base = Math.atan2(t.y-e.y, t.x-e.x);
     for(let k=0;k<4;k++){ const a = base + k*Math.PI/2; skLineStrikes(e, Math.cos(a), Math.sin(a), 6, 72, 50, 700, 95, 0.9, "ice", {frost:1}); }
+    bossSheetPack(e, "storm", 900);
     bossAnnounce(e, "Cruz de Hielo", "ponete en diagonal"); return true; },
-  angTripleCharge(e, t, d){ if(d < 100) return false; skMultiCharge(e, 3, 580, 1000, 1.3, {knock:60, frost:1}, "190,235,255"); bossAnnounce(e, "Juicio Final", "¡3 embestidas!"); return true; },
+  angTripleCharge(e, t, d){ if(d < 100) return false; skMultiCharge(e, 3, 580, 1000, 1.3, {knock:60, frost:1}, "190,235,255"); bossSheetPack(e, "fly", 3200); bossAnnounce(e, "Juicio Final", "¡3 embestidas!"); return true; },
 
   // ---- Minotauro (Laberinto) ----
   minCharge(e, t, d){ if(d < 140 || d > 700) return false; skCharge(e, d, 720, 1150, 1.6, {knock:110, stun:500}, "255,120,80", null); e.minoCharge = true; bossAnnounce(e, "Embestida", "hacelo chocar contra un muro"); return true; },
-  minAxe(e, t, d){ if(d > 210) return false; skCircleSlam(e, 200, 700, 1.3, {knock:70}, "255,140,90", null, "bossHeavyAttack"); bossAnnounce(e, "Hachazo Giratorio", "alejate"); return true; },
-  minStomp(e, t, d){ if(d > 170) return false; skCircleSlam(e, 160, 600, 1.1, {stun:600}, "200,170,120", null, "bossGroundSlam"); bossAnnounce(e, "Pisotón", "¡salí del círculo!"); return true; },
+  minAxe(e, t, d){ if(d > 210) return false; skCircleSlam(e, 200, 700, 1.3, {knock:70}, "255,140,90", null, "bossHeavyAttack", ()=>bossSheetFx("bsMinoWave", e.x, e.y + 6, 180, 620)); bossAnnounce(e, "Hachazo Giratorio", "alejate"); return true; },
+  minStomp(e, t, d){ if(d > 170) return false; skCircleSlam(e, 160, 600, 1.1, {stun:600}, "200,170,120", null, "bossGroundSlam", ()=>bossSheetFx("bsMinoWave", e.x, e.y + 6, 145, 620)); bossAnnounce(e, "Pisotón", "¡salí del círculo!"); return true; },
   minRocks(e, t, d){
     const pts = heroTargets(3).map(h=>({x:h.x, y:h.y})); for(let i=0;i<2;i++){ const a = Math.random()*Math.PI*2; pts.push({x:t.x+Math.cos(a)*80, y:t.y+Math.sin(a)*80}); }
     skStrikes(e, pts, 64, 1150, 1.1, "rock", {knock:40}, null); bossAnnounce(e, "Derrumbe", "movete"); return true; },
@@ -274,8 +292,8 @@ const BOSS_DESIGNS = {
     tips:["La NOVA y la VENTISCA salen de él: alejate cuando brilla.", "Si invoca gólems guardianes, rompelos: le quitan el blindaje.", "Al caer se transforma: guardá energía para la 2ª fase."],
     phases:[
       {hp:1.00, gap:[1100,1600], rot:["magBolts","magNova","magFrostLine","magBlizzard"]},
-      {hp:0.60, gap:[950,1400], rot:["magGuards","magBolts","magFrostLine","magNova","magBlizzard"], banner:"¡EL MAGO SE BLINDA!"},
-      {hp:0.30, gap:[750,1100], rot:["magFrostLine","magBolts","magBlizzard","magNova","magGuards"]}
+      {hp:0.60, gap:[950,1400], rot:["magGuards","magBolts","magFrostLine","magNova","magServants","magBlizzard"], banner:"¡EL MAGO SE BLINDA!"},
+      {hp:0.30, gap:[750,1100], rot:["magFrostLine","magBolts","magServants","magBlizzard","magNova","magGuards"]}
     ]
   },
   angel_caido_hielo: {

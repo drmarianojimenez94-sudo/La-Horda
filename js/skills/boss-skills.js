@@ -159,13 +159,14 @@ function updateBossSkillWorld(dt){
 }
 
 // ---- piezas de kit reutilizables ----
-function skCircleSlam(e, R, windMs, mult, o, rgb, label, anim){
+function skCircleSlam(e, R, windMs, mult, o, rgb, label, anim, onResolve){
   bossWindup(e, windMs, anim||"bossGroundSlam", {shape:0, r:R, rgb}, ()=>{
     e.attackAnim = 500;
     const oo = Object.assign({from:e}, o||{});
     for(const h of heroes){ if(h.alive && distance(e,h) <= R + (h.radius||18)*0.5) bossHitHero(h, e.dmg*mult, oo); }
     vfxShock(e.x, e.y, e.radius*0.4, R, rgb, 480, 2);
     particles.push({x:e.x, y:e.y, life:520, ring:true, maxLife:520, maxR:R, color:"rgb("+rgb+")"});
+    if(onResolve) onResolve();
   });
   if(label) bossSkillLabel(e, label);
 }

@@ -159,6 +159,7 @@ function onBossDefeated(){
     boss.bossPhase = 2;
     bossHudShow(boss);
     animTrigger(boss, "bossPhaseTransition", 1300);
+    bossSheetPack(boss, "transf", 1300); // el Ángel toma forma (hoja del Ángel Caído)
     bossPhaseFeedback();
     showBanner("¡EL MAGO SE TRANSFORMA EN EL ÁNGEL CAÍDO DE HIELO!");
     return; // sigue la pelea de jefe, todavía no termina la partida

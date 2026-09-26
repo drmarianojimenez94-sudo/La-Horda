@@ -120,10 +120,10 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 
 | # | Entidad | Arena / rol | Hoy | A producir |
 |---|---------|-------------|-----|------------|
-| I1 | **Jinete Sin Cabeza** | Ruinas del Bosque, jefe final | 1 frame (54×50) | **Galope 4 frames** (perfil derecha) + **ataque 4 frames**. Opcional: pose de "Resurrección Eterna" (2 a 3 frames) — *El Pack 2 trae otro diseño (caballo negro con cabeza en llamas) distinto del Jinete actual (caballo pálido), con halos grises y cortes: no se integró.* |
-| I2 | **Mago de Hielo y Cristal** | Hielo, jefe final (fase 1) | 1 frame (38×44). Los efectos de Ventisca, Nova y Armadura YA existen | **Caminata o flotación 4 frames** + **cast 3 frames** |
-| I3 | **Ángel Caído de Hielo** | Hielo, jefe final (fase 2) | 1 frame (42×43) | **Vuelo/caminata 4 frames** + **ataque 4 frames** |
-| I4 | **Tundraverx (Dragón de Hielo)** | Hielo, élite/jefe intermedio | 1 frame (39×38). El Aliento y la Nova (con el cuerpo incluido) YA existen | **Vuelo/caminata 4 frames** (perfil derecha) |
+| I1 | ~~**Jinete Sin Cabeza**~~ ✅ | Ruinas del Bosque, jefe final | **Integrado** (hoja I1-I4): galope de perfil 4, ataque 3, muerte 5, frente 3. Diseño nuevo (caballo negro con llamas azules) reemplaza al caballo pálido | Opcional: pose de "Resurrección Eterna" |
+| I2 | ~~**Mago de Hielo y Cristal**~~ ✅ | Hielo, jefe final (fase 1) | **Integrado** (hoja 12): idle 4, caminar 5, básico 3, lanza 4, nova 3, canalización 4, encierro de hielo 4, muro 3, muerte 3 + efectos (lanza de cristal, runa, estallido) | — |
+| I3 | ~~**Ángel Caído de Hielo**~~ ✅ | Hielo, jefe final (fase 2) | **Integrado** (hoja 13): idle, caminar 5, ataque 4, vuelo 4, preparación 4, alas 3, tormenta 4, transformación 5, aura 4, congelación 3, recuperación 4, muerte 8 + efectos (nova). Diseño nuevo (ángel con alas de cristal) reemplaza a la gárgola | — |
+| I4 | ~~**Tundraverx (Dragón de Hielo)**~~ ✅ | Hielo, élite/jefe intermedio | **Integrado** (hoja I1-I4): caminar de perfil 4, aliento 3, muerte 5. Diseño nuevo: dragón cuadrúpedo de cristal, sin alas (el lore de la Esquirla pasó de "ala" a "cresta") | — |
 | I5 | **Doblador — Guerrero** | Bosque, subjefe | 1 frame (32×38) | **Caminata 4 frames** + **ataque 3 frames** |
 | I6 | **Doblador — Arquera** | Bosque, subjefe | 1 frame (25×40) | **Caminata 4 frames** + **disparo 3 frames** |
 | I7 | **Doblador — Pícaro** | Bosque, subjefe | 1 frame (30×40) | **Caminata 4 frames** + **ataque 3 frames** |

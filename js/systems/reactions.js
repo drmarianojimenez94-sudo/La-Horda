@@ -31,7 +31,7 @@ const ENEMY_ARENA_RESIST = {
   micelial:{fire:-0.25}, hielo:{ice:0.4, fire:-0.25}, laberinto:{}, infernal:{fire:0.4, ice:-0.25}
 };
 const ENEMY_TYPE_RESIST = {
-  golem:{physical:0.2}, golem_piedra:{physical:0.2}, golem_hielo:{ice:0.5, physical:0.15}, cangrejo_acorazado:{physical:0.15},
+  golem:{physical:0.2}, golem_piedra:{physical:0.2}, golem_hielo:{ice:0.5, physical:0.15}, golem_cristal:{ice:0.5, physical:0.15}, cristal_servo:{ice:0.5}, cristal_volador:{ice:0.5}, cangrejo_acorazado:{physical:0.15},
   medusa_electrica:{lightning:0.5}, anguila_electrica:{lightning:0.5}, demonio_hielo_fuego:{fire:0.3, ice:0.3},
   esqueleto:{bleed:0.5}, esqueleto_h:{bleed:0.5}, ent:{fire:-0.3}
 };
@@ -39,7 +39,7 @@ const INNATE_WET = {tiburon_joven:1, tiburon_blanco:1, medusa_electrica:1, cangr
 // Tipo del daño que hacen los enemigos a los héroes (para las resistencias de los objetos).
 const ENEMY_ARENA_DMG = {hielo:"ice", infernal:"fire"};
 const ENEMY_TYPE_DMG = {medusa_electrica:"lightning", anguila_electrica:"lightning", dragoncito_hielo:"ice", angel_hielo:"ice", dragon_hielo:"ice",
-  mago_hielo_cristal:"ice", angel_caido_hielo:"ice", demonio_menor:"fire", demonio_mago:"fire", demonio_mayor:"fire", demonio_hielo_fuego:"fire"};
+  mago_hielo_cristal:"ice", cristal_volador:"ice", angel_caido_hielo:"ice", demonio_menor:"fire", demonio_mago:"fire", demonio_mayor:"fire", demonio_hielo_fuego:"fire"};
 
 function dmgKindOf(opts){
   if(opts.dmgKind) return opts.dmgKind;

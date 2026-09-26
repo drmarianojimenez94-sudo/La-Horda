@@ -63,7 +63,7 @@ const NAMED_LEGENDARIES = {
   // — Invierno (receta: Corona del Invierno Sin Fin)
   leg_tundraverx:{name:"Esquirla de Tundraverx", epithet:"la que muerde el aire", type:"arma", element:"ice", proc:"basic_freeze",
     props:[{effect:"dmg_mult",value:0.10},{effect:"crit_chance_add",value:0.04}], arenas:{hielo:5, acuatica:1},
-    lore:"Arrancada del ala del Soberano de Hielo. Todavía está fría al tacto, aunque la dejes al sol."},
+    lore:"Arrancada de la cresta del Soberano de Hielo. Todavía está fría al tacto, aunque la dejes al sol."},
   leg_glaciar_manto:{name:"Manto del Glaciar Dormido", epithet:"que nunca despertó", type:"pechera", element:"ice", proc:"frost_aura",
     props:[{effect:"hp_mult",value:0.10},{effect:"def_add",value:0.05}], arenas:{hielo:5, micelial:1},
     lore:"Tejido con escarcha de un glaciar que duerme desde antes de la primera horda."},

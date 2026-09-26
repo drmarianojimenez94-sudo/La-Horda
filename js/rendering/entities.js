@@ -505,6 +505,10 @@ function _drawProjCore(p){
   if((p.sprite==="hsOrb" || p.sprite==="gcHand") && acua2Ready(p.sprite)){
     // orbe del Hechicero / restos del Golem (arte de su hoja)
     drawImgSized(acua2Pick(p.sprite, p.sprite==="hsOrb" ? 1 : 0), p.x, p.y, r*(p.sprite==="hsOrb" ? 4.2 : 3.6), 0.5, 0.5, false, undefined, p.sprite==="hsOrb" ? Math.atan2(p.vy||0, p.vx||0) : animNow/160);
+  } else if(p.sprite && VFX_SPR_EXTRA[p.sprite] && vfxSprReady(p.sprite)){
+    // proyectil con arte de las hojas de jefes (lanza de cristal del Mago...): apunta a donde viaja
+    const arr = vfxSprImgs(p.sprite);
+    drawImgSized(arr[Math.floor(animNow/80) % arr.length], p.x, p.y, r*2.6, 0.5, 0.5, false, undefined, Math.atan2(p.vy||0, p.vx||0));
   } else if(p.sprite==="orb" && acua2Ready("fxOrb")){
     drawImgSized(acua2Pick("fxOrb",0), p.x, p.y, r*3.4, 0.5, 0.5, false, undefined, animNow/300);
   } else {

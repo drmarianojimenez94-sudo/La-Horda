@@ -8,7 +8,7 @@
 
 // Bestiario de la Arena Infernal, ordenado de menor a mayor dificultad
 // Color visual del proyectil enemigo según la criatura (solo cosmético: daño/velocidad no cambian).
-const ENEMY_PROJ_COLOR = {dragoncito_hielo:"#8fd0ff", angel_hielo:"#bfe8ff", mago_hielo_cristal:"#bfe8ff", angel_caido_hielo:"#bfe8ff", dragon_hielo:"#8fd0ff",
+const ENEMY_PROJ_COLOR = {cristal_volador:"#bfe8ff", dragoncito_hielo:"#8fd0ff", angel_hielo:"#bfe8ff", mago_hielo_cristal:"#bfe8ff", angel_caido_hielo:"#bfe8ff", dragon_hielo:"#8fd0ff",
   enjambre_hadas:"#e0a0ff", dama_bosque:"#8fd46a", doblador_arquera:"#c9d8ff", doblador_clerigo:"#fff0a0",
   medusa:"#8fe0a0", druida_arena:"#e0c070", esfinge:"#ffd76a", sirena_abisal:"#7fd0e0", jinete_sin_cabeza:"#b0a0ff"};
 const ENEMY_BASE = {
@@ -32,6 +32,10 @@ const ENEMY_BASE = {
   demonio_hielo_fuego:{name:"Demonio de Hielo y Fuego", rank:"elite",    hp:150, dmg:15, speed:96,  radius:28, xp:22, gold:9,  scale:4.0, color:"#4a6ea8", ranged:false, dropsItem:true, visualAlias:"demonio_mago", slowOnHit:0.3, burnOnHit:true},
   dragon_hielo:       {name:"Tundraverx, Soberano de Hielo", rank:"elite", hp:420, dmg:20, speed:50, radius:44, xp:60, gold:24, scale:6.0, color:"#7fc0f0", ranged:true, range:320, projSpeed:260, dropsItem:true, visualAlias:"golem"},
   mago_hielo_cristal: {name:"Mago de Hielo y Cristal",  rank:"jefe",     hp:1500,dmg:20, speed:56,  radius:40, xp:0,  gold:0,  scale:4.2, color:"#c9e6ff", ranged:true, range:320, projSpeed:270, visualAlias:"demonio_mago"},
+  // Guardianes de cristal del Mago (los invoca en combate; no salen en las oleadas normales)
+  golem_cristal:      {name:"Gólem de Cristal",         rank:"normal",   hp:62,  dmg:9,  speed:44,  radius:24, xp:6,  gold:2,  scale:3.4, color:"#6fa8e8", ranged:false, visualAlias:"zombie", slowOnHit:0.25},
+  cristal_servo:      {name:"Servo de Cristal",         rank:"normal",   hp:26,  dmg:6,  speed:92,  radius:16, xp:3,  gold:1,  scale:2.6, color:"#9ec8ff", ranged:false, visualAlias:"esqueleto", slowOnHit:0.15},
+  cristal_volador:    {name:"Cristal Volador",          rank:"normal",   hp:20,  dmg:6,  speed:84,  radius:15, xp:3,  gold:1,  scale:2.6, color:"#bfe8ff", ranged:true, range:240, projSpeed:250, visualAlias:"esqueleto_h"},
   angel_caido_hielo:  {name:"Ángel Caído de Hielo",     rank:"jefe",     hp:2600,dmg:26, speed:48,  radius:68, xp:280,gold:130, scale:8.5, color:"#bfe0f5", ranged:true, range:300, projSpeed:250, dropsItem:true, visualAlias:"demonio_mayor"},
 
   // --- Ruinas del Bosque: roster nuevo. "visualAlias" apunta a un sprite procedural existente

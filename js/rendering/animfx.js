@@ -58,6 +58,9 @@ const ANIM_PROFILES = {
   angel_hielo:        {speed:0.9, basic:"cast", cast:1.3, material:"ice", death:"dissolve"},
   demonio_hielo_fuego:{speed:1.0, weight:1.2, lunge:12, material:"ember", death:"frames"},
   dragon_hielo:       {speed:0.7, weight:2.0, amp:0.8, basic:"ranged", impact:1.8, material:"ice", death:"collapse"},
+  golem_cristal:      {speed:0.6, weight:2.0, amp:0.7, lunge:10, impact:1.8, material:"ice",   death:"frames"},
+  cristal_servo:      {speed:1.1, lunge:12, material:"ice", death:"frames"},
+  cristal_volador:    {speed:1.2, weight:0.4, amp:1.2, basic:"ranged", material:"ice", death:"frames"},
   mago_hielo_cristal: {speed:0.9, basic:"cast", cast:1.6, material:"ice", death:"dissolve"},
   angel_caido_hielo:  {speed:0.8, weight:2.0, basic:"cast", cast:1.7, impact:2.0, material:"ice", death:"collapse"},
   duende_bosque:      {speed:1.5, weight:0.5, amp:1.3, lunge:8, material:"leaf", death:"frames"},
@@ -112,6 +115,7 @@ function animProfileOf(ent){
   if(!src.weight && ent.radius) p.weight = Math.max(0.6, Math.min(2.4, ent.radius/26));
   if(!p.tier){
     if(ENEMY_ANIM_ATLASES[ent.type]) p.tier = "full";
+    else if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[ent.type]) p.tier = "full"; // hojas de jefes: animación real completa
     else if(REAL_ANIM_ATLASES[ent.type]) p.tier = "walk";
     else if(ICE_REAL_IMG[ent.type]){ p.tier = "static"; p.hasBob = true; }
     else if(ACUA_ENEMY_TYPES[ent.type]) p.tier = "static";
