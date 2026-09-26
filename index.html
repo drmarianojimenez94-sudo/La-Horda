@@ -189,12 +189,13 @@
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
     <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
-    <div class="shop-section-title">Objetos del día</div>
-    <div class="lobby-note" id="shop-items-note">Cambian todos los días. Los Míticos se fabrican y los Únicos solo se ganan: acá no se venden.</div>
-    <div id="shop-items"></div>
-    <div class="shop-section-title">Campeones</div>
-    <div id="shop-champ-grid"></div>
-    <div class="shop-soon-box shop-soon-small">Skins y efectos visuales: próximamente.</div>
+    <div class="shop-tabs" id="shop-tabs">
+      <button class="shop-tab on" data-shop-tab="campeones">Campeones</button>
+      <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
+      <button class="shop-tab" data-shop-tab="skins">Skins</button>
+    </div>
+    <div class="lobby-note shop-test-note">Etapa de prueba: todos los campeones y todos los objetos cuestan 1.000 de oro.</div>
+    <div id="shop-panel"></div>
     <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
@@ -468,6 +469,7 @@
 <script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/item-icons.js"></script>
 <script src="js/ui/item-preview.js"></script>
+<script src="js/ui/shop-ui.js"></script>
 <script src="js/ui/inventory-ui.js"></script>
 <script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>

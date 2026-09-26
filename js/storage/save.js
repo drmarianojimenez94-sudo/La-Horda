@@ -46,7 +46,7 @@ function defaultSave(){
   return {
     champions,
     itemSchemaV: ITEM_SCHEMA_VERSION,
-    gold:0, gems:0, // GEMAS: recurso ganado jugando, SOLO para subir el nivel de objetos (js/systems/gems.js). No es moneda premium: una futura moneda premium va en otro campo.
+    gold:TEST_START_GOLD, gems:0, // oro inicial: regalo único de la etapa de prueba (ver testStageReset) · GEMAS: recurso ganado jugando, SOLO para subir el nivel de objetos (js/systems/gems.js). No es moneda premium: una futura moneda premium va en otro campo.
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
@@ -54,6 +54,8 @@ function defaultSave(){
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
     campaignResetV3:true,   // 3er reinicio (antes de la prueba real con un amigo): idem
+    testStageV1:true,       // BUGFIX 01: reinicio de la etapa de prueba (nivel 1, bloqueados, solo la Arena 1, 10.000 de oro UNA vez)
+    startGoldNotice:false,  // aviso del regalo inicial pendiente de mostrar (se muestra una vez y se apaga)
     starterChosen:false,    // todavía no eligió su campeón de regalo (pantalla "Tu primer campeón")
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
@@ -64,12 +66,18 @@ function defaultSave(){
     shop:null               // ofertas de objetos del día (js/systems/shop.js)
   };
 }
+// ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
+// campeones, objetos y sets. Va en el guardado nuevo (defaultSave) o se da en el reinicio de la etapa
+// (testStageReset, marcado con testStageV1): recargar, reconectar, morir o cambiar de arena no lo repite
+// porque el oro se lee siempre del guardado persistido.
+const TEST_START_GOLD = 10000;
 let save = defaultSave();
 // MODO PRUEBA (pedido para seguir probando): todos los campeones liberados y todas las arenas de la
 // campaña abiertas, en guardados nuevos y viejos. No toca niveles, oro, objetos ni talentos.
 // Para volver al modo campaña normal, poner esto en false. (Las pruebas automáticas de la campaña
 // lo apagan definiendo window.__campaignMode antes de cargar la página.)
-const PLAYTEST_UNLOCK_ALL = !(typeof window!=="undefined" && window.__campaignMode);
+// BUGFIX 01: apagado. La campaña es secuencial (solo la Arena 1 abierta) y los campeones se compran.
+const PLAYTEST_UNLOCK_ALL = false;
 function applyPlaytestUnlock(){
   if(!PLAYTEST_UNLOCK_ALL) return;
   let changed = !save.starterChosen;
@@ -127,6 +135,7 @@ function _loadSaveInner(){
       // nace con todas las flags en true. Si hace falta otro reinicio más, agregar campaignResetV4
       // igual (acá, en defaultSave() y en campaignReset()).
       if(!parsed.campaignResetV3){ campaignReset(raw); }
+      if(!parsed.testStageV1){ testStageReset(raw); }
       if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
       // El Reino Micelial llegó como 4ta arena (entre la Fortaleza y el Hielo): quien ya había superado
       // la Fortaleza tenía el Hielo abierto, y lo conserva (una sola vez).
@@ -136,6 +145,8 @@ function _loadSaveInner(){
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
       // sesión que solo mira sin tocar nada perdería el arreglo al cerrar el navegador.
       if(needsRarityMigration) persist();
+    } else {
+      save.startGoldNotice = true; persist(); // perfil nuevo: el regalo ya viene en defaultSave; queda guardado desde ya
     }
   }catch(e){ save = defaultSave(); }
 }
@@ -187,6 +198,21 @@ function campaignReset(raw){
   save.campaignResetV1 = true;
   save.campaignResetV2 = true;
   save.campaignResetV3 = true;
+  save.testStageV1 = true;
+  persist();
+}
+// BUGFIX 01 — reinicio de la etapa de prueba (una sola vez por perfil, marcado con testStageV1):
+// campeones a nivel 1 y bloqueados (se elige UNO de regalo, el resto se compra), solo la Arena 1
+// abierta, inventario y equipo vacíos y 10.000 de oro. El guardado anterior queda copiado en
+// localStorage (SAVE_KEY + "_antesDeEtapaPrueba").
+function testStageReset(raw){
+  try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeEtapaPrueba")) localStorage.setItem(SAVE_KEY+"_antesDeEtapaPrueba", raw); }catch(e){}
+  campaignReset(raw);
+  for(const k in save.champions) save.champions[k].equipment = mkEquipment();
+  save.stash = []; save.gems = 0; save.relics = defaultSave().relics;
+  save.lootPity = defaultSave().lootPity; save.shop = null;
+  save.gold = TEST_START_GOLD;
+  save.testStageV1 = true; save.startGoldNotice = true;
   persist();
 }
 // ¿Tiene que elegir todavía su campeón de regalo? Solo mientras no tenga ningún campeón propio

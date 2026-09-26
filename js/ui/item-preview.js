@@ -25,7 +25,8 @@ function itemSetBlockHTML(it, classKey){
     <div class="ip-pieces">${pieces}</div>
     <div class="ip-sub">Equipadas: ${eqN}/${total}${next?` · Próximo bonus con ${next.count}`:" · ¡Completo!"} · ${skin}</div>${bon}</div>`;
 }
-function itemDetailHTML(it, classKey){
+function itemDetailHTML(it, classKey, opts){
+  opts = opts || {};
   const col = itemColor(it), tier = itemTier(it), lv = itemLevel(it);
   const [lo, hi] = itemStatRange(it);
   const owner = it.designed && it.champion ? `Solo ${CLASSES[it.champion].name}` : "Universal";
@@ -37,7 +38,7 @@ function itemDetailHTML(it, classKey){
   const cost = gemUpgradeCost(it);
   const upg = cost===null ? `<div class="ip-upg max">Nivel máximo</div>`
     : `<button class="ip-upg-btn ${(save.gems||0) >= cost ? "ready" : ""}" data-ip-upgrade="${it.uid}">Mejorar a Nv.${lv+1} · ◆ ${cost} gema${cost>1?"s":""}</button><span class="ip-sub"> (tenés ${save.gems||0} · al máximo: ◆ ${gemCostToMax(it)})</span>`;
-  const compare = (classKey && canEquipItem(classKey, it) && itemEquippedBy(it.uid)!==classKey && typeof compareItemsHTML==="function") ? compareItemsHTML(classKey, it) : "";
+  const compare = (!opts.shop && classKey && canEquipItem(classKey, it) && itemEquippedBy(it.uid)!==classKey && typeof compareItemsHTML==="function") ? compareItemsHTML(classKey, it) : "";
   const lore = it.designed && DESIGNED_ITEMS[it.designId] ? DESIGNED_ITEMS[it.designId].lore : null;
   return `<div class="ip-card tier-${tier}" style="--ic:${col}">
     <div class="ip-top">${itemIconHTML(it, "ip-art")}
@@ -50,7 +51,7 @@ function itemDetailHTML(it, classKey){
     <div class="ip-sec"><div class="ip-h">EFECTO</div>${eff}</div>
     ${itemSetBlockHTML(it, classKey)}
     ${compare}
-    <div class="ip-sec ip-upgrade"><div class="ip-h">MEJORAR</div>${upg}</div>
+    ${opts.shop ? "" : `<div class="ip-sec ip-upgrade"><div class="ip-h">MEJORAR</div>${upg}</div>`}
     ${lore ? `<div class="ip-sec ip-lore"><div class="ip-h">LORE</div><i>“${lore}”</i></div>` : ""}
   </div>`;
 }

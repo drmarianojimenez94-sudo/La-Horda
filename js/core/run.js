@@ -226,7 +226,11 @@ function finishBossVictory(){
   // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
   // save.arenasCleared trackea cada una de verdad y persiste.
   save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false};
+  const firstClear = !save.arenasCleared[currentArena];
   save.arenasCleared[currentArena] = true;
+  // BUGFIX 01: la campaña es secuencial -la primera victoria en una arena abre la siguiente-
+  const nextArena = ARENA_ORDER[ARENA_ORDER.indexOf(currentArena) + 1];
+  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${(ARENA_MODS[nextArena]||{}).label||nextArena}`), 2600); }
   if(ARENA_ORDER.every(a=>save.arenasCleared[a]) && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;
   }

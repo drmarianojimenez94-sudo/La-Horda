@@ -57,6 +57,8 @@ function grantPlaytestV1Bonus(){
 }
 function renderMainMenu(){
   if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
+  // BUGFIX 01: aviso único del regalo de la etapa de prueba (10.000 de oro)
+  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Etapa de prueba: recibiste 10.000 de oro. Probá campeones, objetos y sets en la Tienda."); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
@@ -89,48 +91,7 @@ function startChampAnimLoop(){
   requestAnimationFrame(tick);
 }
 function fmtGold(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
-// Tienda: catálogo de campeones (CHAMPION_CATALOG) con el personaje animado, precio y estado.
-// Tocar una tarjeta abre su ficha (renderChampDetail), que tiene la compra real si está bloqueado.
-function renderShop(){
-  document.getElementById("shop-gold-line").innerHTML = `Oro: <b>${fmtGold(save.gold)}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
-  renderShopItems();
-  const grid = document.getElementById("shop-champ-grid");
-  if(!grid) return;
-  grid.innerHTML = CHAMPION_CATALOG.map(c=>{
-    const cls = CLASSES[c.id], champ = save.champions[c.id], owned = champ.unlocked;
-    return `<button class="gallery-card shop-champ-card ${owned?"":"locked"}" data-champ="${c.id}">
-      <canvas class="champ-anim shop-champ-anim" width="96" height="96" data-class-key="${c.id}" style="background:${cls.color}1c;"></canvas>
-      <div class="gallery-card-name">${cls.name}</div>
-      <div class="gallery-card-price">🪙 ${fmtGold(c.priceGold)}</div>
-      ${owned ? `<div class="shop-owned">✔ Tuyo · Nv. ${champ.level}</div>` : `<div class="shop-owned locked">🔒 Bloqueado</div>`}
-    </button>`;
-  }).join("");
-  grid.querySelectorAll(".shop-champ-card").forEach(card=>{
-    card.addEventListener("click", ()=>{
-      renderChampDetail(card.getAttribute("data-champ"));
-      setState("champdetail");
-    });
-  });
-  startChampAnimLoop();
-}
-// Ofertas de objetos del día (js/systems/shop.js)
-function renderShopItems(){
-  const box = document.getElementById("shop-items"); if(!box) return;
-  const st = shopState();
-  box.innerHTML = '<div class="inv-list shop-items-list">' + st.offers.map(of=>{
-    const it = of.item, poor = save.gold < of.price;
-    return `<div class="shop-offer ${of.sold?"sold":""}">${itemCardHTML(it, {actions:false})}
-      <button class="btn shop-buy" data-buy="${of.id}" ${(of.sold||poor)?"disabled":""}>${of.sold ? "Vendido" : `🪙 ${fmtGold(of.price)}`}</button></div>`;
-  }).join("") + '</div>';
-  box.querySelectorAll("[data-buy]").forEach(b=> b.addEventListener("click", ()=>{
-    const of = st.offers.find(o=>o.id===b.getAttribute("data-buy"));
-    if(!of || !confirm(`¿Comprar ${of.item.name} por ${fmtGold(of.price)} de oro?`)) return;
-    const r = shopBuy(of.id);
-    if(!r.ok){ alert(r.reason); return; }
-    if(typeof playSfx==="function") playSfx(of.tier==="legendario" ? "lootLegend" : "ready");
-    renderShop(); if(typeof renderSaveLine==="function") renderSaveLine();
-  }));
-}
+// Tienda: ver js/ui/shop-ui.js (renderShop).
 // Ficha individual: si está bloqueado, muestra precio y botón funcional de desbloqueo real
 // (descuenta oro de verdad y persiste); si no, muestra sus datos de progreso reales.
 function renderChampDetail(champId){
@@ -208,7 +169,7 @@ document.getElementById("mode-arena-btn").addEventListener("click", ()=>{
 // onBossDefeated) -no se perdió nada de esa lógica-, esto es solo un interruptor de
 // exhibición: para la versión real, cambiar el "true" de acá por
 // "ARENA_ORDER.every(a=>save.arenasCleared[a])".
-function isDivinaUnlocked(){ return true; }
+function isDivinaUnlocked(){ return ARENA_ORDER.every(a=>save.arenasCleared[a]); } // BUGFIX 01: campaña real
 document.getElementById("divina-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
@@ -230,11 +191,13 @@ function renderArenaGrid(){
     const a = ARENA_MODS[key];
     const unlocked = isArenaUnlocked(key);
     const selected = currentArena===key;
-    return `<button class="arena-card ${selected?"selected":""} ${unlocked?"":"locked"}" data-arena="${key}" ${unlocked?"":"disabled"}>
-      ${selected?'<span class="arena-card-badge">ELEGIDA</span>':""}
+    const fresh = save.justUnlockedArena===key;
+    return `<button class="arena-card ${selected?"selected":""} ${unlocked?"":"locked"} ${fresh?"fresh":""}" data-arena="${key}" ${unlocked?"":"disabled"}>
+      ${selected?'<span class="arena-card-badge">ELEGIDA</span>':(fresh?'<span class="arena-card-badge fresh">¡NUEVA!</span>':"")}
       <div class="arena-card-icon">${unlocked?a.icon:"🔒"}</div>
       <div class="arena-card-title">${a.label}</div>
-      <div class="arena-card-desc">${unlocked?a.desc:"Todavía no desbloqueada."}</div>
+      <div class="arena-card-desc">${unlocked?a.desc:`🔒 Completá <b>${(ARENA_MODS[ARENA_ORDER[ARENA_ORDER.indexOf(key)-1]]||{}).label||"la arena anterior"}</b> para desbloquearla.`}</div>
+      ${unlocked && save.arenasCleared[key] ? '<div class="arena-card-done">✔ Completada</div>' : ""}
     </button>`;
   }).join("");
   // Arena Divina: la más difícil de todas, va DESPUÉS de la Infernal en esta misma grilla
@@ -245,12 +208,13 @@ function renderArenaGrid(){
       <span class="arena-card-badge" style="color:#d9a8ff; border-color:#7a4fae; background:rgba(122,79,174,0.16);">LA MÁS DIFÍCIL</span>
       <div class="arena-card-icon">${divinaUnlocked?"👁":"🔒"}</div>
       <div class="arena-card-title">Arena Divina</div>
-      <div class="arena-card-desc">${divinaUnlocked?"Asedio 4 contra 4: derribá las torres y el castillo enemigo antes que a los tuyos.":"Completá las 4 arenas para desbloquearla."}</div>
+      <div class="arena-card-desc">${divinaUnlocked?"Asedio 4 contra 4: derribá las torres y el castillo enemigo antes que a los tuyos.":"🔒 Completá las 7 arenas de la campaña para desbloquearla."}</div>
     </button>`;
   grid.innerHTML = normalCards + divinaCard;
   grid.querySelectorAll(".arena-card:not(.locked)").forEach(card=>{
     card.addEventListener("click", ()=>{
       const key = card.getAttribute("data-arena");
+      if(save.justUnlockedArena===key){ save.justUnlockedArena = null; persist(); }
       if(key==="divina"){ setState("divina"); return; }
       currentArena = key;
       updateMenuBrandSub();

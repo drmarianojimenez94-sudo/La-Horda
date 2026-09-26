@@ -341,3 +341,64 @@
 #net-chat .nc-row input{ flex:1; min-width:0; background:#0e0a07; border:1px solid #4a3a2a; color:#f0e4cc; padding:6px 8px; font-size:16px; }
 #net-chat .nc-notice{ min-height:14px; padding:0 8px 4px; font-size:0.64rem; color:#ffb070; }
 #net-chat .nc-row .btn{ flex:none; width:auto; min-width:84px; margin:0; }
+.arena-card-done{ font-size:0.72rem; color:#7dffa8; margin-top:4px; font-weight:700; }
+.arena-card.locked .arena-card-desc b{ color:#ffd76a; }
+.arena-card.fresh{ box-shadow:0 0 0 2px #ffd76a, 0 0 18px rgba(255,215,106,0.45); animation:arenaFresh 1.6s ease-in-out infinite; }
+.arena-card-badge.fresh{ color:#1a0e06; background:#ffd76a; border-color:#ffd76a; }
+@keyframes arenaFresh{ 0%,100%{ box-shadow:0 0 0 2px #ffd76a, 0 0 10px rgba(255,215,106,0.3); } 50%{ box-shadow:0 0 0 2px #ffd76a, 0 0 24px rgba(255,215,106,0.7); } }
+
+/* ---------- Tienda en pestañas (BUGFIX 01) ---------- */
+.shop-tabs{ display:flex; gap:6px; width:100%; max-width:760px; margin-bottom:8px; }
+.shop-tab{ flex:1; padding:9px 6px; border-radius:9px; border:1px solid var(--panel-b); background:var(--panel-a); color:var(--text-dim); font-family:inherit; font-weight:700; font-size:0.85rem; cursor:pointer; }
+.shop-tab.on{ color:var(--ember3); border-color:var(--ember1); background:rgba(255,122,46,0.12); }
+.shop-test-note{ max-width:760px; margin:2px auto 8px; text-align:center; }
+#shop-panel .lobby-note{ margin:0 0 8px; }
+#shop-panel{ width:100%; max-width:760px; max-height:60vh; overflow-y:auto; padding-right:4px; box-sizing:border-box; }
+.shop-champ-list, .shop-item-list, .shop-skin-list{ display:flex; flex-direction:column; gap:8px; }
+.shop-champ-row{ display:flex; gap:10px; align-items:center; background:var(--panel-a); border:1px solid var(--panel-b); border-radius:10px; padding:8px; }
+.shop-champ-row.owned{ border-color:#2f6b45; }
+.shop-champ-info{ flex:1; min-width:0; }
+.shop-champ-name{ font-weight:700; font-size:0.95rem; }
+.shop-champ-role{ font-size:0.72rem; color:#ffd9a8; margin:2px 0; }
+.shop-champ-lore{ font-size:0.68rem; color:var(--text-dim); line-height:1.3; }
+.shop-skills{ display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+.shop-skill{ font-size:0.6rem; border:1px solid var(--panel-b); border-radius:5px; padding:1px 5px; color:var(--text); }
+.shop-skill.ult{ border-color:#c9a13a; color:#ffd76a; }
+.shop-champ-buy, .shop-item-buy{ display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none; }
+.shop-price{ font-weight:700; color:#ffd76a; font-size:0.85rem; }
+.shop-st{ font-size:0.64rem; color:var(--text-dim); }
+.shop-st.own{ color:#7dffa8; } .shop-st.lock{ color:#c9b08a; } .shop-st.sel{ color:#ffd76a; }
+.shop-champ-name .shop-st{ margin-left:6px; font-weight:400; }
+.shop-item{ display:flex; gap:8px; align-items:center; background:var(--panel-a); border:1px solid var(--panel-b); border-left:4px solid var(--ic); border-radius:9px; padding:7px 9px; cursor:pointer; }
+.shop-item-meta{ flex:1; min-width:0; }
+.shop-item-name{ font-weight:700; font-size:0.78rem; }
+.shop-item-sub{ font-size:0.62rem; color:var(--text-dim); margin:1px 0 2px; }
+.shop-eff{ font-size:0.58rem; color:#8fb8ff; line-height:1.3; }
+.shop-eff.item-proc{ color:#ffb020; } .shop-eff.item-mythic{ color:#ff6a6a; } .shop-eff.item-unique{ color:#e0b0ff; } .shop-eff.item-effect{ color:#ffe08a; }
+.shop-tiers{ display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; }
+.shop-tier{ font-size:0.56rem; padding:2px 5px; border-radius:5px; border:1px solid var(--tc); background:transparent; color:var(--tc); cursor:pointer; font-family:inherit; }
+.shop-tier.on{ background:var(--tc); color:#120b06; font-weight:700; }
+.shop-set{ background:rgba(61,220,113,0.05); border:1px solid #2f6b45; border-radius:11px; padding:8px; margin-bottom:10px; }
+.shop-set-head{ display:flex; flex-wrap:wrap; align-items:baseline; gap:6px; margin-bottom:4px; }
+.shop-set-name{ color:#3ddc71; font-weight:700; font-size:0.9rem; }
+.shop-set-theme{ font-size:0.62rem; color:var(--text-dim); }
+.shop-set-count{ margin-left:auto; font-size:0.66rem; color:#cfe9d6; }
+.shop-set-skin{ font-size:0.6rem; color:#ffd76a; }
+.shop-set-bonus{ margin-bottom:6px; }
+.shop-bonus{ font-size:0.62rem; color:var(--text-dim); padding:1px 0; }
+.shop-bonus.on{ color:#7dffa8; } .shop-bonus.ready{ color:#ffe08a; }
+.shop-set-pieces{ display:flex; flex-direction:column; gap:6px; }
+.shop-set-buyall{ margin-top:6px; width:100%; }
+.shop-skin{ display:flex; gap:10px; align-items:center; background:var(--panel-a); border:1px solid var(--panel-b); border-radius:10px; padding:8px; }
+.shop-skin.active{ border-color:#ffd76a; box-shadow:0 0 12px rgba(255,215,106,0.25); }
+.shop-skin-img{ width:84px; height:84px; object-fit:contain; image-rendering:pixelated; background:#0c0a10; border-radius:8px; flex:none; }
+.shop-skin-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+.shop-skin-name{ font-weight:700; color:#ffd76a; font-size:0.9rem; }
+.shop-bought{ animation:shopBought 0.9s ease-out; }
+@keyframes shopBought{ 0%{ box-shadow:0 0 0 3px #ffd76a, 0 0 26px rgba(255,215,106,0.8); } 100%{ box-shadow:none; } }
+@media (max-width:520px){ .shop-champ-row{ flex-wrap:wrap; } .shop-champ-buy{ flex-direction:row; align-items:center; width:100%; justify-content:space-between; } .shop-item{ flex-wrap:wrap; } .shop-item-buy{ flex-direction:row; align-items:center; width:100%; justify-content:space-between; } }
+#shop-panel{ text-align:left; }
+.shop-btn{ padding:6px 14px; border-radius:8px; border:1px solid #c98a3a; background:linear-gradient(180deg,#8a4a1c,#5a2a0e); color:#ffe8c8; font-family:inherit; font-weight:700; font-size:0.78rem; cursor:pointer; }
+.shop-btn.sec{ background:var(--panel-b); border-color:var(--panel-b); color:var(--text); }
+.shop-btn:disabled{ opacity:0.4; cursor:default; }
+.shop-item .item-icon-img{ width:44px; height:44px; }

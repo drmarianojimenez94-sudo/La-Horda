@@ -11,7 +11,9 @@
 // MODO CAMPAÑA (prueba): cada jugador ELIGE UN campeón de regalo al empezar (pantalla "Tu primer
 // campeón", js/ui/starter-select.js); todos los demás arrancan bloqueados y se compran en la
 // Tienda por CHAMPION_PRICE_GOLD de oro. Para agregar un campeón nuevo alcanza con sumar una fila.
-const CHAMPION_PRICE_GOLD = 5000; // economía: un campeón nuevo es una meta real (vender basura no lo paga)
+// ETAPA DE PRUEBA (BUGFIX 01): todos los campeones a 1.000 de oro para poder probarlos. El precio de
+// la economía final era 5.000 (un campeón nuevo como meta real): volver a ese valor al cerrar la prueba.
+const CHAMPION_PRICE_GOLD = 1000;
 const CHAMPION_CATALOG = [
   {id:"tanque",   priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
   {id:"guerrero", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Rápido, letal, sin piedad. Golpea antes de que lo vean venir."},
