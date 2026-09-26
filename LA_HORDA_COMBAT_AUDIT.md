@@ -92,7 +92,8 @@
 - Norma: ataque rápido 0,4–0,7 s · élite/rol 1 s · jefe grande 1,5–2 s. Los avisos del escenario (puentes, forja,
   emboscadas) pueden durar más.
 - Relevadas 35 duraciones de aviso. Fuera de norma: el salto del Sabueso micelial (260 ms → **420 ms**) y la picada
-  del Dragón de Bronce de la Fortaleza (**no avisaba**; ahora línea de 0,45 s). Resultado medido con el piloto
+  del Dragón de Bronce de la Fortaleza (**no avisaba**; ahora línea de 0,45 s). Además, los dos ataques del Demonio
+  de Hielo y Fuego (élite de la Gélida) avisaban 0,6–0,65 s: ahora 0,9 s. Resultado medido con el piloto
   automático en la Fortaleza: ya no hay muertes en los niveles 1–2 con Axiom y Musashi (antes 3 de 8 corridas).
 
 ## 8. Campeones
@@ -107,7 +108,7 @@
   Pacto (5 almas: la próxima habilidad sale potenciada); Cosecha de Almas (cono) y Gólem de Carne (más cadáveres =
   más vida; si ya existe, salta y aplasta); pieles de fuego/hielo. **Sin Explosión de Cadáver.**
 - **Chequeo con datos** (piloto automático, 1 partida por celda, campeones nivel 10/20): ver
-  `LA_HORDA_PLAYTEST_REPORT.md` §3. Segador, Soporte, Eren y Libertador ganan con más frecuencia; Axiom y Musashi
+  `LA_HORDA_PLAYTEST_REPORT.md`, sección "Pase nocturno". Segador, Soporte, Eren y Libertador ganan con más frecuencia; Axiom y Musashi
   (frágiles) son los que más sufren en la Fortaleza. **HUMAN TEST REQUIRED** para "peso" del Tanque y decisiones
   elementales del Mago.
 
@@ -130,4 +131,5 @@
 | `tools/items/t_breakables.js` | destructibles, combos, sin fuego amigo, bots | 9/9 |
 | `tools/items/t_perf_exploits.js` | anti-exploit de la calificación | 8/8 |
 | `tools/items/t_reactions.js`, `t_nigromante.js`, `t_items.js` | reacciones, Nigromante, objetos | OK |
+| `tools/items/t_hpbonus.js` | vida máxima temporal del Tanque (bug de vida negativa) | 4/4 |
 | `server/test-relay.js` | protocolo del relay + chat | 0 fallas |
