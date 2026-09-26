@@ -58,7 +58,7 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   // acción contextual: el progreso viaja en el estado de la arena; esto es interno del anfitrión
   "_ctxHold","_ctxGoal","_ctxGoalT",
   // Gélida: el frío viaja en el estado de la arena; esto es interno del anfitrión / de la IA
-  "_cold","_stillT","_cx","_cy","_hieWarm","_hieSide",
+  "_cold","_stillT","_cx","_cy","_hieWarm","_hieSide","_coldHits",
   // La Fortaleza: forma caminable cacheada (se recalcula en cada cliente) e internos del anfitrión
   "_fs","_strT","_fortStranded","_ux","_uy","_ut","_stk"]);
 // Se mandan solo en los snapshots completos (cada ~4 s y al terminar): cambian todo el tiempo y

@@ -91,7 +91,7 @@ function hieUpdate(dt){
     if(still){ h._stillT += dt; if(h._stillT > HIE_CFG.grace) h._cold += HIE_CFG.coldRate*rule*lvMult*sec; }
     else { h._stillT = 0; h._cold = Math.max(0, h._cold - HIE_CFG.warmRate*sec); }
     if(h._cold >= 100){
-      h._cold = HIE_CFG.resetTo;
+      h._cold = HIE_CFG.resetTo; h._coldHits = (h._coldHits||0) + 1; // (telemetría: cuántas veces lo enfrió la quietud)
       if((h.frostStacks||0) < HIE_CFG.maxColdFrost) addFrost(h, 1);
       else { h.frostTimer = Math.max(h.frostTimer||0, 3200); h.slowAmt = Math.max(h.slowAmt||0, 0.15*HIE_CFG.maxColdFrost); h.slowTimer = Math.max(h.slowTimer||0, 1800); } // se mantiene helado, sin congelarse
       vfxBurst(h.x, h.y-18, 6, "ice", 80, 380, 2.5, 2, -20, 0);
