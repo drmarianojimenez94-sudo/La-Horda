@@ -31,8 +31,9 @@ enteramente sobre él.
 | **La Fortaleza Sin Fin** | **3** | **`js/arenas/fortaleza/`** (registrada en `ARENA_DEFS`) | [fortaleza.md](fortaleza.md) |
 | **El Reino Micelial** | **4** | **`js/arenas/micelial/`** (registrada en `ARENA_DEFS`) | [micelial.md](micelial.md) |
 | Arena de Hielo | 5 | bloques en `update.js`/`boss-skills.js`, `aidBuildHielo` + **`js/arenas/hielo/`** (`ARENA_EXT`) | [hielo.md](hielo.md) |
-| Laberinto Maldito | 6 | muros en `collision.js`, `aidLabyrinthLayout` + **`js/arenas/laberinto/`** (`ARENA_EXT`) | [laberinto.md](laberinto.md) |
-| Arena Infernal | 7 | `aidBuildInfernal`, pozos de lava en `hazards.js` + **`js/arenas/infernal/`** (`ARENA_EXT`) | [infernal.md](infernal.md) |
+| **El Abismo** | **6** | **`js/arenas/abismo/`** (registrada en `ARENA_DEFS`) | [abismo.md](abismo.md) |
+| Laberinto Maldito | 7 | muros en `collision.js`, `aidLabyrinthLayout` + **`js/arenas/laberinto/`** (`ARENA_EXT`) | [laberinto.md](laberinto.md) |
+| Arena Infernal | 8 | `aidBuildInfernal`, pozos de lava en `hazards.js` + **`js/arenas/infernal/`** (`ARENA_EXT`) | [infernal.md](infernal.md) |
 | Arena Divina (modo aparte) | — | `js/arenas/divina.js`, `js/rendering/divina.js` | [divina.md](divina.md) |
 
 ## Extensiones de identidad (`ARENA_EXT`, Alpha 0.1)

@@ -132,7 +132,8 @@ function botMove(h, dt){
   const target = divinaHit ? divinaHit.ref : h._tgt;
   let mx = 0, my = 0;
   // 1) peligro telegrafiado: reacción humana (~250 ms) y salir de ahí antes que nada
-  const dz = botDangerVec(h.x, h.y, (h.radius||18) + 14);
+  // (una arena puede marcar un objetivo URGENTE —rescatar a un compañero colgado— que vale más que esquivar)
+  const dz = (arenaHas("botUrgent") && arenaHook("botUrgent", h)) ? null : botDangerVec(h.x, h.y, (h.radius||18) + 14);
   if(dz){
     h._dangerT = (h._dangerT||0) + dt;
     if(h._dangerT > 230){

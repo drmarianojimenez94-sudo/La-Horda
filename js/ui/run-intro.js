@@ -31,6 +31,11 @@ const ARENA_BRIEF = {
     kill:"Esporas, zonas infectadas que te debilitan, el Micelio Primigenio y la Madre Espora en el centro.",
     help:"Rompé los NÚCLEOS MICELIALES: cada uno que cae limpia la infección de su zona.",
     goal:"Frená la colonia y derrotá a la Madre Espora."},
+  abismo: {
+    say:"Ruinas colgadas sobre la nada. Acá el PISO también pelea: se agrieta, se rompe y vuelve.",
+    kill:"El borde (si caés, quedás colgado: un compañero te sube), el Jinete que carga en línea, el Carcelero y sus cadenas y lo que vive debajo.",
+    help:"Mirá las GRIETAS: una plataforma crítica tiembla y larga piedras antes de caer. Empujá a la horda al vacío y usá al Jinete como arma.",
+    goal:"Sobreviví a las ruinas, vencé al Carcelero del Vacío y enfrentá a El Que Mora Debajo."},
   hielo: {
     say:"Acá el frío es el enemigo. Quedarte quieto te congela.",
     kill:"El frío que se acumula si no te movés, las novas de hielo y el Mago de Hielo, que se vuelve Ángel Caído.",

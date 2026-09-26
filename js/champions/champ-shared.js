@@ -91,6 +91,7 @@ function heroDmgOutMult(h){
 }
 function heroDmgTakenMult(h){
   if(!h) return 1;
+  if(h.abHang) return 0;                       // Abismo: colgado del borde (el peligro es el reloj, no los golpes)
   if(h.classKey==="libertador") return libertadorDmgTakenMult(h);
   if(h.classKey==="eren") return erenDmgTakenMult(h);
   return 1;
@@ -105,6 +106,7 @@ function heroCcResist(h){
 // Movimiento propio bloqueado (embestidas, montar, transformación, cinemática): lo mueve su habilidad.
 function heroMoveLocked(h){
   if(!h) return false;
+  if(h.abHang || h.abHook) return true;        // Abismo: colgado del borde / arrastrado por el gancho
   if(h.classKey==="libertador") return libertadorMoveLocked(h);
   if(h.classKey==="eren") return erenMoveLocked(h);
   return false;

@@ -169,7 +169,7 @@ document.getElementById("mode-arena-btn").addEventListener("click", ()=>{
 // onBossDefeated) -no se perdió nada de esa lógica-, esto es solo un interruptor de
 // exhibición: para la versión real, cambiar el "true" de acá por
 // "ARENA_ORDER.every(a=>save.arenasCleared[a])".
-function isDivinaUnlocked(){ return ARENA_ORDER.every(a=>save.arenasCleared[a]); } // BUGFIX 01: campaña real
+function isDivinaUnlocked(){ return ARENA_ORDER.every(a=>save.arenasCleared[a] || (a==="abismo" && save.legacyLabOpen && save.arenasCleared.infernal)); } // BUGFIX 01: campaña real
 document.getElementById("divina-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });

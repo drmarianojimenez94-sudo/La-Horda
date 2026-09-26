@@ -27,6 +27,7 @@ const BRK_CFG = {
     bosque:   {name:"Vaina de espinas",    r:90,  dmgPct:0.8, fx:"bleed", rgb:"140,210,90",  env:"fire",      pal:"leaf"},
     laberinto:{name:"Jarrón funerario",    r:85,  dmgPct:0.8, fx:"stun",  rgb:"225,195,130", env:null,        pal:"rock"},
     fortaleza:{name:"Barril de pólvora",   r:120, dmgPct:2.0, fx:"knock", rgb:"255,170,90",  env:"fire",      pal:"ember"},
+    abismo:   {name:"Reliquia del vacío",  r:105, dmgPct:0.7, fx:"knock", rgb:"190,110,255", env:null,        pal:"arcane"},
     micelial: {name:"Vaina de esporas",    r:100, dmgPct:0.5, fx:"spore", rgb:"200,120,255", env:"fire",      pal:"micSpore"}
   }
 };

@@ -65,6 +65,7 @@
      drawGround(now)                marcas en el piso (después del piso, antes de las entidades)
      ctxTargets()                   objetivos de la acción contextual (js/systems/context-actions.js)
      botNudge(h, target)            movimiento propio de un bot antes del de su rol (o null)
+     botUrgent(h)                   true = el bot tiene algo urgente (p.ej. rescatar): no esquiva
    ============================================================ */
 const ARENA_DEFS = {};
 const ARENA_EXT = {};

@@ -18,6 +18,12 @@ SET_DB.lucifer.full = "infierno";
 SET_DB.lucifer.thresholds[3] = {count:6, desc:"INFIERNO DESATADO: +15% daño y +8% robo de vida. Con menos de 50% de vida tus golpes básicos incendian y tus asesinatos estallan en llamas.",
   mods:()=>[{effect:"dmg_mult", value:0.15},{effect:"lifesteal_add", value:0.08}]};
 
+// Auditoría de sets: el bonus de 4 piezas decía "Quemadura" (la aplica setsOnHit) pero además sumaba
+// un 35% de descarga eléctrica en cadena (onhit_proc) que no figuraba en ningún texto: afuera.
+// El de 2 piezas ya valía para TODAS las habilidades (no solo las de fuego): el texto lo dice así.
+SET_DB.lucifer.thresholds[0].desc = "+8% daño de habilidades";
+SET_DB.lucifer.thresholds[2].mods = ()=>[];
+
 const NEW_SETS = {
   glaciar: {
     name:"Pacto del Glaciar", theme:"Hielo · control", aura:"150,220,255", full:"glaciar",

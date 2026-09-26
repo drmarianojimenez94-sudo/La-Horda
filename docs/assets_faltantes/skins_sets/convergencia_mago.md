@@ -1,10 +1,13 @@
 # Skin del set «Convergencia Elemental» — Mago
 
+> ✅ **INTEGRADA (SKINS 02)** — Mago, Ángel Arcano (Arcángel Luminar). La hoja no trae fila de ataque básico: ataca con la pose de casteo. Hoja en `art-source/skins_sets/mago_angel_arcano.png`, atlas en `assets/sprites/champions/<campeón>/skins/<set>/`, efectos de habilidad en `assets/vfx/skins/<set>/` (tools/art/skins_sets/fx.py). Se ve con el set COMPLETO equipado. Pendiente solo si llega una hoja mejor: 4 cuadros por estado y vista (hoy 1-2).
+
+
 - **Set:** `convergencia` · Mago · fuego + hielo + rayo · aura rgb(200,150,255)
 - **Campeón:** Mago (`mago`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.
 - **Bonus completo (lo que la skin tiene que contar):** CONVERGENCIA: golpear a un mismo enemigo con fuego, hielo y rayo en menos de 4 s lo hace estallar (área, 250% de daño, congela y deja ardiendo).
-- **Estado:** FALTA (no existe ningún frame). `SET_SKINS` vacío.
+- **Estado:** INTEGRADA (ver arriba).
 
 ## Referencias que hay que adjuntar a ChatGPT (sí o sí)
 

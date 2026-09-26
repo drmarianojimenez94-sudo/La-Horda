@@ -100,10 +100,12 @@ function damageEnemy(e, amount, opts){
   if(opts.knockback){
     const ang = Math.atan2(e.y-src.y, e.x-src.x);
     e.x += Math.cos(ang)*46; e.y += Math.sin(ang)*46;
+    e._kbAt = runElapsedMs; e._kbBy = src; // Abismo: un empujón de habilidad puede tirarlo al vacío
   }
   if(opts.pull){
     const ang = Math.atan2(src.y-e.y, src.x-e.x);
     e.x += Math.cos(ang)*36; e.y += Math.sin(ang)*36;
+    e._kbAt = runElapsedMs; e._kbBy = src;
   }
   if(runStats.lifesteal>0 && opts.fromBasic){
     src.hp = Math.min(src.maxHp, src.hp + dmg*runStats.lifesteal*arenaRuleHealMult());

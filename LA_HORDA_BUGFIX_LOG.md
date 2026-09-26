@@ -157,3 +157,70 @@ Tests ajustados a las reglas nuevas, sin sacar controles: `lib.js` (guardado vet
 - La etapa de prueba reinicia UNA vez los guardados viejos (niveles, desbloqueos, inventario). El anterior queda respaldado en
   `laHordaSave_v1_antesDeEtapaPrueba`.
 - Al terminar la etapa de prueba: `CHAMPION_PRICE_GOLD` vuelve a `CHAMPION_PRICE_GOLD_FINAL` y `SHOP_TEST_MODE` a false.
+
+---
+
+# SKINS 02 + AUDITORÍA DE SETS
+
+## Skins nuevas (set completo del dueño)
+
+| Set | Campeón | Skin | Hoja |
+|---|---|---|---|
+| Convergencia | Mago | Ángel Arcano (Arcángel Luminar) | `art-source/skins_sets/mago_angel_arcano.png` |
+| La Última Profecía | La Profeta | Ángel Caído (Doncella Oscura) | `art-source/skins_sets/profeta_angel_caido.png` |
+| Marea Roja | Segador ("Berserk") | Leónidas, Rey de Esparta (la hoja dice "Guerrero Inmortal") | `art-source/skins_sets/segador_leonidas.png` |
+| Sombra Nocturna | Asesino | Jack el Destripador (Caballero Carmesí) | `art-source/skins_sets/guerrero_jack_destripador.png` |
+| Bendición del Custodio | Sanadora (Soporte) | Ángel del Alba (Forma Celestial) | `art-source/skins_sets/soporte_angel_del_alba.png` |
+
+- Cuerpos: `tools/art/skins_sets/extract.py` (misma grilla de 8 direcciones). Mago y Sanadora no traen fila de ataque
+  básico: atacan con la pose de casteo. Mago, Asesino y Sanadora usan atlas viejos (no CHAMP_PACK): su skin se dibuja por
+  `drawSetSkin` (con el alfa del sigilo) y la caída usa los cuadros de muerte de la skin.
+- **Habilidades con skin (las 9 skins):** `js/systems/skin-fx.js` + `tools/art/skins_sets/fx.py` (87 cuadros del panel de
+  efectos de cada hoja, carga diferida). Misma mecánica, otro aspecto: efectos pintados de la hoja en el lugar que
+  corresponde (tajos, sellos, zonas, trampas, cadenas, proyectiles) + el color de la skin sobre lo que ya dibujaba el kit.
+  No toca números. El color viaja a los invitados en los eventos de red.
+
+## Auditoría de sets (`LA_HORDA_SETS_AUDIT.md`, `tools/items/t_sets.js` 55/55)
+
+- Las 12 de campeón y las 11 universales disparan TODOS sus umbrales.
+- Arreglado: Lucifer 4 sumaba un 35% de descarga eléctrica escondida (no figuraba en el texto); Lucifer 2 decía "daño de
+  fuego" y en realidad es de todas las habilidades (texto corregido).
+- Arreglado: en red, la skin de cada héroe la decide el anfitrión (`skinSet` sincronizado); antes cada invitado la
+  calculaba con su propio guardado (la limitación de la tanda anterior queda resuelta para las skins).
+- Reglas de sets propuestas (sección 4 del documento) + `LA_HORDA_ROADMAP_ALFA.md`.
+
+## QA
+
+| Prueba | Resultado |
+|---|---|
+| Skins en partida (5 nuevas: idle/caminar/espalda/ataque) | ✅ |
+| Efectos de habilidad por skin (9 skins × básico + 3 habilidades + ulti) | ✅ 0 errores |
+| `tools/items/t_*.js` (15 suites, incluida `t_sets.js` nueva) | ✅ todas OK (`t_sets` estabilizada: los bots empujaban al enemigo fuera del glitch) |
+| `tools/regression/t_func.js` | ✅ 92/92 |
+| Humo de las 7 arenas (niveles 3 y 10) | ✅ sin errores |
+
+---
+
+# ARENA DEL ABISMO — playtest (jugar → corregir → repetir)
+
+Encontrados jugando la arena de verdad (niveles 1-10, 4 héroes con bots, Playwright). Cada uno se
+reprodujo, se corrigió y se volvió a jugar. Pruebas: `tools/items/t_abismo.js` (34 chequeos).
+
+| Bug encontrado jugando | Causa | Solución | Archivos |
+|---|---|---|---|
+| El juego se colgaba al usar el golpe fuerte del Errante (`Cannot create property 't' on boolean`) | la IA usaba `e.bossWind = true` y el motor espera ahí un objeto de ventana de anticipación | bandera propia `e.abBusy` | `ab-enemies.js`, `ab-bosses.js` |
+| Nadie caía nunca: los héroes empujados volvían al borde | el clamp los devolvía cuadro a cuadro durante el empujón (el héroe nunca pasaba la tolerancia) | durante un empujón o un arrastre el borde no frena; se decide al pasar la tolerancia o al terminar | `ab-map.js` |
+| El gancho del Carcelero nunca tiraba a nadie | mismo motivo (arrastre corregido cada cuadro) + condición de ruptura con un campo inexistente | ídem + condición corregida | `ab-map.js`, `ab-bosses.js` |
+| El equipo entero caía junto a mitad de nivel | las habilidades de los propios héroes derrumbaban la plataforma donde estaban parados | **sin fuego amigo**: el daño estructural de los héroes deja CRÍTICA una plataforma con un aliado encima | `ab-map.js`, `ab-arena.js` |
+| Los bots no rescataban | (1) el esquive tenía prioridad y la acción RESCATAR nunca se elegía; (2) el punto de rescate estaba fuera de la grilla de navegación; (3) el margen de "borde peligroso" cubría puentes enteros y los bots esquivaban todo el tiempo | gancho nuevo `botUrgent` (rescatar vale más que esquivar), los dos héroes más cercanos van primero, camino por el grafo de plataformas, punto de rescate un poco adentro del borde, margen de borde 20-36 u | `bot-brain.js`, `ab-arena.js`, `ab-map.js` |
+| Los bots escapaban de la plataforma que se derrumbaba y volvían a pisarla | seguían al jugador de vuelta al piso que caía; y al quedar pegados al borde de la plataforma vecina, el chequeo de "¿quedó en el aire?" era estricto | escape propio (antes que revivir o pelear), los bots no vuelven a pisar una plataforma en derrumbe, chequeo tolerante al borde | `ab-arena.js`, `ab-map.js` |
+| Colgados sin nadie que pueda rescatar = derrota segura | todos colgados a la vez, o partida sin aliados | regla de seguridad: si nadie puede rescatar, trepa solo en 3,8 s | `ab-map.js` |
+| Jefe injusto: todos caían al pozo | el rayo del ojo empujaba hacia el pozo, los tentáculos empujaban y el patrón "centro" hundía el anillo entero (no quedaba desde dónde pegarle) | rayo = daño + ralentización; tentáculos aplastan y agrietan sin empujar; "centro" hunde medio anillo; piso mínimo 66 % con el jefe; reconstrucción de 2 plataformas cada 10 s; aviso de patrón 2,6 s | `ab-bosses.js`, `ab-data.js`, `ab-map.js` |
+| Los empujones de habilidades no tiraban enemigos al comienzo de la partida | el reloj vale 0 al empezar y `_kbAt = 0` se leía como "sin empujón" | comparación con `!= null` | `ab-map.js` |
+| Nivel 1 con 60+ enemigos a la vez | ritmo de aparición igual al de niveles medios | ritmo x1,9 en nivel 1 y x1,65 hasta el 3 (máximo vivo ahora ≈40, como las demás arenas) | `ab-enemies.js` |
+| El cuerpo del ojo del jefe se veía como un bloque rectangular | textura de carne dibujada como rectángulo; la mandíbula viene recortada con fondo | elipse texturada con borde que se funde en el vacío; mandíbula con máscara elíptica | `ab-render.js` |
+
+Resultado final del playtest: niveles 1-8 sin caídas definitivas (todos los colgados rescatados en
+1-3 s); nivel 9 (Carcelero) con 1 colgado rescatado en 130 s; nivel 10 ganado con los 4 héroes vivos
+(2 colgados, ambos rescatados). Regresión: 16 suites de `tools/items` en verde, `t_func` 92/92, smoke
+de las 8 arenas sin errores, anfitrión + invitado sincronizados (niveles 9 y 10).

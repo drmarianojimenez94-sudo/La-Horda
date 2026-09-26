@@ -1,6 +1,6 @@
 # Assets faltantes — Skins de set
 
-Una skin se activa SOLO con el set completo (regla canónica: Set verde = sinergias + skin al completarlo; aura ≠ skin). Hoy **ninguna skin existe**: `SET_SKINS` está vacío y con el set completo se ve el aura plena.
+Una skin se activa SOLO con el set completo (regla canónica: Set verde = sinergias + skin al completarlo; aura ≠ skin). **Integradas: 9 de 12 sets de campeón** (Manada, Errante, Legión, Sistema, Convergencia, Custodio, Marea, Nocturno, Profecía): cuerpo completo + efectos de habilidad propios (misma mecánica, otro aspecto; js/systems/skin-fx.js). **Faltan:** Baluarte (Tanque), Granadero (El Libertador), Réquiem (Nigromante) y todas las universales (los sets universales hoy no tienen skin: solo aura). Sin skin, el set completo se ve con su aura plena.
 
 ## Regla de producción (importante)
 
@@ -32,10 +32,10 @@ Una skin se activa SOLO con el set completo (regla canónica: Set verde = sinerg
 
 | Grupo | Hojas completas que faltan |
 |---|---|
-| Sets de campeón | 12 |
+| Sets de campeón | 3 (Baluarte, Granadero, Réquiem) |
 | Sets universales (todas las combinaciones) | 132 |
 | Universales prioritarios (★) | 11 |
-| **Mínimo recomendado para la alfa** | **12 + 11 = 23** |
+| **Mínimo recomendado para la alfa** | **3 de campeón** (universales: después de la alfa) |
 
 ## Integración cuando llegue una hoja
 

@@ -7,7 +7,7 @@
 - **Campeón:** La Cazadora (`cazadora`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.
 - **Bonus completo (lo que la skin tiene que contar):** MANADA: al acorralar a tu Presa (Rastreo al máximo) aparece el Lobo Espectral por 6 s; mientras esté, tus flechas contra la Presa rebotan a 2 enemigos cercanos.
-- **Estado:** FALTA (no existe ningún frame). `SET_SKINS` vacío.
+- **Estado:** INTEGRADA (ver arriba).
 
 ## Referencias que hay que adjuntar a ChatGPT (sí o sí)
 

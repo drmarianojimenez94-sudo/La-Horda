@@ -18,6 +18,7 @@ function isArenaUnlocked(key){
   // La Fortaleza (3ra) y el Reino Micelial (4ta) se sumaron después: quien ya tenía abierto el
   // Hielo antes de que existieran lo conserva (save.legacyHieloOpen, ver loadSave).
   if(key==="hielo" && save.legacyHieloOpen) return true;
+  if(key==="laberinto" && save.legacyLabOpen) return true;   // la Arena del Abismo llegó después (ver loadSave)
   return !!cleared[ARENA_ORDER[i-1]];
 }
 // Reglas del MODO de juego (no de cada arena). Hoy todo es PvE: arenas de oleadas y Arena
@@ -45,6 +46,7 @@ const ARENA_RULES = {
   laberinto: {name:"Muros que se Cierran",icon:"🗿", summary:n=>`Daño recibido +${Math.round(n*2.5)}% · derrumbes`},
   infernal:  {name:"Tierra Maldita",      icon:"🔥", summary:n=>`Curación −${Math.round(Math.min(50,n*5))}% · pozos de lava`},
   fortaleza: {name:"Engranajes Implacables", icon:"⚙", summary:n=>`Trampas +${n*5}% de daño · la Fortaleza acelera`},
+  abismo:    {name:"El Vacío Llama",       icon:"🕳", summary:n=>`Las plataformas se agrietan +${n*6}% más rápido · algo se mueve debajo`},
   micelial:  {name:"La Colonia se Expande", icon:"🍄", summary:n=>`Núcleos crecen +${n*6}% más rápido · la Madre despierta`}
 };
 let arenaRuleBossTimer = 0, arenaRuleBossStacks = 0;

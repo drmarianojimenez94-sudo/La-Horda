@@ -38,6 +38,22 @@ SKINS = {
     'axiom_skin_z': ('sistema', 'axiom', 'axiom', [431, 506, 581, 654, 727, 799, 872],
         {'idle': (119, 191), 'walk': (191, 256), 'run': (256, 321), 'atk': (321, 382), 'hit': (382, 447), 'death': (447, 529)},
         (14, 58, 358, 470), 'Axiom, Skin Z · Realidad Corrupta'),
+    # --- segunda tanda (Mago, Profeta, Segador/berserk, Asesino, Sanadora) ---
+    'profeta_angel_caido': ('profecia', 'profeta', 'profeta', [418, 487, 557, 626, 696, 766, 836],
+        {'idle': (127, 191), 'walk': (191, 254), 'run': (254, 317), 'atk': (317, 381), 'cast': (381, 446), 'hit': (446, 510), 'death': (510, 574)},
+        (14, 60, 340, 530), 'La Profeta, Ángel Caído (Doncella Oscura)'),
+    'mago_angel_arcano': ('convergencia', 'mago', 'mago', [84, 174, 269, 363, 462, 567, 672],
+        {'idle': (130, 207), 'walk': (207, 277), 'run': (277, 345), 'cast': (345, 414), 'hit': (414, 484), 'death': (484, 555)},
+        (1140, 95, 1265, 268), 'Mago, Ángel Arcano (Arcángel Luminar)'),
+    'segador_leonidas': ('marea', 'segador', 'segador', [393, 452, 515, 581, 645, 708, 771],
+        {'idle': (117, 179), 'walk': (179, 240), 'run': (240, 301), 'atk': (301, 363), 'cast': (363, 424), 'hit': (424, 488), 'death': (488, 555)},
+        (10, 58, 322, 495), 'Segador, Leónidas (Rey de Esparta)'),
+    'guerrero_jack_destripador': ('nocturno', 'guerrero', 'guerrero', [388, 447, 505, 563, 621, 680, 736],
+        {'idle': (120, 179), 'walk': (179, 238), 'run': (238, 298), 'atk': (298, 357), 'cast': (357, 418), 'hit': (418, 479), 'death': (479, 537)},
+        (10, 58, 325, 500), 'Asesino, Jack el Destripador (Caballero Carmesí)'),
+    'soporte_angel_del_alba': ('custodio', 'soporte', 'soporte', [75, 172, 268, 367, 468, 569, 670],
+        {'idle': (128, 200), 'walk': (200, 276), 'run': (276, 350), 'cast': (350, 420), 'hit': (420, 490), 'death': (490, 560)},
+        (1105, 95, 1235, 270), 'Sanadora, Ángel del Alba (Forma Celestial)'),
 }
 # forma titán de Eren: filas (y0, y1, cuadros) entre x 395..768; ULTI: humano -> titán
 TITAN_X = (395, 768)
@@ -103,7 +119,8 @@ if __name__ == '__main__':
         for d, v in (('down', 'frente'), ('side', 'perfil_der'), ('left', 'perfil_izq'), ('up', 'espalda')):
             sets['idle_' + d] = g('idle', v)
             sets['walk_' + d] = g('walk', v) + g('run', v)          # paso corto -> paso largo
-            sets['attack_' + d] = g('idle', v) + g('atk', v) + g('atk', v)   # preparación -> golpe
+            ar = 'atk' if 'atk' in rows else 'cast'   # hojas sin fila de ataque (Mago, Sanadora): atacan con la pose de casteo
+            sets['attack_' + d] = g('idle', v) + g(ar, v) + g(ar, v)   # preparación -> golpe
             if ('cast', v) in idx: sets['cast_' + d] = g('idle', v) + g('cast', v) + g('cast', v)
             sets['hit_' + d] = g('hit', v)
         sets['death_down'] = [idx[('death', v)] for v in VIEWS if ('death', v) in idx]

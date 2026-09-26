@@ -88,6 +88,7 @@ function aimPoint(caster, range, radius, moveMode){
   else p = bestClusterPoint(caster, range, radius||70) || {x:caster.x + caster.fx*range*0.6, y:caster.y + caster.fy*range*0.6};
   if(moveMode || !(caster.aim && caster.aim.x!==undefined) ) p = _clampToRange(caster, p, range);
   _faceTo(caster, p.x, p.y);
+  caster._lastAimPt = p;                  // lo usa la etiqueta "terrain" (js/systems/terrain-tags.js)
   return p;
 }
 // Dirección de una habilidad direccional (línea, abanico, carga).

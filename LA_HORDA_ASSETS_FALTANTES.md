@@ -20,10 +20,10 @@
 
 | ID | Prioridad | Qué | Dónde | Hoja completa a pedir | Referencia | Notas |
 |---|---|---|---|---|---|---|
-| SKIN-SET | P1 | Skins de set (8 de campeón restantes + universales) | Todas | ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt) | atlas canon de cada campeón | Ya integradas (BUGFIX 01): Manada/Sylva Flecha de Fuego, Errante/Musashi Samurái Legendario, Legión/Eren Titán Bestia, Sistema/Axiom Skin Z. |
+| SKIN-SET | P1 | Skins de set (3 de campeón restantes: Baluarte, Granadero, Réquiem + universales) | Todas | ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt) | atlas canon de cada campeón | Ya integradas (cuerpo + efectos de habilidad): Manada/Sylva Flecha de Fuego, Errante/Musashi Samurái Legendario, Legión/Eren Titán Bestia, Sistema/Axiom Skin Z, Convergencia/Mago Ángel Arcano, Custodio/Sanadora Ángel del Alba, Marea/Segador Leónidas, Nocturno/Asesino Jack el Destripador, Profecía/Profeta Ángel Caído. |
 | ITEM-ICON | P2 | Íconos finales de objetos (169) | UI | ver LA_HORDA_ITEM_ASSET_MANIFEST.md | — | Hoy se usan íconos procedurales provisorios. |
 | ARENA-CM | P2 | Ciudad Maldita (arena completa) | Arena en desarrollo | set de arena: piso, muros, props, enemigos, jefe | — |  |
-| ARENA-AB | P2 | Abismo (arena completa + Entidad del Abismo) | Arena en desarrollo | set de arena + jefe | — |  |
+| ARENA-AB | P0/P1 | Arena del Abismo: hojas a mayor resolución (6 enemigos, Carcelero del Vacío, El Que Mora Debajo) + tiles/portal/VFX | Abismo (jugable) | ver LA_HORDA_ABISMO_ASSETS.md — sección ABYSS_MISSING_ASSETS (prompts de hoja completa por entidad) | art-source/abismo/*.png | La arena ya es jugable con el arte de las 4 hojas oficiales; los recortes son chicos (29-56 px de alto) y se escalan 2-6x. |
 | ARENA-MP | P2 | Minas Profundas (arena completa + Devoraluz) | Arena en desarrollo | set de arena + jefe | — |  |
 | DIV-01 | P2 | Arena Divina: 5 Pruebas + Reflejos Oscuros | Modo en desarrollo | enemigos y props de las Pruebas | — |  |
 | PROPS | P1 | Props de mecánicas de arena (hoy dibujados por código) | Varias | Fisura infernal (INF-01) · escarcha a los pies (HIE-02) · runa del menhir, maleza, raíces (BOS-01..03) · corriente, chorro, charco (ACU-01..03) · sellos (LAB-01) · íconos de acción (UI-01) · mural de los Cuatro (NAR-03) | fichas en LA_HORDA_MISSING_ASSETS.md | Cada prop es una hoja propia con todos sus estados. |
