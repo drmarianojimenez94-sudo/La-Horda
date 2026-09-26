@@ -226,7 +226,7 @@ function vfxUpdate(dt){
   }
   for(let i=0;i<vfxDyingN;i++){ vfxDying[i].t += dt; }
   let w = 0;
-  for(let i=0;i<vfxDyingN;i++){ const d = vfxDying[i]; if(d.t < d.dur){ if(w!==i){ const tmp = vfxDying[w]; vfxDying[w] = d; vfxDying[i] = tmp; } w++; } else d.e = null; }
+  for(let i=0;i<vfxDyingN;i++){ const d = vfxDying[i]; if(d.t < d.dur){ if(w!==i){ const tmp = vfxDying[w]; vfxDying[w] = d; vfxDying[i] = tmp; } w++; } else { if(d.corpse && d.e) addCorpse(d.e, d.style, d.side, d.kind); d.e = null; } }
   vfxDyingN = w;
 }
 function vfxDrawGround(){
@@ -331,6 +331,9 @@ function vfxOnDeath(e){
   if(src){ const ddx = e.x-src.x, ddy = e.y-src.y, dl = Math.hypot(ddx,ddy)||1; dx = ddx/dl; dy = ddy/dl; }
   slot.e = e; slot.t = 0; slot.boss = boss; slot.dx = dx; slot.dy = dy; slot.side = dx<0 ? -1 : 1;
   slot.style = boss && prof.death!=="frames" ? "boss" : prof.death;
+  slot.kind = e._deathKind || "normal";
+  // el cuerpo queda en el suelo (gore.js): la animación de caída no se desvanece
+  slot.corpse = !boss && e.rank!=="subjefe" && !(GORE_MAT[goreMatOf(e)]||{}).noCorpse && slot.style!=="dissolve" && slot.style!=="sink" && (e.radius||20) <= 60;
   slot.dur = boss ? 2300 : (e.rank==="subjefe" ? 1300 : (prof.death==="frames" ? 900 : (vfxLoad<0.6 ? 380 : 560)));
   e.attackAnim = 0; e.fxAnim = null; e.skillAnim = null; e.hitFlash = 0;
   e._dyingP = 0;
@@ -367,7 +370,7 @@ function vfxDrawDying(){
         case "collapse": case "boss": sy = 1-0.5*ea; sx = 1+0.12*ea; oy = 4*ea; break;
         default: rot = d.side*1.35*ea; oy = 3*ea; break; // "fall": cae de costado según de dónde vino el golpe
       }
-      alpha = d.style==="frames" ? (a<0.6 ? 1 : 1-(a-0.6)/0.4) : (a<0.35 ? 1 : 1-(a-0.35)/0.65);
+      alpha = d.corpse ? 1 : (d.style==="frames" ? (a<0.6 ? 1 : 1-(a-0.6)/0.4) : (a<0.35 ? 1 : 1-(a-0.35)/0.65));
       if(d.style==="dissolve" && Math.random()<0.3*vfxLoad){ const prof = animProfileOf(e); vfxBurst(e.x+(Math.random()-0.5)*R, e.y-Math.random()*R*1.5, 1, prof.material, 20, 500, 3, 0, -40, 1); }
       if(d.style==="sink" && Math.random()<0.25*vfxLoad){ vfxBurst(e.x+(Math.random()-0.5)*R, e.y-R*0.3, 1, "water", 12, 600, 2, 0, -50, 1); }
     }
@@ -376,7 +379,10 @@ function vfxDrawDying(){
     ctx.translate(e.x+ox, e.y+oy); if(rot) ctx.rotate(rot); ctx.scale(sx, sy); ctx.translate(-e.x, -e.y);
     const m = ANIM_ALPHA_MUL;
     ANIM_ALPHA_MUL = alpha; ctx.globalAlpha = alpha;
+    if(d.kind==="burn") ctx.filter = `brightness(${Math.max(0.28, 1-p*1.6)}) saturate(${Math.max(0.4, 1-p)})`; // se carboniza
     drawEnemyBody(e);
+    ctx.filter = "none";
+    if(d.kind==="shock" && p < 0.4 && Math.sin(p*80) > 0) flash = Math.max(flash, 0.9); // electrocutado: destellos
     if(flash>0){
       ctx.globalCompositeOperation = "lighter";
       ANIM_ALPHA_MUL = flash*alpha; ctx.globalAlpha = flash*alpha;
@@ -388,6 +394,7 @@ function vfxDrawDying(){
 }
 function vfxResetRun(){
   vCount = 0; vfxDyingN = 0;
+  resetGore();
   if(typeof floatTexts!=="undefined") for(const f of floatTexts) f.on = false;
   for(const s of vfxShocks) s.on = false;
   for(const s of vfxTeles) s.on = false;

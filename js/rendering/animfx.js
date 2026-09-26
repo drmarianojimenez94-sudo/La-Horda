@@ -274,7 +274,8 @@ function animPose(ent, prof, isHero){
 
   // ---- HIT: flash breve + knockback visual en la dirección del golpe ----
   const hitV = isHero ? (ent.hurtTimer||0) : (ent.hitFlash||0);
-  const hitMax = isHero ? 160 : 90;
+  const hitPow = isHero ? 1 : (ent._lastHitPow||1);
+  const hitMax = isHero ? 160 : IMPACT_FLASH_MS[hitPow];
   if(hitV > an.pHit + 1){
     const src = isHero ? null : ent.lastHitBy;
     let hx = -fx, hy = -fy;
@@ -284,12 +285,14 @@ function animPose(ent, prof, isHero){
   an.pHit = hitV;
   if(hitV>0){
     const h = hitV/hitMax;
-    const kb = (isHero?4:6)*h*h*Math.min(1.4, 1.2/prof.weight)*K;
+    const powK = [1, 1, 1.45, 2.1, 2.7][hitPow];
+    const kb = (isHero?4:6)*h*h*Math.min(1.4, 1.2/prof.weight)*K*powK;
     P.ox += an.hdx*kb; P.oy += an.hdy*kb*0.6;
-    P.sx += 0.05*h; P.sy -= 0.05*h;
+    P.sx += 0.05*h*powK; P.sy -= 0.05*h*powK;
+    if(hitPow>=3) P.rot += (an.hdx>0?1:-1)*0.09*h*powK/2; // un golpe pesado tuerce el cuerpo
     // los jefes reciben golpes todo el tiempo: con el destello completo se veían casi blancos
     // durante toda la pelea (perdían sus colores). Destello tenue para jefes/subjefes.
-    const flashMax = isHero ? 0.45 : (prof.isBoss || ent.rank==="subjefe" ? 0.22 : 0.6);
+    const flashMax = isHero ? 0.45 : (prof.isBoss || ent.rank==="subjefe" ? (hitPow>=3 ? 0.35 : 0.22) : (hitPow>=3 ? 0.85 : 0.6));
     P.flash = Math.max(P.flash, Math.max(0, (h-0.35)/0.65)*flashMax);
   }
 

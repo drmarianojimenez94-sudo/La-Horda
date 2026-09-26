@@ -33,23 +33,50 @@ function gameTimeScale(realDt){
 // ulti se sientan como tales (ver castAbility / damageEnemy).
 let _castCtx = null;
 let _ultImpactDone = false;
-function impactFeedback(e, dmg, crit, opts){
+// JERARQUÍA DE IMPACTO. Si todo es espectacular, nada lo es: cada nivel suma una capa.
+//   1 BÁSICO     destello corto, retroceso chico, sangre leve. Sin hit-stop.
+//   2 HABILIDAD  reacción más grande; un micro hit-stop y un golpe de sonido por lanzamiento (no por enemigo).
+//   3 PESADO     crítico / golpe enorme: hit-stop, temblor, tambaleo (stagger), sangre fuerte.
+//   4 ULTI       el primer impacto frena el tiempo (hit-stop + cámara lenta breve), temblor grande.
+// Algunos campeones pegan "pesado" por naturaleza (IMPACT_WEIGHT): el Tanque se siente masa.
+const IMPACT_FLASH_MS = [90, 90, 115, 150, 180];
+const IMPACT_KNOCK = [0, 4, 8, 15, 20];          // retroceso físico (unidades) a comunes
+const IMPACT_STAGGER = [0, 0, 0, 110, 200];      // tambaleo (ms) a comunes/sub-élites; élites la mitad
+const IMPACT_WEIGHT = {tanque:1.5, segador:1.3, libertador:1.35, eren:1.15};
+function impactPower(e, dmg, crit, opts, src){
+  if(opts.impact) return opts.impact;
+  if(src && src._castUlt) return 4; // lo marca castAbility mientras dura el lanzamiento de una ulti
+  if(crit || opts.heavy || dmg >= e.maxHp*0.4 || opts.execute) return 3;
+  return opts.fromBasic ? 1 : 2;
+}
+function impactFeedback(e, dmg, crit, opts, pow, src){
+  src = src || opts.src || player;
   const big = e.rank==="jefe" || e.rank==="subjefe" || e.rank==="elite";
-  const ult = !!(_castCtx && _castCtx.ult);
-  if(ult){
-    if(!_ultImpactDone){ _ultImpactDone = true; hitStop(60, true); vfxShake(7); playSfx("heavy"); }
-  } else if(crit || opts.heavy || dmg >= e.maxHp*0.4){
-    hitStop(big ? 45 : 32);
-    if(big || crit) vfxShake(big ? 4 : 2.5);
-    if(!opts.fromBasic || crit) playSfx("heavy");
+  const mine = src===player && !src.isRemote;
+  const w = (src && src.classKey && (src.erenTitan ? 1.8 : IMPACT_WEIGHT[src.classKey])) || 1;
+  if(mine){
+    if(pow===4){
+      if(!_ultImpactDone){ _ultImpactDone = true; hitStop(85, true); slowMo(0.55, 240); vfxShake(8); playSfx("heavy"); flashScreen(0.18); }
+    } else if(pow===3){
+      hitStop((big ? 50 : 36)*Math.min(1.3, w));
+      vfxShake((big ? 4 : 2.5)*Math.min(1.4, w));
+      if(!opts.fromBasic || crit) playSfx("heavy");
+    } else if(pow===2 && _castCtx && !_castCtx.hitDone){
+      _castCtx.hitDone = true; // una vez por lanzamiento
+      hitStop(18*w); vfxShake(1.3*w); playSfx("skillHit");
+    } else if(pow===1 && w > 1.2 && !opts.fromProc){ vfxShake(0.8*w); } // básicos con masa (Tanque, Segador)
   }
-  // retroceso corto: los golpes se sienten en el cuerpo del enemigo (nunca en jefes/subjefes)
-  if(!opts.knockback && (e.rank==="normal" || e.rank==="subelite") && !e.draggedBy){
-    const src = opts.src || player;
+  // retroceso físico y tambaleo (nunca en jefes/subjefes; menos en élites)
+  if(e.rank==="jefe" || e.rank==="subjefe" || e.draggedBy) return;
+  const elite = e.rank==="elite";
+  if(!opts.knockback){
     const dx = e.x-src.x, dy = e.y-src.y, d = Math.hypot(dx,dy)||1;
-    const k = opts.fromBasic ? (crit ? 9 : 4) : 8;
+    const k = IMPACT_KNOCK[pow] * (crit && pow===1 ? 2.2 : 1) * w * (elite ? 0.45 : 1);
     e.x += dx/d*k; e.y += dy/d*k;
   }
+  // tambaleo solo a comunes y sub-élites: a un élite no se le cancela su ataque telegrafiado con un crítico
+  const st = elite ? 0 : IMPACT_STAGGER[pow] * (w>1.2 ? 1.3 : 1);
+  if(st > 0) e.stunTimer = Math.max(e.stunTimer||0, st);
 }
 
 // Bajas: una común apenas suena; una élite pega un tirón; un subjefe frena el tiempo.

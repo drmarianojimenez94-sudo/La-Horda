@@ -14,6 +14,7 @@ function update(dt){
   updateRunTimers(dt);
   vfxFrame(dt);
   vfxUpdate(dt);
+  updateGore(dt); // manchas y cadáveres (js/rendering/gore.js)
   updateFloatTexts(dt);
   // Musashi — Último Duelo: se procesa para los 4 héroes SIEMPRE, antes que cualquier otro
   // corte por aturdimiento/muerte de updateAllies (que hace "continue" en esos casos y nunca

@@ -42,10 +42,16 @@ function damageEnemy(e, amount, opts){
   if(crit) dmg *= critMult;
   const _hpBefore = Math.max(0, e.hp);
   e.hp -= dmg;
-  e.hitFlash = 90;
   // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
   // "farmear" daño pegándole fuerte a enemigos casi muertos).
   const usefulDmg = Math.min(dmg, _hpBefore);
+  // Nivel del impacto (1 básico · 2 habilidad · 3 pesado/crítico · 4 ulti): escala la reacción del
+  // cuerpo, el destello, el retroceso, la sangre y (para el jugador) el hit-stop y el temblor.
+  const pow = impactPower(e, dmg, crit, opts, src);
+  e._lastHitPow = pow; e.hitFlash = IMPACT_FLASH_MS[pow];
+  e._lastDmgKind = opts.burn ? "fire" : (opts.chain || opts.shock ? "lightning" : ((opts.slow || opts.freeze) && !opts.fromBasic ? "ice" : (opts.bleed ? "bleed" : "physical")));
+  if(e.hp <= 0) e._lastOverkill = dmg - _hpBefore;
+  if(!opts.fromProc || pow>=3){ const kdx = e.x-(src?src.x:e.x), kdy = e.y-(src?src.y:e.y), kl = Math.hypot(kdx,kdy)||1; if(inView(e.x, e.y, 60)) goreOnHit(e, pow, kdx/kl, kdy/kl); }
   if(src && src.stats){
     src.stats.dmgDealt += usefulDmg;
     if(e.rank==="jefe" || e.rank==="subjefe") src.stats.dmgToBoss += usefulDmg;
@@ -60,7 +66,7 @@ function damageEnemy(e, amount, opts){
     playSfx(crit ? "crit" : "hit");
   }
   vfxHit(e, src, opts, crit);
-  if(src===player && !opts.fromProc) impactFeedback(e, dmg, crit, opts);
+  if(!opts.fromProc || pow>=3) impactFeedback(e, dmg, crit, opts, pow, src);
   if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); }
   if(src && src.stats){
     if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + usefulDmg;
@@ -134,6 +140,9 @@ function damageEnemy(e, amount, opts){
 
 function killEnemy(e){
   e.alive = false;
+  // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
+  e._deathKind = goreDeathKind(e);
+  { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl); }
   // Nigromante — Plaga de los Condenados: el contagio al morir un maldito tiene que dispararse
   // sin importar QUÉ lo mató (antes solo se llamaba desde el tick de daño de la propia maldición,
   // así que un maldito rematado por un golpe normal -el caso más común en la práctica- nunca
@@ -223,7 +232,7 @@ function killEnemy(e){
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
-  if(!e.alive && !vfxOnDeath(e) && inView(e.x, e.y, 100)){
+  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e) && inView(e.x, e.y, 100)){
     particles.push({x:e.x, y:e.y, life:420, maxLife:420, corpse:true, spriteType:e.type, scale:e.scale, flip:e.fx<-0.12});
   }
 }

@@ -136,7 +136,7 @@ const NET_GLOBALS = {
 /* ---------------- eventos visuales/sonoros (se graban en el anfitrión, se repiten en los invitados) ---------------- */
 const NET_EVENT_FNS = ["floatText","showBanner","playSfx","vfxBurst","vfxConverge","vfxShock","vfxTelegraph","vfxSprite","vfxShake",
   "vfxOnDeath","flashScreen","pushChainBolt","pushSpark","pushAsesinoFx","bossHudShow","bossHudHide","bossHudHint","bossHudPhase",
-  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard"];
+  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard","addDecal","goreChunks"];
 const NET_INLINE_EVENTS = new Set(["vfxOnDeath","bossHudShow"]); // su entidad puede no haber llegado nunca al invitado
 const NET_ORIG = {};
 let _netRecDepth = 0, _netEvents = [];
@@ -652,7 +652,7 @@ function netGuestOnMsg(from, d){
 // Cada cuadro del invitado (reemplaza a update(): no hay simulación local de la partida).
 function netGuestUpdate(dt){
   runElapsedMs += dt;
-  vfxFrame(dt); vfxUpdate(dt); updateFloatTexts(dt);
+  vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
   if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si

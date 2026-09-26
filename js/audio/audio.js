@@ -253,7 +253,7 @@ const SFX_CFG = {
   lootMythic:{p:5,gap:500}, lootSet:{p:5,gap:500}, lootUnique:{p:5,gap:1200},
   // Combate: estados y gore
   freeze:{p:2,gap:120}, shatter:{p:3,gap:110}, splat:{p:1,gap:45}, gib:{p:2,gap:90}, burnDeath:{p:1,gap:80}, zap:{p:2,gap:90},
-  threat:{p:4,gap:900}, emergencyHeal:{p:4,gap:500}
+  threat:{p:4,gap:900}, emergencyHeal:{p:4,gap:500}, skillHit:{p:2,gap:70}
 };
 const _sfxLast = {}; let _sfxVoices = [];
 const SFX_MAX_VOICES = 12;
@@ -370,6 +370,7 @@ function playSfx(type){
     case "gib": _noise(t0,0.16,0.22,"lowpass",900,0,D); _tone(t0,"sine",120,45,0.14,0.22,D); _noise(t0+0.05,0.1,0.1,"bandpass",1600,2,D); len=0.2; break;
     case "burnDeath": _noise(t0,0.35,0.12,"bandpass",1200,0.6,D); _tone(t0,"sawtooth",200,90,0.25,0.04,D); len=0.36; break;
     case "zap": _noise(t0,0.12,0.14,"bandpass",3200,4,D); _tone(t0,"square",1400,700,0.1,0.05,D); len=0.13; break;
+    case "skillHit": _tone(t0,"sine",210,70,0.12,0.3,D); _noise(t0,0.07,0.12,"bandpass",1400,1,D); len=0.13; break;
     case "threat": _tone(t0,"square",330,330,0.09,0.09,D); _tone(t0+0.12,"square",247,247,0.12,0.09,D); len=0.26; break;
     case "emergencyHeal": _tone(t0,"sine",440,880,0.35,0.18,D,0.02); _tone(t0+0.05,"sine",660,1320,0.35,0.1,D,0.02); _noise(t0,0.3,0.05,"highpass",6000,0,D); len=0.4; break;
     default:

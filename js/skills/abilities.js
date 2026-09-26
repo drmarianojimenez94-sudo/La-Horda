@@ -332,8 +332,9 @@ function castAbility(caster, sk, isUlt, idx){
   // animaciones del Pack 1 (Segador/Axiom): pose de cast mientras dura este attackAnim; el Tajo
   // del Segador es un golpe de guadaña, así que usa la pose de ataque
   caster._packCastUntil = sk.kind==="cone_slash" ? 0 : animNow + caster.attackAnim;
-  const _prevCastCtx = _castCtx;
+  const _prevCastCtx = _castCtx, _prevUlt = caster._castUlt;
   if(caster===player){ _castCtx = {ult:!!isUlt}; if(isUlt) _ultImpactDone = false; }
+  caster._castUlt = !!isUlt; // impacto nivel 4 para los golpes de esta ulti (también bots/invitados)
   try{
   switch(sk.kind){
 
@@ -1463,5 +1464,5 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
   }
-  } finally { _castCtx = _prevCastCtx; }
+  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; }
 }
