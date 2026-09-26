@@ -59,12 +59,12 @@
    ARENA_EXT[clave]: EXTENSIONES de identidad para las arenas del camino de siempre (Bosque,
      Hielo, Acuática, Laberinto, Infernal). Usan los mismos ganchos que ARENA_DEFS pero SOLO los
      que agregan cosas encima (runStart, guestStart, beginLevel, update, guestUpdate, netState,
-     applyNetState, drawGround, drawTop, botDanger, botObjective, enemyKilled, ctxTargets…).
+     applyNetState, drawGround, drawTop, botDanger, botNudge, enemyKilled, ctxTargets…).
      NUNCA geometría (clamp/inside/navBlocked/drawWorld/spawnPool): arenaDef() no las ve, así el
      camino de siempre (subjefes, octágono, navegación) sigue intacto.
      drawGround(now)                marcas en el piso (después del piso, antes de las entidades)
      ctxTargets()                   objetivos de la acción contextual (js/systems/context-actions.js)
-     botObjective(h)                un bot va a usar un objetivo contextual (o null)
+     botNudge(h, target)            movimiento propio de un bot antes del de su rol (o null)
    ============================================================ */
 const ARENA_DEFS = {};
 const ARENA_EXT = {};

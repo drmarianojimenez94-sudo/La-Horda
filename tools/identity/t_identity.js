@@ -152,8 +152,53 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('INF.en_partida_los_bots_sellan', run.closed >= 1, run);
   }
 
+  if (want('hie')) {
+    // ---------------- Gélida: moverse es sobrevivir ----------------
+    await E(() => { __start('hielo', 3); __calm(); window.__ua = window.__ua || updateAllies; updateAllies = function(){}; player.x = 0; player.y = 120; for (const h of allies){ h.x = 700; h.y = 0; } __step(100); });
+    const still = await E(() => { const c0 = player._cold; __step(900); const c1 = player._cold; __step(6000); const c2 = player._cold; let fr = 0; for (let i = 0; i < 20; i++){ __step(500); fr = Math.max(fr, player.frostStacks||0); } return { c0, c1: +c1.toFixed(1), c2: +c2.toFixed(1), fr, near: !!hieNearLit(player.x, player.y) }; });
+    check('HIE.quieto_se_enfria_tras_un_respiro', still.c1 < 2 && still.c2 > 50 && !still.near, still);
+    check('HIE.el_frio_suma_escarcha', still.fr >= 1, still);
+    const mv = await E(() => { player._cold = 80; player.frostStacks = 0; for (let i = 0; i < 180; i++){ player.x += (i%120 < 60 ? 1.6 : -1.6); update(16); player.hp = player.maxHp; } return +player._cold.toFixed(1); });
+    check('HIE.moverse_calienta', mv < 40, mv);
+    const warm = await E(() => { const b = HIE.br[0]; b.lit = true; b.fuel = 30000; player.x = b.x + 40; player.y = b.y + 10; player._cold = 90; player.frostStacks = 2; player.frostTimer = 3000; __step(1500); return { cold: +player._cold.toFixed(1), fst: player.frostStacks }; });
+    check('HIE.el_brasero_calienta_y_derrite', warm.cold < 10 && warm.fst === 0, warm);
+    await shot('hie_brasero_encendido');
+    const out = await E(() => { const b = HIE.br[0]; b.fuel = 200; __step(400); const off = !b.lit; player.x = b.x + 30; player.y = b.y + 12; updateReviveBtn(); const btn = document.getElementById('btn-revive'); return { off, ctx: ctxTargets().map(t=>t.id), lbl: btn.querySelector('.lbl').textContent, ready: btn.classList.contains('ready') }; });
+    check('HIE.el_brasero_se_apaga_y_se_puede_encender', out.off && out.ctx.includes('hb0') && out.lbl === 'Encender' && out.ready, out);
+    await shot('hie_brasero_apagado');
+    const light = await E(() => { const b = HIE.br[0]; const btn = document.getElementById('btn-revive'); btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true })); __step(1700); btn.dispatchEvent(new PointerEvent('pointerup', { bubbles:true })); return { lit: b.lit, fuel: b.fuel|0 }; });
+    check('HIE.encender_con_el_boton', light.lit && light.fuel > 30000, light);
+    const fire = await E(() => { const b = HIE.br[1]; b.lit = false; b.fuel = 0; fireWalls.push({x:b.x+40, y:b.y, innerR:20, outerR:70, timer:2000, maxTimer:2000, tick:0, tickInterval:500, dmg:1, src:player, tier:1}); __step(100); const byWall = b.lit; const c = HIE.br[2]; c.lit = false; c.fuel = 0; projectiles.push({x:c.x, y:c.y-20, vx:0, vy:0, life:500, dmg:1, radius:6, burn:{dmg:1, dur:1000}, src:player, hitSet:new Set()}); __step(50); return { byWall, byProj: c.lit }; });
+    check('HIE.el_fuego_enciende_braseros', fire.byWall && fire.byProj, fire);
+    const lv1 = await E(() => { __start('hielo', 1); __calm(); updateAllies = function(){}; for (const b of HIE.br) b.lit = false; player.x = 0; player.y = 120; __step(100); __step(6000); return +player._cold.toFixed(1); });
+    const lv3 = await E(() => { __start('hielo', 3); __calm(); updateAllies = function(){}; for (const b of HIE.br) b.lit = false; player.x = 0; player.y = 120; __step(100); __step(6000); return +player._cold.toFixed(1); });
+    check('HIE.nivel1_mas_suave', lv1 < lv3*0.75 && lv1 > 0, { lv1, lv3 });
+    // bots: con frío se mueven; encienden braseros cuando hace falta
+    await E(() => { updateAllies = __ua; });
+    const bn = await E(() => { const h = allies[0]; h._cold = 70; const m = botMove(h, 16); return { mx: +m.mx.toFixed(2), my: +m.my.toFixed(2) }; });
+    check('HIE.bot_con_frio_se_mueve', Math.hypot(bn.mx, bn.my) > 0.5, bn);
+    const bl = await E(() => {
+      __calm(); for (const b of HIE.br){ b.lit = false; b.fuel = 0; } player.x = HIE.br[0].x - 250; player.y = HIE.br[0].y; for (const h of allies){ h.x = player.x + (Math.random()-0.5)*80; h.y = player.y + 60; h._cold = 50; }
+      let t = 0; while (!HIE.br.some(b=>b.lit) && t < 30000){ __step(250); t += 250; enemies.length = 0; }
+      return { lit: HIE.br.filter(b=>b.lit).length, t };
+    });
+    check('HIE.los_bots_encienden_braseros', bl.lit >= 1, bl);
+    // partida corrida (niveles 2-4) con bots: sin errores y sin congelarse sin parar
+    const run = await E(() => {
+      __start('hielo', 2); let t = 0, freezes = 0, prev = heroes.map(()=>0), maxCold = 0, lit = 0;
+      while (state === 'playing' && runLevel <= 4 && t < 300000) {
+        __step(250); t += 250;
+        heroes.forEach((h, i) => { if (h !== player && h.stunTimer > 700 && prev[i] <= 0) freezes++; prev[i] = h.stunTimer||0; if (h !== player) maxCold = Math.max(maxCold, h._cold||0); });
+        lit = Math.max(lit, HIE.br.filter(b=>b.lit).length);
+      }
+      return { lv: runLevel, t: t/1000, freezes, maxCold: Math.round(maxCold), st: state };
+    });
+    check('HIE.partida_real_niveles_2_a_4', run.lv >= 4 && run.st !== 'menu', run);
+    check('HIE.los_bots_no_viven_congelados', run.freezes <= 6, run);
+  }
+
   // ---------------- otras arenas: sin objetivos, sin cambios ----------------
-  const other = await E(() => { const r = {}; for (const a of ['bosque','hielo','laberinto','acuatica']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
+  const other = await E(() => { const r = {}; for (const a of ['bosque','laberinto','acuatica']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
   check('OTRAS.sin_acciones_contextuales_propias_todavia', Object.values(other).every(o => !o.ctx || o.ctx.length === 0), other);
 
   check('SIN_ERRORES', errors.length === 0, errors.slice(0, 5));

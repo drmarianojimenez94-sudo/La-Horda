@@ -1,11 +1,11 @@
 // Mecánicas de identidad (ARENA_EXT) + acción contextual en cooperativo real (anfitrión + invitados por el relay).
-//   (python3 -m http.server 8771 &) ; (cd server && PORT=8799 node relay.js &) ; node tools/identity/t_identity_net.js <invitados 1|3> <outdir>
+//   (python3 -m http.server 8771 &) ; (cd server && PORT=8799 node relay.js &) ; [ARENA=infernal|hielo|...] node tools/identity/t_identity_net.js <invitados 1|3> <outdir>
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
 const fs = require('fs'), path = require('path');
 const SITE = process.env.SITE || 'http://127.0.0.1:8771', RELAY = process.env.RELAY || 'ws://127.0.0.1:8799';
 const NG = +(process.argv[2] || 1), OUT = process.argv[3] || '/tmp/id_net'; fs.mkdirSync(OUT, { recursive: true });
-const ARENAS = (process.env.ARENAS || 'infernal').split(',');
+const ARENAS = [process.env.ARENA || 'infernal']; // una arena por corrida
 const CH = ['guerrero', 'tanque', 'mago', 'soporte'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 400) : '')); if (!ok) fails++; };
@@ -74,14 +74,32 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('NET.infernal.soltar_corta_en_el_anfitrion', rel.hold == null && !rel.done, rel);
     await goal(null);
   }
-  // fin de esta arena: volver a la sala
-  await H.p.evaluate(() => { clearInterval(window.__calm); });
-  if (ARENAS.indexOf(ARENA) < ARENAS.length - 1) {
-    await H.p.evaluate(() => { for (const h of heroes) { h.alive = false; h.hp = 0; } });
-    await sleep(6000);
-    await H.p.evaluate(([a]) => { if (state !== 'prep') { setState('prep'); } currentArena = a; renderPrepSummary(); }, [ARENAS[ARENAS.indexOf(ARENA) + 1]]);
-    await sleep(1500);
+  if (ARENA === 'hielo') {
+    // braseros y frío iguales en todos; el invitado quieto se enfría (lo decide el anfitrión) y enciende un brasero
+    await H.p.evaluate(([gi]) => { ctxBotObjective = () => null; /* (los bots no se adelantan a encender) */ runLevel = 3; enemies.forEach(e => e.alive = false); for (const b of HIE.br){ b.lit = false; b.fuel = 0; } HIE.br[0].lit = true; HIE.br[0].fuel = 40000; const h = heroes[gi]; h.x = HIE.br[2].x + 200; h.y = HIE.br[2].y; for (const o of heroes) if (o !== h && o.classKey) { o.x = -800; o.y = 0; } }, [gi]);
+    await goal(null);
+    await sleep(8000);
+    const cold = await Promise.all(all.map(c => c.p.evaluate(([gi]) => ({ br: HIE.br.map(b => b.lit ? 1 : 0).join(''), cold: Math.round(heroes[gi]._cold||0), fr: heroes[gi].frostStacks||0 }), [gi])));
+    check('NET.hielo.braseros_iguales_en_todos', cold.every(c => c.br === cold[0].br), cold);
+    check('NET.hielo.el_invitado_quieto_se_enfria', cold[1].cold > 30 || cold[1].fr > 0, cold);
+    await G[0].p.screenshot({ path: path.join(OUT, 'net_guest_frio.png') });
+    const bx = await H.p.evaluate(() => [HIE.br[2].x, HIE.br[2].y]);
+    await goal(bx[0] + 30, bx[1] + 12);
+    await sleep(3000);
+    await goal(null);
+    const gb = await G[0].p.evaluate(() => { updateReviveBtn(); const b = document.getElementById('btn-revive'); return { ready: b.classList.contains('ready'), lbl: b.querySelector('.lbl').textContent }; });
+    check('NET.hielo.invitado_ve_encender', gb.ready && gb.lbl === 'Encender', gb);
+    await G[0].p.evaluate(() => document.getElementById('btn-revive').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
+    await sleep(2400);
+    await G[0].p.evaluate(() => document.getElementById('btn-revive').dispatchEvent(new PointerEvent('pointerup', { bubbles: true })));
+    await sleep(800);
+    const lit = await Promise.all(all.map(c => c.p.evaluate(() => HIE.br[2].lit)));
+    check('NET.hielo.el_invitado_enciende_y_todos_lo_ven', lit.every(x => x === true), lit);
+    await sleep(2500);
+    const warm = await H.p.evaluate(([gi]) => Math.round(heroes[gi]._cold||0), [gi]);
+    check('NET.hielo.el_brasero_calienta_al_invitado', warm < 15, warm);
   }
+  await H.p.evaluate(() => { clearInterval(window.__calm); });
   }
   for (const c of all) check(`NET.sin_errores_J${c.i + 1}`, c.errs.length === 0, c.errs.slice(0, 4));
   console.log(fails ? `FALLAS: ${fails}` : 'OK todas');
