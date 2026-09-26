@@ -86,6 +86,7 @@ function labCtxTargets(){ const out = []; for(const s of LAB.seals) if(!s.lit) o
 CTX_KINDS.lab_seal = {
   label:"Sello", icon:"◈", color:"#ffcf5c",
   pointer(s){ return s.n === LAB.next; },
+  maxBots: 1, farOk: true,
   onComplete(s, users){
     s.by = heroes.indexOf(users[0]); s.flash = 700;
     if(s.n === LAB.next){

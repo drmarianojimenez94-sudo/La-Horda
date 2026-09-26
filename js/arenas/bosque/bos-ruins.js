@@ -110,6 +110,7 @@ function bosGuestUpdate(dt){ for(const a of BOS.amb) a.t -= dt; for(const r of B
 function bosCtxTargets(){ const out = []; for(const r of BOS.runes) if(bosReady(r)) out.push(r); return out; }
 CTX_KINDS.bos_rune = {
   label:"Activar", icon:"ᛉ", color:"#8ee07a",
+  maxBots: 1,
   onComplete(r, users){
     r.charge = 0; r.done = false; r.flash = 900; r.by = heroes.indexOf(users[0]);
     let hit = 0;

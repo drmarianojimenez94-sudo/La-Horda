@@ -183,7 +183,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('HIE.bot_con_frio_se_mueve', Math.hypot(bn.mx, bn.my) > 0.5, bn);
     const bl = await E(() => {
       __calm(); for (const b of HIE.br){ b.lit = false; b.fuel = 0; } player.x = HIE.br[0].x - 250; player.y = HIE.br[0].y; for (const h of allies){ h.x = player.x + (Math.random()-0.5)*80; h.y = player.y + 60; h._cold = 50; }
-      let t = 0; while (!HIE.br.some(b=>b.lit) && t < 30000){ __step(250); t += 250; enemies.length = 0; }
+      let t = 0; while (!HIE.br.some(b=>b.lit) && t < 30000){ for (const h of allies) h._cold = Math.max(h._cold||0, 60); __step(250); t += 250; enemies.length = 0; } /* (equipo con frío sostenido: quietos en el hielo) */
       return { lit: HIE.br.filter(b=>b.lit).length, t };
     });
     check('HIE.los_bots_encienden_braseros', bl.lit >= 1, bl);

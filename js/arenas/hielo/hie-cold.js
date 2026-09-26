@@ -127,25 +127,30 @@ CTX_KINDS.hie_brazier = {
     const who = users[0];
     showBanner(who===player ? "Encendiste el brasero" : `${heroLabel(who)} encendió un brasero`);
   },
+  maxBots: 1,
   botWorth(h, b){
+    // solo si al equipo le hace falta y no quedan braseros encendidos cerca del jugador
     let cold = 0, n = 0; for(const o of heroes){ if(o.alive){ cold += o._cold||0; n++; } }
     cold = n ? cold/n : 0;
-    return (cold > 30 || bossActive || (h._cold||0) > 40) ? 2 : 0.5;
+    const litNear = HIE.br.some(x=>x.lit && Math.hypot(x.x-player.x, x.y-player.y) < 600);
+    return (!litNear && (cold > 35 || (h._cold||0) > 55)) ? 2 : 0;
   }
 };
 // Bots con frío: se mueven (o van al brasero encendido más cercano).
 function hieBotNudge(h, target){
   const c = h._cold||0;
   if(h._hieWarm && c < 12) h._hieWarm = false;
-  if(c < 45 && !h._hieWarm) return null;
-  let best = null, bd = 700;
+  if(c < 50 && !h._hieWarm) return null;
+  let best = null, bd = 420; // solo un brasero cercano: no abandona la pelea por calentarse
   for(const b of HIE.br){ if(!b.lit) continue; const d = Math.hypot(b.x-h.x, b.y-h.y); if(d < bd){ bd = d; best = b; } }
-  if(best && (c > 60 || h._hieWarm)){
+  if(best && (c > 75 || h._hieWarm)){
     h._hieWarm = true;
     if(bd < 60) return {mx:0, my:0, target};
     return {mx:(best.x-h.x)/bd, my:(best.y-h.y)/bd, target};
   }
-  // sin brasero cerca: se mueve en círculo alrededor de su objetivo (o del lugar)
+  // sin brasero encendido cerca: si puede ir a encender uno, que lo haga la acción contextual
+  if(h._ctxGoal || HIE.br.some(x=>!x.lit && CTX_KINDS.hie_brazier.botWorth(h, x) >= 1)) return null;
+  // si no, se mueve en círculo alrededor de su objetivo (o del lugar)
   const ox = target ? target.x : h.x+1, oy = target ? target.y : h.y;
   const dx = h.x-ox, dy = h.y-oy, l = Math.hypot(dx, dy)||1;
   const side = (h._hieSide || (h._hieSide = Math.random()<0.5 ? 1 : -1));

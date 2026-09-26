@@ -14,6 +14,8 @@
        botWorth(h, t)                  (opcional) cuánto le conviene a un bot ir (0 = nunca)
        decay                           (opcional) ms perdidos por ms sin nadie (por defecto 0.5)
        pointer(t)                      (opcional) true = si está fuera de cámara, flecha en el borde
+       maxBots                         (opcional) cuántos bots pueden ir al mismo objetivo (por defecto 2)
+       farOk                           (opcional) true = un bot puede alejarse del jugador para usarlo
      }
    - MANTENER el botón contextual (el mismo de Revivir: revivir tiene prioridad) = h._ctxHold.
      El progreso lo lleva SOLO el anfitrión (ctxUpdate, después de updateRevives); el invitado
@@ -104,17 +106,21 @@ function ctxBotObjective(h, dt, target){
     for(const c of ts){
       const k = CTX_KINDS[c.kind]; if(!k || c.done || !k.botWorth) continue;
       if(k.canUse && !k.canUse(h, c)) continue;
-      // no se amontonan: si ya van dos, que vaya otro a otra cosa
+      // correa: un bot no deja solo al jugador por algo lejano (salvo objetivos que lo piden)
+      if(!k.farOk && player && Math.hypot(c.x-player.x, c.y-player.y) > 700) continue;
+      // no se amontonan: si ya van los que hacen falta, que vaya otro a otra cosa
       let going = 0; for(const o of heroes){ if(o!==h && o._ctxGoal===c.id) going++; }
-      if(going >= 2) continue;
-      const w = k.botWorth(h, c) / (1 + Math.hypot(h.x-c.x, h.y-c.y)/500) / (1 + going*0.8);
+      if(going >= (k.maxBots || 2)) continue;
+      const raw = k.botWorth(h, c);
+      if(raw < 1) continue; // solo lo que de verdad vale la pena (pelear también importa)
+      const w = raw / (1 + Math.hypot(h.x-c.x, h.y-c.y)/500) / (1 + going*0.8);
       if(w > bw){ bw = w; best = c; }
     }
     t = best;
   }
   if(!t){ h._ctxGoal = null; if(h._ctxHold!=null) h._ctxHold = null; return null; }
   const k = CTX_KINDS[t.kind];
-  if(k.botWorth(h, t) <= 0){ h._ctxGoal = null; h._ctxHold = null; return null; }
+  if(k.botWorth(h, t) < 1){ h._ctxGoal = null; h._ctxHold = null; return null; }
   h._ctxGoal = t.id;
   const d = Math.hypot(t.x-h.x, t.y-h.y);
   // se acerca hasta bien adentro; si ya lo está usando, un empujón no lo corta (hasta el borde)
