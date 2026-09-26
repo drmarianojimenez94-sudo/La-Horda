@@ -67,7 +67,7 @@ const UNCALM = () => { if (window.__calm) clearInterval(window.__calm); window._
   await A.page.click('#title-continue-btn');
   check('starter.not_twice_after_reload', await ev(A, () => state === 'mainmenu' && Object.keys(save.champions).filter(k => save.champions[k].unlocked).length === 1));
   // guardado VIEJO (con progreso, de antes de la campaña): vuelve a nivel 1, se respalda y se regala de nuevo
-  await ev(A, () => { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); s.gold = 300; for (const k in s.champions) { s.champions[k].level = 37; s.champions[k].xp = 55; s.champions[k].unlocked = true; } delete s.campaignResetV1; delete s.campaignResetV2; localStorage.setItem(SAVE_KEY, JSON.stringify(s)); localStorage.removeItem(SAVE_KEY + '_antesDeCampania'); });
+  await ev(A, () => { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); s.gold = 300; for (const k in s.champions) { s.champions[k].level = 37; s.champions[k].xp = 55; s.champions[k].unlocked = true; } delete s.campaignResetV1; delete s.campaignResetV2; delete s.campaignResetV3; localStorage.setItem(SAVE_KEY, JSON.stringify(s)); localStorage.removeItem(SAVE_KEY + '_antesDeCampania'); });
   await A.page.reload({ waitUntil: 'load' });
   await waitFor(A, () => !document.getElementById('title-continue-btn').disabled, null, 30000);
   const reset = await ev(A, () => ({ gold: save.gold, lv: Object.values(save.champions).every(ch => ch.level === 1 && ch.xp === 0), owned: Object.keys(save.champions).filter(k => save.champions[k].unlocked).length, backup: JSON.parse(localStorage.getItem(SAVE_KEY + '_antesDeCampania') || '{}').champions.tanque.level }));

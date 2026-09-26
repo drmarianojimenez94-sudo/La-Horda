@@ -52,6 +52,7 @@ function defaultSave(){
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
+    campaignResetV3:true,   // 3er reinicio (antes de la prueba real con un amigo): idem
     starterChosen:false,    // todavía no eligió su campeón de regalo (pantalla "Tu primer campeón")
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
@@ -97,11 +98,12 @@ function loadSave(){
       // nivel 1, sin talentos ni maestría, bloqueados (se elige uno de regalo y el resto se
       // compra), campaña y oro en cero-. Los objetos se conservan. El guardado anterior queda
       // copiado entero en localStorage (SAVE_KEY + "_antesDeCampania") por si hay que volver
-      // atrás. campaignResetV2 es un 2do reinicio (mismo mecanismo, flag nueva): sirve para
-      // volver a arrancar de cero a quien ya jugó con campaignResetV1 puesto (ej. antes de una
-      // prueba real con amigos) sin tocar a un guardado recién creado, que ya nace con ambas
-      // flags en true. Si en el futuro hace falta un 3er reinicio, agregar campaignResetV3 igual.
-      if(!parsed.campaignResetV2){ campaignReset(raw); }
+      // atrás. campaignResetV2/V3 son reinicios siguientes (mismo mecanismo, flag nueva cada
+      // vez): sirven para volver a arrancar de cero a quien ya jugó con la flag anterior puesta
+      // (ej. antes de una prueba real con amigos) sin tocar a un guardado recién creado, que ya
+      // nace con todas las flags en true. Si hace falta otro reinicio más, agregar campaignResetV4
+      // igual (acá, en defaultSave() y en campaignReset()).
+      if(!parsed.campaignResetV3){ campaignReset(raw); }
       if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
@@ -127,6 +129,7 @@ function campaignReset(raw){
   save.playtestV1Bonus = true;
   save.campaignResetV1 = true;
   save.campaignResetV2 = true;
+  save.campaignResetV3 = true;
   persist();
 }
 // ¿Tiene que elegir todavía su campeón de regalo? Solo mientras no tenga ningún campeón propio
