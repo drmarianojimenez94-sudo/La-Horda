@@ -116,9 +116,12 @@ function sylvaAddTrack(h, target, amount){
     h.huntTarget = target;
     h.trackStacks = Math.min(5, amount);
   }
-  if(!wasCornered && h.trackStacks>=5 && h===player){
-    floatText(h.x, h.y-46, "¡PRESA ACORRALADA!", "crit");
-    particles.push({x:h.x,y:h.y, life:320, ring:true, maxLife:320, maxR:46, color:"#ffb84a"});
+  if(!wasCornered && h.trackStacks>=5){
+    champSetOnCornered(h); // set La Manada
+    if(h===player){
+      floatText(h.x, h.y-46, "¡PRESA ACORRALADA!", "crit");
+      particles.push({x:h.x,y:h.y, life:320, ring:true, maxLife:320, maxR:46, color:"#ffb84a"});
+    }
   }
 }
 function sylvaClearTrack(h){ h.huntTarget = null; h.trackStacks = 0; }

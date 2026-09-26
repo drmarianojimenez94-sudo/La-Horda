@@ -37,6 +37,7 @@ function damageEnemy(e, amount, opts){
   let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
   const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
   critMult += itemCritMultBonus(src, e);
+  const csc = champSetCritBonus(src, e, opts); if(csc){ critChance += csc.chance; critMult += csc.mult; }
   const crit = opts.forceCrit || Math.random() < critChance;
   if(crit) dmg *= critMult;
   e.hp -= dmg;
@@ -110,7 +111,7 @@ function damageEnemy(e, amount, opts){
   // Segador Olvidado: golpear también genera Furia (además de recibir daño, ver damageHero)
   if(src && src.classKey==="segador"){
     const genMult = src.furyArmorTimer>0 ? (src.furyGenMult||1) : 1;
-    src.energy = Math.min(src.maxEnergy, src.energy + dmg*0.11*genMult);
+    src.energy = Math.min(src.maxEnergy, src.energy + dmg*0.11*genMult*setFuryMult(src));
   }
   // Sylva: cada golpe de básico contra el mismo objetivo suma Rastreo (Instinto de Caza,
   // sección 8) -se engancha acá en vez de en el punto de disparo porque su básico es un
@@ -289,7 +290,7 @@ function damageHero(h, amount, src){
   // Segador Olvidado: recibir daño genera Furia (más si tiene activa la Armadura de la Furia)
   if(h.classKey==="segador" && amount>0.5){
     const furyMult = h.furyArmorTimer>0 ? 1.6 : 1;
-    h.energy = Math.min(h.maxEnergy, h.energy + amount*0.16*furyMult);
+    h.energy = Math.min(h.maxEnergy, h.energy + amount*0.16*furyMult*setFuryMult(h));
     // Nivel 4 de la Armadura de la Furia: una parte del daño recibido se convierte en poder
     // ofensivo mientras la Furia esté activa (tope prudente para que no se descontrole).
     if(h.furyArmorTimer>0 && h.furyConvertPct>0){

@@ -39,6 +39,7 @@ function triggerTrap(tr, firstEnemy){
         e.stunTimer = Math.max(e.stunTimer||0, tr.rootDur);
       }
       if(caster && caster.classKey==="cazadora"){
+        if(e===firstEnemy) champSetOnTrapRoot(caster, e); // set La Manada: lo atrapado pasa a ser la Presa
         if(caster.huntTarget===e){ sylvaAddTrack(caster, e, 2); }
         caster.sylvaTrapBurstTimer = Math.max(caster.sylvaTrapBurstTimer||0, 2000);
         // Talento "Cacería Instantánea": activar una trampa durante Cacería Salvaje también

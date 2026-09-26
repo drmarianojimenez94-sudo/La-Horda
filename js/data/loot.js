@@ -81,3 +81,6 @@ const SET_ARENA_WEIGHTS = {
 // Sets en los que ya tenés piezas pesan más (se puede perseguir uno), y las piezas que te
 // faltan pesan más que las repetidas (los duplicados existen, pero no dominan).
 const SET_OWNED_BIAS = 1.7, SET_MISSING_PIECE_BIAS = 2.2;
+// Sets de campeón (js/data/champion-sets.js): el del campeón que jugás pesa mucho más; los de
+// otros campeones también pueden caer (botín cruzado), con poco peso.
+const SET_CHAMPION_BIAS = 5, SET_OTHER_CHAMP_W = 0.35;

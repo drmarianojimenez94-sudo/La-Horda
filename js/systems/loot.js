@@ -30,13 +30,18 @@ function lootTierWeights(arena, grade, pity, defeat){
   return w;
 }
 // owned: Set de designIds que el campeón ya tiene (inventario), para elegir set/pieza.
-function _rollSetPiece(arena, owned, rng){
+function _rollSetPiece(arena, owned, rng, classKey){
   const aw = SET_ARENA_WEIGHTS[arena] || SET_ARENA_WEIGHTS.infernal;
   const sw = {};
   for(const id in aw){
     if(!SET_DB[id]) continue;
     const has = setPieceIds(id).some(p=>owned.has(p));
     sw[id] = aw[id] * (has ? SET_OWNED_BIAS : 1);
+  }
+  for(const id in SET_DB){
+    const ch = SET_DB[id].champion; if(!ch) continue;
+    const has = setPieceIds(id).some(p=>owned.has(p));
+    sw[id] = (ch===classKey ? SET_CHAMPION_BIAS : SET_OTHER_CHAMP_W) * (has ? SET_OWNED_BIAS : 1);
   }
   const setId = _pick(sw, rng);
   if(!setId) return null;
@@ -66,7 +71,7 @@ function rollLoot(o){
     const tier = _pick(lootTierWeights(o.arena, grade, pity, defeat), rng);
     got[tier] = true;
     if(tier==="set"){
-      const sp = _rollSetPiece(o.arena, owned, rng);
+      const sp = _rollSetPiece(o.arena, owned, rng, o.classKey);
       if(sp){ items.push({tier, setId:sp.setId, designId:sp.designId, type:sp.type}); owned.add(sp.designId); continue; }
       items.push({tier:"legendario"}); got.legendario = true; continue;
     }
@@ -138,7 +143,7 @@ function ownedDesignIds(){
 function grantEndOfRunLoot(classKey, perf, victory){
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, save.lootPity||{});
   const res = rollLoot({arena:currentArena, grade:perf.grade, victory, runLevel, subjefes:subjefesDefeated,
-    owned:ownedDesignIds(), pity:save.lootPity});
+    owned:ownedDesignIds(), pity:save.lootPity, classKey});
   save.lootPity = res.pity;
   const items = []; let inventoryFull = false;
   for(const spec of res.items){

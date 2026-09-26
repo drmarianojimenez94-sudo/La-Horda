@@ -82,6 +82,7 @@ function triggerBasic(caster){
     let hitSomething = false;
     if(target && distance(caster,target) <= cls.basicRange){
       const critOpts = {fromBasic:true, src:caster, critChanceOverride: caster.ghostStepCritTimer>0 ? 1 : mods.critChance, critMultOverride: mods.critMult};
+      if(champSetIaijutsu(caster)){ critOpts.critChanceOverride = 1; critOpts.critMultOverride = mods.critMult + 1.5; iaijutsuLine(caster, finalDmg, target); } // set El Rōnin Errante
       damageEnemy(target, finalDmg, critOpts);
       caster.ghostStepCritTimer = 0; // el crítico garantizado de Paso Fantasma se consume con este golpe
       musashiAddConcentration(caster, target, 1);
@@ -416,6 +417,7 @@ function castAbility(caster, sk, isUlt, idx){
         // Talento "Instinto Perfecto": Concentración extra en un Paso Perfecto.
         musashiAddConcentration(caster, perfectSource, 3+(tSkill.flags.pasoPerfectoConcBonus||0));
         if(caster===player) floatText(caster.x, caster.y-46, "¡PASO PERFECTO!", "crit");
+        champSetOnPerfectStep(caster); // set El Rōnin Errante
         particles.push({x:caster.x,y:caster.y, life:340, ring:true, maxLife:340, maxR:44, color:"#bfe4ff"});
       }
       musashiSpawnAfterimage(caster);
@@ -672,7 +674,7 @@ function castAbility(caster, sk, isUlt, idx){
         let d2 = curDmg;
         if(!isBoss && (cur.hp/cur.maxHp) <= execPct) d2 *= execMult;
         damageEnemy(cur, d2, {src:caster});
-        cur.bleedTimer = Math.max(cur.bleedTimer||0, (sk.bleedDur||2600)*DUR);
+        cur.bleedTimer = Math.max(cur.bleedTimer||0, (sk.bleedDur||2600)*DUR); cur._overwriteBy = caster;
         cur.bleedDmg = Math.max(cur.bleedDmg||0, curDmg*(sk.bleedDmgMult||0.3));
         pushChainBolt(px_, py_, cur.x, cur.y, 16, 380);
         drawAxiomVfxBurst(cur.x, cur.y, "overwrite");

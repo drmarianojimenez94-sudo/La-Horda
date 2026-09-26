@@ -110,8 +110,8 @@ function heroMoveLocked(h){
 }
 // Golpe letal: ¿la evita algo propio del campeón? (Soldado Cabral). true = no muere.
 function heroPreventDeath(h, src){
-  if(h && h.classKey==="libertador") return libertadorPreventDeath(h, src);
-  return false;
+  if(h && h.classKey==="libertador" && libertadorPreventDeath(h, src)) return true;
+  return champSetPreventDeath(h); // set La Última Profecía
 }
 // Cada cuadro, para cada héroe (anfitrión o partida local).
 function updateChampExtras(h, dt){
