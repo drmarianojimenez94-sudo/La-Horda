@@ -349,6 +349,7 @@ function micEnemyWorldUpdate(dt){
       if(e.hover) e.hover = 0;
     }
     if(e.micStatic){ if(e._ax!==undefined){ e.x = e._ax; e.y = e._ay; } continue; }
+    if(!e.isDuelLocked && e.rank!=="jefe") micClamp(e); // (un empujón de un héroe después del ajuste del cuadro anterior)
     // destrabe: si no avanza hacia un héroe y nadie lo ve, sigue la grilla y al final vuelve a entrar por un túnel
     if(e.rank!=="jefe" && e.rank!=="subjefe" && !e.bossWind){
       const mv = Math.hypot(e.x - (e._ux===undefined ? e.x : e._ux), e.y - (e._uy===undefined ? e.y : e._uy));
