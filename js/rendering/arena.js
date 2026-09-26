@@ -21,6 +21,7 @@ const FLOOR_THEME = {
   acuatica: { bg:"#081a20", stoneR:52, stoneG:78,  stoneB:82,  joint:"rgba(2,10,12,0.85)", dirt:"rgba(20,70,60,",  fleckA:"rgba(70,200,180,0.26)", fleckB:"rgba(160,90,120,0.16)" }
 };
 let floorPatterns = {};
+const FLOOR_DIM = {bosque:0.14, hielo:0.2, acuatica:0.14, laberinto:0.1, infernal:0.06, divina:0.1};
 function buildFloorTile(){
   const theme = FLOOR_THEME[currentArena] || FLOOR_THEME.infernal;
   const S = 160;
@@ -30,7 +31,9 @@ function buildFloorTile(){
 
   // Placas de piedra irregulares (estilo roca resquebrajada, sin patrón de ladrillo)
   const seeds = [];
-  for(let i=0;i<26;i++) seeds.push({x:Math.random()*S, y:Math.random()*S, tone:0.75+Math.random()*0.5});
+  // variación de tono contenida (dirección de arte): el piso es FONDO; si tiene tanto contraste como
+  // los personajes, la horda se pierde. Menos ruido = los héroes y los efectos se leen primero.
+  for(let i=0;i<26;i++) seeds.push({x:Math.random()*S, y:Math.random()*S, tone:0.86+Math.random()*0.26});
   const step = 4;
   for(let y=0;y<S;y+=step){
     for(let x=0;x<S;x+=step){
@@ -46,7 +49,7 @@ function buildFloorTile(){
       if(edge < 3){
         g.fillStyle = theme.joint;           // junta / grieta
       } else {
-        const v = best.tone * (0.9 + Math.random()*0.2);
+        const v = best.tone * (0.95 + Math.random()*0.1);
         const r = Math.round(theme.stoneR*v), gg = Math.round(theme.stoneG*v), b = Math.round(theme.stoneB*v);
         g.fillStyle = `rgb(${r},${gg},${b})`;
       }
@@ -87,10 +90,14 @@ function buildFloorTile(){
     g.fillStyle = theme.fleckA; g.fillRect(x, y, 5, 3);
     g.fillStyle = theme.fleckB; g.fillRect(x+1, y+1, 3, 1);
   }
+  // valor del piso por arena: un escalón por debajo de los personajes (figura/fondo)
+  const dim = FLOOR_DIM[currentArena] || 0;
+  if(dim){ g.fillStyle = `rgba(0,0,0,${dim})`; g.fillRect(0,0,S,S); }
   floorPatterns[currentArena] = ctx.createPattern(t, "repeat");
   floorPattern = floorPatterns[currentArena];
 }
 function aidDrawWall(w, now){
+  if(WALL_STYLES[currentArena] && drawArenaBlock(w, now)) return; // muros con estilo propio de la arena (arena-blocks.js)
   const b = aidWallAABB(w);
   const H = AID_WALL_H, W = b.x1-b.x0, D = b.y1-b.y0;
   ctx.save();
@@ -388,8 +395,12 @@ function aidBuildLavaLayer(){
   g.strokeStyle = vc.core; g.lineWidth = 4; g.stroke();
   g.strokeStyle = vc.bright; g.lineWidth = 1.5; g.stroke();
   g.globalCompositeOperation = "lighter"; g.strokeStyle = vc.glow; g.lineWidth = 21; g.stroke(); g.globalCompositeOperation = "source-over";
-  g.beginPath(); for(const pool of lavaPools){ if(pool.blocks) for(const b of pool.blocks) g.rect(pool.x+b.x, pool.y+b.y, 10, 10); } g.fillStyle = vc.core; g.fill();
-  g.beginPath(); for(const pool of lavaPools){ if(pool.blocks) for(const b of pool.blocks){ if(((b.x/10)+(b.y/10)) % 3 === 0) g.rect(pool.x+b.x+2, pool.y+b.y+2, 6, 6); } } g.fillStyle = vc.bright; g.fill();
+  // pozos de lava orgánicos: la unión de círculos sobre la grilla de bloques redondea el borde
+  // (antes eran cuadrados de 10 px y se leían como un error de dibujo). Costra oscura → núcleo → burbujas.
+  const _poolPath = (r, jit)=>{ g.beginPath(); for(const pool of lavaPools){ if(pool.blocks) for(const b of pool.blocks){ const j = jit ? ((b.x*7 + b.y*13) % 5) - 2 : 0; g.moveTo(pool.x+b.x+5+r+j, pool.y+b.y+5); g.arc(pool.x+b.x+5, pool.y+b.y+5, r+j, 0, Math.PI*2); } } };
+  _poolPath(13, true); g.fillStyle = "rgba(20,6,4,0.9)"; g.fill();
+  _poolPath(9, true); g.fillStyle = vc.core; g.fill();
+  g.beginPath(); for(const pool of lavaPools){ if(pool.blocks) for(const b of pool.blocks){ if(((b.x/10)*3+(b.y/10)*5) % 7 === 0){ const r = 2 + ((b.x+b.y)/10 % 3); g.moveTo(pool.x+b.x+5+r, pool.y+b.y+5); g.arc(pool.x+b.x+5, pool.y+b.y+5, r, 0, Math.PI*2); } } } g.fillStyle = vc.bright; g.fill();
   g.globalCompositeOperation = "lighter"; g.globalAlpha = 0.16;
   const gs = glowSprite("255,120,40"); for(const pool of lavaPools){ if(pool.blocks) g.drawImage(gs, pool.x-120, pool.y-120, 240, 240); }
 }

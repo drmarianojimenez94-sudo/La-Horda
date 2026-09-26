@@ -297,7 +297,8 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
       netHostStartGame();
       return;
     }
-    startRun(1);
+    // el Hechicero presenta la arena antes de empezar (run-intro.js)
+    runIntroShow(currentArena, ()=>{ try{ startRun(1); }catch(err){ console.error("Error al arrancar la partida:", err); } });
   }catch(err){
     console.error("Error al arrancar la partida:", err);
     alert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));

@@ -28,3 +28,44 @@
 
 /* ---------- misc ---------- */
 #vote-note{font-size:0.68rem; color:var(--text-dim); margin-top:16px; max-width:340px;}
+
+/* ---------- Pantalla previa a la partida: el Hechicero (run-intro.js) ---------- */
+#run-intro{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; gap:2vw; padding:12px 16px;
+  background:radial-gradient(ellipse at 30% 50%, #3e2810, #0c070a 70%); cursor:pointer; animation:riIn .45s ease-out;}
+#run-intro.hidden{display:none;}
+@keyframes riIn{from{opacity:0} to{opacity:1}}
+#run-intro .ri-art{flex:0 0 42%; height:min(92vh, 520px); max-width:520px; background:transparent !important; position:static !important; width:auto;}
+#run-intro .ri-card{flex:1 1 auto; max-width:520px; background:linear-gradient(180deg, rgba(34,22,12,0.92), rgba(14,9,6,0.94));
+  border:2px solid #b08a4a; border-radius:8px; padding:12px 14px; box-shadow:0 0 22px rgba(255,200,110,0.25);}
+#run-intro .ri-who{font-family:'Press Start 2P',monospace; font-size:0.55rem; letter-spacing:3px; color:#ffd98a;}
+#run-intro .ri-arena{font-family:'Press Start 2P',monospace; font-size:0.95rem; color:#fff3d6; margin:6px 0 6px; text-shadow:0 0 10px rgba(255,210,120,0.6);}
+#run-intro .ri-say{font-family:'VT323',monospace; font-size:1.25rem; line-height:1.05; color:#ffe9c2; font-style:italic; margin-bottom:8px;}
+#run-intro .ri-row{display:flex; flex-direction:column; gap:1px; margin:5px 0; font-family:'VT323',monospace; font-size:1.12rem; line-height:1.02; color:#eadcc6;}
+#run-intro .ri-k{font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:1px;}
+#run-intro .ri-k.kill{color:#ff7a5c;} #run-intro .ri-k.help{color:#7fe0a0;} #run-intro .ri-k.goal{color:#ffd24a;}
+#run-intro .ri-k.cr{color:#bfe8ff;}
+#run-intro .ri-crystals{flex-direction:row; align-items:center; justify-content:space-between; gap:8px; border-top:1px solid rgba(176,138,74,0.35); padding-top:5px;}
+#run-intro .cr-gems{display:flex; align-items:center; gap:7px;}
+#run-intro .cr-gems em{font-style:normal; color:#bfe8ff; margin-left:3px;}
+.cr-gem{display:inline-block; width:13px; height:19px; clip-path:polygon(50% 0,100% 32%,82% 78%,50% 100%,18% 78%,0 32%);
+  background:#2a2520; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12); opacity:0.55;}
+.cr-gem.on{background:linear-gradient(135deg, var(--l) 0 28%, var(--c) 28% 62%, rgba(0,0,0,0.35) 62%), var(--c); opacity:1;
+  filter:drop-shadow(0 0 5px var(--c)); animation:crPulse 2.4s ease-in-out infinite;}
+@keyframes crPulse{50%{filter:drop-shadow(0 0 9px var(--c));}}
+#run-intro .ri-go{margin-top:10px; width:100%; font-size:0.8rem; padding:10px; background:linear-gradient(180deg,#c9922e,#8a5a14); border-color:#ffd98a; color:#fff8e6;}
+#run-intro .ri-tap{text-align:center; font-family:'VT323',monospace; font-size:0.95rem; color:#a8916a; margin-top:4px;}
+@media (max-height: 500px){
+  #run-intro{gap:10px; padding:6px 12px;}
+  #run-intro .ri-art{flex-basis:36%; height:94vh;}
+  #run-intro .ri-card{padding:7px 10px;}
+  #run-intro .ri-arena{font-size:0.72rem; margin:4px 0;}
+  #run-intro .ri-say{font-size:1.02rem; margin-bottom:4px;}
+  #run-intro .ri-row{font-size:0.95rem; margin:3px 0;}
+  #run-intro .ri-k{font-size:0.42rem;}
+  #run-intro .ri-go{margin-top:5px; padding:7px; font-size:0.66rem;}
+  #run-intro .ri-tap{display:none;}
+}
+@media (max-width: 640px) and (orientation: portrait){
+  #run-intro{flex-direction:column;}
+  #run-intro .ri-art{flex:0 0 38vh; width:100%; height:38vh;}
+}

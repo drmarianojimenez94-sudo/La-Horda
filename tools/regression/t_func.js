@@ -37,10 +37,16 @@ async function goToChampSelect(page, arenaTitle) {
 async function pickChamp(page, name) {
   await page.evaluate(n => { const el = [...document.querySelectorAll('.champ-name')].find(e => e.textContent.trim() === n); if (el) el.closest('.champ-card').click(); }, name);
 }
+// Pantalla previa del Hechicero (run-intro.js): se pasa tocando "¡A la batalla!" como un jugador.
+async function passIntro(page, tap) {
+  await sleep(550);
+  if (await vis(page, '#run-intro .ri-go')) { if (tap) await page.tap('#run-intro .ri-go').catch(() => {}); else await page.click('#run-intro .ri-go').catch(() => {}); }
+}
 async function startFromSelect(page) {
   await page.click('#start-btn');
   await sleep(300);
   if (await vis(page, 'text=Comenzar')) await page.click('text=Comenzar').catch(() => {});
+  await passIntro(page);
   await sleep(300);
 }
 async function joyDrag(page, dx, dy, ms) {
@@ -231,6 +237,7 @@ async function canvasNonBlank(page) {
     await page.click('#retry-btn').catch(() => {});
     await sleep(400);
     if (await vis(page, 'text=Comenzar')) await page.click('text=Comenzar').catch(() => {});
+    await passIntro(page);
     await sleep(500);
     check('death.retry_playing', (await T(page, 'state')) === 'playing');
     const errs = await gameErrors(page, errors);
@@ -313,6 +320,7 @@ async function canvasNonBlank(page) {
     await pickChamp(page, 'Soporte');
     await page.tap('#start-btn'); await sleep(300);
     if (await vis(page, 'text=Comenzar')) await page.tap('text=Comenzar').catch(() => {});
+    await passIntro(page, true);
     await sleep(400);
     check('mobile.playing', (await T(page, 'state')) === 'playing');
     const p0 = await T(page, 'player');

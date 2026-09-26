@@ -203,15 +203,15 @@ function roleAnnounce(e){
   if(typeof tutSay==="function") tutSay("role_"+e.role, ROLE_TIPS[e.role], null, 6500);
 }
 const ROLE_TIPS = {
-  sanador:"Ese brillo verde cura a los demás. Mientras respire, la horda no se desangra.",
-  resucitador:"Hay quien no deja descansar a los muertos. Callalo primero.",
-  invocador:"Donde él está, se abren grietas. Cerrá la fuente, no las gotas.",
-  protector:"El escudo azul los cubre a todos. Rompé el escudo antes que la carne.",
-  carcelero:"Si el suelo se marca bajo tus pies, movete: las cadenas no esperan.",
-  cazador:"Ese no quiere a cualquiera: busca al más débil de tu grupo.",
-  suicida:"Si parpadea, alejate. No se detiene hasta estallar.",
-  comandante:"El que lleva el estandarte hace valientes a los cobardes. Matalo y verás cómo dudan.",
-  artillero:"El fuego cae donde estás parado. Leé el suelo."
+  sanador:"SANADOR (cruz verde): cura a la horda que tiene cerca. Matalo primero.",
+  resucitador:"RESUCITADOR: levanta a los muertos del piso. Matalo antes de que junte un ejército.",
+  invocador:"INVOCADOR: abre grietas que traen refuerzos cada pocos segundos. Si lo matás, se cortan.",
+  protector:"PROTECTOR (escudo azul): los enemigos unidos a él reciben menos daño. Matalo a él primero.",
+  carcelero:"CARCELERO: marca el suelo bajo tus pies y te encadena. Si ves la marca, salí rápido.",
+  cazador:"CAZADOR: es rápido y persigue al compañero más débil. Protegé al mago o al soporte.",
+  suicida:"SUICIDA: cuando se planta y parpadea, está por explotar. Alejate (a la horda también la daña).",
+  comandante:"COMANDANTE (estandarte): la horda cercana pega más y corre más. Matalo y dudan.",
+  artillero:"ARTILLERO: bombardea donde estás parado. Cuando aparece un círculo en el piso, movete."
 };
 function resetEnemyRoles(){ _roleSeenLvl = {}; }
 // Dibujo: anillo en el suelo + insignia en rombo con el ícono (encima de la barra de vida).

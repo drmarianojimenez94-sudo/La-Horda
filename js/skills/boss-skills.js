@@ -470,6 +470,7 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
 // Un segmento del Muro de Hielo (se dibuja ordenado por profundidad junto a las entidades).
 function drawIceWall(w){
   const age = w.maxLife - w.life, grow = Math.min(1, age/180), fade = w.life < 500 ? w.life/500 : 1;
+  if(w.st){ drawStonePillar(w, grow, fade); return; }
   const img = ICE_WALL_IMG[w.img], ready = ICE_WALL_READY[w.img];
   drawShadow(w.x, w.y, w.r*1.1);
   if(ready){
@@ -484,6 +485,22 @@ function drawIceWall(w){
     ctx.beginPath(); ctx.moveTo(w.x-w.r, w.y); ctx.lineTo(w.x, w.y-54*grow); ctx.lineTo(w.x+w.r, w.y); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.restore();
   }
+}
+// Pilar de piedra del Laberinto de Piedra (Ángel Corrompido, poder del Guardián del Laberinto):
+// usa el mismo sistema que el Muro de Hielo (colisión con campeones, red), otro dibujo.
+function drawStonePillar(w, grow, fade){
+  const h = 70*grow, r = w.r;
+  drawShadow(w.x, w.y, r*1.2);
+  ctx.save(); ctx.globalAlpha = fade;
+  ctx.fillStyle = "#1c1612"; ctx.fillRect(w.x - r - 2, w.y - h - 2, r*2 + 4, h + 6);           // contorno
+  ctx.fillStyle = "#6b5a48"; ctx.fillRect(w.x - r, w.y - h, r*2, h);                           // cara
+  ctx.fillStyle = "#8d7a62"; ctx.fillRect(w.x - r, w.y - h, r*2, 6);                            // tapa iluminada
+  ctx.fillStyle = "#4a3d31"; ctx.fillRect(w.x + r*0.35, w.y - h + 6, r*0.65, h - 6);           // lado en sombra
+  ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.fillRect(w.x - r*0.5, w.y - h*0.62, r*0.9, 2); ctx.fillRect(w.x - r*0.1, w.y - h*0.3, r*0.7, 2);
+  // runa ámbar del Guardián (se lee como "esto lo puso el jefe")
+  ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = fade*(0.6 + 0.3*Math.sin(animNow/160 + w.x));
+  ctx.fillStyle = "#ffc46e"; ctx.fillRect(w.x - 3, w.y - h*0.72, 6, 12); ctx.fillRect(w.x - 7, w.y - h*0.72 + 4, 14, 3);
+  ctx.restore();
 }
 // Chorro del Lanzallamas de Hielo, golpes que caen (estalactitas/rocas/calabazas), encima de
 // las entidades.

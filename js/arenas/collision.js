@@ -38,7 +38,8 @@ function clampToArena(ent){
 let labyrinthWalls = [];
 function buildLabyrinthWalls(){
   labyrinthWalls = [];
-  if(!arenaMods().hasWalls) return;
+  // el resto de las arenas del coliseo también tienen muros propios (arena-blocks.js)
+  if(!arenaMods().hasWalls){ labyrinthWalls = arenaBlockLayout(currentArena); return; }
   // Arena Identity V1: pasillos, cámaras y plazas diseñados (ver aidLabyrinthLayout) en vez de
   // tabiques al azar sobre anillos. Mismo formato {x,y,len,thick,rot} que usa la colisión.
   labyrinthWalls = aidLabyrinthLayout();

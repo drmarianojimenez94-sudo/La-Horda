@@ -111,5 +111,12 @@ function tieredBurstVFX(x, y, R, talentLevel, color, color2){
   if(tier>=4){
     particles.push({x,y, life:750, maxLife:750, runeRing:true, maxR:R*0.62, color:color2||color, count:10});
   }
+  // Capas que viajan por la red (las partículas de arriba son solo del anfitrión) y que crecen con
+  // el nivel: así el salto Nv.1 → Nv.10 se ve igual en cooperativo y no depende de cada habilidad.
+  const rgb = hexToRgb(color), k = 1 + 0.2*(tier-1);
+  if(tier>=2) vfxShock(x, y, R*0.2, R*1.15*k, rgb, 360, 1);
+  if(tier>=3) vfxBurst(x, y - 8, 6 + tier*3, "t_"+color, 150*k, 520, 3, 1, -50, 1);
+  if(tier>=4) vfxShock(x, y, R*0.4, R*1.6*k, "255,255,255", 300, 1);
+  if(talentLevel>=10){ vfxShock(x, y, R*0.6, R*2.2, rgb, 520, 2); vfxBurst(x, y - 10, 14, "t_"+color, 220, 650, 3.5, 2, -70, 1); }
   return tier;
 }

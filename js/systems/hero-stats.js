@@ -32,8 +32,8 @@ function computePlayerStats(classKey, levelOverride){
   const weapon = equippedItem(classKey, "arma");
   const helmet = equippedItem(classKey, "casco");
   const shieldItem = equippedItem(classKey, "escudo");
-  const weaponDmgPct = weapon ? weapon.value : 0;
-  const shieldPct = (helmet ? helmet.value : 0) + (shieldItem ? shieldItem.value : 0);
+  const weaponDmgPct = itemStat(weapon); // base × roll × nivel
+  const shieldPct = itemStat(helmet) + itemStat(shieldItem);
   dmg = dmg * (1 + weaponDmgPct);
   const hpFinal = Math.round(hp * (1 + passiveSum(classKey,"hp_mult")));
   const speedFinal = speed * (1 + passiveSum(classKey,"speed_mult"));

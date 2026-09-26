@@ -35,7 +35,7 @@ function acuFreeSpot(margin, avoid){
     const x = Math.cos(a)*r*1.18, y = Math.sin(a)*r*0.82;
     if(!aidInside(x, y, margin)) continue;
     if(ACU.zones.some(z=>Math.hypot(z.x-x, z.y-y) < (avoid||260))) continue;
-    if(aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+60)) continue;
+    if(aidBlocked(x, y, 60)) continue;
     return {x:Math.round(x), y:Math.round(y)};
   }
   return null;
@@ -176,9 +176,9 @@ function acuGuestUpdate(dt){
 }
 function acuTut(){
   if(!player || !player.alive) return;
-  if(acuFlowAt(player.x, player.y)) tutSay("current", "El agua tiene memoria y tiene prisa. Si la seguís, te lleva. Si la peleás, te cansa.", "Usá las corrientes para moverte… o para arrastrar a la horda", 9000);
+  if(acuFlowAt(player.x, player.y)) tutSay("current", "Estás en una CORRIENTE: el agua te empuja. A favor te movés rápido; en contra, te frena.", "Usá las corrientes para moverte… o para arrastrar a la horda", 9000);
   const c = acuInCharco(player.x, player.y);
-  if(c && c.warn > 0) tutSay("charco", "Ese brillo no es luz. Es hambre.", "Salí del charco antes de la descarga (a ellos les duele más)", 8000);
+  if(c && c.warn > 0) tutSay("charco", "Ese charco brilla porque está por dar una DESCARGA eléctrica.", "Salí del charco antes de la descarga (a ellos les duele más)", 8000);
 }
 // Bots: no quedarse en el ojo del remolino (los avisos de chorros y charcos ya los esquivan).
 function acuBotDanger(x, y, pad){
@@ -212,9 +212,12 @@ function acuDrawGround(now){
         const yy = row*C.w*0.22;
         for(let xx=-C.len/2 + off + (row>0?35:0); xx < C.len/2 - 20; xx += 70){
           const X = Math.round(xx), Y = Math.round(yy);
-          for(const [lw, col] of [[5, "rgba(10,40,60,0.45)"], [3, "rgba(215,248,255,0.8)"]]){
-            ctx.lineWidth = lw; ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(X, Y-9); ctx.lineTo(X+11, Y); ctx.lineTo(X, Y+9); ctx.stroke();
-          }
+          // estela (agua que corre) + punta de flecha rellena y redondeada: se lee como flujo, no como letra
+          ctx.lineCap = "round"; ctx.lineWidth = 3; ctx.strokeStyle = "rgba(200,245,255,0.22)";
+          ctx.beginPath(); ctx.moveTo(X-30, Y); ctx.lineTo(X-4, Y); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(X-7, Y-9); ctx.quadraticCurveTo(X+4, Y-3, X+10, Y); ctx.quadraticCurveTo(X+4, Y+3, X-7, Y+9); ctx.lineTo(X-2, Y); ctx.closePath();
+          ctx.lineJoin = "round"; ctx.lineWidth = 3; ctx.strokeStyle = "rgba(10,40,60,0.45)"; ctx.stroke();
+          ctx.fillStyle = "rgba(215,248,255,0.78)"; ctx.fill();
         }
       }
       ctx.restore();

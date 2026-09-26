@@ -305,6 +305,8 @@ function castAbility(caster, sk, isUlt, idx){
   // habilidad sin tocar los puntos permanentes invertidos -por eso esto usa una copia
   // (effectiveMasteryFor), nunca masteryOf() a secas, que sigue siendo lo que ve la UI-.
   const mastery = effectiveMasteryFor(caster.classKey, skillKey);
+  // anticipación: destello del color del campeón al lanzar + firma de nivel (fx-contrast.js)
+  vfxCastFlash(caster.x, caster.y, fxHeroRgb(caster), isUlt, caster.classKey ? allocLevel(mastery) : 0);
   // Talentos de ESTA habilidad puntual (ver sección TALENTOS Y MAESTRÍAS más arriba): powerMult
   // se suma al mismo escalado que ya usa la maestría (afecta daño Y curación por igual, tal
   // como ya hacía POWER antes de que existieran talentos), área/duración se multiplican sobre

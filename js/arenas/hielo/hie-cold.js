@@ -104,11 +104,11 @@ function hieGuestUpdate(dt){ hieTut(); }
 // Consejos del Hechicero (cada cliente: anfitrión e invitados).
 function hieTut(){
   if(!player || !player.alive) return;
-  if((player._cold||0) > 45) tutSay("cold", "Acá el frío no mata: espera. Al que se queda quieto, lo guarda para siempre.", "Movete, o calentate junto a un brasero encendido", 10000);
+  if((player._cold||0) > 45) tutSay("cold", "Te estás congelando: el frío sube cuando te quedás quieto y al llenarse te congela. Movete o buscá un brasero encendido.", "Movete, o calentate junto a un brasero encendido", 10000);
   if(TUT.key==="cold" && hieNearLit(player.x, player.y)) tutDone("cold");
   for(const b of HIE.br){
     if(b.lit || Math.hypot(player.x-b.x, player.y-b.y) > 600) continue;
-    tutSay("brazier", "Un fuego apagado todavía recuerda cómo arder.", "Mantené 🔥 junto al brasero (o prendelo con fuego)", 10000);
+    tutSay("brazier", "Eso es un BRASERO apagado. Prendelo y su calor te saca el frío a vos y a tu grupo.", "Mantené 🔥 junto al brasero (o prendelo con fuego)", 10000);
     break;
   }
   if(TUT.key==="brazier" && HIE.br.some(b=>b.lit && b.by===heroes.indexOf(player))) tutDone("brazier");

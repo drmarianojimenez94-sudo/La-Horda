@@ -23,13 +23,18 @@ function vfxFrame(dt){
 }
 // prio: 2 = jugador/jefe/ataque peligroso (siempre), 1 = importante, 0 = secundario (se recorta primero)
 // kind: 0 cuadrado pixel, 1 glow aditivo, 2 estela (línea en la dirección de la velocidad)
+// Paleta "t_#rrggbb": color de una habilidad (se arma sola en cada cliente, también en los invitados)
+function _vfxPalFromKey(pal){
+  if(typeof pal!=="string" || pal.slice(0,3)!=="t_#") return null;
+  const c = pal.slice(2); return (VFX_PAL[pal] = [c, "#ffffff", c, hexToRgb(c)]);
+}
 function vfxBurst(x, y, n, pal, spd, life, size, prio, upBias, kind){
   if(prio<2){
     if(!inView(x, y, 80)) return;
     n = Math.round(n*(prio===1 ? Math.max(0.5,vfxLoad) : vfxLoad));
     if(n<=0) return;
   }
-  const cols = VFX_PAL[pal] || VFX_PAL.spark;
+  const cols = VFX_PAL[pal] || _vfxPalFromKey(pal) || VFX_PAL.spark;
   const cap = prio>=2 ? VFX_MAX : Math.floor(VFX_MAX*0.82*(prio===1?1:vfxLoad));
   for(let i=0;i<n;i++){
     if(vCount >= cap) return;
@@ -109,6 +114,7 @@ function vfxDrawParticles(){
     ctx.globalAlpha = Math.min(1, a*1.4);
     ctx.fillStyle = vCol[i];
     ctx.fillRect(vX[i]-vSize[i]/2, vY[i]-vSize[i]/2, vSize[i], vSize[i]);
+    if(vSize[i] >= 3 && a > 0.35){ ctx.fillStyle = "#fff"; ctx.globalAlpha = (a-0.35)*1.3; const c = vSize[i]*0.4; ctx.fillRect(vX[i]-c/2, vY[i]-c/2, c, c); } // núcleo blanco: se lee sobre cualquier piso
     ctx.globalAlpha = a*0.5;
     ctx.drawImage(glowSprite(hexToRgb(vCol[i])), vX[i]-s, vY[i]-s, s*2, s*2);
   }
@@ -208,6 +214,7 @@ function vfxImpactHeavy(ent, prof, strength){
 }
 function vfxUpdate(dt){
   vfxUpdateParticles(dt);
+  fxContrastUpdate(dt); // destellos de impacto y de lanzamiento (fx-contrast.js)
   for(let i=0;i<VFX_SHOCK_MAX;i++){ const s = vfxShocks[i]; if(s.on){ s.t += dt; if(s.t>=s.dur) s.on = false; } }
   for(let i=0;i<VFX_TELE_MAX;i++){
     const s = vfxTeles[i]; if(!s.on) continue;
@@ -282,9 +289,12 @@ function vfxDrawGround(){
   }
   for(let i=0;i<VFX_SHOCK_MAX;i++){
     const s = vfxShocks[i]; if(!s.on) continue;
-    const q = s.t/s.dur, e = _easeOut(q), r = s.r0 + (s.r1-s.r0)*e;
-    ctx.strokeStyle = `rgba(${s.rgb},${(1-q)*0.85})`; ctx.lineWidth = 1+6*(1-q);
-    ctx.beginPath(); ctx.ellipse(s.x, s.y+6, r, r*0.55, 0, 0, Math.PI*2); ctx.stroke();
+    const q = s.t/s.dur, e = _easeOut(q), r = s.r0 + (s.r1-s.r0)*e, lw = 1+6*(1-q);
+    ctx.beginPath(); ctx.ellipse(s.x, s.y+6, r, r*0.55, 0, 0, Math.PI*2);
+    // contraste: sombra oscura debajo, color, y filo casi blanco encima (fx-contrast.js)
+    ctx.strokeStyle = `rgba(0,0,0,${(1-q)*fxUnder()})`; ctx.lineWidth = lw+4; ctx.stroke();
+    ctx.strokeStyle = `rgba(${s.rgb},${(1-q)*0.9})`; ctx.lineWidth = lw; ctx.stroke();
+    if(q < 0.6){ ctx.strokeStyle = `rgba(255,255,255,${(0.6-q)*1.2})`; ctx.lineWidth = Math.max(1, lw*0.35); ctx.stroke(); }
   }
 }
 const _ONE_CLIP = {frames:[{x:0, y:0, w:1, h:1}]};

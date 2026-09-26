@@ -43,6 +43,9 @@ function drawHero(h){
 // Lo comparten el dibujo normal, el hit flash y la caída al morir.
 function drawHeroBody(h, drawScale, spinning, stealthed){
   if(champPackPending(h.classKey)) return; // nunca el arte viejo mientras baja el redibujado
+  // SKIN DE SET COMPLETO (única transformación visual completa por equipo). Solo si el arte existe
+  // (SET_SKINS en set-effects.js); sin arte, el set completo se ve con su aura completa.
+  if(typeof drawSetSkin==="function" && drawSetSkin(h, drawScale, stealthed?0.32:1)) return;
   // El Mago usa su propio atlas de sprites (arte provisto por el usuario) en vez del sprite
   // procedural; el resto de las clases sigue exactamente igual que antes.
   if(h.classKey==="mago" && drawMagoAtlas(h, drawScale, stealthed?0.32:1)){
@@ -257,6 +260,7 @@ function drawEnemy(e){
     }
     ctx.restore();
   }
+  if(e.type==="angel_corrompido") hechDrawAngelBack(e, P); // alas corruptas detrás del cuerpo (inf-hechicero.js)
   // Cuerpo con la pose del sistema de animación (solo transformación visual: la hitbox no se mueve).
   ctx.save();
   animApply(e.x, e.y, P);
@@ -275,6 +279,7 @@ function drawEnemy(e){
     ctx.restore();
   }
   drawBossSkillAnim(e);
+  if(e.type==="angel_corrompido") hechDrawAngelFront(e); // los cuatro cristales orbitando
   drawEnemyOverlays(e);
 }
 // Dibujo del cuerpo del enemigo según qué arte real tenga (sin sombra/estado/barras): lo
@@ -481,10 +486,15 @@ function _drawProjCore(p){
   const sp = Math.hypot(p.vx||0, p.vy||0)||1;
   const tl = Math.min(r*4, sp*0.05);
   ctx.save();
+  // contraste (fx-contrast.js): sombra suave detrás, así el brillo no se pierde en pisos claros
+  ctx.globalAlpha = fxUnder()*0.9; const dk = r*3.2;
+  ctx.drawImage(fxDarkSprite(), p.x-dk, p.y-dk, dk*2, dk*2);
   ctx.globalCompositeOperation = "lighter";
   ctx.globalAlpha = 0.45;
   ctx.strokeStyle = p.color; ctx.lineWidth = Math.max(2, r*0.8);
   ctx.beginPath(); ctx.moveTo(p.x-(p.vx||0)/sp*tl, p.y-(p.vy||0)/sp*tl); ctx.lineTo(p.x, p.y); ctx.stroke();
+  ctx.globalAlpha = 0.55; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = Math.max(1, r*0.3);   // estela con alma blanca
+  ctx.beginPath(); ctx.moveTo(p.x-(p.vx||0)/sp*tl*0.6, p.y-(p.vy||0)/sp*tl*0.6); ctx.lineTo(p.x, p.y); ctx.stroke();
   ctx.globalAlpha = 0.85;
   const g = r*2.6;
   ctx.drawImage(glowSprite(rgb), p.x-g, p.y-g, g*2, g*2);
@@ -492,7 +502,10 @@ function _drawProjCore(p){
   ctx.globalAlpha = 1;
   const style = p.sprite ? null : projStyleOf(p); // forma propia de cada campeón (skill-evolution.js)
   if(style && drawProjStyle(p, style, r)){ ctx.restore(); return; }
-  if(p.sprite==="orb" && acua2Ready("fxOrb")){
+  if((p.sprite==="hsOrb" || p.sprite==="gcHand") && acua2Ready(p.sprite)){
+    // orbe del Hechicero / restos del Golem (arte de su hoja)
+    drawImgSized(acua2Pick(p.sprite, p.sprite==="hsOrb" ? 1 : 0), p.x, p.y, r*(p.sprite==="hsOrb" ? 4.2 : 3.6), 0.5, 0.5, false, undefined, p.sprite==="hsOrb" ? Math.atan2(p.vy||0, p.vx||0) : animNow/160);
+  } else if(p.sprite==="orb" && acua2Ready("fxOrb")){
     drawImgSized(acua2Pick("fxOrb",0), p.x, p.y, r*3.4, 0.5, 0.5, false, undefined, animNow/300);
   } else {
     ctx.fillStyle = p.color; ctx.fillRect(p.x-r/2, p.y-r/2, r, r);

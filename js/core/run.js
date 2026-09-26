@@ -77,6 +77,7 @@ function startRun(fromLevel){
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
   runEnding = false;
+  crystalReset();
   kills = 0;
   runElapsedMs = 0;
   subjefesDefeated = 0; // Fase 3.1: un objeto por cada subjefe derrotado en esta partida
@@ -139,6 +140,8 @@ function spawnEmber(){
 }
 
 function onBossDefeated(){
+  // Arena Infernal: el Golem de Cuerpos (forma 2) se rompe y nace el Demonio Mayor (forma 3)
+  if(currentArena==="infernal" && (hechAngelFallen() || hechGolemBroken())) return;
   // Arena de Hielo: jefe final en 2 fases. Al vaciar la vida del Mago de Hielo y Cristal
   // (fase 1) no termina la pelea todavía: se transforma en el Ángel Caído de Hielo (fase 2,
   // mucho más grande y agresivo). Recién al derrotar la fase 2 se gana la partida.
@@ -228,7 +231,14 @@ function finishBossVictory(){
   }
   persist();
   runEnding = true;
-  runLater(900, ()=>{ if(state==="playing") showVictoryScreen(); });
+  // Guardián vencido (Mago de Hielo, Madre Espora): su cristal queda libre y vuela al jugador
+  const ck = CRYSTAL_BY_ARENA[currentArena]; let wait = 900;
+  if(ck && ck!=="piedra"){
+    const bx = currentArena==="micelial" && typeof MIC_MOTHER_POS!=="undefined" ? MIC_MOTHER_POS.x : (boss ? boss.x : player.x);
+    const by = currentArena==="micelial" && typeof MIC_MOTHER_POS!=="undefined" ? MIC_MOTHER_POS.y + 60 : (boss ? boss.y : player.y);
+    crystalAward(ck, bx, by); wait = 3400;
+  }
+  runLater(wait, ()=>{ if(state==="playing") showVictoryScreen(); });
 }
 
 function onPlayerDeath(){

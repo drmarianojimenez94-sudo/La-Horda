@@ -6,6 +6,7 @@
 
 function damageEnemy(e, amount, opts){
   opts = opts || {};
+  if(e.cineT > 0) return; // cinemática de un jefe (inf-hechicero.js): intocable mientras habla o se transforma
   const src = opts.src || player;
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
@@ -240,6 +241,8 @@ function killEnemy(e){
       dropPotion(e.x, e.y, "mana");
     }
   }
+  if(e.type==="guardian_laberinto" && !netIsGuest()) crystalAward("piedra", e.x, e.y); // su cristal queda libre (crystals.js)
+  if(e.type==="hechicero_supremo" && hechOnDefeat(e)) return; // no muere: huye (inf-hechicero.js)
   if(e===boss){
     onBossDefeated();
   }
@@ -297,6 +300,7 @@ function damageHero(h, amount, src){
       const absorbed = Math.min(h.itemShield, dmg);
       h.itemShield -= absorbed; dmg -= absorbed;
       if(h===player) floatText(h.x, h.y-50, "¡ESCUDO DE EMERGENCIA!", "crit");
+      vfxShock(h.x, h.y-10, 10, 60, "255,90,90", 420, h===player?2:1); // se ve que fue el objeto mítico
     }
   }
   h.hp -= dmg;

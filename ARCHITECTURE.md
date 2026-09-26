@@ -170,6 +170,8 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Sets por campeón | `js/data/champion-sets.js`, `js/systems/champion-sets.js` | `CHAMPION_SETS` |
 | Precio de campeón, venta de objetos, inventario | `js/data/champions.js`, `js/data/items.js` | `CHAMPION_PRICE_GOLD`, `SELL_VALUE`, `INVENTORY_CAPACITY` |
 | Tienda diaria de objetos | `js/systems/shop.js` | ofertas del día |
+| Identidad de objetos: pasiva fija por arquetipo, familias por arena, nivel/roll, textos de efecto | `js/data/item-identity.js` | `ITEM_ARCHETYPE_PASSIVE`, `ITEM_FAMILIES`, `ARENA_ITEM_FAMILIES`, `ITEM_MAX_LEVEL`, `ITEM_ROLL_RANGE`, `DESIGNED_EFFECT_TEXT` |
+| Gemas (solo suben el nivel de un objeto; se ganan jugando) | `js/data/item-identity.js`, `js/systems/gems.js` | `GEM_UPGRADE_BASE`, `GEM_UPGRADE_GROWTH`, `GEMS_PER_VICTORY` |
 | Chat de la Sala (anti-spam, historial, palabras tapadas) | `server/relay.js`, `js/net/net-chat.js` | `CHAT_*`, `NET_CHAT_QUICK` |
 
 Modo campaña: ya no hay multiplicador de XP de prueba (`DEV_XP_MULT` se eliminó) ni un "nivel objetivo"
@@ -178,6 +180,17 @@ al terminar la campaña: `xpToNext(L) = 90 + 26·L + 0,16·L³` es rápida al pr
 regalo al empezar (`js/ui/starter-select.js`), el resto en la Tienda a `CHAMPION_PRICE_GOLD` (5.000); el
 reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario es de la CUENTA
 (`save.stash`, 30 lugares, migración `stashV1`) y cada campeón equipa desde ahí.
+
+Itemización (reglas que el código hace cumplir): la pasiva de un objeto es FIJA por arquetipo y el azar
+solo mueve los números (`roll` 90–110%); el valor real de una pieza es `itemStat(it)` = base × roll ×
+nivel (nunca leer `it.value` en la UI). Pasivas y procs idénticos en dos piezas no se suman (vale la más
+fuerte, `equippedPassives`/`heroProcs`); los stats sí. `makeItem` nunca crea un Único. Las Gemas solo
+suben el nivel (Nv.1–10, +4%/nivel, sin fallo ni pérdida, fuera de la partida); no son moneda premium: una
+futura moneda de pago va en otro campo. Aura de set desde 2 piezas (`drawSetAuras`); la skin solo con el
+set completo y si su arte está en `SET_SKINS`. Íconos: `js/ui/item-icons.js` (provisorios; el arte final
+va en `ITEM_ICON_ART`) y ficha del objeto `js/ui/item-preview.js`. Assets pendientes con prompts:
+`LA_HORDA_ITEM_ASSET_MANIFEST.md` (se regenera con `node tools/items/gen_item_manifest.js`). Pruebas:
+`tools/items/t_items.js` y `tools/items/t_itemization.js`.
 
 ### Game feel (dónde está cada cosa)
 
@@ -188,7 +201,7 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
   arrastrar = elegir; `drawAimPreview()`.
 - `js/ui/hud.js` — estados de los botones (listo / activo / enfriamiento / sin recurso).
 - `js/ui/boss-hud.js` — barra grande del jefe, fases, estado, aviso del ataque en curso, guía.
-- `js/systems/item-procs.js` — efectos únicos de los legendarios en combate.
+- `js/systems/item-procs.js` — efectos únicos de los legendarios en combate (cada proc con su feedback visual chico).
 - `js/systems/mythic-powers.js` — poderes de los Míticos y comportamiento de los Únicos.
 - `js/rendering/gore.js` — manchas, trozos, cadáveres (horneados en un canvas chico) y muertes por tipo.
 - `js/enemies/enemy-roles.js` — roles enemigos + insignia/anillo + flecha en el borde para los de apoyo.
@@ -198,6 +211,25 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
 - `js/ui/loot-ceremony.js` — cofre con ceremonia por rareza; `js/ui/inventory-ui.js` — Mi Inventario,
   recetario y colección.
 - `js/net/net-chat.js` — chat de la Sala (el anti-spam real vive en `server/relay.js`).
+- `js/arenas/infernal/inf-hechicero.js` — el Hechicero Supremo: subjefe del nivel 9 de la Infernal (huye al caer)
+  y jefe final en 3 formas (Ángel Corrompido con los poderes de los 4 Guardianes → Golem de Cuerpos → Demonio Mayor —
+  Forma Final, diseño `demonio_final`). Arte recortado con `tools/art/hechicero/`.
+- `js/ui/run-intro.js` — pantalla previa a la partida: el Hechicero angelical (alas de luz en canvas) y la ficha
+  clara de la arena (`ARENA_BRIEF`: qué es, qué te mata, qué te ayuda, objetivo).
+- `js/rendering/fx-contrast.js` — pase de contraste de efectos: sombra de contraste por arena, modo brillo del
+  primitivo de sprites (`FX_GLOW`), destello de lanzamiento y estrella de impacto.
+- `js/systems/crystals.js` — los Cristales de los Guardianes (lore en `LA_HORDA_LORE.md`): premio al vencer a la
+  Madre Espora, al Mago de Hielo y al Guardián del Laberinto, ceremonia (el cristal vuela al jugador), guardado en
+  `save.crystals`, diálogo del Hechicero y fila de cristales en la pantalla previa. Test `tools/items/t_crystals.js`.
+- `js/champions/nigro-elements.js` — gólem elemental del Nigromante (Maestría "Maestro de Gólems": Fuego, Hielo,
+  Tormenta o Plaga, excluyentes): multiplicadores, efecto por golpe, rastro de brasas, arte provisorio recoloreado y
+  aura por elemento (también en la forma demoníaca). `exclusiveWith` de un nodo acepta una lista de ids.
+  Test `tools/items/t_nigro_elements.js`.
+- `js/arenas/arena-blocks.js` — muros y bloques de las arenas abiertas (Ruinas, Acuática, Gélida, Infernal):
+  distribución por arena (`ARENA_BLOCK_LAYOUTS`, misma estructura que `labyrinthWalls`, así colisión y navegación
+  los usan sin cambios), estilo por arena (`WALL_STYLES`, horneado a canvas) y transparencia cuando un héroe queda
+  detrás. `aidBlocked(x,y,pad)` es la consulta "¿está libre?" para quien ubique cosas en el piso.
+  Gradación del mapa del Reino Micelial: `tools/art/micelial/grade_map.py`.
 - `js/ai/bot-brain.js` — bots por rol, esquivar avisos, revivir entre ellos, marcador de caído.
 - `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
 - `js/systems/loot.js` — botín del cofre del jefe (`rollLoot` pura, `grantEndOfRunLoot`) y reforja
@@ -308,6 +340,6 @@ clásico de abajo es el que siguen las 5 arenas originales.
 - Local: `python3 -m http.server 8000` en la carpeta del repo → `http://localhost:8000`.
 - Batería de regresión automática: `tools/regression/` (ver su README).
 - Sistemas de esta etapa: `tools/items/` (`t_items`, `t_nigromante`, `t_reactions`, `t_roles`, `t_pacing`,
-  `t_evolution`, `t_collision`, `t_breakables`, `t_perf_exploits`, `t_hpbonus`), `server/test-relay.js` (protocolo y chat).
+  `t_evolution`, `t_collision`, `t_breakables`, `t_perf_exploits`, `t_hpbonus`, `t_hechicero`), `server/test-relay.js` (protocolo y chat).
 - Balance con el código real: `tools/balance/lootsim2.js` (botín por carrera), `tools/playtest/campaign.js`
   (campañas y matrices con piloto automático).

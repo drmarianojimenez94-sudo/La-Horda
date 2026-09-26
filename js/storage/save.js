@@ -46,7 +46,7 @@ function defaultSave(){
   return {
     champions,
     itemSchemaV: ITEM_SCHEMA_VERSION,
-    gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
+    gold:0, gems:0, // GEMAS: recurso ganado jugando, SOLO para subir el nivel de objetos (js/systems/gems.js). No es moneda premium: una futura moneda premium va en otro campo.
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
@@ -59,6 +59,7 @@ function defaultSave(){
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0, unico:0}, // protección suave contra la mala suerte (oculta), ver js/data/loot.js
     stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los campeones): ver js/systems/items.js
+    crystals:{espora:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
     shop:null               // ofertas de objetos del día (js/systems/shop.js)
   };
@@ -113,6 +114,7 @@ function _loadSaveInner(){
       migrateToAccountStash(parsed);
       save.relics = Object.assign(defaultSave().relics, parsed.relics||{});
       save.arenasCleared = Object.assign(defaultSave().arenasCleared, parsed.arenasCleared||{});
+      save.crystals = Object.assign(defaultSave().crystals, parsed.crystals||{});
       // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
       // Acuática tenía abierto el Hielo, y lo conserva (una sola vez, al cargar por primera vez).
       // MODO CAMPAÑA: la prueba de campaña arranca de cero para todos -todos los campeones a
@@ -177,6 +179,7 @@ function campaignReset(raw){
   }
   save.gold = 0;
   save.arenasCleared = defaultSave().arenasCleared;
+  save.crystals = defaultSave().crystals;
   save.legacyHieloOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true;
   save.divineArenaUnlocked = false;
   save.starterChosen = false; save.lastChamp = null;

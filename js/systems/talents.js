@@ -74,10 +74,8 @@ function talentNodeLockReason(classKey, node){
   const rank = st.nodes[node.id] || 0;
   if(rank >= node.maxRank) return "MÁX";
   if(champ.level < (node.minLevel||TALENT_TREE_MIN_LEVEL)) return `Requiere nivel ${node.minLevel||TALENT_TREE_MIN_LEVEL}`;
-  if(node.exclusiveWith && (st.nodes[node.exclusiveWith]||0) > 0){
-    const other = talentNodeById(classKey, node.exclusiveWith);
-    return `Bloqueado: ya elegiste "${other?other.name:node.exclusiveWith}"`;
-  }
+  { const taken = [].concat(node.exclusiveWith||[]).find(x=>(st.nodes[x]||0) > 0); // exclusiveWith: id o lista de ids
+    if(taken){ const other = talentNodeById(classKey, taken); return `Bloqueado: ya elegiste "${other?other.name:taken}"`; } }
   if(node.requires){
     const req = talentNodeById(classKey, node.requires);
     const reqRank = st.nodes[node.requires] || 0;
@@ -150,11 +148,8 @@ function masteryMiniLockReason(classKey, node){
   const rank = st.masteryNodes[node.id] || 0;
   if(rank >= node.maxRank) return "MÁX";
   if(champ.level < TALENT_MASTERY_MIN_LEVEL) return `Requiere nivel ${TALENT_MASTERY_MIN_LEVEL}`;
-  if(node.exclusiveWith && (st.masteryNodes[node.exclusiveWith]||0) > 0){
-    const tree = talentTreeFor(classKey), m = tree.masteries[st.mastery];
-    const other = m.miniTree.find(n=>n.id===node.exclusiveWith);
-    return `Bloqueado: ya elegiste "${other?other.name:node.exclusiveWith}"`;
-  }
+  { const taken = [].concat(node.exclusiveWith||[]).find(x=>(st.masteryNodes[x]||0) > 0);
+    if(taken){ const tree = talentTreeFor(classKey), m = tree.masteries[st.mastery]; const other = m.miniTree.find(n=>n.id===taken); return `Bloqueado: ya elegiste "${other?other.name:taken}"`; } }
   if(node.requires){
     const tree = talentTreeFor(classKey), m = tree.masteries[st.mastery];
     const req = m.miniTree.find(n=>n.id===node.requires);
@@ -223,6 +218,7 @@ function applyModsArray(mods, global, bySkill){
         // (árbol + Maestría + ítem, por ejemplo) tocan la misma bandera; una bandera puramente
         // booleana (sin valor numérico) simplemente se activa.
         if(typeof mod.value==="number") bucket.flags[mod.flag] = (bucket.flags[mod.flag]||0) + mod.value;
+        else if(typeof mod.value==="string") bucket.flags[mod.flag] = mod.value; // elección (ej. golemSkin:"fire"); antes quedaba en true y el elemento nunca se aplicaba
         else bucket.flags[mod.flag] = true;
       }
       else if(mod.key!==undefined) bucket[mod.key] = (bucket[mod.key]||0) + mod.value;

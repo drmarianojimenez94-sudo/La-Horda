@@ -397,3 +397,46 @@
 .loot-overlay-body{ width:100%; }
 .loot-summary-line{ text-align:center; font-size:0.72rem; color:var(--text-dim); margin:0 0 4px; }
 .loot-summary-note{ font-size:0.55rem; opacity:0.7; margin-top:1px; }
+
+/* ---------- Íconos de objetos (item-icons.js) + vista previa (item-preview.js) ---------- */
+.item-icon-img{ width:40px; height:40px; flex:none; image-rendering:pixelated; border-radius:6px; display:block; }
+.inv-card{ position:relative; }
+.inv-card .item-lv{ position:absolute; left:6px; bottom:3px; font-size:0.48rem; font-weight:700; color:#fff; background:rgba(0,0,0,0.7); border-radius:3px; padding:0 3px; }
+.inv-slot .slot-icon-img{ width:34px; height:34px; margin:0 auto 3px; }
+.inv-slot .slot-lv{ color:var(--text-dim); font-size:0.5rem; }
+.loot-card .item-icon-img{ width:48px; height:48px; }
+.gem-note{ color:#8fe3ff; }
+#item-preview{ position:fixed; inset:0; z-index:120; display:flex; align-items:center; justify-content:center; padding:16px; }
+#item-preview .ip-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,0.72); }
+#item-preview .ip-panel{ position:relative; width:100%; max-width:420px; max-height:88vh; overflow-y:auto; background:linear-gradient(160deg, var(--panel), #0f0805); border:1.5px solid var(--panel-b); border-radius:14px; padding:14px; box-sizing:border-box; }
+.ip-card{ border-top:3px solid var(--ic); padding-top:8px; }
+.ip-top{ display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+.ip-top .ip-art{ width:72px; height:72px; }
+.ip-head{ min-width:0; flex:1; }
+.ip-name{ font-size:0.9rem; font-weight:700; line-height:1.2; }
+.ip-epi{ font-size:0.62rem; color:var(--text-dim); font-style:italic; }
+.ip-tags{ display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; font-size:0.56rem; color:var(--text-dim); }
+.ip-tags > span{ border:1px solid var(--panel-b); border-radius:4px; padding:1px 4px; }
+.ip-sec{ margin-top:9px; font-size:0.64rem; }
+.ip-h{ font-size:0.56rem; font-weight:700; letter-spacing:0.08em; color:var(--ember3); margin-bottom:3px; }
+.ip-sub{ color:var(--text-dim); font-size:0.56rem; }
+.ip-line{ padding:1px 0; line-height:1.35; }
+.ip-line.item-proc{ color:#ffb020; }
+.ip-dup{ color:#ff8a6a; font-size:0.54rem; }
+.ip-pieces{ display:flex; flex-wrap:wrap; gap:3px; margin:3px 0; }
+.ip-piece{ font-size:0.54rem; border-radius:4px; padding:1px 4px; border:1px solid var(--panel-b); }
+.ip-piece.eq{ color:#7dffa8; border-color:#3ddc71; }
+.ip-piece.have{ color:#cfe9d6; }
+.ip-piece.miss{ color:var(--text-dim); opacity:0.7; }
+.ip-bonus{ font-size:0.58rem; color:var(--text-dim); padding:1px 0; }
+.ip-bonus.on{ color:#7dffa8; }
+.ip-upg-btn{ padding:5px 9px; border-radius:7px; border:1px solid #8fe3ff; background:rgba(143,227,255,0.08); color:#8fe3ff; font-family:inherit; font-weight:700; font-size:0.62rem; cursor:pointer; opacity:0.6; }
+.ip-upg-btn.ready{ opacity:1; background:rgba(143,227,255,0.18); }
+.ip-upg.max{ color:#ffd76a; font-weight:700; }
+.ip-lore{ color:var(--text-dim); }
+.ip-actions{ display:flex; gap:8px; margin-top:12px; }
+.ip-actions button{ flex:1; padding:8px; border-radius:9px; border:1px solid var(--panel-b); background:var(--panel-b); color:var(--text); font-family:inherit; font-weight:700; font-size:0.7rem; cursor:pointer; }
+.ip-actions button.primary{ background:var(--ember1); color:#1a0e06; border-color:var(--ember1); }
+.ip-actions button:disabled{ opacity:0.45; cursor:default; }
+@media (max-width:420px){ #item-preview{ padding:8px; } #item-preview .ip-panel{ max-height:94vh; padding:10px; } .ip-top .ip-art{ width:56px; height:56px; } }
+.ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }

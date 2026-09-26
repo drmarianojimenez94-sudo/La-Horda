@@ -37,6 +37,10 @@ light, no text, no watermark, no drop shadow baked in (the game draws its own gr
 | UI-01 | P2 | HUD | Botón de curación de emergencia (lista / urgente / gastada) | PROCEDURAL (✚ con CSS) | `#btn-emerg` |
 | UI-02 | P2 | Ritmo | Flecha de oleada en el borde | PROCEDURAL | `pacingDrawWarn` |
 | IT-01 | P1 | Objetos | Íconos de Legendarios con nombre (24), Míticos (8) y Únicos (3) | MISSING (usan el ícono genérico del tipo) | inventario, cofre, recetario |
+| HS-01 | **P0** | Historia | Hechicero Supremo "angelical" con alas de luz (retrato grande, 4 frames de respiración) | PARTIAL (sprite real + alas procedurales en canvas) | `js/ui/run-intro.js` |
+| HS-02 | P1 | Jefe final | Golem de Cuerpos: caminar (6), aplastar (5), muerte que se abre (6) | PARTIAL (3 poses estáticas de la hoja) | `js/arenas/infernal/inf-hechicero.js` |
+| HS-03 | P1 | Jefe final | Transformación Hechicero → Golem (8 frames) y Golem → Demonio (6 frames) | PARTIAL (3 fases de la hoja + partículas) | `hechEnemyTick`, `hechGolemBroken` |
+| HS-04 | P2 | Tutorial | Retrato del Hechicero con 3 expresiones (neutral, advertencia, sonrisa torcida) | PARTIAL (un solo retrato) | `#tut-panel .tut-face` |
 
 ---
 
@@ -195,4 +199,59 @@ flesh, orange glow}. Grotesque but not gory, dark fantasy, bulky readable silhou
 ```
 [PREFIJO] An RPG inventory item icon, 24x24 pixels, {a legendary two-handed scythe named "Guadaña de la Cosecha
 Roja": blood-red blade, bone handle, faint red aura}, centered, fills the square, readable at 24px.
+```
+
+### HS-01 — Hechicero Supremo angelical (pantalla previa)
+Hoy: sprite real de su hoja, aclarado, con alas de luz dibujadas en código (cintas que se afinan).
+```
+[prefijo] + tall hooded sorcerer in dark crimson and gold robes, face hidden by a golden veil, ornate golden
+sun-halo behind the head, huge wings made of flowing golden-white light ribbons (like an archangel of light,
+wings made of light tendrils, not feathers), serene and benevolent pose holding a golden staff, 4-frame idle
+breathing loop with the light ribbons swaying, 256x256 per frame, front view
+```
+
+### HS-01b — Ángel Corrompido (forma 1 del jefe final) — PRIORIDAD P0
+Hoy: el sprite del Hechicero recoloreado en código (oro → carmesí, blanco → hueso), alas corruptas dibujadas
+en código (plumas negras con vena encendida) y los cuatro cristales orbitando. Funciona, pero con arte real
+este es EL momento del juego. Si ya tenés las imágenes del ángel con alas y del ángel corrompido que
+mencionaste, mandalas: el recortador ya está listo (tools/art/hechicero/).
+```
+[prefijo] + fallen archangel boss, the same hooded sorcerer now corrupted: torn crimson and black robes, cracked
+golden halo turned blood-red, two huge black feathered wings with broken feathers and glowing ember-red veins,
+four small crystals orbiting him (violet, ice-blue, amber, white-gold), 3/4 top-down view; sheets: idle 4 frames
+(wings breathing), cast 6 frames (arms up, crystals flare), attack 4 frames, hit 2 frames, death 6 frames
+(wings shatter into feathers and ash), 256x256 per frame
+```
+
+### NG-01 — Gólems elementales del Nigromante (Tormenta y Plaga + animaciones de los 4)
+Hoy: Fuego e Hielo tienen arte real (una pose). Tormenta y Plaga usan el gólem de piedra recoloreado en código
+con aura y detalle propio (arcos eléctricos / goteo de plaga). Mencionaste que mandabas "los gólem y todas sus
+especializaciones": no llegaron. Si las mandás, se enchufan en `NIGRO_GOLEM_IMG.storm` / `.plague` sin tocar
+la lógica.
+```
+[prefijo] + necromancer's summoned golem, 4 elemental variants on one sheet, same silhouette: FIRE (molten rock,
+lava cracks), ICE (blue crystal ice), STORM (dark slate stone with violet lightning veins, crackling arcs),
+PLAGUE (rotting green flesh and stone, pustules, dripping toxic ooze); per variant: idle 4 frames, walk 6 frames,
+slam attack 5 frames, death 5 frames, 3/4 top-down, 128x128 per frame
+```
+
+### HS-02 — Golem de Cuerpos (animaciones)
+Hoy: 3 poses estáticas de la hoja (se desliza al caminar).
+```
+[prefijo] + colossal golem made of fused corpses and pale limbs around a hooded sorcerer in the center, golden
+halo above, crimson robes dripping, 3/4 top-down view; sheets: walk cycle 6 frames (heavy, limbs writhing),
+ground slam 5 frames (arms up then down), death 6 frames (the mass of bodies tears open and collapses), 320x280 per frame
+```
+
+### HS-03 — Transformaciones del final
+```
+[prefijo] + 8-frame transformation: a hooded golden sorcerer is engulfed by rising corpses and pale arms that
+fuse into a colossal flesh golem; then a 6-frame sequence where the golem splits open from the chest and a
+horned fire demon emerges from the remains, embers and gore, 320x280 per frame
+```
+
+### HS-04 — Retratos del tutorial
+```
+[prefijo] + portrait bust of the hooded golden sorcerer, face hidden by a veil, 3 variants: neutral (calm glow),
+warning (halo flares red-gold), sinister smile (a crooked smile visible under the veil), 96x96
 ```

@@ -105,6 +105,18 @@ function skillEvoOnHit(src, e, dmg, opts){
   const ev = _evoActive(src, opts); if(!ev || ev.lvl < 3) return;
   e._evoHitBy = src; e._evoHitAt = runElapsedMs;
   const sig = evoSigFor(src, ev.sk);
+  // IMPACTO QUE CRECE CON EL NIVEL (playtest de evolución: las habilidades de golpe directo -Corte
+  // Sangrante, Triple Golpe, Flecha Perforante- se veían iguales del Nv.1 al 7 porque su efecto es
+  // el golpe, no el lanzamiento). Anillo del color del campeón en el enemigo: más grande y con más
+  // capas en cada hito. Un impacto por enemigo cada 180 ms (no satura con golpes múltiples).
+  const win = (runElapsedMs/100)|0; if(src._evoFxWin !== win){ src._evoFxWin = win; src._evoFxN = 0; } // tope: 6 impactos por campeón cada 100 ms
+  if(inView(e.x, e.y, 40) && (e._evoFxAt===undefined || runElapsedMs - e._evoFxAt > 180) && src._evoFxN++ < 6){
+    e._evoFxAt = runElapsedMs;
+    const rgb = hexToRgb(src.cls.glow||"#ffffff"), T = ev.lvl >= 10 ? 5 : ev.lvl >= 7 ? 4 : ev.lvl >= 5 ? 3 : 2, pr = src===player ? 1 : 0;
+    vfxShock(e.x, e.y - 10, 4, 14 + T*9, rgb, 200 + T*30, pr);
+    if(T >= 3) vfxBurst(e.x, e.y - 18, 3 + T*2, "t_" + (src.cls.glow||"#ffffff"), 90 + T*20, 300, 2.5, pr, -30, 2);
+    if(T >= 4) vfxShock(e.x, e.y - 10, 8, 20 + T*8, "255,255,255", 180, pr);
+  }
   // Nv.7 Resonancia: el enemigo ya tenía tu firma -> estalla (mira el estado ANTES de renovarlo)
   if(ev.lvl >= 7 && e.alive && evoHasSig(e, sig, src) && (src._evoResoAt===undefined || runElapsedMs - src._evoResoAt > EVO_CFG.resoIcd)){
     src._evoResoAt = runElapsedMs;

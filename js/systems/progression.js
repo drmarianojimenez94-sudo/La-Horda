@@ -11,8 +11,14 @@
 // final "objetivo": el final de la campaña cae donde caiga (ver LA_HORDA_PROGRESSION_ECONOMY_REPORT.md),
 // y el endgame pide mucho más esfuerzo. Sin multiplicadores: XP real de enemigos y victorias.
 function xpToNext(level){ return Math.round(90 + level*26 + 0.16*Math.pow(level,3)); }
+// MODO DEV (solo para probar, NO es el ritmo del juego): ?devxp=5 en la URL multiplica toda la XP de
+// campeón (1–20). Muestra un cartel fijo "DEV XP ×N" para que nunca se confunda con el juego real.
+const DEV_XP_MULT = (()=>{ try{ const v = parseFloat(new URLSearchParams(location.search).get("devxp")); return v > 1 ? Math.min(20, v) : 1; }catch(e){ return 1; } })();
+if(DEV_XP_MULT > 1) window.addEventListener("DOMContentLoaded", ()=>{ const b = document.createElement("div"); b.id = "dev-xp-badge"; b.textContent = "DEV XP ×" + DEV_XP_MULT;
+  b.style.cssText = "position:fixed;left:50%;bottom:2px;transform:translateX(-50%);z-index:9999;font:10px monospace;color:#ffd24a;background:rgba(0,0,0,0.6);padding:1px 6px;border-radius:4px;pointer-events:none"; document.body.appendChild(b); });
 function grantXP(champKey, amount){
   const c = save.champions[champKey];
+  amount = Math.round(amount*DEV_XP_MULT);
   c.xp += amount;
   let leveled = false;
   while(c.level < 99 && c.xp >= xpToNext(c.level)){

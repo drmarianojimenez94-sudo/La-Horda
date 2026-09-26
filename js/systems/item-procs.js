@@ -19,6 +19,10 @@ function _procReady(h, key, cdMs){
   return true;
 }
 function _procDmgBase(h){ return h.baseDmg * runStats.dmgMult * (h.buffDmgMult||1); }
+// Feedback de poderes que antes no se veían (UNCLEAR en la auditoría): un efecto chico y con
+// tope por héroe/enemigo, sin texto, para que el jugador aprenda "eso lo hizo mi objeto".
+function _procFx(h, key, ms){ return _procReady(h, "fx_"+key, ms); }
+function _procPr(h){ return h===player ? 1 : 0; }
 
 // Golpe a un enemigo hecho por un héroe (no se llama para el daño que ya viene de un poder).
 function itemProcsOnHit(h, e, dmg, crit, opts){
@@ -59,6 +63,7 @@ function itemProcsOnHit(h, e, dmg, crit, opts){
     h._rampStacks = Math.min(10, (h._rampStacks||0) + 1);
     h._rampTimer = 2000;
     if(h._rampStacks >= 2) damageEnemy(e, dmg*0.035*h._rampStacks*p, {src:h, fromProc:true});
+    if(h._rampStacks===5 || h._rampStacks===10) vfxShock(h.x, h.y-8, 6, 20 + h._rampStacks*3, "255,170,70", 260, _procPr(h)); // la furia sube
     if(h._rampStacks===10 && h===player && _procReady(h, "rampMsg", 4000)) floatText(h.x, h.y-58, "¡FURIA x10!", "crit");
   }
   if(crit && (p = _procPower(h, "crit_quake")) && _procReady(h, "quake", 600)){
@@ -78,8 +83,25 @@ function itemProcsOnHit(h, e, dmg, crit, opts){
   }
   // Filo Sediento: los básicos abren heridas (sangrado que se refresca).
   if(fromBasic && (p = _procPower(h, "bleed_basic"))){
+    const fresh = !(e.bleedTimer > 0);
     e.bleedTimer = Math.max(e.bleedTimer||0, 3000); e.bleedDmg = Math.max(e.bleedDmg||0, _procDmgBase(h)*0.2*p);
+    if(fresh) vfxBurst(e.x, e.y-18, 4, "blood", 70, 320, 2.5, _procPr(h), 20, 0); // la herida se abre
   }
+  // Esporas Pútridas (familia Podredumbre): la maldición real de la Plaga (DoT + 8% más daño recibido, contagia 1 vez)
+  if(fromBasic && (p = _procPower(h, "spore_rot")) && typeof nigromanteApplyCurse==="function"){
+    const fresh = !(e.cursed && e.curseTimer > 0);
+    nigromanteApplyCurse(e, h, _procDmgBase(h)*0.35*p, 0.08, 0, 3000, 1);
+    if(fresh) vfxBurst(e.x, e.y-20, 5, "t_#b06ae6", 60, 520, 2.5, _procPr(h), -20, 1);
+  }
+  // Frío que Quiebra: el crítico extra contra lentos se ve (esquirlas)
+  if(crit && e.alive && (p = _procPower(h, "cold_crit")) && (e.slowTimer>0 || e.stunTimer>0 || e.frozenTimer>0) && _procFx(h, "coldcrit", 160))
+    vfxBurst(e.x, e.y-16, 6, "ice", 130, 300, 3, _procPr(h), -20, 0);
+  // Avivar las Llamas: el golpe extra contra quemados chisporrotea
+  if(e.alive && e.burnTimer>0 && (p = _procPower(h, "burn_vs")) && _procFx(h, "burnvs", 220))
+    vfxBurst(e.x, e.y-14, 4, "ember", 90, 280, 2.5, _procPr(h), -40, 1);
+  // Filo del Verdugo: el golpe de remate deja un tajo rojo
+  if(e.alive && (p = _procPower(h, "execute_edge")) && e.rank!=="jefe" && e.rank!=="subjefe" && e.hp < e.maxHp*0.2 && _procFx(h, "exec", 200))
+    vfxShock(e.x, e.y-14, 4, 26, "255,60,60", 200, _procPr(h));
   // Descarga Arcana: las habilidades pueden electrocutar (aturde y salta a un enemigo cercano).
   if(!fromBasic && (p = _procPower(h, "shock_skill")) && Math.random() < 0.2*Math.min(1.5,p) && _procReady(h, "shock", 250)){
     if(e.rank!=="jefe" && e.rank!=="subjefe") e.stunTimer = Math.max(e.stunTimer||0, 350);
@@ -94,6 +116,9 @@ function itemProcsOnHit(h, e, dmg, crit, opts){
 function itemDamageMult(h, e, opts){
   if(!h || !h.classKey) return 1;
   let m = 1, p;
+  // Daño según vida faltante (Sangre del Berserker 2p, Corazón Carmesí): antes SOLO funcionaba con
+  // el Segador (lo lee su pasiva). Para el resto de los campeones se aplica acá, con la misma fórmula.
+  if(h.classKey!=="segador" && h.maxHp){ const b = passiveSum(h.classKey, "missinghp_dmg_bonus"); if(b) m *= 1 + b*Math.max(0, 1 - h.hp/h.maxHp); }
   if((p = _procPower(h, "burn_vs")) && e.burnTimer>0) m *= 1 + 0.25*p;
   if((p = _procPower(h, "execute_edge")) && e.rank!=="jefe" && e.rank!=="subjefe" && e.hp < e.maxHp*0.2) m *= 1 + 0.6*p;
   return m * mythicDamageMult(h, e, opts);
@@ -119,7 +144,7 @@ function itemDmgTakenMult(h){
   for(const o of heroes){
     if(o===h || !o.alive || !o.classKey) continue;
     const d = Math.hypot(o.x-h.x, o.y-h.y);
-    if(d < 200 && _procPower(o, "ally_ward")) m *= 0.9;
+    if(d < 200 && _procPower(o, "ally_ward")){ m *= 0.9; if(_procFx(h, "ward", 700)) vfxShock(h.x, h.y-10, 6, 30, "143,208,255", 240, 0); }
     if(d < 220){ const my = heroMythics(o.classKey); if(my && my.myth_bastion) m *= 0.88; }
   }
   return Math.max(0.7, m);
@@ -144,9 +169,11 @@ function itemProcsOnKill(h, e){
     const amt = h.maxHp*pct*p;
     const before = h.hp; h.hp = Math.min(h.maxHp, h.hp + amt);
     if(h===player && h.hp-before > h.maxHp*0.02) floatText(h.x, h.y-34, "+"+Math.round(h.hp-before), "heal");
+    if(h.hp-before > 0 && _procFx(h, "killheal", 300)) vfxBurst(h.x, h.y-20, 4, "heal", 60, 360, 2.5, _procPr(h), -30, 1); // el alma vuelve a vos
   }
   if((p = _procPower(h, "haste_on_kill"))){
     h._hasteStacks = Math.min(10, (h._hasteStacks||0) + 1); h._hasteT = 4000;
+    if(_procFx(h, "haste", 400)) vfxBurst(h.x, h.y-4, 3 + (h._hasteStacks>>2), "spirit", 50, 300, 2, _procPr(h), 0, 2); // estela de velocidad
   }
   mythicOnKill(h, e);
 }
@@ -198,6 +225,9 @@ function updateItemProcTimers(h, dt){
       if(h===player && Math.random()<0.5) vfxBurst(h.x+(Math.random()-0.5)*160, h.y+(Math.random()-0.5)*110, 1, "ice", 20, 700, 2, 0, -12, 1);
     }
   }
+  // Sobrecarga Mítica activa (vida < 50%): chispas rojas en el héroe
+  if(h.hp < h.maxHp*0.5 && passiveSum(h.classKey, "mythic_execute") > 0 && _procFx(h, "overload", 500))
+    vfxBurst(h.x, h.y-24, 3, "blood", 40, 420, 2.5, 0, -40, 1);
   updateMythicPowers(h, dt);
 }
 // Gracia Veloz: curar a un aliado les da velocidad a los dos (lo llama trackHeal).

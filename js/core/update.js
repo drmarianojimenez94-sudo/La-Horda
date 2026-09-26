@@ -22,6 +22,8 @@ function update(dt){
   for(const h of heroes) updateLastDuel(h, dt);
   updateMusashiFx(dt);
   updateBossSkillWorld(dt);
+  crystalTick(dt); // ceremonia del cristal de un Guardián (crystals.js)
+  hechWorldTick(dt); // efectos diferidos del Hechicero Supremo (inf-hechicero.js)
   for(const h of heroes){ updateSylvaMomentum(h, dt); updateSylvaWolf(h, dt); }
   for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); updateNigromantePassive(h, dt); }
   // El Libertador / Eren (+ buffs de equipo que dan): js/champions/champ-shared.js
@@ -121,6 +123,8 @@ function update(dt){
     const dist = Math.hypot(dx,dy)||1;
     e.fx = dx/dist; e.fy = dy/dist;
     e.animT += dt;
+    // Hechicero Supremo / Golem de Cuerpos: cinemáticas, teletransporte y animaciones propias
+    if(HECH_TYPES[e.type] && hechEnemyTick(e, dt, tgt, dist)) continue;
     // Ventana de anticipación (bossWindup): cuando se cumple, recién ahí se resuelve el golpe.
     if(e.bossWind){
       e.bossWind.t += dt;
@@ -546,6 +550,8 @@ function update(dt){
         k.tentacleCd = 2600; k.grabCd = 7000; k.sweepCd = 11000; k.summonCd = 9000; k.grabbedHero = null;
         activeChampion = k;
         showBanner("¡EL KRAKEN JOVEN EMERGE!");
+      } else if(currentArena==="infernal" && runLevel===9){
+        hechSpawnSubboss(); // el Hechicero Supremo se revela (inf-hechicero.js)
       } else {
         const champType = currentArena==="hielo"
           ? "dragon_hielo"

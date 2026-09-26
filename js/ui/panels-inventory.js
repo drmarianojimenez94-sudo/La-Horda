@@ -98,9 +98,9 @@ function renderEquipmentGridHTML(classKey, unequipAttr){
       const rm = RARITY_META[it.rarity];
       const borderColor = it.set ? "#3ddc71" : rm.color;
       html += `<div class="inv-slot filled ${it.set?"set-item":""}" style="border-color:${borderColor};">
-        <span class="slot-icon">${it.icon}</span>
+        ${itemIconHTML(it, "slot-icon-img")}
         <span style="color:${borderColor}; font-weight:700;">${label}</span>
-        <span class="slot-item-name">${it.name}${it.set?' <span class="set-badge">SET</span>':""}</span>
+        <span class="slot-item-name">${it.name}${it.set?' <span class="set-badge">SET</span>':""} <span class="slot-lv">Nv.${itemLevel(it)}</span></span>
         <button data-${unequipAttr}="${type}">Quitar</button>
       </div>`;
     } else {
@@ -185,14 +185,14 @@ function renderStatsPanel(){
     <div class="stat-block">
       <div class="stat-block-title">Daño</div>
       <div class="stat-row"><span>Base (Nv. ${lvl})</span><b>${Math.round(baseDmgNoItem)}</b></div>
-      <div class="stat-row highlight"><span>Arma equipada</span><b>${weapon ? `+${Math.round(weapon.value*100)}% — ${weapon.name}` : "sin equipar"}</b></div>
+      <div class="stat-row highlight"><span>Arma equipada</span><b>${weapon ? `+${Math.round(itemStat(weapon)*100)}% — ${weapon.name}` : "sin equipar"}</b></div>
       <div class="stat-row total"><span>Daño final</span><b>${Math.round(full.dmg)}</b></div>
     </div>
     <div class="stat-block">
       <div class="stat-block-title">Vida y escudo</div>
       <div class="stat-row"><span>Vida máxima</span><b>${baseHpVal}</b></div>
-      <div class="stat-row highlight"><span>Casco equipado</span><b>${helmet ? `+${Math.round(helmet.value*100)}% — ${helmet.name}` : "sin equipar"}</b></div>
-      <div class="stat-row highlight"><span>Escudo equipado</span><b>${shieldIt ? `+${Math.round(shieldIt.value*100)}% — ${shieldIt.name}` : "sin equipar"}</b></div>
+      <div class="stat-row highlight"><span>Casco equipado</span><b>${helmet ? `+${Math.round(itemStat(helmet)*100)}% — ${helmet.name}` : "sin equipar"}</b></div>
+      <div class="stat-row highlight"><span>Escudo equipado</span><b>${shieldIt ? `+${Math.round(itemStat(shieldIt)*100)}% — ${shieldIt.name}` : "sin equipar"}</b></div>
       <div class="stat-row total"><span>Escudo permanente</span><b>${shieldAmount}</b></div>
     </div>
     <div class="stat-block">

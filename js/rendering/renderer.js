@@ -42,7 +42,7 @@ function render(){
   drawSetAuras(); // aura discreta de los sets completos (color del set, más intensa con su carga)
   drawAimPreview(); // previsualización de la habilidad que se está apuntando
   drawBossTethers(); // cadenas de hielo entre el Mago y sus guardianes
-  vfxDrawSprites(true); // efectos de sprite real "de suelo" (bajo las entidades)
+  fxGlowBegin(); vfxDrawSprites(true); fxGlowEnd(); // efectos de sprite real "de suelo" (bajo las entidades)
 
   // anillos de habilidad en el suelo
   for(const pt of particles){
@@ -51,9 +51,12 @@ function render(){
       const prog = Math.max(0, Math.min(1, 1-(pt.life/base)));
       const r = Math.max(0, pt.maxR*(pt.warnRing?0.9:prog));
       if(r <= 0) continue;
+      ctx.beginPath(); ctx.arc(pt.x,pt.y+6,r,0,Math.PI*2); // radio real del efecto (antes aplastado)
+      if(!pt.warnRing){ ctx.strokeStyle = `rgba(0,0,0,${(1-prog)*fxUnder()})`; ctx.lineWidth = 9; ctx.stroke(); } // contraste
       ctx.strokeStyle = pt.warnRing ? "rgba(255,90,40,0.85)" : (pt.color+"cc");
       ctx.lineWidth = pt.warnRing?3:5;
-      ctx.beginPath(); ctx.arc(pt.x,pt.y+6,r,0,Math.PI*2); ctx.stroke(); // radio real del efecto (antes aplastado)
+      ctx.stroke();
+      if(!pt.warnRing && prog < 0.7){ ctx.strokeStyle = `rgba(255,255,255,${(0.7-prog)*0.9})`; ctx.lineWidth = 1.6; ctx.stroke(); } // filo brillante
     }
   }
 
@@ -77,7 +80,7 @@ function render(){
   // zonas de Axiom (Error 404 / Bug de Colisión)
   drawAxiomZones();
   drawSylvaRainZones();
-  drawAxiomVfxActive();
+  fxGlowBegin(); drawAxiomVfxActive(); fxGlowEnd();
   drawChampFxGround(); // El Libertador / Eren: escarcha, grietas, avisos de pisada
 
   // héroes caídos (se dibujan bajo los vivos); en la Arena Divina también los campeones rivales,
@@ -134,10 +137,12 @@ function render(){
   }
   drawAcua2Overlays();
   drawBossSkillOverlay();
-  vfxDrawSprites();
+  fxGlowBegin(); vfxDrawSprites(); fxGlowEnd();
+  crystalDraw(); // cristal de un Guardián volando al jugador (crystals.js)
+  drawFxContrastTop(); // anticipación al lanzar + estrella de impacto (fx-contrast.js)
   if(arenaHas("drawTop")) arenaHook("drawTop");
   ctxDraw(); // aviso + progreso de las acciones contextuales
-  drawChampFxTop(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
+  fxGlowBegin(); drawChampFxTop(); fxGlowEnd(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
 
   // proyectiles: núcleo + glow cacheado + estela (sin shadowBlur, que es caro en mobile)
   for(const p of projectiles){
@@ -233,7 +238,7 @@ function render(){
 
   vfxDrawParticles(); // partículas del pool central (impactos, muertes, casts, estelas)
 
-  drawChainFX(); // sprites reales de Cadena de Relámpagos (rayos + impactos), dentro de la cámara
+  fxGlowBegin(); drawChainFX(); fxGlowEnd(); // sprites reales de Cadena de Relámpagos (rayos + impactos), dentro de la cámara
 
   aidAmbDraw(animNow/1000); // ambiente de primer plano: ceniza, nieve, hojas, polvo, motas
   aidGrade(animNow/1000);   // luz/color propio de la arena (debajo del HUD)

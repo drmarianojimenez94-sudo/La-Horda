@@ -325,10 +325,10 @@
   padding:8px 10px; box-shadow:0 0 14px rgba(120,70,170,0.45); opacity:0; transition:opacity .35s;}
 #tut-panel.show{opacity:1;}
 #tut-panel.hidden{display:none;}
-#tut-panel .tut-face{flex:0 0 38px; height:38px; border-radius:4px; background:
-  radial-gradient(ellipse 30% 22% at 50% 58%, #c9a8ff 0 30%, transparent 32%),
-  radial-gradient(ellipse 48% 60% at 50% 70%, #0a0610 0 60%, transparent 62%),
-  linear-gradient(180deg, #3a2650, #1a1024); border:1px solid #8a6aaa;}
+/* retrato real del Hechicero Supremo (el guía) */
+#tut-panel .tut-face{flex:0 0 38px; height:38px; border-radius:4px; image-rendering:pixelated;
+  background:url(../assets/sprites/bosses/infernal/hechicero/portrait.png) center 14%/165% no-repeat, radial-gradient(circle at 50% 35%, #6a4a1e, #1a1008);
+  border:1px solid #c9a25a; box-shadow:0 0 8px rgba(255,210,120,0.45);}
 #tut-panel .tut-who{font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:3px; color:#c9a8ff; margin-bottom:3px;}
 #tut-panel .tut-text{font-family:'VT323',monospace; font-size:1.02rem; line-height:1.05; color:#efe4ff; font-style:italic;}
 #tut-panel .tut-goal{font-family:'VT323',monospace; font-size:1.1rem; color:#ffcf5c; margin-top:4px;}
