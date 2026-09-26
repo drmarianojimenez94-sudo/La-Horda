@@ -49,6 +49,11 @@
      drawTall(it, now)              dibuja las piezas que empujó pushTall (marcadas con it.arena)
      drawScreen()                   dibujo en pantalla (minimapa)
      drawProjectile(p)              proyectiles con arte propio (true = ya dibujado)
+     drawEnemyBody(e)               cuerpo propio de un enemigo (true = ya dibujado; El Reino Micelial)
+     bossDefeated(boss)             true = la arena hace su propia secuencia de muerte del jefe y
+                                    después llama a finishBossVictory() (js/core/run.js)
+     botTarget(h, range)            prioridad propia de objetivo para los bots (o null = la de su rol)
+     camLift()                      cuánto levantar la cámara (u) para que entre un jefe enorme
    ARENA_BOSS_TIPS[tipo]: guía de aparición de subjefes/jefes propios (boss-hud.js).
    ARENA_SFX[nombre]: sonidos propios {p, gap, play(t0, destino) -> duración} (audio.js).
    ============================================================ */

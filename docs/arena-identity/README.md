@@ -29,9 +29,10 @@ enteramente sobre él.
 | Ruinas del Bosque | 1 | bloques en `update.js`/`spawning.js`, `arena-identity.js` (`aidBuildBosque`) | [bosque.md](bosque.md) |
 | Arena Acuática | 2 | `js/arenas/acuatica.js` + bloques en `update.js` | [acuatica.md](acuatica.md) |
 | **La Fortaleza Sin Fin** | **3** | **`js/arenas/fortaleza/`** (registrada en `ARENA_DEFS`) | [fortaleza.md](fortaleza.md) |
-| Arena de Hielo | 4 | bloques en `update.js`/`boss-skills.js`, `aidBuildHielo` | [hielo.md](hielo.md) |
-| Laberinto Maldito | 5 | muros en `collision.js`, `aidLabyrinthLayout` | [laberinto.md](laberinto.md) |
-| Arena Infernal | 6 | `aidBuildInfernal`, pozos de lava en `hazards.js` | [infernal.md](infernal.md) |
+| **El Reino Micelial** | **4** | **`js/arenas/micelial/`** (registrada en `ARENA_DEFS`) | [micelial.md](micelial.md) |
+| Arena de Hielo | 5 | bloques en `update.js`/`boss-skills.js`, `aidBuildHielo` | [hielo.md](hielo.md) |
+| Laberinto Maldito | 6 | muros en `collision.js`, `aidLabyrinthLayout` | [laberinto.md](laberinto.md) |
+| Arena Infernal | 7 | `aidBuildInfernal`, pozos de lava en `hazards.js` | [infernal.md](infernal.md) |
 | Arena Divina (modo aparte) | — | `js/arenas/divina.js`, `js/rendering/divina.js` | [divina.md](divina.md) |
 
 ## Cómo agregar una arena nueva
@@ -55,7 +56,7 @@ enteramente sobre él.
 `enemyTarget(e)`, `enemyAI[tipo](e,dt,tgt,dist)`, `enemyKilled(e)`, `afterEnemies()`, `botDanger(x,y,pad)`,
 `heroReachable(a,b)`, `botRegroup(h,t)`, `buildDecor()`, `drawWorld(now)`, `pushTall()`,
 `drawTall(it,now)`, `drawTop()`, `drawScreen()`, `drawProjectile(p)`, `netState()`,
-`applyNetState(s)`. La descripción de cada uno está al principio de
+`applyNetState(s)`, `drawEnemyBody(e)`, `bossDefeated(boss)`, `botTarget(h,range)`, `camLift()`. La descripción de cada uno está al principio de
 `js/arenas/common/arena-registry.js`. Si una arena no define un gancho, el motor hace exactamente
 lo de siempre.
 
@@ -66,6 +67,7 @@ lo de siempre.
 | Bosque | entrada, horda débil y numerosa | duendes, hadas, bestias | regeneración enemiga, niebla |
 | Acuática | ruinas hundidas, embestidas | tiburones, medusas, cangrejos | corrientes que empujan |
 | **Fortaleza** | **la fortaleza es un enemigo más: recorrido por sectores** | **pesado: subélites y élites desde temprano, menos enemigos por minuto** | **puentes que se reconfiguran + Ciclo Mecánico de trampas** |
+| **Reino Micelial** | **el escenario crece, madura y muere; el mapa es el jefe** | **colonia: masa + emboscada + tanque + tiradores que se plantan + jaurías + chamán de apoyo** | **Núcleos Miceliales (infección que frena y genera colonia), nubes de esporas, partes de la Madre** |
 | Hielo | frío que frena | lobos, gólems, ángeles | novas gélidas, lentitud creciente |
 | Laberinto | muros, pasillos | escorpiones, gólems, medusas | sismos, maná escaso |
 | Infernal | la final | demonios | ignición, curación reducida |

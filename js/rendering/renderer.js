@@ -19,7 +19,8 @@ function render(){
   // cámara alineada a píxeles del dispositivo: sin temblor de medio píxel en el pixel art
   const _pxW = CAM_ZOOM*DPR;
   const camTX = Math.round((VW/2/CAM_ZOOM - player.x + shakeX)*_pxW)/_pxW;
-  const camTY = Math.round(((VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - player.y + shakeY)*_pxW)/_pxW;
+  updateCamLift(); // (0 salvo con un jefe enorme en cámara, ver camera.js)
+  const camTY = Math.round(((VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - (player.y - CAM_LIFT) + shakeY)*_pxW)/_pxW;
   ctx.translate(camTX, camTY);
 
   // Escenario: suelo, lava, muros, braseros

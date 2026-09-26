@@ -44,6 +44,8 @@ function botDangerVec(x, y, pad){
 function _valueOf(e){ return e.rank==="jefe" ? 5 : e.rank==="subjefe" ? 4 : e.rank==="elite" ? 3 : e.rank==="subelite" ? 2 : 1; }
 // Objetivo según el rol. Devuelve un enemigo (o null).
 function botPickTarget(h, range){
+  // prioridades propias de la arena (p.ej. el Chamán y los Núcleos del Reino Micelial)
+  if(arenaHas("botTarget")){ const at = arenaHook("botTarget", h, range); if(at) return at; }
   const role = botRole(h);
   let best = null, bs = -Infinity;
   if(role==="tanque"){

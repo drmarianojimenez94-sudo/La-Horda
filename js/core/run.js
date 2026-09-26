@@ -201,14 +201,24 @@ function onBossDefeated(){
     showBanner(boss.acuaticaPhase===2 ? "¡EL LEVIATÁN SE ENFURECE!" : "¡EL LEVIATÁN DESATA TODO SU PODER!");
     return; // sigue la pelea de jefe, todavía no termina la partida
   }
+  // Arenas con secuencia de muerte propia (El Reino Micelial): la arena termina la victoria
+  // más tarde llamando a finishBossVictory().
+  if(arenaHas("bossDefeated") && arenaHook("bossDefeated", boss)) return;
   bossActive = false;
   if(typeof setMusicMode==="function") setMusicMode("victory");
   bossDeathFeedback();
   showBanner("¡"+String(boss.name||"EL JEFE").toUpperCase()+" HA CAÍDO!");
+  finishBossVictory();
+}
+// Cierre de la victoria (arena superada, desbloqueos, pantalla final). Lo llama onBossDefeated o,
+// si la arena tiene su propia secuencia de muerte del jefe, la arena cuando esa secuencia termina.
+function finishBossVictory(){
+  bossActive = false;
+  if(typeof setMusicMode==="function") setMusicMode("victory");
   grantGold(80);
   // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
   // save.arenasCleared trackea cada una de verdad y persiste.
-  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false};
+  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false};
   save.arenasCleared[currentArena] = true;
   if(ARENA_ORDER.every(a=>save.arenasCleared[a]) && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;

@@ -1,6 +1,6 @@
 # Arena Infernal
 
-- **Lugar en la campaña:** 6ª (la final)
+- **Lugar en la campaña:** 7ª (la final)
 - **Roster:** Esqueleto → Zombi → Esqueleto H → Demonio Menor → Demonio Mago → Gólem
 - **Subjefe:** Campeones de la horda (niveles 4, 7 y 9)
 - **Jefe:** Demonio Mayor (regenera)

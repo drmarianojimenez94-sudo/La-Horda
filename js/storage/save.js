@@ -48,8 +48,9 @@ function defaultSave(){
     itemSchemaV: ITEM_SCHEMA_VERSION,
     gold:0, gems:0, // gemas: preparado para el futuro, todavía sin tienda premium ni compras reales
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
-    arenasCleared:{bosque:false, acuatica:false, fortaleza:false, hielo:false, laberinto:false, infernal:false},
+    arenasCleared:{bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
+    micelialMigrated:true,  // idem para el Reino Micelial (4ta arena, antes del Hielo)
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
     campaignResetV3:true,   // 3er reinicio (antes de la prueba real con un amigo): idem
@@ -105,6 +106,9 @@ function loadSave(){
       // igual (acá, en defaultSave() y en campaignReset()).
       if(!parsed.campaignResetV3){ campaignReset(raw); }
       if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
+      // El Reino Micelial llegó como 4ta arena (entre la Fortaleza y el Hielo): quien ya había superado
+      // la Fortaleza tenía el Hielo abierto, y lo conserva (una sola vez).
+      if(!parsed.micelialMigrated){ save.micelialMigrated = true; if(save.arenasCleared.fortaleza && !save.arenasCleared.micelial) save.legacyHieloOpen = true; }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
@@ -123,7 +127,7 @@ function campaignReset(raw){
   }
   save.gold = 0;
   save.arenasCleared = defaultSave().arenasCleared;
-  save.legacyHieloOpen = false; save.fortalezaMigrated = true;
+  save.legacyHieloOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true;
   save.divineArenaUnlocked = false;
   save.starterChosen = false; save.lastChamp = null;
   save.playtestV1Bonus = true;

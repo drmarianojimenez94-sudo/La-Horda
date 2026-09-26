@@ -1,6 +1,6 @@
 # Laberinto Maldito
 
-- **Lugar en la campaña:** 5ª
+- **Lugar en la campaña:** 6ª
 - **Roster:** Escorpión Gigante → Gólem de Piedra → Medusa, Druida de Arena → Esfinge
 - **Subjefe:** Guardián del Laberinto (nivel 6)
 - **Jefe:** Minotauro

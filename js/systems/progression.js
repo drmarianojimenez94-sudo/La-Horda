@@ -8,10 +8,11 @@
 // Curva de experiencia empinada a propósito: subir de nivel de personaje es permanente, así que
 // cuesta cada vez más pasados los primeros niveles. Sin multiplicadores: la XP que se gana es la
 // real de los enemigos y de la victoria. Calibrada con campañas simuladas desde cero (nivel 1,
-// 6 arenas en orden, tools/playtest): quien juega bien termina la campaña cerca del nivel 40
-// (unos 80.000 XP en total); quien pierde muchas partidas llega un poco más abajo, porque perder
-// solo conserva la mitad de lo ganado.
-function xpToNext(level){ return Math.round(200 + level*50 + Math.pow(level,2.3)*0.6); }
+// 7 arenas en orden desde que llegó el Reino Micelial, tools/playtest): quien juega bien termina
+// la campaña cerca del nivel 40 (unos 115.000 XP en total); quien pierde muchas partidas llega un
+// poco más abajo, porque perder solo conserva la mitad de lo ganado. (Con 6 arenas el término alto
+// era 0,6·nivel^2,3: la 7ma arena sumaba ~6 niveles al final.)
+function xpToNext(level){ return Math.round(200 + level*50 + Math.pow(level,2.3)*1.2); }
 function grantXP(champKey, amount){
   const c = save.champions[champKey];
   c.xp += amount;
