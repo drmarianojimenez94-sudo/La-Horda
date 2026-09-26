@@ -57,7 +57,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
 
   // protector
   const r4 = await E(() => { __start(5); const p = __role(300, 0, 'protector'); const a = __foe(330, 0); const b = __foe(-300, 0); a.hp = a.maxHp = b.hp = b.maxHp = 9999; __step(20, true);
-    damageEnemy(a, 100, {src:player}); damageEnemy(b, 100, {src:player}); return { a: 9999 - a.hp, b: 9999 - b.hp, links: (p._links||[]).length }; });
+    damageEnemy(a, 100, {src:player, critChanceOverride:0}); damageEnemy(b, 100, {src:player, critChanceOverride:0}); return { a: 9999 - a.hp, b: 9999 - b.hp, links: (p._links||[]).length }; });
   check('ROLES.protector_reduce_danio_a_los_suyos', r4.a > 0 && r4.a < r4.b*0.7 && r4.links >= 1, r4);
 
   // carcelero: quieto = enraizado; salir de la marca = libre
