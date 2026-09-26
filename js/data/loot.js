@@ -27,8 +27,8 @@ const ARENA_LOOT = {
   fortaleza: {comun:45, raro:37, muyraro:14,  legendario:2.8,  mitico:0.08, set:0.35, unico:0.003},
   micelial:  {comun:42, raro:38, muyraro:15.5,legendario:3.2,  mitico:0.10, set:0.40, unico:0.004},
   hielo:     {comun:39, raro:38, muyraro:17,  legendario:4.0,  mitico:0.12, set:0.50, unico:0.005},
-  laberinto: {comun:28, raro:37, muyraro:26,  legendario:6.0,  mitico:0.30, set:1.00, unico:0.012},
-  infernal:  {comun:16, raro:34, muyraro:36,  legendario:10.0, mitico:0.80, set:2.00, unico:0.025}
+  laberinto: {comun:28, raro:37, muyraro:26,  legendario:6.0,  mitico:0.30, set:1.50, unico:0.020},
+  infernal:  {comun:16, raro:34, muyraro:36,  legendario:10.0, mitico:0.80, set:3.00, unico:0.040}
 };
 ARENA_LOOT.divina = ARENA_LOOT.laberinto;
 const ARENA_LOOT_LABEL = {bosque:"Introducción", acuatica:"Intermedia", fortaleza:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", laberinto:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
@@ -51,12 +51,12 @@ const LOOT_MAX_ITEMS = 3;
 const DEFEAT_LOOT = {minLevel:6, chance:1, gradeCap:"B", highTierMult:0.25}; // highTierMult: Legendario, Mítico, Set y Único
 // Protección suave contra la mala suerte: cada VICTORIA sin la categoría sube un poco su
 // probabilidad (tope), y se reinicia cuando cae. Oculta para el jugador.
-// El Único respeta su rareza: su protección es mínima (tras 200 victorias sin verlo, x1,8).
+// El Único respeta su rareza (jackpot): su protección crece despacio (x2 a las 100 victorias sin verlo, tope x4 a las 300).
 const LOOT_PITY = {
   legendario:{step:0.06, cap:0.60},
   mitico:    {step:0.04, cap:0.50},
   set:       {step:0.05, cap:0.80},
-  unico:     {step:0.004, cap:0.80}
+  unico:     {step:0.010, cap:3.00}
 };
 // Qué clase de objeto sale cuando la categoría es Legendario / Mítico / Único.
 const LEGEND_SOURCE = {named:0.62, champion:0.13, procedural:0.25}; // con nombre (receta) · de un campeón · procedural con nombre
@@ -83,4 +83,4 @@ const SET_ARENA_WEIGHTS = {
 const SET_OWNED_BIAS = 1.7, SET_MISSING_PIECE_BIAS = 2.2;
 // Sets de campeón (js/data/champion-sets.js): el del campeón que jugás pesa mucho más; los de
 // otros campeones también pueden caer (botín cruzado), con poco peso.
-const SET_CHAMPION_BIAS = 5, SET_OTHER_CHAMP_W = 0.35;
+const SET_CHAMPION_BIAS = 14, SET_OTHER_CHAMP_W = 0.35; // 14: ~45% de las piezas de set son del set de TU campeón (lootsim2: set completo en ~100-150 victorias finales)
