@@ -122,7 +122,9 @@ function computePerformance(h){
   };
   const role = perfRoleOf(h.classKey);
   const parts = PERF_ROLES[role].map(([label, w, fn])=>{ const v = Math.max(0, Math.min(1, fn(ctx)||0)); return {label, weight:w, value:v}; });
-  const score = Math.round(parts.reduce((t,p)=>t + p.value*p.weight, 0)*100);
+  let score = Math.round(parts.reduce((t,p)=>t + p.value*p.weight, 0)*100);
+  // S+ es una partida SIN caídas: con cualquier caída la nota queda como mucho en S (92).
+  if((s.downs||0) > 0 || (h===player && !h.alive)) score = Math.min(score, PERF_GRADES[0].min - 1);
   const g = gradeOf(score);
   return {role, score, grade:g.g, color:g.color, parts};
 }

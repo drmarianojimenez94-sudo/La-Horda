@@ -64,7 +64,7 @@ function damageEnemy(e, amount, opts){
   if(src && src.stats){
     src.stats.dmgDealt += usefulDmg;
     if(e.rank==="jefe" || e.rank==="subjefe") src.stats.dmgToBoss += usefulDmg;
-    if(!opts.fromBasic) src.stats.abilityHits = (src.stats.abilityHits||0)+1;
+    if(!opts.fromBasic && !opts.fromProc) src.stats.abilityHits = (src.stats.abilityHits||0)+1; // los procs (objetos, sets, Resonancia, entorno) no inflan el "área" de la calificación
   }
   e.lastHitBy = src;
   // B1: los números de daño de un invitado se ven solo en SU pantalla
