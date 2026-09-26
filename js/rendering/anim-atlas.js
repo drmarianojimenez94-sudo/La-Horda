@@ -92,7 +92,15 @@ function drawAnimFrameSized(img, clip, n, x, y, w, h, anchorXRatio, anchorYRatio
   ctx.translate(x, y);
   if(rotation) ctx.rotate(rotation); // p.ej. un segmento de rayo estirado entre dos puntos
   if(flip) ctx.scale(-1,1);
-  ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
+  if(FX_GLOW.on){
+    // efectos de habilidad (fx-contrast.js): sombra de contraste debajo + el sprite + copia aditiva encima
+    const a0 = ctx.globalAlpha, R = Math.max(w, h)*0.62, cy = -h*anchorYRatio + h*0.5;
+    ctx.globalAlpha = a0*FX_GLOW.under; ctx.drawImage(fxDarkSprite(), -R, cy-R*0.8, R*2, R*1.6);
+    ctx.globalAlpha = a0;
+    ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
+    ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = a0*FX_GLOW.add;
+    ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
+  } else ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
   ctx.restore();
 }
 // Adaptador: arma clips a partir de una grilla uniforme (cols x celda de frameW x frameH)

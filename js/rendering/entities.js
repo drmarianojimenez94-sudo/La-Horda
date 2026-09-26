@@ -481,10 +481,15 @@ function _drawProjCore(p){
   const sp = Math.hypot(p.vx||0, p.vy||0)||1;
   const tl = Math.min(r*4, sp*0.05);
   ctx.save();
+  // contraste (fx-contrast.js): sombra suave detrás, así el brillo no se pierde en pisos claros
+  ctx.globalAlpha = fxUnder()*0.9; const dk = r*3.2;
+  ctx.drawImage(fxDarkSprite(), p.x-dk, p.y-dk, dk*2, dk*2);
   ctx.globalCompositeOperation = "lighter";
   ctx.globalAlpha = 0.45;
   ctx.strokeStyle = p.color; ctx.lineWidth = Math.max(2, r*0.8);
   ctx.beginPath(); ctx.moveTo(p.x-(p.vx||0)/sp*tl, p.y-(p.vy||0)/sp*tl); ctx.lineTo(p.x, p.y); ctx.stroke();
+  ctx.globalAlpha = 0.55; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = Math.max(1, r*0.3);   // estela con alma blanca
+  ctx.beginPath(); ctx.moveTo(p.x-(p.vx||0)/sp*tl*0.6, p.y-(p.vy||0)/sp*tl*0.6); ctx.lineTo(p.x, p.y); ctx.stroke();
   ctx.globalAlpha = 0.85;
   const g = r*2.6;
   ctx.drawImage(glowSprite(rgb), p.x-g, p.y-g, g*2, g*2);

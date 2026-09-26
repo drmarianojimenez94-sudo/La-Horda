@@ -301,6 +301,7 @@ function castAbility(caster, sk, isUlt, idx){
   if(axiomFreezeTimer>0 && caster!==axiomFreezeCaster && sk.kind!=="force_quit_ult") return; // nadie mas actua mientras dura Force Quit
   if(caster.fused) return; // La Profeta fusionada (Ascensión del Elegido): no puede lanzar nada ella misma
   const skillKey = isUlt ? "ult" : (idx===undefined ? 0 : idx);
+  vfxCastFlash(caster.x, caster.y, fxHeroRgb(caster), isUlt); // anticipación: destello del color del campeón al lanzar (fx-contrast.js)
   // Overcap de objetos (sección 14): legendarios/míticos pueden sumar niveles EFECTIVOS de
   // habilidad sin tocar los puntos permanentes invertidos -por eso esto usa una copia
   // (effectiveMasteryFor), nunca masteryOf() a secas, que sigue siendo lo que ve la UI-.

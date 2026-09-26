@@ -54,6 +54,8 @@ function impactFeedback(e, dmg, crit, opts, pow, src){
   const big = e.rank==="jefe" || e.rank==="subjefe" || e.rank==="elite";
   const mine = src===player && !src.isRemote;
   const w = (src && src.classKey && (src.erenTitan ? 1.8 : IMPACT_WEIGHT[src.classKey])) || 1;
+  // estrella de impacto (fx-contrast.js): habilidades y golpes fuertes de cualquier héroe
+  if(pow >= 2 && src && src.classKey && !opts.fromProc) vfxHitFlash(e.x, e.y - (e.radius||20)*0.7, fxHeroRgb(src), pow);
   if(mine){
     if(pow===4){
       if(!_ultImpactDone){ _ultImpactDone = true; hitStop(85, true); slowMo(0.55, 240); vfxShake(8); playSfx("heavy"); flashScreen(0.18); }
