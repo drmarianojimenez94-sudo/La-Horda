@@ -2,7 +2,7 @@
 
 > *"Las máquinas todavía recuerdan a sus prisioneros."*
 
-Tercera arena de la campaña (Bosque → Acuática → **Fortaleza** → Hielo → Laberinto → Infernal).
+Tercera arena de la campaña (Bosque → Acuática → **Fortaleza** → Reino Micelial → Hielo → Laberinto → Infernal).
 Identidad: **la fortaleza es un enemigo más**. No es un coliseo: es UN mapa continuo y grande
 (2680 × 6800 unidades, ~10 veces el coliseo) que el equipo recorre de sur a norte, dividido en
 sectores por puertas, puentes y mecanismos que se mueven.
