@@ -197,8 +197,88 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('HIE.los_bots_no_viven_congelados', run.freezes <= 6, run);
   }
 
+  if (want('bos')) {
+    // ---------------- Ruinas: runas y emboscadas ----------------
+    await E(() => { __start('bosque', 1); __calm(); window.__ua = window.__ua || updateAllies; updateAllies = function(){}; });
+    const rn = await E(() => ({ n: BOS.runes.length, ready0: BOS.runes.filter(bosReady).length, pos: BOS.runes.map(r => aidInside(r.x, r.y, 20)) }));
+    check('BOS.cuatro_runas_en_los_menhires', rn.n === 4 && rn.ready0 === 0 && rn.pos.every(Boolean), rn);
+    const ch = await E(() => { let t = 0; while (!BOS.runes.some(bosReady) && t < 30000){ __step(500); t += 500; } return { t, ready: BOS.runes.filter(bosReady).map(r=>r.id) }; });
+    check('BOS.la_primera_runa_se_carga_pronto', ch.ready.length >= 1 && ch.t <= 14000, ch);
+    const use = await E(async () => {
+      const r = BOS.runes.find(bosReady); player.x = r.x; player.y = r.y + 10;
+      const foes = []; for (let i = 0; i < 6; i++){ const e = spawnEnemy('duende_bosque', false); e.x = r.x + (Math.random()-0.5)*300; e.y = r.y + (Math.random()-0.5)*200; e.speed = 0; foes.push(e); }
+      const far = spawnEnemy('duende_bosque', false); far.x = r.x + 700; far.y = r.y; far.speed = 0;
+      const hp0 = foes.map(e => e.hp);
+      updateReviveBtn(); const b = document.getElementById('btn-revive'); const lbl = b.querySelector('.lbl').textContent;
+      b.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true })); for (let i = 0; i < 70; i++) update(16); b.dispatchEvent(new PointerEvent('pointerup', { bubbles:true }));
+      const stunned = foes.filter(e => e.alive ? e.stunTimer > 1000 : true).length, hurt = foes.filter((e, i) => !e.alive || e.hp < hp0[i]).length;
+      const res = { lbl, charge: r.charge, stunned, hurt, farStun: far.stunTimer||0 }; enemies.length = 0; return res;
+    });
+    check('BOS.activar_runa_con_el_boton', use.lbl === 'Activar' && use.charge < 0.1, use);
+    check('BOS.la_runa_atrapa_y_lastima_alrededor', use.stunned === 6 && use.hurt === 6 && use.farStun === 0, use);
+    await shot('bos_runa');
+    const boss = await E(() => { const r = BOS.runes[0]; r.charge = 1; const e = spawnEnemy('duende_bosque', false); e.rank = 'jefe'; e.hp = e.maxHp = 10000; e.x = r.x + 50; e.y = r.y; e.speed = 0; const hp = e.hp; CTX_KINDS.bos_rune.onComplete(r, [player]); const out = { stun: e.stunTimer, pct: +(1 - e.hp/hp).toFixed(3) }; enemies.length = 0; return out; });
+    check('BOS.el_jefe_apenas_se_frena', boss.stun <= 400 && boss.pct <= 0.02, boss);
+    const rech = await E(() => { const r = BOS.runes[0]; r.charge = 0; __step(16000); const half = r.charge; __step(17000); return { half: +half.toFixed(2), full: bosReady(r) }; });
+    check('BOS.la_runa_se_recarga', rech.half > 0.4 && rech.half < 0.6 && rech.full, rech);
+    // emboscada: aviso y después la jauría sale de la maleza
+    const amb = await E(() => {
+      __start('bosque', 3); __calm(); updateAllies = function(){}; BOS.ambT = 10; __step(50);
+      const spots = BOS.amb.map(a => ({ x:a.x, y:a.y, t:a.t })); const e0 = enemies.filter(e=>e.alive).length;
+      __step(1500); const mid = enemies.filter(e=>e.alive).length; __step(1400); const after = enemies.filter(e=>e.alive);
+      const near = after.filter(e => spots.some(p => Math.hypot(e.x-p.x, e.y-p.y) < 60)).length;
+      const minD = spots.length ? Math.min(...spots.map(p => Math.hypot(p.x-player.x, p.y-player.y))) : 0;
+      return { spots: spots.length, e0, mid, after: after.length, near, minD: Math.round(minD), types: [...new Set(after.map(e=>e.type))] };
+    });
+    check('BOS.emboscada_con_aviso_previo', amb.spots >= 2 && amb.mid === amb.e0 && amb.minD >= 200, amb);
+    check('BOS.la_jauria_sale_de_la_maleza', amb.after > amb.mid && amb.near >= amb.spots, amb);
+    const amb1 = await E(() => { __start('bosque', 1); __calm(); updateAllies = function(){}; __step(60000); return BOS.amb.length; });
+    check('BOS.nivel1_sin_emboscadas', amb1 === 0, amb1);
+    const ambB = await E(() => { __start('bosque', 3); __calm(); updateAllies = function(){}; activeChampion = {alive:true}; BOS.ambT = 10; __step(2000); const n = BOS.amb.length; activeChampion = null; return n; });
+    check('BOS.sin_emboscadas_con_subjefe', ambB === 0, ambB);
+    // bots: activan la runa si hay horda encima
+    await E(() => { updateAllies = __ua; });
+    const bot = await E(() => {
+      __start('bosque', 3); __calm(); BOS.ambT = 1e12; const r = BOS.runes[1]; r.charge = 1; for (const x of BOS.runes) if (x !== r) x.charge = 0;
+      player.x = r.x - 150; player.y = r.y; for (const h of allies){ h.x = r.x - 120 + (Math.random()-0.5)*60; h.y = r.y + 40; }
+      const foes = []; for (let i = 0; i < 6; i++){ const e = spawnEnemy('duende_bosque', false); e.x = r.x + 80 + (Math.random()-0.5)*80; e.y = r.y + (Math.random()-0.5)*80; e.speed = 0; e.dmg = 0; e.hp = e.maxHp = 1e6; foes.push(e); }
+      let t = 0; while (bosReady(r) && t < 20000){ __step(250); t += 250; }
+      return { used: !bosReady(r), t };
+    });
+    check('BOS.los_bots_usan_la_runa_con_horda', bot.used, bot);
+    const run = await E(() => { __start('bosque', 2); let t = 0, runes = 0, ambs = 0, seen = new Set(); while (state === 'playing' && runLevel <= 4 && t < 300000){ __step(500); t += 500; for (const a of BOS.amb) if (!seen.has(a.id)){ seen.add(a.id); ambs++; } for (const h of heroes) runes = Math.max(runes, 0) + 0; } const used = heroes.reduce((s, h) => s + ((h.stats && h.stats.runes)||0), 0); return { lv: runLevel, t: t/1000, ambs, used, st: state }; });
+    check('BOS.partida_real_niveles_2_a_4', run.lv >= 4 && run.ambs >= 1 && run.st !== 'menu', run);
+  }
+
+  if (want('tut')) {
+    // ---------------- tutorial: la voz del Hechicero ----------------
+    const t = {};
+    const txt = () => E(() => document.querySelector('#tut-panel .tut-goal').textContent);
+    await E(() => { save.tut = {}; __start('bosque', 1); __calm(); window.__ua = window.__ua || updateAllies; updateAllies = function(){}; __step(200); });
+    t.first = await txt(); t.vis = await E(() => !document.getElementById('tut-panel').classList.contains('hidden'));
+    await sleep(600); await shot('tut_hechicero_mover');
+    await E(() => { for (let i = 0; i < 200; i++){ player.x += 2; update(16); } }); t.moved = await E(() => !!save.tut.b_move);
+    await sleep(1800); await E(() => __step(50)); t.second = await txt();
+    await E(() => { const e = spawnEnemy('duende_bosque', false); e.x = player.x + 30; e.y = player.y; e.hp = 1; damageEnemy(e, 10, {src:player}); __step(50); });
+    t.attack = await E(() => !!save.tut.b_attack); await sleep(1800); await E(() => __step(50)); t.third = await txt();
+    await E(() => { player.cds[0] = 1000; __step(50); }); t.skill = await E(() => !!save.tut.b_skill);
+    await sleep(1800); await E(() => __step(50)); t.basics = await E(() => !!save.tut.basics);
+    await sleep(5500); await E(() => __step(50));
+    await E(() => { const a = heroes[1]; a.alive = false; a.hp = 0; a.x = player.x + 30; a.y = player.y; __step(100); });
+    await sleep(200); await E(() => __step(50)); t.revive = await txt();
+    await E(() => { const a = heroes[1]; a.alive = true; a.hp = a.maxHp; player.stats.revives = 1; __step(50); }); t.reviveDone = await E(() => !!save.tut.revive);
+    await E(() => { __start('bosque', 1); __calm(); updateAllies = function(){}; __step(500); });
+    t.again = await E(() => document.getElementById('tut-panel').classList.contains('hidden') || !/joystick/.test(document.querySelector('#tut-panel .tut-goal').textContent));
+    await shot('tut_hechicero');
+    check('TUT.empieza_con_moverse', /joystick/.test(t.first) && t.vis, t);
+    check('TUT.moverse_atacar_habilidad_en_orden', t.moved && /Ataque/.test(t.second) && t.attack && /habilidad/.test(t.third) && t.skill && t.basics, t);
+    check('TUT.revivir_se_ensena_al_primer_caido', /✚/.test(t.revive) && t.reviveDone, t);
+    check('TUT.lo_aprendido_no_se_repite', t.again, t);
+    await E(() => { updateAllies = __ua; });
+  }
+
   // ---------------- otras arenas: sin objetivos, sin cambios ----------------
-  const other = await E(() => { const r = {}; for (const a of ['bosque','laberinto','acuatica']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
+  const other = await E(() => { const r = {}; for (const a of ['laberinto','acuatica']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
   check('OTRAS.sin_acciones_contextuales_propias_todavia', Object.values(other).every(o => !o.ctx || o.ctx.length === 0), other);
 
   check('SIN_ERRORES', errors.length === 0, errors.slice(0, 5));

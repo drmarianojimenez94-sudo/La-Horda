@@ -30,10 +30,9 @@ const HIE_CFG = {
   lightMs: 1400,        // mantener para encender
   fireLightR: 60        // fuego a esta distancia lo enciende
 };
-const HIE = { br:[], hinted:false, hintedB:false };
+const HIE = { br:[] };
 
 function hieResetRun(){
-  HIE.hinted = false; HIE.hintedB = false;
   HIE.br = HIE_CFG.braziers.map((a, i)=>{
     const p = aidOnRing(HIE_CFG.ring, HIE_CFG.ring, a);
     return { id:"hb"+i, kind:"hie_brazier", x:Math.round(p.x), y:Math.round(p.y), r:58, h:78,
@@ -67,7 +66,7 @@ function hieUpdate(dt){
         b.lit = false; b.done = false; b.prog = 0; b.fuel = 0;
         playSfx("hieOut"); vfxBurst(b.x, b.y-34, 8, "stone", 60, 700, 3, 0, -30, 0);
         if(Math.hypot(player.x-b.x, player.y-b.y) < 900) floatText(b.x, b.y-70, "El brasero se apagó", null);
-        if(!HIE.hintedB){ HIE.hintedB = true; showBanner("🔥 Un brasero se apagó: encendelo (✚) o con fuego"); }
+
       }
       continue;
     }
@@ -94,10 +93,22 @@ function hieUpdate(dt){
       vfxBurst(h.x, h.y-18, 6, "ice", 80, 380, 2.5, 2, -20, 0);
       if(h===player){ floatText(h.x, h.y-46, "¡Frío!", "crit"); playSfx("hieChill"); }
     }
-    if(h===player && !HIE.hinted && h._cold > 45){ HIE.hinted = true; showBanner("❄ Quieto te congelás: movete o calentate en un brasero"); }
   }
+  hieTut();
 }
-function hieGuestUpdate(dt){}
+function hieGuestUpdate(dt){ hieTut(); }
+// Consejos del Hechicero (cada cliente: anfitrión e invitados).
+function hieTut(){
+  if(!player || !player.alive) return;
+  if((player._cold||0) > 45) tutSay("cold", "Acá el frío no mata: espera. Al que se queda quieto, lo guarda para siempre.", "Movete, o calentate junto a un brasero encendido", 10000);
+  if(TUT.key==="cold" && hieNearLit(player.x, player.y)) tutDone("cold");
+  for(const b of HIE.br){
+    if(b.lit || Math.hypot(player.x-b.x, player.y-b.y) > 600) continue;
+    tutSay("brazier", "Un fuego apagado todavía recuerda cómo arder.", "Mantené 🔥 junto al brasero (o prendelo con fuego)", 10000);
+    break;
+  }
+  if(TUT.key==="brazier" && HIE.br.some(b=>b.lit && b.by===heroes.indexOf(player))) tutDone("brazier");
+}
 // ---- acción contextual: encender ----
 function hieCtxTargets(){
   const out = [];
@@ -107,7 +118,7 @@ function hieCtxTargets(){
 CTX_KINDS.hie_brazier = {
   label:"Encender", icon:"🔥", color:"#ffb347",
   onComplete(b, users){
-    b.done = false; hieLight(b, "hero");
+    b.done = false; hieLight(b, "hero"); b.by = heroes.indexOf(users[0]);
     const who = users[0];
     showBanner(who===player ? "Encendiste el brasero" : `${heroLabel(who)} encendió un brasero`);
   },

@@ -47,6 +47,7 @@ function updateDownedOverlay(){
    ============================================================ */
 function updateHUD(){
   updateReviveBtn(); // antes nunca se llamaba: el botón quedaba inactivo para siempre
+  tutTick(); // la voz del Hechicero: cada concepto se enseña una vez, jugando (js/systems/tutorial.js)
   updateDownedOverlay();
   // Barra de vida con escudo: la capacidad total de referencia es vida máx + escudo máx
   // de ítems (fijo por equipamiento), así el segmento de escudo nunca se sale de la barra

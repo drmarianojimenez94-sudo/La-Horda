@@ -35,7 +35,7 @@ const INF_CFG = {
   reactSpawns: 2,
   sealStun: 1300, sealR: 230
 };
-const INF = { fis:[], nextId:1, openT:0, hinted:false };
+const INF = { fis:[], nextId:1, openT:0 };
 
 function infOpenCount(){ let n = 0; for(const f of INF.fis) if(!f.done) n++; return n; }
 function infHeroCentroid(){
@@ -63,15 +63,12 @@ function infTryOpen(){
     const f = infMakeFissure(x, y);
     vfxShake(4); playSfx("infCrack");
     vfxTelegraph({shape:0, r:INF_CFG.radius[1], x, y, follow:null, dur:INF_CFG.openWarn, rgb:"255,110,30"});
-    if(!INF.hinted){
-      INF.hinted = true;
-      showBanner("🔥 ¡FISURA! De ahí sale la horda: cerrala con ✖");
-    } else floatText(x, y-40, "¡Fisura!", "crit");
+    floatText(x, y-40, "¡Fisura!", "crit");
     return f;
   }
   return null;
 }
-function infResetRun(){ INF.fis = []; INF.nextId = 1; INF.openT = INF_CFG.openEvery[0]*0.6; INF.hinted = false; }
+function infResetRun(){ INF.fis = []; INF.nextId = 1; INF.openT = INF_CFG.openEvery[0]*0.6; }
 
 // ---- ganchos (anfitrión / partida local) ----
 function infRunStart(){ infResetRun(); }
@@ -136,6 +133,7 @@ function infUpdate(dt){
     }
   }
   INF.fis.length = w;
+  infTut();
 }
 // Saca enemigos por la boca de la fisura (con estallido de brasas).
 let _infForce = null;
@@ -167,6 +165,17 @@ function infPlaceSpawn(e, atBoss, champion){
 }
 function infGuestUpdate(dt){
   for(const f of INF.fis){ f.age += dt; if(f.done) f.doneT += dt; }
+  infTut();
+}
+// Consejo del Hechicero (cada cliente: anfitrión e invitados).
+function infTut(){
+  if(!player || !player.alive) return;
+  for(const f of INF.fis){
+    if(f.done || f.warn > 0 || Math.hypot(player.x-f.x, player.y-f.y) > 650) continue;
+    tutSay("fissure", "La tierra se abre donde el mundo es fino. De esas grietas sale la horda… y se pueden coser.", "Mantené ✖ junto a la fisura para cerrarla (quema)", 12000);
+    if(TUT.key==="fissure" && f.prog > 0 && f.by===heroes.indexOf(player)) tutDone("fissure");
+    break;
+  }
 }
 // ---- acción contextual: cerrar ----
 function infCtxTargets(){
