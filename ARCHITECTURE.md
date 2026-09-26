@@ -170,6 +170,8 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Sets por campeón | `js/data/champion-sets.js`, `js/systems/champion-sets.js` | `CHAMPION_SETS` |
 | Precio de campeón, venta de objetos, inventario | `js/data/champions.js`, `js/data/items.js` | `CHAMPION_PRICE_GOLD`, `SELL_VALUE`, `INVENTORY_CAPACITY` |
 | Tienda diaria de objetos | `js/systems/shop.js` | ofertas del día |
+| Identidad de objetos: pasiva fija por arquetipo, familias por arena, nivel/roll, textos de efecto | `js/data/item-identity.js` | `ITEM_ARCHETYPE_PASSIVE`, `ITEM_FAMILIES`, `ARENA_ITEM_FAMILIES`, `ITEM_MAX_LEVEL`, `ITEM_ROLL_RANGE`, `DESIGNED_EFFECT_TEXT` |
+| Gemas (solo suben el nivel de un objeto; se ganan jugando) | `js/data/item-identity.js`, `js/systems/gems.js` | `GEM_UPGRADE_BASE`, `GEM_UPGRADE_GROWTH`, `GEMS_PER_VICTORY` |
 | Chat de la Sala (anti-spam, historial, palabras tapadas) | `server/relay.js`, `js/net/net-chat.js` | `CHAT_*`, `NET_CHAT_QUICK` |
 
 Modo campaña: ya no hay multiplicador de XP de prueba (`DEV_XP_MULT` se eliminó) ni un "nivel objetivo"
@@ -178,6 +180,17 @@ al terminar la campaña: `xpToNext(L) = 90 + 26·L + 0,16·L³` es rápida al pr
 regalo al empezar (`js/ui/starter-select.js`), el resto en la Tienda a `CHAMPION_PRICE_GOLD` (5.000); el
 reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario es de la CUENTA
 (`save.stash`, 30 lugares, migración `stashV1`) y cada campeón equipa desde ahí.
+
+Itemización (reglas que el código hace cumplir): la pasiva de un objeto es FIJA por arquetipo y el azar
+solo mueve los números (`roll` 90–110%); el valor real de una pieza es `itemStat(it)` = base × roll ×
+nivel (nunca leer `it.value` en la UI). Pasivas y procs idénticos en dos piezas no se suman (vale la más
+fuerte, `equippedPassives`/`heroProcs`); los stats sí. `makeItem` nunca crea un Único. Las Gemas solo
+suben el nivel (Nv.1–10, +4%/nivel, sin fallo ni pérdida, fuera de la partida); no son moneda premium: una
+futura moneda de pago va en otro campo. Aura de set desde 2 piezas (`drawSetAuras`); la skin solo con el
+set completo y si su arte está en `SET_SKINS`. Íconos: `js/ui/item-icons.js` (provisorios; el arte final
+va en `ITEM_ICON_ART`) y ficha del objeto `js/ui/item-preview.js`. Assets pendientes con prompts:
+`LA_HORDA_ITEM_ASSET_MANIFEST.md` (se regenera con `node tools/items/gen_item_manifest.js`). Pruebas:
+`tools/items/t_items.js` y `tools/items/t_itemization.js`.
 
 ### Game feel (dónde está cada cosa)
 
@@ -188,7 +201,7 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
   arrastrar = elegir; `drawAimPreview()`.
 - `js/ui/hud.js` — estados de los botones (listo / activo / enfriamiento / sin recurso).
 - `js/ui/boss-hud.js` — barra grande del jefe, fases, estado, aviso del ataque en curso, guía.
-- `js/systems/item-procs.js` — efectos únicos de los legendarios en combate.
+- `js/systems/item-procs.js` — efectos únicos de los legendarios en combate (cada proc con su feedback visual chico).
 - `js/systems/mythic-powers.js` — poderes de los Míticos y comportamiento de los Únicos.
 - `js/rendering/gore.js` — manchas, trozos, cadáveres (horneados en un canvas chico) y muertes por tipo.
 - `js/enemies/enemy-roles.js` — roles enemigos + insignia/anillo + flecha en el borde para los de apoyo.
