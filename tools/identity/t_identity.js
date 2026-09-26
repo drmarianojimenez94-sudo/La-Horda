@@ -48,6 +48,8 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     await E(() => { __start('infernal', 1); __calm(); });
     const l1 = await E(() => { __step(40000); return INF.fis.length; });
     check('INF.nivel1_sin_fisuras', l1 === 0, l1);
+    const mur = await E(() => ({ m: INF.mural, inside: INF.mural && aidInside(INF.mural.x, INF.mural.y, 100) }));
+    check('INF.mural_de_los_cuatro_en_lugar_fijo_y_libre', !!mur.m && mur.inside, mur);
     await E(() => { __start('infernal', 3); __calm(); window.__ua = updateAllies; updateAllies = function(){}; for (const h of heroes){ h.x = (Math.random()-0.5)*80; h.y = 200 + (Math.random()-0.5)*80; } });
     const op = await E(() => { let t = 0; while (!INF.fis.length && t < 40000) { __step(500); t += 500; } const f = INF.fis[0]; return f ? { t, x:f.x|0, y:f.y|0, warn:f.warn, inside:aidInside(f.x, f.y, 60), heroD: Math.min(...heroes.map(h=>Math.hypot(h.x-f.x, h.y-f.y)))|0 } : { t }; });
     check('INF.se_abre_una_fisura_con_aviso', op.x !== undefined && op.warn > 0 && op.inside && op.heroD >= 170, op);

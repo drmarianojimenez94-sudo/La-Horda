@@ -35,7 +35,7 @@ const INF_CFG = {
   reactSpawns: 2,
   sealStun: 1300, sealR: 230
 };
-const INF = { fis:[], nextId:1, openT:0 };
+const INF = { fis:[], nextId:1, openT:0, mural:null };
 
 function infOpenCount(){ let n = 0; for(const f of INF.fis) if(!f.done) n++; return n; }
 function infHeroCentroid(){
@@ -71,8 +71,18 @@ function infTryOpen(){
 function infResetRun(){ INF.fis = []; INF.nextId = 1; INF.openT = INF_CFG.openEvery[0]*0.6; }
 
 // ---- ganchos (anfitrión / partida local) ----
-function infRunStart(){ infResetRun(); }
-function infGuestStart(){ infResetRun(); }
+function infRunStart(){ infResetRun(); infPlaceMural(); }
+function infGuestStart(){ infResetRun(); infPlaceMural(); }
+// FORESHADOWING: un mural tallado en el piso con cuatro figuras (el Mago, el Guardián Élfico, el
+// Guardián del Laberinto y una cuarta silueta encapuchada). Nadie lo explica: se descubre.
+// Lugar fijo (sin azar): el primer candidato libre, igual en todos los clientes.
+function infPlaceMural(){
+  INF.mural = null;
+  for(const [x, y] of [[0, -520], [-420, -430], [420, -430], [0, 560], [-560, 120], [560, 120]]){
+    if(!aidInside(x, y, 120) || aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+120)) continue;
+    INF.mural = {x, y}; return;
+  }
+}
 function infBeginLevel(){
   // al pasar de nivel todas bajan una etapa (las recién abiertas se apagan)
   if(runLevel <= 1) return;
@@ -169,6 +179,7 @@ function infGuestUpdate(dt){
 }
 // Consejo del Hechicero (cada cliente: anfitrión e invitados).
 function infTut(){
+  if(player && player.alive && runElapsedMs > 4000) tutSay("infernal_intro", "Tres cayeron para que esto quedara cerrado. Ahora se abre otra vez.", null, 7000);
   if(!player || !player.alive) return;
   for(const f of INF.fis){
     if(f.done || f.warn > 0 || Math.hypot(player.x-f.x, player.y-f.y) > 650) continue;
@@ -239,6 +250,31 @@ function infApplyNetState(s){
     return f;
   });
 }
+// ---- mural (PROVISORIO, procedural: ver LA_HORDA_MISSING_ASSETS.md) ----
+function infArtMural(){
+  return aidArt("infMural", 132, 54, (g, w, h)=>{
+    aidPx(g, 0, 0, w, h, "#1a1210"); aidPx(g, 2, 2, w-4, h-4, "#2c211c"); aidPx(g, 2, 2, w-4, 2, "#3e302a"); aidPx(g, 2, h-4, w-4, 2, "#140d0b");
+    const C = "#7a5f4e", D = "#0e0907", L = "#9a7c66";
+    const fig = (ox, draw)=>{ aidPx(g, ox+2, 40, 24, 2, D); draw(ox); };
+    // 1 · el Mago (sombrero en punta, bastón)
+    fig(4, ox=>{ aidPx(g, ox+11, 8, 4, 4, C); aidPx(g, ox+9, 12, 8, 2, C); aidPx(g, ox+10, 14, 6, 6, C); aidPx(g, ox+9, 20, 8, 18, C); aidPx(g, ox+20, 10, 2, 30, L); aidPx(g, ox+19, 8, 4, 3, "#9ad0e8"); });
+    // 2 · el Guardián Élfico (astas, arco)
+    fig(36, ox=>{ aidPx(g, ox+8, 8, 2, 6, C); aidPx(g, ox+16, 8, 2, 6, C); aidPx(g, ox+7, 8, 2, 2, C); aidPx(g, ox+17, 8, 2, 2, C); aidPx(g, ox+10, 12, 6, 6, C); aidPx(g, ox+9, 18, 8, 20, C); aidPx(g, ox+20, 12, 2, 22, L); aidPx(g, ox+22, 14, 1, 18, L); });
+    // 3 · el Guardián del Laberinto (casco con cuernos, escudo)
+    fig(68, ox=>{ aidPx(g, ox+7, 9, 3, 2, C); aidPx(g, ox+16, 9, 3, 2, C); aidPx(g, ox+9, 10, 8, 7, C); aidPx(g, ox+8, 17, 10, 21, C); aidPx(g, ox+2, 20, 7, 12, L); aidPx(g, ox+4, 22, 3, 8, C); });
+    // 4 · la cuarta silueta: encapuchada, sin rasgos (tallada más honda)
+    fig(100, ox=>{ aidPx(g, ox+9, 9, 8, 3, D); aidPx(g, ox+8, 12, 10, 6, D); aidPx(g, ox+7, 18, 12, 20, D); aidPx(g, ox+12, 14, 2, 2, "#c9a8ff"); aidPx(g, ox+6, 37, 14, 2, D); });
+    // grietas que atraviesan el mural
+    aidPx(g, 30, 4, 1, 14, D); aidPx(g, 31, 18, 1, 10, D); aidPx(g, 95, 30, 1, 20, D); aidPx(g, 96, 22, 1, 9, D);
+  });
+}
+function infDrawMural(){
+  const m = INF.mural; if(!m || !inView(m.x, m.y, 200)) return;
+  const img = infArtMural(), s = AID_SCALE*1.2;
+  ctx.save(); ctx.imageSmoothingEnabled = false; ctx.globalAlpha = 0.92;
+  ctx.drawImage(img, Math.round(m.x - img.width*s/2), Math.round(m.y - img.height*s/2), Math.round(img.width*s), Math.round(img.height*s));
+  ctx.restore();
+}
 // ---- dibujo (procedural: grieta + brillo de lava) ----
 function _infRng(seed){ let s = seed|0 || 1; return ()=>{ s = (s*1103515245 + 12345) & 0x7fffffff; return s/0x7fffffff; }; }
 function infCrackPath(f, scale){
@@ -260,6 +296,7 @@ function infCrackPath(f, scale){
   return out;
 }
 function infDrawGround(now){
+  infDrawMural();
   for(const f of INF.fis){
     if(!inView(f.x, f.y, 160)) continue;
     const maxR = INF_CFG.radius[Math.max(1, f.stage)];
