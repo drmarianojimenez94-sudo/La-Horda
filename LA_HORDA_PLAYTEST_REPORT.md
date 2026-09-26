@@ -12,7 +12,7 @@
 
 | Herramienta | Qué hace | Resultado |
 |---|---|---|
-| `tools/identity/t_identity.js` | 80 chequeos de las mecánicas nuevas: acción contextual, fisuras, frío y braseros, runas y emboscadas, corrientes, sellos, etiquetas ambientales y tutorial. Incluye **partidas reales** de los niveles 2 a 5 en cada arena. | **80/80** |
+| `tools/identity/t_identity.js` | 81 chequeos de las mecánicas nuevas: acción contextual, fisuras, frío y braseros, runas y emboscadas, corrientes, sellos, etiquetas ambientales y tutorial. Incluye **partidas reales** de los niveles 2 a 5 en cada arena. | **81/81** |
 | `tools/identity/t_identity_net.js` | Cooperativo real con el relay: Infernal con **4 jugadores** (11/11); Gélida (8/8), Acuática (6/6), Laberinto (6/6) y Ruinas (5/5) con 2 jugadores. | **36/36** |
 | `tools/identity/shots.js` | Capturas en pantalla de celular (844×390) de cada arena con su mecánica activa. | revisadas a ojo |
 | `tools/playtest/campaign.js` (progresión) | Campaña completa desde un guardado vacío con piloto automático: Tanque, Mago y Cazadora. | ver abajo |
