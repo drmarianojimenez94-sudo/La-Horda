@@ -51,7 +51,7 @@ function showGameOverScreen(divinaOutcome){
   document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} bajas · Performance <b style="color:${perf.color};">${perf.grade}</b>`;
   document.getElementById("go-progress").innerHTML =
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
-    Botín: ${lootLine}<br>
+    Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
     <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de lo ganado en esta partida (${penalty.xpLost} de XP${penalty.afterLevel<penalty.beforeLevel?`, volviste a Nv. ${penalty.afterLevel}`:""} y ${penalty.goldLost} de oro).</b>`;
 }
 /* ============================================================
@@ -81,7 +81,7 @@ function buildVictoryData(){
   const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
   grantXP(classKey, victoryXpBonus);
   return {
-    classKey, perf, score:perf.score, rewards:loot.items, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
+    classKey, perf, score:perf.score, rewards:loot.items, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
     kills, gold: save.gold, subjefes: subjefesDefeated,
     level: save.champions[classKey].level,
     stats: player.stats
@@ -100,10 +100,10 @@ function lootCardHTML(item, classKey, idx){
   }
   return `<div class="loot-card tier-${tier}" style="--tc:${tm.color}; animation-delay:${idx*0.9}s" data-tier="${tier}">
     <div class="loot-tier">${tm.label}${item.set?"":""}</div>
-    <div class="loot-main"><span class="item-icon">${item.icon}</span>
+    <div class="loot-main">${itemIconHTML(item)}
       <div class="item-meta">
         <div class="item-name" style="color:${tm.color};">${item.name}</div>
-        <div class="item-stat">+${Math.round(item.value*100)}% ${ITEM_TYPES[item.type].statLabel}</div>
+        <div class="item-stat">+${Math.round(itemStat(item)*100)}% ${ITEM_TYPES[item.type].statLabel}</div>
         ${setLine}
         ${passiveTxt?`<div class="item-passives">${passiveTxt}</div>`:""}
         <div class="vic-item-actions">
@@ -170,10 +170,11 @@ const VICTORY_STEPS = [
     const summary = `<div class="loot-summary-line"><b style="color:${P.color};">${P.grade}</b> · ${A.label||"—"} · <span style="color:#7dffa0;">Victoria</span> ·
         <span style="color:${bonusPct>=0?"#ffcf5c":"#b8a898"};">${bonusPct>=0?"+":""}${bonusPct}% rarezas altas${victoryData.subjefes?` · +${victoryData.subjefes*10}% objeto extra`:""}</span>
         <div class="loot-summary-note">La calificación mejora las probabilidades, nunca garantiza.</div></div>`;
+    const gemNote = victoryData.gems ? `<div class="vic-reward-note gem-note">◆ +${victoryData.gems} Gema${victoryData.gems>1?"s":""} (total ${save.gems}) — sirven para subir el nivel de tus objetos</div>` : "";
     const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): algunas recompensas no se pudieron guardar.</div>` : "";
     if(!victoryData._revealed) return `${summary}${fullNote}<div class="chest-host"></div>`; // la ceremonia del cofre (js/ui/loot-ceremony.js)
     const cards = victoryData.rewards.slice().sort((a,b)=>TIER_ORDER[itemTier(a)]-TIER_ORDER[itemTier(b)]).map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
-    return `${summary}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
+    return `${summary}${gemNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
   },
   // 3. XP / RECURSOS
   function(){

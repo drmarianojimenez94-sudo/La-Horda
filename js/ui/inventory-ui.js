@@ -50,11 +50,11 @@ function itemCardHTML(it, o){
       <button data-inv-discard="${it.uid}">Descartar</button></div>`;
   }
   return `<div class="inv-card tier-${itemTier(it)} ${it.set?"set-item":""} ${compat?"":"incompat"}" data-inv-card="${it.uid}" style="border-left-color:${col};">
-    <span class="item-icon">${it.icon}</span>
+    ${itemIconHTML(it)}${itemLevel(it)>1?`<span class="item-lv">Nv.${itemLevel(it)}</span>`:""}
     <div class="item-meta">
       <div class="item-name" style="color:${col};">${elem}${it.name}${it.set?' <span class="set-badge">SET</span>':""}</div>
       ${epithet}
-      <div class="item-stat">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label} · +${Math.round(it.value*100)}% ${ITEM_TYPES[it.type].statLabel} ${owner} ${byTxt}</div>
+      <div class="item-stat">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label} · Nv.${itemLevel(it)} · +${Math.round(itemStat(it)*100)}% ${ITEM_TYPES[it.type].statLabel} ${owner} ${byTxt}</div>
       ${passives ? `<div class="item-passives">${passives}</div>` : ""}
       ${(o.compare && o.classKey && compat && !onMe) ? compareItemsHTML(o.classKey, it) : ""}
       ${actions}
@@ -104,8 +104,7 @@ function renderChampInventory(panel, classKey, rerender){
   panel.innerHTML = html;
   panel.querySelectorAll(".inv-card").forEach(card=> card.addEventListener("click", ev=>{
     if(ev.target.closest("button")) return;
-    const uid = card.getAttribute("data-inv-card");
-    prepCompareOpenUid = (prepCompareOpenUid===uid) ? null : uid; rerender();
+    openItemPreview(card.getAttribute("data-inv-card"), classKey, rerender);
   }));
   panel.querySelectorAll("[data-champ-filter]").forEach(b=> b.addEventListener("click", ()=>{ champInvFilter = b.getAttribute("data-champ-filter"); rerender(); }));
   panel.querySelectorAll("[data-prep-unequip]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); unequipItem(classKey, b.getAttribute("data-prep-unequip")); rerender(); }));
@@ -154,6 +153,10 @@ function renderMyItemsPanel(panel){
   panel.querySelectorAll("[data-f-rar]").forEach(b=> b.addEventListener("click", ()=>{ myInvFilter.rarity = b.getAttribute("data-f-rar"); renderMyInventory(); }));
   panel.querySelectorAll("[data-f-type]").forEach(b=> b.addEventListener("click", ()=>{ myInvFilter.type = b.getAttribute("data-f-type"); renderMyInventory(); }));
   const sel = panel.querySelector("#myinv-champ"); if(sel) sel.addEventListener("change", ()=>{ myInvFilter.champ = sel.value; renderMyInventory(); });
+  panel.querySelectorAll(".inv-card").forEach(card=> card.addEventListener("click", ev=>{
+    if(ev.target.closest("button")) return;
+    openItemPreview(card.getAttribute("data-inv-card"), null, renderMyInventory);
+  }));
   _bindItemActions(panel, null, renderMyInventory);
 }
 function renderRecipesPanel(panel){
