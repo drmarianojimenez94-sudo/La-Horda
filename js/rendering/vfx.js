@@ -340,7 +340,9 @@ function vfxOnDeath(e){
   if(boss) vfxShake(12);
   return true;
 }
+let _burnFilterLeft = 0;
 function vfxDrawDying(){
+  _burnFilterLeft = IS_TOUCH_DEVICE ? 2 : 4;
   for(let i=0;i<vfxDyingN;i++){
     const d = vfxDying[i], e = d.e; if(!e) continue;
     const R = e.radius||20;
@@ -379,7 +381,8 @@ function vfxDrawDying(){
     ctx.translate(e.x+ox, e.y+oy); if(rot) ctx.rotate(rot); ctx.scale(sx, sy); ctx.translate(-e.x, -e.y);
     const m = ANIM_ALPHA_MUL;
     ANIM_ALPHA_MUL = alpha; ctx.globalAlpha = alpha;
-    if(d.kind==="burn") ctx.filter = `brightness(${Math.max(0.28, 1-p*1.6)}) saturate(${Math.max(0.4, 1-p)})`; // se carboniza
+    // se carboniza (ctx.filter es caro: tope de cuerpos filtrados por cuadro; el cadáver queda horneado quemado igual)
+    if(d.kind==="burn" && _burnFilterLeft-- > 0) ctx.filter = `brightness(${Math.max(0.28, 1-p*1.6)}) saturate(${Math.max(0.4, 1-p)})`;
     drawEnemyBody(e);
     ctx.filter = "none";
     if(d.kind==="shock" && p < 0.4 && Math.sin(p*80) > 0) flash = Math.max(flash, 0.9); // electrocutado: destellos

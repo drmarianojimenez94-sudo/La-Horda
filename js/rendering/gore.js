@@ -101,9 +101,28 @@ function consumeCorpse(x, y, r){
   return corpseList.splice(best, 1)[0];
 }
 function corpsesNear(x, y, r){ let n = 0; for(const c of corpseList) if(Math.hypot(c.x-x, c.y-y) < r) n++; return n; }
+// Un cadáver no se mueve: su cuerpo se "hornea" UNA vez en un canvas chico (con el filtro de
+// quemado aplicado ahí, que en cada cuadro era carísimo) y después solo se copia el bitmap. Antes
+// cada cadáver redibujaba el cuerpo entero todos los cuadros: 17 cadáveres costaban ~22 ms.
+function _bakeCorpse(c){
+  const e = c.e, r = e.radius||20, W = Math.max(80, r*7), H = W;
+  const t = ctx.getTransform(), k = Math.max(1, Math.min(IS_TOUCH_DEVICE ? 2 : 3, Math.hypot(t.a, t.b), 256/W));
+  const cv = document.createElement("canvas"); cv.width = Math.ceil(W*k); cv.height = Math.ceil(H*k);
+  const c2 = cv.getContext("2d"); c2.imageSmoothingEnabled = false;
+  c2.setTransform(k, 0, 0, k, 0, 0); c2.translate(W/2 - c.x, H*0.72 - c.y);
+  if(c.charred) c2.filter = "brightness(0.28) saturate(0.4)";
+  const main = ctx, m = ANIM_ALPHA_MUL, ox = e.x, oy = e.y;
+  ctx = c2; ANIM_ALPHA_MUL = 1;
+  try{
+    e._dyingP = 1; e.hitFlash = 0; e.attackAnim = 0; e.x = c.x; e.y = c.y;
+    drawEnemyBody(e);
+  } finally { ctx = main; ANIM_ALPHA_MUL = m; e.x = ox; e.y = oy; }
+  c.bake = cv; c.bw = W; c.bh = H;
+}
 function drawCorpses(){
   for(const c of corpseList){
     const e = c.e; if(!inView(c.x, c.y, (e.radius||20)*3)) continue;
+    if(!c.bake) _bakeCorpse(c);
     const left = c.dur - c.t;
     const alpha = Math.min(0.9, left/1800);
     let sx = 1, sy = 1, rot = 0, oy = 0;
@@ -115,15 +134,8 @@ function drawCorpses(){
     }
     ctx.save();
     ctx.translate(c.x, c.y+oy); if(rot) ctx.rotate(rot); ctx.scale(sx, sy); ctx.translate(-c.x, -c.y);
-    const m = ANIM_ALPHA_MUL;
-    ANIM_ALPHA_MUL = alpha; ctx.globalAlpha = alpha;
-    if(c.charred) ctx.filter = "brightness(0.28) saturate(0.4)";
-    e._dyingP = 1; e.hitFlash = 0; e.attackAnim = 0;
-    const ox = e.x, oy2 = e.y; e.x = c.x; e.y = c.y;
-    drawEnemyBody(e);
-    e.x = ox; e.y = oy2;
-    ctx.filter = "none";
-    ANIM_ALPHA_MUL = m;
+    ctx.globalAlpha = alpha; ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(c.bake, c.x - c.bw/2, c.y - c.bh*0.72, c.bw, c.bh);
     ctx.restore();
     if(c.charred && Math.random() < 0.04*vfxLoad) vfxBurst(c.x+(Math.random()-0.5)*16, c.y-8, 1, "rock", 8, 900, 3, 0, -26, 1);
   }
