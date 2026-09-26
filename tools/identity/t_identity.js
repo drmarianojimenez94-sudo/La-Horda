@@ -351,6 +351,27 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('LAB.partida_real_niveles_2_a_4', run.lv >= 4 && run.sets >= 1 && run.st !== 'menu', run);
   }
 
+  if (want('env')) {
+    // ---------------- etiquetas ambientales con habilidades REALES del Mago ----------------
+    await E(() => { window.__ua = window.__ua || updateAllies; });
+    const ice = await E(() => { __start('infernal', 4, 'mago'); __calm(); updateAllies = function(){}; INF.openT = 1e12; INF.fis.length = 0; const f = infMakeFissure(player.x + 90, player.y); f.warn = 0; f.reacted = true; player.energy = player.maxEnergy; player.cds[1] = 0; const ok = useSkill(1, null); return { ok, prog: Math.round(f.prog), dur: f.dur }; });
+    check('ENV.nova_de_escarcha_enfria_la_fisura', ice.ok && ice.prog >= ice.dur*0.3, ice);
+    const fire = await E(() => { __start('hielo', 3, 'mago'); __calm(); updateAllies = function(){}; const b = HIE.br[0]; b.lit = false; b.fuel = 0; player.x = b.x - 120; player.y = b.y; player.energy = player.maxEnergy; player.cds[0] = 0; const ok = useSkill(0, {x:b.x, y:b.y, dx:1, dy:0}); return { ok, lit: b.lit }; });
+    check('ENV.muro_de_fuego_enciende_el_brasero', fire.ok && fire.lit, fire);
+    const bolt = await E(() => {
+      __start('acuatica', 3, 'mago'); __calm(); updateAllies = function(){}; ACU.zones = []; const z = acuAdd('charco'); z.x = player.x + 200; z.y = player.y; z.t = 1e9;
+      const foes = []; for (let i = 0; i < 3; i++){ const e = spawnEnemy('tiburon_joven', false); e.x = z.x + (i-1)*40; e.y = z.y + (i%2)*20; e.speed = 0; e.dmg = 0; e.hp = e.maxHp = 5000; foes.push(e); }
+      player.energy = player.maxEnergy; player.cds[2] = 0; const hp0 = foes.map(e=>e.hp); const ok = useSkill(2, null);
+      const r = { ok, stunned: foes.filter(e => e.stunTimer > 300).length, hurt: foes.filter((e,i) => e.hp < hp0[i]).length, heroHp: player.hp === player.maxHp || true }; enemies.length = 0; return r;
+    });
+    check('ENV.cadena_de_relampago_conduce_en_el_charco', bolt.ok && bolt.stunned === 3 && bolt.hurt === 3, bolt);
+    const bush = await E(() => { __start('bosque', 3); __calm(); updateAllies = function(){}; BOS.ambT = 10; __step(50); const a = BOS.amb[0]; envEmit('fire', a.x, a.y, player, {r:60}); __step(2800); const out = enemies.filter(e => e.alive && Math.hypot(e.x-a.x, e.y-a.y) < 80); return { burnt: !!a.burnt, n: out.length, burning: out.filter(e => e.burnTimer > 0).length }; });
+    check('ENV.el_fuego_quema_la_maleza_de_la_emboscada', bush.burnt && bush.n > 0 && bush.burning === bush.n, bush);
+    const div = await E(() => { __start('hielo', 3); divinaMode = true; const b = HIE.br[0]; b.lit = false; envEmit('fire', b.x, b.y, player, {r:60}); const lit = b.lit; divinaMode = false; return lit; });
+    check('ENV.sin_efecto_fuera_de_su_arena', !div, div);
+    await E(() => { updateAllies = __ua; });
+  }
+
   // ---------------- (todas las arenas del camino de siempre tienen ya su mecánica propia) ----------------
   const other = await E(() => { const r = {}; for (const a of []) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
   

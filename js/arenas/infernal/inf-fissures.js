@@ -323,6 +323,16 @@ Object.assign(ARENA_SFX, {
   infSeal:   {p:4, gap:400, play:(t,D)=>{ _tone(t,"sine",220,90,0.5,0.3,D); _noise(t,0.35,0.25,"bandpass",700,1,D); [392,523,659].forEach((f,i)=>_tone(t+0.12+i*0.06,"triangle",f,f,0.35,0.07,D,0.02)); return 0.7; }}
 });
 
+// Etiqueta ambiental "ice" (js/systems/env-tags.js): el hielo enfría una fisura y la deja más cerca de cerrarse.
+envOn("ice", "infernal", (x, y, src, o)=>{
+  for(const f of INF.fis){
+    if(f.done || f.warn > 0 || Math.hypot(f.x-x, f.y-y) > (o.r||60) + INF_CFG.radius[f.stage]) continue;
+    f.prog = Math.min(f.dur - 1, (f.prog||0) + f.dur*0.35);
+    vfxBurst(f.x, f.y, 12, "ice", 120, 500, 3, 1, -40, 0);
+    floatText(f.x, f.y-60, "¡La fisura se enfría!", null);
+  }
+});
+
 ARENA_EXT.infernal = {
   runStart: infRunStart,
   guestStart: infGuestStart,

@@ -266,6 +266,23 @@ Object.assign(ARENA_SFX, {
   acuZap:     {p:4, gap:300, play:(t,D)=>{ _noise(t,0.25,0.3,"highpass",2500,0,D); _tone(t,"square",880,110,0.2,0.1,D); return 0.3; }}
 });
 
+// Etiqueta ambiental "lightning" (js/systems/env-tags.js): un rayo sobre un enemigo parado en un charco
+// lo descarga contra los ENEMIGOS de ese charco (los héroes no sufren esta descarga). Enfriamiento por charco.
+envOn("lightning", "acuatica", (x, y, src)=>{
+  const z = acuInCharco(x, y); if(!z || (z.zapCd||0) > runElapsedMs) return;
+  z.zapCd = runElapsedMs + 3000;
+  const C = ACU_CFG.charco; let n = 0;
+  for(const e of enemies){
+    if(!e.alive || Math.hypot(e.x-z.x, (e.y-z.y)*1.25) > C.r) continue;
+    const boss = e.rank==="jefe";
+    damageEnemy(e, Math.max(1, e.maxHp*(boss ? C.bossPct : C.enemyPct)), {src:src||player, critChanceOverride:0, fromProc:true});
+    if(!boss) e.stunTimer = Math.max(e.stunTimer||0, C.stun*0.8);
+    n++;
+  }
+  vfxShock(z.x, z.y, 10, C.r, "255,232,106", 380, 3); playSfx("acuZap");
+  if(n) floatText(z.x, z.y-60, `¡Conduce! ×${n}`, "crit");
+});
+
 ARENA_EXT.acuatica = {
   runStart: acuRunStart,
   guestStart: acuGuestStart,

@@ -808,6 +808,7 @@ function castAbility(caster, sk, isUlt, idx){
       const electrifiedMs = 500 + chainTier*90;
       for(let i=0;i<(sk.jumps+JUMP_BONUS) && cur;i++){
         damageEnemy(cur, curDmg, {src:caster});
+        envEmit("lightning", cur.x, cur.y, caster, {r:30}); // etiqueta ambiental (js/systems/env-tags.js)
         pushChainBolt(px_, py_, cur.x, cur.y, boltThickness, 420);
         pushSpark("impacto", cur.x, cur.y, sparkSize, 340);
         cur.electrifiedTimer = electrifiedMs; cur.electrifiedSize = sparkSize;
@@ -1038,6 +1039,7 @@ function castAbility(caster, sk, isUlt, idx){
       const twTier = allocLevel(mastery)>=7 ? 4 : allocLevel(mastery)>=4 ? 3 : allocLevel(mastery)>=2 ? 2 : 1;
       fireWalls.push({x:tx, y:ty, innerR:(sk.innerR*AREA), outerR:(sk.outerR*AREA), timer:(sk.duration*DUR), maxTimer:(sk.duration*DUR), tick:0, tickInterval:sk.tick, dmg, src:caster, tier:twTier});
       particles.push({x:tx,y:ty, life:500, warnRing:true, maxR:(sk.outerR*AREA), color:"#ff6a3d"});
+      envEmit("fire", tx, ty, caster, {r:(sk.outerR*AREA)});
       // Talento "Corazón Ígneo": mientras el muro esté en pie, +daño general (buff temporal
       // de siempre, se revierte solo cuando expira -y se renueva si se relanza el muro-).
       const wallDmgBonus = tSkill.flags.wallEmpowersAll;
@@ -1061,6 +1063,7 @@ function castAbility(caster, sk, isUlt, idx){
         }
       }
       frostNovaVFX(caster, (sk.radius*AREA), allocLevel(mastery));
+      envEmit("ice", caster.x, caster.y, caster, {r:(sk.radius*AREA)});
       break;
     }
 
@@ -1074,6 +1077,7 @@ function castAbility(caster, sk, isUlt, idx){
         }
       }
       cataclysmVFX(caster, (sk.radius*AREA), 8); // la ulti siempre se ve al máximo nivel visual
+      envEmit("fire", caster.x, caster.y, caster, {r:(sk.radius*AREA)}); envEmit("ice", caster.x, caster.y, caster, {r:(sk.radius*AREA)});
       frostNovaVFX(caster, (sk.radius*AREA)*0.85, 8); // la ulti siempre se ve al máximo nivel visual
       const stormDur = (sk.duration*DUR);
       caster.stormTimer = stormDur; caster.stormMaxTimer = stormDur;

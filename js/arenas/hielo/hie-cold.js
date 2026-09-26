@@ -239,6 +239,9 @@ Object.assign(ARENA_SFX, {
   hieChill:  {p:2, gap:700, play:(t,D)=>{ [1320,1760,2093].forEach((f,i)=>_tone(t+i*0.05,"sine",f,f*0.9,0.3,0.05,D,0.01)); _noise(t,0.3,0.08,"highpass",5000,0,D); return 0.4; }}
 });
 
+// Etiqueta ambiental "fire" (js/systems/env-tags.js): cualquier fuego cerca enciende un brasero.
+envOn("fire", "hielo", (x, y, src, o)=>{ for(const b of HIE.br){ if(!b.lit && Math.hypot(b.x-x, b.y-y) < (o.r||40) + HIE_CFG.fireLightR) hieLight(b, "fire"); } });
+
 ARENA_EXT.hielo = {
   runStart: hieRunStart,
   guestStart: hieGuestStart,
