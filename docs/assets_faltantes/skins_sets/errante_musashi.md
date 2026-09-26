@@ -7,7 +7,7 @@
 - **Campeón:** Musashi (`musashi`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.
 - **Bonus completo (lo que la skin tiene que contar):** IAIJUTSU: tras 1,2 s sin atacar, tu próximo básico es un corte desenvainado: crítico asegurado con +150% de daño crítico que corta en línea a todos hasta 160.
-- **Estado:** FALTA (no existe ningún frame). `SET_SKINS` vacío.
+- **Estado:** INTEGRADA (ver arriba).
 
 ## Referencias que hay que adjuntar a ChatGPT (sí o sí)
 

@@ -20,7 +20,7 @@
 
 | ID | Prioridad | Qué | Dónde | Hoja completa a pedir | Referencia | Notas |
 |---|---|---|---|---|---|---|
-| SKIN-SET | P1 | Skins de set (8 de campeón restantes + universales) | Todas | ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt) | atlas canon de cada campeón | Ya integradas (BUGFIX 01): Manada/Sylva Flecha de Fuego, Errante/Musashi Samurái Legendario, Legión/Eren Titán Bestia, Sistema/Axiom Skin Z. |
+| SKIN-SET | P1 | Skins de set (3 de campeón restantes: Baluarte, Granadero, Réquiem + universales) | Todas | ver docs/assets_faltantes/skins_sets/ (una ficha por set con la hoja completa y su prompt) | atlas canon de cada campeón | Ya integradas (cuerpo + efectos de habilidad): Manada/Sylva Flecha de Fuego, Errante/Musashi Samurái Legendario, Legión/Eren Titán Bestia, Sistema/Axiom Skin Z, Convergencia/Mago Ángel Arcano, Custodio/Sanadora Ángel del Alba, Marea/Segador Leónidas, Nocturno/Asesino Jack el Destripador, Profecía/Profeta Ángel Caído. |
 | ITEM-ICON | P2 | Íconos finales de objetos (169) | UI | ver LA_HORDA_ITEM_ASSET_MANIFEST.md | — | Hoy se usan íconos procedurales provisorios. |
 | ARENA-CM | P2 | Ciudad Maldita (arena completa) | Arena en desarrollo | set de arena: piso, muros, props, enemigos, jefe | — |  |
 | ARENA-AB | P2 | Abismo (arena completa + Entidad del Abismo) | Arena en desarrollo | set de arena + jefe | — |  |

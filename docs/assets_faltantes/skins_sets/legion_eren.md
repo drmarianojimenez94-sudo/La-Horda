@@ -7,7 +7,7 @@
 - **Campeón:** Eren (`eren`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.
 - **Bonus completo (lo que la skin tiene que contar):** EL PORTADOR ETERNO: la forma titánica dura 30% más y cada baja transformado te cura 2% de la vida.
-- **Estado:** FALTA (no existe ningún frame). `SET_SKINS` vacío.
+- **Estado:** INTEGRADA (ver arriba).
 
 ## Referencias que hay que adjuntar a ChatGPT (sí o sí)
 

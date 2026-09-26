@@ -157,3 +157,44 @@ Tests ajustados a las reglas nuevas, sin sacar controles: `lib.js` (guardado vet
 - La etapa de prueba reinicia UNA vez los guardados viejos (niveles, desbloqueos, inventario). El anterior queda respaldado en
   `laHordaSave_v1_antesDeEtapaPrueba`.
 - Al terminar la etapa de prueba: `CHAMPION_PRICE_GOLD` vuelve a `CHAMPION_PRICE_GOLD_FINAL` y `SHOP_TEST_MODE` a false.
+
+---
+
+# SKINS 02 + AUDITORÍA DE SETS
+
+## Skins nuevas (set completo del dueño)
+
+| Set | Campeón | Skin | Hoja |
+|---|---|---|---|
+| Convergencia | Mago | Ángel Arcano (Arcángel Luminar) | `art-source/skins_sets/mago_angel_arcano.png` |
+| La Última Profecía | La Profeta | Ángel Caído (Doncella Oscura) | `art-source/skins_sets/profeta_angel_caido.png` |
+| Marea Roja | Segador ("Berserk") | Leónidas, Rey de Esparta (la hoja dice "Guerrero Inmortal") | `art-source/skins_sets/segador_leonidas.png` |
+| Sombra Nocturna | Asesino | Jack el Destripador (Caballero Carmesí) | `art-source/skins_sets/guerrero_jack_destripador.png` |
+| Bendición del Custodio | Sanadora (Soporte) | Ángel del Alba (Forma Celestial) | `art-source/skins_sets/soporte_angel_del_alba.png` |
+
+- Cuerpos: `tools/art/skins_sets/extract.py` (misma grilla de 8 direcciones). Mago y Sanadora no traen fila de ataque
+  básico: atacan con la pose de casteo. Mago, Asesino y Sanadora usan atlas viejos (no CHAMP_PACK): su skin se dibuja por
+  `drawSetSkin` (con el alfa del sigilo) y la caída usa los cuadros de muerte de la skin.
+- **Habilidades con skin (las 9 skins):** `js/systems/skin-fx.js` + `tools/art/skins_sets/fx.py` (87 cuadros del panel de
+  efectos de cada hoja, carga diferida). Misma mecánica, otro aspecto: efectos pintados de la hoja en el lugar que
+  corresponde (tajos, sellos, zonas, trampas, cadenas, proyectiles) + el color de la skin sobre lo que ya dibujaba el kit.
+  No toca números. El color viaja a los invitados en los eventos de red.
+
+## Auditoría de sets (`LA_HORDA_SETS_AUDIT.md`, `tools/items/t_sets.js` 55/55)
+
+- Las 12 de campeón y las 11 universales disparan TODOS sus umbrales.
+- Arreglado: Lucifer 4 sumaba un 35% de descarga eléctrica escondida (no figuraba en el texto); Lucifer 2 decía "daño de
+  fuego" y en realidad es de todas las habilidades (texto corregido).
+- Arreglado: en red, la skin de cada héroe la decide el anfitrión (`skinSet` sincronizado); antes cada invitado la
+  calculaba con su propio guardado (la limitación de la tanda anterior queda resuelta para las skins).
+- Reglas de sets propuestas (sección 4 del documento) + `LA_HORDA_ROADMAP_ALFA.md`.
+
+## QA
+
+| Prueba | Resultado |
+|---|---|
+| Skins en partida (5 nuevas: idle/caminar/espalda/ataque) | ✅ |
+| Efectos de habilidad por skin (9 skins × básico + 3 habilidades + ulti) | ✅ 0 errores |
+| `tools/items/t_*.js` (15 suites, incluida `t_sets.js` nueva) | ✅ todas OK (`t_sets` estabilizada: los bots empujaban al enemigo fuera del glitch) |
+| `tools/regression/t_func.js` | ✅ 92/92 |
+| Humo de las 7 arenas (niveles 3 y 10) | ✅ sin errores |

@@ -1,10 +1,13 @@
 # Skin del set «Marea Roja» — Segador Olvidado
 
+> ✅ **INTEGRADA (SKINS 02)** — Segador, Leónidas (Rey de Esparta). La hoja se titula "Guerrero Inmortal – Leónidas"; se asignó al Segador ("Berserk") como se pidió. Hoja en `art-source/skins_sets/segador_leonidas.png`, atlas en `assets/sprites/champions/<campeón>/skins/<set>/`, efectos de habilidad en `assets/vfx/skins/<set>/` (tools/art/skins_sets/fx.py). Se ve con el set COMPLETO equipado. Pendiente solo si llega una hoja mejor: 4 cuadros por estado y vista (hoy 1-2).
+
+
 - **Set:** `marea` · Berserker · riesgo · furia · aura rgb(220,40,40)
 - **Campeón:** Segador Olvidado (`segador`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.
 - **Bonus completo (lo que la skin tiene que contar):** MAREA ROJA: cada baja con menos de 50% de vida suma Sangre (hasta 10): +3% daño y +1,5% robo de vida por carga. Con 10, tu próximo Tajo es un TAJO DE LA MUERTE: doble alcance y remata comunes y élites bajo 30%.
-- **Estado:** FALTA (no existe ningún frame). `SET_SKINS` vacío.
+- **Estado:** INTEGRADA (ver arriba).
 
 ## Referencias que hay que adjuntar a ChatGPT (sí o sí)
 

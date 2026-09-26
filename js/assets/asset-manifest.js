@@ -13,6 +13,16 @@ const ASSET_MANIFEST = [
   "assets/sprites/champions/eren/skins/legion/titan.png",
   "assets/sprites/champions/axiom/skins/sistema/atlas.png",
   "assets/sprites/champions/axiom/skins/sistema/preview.png",
+  "assets/sprites/champions/profeta/skins/profecia/atlas.png",
+  "assets/sprites/champions/profeta/skins/profecia/preview.png",
+  "assets/sprites/champions/mago/skins/convergencia/atlas.png",
+  "assets/sprites/champions/mago/skins/convergencia/preview.png",
+  "assets/sprites/champions/segador/skins/marea/atlas.png",
+  "assets/sprites/champions/segador/skins/marea/preview.png",
+  "assets/sprites/champions/guerrero/skins/nocturno/atlas.png",
+  "assets/sprites/champions/guerrero/skins/nocturno/preview.png",
+  "assets/sprites/champions/soporte/skins/custodio/atlas.png",
+  "assets/sprites/champions/soporte/skins/custodio/preview.png",
   // <<< skins de set
   // >>> guardián ancestral (tools/art/guardian_elfico/build.py)
   "assets/sprites/bosses/bosque/guardian_ancestral/atlas.png",

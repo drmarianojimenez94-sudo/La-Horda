@@ -226,6 +226,7 @@ function setsOnTelegraphEnd(s){
   }
 }
 function updateSets(h, dt){
+  h.skinSet = activeSetSkinId(h);   // lo leen los invitados (ver activeSetSkin)
   if(h._berserkT > 0){ h._berserkT -= dt; if(Math.random() < 0.3) particles.push({x:h.x+(Math.random()-0.5)*20, y:h.y-10, vx:0, vy:-30, life:300, color:"#e63228"}); }
   if(h._berserkCd > 0) h._berserkCd -= dt;
   if(h._arcaneT > 0) h._arcaneT -= dt;
@@ -316,11 +317,20 @@ function setSkinImage(id){
   return im.complete && im.naturalWidth ? im : null;
 }
 // Skin activa del héroe: su set principal COMPLETO y con arte (y del campeón correcto).
+// En red, cada invitado tiene SU guardado: la skin de los demás la decide el anfitrión (que conoce
+// el equipo real de cada jugador) y viaja en el héroe como `skinSet` (se fija en updateSets).
 function activeSetSkin(h){
   if(!h || !h.classKey) return null;
+  if(typeof netIsGuest === "function" && netIsGuest() && h.skinSet !== undefined){
+    const d = h.skinSet ? SET_SKINS[h.skinSet] : null;
+    return d && (!d.champ || d.champ === h.classKey) ? d : null;
+  }
+  return SET_SKINS[activeSetSkinId(h)] || null;
+}
+function activeSetSkinId(h){
   const id = heroMainSet(h); if(!id || setN(h, id) < setFullCount(id)) return null;
   const d = SET_SKINS[id]; if(!d || (d.champ && d.champ !== h.classKey)) return null;
-  return d;
+  return id;
 }
 // Clave de atlas a usar para `key` (p.ej. "eren", "eren_titan"): la de la skin si está activa y cargada.
 function setSkinPackKey(h, key){
@@ -329,7 +339,13 @@ function setSkinPackKey(h, key){
   return P && P.ready ? k : key;
 }
 function drawSetSkin(h, drawScale, alpha){
-  const d = activeSetSkin(h); if(!d || d.packs) return false;   // las skins con atlas las dibuja drawChampPack
+  const d = activeSetSkin(h); if(!d) return false;
+  if(d.packs){
+    // campeones con atlas propio (CHAMP_PACK): los dibuja su camino de siempre con el atlas remapeado.
+    // Los de atlas viejo (Mago, Asesino, Sanadora, Tanque) no pasan por drawChampPack: se dibujan acá.
+    if(CHAMP_PACK[h.classKey] || !d.packs[h.classKey]) return false;
+    return drawChampPack(h.classKey, h, drawScale, alpha);
+  }
   const im = setSkinImage(heroMainSet(h)); if(!im) return false;
   const H = h.radius*2.7*(drawScale/(h.scale||2.0)), W = H*im.width/im.height;
   drawAnimFrameSized(im, {frames:[{x:0, y:0, w:im.width, h:im.height}]}, 0, h.x, h.y, W, H, 0.5, 0.94, (h.fx||0) < -0.12, alpha);

@@ -7,7 +7,7 @@
 - **Campeón:** Axiom (`axiom`) — el set solo lo puede usar este campeón
 - **Se activa:** con el set COMPLETO (4 piezas). Con menos piezas solo hay aura parcial.
 - **Bonus completo (lo que la skin tiene que contar):** RECURSIÓN: cada enemigo infectado por Sobrescribir que muere contagia el código a 2 enemigos cercanos y reduce 1 s el enfriamiento de Error 404.
-- **Estado:** FALTA (no existe ningún frame). `SET_SKINS` vacío.
+- **Estado:** INTEGRADA (ver arriba).
 
 ## Referencias que hay que adjuntar a ChatGPT (sí o sí)
 

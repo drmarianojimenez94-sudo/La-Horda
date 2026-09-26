@@ -481,7 +481,8 @@ function drawRealFallen(h, alpha){
 // Campeón caído (propio o, en la Arena Divina, rival): reacción al golpe, caída de costado y
 // queda tendido semitransparente, o la pose real de muerte cuando existe arte para eso.
 function drawFallenHero(h){
-  if(CHAMP_PACK[h.classKey] && drawChampPackDeath(h)) return; // Segador/Axiom: muerte con sus frames reales
+  const skinPack = typeof setSkinPackKey==="function" && setSkinPackKey(h, h.classKey) !== h.classKey;
+  if((CHAMP_PACK[h.classKey] || skinPack) && drawChampPackDeath(h)) return; // muerte con sus frames reales (o los de su skin de set)
   if(h.classKey==="mago" && drawMagoFallen(h, 0.5)) return; // el propio arte ya lo muestra boca abajo
   // DEATH del campeón con su propio sprite real: reacción al golpe, caída de costado y
   // queda tendido semitransparente (antes: siempre el sprite procedural, fuera cual fuera el arte).
