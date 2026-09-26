@@ -198,6 +198,12 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
 - `js/ui/loot-ceremony.js` — cofre con ceremonia por rareza; `js/ui/inventory-ui.js` — Mi Inventario,
   recetario y colección.
 - `js/net/net-chat.js` — chat de la Sala (el anti-spam real vive en `server/relay.js`).
+- `js/arenas/infernal/inf-hechicero.js` — el Hechicero Supremo: subjefe del nivel 9 de la Infernal (huye al caer)
+  y jefe final en 3 formas (Hechicero → Golem de Cuerpos → Demonio Mayor). Arte recortado con `tools/art/hechicero/`.
+- `js/ui/run-intro.js` — pantalla previa a la partida: el Hechicero angelical (alas de luz en canvas) y la ficha
+  clara de la arena (`ARENA_BRIEF`: qué es, qué te mata, qué te ayuda, objetivo).
+- `js/rendering/fx-contrast.js` — pase de contraste de efectos: sombra de contraste por arena, modo brillo del
+  primitivo de sprites (`FX_GLOW`), destello de lanzamiento y estrella de impacto.
 - `js/ai/bot-brain.js` — bots por rol, esquivar avisos, revivir entre ellos, marcador de caído.
 - `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
 - `js/systems/loot.js` — botín del cofre del jefe (`rollLoot` pura, `grantEndOfRunLoot`) y reforja
@@ -308,6 +314,6 @@ clásico de abajo es el que siguen las 5 arenas originales.
 - Local: `python3 -m http.server 8000` en la carpeta del repo → `http://localhost:8000`.
 - Batería de regresión automática: `tools/regression/` (ver su README).
 - Sistemas de esta etapa: `tools/items/` (`t_items`, `t_nigromante`, `t_reactions`, `t_roles`, `t_pacing`,
-  `t_evolution`, `t_collision`, `t_breakables`, `t_perf_exploits`, `t_hpbonus`), `server/test-relay.js` (protocolo y chat).
+  `t_evolution`, `t_collision`, `t_breakables`, `t_perf_exploits`, `t_hpbonus`, `t_hechicero`), `server/test-relay.js` (protocolo y chat).
 - Balance con el código real: `tools/balance/lootsim2.js` (botín por carrera), `tools/playtest/campaign.js`
   (campañas y matrices con piloto automático).

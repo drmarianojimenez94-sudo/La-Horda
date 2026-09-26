@@ -37,6 +37,10 @@ light, no text, no watermark, no drop shadow baked in (the game draws its own gr
 | UI-01 | P2 | HUD | Botón de curación de emergencia (lista / urgente / gastada) | PROCEDURAL (✚ con CSS) | `#btn-emerg` |
 | UI-02 | P2 | Ritmo | Flecha de oleada en el borde | PROCEDURAL | `pacingDrawWarn` |
 | IT-01 | P1 | Objetos | Íconos de Legendarios con nombre (24), Míticos (8) y Únicos (3) | MISSING (usan el ícono genérico del tipo) | inventario, cofre, recetario |
+| HS-01 | **P0** | Historia | Hechicero Supremo "angelical" con alas de luz (retrato grande, 4 frames de respiración) | PARTIAL (sprite real + alas procedurales en canvas) | `js/ui/run-intro.js` |
+| HS-02 | P1 | Jefe final | Golem de Cuerpos: caminar (6), aplastar (5), muerte que se abre (6) | PARTIAL (3 poses estáticas de la hoja) | `js/arenas/infernal/inf-hechicero.js` |
+| HS-03 | P1 | Jefe final | Transformación Hechicero → Golem (8 frames) y Golem → Demonio (6 frames) | PARTIAL (3 fases de la hoja + partículas) | `hechEnemyTick`, `hechGolemBroken` |
+| HS-04 | P2 | Tutorial | Retrato del Hechicero con 3 expresiones (neutral, advertencia, sonrisa torcida) | PARTIAL (un solo retrato) | `#tut-panel .tut-face` |
 
 ---
 
@@ -195,4 +199,34 @@ flesh, orange glow}. Grotesque but not gory, dark fantasy, bulky readable silhou
 ```
 [PREFIJO] An RPG inventory item icon, 24x24 pixels, {a legendary two-handed scythe named "Guadaña de la Cosecha
 Roja": blood-red blade, bone handle, faint red aura}, centered, fills the square, readable at 24px.
+```
+
+### HS-01 — Hechicero Supremo angelical (pantalla previa)
+Hoy: sprite real de su hoja, aclarado, con alas de luz dibujadas en código (cintas que se afinan).
+```
+[prefijo] + tall hooded sorcerer in dark crimson and gold robes, face hidden by a golden veil, ornate golden
+sun-halo behind the head, huge wings made of flowing golden-white light ribbons (like an archangel of light,
+wings made of light tendrils, not feathers), serene and benevolent pose holding a golden staff, 4-frame idle
+breathing loop with the light ribbons swaying, 256x256 per frame, front view
+```
+
+### HS-02 — Golem de Cuerpos (animaciones)
+Hoy: 3 poses estáticas de la hoja (se desliza al caminar).
+```
+[prefijo] + colossal golem made of fused corpses and pale limbs around a hooded sorcerer in the center, golden
+halo above, crimson robes dripping, 3/4 top-down view; sheets: walk cycle 6 frames (heavy, limbs writhing),
+ground slam 5 frames (arms up then down), death 6 frames (the mass of bodies tears open and collapses), 320x280 per frame
+```
+
+### HS-03 — Transformaciones del final
+```
+[prefijo] + 8-frame transformation: a hooded golden sorcerer is engulfed by rising corpses and pale arms that
+fuse into a colossal flesh golem; then a 6-frame sequence where the golem splits open from the chest and a
+horned fire demon emerges from the remains, embers and gore, 320x280 per frame
+```
+
+### HS-04 — Retratos del tutorial
+```
+[prefijo] + portrait bust of the hooded golden sorcerer, face hidden by a veil, 3 variants: neutral (calm glow),
+warning (halo flares red-gold), sinister smile (a crooked smile visible under the veil), 96x96
 ```
