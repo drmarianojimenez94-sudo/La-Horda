@@ -4,8 +4,10 @@
    ARENA GÉLIDA — "MOVERSE ES SOBREVIVIR"
 
    - FRÍO (h._cold 0-100): quedarse quieto enfría (tras un respiro de 1 s); moverse calienta.
-     Al llenarse suma una carga de ESCARCHA (el sistema de siempre: ralentiza y a las 4 cargas
-     congela). La regla Frío Creciente lo acelera. Nunca daña de golpe: castiga plantarse.
+     Al llenarse suma una carga de ESCARCHA (el sistema de siempre: ralentiza; a las 4 cargas
+     congela), pero el frío SOLO llega hasta 2 cargas: congelar lo terminan los enemigos. La regla
+     Frío Creciente lo acelera un poco. Nunca daña: castiga plantarse (calibrado con la campaña
+     simulada, ver LA_HORDA_PLAYTEST_REPORT.md).
    - BRASEROS (4, fijos): encendidos calientan en un radio visible (el frío baja rápido y la
      escarcha se derrite antes). Se consumen y se APAGAN; se reencienden con la acción
      contextual ("Encender") o con FUEGO: un Muro de Fuego o un proyectil que quema cerca lo
@@ -18,15 +20,16 @@
 const HIE_CFG = {
   grace: 1000,          // ms quieto antes de empezar a enfriar
   stillSpeed: 30,       // u/s: por debajo cuenta como quieto
-  coldRate: 13,         // por segundo quieto (x regla)
+  coldRate: 10,         // por segundo quieto (x regla)
   warmRate: 22,         // por segundo moviéndose
   fireWarm: 65,         // por segundo al lado de un brasero encendido
   firstLevelMult: 0.6,  // nivel 1: se aprende sin castigo fuerte
-  resetTo: 55,          // al sumar una carga de escarcha el frío vuelve acá
+  resetTo: 45,          // al sumar una carga de escarcha el frío vuelve acá
+  maxColdFrost: 2,      // el frío solo nunca congela: suma escarcha hasta 2 cargas (el resto lo ponen los enemigos)
   braziers: [0.35, 1.95, 3.5, 5.05], // ángulos (anillo interior)
   ring: 330,
   warmR: 150,
-  fuel: [38000, 52000], // ms encendido
+  fuel: [48000, 64000], // ms encendido
   lightMs: 1400,        // mantener para encender
   fireLightR: 60        // fuego a esta distancia lo enciende
 };
@@ -56,7 +59,7 @@ function hieLight(b, how){
 }
 function hieUpdate(dt){
   const lvMult = runLevel <= 1 ? HIE_CFG.firstLevelMult : 1;
-  const rule = 1 + 0.05*arenaRuleStacks();
+  const rule = 1 + 0.03*arenaRuleStacks();
   const sec = dt/1000;
   // braseros: se consumen, se apagan y el fuego los prende
   for(const b of HIE.br){
@@ -89,7 +92,8 @@ function hieUpdate(dt){
     else { h._stillT = 0; h._cold = Math.max(0, h._cold - HIE_CFG.warmRate*sec); }
     if(h._cold >= 100){
       h._cold = HIE_CFG.resetTo;
-      addFrost(h, 1);
+      if((h.frostStacks||0) < HIE_CFG.maxColdFrost) addFrost(h, 1);
+      else { h.frostTimer = Math.max(h.frostTimer||0, 3200); h.slowAmt = Math.max(h.slowAmt||0, 0.15*HIE_CFG.maxColdFrost); h.slowTimer = Math.max(h.slowTimer||0, 1800); } // se mantiene helado, sin congelarse
       vfxBurst(h.x, h.y-18, 6, "ice", 80, 380, 2.5, 2, -20, 0);
       if(h===player){ floatText(h.x, h.y-46, "¡Frío!", "crit"); playSfx("hieChill"); }
     }

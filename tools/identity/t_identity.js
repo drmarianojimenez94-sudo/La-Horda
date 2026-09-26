@@ -158,6 +158,8 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const still = await E(() => { const c0 = player._cold; __step(900); const c1 = player._cold; __step(6000); const c2 = player._cold; let fr = 0; for (let i = 0; i < 20; i++){ __step(500); fr = Math.max(fr, player.frostStacks||0); } return { c0, c1: +c1.toFixed(1), c2: +c2.toFixed(1), fr, near: !!hieNearLit(player.x, player.y) }; });
     check('HIE.quieto_se_enfria_tras_un_respiro', still.c1 < 2 && still.c2 > 50 && !still.near, still);
     check('HIE.el_frio_suma_escarcha', still.fr >= 1, still);
+    const nofreeze = await E(() => { player.frostStacks = 0; player._cold = 0; player.stunTimer = 0; let maxSt = 0, stunned = false; for (let i = 0; i < 80; i++){ __step(500); maxSt = Math.max(maxSt, player.frostStacks||0); if (player.stunTimer > 0) stunned = true; } return { maxSt, stunned }; });
+    check('HIE.el_frio_solo_nunca_congela', nofreeze.maxSt <= 2 && !nofreeze.stunned, nofreeze);
     const mv = await E(() => { player._cold = 80; player.frostStacks = 0; for (let i = 0; i < 180; i++){ player.x += (i%120 < 60 ? 1.6 : -1.6); update(16); player.hp = player.maxHp; } return +player._cold.toFixed(1); });
     check('HIE.moverse_calienta', mv < 40, mv);
     const warm = await E(() => { const b = HIE.br[0]; b.lit = true; b.fuel = 30000; player.x = b.x + 40; player.y = b.y + 10; player._cold = 90; player.frostStacks = 2; player.frostTimer = 3000; __step(1500); return { cold: +player._cold.toFixed(1), fst: player.frostStacks }; });
