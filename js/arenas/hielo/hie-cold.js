@@ -136,25 +136,19 @@ CTX_KINDS.hie_brazier = {
     return (!litNear && (cold > 35 || (h._cold||0) > 55)) ? 2 : 0;
   }
 };
-// Bots con frío: se mueven (o van al brasero encendido más cercano).
+// Bots con frío: si hay un brasero encendido MUY cerca y tienen mucho frío, se calientan un momento.
+// Si no, siguen peleando (el frío solo los frena hasta un 30 %: alejarse de la pelea costaba más,
+// medido con la campaña simulada: los bots cuerpo a cuerpo dejaban de tanquear).
 function hieBotNudge(h, target){
   const c = h._cold||0;
   if(h._hieWarm && c < 12) h._hieWarm = false;
-  if(c < 50 && !h._hieWarm) return null;
-  let best = null, bd = 420; // solo un brasero cercano: no abandona la pelea por calentarse
+  if(c < 75 && !h._hieWarm) return null;
+  let best = null, bd = 260;
   for(const b of HIE.br){ if(!b.lit) continue; const d = Math.hypot(b.x-h.x, b.y-h.y); if(d < bd){ bd = d; best = b; } }
-  if(best && (c > 75 || h._hieWarm)){
-    h._hieWarm = true;
-    if(bd < 60) return {mx:0, my:0, target};
-    return {mx:(best.x-h.x)/bd, my:(best.y-h.y)/bd, target};
-  }
-  // sin brasero encendido cerca: si puede ir a encender uno, que lo haga la acción contextual
-  if(h._ctxGoal || HIE.br.some(x=>!x.lit && CTX_KINDS.hie_brazier.botWorth(h, x) >= 1)) return null;
-  // si no, se mueve en círculo alrededor de su objetivo (o del lugar)
-  const ox = target ? target.x : h.x+1, oy = target ? target.y : h.y;
-  const dx = h.x-ox, dy = h.y-oy, l = Math.hypot(dx, dy)||1;
-  const side = (h._hieSide || (h._hieSide = Math.random()<0.5 ? 1 : -1));
-  return {mx:-dy/l*side*0.9 + dx/l*0.1, my:dx/l*side*0.9 + dy/l*0.1, target};
+  if(!best){ h._hieWarm = false; return null; }
+  h._hieWarm = true;
+  if(bd < 60) return {mx:0, my:0, target};
+  return {mx:(best.x-h.x)/bd, my:(best.y-h.y)/bd, target};
 }
 // ---- red ----
 function hieNetState(){

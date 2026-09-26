@@ -179,8 +179,14 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('HIE.nivel1_mas_suave', lv1 < lv3*0.75 && lv1 > 0, { lv1, lv3 });
     // bots: con frío se mueven; encienden braseros cuando hace falta
     await E(() => { updateAllies = __ua; });
-    const bn = await E(() => { const h = allies[0]; h._cold = 70; const m = botMove(h, 16); return { mx: +m.mx.toFixed(2), my: +m.my.toFixed(2) }; });
-    check('HIE.bot_con_frio_se_mueve', Math.hypot(bn.mx, bn.my) > 0.5, bn);
+    const bn = await E(() => {
+      const h = allies[0]; const b = HIE.br[0]; b.lit = true; b.fuel = 30000; h.x = b.x + 200; h.y = b.y; h._cold = 85; h._hieWarm = false;
+      const n1 = hieBotNudge(h, null); const toward = n1 ? ((b.x-h.x)*n1.mx + (b.y-h.y)*n1.my) > 0 : false;
+      h._cold = 60; h._hieWarm = false; const n2 = hieBotNudge(h, null);
+      h.x = b.x + 900; h._cold = 90; h._hieWarm = false; const n3 = hieBotNudge(h, null);
+      return { toward, midCold: !!n2, farBrazier: !!n3 };
+    });
+    check('HIE.bot_con_mucho_frio_va_al_brasero_cercano_y_si_no_sigue_peleando', bn.toward && !bn.midCold && !bn.farBrazier, bn);
     const bl = await E(() => {
       __calm(); for (const b of HIE.br){ b.lit = false; b.fuel = 0; } player.x = HIE.br[0].x - 250; player.y = HIE.br[0].y; for (const h of allies){ h.x = player.x + (Math.random()-0.5)*80; h.y = player.y + 60; h._cold = 50; }
       let t = 0; while (!HIE.br.some(b=>b.lit) && t < 30000){ for (const h of allies) h._cold = Math.max(h._cold||0, 60); __step(250); t += 250; enemies.length = 0; } /* (equipo con frío sostenido: quietos en el hielo) */
