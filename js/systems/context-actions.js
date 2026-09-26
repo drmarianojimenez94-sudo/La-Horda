@@ -117,9 +117,31 @@ function ctxBotObjective(h, dt, target){
   h._ctxGoal = t.id;
   const d = Math.hypot(t.x-h.x, t.y-h.y);
   // se acerca hasta bien adentro; si ya lo está usando, un empujón no lo corta (hasta el borde)
-  if(d > (h._ctxHold===t.id ? t.r-4 : t.r*0.6)){ h._ctxHold = null; return {mx:(t.x-h.x)/d, my:(t.y-h.y)/d, target}; }
+  if(d > (h._ctxHold===t.id ? t.r-4 : t.r*0.6)){
+    h._ctxHold = null;
+    const nd = ctxNavDir(h, t); // con muros en el medio (Laberinto) sigue el camino de la grilla
+    if(nd) return {mx:nd.x, my:nd.y, target, navd:true};
+    return {mx:(t.x-h.x)/d, my:(t.y-h.y)/d, target};
+  }
   if(ctxCanUse(h, t)) h._ctxHold = t.id;
   return {mx:0, my:0, target, usingCtx:true};
+}
+
+// Camino hacia un objetivo cuando hay obstáculos: campo de distancias de la grilla de navegación
+// (js/ai/navigation.js) sembrado en el objetivo. Los objetivos no se mueven: se calcula una vez.
+const _ctxFields = new Map();
+function ctxNavDir(h, t){
+  const N = AID_NAV;
+  if(!N.on || !N.blocked || aidLineClear(h.x, h.y, t.x, t.y)) return null;
+  const key = t.x + "," + t.y + "," + N.W + "x" + N.H;
+  let f = _ctxFields.get(t.id);
+  if(!f || f.key!==key){
+    const d = new Uint16Array(N.W*N.H);
+    aidNavBfs(d, seed=>seed({x:t.x, y:t.y, alive:true}));
+    f = {d, key}; _ctxFields.set(t.id, f);
+    if(_ctxFields.size > 12) _ctxFields.delete(_ctxFields.keys().next().value);
+  }
+  return aidNavDir(h, f.d);
 }
 
 /* ---- Botón (el de Revivir) ---- */

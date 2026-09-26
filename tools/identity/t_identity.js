@@ -321,9 +321,39 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('ACU.partida_real_niveles_2_a_5', run.lv >= 5 && run.st !== 'menu', run);
   }
 
-  // ---------------- otras arenas: sin objetivos, sin cambios ----------------
-  const other = await E(() => { const r = {}; for (const a of ['laberinto']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
-  check('OTRAS.sin_acciones_contextuales_propias_todavia', Object.values(other).every(o => !o.ctx || o.ctx.length === 0), other);
+  if (want('lab')) {
+    // ---------------- Laberinto: sellos en orden ----------------
+    await E(() => { __start('laberinto', 1); __calm(); window.__ua = window.__ua || updateAllies; updateAllies = function(){}; });
+    const l1 = await E(() => { __step(40000); return LAB.seals.length; });
+    check('LAB.nivel1_sin_sellos', l1 === 0, l1);
+    const set = await E(() => { __start('laberinto', 3); __calm(); updateAllies = function(){}; LAB.spawnT = 10; __step(100); const s = LAB.seals; let apart = Infinity; for (let i = 0; i < s.length; i++) for (let j = i+1; j < s.length; j++) apart = Math.min(apart, Math.hypot(s[i].x-s[j].x, s[i].y-s[j].y)); return { n: s.length, nums: s.map(x=>x.n).join(''), apart: Math.round(apart), free: s.every(x => labFree(x.x, x.y, 30)) }; });
+    check('LAB.aparecen_3_sellos_separados_y_libres', set.n === 3 && set.nums === '123' && set.apart >= 380 && set.free, set);
+    const hold = async (n) => E(async (n) => { const s = LAB.seals.find(x => x.n === n); player.x = s.x; player.y = s.y + 8; updateReviveBtn(); const b = document.getElementById('btn-revive'); const lbl = b.querySelector('.lbl').textContent; b.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true })); for (let i = 0; i < 80; i++) update(16); b.dispatchEvent(new PointerEvent('pointerup', { bubbles:true })); return { lbl, lit: LAB.seals.filter(x=>x.lit).map(x=>x.n).join(''), next: LAB.next, strikes: bossStrikes.length, left: LAB.seals.length }; }, n);
+    const w1 = await hold(1);
+    check('LAB.el_primero_se_enciende', w1.lbl === 'Sello' && w1.lit === '1' && w1.next === 2, w1);
+    await shot('lab_sellos');
+    const wrong = await hold(3);
+    check('LAB.orden_equivocado_castiga_y_reinicia', wrong.lit === '' && wrong.next === 1 && wrong.strikes >= 1, wrong);
+    await E(() => { bossStrikes.length = 0; for (const h of heroes) h.hp = h.maxHp; });
+    await hold(1); await hold(2);
+    const fin = await E(async () => { const foes = []; for (let i = 0; i < 3; i++){ const e = spawnEnemy('escorpion_gigante', false); e.x = player.x + 200; e.y = player.y; e.speed = 0; e.dmg = 0; foes.push(e); } for (const h of heroes) h.hp = h.maxHp*0.5; window.__drops = 0; const dp = window.__dp0 || (window.__dp0 = dropPotion); dropPotion = function(){ __drops++; return dp.apply(this, arguments); }; return true; });
+    const w3 = await hold(3);
+    const sol = await E(() => ({ stunned: enemies.filter(e => e.alive && e.stunTimer > 800 && e.slowTimer > 3000).length, healed: heroes.every(h => h.hp > h.maxHp*0.6), potions: __drops }));
+    check('LAB.los_tres_en_orden_resuelven', w3.left === 0 && sol.stunned === 3 && sol.healed && sol.potions >= 1, { w3, sol });
+    const win = await E(() => { LAB.spawnT = 10; __step(100); const s = LAB.seals.find(x=>x.n===1); s.lit = true; LAB.next = 2; LAB.winT = 40000; __step(41000); return { lit: LAB.seals.filter(x=>x.lit).length, next: LAB.next, n: LAB.seals.length }; });
+    check('LAB.la_ventana_vence_y_vuelve_a_cero', win.lit === 0 && win.next === 1 && win.n === 3, win);
+    const ch = await E(() => { LAB.seals = []; activeChampion = {alive:true}; LAB.spawnT = 10; __step(2000); const n = LAB.seals.length; activeChampion = null; return n; });
+    check('LAB.sin_sellos_con_subjefe', ch === 0, ch);
+    await E(() => { updateAllies = __ua; });
+    const bot = await E(() => { __start('laberinto', 3); __calm(); LAB.spawnT = 10; __step(100); player.x = LAB.seals[0].x - 100; player.y = LAB.seals[0].y; let t = 0; const order = []; while (LAB.seals.length && t < 90000){ __step(250); t += 250; enemies.length = 0; for (const s of LAB.seals) if (s.lit && !order.includes(s.n)) order.push(s.n); } return { solved: LAB.solved > 0, order: order.join(''), t: t/1000, wrong: LAB.wrongs }; });
+    check('LAB.los_bots_resuelven_en_orden', bot.solved && bot.wrong === 0, bot);
+    const run = await E(() => { __start('laberinto', 2); let t = 0, sets = 0, last = 0; while (state === 'playing' && runLevel <= 4 && t < 300000){ __step(500); t += 500; if (LAB.set !== last){ last = LAB.set; sets++; } } return { lv: runLevel, t: t/1000, sets, solved: LAB.solved, wrongs: LAB.wrongs, st: state }; });
+    check('LAB.partida_real_niveles_2_a_4', run.lv >= 4 && run.sets >= 1 && run.st !== 'menu', run);
+  }
+
+  // ---------------- (todas las arenas del camino de siempre tienen ya su mecánica propia) ----------------
+  const other = await E(() => { const r = {}; for (const a of []) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
+  
 
   check('SIN_ERRORES', errors.length === 0, errors.slice(0, 5));
   console.log(fails ? `FALLAS: ${fails}` : 'OK todas');
