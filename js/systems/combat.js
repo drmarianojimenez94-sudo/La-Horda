@@ -40,11 +40,15 @@ function damageEnemy(e, amount, opts){
   const csc = champSetCritBonus(src, e, opts); if(csc){ critChance += csc.chance; critMult += csc.mult; }
   const crit = opts.forceCrit || Math.random() < critChance;
   if(crit) dmg *= critMult;
+  const _hpBefore = Math.max(0, e.hp);
   e.hp -= dmg;
   e.hitFlash = 90;
+  // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
+  // "farmear" daño pegándole fuerte a enemigos casi muertos).
+  const usefulDmg = Math.min(dmg, _hpBefore);
   if(src && src.stats){
-    src.stats.dmgDealt += dmg;
-    if(e.rank==="jefe" || e.rank==="subjefe") src.stats.dmgToBoss += dmg;
+    src.stats.dmgDealt += usefulDmg;
+    if(e.rank==="jefe" || e.rank==="subjefe") src.stats.dmgToBoss += usefulDmg;
     if(!opts.fromBasic) src.stats.abilityHits = (src.stats.abilityHits||0)+1;
   }
   e.lastHitBy = src;
@@ -59,7 +63,7 @@ function damageEnemy(e, amount, opts){
   if(src===player && !opts.fromProc) impactFeedback(e, dmg, crit, opts);
   if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); }
   if(src && src.stats){
-    if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + dmg;
+    if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + usefulDmg;
     if(opts.slow || opts.stun || opts.freeze || opts.knockback) src.stats.ccApplied = (src.stats.ccApplied||0) + 1;
   }
   // Antes cargaba con el 10% del daño ya escalado por maestría/nivel/buffs, así que al final
@@ -224,6 +228,7 @@ function killEnemy(e){
   }
 }
 
+let _avoidableHit = false; // lo prende bossHitHero: el golpe venía con aviso en el suelo
 function damageHero(h, amount, src){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
@@ -236,7 +241,10 @@ function damageHero(h, amount, src){
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
     amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h);
   }
-  if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
+  if(h.stats){
+    h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
+    if(_avoidableHit) h.stats.avoidableTaken = (h.stats.avoidableTaken||0) + amount; // golpes telegrafiados (se podían esquivar)
+  }
   // Espinas (refuerzo): devuelve parte del golpe a quien pegó cuerpo a cuerpo al jugador
   if(h===player && runStats.thorns>0 && src && src.type && src.alive && src.hp>0 && typeof src.maxHp==="number") damageEnemy(src, amount*runStats.thorns, {src:player});
   const defBonus = (h===player) ? runStats.defBonus : 0;

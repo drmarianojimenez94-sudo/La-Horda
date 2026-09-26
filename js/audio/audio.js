@@ -246,7 +246,14 @@ const SFX_CFG = {
   levelup:{p:4,gap:400}, victory:{p:5,gap:1000}, ult:{p:4,gap:300},
   // El Libertador / Eren (sintetizados, sin archivos de audio)
   musket:{p:3,gap:120}, musketOfficer:{p:4,gap:150}, blade:{p:1,gap:70}, bugle:{p:4,gap:800}, gallop:{p:3,gap:400},
-  hook:{p:2,gap:90}, roar:{p:4,gap:600}, stomp:{p:3,gap:140}, punch:{p:2,gap:90}, thunder:{p:5,gap:800}
+  hook:{p:2,gap:90}, roar:{p:4,gap:600}, stomp:{p:3,gap:140}, punch:{p:2,gap:90}, thunder:{p:5,gap:800},
+  // Botín: cada rareza suena distinto (la revelación se oye aunque no se mire la pantalla)
+  chestDrop:{p:4,gap:300}, chestShake:{p:3,gap:90}, chestOpen:{p:5,gap:300},
+  lootCommon:{p:2,gap:60}, lootRare:{p:3,gap:80}, lootVeryRare:{p:4,gap:120}, lootLegend:{p:5,gap:300},
+  lootMythic:{p:5,gap:500}, lootSet:{p:5,gap:500}, lootUnique:{p:5,gap:1200},
+  // Combate: estados y gore
+  freeze:{p:2,gap:120}, shatter:{p:3,gap:110}, splat:{p:1,gap:45}, gib:{p:2,gap:90}, burnDeath:{p:1,gap:80}, zap:{p:2,gap:90},
+  threat:{p:4,gap:900}, emergencyHeal:{p:4,gap:500}
 };
 const _sfxLast = {}; let _sfxVoices = [];
 const SFX_MAX_VOICES = 12;
@@ -333,6 +340,38 @@ function playSfx(type){
       _noise(t0,0.8,0.2,"bandpass",600,0.8,D); _duck(0.5,800); len=1.0; break;
     }
     case "thunder": _noise(t0,1.1,0.55,"lowpass",1500,0,D); _tone(t0,"sine",60,28,1.0,0.6,D); _noise(t0,0.08,0.4,"highpass",2000,0,D); _duck(0.35,1000); len=1.1; break;
+    // ---- Botín ----
+    case "chestDrop": _tone(t0,"sine",80,40,0.3,0.55,D); _noise(t0,0.2,0.25,"lowpass",600,0,D); _noise(t0+0.02,0.06,0.12,"bandpass",2400,3,D); len=0.32; break;
+    case "chestShake": _noise(t0,0.06,0.12,"bandpass",900,2,D); _tone(t0,"square",140,120,0.05,0.05,D); len=0.07; break;
+    case "chestOpen": _noise(t0,0.35,0.22,"bandpass",700,1.2,D); _tone(t0,"triangle",220,440,0.3,0.1,D); _tone(t0+0.18,"sine",880,1320,0.4,0.08,D,0.04); len=0.6; break;
+    case "lootCommon": _tone(t0,"triangle",520,520,0.08,0.08,D); len=0.1; break;
+    case "lootRare": _tone(t0,"triangle",660,660,0.1,0.1,D); _tone(t0+0.08,"triangle",990,990,0.14,0.09,D); len=0.24; break;
+    case "lootVeryRare": [659.25,830.6,987.8].forEach((f,i)=>_tone(t0+i*0.07,"triangle",f,f,0.22,0.12,D,0.01)); len=0.4; break;
+    case "lootLegend":
+      [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i)=>_tone(t0+i*0.08,"triangle",f,f,0.5,0.16,D,0.01));
+      _tone(t0,"sine",130,65,0.6,0.35,D); _noise(t0+0.35,0.6,0.06,"highpass",6500,0,D); _duck(0.4,1100); len=1.0; break;
+    case "lootMythic":
+      _tone(t0,"sawtooth",65,40,1.2,0.3,D,0.05); _noise(t0,0.9,0.25,"lowpass",500,0,D);
+      [392,466.2,587.3,784,932.3].forEach((f,i)=>_tone(t0+0.3+i*0.11,"triangle",f,f,0.8,0.16,D,0.02));
+      _duck(0.25,1800); len=1.6; break;
+    case "lootSet":
+      [523.25,659.25,783.99].forEach((f,i)=>_tone(t0+i*0.12,"sine",f,f,0.9,0.14,D,0.04));
+      [1046.5,1318.5,1568].forEach((f,i)=>_tone(t0+0.45+i*0.1,"triangle",f,f,0.9,0.1,D,0.02));
+      _noise(t0+0.4,1.0,0.07,"highpass",7000,0,D); _duck(0.25,1800); len=1.6; break;
+    case "lootUnique":
+      _tone(t0,"sine",55,30,2.2,0.5,D,0.2); _noise(t0,1.8,0.25,"lowpass",380,0,D);
+      [261.6,311.1,392,466.2,523.25,622.3,784].forEach((f,i)=>_tone(t0+0.6+i*0.14,"triangle",f,f,1.4,0.15,D,0.03));
+      _tone(t0+1.6,"sawtooth",1046.5,1046.5,1.2,0.05,D,0.1); _noise(t0+1.5,1.4,0.08,"highpass",7500,0,D);
+      _duck(0.15,3200); len=3.0; break;
+    // ---- Estados y gore ----
+    case "freeze": _tone(t0,"triangle",1800,2600,0.18,0.07,D); _noise(t0,0.15,0.1,"highpass",5000,0,D); len=0.2; break;
+    case "shatter": _noise(t0,0.22,0.3,"highpass",3500,0,D); _tone(t0,"triangle",2400,900,0.2,0.08,D); _tone(t0+0.03,"triangle",3100,1400,0.15,0.05,D); len=0.25; break;
+    case "splat": _noise(t0,0.09,0.14,"lowpass",700,0,D); _tone(t0,"sine",180,70,0.08,0.12,D); len=0.1; break;
+    case "gib": _noise(t0,0.16,0.22,"lowpass",900,0,D); _tone(t0,"sine",120,45,0.14,0.22,D); _noise(t0+0.05,0.1,0.1,"bandpass",1600,2,D); len=0.2; break;
+    case "burnDeath": _noise(t0,0.35,0.12,"bandpass",1200,0.6,D); _tone(t0,"sawtooth",200,90,0.25,0.04,D); len=0.36; break;
+    case "zap": _noise(t0,0.12,0.14,"bandpass",3200,4,D); _tone(t0,"square",1400,700,0.1,0.05,D); len=0.13; break;
+    case "threat": _tone(t0,"square",330,330,0.09,0.09,D); _tone(t0+0.12,"square",247,247,0.12,0.09,D); len=0.26; break;
+    case "emergencyHeal": _tone(t0,"sine",440,880,0.35,0.18,D,0.02); _tone(t0+0.05,"sine",660,1320,0.35,0.1,D,0.02); _noise(t0,0.3,0.05,"highpass",6000,0,D); len=0.4; break;
     default:
       // sonidos propios de una arena (ARENA_SFX, p.ej. La Fortaleza): mismo control de prioridad/voces
       if(cfg.play) len = cfg.play(t0, D) || 0.3;

@@ -320,3 +320,8 @@
 .starter-confirm{ position:sticky; bottom:8px; margin:8px auto; padding:10px 14px; width:min(420px, 92vw); text-align:center;
   background:rgba(20,12,8,0.94); border:2px solid #ffcf5c; }
 .champ-card.locked{ opacity:0.55; filter:grayscale(0.7); }
+/* Tienda de objetos del día */
+.shop-items-list{ max-height:none; width:100%; max-width:560px; }
+.shop-offer{ display:flex; flex-direction:column; gap:4px; }
+.shop-offer.sold{ opacity:0.45; }
+.shop-buy{ align-self:flex-end; padding:6px 14px; font-size:0.72rem; }

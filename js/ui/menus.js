@@ -93,6 +93,7 @@ function fmtGold(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 // Tocar una tarjeta abre su ficha (renderChampDetail), que tiene la compra real si está bloqueado.
 function renderShop(){
   document.getElementById("shop-gold-line").innerHTML = `Oro: <b>${fmtGold(save.gold)}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
+  renderShopItems();
   const grid = document.getElementById("shop-champ-grid");
   if(!grid) return;
   grid.innerHTML = CHAMPION_CATALOG.map(c=>{
@@ -111,6 +112,24 @@ function renderShop(){
     });
   });
   startChampAnimLoop();
+}
+// Ofertas de objetos del día (js/systems/shop.js)
+function renderShopItems(){
+  const box = document.getElementById("shop-items"); if(!box) return;
+  const st = shopState();
+  box.innerHTML = '<div class="inv-list shop-items-list">' + st.offers.map(of=>{
+    const it = of.item, poor = save.gold < of.price;
+    return `<div class="shop-offer ${of.sold?"sold":""}">${itemCardHTML(it, {actions:false})}
+      <button class="btn shop-buy" data-buy="${of.id}" ${(of.sold||poor)?"disabled":""}>${of.sold ? "Vendido" : `🪙 ${fmtGold(of.price)}`}</button></div>`;
+  }).join("") + '</div>';
+  box.querySelectorAll("[data-buy]").forEach(b=> b.addEventListener("click", ()=>{
+    const of = st.offers.find(o=>o.id===b.getAttribute("data-buy"));
+    if(!of || !confirm(`¿Comprar ${of.item.name} por ${fmtGold(of.price)} de oro?`)) return;
+    const r = shopBuy(of.id);
+    if(!r.ok){ alert(r.reason); return; }
+    if(typeof playSfx==="function") playSfx(of.tier==="legendario" ? "lootLegend" : "ready");
+    renderShop(); if(typeof renderSaveLine==="function") renderSaveLine();
+  }));
 }
 // Ficha individual: si está bloqueado, muestra precio y botón funcional de desbloqueo real
 // (descuenta oro de verdad y persiste); si no, muestra sus datos de progreso reales.

@@ -59,7 +59,8 @@ function addFrost(h, n){
 // Golpe de una habilidad de jefe sobre un campeón, con sus efectos de control opcionales.
 function bossHitHero(h, dmg, o){
   if(!h || !h.alive) return;
-  damageHero(h, dmg, o && o.from);
+  _avoidableHit = true;
+  try{ damageHero(h, dmg, o && o.from); } finally { _avoidableHit = false; }
   if(!h.alive || h.invulnTimer>0 || !o) return;
   if(o.slow){ h.slowAmt = Math.max(h.slowAmt||0, o.slow); h.slowTimer = Math.max(h.slowTimer||0, o.slowDur||1500); }
   if(o.stun){ h.stunTimer = Math.max(h.stunTimer||0, o.stun); }
