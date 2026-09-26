@@ -125,7 +125,7 @@ function labGuestUpdate(dt){ for(const s of LAB.seals) if(s.flash > 0) s.flash -
 function labTut(){
   if(!player || !player.alive || !LAB.seals.length) return;
   if(LAB.seals.some(s=>Math.hypot(player.x-s.x, player.y-s.y) < 650))
-    tutSay("seal", "Las puertas de este lugar se abren en orden. El orden está escrito en el piso.", "Activá los sellos en orden: I → II → III", 11000);
+    tutSay("seal", "En el piso hay SELLOS numerados. Activados en orden aturden a la horda y te curan.", "Activá los sellos en orden: I → II → III", 11000);
   if(TUT.key==="seal" && LAB.seals.some(s=>s.lit && s.by===heroes.indexOf(player))) tutDone("seal");
 }
 // ---- red ----

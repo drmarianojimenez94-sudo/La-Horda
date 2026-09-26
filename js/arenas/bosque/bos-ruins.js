@@ -70,9 +70,9 @@ function bosUpdate(dt){
 // Consejos del Hechicero (cada cliente mira lo suyo: anfitrión e invitados).
 function bosTut(){
   if(!player || !player.alive) return;
-  for(const r of BOS.runes) if(bosReady(r) && Math.hypot(player.x-r.x, player.y-r.y) < 760){ tutSay("rune", "Estas piedras fueron un pacto. Cuando la runa brilla, las raíces todavía obedecen.", "Mantené ✚ junto a la runa verde", 12000); break; }
+  for(const r of BOS.runes) if(bosReady(r) && Math.hypot(player.x-r.x, player.y-r.y) < 760){ tutSay("rune", "Esa piedra con una RUNA verde que brilla juega a tu favor: activala y las raíces atrapan a la horda cercana.", "Mantené ✚ junto a la runa verde", 12000); break; }
   if(TUT.key==="rune" && BOS.runes.some(r=>r.flash > 0 && r.by===heroes.indexOf(player))) tutDone("rune");
-  if(BOS.amb.some(a=>a.t > 0)) tutSay("ambush", "El bosque respira raro… Las hojas que tiemblan esconden dientes.", "Alejate de la maleza que se sacude", 7000);
+  if(BOS.amb.some(a=>a.t > 0)) tutSay("ambush", "¡Cuidado! La maleza que se sacude esconde una EMBOSCADA.", "Alejate de la maleza que se sacude", 7000);
 }
 function bosStartAmbush(){
   const c = infHeroCentroid();

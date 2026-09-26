@@ -176,9 +176,9 @@ function acuGuestUpdate(dt){
 }
 function acuTut(){
   if(!player || !player.alive) return;
-  if(acuFlowAt(player.x, player.y)) tutSay("current", "El agua tiene memoria y tiene prisa. Si la seguís, te lleva. Si la peleás, te cansa.", "Usá las corrientes para moverte… o para arrastrar a la horda", 9000);
+  if(acuFlowAt(player.x, player.y)) tutSay("current", "Estás en una CORRIENTE: el agua te empuja. A favor te movés rápido; en contra, te frena.", "Usá las corrientes para moverte… o para arrastrar a la horda", 9000);
   const c = acuInCharco(player.x, player.y);
-  if(c && c.warn > 0) tutSay("charco", "Ese brillo no es luz. Es hambre.", "Salí del charco antes de la descarga (a ellos les duele más)", 8000);
+  if(c && c.warn > 0) tutSay("charco", "Ese charco brilla porque está por dar una DESCARGA eléctrica.", "Salí del charco antes de la descarga (a ellos les duele más)", 8000);
 }
 // Bots: no quedarse en el ojo del remolino (los avisos de chorros y charcos ya los esquivan).
 function acuBotDanger(x, y, pad){

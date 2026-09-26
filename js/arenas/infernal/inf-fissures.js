@@ -179,11 +179,11 @@ function infGuestUpdate(dt){
 }
 // Consejo del Hechicero (cada cliente: anfitrión e invitados).
 function infTut(){
-  if(player && player.alive && runElapsedMs > 4000) tutSay("infernal_intro", "Tres cayeron para que esto quedara cerrado. Ahora se abre otra vez.", null, 7000);
+  if(player && player.alive && runElapsedMs > 4000) tutSay("infernal_intro", "Arena Infernal: la horda sale sin parar de las grietas del piso. Si las cerrás, se corta. Y ojo: acá tus habilidades pegan menos.", null, 7000);
   if(!player || !player.alive) return;
   for(const f of INF.fis){
     if(f.done || f.warn > 0 || Math.hypot(player.x-f.x, player.y-f.y) > 650) continue;
-    tutSay("fissure", "La tierra se abre donde el mundo es fino. De esas grietas sale la horda… y se pueden coser.", "Mantené ✖ junto a la fisura para cerrarla (quema)", 12000);
+    tutSay("fissure", "Esa grieta que brilla es una FISURA: de ahí sale la horda. Parate al lado y cerrala.", "Mantené ✖ junto a la fisura para cerrarla (quema)", 12000);
     if(TUT.key==="fissure" && f.prog > 0 && f.by===heroes.indexOf(player)) tutDone("fissure");
     break;
   }
