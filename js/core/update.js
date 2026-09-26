@@ -487,6 +487,7 @@ function update(dt){
   updateRevives(dt);
   ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);
+  updateEmergency(dt); // curación de emergencia: la parte que entra de a poco
   updateFireWalls(dt);
   updateTraps(dt);
   updateAxiomZones(dt);
@@ -505,7 +506,8 @@ function update(dt){
     // El nivel de cuenta de los héroes acorta más este intervalo (partyLevelScale) -sobre
     // el piso ya reducido a 560ms-, para que una cuenta veterana enfrente más enemigos por
     // minuto sin depender solo del nivel de la arena en esta partida puntual.
-    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1));
+    updatePacing(dt); // montaña rusa del nivel: calentamiento, oleada con aviso, respiro, clímax (pacing.js)
+    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1)) * pacingIntervalMult();
     if(spawnTimer<=0 && !activeChampion){
       spawnTimer = spawnInterval;
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo

@@ -159,6 +159,7 @@ function drawScreenFeedback(){
     if(e.rank!=="elite"){ ctx.font = "bold 11px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = col; ctx.fillText(e.rank==="jefe" ? "☠" : "◆", p.x - Math.cos(ang)*20, p.y - Math.sin(ang)*20 + 4); }
     ctx.globalAlpha = 1; n++;
   }
+  pacingDrawWarn(now, _edgePoint, _arrow); // de dónde viene la próxima oleada
   if(!divinaMode) for(const a of allies){
     if(a.alive || inView(a.x, a.y, -30)) continue;
     const ang = Math.atan2(a.y-player.y, a.x-player.x), p = _edgePoint(ang, 24);

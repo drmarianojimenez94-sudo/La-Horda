@@ -8,6 +8,7 @@
    ALIADOS CONTROLADOS POR IA (los otros 3 campeones)
    ============================================================ */
 function botTryAbilities(h){
+  botMaybeEmergency(h); // curación de emergencia por debajo del 30% (pacing.js)
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(h.classKey,"cd_mult"));
   // El Libertador / Eren: IA propia (js/champions/libertador.js, eren.js)
   if(h.classKey==="libertador" && !divinaMode){ botLibertador(h, passiveCdMult); return; }

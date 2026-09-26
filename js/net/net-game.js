@@ -375,6 +375,7 @@ function netHostOnMsg(from, d){
       return;
     case "ult": if(state==="playing" && h.alive) netWithHero(h, ()=> useUltimate()); return;
     case "pact": if(state==="playing" && h.alive) nigroTogglePact(h); return; // Nigromante invitado
+    case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(d.aim||null); });

@@ -55,7 +55,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   const invUid = await ev(host, () => {
     const it = makeItem('arma', 'legendario', selectedClass); addItemToInventory(selectedClass, it); renderPrepSummary(); return it.uid;
   });
-  await host.page.click(`#prep-inventory-panel [data-prep-equip="${invUid}"]`);
+  await host.page.click(`#prep-inventory-panel [data-inv-equip="${invUid}"]`);
   const eqAfter = await ev(host, () => save.champions[selectedClass].equipment.arma);
   check('inventory.equip_in_lobby', eqAfter === invUid, { eqAfter, invUid });
   if (N > 1 || FIFTH) {
@@ -193,6 +193,13 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     await sleep(500);
     const back = await ev(guests[0], () => player.alive);
     check('revive.guest_revived', back === true);
+    // curación de emergencia pedida por el invitado: la aplica el anfitrión, una sola vez
+    await ev(host, () => { const g = heroes[1]; g.hp = g.maxHp*0.3; g.emergCharges = 1; });
+    await sleep(300);
+    await ev(guests[0], () => { emergPress(); emergPress(); });
+    await sleep(500);
+    const em = await ev(host, () => ({ pct: heroes[1].hp/heroes[1].maxHp, charges: heroes[1].emergCharges }));
+    check('emerg.guest_heal_applied_once', em.pct > 0.55 && em.pct < 0.9 && em.charges === 0, em);
   }
   // ---------------- refuerzo entre niveles: cada humano elige ----------------
   await ev(host, () => { levelTimer = levelDuration + 1; });

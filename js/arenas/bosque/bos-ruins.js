@@ -78,11 +78,14 @@ function bosStartAmbush(){
   const c = infHeroCentroid();
   const n = BOS_CFG.ambushSpots[0] + ((Math.random()*(BOS_CFG.ambushSpots[1]-BOS_CFG.ambushSpots[0]+1))|0);
   const base = Math.random()*Math.PI*2;
-  let made = 0;
-  for(let i=0; i<n*4 && made<n; i++){
-    const ang = base + made*(Math.PI*2/n) + (Math.random()-0.5)*0.5, d = 270 + Math.random()*90;
+  let made = 0, fails = 0;
+  for(let i=0; i<n*10 && made<n; i++){
+    // si un sector choca con el borde o una roca, cada reintento abre el abanico (antes repetía
+    // casi el mismo ángulo y la emboscada quedaba con un solo punto)
+    const ang = base + made*(Math.PI*2/n) + (Math.random()-0.5)*(0.5 + fails*0.45), d = 270 + Math.random()*90 - Math.min(fails, 4)*14;
     const x = c.x + Math.cos(ang)*d, y = c.y + Math.sin(ang)*d*0.8;
-    if(!aidInside(x, y, 70) || aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+40)) continue;
+    if(!aidInside(x, y, 70) || aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+40) || BOS.amb.some(o=>o.t > 0 && Math.hypot(o.x-x, o.y-y) < 120)){ fails++; continue; }
+    fails = 0;
     BOS.amb.push({id:BOS.nextA++, x:Math.round(x), y:Math.round(y), t:BOS_CFG.ambushWarn, sprung:false, seed:(Math.random()*1e6)|0});
     made++;
   }

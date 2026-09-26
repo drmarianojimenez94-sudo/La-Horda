@@ -135,6 +135,14 @@ function updateHUD(){
     nigroHudEl.classList.add("hidden");
     document.getElementById("btn-pact").classList.add("hidden");
   }
+  // curación de emergencia: lista (verde), urgente (<35% vida, late) o gastada hasta el próximo nivel
+  const eb = document.getElementById("btn-emerg");
+  if(eb){
+    const has = (player.emergCharges||0) > 0, can = has && player.alive && !divinaMode && player.hp < player.maxHp*0.95;
+    eb.classList.toggle("hidden", !!divinaMode);
+    eb.classList.toggle("ready", can); eb.classList.toggle("spent", !has);
+    eb.classList.toggle("urgent", can && player.hp < player.maxHp*0.35);
+  }
   const pct = bossActive ? 100 : Math.min(100, levelTimer/levelDuration*100);
   document.getElementById("wave-timer-bar").style.width = pct+"%";
 

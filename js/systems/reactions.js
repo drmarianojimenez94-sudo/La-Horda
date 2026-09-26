@@ -102,7 +102,7 @@ function reactionMult(e, dmg, opts, src, pow, kind){
     e.frozenTimer = 0; e.slowAmt = 0; e.slowTimer = 0; e.wetTimer = C.wetMs; e.wetBy = src;
     vfxBurst(e.x, e.y-20, 10, "spirit", 70, 800, 4, 1, -45, 1);
     _reactLabel(e, "vapor", src, by);
-  } else if(pow>=3 && kind!=="bleed" && e.bleedTimer>0 && e.bleedDmg>0){
+  } else if(pow>=3 && kind!=="bleed" && e.bleedTimer>0 && e.bleedDmg>0 && dmg < e.hp){ // un golpe que ya mata no la gasta (el sangrado sigue valiendo para "matar sangrantes")
     const C = REACTION_CFG.hemorrhage; e._reactAt = runElapsedMs;
     const extra = e.bleedDmg*(e.bleedTimer/1000)*C.mult; const by = e.bleedSrc;
     e.bleedTimer = 0;
