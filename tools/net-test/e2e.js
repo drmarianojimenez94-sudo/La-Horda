@@ -106,6 +106,24 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     const readies = await ev(host, () => net.room.slots.map(s => s && s.ready));
     check('lobby.ready_synced', readies.filter((r, i) => i > 0 && r).length === guests.length, readies);
   }
+  const all0 = () => [host, ...guests];
+  // ---------------- chat de la sala ----------------
+  if (guests.length) {
+    await guests[0].page.click('#net-chat [data-q="¡Vamos!"]');
+    await host.page.fill('#net-chat-input', 'arranco en 5');
+    await host.page.press('#net-chat-input', 'Enter');
+    await sleep(600);
+    const logs = await Promise.all(all0().map(c => ev(c, () => netChat.log.map(m => m.name + ':' + m.text))));
+    check('chat.frase_rapida_y_texto_llegan_a_todos', logs.every(l => l.includes('Facundo:¡Vamos!') && l.includes('Mariano:arranco en 5')), logs[0]);
+    const shown = await ev(guests[0], () => document.getElementById('net-chat-log').textContent);
+    check('chat.visible_en_la_sala', /arranco en 5/.test(shown), shown.slice(0, 80));
+    await host.page.click('#net-chat-log [data-mute="1"]');
+    await sleep(500);
+    const mutedUi = await ev(guests[0], () => document.getElementById('net-chat-input').disabled);
+    check('chat.anfitrion_silencia_y_el_invitado_lo_ve', mutedUi === true, mutedUi);
+    await host.page.click('#net-chat-log [data-mute="1"]');
+    await sleep(400);
+  }
   // ---------------- COMENZAR ----------------
   await host.page.click('#prep-start-btn');
   const all = [host, ...guests];

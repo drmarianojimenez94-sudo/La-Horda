@@ -33,6 +33,19 @@ const RECONNECT_GRACE_MS = 3 * 60 * 1000;   // un invitado caído conserva su lu
 const ROOM_IDLE_MS = 45 * 60 * 1000;        // salas sin actividad se borran
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin 0/O/1/I para dictarlo sin errores
 const ALLOWED = (process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
+// CHAT DE LA SALA: texto corto, anti-spam en el servidor y lista de palabras tapadas configurable
+// (CHAT_BLOCKLIST="palabra1,palabra2"). El anfitrión puede silenciar a un jugador. El registro
+// solo guarda metadatos (sala, lugar, largo, si se tapó algo): nunca el texto.
+const CHAT_MAX_LEN = 120, CHAT_HISTORY = 20, CHAT_MIN_GAP_MS = 800, CHAT_BURST = 5, CHAT_BURST_MS = 10000, CHAT_DUP_MS = 20000;
+const CHAT_BLOCK = (process.env.CHAT_BLOCKLIST || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+function chatFilter(text){
+  let out = text, hit = false;
+  for(const w of CHAT_BLOCK){
+    const re = new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+    out = out.replace(re, m => { hit = true; return "*".repeat(m.length); });
+  }
+  return { text: out, hit };
+}
 
 const rooms = new Map(); // code -> room
 
@@ -51,7 +64,7 @@ function publicRoom(room){
   return {
     code: room.code, arena: room.arena, state: room.state, hostSlot: 0, protocol: PROTOCOL,
     slots: room.slots.map((m, i) => m ? { slot: i, name: m.name, champ: m.champ, level: m.level, ready: !!m.ready,
-      connected: !!m.ws, host: i === 0 } : null)
+      connected: !!m.ws, host: i === 0, muted: !!m.muted } : null)
   };
 }
 // Solo para pruebas: SIM_LATENCY_MS demora todo lo que sale del servidor (simula Internet).
@@ -87,7 +100,7 @@ function handle(ws, msg){
       const code = newCode();
       if(!code) return send(ws, { t: "error", code: "SERVER_FULL" });
       const r = { code, arena: clean(msg.arena, 24), build: clean(msg.build, 40), state: "lobby",
-        slots: [null, null, null, null], touched: Date.now(), created: Date.now() };
+        slots: [null, null, null, null], touched: Date.now(), created: Date.now(), chat: [] };
       r.slots[0] = { ws, clientId: clean(msg.clientId, 64), name: clean(msg.name, 24) || "Anfitrión",
         champ: clean(msg.champ, 24), level: msg.level|0, ready: true, lostAt: 0 };
       rooms.set(code, r);
@@ -115,7 +128,7 @@ function handle(ws, msg){
         ws._room = code; ws._slot = slot;
         r.touched = Date.now();
         log("RECONNECT", { code, slot });
-        send(ws, { t: "joined", slot, host: false, reconnect: true, room: publicRoom(r) });
+        send(ws, { t: "joined", slot, host: false, reconnect: true, room: publicRoom(r), chat: r.chat.slice(-CHAT_HISTORY) });
         broadcastRoom(r);
         return;
       }
@@ -127,7 +140,7 @@ function handle(ws, msg){
       ws._room = code; ws._slot = slot;
       r.touched = Date.now();
       log("ROOM_JOINED", { code, slot });
-      send(ws, { t: "joined", slot, host: false, room: publicRoom(r) });
+      send(ws, { t: "joined", slot, host: false, room: publicRoom(r), chat: r.chat.slice(-CHAT_HISTORY) });
       broadcastRoom(r);
       return;
     }
@@ -174,6 +187,29 @@ function handle(ws, msg){
       if(ws._slot !== 0){ const h = room.slots[0]; if(h && h.ws) sendRaw(h.ws, str); return; }
       if(typeof msg.to === "number"){ const m = room.slots[msg.to]; if(m && m.ws) sendRaw(m.ws, str); return; }
       for(let i = 1; i < room.slots.length; i++){ const m = room.slots[i]; if(m && m.ws) sendRaw(m.ws, str); }
+      return;
+    }
+    case "chat": {
+      if(me.muted) return send(ws, { t: "error", code: "CHAT_MUTED" });
+      const raw = clean(msg.text, CHAT_MAX_LEN).replace(/\s+/g, " ").trim();
+      if(!raw) return;
+      const now = Date.now();
+      me.chatTimes = (me.chatTimes || []).filter(t => now - t < CHAT_BURST_MS);
+      if((me.chatLast && now - me.chatLast < CHAT_MIN_GAP_MS) || me.chatTimes.length >= CHAT_BURST) return send(ws, { t: "error", code: "CHAT_SLOW" });
+      if(me.chatLastText === raw.toLowerCase() && now - me.chatLast < CHAT_DUP_MS) return send(ws, { t: "error", code: "CHAT_DUP" });
+      me.chatLast = now; me.chatLastText = raw.toLowerCase(); me.chatTimes.push(now);
+      const f = chatFilter(raw);
+      const entry = { from: ws._slot, name: me.name, text: f.text, at: now };
+      room.chat.push(entry); if(room.chat.length > CHAT_HISTORY) room.chat.shift();
+      const str = JSON.stringify({ t: "chat", m: entry });
+      for(const m of room.slots) if(m && m.ws) sendRaw(m.ws, str);
+      log("CHAT", { code: room.code, slot: ws._slot, len: raw.length, masked: f.hit });
+      return;
+    }
+    case "mute": {
+      if(ws._slot !== 0) return send(ws, { t: "error", code: "NOT_HOST" });
+      const i = msg.slot|0, m = room.slots[i];
+      if(i > 0 && m){ m.muted = !!msg.on; log("CHAT_MUTE", { code: room.code, slot: i, on: m.muted }); broadcastRoom(room); }
       return;
     }
     case "kick": {
@@ -238,4 +274,4 @@ setInterval(() => {
 
 const PORT = parseInt(process.env.PORT || "8787", 10);
 server.listen(PORT, () => log("RELAY_LISTENING", { port: PORT, protocol: PROTOCOL, allowed: ALLOWED }));
-module.exports = { server, rooms };
+module.exports = { server, rooms, chatFilter };

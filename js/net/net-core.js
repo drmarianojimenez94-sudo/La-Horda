@@ -108,6 +108,7 @@ function _netHandle(m){
     case "joined":
       net.slot = m.slot; net.role = m.host ? "host" : "guest"; net.room = m.room; net.code = m.room.code;
       net.reconnectAttempts = 0;
+      if(typeof netChatReset==="function") netChatReset(m.chat); // historial corto del chat de la sala
       netLog(m.host ? "ROOM_CREATED" : (m.reconnect ? "RECONNECT" : "ROOM_JOINED"), {code:net.code, slot:m.slot});
       _netEmit("joined", m);
       _netEmit("room", m.room);
@@ -130,6 +131,7 @@ function _netHandle(m){
       return;
     }
     case "msg": _netEmit("msg", m.from, m.d); return;
+    case "chat": _netEmit("chat", m.m); return;
     case "closed":
       netLog(m.reason==="host_left" ? "HOST_LEFT" : "ROOM_CLOSED", {reason:m.reason});
       const role = net.role;
@@ -137,6 +139,7 @@ function _netHandle(m){
       _netEmit("closed", m.reason, role);
       return;
     case "error":
+      if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
       if(m.code==="ROOM_FULL") netLog("ROOM_FULL"); else netLog("NETWORK_ERROR", {code:m.code});
       _netEmit("error", m);
       return;

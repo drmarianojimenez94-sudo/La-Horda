@@ -310,6 +310,7 @@ function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
   netRenderLobbyBar();
+  netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online
   if(netInRoom()){
     // B1: sala online real: lugares en tiempo real (vos, amigos, esperando)
     document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
