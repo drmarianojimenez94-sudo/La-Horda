@@ -26,6 +26,7 @@ async function waitAll(cs, fn, ms = 8000) { const t0 = Date.now(); while (Date.n
 
 async function newClient(browser, i) {
   const ctx = await browser.newContext({ viewport: { width: 1000, height: 560 } });
+  await ctx.addInitScript(() => { window.__campaignMode = true; }); // prueba la campaña real (sin el modo prueba de save.js)
   await ctx.addInitScript(([name]) => {
     try { if (!sessionStorage.getItem('__seeded')) { localStorage.clear(); localStorage.setItem('horda_name', name); sessionStorage.setItem('__seeded', '1'); } } catch (e) {}
   }, [NAMES[i]]);

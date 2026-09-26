@@ -22,6 +22,7 @@ async function launch(opts = {}) {
 // Open a site in deterministic mode with a given save; waits until every tracked image settled.
 async function openDet(browser, site, { seed = 12345, save = null, viewport = { width: 1280, height: 800 } } = {}) {
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+  await ctx.addInitScript(() => { window.__campaignMode = true; }); // la regresión prueba la campaña real (sin el modo prueba de save.js)
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));

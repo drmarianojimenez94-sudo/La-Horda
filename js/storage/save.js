@@ -61,7 +61,22 @@ function defaultSave(){
   };
 }
 let save = defaultSave();
+// MODO PRUEBA (pedido para seguir probando): todos los campeones liberados y todas las arenas de la
+// campaña abiertas, en guardados nuevos y viejos. No toca niveles, oro, objetos ni talentos.
+// Para volver al modo campaña normal, poner esto en false. (Las pruebas automáticas de la campaña
+// lo apagan definiendo window.__campaignMode antes de cargar la página.)
+const PLAYTEST_UNLOCK_ALL = !(typeof window!=="undefined" && window.__campaignMode);
+function applyPlaytestUnlock(){
+  if(!PLAYTEST_UNLOCK_ALL) return;
+  let changed = !save.starterChosen;
+  for(const k in save.champions){ if(!save.champions[k].unlocked){ save.champions[k].unlocked = true; changed = true; } }
+  save.starterChosen = true;
+  if(changed) persist();
+}
 function loadSave(){
+  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); }
+}
+function _loadSaveInner(){
   try{
     const raw = localStorage.getItem(SAVE_KEY);
     if(raw){

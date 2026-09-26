@@ -9,6 +9,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox'] });
   const ctx = await b.newContext({ viewport: { width: 900, height: 520 } });
+  await ctx.addInitScript(() => { window.__campaignMode = true; }); // prueba la campaña real (sin el modo prueba de save.js)
   await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('__s')) { localStorage.clear(); sessionStorage.setItem('__s', '1'); } } catch (e) {} });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`);
