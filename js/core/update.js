@@ -187,7 +187,7 @@ function update(dt){
       if(!e.bossWind && !e.channel && e.escarchaCd<=0 && dist < 220){
         e.escarchaCd = 7500;
         const R = 170, Rinner = 80;
-        bossWindup(e, 600, "bossGroundSlam", {shape:0, r:R, rgb:"150,220,255"}, ()=>{
+        bossWindup(e, 900, "bossGroundSlam", {shape:0, r:R, rgb:"150,220,255"}, ()=>{ // 0,9 s: norma de aviso de élite (antes 0,6 s, con aturdido en el anillo interior)
           e.attackAnim = 500;
           const targets = [player, ...allies].filter(h=>h.alive);
           for(const h of targets){
@@ -601,7 +601,7 @@ function updateControlledHero(dt){
   if(runStats.regenPct>0 && player.alive) player.hp = Math.min(player.maxHp, player.hp + player.maxHp*runStats.regenPct*arenaRuleHealMult()*dt/1000);
   if(player.shieldTimer>0){ player.shieldTimer-=dt; if(player.shieldTimer<=0) player.shield=0; }
   if(player.stats) sampleTankPresence(player, dt);
-  if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp-=player.pendingHpBonus; player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
+  if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp=Math.max(1,player.maxHp-player.pendingHpBonus); player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
   if(player.furyArmorTimer>0){
     player.furyArmorTimer -= dt;
     if(Math.random()<0.55) particles.push({x:player.x+(Math.random()-0.5)*22, y:player.y-8+(Math.random()-0.5)*12, vx:(Math.random()-0.5)*14, vy:-16-Math.random()*12, life:320, color:Math.random()<0.5?"#c62828":"#1a1414"});

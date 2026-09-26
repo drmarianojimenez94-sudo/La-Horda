@@ -1003,7 +1003,7 @@ function castAbility(caster, sk, isUlt, idx){
       if(spinExtend) caster.spinDurationMult = Math.max(caster.spinDurationMult||1, 1+spinExtend);
       // Vida máxima temporal: se retira el bonus anterior (si lo hubiera) antes de aplicar el nuevo,
       // para que recastear el grito no acumule vida infinitamente.
-      if(caster.pendingHpBonus){ caster.maxHp -= caster.pendingHpBonus; caster.hp = Math.min(caster.hp, caster.maxHp); caster.pendingHpBonus = 0; }
+      if(caster.pendingHpBonus){ caster.maxHp = Math.max(1, caster.maxHp - caster.pendingHpBonus); caster.hp = Math.min(caster.hp, caster.maxHp); caster.pendingHpBonus = 0; }
       const hpBonus = Math.round(caster.maxHp * (sk.hpBonusPct||0) * POWER);
       caster.maxHp += hpBonus; caster.hp += hpBonus; caster.pendingHpBonus = hpBonus;
       // Crecimiento visual: el caballero se agiganta levemente mientras dura el grito

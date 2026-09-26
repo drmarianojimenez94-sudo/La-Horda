@@ -233,7 +233,7 @@ function updateAllies(dt){
     h.ultCd = Math.max(0, h.ultCd-dt);
     h.energy = Math.min(h.maxEnergy, h.energy + h.cls.energyRegen*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
     if(h.shieldTimer>0){ h.shieldTimer-=dt; if(h.shieldTimer<=0) h.shield=0; }
-    if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp-=h.pendingHpBonus; h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
+    if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp=Math.max(1,h.maxHp-h.pendingHpBonus); h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
     if(h.furyArmorTimer>0){
       h.furyArmorTimer -= dt;
       // Ojos y aura carmesí: partículas oscuras/rojas mientras dura la Armadura de la Furia

@@ -365,7 +365,10 @@ function refreshEquippedStats(){
   player.baseSpeed = base.speed*(player.isBot?0.95:1)*arenaMods().heroSpeedMult;
   // Vida máxima: si sube (pechera nueva, etc.), la vida ACTUAL sube en la misma proporción del
   // aumento (no se rellena gratis a tope); si baja, la vida actual se recorta si hiciera falta.
-  const newMaxHp = Math.round(base.hp * runStats.hpMult);
+  // La vida máxima TEMPORAL (Grito de Guerra / Grito Provocador, `pendingHpBonus`) se conserva:
+  // si se pisara, al vencer el grito se restaría igual y la vida máxima caería nivel a nivel
+  // hasta quedar negativa (bug medido en la Gélida con el Tanque).
+  const newMaxHp = Math.round(base.hp * runStats.hpMult) + (player.pendingHpBonus||0);
   if(newMaxHp !== player.maxHp){
     const hpDiff = newMaxHp - player.maxHp;
     player.maxHp = newMaxHp;

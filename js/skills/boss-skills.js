@@ -288,7 +288,7 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
     if(e.skA<=0 && dist < 200){
       e.skA = 9000;
       const dx = e.fx, dy = e.fy, td = teleDir(dx, dy);
-      bossWindup(e, 650, "bossCast", {shape:1, r:210, dx:td.dx, dy:td.dy, arc:0.5, rgb:"150,220,255"}, ()=>{
+      bossWindup(e, 900, "bossCast", {shape:1, r:210, dx:td.dx, dy:td.dy, arc:0.5, rgb:"150,220,255"}, ()=>{ // 0,9 s (norma de élite; antes 0,65 s)
         e.channel = {dx, dy, t:0, dur:1600, r:210, cosA:Math.cos(0.5), tick:0, tickMs:200, mult:0.28, turn:0.9};
       });
       bossSkillLabel(e, "¡Lanzallamas de Hielo!");
