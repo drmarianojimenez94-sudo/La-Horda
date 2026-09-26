@@ -55,9 +55,7 @@ function spawnPoolForHielo(level){
   if(level >= 2) pool.push({t:"golem_hielo", w:6});
   if(level >= 3) pool.push({t:"dragoncito_hielo", w:5});
   if(level >= 5) pool.push({t:"angel_hielo", w:4});
-  // el Demonio de Hielo y Fuego es un élite con 3 habilidades: nunca más de 2 vivos a la vez (con más se
-  // volvía el "muro" de la Gélida en las campañas simuladas)
-  if(level >= 6 && enemies.filter(o=>o.alive && o.type==="demonio_hielo_fuego").length < 2) pool.push({t:"demonio_hielo_fuego", w:3});
+  if(level >= 6) pool.push({t:"demonio_hielo_fuego", w:3});
   if(level >= 8){ pool[0].w = 5; }
   if(level >= 9){ pool[0].w = 3; }
   return pool;
