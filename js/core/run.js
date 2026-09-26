@@ -157,11 +157,12 @@ function onBossDefeated(){
     scaleBossStats(boss, "angel_caido_hielo");
     boss.regenUsed = false; boss.regenTimer = 0; boss.bd = null;
     boss.bossPhase = 2;
+    boss.name = "Demonio Gélido — Ángel Caído"; // canon: Mago Gélido → Demonio Gélido (mismo cuerpo del Ángel Caído de Hielo)
     bossHudShow(boss);
     animTrigger(boss, "bossPhaseTransition", 1300);
     bossSheetPack(boss, "transf", 1300); // el Ángel toma forma (hoja del Ángel Caído)
     bossPhaseFeedback();
-    showBanner("¡EL MAGO SE TRANSFORMA EN EL ÁNGEL CAÍDO DE HIELO!");
+    showBanner("¡EL MAGO GÉLIDO SE CORROMPE: NACE EL DEMONIO GÉLIDO!");
     return; // sigue la pelea de jefe, todavía no termina la partida
   }
   // Ruinas del Bosque: "Resurrección Eterna". La primera vez que el Jinete Sin Cabeza llega a
@@ -223,25 +224,26 @@ function finishBossVictory(){
   bossActive = false;
   if(typeof setMusicMode==="function") setMusicMode("victory");
   grantGold(80);
-  // Arena Divina se desbloquea al completar las 4 arenas normales (no solo la Infernal) —
-  // save.arenasCleared trackea cada una de verdad y persiste.
-  save.arenasCleared = save.arenasCleared || {bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, laberinto:false, infernal:false};
+  // ORDEN CANÓNICO (CAMPAIGN_ORDER): la campaña es secuencial -la primera victoria en una arena abre la
+  // siguiente arena jugable (la frontera, ver campaignFrontier)-. Completar la Arena Infernal abre la
+  // Arena Divina (postgame).
+  save.arenasCleared = save.arenasCleared || {};
+  const wasOpen = {}; for(const k of ARENA_ORDER) wasOpen[k] = isArenaUnlocked(k);
   const firstClear = !save.arenasCleared[currentArena];
   save.arenasCleared[currentArena] = true;
-  // BUGFIX 01: la campaña es secuencial -la primera victoria en una arena abre la siguiente-
-  const nextArena = ARENA_ORDER[ARENA_ORDER.indexOf(currentArena) + 1];
-  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${(ARENA_MODS[nextArena]||{}).label||nextArena}`), 2600); }
-  if(ARENA_ORDER.every(a=>save.arenasCleared[a]) && !save.divineArenaUnlocked){
+  const nextArena = ARENA_ORDER.find(k=>k!==currentArena && !wasOpen[k] && isArenaUnlocked(k));
+  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${campaignNumberLabel(nextArena)} — ${(ARENA_MODS[nextArena]||{}).label||nextArena}`), 2600); }
+  if(currentArena==="infernal" && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;
+    setTimeout(()=>showBanner("🔓 POSTGAME: ARENA DIVINA — LAS CINCO PRUEBAS"), firstClear ? 9000 : 2600);
   }
   persist();
   runEnding = true;
-  // Guardián vencido (Mago de Hielo, Madre Espora): su cristal queda libre y vuela al jugador
+  if(typeof campaignOnVictory==="function") campaignOnVictory(currentArena, firstClear); // la Cicatriz hacia la próxima arena
+  // Guardián vencido (Bosque, Gélida, Laberinto): su cristal queda libre y vuela al jugador
   const ck = CRYSTAL_BY_ARENA[currentArena]; let wait = 900;
-  if(ck && ck!=="piedra"){
-    const bx = currentArena==="micelial" && typeof MIC_MOTHER_POS!=="undefined" ? MIC_MOTHER_POS.x : (boss ? boss.x : player.x);
-    const by = currentArena==="micelial" && typeof MIC_MOTHER_POS!=="undefined" ? MIC_MOTHER_POS.y + 60 : (boss ? boss.y : player.y);
-    crystalAward(ck, bx, by); wait = 3400;
+  if(ck){
+    crystalAward(ck, boss ? boss.x : player.x, boss ? boss.y : player.y); wait = 3400;
   }
   runLater(wait, ()=>{ if(state==="playing") showVictoryScreen(); });
 }

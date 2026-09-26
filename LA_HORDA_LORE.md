@@ -1,3 +1,8 @@
+> ⚠️ **CANON V1 — REEMPLAZADO.** El canon oficial vive ahora en `docs/lore/LA_HORDA_LORE_BIBLE.md`
+> (orden de campaña, Guardianes y contradicciones), `docs/lore/LA_HORDA_STORY_STATE.md` y
+> `docs/lore/LA_HORDA_CINEMATICS.md`. Este archivo se conserva como historia: la Madre Espora ya **no**
+> es Guardiana y el orden de arenas de acá abajo es el anterior.
+
 # LA HORDA — Lore (canon del juego)
 
 > Documento de referencia para texto, diálogos, arte y diseño de jefes. Si algo del juego contradice

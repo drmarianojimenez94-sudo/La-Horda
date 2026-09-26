@@ -11,45 +11,45 @@
    Ojo de la historia: acá parece un ángel. En la Arena Infernal se revela (inf-hechicero.js).
    ============================================================ */
 const ARENA_BRIEF = {
-  bosque: {
-    say:"Esta es la entrada. Acá aprendés a pelear: la horda es débil, pero se cura sola si la dejás.",
-    kill:"Enemigos que se regeneran, emboscadas en la maleza que se sacude y el Jinete Sin Cabeza, que revive una vez.",
-    help:"Las RUNAS de piedra: mantené ✚ junto a una que brille y las raíces atrapan a la horda.",
-    goal:"Sobreviví 10 niveles y derrotá al Jinete Sin Cabeza (dos veces)."},
-  acuatica: {
-    say:"Ruinas bajo el agua. El agua te mueve: aprovechala o te va a cansar.",
-    kill:"Charcos que brillan antes de dar una descarga, el Kraken Joven (nivel 6) y el Leviatán que ataca desde el borde.",
-    help:"Las CORRIENTES: seguilas para moverte rápido o para arrastrar a la horda lejos de vos.",
-    goal:"Llegá al nivel 10 y vencé al Leviatán en sus 3 fases."},
   fortaleza: {
-    say:"Una fortaleza viva. Todo lo que te mata avisa en el piso antes de golpear.",
-    kill:"Trampas (vapor, rejillas al rojo, prensas y cadenas), puentes que se mueven y el Caballero Oxidado.",
+    say:"La Ciudad Maldita resistió, pero la Horda dejó una CICATRIZ. Seguila: empieza en esta fábrica que no para nunca.",
+    kill:"Trampas (vapor, rejillas al rojo, prensas y cadenas), puentes que se mueven, el Dragón de la Forja y el Caballero Oxidado.",
     help:"Mirá el piso: las marcas avisan. Al Caballero NO le pegues cuando brilla azul (contraataca).",
-    goal:"Cruzá los sectores y derrotá al Caballero de la Armadura Oxidada."},
+    goal:"Cruzá la Fábrica Sin Fin y derrotá al Caballero de la Armadura Oxidada."},
+  bosque: {
+    say:"Ruinas sagradas. Acá espera el PRIMERO de los Cuatro Guardianes: la horda es débil, pero se cura sola si la dejás.",
+    kill:"Enemigos que se regeneran, emboscadas en la maleza que se sacude y el Guardián Ancestral, que se corrompe en la Bestia del Bosque.",
+    help:"Las RUNAS de piedra: mantené ✚ junto a una que brille y las raíces atrapan a la horda.",
+    goal:"Sobreviví 10 niveles, vencé al Guardián Ancestral y recuperá el PRIMER CRISTAL."},
   micelial: {
-    say:"Una caverna que está viva y crece. Si la dejás, la infección se come el mapa.",
+    say:"Una caverna que está viva y crece. Si la dejás, la infección se come el mapa. No escuches lo que susurran las esporas.",
     kill:"Esporas, zonas infectadas que te debilitan, el Micelio Primigenio y la Madre Espora en el centro.",
     help:"Rompé los NÚCLEOS MICELIALES: cada uno que cae limpia la infección de su zona.",
     goal:"Frená la colonia y derrotá a la Madre Espora."},
+  hielo: {
+    say:"Acá espera el SEGUNDO Guardián. El frío es el enemigo: quedarte quieto te congela.",
+    kill:"El frío que se acumula si no te movés, las novas de hielo y el Mago Gélido, que se corrompe en su forma demoníaca.",
+    help:"Los BRASEROS: mantené 🔥 junto a uno (o prendelo con fuego) y el frío baja. Seguí moviéndote.",
+    goal:"Derrotá al Mago Gélido en sus dos formas y recuperá el SEGUNDO CRISTAL."},
+  acuatica: {
+    say:"Con dos cristales, la realidad empieza a doblarse. El agua te mueve: aprovechala o te va a cansar.",
+    kill:"Charcos que brillan antes de dar una descarga, el Kraken Joven (nivel 6) y el Leviatán que ataca desde el borde.",
+    help:"Las CORRIENTES: seguilas para moverte rápido o para arrastrar a la horda lejos de vos.",
+    goal:"Llegá al nivel 10 y vencé al Leviatán en sus 3 fases."},
+  laberinto: {
+    say:"Acá espera el TERCER Guardián. Muros, sismos y poco maná: gana el que piensa antes de correr.",
+    kill:"Quedarte encerrado entre muros, los sismos, el Guardián del Laberinto (nivel 6) y el Minotauro.",
+    help:"Los SELLOS del piso, en orden I → II → III: aturden a la horda y te curan. Hacé chocar al Minotauro contra un muro.",
+    goal:"Activá los sellos, derrotá al Minotauro y recuperá el TERCER CRISTAL."},
   abismo: {
-    say:"Ruinas colgadas sobre la nada. Acá el PISO también pelea: se agrieta, se rompe y vuelve.",
+    say:"El punto de no retorno. Más allá, la dimensión de la Horda. Acá el PISO también pelea: se agrieta, se rompe y vuelve.",
     kill:"El borde (si caés, quedás colgado: un compañero te sube), el Jinete que carga en línea, el Carcelero y sus cadenas y lo que vive debajo.",
     help:"Mirá las GRIETAS: una plataforma crítica tiembla y larga piedras antes de caer. Empujá a la horda al vacío y usá al Jinete como arma.",
     goal:"Sobreviví a las ruinas, vencé al Carcelero del Vacío y enfrentá a El Que Mora Debajo."},
-  hielo: {
-    say:"Acá el frío es el enemigo. Quedarte quieto te congela.",
-    kill:"El frío que se acumula si no te movés, las novas de hielo y el Mago de Hielo, que se vuelve Ángel Caído.",
-    help:"Los BRASEROS: mantené 🔥 junto a uno (o prendelo con fuego) y el frío baja. Seguí moviéndote.",
-    goal:"Derrotá al Mago de Hielo y a su forma de Ángel Caído."},
-  laberinto: {
-    say:"Muros, sismos y poco maná. Acá gana el que piensa antes de correr.",
-    kill:"Quedarte encerrado entre muros, los sismos, el Guardián (nivel 6) y el Minotauro.",
-    help:"Los SELLOS del piso, en orden I → II → III: aturden a la horda y te curan. Hacé chocar al Minotauro contra un muro.",
-    goal:"Activá los sellos y derrotá al Minotauro."},
   infernal: {
-    say:"La última arena. Tus habilidades pegan menos acá: jugá con cuidado… y confiá en mí.",
+    say:"La dimensión de la Horda. Tus habilidades pegan menos acá: jugá con cuidado… y traeme los cristales.",
     kill:"Las FISURAS de donde sale la horda, el fuego del piso y lo que te espera en el nivel 9.",
-    help:"Cerrá las fisuras: mantené ✖ junto a una (quema un poco, pero corta la horda).",
+    help:"Cerrá las fisuras: mantené ✖ junto a una (quema un poco, pero corta la horda). Alguien está encadenado en el fondo.",
     goal:"Llegá al corazón del Infierno. Ahí te voy a estar esperando."}
 };
 const RUN_INTRO = { open:false, raf:0, t0:0, onGo:null };
@@ -58,7 +58,7 @@ function runIntroShow(arena, onGo){
   const el = document.getElementById("run-intro"); const B = ARENA_BRIEF[arena];
   if(!el || !B){ onGo(); return; }
   const M = ARENA_MODS[arena] || {};
-  el.querySelector(".ri-arena").textContent = (M.icon ? M.icon + " " : "") + (M.label || arena).toUpperCase();
+  el.querySelector(".ri-arena").textContent = (M.icon ? M.icon + " " : "") + (typeof campaignNumberLabel==="function" && campaignNumberLabel(arena) ? campaignNumberLabel(arena) + " — " : "") + (M.label || arena).toUpperCase();
   el.querySelector(".ri-say").textContent = "«" + B.say + "»";
   el.querySelector(".ri-kill").textContent = B.kill;
   el.querySelector(".ri-help").textContent = B.help;

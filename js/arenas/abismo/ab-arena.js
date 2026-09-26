@@ -95,7 +95,7 @@ function abBeginLevel(){
   for(const h of heroes){ if(h.abHang) abRescue(h, null); h.abHook = null; }
   abS.tremorT = 14000 + Math.random()*6000;
   if(lv === 1){
-    arenaTitleCard("ARENA VI", "EL ABISMO", "Acá el piso también es parte del combate.", 5200);
+    arenaTitleCard(campaignArenaKicker("abismo"), "EL ABISMO", "El punto de no retorno. Acá el piso también es parte del combate.", 5200);
     runLater(6000, ()=>abTutSay("ab_intro", "Estas ruinas flotan sobre el VACÍO. El piso se agrieta, avisa y se derrumba… y lo que esté arriba cae. Empujá a la horda por el borde.", 9000));
   }
   if(lv === 9 && abS.ca.st!=="dead") abS.ca = {st:"none", t:0, x:0, y:0};

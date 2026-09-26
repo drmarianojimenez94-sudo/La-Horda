@@ -52,6 +52,8 @@ function defaultSave(){
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
     micelialMigrated:true,  // idem para el Reino Micelial (4ta arena, antes del Hielo)
     abismoMigrated:true,    // idem para la Arena del Abismo (antes del Laberinto): save.legacyLabOpen
+    campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
+    legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
     campaignResetV3:true,   // 3er reinicio (antes de la prueba real con un amigo): idem
@@ -62,7 +64,7 @@ function defaultSave(){
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0, unico:0}, // protección suave contra la mala suerte (oculta), ver js/data/loot.js
     stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los campeones): ver js/systems/items.js
-    crystals:{espora:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
+    crystals:{ancestral:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
     shop:null               // ofertas de objetos del día (js/systems/shop.js)
   };
@@ -144,6 +146,11 @@ function _loadSaveInner(){
       // La Arena del Abismo llegó entre el Hielo y el Laberinto: quien ya había superado el Hielo tenía el
       // Laberinto abierto y lo conserva; quien ya había terminado la campaña conserva la Arena Divina.
       if(!parsed.abismoMigrated){ save.abismoMigrated = true; if(save.arenasCleared.hielo && !save.arenasCleared.abismo) save.legacyLabOpen = true; }
+      // ORDEN CANÓNICO (campaignV2): las arenas cambian de ORDEN, no de ID (un guardado nunca lee otra
+      // arena como completada). Lo que el guardado ya tenía abierto con el orden anterior lo conserva
+      // (save.legacyOpenArenas); lo nuevo se abre por la frontera del orden canónico. Los cristales
+      // pasan a los Guardianes canónicos (Bosque, Gélida, Laberinto): la Madre Espora ya no es Guardiana.
+      if(!parsed.campaignV2){ campaignV2Migrate(parsed); persist(); }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
@@ -184,6 +191,19 @@ function migrateToAccountStash(parsed){
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, parsed.lootPity||{});
   if(!parsed.stashV1){ save.stashV1 = true; for(const it of stash) if(typeof collectionRegister==="function") collectionRegister(it, true); persist(); }
 }
+function campaignV2Migrate(parsed){
+  const cleared = save.arenasCleared || {}, old = LEGACY_ARENA_ORDER_V1;
+  const oldOpen = k=>{ const i = old.indexOf(k); if(i===0) return true; if(k==="hielo" && save.legacyHieloOpen) return true;
+    if(k==="laberinto" && save.legacyLabOpen) return true; return i > 0 && !!cleared[old[i-1]]; };
+  const anyCleared = old.some(k=>cleared[k]);   // un perfil sin nada completado arranca como uno nuevo (solo la frontera)
+  save.legacyOpenArenas = anyCleared ? old.filter(k=>!cleared[k] && oldOpen(k) && ARENA_ORDER.includes(k)) : [];
+  // Arena Divina: quien ya la tenía (campaña terminada con el orden anterior) la conserva
+  if(cleared.infernal) save.divineArenaUnlocked = true;
+  const c = Object.assign({}, (parsed && parsed.crystals) || {});
+  save.crystalsLegacyV1 = c;                                   // registro del estado anterior
+  save.crystals = {ancestral: !!cleared.bosque, escarcha: !!(c.escarcha || cleared.hielo), piedra: !!(c.piedra || cleared.laberinto)};
+  save.campaignV2 = true;
+}
 function campaignReset(raw){
   try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeCampania")) localStorage.setItem(SAVE_KEY+"_antesDeCampania", raw); }catch(e){}
   for(const k in save.champions){
@@ -196,6 +216,7 @@ function campaignReset(raw){
   save.arenasCleared = defaultSave().arenasCleared;
   save.crystals = defaultSave().crystals;
   save.legacyHieloOpen = false; save.legacyLabOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true; save.abismoMigrated = true;
+  save.campaignV2 = true; save.legacyOpenArenas = [];
   save.divineArenaUnlocked = false;
   save.starterChosen = false; save.lastChamp = null;
   save.playtestV1Bonus = true;

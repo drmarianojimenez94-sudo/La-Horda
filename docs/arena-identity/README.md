@@ -24,17 +24,19 @@ enteramente sobre él.
 
 ## Lo PROPIO de cada arena
 
-| Arena | Orden | Código propio | Ficha |
+| Arena | Orden (canon, ver `docs/lore/LA_HORDA_LORE_BIBLE.md`) | Código propio | Ficha |
 |---|---|---|---|
-| Ruinas del Bosque | 1 | bloques en `update.js`/`spawning.js`, `aidBuildBosque` + **`js/arenas/bosque/`** (`ARENA_EXT`) | [bosque.md](bosque.md) |
-| Arena Acuática | 2 | `js/arenas/acuatica.js` + bloques en `update.js` + **`js/arenas/acuatica/`** (`ARENA_EXT`) | [acuatica.md](acuatica.md) |
-| **La Fortaleza Sin Fin** | **3** | **`js/arenas/fortaleza/`** (registrada en `ARENA_DEFS`) | [fortaleza.md](fortaleza.md) |
-| **El Reino Micelial** | **4** | **`js/arenas/micelial/`** (registrada en `ARENA_DEFS`) | [micelial.md](micelial.md) |
-| Arena de Hielo | 5 | bloques en `update.js`/`boss-skills.js`, `aidBuildHielo` + **`js/arenas/hielo/`** (`ARENA_EXT`) | [hielo.md](hielo.md) |
-| **El Abismo** | **6** | **`js/arenas/abismo/`** (registrada en `ARENA_DEFS`) | [abismo.md](abismo.md) |
-| Laberinto Maldito | 7 | muros en `collision.js`, `aidLabyrinthLayout` + **`js/arenas/laberinto/`** (`ARENA_EXT`) | [laberinto.md](laberinto.md) |
-| Arena Infernal | 8 | `aidBuildInfernal`, pozos de lava en `hazards.js` + **`js/arenas/infernal/`** (`ARENA_EXT`) | [infernal.md](infernal.md) |
-| Arena Divina (modo aparte) | — | `js/arenas/divina.js`, `js/rendering/divina.js` | [divina.md](divina.md) |
+| Ciudad Maldita (`ciudad`) | 01 · en construcción | — (slot `comingSoon` en `ARENA_MODS`) | — |
+| **La Fábrica Sin Fin** (`fortaleza`) | **02** | **`js/arenas/fortaleza/`** (registrada en `ARENA_DEFS`) | [fortaleza.md](fortaleza.md) |
+| Ruinas Célticas / Élficas (`bosque`) | 03 · Guardián 1 | bloques en `update.js`/`spawning.js`, `aidBuildBosque` + **`js/arenas/bosque/`** (`ARENA_EXT`) | [bosque.md](bosque.md) |
+| **El Reino Fúngico** (`micelial`) | **04** | **`js/arenas/micelial/`** (registrada en `ARENA_DEFS`) | [micelial.md](micelial.md) |
+| Arena Gélida (`hielo`) | 05 · Guardián 2 | bloques en `update.js`/`boss-skills.js`, `aidBuildHielo` + **`js/arenas/hielo/`** (`ARENA_EXT`) | [hielo.md](hielo.md) |
+| Arena Acuática (`acuatica`) | 06 | `js/arenas/acuatica.js` + bloques en `update.js` + **`js/arenas/acuatica/`** (`ARENA_EXT`) | [acuatica.md](acuatica.md) |
+| Minas Profundas (`minas`) | 07 · en construcción | — (slot `comingSoon` en `ARENA_MODS`) | — |
+| Laberinto (`laberinto`) | 08 · Guardián 3 | muros en `collision.js`, `aidLabyrinthLayout` + **`js/arenas/laberinto/`** (`ARENA_EXT`) | [laberinto.md](laberinto.md) |
+| **El Abismo** (`abismo`) | **09** | **`js/arenas/abismo/`** (registrada en `ARENA_DEFS`) | [abismo.md](abismo.md) |
+| Arena Infernal (`infernal`) | 10 · Guardián 4 | `aidBuildInfernal`, pozos de lava en `hazards.js` + **`js/arenas/infernal/`** (`ARENA_EXT`) | [infernal.md](infernal.md) |
+| Arena Divina (postgame, se abre al completar la Infernal) | — | `js/arenas/divina.js`, `js/rendering/divina.js` | [divina.md](divina.md) |
 
 ## Extensiones de identidad (`ARENA_EXT`, Alpha 0.1)
 

@@ -192,7 +192,7 @@ function micBeginLevel(){
   micS.nucT = Math.min(micS.nucT, 6000);
   micS.inter.t = 6000 + Math.random()*3000;
   if(lv === 1){
-    arenaTitleCard("ARENA IV", "EL REINO MICELIAL", "Todo lo que ves está vivo. Y crece.", 5200);
+    arenaTitleCard(campaignArenaKicker("micelial"), "EL REINO FÚNGICO", "Todo lo que ves está vivo. Y crece.", 5200);
     runLater(6200, ()=>{ if(state==="playing" && micS && micS.lv===1) showBanner("El capullo del centro late… no lo pierdas de vista"); });
   } else if(st !== prev){
     const S = MIC_STAGES[st];
