@@ -75,6 +75,12 @@ function setsOnHit(h, e, dmg, crit, opts){
     if(h._mark !== e){ h._focus = Math.floor((h._focus||0)/2); h._mark = e; }
     else if(_setReady(h, "focus", 120)){ h._focus = Math.min(10, (h._focus||0) + 1); if(h._focus===10 && _setReady(h, "focusMsg", 6000)) _setMsg(h, "¡PRESA ACORRALADA!"); }
   }
+  // Lucifer 4: los básicos prenden fuego (antes el texto decía Quemadura y daba una descarga eléctrica)
+  if((c.lucifer||0) >= 4 && fromBasic && e.alive){
+    const fresh = !(e.burnTimer > 0);
+    e.burnTimer = Math.max(e.burnTimer||0, 2400); e.burnDmg = Math.max(e.burnDmg||0, _setBase(h)*0.2); e.burnSrc = h;
+    if(fresh) vfxBurst(e.x, e.y-14, 4, "ember", 70, 280, 2.5, h===player?1:0, -40, 1);
+  }
   // Lucifer 6: con poca vida, los básicos incendian
   if((c.lucifer||0) >= 6 && fromBasic && h.hp < h.maxHp*0.5 && e.alive && _setReady(h, "lucIgnite", 300)){
     damageEnemy(e, _setBase(h)*0.3, {src:h, fromProc:true, burn:true});
@@ -250,15 +256,27 @@ function updateSets(h, dt){
     }
   }
 }
-// Aura discreta del set completo bajo el héroe (color del set; más intensa con la carga).
+// AURA DE SET: aparece con 2 piezas y se intensifica con cada pieza; con el set completo es el aura
+// plena (con su carga/estado). AURA ≠ SKIN: la skin solo llega con el set completo y si existe su arte.
+function heroMainSet(h){
+  const c = heroSetCounts(h); if(!c) return null;
+  let best = null, bq = 0;
+  for(const k in c){ const q = c[k]/setFullCount(k) + (c[k] >= setFullCount(k) ? 1 : 0); if(c[k] >= 2 && q > bq){ bq = q; best = k; } }
+  return best;
+}
 function drawSetAuras(){
   for(const h of heroes){
     if(!h.alive || !inView(h.x, h.y, 60)) continue;
-    const c = heroSetCounts(h); if(!c) continue;
-    let id = null;
-    for(const k in c){ if(c[k] >= setFullCount(k)){ id = k; break; } }
-    if(!id) continue;
-    const S = SET_DB[id];
+    const id = heroMainSet(h); if(!id) continue;
+    const S = SET_DB[id], n = setN(h, id), full = n >= setFullCount(id);
+    if(!full){
+      // parcial: anillo punteado tenue que gana opacidad con cada pieza (2/4 → 3/4...)
+      const q = n/setFullCount(id), pulse = 0.5 + 0.5*Math.sin(animNow/420);
+      ctx.save(); ctx.strokeStyle = `rgba(${S.aura},${0.14 + 0.32*q + 0.06*pulse})`; ctx.lineWidth = 1.5 + q;
+      ctx.setLineDash([5, 6]); ctx.lineDashOffset = -animNow/80;
+      ctx.beginPath(); ctx.ellipse(h.x, h.y+2, h.radius*1.2, h.radius*0.48, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore();
+      continue;
+    }
     let charge = 0.3, hot = false;
     if(id==="tempestad"){ charge = (h._storm||0)/30; hot = !!h._stormReady; }
     else if(id==="coloso") charge = Math.min(1, (h._colossus||0)/(h.maxHp*0.3));
@@ -270,11 +288,11 @@ function drawSetAuras(){
     else if(id==="laberinto") charge = (h._momentum||0)/10;
     else if(id==="lucifer"){ hot = h.hp < h.maxHp*0.5; charge = hot ? 0.8 : 0.25; }
     const pulse = 0.5 + 0.5*Math.sin(animNow/(hot ? 110 : 260));
-    const a = 0.12 + 0.3*charge + (hot ? 0.25*pulse : 0.06*pulse);
+    const a = 0.22 + 0.3*charge + (hot ? 0.25*pulse : 0.08*pulse);
     ctx.save();
-    ctx.strokeStyle = `rgba(${S.aura},${Math.min(0.85, a)})`; ctx.lineWidth = hot ? 3 : 2;
-    ctx.beginPath(); ctx.ellipse(h.x, h.y+2, h.radius*1.25, h.radius*0.5, 0, 0, Math.PI*2); ctx.stroke();
-    if(hot){ ctx.globalAlpha = 0.25*pulse; ctx.fillStyle = `rgb(${S.aura})`; ctx.fill(); }
+    ctx.strokeStyle = `rgba(${S.aura},${Math.min(0.9, a)})`; ctx.lineWidth = hot ? 3.5 : 2.5;
+    ctx.beginPath(); ctx.ellipse(h.x, h.y+2, h.radius*1.3, h.radius*0.52, 0, 0, Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = 0.18 + (hot ? 0.2*pulse : 0); ctx.fillStyle = `rgb(${S.aura})`; ctx.fill();
     ctx.restore();
     // presa marcada (Sombra del Cazador) sobre el objetivo
     if(id==="cazador" && h._mark && h._mark.alive && h===player){
@@ -282,6 +300,25 @@ function drawSetAuras(){
       ctx.beginPath(); ctx.ellipse(m.x, m.y+4, (m.radius||30)*1.4, (m.radius||30)*0.6, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore();
     }
   }
+}
+/* ---------------- skins de set completo ---------------- */
+// Registro de arte de skin por set: SET_SKINS[setId] = {src:"assets/.../skin.png"} (una pose por
+// campeón o un atlas; ver LA_HORDA_ITEM_ASSET_MANIFEST.md). Hoy NINGÚN set tiene arte de skin:
+// el set completo se ve con su aura plena y la skin se enchufa acá cuando llegue, sin tocar la lógica.
+const SET_SKINS = {};
+const _SET_SKIN_IMG = {};
+function setSkinImage(id){
+  const d = SET_SKINS[id]; if(!d) return null;
+  let im = _SET_SKIN_IMG[id]; if(!im){ im = _SET_SKIN_IMG[id] = new Image(); im.src = d.src; }
+  return im.complete && im.naturalWidth ? im : null;
+}
+function drawSetSkin(h, drawScale, alpha){
+  if(!h || !h.classKey) return false;
+  const id = heroMainSet(h); if(!id || setN(h, id) < setFullCount(id)) return false; // solo set COMPLETO
+  const im = setSkinImage(id); if(!im) return false;
+  const H = h.radius*2.7*(drawScale/(h.scale||2.0)), W = H*im.width/im.height;
+  drawAnimFrameSized(im, {frames:[{x:0, y:0, w:im.width, h:im.height}]}, 0, h.x, h.y, W, H, 0.5, 0.94, (h.fx||0) < -0.12, alpha);
+  return true;
 }
 function resetSetRunState(h){
   h._storm = 0; h._stormReady = false; h._colossus = 0; h._oath = 0; h._alba = 0; h._albaReady = false;

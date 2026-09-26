@@ -43,6 +43,9 @@ function drawHero(h){
 // Lo comparten el dibujo normal, el hit flash y la caída al morir.
 function drawHeroBody(h, drawScale, spinning, stealthed){
   if(champPackPending(h.classKey)) return; // nunca el arte viejo mientras baja el redibujado
+  // SKIN DE SET COMPLETO (única transformación visual completa por equipo). Solo si el arte existe
+  // (SET_SKINS en set-effects.js); sin arte, el set completo se ve con su aura completa.
+  if(typeof drawSetSkin==="function" && drawSetSkin(h, drawScale, stealthed?0.32:1)) return;
   // El Mago usa su propio atlas de sprites (arte provisto por el usuario) en vez del sprite
   // procedural; el resto de las clases sigue exactamente igual que antes.
   if(h.classKey==="mago" && drawMagoAtlas(h, drawScale, stealthed?0.32:1)){

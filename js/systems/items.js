@@ -45,7 +45,7 @@ function autoEquipBest(classKey){
     if(champ.equipment[type]) return;
     const candidates = stashItems().filter(it=>it.type===type && it.designed && it.champion===classKey && !itemEquippedBy(it.uid));
     if(!candidates.length) return;
-    candidates.sort((a,b)=> rarityIndex(b.rarity)-rarityIndex(a.rarity) || b.value-a.value);
+    candidates.sort((a,b)=> rarityIndex(b.rarity)-rarityIndex(a.rarity) || itemStat(b)-itemStat(a));
     champ.equipment[type] = candidates[0].uid; changed = true;
   });
   if(changed) persist();
@@ -95,6 +95,8 @@ function makeDesignedItem(designId){
   const extra = d.set ? ` · Set: ${SET_DB[d.set].name}` : (d.mythic ? ` · ${MYTHIC_POWERS[d.mythic].name}` : (d.unique ? ` · ${UNIQUE_POWERS[d.unique].name}` : ""));
   return {
     uid: "it_"+(ITEM_UID_SEQ++)+"_"+Date.now().toString(36),
+    level:1, roll:_itemRoll(),
+    effectText: DESIGNED_EFFECT_TEXT[d.id] || null,
     type:d.type, rarity:d.rarity, designed:true, designId:d.id,
     name:d.name, epithet:d.epithet||null, icon:ITEM_TYPES[d.type].icon, statKey:d.type, value,
     passives, mythicPassive,
@@ -136,28 +138,57 @@ function proceduralItemName(type, rarity, proc){
   const proper = _pickFrom(LEGEND_PROPER_NAMES);
   return proc && LEGEND_PROC_EPITHET[proc] ? `${noun} de ${proper}, ${LEGEND_PROC_EPITHET[proc]}` : `${noun} de ${proper}`;
 }
-// Genera un objeto nuevo 100% a partir de datos (sin casos especiales por objeto). Los objetos
-// procedurales son UNIVERSALES (cualquier campeón los puede usar): champKey solo queda como dato.
-function makeItem(type, rarity, champKey){
-  const meta = RARITY_META[rarity];
+// Roll de stats de UNA copia (la identidad y la pasiva no varían; solo los números).
+function _itemRoll(){ const [lo, hi] = ITEM_ROLL_RANGE; return Math.round((lo + Math.random()*(hi-lo))*1000)/1000; }
+function _passiveById(id){ return PASSIVE_DB.find(p=>p.id===id) || PASSIVE_DB[0]; }
+// Familia de mecánicas según la arena (qué tiende a caer acá) y el poder dentro de la familia.
+function rollItemFamily(arena){ return _pick(ARENA_ITEM_FAMILIES[arena] || ARENA_ITEM_FAMILIES.infernal, Math.random) || "fuego"; }
+function rollFamilyProc(family){ return _pick(ITEM_FAMILIES[family].procs, Math.random); }
+// Genera un objeto procedural con IDENTIDAD FIJA (item-identity.js): la pieza (sustantivo) define
+// su pasiva; en Muy Raro y Legendario la familia define su mecánica y su nombre. Los procedurales
+// son UNIVERSALES (cualquier campeón los usa). opts = {arena, family}.
+// Nunca genera Únicos: los Únicos se diseñan a mano (UNIQUE_DESIGNS).
+function makeItem(type, rarity, champKey, opts){
+  opts = opts || {};
+  if(rarity==="unico"){ console.warn("makeItem: los Únicos no se generan proceduralmente; sale un Mítico"); rarity = "mitico"; }
   const value = RARITY_VALUES[type][rarity];
-  const passiveDefs = rollFrom(PASSIVE_DB, meta.passives);
-  const passives = passiveDefs.map(instancePassive);
-  const mythicPassive = (rarity==="mitico"||rarity==="unico") ? instancePassive(rollFrom(PASSIVE_DB_MYTHIC,1)[0]) : null;
-  const legendProc = LEGEND_PROC_POWER[rarity] ? LEGEND_PROC_IDS[(Math.random()*LEGEND_PROC_IDS.length)|0] : undefined;
+  const noun = _pickFrom(ITEM_NOUNS[type] || [ITEM_TYPES[type].label]);
+  const passives = [];
+  if(rarity!=="comun") passives.push(instancePassive(_passiveById((ITEM_ARCHETYPE_PASSIVE[type]||{})[noun] || "pas_dmg")));
+  let family = null, legendProc, name;
+  if(rarity==="muyraro" || rarity==="legendario" || rarity==="mitico"){
+    family = opts.family || rollItemFamily(opts.arena || (typeof currentArena!=="undefined" ? currentArena : "bosque"));
+    legendProc = rollFamilyProc(family);
+  }
+  if(rarity==="legendario" || rarity==="mitico"){
+    const fp = _passiveById(ITEM_FAMILIES[family].passive);
+    if(!passives.some(p=>p.id===fp.id)) passives.push(instancePassive(fp));
+  }
+  if(rarity==="muyraro") name = noun + " " + _genderize(_pickFrom(ITEM_FAMILIES[family].adj), noun);
+  else if(ITEM_QUALITY[rarity]) name = noun + " " + _genderize(_pickFrom(ITEM_QUALITY[rarity]), noun);
+  else { const proper = _pickFrom(LEGEND_PROPER_NAMES); name = legendProc && LEGEND_PROC_EPITHET[legendProc] ? `${noun} de ${proper}, ${LEGEND_PROC_EPITHET[legendProc]}` : `${noun} de ${proper}`; }
+  const mythicPassive = rarity==="mitico" ? instancePassive(PASSIVE_DB_MYTHIC[family==="bastion" ? 1 : 0]) : null;
   return {
     uid: "it_"+(ITEM_UID_SEQ++)+"_"+Date.now().toString(36),
-    type, rarity,
-    name: proceduralItemName(type, rarity, legendProc),
+    level:1, roll:_itemRoll(), noun, family,
+    type, rarity, name,
     icon: ITEM_TYPES[type].icon,
     statKey: type, value,
     passives, mythicPassive,
     legendProc,
+    element: family ? ITEM_FAMILIES[family].element : null,
     champion: null,
     placeholder: false,
-    desc: `+${Math.round(value*100)}% ${ITEM_TYPES[type].statLabel}${passives.length?` · ${passives.length} pasiva${passives.length>1?"s":""}`:""}${mythicPassive?" · 1 pasiva mítica":""}.`
+    desc: `+${Math.round(value*100)}% ${ITEM_TYPES[type].statLabel}${passives.length?` · ${passives.map(p=>p.name).join(" · ")}`:""}${legendProc?` · ${LEGEND_PROCS[legendProc].name}`:""}.`
   };
 }
+/* ---------------- nivel, roll y valor real ---------------- */
+function itemLevel(it){ return Math.max(1, Math.min(ITEM_MAX_LEVEL, (it && it.level)|0 || 1)); }
+function itemLevelMult(it){ return 1 + ITEM_LEVEL_STEP*(itemLevel(it)-1); }
+// Stat garantizado REAL del objeto: base de la rareza × roll de esta copia × nivel.
+function itemStat(it){ return it ? it.value * (it.roll||1) * itemLevelMult(it) : 0; }
+// Rango posible del stat de ESTE objeto en su nivel actual (para el tooltip: "+19% (17–21%)").
+function itemStatRange(it){ const m = it.value*itemLevelMult(it); return [m*ITEM_ROLL_RANGE[0], m*ITEM_ROLL_RANGE[1]]; }
 // Devuelve el objeto equipado en una ranura de un campeón (o null)
 function equippedItem(champKey, type){
   const champ = save.champions[champKey];
@@ -167,17 +198,26 @@ function equippedItem(champKey, type){
 }
 // Junta todas las pasivas (normales + míticas + el % garantizado de pechera/guantes/botas +
 // bonus de set activos) de los 6 ítems equipados de un campeón.
+// PASIVAS IDÉNTICAS NO SE ACUMULAN: si dos objetos traen la misma pasiva de catálogo (mismo id,
+// ej. dos "Ojo Certero"), cuenta solo la más fuerte. Los STATS (el % garantizado de cada pieza y las
+// propiedades con número de los objetos con nombre) sí se suman, como siempre.
+function _isCatalogPassive(p){ return p && typeof p.id==="string" && (p.id.startsWith("pas_") || p.id.startsWith("pasm_")); }
+function itemPassiveValue(it, p){ const mult = it.designed ? 1 : (PASSIVE_RARITY_MULT[it.rarity]||1); return p.value*mult*itemLevelMult(it); }
 function equippedPassives(champKey){
-  const list = [];
+  const list = [], best = {};
   EQUIP_SLOT_TYPES.forEach(type=>{
     const it = equippedItem(champKey, type);
     if(!it) return;
-    const mult = it.designed ? 1 : (PASSIVE_RARITY_MULT[it.rarity]||1);
-    (it.passives||[]).forEach(p=>list.push(mult===1 ? p : {id:p.id, name:p.name, effect:p.effect, value:p.value*mult}));
-    if(it.mythicPassive) list.push(it.mythicPassive);
+    (it.passives||[]).forEach(p=>{
+      const q = {id:p.id, name:p.name, effect:p.effect, value:itemPassiveValue(it, p)};
+      if(_isCatalogPassive(p)){ if(!best[p.id] || best[p.id].value < q.value) best[p.id] = q; }
+      else list.push(q);
+    });
+    if(it.mythicPassive){ const m = it.mythicPassive; if(!best[m.id] || best[m.id].value < m.value) best[m.id] = m; }
     const guaranteedEffect = SLOT_GUARANTEED_EFFECT[type];
-    if(guaranteedEffect) list.push({id:"slot_"+type, name:ITEM_TYPES[type].label, effect:guaranteedEffect, value:it.value});
+    if(guaranteedEffect) list.push({id:"slot_"+type, name:ITEM_TYPES[type].label, effect:guaranteedEffect, value:itemStat(it)});
   });
+  for(const id in best) list.push(best[id]);
   activeSetBonusEffects(champKey).forEach(p=>list.push(p));
   return list;
 }
@@ -208,13 +248,14 @@ function passiveSum(champKey, effect){
 // determinístico según su uid para objetos anteriores a este sistema.
 function legendProcOf(it){
   if(!it || it.set || !LEGEND_PROC_POWER[it.rarity]) return null; // las piezas de set valen por el set
+  if(it.rarity==="muyraro") return it.legendProc && LEGEND_PROCS[it.legendProc] ? it.legendProc : null; // Muy Raro: solo si nació con su mecánica
   if(it.legendProc && LEGEND_PROCS[it.legendProc]) return it.legendProc;
   let h = 0; const s = String(it.uid||it.name||"");
   for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;
   return LEGEND_PROC_IDS[h % LEGEND_PROC_IDS.length];
 }
-// Poderes legendarios activos de un campeón: {procId: potencia} (se suman si dos objetos
-// traen el mismo). Mismo caché por cuadro que passiveSum.
+// Poderes activos de un campeón: {procId: potencia}. Dos objetos con el MISMO poder no se suman:
+// vale el más fuerte (regla de pasivas duplicadas). Mismo caché por cuadro que passiveSum.
 function heroProcs(champKey){
   if(!champKey || !save || !save.champions[champKey]) return null;
   const c = _passiveBucket(champKey);
@@ -223,7 +264,7 @@ function heroProcs(champKey){
     EQUIP_SLOT_TYPES.forEach(type=>{
       const it = equippedItem(champKey, type);
       const id = legendProcOf(it);
-      if(id) c.procs[id] = (c.procs[id]||0) + LEGEND_PROC_POWER[it.rarity];
+      if(id) c.procs[id] = Math.max(c.procs[id]||0, LEGEND_PROC_POWER[it.rarity]);
     });
   }
   return c.procs;
@@ -248,21 +289,28 @@ function heroUnique(champKey){ if(!heroMythics(champKey)) return null; return _p
 const PASSIVE_PCT_EFFECTS = {dmg_mult:1, atkspeed_mult:1, cd_mult:1, lifesteal_add:1, heal_mult:1, def_add:1, skilldmg_mult:1, onhit_proc:1,
   hp_mult:1, speed_mult:1, crit_chance_add:1, crit_mult_add:1, energy_mult:1, overheal_shield_pct:1, mythic_execute:1, mythic_emergency_shield:1,
   missinghp_dmg_bonus:1, res_physical:1, res_fire:1, res_ice:1, res_lightning:1};
-function itemPassivesHTML(it){
-  const mult = it.designed ? 1 : (PASSIVE_RARITY_MULT[it.rarity]||1);
-  const parts = (it.passives||[]).map(p=> PASSIVE_PCT_EFFECTS[p.effect] ? `${p.name} +${Math.round(p.value*mult*100)}%` : p.name);
-  if(it.mythicPassive) parts.push("★ "+it.mythicPassive.name);
-  let html = parts.join(" · ");
+// EFECTO de un objeto en líneas legibles, con sus valores REALES (rareza × nivel). Separado del
+// lore: primero lo que hace, con números; la historia va aparte (itemDetailHTML).
+function itemEffectLines(it){
+  const out = [];
+  if(it.effectText) out.push({cls:"item-effect", txt:"✦ "+it.effectText});
+  (it.passives||[]).forEach(p=>{
+    const v = itemPassiveValue(it, p), lab = PASSIVE_EFFECT_LABEL[p.effect] || p.name;
+    const isCat = _isCatalogPassive(p);
+    out.push({cls:"item-passive", txt: PASSIVE_PCT_EFFECTS[p.effect] ? (isCat ? `${p.name}: +${Math.round(v*100)}% ${lab.toLowerCase()}` : `+${Math.round(v*100)}% ${lab.toLowerCase()}`) : p.name, id: isCat ? p.id : null});
+  });
+  if(it.mythicPassive) out.push({cls:"item-mythic", txt:`★ ${it.mythicPassive.name}: ${it.mythicPassive.desc}`, id:it.mythicPassive.id});
   const proc = legendProcOf(it);
-  if(proc) html += `${html?"<br>":""}<span class="item-proc">✦ ${LEGEND_PROCS[proc].name}: ${LEGEND_PROCS[proc].desc}</span>`;
-  if(it.mythic && MYTHIC_POWERS[it.mythic]) html += `<br><span class="item-mythic">★ ${MYTHIC_POWERS[it.mythic].name}: ${MYTHIC_POWERS[it.mythic].desc}</span>`;
-  if(it.unique && UNIQUE_POWERS[it.unique]) html += `<br><span class="item-unique">◆ ${UNIQUE_POWERS[it.unique].name}: ${UNIQUE_POWERS[it.unique].desc}</span>`;
+  if(proc) out.push({cls:"item-proc", txt:`✦ ${LEGEND_PROCS[proc].name}${it.rarity==="muyraro"?" (versión menor, 50%)":""}: ${LEGEND_PROCS[proc].desc}`, proc});
+  if(it.mythic && MYTHIC_POWERS[it.mythic]) out.push({cls:"item-mythic", txt:`★ ${MYTHIC_POWERS[it.mythic].name}: ${MYTHIC_POWERS[it.mythic].desc}`});
+  if(it.unique && UNIQUE_POWERS[it.unique]) out.push({cls:"item-unique", txt:`◆ ${UNIQUE_POWERS[it.unique].name}: ${UNIQUE_POWERS[it.unique].desc}`});
   if(it.designed && it.rarity==="legendario" && typeof recipesUsing==="function"){
     const r = recipesUsing(it.designId);
-    if(r.length) html += `<br><span class="item-recipe">⚗ Parte de la receta de <b>${DESIGNED_ITEMS[r[0]].name}</b></span>`;
+    if(r.length) out.push({cls:"item-recipe", txt:`⚗ Parte de la receta de ${DESIGNED_ITEMS[r[0]].name}`});
   }
-  return html;
+  return out;
 }
+function itemPassivesHTML(it){ return itemEffectLines(it).map(l=>`<span class="${l.cls}">${l.txt}</span>`).join("<br>"); }
 // Sobrecarga Mítica: bonus de daño/velocidad mientras la vida esté por debajo del 50%.
 function mythicExecuteBonus(h){
   if(!h.hp || !h.maxHp || h.hp >= h.maxHp*0.5 || !h.classKey) return 0;
@@ -339,8 +387,10 @@ function fuseItems(classKey, uids){
   const items = uids.map(u=>findStashItem(u));
   const check = canFuseGroup(items);
   if(!check.ok) return check;
+  const keepLevel = Math.max(...items.map(itemLevel)); // lo invertido en Gemas no se pierde al fusionar
   uids.forEach(u=>removeItemFromInventory(classKey, u, false));
   const fused = makeItem(check.type, check.nextRarity, classKey);
+  fused.level = keepLevel;
   addItemToInventory(classKey, fused);
   return {ok:true, item:fused};
 }

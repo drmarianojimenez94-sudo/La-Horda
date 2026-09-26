@@ -300,6 +300,7 @@ function damageHero(h, amount, src){
       const absorbed = Math.min(h.itemShield, dmg);
       h.itemShield -= absorbed; dmg -= absorbed;
       if(h===player) floatText(h.x, h.y-50, "¡ESCUDO DE EMERGENCIA!", "crit");
+      vfxShock(h.x, h.y-10, 10, 60, "255,90,90", 420, h===player?2:1); // se ve que fue el objeto mítico
     }
   }
   h.hp -= dmg;
