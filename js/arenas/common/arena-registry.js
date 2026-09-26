@@ -56,18 +56,33 @@
      camLift()                      cuánto levantar la cámara (u) para que entre un jefe enorme
    ARENA_BOSS_TIPS[tipo]: guía de aparición de subjefes/jefes propios (boss-hud.js).
    ARENA_SFX[nombre]: sonidos propios {p, gap, play(t0, destino) -> duración} (audio.js).
+   ARENA_EXT[clave]: EXTENSIONES de identidad para las arenas del camino de siempre (Bosque,
+     Hielo, Acuática, Laberinto, Infernal). Usan los mismos ganchos que ARENA_DEFS pero SOLO los
+     que agregan cosas encima (runStart, guestStart, beginLevel, update, guestUpdate, netState,
+     applyNetState, drawGround, drawTop, botDanger, botObjective, enemyKilled, ctxTargets…).
+     NUNCA geometría (clamp/inside/navBlocked/drawWorld/spawnPool): arenaDef() no las ve, así el
+     camino de siempre (subjefes, octágono, navegación) sigue intacto.
+     drawGround(now)                marcas en el piso (después del piso, antes de las entidades)
+     ctxTargets()                   objetivos de la acción contextual (js/systems/context-actions.js)
+     botObjective(h)                un bot va a usar un objetivo contextual (o null)
    ============================================================ */
 const ARENA_DEFS = {};
+const ARENA_EXT = {};
 const ARENA_BOSS_TIPS = {};
 const ARENA_SFX = {};
 function arenaDef(){ return (typeof currentArena!=="undefined" && ARENA_DEFS[currentArena]) || null; }
+// Definición con ganchos: la arena registrada o la extensión de una arena del camino de siempre.
+function arenaHookDef(){
+  if(typeof currentArena==="undefined") return null;
+  return ARENA_DEFS[currentArena] || ((typeof divinaMode!=="undefined" && divinaMode) ? null : ARENA_EXT[currentArena]) || null;
+}
 // Llama al gancho `name` de la arena actual (si existe). Devuelve lo que devuelva el gancho.
 function arenaHook(name, a, b, c, d){
-  const def = arenaDef(); if(!def) return undefined;
+  const def = arenaHookDef(); if(!def) return undefined;
   const f = def[name]; if(typeof f!=="function") return undefined;
   return f(a, b, c, d);
 }
-function arenaHas(name){ const def = arenaDef(); return !!(def && def[name]); }
+function arenaHas(name){ const def = arenaHookDef(); return !!(def && def[name]); }
 // IA propia de un tipo de enemigo de la arena actual (o null).
 function arenaEnemyAI(type){ const def = arenaDef(); return (def && def.enemyAI && def.enemyAI[type]) || null; }
 

@@ -226,6 +226,10 @@
   animation:reviveBtnPulse 1.3s ease-in-out infinite;
 }
 .ability-btn.revive.holding{ animation:none; box-shadow:0 0 20px rgba(111,220,140,0.9); }
+/* El mismo botón como ACCIÓN CONTEXTUAL (cerrar fisura, encender brasero...): color del tipo. */
+.ability-btn.revive.ctx.ready{ border-color:var(--ctx-col,#ffcf5c); background:radial-gradient(circle at 35% 30%, #2a2214, #120d08 75%);
+  box-shadow:0 0 16px var(--ctx-col,#ffcf5c); animation:none; }
+.ability-btn.revive.ctx.holding{ box-shadow:0 0 24px var(--ctx-col,#ffcf5c); }
 @keyframes reviveBtnPulse{ 0%,100%{box-shadow:0 0 10px rgba(111,220,140,0.4);} 50%{box-shadow:0 0 20px rgba(111,220,140,0.8);} }
 /* Apuntado de habilidades (js/core/aim.js): aro + perilla sobre el botón mientras se arrastra. */
 #aim-pad{position:fixed; width:120px; height:120px; border-radius:50%; pointer-events:none; z-index:16;

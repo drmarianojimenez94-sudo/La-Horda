@@ -55,6 +55,8 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   "_an",
   // revivir: el candado/progreso viaja (_reviveBy/_reviveT/_reviveDur); esto es interno del anfitrión
   "_revTouchAt","_revHold",
+  // acción contextual: el progreso viaja en el estado de la arena; esto es interno del anfitrión
+  "_ctxHold","_ctxGoal","_ctxGoalT",
   // La Fortaleza: forma caminable cacheada (se recalcula en cada cliente) e internos del anfitrión
   "_fs","_strT","_fortStranded","_ux","_uy","_ut","_stk"]);
 // Se mandan solo en los snapshots completos (cada ~4 s y al terminar): cambian todo el tiempo y
@@ -378,11 +380,12 @@ function netHostOnMsg(from, d){
       if(!d.on){ h._revHold = -1; cancelRevivesBy(h); return; }
       if(heroes[d.slot|0] && heroes[d.slot|0]!==h) h._revHold = d.slot|0;
       return;
+    case "ctx": ctxNetMsg(h, d); return; // acción contextual: mantener (on:1) / soltar (on:0)
     case "invest": investTalentPoint(h.classKey, d.idx==="ult" ? "ult" : (d.idx|0)); return;
     case "buff": netHostBuffPicked(from, d.id); return;
     case "needFull": netSendTo(from, netStartMessage()); return;
     case "quit":
-      n.connected = false; h.isRemote = false; h._revHold = -1; cancelRevivesBy(h); // lo sigue un bot hasta el final
+      n.connected = false; h.isRemote = false; h._revHold = -1; h._ctxHold = null; cancelRevivesBy(h); // lo sigue un bot hasta el final
       showBanner(`${h.netName||h.cls.name} abandonó la partida (lo controla un bot)`);
       return;
   }
@@ -395,7 +398,7 @@ function netHostOnRoom(room){
     const s = room.slots[i];
     const connected = !!(s && s.connected);
     if(!connected && h._net.connected){
-      h._net.connected = false; h.isRemote = false; h._revHold = -1;
+      h._net.connected = false; h.isRemote = false; h._revHold = -1; h._ctxHold = null;
       cancelRevivesBy(h); // desconectarse interrumpe su revivir (el bot, si quiere, empieza de cero)
       showBanner(`${h.netName} se desconectó — lo controla un bot`);
     } else if(connected && !h._net.connected){

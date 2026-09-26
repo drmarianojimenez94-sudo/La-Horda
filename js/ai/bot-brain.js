@@ -136,6 +136,8 @@ function botMove(h, dt){
     if(reviverCanAct(h)) reviveStep(down, h, BOT_REVIVE_MS, dt);
     return {mx:0, my:0, target, reviving:true};
   }
+  // 2b) objetivo de la arena (cerrar una fisura, encender un brasero...): js/systems/context-actions.js
+  if(!divinaMode){ const ob = ctxBotObjective(h, dt, target); if(ob) return ob; }
   // 3) reagruparse si se alejó mucho del jugador. Si un puente los separó, espera en el borde de
   // su tramo más cercano al jugador (no camina contra la lava) hasta que el mecanismo los una.
   let rg = player;
