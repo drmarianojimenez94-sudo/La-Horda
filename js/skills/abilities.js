@@ -301,11 +301,12 @@ function castAbility(caster, sk, isUlt, idx){
   if(axiomFreezeTimer>0 && caster!==axiomFreezeCaster && sk.kind!=="force_quit_ult") return; // nadie mas actua mientras dura Force Quit
   if(caster.fused) return; // La Profeta fusionada (Ascensión del Elegido): no puede lanzar nada ella misma
   const skillKey = isUlt ? "ult" : (idx===undefined ? 0 : idx);
-  vfxCastFlash(caster.x, caster.y, fxHeroRgb(caster), isUlt); // anticipación: destello del color del campeón al lanzar (fx-contrast.js)
   // Overcap de objetos (sección 14): legendarios/míticos pueden sumar niveles EFECTIVOS de
   // habilidad sin tocar los puntos permanentes invertidos -por eso esto usa una copia
   // (effectiveMasteryFor), nunca masteryOf() a secas, que sigue siendo lo que ve la UI-.
   const mastery = effectiveMasteryFor(caster.classKey, skillKey);
+  // anticipación: destello del color del campeón al lanzar + firma de nivel (fx-contrast.js)
+  vfxCastFlash(caster.x, caster.y, fxHeroRgb(caster), isUlt, caster.classKey ? allocLevel(mastery) : 0);
   // Talentos de ESTA habilidad puntual (ver sección TALENTOS Y MAESTRÍAS más arriba): powerMult
   // se suma al mismo escalado que ya usa la maestría (afecta daño Y curación por igual, tal
   // como ya hacía POWER antes de que existieran talentos), área/duración se multiplican sobre

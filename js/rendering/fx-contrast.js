@@ -63,14 +63,44 @@ function vfxHitFlash(x, y, rgb, pow){
 }
 /* ---------------- anticipación al lanzar ---------------- */
 const FX_CAST_MAX = 10, fxCasts = [];
-for(let i=0;i<FX_CAST_MAX;i++) fxCasts.push({on:false, x:0, y:0, t:0, dur:0, rgb:"255,255,255", ult:false});
-// (x, y, rgb): números y texto, así viaja liviano por la red a los invitados
-function vfxCastFlash(x, y, rgb, ult){
+for(let i=0;i<FX_CAST_MAX;i++) fxCasts.push({on:false, x:0, y:0, t:0, dur:0, rgb:"255,255,255", ult:false, lvl:0});
+// (x, y, rgb): números y texto, así viaja liviano por la red a los invitados.
+// lvl (nivel de la habilidad 0-10): FIRMA DE NIVEL que crece con los mismos hitos que la evolución
+// (3/5/7/10) para que TODA habilidad se vea más espectacular al subirla, aunque su efecto propio
+// no tenga progresión visual: Nv.3 sello en el piso · Nv.5 + chispas que suben · Nv.7 + columna
+// de luz · Nv.10 + corona y núcleo blanco.
+function vfxCastFlash(x, y, rgb, ult, lvl){
   if(!inView(x, y, 120)) return;
   let f = null;
   for(let i=0;i<FX_CAST_MAX;i++){ if(!fxCasts[i].on){ f = fxCasts[i]; break; } }
   if(!f) return;
-  f.on = true; f.x = x; f.y = y; f.t = 0; f.dur = ult ? 420 : 260; f.rgb = rgb || "255,240,200"; f.ult = !!ult;
+  f.lvl = lvl||0;
+  f.on = true; f.x = x; f.y = y; f.t = 0; f.dur = (ult ? 420 : 260) + (f.lvl >= 7 ? 260 : f.lvl >= 3 ? 140 : 0); f.rgb = rgb || "255,240,200"; f.ult = !!ult;
+}
+// Firma de nivel (debajo de lo que dibuja drawFxContrastTop para el destello)
+function _fxCastTier(f, q, a){
+  const L = f.lvl; if(L < 3) return;
+  const x = f.x, y = f.y, e = _easeOut(Math.min(1, q*1.6)), R = (f.ult ? 70 : 48)*(0.6 + 0.4*e)*(1 + (L >= 7 ? 0.35 : L >= 5 ? 0.18 : 0));
+  // Nv.3: sello (elipse doble con marcas que giran)
+  ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = a*0.85;
+  ctx.strokeStyle = `rgba(${f.rgb},0.95)`; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.ellipse(x, y + 4, R, R*0.42, 0, 0, Math.PI*2); ctx.stroke();
+  ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(x, y + 4, R*0.72, R*0.3, 0, 0, Math.PI*2); ctx.stroke();
+  const rot = f.t/300;
+  for(let i=0;i<8;i++){ const an = rot + i*Math.PI/4, cx = x + Math.cos(an)*R*0.86, cy = y + 4 + Math.sin(an)*R*0.36; ctx.fillStyle = `rgba(${f.rgb},1)`; ctx.fillRect(cx - 2, cy - 2, 4, 4); }
+  // Nv.5: chispas que suben desde el sello
+  if(L >= 5){ ctx.fillStyle = "#ffffff";
+    for(let i=0;i<10;i++){ const an = i*0.628 + 0.3, ph = (q*1.3 + i*0.09) % 1, sx = x + Math.cos(an)*R*0.8, sy = y + 4 + Math.sin(an)*R*0.34 - ph*70;
+      ctx.globalAlpha = a*(1 - ph); ctx.fillRect(sx - 1.5, sy - 4, 3, 8); } }
+  // Nv.7: columna de luz del color del campeón
+  if(L >= 7){ const H = f.ult ? 190 : 140, W = R*0.55;
+    const g = ctx.createLinearGradient(0, y - H, 0, y); g.addColorStop(0, `rgba(${f.rgb},0)`); g.addColorStop(0.7, `rgba(${f.rgb},${0.45*a})`); g.addColorStop(1, `rgba(255,255,255,${0.7*a})`);
+    ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(x - W/2, y - H, W, H);
+    ctx.fillStyle = `rgba(255,255,255,${0.5*a})`; ctx.fillRect(x - W*0.12, y - H*0.85, W*0.24, H*0.85); }
+  // Nv.10: corona de rayos + núcleo blanco
+  if(L >= 10){ ctx.globalAlpha = a; ctx.strokeStyle = "rgba(255,255,255,0.95)"; ctx.lineWidth = 2;
+    for(let i=0;i<12;i++){ const an = -rot*1.5 + i*Math.PI/6; ctx.beginPath(); ctx.moveTo(x + Math.cos(an)*R*1.05, y - 26 + Math.sin(an)*R*1.05*0.5); ctx.lineTo(x + Math.cos(an)*R*1.35, y - 26 + Math.sin(an)*R*1.35*0.5); ctx.stroke(); }
+    ctx.drawImage(glowSprite("255,255,255"), x - 30, y - 56, 60, 60); }
 }
 function fxContrastUpdate(dt){
   for(let i=0;i<FX_FLASH_MAX;i++){ const f = fxFlashes[i]; if(f.on){ f.t += dt; if(f.t >= f.dur) f.on = false; } }
@@ -83,6 +113,7 @@ function drawFxContrastTop(){
     const f = fxCasts[i]; if(!f.on) continue;
     const x = f.x, y = f.y - 26;
     const q = f.t/f.dur, a = 1 - q, R = (f.ult ? 90 : 56)*(0.35 + 0.65*_easeOut(q));
+    _fxCastTier(f, q, a);
     ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = a*fxUnder();
     ctx.drawImage(fxDarkSprite(), x-R*1.2, y-R*1.2, R*2.4, R*2.4);
     ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = a*0.9;

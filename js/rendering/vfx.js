@@ -23,13 +23,18 @@ function vfxFrame(dt){
 }
 // prio: 2 = jugador/jefe/ataque peligroso (siempre), 1 = importante, 0 = secundario (se recorta primero)
 // kind: 0 cuadrado pixel, 1 glow aditivo, 2 estela (línea en la dirección de la velocidad)
+// Paleta "t_#rrggbb": color de una habilidad (se arma sola en cada cliente, también en los invitados)
+function _vfxPalFromKey(pal){
+  if(typeof pal!=="string" || pal.slice(0,3)!=="t_#") return null;
+  const c = pal.slice(2); return (VFX_PAL[pal] = [c, "#ffffff", c, hexToRgb(c)]);
+}
 function vfxBurst(x, y, n, pal, spd, life, size, prio, upBias, kind){
   if(prio<2){
     if(!inView(x, y, 80)) return;
     n = Math.round(n*(prio===1 ? Math.max(0.5,vfxLoad) : vfxLoad));
     if(n<=0) return;
   }
-  const cols = VFX_PAL[pal] || VFX_PAL.spark;
+  const cols = VFX_PAL[pal] || _vfxPalFromKey(pal) || VFX_PAL.spark;
   const cap = prio>=2 ? VFX_MAX : Math.floor(VFX_MAX*0.82*(prio===1?1:vfxLoad));
   for(let i=0;i<n;i++){
     if(vCount >= cap) return;

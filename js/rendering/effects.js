@@ -149,10 +149,11 @@ function drawGroundSigil(h){
   const fadeIn = Math.min(1, (h.sigilMaxTimer-h.sigilTimer)/250);
   const fadeOut = h.sigilTimer < 400 ? h.sigilTimer/400 : 1;
   ctx.save();
-  ctx.globalAlpha = 0.4*fadeIn*fadeOut;
+  ctx.globalAlpha = (0.32 + 0.14*tier)*fadeIn*fadeOut; // más nivel = sello más presente
   ctx.translate(h.x, h.y+6);
   ctx.scale(1, 0.55);
-  ctx.strokeStyle = col; ctx.lineWidth = 2;
+  if(tier>=3){ ctx.save(); ctx.globalCompositeOperation = "lighter"; const gr = R*(1.1 + 0.1*tier); ctx.drawImage(glowSprite(hexToRgb(col)), -gr, -gr, gr*2, gr*2); ctx.restore(); }
+  ctx.strokeStyle = col; ctx.lineWidth = 1.5 + 0.5*tier;
   ctx.save();
   ctx.rotate(t*0.6);
   ctx.beginPath();
