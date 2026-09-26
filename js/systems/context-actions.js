@@ -121,34 +121,85 @@ function ctxBotObjective(h, dt, target){
   if(!t){ h._ctxGoal = null; if(h._ctxHold!=null) h._ctxHold = null; return null; }
   const k = CTX_KINDS[t.kind];
   if(k.botWorth(h, t) < 1){ h._ctxGoal = null; h._ctxHold = null; return null; }
+  if(h._ctxGoal !== t.id){ h._ctxBestD = undefined; h._ctxProgT = 0; h._ctxUnstick = 0; } // objetivo nuevo: medición de avance de cero
   h._ctxGoal = t.id;
   const d = Math.hypot(t.x-h.x, t.y-h.y);
   // se acerca hasta bien adentro; si ya lo está usando, un empujón no lo corta (hasta el borde)
   if(d > (h._ctxHold===t.id ? t.r-4 : t.r*0.6)){
     h._ctxHold = null;
-    const nd = ctxNavDir(h, t); // con muros en el medio (Laberinto) sigue el camino de la grilla
-    if(nd) return {mx:nd.x, my:nd.y, target, navd:true};
-    return {mx:(t.x-h.x)/d, my:(t.y-h.y)/d, target};
+    // camino: con muros (Laberinto) sigue la grilla salvo en el tramo final; si no, derecho
+    let dir = d > 90 ? ctxNavDir(h, t) : null, navd = !!dir;
+    if(!dir) dir = {x:(t.x-h.x)/d, y:(t.y-h.y)/d};
+    // ¿avanza? si en 1,2 s no se acercó 15 u POR EL CAMINO (rodear un muro no cuenta como trabarse),
+    // está trabado contra una punta de muro o un compañero: paso al costado
+    const pd = (navd && dir.pathD!=null) ? dir.pathD : d;
+    h._ctxProgT = (h._ctxProgT||0) + dt;
+    if(h._ctxProgT > 1200){
+      if((h._ctxBestD===undefined ? 1e9 : h._ctxBestD) - pd < 15){ h._ctxUnstick = 700; h._ctxSide = -(h._ctxSide||1); }
+      h._ctxBestD = pd; h._ctxProgT = 0;
+    }
+    if(h._ctxUnstick > 0){
+      h._ctxUnstick -= dt; const sd = h._ctxSide||1;
+      return {mx:-dir.y*sd*0.95 + dir.x*0.2, my:dir.x*sd*0.95 + dir.y*0.2, target, navd:true};
+    }
+    return {mx:dir.x, my:dir.y, target, navd};
   }
   if(ctxCanUse(h, t)) h._ctxHold = t.id;
   return {mx:0, my:0, target, usingCtx:true};
 }
 
-// Camino hacia un objetivo cuando hay obstáculos: campo de distancias de la grilla de navegación
-// (js/ai/navigation.js) sembrado en el objetivo. Los objetivos no se mueven: se calcula una vez.
+// Camino hacia un objetivo cuando hay obstáculos: campo de distancias sobre la grilla de navegación
+// (js/ai/navigation.js) sembrado en el objetivo, con los obstáculos INFLADOS una celda más que para
+// los enemigos (un campeón grande que dobla pegado a la punta de un muro se traba). Los objetivos no
+// se mueven: el campo se calcula una vez por objetivo.
 const _ctxFields = new Map();
+function _ctxBuildField(t){
+  const N = AID_NAV, W = N.W, H = N.H, n = W*H;
+  const infl = new Uint8Array(n);
+  for(let j=0;j<H;j++) for(let i=0;i<W;i++){
+    const c = j*W+i; if(N.blocked[c]){ infl[c] = 1; continue; }
+    for(let dj=-1; dj<=1 && !infl[c]; dj++) for(let di=-1; di<=1; di++){
+      const ii = i+di, jj = j+dj; if(ii<0||jj<0||ii>=W||jj>=H) continue;
+      if(N.blocked[jj*W+ii]){ infl[c] = 1; break; }
+    }
+  }
+  const D = new Uint16Array(n).fill(65535), q = new Int32Array(n);
+  let qh = 0, qt = 0;
+  const s0 = aidNavCell(t.x, t.y); if(s0 < 0) return {D, infl};
+  D[s0] = 0; q[qt++] = s0; infl[s0] = 0;
+  while(qh < qt){
+    const c = q[qh++], d = D[c]+1, i = c % W, j = (c-i)/W;
+    if(i>0 && !infl[c-1] && D[c-1]===65535){ D[c-1] = d; q[qt++] = c-1; }
+    if(i<W-1 && !infl[c+1] && D[c+1]===65535){ D[c+1] = d; q[qt++] = c+1; }
+    if(j>0 && !infl[c-W] && D[c-W]===65535){ D[c-W] = d; q[qt++] = c-W; }
+    if(j<H-1 && !infl[c+W] && D[c+W]===65535){ D[c+W] = d; q[qt++] = c+W; }
+  }
+  return {D, infl};
+}
 function ctxNavDir(h, t){
   const N = AID_NAV;
-  if(!N.on || !N.blocked || aidLineClear(h.x, h.y, t.x, t.y)) return null;
+  if(!N.on || !N.blocked) return null;
   const key = t.x + "," + t.y + "," + N.W + "x" + N.H;
   let f = _ctxFields.get(t.id);
   if(!f || f.key!==key){
-    const d = new Uint16Array(N.W*N.H);
-    aidNavBfs(d, seed=>seed({x:t.x, y:t.y, alive:true}));
-    f = {d, key}; _ctxFields.set(t.id, f);
+    f = Object.assign(_ctxBuildField(t), {key}); _ctxFields.set(t.id, f);
     if(_ctxFields.size > 12) _ctxFields.delete(_ctxFields.keys().next().value);
   }
-  return aidNavDir(h, f.d);
+  const W = N.W, c = aidNavCell(h.x, h.y); if(c < 0) return null;
+  const i = c % W, j = (c-i)/W;
+  // en una celda inflada (pegado a un muro): ir a la vecina con menor distancia, aunque esté inflada
+  let best = -1, bd = f.D[c];
+  for(let dj=-1; dj<=1; dj++) for(let di=-1; di<=1; di++){
+    if(!di && !dj) continue;
+    const ii = i+di, jj = j+dj; if(ii<0||jj<0||ii>=W||jj>=N.H) continue;
+    const k = jj*W+ii; if(N.blocked[k]) continue;
+    if(di && dj && (N.blocked[j*W+ii] || N.blocked[jj*W+i] || f.infl[j*W+ii] || f.infl[jj*W+i])) continue; // no cortar esquinas
+    if(f.D[k] < bd){ bd = f.D[k]; best = k; }
+  }
+  if(best < 0 || bd===65535) return null;
+  const bi = best % W, bj = (best-bi)/W;
+  const tx = N.x0 + (bi+0.5)*N.cell, ty = N.y0 + (bj+0.5)*N.cell, dx = tx-h.x, dy = ty-h.y, l = Math.hypot(dx, dy)||1;
+  return {x:dx/l, y:dy/l, pathD:f.D[c]===65535 ? null : f.D[c]*N.cell}; // pathD: distancia por el camino (para medir avance)
 }
 
 /* ---- Botón (el de Revivir) ---- */
