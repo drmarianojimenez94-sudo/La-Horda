@@ -277,8 +277,52 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     await E(() => { updateAllies = __ua; });
   }
 
+  if (want('acu')) {
+    // ---------------- Acuática: corrientes y charcos conductores ----------------
+    const lay = await E(() => { const r = {}; for (const lv of [1, 2, 3, 4, 5, 7]) { __start('acuatica', lv); r[lv] = ACU.zones.map(z => z.type).sort().join(','); } return r; });
+    check('ACU.las_zonas_se_suman_por_nivel', lay[1] === 'lineal' && /remolino/.test(lay[2]) && /charco/.test(lay[3]) && /anillo/.test(lay[4]) && /chorro/.test(lay[5]) && lay[7].split(',').length >= 8, lay);
+    await E(() => { __start('acuatica', 1); __calm(); window.__ua = window.__ua || updateAllies; updateAllies = function(){}; for (const h of allies){ h.x = 900; h.y = 0; } acuaCurrent.active = false; });
+    const lin = await E(() => {
+      ACU.zones = []; const z = acuAdd('lineal'); z.x = 0; z.y = 200; z.dx = 1; z.dy = 0;
+      player.x = -120; player.y = 200; const e = spawnEnemy('tiburon_joven', false); e.x = -120; e.y = 220; e.speed = 0; e.dmg = 0;
+      const b = spawnEnemy('tiburon_joven', false); b.rank = 'jefe'; b.x = -100; b.y = 190; b.speed = 0; b.dmg = 0;
+      __step(1000); const r = { px: Math.round(player.x + 120), ex: Math.round(e.x + 120), bx: Math.round(b.x + 100), py: Math.round(player.y - 200) }; enemies.length = 0; return r;
+    });
+    check('ACU.la_corriente_lineal_arrastra_heroes_y_enemigos', lin.px > 55 && lin.ex > 30 && lin.ex < lin.px && Math.abs(lin.py) < 5, lin);
+    check('ACU.los_jefes_no_se_mueven', lin.bx === 0, lin);
+    const rem = await E(() => { ACU.zones = []; const z = acuAdd('remolino'); z.x = 0; z.y = 200; player.x = 110; player.y = 200; const d0 = Math.hypot(player.x - z.x, player.y - z.y); __step(1000); const d1 = Math.hypot(player.x - z.x, player.y - z.y); return { d0: Math.round(d0), d1: Math.round(d1), dy: Math.round(player.y - 200) }; });
+    check('ACU.el_remolino_tira_y_gira', rem.d1 < rem.d0 - 15 && Math.abs(rem.dy) > 5, rem);
+    const ring = await E(() => { ACU.zones = []; acuAdd('anillo'); player.x = 585*1.18; player.y = 0; __step(1000); return { dx: Math.round(player.x - 585*1.18), dy: Math.round(player.y) }; });
+    check('ACU.el_anillo_empuja_alrededor', Math.abs(ring.dy) > 30 && Math.abs(ring.dx) < Math.abs(ring.dy), ring);
+    const jet = await E(() => { ACU.zones = []; const z = acuAdd('chorro'); z.x = 0; z.y = 200; z.dx = 0; z.dy = -1; z.t = 50; player.x = 0; player.y = 120; __step(200); const warned = z.warn > 0 && vfxTeles.some(s => s.on && s.shape === 2); const y0 = player.y; __step(900); const early = Math.round(player.y - y0); __step(400); return { warned, early, moved: Math.round(y0 - player.y) }; });
+    check('ACU.el_chorro_avisa_y_despues_empuja', jet.warned && jet.early === 0 && jet.moved > 100, jet);
+    const zap = await E(() => {
+      ACU.zones = []; const z = acuAdd('charco'); z.x = 0; z.y = 200; z.t = 50; player.x = 20; player.y = 200; player.hp = player.maxHp;
+      const foes = []; for (let i = 0; i < 4; i++){ const e = spawnEnemy('tiburon_joven', false); e.x = (Math.random()-0.5)*100; e.y = 200 + (Math.random()-0.5)*60; e.speed = 0; e.dmg = 0; e.hp = e.maxHp = 1000; foes.push(e); }
+      __step(200); const warned = z.warn > 0; const hp0 = player.hp; __step(1200);
+      const r = { warned, heroLost: +((hp0 - player.hp)/player.maxHp).toFixed(3), stunned: foes.filter(e => e.stunTimer > 300).length, hurt: foes.filter(e => e.hp < 1000).length }; enemies.length = 0; return r;
+    });
+    check('ACU.el_charco_avisa_y_descarga', zap.warned && zap.stunned === 4 && zap.hurt === 4, zap);
+    check('ACU.al_heroe_le_pega_poco', zap.heroLost > 0 && zap.heroLost <= 0.06, zap);
+    const eel = await E(() => {
+      ACU.zones = []; const z = acuAdd('charco'); z.x = 0; z.y = 200; z.t = 1e9;
+      const h1 = heroes[1], h2 = heroes[2]; player.x = 0; player.y = 200; h1.x = 220; h1.y = 200; h2.x = 900; h2.y = 0; heroes[3].x = -900;
+      const hp1 = h1.hp; const e = { dmg: 10, x: -40, y: 200 }; applyEelChain(e, player); const wet = h1.hp < hp1;
+      player.x = 0; player.y = -300; h1.x = 220; h1.y = -300; const hp2 = h1.hp; applyEelChain(e, player); const dry = h1.hp < hp2;
+      return { wet, dry };
+    });
+    check('ACU.la_anguila_salta_mas_lejos_en_el_charco', eel.wet && !eel.dry, eel);
+    await E(() => { ACU.zones = []; acuLayout(7); player.x = ACU.zones[0].x; player.y = ACU.zones[0].y; __step(300); });
+    await shot('acu_zonas');
+    await E(() => { updateAllies = __ua; });
+    const bd = await E(() => { ACU.zones = []; const z = acuAdd('remolino'); z.x = 0; z.y = 200; return !!acuBotDanger(10, 205, 20); });
+    check('ACU.bots_evitan_el_ojo_del_remolino', bd);
+    const run = await E(() => { __start('acuatica', 2); let t = 0, maxE = 0; while (state === 'playing' && runLevel <= 5 && t < 300000){ __step(500); t += 500; maxE = Math.max(maxE, enemies.length); } return { lv: runLevel, t: t/1000, maxE, st: state, zones: ACU.zones.length }; });
+    check('ACU.partida_real_niveles_2_a_5', run.lv >= 5 && run.st !== 'menu', run);
+  }
+
   // ---------------- otras arenas: sin objetivos, sin cambios ----------------
-  const other = await E(() => { const r = {}; for (const a of ['laberinto','acuatica']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
+  const other = await E(() => { const r = {}; for (const a of ['laberinto']) { __start(a, 2); __step(3000); r[a] = { ctx: ctxTargets(), btn: document.getElementById('btn-revive').classList.contains('ready') }; } return r; });
   check('OTRAS.sin_acciones_contextuales_propias_todavia', Object.values(other).every(o => !o.ctx || o.ctx.length === 0), other);
 
   check('SIN_ERRORES', errors.length === 0, errors.slice(0, 5));

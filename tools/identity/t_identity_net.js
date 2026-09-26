@@ -99,6 +99,21 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const warm = await H.p.evaluate(([gi]) => Math.round(heroes[gi]._cold||0), [gi]);
     check('NET.hielo.el_brasero_calienta_al_invitado', warm < 15, warm);
   }
+  if (ARENA === 'acuatica') {
+    // el invitado en una corriente: se arrastra solo (predicción) y el anfitrión no lo corrige a cada cuadro
+    await H.p.evaluate(([gi]) => { enemies.forEach(e => e.alive = false); acuaCurrent.active = false; ACU.zones = []; const h = heroes[gi]; h.x = -150; h.y = 250; const z = acuAdd('lineal'); z.x = 0; z.y = 250; z.dx = 1; z.dy = 0; }, [gi]);
+    await goal(null);
+    await sleep(1500);
+    const z0 = await Promise.all(all.map(c => c.p.evaluate(() => ACU.zones.map(z => [z.type, z.x, z.y]).join('|'))));
+    check('NET.acuatica.zonas_iguales_en_todos', z0.every(z => z === z0[0] && z.length > 0), z0);
+    const pa0 = await H.p.evaluate(([gi]) => heroes[gi]._net.posAuth, [gi]);
+    const gx0 = await G[0].p.evaluate(() => player.x);
+    await sleep(2500);
+    const gx1 = await G[0].p.evaluate(() => player.x);
+    const pa1 = await H.p.evaluate(([gi]) => ({ pa: heroes[gi]._net.posAuth, x: Math.round(heroes[gi].x) }), [gi]);
+    check('NET.acuatica.el_invitado_es_arrastrado', gx1 - gx0 > 80, { gx0: Math.round(gx0), gx1: Math.round(gx1), host: pa1.x });
+    check('NET.acuatica.sin_correcciones_en_cadena', pa1.pa - pa0 <= 2, { pa0, pa1: pa1.pa });
+  }
   await H.p.evaluate(() => { clearInterval(window.__calm); });
   }
   for (const c of all) check(`NET.sin_errores_J${c.i + 1}`, c.errs.length === 0, c.errs.slice(0, 4));

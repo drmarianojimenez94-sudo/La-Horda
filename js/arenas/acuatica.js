@@ -14,12 +14,15 @@ function applyEelChain(e, first){
   particles.push({x:e.x,y:e.y, x2:first.x, y2:first.y, life:220, bolt:true, color:"#ffe86a"});
   const hitList = [first];
   let cur = first;
-  for(let i=0;i<2 && cur;i++){
+  // parado en un charco conductor (acu-currents.js): la cadena salta más lejos y una vez más
+  const wet = typeof acuInCharco==="function" && acuInCharco(first.x, first.y);
+  const jumps = wet ? 3 : 2, range = wet ? 260 : 170;
+  for(let i=0;i<jumps && cur;i++){
     let next=null, bd=Infinity;
     for(const h of [player,...allies]){
       if(!h.alive || hitList.includes(h)) continue;
       const d = distance(cur,h);
-      if(d < 170 && d < bd){ bd=d; next=h; }
+      if(d < range && d < bd){ bd=d; next=h; }
     }
     if(!next) break;
     damageHero(next, e.dmg*0.7, e);
@@ -42,7 +45,7 @@ function updateAcuaCurrent(dt){
   if(acuaCurrent.timer<=0){ acuaCurrent.active=false; return; }
   const push = 34*(1+0.09*arenaRuleStacks());
   for(const h of heroes){
-    if(!h.alive) continue;
+    if(!h.alive || h.isRemote) continue; // el invitado se empuja solo (predicción, ver acuGuestUpdate): si no, el anfitrión lo corregiría cada cuadro
     h.x += acuaCurrent.dx*push*dt/1000;
     h.y += acuaCurrent.dy*push*dt/1000;
     clampToArena(h);
