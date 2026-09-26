@@ -105,12 +105,14 @@ function botTryAbilities(h){
       }
       return;
     }
-    const maxCount = nigromanteMaxSkeletons(masteryOf(h.classKey, 0));
     const nearCount = enemies.filter(e=>e.alive && distance(h,e)<=260).length;
+    // Pacto: gastar almas cuando hay mucha horda cerca (o el gólem necesita la furia)
+    if(!h.nigroPact && (h.nigroSouls||0) >= 7 && nearCount >= 5) nigroTogglePact(h);
     let priority = [];
-    if(h.skeletons.length < maxCount) priority.push(0);
     if(!h.golem) priority.push(1);
-    if(nearCount>=2) priority.push(2);
+    if(nearCount>=3) priority.push(2);
+    if(nearestEnemyTo(h, 200)) priority.push(0);
+    if(h.golem && nearCount>=4) priority.push(1); // ¡Aplasta! sobre el grupo
     for(const idx of priority){
       const sk = h.cls.skills[idx];
       if(h.cds[idx]>0 || h.energy < sk.cost) continue;

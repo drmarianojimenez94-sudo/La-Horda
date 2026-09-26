@@ -563,6 +563,7 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
 
+    case "soul_harvest": { nigroCastHarvest(caster, sk, dmg, AREA, mastery); break; }
     case "raise_skeletons": {
       // Nigromante — Levanta esqueletos permanentes hasta el máximo que permite la maestría de
       // esta habilidad (sección 3); si ya hay algunos vivos, solo completa los que falten -nunca
@@ -586,12 +587,8 @@ function castAbility(caster, sk, isUlt, idx){
     case "summon_golem": {
       // Nigromante — Crear Golem: único (spawnOrRenewGolem lo renueva/reposiciona si ya existe
       // en vez de duplicarlo). No disponible transformado (sección 6).
-      if(caster.nigroDemonForm){ if(caster===player) floatText(caster.x, caster.y-40, "No disponible transformado", null); break; }
-      spawnOrRenewGolem(caster);
-      caster.nigroCastKind = "golem";
-      caster.attackAnim = Math.max(caster.attackAnim, 320);
+      nigroCastGolem(caster, sk, dmg, AREA);
       particles.push({x:caster.x,y:caster.y, life:400, ring:true, maxLife:400, maxR:60, color:"#8fae7a"});
-      if(caster===player) floatText(caster.x, caster.y-50, "¡CREAR GOLEM!", null);
       break;
     }
 
@@ -600,11 +597,12 @@ function castAbility(caster, sk, isUlt, idx){
       // maldito muere, contagia a los cercanos (nigromantePlagueDeathSpread), con un tope de
       // generaciones (maxGen) que "Peste Negra" sube en 1 -nunca una cadena infinita-. Sigue
       // disponible incluso transformado (sección 6).
+      const plaguePact = nigroConsumePact(caster); // potenciada: más área y una generación extra
       const _pp = aimPoint(caster, sk.range*AREA, sk.radius*AREA), tx = _pp.x, ty = _pp.y;
-      const radius = sk.radius*AREA;
+      const radius = sk.radius*AREA*(plaguePact?1.6:1);
       const defPct = sk.defTakenPct + (tSkill.flags.defTakenBonusPct||0);
       const durationMs = sk.duration*DUR;
-      const maxGen = 2 + (tSkill.flags.blackPlague?1:0);
+      const maxGen = 2 + (tSkill.flags.blackPlague?1:0) + (plaguePact?1:0);
       for(const e of enemies){
         if(!e.alive || Math.hypot(e.x-tx,e.y-ty) > radius) continue;
         nigromanteApplyCurse(e, caster, dmg*0.35, defPct, 0, durationMs, maxGen);

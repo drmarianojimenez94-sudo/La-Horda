@@ -88,6 +88,14 @@ const CHAMPION_SETS = {
       {count:3, desc:"Tus disparos de fusil aturden 0,4 s a comunes y élites", mods:()=>[]},
       {count:4, desc:"FUEGO A DISCRECIÓN: cada disparo de fusil que mata recarga el arma al instante.", mods:()=>[]}
     ]},
+  requiem: { champion:"nigromante", name:"Réquiem del Señor de la Muerte", theme:"Nigromante · legión · almas", aura:"90,230,140", full:"requiem",
+    lore:"Cada pieza fue cosida con el nombre de un muerto. Todavía responden cuando las llaman.",
+    pieces:{arma:"Cetro del Réquiem", casco:"Corona de Huesos", pechera:"Mortaja del Señor", guantes:"Garras de la Tumba"},
+    thresholds:[
+      {count:2, desc:"+1 esqueleto máximo", mods:()=>[]},
+      {count:3, desc:"Gastar almas en un Pacto cura 3% de vida por alma a vos, a tu gólem y a tus esqueletos", mods:()=>[]},
+      {count:4, desc:"LEGIÓN SIN FIN: con 5 o más esqueletos, vos y tu ejército reciben 15% menos daño y tus esqueletos golpean 20% más fuerte.", mods:()=>[]}
+    ]},
   legion: { champion:"eren", name:"Legión de Reconocimiento", theme:"Eren · maniobras · el Portador", aura:"200,90,60", full:"legion",
     lore:"Las alas en la espalda no son un adorno: son una promesa de volver.",
     pieces:{arma:"Hojas de la Legión", pechera:"Arnés de Maniobras", guantes:"Empuñaduras de la Legión", botas:"Botas de la Legión"},

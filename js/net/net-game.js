@@ -374,6 +374,7 @@ function netHostOnMsg(from, d){
       netWithHero(h, ()=>{ if(useSkill(d.idx|0, d.aim||null)) netEmitTo(from, "useXp", [d.idx|0]); });
       return;
     case "ult": if(state==="playing" && h.alive) netWithHero(h, ()=> useUltimate()); return;
+    case "pact": if(state==="playing" && h.alive) nigroTogglePact(h); return; // Nigromante invitado
     case "sylva":
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(d.aim||null); });

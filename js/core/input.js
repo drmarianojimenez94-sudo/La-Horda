@@ -47,6 +47,8 @@ bindAbilityButton(document.getElementById("btn-basic"), ()=> triggerBasic(player
 // Las 3 habilidades (btn-s1/s2/s3) se manejan en js/core/aim.js: tocar = lanzar al mejor
 // objetivo; mantener y arrastrar = apuntar con previsualización del área.
 bindAbilityButton(document.getElementById("btn-ult"), ()=> useUltimate());
+// Nigromante: Pacto (gasta 5 almas -> la próxima habilidad sale potenciada)
+bindAbilityButton(document.getElementById("btn-pact"), ()=>{ if(netIsGuest()) netSendToHost({k:"pact"}); else nigroTogglePact(player); });
 
 let basicHeld = false;
 const basicBtn = document.getElementById("btn-basic");

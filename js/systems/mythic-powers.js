@@ -103,7 +103,7 @@ function mythicOnKill(h, e){
 
 /* ---------------- al lanzar ---------------- */
 const MYTH_ECHO_BLOCK = {charge_drag:1, teleport_blink:1, ghost_step:1, eren_hook:1, sm_bayonet:1, sm_san_lorenzo:1, ronin_slash:1,
-  raise_skeletons:1, summon_golem:1, war_cry:1, fury_armor:1, brief_immunity:1, sm_granaderos:1, eren_instinct:1, eren_advance:1,
+  raise_skeletons:1, soul_harvest:0, summon_golem:1, war_cry:1, fury_armor:1, brief_immunity:1, sm_granaderos:1, eren_instinct:1, eren_advance:1,
   spin_channel:1, titan_terremoto:1, titan_retumbar:1, piercing_shot:1};
 function mythicOnCast(h, sk, isUlt){
   if(h._mythEcho) return; // la repetición del Eco no cuenta para nada más

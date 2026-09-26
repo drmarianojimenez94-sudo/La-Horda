@@ -148,6 +148,7 @@ function killEnemy(e){
   // así que un maldito rematado por un golpe normal -el caso más común en la práctica- nunca
   // contagiaba a nadie). Acá se dispara siempre, una sola vez, para cualquier causa de muerte.
   if(e.cursed) nigromantePlagueDeathSpread(e);
+  nigroOnEnemyKilled(e); // Cosecha de Almas
   // Musashi: si el que murió era la Marca de Duelo de alguien, hay que limpiarla siempre -
   // nunca debe quedar apuntando a un cadáver-. Si murió DENTRO de un Último Duelo activo con
   // él, es la condición de victoria real (Golpe de Gracia + Senda del Rōnin, ver
@@ -232,8 +233,11 @@ function killEnemy(e){
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
-  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e) && inView(e.x, e.y, 100)){
-    particles.push({x:e.x, y:e.y, life:420, maxLife:420, corpse:true, spriteType:e.type, scale:e.scale, flip:e.fx<-0.12});
+  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e)){
+    // sin animación de muerte (fuera de cámara o sin lugar en el pool): el cadáver igual queda en el
+    // suelo -es la materia prima del Nigromante, no puede depender de la cámara del anfitrión-
+    if(!addCorpse(e, animProfileOf(e).death, e.fx<-0.12 ? -1 : 1, e._deathKind) && inView(e.x, e.y, 100))
+      particles.push({x:e.x, y:e.y, life:420, maxLife:420, corpse:true, spriteType:e.type, scale:e.scale, flip:e.fx<-0.12});
   }
 }
 

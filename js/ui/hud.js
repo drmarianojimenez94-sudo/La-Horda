@@ -113,8 +113,14 @@ function updateHUD(){
   const nigroHudEl = document.getElementById("nigromante-hud");
   if(player.classKey==="nigromante"){
     nigroHudEl.classList.remove("hidden");
-    const maxCount = nigromanteMaxSkeletons(masteryOf("nigromante", 0));
+    const maxCount = nigromanteMaxSkeletons(masteryOf("nigromante", 0)) + (typeof champSetExtraSkeletons==="function" ? champSetExtraSkeletons(player) : 0);
     document.getElementById("nigro-skeleton-val").textContent = `${player.skeletons.length}/${maxCount}`;
+    const souls = Math.floor(player.nigroSouls||0);
+    const pipsEl = document.getElementById("nigro-souls-pips");
+    const sig = souls + (player.nigroPact?"p":"");
+    if(pipsEl._sig !== sig){ pipsEl._sig = sig; let s = ""; for(let i=0;i<NIGRO_SOUL_MAX;i++) s += `<i class="${i<souls?"on":""} ${i===NIGRO_PACT_COST-1?"pact":""}"></i>`; pipsEl.innerHTML = s; }
+    const pb = document.getElementById("btn-pact"); pb.classList.remove("hidden");
+    pb.classList.toggle("ready", souls >= NIGRO_PACT_COST && !player.nigroPact); pb.classList.toggle("armed", !!player.nigroPact);
     const golemRow = document.getElementById("nigro-golem-row");
     document.getElementById("nigro-golem-val").textContent = player.golem ? "Activo" : "Inactivo";
     golemRow.classList.toggle("active", !!player.golem);
@@ -127,6 +133,7 @@ function updateHUD(){
     }
   } else {
     nigroHudEl.classList.add("hidden");
+    document.getElementById("btn-pact").classList.add("hidden");
   }
   const pct = bossActive ? 100 : Math.min(100, levelTimer/levelDuration*100);
   document.getElementById("wave-timer-bar").style.width = pct+"%";

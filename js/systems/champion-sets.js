@@ -226,3 +226,15 @@ function convergenceBurst(h, e){
 function updateChampionSets(h, dt){
   if(h._elemSwapT > 0) h._elemSwapT -= dt;
 }
+
+// Nigromante: Réquiem del Señor de la Muerte
+function champSetExtraSkeletons(h){ return setN(h, "requiem") >= 2 ? 1 : 0; }
+function champSetOnSoulsSpent(h, n){
+  if(setN(h, "requiem") < 3) return;
+  const pct = 0.03*n;
+  h.hp = Math.min(h.maxHp, h.hp + h.maxHp*pct*arenaRuleHealMult());
+  if(h.golem) h.golem.hp = Math.min(h.golem.maxHp, h.golem.hp + h.golem.maxHp*pct);
+  for(const sk of h.skeletons) if(sk.alive) sk.hp = Math.min(sk.maxHp, sk.hp + sk.maxHp*pct);
+  vfxBurst(h.x, h.y-24, 8, "heal", 90, 420, 3, h===player?1:0, -40, 0);
+}
+function champSetLegion(h){ return setN(h, "requiem") >= 4 && h.skeletons && h.skeletons.length >= 5; }

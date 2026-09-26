@@ -86,6 +86,7 @@ function heroDmgOutMult(h){
   if(h.advAllyTimer>0) m *= 1 + EREN_CFG.advance.dmgPct*EREN_CFG.advance.allyShare;
   if(h.classKey==="libertador") m *= libertadorDmgMult(h);
   if(h.classKey==="eren") m *= erenDmgMult(h);
+  if(h.classKey==="nigromante") m *= nigroSoulDmgMult(h); // almas guardadas: +2% por alma
   return m;
 }
 function heroDmgTakenMult(h){

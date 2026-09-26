@@ -50,7 +50,7 @@ function setCritBonus(h, e){
 function setAtkSpeedMult(h){ return h && h._berserkT > 0 ? 1.25 : 1; }
 function setLifestealAdd(h){ return (h && h._berserkT > 0 ? 0.25 : 0) + champSetLifesteal(h); }
 function setSpeedMult(h){ return h && h._momentum ? 1 + 0.02*h._momentum : 1; }
-function setDmgTakenMult(h){ return h && h._guardDRT > 0 ? 0.75 : 1; }
+function setDmgTakenMult(h){ return (h && h._guardDRT > 0 ? 0.75 : 1) * (h && h.classKey==="nigromante" && champSetLegion(h) ? 0.85 : 1); }
 function setSummonMult(h){ return setN(h, "sepulturero") >= 2 ? 1.2 : 1; }
 function setReviveHpPct(by){ return setN(by, "guardian") >= 3 ? 0.6 : 0.4; }
 

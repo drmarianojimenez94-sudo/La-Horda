@@ -168,15 +168,15 @@ const CLASSES = {
   },
   nigromante:{
     name:"Nigromante", icon:"💀", color:"#4ab88a", glow:"#8ef0c8",
-    role:"Invocador y debuffer mágico: levanta un ejército, maldice a sus enemigos y puede convertirse él mismo en un demonio.", roleCategory:"mago",
+    role:"Señor de un ejército y cosechador de almas: los caídos se levantan a su lado, las almas alimentan su poder y maldice a la horda.", roleCategory:"mago",
     // Vida/defensa de mago (frágil, se apoya en sus invocaciones como línea de frente), daño
     // base bajo -su DPS real sale de la Plaga y del ejército, no del Proyectil de Hueso solo-.
     baseHP:98, baseDmg:9, baseDef:0.07, baseSpeed:150, energyMax:120, energyRegen:9.2, hpGrowthMult:0.75, dmgGrowthMult:1.0,
     basicRange:320, basicCd:480, basicArc:false, ranged:true,
     isNecromancer:true, // bloque propio de básico/pasivas/ulti en triggerBasic/castAbility, igual que Musashi/Sylva
     skills:[
-      {name:"Levantar Esqueletos", ico:"💀", cost:34, cd:11000, kind:"raise_skeletons", range:260, desc:"Invoca esqueletos permanentes (hasta 6 con la habilidad al máximo); priorizan enemigos malditos"},
-      {name:"Crear Golem", ico:"🗿", cost:38, cd:14000, kind:"summon_golem", range:240, dmgMult:0.9, desc:"Invoca un único gólem tanque; si ya tenés uno, lo renueva y reposiciona en vez de duplicarlo"},
+      {name:"Cosecha de Almas", ico:"☠", cost:28, cd:6500, kind:"soul_harvest", range:210, arc:1.05, dmgMult:1.15, slow:0.3, desc:"Arranca almas en un cono: daña, ralentiza y suelta almas. PASIVA: tus esqueletos se levantan solos de los cadáveres cercanos (hasta 6 al mejorarla)"},
+      {name:"Gólem de Carne", ico:"🗿", cost:36, cd:12000, kind:"summon_golem", range:240, dmgMult:0.9, desc:"Arma un gólem con los cadáveres cercanos (más cuerpos, más vida). Si ya tenés uno: salta al punto apuntado y APLASTA (daño y aturdimiento)"},
       {name:"Plaga de los Condenados", ico:"☠", cost:44, cd:13000, kind:"condemned_plague", range:300, radius:150, dmgMult:0.22, defTakenPct:0.3, duration:6000, desc:"Maldice un área: daño continuo y más daño recibido; si un maldito muere, contagia a los cercanos"}
     ],
     ultimate:{name:"Encarnación del Abismo", ico:"★", cd:38000, kind:"abyss_incarnation_ult", duration:11000, hpMult:1.9, dmgMult:1.8, desc:"Absorbe temporalmente a todo tu ejército y te transforma en un Demonio Nigromántico; tu poder escala con cuántos absorbiste"}
