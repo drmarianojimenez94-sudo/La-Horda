@@ -94,7 +94,14 @@ mismo tamaño y en filas por animación, como la hoja del Hechicero que mandaste
   (por eso la estrella de impacto se dibuja local).
 - Sin paso de build: el peso de las imágenes llega entero al celular; conviene la carga diferida (Sprint 7).
 
-## 5. Lo que se hizo en este pase (para referencia)
+## 5. Pase siguiente (arenas, lore, final, Nigromante, evolución, review)
+- Review de dirección de arte completa: `LA_HORDA_ART_DIRECTION_REVIEW.md` (12 problemas priorizados, notas por
+  área, crítica por arena y por campeón, benchmarks, hoja de ruta P0/P1/P2 y lista de arte pedido).
+- Lore canónico: `LA_HORDA_LORE.md` (Cuatro Guardianes, cristales, arco del Hechicero).
+- Muros por arena, pisos con menos ruido, Micelial graduado, jefe final con todas las habilidades,
+  gólem elemental del Nigromante, firma de nivel en todas las habilidades, modo `?devxp=N`.
+
+## 6. Lo que se hizo en el pase anterior (para referencia)
 - **Final de campaña:** Hechicero Supremo subjefe (nivel 9 de la Infernal; huye al caer) y jefe final en 3 formas
   (Hechicero → Golem de Cuerpos → Demonio Mayor), con el arte de su hoja. Test `tools/items/t_hechicero.js`.
 - **Pantalla previa** con el Hechicero angelical y la ficha clara de cada arena (solo; en cooperativo se omite).

@@ -24,7 +24,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
           for (const i of [0,1,2]) c.skillMastery[i].alloc = lvl; c.ultMastery.alloc = lvl;
           selectedClass = ck; currentArena = 'laberinto'; lobbyAllies = []; startRun(4); spawnTimer = 1e12; enemies.length = 0; levelDuration = 9e9;
           for (const id of ['arena-title-card','tut-panel','center-banner','boss-intro']) { const el=document.getElementById(id); if(el) el.style.display='none'; }
-          heroes.length = 1; // solo el campeón: nada tapa el efecto
+          heroes.length = 1; if (typeof allies!=='undefined') allies.length = 0; // solo el campeón: sin bots que lancen lo suyo
           player.energy = 9999; player.fx = 1; player.fy = 0;
           const foes = []; for (let i = 0; i < 7; i++){ const e = spawnEnemy('esqueleto', false); e.x = player.x + 90 + (i%3)*55; e.y = player.y - 60 + Math.floor(i/3)*60; e.hp = e.maxHp = 1e7; e.speed = 0; foes.push(e); }
           // evolución Nv.10: la 3ra lanzada sale potenciada -> lanzar 2 veces antes (sin capturar)
