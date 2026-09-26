@@ -51,6 +51,9 @@ function damageEnemy(e, amount, opts){
   const _powPre = impactPower(e, dmg, crit, opts, src);
   dmg *= reactionMult(e, dmg, opts, src, _powPre, dmgKind);
   const _hpBefore = Math.max(0, e.hp);
+  if(e.rank==="jefe" && e.bd && typeof bossPhaseFloor==="function"){   // una ráfaga no se saltea una fase del jefe
+    const fl = bossPhaseFloor(e); if(fl !== null && e.hp > fl && e.hp - dmg < fl) dmg = e.hp - fl;   // solo si el golpe CRUZA el umbral (un DoT que ya bajó la vida no lo vuelve inmortal)
+  }
   e.hp -= dmg;
   // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
   // "farmear" daño pegándole fuerte a enemigos casi muertos).
@@ -88,7 +91,7 @@ function damageEnemy(e, amount, opts){
   // barra. Ahora se normaliza contra el daño BASE del propio héroe: siempre hacen falta más o
   // menos la misma cantidad de golpes para cargar la ulti, sin importar cuánto haya escalado.
   if(!(src.classKey==="eren" && src.erenPhase==="rumble")) // El Retumbar no recarga la Furia que lo disparó (termina en 0)
-    src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
+    if(!(src._ultLockUntil > runElapsedMs)) src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
   if(src.classKey==="eren") erenCheckRumbling(src);
   if(opts.burn){ e.burnTimer = Math.max(e.burnTimer||0, 2600*uniqueBurnMult(src)); e.burnDmg = Math.max(e.burnDmg||0, amount*0.12); e.burnSrc = src; if(heroUniqueKey(src)==="uniq_archimago") e.voidFire = true; }
   if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; e.bleedSrc = src; }

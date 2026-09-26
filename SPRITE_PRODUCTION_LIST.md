@@ -120,15 +120,15 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 
 | # | Entidad | Arena / rol | Hoy | A producir |
 |---|---------|-------------|-----|------------|
-| I1 | **Jinete Sin Cabeza** | Ruinas del Bosque, jefe final | 1 frame (54×50) | **Galope 4 frames** (perfil derecha) + **ataque 4 frames**. Opcional: pose de "Resurrección Eterna" (2 a 3 frames) — *El Pack 2 trae otro diseño (caballo negro con cabeza en llamas) distinto del Jinete actual (caballo pálido), con halos grises y cortes: no se integró.* |
-| I2 | **Mago de Hielo y Cristal** | Hielo, jefe final (fase 1) | 1 frame (38×44). Los efectos de Ventisca, Nova y Armadura YA existen | **Caminata o flotación 4 frames** + **cast 3 frames** |
-| I3 | **Ángel Caído de Hielo** | Hielo, jefe final (fase 2) | 1 frame (42×43) | **Vuelo/caminata 4 frames** + **ataque 4 frames** |
-| I4 | **Tundraverx (Dragón de Hielo)** | Hielo, élite/jefe intermedio | 1 frame (39×38). El Aliento y la Nova (con el cuerpo incluido) YA existen | **Vuelo/caminata 4 frames** (perfil derecha) |
+| I1 | ~~**Jinete Sin Cabeza**~~ ✅ | Ruinas del Bosque, jefe final | **Integrado** (hoja I1-I4): galope de perfil 4, ataque 3, muerte 5, frente 3. Diseño nuevo (caballo negro con llamas azules) reemplaza al caballo pálido | Opcional: pose de "Resurrección Eterna" |
+| I2 | ~~**Mago de Hielo y Cristal**~~ ✅ | Hielo, jefe final (fase 1) | **Integrado** (hoja 12): idle 4, caminar 5, básico 3, lanza 4, nova 3, canalización 4, encierro de hielo 4, muro 3, muerte 3 + efectos (lanza de cristal, runa, estallido) | — |
+| I3 | ~~**Ángel Caído de Hielo**~~ ✅ | Hielo, jefe final (fase 2) | **Integrado** (hoja 13): idle, caminar 5, ataque 4, vuelo 4, preparación 4, alas 3, tormenta 4, transformación 5, aura 4, congelación 3, recuperación 4, muerte 8 + efectos (nova). Diseño nuevo (ángel con alas de cristal) reemplaza a la gárgola | — |
+| I4 | ~~**Tundraverx (Dragón de Hielo)**~~ ✅ | Hielo, élite/jefe intermedio | **Integrado** (hoja I1-I4): caminar de perfil 4, aliento 3, muerte 5. Diseño nuevo: dragón cuadrúpedo de cristal, sin alas (el lore de la Esquirla pasó de "ala" a "cresta") | — |
 | I5 | **Doblador — Guerrero** | Bosque, subjefe | 1 frame (32×38) | **Caminata 4 frames** + **ataque 3 frames** |
 | I6 | **Doblador — Arquera** | Bosque, subjefe | 1 frame (25×40) | **Caminata 4 frames** + **disparo 3 frames** |
 | I7 | **Doblador — Pícaro** | Bosque, subjefe | 1 frame (30×40) | **Caminata 4 frames** + **ataque 3 frames** |
 | I8 | **Doblador — Clérigo** | Bosque, subjefe | 1 frame (22×33) | **Caminata 4 frames** + **cast 3 frames** |
-| I9 | **Minotauro** | Laberinto, jefe final | La tira real solo trae perfil caminando (derecha) y espalda (3 frames) | **Ataque 4 frames** (perfil derecha: embestida o hachazo) + **caminata de frente 4 frames** (vista abajo) |
+| I9 | ~~**Minotauro**~~ ✅ | Laberinto, jefe final | **Integrado — canon nuevo (IMG 9)**: idle en 4 direcciones, caminar, carrera, ataque, golpe pesado, golpe sísmico, embestida, hurt y muerte + VFX propios (onda, hacha, polvo, traza, furia). Reemplaza TODO el set anterior | — |
 | I10 | **Demonio Mayor — efectos** | Arena Infernal, jefe | El cuerpo tiene atlas real; el **aliento** y la **onda** se dibujan por código | **Aliento de fuego 4 a 6 frames** (efecto, dirección derecha) + **onda expansiva 4 frames** (anillo/golpe al suelo, vista cenital) |
 | I11 | ~~**Zombi**~~ ✅ | Arena Infernal, común | **Integrado** (Pack 4): idle 4, caminar 3, ataque 3, golpe 1, muerte 3. *La fila "attack" del pack dibuja otra criatura (con cuernos y lanza): se usaron como ataque los frames de embestida de la fila "hit"* | Opcional: ataque propio (mordida/zarpazo) con el mismo diseño |
 | I12 | ~~**Esqueleto Cornudo**~~ ✅ | Arena Infernal, subélite | **Integrado** (Pack 4): idle 4, caminar 4, ataque 3, golpe 2, muerte 3 | — |
@@ -272,3 +272,11 @@ de nuevo**:
   y las ruinas de la Arena Divina.
 - **POLISH**: quedan 21 de 26. Resueltos: muertes del Segador y de Axiom, Gólem de Hielo, Demonio
   de Hielo y Fuego y Ent.
+
+## Pase de canon + Artgate (hojas IMG 1-9 y hojas de jefes)
+
+Decisiones y motivos en `LA_HORDA_SPRITE_CANON.md` y `LA_HORDA_ARTGATE_AUDIT.md`; lo que falta, en `LA_HORDA_ASSETS_FALTANTES.md`.
+
+- **Integrados como canon (reemplazan el set anterior):** Mago de Hielo y Cristal, Ángel Caído, Jinete Sin Cabeza, Tundraverx, Minotauro, Dragoncito de Hielo, Ángel de Hielo élite, Enjambre de Hadas, Cù-Sìth, Gólem del Infernal (de lava), Gólem de Piedra; nuevos: Gólem de Cristal, Servo y Cristal Volador.
+- **Conservados (el actual gana o está completo):** los 13 campeones, Dama del Bosque, Gólem de Hielo, Esfinge/Medusa/Druida, Duende, Zombi, Lobo Espectral, Demonio Nigromántico.
+- **Rechazados por Frankenstein:** redibujos de campeones (IMG 4/5/7), muertes del Laberinto (IMG 1, otro diseño), ajustes de Duende/Zombi/Lobo/Demonio, cuerpo del Minotauro de capa roja.

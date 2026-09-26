@@ -159,13 +159,14 @@ function updateBossSkillWorld(dt){
 }
 
 // ---- piezas de kit reutilizables ----
-function skCircleSlam(e, R, windMs, mult, o, rgb, label, anim){
+function skCircleSlam(e, R, windMs, mult, o, rgb, label, anim, onResolve){
   bossWindup(e, windMs, anim||"bossGroundSlam", {shape:0, r:R, rgb}, ()=>{
     e.attackAnim = 500;
     const oo = Object.assign({from:e}, o||{});
     for(const h of heroes){ if(h.alive && distance(e,h) <= R + (h.radius||18)*0.5) bossHitHero(h, e.dmg*mult, oo); }
     vfxShock(e.x, e.y, e.radius*0.4, R, rgb, 480, 2);
     particles.push({x:e.x, y:e.y, life:520, ring:true, maxLife:520, maxR:R, color:"rgb("+rgb+")"});
+    if(onResolve) onResolve();
   });
   if(label) bossSkillLabel(e, label);
 }
@@ -471,6 +472,7 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
 function drawIceWall(w){
   const age = w.maxLife - w.life, grow = Math.min(1, age/180), fade = w.life < 500 ? w.life/500 : 1;
   if(w.st){ drawStonePillar(w, grow, fade); return; }
+  if(w.tree && drawTreeWall(w, grow, fade)) return;
   const img = ICE_WALL_IMG[w.img], ready = ICE_WALL_READY[w.img];
   drawShadow(w.x, w.y, w.r*1.1);
   if(ready){
@@ -485,6 +487,15 @@ function drawIceWall(w){
     ctx.beginPath(); ctx.moveTo(w.x-w.r, w.y); ctx.lineTo(w.x, w.y-54*grow); ctx.lineTo(w.x+w.r, w.y); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.restore();
   }
+}
+// Árbol de la Muralla de Árboles (Guardián Ancestral): cuadros gdTreeWall de su hoja.
+function drawTreeWall(w, grow, fade){
+  const F = VFX_SPR_EXTRA.gdTreeWall; if(!F || !F.ready()) return false;
+  const img = F.imgs[(w.img||0) % F.imgs.length], h = 92*grow, s = h/img.height;
+  drawShadow(w.x, w.y, w.r*1.2);
+  ctx.save(); ctx.globalAlpha = fade; ctx.translate(w.x, w.y+6); if(w.flip) ctx.scale(-1,1);
+  ctx.imageSmoothingEnabled = false; ctx.drawImage(img, -img.width*s/2, -h, img.width*s, h); ctx.restore();
+  return true;
 }
 // Pilar de piedra del Laberinto de Piedra (Ángel Corrompido, poder del Guardián del Laberinto):
 // usa el mismo sistema que el Muro de Hielo (colisión con campeones, red), otro dibujo.

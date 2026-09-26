@@ -53,6 +53,11 @@ const EREN_CFG = {
   retumbar: {steps:6, stepMs:520, radius:160, dmgMult:1.35, speed:95, knockPx:60, eliteStaggerMs:260},
   // El Retumbar (definitiva 2, secreta): tres pisadas con aviso, control cedido
   rumbling: {roarMs:1300, telegraphMs:1350, gapMs:650, dist:320, radii:[250, 250, 420], dmgMult:[8, 8, 13],
-             knockPx:140, silhouettes:9},
+             knockPx:140, silhouettes:9,
+             // EXCEPCIONAL (BUGFIX 01): como mucho 2 por partida y, además de la Furia llena transformado,
+             // una condición especial que no depende de enfriamientos (ver erenRumblingCondition):
+             //  1ª: pelea contra un JEFE, o Eren al borde (<35% vida) / un aliado caído.
+             //  2ª: el JEFE ya debajo del 50% y al menos 90 s desde la primera.
+             maxPerRun:2, gapMs2:90000, lowHpPct:0.35, bossHpPct2:0.5},
   exhausted:{durationMs:6000, speedPct:-0.30, noTransformMs:20000}
 };

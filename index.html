@@ -189,12 +189,13 @@
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
     <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
-    <div class="shop-section-title">Objetos del día</div>
-    <div class="lobby-note" id="shop-items-note">Cambian todos los días. Los Míticos se fabrican y los Únicos solo se ganan: acá no se venden.</div>
-    <div id="shop-items"></div>
-    <div class="shop-section-title">Campeones</div>
-    <div id="shop-champ-grid"></div>
-    <div class="shop-soon-box shop-soon-small">Skins y efectos visuales: próximamente.</div>
+    <div class="shop-tabs" id="shop-tabs">
+      <button class="shop-tab on" data-shop-tab="campeones">Campeones</button>
+      <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
+      <button class="shop-tab" data-shop-tab="skins">Skins</button>
+    </div>
+    <div class="lobby-note shop-test-note">Etapa de prueba: todos los campeones y todos los objetos cuestan 1.000 de oro.</div>
+    <div id="shop-panel"></div>
     <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
@@ -364,6 +365,10 @@
 <script src="js/rendering/feedback.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
+<script src="js/assets/boss-sheets-meta.js"></script>
+<script src="js/assets/canon-sheets-meta.js"></script>
+<script src="js/assets/guardian-sheet-meta.js"></script>
+<script src="js/assets/boss-sheets.js"></script>
 <script src="js/rendering/fx-contrast.js"></script>
 <script src="js/rendering/gore.js"></script>
 <script src="js/rendering/entities.js"></script>
@@ -376,6 +381,7 @@
 <script src="js/systems/mythic-powers.js"></script>
 <script src="js/systems/reactions.js"></script>
 <script src="js/systems/set-effects.js"></script>
+<script src="js/assets/set-skins-meta.js"></script>
 <script src="js/systems/champion-sets.js"></script>
 <script src="js/systems/performance.js"></script>
 <script src="js/systems/loot.js"></script>
@@ -413,6 +419,7 @@
 <script src="js/skills/ability-vfx.js"></script>
 <script src="js/skills/boss-skills.js"></script>
 <script src="js/skills/boss-patterns.js"></script>
+<script src="js/skills/boss-guardian.js"></script>
 <script src="js/enemies/spawning.js"></script>
 <script src="js/enemies/enemy-roles.js"></script>
 <script src="js/enemies/ranged-styles.js"></script>
@@ -432,6 +439,7 @@
 <script src="js/arenas/fortaleza/fort-art.js"></script>
 <script src="js/arenas/fortaleza/fort-render.js"></script>
 <script src="js/arenas/fortaleza/fort-arena.js"></script>
+<script src="js/arenas/fortaleza/fort-guide.js"></script>
 <script src="js/arenas/micelial/mic-data.js"></script>
 <script src="js/arenas/micelial/mic-map.js"></script>
 <script src="js/arenas/micelial/mic-ecosystem.js"></script>
@@ -440,6 +448,7 @@
 <script src="js/arenas/micelial/mic-mother.js"></script>
 <script src="js/arenas/micelial/mic-render.js"></script>
 <script src="js/arenas/micelial/mic-arena.js"></script>
+<script src="js/arenas/micelial/mic-guide.js"></script>
 <script src="js/arenas/infernal/inf-fissures.js"></script>
 <script src="js/arenas/infernal/inf-hechicero.js"></script>
 <script src="js/arenas/hielo/hie-cold.js"></script>
@@ -465,6 +474,7 @@
 <script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/item-icons.js"></script>
 <script src="js/ui/item-preview.js"></script>
+<script src="js/ui/shop-ui.js"></script>
 <script src="js/ui/inventory-ui.js"></script>
 <script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>

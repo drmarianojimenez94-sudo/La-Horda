@@ -45,7 +45,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Único · **Rareza:** Único · **Slot real:** Casco (casco) · **Set:** — · **Uso:** Mago
 - **Arena / fuente:** Único diseñado a mano (jefes finales / pity de Único)
 - **Archivo:** `assets/items/uniq_corona_archimago.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["uniq_corona_archimago"]`)
-- **Efecto (para que el arte lo cuente):** +18% daño de habilidades / +10% enfriamiento / +12% recurso / Represalia: Quien te golpea cuerpo a cuerpo recibe parte del daño y queda aturdido / Fuego del Vacío: Tu fuego se vuelve violeta y quema el doble de tiempo. El Muro de Fuego te sigue. La Cadena de Relámpago salta 3 veces más y deja a cada objetivo en llamas.
+- **Efecto (para que el arte lo cuente):** +18% daño de habilidades / +10% enfriamiento / +12% recurso / Aliento Glacial: Los enemigos cerca tuyo se mueven un 18% más lento / Fuego del Vacío: Tu fuego se vuelve violeta y quema el doble de tiempo. El Muro de Fuego te sigue. La Cadena de Relámpago salta 3 veces más y deja a cada objetivo en llamas.
 - **Descripción visual:** corona de fuego (rojo brasa, naranja, amarillo). El último Archimago miró al Vacío hasta que el Vacío le devolvió la mirada. La corona es lo único que quedó mirando.
 - **Prompt:** `Corona del Archimago Eclipsado — game item icon, a crown, palette: fire (ember red, orange, yellow); lore hint: "El último Archimago miró al Vacío hasta que el Vacío le devolvió la mirada. La corona es lo único que quedó mirando."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -53,7 +53,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Único · **Rareza:** Único · **Slot real:** Casco (casco) · **Set:** — · **Uso:** Tanque
 - **Arena / fuente:** Único diseñado a mano (jefes finales / pity de Único)
 - **Archivo:** `assets/items/uniq_yelmo_coloso.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["uniq_yelmo_coloso"]`)
-- **Efecto (para que el arte lo cuente):** +22% vida / +10% defensa / Aliento Glacial: Los enemigos cerca tuyo se mueven un 18% más lento / Paso del Coloso: Te agrandás un 15% y cada paso hace temblar el suelo: los enemigos pegados a vos se tambalean. La Embestida deja una grieta que aturde a todo lo que cruza.
+- **Efecto (para que el arte lo cuente):** +22% vida / +10% defensa / Festín de Almas: Cada baja te cura; las bajas de élite curan mucho más / Paso del Coloso: Te agrandás un 15% y cada paso hace temblar el suelo: los enemigos pegados a vos se tambalean. La Embestida deja una grieta que aturde a todo lo que cruza.
 - **Descripción visual:** yelmo de acero (gris azulado). Perteneció a un gigante que caminó a través de tres hordas sin detenerse.
 - **Prompt:** `Yelmo del Coloso Errante — game item icon, a helmet, palette: steel (bluish grey); lore hint: "Perteneció a un gigante que caminó a través de tres hordas sin detenerse."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -61,7 +61,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Único · **Rareza:** Único · **Slot real:** Arma (arma) · **Set:** — · **Uso:** La Cazadora
 - **Arena / fuente:** Único diseñado a mano (jefes finales / pity de Único)
 - **Archivo:** `assets/items/uniq_arco_lunaroja.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["uniq_arco_lunaroja"]`)
-- **Efecto (para que el arte lo cuente):** +20% daño / +12% velocidad de ataque / +6% prob. de crítico / Festín de Almas: Cada baja te cura; las bajas de élite curan mucho más / Luna Roja: Tus flechas son de sangre: cada una hace sangrar y, contra tu Presa, atraviesa. El Lobo Espectral aparece siempre que marcás una Presa nueva (cada 20 s).
+- **Efecto (para que el arte lo cuente):** +20% daño / +12% velocidad de ataque / +6% prob. de crítico / Frío que Quiebra: +50% de daño crítico contra enemigos ralentizados o congelados / Luna Roja: Tus flechas son de sangre: cada una hace sangrar y, contra tu Presa, atraviesa. El Lobo Espectral aparece siempre que marcás una Presa nueva (cada 20 s).
 - **Descripción visual:** arco de sangre (carmesí, rojo oscuro). Solo se tensa cuando la luna sangra. La Cazadora aprendió a esperar esas noches.
 - **Prompt:** `Arco de la Luna Roja — game item icon, a bow, palette: blood (crimson, dark red); lore hint: "Solo se tensa cuando la luna sangra. La Cazadora aprendió a esperar esas noches."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -138,8 +138,8 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Arena / fuente:** Arena de Hielo, Arena Acuática
 - **Archivo:** `assets/items/leg_tundraverx.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["leg_tundraverx"]`)
 - **Efecto (para que el arte lo cuente):** +10% daño / +4% prob. de crítico / Escarcha Viva: Tus básicos ralentizan; cada 6 golpes congelan al objetivo / Parte de la receta de Corona del Invierno Sin Fin
-- **Descripción visual:** daga/colmillo de hielo (azul glaciar, celeste, blanco), «la que muerde el aire». Arrancada del ala del Soberano de Hielo. Todavía está fría al tacto, aunque la dejes al sol.
-- **Prompt:** `Esquirla de Tundraverx — game item icon, a dagger/fang blade, palette: ice (glacier blue, cyan, white); lore hint: "Arrancada del ala del Soberano de Hielo. Todavía está fría al tacto, aunque la dejes al sol."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
+- **Descripción visual:** daga/colmillo de hielo (azul glaciar, celeste, blanco), «la que muerde el aire». Arrancada de la cresta del Soberano de Hielo. Todavía está fría al tacto, aunque la dejes al sol.
+- **Prompt:** `Esquirla de Tundraverx — game item icon, a dagger/fang blade, palette: ice (glacier blue, cyan, white); lore hint: "Arrancada de la cresta del Soberano de Hielo. Todavía está fría al tacto, aunque la dejes al sol."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
 #### Manto del Glaciar Dormido  `leg_glaciar_manto`
 - **Categoría:** Legendario con nombre · **Rareza:** Legendario · **Slot real:** Pechera (pechera) · **Set:** — · **Uso:** Universal
@@ -331,7 +331,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Escudo (escudo) · **Set:** — · **Uso:** Tanque
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/tanque_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["tanque_leg"]`)
-- **Efecto (para que el arte lo cuente):** Embestida: durante la carga recibís 10% menos daño (0,5 s). / Paso del Cazador: Cada baja te da velocidad de movimiento (se acumula hasta 10)
+- **Efecto (para que el arte lo cuente):** Embestida: durante la carga recibís 10% menos daño (0,5 s). / Égida: Un golpe fuerte recibido te da un escudo (cada 8 s)
 - **Descripción visual:** escudo de cometa de acero (gris azulado). Perteneció a un caballero que nunca retrocedió un solo paso.
 - **Prompt:** `Escudo del Juggernaut — game item icon, a kite shield, palette: steel (bluish grey); lore hint: "Perteneció a un caballero que nunca retrocedió un solo paso."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -339,7 +339,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Pechera (pechera) · **Set:** — · **Uso:** Tanque
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/tanque_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["tanque_mit"]`)
-- **Efecto (para que el arte lo cuente):** Grito de Guerra: tu próximo Torbellino dura 18% más. / Sobrecarga Mítica: Con menos de 50% de vida: +15% de daño y +15% de velocidad de ataque / Golpe Sísmico: Los críticos generan una onda de choque que aturde
+- **Efecto (para que el arte lo cuente):** Grito de Guerra: tu próximo Torbellino dura 18% más. / Sobrecarga Mítica: Con menos de 50% de vida: +15% de daño y +15% de velocidad de ataque / Estallido Ígneo: Al matar, el enemigo puede estallar en llamas y dañar a los cercanos
 - **Descripción visual:** pala de acero (gris azulado). Se dice que el grito de su portador todavía se escucha en el campo de batalla.
 - **Prompt:** `Corona del Paladín Eterno — game item icon, a shovel, palette: steel (bluish grey); lore hint: "Se dice que el grito de su portador todavía se escucha en el campo de batalla."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -347,7 +347,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Botas (botas) · **Set:** — · **Uso:** Asesino
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/guerrero_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["guerrero_leg"]`)
-- **Efecto (para que el arte lo cuente):** Trampa de Área: colocás 1 trampa más por lanzamiento. / Resonancia Arcana: Al lanzar una habilidad, una onda de energía golpea a tu alrededor
+- **Efecto (para que el arte lo cuente):** Trampa de Área: colocás 1 trampa más por lanzamiento. / Filo del Verdugo: +60% de daño a enemigos comunes y élites con menos de 20% de vida
 - **Descripción visual:** botas de cuero (marrón). Cada paso que da queda marcado con una trampa invisible.
 - **Prompt:** `Garra del Cazador — game item icon, a boots, palette: leather (brown); lore hint: "Cada paso que da queda marcado con una trampa invisible."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -355,7 +355,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Arma (arma) · **Set:** — · **Uso:** Asesino
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/guerrero_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["guerrero_mit"]`)
-- **Efecto (para que el arte lo cuente):** Triple Golpe: contra enemigos con menos de 30% de vida, el golpe final hace +22% de daño. / Sobrecarga Mítica: Con menos de 50% de vida: +15% de daño y +15% de velocidad de ataque / Avivar las Llamas: +25% de daño contra enemigos que están ardiendo
+- **Efecto (para que el arte lo cuente):** Triple Golpe: contra enemigos con menos de 30% de vida, el golpe final hace +22% de daño. / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Paso del Cazador: Cada baja te da velocidad de movimiento (se acumula hasta 10)
 - **Descripción visual:** daga/colmillo de acero (gris azulado). Bebe con más sed cuanto más débil está su presa.
 - **Prompt:** `Colmillo del Verdugo — game item icon, a dagger/fang blade, palette: steel (bluish grey); lore hint: "Bebe con más sed cuanto más débil está su presa."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -363,7 +363,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Casco (casco) · **Set:** — · **Uso:** Mago
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/mago_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["mago_leg"]`)
-- **Efecto (para que el arte lo cuente):** Nova de Escarcha: los enemigos cerca del centro quedan aturdidos 0,35 s. / Guardia Juramentada: Los aliados cerca tuyo reciben 10% menos daño
+- **Efecto (para que el arte lo cuente):** Nova de Escarcha: los enemigos cerca del centro quedan aturdidos 0,35 s. / Furia Creciente: Golpear seguido acumula daño y velocidad de ataque (hasta 10)
 - **Descripción visual:** cristal/gema de hielo (azul glaciar, celeste, blanco). Extraído de un glaciar que nunca ha visto el sol.
 - **Prompt:** `Cristal de Invierno Eterno — game item icon, a crystal, palette: ice (glacier blue, cyan, white); lore hint: "Extraído de un glaciar que nunca ha visto el sol."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -371,7 +371,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Arma (arma) · **Set:** — · **Uso:** Mago
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/mago_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["mago_mit"]`)
-- **Efecto (para que el arte lo cuente):** Muro de Fuego: mientras dura, todo tu daño aumenta 7%. / Sobrecarga Mítica: Con menos de 50% de vida: +15% de daño y +15% de velocidad de ataque / Golpe Sísmico: Los críticos generan una onda de choque que aturde
+- **Efecto (para que el arte lo cuente):** Muro de Fuego: mientras dura, todo tu daño aumenta 7%. / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Tormenta Encadenada: Cada 4 golpes básicos sale un rayo que salta entre enemigos
 - **Descripción visual:** corazón de acero (gris azulado). El fuego que jamás se apaga, ni siquiera cuando el Mago descansa.
 - **Prompt:** `Corazón del Muro Eterno — game item icon, a heart relic, palette: steel (bluish grey); lore hint: "El fuego que jamás se apaga, ni siquiera cuando el Mago descansa."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -379,7 +379,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Pechera (pechera) · **Set:** — · **Uso:** Soporte
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/soporte_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["soporte_leg"]`)
-- **Efecto (para que el arte lo cuente):** El exceso de curación se convierte en escudo (15% de lo que sobra). / +15% exceso de curación → escudo / Resonancia Arcana: Al lanzar una habilidad, una onda de energía golpea a tu alrededor
+- **Efecto (para que el arte lo cuente):** El exceso de curación se convierte en escudo (15% de lo que sobra). / +15% exceso de curación → escudo / Descarga Arcana: Tus habilidades pueden electrocutar: aturden un instante y saltan a otro enemigo
 - **Descripción visual:** cáliz de acero (gris azulado). Nunca se vacía del todo: siempre queda algo para dar.
 - **Prompt:** `Cáliz de Sobreabundancia — game item icon, a chalice, palette: steel (bluish grey); lore hint: "Nunca se vacía del todo: siempre queda algo para dar."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -387,7 +387,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Arma (arma) · **Set:** — · **Uso:** Soporte
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/soporte_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["soporte_mit"]`)
-- **Efecto (para que el arte lo cuente):** Bendición de Guerra: además daña a los enemigos cercanos (14% de tu daño). / Sobrecarga Mítica: Con menos de 50% de vida: +15% de daño y +15% de velocidad de ataque / Avivar las Llamas: +25% de daño contra enemigos que están ardiendo
+- **Efecto (para que el arte lo cuente):** Bendición de Guerra: además daña a los enemigos cercanos (14% de tu daño). / Sobrecarga Mítica: Con menos de 50% de vida: +15% de daño y +15% de velocidad de ataque / Paso del Cazador: Cada baja te da velocidad de movimiento (se acumula hasta 10)
 - **Descripción visual:** espada de acero (gris azulado). Bendice el arma de un aliado con un eco ofensivo propio.
 - **Prompt:** `Aura de la Consagración — game item icon, a sword, palette: steel (bluish grey); lore hint: "Bendice el arma de un aliado con un eco ofensivo propio."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -395,7 +395,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Pechera (pechera) · **Set:** — · **Uso:** Segador Olvidado
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/segador_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["segador_leg"]`)
-- **Efecto (para que el arte lo cuente):** Armadura de la Furia: +6% de robo de vida mientras está activa. / Guardia Juramentada: Los aliados cerca tuyo reciben 10% menos daño
+- **Efecto (para que el arte lo cuente):** Armadura de la Furia: +6% de robo de vida mientras está activa. / Furia Creciente: Golpear seguido acumula daño y velocidad de ataque (hasta 10)
 - **Descripción visual:** coraza/peto de acero (gris azulado). Cuanto más aprieta, más fuerte se vuelve quien lo lleva.
 - **Prompt:** `Yugo de la Furia — game item icon, a chest armor, palette: steel (bluish grey); lore hint: "Cuanto más aprieta, más fuerte se vuelve quien lo lleva."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -403,7 +403,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Arma (arma) · **Set:** — · **Uso:** Segador Olvidado
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/segador_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["segador_mit"]`)
-- **Efecto (para que el arte lo cuente):** Hasta +22% de daño según la vida que te falta. / +22% daño según vida faltante / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Gracia Veloz: Curar a un aliado les da a los dos velocidad por 2,5 s
+- **Efecto (para que el arte lo cuente):** Hasta +22% de daño según la vida que te falta. / +22% daño según vida faltante / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Aliento Glacial: Los enemigos cerca tuyo se mueven un 18% más lento
 - **Descripción visual:** corazón de sangre (carmesí, rojo oscuro). Late más rápido mientras menos le queda por perder.
 - **Prompt:** `Corazón Carmesí — game item icon, a heart relic, palette: blood (crimson, dark red); lore hint: "Late más rápido mientras menos le queda por perder."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -411,7 +411,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Botas (botas) · **Set:** — · **Uso:** Axiom
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/axiom_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["axiom_leg"]`)
-- **Efecto (para que el arte lo cuente):** Teletransporte: al llegar recibís un escudo del 7% de tu vida. / Escarcha Viva: Tus básicos ralentizan; cada 6 golpes congelan al objetivo
+- **Efecto (para que el arte lo cuente):** Teletransporte: al llegar recibís un escudo del 7% de tu vida. / Esporas Pútridas: Tus golpes básicos pudren al objetivo: daño en el tiempo y +8% de daño recibido durante 3 s. Si muere podrido, contagia a un enemigo cercano
 - **Descripción visual:** botas de cuero (marrón). Un trozo de código que nunca terminó de compilar.
 - **Prompt:** `Fragmento de Recarga — game item icon, a boots, palette: leather (brown); lore hint: "Un trozo de código que nunca terminó de compilar."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -419,7 +419,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Arma (arma) · **Set:** — · **Uso:** Axiom
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/axiom_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["axiom_mit"]`)
-- **Efecto (para que el arte lo cuente):** Sobrescribir: el multiplicador de ejecución sube +0,35. / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Estallido Ígneo: Al matar, el enemigo puede estallar en llamas y dañar a los cercanos
+- **Efecto (para que el arte lo cuente):** Sobrescribir: el multiplicador de ejecución sube +0,35. / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Gracia Veloz: Curar a un aliado les da a los dos velocidad por 2,5 s
 - **Descripción visual:** orbe de acero (gris azulado). Encuentra la vulnerabilidad exacta antes de que exista.
 - **Prompt:** `Núcleo de Ejecución Forzada — game item icon, an orb, palette: steel (bluish grey); lore hint: "Encuentra la vulnerabilidad exacta antes de que exista."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -427,7 +427,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Legendario · **Slot real:** Casco (casco) · **Set:** — · **Uso:** La Profeta
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/profeta_leg.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["profeta_leg"]`)
-- **Efecto (para que el arte lo cuente):** Danza del Augurio: el radio de aturdimiento crece 12%. / Filo del Verdugo: +60% de daño a enemigos comunes y élites con menos de 20% de vida
+- **Efecto (para que el arte lo cuente):** Danza del Augurio: el radio de aturdimiento crece 12%. / Brasa Viva: Tus golpes básicos prenden fuego al objetivo
 - **Descripción visual:** cristal/gema de luz sagrada (dorado, marfil). Cada lágrima que cae es un futuro que ya no ocurrirá.
 - **Prompt:** `Lágrima del Augurio — game item icon, a crystal, palette: holy light (gold, ivory); lore hint: "Cada lágrima que cae es un futuro que ya no ocurrirá."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 
@@ -435,7 +435,7 @@ Colores de marco por categoría: Común blanco · Raro azul · Muy Raro amarillo
 - **Categoría:** Objeto de campeón · **Rareza:** Mítico · **Slot real:** Pechera (pechera) · **Set:** — · **Uso:** La Profeta
 - **Arena / fuente:** Botín del campeón (cualquier arena)
 - **Archivo:** `assets/items/profeta_mit.png` · 64×64 PNG, fondo transparente (se registra en `ITEM_ICON_ART["profeta_mit"]`)
-- **Efecto (para que el arte lo cuente):** Sacrificio: curás 12% más. / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Filo Sediento: Tus golpes básicos abren heridas que sangran
+- **Efecto (para que el arte lo cuente):** Sacrificio: curás 12% más. / Guardián Mítico: La primera vez que te quedás sin escudo en la partida, recibís un escudo de emergencia del 20% de tu vida / Égida: Un golpe fuerte recibido te da un escudo (cada 8 s)
 - **Descripción visual:** cáliz de acero (gris azulado). Un poco de vida propia a cambio de mucha vida ajena.
 - **Prompt:** `Cáliz del Sacrificio Menor — game item icon, a chalice, palette: steel (bluish grey); lore hint: "Un poco de vida propia a cambio de mucha vida ajena."; pixel art, dark-fantasy chibi style of LA HORDA (same grammar as the Knight/Tanque master reference), 1px uniform dark outline, 2-3 flat shading tones per color, no gradients or airbrush, limited palette of 4-6 colors plus outline, crisp alpha (only 0 or 255), transparent background, centered, slight 3/4 angle, no text, no frame (the game draws the rarity frame), 64x64`
 

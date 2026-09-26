@@ -97,6 +97,7 @@ function update(dt){
     if(e.electrifiedTimer>0) e.electrifiedTimer -= dt;
     if(arenaMods().enemyRegenPct && e.hp<e.maxHp && e.rank!=="jefe" && e.rank!=="subjefe"){ e.hp = Math.min(e.maxHp, e.hp + e.maxHp*arenaMods().enemyRegenPct*arenaRuleEnemyRegenMult()*dt/1000); }
     if(e.attackAnim>0) e.attackAnim -= dt;
+    bossSheetTick(e, dt); // animación de habilidad de las hojas de jefes + estela de fuego del Minotauro
     if(e.skillAnim) e.skillAnim.t += dt;
     if(e.fxAnim) e.fxAnim.t += dt;
     // Arrastrado por una Embestida: sigue al caballero en vez de actuar normalmente
@@ -164,7 +165,10 @@ function update(dt){
               addFrost(h, 2); // Aliento gélido: 2 cargas de escarcha (dos alientos seguidos congelan)
             }
           }
-          e.fxAnim = {name:"aliento_hielo", t:0};
+          // con el canon nuevo (Tundraverx sin alas) el efecto viejo traía dibujado al dragón alado:
+          // se usa el aliento de su propia hoja (cuadros de ataque) en vez del reemplazo de cuerpo
+          if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[e.type]) bossSheetPack(e, "atk", 900);
+          else e.fxAnim = {name:"aliento_hielo", t:0};
         });
         showBanner("¡Aliento de Hielo!");
       } else if(!e.fxAnim && e.novaCd<=0){
@@ -177,7 +181,8 @@ function update(dt){
           for(const h of targets){ if(distance(e,h) <= R) bossHitHero(h, e.dmg*1.1, {slow:0.45, slowDur:1800, frost:1}); }
           particles.push({x:e.x,y:e.y, life:650, ring:true, maxLife:650, maxR:R, color:"#bfe0f5"});
           particles.push({x:e.x,y:e.y, life:820, ring:true, maxLife:820, maxR:R*0.65, color:"#eaf7ff"});
-          e.fxAnim = {name:"nova_hielo_dragon", t:0};
+          if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[e.type]){ bossSheetPack(e, "atk", 700); bossSheetFx("bsMagoBurst", e.x, e.y - e.radius*0.3, R*1.2, 700, {grow:0.3}); }
+          else e.fxAnim = {name:"nova_hielo_dragon", t:0};
         });
         showBanner("¡Nova de Hielo!");
       }
@@ -698,7 +703,7 @@ function updateControlledHero(dt){
   // se revierte solo, junto con esto, cuando buffTimer llega a 0 (ver más arriba).
   if(player.ascensionTimer>0){
     player.ascensionTimer -= dt;
-    player.cds[0]=Math.min(player.cds[0],60); player.cds[1]=Math.min(player.cds[1],60); player.cds[2]=Math.min(player.cds[2],60); player.ultCd=Math.min(player.ultCd,60);
+    player.cds[0]=Math.min(player.cds[0],60); player.cds[1]=Math.min(player.cds[1],60); player.cds[2]=Math.min(player.cds[2],60); 
     if(player.ascensionTimer<=0) player.ascensionMaxTimer=0;
   }
   // Mientras está fusionada con el aliado (invisible/invulnerable), su posición sigue a la de

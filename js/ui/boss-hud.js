@@ -67,6 +67,7 @@ function bossHudStatus(){
   if(_bossPhaseTxt) bits.push(_bossPhaseTxt);
   if(e.type==="leviatan") bits.push(`Vida ${e.acuaticaPhase||1}/3`);
   if(e.type==="jinete_sin_cabeza") bits.push(e.resurrected ? "Vida 2/2" : "Vida 1/2");
+  if(e.type==="guardian_ancestral"){ if(e._gdTf > 0) bits.push('<span class="bs-armor">TRANSFORMÁNDOSE</span>'); else if(e._gdDone) bits.push("Corrompido"); }
   if(e.crashVuln) bits.push('<span class="bs-vuln">VULNERABLE</span>');
   else if(e.dmgTakenMult && e.dmgTakenMult<0.99) bits.push('<span class="bs-armor">BLINDADO</span>');
   if(e.regenTimer>0 && e.type==="demonio_mayor") bits.push('<span class="bs-regen">REGENERANDO</span>');
