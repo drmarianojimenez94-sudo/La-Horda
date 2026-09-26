@@ -171,7 +171,7 @@ function fortBeginLevel(){
   if(lv >= 7) fortOpenGate("g_blast", fortS.gates.g_blast.open<1 ? "blast" : null); // red de seguridad (la abre la muerte del Dragón)
   if(lv >= 6 && fortS.lift.db_forge.want!==1){ fortS.lift.db_forge.want = 1; playSfx("fortBridge"); }
   if(lv===1){
-    arenaTitleCard("ARENA III", "LA FORTALEZA SIN FIN", "Las máquinas todavía recuerdan a sus prisioneros.", 5200);
+    arenaTitleCard(campaignArenaKicker("fortaleza"), "LA FÁBRICA SIN FIN", "La Horda contaminó hasta las máquinas. Las máquinas todavía recuerdan a sus prisioneros.", 5200);
   } else if(sec !== prev){
     const S = FORT_SECTORS[sec];
     runLater(900, ()=>{ if(state==="playing") showBanner(`⚙ ${S.name.toUpperCase()} — ¡AVANZÁ!`); });

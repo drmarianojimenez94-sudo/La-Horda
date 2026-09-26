@@ -14,7 +14,7 @@
 })();
 function fortGuideTut(){
   if(typeof fortS==="undefined" || !fortS || !player || !player.alive || !fortS.traps) return;
-  tutSay("fort_intro", "LA FORTALEZA SIN FIN es una máquina: puertas, puentes y TRAMPAS. Las trampas SIEMPRE avisan (marca en el piso + ruido) antes de activarse.", null, 8000);
+  tutSay("fort_intro", "LA FÁBRICA SIN FIN es una máquina: puertas, puentes y TRAMPAS. Las trampas SIEMPRE avisan (marca en el piso + ruido) antes de activarse.", null, 8000);
   // trampa avisando cerca: salí de la marca
   for(let i=0;i<fortS.traps.length;i++){
     const s = fortS.traps[i], T = FORT_MAP.traps[i];

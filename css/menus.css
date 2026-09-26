@@ -402,3 +402,9 @@
 .shop-btn.sec{ background:var(--panel-b); border-color:var(--panel-b); color:var(--text); }
 .shop-btn:disabled{ opacity:0.4; cursor:default; }
 .shop-item .item-icon-img{ width:44px; height:44px; }
+/* Orden canónico de la campaña: número de arena, arenas en construcción y separador postgame */
+.arena-card-num{ color:#ffd76a; font-variant-numeric:tabular-nums; }
+.arena-card.soon{ opacity:0.55; border-style:dashed; }
+.arena-card.soon .arena-card-desc i{ color:#b9a98a; font-style:normal; font-size:0.85rem; }
+.arena-card-badge.soon{ color:#cfc4ae; background:rgba(120,110,90,0.18); border-color:#6f6452; }
+.arena-grid-sep{ grid-column:1 / -1; text-align:center; letter-spacing:0.3em; font-size:0.8rem; color:#b59ae0; margin:6px 0 -2px; opacity:0.85; }

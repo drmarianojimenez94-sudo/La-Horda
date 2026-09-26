@@ -224,3 +224,16 @@ Resultado final del playtest: niveles 1-8 sin caídas definitivas (todos los col
 1-3 s); nivel 9 (Carcelero) con 1 colgado rescatado en 130 s; nivel 10 ganado con los 4 héroes vivos
 (2 colgados, ambos rescatados). Regresión: 16 suites de `tools/items` en verde, `t_func` 92/92, smoke
 de las 8 arenas sin errores, anfitrión + invitado sincronizados (niveles 9 y 10).
+
+## Orden canónico de la campaña (campaignV2)
+
+| | |
+|---|---|
+| **Pedido** | Nuevo orden oficial 01 Ciudad Maldita → 10 Arena Infernal, Guardianes solo en 03/05/08/10, Arena Divina como postgame. |
+| **Causa** | El orden anterior (Bosque → Acuática → Fortaleza → Micelial → Hielo → Abismo → Laberinto → Infernal) y el canon V1 (Madre Espora Guardiana) contradecían el canon nuevo. |
+| **Solución** | `CAMPAIGN_ORDER` (10 arenas; Ciudad y Minas como slots EN CONSTRUCCIÓN) y `ARENA_ORDER` (jugables en orden canónico). Desbloqueo por frontera (`campaignFrontier`): solo la primera arena jugable al inicio, estrictamente secuencial, Infernal → Divina. IDs internos sin cambios; migración `campaignV2Migrate` (conserva lo abierto con el orden viejo, remapea cristales). Curva de dificultad por posición. Cristales: Ruinas (Ancestral), Gélida (Escarcha), Laberinto (Piedra, al vencer al Minotauro). Historia: `js/systems/campaign-story.js` (Cicatrices, prólogo de la Ciudad Maldita, carteles "ARENA NN", final). Contradicciones registradas en `docs/lore/LA_HORDA_LORE_BIBLE.md` §8. |
+| **Archivos** | `js/data/arenas.js`, `js/arenas/arena-rules.js`, `js/storage/save.js`, `js/ui/menus.js`, `js/ui/run-intro.js`, `js/core/run.js`, `js/systems/{crystals,campaign-story,difficulty,waves,combat}.js`, `js/arenas/infernal/inf-hechicero.js`, `js/skills/boss-guardian.js`, títulos de Fábrica/Reino Fúngico/Abismo, `docs/lore/*` |
+| **Pruebas** | `tools/items/t_campaign.js` (29 chequeos: orden, UI, cadena, victoria, Guardianes, cristales, jefes, migración ×5), `t_crystals` actualizado (11), 17 suites de `tools/items`, `t_func` 92/92, smoke de las 8 arenas jugables, red anfitrión + invitado (Abismo y Ruinas). |
+| **Resultado** | ✅ Todo en verde. |
+| **Regresiones** | `t_items` (la primera arena abierta es la Fábrica), `t_abismo` (Abismo entre Laberinto e Infernal) y `t_func` (elige arenas por ID) actualizados. |
+| **Assets faltantes** | Bestia del Bosque, Forjador, VFX de Cicatriz, arenas Ciudad Maldita y Minas Profundas (ver `docs/lore/LA_HORDA_CINEMATICS.md`). |

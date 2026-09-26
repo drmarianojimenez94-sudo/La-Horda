@@ -5,7 +5,7 @@
    temporizadores, arena elegida...). Lo leen y escriben casi todos los sistemas.
    ============================================================ */
 
-let currentArena = "bosque"; // arranca en la primera arena por defecto
+let currentArena = "fortaleza"; // arranca en la primera arena JUGABLE del orden canónico (Ciudad Maldita está en construcción)
 
 /* ============================================================
    GAME STATE

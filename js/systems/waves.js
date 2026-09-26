@@ -21,6 +21,7 @@ function beginLevel(){
   const ruleTxt = arenaRuleStacks()>0 ? " · " + arenaRuleLevelText() : "";
   showBanner(runLevel===LEVEL_COUNT ? "NIVEL 10 — EL JEFE ESPERA" + ruleTxt : `NIVEL ${runLevel}` + ruleTxt);
   if(arenaHas("beginLevel")) arenaHook("beginLevel"); // puertas, sectores y jefes de la arena
+  if(runLevel===1 && typeof campaignTitleCard==="function"){ campaignTitleCard(); campaignMaybePrologue(); } // "ARENA NN" + prólogo de la Ciudad Maldita (campaign-story.js)
 }
 let midBossSpawned = false;
 let activeChampion = null; // subjefe/jefe activo: mientras exista, se detiene la aparición normal de monstruos
@@ -69,7 +70,7 @@ function startBossFight(){
   }
   boss.bossPhase = 1;
   bossEntrance(boss);
-  showBanner(currentArena==="hielo" ? "EL MAGO DE HIELO DESPIERTA" : (currentArena==="bosque" ? "EL GUARDIÁN ANCESTRAL CORROMPIDO DESPIERTA" : (currentArena==="laberinto" ? "EL MINOTAURO DESPIERTA" : (currentArena==="acuatica" ? "¡EL LEVIATÁN EMERGE DE LAS PROFUNDIDADES!" : "EL DEMONIO MAYOR DESPIERTA"))));
+  showBanner(currentArena==="hielo" ? "EL MAGO GÉLIDO DESPIERTA" : (currentArena==="bosque" ? "EL GUARDIÁN ANCESTRAL CORROMPIDO DESPIERTA" : (currentArena==="laberinto" ? "EL MINOTAURO DESPIERTA" : (currentArena==="acuatica" ? "¡EL LEVIATÁN EMERGE DE LAS PROFUNDIDADES!" : "EL DEMONIO MAYOR DESPIERTA"))));
 }
 
 // Cierre de nivel: al terminar el tiempo, la horda restante cae de golpe (con su animación y

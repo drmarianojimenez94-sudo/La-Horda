@@ -2,8 +2,8 @@
 
 > *"Acá el piso también es parte del combate."*
 
-Sexta arena de la campaña (Bosque → Acuática → Fortaleza → Reino Micelial → Hielo → **Abismo** →
-Laberinto → Infernal). Se ubicó antes del Laberinto por pedido; el orden final se revisa después.
+Arena 09 de la campaña canónica (ver `docs/lore/LA_HORDA_LORE_BIBLE.md`): el **punto de no retorno**,
+entre el Laberinto y la Arena Infernal.
 Identidad: **EL TERRENO ES UN RECURSO.** Ruinas lovecraftianas suspendidas sobre el vacío, dark fantasy,
 pixel art 16-bit detallado (sin sci-fi ni neón). Debajo vive **El Que Mora Debajo**: está desde el
 nivel 1 y se revela de a poco.

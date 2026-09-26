@@ -7,20 +7,34 @@
    ============================================================ */
 
 function arenaMods(){ return ARENA_MODS[currentArena] || ARENA_MODS.bosque; }
-// Campaña: la primera arena (Ruinas del Bosque) está abierta desde el comienzo y cada una de las
-// siguientes se abre al superar la anterior, en el orden real de ARENA_ORDER. Un anfitrión solo
+// Campaña (ORDEN CANÓNICO, ver CAMPAIGN_ORDER en js/data/arenas.js): la primera arena jugable está
+// abierta desde el comienzo y cada una de las siguientes se abre al superar la anterior. La FRONTERA
+// es la primera arena jugable sin completar: solo esa (y las ya completadas) están abiertas, así que
+// no se puede saltear ninguna. Las arenas "en construcción" no son jugables y el desbloqueo las saltea.
+// save.legacyOpenArenas: arenas que un guardado viejo ya tenía abiertas antes del orden canónico
+// (migración campaignV2 en save.js: nadie pierde una arena que ya podía jugar). Un anfitrión solo
 // puede crear una sala para una arena que tenga abierta (el multijugador no saltea la campaña).
+function campaignFrontier(){
+  const cleared = (save && save.arenasCleared) || {};
+  for(const k of ARENA_ORDER) if(!cleared[k]) return k;
+  return null;
+}
 function isArenaUnlocked(key){
   const i = ARENA_ORDER.indexOf(key);
-  if(typeof PLAYTEST_UNLOCK_ALL!=="undefined" && PLAYTEST_UNLOCK_ALL) return i >= 0; // modo prueba (ver save.js)
-  if(i <= 0) return i===0;
+  if(i < 0) return false;                                   // Divina, arenas en construcción o desconocidas
+  if(typeof PLAYTEST_UNLOCK_ALL!=="undefined" && PLAYTEST_UNLOCK_ALL) return true; // modo prueba (ver save.js)
   const cleared = save.arenasCleared || {};
-  // La Fortaleza (3ra) y el Reino Micelial (4ta) se sumaron después: quien ya tenía abierto el
-  // Hielo antes de que existieran lo conserva (save.legacyHieloOpen, ver loadSave).
-  if(key==="hielo" && save.legacyHieloOpen) return true;
-  if(key==="laberinto" && save.legacyLabOpen) return true;   // la Arena del Abismo llegó después (ver loadSave)
-  return !!cleared[ARENA_ORDER[i-1]];
+  if(cleared[key]) return true;
+  if(Array.isArray(save.legacyOpenArenas) && save.legacyOpenArenas.includes(key)) return true;
+  return key === campaignFrontier();
 }
+// La arena que se muestra/juega por defecto: la elegida si está abierta; si no, la frontera.
+function ensurePlayableArena(){
+  if(typeof currentArena==="undefined" || currentArena==="divina") return;
+  if(!isArenaUnlocked(currentArena)) currentArena = campaignFrontier() || ARENA_ORDER[ARENA_ORDER.length-1];
+}
+// Arena Divina (postgame, fuera de las diez): se abre al completar la Arena Infernal.
+function isDivinaUnlocked(){ return !!(save.divineArenaUnlocked || (save.arenasCleared && save.arenasCleared.infernal)); }
 // Reglas del MODO de juego (no de cada arena). Hoy todo es PvE: arenas de oleadas y Arena
 // Divina (contra un equipo manejado por la IA). Un modo PvP futuro puede declarar
 // friendlyFire:true sin tocar el resto del código.

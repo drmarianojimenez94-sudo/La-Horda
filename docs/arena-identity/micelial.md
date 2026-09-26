@@ -2,7 +2,7 @@
 
 > *"Todo lo que ves está vivo. Y crece."*
 
-Cuarta arena de la campaña (Bosque → Acuática → Fortaleza → **Reino Micelial** → Hielo → Laberinto → Infernal).
+Arena 04 de la campaña canónica: **El Reino Fúngico** (ID interno `micelial`). La Madre Espora **no** es Guardiana (ver `docs/lore/LA_HORDA_LORE_BIBLE.md`).
 Identidad: **EL ESCENARIO CRECE, MADURA Y MUERE.** Dark fantasy + horror fúngico + bioluminiscencia
 psicodélica, sin arquitectura medieval. La caverna entera es UN organismo: **la Madre Espora**. Está
 desde el nivel 1 (el capullo del centro del mapa ES ella) y se vuelve evidente de a poco.

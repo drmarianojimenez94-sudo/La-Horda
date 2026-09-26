@@ -1,6 +1,6 @@
-// Cristales de los Guardianes (js/systems/crystals.js): se ganan al vencer a un Guardián
-// corrompido (Guardián del Laberinto, Mago de Hielo, Madre Espora), vuelan al jugador, se guardan
-// y se ven en la pantalla previa.
+// Cristales de los Guardianes (js/systems/crystals.js): se ganan al COMPLETAR la arena de un Guardián
+// canónico (Ruinas → Ancestral, Gélida → Escarcha, Laberinto → Piedra), vuelan al jugador, se guardan
+// y se ven en la pantalla previa. El subjefe del Laberinto ya no da el cristal: advierte al caer.
 //   (python3 -m http.server 8771 &) ; node tools/items/t_crystals.js [carpeta_capturas]
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
@@ -31,18 +31,28 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const E = (fn, a) => page.evaluate(fn, a);
   const r0 = await E(() => ({ c: Object.assign({}, save.crystals), n: crystalsOwned().length }));
   check('CR.guardado_nuevo_sin_cristales', r0.n === 0 && r0.c.piedra === false, r0);
-  // ---- Guardián del Laberinto (subjefe) ----
-  const r1 = await E(() => { __start('laberinto', 6);
+  // ---- Guardián del Laberinto (subjefe): advierte, NO da el cristal ----
+  const r0b = await E(() => { __start('laberinto', 6);
     const g = spawnEnemy('guardian_laberinto', false, false); g.x = player.x + 120; g.y = player.y;
-    __kill(g); const fx = CRYSTAL_FX.on && CRYSTAL_FX.key === 'piedra';
-    __step(1000); render(); return { fx, has: crystalHas('piedra') }; });
-  check('CR.guardian_laberinto_da_cristal_de_piedra', r1.fx && r1.has, r1);
+    __kill(g); __step(200); return { fx: CRYSTAL_FX.on, has: crystalHas('piedra') }; });
+  await sleep(1300);
+  const warn = await E(() => (document.getElementById('center-banner')||{}).textContent || '');
+  check('CR.subjefe_laberinto_advierte_sin_dar_cristal', !r0b.fx && !r0b.has && /advertirte/.test(warn), { r0b, warn });
+  // ---- Laberinto completado (Minotauro): Cristal de Piedra ----
+  const r1 = await E(() => { __start('laberinto', 10); runLevel = LEVEL_COUNT; levelTimer = levelDuration + 1; __step(64);
+    const t = boss && boss.type; __kill(boss); let fx = false;
+    for (let i = 0; i < 700 && !fx; i++){ __step(16); fx = CRYSTAL_FX.on && CRYSTAL_FX.key === 'piedra'; }
+    __step(1000); render(); return { t, fx, has: crystalHas('piedra') }; });
+  check('CR.laberinto_completado_da_cristal_de_piedra', r1.t === 'minotauro' && r1.fx && r1.has, r1);
   if (OUT) await page.screenshot({ path: OUT + '/crystal_flight.png' });
-  const r1b = await E(() => { __step(1800); return { done: !CRYSTAL_FX.on, banner: (document.getElementById('center-banner')||{}).textContent || '', tut: (document.querySelector('#tut-panel .tut-text')||{}).textContent || '' }; });
+  const r1b = await E(() => { __step(1800); return { done: !CRYSTAL_FX.on, banner: (document.getElementById('center-banner')||{}).textContent || '' }; });
   check('CR.llega_al_jugador_con_cartel', r1b.done && /PIEDRA/.test(r1b.banner) && /1\/3/.test(r1b.banner), r1b);
   await sleep(700);
   const tut = await E(() => (document.querySelector('#tut-panel .tut-text')||{}).textContent || '');
   check('CR.el_hechicero_comenta', /Cristal de Piedra/.test(tut) && /primero de tres/.test(tut), tut.slice(0, 90));
+  // ---- Reino Fúngico: la Madre Espora NO es Guardiana (sin cristal) ----
+  const rM = await E(() => { __start('micelial', 1); state = 'playing'; boss = null; finishBossVictory(); return { fx: CRYSTAL_FX.on, n: crystalsOwned().length, keys: Object.keys(CRYSTAL_DEFS) }; });
+  check('CR.madre_espora_no_da_cristal', !rM.fx && rM.n === 1 && !rM.keys.includes('espora'), rM);
   // ---- Mago de Hielo (jefe de 2 fases) ----
   const r2 = await E(() => { __start('hielo', 10); runLevel = LEVEL_COUNT; levelTimer = levelDuration + 1; __step(64);
     const t1 = boss && boss.type; __kill(boss); __step(64); const t2 = boss && boss.type; __kill(boss); __step(200);

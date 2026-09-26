@@ -43,7 +43,7 @@ function guardTick(e, dt){
       vfxShock(e.x, e.y, e.radius*0.5, e.radius*3.6, "220,60,60", 700, 3);
       for(const h of heroes){ if(h.alive && distance(e,h) < 230) bossHitHero(h, e.dmg*0.35, {from:e, knock:110}); }
       vfxShake(12); flashScreen(0.35, "200,40,40"); playSfx("bossRoar");
-      showBanner("¡EL GUARDIÁN SE CORROMPE!");
+      showBanner("¡EL GUARDIÁN SE CORROMPE: NACE LA BESTIA DEL BOSQUE!"); // canon: Guardián Ancestral → Bestia del Bosque (misma pelea, forma corrupta)
       bossHudHint("Expuesto", "¡acaba de transformarse: descargá todo ahora!");
     }
   }

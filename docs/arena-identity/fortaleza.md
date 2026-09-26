@@ -2,7 +2,7 @@
 
 > *"Las máquinas todavía recuerdan a sus prisioneros."*
 
-Tercera arena de la campaña (Bosque → Acuática → **Fortaleza** → Reino Micelial → Hielo → Laberinto → Infernal).
+Arena 02 de la campaña canónica: **La Fábrica Sin Fin** (ID interno `fortaleza`), la primera jugable (ver `docs/lore/LA_HORDA_LORE_BIBLE.md`).
 Identidad: **la fortaleza es un enemigo más**. No es un coliseo: es UN mapa continuo y grande
 (2680 × 6800 unidades, ~10 veces el coliseo) que el equipo recorre de sur a norte, dividido en
 sectores por puertas, puentes y mecanismos que se mueven.

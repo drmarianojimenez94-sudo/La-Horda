@@ -164,12 +164,7 @@ function renderChampDetail(champId){
 document.getElementById("mode-arena-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
-// DEMO: forzado a desbloqueada para poder probarla sin tener que ganarle antes a la
-// Infernal cada vez. save.divineArenaUnlocked se sigue guardando de verdad igual (ver
-// onBossDefeated) -no se perdió nada de esa lógica-, esto es solo un interruptor de
-// exhibición: para la versión real, cambiar el "true" de acá por
-// "ARENA_ORDER.every(a=>save.arenasCleared[a])".
-function isDivinaUnlocked(){ return ARENA_ORDER.every(a=>save.arenasCleared[a] || (a==="abismo" && save.legacyLabOpen && save.arenasCleared.infernal)); } // BUGFIX 01: campaña real
+// isDivinaUnlocked(): js/arenas/arena-rules.js (se abre al completar la Arena Infernal).
 document.getElementById("divina-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
@@ -182,33 +177,51 @@ document.getElementById("modeselect-back-btn").addEventListener("click", ()=>{
 document.getElementById("arenaselect-back-btn").addEventListener("click", ()=>{
   setState("modeselect");
 });
-// Tarjetas de selección de arena: por ahora todas desbloqueadas (demo). isArenaUnlocked()
-// ya deja el gancho listo para cuando haya que empezar a exigir progreso.
+// Tarjetas de selección de arena en el ORDEN CANÓNICO (CAMPAIGN_ORDER): 01 → 10, después la Arena
+// Divina (postgame) y el Coliseo (próximamente). Las arenas en construcción se muestran con su número
+// pero no se pueden elegir; las bloqueadas dicen qué hay que completar.
 function renderArenaGrid(){
   const grid = document.getElementById("arena-grid");
   if(!grid) return;
-  const normalCards = ARENA_ORDER.map(key=>{
-    const a = ARENA_MODS[key];
+  ensurePlayableArena();
+  const frontier = campaignFrontier();
+  const normalCards = CAMPAIGN_ORDER.map(key=>{
+    const a = ARENA_MODS[key], num = campaignNumberLabel(key);
+    if(a.comingSoon){
+      return `<button class="arena-card locked soon" data-arena="${key}" disabled>
+      <span class="arena-card-badge soon">EN CONSTRUCCIÓN</span>
+      <div class="arena-card-icon">${a.icon}</div>
+      <div class="arena-card-title"><span class="arena-card-num">${num}</span> — ${a.label}</div>
+      <div class="arena-card-desc">${a.desc}<br><i>Todavía no se puede jugar: la campaña sigue en la próxima arena.</i></div>
+    </button>`;
+    }
     const unlocked = isArenaUnlocked(key);
     const selected = currentArena===key;
     const fresh = save.justUnlockedArena===key;
+    const i = ARENA_ORDER.indexOf(key), prev = i > 0 ? ARENA_ORDER[i-1] : null;
+    const need = (save.arenasCleared||{})[prev] ? frontier : prev;
     return `<button class="arena-card ${selected?"selected":""} ${unlocked?"":"locked"} ${fresh?"fresh":""}" data-arena="${key}" ${unlocked?"":"disabled"}>
       ${selected?'<span class="arena-card-badge">ELEGIDA</span>':(fresh?'<span class="arena-card-badge fresh">¡NUEVA!</span>':"")}
       <div class="arena-card-icon">${unlocked?a.icon:"🔒"}</div>
-      <div class="arena-card-title">${a.label}</div>
-      <div class="arena-card-desc">${unlocked?a.desc:`🔒 Completá <b>${(ARENA_MODS[ARENA_ORDER[ARENA_ORDER.indexOf(key)-1]]||{}).label||"la arena anterior"}</b> para desbloquearla.`}</div>
+      <div class="arena-card-title"><span class="arena-card-num">${num}</span> — ${a.label}</div>
+      <div class="arena-card-desc">${unlocked?a.desc:`🔒 Completá <b>${(ARENA_MODS[need]||{}).label||"la arena anterior"}</b> para desbloquearla.`}</div>
       ${unlocked && save.arenasCleared[key] ? '<div class="arena-card-done">✔ Completada</div>' : ""}
     </button>`;
   }).join("");
-  // Arena Divina: la más difícil de todas, va DESPUÉS de la Infernal en esta misma grilla
-  // (no es un modo de juego separado por ahora) — se desbloquea al completar las 4 arenas
-  // normales. isDivinaUnlocked() está forzado a true en la demo, ver esa función.
+  // Arena Divina: contenido POSTGAME, fuera de las diez arenas de la campaña. Se abre al completar
+  // la Arena Infernal (isDivinaUnlocked, js/arenas/arena-rules.js). Después, el Coliseo (PvP) — próximamente.
   const divinaUnlocked = isDivinaUnlocked();
-  const divinaCard = `<button class="arena-card divina ${divinaUnlocked?"":"locked"}" data-arena="divina" ${divinaUnlocked?"":"disabled"}>
-      <span class="arena-card-badge" style="color:#d9a8ff; border-color:#7a4fae; background:rgba(122,79,174,0.16);">LA MÁS DIFÍCIL</span>
+  const divinaCard = `<div class="arena-grid-sep">POSTGAME</div><button class="arena-card divina ${divinaUnlocked?"":"locked"}" data-arena="divina" ${divinaUnlocked?"":"disabled"}>
+      <span class="arena-card-badge" style="color:#d9a8ff; border-color:#7a4fae; background:rgba(122,79,174,0.16);">POSTGAME</span>
       <div class="arena-card-icon">${divinaUnlocked?"👁":"🔒"}</div>
       <div class="arena-card-title">Arena Divina</div>
-      <div class="arena-card-desc">${divinaUnlocked?"Asedio 4 contra 4: derribá las torres y el castillo enemigo antes que a los tuyos.":"🔒 Completá las 7 arenas de la campaña para desbloquearla."}</div>
+      <div class="arena-card-desc">${divinaUnlocked?"Las Cinco Pruebas Divinas: asedio 4 contra 4, derribá las torres y el castillo enemigo antes que a los tuyos.":"🔒 Completá la <b>Arena Infernal</b> para desbloquearla."}</div>
+    </button>
+    <button class="arena-card locked soon" data-arena="coliseo" disabled>
+      <span class="arena-card-badge soon">PRÓXIMAMENTE</span>
+      <div class="arena-card-icon">⚔</div>
+      <div class="arena-card-title">Coliseo</div>
+      <div class="arena-card-desc">Campeones contra campeones (PvP). Se abre después de las Pruebas Divinas.</div>
     </button>`;
   grid.innerHTML = normalCards + divinaCard;
   grid.querySelectorAll(".arena-card:not(.locked)").forEach(card=>{
@@ -223,6 +236,7 @@ function renderArenaGrid(){
   });
 }
 function updateMenuBrandSub(){
+  ensurePlayableArena();
   const el = document.getElementById("menu-brand-sub");
   if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }

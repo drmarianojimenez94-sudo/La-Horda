@@ -45,7 +45,7 @@ const MIC_GUIDE_CFG = { pressurePerStage: 0.07, pressureCap: 1.5, pointerMax: 19
 function micGuideTut(){
   if(!micS || !player || !player.alive) return;
   if(runLevel === LEVEL_COUNT) return;   // el nivel 10 lo explica la Madre
-  tutSay("mic_intro", "Este es el REINO MICELIAL: el hongo está VIVO. Las nubes de esporas frenan y lastiman: no pelees adentro de ellas.", null, 8000);
+  tutSay("mic_intro", "Este es el REINO FÚNGICO: el hongo está VIVO. Las nubes de esporas frenan y lastiman: no pelees adentro de ellas.", null, 8000);
   const nucs = micNucleos(); if(!nucs.length) return;
   let near = null, nd = Infinity;
   for(const e of nucs){ const d = Math.hypot(e.x-player.x, e.y-player.y); if(d < nd){ nd = d; near = e; } }

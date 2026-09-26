@@ -9,7 +9,7 @@
      se arrodilla, se ríe y desaparece ("nos vemos al final del camino").
    - Nivel 10, JEFE FINAL en 3 formas (lore: LA_HORDA_LORE.md):
        1) ÁNGEL CORROMPIDO: te arranca los tres cristales de los Guardianes (crystals.js), le
-          nacen alas corruptas y pelea con TODOS los poderes: Esporas de la Madre, Nova de
+          nacen alas corruptas y pelea con TODOS los poderes: Niebla del Olvido (Guardián Ancestral), Nova de
           Escarcha, Laberinto de Piedra, los suyos de luz y el Juicio de los Cuatro;
        2) GOLEM DE CUERPOS: los caídos de todas las arenas cosidos a su alrededor;
        3) al romperse el Golem, de sus restos nace el DEMONIO MAYOR — Forma Final, que repite lo
@@ -87,7 +87,7 @@ const HECH_PORTRAIT = new Image(); HECH_PORTRAIT.src = HECH_DIR + "portrait.png"
 
 /* ---------------- guías (boss-hud.js) ---------------- */
 ARENA_BOSS_TIPS.angel_corrompido = {epithet:"Forma 1 de 3 — con el poder de los Cuatro", tips:[
-  "Usa los poderes de los Guardianes: NUBE VIOLETA (salí), ANILLOS DE HIELO (esperá el hueco), PILARES (salí por el hueco).",
+  "Usa los poderes de los Guardianes: NIEBLA (salí de la nube), ANILLOS DE HIELO (esperá el hueco), PILARES (salí por el hueco).",
   "JUICIO DE LOS CUATRO: cuatro golpes alrededor y al final el centro. Salí en diagonal.",
   "Si te acercás, se teletransporta: rodealo entre varios."]};
 ARENA_BOSS_TIPS.hechicero_supremo = {epithet:"El que te guió hasta acá", tips:[
@@ -164,9 +164,9 @@ BOSS_DESIGNS.hechicero_supremo = {
 function _acEl(e, k){ e.acEl = k; e.acElT = animNow; }
 function _acHitIn(x, y, r, dmg, o){ for(const h of heroes){ if(h.alive && Math.hypot(h.x-x, h.y-y) <= r + (h.radius||18)*0.5) bossHitHero(h, dmg, o); } }
 Object.assign(BOSS_ATTACKS, {
-  // ESPORAS DE LA MADRE (Madre Espora): nubes que quedan 4 s en el piso; adentro, daño y lentitud
+  // NIEBLA DEL OLVIDO (Guardián Ancestral, 1er Guardián): nubes que quedan 4 s en el piso; adentro, daño y lentitud
   acEspora(e, t, d){
-    _acEl(e, "espora");
+    _acEl(e, "ancestral");
     const pts = heroTargets().slice(0, 4).map(h=>({x:h.x, y:h.y}));
     for(let i=0;i<2;i++){ const a = Math.random()*Math.PI*2, r = 120+Math.random()*150; pts.push({x:t.x+Math.cos(a)*r, y:t.y+Math.sin(a)*r}); }
     const delay = 950, R = 88;
@@ -176,8 +176,8 @@ Object.assign(BOSS_ATTACKS, {
       for(let k=0;k<8;k++) hechLater(delay + 250 + k*500, ()=> _acHitIn(p.x, p.y, R, e.dmg*0.12, {slow:0.35, slowDur:700}));
     }
     _hPack(e, "cast", 900);
-    bossAnnounce(e, "Esporas de la Madre", "salí de la nube violeta"); return true; },
-  // NOVA DE ESCARCHA (Mago de Hielo): tres anillos que se abren desde él, uno detrás del otro
+    bossAnnounce(e, "Niebla del Olvido", "salí de la nube"); return true; },
+  // NOVA DE ESCARCHA (Mago Gélido, 2º Guardián): tres anillos que se abren desde él, uno detrás del otro
   acEscarcha(e, t, d){
     _acEl(e, "escarcha");
     const ox = e.x, oy = e.y, rings = [[0,150,900],[150,300,1400],[300,460,1900]];
@@ -298,7 +298,7 @@ function hechDrawAngelBack(e, pose){
 }
 function hechDrawAngelFront(e){
   if(typeof crystalDrawGem!=="function") return;
-  const H = _hAngelH(e), cx = e.x, cy = e.y - H*0.55, t = animNow/1000, keys = ["espora","escarcha","piedra","juicio"];
+  const H = _hAngelH(e), cx = e.x, cy = e.y - H*0.55, t = animNow/1000, keys = ["ancestral","escarcha","piedra","juicio"];
   const hot = e.acElT && animNow - e.acElT < 1600 ? e.acEl : null;
   ctx.save();
   for(let i=0;i<4;i++){
@@ -410,9 +410,9 @@ function hechSpawnSubboss(){
   h.cine = "reveal"; h.cineT = 1800;
   activeChampion = h;
   vfxShock(h.x, h.y, 20, 220, "255,225,140", 800, 2); flashScreen(0.35, "255,235,180");
-  arenaTitleCard("SUBJEFE", "EL HECHICERO SUPREMO", "El que te guió hasta acá. Nunca estuvo de tu lado.", 4400);
+  arenaTitleCard("SUBJEFE", "EL HECHICERO SUPREMO", "El cuarto Guardián. El que te guió hasta acá nunca estuvo de tu lado.", 4400);
   _hSay(h, "«Te guié hasta acá. Ahora dame lo que despertó en vos.»");
-  if(typeof tutSay==="function") tutSay("hech_betrayal", "¿Creíste que te guiaba para salvarte? Te guiaba hasta mí.", "Derrotá al Hechicero Supremo", 9000, true);
+  if(typeof tutSay==="function") tutSay("hech_betrayal", "¿Creíste que te guiaba para salvarte? Yo fui el primero de los Cuatro Guardianes, su líder. Me quedé en esta dimensión por decisión propia. Te guiaba hasta mí.", "Derrotá al Hechicero Supremo", 9000, true);
   return h;
 }
 // Al "morir": no muere. Se arrodilla, se ríe y desaparece. true = killEnemy no hace la muerte normal.
@@ -422,6 +422,8 @@ function hechOnDefeat(e){
   vfxShock(e.x, e.y, 20, 260, "255,225,140", 900, 2); flashScreen(0.4, "255,235,180"); vfxShake(8);
   vfxBurst(e.x, e.y-40, 26, "holy", 180, 700, 4, 2, -60, 0);
   floatText(e.x, e.y - e.radius*2.6, "«Todavía no… nos vemos al final del camino.»", "crit");
+  // El Forjador (prisionero del Hechicero: se negó a fundir los cristales). Solo una voz: no hay entidad nueva.
+  setTimeout(()=>{ try{ if(state==="playing") showBanner("Una voz encadenada: «No le des los cristales… me negué a fundirlos y por eso me encerró»"); }catch(err){} }, 3200);
   showBanner("EL HECHICERO HUYE… TE ESPERA EN EL CORAZÓN DEL INFIERNO");
   if(hudBoss===e && typeof bossHudHide==="function") bossHudHide();
   return true;
@@ -439,8 +441,8 @@ function hechStartFinalBoss(){
   for(const o of enemies){ if(o.alive && o!==g && o.rank!=="subjefe"){ o.alive = false; o.hp = 0; vfxOnDeath(o); } }
   enemies = enemies.filter(o=>o.alive);
   if(typeof setMusicMode==="function") setMusicMode("boss");
-  arenaTitleCard("JEFE FINAL", "EL HECHICERO SUPREMO", "Forma 1 de 3. Con los cuatro cristales ya no necesita esconderse.", 3400);
-  if(typeof tutSay==="function") tutSay("hech_final", "Los cristales de los Guardianes, y el mío. Con los Cuatro juntos, la Horda entera me obedece. Gracias por traérmelos.", "Derrotá al Hechicero en sus 3 formas", 9000, true);
+  arenaTitleCard("JEFE FINAL", "EL HECHICERO SUPREMO", "El cuarto Guardián. Forma 1 de 3: quiere fundir los cuatro cristales en uno.", 3400);
+  if(typeof tutSay==="function") tutSay("hech_final", "Tres cristales de los Guardianes, y el mío. El Forjador se negó a fundirlos en uno solo: por eso está encadenado. No importa. Con los Cuatro fundidos, yo SOY la Horda. Gracias por traérmelos.", "Derrotá al Hechicero en sus 3 formas", 9000, true);
   return g;
 }
 // Las alas se quiebran: la Horda le da un cuerpo hecho de sus víctimas (forma 2). true = sigue la pelea.
@@ -470,12 +472,12 @@ function hechGolemBroken(){
   boss.x = px; boss.y = py;
   scaleBossStats(boss, "demonio_mayor");
   boss.hp = boss.maxHp = Math.round(boss.maxHp*0.65); // la pelea ya viene larga: la forma final no es un segundo jefe entero
-  boss.name = "Demonio Mayor — Forma Final";
+  boss.name = "Rey de la Horda — Forma Final"; // canon: Hechicero Supremo → Rey/Demonio de la Horda (mismo cuerpo del Demonio Mayor)
   boss.designKey = "demonio_final"; // repite lo peor de todas las formas (BOSS_DESIGNS.demonio_final)
   boss.regenUsed = false; boss.regenTimer = 0; boss.bd = null; boss.bossPhase = 3;
   bossHudShow(boss);
   animTrigger(boss, "bossPhaseTransition", 1300);
   bossPhaseFeedback();
-  showBanner("FORMA 3 DE 3 — ¡DE LOS RESTOS NACE EL DEMONIO MAYOR!");
+  showBanner("FORMA 3 DE 3 — ¡NACE EL REY DE LA HORDA!");
   return true;
 }

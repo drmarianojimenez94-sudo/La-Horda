@@ -1,38 +1,43 @@
 "use strict";
 /* ============================================================
    js/systems/crystals.js
-   LOS CRISTALES DE LOS GUARDIANES (lore: ver LA_HORDA_LORE.md).
-   Cuatro Guardianes contenían a la Horda; la Horda los corrompió. Cada uno guarda un cristal con
+   LOS CRISTALES DE LOS GUARDIANES (canon: docs/lore/LA_HORDA_LORE_BIBLE.md).
+   Los Primeros Cuatro contenían a la Horda; la Horda los corrompió. Cada uno guarda un cristal con
    su parte del sello. Al vencer a un Guardián corrompido, su cristal queda libre y va al jugador.
-   El Hechicero Supremo es el cuarto Guardián: te guía porque necesita que juntes los otros tres,
-   y en el final te los quita para tener todo el poder de la Horda (inf-hechicero.js).
-     - Cristal de Espora   → la Madre Espora (jefa del Reino Micelial)
-     - Cristal de Escarcha → el Mago de Hielo y Cristal (jefe de la Gélida, cae como Ángel Caído)
-     - Cristal de Piedra   → el Guardián del Laberinto (subjefe del Laberinto)
-     - Cristal del Juicio  → el del propio Hechicero (no se junta: es el que los quiere a todos)
-   Se guarda en save.crystals. En cooperativo el premio viaja como evento (cada uno lo guarda).
+   El Hechicero Supremo es el cuarto Guardián (su líder): te guía porque necesita que juntes los
+   otros tres, y en el final te los quita para fundirlos con el suyo (inf-hechicero.js).
+     - Cristal Ancestral   → Guardián 1: el Guardián Ancestral / Élfico (Ruinas Célticas / Élficas, arena 03)
+     - Cristal de Escarcha → Guardián 2: el Mago Gélido (Arena Gélida, arena 05)
+     - Cristal de Piedra   → Guardián 3: el Guardián del Laberinto, que se volvió el Minotauro (Laberinto, arena 08)
+     - Cristal del Juicio  → Guardián 4: el del propio Hechicero (no se junta: es el que los quiere a todos)
+   La Madre Espora, el Kraken y el Dragón de la Fábrica NO son Guardianes.
+   El cristal se entrega al completar la arena del Guardián (al caer su jefe final).
+   Se guarda en save.crystals (migración de guardados viejos: campaignV2Migrate en save.js).
+   En cooperativo el premio viaja como evento (cada uno lo guarda).
    ============================================================ */
 const CRYSTAL_DEFS = {
-  espora:   {name:"Cristal de Espora",   guardian:"la Madre Espora",          arena:"micelial",  rgb:"200,120,255", dark:"#4a1f6b", mid:"#b06ae6", light:"#f0dcff"},
-  escarcha: {name:"Cristal de Escarcha", guardian:"el Mago de Hielo",         arena:"hielo",     rgb:"150,225,255", dark:"#2a5f86", mid:"#6fc3ef", light:"#e4f7ff"},
+  ancestral:{name:"Cristal Ancestral",   guardian:"el Guardián Ancestral",   arena:"bosque",    rgb:"150,230,120", dark:"#2f5a1f", mid:"#79c255", light:"#e2ffd2"},
+  escarcha: {name:"Cristal de Escarcha", guardian:"el Mago Gélido",          arena:"hielo",     rgb:"150,225,255", dark:"#2a5f86", mid:"#6fc3ef", light:"#e4f7ff"},
   piedra:   {name:"Cristal de Piedra",   guardian:"el Guardián del Laberinto", arena:"laberinto", rgb:"255,196,110", dark:"#7a4d1c", mid:"#d99a48", light:"#ffe7bf"}
 };
-const CRYSTAL_ORDER = ["espora","escarcha","piedra"]; // orden de la campaña
+const CRYSTAL_ORDER = ["ancestral","escarcha","piedra"]; // orden de la campaña (arenas 03, 05 y 08)
 for(const k in CRYSTAL_DEFS){ const D = CRYSTAL_DEFS[k]; VFX_PAL["cr_"+k] = [D.mid, D.light, "#ffffff", D.rgb]; }
 const CRYSTAL_JUICIO = {name:"Cristal del Juicio", rgb:"255,236,170", dark:"#8a6a1c", mid:"#f0c84a", light:"#fff6d6"};
-const CRYSTAL_BY_ARENA = {micelial:"espora", hielo:"escarcha", laberinto:"piedra"};
+const CRYSTAL_BY_ARENA = {bosque:"ancestral", hielo:"escarcha", laberinto:"piedra"};
 
 function crystalsOwned(){ const c = save.crystals || {}; return CRYSTAL_ORDER.filter(k=>c[k]); }
 function crystalHas(k){ return !!(save.crystals && save.crystals[k]); }
 
 // Lo que dice el Hechicero al recibir cada cristal (con la sospecha sembrada: "yo te lo cuido").
+// El primero revela que los monstruos que custodian los cristales alguna vez fueron héroes; desde
+// el segundo, su historia empieza a no cerrar (sin revelar todavía que él es el cuarto).
 const CRYSTAL_LINES = {
-  espora: "¡El Cristal de Espora! La Madre Espora era una de los Cuatro Guardianes que contenían a la Horda, hasta que la Horda la pudrió por dentro.",
-  escarcha: "El Cristal de Escarcha. El Mago de Hielo también fue Guardián, antes de que el frío de la Horda le congelara el alma.",
-  piedra: "El Cristal de Piedra. El Guardián del Laberinto cerraba los caminos de la Horda… hasta que la Horda lo volvió parte de sus muros."
+  ancestral: "El Cristal Ancestral. Esa bestia… era el Guardián Ancestral, uno de los Primeros Cuatro. Los monstruos que custodian los cristales alguna vez fueron héroes.",
+  escarcha: "El Cristal de Escarcha. El Mago Gélido también fue Guardián, antes de que la Horda le congelara el alma. No preguntes cómo sé tanto de ellos. Todavía no.",
+  piedra: "El Cristal de Piedra. El Guardián del Laberinto cerraba los caminos de la Horda… hasta volverse el Minotauro. Lo que te haya dicho al caer, olvidalo: deliraba."
 };
-const CRYSTAL_COUNT_LINES = ["", " Es el primero de tres. Guardalo bien: cuando llegue el momento, yo te lo cuido.", " Ya tenés dos. Falta uno.",
-  " Los tres. Con el mío, los Cuatro estarían juntos otra vez… La Infernal te espera."];
+const CRYSTAL_COUNT_LINES = ["", " Es el primero de tres. Guardalo bien: cuando llegue el momento, yo te lo cuido.", " Ya tenés dos. Las Cicatrices los sienten: prestá atención.",
+  " Los tres. La Cicatriz que abran va a ser la más grande de todas… Te espero del otro lado."];
 function crystalLine(key){ return CRYSTAL_LINES[key] + CRYSTAL_COUNT_LINES[crystalsOwned().length]; }
 
 /* ---------------- ceremonia (local en cada cliente) ---------------- */

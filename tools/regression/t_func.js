@@ -2,7 +2,8 @@
 // game loop. Produces a list of checks; comparing baseline vs modular results.
 // usage: node t_func.js <site> <outdir>
 const { launch, BASE, sleep, seedSave, writeJSON, waitImages } = require('./lib.js');
-const ARENA_TITLES = ["Ruinas del Bosque", "Arena Acuática", "Arena de Hielo", "Laberinto Maldito", "Arena Infernal"];
+// Se eligen por ID (data-arena): el título visible lleva el número del orden canónico ("03 — Ruinas Célticas / Élficas").
+const ARENA_TITLES = ["bosque", "acuatica", "hielo", "laberinto", "infernal"];
 const CHAMP_NAMES = ['Tanque', 'Asesino', 'Mago', 'Soporte', 'Segador Olvidado', 'Axiom', 'La Profeta', 'Musashi', 'Sylva', 'Nigromante'];
 
 const checks = [];
@@ -32,7 +33,7 @@ async function goToChampSelect(page, arenaTitle) {
   await page.click('#title-continue-btn');
   await page.click('#mainmenu-jugar-btn');
   await page.click('#mode-arena-btn');
-  await page.click(`.arena-card-title:text-is("${arenaTitle}")`);
+  await page.click(`.arena-card[data-arena="${arenaTitle}"]`);
 }
 async function pickChamp(page, name) {
   await page.evaluate(n => { const el = [...document.querySelectorAll('.champ-name')].find(e => e.textContent.trim() === n); if (el) el.closest('.champ-card').click(); }, name);
@@ -198,7 +199,7 @@ async function canvasNonBlank(page) {
   {
     const { ctx, page, errors } = await newPage(browser, site, { save: seedSave({ level: 12, tp: 3, alloc: 0 }) });
     await waitImages(page);
-    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Mago'); await startFromSelect(page);
+    await goToChampSelect(page, 'bosque'); await pickChamp(page, 'Mago'); await startFromSelect(page);
     await sleep(600);
     const ui = await page.evaluate(() => ({ vis: [...document.querySelectorAll('.skill-plus:not(.hidden)')].map(b => b.dataset.idx), sug: (document.querySelector('.skill-plus.suggested') || {}).dataset }));
     check('skillup.plus_visible', ui.vis.length === 3 && !ui.vis.includes('ult'), ui);
@@ -215,7 +216,7 @@ async function canvasNonBlank(page) {
   {
     const { ctx, page, errors } = await newPage(browser, site);
     await waitImages(page);
-    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Mago');
+    await goToChampSelect(page, 'bosque'); await pickChamp(page, 'Mago');
     await page.click('#start-btn'); await sleep(300);
     await page.evaluate(() => window.__T.ev('(addItemToInventory(selectedClass, makeItem("arma","legendario",selectedClass)), addItemToInventory(selectedClass, makeItem("casco","raro",selectedClass)), renderPrepSummary(), 1)'));
     await sleep(100);
@@ -233,7 +234,7 @@ async function canvasNonBlank(page) {
   {
     const { ctx, page, errors } = await newPage(browser, site, { save: seedSave({ level: 5, alloc: 0 }) });
     await waitImages(page);
-    await goToChampSelect(page, 'Ruinas del Bosque'); await pickChamp(page, 'Mago'); await startFromSelect(page);
+    await goToChampSelect(page, 'bosque'); await pickChamp(page, 'Mago'); await startFromSelect(page);
     await T(page, 'damagePlayer', 999999);
     await sleep(900);
     check('death.gameover_screen', await vis(page, '#gameover-screen'), await T(page, 'state'));
@@ -256,7 +257,7 @@ async function canvasNonBlank(page) {
     let ok = 0;
     for (let k = 0; k < 5; k++) {
       await page.click('#mainmenu-jugar-btn'); await page.click('#mode-arena-btn');
-      await page.click(`.arena-card-title:text-is("${ARENA_TITLES[k]}")`);
+      await page.click(`.arena-card[data-arena="${ARENA_TITLES[k]}"]`);
       await pickChamp(page, CHAMP_NAMES[(k * 7) % 10]); await startFromSelect(page);
       await sleep(1200);
       if ((await T(page, 'state')) === 'playing') ok++;
@@ -319,7 +320,7 @@ async function canvasNonBlank(page) {
     await page.tap('#title-continue-btn');
     check('mobile.menu_tap', await vis(page, '#mainmenu-screen'));
     await page.tap('#mainmenu-jugar-btn'); await page.tap('#mode-arena-btn');
-    await page.tap('.arena-card-title:text-is("Ruinas del Bosque")');
+    await page.tap('.arena-card[data-arena="bosque"]');
     await pickChamp(page, 'Soporte');
     await page.tap('#start-btn'); await sleep(300);
     if (await vis(page, 'text=Comenzar')) await page.tap('text=Comenzar').catch(() => {});
