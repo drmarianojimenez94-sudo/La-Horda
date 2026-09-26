@@ -150,7 +150,7 @@ const PACK_ANIM = {
 };
 // Atlas del redraw (Dama del Bosque / Doppelgängers): mismas reglas de estado que el pack de abajo.
 function drawEnemyAtlasPack(e){
-  const P = ENEMY_ATLAS_PACK[e.type];
+  const P = (e.atlasKey && ENEMY_ATLAS_PACK[e.atlasKey] && ENEMY_ATLAS_PACK[e.atlasKey].ready) ? ENEMY_ATLAS_PACK[e.atlasKey] : ENEMY_ATLAS_PACK[e.type]; // atlasKey: otra paleta del mismo cuerpo (Guardián en furia)
   if(!P || !P.ready) return false;
   if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;
   e._pkAtkLast = e.attackAnim;

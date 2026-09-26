@@ -302,20 +302,35 @@ function drawSetAuras(){
   }
 }
 /* ---------------- skins de set completo ---------------- */
-// Registro de arte de skin por set: SET_SKINS[setId] = {src:"assets/.../skin.png"} (una pose por
-// campeón o un atlas; ver LA_HORDA_ITEM_ASSET_MANIFEST.md). Hoy NINGÚN set tiene arte de skin:
-// el set completo se ve con su aura plena y la skin se enchufa acá cuando llegue, sin tocar la lógica.
+// Registro de arte de skin por set (js/assets/set-skins-meta.js, generado por
+// tools/art/skins_sets/extract.py): SET_SKINS[setId] = {champ, name, preview, packs:{claveBase: claveSkin}}.
+// La skin REMAPEA el atlas del campeón (CHAMP_PACK) solo mientras el set está COMPLETO: cada estado
+// (caminar, atacar, habilidades, forma titán de Eren...) sigue su propia lógica, cambia el dibujo.
+// Sets sin arte: el set completo se ve con su aura plena (docs/assets_faltantes/skins_sets/).
+// Formato viejo (una sola imagen, {src}) se sigue aceptando por si llega una pose suelta.
 const SET_SKINS = {};
 const _SET_SKIN_IMG = {};
 function setSkinImage(id){
-  const d = SET_SKINS[id]; if(!d) return null;
+  const d = SET_SKINS[id]; if(!d || !d.src) return null;
   let im = _SET_SKIN_IMG[id]; if(!im){ im = _SET_SKIN_IMG[id] = new Image(); im.src = d.src; }
   return im.complete && im.naturalWidth ? im : null;
 }
+// Skin activa del héroe: su set principal COMPLETO y con arte (y del campeón correcto).
+function activeSetSkin(h){
+  if(!h || !h.classKey) return null;
+  const id = heroMainSet(h); if(!id || setN(h, id) < setFullCount(id)) return null;
+  const d = SET_SKINS[id]; if(!d || (d.champ && d.champ !== h.classKey)) return null;
+  return d;
+}
+// Clave de atlas a usar para `key` (p.ej. "eren", "eren_titan"): la de la skin si está activa y cargada.
+function setSkinPackKey(h, key){
+  const d = activeSetSkin(h); if(!d || !d.packs) return key;
+  const k = d.packs[key], P = k && CHAMP_PACK[k];
+  return P && P.ready ? k : key;
+}
 function drawSetSkin(h, drawScale, alpha){
-  if(!h || !h.classKey) return false;
-  const id = heroMainSet(h); if(!id || setN(h, id) < setFullCount(id)) return false; // solo set COMPLETO
-  const im = setSkinImage(id); if(!im) return false;
+  const d = activeSetSkin(h); if(!d || d.packs) return false;   // las skins con atlas las dibuja drawChampPack
+  const im = setSkinImage(heroMainSet(h)); if(!im) return false;
   const H = h.radius*2.7*(drawScale/(h.scale||2.0)), W = H*im.width/im.height;
   drawAnimFrameSized(im, {frames:[{x:0, y:0, w:im.width, h:im.height}]}, 0, h.x, h.y, W, H, 0.5, 0.94, (h.fx||0) < -0.12, alpha);
   return true;

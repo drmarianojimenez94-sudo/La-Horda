@@ -10,7 +10,7 @@
 // Color visual del proyectil enemigo según la criatura (solo cosmético: daño/velocidad no cambian).
 const ENEMY_PROJ_COLOR = {cristal_volador:"#bfe8ff", dragoncito_hielo:"#8fd0ff", angel_hielo:"#bfe8ff", mago_hielo_cristal:"#bfe8ff", angel_caido_hielo:"#bfe8ff", dragon_hielo:"#8fd0ff",
   enjambre_hadas:"#e0a0ff", dama_bosque:"#8fd46a", doblador_arquera:"#c9d8ff", doblador_clerigo:"#fff0a0",
-  medusa:"#8fe0a0", druida_arena:"#e0c070", esfinge:"#ffd76a", sirena_abisal:"#7fd0e0", jinete_sin_cabeza:"#b0a0ff"};
+  medusa:"#8fe0a0", druida_arena:"#e0c070", esfinge:"#ffd76a", sirena_abisal:"#7fd0e0", jinete_sin_cabeza:"#b0a0ff", guardian_ancestral:"#8ee07a"};
 const ENEMY_BASE = {
   esqueleto:     {name:"Esqueleto",        rank:"normal",   hp:26,  dmg:7,  speed:84, radius:22, xp:3,  gold:1,  scale:3.2, color:"#ece4cc", ranged:false},
   zombie:        {name:"Zombi",            rank:"normal",   hp:52,  dmg:9,  speed:58, radius:24, xp:6,  gold:2,  scale:3.4, color:"#6d7d55", ranged:false},
@@ -58,6 +58,10 @@ const ENEMY_BASE = {
   // Jefe final (nivel 10): Jinete Sin Cabeza. "Resurrección Eterna": la primera vez que
   // llega a 0 de vida no muere -renace con la vida al máximo y +30% de daño hecho Y
   // recibido, una fase de furia más letal pero también más frágil- (ver onBossDefeated).
+  // Jefe del Bosque (BUGFIX 01): el protector del círculo de runas, consumido por la corrupción que
+  // las runas desataron. 3 fases con transformación a mitad de pelea (js/skills/boss-guardian.js).
+  // El Jinete Sin Cabeza queda en el juego (Arena Divina y como respaldo) con todo su arte y código.
+  guardian_ancestral:{name:"Guardián Ancestral Corrompido", rank:"jefe", hp:3600,dmg:32, speed:54, radius:74, xp:0, gold:0, scale:9.5, color:"#3f6a3a", ranged:true, range:320, projSpeed:300, dropsItem:true, visualAlias:"dama_bosque"},
   jinete_sin_cabeza:{name:"Jinete Sin Cabeza",  rank:"jefe",     hp:3400,dmg:32, speed:58,  radius:74, xp:0,  gold:0,   scale:9.5, color:"#5a5a62", ranged:true, range:330, projSpeed:270, dropsItem:true, visualAlias:"demonio_mayor"},
 
   // --- Laberinto Maldito: roster propio con arte real integrado vía REAL_ANIM, con la misma

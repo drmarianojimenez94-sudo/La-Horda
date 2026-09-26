@@ -467,14 +467,19 @@ function _erenFrame(P, set, prog, flip, h, s, alpha){
   champPackDrawFrame(P, arr[n], h.x, h.y, s, flip, alpha);
   return true;
 }
+// Atlas de Eren (humano / titán): los de la skin Titán Bestia si el set Legión está completo.
+function erenPacks(h){
+  const sk = typeof setSkinPackKey==="function";
+  return [CHAMP_PACK[sk ? setSkinPackKey(h, "eren") : "eren"], CHAMP_PACK[sk ? setSkinPackKey(h, "eren_titan") : "eren_titan"]];
+}
 function erenTitanScale(h, drawScale){
-  const P = CHAMP_PACK.eren, TP = CHAMP_PACK.eren_titan;
+  const [P, TP] = erenPacks(h);
   const humanR = h.erenPrev ? h.erenPrev.radius : (h.erenTitan ? h.radius/EREN_CFG.titan.radiusMult : h.radius);
   const sHuman = humanR*2.7*(drawScale/(h.scale||2.0))/P.refH;
   return sHuman * EREN_CFG.titan.visualScale * P.refH / TP.refH;
 }
 function drawEren(h, drawScale, alpha){
-  const P = CHAMP_PACK.eren, TP = CHAMP_PACK.eren_titan;
+  const [P, TP] = erenPacks(h);
   if(!P || !P.ready) return false;
   const dir = champPackDir(h), left = !!h._pleft;
   const ph = h.erenPhase;

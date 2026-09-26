@@ -86,7 +86,7 @@ function startRun(fromLevel){
   const hudArenaEl = document.getElementById("hud-arena");
   if(hudArenaEl) hudArenaEl.textContent = (ARENA_MODS[currentArena]||{}).label || "";
   runStats = freshRunStats();
-  iceWalls.length = 0; bossStrikes.length = 0;
+  iceWalls.length = 0; bossStrikes.length = 0; if(typeof guardReset==="function") guardReset();
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
   vfxResetRun();

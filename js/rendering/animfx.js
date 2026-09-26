@@ -73,6 +73,7 @@ const ANIM_PROFILES = {
   doblador_arquera:   {basic:"ranged", material:"spirit", death:"dissolve"},
   doblador_picaro:    {speed:1.5, weight:0.7, lunge:16, material:"spirit", death:"dissolve"},
   doblador_clerigo:   {basic:"cast", cast:1.3, material:"spirit", death:"dissolve"},
+  guardian_ancestral: {speed:0.85, weight:2.2, lunge:14, impact:2.2, material:"wood", particle:"leaf", death:"collapse"},
   jinete_sin_cabeza:  {speed:0.9, weight:2.0, lunge:20, impact:2.2, material:"shadow", particle:"shadow", death:"collapse"},
   escorpion_gigante:  {speed:1.4, weight:0.7, lunge:10, material:"chitin"},
   golem_piedra:       {speed:0.55,weight:2.2, lunge:12, impact:2.0, material:"rock", death:"crumble"},

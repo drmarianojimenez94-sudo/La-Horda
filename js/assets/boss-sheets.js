@@ -34,6 +34,7 @@ function bossSheetFx(key, x, y, h, dur, o){
 }
 // Por cuadro, para los tipos de estas hojas: descuento del packSet y la estela de fuego del Minotauro.
 function bossSheetTick(e, dt){
+  if(e.type === "guardian_ancestral" && typeof guardTick === "function") guardTick(e, dt);
   if(e._bsPack && e.packTimer > 0){ e.packTimer -= dt; if(e.packTimer <= 0){ e.packSet = null; e._bsPack = false; } }
   if(e.type === "minotauro" && e.bossCharge){
     e._minoFireT = (e._minoFireT || 0) - dt;

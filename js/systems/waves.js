@@ -49,7 +49,9 @@ function startBossFight(){
   bossActive = true;
   // Arena Infernal: jefe final en 3 formas (Hechicero -> Golem de Cuerpos -> Demonio Mayor), ver inf-hechicero.js
   if(currentArena==="infernal"){ boss = hechStartFinalBoss(); return; }
-  const bossType = currentArena==="hielo" ? "mago_hielo_cristal" : (currentArena==="bosque" ? "jinete_sin_cabeza" : (currentArena==="laberinto" ? "minotauro" : (currentArena==="acuatica" ? "leviatan" : "demonio_mayor")));
+  // Bosque: primero las runas se desbordan y explotan (bos-ruins.js); al final vuelve a llamar acá
+  if(currentArena==="bosque" && !divinaMode && typeof bosBossIntro==="function" && bosBossIntro()) return;
+  const bossType = currentArena==="hielo" ? "mago_hielo_cristal" : (currentArena==="bosque" ? "guardian_ancestral" : (currentArena==="laberinto" ? "minotauro" : (currentArena==="acuatica" ? "leviatan" : "demonio_mayor")));
   boss = spawnEnemy(bossType, true);
   scaleBossStats(boss, bossType);
   boss.regenUsed = false; boss.regenTimer = 0; boss.bd = null;
@@ -67,7 +69,7 @@ function startBossFight(){
   }
   boss.bossPhase = 1;
   bossEntrance(boss);
-  showBanner(currentArena==="hielo" ? "EL MAGO DE HIELO DESPIERTA" : (currentArena==="bosque" ? "EL JINETE SIN CABEZA DESPIERTA" : (currentArena==="laberinto" ? "EL MINOTAURO DESPIERTA" : (currentArena==="acuatica" ? "¡EL LEVIATÁN EMERGE DE LAS PROFUNDIDADES!" : "EL DEMONIO MAYOR DESPIERTA"))));
+  showBanner(currentArena==="hielo" ? "EL MAGO DE HIELO DESPIERTA" : (currentArena==="bosque" ? "EL GUARDIÁN ANCESTRAL CORROMPIDO DESPIERTA" : (currentArena==="laberinto" ? "EL MINOTAURO DESPIERTA" : (currentArena==="acuatica" ? "¡EL LEVIATÁN EMERGE DE LAS PROFUNDIDADES!" : "EL DEMONIO MAYOR DESPIERTA"))));
 }
 
 // Cierre de nivel: al terminar el tiempo, la horda restante cae de golpe (con su animación y

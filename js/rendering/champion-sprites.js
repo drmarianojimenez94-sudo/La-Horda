@@ -249,7 +249,8 @@ function champPackDrawFrame(P, v, x, y, s, flip, alpha){
   }
 }
 function drawChampPack(key, h, drawScale, alpha){
-  const P = CHAMP_PACK[key];
+  const P = CHAMP_PACK[typeof setSkinPackKey==="function" ? setSkinPackKey(h, key) : key]; // skin de set completo
+
   if(!P || !P.ready) return false;
   const dir = champPackDir(h);
   // detecta el comienzo de cada ataque/cast para conocer su duración real (varía con la velocidad de ataque)
@@ -272,7 +273,7 @@ function drawChampPack(key, h, drawScale, alpha){
 }
 // Muerte con los frames reales (en vez del sprite de pie rotado): queda tendido semitransparente.
 function drawChampPackDeath(h){
-  const P = CHAMP_PACK[h.classKey];
+  const P = CHAMP_PACK[typeof setSkinPackKey==="function" ? setSkinPackKey(h, h.classKey) : h.classKey];
   if(!P || !P.ready) return false;
   if(!h._deadAt){ h._deadAt = animNow; vfxBurst(h.x, h.y-20, 12, "blood", 120, 420, 3, 2, -30, 0); }
   const pick = champPackSet(P, "death", h._pdir || "down", h);

@@ -401,6 +401,7 @@ function updateBossDirector(e, dt, tgt, dist){
       const P = phases[ph];
       if(P.banner) showBanner(P.banner);
       if(P.enrage && !e.enraged){ e.enraged = true; e.speed *= 1.3; }
+      if(P.onEnter) P.onEnter(e);   // p.ej. transformación del Guardián Ancestral
       // cambio de fase: rugido que empuja a todos + breve respiro
       animTrigger(e, "bossPhaseTransition", 1100);
       vfxShock(e.x, e.y, e.radius*0.4, e.radius*3, "255,210,140", 700, 2);
@@ -410,6 +411,7 @@ function updateBossDirector(e, dt, tgt, dist){
     } else bossHudPhase(0, phases.length);
   }
   bossGuardCheck(e);
+  if(e._gdTf > 0){ e.attackAnim = Math.max(e.attackAnim||0, 120); return true; }   // transformándose: quieto
   if(bossActionsBusy(e, dt, tgt, dist)) return true;
   if(e.bossWind) return false;
   st.gap -= dt;
