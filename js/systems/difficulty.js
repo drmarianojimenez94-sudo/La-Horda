@@ -30,14 +30,14 @@ const DIFF = {
   // mitad el promedio de los 4: el que pierde la partida es el jugador, y un tanque no debería
   // volver letales los golpes para una maga). Un ataque x1.0 del jefe quita este % de esa vida:
   // siempre PESA, pero nunca borra de un golpe. Sube con la dificultad de la arena.
-  bossDmgPct: {bosque:0.09, acuatica:0.10, fortaleza:0.102, micelial:0.104, hielo:0.105, laberinto:0.11, infernal:0.12},
+  bossDmgPct: {bosque:0.09, acuatica:0.10, fortaleza:0.102, micelial:0.104, hielo:0.105, abismo:0.108, laberinto:0.11, infernal:0.12},
   subbossDmgPct: 0.065,
   bossBasicMult: 0.5, // sus ataques comunes (proyectil/golpe) pegan la mitad que sus habilidades
   // REJUGAR / FARMEAR (BUGFIX 01): escalado dinámico PARCIAL. Si el grupo entra muy por encima del
   // nivel esperado de la arena (campaña calibrada a ~nivel 40 al final), la horda sigue un poco más
   // su poder: +0,6% de seguimiento por nivel de diferencia, con tope. Nunca 1:1: subir de nivel
   // sigue haciendo más fácil la arena (se limpia más rápido), pero no la vuelve trivial.
-  arenaLevel: {bosque:1, acuatica:6, fortaleza:12, micelial:17, hielo:23, laberinto:28, infernal:34},
+  arenaLevel: {bosque:1, acuatica:6, fortaleza:12, micelial:17, hielo:23, abismo:26, laberinto:28, infernal:34},
   replayFollowPerLvl: 0.006, replayFollowMax: 0.15
 };
 let runDifficulty = {hp:1, dmg:1, spawnRate:1, xp:1, off:1, def:1};

@@ -58,6 +58,14 @@ const ARENA_MODS = {
               fireDmgMult:1.15, iceDmgMult:1.0, enemyDmgPerWave:0.148, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.87, enemyRegenPct:0, hazard:null, hasWalls:false,
               potionMult:1.3 },
+  // ARENA DEL ABISMO (entre el Hielo y el Laberinto; el orden final se revisa después). "EL TERRENO ES
+  // UN RECURSO": ruinas suspendidas sobre el vacío con plataformas que se agrietan, colapsan y el
+  // Abismo reconstruye entre oleadas; caer no mata (quedás colgado del borde y un compañero te
+  // rescata) y a los enemigos SÍ se los puede tirar al vacío (js/arenas/abismo/).
+  abismo:   { label:"Arena del Abismo", icon:"🕳", desc:"Ruinas suspendidas donde el mundo se termina. El piso también es parte del combate.", hazardName:"El Vacío",
+              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.16, unlockLevel:0,
+              heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.86, enemyRegenPct:0, hazard:null, hasWalls:false,
+              potionMult:1.3 },
   // Arena Divina: la de asedio 4v4. Todavía sin combate (Fase 1: solo el escenario), así que
   // sin debuffs propios por ahora -esto se termina de calibrar cuando exista el combate de
   // verdad. NO va en ARENA_ORDER a propósito: no tiene que aparecer en la selección normal
@@ -66,4 +74,4 @@ const ARENA_MODS = {
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:1.0, enemyRegenPct:0, hazard:null, hasWalls:false }
 };
-const ARENA_ORDER = ["bosque","acuatica","fortaleza","micelial","hielo","laberinto","infernal"];
+const ARENA_ORDER = ["bosque","acuatica","fortaleza","micelial","hielo","abismo","laberinto","infernal"];

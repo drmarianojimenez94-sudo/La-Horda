@@ -10,7 +10,7 @@ const aidAmb = [];
 for(let i=0;i<AID_AMB_MAX;i++) aidAmb.push({on:false, x:0, y:0, vx:0, vy:0, life:0, max:1, k:0, s:1, ph:0});
 let aidAmbN = 0, aidEruptT = 0, aidWind = 0;
 // presupuesto base por arena (se multiplica por vfxLoad: con hordas o FPS bajos, baja solo)
-const AID_AMB_BUDGET = { infernal:70, hielo:120, bosque:60, laberinto:50, acuatica:60, divina:60, fortaleza:80, micelial:0 }; // (el Reino Micelial tiene su propio polvillo de esporas, mic-render.js)
+const AID_AMB_BUDGET = { infernal:70, hielo:120, bosque:60, laberinto:50, acuatica:60, divina:60, fortaleza:80, micelial:0, abismo:0 }; // (el Reino Micelial tiene su propio polvillo de esporas, mic-render.js)
 function aidAmbReset(){ for(const p of aidAmb) p.on = false; aidAmbN = 0; aidEruptT = 1500; }
 // kinds: 1 ceniza, 2 copo de nieve, 3 ráfaga (línea de viento), 4 hoja, 5 luciérnaga, 6 polvo,
 // 7 mota marina, 8 mota sagrada (dorada), 9 brasa infernal (divina norte)

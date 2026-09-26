@@ -27,11 +27,12 @@ const ARENA_LOOT = {
   fortaleza: {comun:45, raro:37, muyraro:14,  legendario:2.8,  mitico:0.08, set:0.35, unico:0.003},
   micelial:  {comun:42, raro:38, muyraro:15.5,legendario:3.2,  mitico:0.10, set:0.40, unico:0.004},
   hielo:     {comun:39, raro:38, muyraro:17,  legendario:4.0,  mitico:0.12, set:0.50, unico:0.005},
+  abismo:    {comun:33, raro:38, muyraro:22,  legendario:5.0,  mitico:0.20, set:1.00, unico:0.012},
   laberinto: {comun:28, raro:37, muyraro:26,  legendario:6.0,  mitico:0.30, set:1.50, unico:0.020},
   infernal:  {comun:16, raro:34, muyraro:36,  legendario:10.0, mitico:0.80, set:3.00, unico:0.040}
 };
 ARENA_LOOT.divina = ARENA_LOOT.laberinto;
-const ARENA_LOOT_LABEL = {bosque:"Introducción", acuatica:"Intermedia", fortaleza:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", laberinto:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
+const ARENA_LOOT_LABEL = {bosque:"Introducción", acuatica:"Intermedia", fortaleza:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", abismo:"Media-alta", laberinto:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
 // La calificación mejora las probabilidades de lo raro (más cuanto más rara la categoría),
 // sin garantizar nada: peso × factor^exponente, y "común" absorbe la diferencia.
 const GRADE_LOOT = {
@@ -74,6 +75,7 @@ const SET_ARENA_WEIGHTS = {
   fortaleza: {coloso:3, guardian:3, berserker:2, tempestad:1},
   micelial:  {sepulturero:3, arcano:3, cazador:2, alba:1},
   hielo:     {glaciar:4, coloso:2, arcano:2, guardian:1},
+  abismo:    {arcano:3, laberinto:3, tempestad:2, guardian:2},
   laberinto: {laberinto:4, coloso:3, guardian:3, cazador:1, arcano:1},
   infernal:  {lucifer:4, berserker:3, glaciar:1, coloso:1, sepulturero:1, tempestad:1, guardian:1, alba:1, cazador:1, arcano:1, laberinto:1},
   divina:    {laberinto:2, coloso:2, guardian:2, cazador:2, arcano:2, tempestad:2}

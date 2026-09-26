@@ -36,6 +36,7 @@ const ROLE_POOL_BY_ARENA = {
   fortaleza:["protector","comandante","artillero","carcelero"],
   micelial: ["resucitador","invocador","suicida","sanador"],
   hielo:    ["carcelero","protector","artillero","cazador"],
+  abismo:   ["cazador","protector","comandante","invocador"],
   laberinto:["resucitador","comandante","carcelero","cazador"],
   infernal: ["invocador","suicida","comandante","resucitador","artillero","sanador"]
 };

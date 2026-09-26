@@ -28,7 +28,7 @@ const REACTION_CFG = {
 // Resistencia de la horda por arena (positivo = resiste, negativo = débil). Se aplica también a jefes.
 const ENEMY_ARENA_RESIST = {
   bosque:{fire:-0.15}, acuatica:{ice:0.2, lightning:-0.3}, fortaleza:{physical:0.12, lightning:-0.15},
-  micelial:{fire:-0.25}, hielo:{ice:0.4, fire:-0.25}, laberinto:{}, infernal:{fire:0.4, ice:-0.25}
+  micelial:{fire:-0.25}, hielo:{ice:0.4, fire:-0.25}, abismo:{physical:0.08, lightning:-0.12}, laberinto:{}, infernal:{fire:0.4, ice:-0.25}
 };
 const ENEMY_TYPE_RESIST = {
   golem:{physical:0.2}, golem_piedra:{physical:0.2}, golem_hielo:{ice:0.5, physical:0.15}, golem_cristal:{ice:0.5, physical:0.15}, cristal_servo:{ice:0.5}, cristal_volador:{ice:0.5}, cangrejo_acorazado:{physical:0.15},

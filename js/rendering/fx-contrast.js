@@ -16,7 +16,7 @@
    Barato: todo son pools fijos y sprites cacheados (sin shadowBlur ni filtros por cuadro).
    ============================================================ */
 // cuánto oscurece la sombra de contraste según el piso de la arena (pisos claros piden más)
-const FX_CONTRAST_UNDER = {hielo:0.5, micelial:0.42, infernal:0.42, acuatica:0.36, fortaleza:0.34, laberinto:0.34, bosque:0.3, divina:0.34};
+const FX_CONTRAST_UNDER = {hielo:0.5, abismo:0.4, micelial:0.42, infernal:0.42, acuatica:0.36, fortaleza:0.34, laberinto:0.34, bosque:0.3, divina:0.34};
 function fxUnder(){ return FX_CONTRAST_UNDER[currentArena] || 0.3; }
 // Modo "brillo" del primitivo de sprites (anim-atlas.js): se prende SOLO mientras se dibujan efectos
 // de habilidad (no personajes ni escenario). Con el cuadro cargado (vfxLoad bajo) se apaga solo.
