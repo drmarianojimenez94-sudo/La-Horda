@@ -12,6 +12,7 @@ function arenaMods(){ return ARENA_MODS[currentArena] || ARENA_MODS.bosque; }
 // puede crear una sala para una arena que tenga abierta (el multijugador no saltea la campaña).
 function isArenaUnlocked(key){
   const i = ARENA_ORDER.indexOf(key);
+  if(typeof PLAYTEST_UNLOCK_ALL!=="undefined" && PLAYTEST_UNLOCK_ALL) return i >= 0; // modo prueba (ver save.js)
   if(i <= 0) return i===0;
   const cleared = save.arenasCleared || {};
   // La Fortaleza (3ra) y el Reino Micelial (4ta) se sumaron después: quien ya tenía abierto el

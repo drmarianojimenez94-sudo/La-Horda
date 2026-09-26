@@ -14,6 +14,7 @@ async function newPage(browser, site, { save = seedSave(), mobile = false, portr
     : { viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   page.setDefaultTimeout(8000);
+  await ctx.addInitScript(() => { window.__campaignMode = true; }); // la regresión prueba la campaña real (sin el modo prueba de save.js)
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('dialog', d => d.accept().catch(() => {}));
