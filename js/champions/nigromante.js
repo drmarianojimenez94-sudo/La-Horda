@@ -188,7 +188,7 @@ function updateNigromanteSkeletons(h, dt){
 function spawnOrRenewGolem(h){
   const mods = talentSkillMods(h.classKey, 1).flags;
   const skin = nigromanteGolemSkin(h);
-  const baseHp = 260 * (1+(mods.golemHpPct||0)) * (skin==="ice"?1.2 : skin==="fire"?0.85 : 1);
+  const baseHp = 260 * (1+(mods.golemHpPct||0)) * nigroEl(skin).hp; // elemento: nigro-elements.js
   if(h.golem){
     // Ya existe: lo renueva (vida llena, reposiciona cerca del Nigromante) en vez de duplicarlo.
     h.golem.maxHp = baseHp; h.golem.hp = baseHp; h.golem.skin = skin;
@@ -237,6 +237,7 @@ function updateNigromanteGolem(h, dt){
     g.x = h.x+h.fx*60; g.y = h.y+h.fy*60;
   }
   if(arenaHas("clamp")) clampToArena(g);
+  nigroGolemElementTick(g, h, dt); // rastro de brasas del gólem de fuego
   const mods = talentSkillMods(h.classKey, 1);
   const AREA_G = 1+(mods.flags.golemAreaBonus||0)+mods.areaMult;
   const range = 70*AREA_G;
@@ -250,13 +251,14 @@ function updateNigromanteGolem(h, dt){
         g.atkCd = g.furyT > 0 ? 1000 : 1500;
         g.attackAnim = 320;
         const sk = CLASSES.nigromante.skills[1];
-        const dmgMult = (1+mods.powerMult) * (g.skin==="fire"?1.25 : g.skin==="ice"?0.9 : 1) * (g.furyT > 0 ? 1.5 : 1);
+        const dmgMult = (1+mods.powerMult) * nigroEl(g.skin).dmg * (g.furyT > 0 ? 1.5 : 1);
         const finalDmg = h.baseDmg*runStats.dmgMult*sk.dmgMult*dmgMult*arenaMods().heroDmgMult;
         for(const e of enemies){
           if(!e.alive || distance(g,e) > range+18) continue;
           damageEnemy(e, finalDmg, {src:h, slow: g.skin==="ice"?0.35:undefined, slowDur: g.skin==="ice"?1500:undefined, burn: g.skin==="fire"?true:undefined});
+          if(g.target===e) nigroGolemOnHit(g, h, e, finalDmg); // Tormenta: rayo en cadena · Plaga: maldición
         }
-        particles.push({x:g.x,y:g.y, life:260, ring:true, maxLife:260, maxR:range, color: g.skin==="fire"?"#ff8a3d":g.skin==="ice"?"#9fe3ff":"#8fae7a"});
+        particles.push({x:g.x,y:g.y, life:260, ring:true, maxLife:260, maxR:range, color: nigroEl(g.skin).ring});
       }
     }
   } else {

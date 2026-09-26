@@ -110,15 +110,14 @@ function talentChainHTML(classKey, nodes, rankOf, lockOf, isMastery){
   let html = "", i = 0;
   while(i < nodes.length){
     const n = nodes[i];
-    const pair = n.exclusiveWith ? nodes.find(o=>o.id===n.exclusiveWith) : null;
-    if(pair && nodes.indexOf(pair) > i){
-      html += `<div class="tt-fork"><div class="tt-fork-label">Elegí uno (permanente)</div>
-        ${talentNodeHTML(classKey, n, rankOf(n), lockOf(n), isMastery)}
-        <div class="tt-fork-or">o</div>
-        ${talentNodeHTML(classKey, pair, rankOf(pair), lockOf(pair), isMastery)}</div>`;
+    // bifurcación: el nodo y los que excluye (2 o más) se dibujan juntos, una sola vez
+    const group = n.exclusiveWith ? [n].concat([].concat(n.exclusiveWith).map(id=>nodes.find(o=>o.id===id)).filter(Boolean)) : null;
+    if(group && group.length > 1 && group.every(o=>nodes.indexOf(o) >= i)){
+      html += `<div class="tt-fork${group.length > 2 ? " tt-fork-multi" : ""}"><div class="tt-fork-label">Elegí uno (permanente)</div>
+        ${group.map(o=>talentNodeHTML(classKey, o, rankOf(o), lockOf(o), isMastery)).join(`<div class="tt-fork-or">o</div>`)}</div>`;
       i++; continue;
     }
-    if(pair && nodes.indexOf(pair) < i){ i++; continue; } // ya dibujado junto a su par
+    if(group && group.length > 1){ i++; continue; } // ya dibujado junto a su bifurcación
     html += talentNodeHTML(classKey, n, rankOf(n), lockOf(n), isMastery);
     i++;
   }

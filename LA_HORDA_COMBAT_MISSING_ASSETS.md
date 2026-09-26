@@ -223,6 +223,18 @@ four small crystals orbiting him (violet, ice-blue, amber, white-gold), 3/4 top-
 (wings shatter into feathers and ash), 256x256 per frame
 ```
 
+### NG-01 — Gólems elementales del Nigromante (Tormenta y Plaga + animaciones de los 4)
+Hoy: Fuego e Hielo tienen arte real (una pose). Tormenta y Plaga usan el gólem de piedra recoloreado en código
+con aura y detalle propio (arcos eléctricos / goteo de plaga). Mencionaste que mandabas "los gólem y todas sus
+especializaciones": no llegaron. Si las mandás, se enchufan en `NIGRO_GOLEM_IMG.storm` / `.plague` sin tocar
+la lógica.
+```
+[prefijo] + necromancer's summoned golem, 4 elemental variants on one sheet, same silhouette: FIRE (molten rock,
+lava cracks), ICE (blue crystal ice), STORM (dark slate stone with violet lightning veins, crackling arcs),
+PLAGUE (rotting green flesh and stone, pustules, dripping toxic ooze); per variant: idle 4 frames, walk 6 frames,
+slam attack 5 frames, death 5 frames, 3/4 top-down, 128x128 per frame
+```
+
 ### HS-02 — Golem de Cuerpos (animaciones)
 Hoy: 3 poses estáticas de la hoja (se desliza al caminar).
 ```

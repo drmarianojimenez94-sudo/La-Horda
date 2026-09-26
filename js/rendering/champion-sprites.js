@@ -456,7 +456,10 @@ function drawNigromanteDemon(h, drawScale, alpha){
   const targetH = h.radius*2.9*(drawScale/(h.scale||2.0));
   const s = targetH/img.height;
   const clip = { frames: [{x:0, y:0, w:img.width, h:img.height}] };
+  const el = typeof nigromanteGolemSkin==="function" ? nigromanteGolemSkin(h) : "stone"; // la forma demoníaca toma el elemento del gólem
+  nigroDrawElementAura(h.x, h.y, el, targetH*0.42, animNow/1000);
   drawAnimFrameSized(img, clip, 0, h.x, h.y, img.width*s, img.height*s, 0.5, 0.94, flip, alpha);
+  nigroDrawElementDetail(h.x, h.y, el, targetH, animNow/1000);
   return true;
 }
 // Pose real de muerte (cuerpo tendido) de Musashi y del Nigromante: arte que ya venía embebido
@@ -553,20 +556,20 @@ function drawSkeletonMinion(sk){
 // nigromanteGolemSkin()-, coherente con que la eleccion tambien cambia la forma demoniaca).
 function drawGolemReal(g){
   const skin = g.skin||"stone";
-  const ready = skin==="fire" ? NIGRO_GOLEM_READY.fire : skin==="ice" ? NIGRO_GOLEM_READY.ice : NIGRO_GOLEM_READY.stone;
-  if(!ready) return;
-  const img = g.attackAnim>0 && skin==="stone" && NIGRO_GOLEM_READY.stoneAtk ? NIGRO_GOLEM_IMG.stoneAtk
-    : (skin==="fire" ? NIGRO_GOLEM_IMG.fire : skin==="ice" ? NIGRO_GOLEM_IMG.ice : NIGRO_GOLEM_IMG.stone);
+  const img = nigroGolemImage(skin, g.attackAnim>0); // arte real o provisorio por elemento (nigro-elements.js)
+  if(!img) return;
   const flip = (g.fx||0) < -0.12;
   const targetH = 96;
   const s = targetH/img.height;
   const clip = { frames: [{x:0,y:0,w:img.width,h:img.height}] };
   drawShadow(g.x, g.y, 34);
+  nigroDrawElementAura(g.x, g.y, skin, 38, animNow/1000);
   g._animKey = "nigro_golem";
   const Pg = animPose(g, animProfileOf(g), false);
   ctx.save(); animApply(g.x, g.y, Pg);
   drawAnimFrameSized(img, clip, 0, g.x, g.y, img.width*s, img.height*s, 0.5, 0.94, flip, g.hitFlash>0?0.6:1);
   ctx.restore();
+  nigroDrawElementDetail(g.x, g.y, skin, targetH, animNow/1000);
   if(g.hp<g.maxHp){
     ctx.fillStyle="rgba(0,0,0,0.5)"; ctx.fillRect(g.x-26,g.y-targetH-14,52,5);
     ctx.fillStyle="#8fae7a"; ctx.fillRect(g.x-26,g.y-targetH-14,52*Math.max(0,g.hp/g.maxHp),5);
