@@ -94,6 +94,7 @@ for(const _t in REAL_ANIM_SETS){
   atlas.sideNat = set.sideNat;
 }
 function drawRealAnimSprite(e){
+  if(ENEMY_ATLAS_PACK[e.type] && ENEMY_ATLAS_PACK[e.type].ready) return false; // canon nuevo (atlas por sets) manda
   const atlas = REAL_ANIM_ATLASES[e.type];
   if(!atlas || !atlas.ready()) return false;
   let clip = atlas.clip, flip = e.fx < -0.12;
@@ -171,6 +172,14 @@ function drawEnemyAtlasPack(e){
     arr = P.sets.idle; n = Math.floor((e.animT||0)/220);
   } else {
     arr = P.sets.walk; n = Math.floor((e.animT||0)/140);
+    // vistas de frente/espalda si la hoja las trae (con histéresis, igual que las tiras del Laberinto)
+    if(P.sets.walk_down || P.sets.walk_up){
+      const ax = Math.abs(e.fx||0), ay = Math.abs(e.fy||0);
+      let dir = e._pdir||0;
+      if(dir===0){ if(ay > ax*1.3) dir = e.fy>0 ? 1 : 2; } else if(ax > ay*1.3) dir = 0; else dir = e.fy>0 ? 1 : 2;
+      e._pdir = dir;
+      if(dir===1 && P.sets.walk_down) arr = P.sets.walk_down; else if(dir===2 && P.sets.walk_up) arr = P.sets.walk_up;
+    }
   }
   const v = e.alive ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
   const s = e.radius*(P.hMul||2.6)/P.refH;

@@ -114,15 +114,17 @@ SPEC = [
 ]
 
 _cache = {}
+BG_PCT, BG_SIZE = 35, 41   # fondo local (percentil en ventana); las hojas con celdas claras usan una ventana mayor
 def sheet(name):
     if name in _cache: return _cache[name]
     im = Image.open(os.path.join(ROOT, name + '.png'))
+    if im.mode == 'RGBA' and np.percentile(np.array(im)[..., 3], 10) > 200: im = im.convert('RGB')   # alfa casi lleno = fondo sin quitar
     if im.mode == 'RGBA':
         a = np.array(im); rgb = a[..., :3]; score = a[..., 3].astype(float)   # 0..255
         kind = 'alpha'
     else:
         rgb = np.array(im.convert('RGB')); f = rgb.astype(float)
-        bg = np.stack([ndimage.percentile_filter(f[..., c], 35, size=41) for c in range(3)], -1)
+        bg = np.stack([ndimage.percentile_filter(f[..., c], BG_PCT, size=BG_SIZE) for c in range(3)], -1)
         score = np.sqrt(((f - bg) ** 2).sum(-1)) * 4.0                          # ~0..255
         kind = 'dist'
         glow = np.clip((f.max(-1) - bg.max(-1) - 30) / 110.0, 0, 1)            # efectos: solo lo que brilla
@@ -136,7 +138,7 @@ def masks(score, kind, typ):
         fg = score > (128 if kind == 'alpha' else 96)
         fg = ndimage.binary_opening(fg, np.ones((2, 2), bool))
         return ndimage.binary_fill_holes(fg), None
-    if typ == 'fig' and kind == 'dist':
+    if typ in ('fig', 'figfx') and kind == 'dist':
         # el contorno casi negro del arte está cerca del fondo: umbral más bajo + cerrar huecos
         fg = score > 64
         fg = ndimage.binary_opening(fg, np.ones((2, 2), bool))
@@ -155,7 +157,9 @@ def drop_lines(fg):
     """Afuera las líneas finas de los paneles/carteles (alto <= 5 px y largas)."""
     lb, _ = ndimage.label(fg, N8)
     for i, sl in enumerate(ndimage.find_objects(lb), 1):
-        if sl and (sl[0].stop - sl[0].start) <= 5 and (sl[1].stop - sl[1].start) >= 20: fg[sl][lb[sl] == i] = False
+        if not sl: continue
+        hh, ww = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+        if (hh <= 5 and ww >= 20) or (ww <= 5 and hh >= 20): fg[sl][lb[sl] == i] = False   # bordes de panel/celda
     return fg
 
 def split(fg, n):

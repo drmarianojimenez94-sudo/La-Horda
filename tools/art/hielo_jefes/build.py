@@ -95,8 +95,7 @@ FX = {
     'bsAngelBurst':  ('angel_fx', 'explosion', 'assets/vfx/bosses/hielo', False),
     'bsAngelImpact': ('angel_fx', 'impacto',  'assets/vfx/bosses/hielo', False),
     'bsAngelWalls':  ('angel_fx', 'muros',    'assets/vfx/bosses/hielo', False),
-    'bsMinoFire':    ('minotauro_fx', 'fuego', 'assets/vfx/bosses/laberinto', True),
-    'bsMinoWave':    ('minotauro_fx', 'onda',  'assets/vfx/bosses/laberinto', True),
+    # (el fuego y la lava de minotauro_sheet quedaron fuera: el canon del Minotauro es la IMG 9, con sus propios efectos)
 }
 
 def pack(frames, cols):

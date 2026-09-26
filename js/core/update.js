@@ -165,7 +165,10 @@ function update(dt){
               addFrost(h, 2); // Aliento gélido: 2 cargas de escarcha (dos alientos seguidos congelan)
             }
           }
-          e.fxAnim = {name:"aliento_hielo", t:0};
+          // con el canon nuevo (Tundraverx sin alas) el efecto viejo traía dibujado al dragón alado:
+          // se usa el aliento de su propia hoja (cuadros de ataque) en vez del reemplazo de cuerpo
+          if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[e.type]) bossSheetPack(e, "atk", 900);
+          else e.fxAnim = {name:"aliento_hielo", t:0};
         });
         showBanner("¡Aliento de Hielo!");
       } else if(!e.fxAnim && e.novaCd<=0){
@@ -178,7 +181,8 @@ function update(dt){
           for(const h of targets){ if(distance(e,h) <= R) bossHitHero(h, e.dmg*1.1, {slow:0.45, slowDur:1800, frost:1}); }
           particles.push({x:e.x,y:e.y, life:650, ring:true, maxLife:650, maxR:R, color:"#bfe0f5"});
           particles.push({x:e.x,y:e.y, life:820, ring:true, maxLife:820, maxR:R*0.65, color:"#eaf7ff"});
-          e.fxAnim = {name:"nova_hielo_dragon", t:0};
+          if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[e.type]){ bossSheetPack(e, "atk", 700); bossSheetFx("bsMagoBurst", e.x, e.y - e.radius*0.3, R*1.2, 700, {grow:0.3}); }
+          else e.fxAnim = {name:"nova_hielo_dragon", t:0};
         });
         showBanner("¡Nova de Hielo!");
       }

@@ -17,7 +17,7 @@ const RANGED_STYLE = {
 };
 function _enemyShot(e, vx, vy, dmg, extra){
   const p = {x:e.x, y:e.y, vx, vy, dmg, life:2200, radius:7, color:ENEMY_PROJ_COLOR[e.type]||"#ff5a3d", enemy:true, src:e, rank:e.rank,
-    sprite: e.type==="sirena_abisal" ? "orb" : undefined};
+    sprite: e.type==="sirena_abisal" ? "orb" : ((typeof ENEMY_PROJ_SPRITE!=="undefined" && ENEMY_PROJ_SPRITE[e.type]) || undefined)};
   if(extra) Object.assign(p, extra);
   projectiles.push(p);
   return p;

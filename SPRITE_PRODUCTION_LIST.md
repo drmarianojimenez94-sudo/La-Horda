@@ -128,7 +128,7 @@ Los sprites miden unos 45 a 60 px de alto, en línea con el resto del arte del j
 | I6 | **Doblador — Arquera** | Bosque, subjefe | 1 frame (25×40) | **Caminata 4 frames** + **disparo 3 frames** |
 | I7 | **Doblador — Pícaro** | Bosque, subjefe | 1 frame (30×40) | **Caminata 4 frames** + **ataque 3 frames** |
 | I8 | **Doblador — Clérigo** | Bosque, subjefe | 1 frame (22×33) | **Caminata 4 frames** + **cast 3 frames** |
-| I9 | **Minotauro** | Laberinto, jefe final | La tira real solo trae perfil caminando (derecha) y espalda (3 frames) | **Ataque 4 frames** (perfil derecha: embestida o hachazo) + **caminata de frente 4 frames** (vista abajo) |
+| I9 | ~~**Minotauro**~~ ✅ | Laberinto, jefe final | **Integrado — canon nuevo (IMG 9)**: idle en 4 direcciones, caminar, carrera, ataque, golpe pesado, golpe sísmico, embestida, hurt y muerte + VFX propios (onda, hacha, polvo, traza, furia). Reemplaza TODO el set anterior | — |
 | I10 | **Demonio Mayor — efectos** | Arena Infernal, jefe | El cuerpo tiene atlas real; el **aliento** y la **onda** se dibujan por código | **Aliento de fuego 4 a 6 frames** (efecto, dirección derecha) + **onda expansiva 4 frames** (anillo/golpe al suelo, vista cenital) |
 | I11 | ~~**Zombi**~~ ✅ | Arena Infernal, común | **Integrado** (Pack 4): idle 4, caminar 3, ataque 3, golpe 1, muerte 3. *La fila "attack" del pack dibuja otra criatura (con cuernos y lanza): se usaron como ataque los frames de embestida de la fila "hit"* | Opcional: ataque propio (mordida/zarpazo) con el mismo diseño |
 | I12 | ~~**Esqueleto Cornudo**~~ ✅ | Arena Infernal, subélite | **Integrado** (Pack 4): idle 4, caminar 4, ataque 3, golpe 2, muerte 3 | — |
@@ -272,3 +272,11 @@ de nuevo**:
   y las ruinas de la Arena Divina.
 - **POLISH**: quedan 21 de 26. Resueltos: muertes del Segador y de Axiom, Gólem de Hielo, Demonio
   de Hielo y Fuego y Ent.
+
+## Pase de canon + Artgate (hojas IMG 1-9 y hojas de jefes)
+
+Decisiones y motivos en `LA_HORDA_SPRITE_CANON.md` y `LA_HORDA_ARTGATE_AUDIT.md`; lo que falta, en `LA_HORDA_ASSETS_FALTANTES.md`.
+
+- **Integrados como canon (reemplazan el set anterior):** Mago de Hielo y Cristal, Ángel Caído, Jinete Sin Cabeza, Tundraverx, Minotauro, Dragoncito de Hielo, Ángel de Hielo élite, Enjambre de Hadas, Cù-Sìth, Gólem del Infernal (de lava), Gólem de Piedra; nuevos: Gólem de Cristal, Servo y Cristal Volador.
+- **Conservados (el actual gana o está completo):** los 13 campeones, Dama del Bosque, Gólem de Hielo, Esfinge/Medusa/Druida, Duende, Zombi, Lobo Espectral, Demonio Nigromántico.
+- **Rechazados por Frankenstein:** redibujos de campeones (IMG 4/5/7), muertes del Laberinto (IMG 1, otro diseño), ajustes de Duende/Zombi/Lobo/Demonio, cuerpo del Minotauro de capa roja.

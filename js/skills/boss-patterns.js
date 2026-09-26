@@ -232,17 +232,18 @@ const BOSS_ATTACKS = {
   angTripleCharge(e, t, d){ if(d < 100) return false; skMultiCharge(e, 3, 580, 1000, 1.3, {knock:60, frost:1}, "190,235,255"); bossSheetPack(e, "fly", 3200); bossAnnounce(e, "Juicio Final", "¡3 embestidas!"); return true; },
 
   // ---- Minotauro (Laberinto) ----
-  minCharge(e, t, d){ if(d < 140 || d > 700) return false; skCharge(e, d, 720, 1150, 1.6, {knock:110, stun:500}, "255,120,80", null); e.minoCharge = true; bossAnnounce(e, "Embestida", "hacelo chocar contra un muro"); return true; },
-  minAxe(e, t, d){ if(d > 210) return false; skCircleSlam(e, 200, 700, 1.3, {knock:70}, "255,140,90", null, "bossHeavyAttack", ()=>bossSheetFx("bsMinoWave", e.x, e.y + 6, 180, 620)); bossAnnounce(e, "Hachazo Giratorio", "alejate"); return true; },
-  minStomp(e, t, d){ if(d > 170) return false; skCircleSlam(e, 160, 600, 1.1, {stun:600}, "200,170,120", null, "bossGroundSlam", ()=>bossSheetFx("bsMinoWave", e.x, e.y + 6, 145, 620)); bossAnnounce(e, "Pisotón", "¡salí del círculo!"); return true; },
+  minCharge(e, t, d){ if(d < 140 || d > 700) return false; skCharge(e, d, 720, 1150, 1.6, {knock:110, stun:500}, "255,120,80", null); e.minoCharge = true; bossSheetPack(e, "charge", 1500); bossAnnounce(e, "Embestida", "hacelo chocar contra un muro"); return true; },
+  minAxe(e, t, d){ if(d > 210) return false; skCircleSlam(e, 200, 700, 1.3, {knock:70}, "255,140,90", null, "bossHeavyAttack", ()=>{ bossSheetFx("csMinoWave", e.x, e.y + 6, 200, 620); bossSheetFx("csMinoAxe", e.x + (e.fx||1)*e.radius*0.6, e.y - e.radius*0.3, 120, 420); }); bossSheetPack(e, "heavy", 900); bossAnnounce(e, "Hachazo Giratorio", "alejate"); return true; },
+  minStomp(e, t, d){ if(d > 170) return false; skCircleSlam(e, 160, 600, 1.1, {stun:600}, "200,170,120", null, "bossGroundSlam", ()=>{ bossSheetFx("csMinoWave", e.x, e.y + 6, 160, 620); bossSheetFx("csMinoDust", e.x, e.y - 10, 110, 600); }); bossSheetPack(e, "seismic", 800); bossAnnounce(e, "Pisotón", "¡salí del círculo!"); return true; },
   minRocks(e, t, d){
     const pts = heroTargets(3).map(h=>({x:h.x, y:h.y})); for(let i=0;i<2;i++){ const a = Math.random()*Math.PI*2; pts.push({x:t.x+Math.cos(a)*80, y:t.y+Math.sin(a)*80}); }
-    skStrikes(e, pts, 64, 1150, 1.1, "rock", {knock:40}, null); bossAnnounce(e, "Derrumbe", "movete"); return true; },
+    skStrikes(e, pts, 64, 1150, 1.1, "rock", {knock:40}, null); bossSheetPack(e, "seismic", 800); bossAnnounce(e, "Derrumbe", "movete"); return true; },
   minCross(e, t, d){
     const dirs = e.hp < e.maxHp*0.25 ? 8 : 4, base = Math.random()*Math.PI;
     for(let k=0;k<dirs;k++){ const a = base + k*Math.PI*2/dirs; skLineStrikes(e, Math.cos(a), Math.sin(a), 7, 74, 52, 650, 90, 1.0, "rock", {knock:30}); }
+    bossSheetPack(e, "seismic", 900); bossSheetFx("csMinoWave", e.x, e.y + 6, 220, 700);
     bossAnnounce(e, "Terremoto", "ponete entre las grietas"); return true; },
-  minTripleCharge(e, t, d){ if(d < 100) return false; e.minoCharge = true; skMultiCharge(e, 3, 700, 1200, 1.5, {knock:100, stun:450}, "255,90,60"); bossAnnounce(e, "Estampida", "¡3 embestidas: usá los muros!"); return true; },
+  minTripleCharge(e, t, d){ if(d < 100) return false; e.minoCharge = true; skMultiCharge(e, 3, 700, 1200, 1.5, {knock:100, stun:450}, "255,90,60"); bossSheetPack(e, "charge", 3600); bossAnnounce(e, "Estampida", "¡3 embestidas: usá los muros!"); return true; },
 
   // ---- Demonio Mayor (Infernal) ----
   demFlame(e, t, d){

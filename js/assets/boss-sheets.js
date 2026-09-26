@@ -38,9 +38,14 @@ function bossSheetTick(e, dt){
   if(e.type === "minotauro" && e.bossCharge){
     e._minoFireT = (e._minoFireT || 0) - dt;
     if(e._minoFireT <= 0){
-      e._minoFireT = 140;
+      e._minoFireT = 160;
       const c = e.bossCharge, a = Math.atan2(c.dy, c.dx);
-      bossSheetFx("bsMinoFire", e.x - c.dx * e.radius * 0.9, e.y - c.dy * e.radius * 0.4, e.radius * 1.3, 520, {rot:a, anchorY:0.6});
+      bossSheetFx("csMinoTrail", e.x - c.dx * e.radius * 0.9, e.y - c.dy * e.radius * 0.2, e.radius * 1.0, 480, {rot:a, anchorY:0.6});
     }
+  }
+  // furia del Minotauro (debajo del 50%): aura roja de su hoja, cada tanto
+  if(e.type === "minotauro" && e.enraged && e.alive){
+    e._minoRageT = (e._minoRageT || 0) - dt;
+    if(e._minoRageT <= 0){ e._minoRageT = 1600; bossSheetFx("csMinoRage", e.x, e.y + 4, e.radius * 2.2, 1500, {follow:e, anchorY:0.85}); }
   }
 }
