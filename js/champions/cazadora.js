@@ -116,9 +116,12 @@ function sylvaAddTrack(h, target, amount){
     h.huntTarget = target;
     h.trackStacks = Math.min(5, amount);
   }
-  if(!wasCornered && h.trackStacks>=5 && h===player){
-    floatText(h.x, h.y-46, "¡PRESA ACORRALADA!", "crit");
-    particles.push({x:h.x,y:h.y, life:320, ring:true, maxLife:320, maxR:46, color:"#ffb84a"});
+  if(!wasCornered && h.trackStacks>=5){
+    champSetOnCornered(h); // set La Manada
+    if(h===player){
+      floatText(h.x, h.y-46, "¡PRESA ACORRALADA!", "crit");
+      particles.push({x:h.x,y:h.y, life:320, ring:true, maxLife:320, maxR:46, color:"#ffb84a"});
+    }
   }
 }
 function sylvaClearTrack(h){ h.huntTarget = null; h.trackStacks = 0; }
@@ -158,6 +161,8 @@ function updateSylvaMomentum(h, dt){
 function spawnSylvaWolf(h){
   h.wolf = { x:h.x+30, y:h.y, fx:1, fy:0, moving:false, biteCd:0, biteTimer:0, jumping:false, animT:0 };
 }
+// Único "Luna Roja": el lobo aparece un rato al marcar una Presa nueva (fuera de la ulti).
+function sylvaSummonWolf(h, ms){ if(!h.wolf) spawnSylvaWolf(h); h._uqWolfT = ms; }
 function despawnSylvaWolf(h){
   if(h.wolf){ particles.push({x:h.wolf.x,y:h.wolf.y, life:320, ring:true, maxLife:320, maxR:34, color:"#5ad0c8"}); }
   h.wolf = null;

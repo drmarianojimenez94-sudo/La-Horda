@@ -80,7 +80,7 @@ const MIC_CFG = {
   acechador:{ hideRange:[200, 420], hideMs:[1300, 2400], hideAlpha:0.22, warnMs:650, leapMs:430, leapMax:380, leapCdMs:[5500, 8000], dmgMult:1.25, recoverMs:700 },
   hinchado:{ punchR:130, punchWind:620, punchCd:2300, boomR:175, boomWarn:1600, boomCdMs:[9000, 12000], boomMult:1.35, boomRange:230, deathR:95, deathWarn:750, deathPct:0.06 },
   peregrino:{ walkRange:380, plantRange:430, plantMs:900, plantedRange:540, plantedShotMs:1050, walkShotMs:2100, plantMaxMs:9000, uprootNear:130, boltSpeed:320 },
-  sabueso:{ packExtra:[1, 2], leapRange:[130, 270], leapWarn:260, leapMs:360, leapCdMs:[3200, 5000], packMaxAlive:14 },
+  sabueso:{ packExtra:[1, 2], leapRange:[130, 270], leapWarn:420, leapMs:360, leapCdMs:[3200, 5000], packMaxAlive:14 },
   chaman:{ keepMin:230, keepMax:340, regenCdMs:[7000, 9000], regenMs:2200, regenR:270, regenPct:0.03, regenTick:500,
            germCdMs:[11000, 14000], germRange:720, germBoostMs:4200, ballCdMs:2300, ballSpeed:260, auraR:210, auraSpd:0.15, auraDmg:0.10 },
   // Subjefe (nivel 6)

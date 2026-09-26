@@ -82,6 +82,10 @@ const PASSIVE_DB = [
   {id:"pas_crit",     name:"Ojo Certero",      desc:"Aumenta la probabilidad de golpe crítico", condition:"siempre",      effect:"crit_chance_add", valueBase:0.025, growth:0.01},
   {id:"pas_critdmg",  name:"Golpe Devastador", desc:"Aumenta el daño de los golpes críticos", condition:"siempre",        effect:"crit_mult_add",   valueBase:0.08, growth:0.03},
   {id:"pas_energia",  name:"Pozo Interior",    desc:"Aumenta el recurso máximo y su regeneración", condition:"siempre",   effect:"energy_mult",     valueBase:0.05, growth:0.02},
+  {id:"pas_resfire",  name:"Piel Ignífuga",    desc:"Reduce el daño de fuego recibido",   condition:"siempre",            effect:"res_fire",        valueBase:0.05, growth:0.02},
+  {id:"pas_resice",   name:"Sangre Cálida",    desc:"Reduce el daño de hielo recibido",   condition:"siempre",            effect:"res_ice",         valueBase:0.05, growth:0.02},
+  {id:"pas_resltg",   name:"Aislante",         desc:"Reduce el daño eléctrico recibido",  condition:"siempre",            effect:"res_lightning",   valueBase:0.05, growth:0.02},
+  {id:"pas_resphys",  name:"Cuero Curtido",    desc:"Reduce el daño físico recibido",     condition:"siempre",            effect:"res_physical",    valueBase:0.03, growth:0.01},
   {id:"pas_overheal", name:"Sobreabundancia",  desc:"El exceso de curación/robo de vida se convierte en escudo", condition:"al curar de más", effect:"overheal_shield_pct", valueBase:0.10, growth:0.04}
 ];
 // Potencia real de las pasivas según la rareza del objeto que las trae. Antes una pasiva valía
@@ -203,7 +207,17 @@ Object.keys(SET_DB.lucifer.pieces).forEach(type=>{
 // slots nuevos -pechera/guantes/botas- como una pasiva más, reusando el mismo balde de
 // passiveSum sin tocar ninguna fórmula de combate existente.
 const SLOT_GUARANTEED_EFFECT = { pechera:"hp_mult", guantes:"atkspeed_mult", botas:"speed_mult" };
-// Agrega un objeto al inventario permanente de un campeón (NO lo equipa automáticamente)
+// INVENTARIO DE LA CUENTA (save.stash): 30 espacios compartidos por todos los campeones. Lo equipado
+// no ocupa espacio (vive en el campeón que lo lleva). Ver js/systems/items.js.
 const INVENTORY_CAPACITY = 30;
-// Valor de venta por rareza, centralizado (fácil de rebalancear después)
-const SELL_VALUE = {comun:12, raro:28, muyraro:60, legendario:130, mitico:280, unico:600};
+// Valor de venta por rareza. Economía: un campeón cuesta 5.000 de oro (CHAMPION_PRICE_GOLD) y la
+// basura NO debe pagarlo. Común casi nada; Legendario vale, pero venderlo duele (un Legendario de
+// tienda cuesta ~5.000); un Mítico se vende por mucho menos de lo que vale; el Único no se vende.
+const SELL_VALUE = {comun:3, raro:10, muyraro:35, legendario:320, mitico:1100, unico:0};
+const SELL_VALUE_SET_PIECE = 260;
+// Nombre legible de cada efecto de pasiva (UI y objetos con nombre propio).
+const PASSIVE_EFFECT_LABEL = {dmg_mult:"Daño", atkspeed_mult:"Velocidad de ataque", cd_mult:"Enfriamiento", lifesteal_add:"Robo de vida",
+  heal_mult:"Curación", def_add:"Defensa", skilldmg_mult:"Daño de habilidades", onhit_proc:"Descarga al golpear", hp_mult:"Vida",
+  speed_mult:"Velocidad", crit_chance_add:"Prob. de crítico", crit_mult_add:"Daño crítico", energy_mult:"Recurso",
+  overheal_shield_pct:"Exceso de curación → escudo", missinghp_dmg_bonus:"Daño según vida faltante",
+  res_physical:"Resistencia física", res_fire:"Resistencia al fuego", res_ice:"Resistencia al hielo", res_lightning:"Resistencia eléctrica"};

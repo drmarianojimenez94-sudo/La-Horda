@@ -30,6 +30,8 @@ async function runOne(page, job) {
     if (job.penalty !== undefined) ARENA_FAIL_PENALTY_PCT = job.penalty;
     if (job.mods) Object.assign(ARENA_MODS[job.arena], job.mods);
     if (job.gear) { for (const k in save.champions) if (typeof autoEquipBest === 'function') autoEquipBest(k); }
+    // un jugador competente gasta sus puntos de talento (el HUD le sugiere cuál subir)
+    if (job.lvl <= 0 && typeof suggestedSkillInvest === 'function') for (let g = 0; g < 60; g++) { const i = suggestedSkillInvest(job.cls); if (i === null || i === undefined || !investTalentPoint(job.cls, i)) break; }
     __CP.reset();
     if (job.arena === 'auto') job.arena = ARENA_ORDER.find(a => !(save.arenasCleared||{})[a]) || 'infernal';
     const lvl0 = save.champions[job.cls].level, xp0 = save.champions[job.cls].xp, gold0 = save.gold;

@@ -40,7 +40,7 @@ function setDamageMult(h, e, opts){
   if(h._arcaneT > 0 && !opts.fromBasic) m *= 1.45;
   if(h._albaDmgT > 0) m *= 1.15;
   if(h._momentum) m *= 1 + 0.025*h._momentum;
-  return m;
+  return m * champSetDamageMult(h, e, opts);
 }
 // Concentración de Sombra del Cazador: crítico extra solo contra la presa marcada.
 function setCritBonus(h, e){
@@ -48,9 +48,9 @@ function setCritBonus(h, e){
   return {chance: 0.03*h._focus, mult: 0.05*h._focus};
 }
 function setAtkSpeedMult(h){ return h && h._berserkT > 0 ? 1.25 : 1; }
-function setLifestealAdd(h){ return h && h._berserkT > 0 ? 0.25 : 0; }
+function setLifestealAdd(h){ return (h && h._berserkT > 0 ? 0.25 : 0) + champSetLifesteal(h); }
 function setSpeedMult(h){ return h && h._momentum ? 1 + 0.02*h._momentum : 1; }
-function setDmgTakenMult(h){ return h && h._guardDRT > 0 ? 0.75 : 1; }
+function setDmgTakenMult(h){ return (h && h._guardDRT > 0 ? 0.75 : 1) * (h && h.classKey==="nigromante" && champSetLegion(h) ? 0.85 : 1); }
 function setSummonMult(h){ return setN(h, "sepulturero") >= 2 ? 1.2 : 1; }
 function setReviveHpPct(by){ return setN(by, "guardian") >= 3 ? 0.6 : 0.4; }
 
@@ -80,9 +80,11 @@ function setsOnHit(h, e, dmg, crit, opts){
     damageEnemy(e, _setBase(h)*0.3, {src:h, fromProc:true, burn:true});
     vfxBurst(e.x, e.y-12, 5, "ember", 90, 260, 3, 0, -30, 0);
   }
+  champSetsOnHit(h, e, dmg, crit, opts); // sets de campeón (js/systems/champion-sets.js)
 }
 function setsOnKill(h, e){
   const c = heroSetCounts(h); if(!c) return;
+  champSetsOnKill(h, e);
   if((c.glaciar||0) >= 4 && e._frag >= 2 && e._fragBy === h){ glacialBurst(h, e, e._frag/5); e._frag = 0; }
   if((c.lucifer||0) >= 6 && h.hp < h.maxHp*0.5 && _setReady(h, "lucBoom", 500)){
     const R = 95, d = _setBase(h)*0.9;
@@ -111,6 +113,7 @@ function glacialBurst(h, e, power){
 }
 function setsOnCast(h, sk, isUlt){
   const c = heroSetCounts(h); if(!c) return;
+  champSetsOnCast(h, sk, isUlt);
   // Tempestad 4: la tormenta sale con la siguiente habilidad
   if((c.tempestad||0) >= 4 && h._stormReady){
     h._stormReady = false; h._storm = 0;
@@ -135,6 +138,7 @@ function setsOnCast(h, sk, isUlt){
 }
 // dmgFinal = daño que llegó a la vida; mitigated = lo que frenó la defensa; absorbed = escudos
 function setsOnHurt(h, dmgFinal, mitigated, absorbed){
+  champSetsOnHurt(h, dmgFinal); // Ángel Guardián: depende del set de OTRO héroe (el soporte)
   const c = heroSetCounts(h); if(!c) return;
   if((c.coloso||0) >= 4){
     h._colossus = (h._colossus||0) + mitigated + absorbed;
@@ -221,6 +225,7 @@ function updateSets(h, dt){
   if(h._arcaneT > 0) h._arcaneT -= dt;
   if(h._albaDmgT > 0) h._albaDmgT -= dt;
   if(h._guardDRT > 0) h._guardDRT -= dt;
+  updateChampionSets(h, dt);
   if(h._mark && !h._mark.alive){ h._mark = null; }
   if(!h.alive) return;
   const c = heroSetCounts(h); if(!c) return;
@@ -282,4 +287,5 @@ function resetSetRunState(h){
   h._storm = 0; h._stormReady = false; h._colossus = 0; h._oath = 0; h._alba = 0; h._albaReady = false;
   h._berserkT = 0; h._berserkCd = 0; h._arcaneT = 0; h._reso = 0; h._lastSk = null; h._focus = 0; h._mark = null;
   h._momentum = 0; h._noHitT = 0; h._fuseT = 0; h._guardDRT = 0; h._albaDmgT = 0; h._setCd = {};
+  h._tide = 0; h._elemSwapT = 0; h._lastElem = null; h._bsN = 0; h._prophecyAt = undefined; h._angelAt = undefined;
 }

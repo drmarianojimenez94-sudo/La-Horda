@@ -94,7 +94,7 @@ function lootCardHTML(item, classKey, idx){
   const equipped = save.champions[classKey].equipment[item.type] === item.uid;
   let setLine = "";
   if(item.set){
-    const S = SET_DB[item.set], owned = ownedDesignIds(classKey), total = setPieceCount(item.set);
+    const S = SET_DB[item.set], owned = ownedDesignIds(), total = setPieceCount(item.set);
     const have = setPieceIds(item.set).filter(id=>owned.has(id)).length;
     setLine = `<div class="loot-set-line">SET: ${S.name} · ${have}/${total} piezas${have<total?` · te falta${total-have>1?"n":""} ${total-have}`:" · ¡COMPLETO!"}</div>`;
   }
@@ -107,7 +107,7 @@ function lootCardHTML(item, classKey, idx){
         ${setLine}
         ${passiveTxt?`<div class="item-passives">${passiveTxt}</div>`:""}
         <div class="vic-item-actions">
-          <button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>
+          ${canEquipItem(classKey, item) ? `<button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>` : `<button disabled>Para ${CLASSES[item.champion].name}</button>`}
           <button data-vic-keep="${item.uid}">Guardar</button>
         </div>
       </div></div>
@@ -166,15 +166,14 @@ const VICTORY_STEPS = [
     const P = victoryData.perf, G = GRADE_LOOT[P.grade];
     const bonusPct = Math.round((Math.pow(G.factor, 1.5) - 1)*100);
     const A = ARENA_MODS[victoryData.arena]||{};
-    const summary = `<div class="res-rows">
-        <div class="res-row"><span>Performance</span><b style="color:${P.color};">${P.grade}</b></div>
-        <div class="res-row"><span>Arena</span><b>${A.label||"—"} · ${ARENA_LOOT_LABEL[victoryData.arena]||""}</b></div>
-        <div class="res-row"><span>Resultado</span><b style="color:#7dffa0;">Victoria</b></div>
-        <div class="res-row"><span>Bonus de recompensa</span><b style="color:${bonusPct>=0?"#ffcf5c":"#b8a898"};">${bonusPct>=0?"+":""}${bonusPct}% rarezas altas${victoryData.subjefes?` · +${victoryData.subjefes*10}% objeto extra`:""}</b></div>
-      </div>`;
-    const cards = victoryData.rewards.map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
-    const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} objetos): algunas recompensas no se pudieron guardar.</div>` : "";
-    return `${summary}${fullNote}<div class="loot-reveal">${cards}</div>`;
+    // una sola línea: el protagonista es el cofre
+    const summary = `<div class="loot-summary-line"><b style="color:${P.color};">${P.grade}</b> · ${A.label||"—"} · <span style="color:#7dffa0;">Victoria</span> ·
+        <span style="color:${bonusPct>=0?"#ffcf5c":"#b8a898"};">${bonusPct>=0?"+":""}${bonusPct}% rarezas altas${victoryData.subjefes?` · +${victoryData.subjefes*10}% objeto extra`:""}</span>
+        <div class="loot-summary-note">La calificación mejora las probabilidades, nunca garantiza.</div></div>`;
+    const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): algunas recompensas no se pudieron guardar.</div>` : "";
+    if(!victoryData._revealed) return `${summary}${fullNote}<div class="chest-host"></div>`; // la ceremonia del cofre (js/ui/loot-ceremony.js)
+    const cards = victoryData.rewards.slice().sort((a,b)=>TIER_ORDER[itemTier(a)]-TIER_ORDER[itemTier(b)]).map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
+    return `${summary}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
   },
   // 3. XP / RECURSOS
   function(){
@@ -189,16 +188,24 @@ const VICTORY_STEPS = [
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%;"></div></div>
       <div class="vic-sub" style="margin-top:-6px;">${champ.xp} / ${need} XP para el próximo nivel</div>
       <div class="vic-xp-row"><span>Oro total</span><b>${victoryData.gold}</b></div>
-      <div class="vic-xp-row"><span>Objetos en inventario</span><b>${(champ.inventory||[]).length}</b></div>`;
+      <div class="vic-xp-row"><span>Inventario de la cuenta</span><b>${stashUsedSlots()}/${INVENTORY_CAPACITY}</b></div>`;
   }
 ];
 
 function renderVictoryStep(){
   const body = document.getElementById("victory-step-body");
   body.innerHTML = VICTORY_STEPS[victoryStep]();
+  const bindLootButtons = (root)=>{
+    root.querySelectorAll("[data-vic-equip]").forEach(btn=> btn.addEventListener("click", ()=>{ equipItem(victoryData.classKey, btn.getAttribute("data-vic-equip")); btn.textContent = "Equipado"; btn.disabled = true; }));
+    root.querySelectorAll("[data-vic-keep]").forEach(btn=> btn.addEventListener("click", ()=>{ btn.textContent = "Guardado ✓"; btn.disabled = true; }));
+  };
   if(victoryStep===2){
-    if(!victoryData._revealed){ victoryData._revealed = true; revealLootSfx(body); }
-    else body.classList.add("loot-shown"); // al equipar se vuelve a dibujar: sin repetir la revelación
+    const host = body.querySelector(".chest-host");
+    if(host){
+      const C = runLootCeremony(host, victoryData.rewards, victoryData.perf.grade, ()=>{ victoryData._revealed = true; });
+      C._bindCard = bindLootButtons;
+      if(!victoryData.rewards.length) setTimeout(()=>{ const r = host.querySelector(".chest-items"); if(r) r.innerHTML = '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'; }, 2200);
+    } else body.classList.add("loot-shown"); // al volver a dibujar: sin repetir la revelación
   } else body.classList.remove("loot-shown");
   const nextBtn = document.getElementById("victory-next-btn");
   const isLast = victoryStep === VICTORY_STEPS.length-1;
@@ -210,17 +217,7 @@ function renderVictoryStep(){
   document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
   if(isLast) nextBtn.classList.add("hidden");
 
-  body.querySelectorAll("[data-vic-equip]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      equipItem(victoryData.classKey, btn.getAttribute("data-vic-equip"));
-      renderVictoryStep();
-    });
-  });
-  body.querySelectorAll("[data-vic-keep]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      btn.textContent = "Guardado ✓"; btn.disabled = true;
-    });
-  });
+  if(victoryStep!==2 || !body.querySelector(".chest-host")) bindLootButtons(body);
 }
 
 function showVictoryScreen(){

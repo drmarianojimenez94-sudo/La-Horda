@@ -14,6 +14,7 @@ function update(dt){
   updateRunTimers(dt);
   vfxFrame(dt);
   vfxUpdate(dt);
+  updateGore(dt); // manchas y cadáveres (js/rendering/gore.js)
   updateFloatTexts(dt);
   // Musashi — Último Duelo: se procesa para los 4 héroes SIEMPRE, antes que cualquier otro
   // corte por aturdimiento/muerte de updateAllies (que hace "continue" en esos casos y nunca
@@ -22,7 +23,7 @@ function update(dt){
   updateMusashiFx(dt);
   updateBossSkillWorld(dt);
   for(const h of heroes){ updateSylvaMomentum(h, dt); updateSylvaWolf(h, dt); }
-  for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); }
+  for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); updateNigromantePassive(h, dt); }
   // El Libertador / Eren (+ buffs de equipo que dan): js/champions/champ-shared.js
   for(const h of heroes) updateChampExtras(h, dt);
   updateChampFx(dt);
@@ -77,6 +78,9 @@ function update(dt){
   for(const e of enemies){
     if(!e.alive) continue;
     if(axiomFreezeTimer>0){ continue; } // Force Quit: nadie salvo Axiom actúa mientras dura
+    if(e.frozenTimer>0) e.frozenTimer -= dt; // congelado (Invierno Sin Fin, reacciones de hielo)
+    if(e.shockedTimer>0) e.shockedTimer -= dt;
+    if(e.wetTimer>0) e.wetTimer -= dt;
     if(e.stunTimer>0){ e.stunTimer-=dt; e.channel = null; e.bossCharge = null; continue; } // aturdir interrumpe canalizaciones/embestidas
     if(e.slowTimer>0) e.slowTimer-=dt; else e.slowAmt=0;
     if(e.burnTimer>0){ e.burnTimer-=dt; e.hp -= e.burnDmg*dt/1000; if(e.hp<=0){ killEnemy(e); continue; } }
@@ -110,6 +114,7 @@ function update(dt){
     // El enemigo persigue al héroe vivo más cercano (jugador o aliado), salvo que esté provocado
     let tgt;
     if(e.tauntedBy && e.tauntedBy.alive && e.tauntTimer>0){ tgt = e.tauntedBy; e.tauntTimer -= dt; }
+    else if(e.role==="cazador") tgt = roleHunterTarget(e) || nearestHeroTo(e.x, e.y); // va por el más frágil
     else { tgt = arenaHas("enemyTarget") ? arenaHook("enemyTarget", e) : nearestHeroTo(e.x, e.y); }
     if(!tgt) continue;
     const dx = tgt.x-e.x, dy = tgt.y-e.y;
@@ -121,6 +126,8 @@ function update(dt){
       e.bossWind.t += dt;
       if(e.bossWind.t >= e.bossWind.dur){ const w = e.bossWind; e.bossWind = null; w.fn(); }
     }
+    // Roles enemigos (js/enemies/enemy-roles.js): sanador, suicida, artillero... true = ya actuó.
+    if(e.role){ roleAnnounce(e); if(updateEnemyRole(e, dt, tgt, dist)) continue; }
 
     // ---- Jefes finales: director de fases y rotación de ataques (js/skills/boss-patterns.js).
     // El Leviatán además orbita el borde (su bloque de más abajo). ----
@@ -180,7 +187,7 @@ function update(dt){
       if(!e.bossWind && !e.channel && e.escarchaCd<=0 && dist < 220){
         e.escarchaCd = 7500;
         const R = 170, Rinner = 80;
-        bossWindup(e, 600, "bossGroundSlam", {shape:0, r:R, rgb:"150,220,255"}, ()=>{
+        bossWindup(e, 900, "bossGroundSlam", {shape:0, r:R, rgb:"150,220,255"}, ()=>{ // 0,9 s: norma de aviso de élite (antes 0,6 s, con aturdido en el anillo interior)
           e.attackAnim = 500;
           const targets = [player, ...allies].filter(h=>h.alive);
           for(const h of targets){
@@ -420,14 +427,17 @@ function update(dt){
       continue;
     }
 
-    const spd = e.bossWind ? 0 : e.speed*(1-e.slowAmt); // se planta mientras carga un golpe telegrafiado
+    const cmd = roleCommandBuff(e) ? ROLE_CFG.comandante : null; // un Comandante cerca: más rápidos y más fuertes
+    const spd = e.bossWind ? 0 : e.speed*(1-e.slowAmt)*(cmd ? 1+cmd.spdBuff : 1); // se planta mientras carga un golpe telegrafiado
     if(e.ranged){
       if(dist > e.range*0.7){
         aidEnemyStep(e, dx, dy, dist, spd, dt); // rodea muros/obstáculos si la arena los tiene
       }
       e.atkCd -= dt;
       if(dist <= e.range && e.atkCd<=0){
+        const d0 = e.dmg; if(cmd) e.dmg = d0*(1+cmd.dmgBuff);
         e.atkCd = enemyRangedAttack(e, tgt, dx, dy, dist); // cada familia dispara a su manera (ranged-styles.js)
+        e.dmg = d0;
       }
     } else {
       if(dist > e.radius+tgt.radius-4){
@@ -437,7 +447,7 @@ function update(dt){
       if(dist <= e.radius+tgt.radius+6 && e.atkCd<=0){
         e.atkCd = 900;
         e.attackAnim = 280;
-        damageHero(tgt, e.dmg*(e.basicMult||1), e);
+        damageHero(tgt, e.dmg*(e.basicMult||1)*(cmd ? 1+cmd.dmgBuff : 1), e);
       }
     }
   }
@@ -477,6 +487,8 @@ function update(dt){
   updateRevives(dt);
   ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);
+  updateEmergency(dt); // curación de emergencia: la parte que entra de a poco
+  updateBreakables(dt); // urnas, barriles, ánforas... (breakables.js)
   updateFireWalls(dt);
   updateTraps(dt);
   updateAxiomZones(dt);
@@ -495,7 +507,8 @@ function update(dt){
     // El nivel de cuenta de los héroes acorta más este intervalo (partyLevelScale) -sobre
     // el piso ya reducido a 560ms-, para que una cuenta veterana enfrente más enemigos por
     // minuto sin depender solo del nivel de la arena en esta partida puntual.
-    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1));
+    updatePacing(dt); // montaña rusa del nivel: calentamiento, oleada con aviso, respiro, clímax (pacing.js)
+    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1)) * pacingIntervalMult();
     if(spawnTimer<=0 && !activeChampion){
       spawnTimer = spawnInterval;
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo
@@ -503,7 +516,7 @@ function update(dt){
       // más sensación de horda desde temprano). Se reduce a 1 desde el nivel 4 en adelante, así
       // que NO afecta el ritmo ya calibrado de niveles medios/tardíos ni la curva de dificultad.
       const burstSize = runLevel<=1 ? 3 : (runLevel<=3 ? 2 : 1);
-      for(let i=0;i<burstSize;i++) spawnEnemy(pickFromPool(spawnPoolFor(runLevel)), false);
+      for(let i=0;i<burstSize;i++) maybeAssignRole(spawnEnemy(pickFromPool(spawnPoolFor(runLevel)), false));
     } else if(spawnTimer<=0){
       spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el campeón caiga
     }
@@ -575,7 +588,7 @@ function updateControlledHero(dt){
     player.animT += dt;
   }
   // objetos/sets/rendimiento de TODO el equipo: una sola vez por cuadro (no por cada invitado)
-  if(!player.isRemote) for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); samplePerformance(h, dt); }
+  if(!player.isRemote){ for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); updateUniquePowers(h, dt); samplePerformance(h, dt); } updateMythicGrounds(dt); updateUniqueFissures(dt); }
   if(player.attackAnim>0) player.attackAnim -= dt;
   if(player.hurtTimer>0) player.hurtTimer -= dt;
   if(basicHeld) triggerBasic(player);
@@ -588,7 +601,7 @@ function updateControlledHero(dt){
   if(runStats.regenPct>0 && player.alive) player.hp = Math.min(player.maxHp, player.hp + player.maxHp*runStats.regenPct*arenaRuleHealMult()*dt/1000);
   if(player.shieldTimer>0){ player.shieldTimer-=dt; if(player.shieldTimer<=0) player.shield=0; }
   if(player.stats) sampleTankPresence(player, dt);
-  if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp-=player.pendingHpBonus; player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
+  if(player.buffTimer>0){ player.buffTimer-=dt; if(player.buffTimer<=0){ player.buffDmgMult=1; player.buffAtkSpeedMult=1; player.buffLifesteal=0; player.buffDefMult=1; player.buffBleedOnHit=false; player.spinDurationMult=1; player.colossalTimer=0; if(player.pendingHpBonus){ player.maxHp=Math.max(1,player.maxHp-player.pendingHpBonus); player.hp=Math.min(player.hp,player.maxHp); player.pendingHpBonus=0; } } }
   if(player.furyArmorTimer>0){
     player.furyArmorTimer -= dt;
     if(Math.random()<0.55) particles.push({x:player.x+(Math.random()-0.5)*22, y:player.y-8+(Math.random()-0.5)*12, vx:(Math.random()-0.5)*14, vy:-16-Math.random()*12, life:320, color:Math.random()<0.5?"#c62828":"#1a1414"});

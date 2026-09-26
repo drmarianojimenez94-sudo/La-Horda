@@ -59,6 +59,37 @@ function micEdgePoint(a, m){
   const ex = Math.cos(a)*E.rx*k, ey = Math.sin(a)*E.ry*k, l = Math.hypot(ex, ey)||1;
   return {x:E.cx + ex - ex/l*(m||0), y:E.cy + ey - ey/l*(m||0)};
 }
+// HONGOS SÓLIDOS: las hileras grandes, las lámparas altas, los pilares y los hongos gigantes de la
+// Madre se veían como paredes pero se atravesaban. Ahora chocan en la BASE del tallo (círculos
+// chicos, contra medio radio del cuerpo como el capullo). Con los nodos a >= 92 u entre sí, el
+// alcance máximo de cada hongo (30 u) deja siempre un paso >= 28 u: nunca cierran un bolsillo.
+const MIC_SOLID_SHAPE = { pillar:[[0,20]], lamp:[[0,12]], grove:[[-14,12],[0,12],[14,12]], row:[[-10,10],[10,10]] };
+const MIC_SOLID_STATES = [0,0,1,1,1,1,0,0]; // GROWN, MATURE, SPORE, WITHERED
+let _micSolids = [], _micSolidsKey = "";
+function micSolids(){
+  if(!micS) return _micSolids;
+  let key = micS.nodes||"";
+  for(const g of micS.giants) key += "|" + g.x + (g.t > 1300 && g.t < g.d - 1200 ? "+" : "-");
+  if(key === _micSolidsKey) return _micSolids;
+  _micSolidsKey = key; _micSolids = [];
+  const nodes = micS.nodes||"";
+  for(let i=0;i<MIC_NODES.length && i<nodes.length;i++){
+    const n = MIC_NODES[i], sh = MIC_SOLID_SHAPE[n.kind]; if(!sh) continue;
+    if(!MIC_SOLID_STATES[nodes.charCodeAt(i) - 48]) continue;
+    for(const c of sh) _micSolids.push({x:n.x + c[0]*n.s*(n.flip ? -1 : 1), y:n.y, r:c[1]*n.s});
+  }
+  for(const g of micS.giants){ if(g.t > 1300 && g.t < g.d - 1200) _micSolids.push({x:g.x, y:g.y, r:24}); }
+  return _micSolids;
+}
+function micPushSolids(ent){
+  const half = ent.radius ? Math.min(ent.radius, 30)*0.5 : 8;
+  for(const c of micSolids()){
+    const dx = ent.x - c.x, dy = ent.y - c.y, R = c.r + half;
+    if(Math.abs(dx) > R || Math.abs(dy) > R) continue;
+    const d = Math.hypot(dx, dy);
+    if(d < R){ const l = d || 1; ent.x = c.x + (d ? dx/l : 1)*R; ent.y = c.y + (d ? dy/l : 0)*R; }
+  }
+}
 function micClamp(ent){
   if(!ent || ent.micStatic) return;
   const E = MIC_MAP.ell, P = MIC_MAP.pod, m = 6;
@@ -69,6 +100,7 @@ function micClamp(ent){
     const px = ent.x - P.x, py = ent.y - P.y, d = Math.hypot(px, py), R = P.r + (ent.radius ? Math.min(ent.radius, 30)*0.5 : 8);
     if(d < R){ const l = d || 1; ent.x = P.x + (d ? px/l : 0)*R; ent.y = P.y + (d ? py/l : 1)*R; }
   }
+  if(!(ent.rank==="jefe" || ent.structure || (ent.radius||0) > 60)) micPushSolids(ent); // los grandes pasan por encima
 }
 function micNavBlocked(x, y){ return !micInside(x, y, 14); }
 function micRand(a, b){ return a + Math.random()*(b - a); }

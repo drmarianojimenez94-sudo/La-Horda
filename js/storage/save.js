@@ -25,7 +25,7 @@ function mkEquipment(){
 function mkChampion(unlocked){
   return {level:1, xp:0, talentPoints:0, unlocked: unlocked!==false,
     skillMastery:[mkMastery(),mkMastery(),mkMastery()], ultMastery:mkMastery(),
-    inventory:[], equipment:mkEquipment(),
+    equipment:mkEquipment(), // uid de lo que lleva puesto; los objetos viven en save.stash (inventario de la cuenta)
     talents: mkTalentState()};
 }
 // Saves de antes del rediseño de rarezas usaban ["comun","magico","raro","legendario","mitico","unico"];
@@ -57,7 +57,10 @@ function defaultSave(){
     starterChosen:false,    // todavía no eligió su campeón de regalo (pantalla "Tu primer campeón")
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
-    lootPity:{legendario:0, set:0, mitico:0} // protección suave contra la mala suerte (oculta), ver js/data/loot.js
+    lootPity:{legendario:0, set:0, mitico:0, unico:0}, // protección suave contra la mala suerte (oculta), ver js/data/loot.js
+    stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los campeones): ver js/systems/items.js
+    collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
+    shop:null               // ofertas de objetos del día (js/systems/shop.js)
   };
 }
 let save = defaultSave();
@@ -93,7 +96,8 @@ function _loadSaveInner(){
         const merged = Object.assign({}, base, loaded);
         merged.skillMastery = [0,1,2].map(i => Object.assign(mkMastery(), (loaded.skillMastery||[])[i] || {}));
         merged.ultMastery = Object.assign(mkMastery(), loaded.ultMastery || {});
-        merged.inventory = (loaded.inventory || []).map(it => needsRarityMigration ? migrateItemRarity(it) : it);
+        merged._legacyInventory = (loaded.inventory || []).map(it => needsRarityMigration ? migrateItemRarity(it) : it);
+        delete merged.inventory;
         merged.equipment = Object.assign(mkEquipment(), loaded.equipment || {});
         // Migración segura de saves viejos sin árbol de talentos: defaults vacíos, nunca
         // undefined (evita errores al leer nodes/picks/masteryNodes de una partida anterior).
@@ -106,6 +110,7 @@ function _loadSaveInner(){
         };
         save.champions[k] = merged;
       });
+      migrateToAccountStash(parsed);
       save.relics = Object.assign(defaultSave().relics, parsed.relics||{});
       save.arenasCleared = Object.assign(defaultSave().arenasCleared, parsed.arenasCleared||{});
       // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
@@ -131,6 +136,36 @@ function _loadSaveInner(){
       if(needsRarityMigration) persist();
     }
   }catch(e){ save = defaultSave(); }
+}
+// Inventario de la cuenta (stashV1): antes cada campeón tenía su propio inventario. Se juntan todos
+// en save.stash sin perder nada (aunque pase los 30 espacios: solo se frena el botín nuevo hasta
+// vender/descartar). Los objetos procedurales pasan a ser universales. Los "Únicos de prueba"
+// ([PLACEHOLDER]) se convierten en Legendarios: un Único real es un jackpot diseñado a mano.
+function migrateToAccountStash(parsed){
+  const stash = Array.isArray(parsed.stash) ? parsed.stash.filter(Boolean) : [];
+  const seen = new Set(stash.map(it=>it.uid));
+  for(const k in save.champions){
+    const c = save.champions[k];
+    for(const it of (c._legacyInventory||[])){ if(it && !seen.has(it.uid)){ stash.push(it); seen.add(it.uid); } }
+    delete c._legacyInventory;
+  }
+  for(const it of stash){
+    if(!it.designed) it.champion = null;
+    if(it.placeholder && it.rarity==="unico"){
+      it.rarity = "legendario"; it.placeholder = false; it.value = RARITY_VALUES[it.type].legendario; it.mythicPassive = null;
+      it.name = (typeof proceduralItemName==="function") ? proceduralItemName(it.type, "legendario", it.legendProc) : "Legendario";
+    }
+  }
+  // equipo que apunte a objetos inexistentes -> vacío; un objeto en dos campeones -> se queda en el primero
+  const used = new Set();
+  for(const k in save.champions){
+    const eq = save.champions[k].equipment;
+    for(const sl in eq){ const uid = eq[sl]; if(!uid) continue; if(!seen.has(uid) || used.has(uid)) eq[sl] = null; else used.add(uid); }
+  }
+  save.stash = stash;
+  save.collection = Object.assign({}, parsed.collection||{});
+  save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, parsed.lootPity||{});
+  if(!parsed.stashV1){ save.stashV1 = true; for(const it of stash) if(typeof collectionRegister==="function") collectionRegister(it, true); persist(); }
 }
 function campaignReset(raw){
   try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeCampania")) localStorage.setItem(SAVE_KEY+"_antesDeCampania", raw); }catch(e){}

@@ -11,6 +11,8 @@ function updateFireWalls(dt){
   for(const fw of fireWalls){
     fw.timer -= dt;
     fw.tick -= dt;
+    // Único "Fuego del Vacío": el muro sigue al Mago (y se ve violeta)
+    if(fw.src && fw.src.alive && heroUniqueKey(fw.src)==="uniq_archimago"){ fw.x += (fw.src.x-fw.x)*Math.min(1, dt/260); fw.y += (fw.src.y-fw.y)*Math.min(1, dt/260); fw.voidFire = true; }
     if(fw.tick<=0){
       fw.tick = fw.tickInterval;
       for(const e of enemies){
@@ -37,6 +39,7 @@ function drawFireWall(fw){
   const dying = fw.timer < 350;
   ctx.save();
   ctx.globalAlpha = alpha;
+  if(fw.voidFire) ctx.filter = "hue-rotate(245deg) saturate(1.4)"; // Único "Fuego del Vacío" (donde el navegador lo soporte)
   // Sprites reales del paquete "Muro de Fuego": se reparten llamas individuales a lo largo de
   // la circunferencia del anillo (la habilidad es un aro, no un muro recto). Más llamas y más
   // grandes cuanto mayor el talento invertido — así se nota mucho más al subir de nivel.
@@ -49,7 +52,15 @@ function drawFireWall(fw){
     const t = animName==="formacion" ? ageSec : (now + i*0.11);
     MuroFuego.draw(ctx, animName, t, fx, fy, flameSize);
   }
-  if(tier>=3 && !dying){
+  ctx.filter = "none";
+  if(fw.voidFire && !dying){
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    const gv = ctx.createRadialGradient(fw.x, fw.y, fw.innerR*0.4, fw.x, fw.y, fw.outerR+26);
+    gv.addColorStop(0, "rgba(150,80,255,0.22)"); gv.addColorStop(1, "rgba(150,80,255,0)");
+    ctx.fillStyle = gv; ctx.fillRect(fw.x-fw.outerR-30, fw.y-fw.outerR-30, (fw.outerR+30)*2, (fw.outerR+30)*2);
+    ctx.restore();
+  }
+  if(tier>=3 && !dying && !fw.voidFire){
     // resplandor cálido de fondo en niveles altos de talento
     ctx.save();
     ctx.globalCompositeOperation = "lighter";

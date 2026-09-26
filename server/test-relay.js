@@ -58,6 +58,31 @@ function client(){
   check("relay.host_to_one", !!o3);
   let leaked = false; try{ await guests[0].wait(m => m.t === "msg" && m.d.k === "only3", 300); leaked = true; }catch(e){}
   check("relay.not_leaked", !leaked);
+  // chat de la sala: llega a todos, se sanea, anti-spam, repetidos, historial al reconectar, silenciar
+  for (const c of [host, ...guests]) c.inbox.length = 0;
+  guests[0].send({ t: "chat", text: "  hola   <b>equipo</b>  " });
+  const ch = await Promise.all([host, ...guests].map(c => c.wait(m => m.t === "chat")));
+  check("chat.llega_a_todos_y_saneado", ch.every(m => m.m.text === "hola bequipo/b" && m.m.from === 1 && m.m.name === "Facundo"), ch[0].m);
+  guests[0].send({ t: "chat", text: "otra" });
+  check("chat.anti_spam_intervalo", (await guests[0].wait(m => m.t === "error")).code === "CHAT_SLOW");
+  await new Promise(r => setTimeout(r, 850));
+  guests[0].send({ t: "chat", text: "HOLA bequipo/b" });
+  check("chat.repetido_bloqueado", (await guests[0].wait(m => m.t === "error")).code === "CHAT_DUP");
+  guests[1].send({ t: "chat", text: "x".repeat(400) });
+  const long = await host.wait(m => m.t === "chat" && m.m.from === 2);
+  check("chat.largo_maximo_120", long.m.text.length === 120);
+  let burst = 0; for (let i = 0; i < 7; i++){ guests[2].send({ t: "chat", text: "m" + i }); await new Promise(r => setTimeout(r, 820)); }
+  await new Promise(r => setTimeout(r, 100)); burst = host.inbox.filter(m => m.t === "chat" && m.m.from === 3).length;
+  check("chat.rafaga_maxima_5_en_10s", burst === 5, burst);
+  host.send({ t: "mute", slot: 1, on: true });
+  await host.wait(m => m.t === "room" && m.room.slots[1] && m.room.slots[1].muted);
+  await new Promise(r => setTimeout(r, 850));
+  guests[0].send({ t: "chat", text: "me silenciaron?" });
+  check("chat.silenciado_por_el_anfitrion", (await guests[0].wait(m => m.t === "error")).code === "CHAT_MUTED");
+  guests[1].send({ t: "mute", slot: 3, on: true });
+  check("chat.solo_el_anfitrion_silencia", (await guests[1].wait(m => m.t === "error")).code === "NOT_HOST");
+  host.send({ t: "mute", slot: 1, on: false });
+  await host.wait(m => m.t === "room" && m.room.slots[1] && !m.room.slots[1].muted);
   // start: sala bloqueada
   host.send({ t: "start" });
   await host.wait(m => m.t === "room" && m.room.state === "playing");
@@ -70,6 +95,7 @@ function client(){
   back.send({ t: "join", protocol: 1, code, name: "Tercero", clientId: "G2", build: "b1" });
   const rj = await back.wait(m => m.t === "joined" || m.t === "error");
   check("reconnect.same_slot", rj.t === "joined" && rj.slot === 3 && rj.reconnect, rj);
+  check("chat.historial_al_reconectar", Array.isArray(rj.chat) && rj.chat.length >= 3 && rj.chat.length <= 20, rj.chat && rj.chat.length);
   // en partida, LISTO no cuenta (se marca en la sala)
   guests[1].send({ t: "update", ready: true });
   const rp = await host.wait(m => m.t === "room" && m.room.slots[2]);

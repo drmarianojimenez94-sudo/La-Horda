@@ -74,7 +74,7 @@ function makeHero(classKey, isBot, spawnX, spawnY, levelOverride, isDivineFoe){
     sylvaCharging:false, sylvaChargeTimer:0, sylvaTrapBurstTimer:0, sylvaTrapBurstBonus:0,
     wildHuntTimer:0, wildHuntMaxTimer:0, wolf:null,
     // Nigromante:
-    skeletons:[], golem:null, nigroCastKind:null, nigroGraveyard:[],
+    skeletons:[], golem:null, nigroCastKind:null, nigroGraveyard:[], nigroSouls:0, nigroPact:false, nigroRaiseT:0,
     nigroTransformTimer:0, nigroDemonForm:false, nigroDemonTimer:0, nigroDemonMaxTimer:0,
     nigroAbsorbedSkeletons:0, nigroAbsorbedGolem:false, nigroGolemSkin:"stone",
     // Fase 2 — evaluación de desempeño por rol: contadores que se acumulan durante la partida

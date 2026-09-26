@@ -157,7 +157,13 @@ function fortAIBronce(e, dt, tgt, dist){
     });
     return true;
   }
-  if(!e.bossWind && e.atkCd2 <= 0 && dist < 240 && !(e.retreat>0)){ e.dive = {t:0}; playSfx("fortWing"); return true; }
+  // picada: antes era instantánea (solo el sonido de alas). Ahora avisa 0,45 s con una línea hacia su
+  // objetivo (regla de avisos: ataque rápido 0,4-0,7 s), y se puede esquivar corriéndose de la línea.
+  if(!e.bossWind && e.atkCd2 <= 0 && dist < 240 && !(e.retreat>0)){
+    e.atkCd2 = 1e6; playSfx("fortWing");
+    bossWindup(e, 450, "bossCast", {shape:2, r:14, len:Math.min(260, dist + 40), aimAt:tgt, rgb:"255,190,110"}, ()=>{ e.dive = {t:0}; e.atkCd2 = 0; });
+    return true;
+  }
   // órbita a media distancia (acoso): se acerca/aleja y rodea
   if(e.retreat>0) e.retreat -= dt;
   const want = e.retreat>0 ? C.keepMax : (C.keepMin + C.keepMax)/2;

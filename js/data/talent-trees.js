@@ -985,7 +985,7 @@ TALENT_TREES.cazadora = {
 TALENT_TREES.nigromante = {
   masteryRequirement: 8,
   nodes: [
-    // ---- RAMA: SEÑOR DE LOS MUERTOS (Levantar Esqueletos) ----
+    // ---- RAMA: SEÑOR DE LOS MUERTOS (Cosecha de Almas + esqueletos) ----
     {id:"ng_ske_c1", branch:"esqueletos", type:"common", maxRank:3, cost:1, requires:null,
       name:"Huesos Reforzados", desc:"Los esqueletos invocados tienen más vida.",
       rankDesc:r=>`+${r*10}% vida de los esqueletos`,
@@ -995,14 +995,14 @@ TALENT_TREES.nigromante = {
       rankDesc:r=>`+${r*8}% daño de los esqueletos`,
       mods:r=>[{targetSkill:0, flag:"skeletonDmgPct", value:0.08*r}]},
     {id:"ng_ske_c3", branch:"esqueletos", type:"common", maxRank:3, cost:1, requires:"ng_ske_c2",
-      name:"Levantamiento Rápido", desc:"Levantar Esqueletos reduce su propio cooldown.",
-      rankDesc:r=>`-${r*4}% cooldown de Levantar Esqueletos`,
+      name:"Levantamiento Rápido", desc:"Cosecha de Almas reduce su propio cooldown.",
+      rankDesc:r=>`-${r*4}% cooldown de Cosecha de Almas`,
       mods:r=>[{targetSkill:0, key:"cdMult", value:-0.04*r}]},
     {id:"ng_ske_s1", branch:"esqueletos", type:"special", maxRank:3, cost:4, requires:"ng_ske_c3",
       name:"Vínculo Profano", desc:"Cada esqueleto vivo aumenta ligeramente el daño mágico del Nigromante.",
       rankDesc:r=>`+${(r*0.6).toFixed(1)}% daño por esqueleto vivo`,
       mods:r=>[{targetSkill:0, flag:"skeletonDmgAuraPct", value:0.006*r}]},
-    // ---- RAMA: MAESTRO DE GOLEMS (Crear Golem) ----
+    // ---- RAMA: MAESTRO DE GOLEMS (Gólem de Carne) ----
     {id:"ng_gol_c1", branch:"golem", type:"common", maxRank:3, cost:1, requires:null,
       name:"Núcleo Reforzado", desc:"El gólem invocado tiene más vida.",
       rankDesc:r=>`+${r*10}% vida del gólem`,
@@ -1012,8 +1012,8 @@ TALENT_TREES.nigromante = {
       rankDesc:r=>`+${r*8}% daño del gólem`,
       mods:r=>[{targetSkill:1, key:"powerMult", value:0.08*r}]},
     {id:"ng_gol_c3", branch:"golem", type:"common", maxRank:3, cost:1, requires:"ng_gol_c2",
-      name:"Invocación Rápida", desc:"Crear Golem reduce su propio cooldown.",
-      rankDesc:r=>`-${r*4}% cooldown de Crear Golem`,
+      name:"Invocación Rápida", desc:"Gólem de Carne reduce su propio cooldown.",
+      rankDesc:r=>`-${r*4}% cooldown de Gólem de Carne`,
       mods:r=>[{targetSkill:1, key:"cdMult", value:-0.04*r}]},
     {id:"ng_gol_s1", branch:"golem", type:"special", maxRank:3, cost:4, requires:"ng_gol_c3",
       name:"Paso Pesado", desc:"El gólem golpea con un área un poco mayor.",
@@ -1046,8 +1046,8 @@ TALENT_TREES.nigromante = {
           rankDesc:r=>`+${r*15}% vida y daño de los esqueletos`,
           mods:r=>[{targetSkill:0, flag:"skeletonHpPct", value:0.15*r}, {targetSkill:0, flag:"skeletonDmgPct", value:0.15*r}]},
         {id:"ng_m_ske_2", maxRank:2, cost:4, requires:null, name:"Ejército sin Fin",
-          desc:"Levantar Esqueletos reduce mucho su propio cooldown.",
-          rankDesc:r=>`-${r*8}% cooldown de Levantar Esqueletos`,
+          desc:"Cosecha de Almas reduce mucho su propio cooldown.",
+          rankDesc:r=>`-${r*8}% cooldown de Cosecha de Almas`,
           mods:r=>[{targetSkill:0, key:"cdMult", value:-0.08*r}]},
         {id:"ng_m_ske_3", maxRank:1, cost:6, requires:null, name:"Legión Eterna",
           desc:"Los esqueletos caídos tienen una probabilidad de resucitar solos tras un tiempo -limitado para que el ejército nunca crezca sin límite-.",

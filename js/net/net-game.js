@@ -116,7 +116,8 @@ const NET_COLLS = {
   iceWalls:          [()=>iceWalls, a=>{ iceWalls = a; }],
   activeAxiomVfx:    [()=>activeAxiomVfx, a=>{ activeAxiomVfx = a; }],
   musashiAfterimages:[()=>musashiAfterimages, a=>{ musashiAfterimages = a; }],
-  champFx:           [()=>champFx, a=>{ champFx = a; }] // El Libertador / Eren: zonas, avisos de pisada, jinetes, escarcha
+  champFx:           [()=>champFx, a=>{ champFx = a; }], // El Libertador / Eren: zonas, avisos de pisada, jinetes, escarcha
+  breakables:        [()=>breakables, a=>{ breakables = a; }] // urnas, barriles, ánforas que estallan contra la horda
 };
 // Estado global de la partida (no-entidades) que los invitados necesitan para HUD/dibujo.
 const NET_GLOBALS = {
@@ -136,7 +137,7 @@ const NET_GLOBALS = {
 /* ---------------- eventos visuales/sonoros (se graban en el anfitrión, se repiten en los invitados) ---------------- */
 const NET_EVENT_FNS = ["floatText","showBanner","playSfx","vfxBurst","vfxConverge","vfxShock","vfxTelegraph","vfxSprite","vfxShake",
   "vfxOnDeath","flashScreen","pushChainBolt","pushSpark","pushAsesinoFx","bossHudShow","bossHudHide","bossHudHint","bossHudPhase",
-  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard"];
+  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard","addDecal","goreChunks"];
 const NET_INLINE_EVENTS = new Set(["vfxOnDeath","bossHudShow"]); // su entidad puede no haber llegado nunca al invitado
 const NET_ORIG = {};
 let _netRecDepth = 0, _netEvents = [];
@@ -231,7 +232,7 @@ function netPickBots(humanChamps, n){
 function netBuildLoadout(){
   const k = selectedClass, c = save.champions[k];
   const eq = Object.assign(mkEquipment(), c.equipment||{});
-  const items = (c.inventory||[]).filter(it=>Object.values(eq).includes(it.uid));
+  const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items};
 }
@@ -241,7 +242,7 @@ function netLoadoutRecord(L){
   if(Array.isArray(L.skillMastery)) rec.skillMastery = [0,1,2].map(i=>Object.assign(mkMastery(), L.skillMastery[i]||{}));
   if(L.ultMastery) rec.ultMastery = Object.assign(mkMastery(), L.ultMastery);
   if(L.talents) rec.talents = Object.assign(mkTalentState(), L.talents);
-  rec.inventory = Array.isArray(L.items) ? L.items.slice(0, 6) : [];
+  rec.loadoutItems = Array.isArray(L.items) ? L.items.slice(0, 6) : []; // sus objetos equipados (ver itemPoolFor)
   rec.equipment = Object.assign(mkEquipment(), L.equipment||{});
   return rec;
 }
@@ -374,6 +375,8 @@ function netHostOnMsg(from, d){
       netWithHero(h, ()=>{ if(useSkill(d.idx|0, d.aim||null)) netEmitTo(from, "useXp", [d.idx|0]); });
       return;
     case "ult": if(state==="playing" && h.alive) netWithHero(h, ()=> useUltimate()); return;
+    case "pact": if(state==="playing" && h.alive) nigroTogglePact(h); return; // Nigromante invitado
+    case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(d.aim||null); });
@@ -652,7 +655,7 @@ function netGuestOnMsg(from, d){
 // Cada cuadro del invitado (reemplaza a update(): no hay simulación local de la partida).
 function netGuestUpdate(dt){
   runElapsedMs += dt;
-  vfxFrame(dt); vfxUpdate(dt); updateFloatTexts(dt);
+  vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
   if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si

@@ -342,3 +342,19 @@
   #tut-panel .tut-text{ font-size:0.9rem; }
   #tut-panel .tut-goal{ font-size:0.92rem; margin-top:2px; }
 }
+
+/* Botones secundarios (Pacto del Nigromante, curación de emergencia): chicos y separados de las habilidades */
+.ability-btn.sec{ width:42px; height:42px; font-size:0.5rem; border-color:#4a6a4a; opacity:0.75; }
+.ability-btn.sec .ico{ font-size:1rem; }
+/* curación de emergencia: abajo a la izquierda de las habilidades, lejos del ataque básico */
+.ability-btn.emerg{ right:calc(158px + env(safe-area-inset-right,0px)); bottom:calc(12px + env(safe-area-inset-bottom,0px)); border-color:#2f6b40; opacity:0.35; }
+.ability-btn.emerg.ready{ opacity:1; border-color:#6fdc8c; box-shadow:0 0 10px rgba(111,220,140,0.5); }
+.ability-btn.emerg.urgent{ animation:reviveBtnPulse 0.9s ease-in-out infinite; }
+.ability-btn.emerg.spent .ico{ filter:grayscale(1); }
+.ability-btn.pact{ right:calc(158px + env(safe-area-inset-right,0px)); bottom:calc(130px + env(safe-area-inset-bottom,0px)); }
+.ability-btn.pact.ready{ opacity:1; border-color:#5ae68c; box-shadow:0 0 12px rgba(90,230,140,0.55); }
+.ability-btn.pact.armed{ opacity:1; border-color:#b8ffcf; background:radial-gradient(circle at 35% 30%, #1e5a34, #0a1a10 75%); box-shadow:0 0 20px rgba(90,230,140,0.95); animation:ultPulse 0.9s ease-in-out infinite; }
+#nigro-souls-pips{ letter-spacing:1px; font-size:0.62rem; }
+#nigro-souls-pips i{ display:inline-block; width:6px; height:9px; margin-right:1px; background:#1e3a28; border:1px solid #2e5a3c; }
+#nigro-souls-pips i.on{ background:#5ae68c; border-color:#b8ffcf; box-shadow:0 0 4px #5ae68c; }
+#nigro-souls-pips i.pact{ border-color:#ffe36a; }

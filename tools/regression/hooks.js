@@ -28,7 +28,7 @@ window.__T = {
   discard:(uid)=>discardItem(player.classKey,uid),
   fuse:(uids)=>fuseItems(player.classKey,uids),
   fusableGroups:()=>fusableGroups(player.classKey).map(g=>({type:g[0].type,rarity:g[0].rarity,n:g.length,uids:g.map(i=>i.uid)})),
-  inv:()=>({len:save.champions[player.classKey].inventory.length, items:save.champions[player.classKey].inventory.map(it=>({uid:it.uid,type:it.type,rarity:it.rarity,set:it.set||null,skillOvercap:it.skillOvercap||null,designed:!!it.designed})), equipment:Object.assign({},save.champions[player.classKey].equipment)}),
+  inv:()=>({len:stashItems().length, items:stashItems().map(it=>({uid:it.uid,type:it.type,rarity:it.rarity,set:it.set||null,skillOvercap:it.skillOvercap||null,designed:!!it.designed})), equipment:Object.assign({},save.champions[player.classKey].equipment)}),
   overcap:(skillKey)=>itemSkillOvercap(player.classKey, skillKey===undefined?0:skillKey),
   setProgress:(setId)=>setProgressFor(player.classKey,setId),
   gold:()=>save.gold,

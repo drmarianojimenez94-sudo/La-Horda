@@ -159,12 +159,25 @@ se llama `cazadora`. Las carpetas de assets usan esos nombres internos.
 | Calificación personal por rol (C/B/A/S/S+) | `js/systems/performance.js` | `PERF_ROLES`, `PERF_GRADES` |
 | Sets (piezas, bonus 2/3/completo) y su comportamiento en combate | `js/data/sets.js`, `js/systems/set-effects.js` | `SET_DB`, `set*` hooks |
 | Viewport del juego / escala de cámara | `js/core/constants.js`, `js/core/canvas.js` | `VIEW_WORLD_SHORT`, `VIEW_WORLD_LONG_MAX` |
+| Roles enemigos (sanador, invocador, suicida...): chance por nivel, pool por arena, topes | `js/enemies/enemy-roles.js` | `ROLE_CFG`, `ROLE_CHANCE_BY_LEVEL`, `ROLE_POOL_BY_ARENA` |
+| Ritmo del nivel (oleada, respiro, clímax) y curación de emergencia | `js/systems/pacing.js` | `PACE_PHASES`, `PACE_SURGE`, `EMERG_CFG` |
+| Reacciones entre estados y resistencias por arena/tipo | `js/systems/reactions.js` | `REACTION_CFG`, `ENEMY_ARENA_RESIST`, `ENEMY_TYPE_RESIST` |
+| Evolución de habilidades (Nv. 3/5/7/10) y proyectil de cada campeón | `js/systems/skill-evolution.js` | `EVO_CFG`, `CHAMP_IDENTITY` |
+| Objetos destructibles del escenario | `js/systems/breakables.js` | `BRK_CFG` |
+| Gore: presupuesto de manchas y cadáveres | `js/rendering/gore.js` | `GORE_BUDGET` |
+| Impacto por nivel (hit-stop, retroceso, tambaleo) | `js/rendering/feedback.js` | `IMPACT_*`, `IMPACT_WEIGHT` |
+| Legendarios con nombre, Míticos de receta, Únicos | `js/data/legendaries.js` | `NAMED_LEGENDARIES`, `RECIPE_MYTHICS`, `UNIQUE_DESIGNS` |
+| Sets por campeón | `js/data/champion-sets.js`, `js/systems/champion-sets.js` | `CHAMPION_SETS` |
+| Precio de campeón, venta de objetos, inventario | `js/data/champions.js`, `js/data/items.js` | `CHAMPION_PRICE_GOLD`, `SELL_VALUE`, `INVENTORY_CAPACITY` |
+| Tienda diaria de objetos | `js/systems/shop.js` | ofertas del día |
+| Chat de la Sala (anti-spam, historial, palabras tapadas) | `server/relay.js`, `js/net/net-chat.js` | `CHAT_*`, `NET_CHAT_QUICK` |
 
-Modo campaña: ya no hay multiplicador de XP de prueba (`DEV_XP_MULT` se eliminó); la curva
-`xpToNext` está calibrada con campañas simuladas (`tools/playtest`) para terminar las 6 arenas
-cerca del nivel 40. Campeón de regalo al empezar (`js/ui/starter-select.js`), el resto en la Tienda
-a `CHAMPION_PRICE_GOLD` (1.000); el reinicio a nivel 1 es `campaignResetV1` en
-`js/storage/save.js`.
+Modo campaña: ya no hay multiplicador de XP de prueba (`DEV_XP_MULT` se eliminó) ni un "nivel objetivo"
+al terminar la campaña: `xpToNext(L) = 90 + 26·L + 0,16·L³` es rápida al principio y lenta al final
+(medido con `tools/playtest/campaign.js`, ver `LA_HORDA_PROGRESSION_ECONOMY_REPORT.md`). Campeón de
+regalo al empezar (`js/ui/starter-select.js`), el resto en la Tienda a `CHAMPION_PRICE_GOLD` (5.000); el
+reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario es de la CUENTA
+(`save.stash`, 30 lugares, migración `stashV1`) y cada campeón equipa desde ahí.
 
 ### Game feel (dónde está cada cosa)
 
@@ -176,6 +189,15 @@ a `CHAMPION_PRICE_GOLD` (1.000); el reinicio a nivel 1 es `campaignResetV1` en
 - `js/ui/hud.js` — estados de los botones (listo / activo / enfriamiento / sin recurso).
 - `js/ui/boss-hud.js` — barra grande del jefe, fases, estado, aviso del ataque en curso, guía.
 - `js/systems/item-procs.js` — efectos únicos de los legendarios en combate.
+- `js/systems/mythic-powers.js` — poderes de los Míticos y comportamiento de los Únicos.
+- `js/rendering/gore.js` — manchas, trozos, cadáveres (horneados en un canvas chico) y muertes por tipo.
+- `js/enemies/enemy-roles.js` — roles enemigos + insignia/anillo + flecha en el borde para los de apoyo.
+- `js/systems/pacing.js` — oleada con aviso de dirección, respiro, clímax; botón de curación de emergencia.
+- `js/systems/skill-evolution.js` — Firma/Ímpetu/Resonancia/Forma final y la forma de cada proyectil.
+- `js/systems/breakables.js` — urnas, barriles, ánforas... que estallan contra la horda (sin fuego amigo).
+- `js/ui/loot-ceremony.js` — cofre con ceremonia por rareza; `js/ui/inventory-ui.js` — Mi Inventario,
+  recetario y colección.
+- `js/net/net-chat.js` — chat de la Sala (el anti-spam real vive en `server/relay.js`).
 - `js/ai/bot-brain.js` — bots por rol, esquivar avisos, revivir entre ellos, marcador de caído.
 - `js/ui/title-scene.js` — ejército de héroes de la pantalla de título.
 - `js/systems/loot.js` — botín del cofre del jefe (`rollLoot` pura, `grantEndOfRunLoot`) y reforja
@@ -285,3 +307,7 @@ clásico de abajo es el que siguen las 5 arenas originales.
 - Preview por commit (iPhone): `https://rawcdn.githack.com/drmarianojimenez94-sudo/La-Horda/<commit>/index.html`
 - Local: `python3 -m http.server 8000` en la carpeta del repo → `http://localhost:8000`.
 - Batería de regresión automática: `tools/regression/` (ver su README).
+- Sistemas de esta etapa: `tools/items/` (`t_items`, `t_nigromante`, `t_reactions`, `t_roles`, `t_pacing`,
+  `t_evolution`, `t_collision`, `t_breakables`, `t_perf_exploits`, `t_hpbonus`), `server/test-relay.js` (protocolo y chat).
+- Balance con el código real: `tools/balance/lootsim2.js` (botín por carrera), `tools/playtest/campaign.js`
+  (campañas y matrices con piloto automático).

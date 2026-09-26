@@ -59,7 +59,8 @@ function addFrost(h, n){
 // Golpe de una habilidad de jefe sobre un campeón, con sus efectos de control opcionales.
 function bossHitHero(h, dmg, o){
   if(!h || !h.alive) return;
-  damageHero(h, dmg, o && o.from);
+  _avoidableHit = true;
+  try{ damageHero(h, dmg, o && o.from); } finally { _avoidableHit = false; }
   if(!h.alive || h.invulnTimer>0 || !o) return;
   if(o.slow){ h.slowAmt = Math.max(h.slowAmt||0, o.slow); h.slowTimer = Math.max(h.slowTimer||0, o.slowDur||1500); }
   if(o.stun){ h.stunTimer = Math.max(h.stunTimer||0, o.stun); }
@@ -287,7 +288,7 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
     if(e.skA<=0 && dist < 200){
       e.skA = 9000;
       const dx = e.fx, dy = e.fy, td = teleDir(dx, dy);
-      bossWindup(e, 650, "bossCast", {shape:1, r:210, dx:td.dx, dy:td.dy, arc:0.5, rgb:"150,220,255"}, ()=>{
+      bossWindup(e, 900, "bossCast", {shape:1, r:210, dx:td.dx, dy:td.dy, arc:0.5, rgb:"150,220,255"}, ()=>{ // 0,9 s (norma de élite; antes 0,65 s)
         e.channel = {dx, dy, t:0, dur:1600, r:210, cosA:Math.cos(0.5), tick:0, tickMs:200, mult:0.28, turn:0.9};
       });
       bossSkillLabel(e, "¡Lanzallamas de Hielo!");

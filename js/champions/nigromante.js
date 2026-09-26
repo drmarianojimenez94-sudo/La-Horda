@@ -109,7 +109,7 @@ function updateNigromanteSkeletons(h, dt){
         if(!e.alive) continue;
         const d = distance(sk,e);
         if(e.attackAnim>0 && d <= (e.radius||20)+30){
-          sk.hp -= (e.dmg||5); sk.hitFlash = 90;
+          sk.hp -= (e.dmg||5) * (champSetLegion(h) ? 0.85 : 1); sk.hitFlash = 90;
         }
         if(d>520) continue;
         const score = (e.cursed?100000:0) - d;
@@ -139,7 +139,7 @@ function updateNigromanteSkeletons(h, dt){
         if(sk.atkCd<=0){
           sk.atkCd = sk.ranged ? 1400 : 950;
           sk.attackAnim = 260;
-          const dmgMult = 1+(mods.skeletonDmgPct||0);
+          const dmgMult = (1+(mods.skeletonDmgPct||0)) * (champSetLegion(h) ? 1.2 : 1);
           const finalDmg = sk.dmg*runStats.dmgMult*dmgMult*arenaMods().heroDmgMult;
           if(sk.ranged){
             projectiles.push({x:sk.x,y:sk.y-10, vx:sk.fx*300, vy:sk.fy*300, dmg:finalDmg, life:1100, radius:6, color:"#7ad48a", src:h});
@@ -210,6 +210,7 @@ function killNigroGolem(h){
 function updateNigromanteGolem(h, dt){
   const g = h.golem;
   if(!g) return;
+  if(g.furyT>0) g.furyT -= dt;
   if(g.hitFlash>0) g.hitFlash -= dt;
   if(g.attackAnim>0) g.attackAnim -= dt;
   if(g.atkCd>0) g.atkCd -= dt;
@@ -246,10 +247,10 @@ function updateNigromanteGolem(h, dt){
     else {
       g.moving=false;
       if(g.atkCd<=0){
-        g.atkCd = 1500;
+        g.atkCd = g.furyT > 0 ? 1000 : 1500;
         g.attackAnim = 320;
         const sk = CLASSES.nigromante.skills[1];
-        const dmgMult = (1+mods.powerMult) * (g.skin==="fire"?1.25 : g.skin==="ice"?0.9 : 1);
+        const dmgMult = (1+mods.powerMult) * (g.skin==="fire"?1.25 : g.skin==="ice"?0.9 : 1) * (g.furyT > 0 ? 1.5 : 1);
         const finalDmg = h.baseDmg*runStats.dmgMult*sk.dmgMult*dmgMult*arenaMods().heroDmgMult;
         for(const e of enemies){
           if(!e.alive || distance(g,e) > range+18) continue;
@@ -317,4 +318,134 @@ function updateNigromanteDemonForm(h, dt){
   if(!h.nigroDemonForm) return;
   h.nigroDemonTimer -= dt;
   if(h.nigroDemonTimer<=0){ h.nigroDemonTimer=0; exitAbyssForm(h); }
+}
+
+/* ============================================================
+   NIGROMANTE — REDISEÑO: señor de un ejército + cosechador de almas + manipulador de la muerte.
+   - NECROMANCIA (pasiva): los enemigos muertos dejan cadáveres (js/rendering/gore.js). Cada ~2 s,
+     si le faltan esqueletos, el Nigromante levanta uno de un cadáver cercano (máximo según la
+     maestría de Cosecha de Almas: 2 -> 6). Sin cadáveres no hay ejército: pelear cerca de la horda
+     alimenta la legión. No hace falta un botón de invocar.
+   - COSECHA DE ALMAS (recurso, 0-10): cada baja tuya o de tu ejército suelta almas (más las
+     malditas y los élites). Tenerlas da poder: +2% de daño por alma a vos y a tu ejército.
+   - PACTO (botón ☠, o automático en los bots): gasta 5 almas y la PRÓXIMA habilidad sale
+     potenciada. Decisión: ¿poder sostenido o estallido ahora?
+       Cosecha potenciada -> nova completa, más daño, levanta 2 esqueletos al instante y te cura.
+       Gólem potenciado   -> Furia de Huesos: +50% daño y ataque 8 s y se cura 40%.
+       Plaga potenciada   -> 60% más de área y una generación extra de contagio.
+   - Sin "explosión de cadáveres": los cuerpos son materia prima del ejército y del gólem.
+   ============================================================ */
+const NIGRO_SOUL_MAX = 10, NIGRO_PACT_COST = 5, NIGRO_RAISE_MS = 2100, NIGRO_RAISE_R = 340;
+function nigroSouls(h){ return h.nigroSouls||0; }
+function nigroGainSouls(h, n, fx, fy){
+  if(!h || h.classKey!=="nigromante" || !h.alive) return;
+  const before = h.nigroSouls||0;
+  h.nigroSouls = Math.min(NIGRO_SOUL_MAX, before + n);
+  if(fx!==undefined && inView(fx, fy, 40)){
+    // el alma viaja hasta el Nigromante
+    vfxBurst(fx, fy-18, 3, "necro", 40, 380, 3, h===player?1:0, -30, 1);
+    if(h===player || Math.random()<0.4) pushChainBolt(fx, fy-20, h.x, h.y-28, 6, 260);
+  }
+  if(h===player && before < NIGRO_PACT_COST && h.nigroSouls >= NIGRO_PACT_COST) floatText(h.x, h.y-58, "☠ Pacto listo", "heal");
+}
+// +2% de daño por alma (Nigromante y todo lo que pega con src = él: esqueletos, gólem, plaga)
+function nigroSoulDmgMult(h){ return h && h.classKey==="nigromante" ? 1 + 0.02*(h.nigroSouls||0) : 1; }
+// Baja: almas para el Nigromante que la causó (o cualquier Nigromante cerca de un maldito que muere).
+function nigroOnEnemyKilled(e){
+  const k = e.lastHitBy;
+  const big = e.rank==="elite" ? 2 : (e.rank==="subjefe" ? 3 : (e.rank==="jefe" ? 5 : 1));
+  if(k && k.classKey==="nigromante") nigroGainSouls(k, big + (e.cursed?1:0), e.x, e.y);
+  else if(e.cursed && e.curseSrc && e.curseSrc.classKey==="nigromante" && distance(e.curseSrc, e) < 520) nigroGainSouls(e.curseSrc, 1, e.x, e.y);
+}
+// Pacto: armar / desarmar (botón). Se consume al lanzar la siguiente habilidad.
+function nigroTogglePact(h){
+  if(!h || h.classKey!=="nigromante") return;
+  if(!h.nigroPact && nigroSouls(h) < NIGRO_PACT_COST){ if(h===player) floatText(h.x, h.y-50, `Faltan almas (${Math.floor(nigroSouls(h))}/${NIGRO_PACT_COST})`, null); return; }
+  h.nigroPact = !h.nigroPact;
+  if(h.nigroPact){ vfxShock(h.x, h.y, 8, 50, "90,230,140", 320, h===player?1:0); if(h===player) playSfx("ready"); }
+}
+function nigroConsumePact(h){
+  if(!h.nigroPact || nigroSouls(h) < NIGRO_PACT_COST){ h.nigroPact = false; return false; }
+  h.nigroPact = false; h.nigroSouls -= NIGRO_PACT_COST;
+  if(typeof champSetOnSoulsSpent==="function") champSetOnSoulsSpent(h, NIGRO_PACT_COST);
+  vfxBurst(h.x, h.y-30, 14, "necro", 150, 500, 3.5, h===player?2:1, -30, 0);
+  vfxShock(h.x, h.y, 10, 90, "90,230,140", 420, h===player?2:1);
+  if(h===player){ floatText(h.x, h.y-66, "¡PACTO!", "crit"); playSfx("cast"); }
+  return true;
+}
+// Necromancia pasiva: levanta esqueletos de los cadáveres cercanos.
+function updateNigromantePassive(h, dt){
+  if(h.classKey!=="nigromante" || !h.alive || h.nigroDemonForm) return;
+  h.nigroRaiseT = (h.nigroRaiseT||0) - dt;
+  if(h.nigroRaiseT > 0) return;
+  h.nigroRaiseT = NIGRO_RAISE_MS * (1 - Math.min(0.4, talentSkillMods(h.classKey, 0).flags.raiseSpeedPct||0));
+  const maxCount = nigromanteMaxSkeletons(masteryOf(h.classKey, 0)) + (typeof champSetExtraSkeletons==="function" ? champSetExtraSkeletons(h) : 0);
+  if(h.skeletons.length >= maxCount) return;
+  const c = consumeCorpse(h.x, h.y, NIGRO_RAISE_R);
+  if(!c) return;
+  const comp = nigromanteSkeletonComposition(maxCount);
+  const mages = h.skeletons.filter(s=>s.type==="mage").length;
+  const type = mages < comp.mages && h.skeletons.length >= comp.warriors ? "mage" : "warrior";
+  pushChainBolt(h.x, h.y-28, c.x, c.y-10, 8, 320);
+  spawnNigroSkeleton(h, type, talentSkillMods(h.classKey, 0).flags);
+  const sk = h.skeletons[h.skeletons.length-1]; sk.x = c.x; sk.y = c.y;
+  vfxBurst(c.x, c.y-10, 8, "necro", 80, 420, 3, h===player?1:0, -30, 0);
+}
+// Cosecha de Almas (habilidad 1): cono que arranca almas; potenciada = nova + 2 esqueletos + cura.
+function nigroCastHarvest(h, sk, dmg, AREA, mastery){
+  if(h.nigroDemonForm){ if(h===player) floatText(h.x, h.y-40, "No disponible transformado", null); return; }
+  const pact = nigroConsumePact(h);
+  aimDir(h, sk.range*AREA);
+  const R = sk.range*AREA*(pact?1.1:1), cosA = pact ? -1 : Math.cos(sk.arc||1.0);
+  let hits = 0, kills = 0;
+  for(const e of enemies){
+    if(!e.alive) continue;
+    const dx = e.x-h.x, dy = e.y-h.y, d = Math.hypot(dx,dy)||1;
+    if(d > R + (e.radius||20)*0.5 || (dx/d)*h.fx + (dy/d)*h.fy < cosA) continue;
+    const wasAlive = e.alive;
+    damageEnemy(e, dmg*(pact?1.8:1), {src:h, slow:sk.slow, slowDur:1200});
+    hits++; if(wasAlive && !e.alive) kills++;
+    if(hits <= 6) pushChainBolt(e.x, e.y-16, h.x, h.y-26, 5, 220);
+  }
+  nigroGainSouls(h, Math.min(2, hits*0.34));
+  if(pact){
+    const flags = talentSkillMods(h.classKey, 0).flags;
+    for(let i=0;i<2;i++) spawnNigroSkeleton(h, "warrior", flags);
+    const heal = h.maxHp*0.10; h.hp = Math.min(h.maxHp, h.hp + heal*arenaRuleHealMult());
+    if(h===player) floatText(h.x, h.y-40, "+"+Math.round(heal), "heal");
+    vfxShock(h.x, h.y, 14, R, "90,230,140", 460, h===player?2:1);
+  } else {
+    vfxShock(h.x + h.fx*R*0.5, h.y + h.fy*R*0.5, 10, R*0.55, "90,230,140", 320, h===player?1:0);
+  }
+  vfxBurst(h.x + h.fx*50, h.y + h.fy*40 - 20, pact?16:9, "necro", 170, 380, 3, h===player?2:1, -20, 0);
+  h.nigroCastKind = "skeleton"; h.attackAnim = Math.max(h.attackAnim, 300);
+}
+// Gólem de Carne (habilidad 2): con cadáveres cercanos arma un gólem más duro. Si ya existe, salta y aplasta.
+function nigroCastGolem(h, sk, dmg, AREA){
+  if(h.nigroDemonForm){ if(h===player) floatText(h.x, h.y-40, "No disponible transformado", null); return; }
+  const pact = nigroConsumePact(h);
+  if(!h.golem){
+    let used = 0; for(let i=0;i<6;i++){ const c = consumeCorpse(h.x, h.y, 300); if(!c) break; used++; pushChainBolt(c.x, c.y-10, h.x+h.fx*60, h.y+h.fy*60-20, 7, 360); }
+    spawnOrRenewGolem(h);
+    const g = h.golem; const k = 0.7 + 0.15*used; g.maxHp *= k; g.hp = g.maxHp;
+    g.corpses = used;
+    if(h===player) floatText(h.x, h.y-50, used ? `¡GÓLEM DE CARNE! (${used} cuerpos)` : "¡GÓLEM! (sin cuerpos: más débil)", null);
+  } else {
+    // ¡Aplasta!: el gólem salta al punto apuntado
+    const g = h.golem;
+    const p = aimPoint(h, 320*AREA, 110*AREA);
+    g.x = p.x; g.y = p.y; clampToArena(g);
+    const R = 110*AREA, stun = 800;
+    for(const e of enemies){
+      if(!e.alive || Math.hypot(e.x-g.x, e.y-g.y) > R) continue;
+      damageEnemy(e, dmg*1.6, {src:h, heavy:true, burn: g.skin==="fire"?true:undefined, slow: g.skin==="ice"?0.6:undefined, slowDur:1600});
+      if(e.rank!=="jefe" && e.rank!=="subjefe") e.stunTimer = Math.max(e.stunTimer||0, g.skin==="ice" ? 1200 : stun);
+    }
+    g.attackAnim = 320;
+    vfxShock(g.x, g.y, 12, R, g.skin==="fire"?"255,138,61":g.skin==="ice"?"159,227,255":"143,174,122", 440, h===player?2:1);
+    vfxBurst(g.x, g.y, 14, "rock", 160, 380, 3.5, h===player?1:0, -20, 0);
+    if(h===player){ vfxShake(4); playSfx("stomp"); floatText(g.x, g.y-60, "¡APLASTA!", "crit"); }
+  }
+  if(pact && h.golem){ h.golem.furyT = 8000; h.golem.hp = Math.min(h.golem.maxHp, h.golem.hp + h.golem.maxHp*0.4); if(h===player) floatText(h.golem.x, h.golem.y-70, "¡FURIA DE HUESOS!", "crit"); }
+  h.nigroCastKind = "golem"; h.attackAnim = Math.max(h.attackAnim, 320);
 }

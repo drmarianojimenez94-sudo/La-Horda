@@ -60,6 +60,7 @@
         if(d < 230){ close++; const w = (e.rank==="jefe"||e.rank==="subjefe"?3:1)/Math.max(30,d); tx += (player.x-e.x)*w; ty += (player.y-e.y)*w; } }
       const ranged = !!player.cls.ranged;
       const hpPct = player.hp/player.maxHp;
+      if(hpPct < 0.3 && typeof emergUse === "function") emergUse(player); // curación de emergencia (1 por nivel)
       // potion seeking when hurt
       let pot = null, pd = 1e9;
       if(hpPct < 0.6 || player.energy < player.maxEnergy*0.25) for(const p of potions){ const d = Math.hypot(p.x-player.x,p.y-player.y); if(d<pd && d<500){ pd=d; pot=p; } }

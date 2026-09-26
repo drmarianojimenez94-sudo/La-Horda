@@ -15,11 +15,14 @@
                control, aporte contra élites/jefes, supervivencia.
    >>> Umbrales y pesos: PERF_ROLES / PERF_GRADES.
    ============================================================ */
+// EXIGENTE: 100/100 es posible pero pide una partida casi perfecta en TODO lo que mide el rol
+// (sin caídas, esquivando lo telegrafiado, aportando al equipo y al jefe). Calibrado con
+// tools/balance/perfsim.js: el piloto automático "competente" queda en B/A.
 const PERF_GRADES = [
-  {g:"S+", min:88, color:"#ff5ad2"},
-  {g:"S",  min:76, color:"#ffcf3a"},
-  {g:"A",  min:61, color:"#6fdc8c"},
-  {g:"B",  min:44, color:"#4fa8f0"},
+  {g:"S+", min:93, color:"#ff5ad2"},
+  {g:"S",  min:83, color:"#ffcf3a"},
+  {g:"A",  min:67, color:"#6fdc8c"},
+  {g:"B",  min:50, color:"#4fa8f0"},
   {g:"C",  min:0,  color:"#b8a898"}
 ];
 // Convierte una proporción del equipo en 0..1: `lo` = nada destacable, `hi` = excelente.
@@ -27,35 +30,39 @@ const _band = (v, lo, hi) => Math.max(0, Math.min(1, (v - lo)/(hi - lo)));
 // Cada componente: [etiqueta, peso, función(ctx) -> 0..1]
 const PERF_ROLES = {
   tanque: [
-    ["Daño mitigado y absorbido", 0.30, c => _band(c.share("tankLoad"), 0.3, 0.62)],
-    ["Amenazas controladas",      0.20, c => _band(c.perMin("enemiesControlled") + c.perMin("presenceTicks")*0.25 + c.perMin("ccApplied")*0.15, 5, 22)],
-    ["Protección de aliados",     0.16, c => _band(c.perMin("protectTicks"), 14, 46)],
-    ["Revivir",                   0.10, c => c.reviveScore()],
-    ["Supervivencia",             0.12, c => c.survival()],
-    ["Participación en el jefe",  0.12, c => c.bossPart()]
+    ["Daño mitigado y absorbido", 0.26, c => _band(c.share("tankLoad"), 0.32, 0.66)],
+    ["Amenazas controladas",      0.18, c => _band(c.perMin("enemiesControlled") + c.perMin("presenceTicks")*0.25 + c.perMin("ccApplied")*0.15, 6, 26)],
+    ["Protección de aliados",     0.14, c => _band(c.perMin("protectTicks"), 16, 50)],
+    ["Revivir",                   0.08, c => c.reviveScore()],
+    ["Supervivencia",             0.14, c => c.survival()],
+    ["Mecánicas del jefe",        0.12, c => c.bossPart()],
+    ["Esquivar lo telegrafiado",  0.08, c => c.avoidance()]
   ],
   soporte: [
-    ["Curación efectiva",         0.30, c => _band(c.healRatio(), 0.02, 0.16)],
-    ["Escudos y potenciaciones",  0.14, c => _band(c.perMin("buffsGranted") + c.perMin("shieldGivenPct")*0.5, 0.8, 6)],
-    ["Revivir",                   0.14, c => c.reviveScore()],
-    ["Aliados salvados",          0.12, c => _band(c.perMin("alliesSaved"), 0.03, 0.4)],
-    ["Supervivencia",             0.18, c => c.survival()],
-    ["Participación",             0.12, c => Math.max(c.bossPart(), _band(c.share("dmgDealt"), 0.06, 0.2))]
+    ["Curación efectiva",         0.26, c => _band(c.healRatio(), 0.03, 0.2)],
+    ["Escudos y potenciaciones",  0.12, c => _band(c.perMin("buffsGranted") + c.perMin("shieldGivenPct")*0.5, 1, 7)],
+    ["Revivir",                   0.12, c => c.reviveScore()],
+    ["Aliados salvados",          0.12, c => _band(c.perMin("alliesSaved"), 0.05, 0.5)],
+    ["Supervivencia",             0.16, c => c.survival()],
+    ["Participación",             0.10, c => Math.max(c.bossPart(), _band(c.share("dmgDealt"), 0.08, 0.24))],
+    ["Esquivar lo telegrafiado",  0.12, c => c.avoidance()]
   ],
   asesino: [
-    ["Daño útil",                 0.22, c => _band(c.share("dmgDealt"), 0.15, 0.42)],
-    ["Daño a élites y jefes",     0.28, c => _band(c.share("dmgToPriority"), 0.15, 0.42)],
-    ["Bajas prioritarias",        0.18, c => _band(c.share("priorityKills"), 0.14, 0.45)],
-    ["Participación en el jefe",  0.12, c => c.bossPart()],
-    ["Supervivencia",             0.20, c => c.survival()]
+    ["Daño útil",                 0.20, c => _band(c.share("dmgDealt"), 0.18, 0.48)],
+    ["Daño a élites y jefes",     0.24, c => _band(c.share("dmgToPriority"), 0.18, 0.48)],
+    ["Bajas prioritarias",        0.16, c => _band(c.share("priorityKills"), 0.16, 0.5)],
+    ["Mecánicas del jefe",        0.10, c => c.bossPart()],
+    ["Supervivencia",             0.18, c => c.survival()],
+    ["Esquivar lo telegrafiado",  0.12, c => c.avoidance()]
   ],
   mago: [
-    ["Daño útil",                 0.22, c => _band(c.share("dmgDealt"), 0.14, 0.4)],
-    ["Área (enemigos por habilidad)", 0.18, c => _band(c.ratio("abilityHits", "skillCasts"), 1.4, 3.6)],
-    ["Bajas múltiples",           0.12, c => _band(c.perMin("multiKills"), 0.5, 4)],
-    ["Control",                   0.10, c => _band(c.perMin("ccApplied"), 1.5, 14)],
-    ["Aporte contra élites/jefes", 0.18, c => _band(c.share("dmgToPriority"), 0.12, 0.38)],
-    ["Supervivencia",             0.20, c => c.survival()]
+    ["Daño útil",                 0.20, c => _band(c.share("dmgDealt"), 0.16, 0.45)],
+    ["Área (enemigos por habilidad)", 0.16, c => _band(c.ratio("abilityHits", "skillCasts"), 1.6, 4.2)],
+    ["Bajas múltiples",           0.10, c => _band(c.perMin("multiKills"), 0.6, 5)],
+    ["Control",                   0.08, c => _band(c.perMin("ccApplied"), 2, 16)],
+    ["Aporte contra élites/jefes", 0.16, c => _band(c.share("dmgToPriority"), 0.14, 0.42)],
+    ["Supervivencia",             0.18, c => c.survival()],
+    ["Esquivar lo telegrafiado",  0.12, c => c.avoidance()]
   ]
 };
 function perfRoleOf(classKey){
@@ -107,12 +114,17 @@ function computePerformance(h){
     ratio: (a, b) => (s[a]||0)/Math.max(1, s[b]||0),
     healRatio: () => { const taken = party.reduce((t,o)=>t + (o.stats.dmgTaken||0), 0); return taken > 0 ? (s.healEffective||0)/taken : 0; },
     reviveScore: () => teamDowns <= 0 ? 0.75 : Math.min(1, 0.3 + 0.7*(s.revives||0)/Math.max(1, teamDowns*0.5)),
-    survival: () => { const up = Math.min(1, (s.aliveMs||0)/Math.max(1, runElapsedMs||1)); return Math.max(0, up - 0.22*(s.downs||0)); },
+    // cada caída cuesta mucho (y morir del todo deja la supervivencia en 0)
+    survival: () => { if(h===player && !h.alive) return 0; const up = Math.min(1, (s.aliveMs||0)/Math.max(1, runElapsedMs||1)); return Math.max(0, up - 0.35*(s.downs||0)); },
+    // golpes con aviso en el suelo que igual te pegaron, por minuto y relativo a tu vida
+    avoidance: () => 1 - _band((s.avoidableTaken||0)/Math.max(1, h.maxHp)/mins, 0.04, 0.5),
     bossPart: () => (s.bossFightSecs||0) > 5 ? Math.min(1, (s.bossTime||0)/(s.bossFightSecs*0.7)) : 0.6
   };
   const role = perfRoleOf(h.classKey);
   const parts = PERF_ROLES[role].map(([label, w, fn])=>{ const v = Math.max(0, Math.min(1, fn(ctx)||0)); return {label, weight:w, value:v}; });
-  const score = Math.round(parts.reduce((t,p)=>t + p.value*p.weight, 0)*100);
+  let score = Math.round(parts.reduce((t,p)=>t + p.value*p.weight, 0)*100);
+  // S+ es una partida SIN caídas: con cualquier caída la nota queda como mucho en S (92).
+  if((s.downs||0) > 0 || (h===player && !h.alive)) score = Math.min(score, PERF_GRADES[0].min - 1);
   const g = gradeOf(score);
   return {role, score, grade:g.g, color:g.color, parts};
 }

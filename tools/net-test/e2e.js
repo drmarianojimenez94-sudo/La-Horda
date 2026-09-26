@@ -55,7 +55,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   const invUid = await ev(host, () => {
     const it = makeItem('arma', 'legendario', selectedClass); addItemToInventory(selectedClass, it); renderPrepSummary(); return it.uid;
   });
-  await host.page.click(`#prep-inventory-panel [data-prep-equip="${invUid}"]`);
+  await host.page.click(`#prep-inventory-panel [data-inv-equip="${invUid}"]`);
   const eqAfter = await ev(host, () => save.champions[selectedClass].equipment.arma);
   check('inventory.equip_in_lobby', eqAfter === invUid, { eqAfter, invUid });
   if (N > 1 || FIFTH) {
@@ -105,6 +105,24 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   if (guests.length) {
     const readies = await ev(host, () => net.room.slots.map(s => s && s.ready));
     check('lobby.ready_synced', readies.filter((r, i) => i > 0 && r).length === guests.length, readies);
+  }
+  const all0 = () => [host, ...guests];
+  // ---------------- chat de la sala ----------------
+  if (guests.length) {
+    await guests[0].page.click('#net-chat [data-q="¡Vamos!"]');
+    await host.page.fill('#net-chat-input', 'arranco en 5');
+    await host.page.press('#net-chat-input', 'Enter');
+    await sleep(600);
+    const logs = await Promise.all(all0().map(c => ev(c, () => netChat.log.map(m => m.name + ':' + m.text))));
+    check('chat.frase_rapida_y_texto_llegan_a_todos', logs.every(l => l.includes('Facundo:¡Vamos!') && l.includes('Mariano:arranco en 5')), logs[0]);
+    const shown = await ev(guests[0], () => document.getElementById('net-chat-log').textContent);
+    check('chat.visible_en_la_sala', /arranco en 5/.test(shown), shown.slice(0, 80));
+    await host.page.click('#net-chat-log [data-mute="1"]');
+    await sleep(500);
+    const mutedUi = await ev(guests[0], () => document.getElementById('net-chat-input').disabled);
+    check('chat.anfitrion_silencia_y_el_invitado_lo_ve', mutedUi === true, mutedUi);
+    await host.page.click('#net-chat-log [data-mute="1"]');
+    await sleep(400);
   }
   // ---------------- COMENZAR ----------------
   await host.page.click('#prep-start-btn');
@@ -193,6 +211,13 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     await sleep(500);
     const back = await ev(guests[0], () => player.alive);
     check('revive.guest_revived', back === true);
+    // curación de emergencia pedida por el invitado: la aplica el anfitrión, una sola vez
+    await ev(host, () => { const g = heroes[1]; g.hp = g.maxHp*0.3; g.emergCharges = 1; });
+    await sleep(300);
+    await ev(guests[0], () => { emergPress(); emergPress(); });
+    await sleep(500);
+    const em = await ev(host, () => ({ pct: heroes[1].hp/heroes[1].maxHp, charges: heroes[1].emergCharges }));
+    check('emerg.guest_heal_applied_once', em.pct > 0.55 && em.pct < 0.9 && em.charges === 0, em);
   }
   // ---------------- refuerzo entre niveles: cada humano elige ----------------
   await ev(host, () => { levelTimer = levelDuration + 1; });

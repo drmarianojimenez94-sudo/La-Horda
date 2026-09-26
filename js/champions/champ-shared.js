@@ -71,6 +71,7 @@ function heroSpeedMult(h){
   if(h.classKey==="libertador") m *= libertadorSpeedMult(h);
   if(h.classKey==="eren") m *= erenSpeedMult(h);
   if(h.advAllyTimer>0) m *= 1 + EREN_CFG.advance.speedPct*EREN_CFG.advance.allyShare;
+  m *= itemSpeedMult(h); // Paso del Cazador / Gracia Veloz (objetos)
   return m;
 }
 function heroAtkSpeedMult(h){
@@ -85,6 +86,7 @@ function heroDmgOutMult(h){
   if(h.advAllyTimer>0) m *= 1 + EREN_CFG.advance.dmgPct*EREN_CFG.advance.allyShare;
   if(h.classKey==="libertador") m *= libertadorDmgMult(h);
   if(h.classKey==="eren") m *= erenDmgMult(h);
+  if(h.classKey==="nigromante") m *= nigroSoulDmgMult(h); // almas guardadas: +2% por alma
   return m;
 }
 function heroDmgTakenMult(h){
@@ -109,8 +111,8 @@ function heroMoveLocked(h){
 }
 // Golpe letal: ¿la evita algo propio del campeón? (Soldado Cabral). true = no muere.
 function heroPreventDeath(h, src){
-  if(h && h.classKey==="libertador") return libertadorPreventDeath(h, src);
-  return false;
+  if(h && h.classKey==="libertador" && libertadorPreventDeath(h, src)) return true;
+  return champSetPreventDeath(h); // set La Última Profecía
 }
 // Cada cuadro, para cada héroe (anfitrión o partida local).
 function updateChampExtras(h, dt){

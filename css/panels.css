@@ -134,6 +134,13 @@
 .mastery-stats b{ color:var(--ember3); font-weight:700; }
 .mastery-next{ color:#7dc98a; }
 .mastery-use{ font-size:0.58rem; color:#8fb8ff; margin-top:2px; }
+/* evolución de la habilidad: hitos Nv.3/5/7/10 (skill-evolution.js); el alcanzado se enciende */
+.evo-lines{ display:flex; flex-wrap:wrap; gap:3px; margin-top:3px; }
+.evo-lines .evo{ font-size:0.52rem; padding:1px 4px; border:1px solid #3a3040; color:#7a6f84; background:#140e18; }
+.evo-lines .evo i{ display:none; font-style:normal; }
+.evo-lines .evo.on{ color:#ffe9a8; border-color:#c9a24a; background:#2a1e0c; }
+.evo-lines .evo.next{ color:#c8bcd4; border-color:#6a5a7a; }
+.evo-lines .evo.next i, .evo-lines .evo:hover i{ display:inline; }
 .mastery-plus{
   width:26px; height:26px; border-radius:7px; flex:none; font-size:1rem; font-weight:700;
   background:#141010; border:1px solid #4a3a2e; color:var(--text-dim); cursor:default;
@@ -318,3 +325,75 @@
   .tt-cols{ grid-template-columns:1fr; }
   .tt-cols::before, .tt-col::before{ display:none; }
 }
+
+/* ---- Inventario de la cuenta (Mi Inventario / vista por campeón) ---- */
+.hub-tabs-top{ justify-content:center; }
+.inv-filters{ display:flex; flex-wrap:wrap; gap:5px; margin:4px 0 6px; }
+.inv-chip{ font-family:inherit; font-size:0.6rem; padding:4px 8px; border-radius:12px; border:1px solid rgba(255,255,255,0.18); background:rgba(0,0,0,0.35); color:var(--text-dim); cursor:pointer; }
+.inv-chip.on{ border-color:var(--ember1); color:var(--ember3); background:rgba(255,122,46,0.14); }
+.inv-filters select{ font-family:inherit; font-size:0.62rem; padding:4px 6px; background:#1a120c; color:var(--text); border:1px solid rgba(255,255,255,0.2); border-radius:6px; }
+.inv-list.tall{ max-height:52vh; }
+.inv-card.incompat{ opacity:0.62; }
+.inv-card .item-epithet{ font-size:0.55rem; color:#e8c890; font-style:italic; }
+.inv-card .item-mythic{ color:#ff6a5a; font-weight:700; }
+.inv-card .item-unique{ color:#c68cff; font-weight:700; }
+.inv-card .item-recipe{ color:#e8c890; }
+.inv-owner{ color:#ffb0a0; font-weight:700; }
+.inv-by{ color:#8fd0ff; font-weight:700; }
+.inv-by.me{ color:#7dff9a; }
+.inv-elem{ margin-right:3px; }
+.inv-card.tier-legendario{ box-shadow:inset 0 0 0 1px rgba(255,176,32,0.25); }
+.inv-card.tier-mitico{ box-shadow:inset 0 0 0 1px rgba(255,77,77,0.45), 0 0 8px rgba(255,77,77,0.25); }
+.inv-card.tier-unico{ box-shadow:inset 0 0 0 1px rgba(176,106,255,0.6), 0 0 12px rgba(176,106,255,0.35); }
+.inv-card.tier-set{ box-shadow:inset 0 0 0 1px rgba(61,220,113,0.35); }
+.inv-capacity a{ color:var(--ember3); }
+/* Recetas */
+.recipe-card{ border:1px solid rgba(255,77,77,0.35); border-radius:8px; padding:8px 10px; margin:0 0 8px; background:rgba(40,8,8,0.35); max-width:560px; }
+.recipe-card.ready{ border-color:#ff4d4d; box-shadow:0 0 14px rgba(255,77,77,0.35); }
+.rc-head{ display:flex; justify-content:space-between; align-items:center; }
+.rc-title{ color:#ff6a5a; font-weight:700; font-size:0.75rem; }
+.rc-count{ font-weight:700; color:var(--ember3); font-size:0.75rem; }
+.rc-power{ font-size:0.58rem; color:#ffb0a0; margin:3px 0 5px; }
+.rc-part{ display:flex; gap:6px; align-items:baseline; font-size:0.6rem; padding:2px 0; }
+.rc-part.miss{ opacity:0.8; }
+.rc-mark{ width:14px; font-weight:700; color:#7dff9a; }
+.rc-part.miss .rc-mark{ color:#8a8078; }
+.rc-where{ color:var(--text-dim); font-size:0.54rem; margin-left:auto; text-align:right; }
+.rc-craft{ margin-top:6px; }
+.rc-owned{ font-size:0.54rem; color:var(--text-dim); margin-top:4px; }
+/* Colección */
+.col-group{ margin:6px 0 10px; max-width:640px; }
+.col-title{ font-weight:700; font-size:0.66rem; margin-bottom:4px; }
+.col-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(118px, 1fr)); gap:5px; }
+.col-cell{ border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:4px 6px; display:flex; flex-direction:column; opacity:0.5; background:rgba(0,0,0,0.3); }
+.col-cell.have{ opacity:1; border-color:var(--cc); }
+.col-ico{ font-size:0.9rem; }
+.col-name{ font-size:0.56rem; color:var(--cc); font-weight:700; }
+.col-cell:not(.have) .col-name{ color:#8a8078; }
+.col-hint{ font-size:0.5rem; color:var(--text-dim); }
+
+/* ---- Ceremonia del cofre (js/ui/loot-ceremony.js) ---- */
+.chest-host{ position:relative; display:flex; flex-direction:column; align-items:stretch; }
+@media (min-aspect-ratio: 4/3){ .chest-host{ flex-direction:row; gap:10px; align-items:flex-start; } .chest-host .chest-stage{ flex:none; width:210px; } .chest-host .chest-items{ flex:1; max-height:58vh; overflow-y:auto; margin-top:6px; } }
+.chest-stage{ position:relative; display:flex; flex-direction:column; align-items:center; margin:6px 0 4px; }
+.chest-name{ font-size:0.62rem; color:var(--text-dim); letter-spacing:0.04em; margin-bottom:2px; }
+.chest-cv{ width:204px; height:150px; background:transparent; image-rendering:pixelated; image-rendering:crisp-edges; }
+.chest-open-btn{ margin-top:4px; padding:6px 26px; }
+.chest-banner{ position:absolute; top:40%; left:50%; transform:translate(-50%,-50%) scale(0.6); opacity:0; pointer-events:none;
+  font-family:var(--font-pixel); font-size:1.3rem; color:var(--bc,#fff); text-shadow:0 0 12px var(--bc,#fff), 0 2px 0 #000; white-space:nowrap; }
+.chest-banner.show{ animation:chestBanner 1.6s ease-out forwards; }
+@keyframes chestBanner{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.5);} 15%{opacity:1; transform:translate(-50%,-50%) scale(1.15);} 30%{transform:translate(-50%,-50%) scale(1);} 80%{opacity:1;} 100%{opacity:0; transform:translate(-50%,-80%) scale(1);} }
+.chest-flash{ position:absolute; inset:-40px; pointer-events:none; animation:chestFlash 0.9s ease-out forwards; z-index:3; }
+@keyframes chestFlash{ 0%{opacity:0;} 12%{opacity:1;} 100%{opacity:0;} }
+.chest-quake{ animation:chestQuake 0.5s linear; }
+@keyframes chestQuake{ 0%,100%{transform:translate(0,0);} 20%{transform:translate(-4px,2px);} 40%{transform:translate(4px,-2px);} 60%{transform:translate(-3px,-1px);} 80%{transform:translate(3px,1px);} }
+.chest-host.jackpot{ background:radial-gradient(ellipse at center, rgba(90,40,160,0.35) 0%, rgba(0,0,0,0.0) 70%); }
+.chest-host.jackpot .chest-banner{ font-size:1.9rem; }
+.chest-skip{ text-align:center; font-size:0.55rem; color:var(--text-dim); opacity:0.6; margin-top:2px; }
+.chest-items .loot-card{ animation:lootIn 0.45s ease-out forwards; }
+.loot-card.tier-unico{ --tc:#b06aff; box-shadow:0 0 30px rgba(176,106,255,0.95); animation:lootIn 0.6s ease-out forwards, mythPulse 0.9s ease-in-out 0.6s infinite alternate; }
+.loot-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.78); z-index:80; display:flex; align-items:center; justify-content:center; }
+.loot-overlay-box{ width:min(560px, 92vw); max-height:92vh; overflow:auto; background:#140c08; border:1px solid var(--panel-b); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; align-items:center; }
+.loot-overlay-body{ width:100%; }
+.loot-summary-line{ text-align:center; font-size:0.72rem; color:var(--text-dim); margin:0 0 4px; }
+.loot-summary-note{ font-size:0.55rem; opacity:0.7; margin-top:1px; }

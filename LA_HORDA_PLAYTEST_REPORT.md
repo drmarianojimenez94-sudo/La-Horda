@@ -8,6 +8,61 @@
 >   **HUMAN TEST REQUIRED**.
 > Sin puntajes inventados: solo conteos y resultados medidos.
 
+## Pase nocturno: combate, progresión, botín y economía (lo más reciente)
+
+Detalle en `LA_HORDA_COMBAT_AUDIT.md`, `LA_HORDA_GAMEFEEL_REPORT.md` y `LA_HORDA_PROGRESSION_ECONOMY_REPORT.md`.
+
+### Pruebas automáticas (todas en verde)
+
+| Prueba | Resultado |
+|---|---|
+| Regresión funcional (menús, partida, guardados, celular) | **91/91** |
+| `tools/items/`: objetos, Nigromante, reacciones, roles (15), ritmo (14), evolución (12), colisiones (7), destructibles (9), calificación (8), vida temporal del Tanque (4) | **0 fallas** |
+| Identidad de arenas (`t_identity`) · Fortaleza (41/41) · Micelial | **OK** |
+| Relay + chat (`server/test-relay.js`) | **0 fallas** |
+| Red real e2e: 2 humanos, y 4 humanos + 5º rechazado | **0 fallas** |
+
+Dos tests eran aleatorios y se volvieron deterministas: sellos del Laberinto en bolsillos inalcanzables (1 de
+cada 7) y el Protector cuando salía un crítico.
+
+### Dificultad: ¿se rompió algo? (A/B contra la versión base, mismas partidas)
+
+Matriz de 12 campeones × Ruinas/Fortaleza/Infernal, campeones nivel 10 y 20, equipo automático, 1 partida por celda:
+
+| Versión | Victorias | Ruinas | Fortaleza | Infernal |
+|---|---|---|---|---|
+| Base (antes del pase) | 5/36 | 3/12 | 2/12 | 0/12 |
+| Nueva, tanda 1 | 11/36 | 4/12 | 4/12 | 3/12 |
+| Nueva, tanda 2 | 8/36 | 3/12 | 3/12 | 2/12 |
+
+No se volvió más difícil. Por campeón (tandas nuevas juntas): Segador 5/6, Eren 4/6, Soporte 4/6, Libertador 2/6,
+Profeta 2/6; Axiom, Cazadora, Guerrero, Mago y Nigromante 0/6. Con 1 partida por celda las diferencias
+individuales son ruido; lo firme es que no hay regresión.
+
+**Fortaleza, primeros niveles (Axiom y Musashi nivel 10, 8 partidas):** muertes en los niveles 1–2: base 3/8 →
+0/8 con el aviso nuevo de la picada del Dragón de Bronce. Nivel medio alcanzado: 3,5 → 4,1.
+
+### Campaña desde cero (piloto automático, 31–40 partidas por campeón, 0 errores de página)
+
+| Campeón | Partidas para terminar | Nivel al terminar | 5.000 de oro en la partida | Intentos en la Gélida | Arena más dura |
+|---|---|---|---|---|---|
+| Tanque | 11 | 35 | 7 | 2 | Ruinas (4, con nivel 1) |
+| Mago | 10 | 39 | 6 | 1 | Laberinto (3) |
+| Cazadora | 15 | 39 | 7 | 1 | Laberinto (6) |
+
+**Corrección de lecturas anteriores:** las campañas simuladas de Alpha 0.1 (más abajo) mostraban "el Hielo es la
+pared" (0/20, 1/22). Este pase encontró dos causas: el piloto **nunca gastaba los puntos de talento** (un jugador
+real sí, con el botón del HUD) y un **bug real** del Tanque (vida máxima que bajaba hasta quedar negativa al elegir
+refuerzos con el Grito de Guerra activo). Arreglado lo segundo y corregido el piloto, la Gélida sale en 1–2 intentos.
+A/B justa (nivel 31): sin ajustes 9/12, con los avisos de 0,9 s del Demonio de Hielo y Fuego 9/12. Se quedó el
+cambio de legibilidad y se quitó el tope de demonios que solo la facilitaba.
+
+### HUMAN TEST REQUIRED (lo que ninguna simulación contesta)
+
+- La Gélida en 2–4 intentos **para una persona** (el piloto esquiva perfecto).
+- El Laberinto con personajes frágiles a distancia (la Cazadora necesitó 6).
+- Hit-stop del crítico en celulares de 60 Hz, duración de la ceremonia del cofre y comodidad del chat con una mano.
+
 ## Cómo se jugó
 
 | Herramienta | Qué hace | Resultado |

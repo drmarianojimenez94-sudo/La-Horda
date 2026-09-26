@@ -23,6 +23,9 @@ function _procDmgBase(h){ return h.baseDmg * runStats.dmgMult * (h.buffDmgMult||
 // Golpe a un enemigo hecho por un héroe (no se llama para el daño que ya viene de un poder).
 function itemProcsOnHit(h, e, dmg, crit, opts){
   if(!h.classKey) return;
+  mythicOnHit(h, e, dmg, crit, opts);
+  uniqueOnHit(h, e, dmg, crit, opts);
+  if(!e.alive) return;
   const fromBasic = !!opts.fromBasic;
   let p;
   if(fromBasic && (p = _procPower(h, "basic_chain"))){
@@ -68,6 +71,58 @@ function itemProcsOnHit(h, e, dmg, crit, opts){
     vfxShock(e.x, e.y, 10, R, "255,210,120", 320, h===player?2:1);
     vfxBurst(e.x, e.y, 6, "rock", 110, 280, 3, 0, -30, 0);
   }
+  // Brasa Viva: los básicos prenden fuego (reusa la quemadura de siempre).
+  if(fromBasic && (p = _procPower(h, "ignite_basic"))){
+    e.burnTimer = Math.max(e.burnTimer||0, 2500); e.burnDmg = Math.max(e.burnDmg||0, _procDmgBase(h)*0.22*p);
+    if(Math.random()<0.25) vfxBurst(e.x, e.y-14, 3, "ember", 60, 260, 2.5, 0, -40, 1);
+  }
+  // Filo Sediento: los básicos abren heridas (sangrado que se refresca).
+  if(fromBasic && (p = _procPower(h, "bleed_basic"))){
+    e.bleedTimer = Math.max(e.bleedTimer||0, 3000); e.bleedDmg = Math.max(e.bleedDmg||0, _procDmgBase(h)*0.2*p);
+  }
+  // Descarga Arcana: las habilidades pueden electrocutar (aturde y salta a un enemigo cercano).
+  if(!fromBasic && (p = _procPower(h, "shock_skill")) && Math.random() < 0.2*Math.min(1.5,p) && _procReady(h, "shock", 250)){
+    if(e.rank!=="jefe" && e.rank!=="subjefe") e.stunTimer = Math.max(e.stunTimer||0, 350);
+    e.shockedTimer = 1200;
+    let next = null, bd = 170;
+    for(const o of enemies){ if(!o.alive || o===e) continue; const d = Math.hypot(o.x-e.x, o.y-e.y); if(d < bd){ bd = d; next = o; } }
+    if(next){ pushChainBolt(e.x, e.y-12, next.x, next.y-10, 16, 260); damageEnemy(next, _procDmgBase(h)*0.6*p, {src:h, fromProc:true}); }
+    vfxBurst(e.x, e.y-14, 5, "shock", 90, 240, 2.5, 0, -20, 1);
+  }
+}
+// Multiplicador de daño de los poderes de objeto contra ESTE enemigo (lo lee damageEnemy).
+function itemDamageMult(h, e, opts){
+  if(!h || !h.classKey) return 1;
+  let m = 1, p;
+  if((p = _procPower(h, "burn_vs")) && e.burnTimer>0) m *= 1 + 0.25*p;
+  if((p = _procPower(h, "execute_edge")) && e.rank!=="jefe" && e.rank!=="subjefe" && e.hp < e.maxHp*0.2) m *= 1 + 0.6*p;
+  return m * mythicDamageMult(h, e, opts);
+}
+// Daño crítico extra de los poderes (Frío que Quiebra, Eclipse).
+function itemCritMultBonus(h, e){
+  if(!h || !h.classKey) return 0;
+  let b = 0, p;
+  if((p = _procPower(h, "cold_crit")) && (e.slowTimer>0 || e.stunTimer>0 || e.frozenTimer>0)) b += 0.5*p;
+  return b + mythicCritMultBonus(h, e);
+}
+// Velocidad de movimiento de los poderes (Paso del Cazador, Gracia Veloz).
+function itemSpeedMult(h){
+  if(!h) return 1;
+  let m = 1;
+  if(h._hasteStacks) m *= 1 + 0.03*h._hasteStacks;
+  if(h._healHasteT > 0) m *= 1.18;
+  return m;
+}
+// Daño recibido: Guardia Juramentada (aliados cerca de quien la lleva) y Último Bastión.
+function itemDmgTakenMult(h){
+  let m = 1;
+  for(const o of heroes){
+    if(o===h || !o.alive || !o.classKey) continue;
+    const d = Math.hypot(o.x-h.x, o.y-h.y);
+    if(d < 200 && _procPower(o, "ally_ward")) m *= 0.9;
+    if(d < 220){ const my = heroMythics(o.classKey); if(my && my.myth_bastion) m *= 0.88; }
+  }
+  return Math.max(0.7, m);
 }
 
 function itemProcsOnKill(h, e){
@@ -90,9 +145,14 @@ function itemProcsOnKill(h, e){
     const before = h.hp; h.hp = Math.min(h.maxHp, h.hp + amt);
     if(h===player && h.hp-before > h.maxHp*0.02) floatText(h.x, h.y-34, "+"+Math.round(h.hp-before), "heal");
   }
+  if((p = _procPower(h, "haste_on_kill"))){
+    h._hasteStacks = Math.min(10, (h._hasteStacks||0) + 1); h._hasteT = 4000;
+  }
+  mythicOnKill(h, e);
 }
 
 function itemProcsOnCast(h, sk, isUlt){
+  mythicOnCast(h, sk, isUlt);
   const p = _procPower(h, "skill_nova");
   if(!p || !_procReady(h, "nova", 1500)) return;
   const R = 125, dmg = _procDmgBase(h)*(isUlt ? 2.2 : 1.1)*p;
@@ -104,8 +164,17 @@ function itemProcsOnCast(h, sk, isUlt){
   vfxBurst(h.x, h.y-14, 8, "arcane", 130, 320, 3, h===player?1:0, -30, 1);
 }
 
-function itemProcsOnHurt(h, dmg){
-  if(!h.classKey || dmg < h.maxHp*0.07) return;
+function itemProcsOnHurt(h, dmg, src){
+  if(!h.classKey) return;
+  // Represalia: quien pega cuerpo a cuerpo recibe parte del golpe y queda aturdido un instante.
+  let pr;
+  if(src && src.alive && src.maxHp && !src.ranged && (pr = _procPower(h, "retaliate")) && _procReady(h, "retal", 1200) && Math.hypot(src.x-h.x, src.y-h.y) < 140){
+    damageEnemy(src, dmg*0.35*pr + _procDmgBase(h)*0.5, {src:h, fromProc:true});
+    if(src.rank!=="jefe" && src.rank!=="subjefe") src.stunTimer = Math.max(src.stunTimer||0, 450);
+    vfxShock(src.x, src.y, 6, 34, "255,200,120", 240, h===player?1:0);
+  }
+  mythicOnHurt(h, dmg, src);
+  if(dmg < h.maxHp*0.07) return;
   const p = _procPower(h, "hit_shield");
   if(!p || !_procReady(h, "aegis", 8000)) return;
   h.shield = Math.min(h.maxHp*0.5, (h.shield||0) + h.maxHp*0.14*p);
@@ -116,4 +185,24 @@ function itemProcsOnHurt(h, dmg){
 
 function updateItemProcTimers(h, dt){
   if(h._rampTimer>0){ h._rampTimer -= dt; if(h._rampTimer<=0) h._rampStacks = 0; }
+  if(h._hasteT>0){ h._hasteT -= dt; if(h._hasteT<=0) h._hasteStacks = 0; }
+  if(h._healHasteT>0) h._healHasteT -= dt;
+  if(!h.alive || !h.classKey) return;
+  // Aliento Glacial: aura de frío (cada 0,4 s, ralentiza 18% a los enemigos cerca)
+  const fa = _procPower(h, "frost_aura");
+  if(fa){
+    h._frostAuraT = (h._frostAuraT||0) - dt;
+    if(h._frostAuraT<=0){
+      h._frostAuraT = 400;
+      for(const e of enemies){ if(!e.alive || Math.hypot(e.x-h.x, e.y-h.y) > 120) continue; e.slowAmt = Math.max(e.slowAmt||0, 0.18*Math.min(1.4,fa)); e.slowTimer = Math.max(e.slowTimer||0, 600); }
+      if(h===player && Math.random()<0.5) vfxBurst(h.x+(Math.random()-0.5)*160, h.y+(Math.random()-0.5)*110, 1, "ice", 20, 700, 2, 0, -12, 1);
+    }
+  }
+  updateMythicPowers(h, dt);
+}
+// Gracia Veloz: curar a un aliado les da velocidad a los dos (lo llama trackHeal).
+function itemProcsOnHeal(caster, target, restored){
+  if(!caster || !caster.classKey || restored <= 0) return;
+  if(_procPower(caster, "heal_haste") && target && target!==caster){ caster._healHasteT = 2500; target._healHasteT = 2500; }
+  mythicOnHeal(caster, target, restored);
 }

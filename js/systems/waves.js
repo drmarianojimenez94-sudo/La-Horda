@@ -14,6 +14,8 @@ function beginLevel(){
   midBossSpawned = false;
   activeChampion = null;
   levelClearing = 0;
+  resetPacing(); emergReset(); // ritmo del nivel de cero y una curación de emergencia por nivel
+  spawnBreakables(); // objetos del escenario que estallan contra la horda (breakables.js)
   if(typeof setMusicMode==="function") setMusicMode(runLevel===LEVEL_COUNT ? "prelude" : "wave", runLevel);
   updateArenaRuleChip();
   const ruleTxt = arenaRuleStacks()>0 ? " · " + arenaRuleLevelText() : "";

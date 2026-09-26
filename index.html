@@ -40,6 +40,7 @@
         <div id="sylva-momentum-row">Impulso <span id="sylva-momentum-val">0/10</span></div>
       </div>
       <div id="nigromante-hud" class="hidden">
+        <div id="nigro-souls-row" title="Almas: +2% de daño por alma. Con 5, el Pacto potencia tu próxima habilidad">☠ <span id="nigro-souls-pips"></span></div>
         <div id="nigro-skeleton-row">💀 <span id="nigro-skeleton-val">0/6</span></div>
         <div id="nigro-golem-row">🗿 <span id="nigro-golem-val">Inactivo</span></div>
         <div id="nigro-demon-row" class="hidden">Abismo <span id="nigro-demon-val">0s</span></div>
@@ -89,6 +90,8 @@
       <div class="ability-btn s2" id="btn-s2"><div class="ico">◆</div><div>2</div></div>
       <div class="ability-btn s1" id="btn-s1"><div class="ico">◆</div><div>1</div></div>
       <div class="ability-btn basic" id="btn-basic"><div class="ico">⚔</div><div>Ataque</div></div>
+      <div class="ability-btn sec emerg" id="btn-emerg"><div class="ico">✚</div><div class="lbl">Cura</div></div>
+      <div class="ability-btn sec pact hidden" id="btn-pact"><div class="ico">☠</div><div class="lbl">Pacto</div></div>
     </div>
   </div>
 
@@ -146,8 +149,24 @@
   <div id="champions-screen" class="screen hidden">
     <div class="arena-title">Mis Campeones</div>
     <div class="lobby-sub" id="champions-sub"></div>
+    <div class="hub-tabs hub-tabs-top">
+      <button class="hub-tab active" id="mychamps-tab-champs">Campeones</button>
+      <button class="hub-tab" id="mychamps-tab-inv">🎒 Mi Inventario</button>
+    </div>
     <div id="mychamps-grid"></div>
     <button class="btn secondary" id="champions-back-btn">Volver</button>
+  </div>
+  <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los campeones), recetas de Míticos y colección -->
+  <div id="inventory-screen" class="screen hidden">
+    <div class="arena-title">Mi Inventario</div>
+    <div class="lobby-sub" id="myinv-sub"></div>
+    <div class="hub-tabs" id="myinv-tabs">
+      <button class="hub-tab active" data-tab="objetos">Objetos</button>
+      <button class="hub-tab" data-tab="recetas">Recetas</button>
+      <button class="hub-tab" data-tab="coleccion">Colección</button>
+    </div>
+    <div id="myinv-panel"></div>
+    <button class="btn secondary" id="myinv-back-btn">Volver a Mis Campeones</button>
   </div>
   <div id="champhub-screen" class="screen hidden">
     <div id="champhub-head"></div>
@@ -170,9 +189,12 @@
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
     <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
+    <div class="shop-section-title">Objetos del día</div>
+    <div class="lobby-note" id="shop-items-note">Cambian todos los días. Los Míticos se fabrican y los Únicos solo se ganan: acá no se venden.</div>
+    <div id="shop-items"></div>
     <div class="shop-section-title">Campeones</div>
     <div id="shop-champ-grid"></div>
-    <div class="shop-soon-box shop-soon-small">Skins, armas, armaduras y mascotas: próximamente.</div>
+    <div class="shop-soon-box shop-soon-small">Skins y efectos visuales: próximamente.</div>
     <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
@@ -217,6 +239,7 @@
     <div class="arena-title" id="lobby-title">Sala</div>
     <div class="lobby-sub" id="lobby-sub"></div>
     <div id="net-bar"></div>
+    <div id="net-chat" class="hidden"></div>
     <div id="lobby-slots"></div>
     <div id="prep-summary"></div>
     <div class="hub-tabs" id="prep-tabs">
@@ -293,6 +316,8 @@
 <script src="js/data/items.js"></script>
 <script src="js/data/sets.js"></script>
 <script src="js/data/loot.js"></script>
+<script src="js/data/legendaries.js"></script>
+<script src="js/data/champion-sets.js"></script>
 <script src="js/data/rewards.js"></script>
 <script src="js/data/arenas.js"></script>
 <script src="js/data/pixel-art.js"></script>
@@ -324,6 +349,7 @@
 <script src="js/rendering/feedback.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
+<script src="js/rendering/gore.js"></script>
 <script src="js/rendering/entities.js"></script>
 <script src="js/rendering/renderer.js"></script>
 <script src="js/systems/progression.js"></script>
@@ -331,17 +357,25 @@
 <script src="js/systems/talents.js"></script>
 <script src="js/systems/items.js"></script>
 <script src="js/systems/item-procs.js"></script>
+<script src="js/systems/mythic-powers.js"></script>
+<script src="js/systems/reactions.js"></script>
 <script src="js/systems/set-effects.js"></script>
+<script src="js/systems/champion-sets.js"></script>
 <script src="js/systems/performance.js"></script>
 <script src="js/systems/loot.js"></script>
+<script src="js/systems/recipes.js"></script>
+<script src="js/systems/shop.js"></script>
 <script src="js/systems/rewards.js"></script>
 <script src="js/systems/hero-stats.js"></script>
 <script src="js/systems/difficulty.js"></script>
 <script src="js/systems/waves.js"></script>
 <script src="js/systems/combat.js"></script>
 <script src="js/systems/potions.js"></script>
+<script src="js/systems/pacing.js"></script>
+<script src="js/systems/skill-evolution.js"></script>
 <script src="js/systems/context-actions.js"></script>
 <script src="js/systems/env-tags.js"></script>
+<script src="js/systems/breakables.js"></script>
 <script src="js/systems/tutorial.js"></script>
 <script src="js/champions/hero-factory.js"></script>
 <script src="js/champions/segador.js"></script>
@@ -361,6 +395,7 @@
 <script src="js/skills/boss-skills.js"></script>
 <script src="js/skills/boss-patterns.js"></script>
 <script src="js/enemies/spawning.js"></script>
+<script src="js/enemies/enemy-roles.js"></script>
 <script src="js/enemies/ranged-styles.js"></script>
 <script src="js/arenas/arena-rules.js"></script>
 <script src="js/arenas/arena-identity.js"></script>
@@ -406,8 +441,10 @@
 <script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/menus.js"></script>
 <script src="js/ui/champions-hub.js"></script>
+<script src="js/ui/inventory-ui.js"></script>
 <script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>
+<script src="js/ui/loot-ceremony.js"></script>
 <script src="js/ui/end-screens.js"></script>
 <script src="js/core/run.js"></script>
 <script src="js/core/update.js"></script>
@@ -416,6 +453,7 @@
 <script src="js/net/net-core.js"></script>
 <script src="js/net/net-game.js"></script>
 <script src="js/net/net-lobby.js"></script>
+<script src="js/net/net-chat.js"></script>
 <script src="js/net/net-debug.js"></script>
 <script src="js/main.js"></script>
 </body>

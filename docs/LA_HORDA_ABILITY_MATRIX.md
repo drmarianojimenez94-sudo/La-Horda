@@ -22,6 +22,35 @@
 | `lightning` | Acuática | Un rayo sobre un enemigo parado en un charco conductor descarga contra los **enemigos** del charco (no contra los héroes). Tiene 3 s de enfriamiento por charco. | `ENV.cadena_de_relampago_conduce_en_el_charco` |
 | (charco) | Acuática | La Cadena Eléctrica de la **anguila** salta más lejos (260 en vez de 170) y una vez más si el primer héroe que golpea está en un charco. | `ACU.la_anguila_salta_mas_lejos_en_el_charco` |
 
+| `fire` / `ice` / `lightning` | **Todas** | Arman al instante el objeto destructible que corresponde (el fuego prende la urna de brasas, el barril de pólvora, la vaina de espinas o la de esporas; el hielo el cristal de escarcha; el rayo el ánfora de agua). | `BRK.etiqueta_justa_la_prende_y_otra_no` |
+
+## Reacciones entre estados (`js/systems/reactions.js`)
+
+| Reacción | Estado previo | Golpe que la dispara | Efecto |
+|---|---|---|---|
+| Conducción | Mojado (acuáticos, charcos, Vapor, ánfora) | Rayo | +25% y salta a los mojados cercanos (aturde) |
+| Quiebre | Congelado o muy ralentizado | Pesado (crítico, `heavy`, ulti) | +80% y esquirlas |
+| Vapor | Congelado o ralentizado ≥ 50% | Fuego | +50%, descongela y deja **mojado** |
+| Hemorragia | Sangrante | Pesado | El sangrado restante entra de golpe (+50%) |
+
+Un golpe que **ya mata** no consume el estado (lo necesitan los míticos que "matan congelados/sangrantes").
+Resistencias por arena y por tipo de enemigo: `ENEMY_ARENA_RESIST` / `ENEMY_TYPE_RESIST` (mismo archivo).
+
+## Firma de cada campeón (evolución Nv. 3 — `js/systems/skill-evolution.js`)
+
+Desde el nivel 3 de talento de cada habilidad, sus golpes dejan el estado propio del campeón:
+
+| Campeón | Firma | Habilita |
+|---|---|---|
+| Tanque, El Libertador | Aturde (220 ms; élites/jefes: ralentiza) | — |
+| Asesino, Segador, Musashi, Eren | Sangrado | Hemorragia |
+| Mago | Según el elemento de la habilidad: quemadura / escarcha / descarga | Vapor, Quiebre |
+| Soporte, La Profeta, La Cazadora | Marca (+10% de daño recibido, 3 s) | — |
+| Nigromante | Marchitar (+10% de daño recibido, 3 s) | — |
+| Axiom | Descarga | — |
+
+Nv. 7 (Resonancia): golpear con la habilidad a un enemigo que **ya** tiene tu firma lo hace estallar (25% alrededor).
+
 ## Campeones
 
 | Campeón | Habilidad | Tipo de daño | Estados | Emite |
@@ -80,7 +109,6 @@
 
 ## Pendiente (no implementado)
 
-- Resistencias o debilidades por tipo de daño. La estructura existe; los valores no.
 - Etiquetas `holy`, `shadow`, `arcane` y `physical` como emisores. Hoy ninguna arena escucha
   esas etiquetas. Candidatas:
   - `holy`: purificar la corrupción de la Ciudad Maldita.

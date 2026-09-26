@@ -37,6 +37,7 @@ function render(){
   drawAcuaAmbience();
   drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   if(arenaHas("drawGround")) arenaHook("drawGround", animNow/1000); // marcas propias en el piso (ARENA_EXT)
+  drawGoreDecals(); // sangre, quemaduras, escarcha y astillas en el piso (debajo de los avisos: el peligro se lee primero)
   vfxDrawGround(); // telegraphs de zonas peligrosas + ondas de choque
   drawSetAuras(); // aura discreta de los sets completos (color del set, más intensa con su carga)
   drawAimPreview(); // previsualización de la habilidad que se está apuntando
@@ -66,6 +67,8 @@ function render(){
   for(const fw of fireWalls){
     drawFireWall(fw);
   }
+  drawMythicGrounds(); // suelo consagrado (Alba Eterna)
+  drawUniqueFissures(); // grietas del Único "Paso del Coloso"
 
   // trampas del Asesino
   for(const tr of traps){
@@ -82,7 +85,8 @@ function render(){
   for(const h of heroes){ if(!h.alive) drawFallenHero(h); }
   if(divinaMode){ for(const h of divinaEnemies){ if(!h.alive && !h.isBossChamp && h.classKey) drawFallenHero(h); } }
 
-  // cuerpos de enemigos muriendo (debajo de los vivos)
+  // cadáveres que quedaron en el suelo y cuerpos de enemigos muriendo (debajo de los vivos)
+  drawCorpses();
   vfxDrawDying();
 
   // entidades ordenadas por profundidad (entradas reutilizadas: sin allocations por frame; los

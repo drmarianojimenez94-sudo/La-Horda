@@ -33,6 +33,15 @@ function labFree(x, y, clear){
   return aidInside(x, y, 70) && !aidSolids.some(s=>Math.hypot(s.x-x, s.y-y) < s.r+clear)
     && !labyrinthWalls.some(w=>aidPointInWall(w, x, y, clear));
 }
+// El sello tiene que poder alcanzarse por el camino de los bots (grilla con muros inflados): si no,
+// podía caer en un bolsillo entre muros al que un bot nunca llegaba y la ventana se vencía sola.
+function labReachable(x, y){
+  if(typeof AID_NAV==="undefined" || !AID_NAV.on || !AID_NAV.blocked || typeof _ctxBuildField!=="function") return true;
+  const f = _ctxBuildField({x, y});
+  for(const h of heroes){ if(!h.alive) continue; const c = aidNavCell(h.x, h.y); if(c >= 0 && f.D[c] < 65535) return true; }
+  const c0 = aidNavCell(0, 0);
+  return c0 >= 0 && f.D[c0] < 65535;
+}
 function labSpawnSet(){
   const pts = [];
   for(let t=0; t<400 && pts.length<3; t++){
@@ -40,6 +49,7 @@ function labSpawnSet(){
     const x = Math.round(Math.cos(a)*r*1.18), y = Math.round(Math.sin(a)*r*0.82);
     if(!labFree(x, y, 46)) continue;
     if(pts.some(p=>Math.hypot(p.x-x, p.y-y) < LAB_CFG.minApart)) continue;
+    if(!labReachable(x, y)) continue;
     pts.push({x, y});
   }
   if(pts.length < 3) return false;

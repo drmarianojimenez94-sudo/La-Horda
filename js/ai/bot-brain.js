@@ -41,7 +41,9 @@ function botDangerVec(x, y, pad){
   return hit ? {x:vx, y:vy} : null;
 }
 
-function _valueOf(e){ return e.rank==="jefe" ? 5 : e.rank==="subjefe" ? 4 : e.rank==="elite" ? 3 : e.rank==="subelite" ? 2 : 1; }
+// Roles enemigos de apoyo: los bots los priorizan como a un élite (matar al sanador primero).
+const BOT_ROLE_VALUE = {sanador:2.2, resucitador:2, invocador:2, comandante:2, artillero:1.5, protector:1.2, carcelero:1, cazador:1};
+function _valueOf(e){ return (e.rank==="jefe" ? 5 : e.rank==="subjefe" ? 4 : e.rank==="elite" ? 3 : e.rank==="subelite" ? 2 : 1) + (e.role ? BOT_ROLE_VALUE[e.role]||0 : 0); }
 // Objetivo según el rol. Devuelve un enemigo (o null).
 function botPickTarget(h, range){
   // prioridades propias de la arena (p.ej. el Chamán y los Núcleos del Reino Micelial)
@@ -100,6 +102,19 @@ function botDownedNear(h, range){
 // A distancia salvo El Libertador montado (sable corvo: caballería que carga cuerpo a cuerpo).
 function botRanged(h){ return !!h.cls.ranged && !h.smMounted; }
 // Movimiento de un bot. Devuelve {mx, my, target}. Llamada desde updateAllies().
+function botBreakableGoal(h){
+  let best = null, bs = 0;
+  for(const b of breakables){
+    if(b.fuse > 0) continue;
+    const d = Math.hypot(b.x-h.x, b.y-h.y); if(d > 300) continue;
+    const K = BRK_CFG.kinds[b.kind]; let n = 0;
+    for(const e of enemies){ if(e.alive && Math.abs(e.x-b.x) < K.r && Math.hypot(e.x-b.x, e.y-b.y) < K.r*0.9) n++; }
+    const s = n - d/150; if(n >= 3 && s > bs){ bs = s; best = b; }
+  }
+  if(!best) return null;
+  const d = Math.hypot(best.x-h.x, best.y-h.y)||1;
+  return {x:(best.x-h.x)/d, y:(best.y-h.y)/d};
+}
 function botMove(h, dt){
   const role = botRole(h);
   const divinaHit = divinaMode ? divinaHostiles("player", h.x, h.y, 620) : null;
@@ -140,6 +155,8 @@ function botMove(h, dt){
   if(arenaHas("botNudge")){ const nu = arenaHook("botNudge", h, target); if(nu) return nu; }
   // 2c) objetivo de la arena (cerrar una fisura, encender un brasero...): js/systems/context-actions.js
   if(!divinaMode){ const ob = ctxBotObjective(h, dt, target); if(ob) return ob; }
+  // 2d) patear una urna/barril/ánfora cuando la horda se amontonó al lado (breakables.js)
+  if(breakables.length && !divinaMode){ const bk = botBreakableGoal(h); if(bk) return {mx:bk.x, my:bk.y, target}; }
   // 3) reagruparse si se alejó mucho del jugador. Si un puente los separó, espera en el borde de
   // su tramo más cercano al jugador (no camina contra la lava) hasta que el mecanismo los una.
   let rg = player;

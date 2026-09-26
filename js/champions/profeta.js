@@ -8,6 +8,7 @@
 const PROFETA_PRESAGIO_MAX = 4; // golpes básicos consecutivos para disparar el giro extra
 const PROFETA_COMBO_WINDOW_MS = 1500; // si deja de golpear este tiempo, el contador se reinicia (ver updateAllies/update)
 function triggerPresagioSpin(caster, basicDmg){
+  champSetOnPresagio(caster); // set La Última Profecía
   const R = 105;
   const spinBonus = caster.classKey ? (talentSkillMods(caster.classKey, 0).flags.presagioSpinBonus||0) : 0;
   const dmg = basicDmg * (1.6+spinBonus);

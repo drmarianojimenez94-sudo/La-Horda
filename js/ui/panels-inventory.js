@@ -121,8 +121,7 @@ function renderSetPanelHTML(classKey){
 // piezas EQUIPADAS (los activos en verde) y, si hay repetidas, la reforja. Es el "me falta una".
 function setDetailHTML(classKey, setId){
   const S = SET_DB[setId]; if(!S) return "";
-  const champ = save.champions[classKey];
-  const owned = ownedDesignIds(classKey);
+  const owned = ownedDesignIds();
   const eqIds = new Set(EQUIP_SLOT_TYPES.map(t=>{ const it = equippedItem(classKey, t); return it && it.set===setId ? it.designId : null; }).filter(Boolean));
   const n = eqIds.size, total = setPieceCount(setId);
   const pieces = setPieceIds(setId).map(id=>{
@@ -161,8 +160,7 @@ function renderFusionHTML(classKey, fuseAttr){
 // unidades disponibles y ejecuta la fusión real (fuseItems ya valida todo de nuevo por las dudas).
 function handleFuseClick(classKey, groupKey){
   const [type, rarity] = groupKey.split("|");
-  const champ = save.champions[classKey];
-  const uids = (champ.inventory||[]).filter(it=>it.type===type && it.rarity===rarity && !it.designed).slice(0,3).map(it=>it.uid);
+  const uids = fusableGroups(classKey).flat().filter(it=>it.type===type && it.rarity===rarity).slice(0,3).map(it=>it.uid);
   if(uids.length!==3) return;
   const result = fuseItems(classKey, uids);
   if(!result.ok) alert(result.reason||"No se pudo fusionar.");

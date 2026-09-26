@@ -7,8 +7,9 @@
 
 function drawHero(h){
   const colossal = h.colossalTimer>0;
-  const drawScale = colossal ? h.scale*1.55 : (h.growTimer>0 ? h.scale*(h.growScale||1) : h.scale);
+  const drawScale = (colossal ? h.scale*1.55 : (h.growTimer>0 ? h.scale*(h.growScale||1) : h.scale)) * uniqueScaleMult(h);
   if(h._deadAt) h._deadAt = 0;
+  drawUniqueAura(h);
   const prof = animProfileOf(h);
   const P = animPose(h, prof, true);
   const lift = P.oy<0 ? Math.min(0.35, -P.oy/60) : 0;
@@ -329,6 +330,7 @@ function drawEnemyBody(e){
 }
 // Estados, nombre y barra de vida: fuera de la transformación, para que no bailen con la pose.
 function drawEnemyOverlays(e){
+  if(e.role) drawEnemyRoleMarks(e); // insignia + anillo del rol enemigo (enemy-roles.js)
   if(e.armorTimer>0){
     // Armadura de Hielo activa: aura celeste pulsante mientras dura la reducción de daño
     const pulse = 0.55+0.45*Math.sin(performance.now()/150);
@@ -342,7 +344,7 @@ function drawEnemyOverlays(e){
   }
 
   if(e.burnTimer>0){
-    ctx.fillStyle = "rgba(255,120,30,0.5)";
+    ctx.fillStyle = e.voidFire ? "rgba(176,106,255,0.65)" : "rgba(255,120,30,0.5)";
     for(let i=0;i<3;i++){
       ctx.fillRect(e.x-8+i*8, e.y-e.radius-18-((performance.now()/90+i*7)%10), 4, 5);
     }
@@ -359,7 +361,18 @@ function drawEnemyOverlays(e){
     ctx.beginPath(); ctx.arc(e.x, e.y-e.radius*0.5, 3, 0, Math.PI*2); ctx.fill();
     ctx.restore();
   }
-  if(e.slowAmt>0.7){
+  // mojado (Conducción con el rayo): gotas que caen
+  if((e.wetTimer>0 || (e.innateWet && currentArena!=="acuatica")) && inView(e.x, e.y, 0)){
+    const t = animNow/140;
+    ctx.fillStyle = "rgba(120,200,240,0.85)";
+    for(let i=0;i<3;i++){ const k = (t + i*0.33) % 1; ctx.fillRect(e.x-8+i*8, e.y-e.radius*1.2 + k*e.radius, 2, 3); }
+  }
+  // electrizado (Descarga Arcana / Conducción)
+  if(e.shockedTimer>0 && Math.sin(animNow/35) > 0.2){
+    ctx.strokeStyle = "rgba(255,232,106,0.9)"; ctx.lineWidth = 1.5;
+    const a = animNow/60; ctx.beginPath(); ctx.moveTo(e.x+Math.cos(a)*e.radius*0.8, e.y-e.radius*1.1); ctx.lineTo(e.x, e.y-e.radius*0.7); ctx.lineTo(e.x-Math.cos(a)*e.radius*0.7, e.y-e.radius*0.4); ctx.stroke();
+  }
+  if(e.slowAmt>0.7 || e.frozenTimer>0){
     // congelado: bloque de hielo translúcido sobre la criatura
     ctx.save();
     ctx.globalAlpha = 0.55;
@@ -477,6 +490,8 @@ function _drawProjCore(p){
   ctx.drawImage(glowSprite(rgb), p.x-g, p.y-g, g*2, g*2);
   ctx.globalCompositeOperation = "source-over";
   ctx.globalAlpha = 1;
+  const style = p.sprite ? null : projStyleOf(p); // forma propia de cada campeón (skill-evolution.js)
+  if(style && drawProjStyle(p, style, r)){ ctx.restore(); return; }
   if(p.sprite==="orb" && acua2Ready("fxOrb")){
     drawImgSized(acua2Pick("fxOrb",0), p.x, p.y, r*3.4, 0.5, 0.5, false, undefined, animNow/300);
   } else {

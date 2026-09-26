@@ -14,7 +14,7 @@ function elementColor(sk, fallback){
 // Visuales de Nova de Escarcha que evolucionan con el nivel de maestría de la habilidad,
 // siguiendo la progresión de referencia N1 (anillo simple) -> N4 (círculo rúnico completo).
 function frostNovaVFX(caster, R, talentLevel){
-  const tier = talentLevel>=7 ? 4 : talentLevel>=4 ? 3 : talentLevel>=2 ? 2 : 1;
+  const tier = tierOf(talentLevel);
   // N1: doble anillo de escarcha (siempre presente, crece con el área)
   particles.push({x:caster.x,y:caster.y, life:520, ring:true, maxLife:520, maxR:R, color:"#bfe8ff"});
   particles.push({x:caster.x,y:caster.y, life:680, ring:true, maxLife:680, maxR:R*0.55, color:"#eaffff"});
@@ -58,7 +58,7 @@ function frostNovaVFX(caster, R, talentLevel){
 // Visuales del estallido inicial de Cataclismo Elemental (Ulti), escalonadas por nivel de talento:
 // de un anillo de fuego simple a un círculo rúnico con esquirlas de hielo, como en la referencia.
 function cataclysmVFX(caster, R, talentLevel){
-  const tier = talentLevel>=7 ? 4 : talentLevel>=4 ? 3 : talentLevel>=2 ? 2 : 1;
+  const tier = tierOf(talentLevel);
   particles.push({x:caster.x,y:caster.y, life:520, ring:true, maxLife:520, maxR:R, color:"#ff6a3d"});
   particles.push({x:caster.x,y:caster.y, life:520, maxLife:520, spin:true, radius:R*0.6, color:"#9fe3ff"});
   if(tier>=2){
@@ -84,14 +84,16 @@ function cataclysmVFX(caster, R, talentLevel){
     particles.push({x:caster.x,y:caster.y, life:900, ring:true, maxLife:900, maxR:R*0.9, color:"#7ad0ff"});
   }
 }
-// Convierte un nivel de talento (0-10) en una de las 4 etapas visuales usadas en todo el juego
-function tierOf(level){ return level>=9 ? 4 : level>=6 ? 3 : level>=3 ? 2 : 1; }
+// Convierte un nivel de talento (0-10) en una de las 4 etapas visuales usadas en todo el juego.
+// Mismos hitos que la EVOLUCIÓN de habilidades (skill-evolution.js): Nv.3 / Nv.5 / Nv.7; el Nv.10
+// suma encima el destello de "Forma final".
+function tierOf(level){ return level>=7 ? 4 : level>=5 ? 3 : level>=3 ? 2 : 1; }
 // Estallido genérico que escala en capas según el nivel de talento invertido en la habilidad:
 // Nv.0-1: anillo simple · Nv.2-3: + chispas y segundo anillo · Nv.4-6: + esquirlas de poder ·
 // Nv.7-10: + círculo rúnico completo. Sirve de base visual compartida para cualquier habilidad
 // que no tenga ya su propia progresión temática (como Nova de Escarcha o Cataclismo).
 function tieredBurstVFX(x, y, R, talentLevel, color, color2){
-  const tier = talentLevel>=7 ? 4 : talentLevel>=4 ? 3 : talentLevel>=2 ? 2 : 1;
+  const tier = tierOf(talentLevel);
   particles.push({x,y, life:420, ring:true, maxLife:420, maxR:R, color});
   if(tier>=2){
     particles.push({x,y, life:520, ring:true, maxLife:520, maxR:R*0.6, color:color2||color});

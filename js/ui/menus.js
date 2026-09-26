@@ -93,6 +93,7 @@ function fmtGold(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 // Tocar una tarjeta abre su ficha (renderChampDetail), que tiene la compra real si está bloqueado.
 function renderShop(){
   document.getElementById("shop-gold-line").innerHTML = `Oro: <b>${fmtGold(save.gold)}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
+  renderShopItems();
   const grid = document.getElementById("shop-champ-grid");
   if(!grid) return;
   grid.innerHTML = CHAMPION_CATALOG.map(c=>{
@@ -111,6 +112,24 @@ function renderShop(){
     });
   });
   startChampAnimLoop();
+}
+// Ofertas de objetos del día (js/systems/shop.js)
+function renderShopItems(){
+  const box = document.getElementById("shop-items"); if(!box) return;
+  const st = shopState();
+  box.innerHTML = '<div class="inv-list shop-items-list">' + st.offers.map(of=>{
+    const it = of.item, poor = save.gold < of.price;
+    return `<div class="shop-offer ${of.sold?"sold":""}">${itemCardHTML(it, {actions:false})}
+      <button class="btn shop-buy" data-buy="${of.id}" ${(of.sold||poor)?"disabled":""}>${of.sold ? "Vendido" : `🪙 ${fmtGold(of.price)}`}</button></div>`;
+  }).join("") + '</div>';
+  box.querySelectorAll("[data-buy]").forEach(b=> b.addEventListener("click", ()=>{
+    const of = st.offers.find(o=>o.id===b.getAttribute("data-buy"));
+    if(!of || !confirm(`¿Comprar ${of.item.name} por ${fmtGold(of.price)} de oro?`)) return;
+    const r = shopBuy(of.id);
+    if(!r.ok){ alert(r.reason); return; }
+    if(typeof playSfx==="function") playSfx(of.tier==="legendario" ? "lootLegend" : "ready");
+    renderShop(); if(typeof renderSaveLine==="function") renderSaveLine();
+  }));
 }
 // Ficha individual: si está bloqueado, muestra precio y botón funcional de desbloqueo real
 // (descuenta oro de verdad y persiste); si no, muestra sus datos de progreso reales.
@@ -291,6 +310,7 @@ function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
   netRenderLobbyBar();
+  netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online
   if(netInRoom()){
     // B1: sala online real: lugares en tiempo real (vos, amigos, esperando)
     document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
@@ -334,109 +354,7 @@ let prepCompareOpenUid = null; // qué tarjeta tiene la comparación abierta, en
 function renderPrepInventory(){
   renderChampInventory(document.getElementById("prep-inventory-panel"), selectedClass, renderPrepSummary);
 }
-function renderChampInventory(panel, classKey, rerender){
-  if(!panel) return;
-  const champ = save.champions[classKey];
-  champ.inventory = champ.inventory || [];
-  champ.equipment = Object.assign(mkEquipment(), champ.equipment||{});
-
-  let html = renderEquipmentGridHTML(classKey, "prep-unequip");
-  html += renderSetPanelHTML(classKey);
-
-  const full = champ.inventory.length >= INVENTORY_CAPACITY;
-  html += `<div class="inv-capacity">Inventario: ${champ.inventory.length}/${INVENTORY_CAPACITY}${full?" — lleno":""}</div>`;
-  html += renderFusionHTML(classKey, "prep-fuse");
-
-  if(!champ.inventory.length){
-    html += '<div class="inv-empty">Todavía no tenés objetos para este campeón. Se obtienen al derrotar subjefes y al jefe final.</div>';
-  } else {
-    html += '<div class="inv-list">';
-    champ.inventory.slice().reverse().forEach(it=>{
-      const rm = RARITY_META[it.rarity];
-      const equipped = champ.equipment[it.type] === it.uid;
-      const passiveNames = it.passives.map(p=>p.name);
-      if(it.mythicPassive) passiveNames.push("★ "+it.mythicPassive.name);
-      const passiveTxt = passiveNames.join(", ");
-      const comparing = prepCompareOpenUid === it.uid;
-      html += `<div class="inv-card ${it.set?"set-item":""}" data-prep-compare="${it.uid}" style="border-left-color:${it.set?"#3ddc71":rm.color};">
-        <span class="item-icon">${it.icon}</span>
-        <div class="item-meta">
-          <div class="item-name" style="color:${it.set?"#3ddc71":rm.color};">${it.name}${it.set?' <span class="set-badge">SET</span>':""}</div>
-          <div class="item-stat">${rm.label} · +${Math.round(it.value*100)}% ${ITEM_TYPES[it.type].statLabel}</div>
-          ${it.desc ? `<div class="item-desc">${it.desc}</div>` : ""}
-          ${passiveTxt ? `<div class="item-passives">${passiveTxt}</div>` : ""}
-          ${(!equipped && comparing) ? compareItemsHTML(classKey, it) : ""}
-          <div class="vic-item-actions">
-            <button data-prep-sell="${it.uid}">Vender (+${SELL_VALUE[it.rarity]||10}o)</button>
-            <button data-prep-discard="${it.uid}">Descartar</button>
-          </div>
-        </div>
-        <button data-prep-equip="${it.uid}" class="${equipped?"equipped":""}">${equipped?"Equipado":"Equipar"}</button>
-      </div>`;
-    });
-    html += '</div>';
-  }
-  html += `<button class="inv-debug-btn prep-debug-gen" ${full?"disabled":""}>[Prueba] Generar objeto al azar — para testear sin esperar a derrotar un subjefe</button>`;
-  panel.innerHTML = html;
-
-  panel.querySelectorAll(".inv-card").forEach(card=>{
-    card.addEventListener("click", (ev)=>{
-      if(ev.target.closest("button")) return;
-      const uid = card.getAttribute("data-prep-compare");
-      prepCompareOpenUid = (prepCompareOpenUid===uid) ? null : uid;
-      rerender();
-    });
-  });
-  panel.querySelectorAll("[data-prep-equip]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      equipItem(classKey, btn.getAttribute("data-prep-equip"));
-      prepCompareOpenUid = null;
-      rerender();
-    });
-  });
-  panel.querySelectorAll("[data-prep-unequip]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      unequipItem(classKey, btn.getAttribute("data-prep-unequip"));
-      rerender();
-    });
-  });
-  panel.querySelectorAll("[data-prep-sell]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      if(!confirm("¿Vender este objeto? No se puede deshacer.")) return;
-      sellItem(classKey, btn.getAttribute("data-prep-sell"));
-      prepCompareOpenUid = null;
-      rerender();
-      renderSaveLine();
-    });
-  });
-  panel.querySelectorAll("[data-prep-discard]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      if(!confirm("¿Descartar este objeto sin recompensa? No se puede deshacer.")) return;
-      discardItem(classKey, btn.getAttribute("data-prep-discard"));
-      prepCompareOpenUid = null;
-      rerender();
-    });
-  });
-  panel.querySelectorAll("[data-prep-fuse]").forEach(btn=>{
-    btn.addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      handleFuseClick(classKey, btn.getAttribute("data-prep-fuse"));
-      rerender();
-    });
-  });
-  const prepDbg = panel.querySelector(".prep-debug-gen");
-  if(prepDbg) prepDbg.addEventListener("click", ()=>{
-    const type = rollItemType(classKey);
-    const rarity = RARITIES[Math.floor(Math.random()*RARITIES.length)];
-    const item = makeItem(type, rarity, classKey);
-    addItemToInventory(classKey, item);
-    rerender();
-  });
-}
+// renderChampInventory (vista de objetos por campeón): js/ui/inventory-ui.js
 function netBackToRoomIfAny(){
   // B1: al terminar una partida online, "volver a la sala" mantiene el mismo código
   netCancelAutoReturn();

@@ -82,6 +82,7 @@ function triggerBasic(caster){
     let hitSomething = false;
     if(target && distance(caster,target) <= cls.basicRange){
       const critOpts = {fromBasic:true, src:caster, critChanceOverride: caster.ghostStepCritTimer>0 ? 1 : mods.critChance, critMultOverride: mods.critMult};
+      if(champSetIaijutsu(caster)){ critOpts.critChanceOverride = 1; critOpts.critMultOverride = mods.critMult + 1.5; iaijutsuLine(caster, finalDmg, target); } // set El Rōnin Errante
       damageEnemy(target, finalDmg, critOpts);
       caster.ghostStepCritTimer = 0; // el crítico garantizado de Paso Fantasma se consume con este golpe
       musashiAddConcentration(caster, target, 1);
@@ -120,8 +121,9 @@ function triggerBasic(caster){
     if(target){ dx=target.x-caster.x; dy=target.y-caster.y; const l=Math.hypot(dx,dy)||1; dx/=l; dy/=l; caster.fx=dx; caster.fy=dy; }
     caster.attackAnim = Math.max(70, 190/totalAspd);
     const dmg = caster.baseDmg * runStats.dmgMult * (caster.buffDmgMult||1) * arenaMods().heroDmgMult * (1 + passiveSum(caster.classKey,"dmg_mult") + mythicBonus) * mods.dmgMult;
-    projectiles.push({x:caster.x, y:caster.y-14, vx:dx*480, vy:dy*480, dmg, life:750, radius:6, color:"#c8f0a8",
-      fromBasic:true, pierce:false, src:caster, critChanceOverride: runStats.critChance+mods.critChanceAdd});
+    const lunaRoja = heroUniqueKey(caster)==="uniq_lunaroja"; // Único: flechas de sangre que atraviesan a la Presa
+    projectiles.push({x:caster.x, y:caster.y-14, vx:dx*480, vy:dy*480, dmg, life:750, radius:6, color: lunaRoja ? "#ff4a5a" : "#c8f0a8",
+      fromBasic:true, pierce: lunaRoja && !!target && target===caster.huntTarget, hitSet: new Set(), src:caster, critChanceOverride: runStats.critChance+mods.critChanceAdd});
     spawnSlash(caster);
     return;
   }
@@ -309,8 +311,10 @@ function castAbility(caster, sk, isUlt, idx){
   // lo que ya calculaba la maestría, sin reemplazarlo.
   const tSkill = caster.classKey ? talentSkillMods(caster.classKey, skillKey) : {powerMult:0,areaMult:0,durationMult:0,jumpBonus:0,flags:{}};
   // La maestría de la habilidad escala daño/curación, área, duración y saltos de cadena
-  const POWER = masteryPowerMult(mastery) * (1+tSkill.powerMult);
-  const AREA = masteryAreaMult(mastery) * (1+tSkill.areaMult);
+  // Evolución de la habilidad (skill-evolution.js): Nv.10 = cada 3er lanzamiento sale potenciado
+  const EVO = skillEvoOnCast(caster, skillKey, sk, isUlt);
+  const POWER = masteryPowerMult(mastery) * (1+tSkill.powerMult) * EVO.power;
+  const AREA = masteryAreaMult(mastery) * (1+tSkill.areaMult) * EVO.area;
   const DUR = masteryDurationMult(mastery) * (1+tSkill.durationMult);
   const JUMP_BONUS = masteryJumpBonus(mastery) + (tSkill.jumpBonus||0);
   const passiveDmg = caster.classKey ? (passiveSum(caster.classKey,"dmg_mult") + passiveSum(caster.classKey,"skilldmg_mult") + mythicExecuteBonus(caster)) : 0;
@@ -330,8 +334,9 @@ function castAbility(caster, sk, isUlt, idx){
   // animaciones del Pack 1 (Segador/Axiom): pose de cast mientras dura este attackAnim; el Tajo
   // del Segador es un golpe de guadaña, así que usa la pose de ataque
   caster._packCastUntil = sk.kind==="cone_slash" ? 0 : animNow + caster.attackAnim;
-  const _prevCastCtx = _castCtx;
+  const _prevCastCtx = _castCtx, _prevUlt = caster._castUlt;
   if(caster===player){ _castCtx = {ult:!!isUlt}; if(isUlt) _ultImpactDone = false; }
+  caster._castUlt = !!isUlt; // impacto nivel 4 para los golpes de esta ulti (también bots/invitados)
   try{
   switch(sk.kind){
 
@@ -415,6 +420,7 @@ function castAbility(caster, sk, isUlt, idx){
         // Talento "Instinto Perfecto": Concentración extra en un Paso Perfecto.
         musashiAddConcentration(caster, perfectSource, 3+(tSkill.flags.pasoPerfectoConcBonus||0));
         if(caster===player) floatText(caster.x, caster.y-46, "¡PASO PERFECTO!", "crit");
+        champSetOnPerfectStep(caster); // set El Rōnin Errante
         particles.push({x:caster.x,y:caster.y, life:340, ring:true, maxLife:340, maxR:44, color:"#bfe4ff"});
       }
       musashiSpawnAfterimage(caster);
@@ -559,6 +565,7 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
 
+    case "soul_harvest": { nigroCastHarvest(caster, sk, dmg, AREA, mastery); break; }
     case "raise_skeletons": {
       // Nigromante — Levanta esqueletos permanentes hasta el máximo que permite la maestría de
       // esta habilidad (sección 3); si ya hay algunos vivos, solo completa los que falten -nunca
@@ -582,12 +589,8 @@ function castAbility(caster, sk, isUlt, idx){
     case "summon_golem": {
       // Nigromante — Crear Golem: único (spawnOrRenewGolem lo renueva/reposiciona si ya existe
       // en vez de duplicarlo). No disponible transformado (sección 6).
-      if(caster.nigroDemonForm){ if(caster===player) floatText(caster.x, caster.y-40, "No disponible transformado", null); break; }
-      spawnOrRenewGolem(caster);
-      caster.nigroCastKind = "golem";
-      caster.attackAnim = Math.max(caster.attackAnim, 320);
+      nigroCastGolem(caster, sk, dmg, AREA);
       particles.push({x:caster.x,y:caster.y, life:400, ring:true, maxLife:400, maxR:60, color:"#8fae7a"});
-      if(caster===player) floatText(caster.x, caster.y-50, "¡CREAR GOLEM!", null);
       break;
     }
 
@@ -596,11 +599,12 @@ function castAbility(caster, sk, isUlt, idx){
       // maldito muere, contagia a los cercanos (nigromantePlagueDeathSpread), con un tope de
       // generaciones (maxGen) que "Peste Negra" sube en 1 -nunca una cadena infinita-. Sigue
       // disponible incluso transformado (sección 6).
+      const plaguePact = nigroConsumePact(caster); // potenciada: más área y una generación extra
       const _pp = aimPoint(caster, sk.range*AREA, sk.radius*AREA), tx = _pp.x, ty = _pp.y;
-      const radius = sk.radius*AREA;
+      const radius = sk.radius*AREA*(plaguePact?1.6:1);
       const defPct = sk.defTakenPct + (tSkill.flags.defTakenBonusPct||0);
       const durationMs = sk.duration*DUR;
-      const maxGen = 2 + (tSkill.flags.blackPlague?1:0);
+      const maxGen = 2 + (tSkill.flags.blackPlague?1:0) + (plaguePact?1:0);
       for(const e of enemies){
         if(!e.alive || Math.hypot(e.x-tx,e.y-ty) > radius) continue;
         nigromanteApplyCurse(e, caster, dmg*0.35, defPct, 0, durationMs, maxGen);
@@ -671,7 +675,7 @@ function castAbility(caster, sk, isUlt, idx){
         let d2 = curDmg;
         if(!isBoss && (cur.hp/cur.maxHp) <= execPct) d2 *= execMult;
         damageEnemy(cur, d2, {src:caster});
-        cur.bleedTimer = Math.max(cur.bleedTimer||0, (sk.bleedDur||2600)*DUR);
+        cur.bleedTimer = Math.max(cur.bleedTimer||0, (sk.bleedDur||2600)*DUR); cur._overwriteBy = caster;
         cur.bleedDmg = Math.max(cur.bleedDmg||0, curDmg*(sk.bleedDmgMult||0.3));
         pushChainBolt(px_, py_, cur.x, cur.y, 16, 380);
         drawAxiomVfxBurst(cur.x, cur.y, "overwrite");
@@ -806,8 +810,8 @@ function castAbility(caster, sk, isUlt, idx){
       const boltThickness = 26 + chainTier*14;     // más grueso e imponente cuanto más talento
       const sparkSize = 46 + chainTier*20;
       const electrifiedMs = 500 + chainTier*90;
-      for(let i=0;i<(sk.jumps+JUMP_BONUS) && cur;i++){
-        damageEnemy(cur, curDmg, {src:caster});
+      for(let i=0;i<(sk.jumps+JUMP_BONUS+uniqueChainBonus(caster)) && cur;i++){
+        damageEnemy(cur, curDmg, {src:caster, chain:true});
         envEmit("lightning", cur.x, cur.y, caster, {r:30}); // etiqueta ambiental (js/systems/env-tags.js)
         pushChainBolt(px_, py_, cur.x, cur.y, boltThickness, 420);
         pushSpark("impacto", cur.x, cur.y, sparkSize, 340);
@@ -967,8 +971,10 @@ function castAbility(caster, sk, isUlt, idx){
       }
       // breve destello de carga antes de la estampida
       particles.push({x:caster.x,y:caster.y, life:180, ring:true, maxLife:180, maxR:34, color:"#9fe3ff"});
+      const _cx0 = caster.x, _cy0 = caster.y;
       caster.x += dx*dist; caster.y += dy*dist;
       clampToArena(caster);
+      if(heroUniqueKey(caster)==="uniq_juggernaut") uniqueAddFissure(caster, _cx0, _cy0, caster.x, caster.y); // Único "Paso del Coloso"
       particles.push({x:caster.x,y:caster.y, life:260, slash:true, color:"#9fe3ff"});
       particles.push({x:caster.x-dx*40,y:caster.y-dy*40, life:280, bolt:true, x2:caster.x, y2:caster.y, color:"#cdeeff"});
       tieredBurstVFX(caster.x, caster.y, 40, allocLevel(mastery), "#9fe3ff", "#cdeeff");
@@ -997,7 +1003,7 @@ function castAbility(caster, sk, isUlt, idx){
       if(spinExtend) caster.spinDurationMult = Math.max(caster.spinDurationMult||1, 1+spinExtend);
       // Vida máxima temporal: se retira el bonus anterior (si lo hubiera) antes de aplicar el nuevo,
       // para que recastear el grito no acumule vida infinitamente.
-      if(caster.pendingHpBonus){ caster.maxHp -= caster.pendingHpBonus; caster.hp = Math.min(caster.hp, caster.maxHp); caster.pendingHpBonus = 0; }
+      if(caster.pendingHpBonus){ caster.maxHp = Math.max(1, caster.maxHp - caster.pendingHpBonus); caster.hp = Math.min(caster.hp, caster.maxHp); caster.pendingHpBonus = 0; }
       const hpBonus = Math.round(caster.maxHp * (sk.hpBonusPct||0) * POWER);
       caster.maxHp += hpBonus; caster.hp += hpBonus; caster.pendingHpBonus = hpBonus;
       // Crecimiento visual: el caballero se agiganta levemente mientras dura el grito
@@ -1458,5 +1464,5 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
   }
-  } finally { _castCtx = _prevCastCtx; }
+  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; }
 }

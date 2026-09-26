@@ -8,6 +8,7 @@
    ALIADOS CONTROLADOS POR IA (los otros 3 campeones)
    ============================================================ */
 function botTryAbilities(h){
+  botMaybeEmergency(h); // curación de emergencia por debajo del 30% (pacing.js)
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(h.classKey,"cd_mult"));
   // El Libertador / Eren: IA propia (js/champions/libertador.js, eren.js)
   if(h.classKey==="libertador" && !divinaMode){ botLibertador(h, passiveCdMult); return; }
@@ -105,12 +106,14 @@ function botTryAbilities(h){
       }
       return;
     }
-    const maxCount = nigromanteMaxSkeletons(masteryOf(h.classKey, 0));
     const nearCount = enemies.filter(e=>e.alive && distance(h,e)<=260).length;
+    // Pacto: gastar almas cuando hay mucha horda cerca (o el gólem necesita la furia)
+    if(!h.nigroPact && (h.nigroSouls||0) >= 7 && nearCount >= 5) nigroTogglePact(h);
     let priority = [];
-    if(h.skeletons.length < maxCount) priority.push(0);
     if(!h.golem) priority.push(1);
-    if(nearCount>=2) priority.push(2);
+    if(nearCount>=3) priority.push(2);
+    if(nearestEnemyTo(h, 200)) priority.push(0);
+    if(h.golem && nearCount>=4) priority.push(1); // ¡Aplasta! sobre el grupo
     for(const idx of priority){
       const sk = h.cls.skills[idx];
       if(h.cds[idx]>0 || h.energy < sk.cost) continue;
@@ -230,7 +233,7 @@ function updateAllies(dt){
     h.ultCd = Math.max(0, h.ultCd-dt);
     h.energy = Math.min(h.maxEnergy, h.energy + h.cls.energyRegen*arenaMods().heroEnergyRegenMult*arenaRuleEnergyRegenMult()*dt/1000);
     if(h.shieldTimer>0){ h.shieldTimer-=dt; if(h.shieldTimer<=0) h.shield=0; }
-    if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp-=h.pendingHpBonus; h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
+    if(h.buffTimer>0){ h.buffTimer-=dt; if(h.buffTimer<=0){ h.buffDmgMult=1; h.buffAtkSpeedMult=1; h.buffLifesteal=0; h.buffDefMult=1; h.buffBleedOnHit=false; h.spinDurationMult=1; h.colossalTimer=0; if(h.pendingHpBonus){ h.maxHp=Math.max(1,h.maxHp-h.pendingHpBonus); h.hp=Math.min(h.hp,h.maxHp); h.pendingHpBonus=0; } } }
     if(h.furyArmorTimer>0){
       h.furyArmorTimer -= dt;
       // Ojos y aura carmesí: partículas oscuras/rojas mientras dura la Armadura de la Furia

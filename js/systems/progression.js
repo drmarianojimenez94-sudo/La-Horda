@@ -5,14 +5,12 @@
    abandonar la arena.
    ============================================================ */
 
-// Curva de experiencia empinada a propósito: subir de nivel de personaje es permanente, así que
-// cuesta cada vez más pasados los primeros niveles. Sin multiplicadores: la XP que se gana es la
-// real de los enemigos y de la victoria. Calibrada con campañas simuladas desde cero (nivel 1,
-// 7 arenas en orden desde que llegó el Reino Micelial, tools/playtest): quien juega bien termina
-// la campaña cerca del nivel 40 (unos 115.000 XP en total); quien pierde muchas partidas llega un
-// poco más abajo, porque perder solo conserva la mitad de lo ganado. (Con 6 arenas el término alto
-// era 0,6·nivel^2,3: la 7ma arena sumaba ~6 niveles al final.)
-function xpToNext(level){ return Math.round(200 + level*50 + Math.pow(level,2.3)*1.2); }
+// Curva de experiencia: RÁPIDA al comienzo (los primeros 10 niveles cuestan la mitad que antes: el
+// jugador siente crecer a su campeón partida a partida) y cada vez MÁS LENTA (término cúbico): se
+// cruza con la curva anterior cerca del nivel 35 y el nivel 60 cuesta el doble. No hay un nivel
+// final "objetivo": el final de la campaña cae donde caiga (ver LA_HORDA_PROGRESSION_ECONOMY_REPORT.md),
+// y el endgame pide mucho más esfuerzo. Sin multiplicadores: XP real de enemigos y victorias.
+function xpToNext(level){ return Math.round(90 + level*26 + 0.16*Math.pow(level,3)); }
 function grantXP(champKey, amount){
   const c = save.champions[champKey];
   c.xp += amount;

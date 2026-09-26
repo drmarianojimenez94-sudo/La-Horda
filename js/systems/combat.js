@@ -8,6 +8,8 @@ function damageEnemy(e, amount, opts){
   opts = opts || {};
   const src = opts.src || player;
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
+  if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
+  if(e._evoMarkT) dmg *= evoDmgTakenMult(e); // marca/marchitar de la Firma (skill-evolution.js)
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
   // e.fy ya apuntan hacia donde está mirando (su objetivo actual), así que compara contra eso
   // en vez de armar un sistema de facing nuevo-.
@@ -29,20 +31,40 @@ function damageEnemy(e, amount, opts){
   // Sin overrides, el comportamiento de siempre queda idéntico.
   dmg *= heroDmgOutMult(src) * enemyVulnMult(e); // Granaderos/¡Avancen!/forma montada/titán y defensa rota (San Lorenzo, Andes)
   dmg *= setDamageMult(src, e, opts); // bonus de sets (Glaciar, Cazador, Frenesí, Resonancia, Impulso…)
+  dmg *= itemDamageMult(src, e, opts); // poderes de legendarios/míticos (Avivar las Llamas, Verdugo, Cosecha Roja…)
+  // tipo de daño -> resistencia/debilidad de la horda de esta arena (js/systems/reactions.js)
+  const dmgKind = dmgKindOf(opts);
+  const _res = enemyResist(e, dmgKind);
+  if(_res){ dmg *= 1 - _res; resistLabel(e, dmgKind, _res, src); }
   // refuerzos de la partida: rematar (enemigo bajo 30% de vida) y cazador de élites/jefes
   if(runStats.executeBonus && e.hp < e.maxHp*0.3) dmg *= 1 + runStats.executeBonus;
   if(runStats.eliteDmgMult!==1 && (e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) dmg *= runStats.eliteDmgMult;
   let critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
   let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
   const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
+  critMult += itemCritMultBonus(src, e);
+  const csc = champSetCritBonus(src, e, opts); if(csc){ critChance += csc.chance; critMult += csc.mult; }
   const crit = opts.forceCrit || Math.random() < critChance;
   if(crit) dmg *= critMult;
+  // reacciones entre estados (Conducción, Quiebre, Vapor, Hemorragia): miran los estados de ANTES del golpe
+  const _powPre = impactPower(e, dmg, crit, opts, src);
+  dmg *= reactionMult(e, dmg, opts, src, _powPre, dmgKind);
+  const _hpBefore = Math.max(0, e.hp);
   e.hp -= dmg;
-  e.hitFlash = 90;
+  // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
+  // "farmear" daño pegándole fuerte a enemigos casi muertos).
+  const usefulDmg = Math.min(dmg, _hpBefore);
+  // Nivel del impacto (1 básico · 2 habilidad · 3 pesado/crítico · 4 ulti): escala la reacción del
+  // cuerpo, el destello, el retroceso, la sangre y (para el jugador) el hit-stop y el temblor.
+  const pow = impactPower(e, dmg, crit, opts, src);
+  e._lastHitPow = pow; e.hitFlash = IMPACT_FLASH_MS[pow];
+  e._lastDmgKind = dmgKind;
+  if(e.hp <= 0) e._lastOverkill = dmg - _hpBefore;
+  if(!opts.fromProc || pow>=3){ const kdx = e.x-(src?src.x:e.x), kdy = e.y-(src?src.y:e.y), kl = Math.hypot(kdx,kdy)||1; if(inView(e.x, e.y, 60)) goreOnHit(e, pow, kdx/kl, kdy/kl); }
   if(src && src.stats){
-    src.stats.dmgDealt += dmg;
-    if(e.rank==="jefe" || e.rank==="subjefe") src.stats.dmgToBoss += dmg;
-    if(!opts.fromBasic) src.stats.abilityHits = (src.stats.abilityHits||0)+1;
+    src.stats.dmgDealt += usefulDmg;
+    if(e.rank==="jefe" || e.rank==="subjefe") src.stats.dmgToBoss += usefulDmg;
+    if(!opts.fromBasic && !opts.fromProc) src.stats.abilityHits = (src.stats.abilityHits||0)+1; // los procs (objetos, sets, Resonancia, entorno) no inflan el "área" de la calificación
   }
   e.lastHitBy = src;
   // B1: los números de daño de un invitado se ven solo en SU pantalla
@@ -53,10 +75,11 @@ function damageEnemy(e, amount, opts){
     playSfx(crit ? "crit" : "hit");
   }
   vfxHit(e, src, opts, crit);
-  if(src===player && !opts.fromProc) impactFeedback(e, dmg, crit, opts);
-  if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); }
+  if(!opts.fromProc || pow>=3) impactFeedback(e, dmg, crit, opts, pow, src);
+  if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); skillEvoOnHit(src, e, dmg, opts); }
+  if(breakables.length && src && src.classKey) breakablesOnHit(e, src); // golpe pegado a una urna/barril la arma (encadena)
   if(src && src.stats){
-    if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + dmg;
+    if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + usefulDmg;
     if(opts.slow || opts.stun || opts.freeze || opts.knockback) src.stats.ccApplied = (src.stats.ccApplied||0) + 1;
   }
   // Antes cargaba con el 10% del daño ya escalado por maestría/nivel/buffs, así que al final
@@ -66,9 +89,9 @@ function damageEnemy(e, amount, opts){
   if(!(src.classKey==="eren" && src.erenPhase==="rumble")) // El Retumbar no recarga la Furia que lo disparó (termina en 0)
     src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
   if(src.classKey==="eren") erenCheckRumbling(src);
-  if(opts.burn){ e.burnTimer = 2600; e.burnDmg = amount*0.12; }
-  if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; }
-  if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; }
+  if(opts.burn){ e.burnTimer = Math.max(e.burnTimer||0, 2600*uniqueBurnMult(src)); e.burnDmg = Math.max(e.burnDmg||0, amount*0.12); e.burnSrc = src; if(heroUniqueKey(src)==="uniq_archimago") e.voidFire = true; }
+  if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; e.bleedSrc = src; }
+  if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; e.slowBy = src; }
   if(opts.stun){ e.stunTimer = opts.stun; }
   if(opts.knockback){
     const ang = Math.atan2(e.y-src.y, e.x-src.x);
@@ -108,7 +131,7 @@ function damageEnemy(e, amount, opts){
   // Segador Olvidado: golpear también genera Furia (además de recibir daño, ver damageHero)
   if(src && src.classKey==="segador"){
     const genMult = src.furyArmorTimer>0 ? (src.furyGenMult||1) : 1;
-    src.energy = Math.min(src.maxEnergy, src.energy + dmg*0.11*genMult);
+    src.energy = Math.min(src.maxEnergy, src.energy + dmg*0.11*genMult*setFuryMult(src));
   }
   // Sylva: cada golpe de básico contra el mismo objetivo suma Rastreo (Instinto de Caza,
   // sección 8) -se engancha acá en vez de en el punto de disparo porque su básico es un
@@ -127,11 +150,17 @@ function damageEnemy(e, amount, opts){
 
 function killEnemy(e){
   e.alive = false;
+  // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
+  e._deathKind = goreDeathKind(e);
+  if(e.role) roleOnDeath(e);
+  if(e._evoHitBy) skillEvoOnKill(e); // Ímpetu (Nv.5 de la habilidad que lo remató)
+  { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl); }
   // Nigromante — Plaga de los Condenados: el contagio al morir un maldito tiene que dispararse
   // sin importar QUÉ lo mató (antes solo se llamaba desde el tick de daño de la propia maldición,
   // así que un maldito rematado por un golpe normal -el caso más común en la práctica- nunca
   // contagiaba a nadie). Acá se dispara siempre, una sola vez, para cualquier causa de muerte.
   if(e.cursed) nigromantePlagueDeathSpread(e);
+  nigroOnEnemyKilled(e); // Cosecha de Almas
   // Musashi: si el que murió era la Marca de Duelo de alguien, hay que limpiarla siempre -
   // nunca debe quedar apuntando a un cadáver-. Si murió DENTRO de un Último Duelo activo con
   // él, es la condición de victoria real (Golpe de Gracia + Senda del Rōnin, ver
@@ -216,11 +245,15 @@ function killEnemy(e){
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
-  if(!e.alive && !vfxOnDeath(e) && inView(e.x, e.y, 100)){
-    particles.push({x:e.x, y:e.y, life:420, maxLife:420, corpse:true, spriteType:e.type, scale:e.scale, flip:e.fx<-0.12});
+  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e)){
+    // sin animación de muerte (fuera de cámara o sin lugar en el pool): el cadáver igual queda en el
+    // suelo -es la materia prima del Nigromante, no puede depender de la cámara del anfitrión-
+    if(!addCorpse(e, animProfileOf(e).death, e.fx<-0.12 ? -1 : 1, e._deathKind) && inView(e.x, e.y, 100))
+      particles.push({x:e.x, y:e.y, life:420, maxLife:420, corpse:true, spriteType:e.type, scale:e.scale, flip:e.fx<-0.12});
   }
 }
 
+let _avoidableHit = false; // lo prende bossHitHero: el golpe venía con aviso en el suelo
 function damageHero(h, amount, src){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
@@ -231,9 +264,12 @@ function damageHero(h, amount, src){
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
-    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h);
+    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h) * heroResistMult(h, src);
   }
-  if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
+  if(h.stats){
+    h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
+    if(_avoidableHit) h.stats.avoidableTaken = (h.stats.avoidableTaken||0) + amount; // golpes telegrafiados (se podían esquivar)
+  }
   // Espinas (refuerzo): devuelve parte del golpe a quien pegó cuerpo a cuerpo al jugador
   if(h===player && runStats.thorns>0 && src && src.type && src.alive && src.hp>0 && typeof src.maxHp==="number") damageEnemy(src, amount*runStats.thorns, {src:player});
   const defBonus = (h===player) ? runStats.defBonus : 0;
@@ -267,7 +303,7 @@ function damageHero(h, amount, src){
   if(h.classKey==="eren" && dmg>0) erenOnHurt(h, dmg);
   const absorbed = Math.max(0, dmgBeforeShields - dmg);
   if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }
-  if(dmg>0) itemProcsOnHurt(h, dmg);
+  if(dmg>0) itemProcsOnHurt(h, dmg, src);
   setsOnHurt(h, Math.max(0,dmg), mitigated, absorbed);
   if(h.isRemote && dmg>0.5) netEmitTo(h._netSlot, "hurt", [dmg, src && src.x, src && src.y]);
   else if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);
@@ -287,7 +323,7 @@ function damageHero(h, amount, src){
   // Segador Olvidado: recibir daño genera Furia (más si tiene activa la Armadura de la Furia)
   if(h.classKey==="segador" && amount>0.5){
     const furyMult = h.furyArmorTimer>0 ? 1.6 : 1;
-    h.energy = Math.min(h.maxEnergy, h.energy + amount*0.16*furyMult);
+    h.energy = Math.min(h.maxEnergy, h.energy + amount*0.16*furyMult*setFuryMult(h));
     // Nivel 4 de la Armadura de la Furia: una parte del daño recibido se convierte en poder
     // ofensivo mientras la Furia esté activa (tope prudente para que no se descontrole).
     if(h.furyArmorTimer>0 && h.furyConvertPct>0){

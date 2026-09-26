@@ -211,9 +211,9 @@ async function canvasNonBlank(page) {
     await page.evaluate(() => window.__T.ev('(addItemToInventory(selectedClass, makeItem("arma","legendario",selectedClass)), addItemToInventory(selectedClass, makeItem("casco","raro",selectedClass)), renderPrepSummary(), 1)'));
     await sleep(100);
     const html = await page.locator('#prep-inventory-panel').innerHTML();
-    await page.locator('#prep-inventory-panel [data-prep-equip]').first().click().catch(() => {});
+    await page.locator('#prep-inventory-panel [data-inv-equip]').first().click().catch(() => {});
     await sleep(150);
-    const eq = await page.evaluate(() => window.__T.ev('({len: save.champions.mago.inventory.length, equipped: Object.values(save.champions.mago.equipment).filter(Boolean).length})'));
+    const eq = await page.evaluate(() => window.__T.ev('({len: save.stash.length, equipped: Object.values(save.champions.mago.equipment).filter(Boolean).length})'));
     check('inventory.ui', html.length > 100 && eq.len >= 2 && eq.equipped >= 1, eq);
     const errs = await gameErrors(page, errors);
     check('inventory.no_errors', errs.length === 0, errs);

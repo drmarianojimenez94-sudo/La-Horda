@@ -90,6 +90,9 @@ function startRun(fromLevel){
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
   vfxResetRun();
   resetFeedback();
+  resetMythicPowers(); // suelo consagrado y otros efectos de objetos míticos
+  resetEnemyRoles(); // avisos de roles enemigos vistos
+  resetBreakables();
   hazardZones = []; arenaRuleTimer = 8000; resetArenaRule();
   bossHudHide();
   if(typeof arenaTitleCardHide==="function") arenaTitleCardHide();

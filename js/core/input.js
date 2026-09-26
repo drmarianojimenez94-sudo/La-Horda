@@ -47,6 +47,12 @@ bindAbilityButton(document.getElementById("btn-basic"), ()=> triggerBasic(player
 // Las 3 habilidades (btn-s1/s2/s3) se manejan en js/core/aim.js: tocar = lanzar al mejor
 // objetivo; mantener y arrastrar = apuntar con previsualización del área.
 bindAbilityButton(document.getElementById("btn-ult"), ()=> useUltimate());
+// Nigromante: Pacto (gasta 5 almas -> la próxima habilidad sale potenciada)
+// Curación de emergencia (1 por nivel). Tecla Q en escritorio.
+function emergPress(){ if(netIsGuest()) netSendToHost({k:"emerg"}); else emergUse(player); }
+bindAbilityButton(document.getElementById("btn-emerg"), emergPress);
+window.addEventListener("keydown", (ev)=>{ if(ev.repeat || (ev.key!=="q" && ev.key!=="Q") || state!=="playing") return; const tag = ev.target && ev.target.tagName; if(tag==="INPUT" || tag==="TEXTAREA") return; emergPress(); });
+bindAbilityButton(document.getElementById("btn-pact"), ()=>{ if(netIsGuest()) netSendToHost({k:"pact"}); else nigroTogglePact(player); });
 
 let basicHeld = false;
 const basicBtn = document.getElementById("btn-basic");

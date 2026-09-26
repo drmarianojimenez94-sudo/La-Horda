@@ -58,6 +58,7 @@ function renderChampHub(){
 function setHubTabs(tabsId, active){
   document.querySelectorAll(`#${tabsId} .hub-tab`).forEach(t=> t.classList.toggle("active", t.dataset.tab===active));
 }
+document.getElementById("mychamps-tab-champs").addEventListener("click", ()=>{ setState("champions"); renderMyChampions(); });
 document.getElementById("mainmenu-campeones-btn").addEventListener("click", ()=>{
   setState("champions"); renderMyChampions();
 });

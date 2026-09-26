@@ -53,7 +53,7 @@ function erenFuryGainMult(h){
   if(h.erenAdvanceTimer>0) m *= EREN_CFG.advance.furyMult;
   if(h.erenTitan) m *= F.titanGainMult;
   m *= 1 + (talentSkillMods(h.classKey, "ult").flags.furyGainPct||0);
-  return m;
+  return m * setFuryMult(h); // set Legión de Reconocimiento
 }
 function erenAddFury(h, amt){
   if(h.erenPhase==="rumble") return;
@@ -249,7 +249,7 @@ function erenEnterTitan(h){
   h.def = Math.max(h.def, T.def);
   h.cds = [0,0,0];
   h.erenTitan = true; h.cls = EREN_TITAN_CLS;
-  h.erenTitanTimer = h.erenTitanDur || T.durationMs; h.erenTitanMax = h.erenTitanTimer;
+  h.erenTitanTimer = (h.erenTitanDur || T.durationMs) * champSetTitanDurMult(h); h.erenTitanMax = h.erenTitanTimer;
   h.erenRumblingReady = false; h.ultCharge = 0; h.erenRegenPool = 0;
   h.erenCombo = 0;
   if(h===player || h.isRemote) showBanner("EL PORTADOR");
@@ -366,6 +366,7 @@ function updateEren(h, dt){
       if(!e.alive || hitSet.has(e)) continue;
       if(distance(h, e) > H.slashRadius*(h.erenHookArea||1) + (e.radius||20)*0.5) continue;
       hitSet.add(e);
+      if(hitSet.size===3) champSetOnHookEnd(h, 3); // set Legión: gancho que corta a 3+
       damageEnemy(e, h.erenHookDmg||0, {src:h});
       vfxBurst(e.x, e.y-16, 6, "blood", 150, 300, 3, 1, -20, 0);
       h.erenSlashFxTimer = 180;
