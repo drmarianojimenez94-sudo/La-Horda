@@ -22,6 +22,7 @@ function update(dt){
   for(const h of heroes) updateLastDuel(h, dt);
   updateMusashiFx(dt);
   updateBossSkillWorld(dt);
+  crystalTick(dt); // ceremonia del cristal de un Guardián (crystals.js)
   hechWorldTick(dt); // efectos diferidos del Hechicero Supremo (inf-hechicero.js)
   for(const h of heroes){ updateSylvaMomentum(h, dt); updateSylvaWolf(h, dt); }
   for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); updateNigromantePassive(h, dt); }

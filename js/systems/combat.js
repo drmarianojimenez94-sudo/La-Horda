@@ -241,6 +241,7 @@ function killEnemy(e){
       dropPotion(e.x, e.y, "mana");
     }
   }
+  if(e.type==="guardian_laberinto" && !netIsGuest()) crystalAward("piedra", e.x, e.y); // su cristal queda libre (crystals.js)
   if(e.type==="hechicero_supremo" && hechOnDefeat(e)) return; // no muere: huye (inf-hechicero.js)
   if(e===boss){
     onBossDefeated();

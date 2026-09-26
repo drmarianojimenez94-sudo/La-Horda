@@ -253,7 +253,8 @@ const SFX_CFG = {
   lootMythic:{p:5,gap:500}, lootSet:{p:5,gap:500}, lootUnique:{p:5,gap:1200},
   // Combate: estados y gore
   freeze:{p:2,gap:120}, shatter:{p:3,gap:110}, splat:{p:1,gap:45}, gib:{p:2,gap:90}, burnDeath:{p:1,gap:80}, zap:{p:2,gap:90},
-  threat:{p:4,gap:900}, emergencyHeal:{p:4,gap:500}, skillHit:{p:2,gap:70}
+  threat:{p:4,gap:900}, emergencyHeal:{p:4,gap:500}, skillHit:{p:2,gap:70},
+  crystal:{p:5,gap:800} // cristal de un Guardián
 };
 const _sfxLast = {}; let _sfxVoices = [];
 const SFX_MAX_VOICES = 12;
@@ -343,6 +344,7 @@ function playSfx(type){
     // ---- Botín ----
     case "chestDrop": _tone(t0,"sine",80,40,0.3,0.55,D); _noise(t0,0.2,0.25,"lowpass",600,0,D); _noise(t0+0.02,0.06,0.12,"bandpass",2400,3,D); len=0.32; break;
     case "chestShake": _noise(t0,0.06,0.12,"bandpass",900,2,D); _tone(t0,"square",140,120,0.05,0.05,D); len=0.07; break;
+    case "crystal": _tone(t0,"sine",660,660,0.5,0.1,D); _tone(t0+0.08,"sine",990,990,0.6,0.08,D); _tone(t0+0.16,"triangle",1320,1760,0.8,0.07,D,0.05); _noise(t0,0.5,0.08,"highpass",5000,0,D); len=0.9; break;
     case "chestOpen": _noise(t0,0.35,0.22,"bandpass",700,1.2,D); _tone(t0,"triangle",220,440,0.3,0.1,D); _tone(t0+0.18,"sine",880,1320,0.4,0.08,D,0.04); len=0.6; break;
     case "lootCommon": _tone(t0,"triangle",520,520,0.08,0.08,D); len=0.1; break;
     case "lootRare": _tone(t0,"triangle",660,660,0.1,0.1,D); _tone(t0+0.08,"triangle",990,990,0.14,0.09,D); len=0.24; break;

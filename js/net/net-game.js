@@ -137,7 +137,7 @@ const NET_GLOBALS = {
 /* ---------------- eventos visuales/sonoros (se graban en el anfitrión, se repiten en los invitados) ---------------- */
 const NET_EVENT_FNS = ["floatText","showBanner","playSfx","vfxBurst","vfxConverge","vfxShock","vfxTelegraph","vfxSprite","vfxShake",
   "vfxOnDeath","flashScreen","pushChainBolt","pushSpark","pushAsesinoFx","bossHudShow","bossHudHide","bossHudHint","bossHudPhase",
-  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard","addDecal","goreChunks","vfxCastFlash"];
+  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard","addDecal","goreChunks","vfxCastFlash","crystalAward"];
 const NET_INLINE_EVENTS = new Set(["vfxOnDeath","bossHudShow"]); // su entidad puede no haber llegado nunca al invitado
 const NET_ORIG = {};
 let _netRecDepth = 0, _netEvents = [];

@@ -58,6 +58,8 @@ function runIntroShow(arena, onGo){
   el.querySelector(".ri-kill").textContent = B.kill;
   el.querySelector(".ri-help").textContent = B.help;
   el.querySelector(".ri-goal").textContent = B.goal;
+  const cr = el.querySelector(".ri-crystals");
+  if(cr){ const show = typeof crystalRowHtml==="function" && (crystalsOwned().length > 0 || CRYSTAL_BY_ARENA[arena] || arena==="infernal"); cr.innerHTML = show ? crystalRowHtml() : ""; cr.style.display = show ? "" : "none"; }
   el.classList.remove("hidden");
   RUN_INTRO.open = true; RUN_INTRO.onGo = onGo; RUN_INTRO.t0 = performance.now();
   cancelAnimationFrame(RUN_INTRO.raf);

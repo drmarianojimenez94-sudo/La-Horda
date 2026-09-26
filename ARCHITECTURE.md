@@ -204,6 +204,9 @@ reinicio a nivel 1 es `campaignResetV1` en `js/storage/save.js`. El inventario e
   clara de la arena (`ARENA_BRIEF`: qué es, qué te mata, qué te ayuda, objetivo).
 - `js/rendering/fx-contrast.js` — pase de contraste de efectos: sombra de contraste por arena, modo brillo del
   primitivo de sprites (`FX_GLOW`), destello de lanzamiento y estrella de impacto.
+- `js/systems/crystals.js` — los Cristales de los Guardianes (lore en `LA_HORDA_LORE.md`): premio al vencer a la
+  Madre Espora, al Mago de Hielo y al Guardián del Laberinto, ceremonia (el cristal vuela al jugador), guardado en
+  `save.crystals`, diálogo del Hechicero y fila de cristales en la pantalla previa. Test `tools/items/t_crystals.js`.
 - `js/arenas/arena-blocks.js` — muros y bloques de las arenas abiertas (Ruinas, Acuática, Gélida, Infernal):
   distribución por arena (`ARENA_BLOCK_LAYOUTS`, misma estructura que `labyrinthWalls`, así colisión y navegación
   los usan sin cambios), estilo por arena (`WALL_STYLES`, horneado a canvas) y transparencia cuando un héroe queda

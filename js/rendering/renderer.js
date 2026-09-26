@@ -138,6 +138,7 @@ function render(){
   drawAcua2Overlays();
   drawBossSkillOverlay();
   fxGlowBegin(); vfxDrawSprites(); fxGlowEnd();
+  crystalDraw(); // cristal de un Guardián volando al jugador (crystals.js)
   drawFxContrastTop(); // anticipación al lanzar + estrella de impacto (fx-contrast.js)
   if(arenaHas("drawTop")) arenaHook("drawTop");
   ctxDraw(); // aviso + progreso de las acciones contextuales
