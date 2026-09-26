@@ -31,7 +31,7 @@ sus bloques a `js/arenas/hielo/` y registrar los mismos ganchos que usa La Forta
 | **Encender** | Acción contextual (🔥, 1,4 s) o **fuego**: un Muro de Fuego, un proyectil que quema o el Cataclismo cerca lo prenden al instante. |
 | **Legibilidad** | Escarcha que crece a los pies, medidor ❄ sobre el jugador, borde de pantalla helado con mucho frío, zona de calor punteada que parpadea antes de apagarse. |
 
-- **Bots:** con frío se mueven en círculo alrededor de su objetivo o van al brasero encendido (gancho `botNudge`); encienden braseros si al equipo le hace falta.
+- **Bots:** siguen peleando aunque tengan frío (alejarse costaba más que la lentitud: dejaban de tanquear); solo van a un brasero encendido **muy cercano** (260 u) con mucho frío (gancho `botNudge`), y uno solo enciende un brasero apagado cuando al equipo le hace falta y no hay otro encendido cerca.
 - **Red:** estado de braseros y frío de cada héroe en `hieNetState()`.
 - **Pruebas:** `HIE.*`, `ENV.muro_de_fuego_enciende_el_brasero` y `ARENA=hielo t_identity_net.js`.
 - Ver "Modificación futura" arriba: la pared de dificultad sigue siendo un tema de balance abierto (ver `LA_HORDA_PLAYTEST_REPORT.md`).

@@ -59,8 +59,8 @@ Sistemas comunes nuevos que usan:
 | Laberinto | sellos I-II-III en orden (resolver) |
 | Infernal | fisuras-portal que crecen: ¿mato o cierro? |
 
-Pruebas: `tools/identity/t_identity.js` (78 chequeos) y `tools/identity/t_identity_net.js`
-(`ARENA=infernal|hielo|acuatica|laberinto`, 2 jugadores reales por el relay).
+Pruebas: `tools/identity/t_identity.js` (80 chequeos) y `tools/identity/t_identity_net.js`
+(`ARENA=infernal|hielo|acuatica|laberinto|bosque`, 2 a 4 jugadores reales por el relay).
 
 ## Cómo agregar una arena nueva
 
