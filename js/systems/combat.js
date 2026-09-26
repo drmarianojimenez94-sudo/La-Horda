@@ -9,6 +9,7 @@ function damageEnemy(e, amount, opts){
   const src = opts.src || player;
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
+  if(e._evoMarkT) dmg *= evoDmgTakenMult(e); // marca/marchitar de la Firma (skill-evolution.js)
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
   // e.fy ya apuntan hacia donde está mirando (su objetivo actual), así que compara contra eso
   // en vez de armar un sistema de facing nuevo-.
@@ -75,7 +76,7 @@ function damageEnemy(e, amount, opts){
   }
   vfxHit(e, src, opts, crit);
   if(!opts.fromProc || pow>=3) impactFeedback(e, dmg, crit, opts, pow, src);
-  if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); }
+  if(src && src.classKey && !opts.fromProc){ itemProcsOnHit(src, e, dmg, crit, opts); setsOnHit(src, e, dmg, crit, opts); skillEvoOnHit(src, e, dmg, opts); }
   if(src && src.stats){
     if(e.rank!=="normal") src.stats.dmgToPriority = (src.stats.dmgToPriority||0) + usefulDmg;
     if(opts.slow || opts.stun || opts.freeze || opts.knockback) src.stats.ccApplied = (src.stats.ccApplied||0) + 1;
@@ -151,6 +152,7 @@ function killEnemy(e){
   // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
   e._deathKind = goreDeathKind(e);
   if(e.role) roleOnDeath(e);
+  if(e._evoHitBy) skillEvoOnKill(e); // Ímpetu (Nv.5 de la habilidad que lo remató)
   { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl); }
   // Nigromante — Plaga de los Condenados: el contagio al morir un maldito tiene que dispararse
   // sin importar QUÉ lo mató (antes solo se llamaba desde el tick de daño de la propia maldición,

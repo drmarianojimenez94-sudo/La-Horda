@@ -311,8 +311,10 @@ function castAbility(caster, sk, isUlt, idx){
   // lo que ya calculaba la maestría, sin reemplazarlo.
   const tSkill = caster.classKey ? talentSkillMods(caster.classKey, skillKey) : {powerMult:0,areaMult:0,durationMult:0,jumpBonus:0,flags:{}};
   // La maestría de la habilidad escala daño/curación, área, duración y saltos de cadena
-  const POWER = masteryPowerMult(mastery) * (1+tSkill.powerMult);
-  const AREA = masteryAreaMult(mastery) * (1+tSkill.areaMult);
+  // Evolución de la habilidad (skill-evolution.js): Nv.10 = cada 3er lanzamiento sale potenciado
+  const EVO = skillEvoOnCast(caster, skillKey, sk, isUlt);
+  const POWER = masteryPowerMult(mastery) * (1+tSkill.powerMult) * EVO.power;
+  const AREA = masteryAreaMult(mastery) * (1+tSkill.areaMult) * EVO.area;
   const DUR = masteryDurationMult(mastery) * (1+tSkill.durationMult);
   const JUMP_BONUS = masteryJumpBonus(mastery) + (tSkill.jumpBonus||0);
   const passiveDmg = caster.classKey ? (passiveSum(caster.classKey,"dmg_mult") + passiveSum(caster.classKey,"skilldmg_mult") + mythicExecuteBonus(caster)) : 0;

@@ -92,7 +92,7 @@ function reactionMult(e, dmg, opts, src, pow, kind){
   } else if(kind==="physical" && pow>=3 && _isFrozen(e)){
     const C = REACTION_CFG.shatter; e._reactAt = runElapsedMs; m *= C.mult;
     const by = e.frozenBy || e.slowBy;
-    e.frozenTimer = 0; e.slowAmt = 0; e.slowTimer = 0;
+    if(dmg < e.hp){ e.frozenTimer = 0; e.slowAmt = 0; e.slowTimer = 0; } // si lo mata, el hielo queda para "matar congelados" (Invierno)
     for(const o of enemies){ if(!o.alive || o===e || Math.hypot(o.x-e.x, o.y-e.y) > C.r) continue; damageEnemy(o, dmg*C.shardPct, {src, fromProc:true, fromReaction:true, dmgKind:"ice"}); }
     vfxBurst(e.x, e.y-18, 14, "ice", 180, 400, 3.5, 1, -30, 0); vfxShock(e.x, e.y, 6, C.r, C.rgb, 300, 1);
     _reactLabel(e, "shatter", src, by);

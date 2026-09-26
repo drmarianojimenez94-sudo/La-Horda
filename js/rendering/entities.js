@@ -490,6 +490,8 @@ function _drawProjCore(p){
   ctx.drawImage(glowSprite(rgb), p.x-g, p.y-g, g*2, g*2);
   ctx.globalCompositeOperation = "source-over";
   ctx.globalAlpha = 1;
+  const style = p.sprite ? null : projStyleOf(p); // forma propia de cada campeón (skill-evolution.js)
+  if(style && drawProjStyle(p, style, r)){ ctx.restore(); return; }
   if(p.sprite==="orb" && acua2Ready("fxOrb")){
     drawImgSized(acua2Pick("fxOrb",0), p.x, p.y, r*3.4, 0.5, 0.5, false, undefined, animNow/300);
   } else {

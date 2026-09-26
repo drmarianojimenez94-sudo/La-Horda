@@ -37,6 +37,7 @@ function renderSkillsPanel(panel, classKey, rerender){
           <div class="mastery-bar-track"><div class="mastery-bar-fill" style="width:${usePct}%"></div></div>
           <div class="mastery-stats"><b>${statNow}</b>${statNext}</div>
           <div class="mastery-use">Uso Nv. ${m.useLvl} · +${useBonusPct}% daño permanente por práctica</div>
+          ${skillEvoHTML(classKey, sk, idx, tLvl)}
           ${ultLock}
         </div>
         <button class="mastery-plus ${canInvest?"ready":""}" ${canInvest?"":"disabled"} data-idx="${idx}">+</button>

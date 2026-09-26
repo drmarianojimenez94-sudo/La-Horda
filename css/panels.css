@@ -134,6 +134,13 @@
 .mastery-stats b{ color:var(--ember3); font-weight:700; }
 .mastery-next{ color:#7dc98a; }
 .mastery-use{ font-size:0.58rem; color:#8fb8ff; margin-top:2px; }
+/* evolución de la habilidad: hitos Nv.3/5/7/10 (skill-evolution.js); el alcanzado se enciende */
+.evo-lines{ display:flex; flex-wrap:wrap; gap:3px; margin-top:3px; }
+.evo-lines .evo{ font-size:0.52rem; padding:1px 4px; border:1px solid #3a3040; color:#7a6f84; background:#140e18; }
+.evo-lines .evo i{ display:none; font-style:normal; }
+.evo-lines .evo.on{ color:#ffe9a8; border-color:#c9a24a; background:#2a1e0c; }
+.evo-lines .evo.next{ color:#c8bcd4; border-color:#6a5a7a; }
+.evo-lines .evo.next i, .evo-lines .evo:hover i{ display:inline; }
 .mastery-plus{
   width:26px; height:26px; border-radius:7px; flex:none; font-size:1rem; font-weight:700;
   background:#141010; border:1px solid #4a3a2e; color:var(--text-dim); cursor:default;
