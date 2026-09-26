@@ -146,8 +146,24 @@
   <div id="champions-screen" class="screen hidden">
     <div class="arena-title">Mis Campeones</div>
     <div class="lobby-sub" id="champions-sub"></div>
+    <div class="hub-tabs hub-tabs-top">
+      <button class="hub-tab active" id="mychamps-tab-champs">Campeones</button>
+      <button class="hub-tab" id="mychamps-tab-inv">🎒 Mi Inventario</button>
+    </div>
     <div id="mychamps-grid"></div>
     <button class="btn secondary" id="champions-back-btn">Volver</button>
+  </div>
+  <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los campeones), recetas de Míticos y colección -->
+  <div id="inventory-screen" class="screen hidden">
+    <div class="arena-title">Mi Inventario</div>
+    <div class="lobby-sub" id="myinv-sub"></div>
+    <div class="hub-tabs" id="myinv-tabs">
+      <button class="hub-tab active" data-tab="objetos">Objetos</button>
+      <button class="hub-tab" data-tab="recetas">Recetas</button>
+      <button class="hub-tab" data-tab="coleccion">Colección</button>
+    </div>
+    <div id="myinv-panel"></div>
+    <button class="btn secondary" id="myinv-back-btn">Volver a Mis Campeones</button>
   </div>
   <div id="champhub-screen" class="screen hidden">
     <div id="champhub-head"></div>
@@ -293,6 +309,7 @@
 <script src="js/data/items.js"></script>
 <script src="js/data/sets.js"></script>
 <script src="js/data/loot.js"></script>
+<script src="js/data/legendaries.js"></script>
 <script src="js/data/rewards.js"></script>
 <script src="js/data/arenas.js"></script>
 <script src="js/data/pixel-art.js"></script>
@@ -331,9 +348,11 @@
 <script src="js/systems/talents.js"></script>
 <script src="js/systems/items.js"></script>
 <script src="js/systems/item-procs.js"></script>
+<script src="js/systems/mythic-powers.js"></script>
 <script src="js/systems/set-effects.js"></script>
 <script src="js/systems/performance.js"></script>
 <script src="js/systems/loot.js"></script>
+<script src="js/systems/recipes.js"></script>
 <script src="js/systems/rewards.js"></script>
 <script src="js/systems/hero-stats.js"></script>
 <script src="js/systems/difficulty.js"></script>
@@ -406,6 +425,7 @@
 <script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/menus.js"></script>
 <script src="js/ui/champions-hub.js"></script>
+<script src="js/ui/inventory-ui.js"></script>
 <script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/end-screens.js"></script>

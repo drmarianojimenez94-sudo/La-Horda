@@ -11,7 +11,7 @@ const path = require('path'); const sleep = ms => new Promise(r => setTimeout(r,
     await page.addScriptTag({ path: path.join(__dirname, 'autopilot.js') });
     const r = await page.evaluate(([setId, cls])=>{
       for(const k in save.champions){ save.champions[k].level=25; }
-      const champ = save.champions[cls]; champ.inventory = []; champ.equipment = mkEquipment();
+      const champ = save.champions[cls]; save.stash = []; champ.equipment = mkEquipment();
       for(const pid of setPieceIds(setId)){ const it = makeDesignedItem(pid); addItemToInventory(cls, it); equipItem(cls, it.uid); }
       invalidatePassiveCache();
       __AP.start(cls, setId==="laberinto"?"laberinto":"bosque", 6);

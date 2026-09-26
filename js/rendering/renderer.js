@@ -66,6 +66,8 @@ function render(){
   for(const fw of fireWalls){
     drawFireWall(fw);
   }
+  drawMythicGrounds(); // suelo consagrado (Alba Eterna)
+  drawUniqueFissures(); // grietas del Único "Paso del Coloso"
 
   // trampas del Asesino
   for(const tr of traps){

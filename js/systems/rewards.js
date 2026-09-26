@@ -26,6 +26,7 @@ function trackHeal(caster, target, amount){
   caster.stats.healDone += amount;
   caster.stats.healEffective += restored;
   setsOnHeal(caster, restored);
+  itemProcsOnHeal(caster, target, restored);
   const danger = target.maxHp*0.35;
   if(before < danger && after >= danger) caster.stats.alliesSaved++;
 }

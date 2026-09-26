@@ -77,6 +77,8 @@ function update(dt){
   for(const e of enemies){
     if(!e.alive) continue;
     if(axiomFreezeTimer>0){ continue; } // Force Quit: nadie salvo Axiom actúa mientras dura
+    if(e.frozenTimer>0) e.frozenTimer -= dt; // congelado (Invierno Sin Fin, reacciones de hielo)
+    if(e.shockedTimer>0) e.shockedTimer -= dt;
     if(e.stunTimer>0){ e.stunTimer-=dt; e.channel = null; e.bossCharge = null; continue; } // aturdir interrumpe canalizaciones/embestidas
     if(e.slowTimer>0) e.slowTimer-=dt; else e.slowAmt=0;
     if(e.burnTimer>0){ e.burnTimer-=dt; e.hp -= e.burnDmg*dt/1000; if(e.hp<=0){ killEnemy(e); continue; } }
@@ -575,7 +577,7 @@ function updateControlledHero(dt){
     player.animT += dt;
   }
   // objetos/sets/rendimiento de TODO el equipo: una sola vez por cuadro (no por cada invitado)
-  if(!player.isRemote) for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); samplePerformance(h, dt); }
+  if(!player.isRemote){ for(const h of heroes){ updateItemProcTimers(h, dt); updateSets(h, dt); updateUniquePowers(h, dt); samplePerformance(h, dt); } updateMythicGrounds(dt); updateUniqueFissures(dt); }
   if(player.attackAnim>0) player.attackAnim -= dt;
   if(player.hurtTimer>0) player.hurtTimer -= dt;
   if(basicHeld) triggerBasic(player);

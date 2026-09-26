@@ -7,8 +7,9 @@
 
 function drawHero(h){
   const colossal = h.colossalTimer>0;
-  const drawScale = colossal ? h.scale*1.55 : (h.growTimer>0 ? h.scale*(h.growScale||1) : h.scale);
+  const drawScale = (colossal ? h.scale*1.55 : (h.growTimer>0 ? h.scale*(h.growScale||1) : h.scale)) * uniqueScaleMult(h);
   if(h._deadAt) h._deadAt = 0;
+  drawUniqueAura(h);
   const prof = animProfileOf(h);
   const P = animPose(h, prof, true);
   const lift = P.oy<0 ? Math.min(0.35, -P.oy/60) : 0;
@@ -342,7 +343,7 @@ function drawEnemyOverlays(e){
   }
 
   if(e.burnTimer>0){
-    ctx.fillStyle = "rgba(255,120,30,0.5)";
+    ctx.fillStyle = e.voidFire ? "rgba(176,106,255,0.65)" : "rgba(255,120,30,0.5)";
     for(let i=0;i<3;i++){
       ctx.fillRect(e.x-8+i*8, e.y-e.radius-18-((performance.now()/90+i*7)%10), 4, 5);
     }

@@ -29,12 +29,14 @@ function damageEnemy(e, amount, opts){
   // Sin overrides, el comportamiento de siempre queda idéntico.
   dmg *= heroDmgOutMult(src) * enemyVulnMult(e); // Granaderos/¡Avancen!/forma montada/titán y defensa rota (San Lorenzo, Andes)
   dmg *= setDamageMult(src, e, opts); // bonus de sets (Glaciar, Cazador, Frenesí, Resonancia, Impulso…)
+  dmg *= itemDamageMult(src, e, opts); // poderes de legendarios/míticos (Avivar las Llamas, Verdugo, Cosecha Roja…)
   // refuerzos de la partida: rematar (enemigo bajo 30% de vida) y cazador de élites/jefes
   if(runStats.executeBonus && e.hp < e.maxHp*0.3) dmg *= 1 + runStats.executeBonus;
   if(runStats.eliteDmgMult!==1 && (e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) dmg *= runStats.eliteDmgMult;
   let critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
   let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
   const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
+  critMult += itemCritMultBonus(src, e);
   const crit = opts.forceCrit || Math.random() < critChance;
   if(crit) dmg *= critMult;
   e.hp -= dmg;
@@ -66,7 +68,7 @@ function damageEnemy(e, amount, opts){
   if(!(src.classKey==="eren" && src.erenPhase==="rumble")) // El Retumbar no recarga la Furia que lo disparó (termina en 0)
     src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
   if(src.classKey==="eren") erenCheckRumbling(src);
-  if(opts.burn){ e.burnTimer = 2600; e.burnDmg = amount*0.12; }
+  if(opts.burn){ e.burnTimer = Math.max(e.burnTimer||0, 2600*uniqueBurnMult(src)); e.burnDmg = Math.max(e.burnDmg||0, amount*0.12); e.burnSrc = src; if(heroUniqueKey(src)==="uniq_archimago") e.voidFire = true; }
   if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; }
   if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; }
   if(opts.stun){ e.stunTimer = opts.stun; }
@@ -231,7 +233,7 @@ function damageHero(h, amount, src){
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
-    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h);
+    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h);
   }
   if(h.stats) h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
   // Espinas (refuerzo): devuelve parte del golpe a quien pegó cuerpo a cuerpo al jugador
@@ -267,7 +269,7 @@ function damageHero(h, amount, src){
   if(h.classKey==="eren" && dmg>0) erenOnHurt(h, dmg);
   const absorbed = Math.max(0, dmgBeforeShields - dmg);
   if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }
-  if(dmg>0) itemProcsOnHurt(h, dmg);
+  if(dmg>0) itemProcsOnHurt(h, dmg, src);
   setsOnHurt(h, Math.max(0,dmg), mitigated, absorbed);
   if(h.isRemote && dmg>0.5) netEmitTo(h._netSlot, "hurt", [dmg, src && src.x, src && src.y]);
   else if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);

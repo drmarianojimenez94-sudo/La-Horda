@@ -2,23 +2,53 @@
 /* ============================================================
    js/systems/items.js
    Sistema de objetos: creación, equipar, inventario, vender, fusionar, sets y pasivas.
+   INVENTARIO DE LA CUENTA: los objetos viven en save.stash (30 espacios, compartidos por todos
+   los campeones: el botín es CRUZADO, podés ganar objetos de cualquier campeón). Cada campeón
+   guarda en `equipment` los uid de lo que lleva puesto; lo equipado no ocupa espacio.
+   Compatibilidad: los objetos genéricos y las piezas de set sirven a cualquiera; los diseñados
+   para un campeón (champion:"mago", Únicos...) solo a ese campeón.
+   Durante una partida en red, el registro del invitado trae sus propios objetos equipados
+   (champ.loadoutItems) y se usan esos en vez del inventario del anfitrión.
    ============================================================ */
 
-// IA de los aliados: si tienen objetos sin equipar en su inventario PERMANENTE (ganado en
-// partidas anteriores jugando esa clase), se ponen el mejor disponible en cada ranura vacía.
-// Nunca toca una ranura que el jugador ya haya elegido a mano.
+// Todos los objetos de la cuenta (o los del loadout de un invitado, en red).
+function itemPoolFor(champKey){
+  const c = champKey && save.champions[champKey];
+  if(c && Array.isArray(c.loadoutItems)) return c.loadoutItems;
+  if(!Array.isArray(save.stash)) save.stash = [];
+  return save.stash;
+}
+function stashItems(){ if(!Array.isArray(save.stash)) save.stash = []; return save.stash; }
+function findStashItem(uid){ return stashItems().find(it=>it.uid===uid) || null; }
+// Qué campeón lleva puesto un objeto (o null).
+function itemEquippedBy(uid){
+  if(!uid) return null;
+  for(const k in save.champions){ const eq = save.champions[k].equipment; if(eq && Object.values(eq).includes(uid)) return k; }
+  return null;
+}
+function stashUsedSlots(){ return stashItems().filter(it=>!itemEquippedBy(it.uid)).length; }
+function stashFull(){ return stashUsedSlots() >= INVENTORY_CAPACITY; }
+// ¿Este campeón puede usar este objeto? Genéricos y sets: todos. Diseñados de campeón: solo él.
+function canEquipItem(champKey, it){
+  if(!it) return false;
+  if(it.designed && it.champion && it.champion!==champKey) return false;
+  return true;
+}
+// Bots: solo se ponen, en ranuras vacías, objetos diseñados PARA su campeón que nadie use (el
+// inventario es de la cuenta: nunca le sacan un objeto genérico al jugador).
 function autoEquipBest(classKey){
   const champ = save.champions[classKey];
   if(!champ) return;
   champ.equipment = Object.assign(mkEquipment(), champ.equipment||{});
+  let changed = false;
   EQUIP_SLOT_TYPES.forEach(type=>{
     if(champ.equipment[type]) return;
-    const candidates = (champ.inventory||[]).filter(it=>it.type===type);
+    const candidates = stashItems().filter(it=>it.type===type && it.designed && it.champion===classKey && !itemEquippedBy(it.uid));
     if(!candidates.length) return;
     candidates.sort((a,b)=> rarityIndex(b.rarity)-rarityIndex(a.rarity) || b.value-a.value);
-    champ.equipment[type] = candidates[0].uid;
+    champ.equipment[type] = candidates[0].uid; changed = true;
   });
-  persist();
+  if(changed) persist();
 }
 function weaponLabelFor(classKey){ return CLASS_WEAPON_LABEL[classKey] || ITEM_TYPES.arma.label; }
 
@@ -59,19 +89,20 @@ function activeSetIdsFor(champKey){
 function makeDesignedItem(designId){
   const d = DESIGNED_ITEMS[designId];
   if(!d) return null;
-  const meta = RARITY_META[d.rarity];
   const value = RARITY_VALUES[d.type][d.rarity];
-  const mythicPassive = d.rarity==="mitico" ? instancePassive(rollFrom(PASSIVE_DB_MYTHIC,1)[0]) : null;
+  const mythicPassive = (d.rarity==="mitico" && !d.mythic) ? instancePassive(rollFrom(PASSIVE_DB_MYTHIC,1)[0]) : null;
   const passives = (d.effectMods||[]).map((m,i)=>({id:d.id+"_eff"+i, name:d.passiveNames[i]||"Pasiva", desc:"", condition:"siempre", effect:m.effect, value:m.value}));
+  const extra = d.set ? ` · Set: ${SET_DB[d.set].name}` : (d.mythic ? ` · ${MYTHIC_POWERS[d.mythic].name}` : (d.unique ? ` · ${UNIQUE_POWERS[d.unique].name}` : ""));
   return {
     uid: "it_"+(ITEM_UID_SEQ++)+"_"+Date.now().toString(36),
     type:d.type, rarity:d.rarity, designed:true, designId:d.id,
-    name:d.name, icon:ITEM_TYPES[d.type].icon, statKey:d.type, value,
+    name:d.name, epithet:d.epithet||null, icon:ITEM_TYPES[d.type].icon, statKey:d.type, value,
     passives, mythicPassive,
-    champion:d.champion, set:d.set||null,
+    champion:d.champion, set:d.set||null, element:d.element||null,
+    legendProc:d.legendProc||undefined, mythic:d.mythic||null, unique:d.unique||null,
     skillMods: d.skillMods||null, skillOvercap: d.skillOvercap||null,
     placeholder:false,
-    desc: `${d.lore} · +${Math.round(value*100)}% ${ITEM_TYPES[d.type].statLabel}${d.set?` · Set: ${SET_DB[d.set].name}`:""}${(d.skillMods||d.skillOvercap)?" · Modifica una habilidad":""}`
+    desc: `${d.lore} · +${Math.round(value*100)}% ${ITEM_TYPES[d.type].statLabel}${extra}${(d.skillMods||d.skillOvercap)?" · Modifica una habilidad":""}`
   };
 }
 // IDs de objetos diseñados disponibles para un campeón (los suyos + las piezas de set
@@ -96,36 +127,43 @@ function instancePassive(def){
 let ITEM_UID_SEQ = 1;
 // Genera un objeto nuevo 100% a partir de datos (sin casos especiales por objeto).
 // type: "arma"|"casco"|"escudo" · rarity: una de RARITIES · champKey: compatible con ese campeón (o null = cualquiera)
+function _pickFrom(arr){ return arr[(Math.random()*arr.length)|0]; }
+function _genderize(q, noun){ return q.replace("{o}", ITEM_NOUN_FEM[noun] ? (ITEM_NOUN_PLURAL[noun] ? "as" : "a") : (ITEM_NOUN_PLURAL[noun] ? "os" : "o")); }
+// Nombre de un objeto procedural: "Yelmo Templado", "Hoja de Karzul, del Golpe Sísmico"...
+function proceduralItemName(type, rarity, proc){
+  const noun = _pickFrom(ITEM_NOUNS[type] || [ITEM_TYPES[type].label]);
+  if(ITEM_QUALITY[rarity]) return noun + " " + _genderize(_pickFrom(ITEM_QUALITY[rarity]), noun);
+  const proper = _pickFrom(LEGEND_PROPER_NAMES);
+  return proc && LEGEND_PROC_EPITHET[proc] ? `${noun} de ${proper}, ${LEGEND_PROC_EPITHET[proc]}` : `${noun} de ${proper}`;
+}
+// Genera un objeto nuevo 100% a partir de datos (sin casos especiales por objeto). Los objetos
+// procedurales son UNIVERSALES (cualquier campeón los puede usar): champKey solo queda como dato.
 function makeItem(type, rarity, champKey){
   const meta = RARITY_META[rarity];
   const value = RARITY_VALUES[type][rarity];
   const passiveDefs = rollFrom(PASSIVE_DB, meta.passives);
   const passives = passiveDefs.map(instancePassive);
   const mythicPassive = (rarity==="mitico"||rarity==="unico") ? instancePassive(rollFrom(PASSIVE_DB_MYTHIC,1)[0]) : null;
-  const isPlaceholder = rarity==="unico"; // los únicos reales se diseñan a mano más adelante
-  const clsName = champKey && CLASSES[champKey] ? CLASSES[champKey].name : "cualquier campeón";
-  const uniqueWord = type==="arma" ? "Única" : "Único";
+  const legendProc = LEGEND_PROC_POWER[rarity] ? LEGEND_PROC_IDS[(Math.random()*LEGEND_PROC_IDS.length)|0] : undefined;
   return {
     uid: "it_"+(ITEM_UID_SEQ++)+"_"+Date.now().toString(36),
     type, rarity,
-    name: isPlaceholder ? `[PLACEHOLDER] ${ITEM_TYPES[type].label} ${uniqueWord} de ${clsName}` : `${meta.label} ${ITEM_TYPES[type].label} de ${clsName}`,
+    name: proceduralItemName(type, rarity, legendProc),
     icon: ITEM_TYPES[type].icon,
     statKey: type, value,
     passives, mythicPassive,
-    legendProc: LEGEND_PROC_POWER[rarity] ? LEGEND_PROC_IDS[(Math.random()*LEGEND_PROC_IDS.length)|0] : undefined,
-    champion: champKey || null,
-    placeholder: isPlaceholder,
-    desc: isPlaceholder
-      ? "Objeto ÚNICO de prueba: la estructura funciona, pero el diseño final de este objeto se hará a mano más adelante."
-      : `+${Math.round(value*100)}% ${ITEM_TYPES[type].statLabel}${passives.length?` · ${passives.length} pasiva${passives.length>1?"s":""}`:""}${mythicPassive?" · 1 pasiva mítica":""}.`
+    legendProc,
+    champion: null,
+    placeholder: false,
+    desc: `+${Math.round(value*100)}% ${ITEM_TYPES[type].statLabel}${passives.length?` · ${passives.length} pasiva${passives.length>1?"s":""}`:""}${mythicPassive?" · 1 pasiva mítica":""}.`
   };
 }
 // Devuelve el objeto equipado en una ranura de un campeón (o null)
 function equippedItem(champKey, type){
   const champ = save.champions[champKey];
-  const uid = champ.equipment && champ.equipment[type];
+  const uid = champ && champ.equipment && champ.equipment[type];
   if(!uid) return null;
-  return (champ.inventory||[]).find(it=>it.uid===uid) || null;
+  return itemPoolFor(champKey).find(it=>it.uid===uid) || null;
 }
 // Junta todas las pasivas (normales + míticas + el % garantizado de pechera/guantes/botas +
 // bonus de set activos) de los 6 ítems equipados de un campeón.
@@ -190,10 +228,26 @@ function heroProcs(champKey){
   }
   return c.procs;
 }
+// Poderes míticos (MYTHIC_POWERS) y Único (UNIQUE_POWERS) equipados: {myth_x:1} / "uniq_x". Mismo caché.
+function heroMythics(champKey){
+  if(!champKey || !save || !save.champions[champKey]) return null;
+  const c = _passiveBucket(champKey);
+  if(!c.myths){
+    c.myths = {}; c.unique = null;
+    EQUIP_SLOT_TYPES.forEach(type=>{
+      const it = equippedItem(champKey, type); if(!it) return;
+      if(it.mythic) c.myths[it.mythic] = 1;
+      if(it.unique && UNIQUE_POWERS[it.unique] && UNIQUE_POWERS[it.unique].champion===champKey) c.unique = it.unique;
+    });
+  }
+  return c.myths;
+}
+function heroUnique(champKey){ if(!heroMythics(champKey)) return null; return _passiveBucket(champKey).unique; }
 // Texto de pasivas para la UI (inventario, recompensas): con su valor REAL (ya multiplicado por
 // la rareza del objeto) y el poder legendario, si lo tiene.
 const PASSIVE_PCT_EFFECTS = {dmg_mult:1, atkspeed_mult:1, cd_mult:1, lifesteal_add:1, heal_mult:1, def_add:1, skilldmg_mult:1, onhit_proc:1,
-  hp_mult:1, speed_mult:1, crit_chance_add:1, crit_mult_add:1, energy_mult:1, overheal_shield_pct:1, mythic_execute:1, mythic_emergency_shield:1};
+  hp_mult:1, speed_mult:1, crit_chance_add:1, crit_mult_add:1, energy_mult:1, overheal_shield_pct:1, mythic_execute:1, mythic_emergency_shield:1,
+  missinghp_dmg_bonus:1, res_physical:1, res_fire:1, res_ice:1, res_lightning:1};
 function itemPassivesHTML(it){
   const mult = it.designed ? 1 : (PASSIVE_RARITY_MULT[it.rarity]||1);
   const parts = (it.passives||[]).map(p=> PASSIVE_PCT_EFFECTS[p.effect] ? `${p.name} +${Math.round(p.value*mult*100)}%` : p.name);
@@ -201,6 +255,12 @@ function itemPassivesHTML(it){
   let html = parts.join(" · ");
   const proc = legendProcOf(it);
   if(proc) html += `${html?"<br>":""}<span class="item-proc">✦ ${LEGEND_PROCS[proc].name}: ${LEGEND_PROCS[proc].desc}</span>`;
+  if(it.mythic && MYTHIC_POWERS[it.mythic]) html += `<br><span class="item-mythic">★ ${MYTHIC_POWERS[it.mythic].name}: ${MYTHIC_POWERS[it.mythic].desc}</span>`;
+  if(it.unique && UNIQUE_POWERS[it.unique]) html += `<br><span class="item-unique">◆ ${UNIQUE_POWERS[it.unique].name}: ${UNIQUE_POWERS[it.unique].desc}</span>`;
+  if(it.designed && it.rarity==="legendario" && typeof recipesUsing==="function"){
+    const r = recipesUsing(it.designId);
+    if(r.length) html += `<br><span class="item-recipe">⚗ Parte de la receta de <b>${DESIGNED_ITEMS[r[0]].name}</b></span>`;
+  }
   return html;
 }
 // Sobrecarga Mítica: bonus de daño/velocidad mientras la vida esté por debajo del 50%.
@@ -208,13 +268,18 @@ function mythicExecuteBonus(h){
   if(!h.hp || !h.maxHp || h.hp >= h.maxHp*0.5 || !h.classKey) return 0;
   return passiveSum(h.classKey, "mythic_execute");
 }
+// Equipar: si otro campeón lo tenía puesto, se lo saca (un objeto está en un solo campeón).
 function equipItem(champKey, uid){
   const champ = save.champions[champKey];
-  const item = (champ.inventory||[]).find(it=>it.uid===uid);
-  if(!item) return;
+  const item = itemPoolFor(champKey).find(it=>it.uid===uid);
+  if(!item || !canEquipItem(champKey, item)) return false;
+  champ.equipment = Object.assign(mkEquipment(), champ.equipment||{});
+  const other = itemEquippedBy(uid);
+  if(other && other!==champKey){ const eq = save.champions[other].equipment; for(const sl in eq) if(eq[sl]===uid) eq[sl] = null; }
   champ.equipment[item.type] = uid; // reemplaza lo que hubiera en esa ranura, sin duplicar bonificación
   invalidatePassiveCache();
   persist();
+  return true;
 }
 function unequipItem(champKey, type){
   const champ = save.champions[champKey];
@@ -222,28 +287,32 @@ function unequipItem(champKey, type){
   invalidatePassiveCache();
   persist();
 }
+// Guarda un objeto en el inventario de la cuenta (NO lo equipa). champKey queda por compatibilidad
+// con el código que ya lo pasaba; el objeto es de la cuenta, no de ese campeón.
 function addItemToInventory(champKey, item){
-  const champ = save.champions[champKey];
-  champ.inventory = champ.inventory || [];
-  if(champ.inventory.length >= INVENTORY_CAPACITY) return null; // inventario lleno
-  champ.inventory.push(item);
+  if(!item) return null;
+  if(stashFull()) return null; // inventario lleno
+  stashItems().push(item);
+  if(typeof collectionRegister==="function") collectionRegister(item);
   persist();
   return item;
 }
-// Quita el objeto del inventario (y lo desequipa primero si estaba puesto). "gold" indica si
-// además otorga oro (vender) o no (descartar, sin recompensa, solo para liberar espacio ya).
+function sellValueOf(item){ return item ? (item.set ? SELL_VALUE_SET_PIECE : (SELL_VALUE[item.rarity]||0)) : 0; }
+// Quita el objeto del inventario (y lo desequipa de quien lo tenga). "gold" indica si además
+// otorga oro (vender) o no (descartar, sin recompensa, solo para liberar espacio ya).
 function removeItemFromInventory(champKey, uid, grantGoldReward){
-  const champ = save.champions[champKey];
-  const idx = (champ.inventory||[]).findIndex(it=>it.uid===uid);
+  const inv = stashItems();
+  const idx = inv.findIndex(it=>it.uid===uid);
   if(idx===-1) return null;
-  const item = champ.inventory[idx];
-  Object.keys(champ.equipment).forEach(slot=>{ if(champ.equipment[slot]===uid) champ.equipment[slot]=null; });
-  champ.inventory.splice(idx,1);
-  if(grantGoldReward){ save.gold += SELL_VALUE[item.rarity]||10; }
+  const item = inv[idx];
+  for(const k in save.champions){ const eq = save.champions[k].equipment; if(!eq) continue; for(const sl in eq) if(eq[sl]===uid) eq[sl] = null; }
+  inv.splice(idx,1);
+  if(grantGoldReward){ save.gold += sellValueOf(item); }
+  invalidatePassiveCache();
   persist();
   return item;
 }
-function sellItem(champKey, uid){ return removeItemFromInventory(champKey, uid, true); }
+function sellItem(champKey, uid){ const it = findStashItem(uid); if(it && it.rarity==="unico") return null; return removeItemFromInventory(champKey, uid, true); }
 function discardItem(champKey, uid){ return removeItemFromInventory(champKey, uid, false); }
 
 // Fusión (sección 18): 3 objetos GENÉRICOS (sin nombre propio, sin set) del mismo tipo+rareza
@@ -251,21 +320,23 @@ function discardItem(champKey, uid){ return removeItemFromInventory(champKey, ui
 // (legendarios/míticos con lore) y los de set NUNCA se fusionan -son demasiado específicos
 // para "promediarse"-, y ÚNICO nunca sale de acá (sección 6): ni como entrada consumible más
 // allá de mitico, ni como resultado.
+// Solo basura -> algo mejor: Común x3 -> Raro, Raro x3 -> Muy Raro. Nunca Legendario ni más (los
+// Míticos se fabrican con RECETAS de 3 legendarios específicos; los Únicos no se fabrican).
+const FUSE_MAX_INPUT_RARITY = "raro";
 function canFuseGroup(items){
   if(items.length!==3) return {ok:false, reason:"Elegí exactamente 3 objetos"};
   const [a,b,c] = items;
   if(!a || !b || !c) return {ok:false, reason:"Objeto inexistente"};
   if(a.type!==b.type || b.type!==c.type) return {ok:false, reason:"Deben ser del mismo tipo de equipamiento"};
   if(a.rarity!==b.rarity || b.rarity!==c.rarity) return {ok:false, reason:"Deben ser de la misma rareza"};
-  if(a.rarity==="unico" || a.rarity==="mitico") return {ok:false, reason:"Esta rareza no se puede fusionar más"};
-  if(a.designed || b.designed || c.designed) return {ok:false, reason:"Los objetos con nombre propio (legendarios/míticos/set) no se fusionan"};
+  if(rarityIndex(a.rarity) > rarityIndex(FUSE_MAX_INPUT_RARITY)) return {ok:false, reason:"Solo se fusionan Comunes y Raros"};
+  if(a.designed || b.designed || c.designed) return {ok:false, reason:"Los objetos con nombre propio no se fusionan"};
   const nextRarity = RARITIES[rarityIndex(a.rarity)+1];
   return {ok:true, nextRarity, type:a.type};
 }
 function fuseItems(classKey, uids){
-  const champ = save.champions[classKey];
-  if(!champ || uids.length!==3) return {ok:false, reason:"Elegí exactamente 3 objetos"};
-  const items = uids.map(u=>(champ.inventory||[]).find(it=>it.uid===u));
+  if(uids.length!==3) return {ok:false, reason:"Elegí exactamente 3 objetos"};
+  const items = uids.map(u=>findStashItem(u));
   const check = canFuseGroup(items);
   if(!check.ok) return check;
   uids.forEach(u=>removeItemFromInventory(classKey, u, false));
@@ -273,12 +344,11 @@ function fuseItems(classKey, uids){
   addItemToInventory(classKey, fused);
   return {ok:true, item:fused};
 }
-// Agrupa el inventario por tipo+rareza para ofrecer fusión de a 3 (solo grupos fusionables).
+// Agrupa el inventario (sin lo equipado) por tipo+rareza para ofrecer fusión de a 3.
 function fusableGroups(classKey){
-  const champ = save.champions[classKey];
   const groups = {};
-  (champ.inventory||[]).forEach(it=>{
-    if(it.designed || it.rarity==="unico" || it.rarity==="mitico") return;
+  stashItems().forEach(it=>{
+    if(it.designed || rarityIndex(it.rarity) > rarityIndex(FUSE_MAX_INPUT_RARITY) || itemEquippedBy(it.uid)) return;
     const key = it.type+"|"+it.rarity;
     (groups[key] = groups[key]||[]).push(it);
   });

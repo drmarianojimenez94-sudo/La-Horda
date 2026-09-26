@@ -13,6 +13,7 @@ const screens = {
   starter: document.getElementById("starter-screen"),
   champions: document.getElementById("champions-screen"),
   champhub: document.getElementById("champhub-screen"),
+  inventory: document.getElementById("inventory-screen"),
   champdetail: document.getElementById("champdetail-screen"),
   shop: document.getElementById("shop-screen"),
   modeselect: document.getElementById("modeselect-screen"),

@@ -231,7 +231,7 @@ function netPickBots(humanChamps, n){
 function netBuildLoadout(){
   const k = selectedClass, c = save.champions[k];
   const eq = Object.assign(mkEquipment(), c.equipment||{});
-  const items = (c.inventory||[]).filter(it=>Object.values(eq).includes(it.uid));
+  const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items};
 }
@@ -241,7 +241,7 @@ function netLoadoutRecord(L){
   if(Array.isArray(L.skillMastery)) rec.skillMastery = [0,1,2].map(i=>Object.assign(mkMastery(), L.skillMastery[i]||{}));
   if(L.ultMastery) rec.ultMastery = Object.assign(mkMastery(), L.ultMastery);
   if(L.talents) rec.talents = Object.assign(mkTalentState(), L.talents);
-  rec.inventory = Array.isArray(L.items) ? L.items.slice(0, 6) : [];
+  rec.loadoutItems = Array.isArray(L.items) ? L.items.slice(0, 6) : []; // sus objetos equipados (ver itemPoolFor)
   rec.equipment = Object.assign(mkEquipment(), L.equipment||{});
   return rec;
 }

@@ -120,8 +120,9 @@ function triggerBasic(caster){
     if(target){ dx=target.x-caster.x; dy=target.y-caster.y; const l=Math.hypot(dx,dy)||1; dx/=l; dy/=l; caster.fx=dx; caster.fy=dy; }
     caster.attackAnim = Math.max(70, 190/totalAspd);
     const dmg = caster.baseDmg * runStats.dmgMult * (caster.buffDmgMult||1) * arenaMods().heroDmgMult * (1 + passiveSum(caster.classKey,"dmg_mult") + mythicBonus) * mods.dmgMult;
-    projectiles.push({x:caster.x, y:caster.y-14, vx:dx*480, vy:dy*480, dmg, life:750, radius:6, color:"#c8f0a8",
-      fromBasic:true, pierce:false, src:caster, critChanceOverride: runStats.critChance+mods.critChanceAdd});
+    const lunaRoja = heroUniqueKey(caster)==="uniq_lunaroja"; // Único: flechas de sangre que atraviesan a la Presa
+    projectiles.push({x:caster.x, y:caster.y-14, vx:dx*480, vy:dy*480, dmg, life:750, radius:6, color: lunaRoja ? "#ff4a5a" : "#c8f0a8",
+      fromBasic:true, pierce: lunaRoja && !!target && target===caster.huntTarget, hitSet: new Set(), src:caster, critChanceOverride: runStats.critChance+mods.critChanceAdd});
     spawnSlash(caster);
     return;
   }
@@ -806,8 +807,8 @@ function castAbility(caster, sk, isUlt, idx){
       const boltThickness = 26 + chainTier*14;     // más grueso e imponente cuanto más talento
       const sparkSize = 46 + chainTier*20;
       const electrifiedMs = 500 + chainTier*90;
-      for(let i=0;i<(sk.jumps+JUMP_BONUS) && cur;i++){
-        damageEnemy(cur, curDmg, {src:caster});
+      for(let i=0;i<(sk.jumps+JUMP_BONUS+uniqueChainBonus(caster)) && cur;i++){
+        damageEnemy(cur, curDmg, {src:caster, chain:true});
         envEmit("lightning", cur.x, cur.y, caster, {r:30}); // etiqueta ambiental (js/systems/env-tags.js)
         pushChainBolt(px_, py_, cur.x, cur.y, boltThickness, 420);
         pushSpark("impacto", cur.x, cur.y, sparkSize, 340);
@@ -967,8 +968,10 @@ function castAbility(caster, sk, isUlt, idx){
       }
       // breve destello de carga antes de la estampida
       particles.push({x:caster.x,y:caster.y, life:180, ring:true, maxLife:180, maxR:34, color:"#9fe3ff"});
+      const _cx0 = caster.x, _cy0 = caster.y;
       caster.x += dx*dist; caster.y += dy*dist;
       clampToArena(caster);
+      if(heroUniqueKey(caster)==="uniq_juggernaut") uniqueAddFissure(caster, _cx0, _cy0, caster.x, caster.y); // Único "Paso del Coloso"
       particles.push({x:caster.x,y:caster.y, life:260, slash:true, color:"#9fe3ff"});
       particles.push({x:caster.x-dx*40,y:caster.y-dy*40, life:280, bolt:true, x2:caster.x, y2:caster.y, color:"#cdeeff"});
       tieredBurstVFX(caster.x, caster.y, 40, allocLevel(mastery), "#9fe3ff", "#cdeeff");

@@ -94,7 +94,7 @@ function lootCardHTML(item, classKey, idx){
   const equipped = save.champions[classKey].equipment[item.type] === item.uid;
   let setLine = "";
   if(item.set){
-    const S = SET_DB[item.set], owned = ownedDesignIds(classKey), total = setPieceCount(item.set);
+    const S = SET_DB[item.set], owned = ownedDesignIds(), total = setPieceCount(item.set);
     const have = setPieceIds(item.set).filter(id=>owned.has(id)).length;
     setLine = `<div class="loot-set-line">SET: ${S.name} · ${have}/${total} piezas${have<total?` · te falta${total-have>1?"n":""} ${total-have}`:" · ¡COMPLETO!"}</div>`;
   }
@@ -107,7 +107,7 @@ function lootCardHTML(item, classKey, idx){
         ${setLine}
         ${passiveTxt?`<div class="item-passives">${passiveTxt}</div>`:""}
         <div class="vic-item-actions">
-          <button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>
+          ${canEquipItem(classKey, item) ? `<button class="primary" data-vic-equip="${item.uid}" ${equipped?"disabled":""}>${equipped?"Equipado":"Equipar"}</button>` : `<button disabled>Para ${CLASSES[item.champion].name}</button>`}
           <button data-vic-keep="${item.uid}">Guardar</button>
         </div>
       </div></div>
