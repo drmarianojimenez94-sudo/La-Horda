@@ -67,6 +67,7 @@ async function runOne(page, job) {
   const fresh = async (seedSave) => {
     if (page) await page.context().close();
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
+    await ctx.addInitScript(() => { window.__campaignMode = true; }); // campaña real (sin el modo prueba que libera todo)
     if (seedSave === 'empty') await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('__s')) { localStorage.clear(); sessionStorage.setItem('__s', '1'); } } catch (e) {} });
     page = await ctx.newPage(); errors = [];
     page.on('pageerror', e => errors.push(e.message));

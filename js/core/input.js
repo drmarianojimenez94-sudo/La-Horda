@@ -133,7 +133,8 @@ const reviveBtn = document.getElementById("btn-revive");
 reviveBtn.addEventListener("pointerdown", (ev)=>{
   ev.stopPropagation();
   const target = nearestDownedAlly();
-  if(!target) return;
+  // sin nadie para revivir, el mismo botón es la acción contextual (js/systems/context-actions.js)
+  if(!target){ const ct = player && player.alive && state==="playing" ? ctxNearest(player) : null; if(ct) ctxBtnStart(ct); return; }
   reviveBtnTarget = target;
   reviveBtn.dataset.holding = "1";
   reviveBtn.classList.add("holding");
@@ -141,7 +142,7 @@ reviveBtn.addEventListener("pointerdown", (ev)=>{
   reviveBtnHoldRaf = requestAnimationFrame(reviveBtnTick);
 });
 ["pointerup","pointercancel","pointerleave"].forEach(evt=>{
-  reviveBtn.addEventListener(evt, (ev)=>{ ev.stopPropagation(); stopReviveBtnHold(); });
+  reviveBtn.addEventListener(evt, (ev)=>{ ev.stopPropagation(); stopReviveBtnHold(); ctxBtnStop(); });
 });
 // Muestra/oculta el botón según si hay algún aliado caído al alcance que se pueda revivir ahora
 // (vivo, en rango, nadie más lo está reviviendo, partida en curso).
@@ -149,9 +150,12 @@ function updateReviveBtn(){
   const btn = document.getElementById("btn-revive");
   if(!btn) return;
   const holding = btn.dataset.holding==="1";
-  const hasTarget = holding ? reviveTargetValid(reviveBtnTarget) : !!nearestDownedAlly();
-  btn.classList.toggle("ready", hasTarget);
-  if(!hasTarget && holding) stopReviveBtnHold();
+  if(btn.dataset.ctx==="1"){ btn.classList.add("ready"); return; } // manteniendo una acción contextual (ctxBtnTick la corta)
+  const hasRevive = holding ? reviveTargetValid(reviveBtnTarget) : !!nearestDownedAlly();
+  const ct = (!hasRevive && !holding && player && player.alive) ? ctxNearest(player) : null;
+  ctxBtnSetLook(ct);
+  btn.classList.toggle("ready", hasRevive || !!ct);
+  if(!hasRevive && holding) stopReviveBtnHold();
 }
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{

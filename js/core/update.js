@@ -475,6 +475,7 @@ function update(dt){
 
   updateAllies(dt);
   updateRevives(dt);
+  ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);
   updateFireWalls(dt);
   updateTraps(dt);

@@ -357,7 +357,7 @@ function updateAllies(dt){
     h.moving = ml > 0.05 && !h.fused;
     if(h.moving){
       mx/=ml; my/=ml;
-      const nd = aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; }
+      const nd = bm.navd ? null : aidAllyDir(h, mx, my); if(nd){ mx = nd.x; my = nd.y; } // (navd: ya sigue su propio camino, p.ej. a un objetivo contextual)
       const spd = h.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(h) * (1-Math.min(0.8,h.slowAmt||0)) * heroSpeedMult(h);
       h.x += mx*spd*dt/1000; h.y += my*spd*dt/1000;
       if(!target){ h.fx = mx; h.fy = my; }

@@ -226,6 +226,10 @@
   animation:reviveBtnPulse 1.3s ease-in-out infinite;
 }
 .ability-btn.revive.holding{ animation:none; box-shadow:0 0 20px rgba(111,220,140,0.9); }
+/* El mismo botón como ACCIÓN CONTEXTUAL (cerrar fisura, encender brasero...): color del tipo. */
+.ability-btn.revive.ctx.ready{ border-color:var(--ctx-col,#ffcf5c); background:radial-gradient(circle at 35% 30%, #2a2214, #120d08 75%);
+  box-shadow:0 0 16px var(--ctx-col,#ffcf5c); animation:none; }
+.ability-btn.revive.ctx.holding{ box-shadow:0 0 24px var(--ctx-col,#ffcf5c); }
 @keyframes reviveBtnPulse{ 0%,100%{box-shadow:0 0 10px rgba(111,220,140,0.4);} 50%{box-shadow:0 0 20px rgba(111,220,140,0.8);} }
 /* Apuntado de habilidades (js/core/aim.js): aro + perilla sobre el botón mientras se arrastra. */
 #aim-pad{position:fixed; width:120px; height:120px; border-radius:50%; pointer-events:none; z-index:16;
@@ -311,3 +315,30 @@
   width:70%; background:linear-gradient(90deg, rgba(176,128,64,0), rgba(224,176,96,0.9), rgba(176,128,64,0));}
 @keyframes atcIn{ 0%{opacity:0; transform:translate(-50%,-12px) scale(1.06);} 10%{opacity:1; transform:translate(-50%,0) scale(1);}
   82%{opacity:1;} 100%{opacity:0;} }
+
+/* Tutorial jugable: la voz del Hechicero (js/systems/tutorial.js). No bloquea nada y va abajo al
+   centro (entre el joystick y los botones) para no tapar al campeón. El retrato es
+   PROVISORIO (capucha dibujada con CSS) hasta que exista el arte del Hechicero. */
+#tut-panel{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(8px + env(safe-area-inset-bottom,0px));
+  width:max(250px, min(400px, calc(100vw - 440px))); display:flex; gap:10px; align-items:flex-start; z-index:16; pointer-events:none;
+  background:linear-gradient(180deg, rgba(20,12,28,0.92), rgba(10,6,14,0.92)); border:2px solid #6a4a8a; border-radius:6px;
+  padding:8px 10px; box-shadow:0 0 14px rgba(120,70,170,0.45); opacity:0; transition:opacity .35s;}
+#tut-panel.show{opacity:1;}
+#tut-panel.hidden{display:none;}
+#tut-panel .tut-face{flex:0 0 38px; height:38px; border-radius:4px; background:
+  radial-gradient(ellipse 30% 22% at 50% 58%, #c9a8ff 0 30%, transparent 32%),
+  radial-gradient(ellipse 48% 60% at 50% 70%, #0a0610 0 60%, transparent 62%),
+  linear-gradient(180deg, #3a2650, #1a1024); border:1px solid #8a6aaa;}
+#tut-panel .tut-who{font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:3px; color:#c9a8ff; margin-bottom:3px;}
+#tut-panel .tut-text{font-family:'VT323',monospace; font-size:1.02rem; line-height:1.05; color:#efe4ff; font-style:italic;}
+#tut-panel .tut-goal{font-family:'VT323',monospace; font-size:1.1rem; color:#ffcf5c; margin-top:4px;}
+#tut-panel .tut-goal.done{color:#8effb4;}
+#tut-panel .tut-goal:empty{display:none;}
+/* celulares apaisados (poca altura): el cuadro del Hechicero más compacto para no tapar la horda */
+@media (max-height: 500px){
+  #tut-panel{ width:max(240px, min(340px, calc(100vw - 460px))); padding:5px 8px; gap:7px; }
+  #tut-panel .tut-face{ flex-basis:28px; height:28px; }
+  #tut-panel .tut-who{ font-size:0.42rem; margin-bottom:2px; }
+  #tut-panel .tut-text{ font-size:0.9rem; }
+  #tut-panel .tut-goal{ font-size:0.92rem; margin-top:2px; }
+}

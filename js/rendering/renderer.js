@@ -36,6 +36,7 @@ function render(){
   }
   drawAcuaAmbience();
   drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
+  if(arenaHas("drawGround")) arenaHook("drawGround", animNow/1000); // marcas propias en el piso (ARENA_EXT)
   vfxDrawGround(); // telegraphs de zonas peligrosas + ondas de choque
   drawSetAuras(); // aura discreta de los sets completos (color del set, más intensa con su carga)
   drawAimPreview(); // previsualización de la habilidad que se está apuntando
@@ -131,6 +132,7 @@ function render(){
   drawBossSkillOverlay();
   vfxDrawSprites();
   if(arenaHas("drawTop")) arenaHook("drawTop");
+  ctxDraw(); // aviso + progreso de las acciones contextuales
   drawChampFxTop(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
 
   // proyectiles: núcleo + glow cacheado + estela (sin shadowBlur, que es caro en mobile)
@@ -235,6 +237,7 @@ function render(){
 
   ctx.restore();
   if(arenaHas("drawScreen")) arenaHook("drawScreen"); // minimapa de las arenas grandes
+  ctxDrawScreen(); // flechas hacia objetivos contextuales importantes fuera de cámara
   drawChampFxScreen();       // Cruce de los Andes (Cordillera + nieve) y siluetas de El Retumbar
   drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }
