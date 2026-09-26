@@ -95,6 +95,7 @@ function acuInCharco(x, y){
   return null;
 }
 function acuUpdate(dt){
+  reactionsWetZones(dt); // charcos y corrientes mojan a la horda (Conducción con el rayo)
   if(runEnding) return;
   // corrientes: jugador local, bots y enemigos (los invitados se empujan solos, ver acuGuestUpdate)
   // (aturdido = p.ej. agarrado por el Kraken: no se lo arrastra)

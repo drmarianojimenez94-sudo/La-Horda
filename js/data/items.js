@@ -82,6 +82,10 @@ const PASSIVE_DB = [
   {id:"pas_crit",     name:"Ojo Certero",      desc:"Aumenta la probabilidad de golpe crítico", condition:"siempre",      effect:"crit_chance_add", valueBase:0.025, growth:0.01},
   {id:"pas_critdmg",  name:"Golpe Devastador", desc:"Aumenta el daño de los golpes críticos", condition:"siempre",        effect:"crit_mult_add",   valueBase:0.08, growth:0.03},
   {id:"pas_energia",  name:"Pozo Interior",    desc:"Aumenta el recurso máximo y su regeneración", condition:"siempre",   effect:"energy_mult",     valueBase:0.05, growth:0.02},
+  {id:"pas_resfire",  name:"Piel Ignífuga",    desc:"Reduce el daño de fuego recibido",   condition:"siempre",            effect:"res_fire",        valueBase:0.05, growth:0.02},
+  {id:"pas_resice",   name:"Sangre Cálida",    desc:"Reduce el daño de hielo recibido",   condition:"siempre",            effect:"res_ice",         valueBase:0.05, growth:0.02},
+  {id:"pas_resltg",   name:"Aislante",         desc:"Reduce el daño eléctrico recibido",  condition:"siempre",            effect:"res_lightning",   valueBase:0.05, growth:0.02},
+  {id:"pas_resphys",  name:"Cuero Curtido",    desc:"Reduce el daño físico recibido",     condition:"siempre",            effect:"res_physical",    valueBase:0.03, growth:0.01},
   {id:"pas_overheal", name:"Sobreabundancia",  desc:"El exceso de curación/robo de vida se convierte en escudo", condition:"al curar de más", effect:"overheal_shield_pct", valueBase:0.10, growth:0.04}
 ];
 // Potencia real de las pasivas según la rareza del objeto que las trae. Antes una pasiva valía

@@ -80,6 +80,7 @@ function update(dt){
     if(axiomFreezeTimer>0){ continue; } // Force Quit: nadie salvo Axiom actúa mientras dura
     if(e.frozenTimer>0) e.frozenTimer -= dt; // congelado (Invierno Sin Fin, reacciones de hielo)
     if(e.shockedTimer>0) e.shockedTimer -= dt;
+    if(e.wetTimer>0) e.wetTimer -= dt;
     if(e.stunTimer>0){ e.stunTimer-=dt; e.channel = null; e.bossCharge = null; continue; } // aturdir interrumpe canalizaciones/embestidas
     if(e.slowTimer>0) e.slowTimer-=dt; else e.slowAmt=0;
     if(e.burnTimer>0){ e.burnTimer-=dt; e.hp -= e.burnDmg*dt/1000; if(e.hp<=0){ killEnemy(e); continue; } }

@@ -360,7 +360,18 @@ function drawEnemyOverlays(e){
     ctx.beginPath(); ctx.arc(e.x, e.y-e.radius*0.5, 3, 0, Math.PI*2); ctx.fill();
     ctx.restore();
   }
-  if(e.slowAmt>0.7){
+  // mojado (Conducción con el rayo): gotas que caen
+  if((e.wetTimer>0 || (e.innateWet && currentArena!=="acuatica")) && inView(e.x, e.y, 0)){
+    const t = animNow/140;
+    ctx.fillStyle = "rgba(120,200,240,0.85)";
+    for(let i=0;i<3;i++){ const k = (t + i*0.33) % 1; ctx.fillRect(e.x-8+i*8, e.y-e.radius*1.2 + k*e.radius, 2, 3); }
+  }
+  // electrizado (Descarga Arcana / Conducción)
+  if(e.shockedTimer>0 && Math.sin(animNow/35) > 0.2){
+    ctx.strokeStyle = "rgba(255,232,106,0.9)"; ctx.lineWidth = 1.5;
+    const a = animNow/60; ctx.beginPath(); ctx.moveTo(e.x+Math.cos(a)*e.radius*0.8, e.y-e.radius*1.1); ctx.lineTo(e.x, e.y-e.radius*0.7); ctx.lineTo(e.x-Math.cos(a)*e.radius*0.7, e.y-e.radius*0.4); ctx.stroke();
+  }
+  if(e.slowAmt>0.7 || e.frozenTimer>0){
     // congelado: bloque de hielo translúcido sobre la criatura
     ctx.save();
     ctx.globalAlpha = 0.55;

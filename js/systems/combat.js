@@ -30,6 +30,10 @@ function damageEnemy(e, amount, opts){
   dmg *= heroDmgOutMult(src) * enemyVulnMult(e); // Granaderos/¡Avancen!/forma montada/titán y defensa rota (San Lorenzo, Andes)
   dmg *= setDamageMult(src, e, opts); // bonus de sets (Glaciar, Cazador, Frenesí, Resonancia, Impulso…)
   dmg *= itemDamageMult(src, e, opts); // poderes de legendarios/míticos (Avivar las Llamas, Verdugo, Cosecha Roja…)
+  // tipo de daño -> resistencia/debilidad de la horda de esta arena (js/systems/reactions.js)
+  const dmgKind = dmgKindOf(opts);
+  const _res = enemyResist(e, dmgKind);
+  if(_res){ dmg *= 1 - _res; resistLabel(e, dmgKind, _res, src); }
   // refuerzos de la partida: rematar (enemigo bajo 30% de vida) y cazador de élites/jefes
   if(runStats.executeBonus && e.hp < e.maxHp*0.3) dmg *= 1 + runStats.executeBonus;
   if(runStats.eliteDmgMult!==1 && (e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) dmg *= runStats.eliteDmgMult;
@@ -40,6 +44,9 @@ function damageEnemy(e, amount, opts){
   const csc = champSetCritBonus(src, e, opts); if(csc){ critChance += csc.chance; critMult += csc.mult; }
   const crit = opts.forceCrit || Math.random() < critChance;
   if(crit) dmg *= critMult;
+  // reacciones entre estados (Conducción, Quiebre, Vapor, Hemorragia): miran los estados de ANTES del golpe
+  const _powPre = impactPower(e, dmg, crit, opts, src);
+  dmg *= reactionMult(e, dmg, opts, src, _powPre, dmgKind);
   const _hpBefore = Math.max(0, e.hp);
   e.hp -= dmg;
   // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
@@ -49,7 +56,7 @@ function damageEnemy(e, amount, opts){
   // cuerpo, el destello, el retroceso, la sangre y (para el jugador) el hit-stop y el temblor.
   const pow = impactPower(e, dmg, crit, opts, src);
   e._lastHitPow = pow; e.hitFlash = IMPACT_FLASH_MS[pow];
-  e._lastDmgKind = opts.burn ? "fire" : (opts.chain || opts.shock ? "lightning" : ((opts.slow || opts.freeze) && !opts.fromBasic ? "ice" : (opts.bleed ? "bleed" : "physical")));
+  e._lastDmgKind = dmgKind;
   if(e.hp <= 0) e._lastOverkill = dmg - _hpBefore;
   if(!opts.fromProc || pow>=3){ const kdx = e.x-(src?src.x:e.x), kdy = e.y-(src?src.y:e.y), kl = Math.hypot(kdx,kdy)||1; if(inView(e.x, e.y, 60)) goreOnHit(e, pow, kdx/kl, kdy/kl); }
   if(src && src.stats){
@@ -80,8 +87,8 @@ function damageEnemy(e, amount, opts){
     src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
   if(src.classKey==="eren") erenCheckRumbling(src);
   if(opts.burn){ e.burnTimer = Math.max(e.burnTimer||0, 2600*uniqueBurnMult(src)); e.burnDmg = Math.max(e.burnDmg||0, amount*0.12); e.burnSrc = src; if(heroUniqueKey(src)==="uniq_archimago") e.voidFire = true; }
-  if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; }
-  if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; }
+  if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; e.bleedSrc = src; }
+  if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; e.slowBy = src; }
   if(opts.stun){ e.stunTimer = opts.stun; }
   if(opts.knockback){
     const ang = Math.atan2(e.y-src.y, e.x-src.x);
@@ -252,7 +259,7 @@ function damageHero(h, amount, src){
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
-    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h);
+    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h) * heroResistMult(h, src);
   }
   if(h.stats){
     h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo
