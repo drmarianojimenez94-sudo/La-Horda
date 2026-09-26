@@ -139,6 +139,8 @@ function spawnEmber(){
 }
 
 function onBossDefeated(){
+  // Arena Infernal: el Golem de Cuerpos (forma 2) se rompe y nace el Demonio Mayor (forma 3)
+  if(currentArena==="infernal" && hechGolemBroken()) return;
   // Arena de Hielo: jefe final en 2 fases. Al vaciar la vida del Mago de Hielo y Cristal
   // (fase 1) no termina la pelea todavía: se transforma en el Ángel Caído de Hielo (fase 2,
   // mucho más grande y agresivo). Recién al derrotar la fase 2 se gana la partida.

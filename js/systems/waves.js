@@ -14,7 +14,7 @@ function beginLevel(){
   midBossSpawned = false;
   activeChampion = null;
   levelClearing = 0;
-  resetPacing(); emergReset(); // ritmo del nivel de cero y una curación de emergencia por nivel
+  resetPacing(); emergReset(); hechReset(); // ritmo del nivel de cero y una curación de emergencia por nivel
   spawnBreakables(); // objetos del escenario que estallan contra la horda (breakables.js)
   if(typeof setMusicMode==="function") setMusicMode(runLevel===LEVEL_COUNT ? "prelude" : "wave", runLevel);
   updateArenaRuleChip();
@@ -47,6 +47,8 @@ function bossEntrance(e){
 }
 function startBossFight(){
   bossActive = true;
+  // Arena Infernal: jefe final en 3 formas (Hechicero -> Golem de Cuerpos -> Demonio Mayor), ver inf-hechicero.js
+  if(currentArena==="infernal"){ boss = hechStartFinalBoss(); return; }
   const bossType = currentArena==="hielo" ? "mago_hielo_cristal" : (currentArena==="bosque" ? "jinete_sin_cabeza" : (currentArena==="laberinto" ? "minotauro" : (currentArena==="acuatica" ? "leviatan" : "demonio_mayor")));
   boss = spawnEnemy(bossType, true);
   scaleBossStats(boss, bossType);
