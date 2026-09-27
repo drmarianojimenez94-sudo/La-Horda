@@ -19,15 +19,16 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   await p.click('.starter-card[data-champ="tanque"]'); await p.click('#starter-yes-btn');
   await p.click('#mainmenu-jugar-btn'); await p.click('#mode-arena-btn');
   const cards = await p.$$eval('.arena-card:not(.divina)', els => els.map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')));
-  check('new_save.only_first_arena_open', cards.join(',') === 'bosque:open,acuatica:locked,fortaleza:locked,micelial:locked,hielo:locked,laberinto:locked,infernal:locked', cards);
-  // superar el Bosque abre la Acuática, y así en orden
-  const after = await p.evaluate(() => { save.arenasCleared = { bosque: true }; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
-  check('progression.bosque_opens_acuatica', after.slice(0, 3).join(',') === 'bosque:open,acuatica:open,fortaleza:locked', after);
-  // la Fortaleza abre el Reino Micelial (4ta), y el Reino abre el Hielo
-  const mic = await p.evaluate(() => { save.arenasCleared = { bosque: true, acuatica: true, fortaleza: true }; save.legacyHieloOpen = false; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
-  check('progression.fortaleza_opens_micelial_not_hielo', mic.slice(2, 5).join(',') === 'fortaleza:open,micelial:open,hielo:locked', mic);
-  const mic2 = await p.evaluate(() => { save.arenasCleared = { bosque: true, acuatica: true, fortaleza: true, micelial: true }; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
-  check('progression.micelial_opens_hielo', mic2.slice(3, 5).join(',') === 'micelial:open,hielo:open', mic2);
+  // orden canónico (docs/lore/LA_HORDA_LORE_BIBLE.md): 01 Ciudad … 08 Abismo · 09 Minas · 10 Infernal
+  check('new_save.only_first_arena_open', cards.join(',') === 'ciudad:open,fortaleza:locked,bosque:locked,micelial:locked,hielo:locked,acuatica:locked,laberinto:locked,abismo:locked,minas:locked,infernal:locked,coliseo:locked', cards);
+  // completar la Ciudad abre la Fábrica, y así en orden
+  const after = await p.evaluate(() => { save.arenasCleared = { ciudad: true }; save.legacyOpenArenas = []; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
+  check('progression.ciudad_opens_fabrica', after.slice(0, 3).join(',') === 'ciudad:open,fortaleza:open,bosque:locked', after);
+  // el Abismo abre las Minas (09), no la Infernal; las Minas abren la Infernal
+  const ab = await p.evaluate(() => { save.arenasCleared = {}; for (const k of ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','laberinto','abismo']) save.arenasCleared[k] = true; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
+  check('progression.abismo_opens_minas_not_infernal', ab.slice(7, 10).join(',') === 'abismo:open,minas:open,infernal:locked', ab);
+  const mn = await p.evaluate(() => { save.arenasCleared.minas = true; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
+  check('progression.minas_opens_infernal', mn.slice(8, 10).join(',') === 'minas:open,infernal:open', mn);
   // intento de exploit: forzar una sala online en la Infernal sin tenerla
   const exploit = await p.evaluate(async () => { save.arenasCleared = {}; currentArena = 'infernal'; setState('prep'); renderPrepSummary(); document.getElementById('net-create-btn').click(); await new Promise(r => setTimeout(r, 800)); return { code: net.code, err: netLobby.lastError }; });
   check('exploit.no_room_for_locked_arena', !exploit.code && /desbloqueaste/.test(exploit.err), exploit);

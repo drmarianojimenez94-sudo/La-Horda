@@ -273,7 +273,7 @@ function damageHero(h, amount, src){
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
     if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
-    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h) * heroResistMult(h, src);
+    amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h) * heroResistMult(h, src) * (arenaHook("heroDmgTakenMult", h)||1); // (Minas: +daño a oscuras)
   }
   if(h.stats){
     h.stats.dmgTaken += amount; // daño bruto recibido, antes de mitigación/escudo

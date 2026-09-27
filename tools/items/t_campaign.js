@@ -1,6 +1,6 @@
 // ORDEN CANÓNICO de la campaña (docs/lore/LA_HORDA_LORE_BIBLE.md): 01 Ciudad Maldita … 10 Arena Infernal,
-// slot en construcción (Minas; la Ciudad Maldita ya es jugable: Arena 01), desbloqueo secuencial, Arena Divina postgame, migración de
-// guardados del orden anterior, Guardianes solo en 03/05/08/10 y cristales en sus arenas.
+// las diez jugables (Ciudad Maldita = 01, Minas Profundas = 09), desbloqueo secuencial, Arena Divina postgame, migración de
+// guardados del orden anterior, Guardianes solo en 03/05/07/10 y cristales en sus arenas.
 //   (python3 -m http.server 8771 &) ; node tools/items/t_campaign.js [carpeta_capturas]
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
@@ -8,10 +8,10 @@ const BASE = process.env.SE_BASE_URL || 'http://127.0.0.1:8771';
 const OUT = process.argv[2];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 500) : '')); if (!ok) fails++; };
-const CANON = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','minas','laberinto','abismo','infernal'];
+const CANON = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','laberinto','abismo','minas','infernal'];
 const NAMES = ['01 — Ciudad Maldita','02 — Fábrica Sin Fin','03 — Ruinas Célticas / Élficas','04 — Reino Fúngico','05 — Arena Gélida',
-  '06 — Arena Acuática','07 — Minas Profundas','08 — Laberinto','09 — Abismo','10 — Arena Infernal'];
-const PLAYABLE = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','laberinto','abismo','infernal'];
+  '06 — Arena Acuática','07 — Laberinto','08 — Abismo','09 — Minas Profundas','10 — Arena Infernal'];
+const PLAYABLE = CANON.slice(); // las diez son jugables (Minas Profundas = Arena 09)
 (async () => {
   const browser = await chromium.launch({ args: ['--no-sandbox'] });
   const ctx = await browser.newContext({ viewport: { width: 900, height: 506 } });
@@ -51,7 +51,7 @@ const PLAYABLE = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','l
   check('ORDEN.canon_01_a_10', JSON.stringify(r0.canon) === JSON.stringify(CANON), r0.canon);
   check('ORDEN.nombres_y_numeros', JSON.stringify(r0.nums) === JSON.stringify(NAMES), r0.nums);
   check('ORDEN.jugables_en_orden', JSON.stringify(r0.playable) === JSON.stringify(PLAYABLE), r0.playable);
-  check('ORDEN.en_construccion_solo_minas', JSON.stringify(r0.soon) === '["minas"]' && !r0.soonOpen, r0.soon);
+  check('ORDEN.sin_slots_en_construccion_y_minas_cerrada', JSON.stringify(r0.soon) === '[]' && !r0.soonOpen, r0.soon);
   check('NUEVO.solo_la_primera_arena_jugable', JSON.stringify(r0.open) === '["ciudad"]' && r0.cur === 'ciudad', r0);
   check('NUEVO.divina_bloqueada', r0.divina === false);
   // arena guardada bloqueada -> se corrige a la frontera
@@ -63,7 +63,7 @@ const PLAYABLE = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','l
     return [...document.querySelectorAll('#arena-grid .arena-card')].map(c => ({ k: c.dataset.arena, t: c.querySelector('.arena-card-title').textContent.trim(), dis: c.disabled, soon: c.classList.contains('soon') })); });
   check('UI.lista_01_a_10_y_despues_divina', JSON.stringify(g0.slice(0, 10).map(c => c.t)) === JSON.stringify(NAMES) && g0[10].k === 'divina' && g0[11].k === 'coliseo', g0.map(c => c.t));
   check('UI.solo_ciudad_elegible', JSON.stringify(g0.filter(c => !c.dis).map(c => c.k)) === '["ciudad"]', g0.filter(c => !c.dis));
-  check('UI.en_construccion_y_proximamente', g0.filter(c => c.soon).map(c => c.k).join() === 'minas,coliseo', g0.filter(c => c.soon).map(c => c.k));
+  check('UI.en_construccion_y_proximamente', g0.filter(c => c.soon).map(c => c.k).join() === 'coliseo', g0.filter(c => c.soon).map(c => c.k));
   if (OUT) { await sleep(200); await page.screenshot({ path: OUT + '/arena_select_nuevo.png', fullPage: true }); }
   const g1 = await E(() => { const c = document.querySelector('#arena-grid [data-arena="minas"]'); c.click(); document.querySelector('#arena-grid [data-arena="bosque"]').click(); return currentArena; });
   check('UI.no_se_puede_saltear_ni_elegir_en_construccion', g1 === 'ciudad', g1);
@@ -72,7 +72,7 @@ const PLAYABLE = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','l
   const chain = await E(() => { const log = []; for (const k of ARENA_ORDER){ const open = __open(); log.push({ k, open: open.slice(), ok: open[open.length-1] === k && !isDivinaUnlocked() }); save.arenasCleared[k] = true; }
     return { log, divina: isDivinaUnlocked() }; });
   check('CADENA.se_abre_de_a_una_en_orden', chain.log.every(x => x.ok) && chain.log.every((x, i) => x.open.length === i + 1), chain.log.map(x => x.open.length));
-  check('CADENA.abismo_abre_infernal_e_infernal_abre_divina', chain.log[8].k === 'infernal' && chain.log[8].open.includes('infernal') && chain.divina, chain);
+  check('CADENA.abismo_abre_minas_minas_abre_infernal_e_infernal_abre_divina', chain.log[8].k === 'minas' && chain.log[8].open.includes('minas') && !chain.log[8].open.includes('infernal') && chain.log[9].k === 'infernal' && chain.log[9].open.includes('infernal') && chain.divina, chain);
 
   // ---------------- victoria real: banner, frontera, Divina ----------------
   await boot(null);
@@ -85,20 +85,20 @@ const PLAYABLE = ['ciudad','fortaleza','bosque','micelial','hielo','acuatica','l
   const v1b = await E(() => (document.getElementById('center-banner')||{}).textContent || '');
   check('VICTORIA.fabrica_abre_ruinas_03', v1.next === 'bosque' && JSON.stringify(v1.open) === '["ciudad","fortaleza","bosque"]' && !v1.fx && /03 — Ruinas/.test(v1b), { v1, v1b });
   const v2 = await E(() => { for (const k of ['bosque','micelial','hielo']) save.arenasCleared[k] = true; __start('acuatica', 1); boss = null; finishBossVictory(); return { next: save.justUnlockedArena, fx: CRYSTAL_FX.on }; });
-  check('VICTORIA.acuatica_salta_minas_y_abre_laberinto_08', v2.next === 'laberinto' && !v2.fx, v2);
+  check('VICTORIA.acuatica_abre_laberinto_07', v2.next === 'laberinto' && !v2.fx, v2);
   const v3 = await E(() => { for (const k of ['laberinto','abismo']) save.arenasCleared[k] = true; __start('infernal', 1); boss = null; finishBossVictory(); return { div: save.divineArenaUnlocked, open: isDivinaUnlocked() }; });
   check('VICTORIA.infernal_abre_divina', v3.div && v3.open, v3);
 
   // ---------------- Guardianes y cristales ----------------
   const gd = await E(() => ({ story: Object.fromEntries(Object.entries(CAMPAIGN_STORY).filter(([k, v]) => v.guardian).map(([k, v]) => [k, v.guardian])),
     byArena: Object.assign({}, CRYSTAL_BY_ARENA), nums: Object.keys(CAMPAIGN_STORY).filter(k => CAMPAIGN_STORY[k].guardian).map(k => campaignNumber(k)) }));
-  check('GUARDIANES.solo_en_03_05_08_10', JSON.stringify(gd.story) === '{"bosque":1,"hielo":2,"laberinto":3,"infernal":4}' && gd.nums.join() === '3,5,8,10', gd);
+  check('GUARDIANES.solo_en_03_05_07_10', JSON.stringify(gd.story) === '{"bosque":1,"hielo":2,"laberinto":3,"infernal":4}' && gd.nums.join() === '3,5,7,10', gd);
   check('CRISTALES.solo_ruinas_gelida_laberinto', JSON.stringify(gd.byArena) === '{"bosque":"ancestral","hielo":"escarcha","laberinto":"piedra"}', gd.byArena);
   await boot(null);
   const cr = await E(() => { const out = {};
     for (const k of ARENA_ORDER){ __start(k, 1); boss = null; CRYSTAL_FX.on = false; finishBossVictory(); out[k] = CRYSTAL_FX.on ? CRYSTAL_FX.key : null; CRYSTAL_FX.on = false; }
     return out; });
-  check('CRISTALES.victoria_por_arena', JSON.stringify(cr) === JSON.stringify({ ciudad:null, fortaleza:null, bosque:'ancestral', micelial:null, hielo:'escarcha', acuatica:null, laberinto:'piedra', abismo:null, infernal:null }), cr);
+  check('CRISTALES.victoria_por_arena', JSON.stringify(cr) === JSON.stringify({ ciudad:null, fortaleza:null, bosque:'ancestral', micelial:null, hielo:'escarcha', acuatica:null, laberinto:'piedra', abismo:null, minas:null, infernal:null }), cr);
   // jefes de cada arena intactos
   const bosses = await E(() => { const out = {}; for (const k of ['bosque','hielo','acuatica','laberinto']){ __start(k, 10); runLevel = LEVEL_COUNT; levelTimer = levelDuration + 1; __step(64); for (let i = 0; i < 900 && !boss; i++) __step(16); out[k] = boss && boss.type; } return out; }); // (el Bosque tiene intro antes del jefe)
   check('JEFES.siguen_en_su_arena', JSON.stringify(bosses) === '{"bosque":"guardian_ancestral","hielo":"mago_hielo_cristal","acuatica":"leviatan","laberinto":"minotauro"}', bosses);

@@ -55,6 +55,7 @@ function defaultSave(){
     codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
     ciudadV1:true,          // la Ciudad Maldita (Arena 01) pasó a ser jugable (ver loadSave: nadie pierde la arena que ya tenía abierta)
+    minasV1:true,           // las Minas Profundas (Arena 09) pasaron a ser jugables y la campaña se reordenó (ver minasV1Migrate)
     legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
@@ -194,6 +195,9 @@ function _loadSaveInner(){
       // La Ciudad Maldita (Arena 01) se volvió jugable: pasa a ser la frontera de la campaña. Quien ya había
       // avanzado conserva abierta la arena que tenía como frontera (y todo lo que ya había superado).
       if(!parsed.ciudadV1){ ciudadV1Migrate(); persist(); }
+      // Las Minas Profundas se volvieron jugables como Arena 09 (Laberinto 07 · Abismo 08 · Minas 09 · Infernal 10):
+      // quien ya tenía abierta una arena la conserva (en particular la Infernal para quien ya superó el Abismo).
+      if(!parsed.minasV1){ minasV1Migrate(); persist(); }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
@@ -251,9 +255,21 @@ function ciudadV1Migrate(){
   save.ciudadV1 = true;
   const cleared = save.arenasCleared || {};
   if(!Object.keys(cleared).some(k=>cleared[k])) return;             // perfil sin nada completado: arranca por la Ciudad
-  const oldFrontier = ARENA_ORDER.filter(k=>k!=="ciudad").find(k=>!cleared[k]);
+  const oldFrontier = ARENA_ORDER.filter(k=>k!=="ciudad" && k!=="minas").find(k=>!cleared[k]);
   save.legacyOpenArenas = Array.isArray(save.legacyOpenArenas) ? save.legacyOpenArenas : [];
   if(oldFrontier && !save.legacyOpenArenas.includes(oldFrontier)) save.legacyOpenArenas.push(oldFrontier);
+}
+// Orden de campaña ANTES de que las Minas fueran jugables (las Minas estaban "en construcción").
+const MINAS_PREV_ORDER = ["ciudad","fortaleza","bosque","micelial","hielo","acuatica","laberinto","abismo","infernal"];
+function minasV1Migrate(){
+  save.minasV1 = true;
+  const cleared = save.arenasCleared || {};
+  save.legacyOpenArenas = Array.isArray(save.legacyOpenArenas) ? save.legacyOpenArenas : [];
+  // lo que estaba abierto con el orden anterior sigue abierto (la frontera vieja; lo superado ya cuenta)
+  const oldFrontier = MINAS_PREV_ORDER.find(k=>!cleared[k]);
+  if(oldFrontier && !save.legacyOpenArenas.includes(oldFrontier)) save.legacyOpenArenas.push(oldFrontier);
+  // perfiles con TODAS las arenas abiertas (desbloqueo de prueba): también la nueva
+  if(save.testUnlock90V1 && !save.legacyOpenArenas.includes("minas")) save.legacyOpenArenas.push("minas");
 }
 function campaignReset(raw){
   try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeCampania")) localStorage.setItem(SAVE_KEY+"_antesDeCampania", raw); }catch(e){}
@@ -267,7 +283,7 @@ function campaignReset(raw){
   save.arenasCleared = defaultSave().arenasCleared;
   save.crystals = defaultSave().crystals;
   save.legacyHieloOpen = false; save.legacyLabOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true; save.abismoMigrated = true;
-  save.campaignV2 = true; save.legacyOpenArenas = []; save.ciudadV1 = true;
+  save.campaignV2 = true; save.legacyOpenArenas = []; save.ciudadV1 = true; save.minasV1 = true;
   save.divineArenaUnlocked = false;
   save.starterChosen = false; save.lastChamp = null;
   save.playtestV1Bonus = true;
