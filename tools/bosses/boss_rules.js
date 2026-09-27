@@ -37,7 +37,7 @@ const want = a => !only.length || only.includes(a);
   /* ================= 01 CIUDAD: El Presentador ================= */
   if (want('ciudad')) {
     console.log('== ciudad');
-    await start('ciudad');
+    await start('ciudad', []); // sin bots: le cortaban el Gran Número antes de que la prueba lo mirara (fallaba al azar, también en main)
     await E(() => { runLevel = LEVEL_COUNT; levelTimer = 0; beginLevel(); });
     for (let k = 0; k < 30; k++) { if (await E(() => !!cmPresEntity() && bossActive)) break; await sleep(400); }
     await god(); await sleep(500);
@@ -51,9 +51,16 @@ const want = a => !only.length || only.includes(a);
     // sin interrumpir: cometas contra la ciudad
     await E(() => { const e = cmPresEntity(); e._expT = 0; e.crashVuln = false; e.stunTimer = 0; e.gnCd = 0; e.cmBusy = false; });
     await sleep(300);
-    await E(() => { const e = cmPresEntity(); if (e.gn) e.gn.t = CM_CFG.presentador.gnWind; });
-    await sleep(400);
-    ok('cm_cometas', await E(() => enemies.some(o => o.alive && o.type === 'cm_cometa')));
+    // los cometas viven poco y el canal puede tardar en arrancar: se mira durante 2,5 s (antes, una sola
+    // mirada a los 400 ms fallaba al azar también en main)
+    let cometas = false;
+    for (let k = 0; k < 25 && !cometas; k++) {
+      // hp0 = hp: los golpes de los bots durante la carga no cuentan como "cortarle la función" (ese caso
+      // es cm_gn_interrumpido); acá se prueba el camino sin interrumpir
+      cometas = await E(() => { const e = cmPresEntity(); if (e && e.gn) { e.gn.hp0 = e.hp; e.gn.t = CM_CFG.presentador.gnWind; } return enemies.some(o => o.alive && o.type === 'cm_cometa'); });
+      if (!cometas) await sleep(100);
+    }
+    ok('cm_cometas', cometas);
     // desviar un cometa: vuelve y lo expone
     await E(() => { const c = enemies.find(o => o.alive && o.type === 'cm_cometa'); if (c) cmCometDeflected(c); });
     for (let k = 0; k < 12; k++) { await sleep(300); if (await E(() => cmPresEntity()._expT > 0)) break; }

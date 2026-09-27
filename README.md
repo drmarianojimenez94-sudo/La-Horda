@@ -73,6 +73,18 @@ tocar el balance: ver [ARCHITECTURE.md](ARCHITECTURE.md).**
 crear o unirse, reintenta solo hasta ~100 s mostrando "Despertando el servidor… N s". Si el servidor
 rechaza la conexión, la Sala muestra el motivo. Prueba: `node tools/net-test/coldstart.js`.
 
+**Verificación del juego publicado:** el workflow `Live check` (`.github/workflows/live-check.yml`) corre
+una vez por día y a mano desde la pestaña Actions. Despierta el relay de Render, crea una sala y se une
+con el código (`tools/net-test/live_relay.js`), hace el flujo de la Sala con dos iPhone emulados contra
+GitHub Pages y mide la carga en 4G.
+
+## Pruebas de celular y fluidez
+
+- `node tools/audit/ui_layout.js`: 43 pantallas en iPhone 14 y SE apaisados (botones de menos de 40 px,
+  textos chicos, cosas fuera de pantalla). Los ajustes para celular están en `css/mobile.css`.
+- `node tools/audit/fps.js [arena] [cpu]`: fluidez. Si el juego va lento, la resolución interna baja sola
+  (75 % / 60 %; `js/core/canvas.js`); `?res=0.75` la fija para probar.
+
 ## Modo desarrollador
 
 Los regalos de prueba (todos los guardianes en nivel 90, todas las arenas y todas las skins) **solo** se
