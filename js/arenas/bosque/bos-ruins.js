@@ -221,8 +221,11 @@ function bosSpring(a){
   const hunters = pool.filter(p=>p.t==="bestia_bosque" || p.t==="cu_sith");
   const src = hunters.length ? hunters : pool;
   const k = BOS_CFG.ambushPer[0] + ((Math.random()*(BOS_CFG.ambushPer[1]-BOS_CFG.ambushPer[0]+1))|0);
+  let cu = 0;
   for(let i=0;i<k;i++){
-    const e = spawnEnemy(pickFromPool(src), false);
+    let t = pickFromPool(src);
+    if(t==="cu_sith" && cu++ >= 1) t = "bestia_bosque"; // el Cù-Sìth es élite: como mucho uno por emboscada
+    const e = spawnEnemy(t, false);
     if(!e) continue;
     e.x = a.x + (Math.random()-0.5)*30; e.y = a.y + (Math.random()-0.5)*20; clampToArena(e);
     if(a.burnt){ e.burnTimer = Math.max(e.burnTimer||0, 4000); e.burnDmg = Math.max(e.burnDmg||0, e.maxHp*0.05); }

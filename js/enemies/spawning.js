@@ -41,7 +41,7 @@ function spawnPoolForLaberinto(level){
 function spawnPoolForBosque(level){
   const pool = [{t:"duende_bosque", w:10}, {t:"enjambre_hadas", w:6}];
   if(level >= 3) pool.push({t:"bestia_bosque", w:5});
-  if(level >= 4) pool.push({t:"cu_sith", w:4});
+  if(level >= 4) pool.push({t:"cu_sith", w:2});   // élite (Tres Aullidos): menos peso que cuando era subélite
   if(level >= 6) pool.push({t:"dama_bosque", w:2});
   if(level >= 7) pool.push({t:"ent", w:2});
   if(level >= 8){ pool[0].w = 6; }
@@ -53,7 +53,8 @@ function spawnPoolForBosque(level){
 function spawnPoolForHielo(level){
   const pool = [{t:"lobo_artico", w:10}];
   if(level >= 2) pool.push({t:"golem_hielo", w:6});
-  if(level >= 3) pool.push({t:"dragoncito_hielo", w:5});
+  if(level >= 2) pool.push({t:"hada_escarcha", w:3});     // esbirros: cada una llega con 2 más (bestias-ai.js)
+  if(level >= 3) pool.push({t:"dragoncito_hielo", w:2});  // élite (Aliento de Escarcha): menos peso que cuando era subélite
   if(level >= 5) pool.push({t:"angel_hielo", w:4});
   if(level >= 6) pool.push({t:"demonio_hielo_fuego", w:3});
   if(level >= 8){ pool[0].w = 5; }
@@ -120,6 +121,7 @@ function spawnEnemy(type, atBoss, champion){
   enemies.push(e);
   if(typeof codexNoteSeen==="function") codexNoteSeen(type); // Códice: criatura descubierta
   if(arenaHas("placeSpawn")) arenaHook("placeSpawn", e, atBoss, champion); // puertas/túneles propios de la arena
+  if(typeof bestiaOnSpawn==="function") bestiaOnSpawn(e); // hadas en grupo / color de cada hada (bestias-ai.js)
   // Un guardián (subjefe) detiene la aparición normal de monstruos mientras esté vivo,
   // salvo que se marque explícitamente como "caótico" (permite que sigan apareciendo).
   if(champion && !e.allowChaosSpawn) activeChampion = e;

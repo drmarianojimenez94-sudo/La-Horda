@@ -3,6 +3,19 @@
    La usa js/assets/preload.js para saber cuándo terminó de cargar todo. Si agregás una imagen
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
+  // >>> hoja de bestias (tools/art/hoja_bestias/build.py)
+  "assets/sprites/enemies/bosque/cu_sith/v3/atlas.png",
+  "assets/sprites/enemies/bosque/enjambre_hadas/v3/atlas.png",
+  "assets/sprites/enemies/hielo/hada_escarcha/atlas.png",
+  "assets/sprites/enemies/laberinto/druida_arena/muerte/atlas.png",
+  "assets/sprites/enemies/laberinto/esfinge/muerte/atlas.png",
+  "assets/sprites/enemies/laberinto/medusa/muerte/atlas.png",
+  "assets/vfx/enemies/bosque/hbCuMordida_0.png",
+  "assets/vfx/enemies/bosque/hbDamaHechizo_0.png",
+  "assets/vfx/enemies/hielo/hbAngelPrisma_0.png",
+  "assets/vfx/enemies/hielo/hbDragAliento_0.png",
+  "assets/vfx/enemies/hielo/hbDragAliento_1.png",
+  // <<< hoja de bestias
   // >>> minas profundas (tools/art/minas/extract.py)
   "assets/sprites/arenas/minas/mn_esclavo/atlas.png",
   "assets/sprites/arenas/minas/mn_insecto/atlas.png",
@@ -578,8 +591,6 @@ const ASSET_MANIFEST = [
   "assets/sprites/bosses/laberinto/minotauro/v3/atlas.png",
   "assets/sprites/enemies/hielo/dragoncito_hielo/v2/atlas.png",
   "assets/sprites/enemies/hielo/angel_hielo/v2/atlas.png",
-  "assets/sprites/enemies/bosque/enjambre_hadas/v2/atlas.png",
-  "assets/sprites/enemies/bosque/cu_sith/v2/atlas.png",
   "assets/sprites/enemies/infernal/golem/v2/atlas.png",
   "assets/sprites/enemies/laberinto/golem_piedra/v2/atlas.png",
   "assets/vfx/bosses/laberinto/csMinoWave_0.png",

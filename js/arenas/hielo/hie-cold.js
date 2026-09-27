@@ -43,6 +43,7 @@ function hieResetRun(){
       lit:true, fuel:HIE_CFG.fuel[0] + i*3500, prog:0, dur:HIE_CFG.lightMs, done:false, by:-1 };
   });
   for(const h of heroes){ h._cold = 0; h._stillT = 0; h._cx = h.x; h._cy = h.y; }
+  if(typeof bestiaResetRun==="function") bestiaResetRun();
 }
 function hieRunStart(){ hieResetRun(); }
 function hieGuestStart(){ hieResetRun(); }
@@ -185,6 +186,8 @@ function hieDrawGround(now){
     ctx.beginPath(); ctx.ellipse(b.x, b.y, HIE_CFG.warmR, HIE_CFG.warmR*0.8, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.restore();
   }
+  // hilo de luz de las Hadas de Escarcha que le roban el calor a un brasero (js/enemies/bestias-ai.js)
+  if(typeof hadaDrawSteal==="function") hadaDrawSteal();
   // escarcha bajo los pies de quien tiene frío
   for(const h of heroes){
     const c = h._cold||0; if(!h.alive || c < 20 || !inView(h.x, h.y, 60)) continue;
