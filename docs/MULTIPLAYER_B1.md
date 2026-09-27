@@ -11,16 +11,28 @@ la sala online siempre respeta la arena y los campeones que cada uno tiene.
 **Crear sala (anfitrión)**
 1. MENÚ PRINCIPAL → **JUGAR → Arena** → elegís una arena **desbloqueada** y tu campeón → **SALA**
    (pre-sala) → **🌐 Crear sala online**.
-2. Aparece el código (ej. `SALA QKL58J`), el enlace, **📋 Copiar enlace** y **📨 Invitar** (en
-   iPhone abre el menú para compartir por WhatsApp).
+2. Aparece en grande el **CÓDIGO DE SALA** (ej. `QKL58J`) con **📋 COPIAR CÓDIGO**, y también
+   **🔗 Copiar enlace** y **📨 Invitar** (en iPhone abre el menú para compartir). Basta con dictar
+   o mandar el código: no hace falta ningún enlace.
 
-**Unirse (invitado)** — dos formas:
-- MENÚ PRINCIPAL → **JUGAR → Arena** → cualquier arena tuya y tu campeón → en la **SALA**, en
-  **Unirse a una sala**, pegás **el enlace** o escribís **el código** (sirve `QKL58J`, `qkl58j` o
-  `SALA QKL58J`; el botón 📋 pega lo copiado) → **Unirse**. Pasás a la sala del anfitrión, con su
-  arena.
+**Unirse (invitado)** — tres formas, todas sin salir del juego salvo la del enlace:
+- **Solo con el código (la principal):** MENÚ PRINCIPAL → **MODOS DE JUEGO** → tarjeta **🔑 UNIRSE CON
+  CÓDIGO** → escribís el código (sirve `QKL58J`, `qkl58j`, `qkl 58j` o `SALA QKL58J`; el botón 📋 pega
+  lo copiado) → **UNIRSE**. Entrás directo a la Sala del anfitrión, con su arena y con el campeón que
+  tenías elegido (se cambia en la Sala).
+- Desde tu **SALA** (JUGAR → Arena → arena y campeón → Sala): recuadro **🔑 UNIRSE CON CÓDIGO**, igual.
 - O abrís el enlace directamente → poné tu nombre → **Unirse a la sala**. Si es tu primera vez,
   antes elegís tu campeón de regalo.
+
+Mensajes claros al unirse: código con largo incorrecto, caracteres que los códigos no usan (O, 0, I,
+1), **sala inexistente** (o ya cerrada), **SALA COMPLETA** (4 jugadores), partida ya comenzada,
+versión distinta o servidor que no responde. Un intento fallido no deja la conexión a medias.
+
+**Skins en la sala:** cada jugador ve y elige **sus** skins en el recuadro **🎨 Skins de <campeón>**
+de la Sala (USAR si ya tenés las piezas, o Comprar ahí mismo: se autoequipa) o en la Tienda de
+skins (botón en el mismo recuadro, vuelve a la Sala). La skin de cada uno se ve en su lugar de la
+sala para todos, en la partida, al revivir y después de reconectarse; el juego de un jugador nunca
+usa su propio guardado para dibujar la skin de otro (el anfitrión reparte la de cada invitado).
 
 **En la sala** (todos): cada uno ve a los 4 lugares en tiempo real con su color **P1 naranja · P2
 azul · P3 verde · P4 violeta**. Cada jugador **elige su campeón ahí mismo** (los que usa otro
@@ -157,15 +169,17 @@ horas de instancia por mes por workspace.
 ## Pruebas
 
 Ver `tools/net-test/README.md` (1–4 humanos, 5º rechazado, desconexiones, campaña,
-resistencia, jefes, latencia simulada). Lo que **no** se puede probar desde el entorno de
+resistencia, jefes, latencia simulada) y `tools/net-test/lobby_code_skins.js` (unirse con código,
+scroll táctil en celular, autoequip y sincronización de skins, enlace, reconexión). Lo que **no** se puede probar desde el entorno de
 desarrollo: dispositivos reales en redes distintas (ver "Prueba manual" abajo).
 
 ## Prueba manual pendiente (dispositivos reales)
 
 1. iPhone A con WiFi y teléfono B con datos móviles (redes distintas).
-2. A: crear sala en Ruinas del Bosque, copiar enlace, mandarlo por WhatsApp.
-3. B: JUGAR → Arena → SALA → pegar el enlace en "Unirse" (o abrir el enlace), elegir campeón en la sala,
-   marcar LISTO. A: ver a B en P2 (azul), comenzar.
+2. A: crear sala, leerle el CÓDIGO a B (o tocar COPIAR CÓDIGO y mandarlo).
+3. B: abrir LA HORDA por su cuenta → MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO → escribirlo → UNIRSE.
+   Scrollear la Sala con el dedo hasta abajo, comprar/usar una skin, marcar LISTO. A: ver a B en P2
+   (azul) con su skin, comenzar. (Probar también el enlace de invitación con un tercer teléfono.)
 4. Moverse los dos, usar habilidades, dejarse caer y revivirse (mantener ✚), pasar de nivel (cada
    uno elige refuerzo). Anotar el ping del panel B1.
 5. Dejarse caer los dos (team wipe) → derrota → A toca VOLVER AL LOBBY → B vuelve solo a la misma

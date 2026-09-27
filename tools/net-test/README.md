@@ -17,6 +17,11 @@ node tools/net-test/loop.js 3                       # PLAYTEST V1 (P0): ciclo co
                                                     #   campeón de regalo, Arena -> Sala -> Unirse pegando enlace/código,
                                                     #   campeón en la sala, REVIVE 1-5, team wipe ->
                                                     #   misma sala, reintentar x3 sin degradación
+node tools/net-test/lobby_code_skins.js desktop     # PRE-ALFA: A crea sala (escritorio) · B en iPhone horizontal:
+node tools/net-test/lobby_code_skins.js mobile      #   UNIRSE CON CÓDIGO (validación, inexistente, llena), COPIAR CÓDIGO,
+                                                    #   sin bucle de re-render, scroll táctil (Sala, Tienda, Inventario,
+                                                    #   selección, modales), skin comprada autoequipada y visible para
+                                                    #   todos, partida, revivir, reconexión, recarga, enlace
 node tools/net-test/soak.js 60 laberinto nigromante,musashi,axiom,profeta   # resistencia
 BOSS=1 node tools/net-test/soak.js 25 hielo musashi,profeta                 # jefes
 node tools/net-test/shots.js /tmp/capturas          # capturas anfitrión / invitado

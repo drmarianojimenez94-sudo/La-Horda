@@ -158,9 +158,9 @@ async function netJoinRoom(code, champ, level){
   netSend({t:"join", protocol:NET_PROTOCOL, build:NET_CONFIG.build, code:net.code, champ, level, name:netPlayerName(), clientId:netClientId()});
 }
 function netLeaveRoom(){
-  netSend({t:"leave"});
+  if(net.role) netSend({t:"leave"}); // sin sala (p.ej. un "unirse" rechazado) no hay nada que avisar
   _netReset();
-  try{ if(net.ws) net.ws.close(); }catch(e){}
+  try{ if(net.ws){ net.ws.onmessage = null; net.ws.close(); } }catch(e){}
   net.ws = null; net.status = "off";
 }
 function netInviteUrl(){

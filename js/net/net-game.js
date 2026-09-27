@@ -235,7 +235,8 @@ function netBuildLoadout(){
   const eq = Object.assign(mkEquipment(), c.equipment||{});
   const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
-    skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items};
+    skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
+    skin:(typeof champSkinId==="function" ? champSkinId(k) : null)}; // cosmético: la skin de SU guardado (sala)
 }
 function netLoadoutRecord(L){
   const rec = mkChampion(true);
@@ -364,8 +365,13 @@ function netHostCheckDefeat(){
 }
 // Mensajes de los invitados
 function netHostOnMsg(from, d){
-  if(!d || !netMatch) { if(d && d.k==="loadout") netLobby.loadouts[from] = d.L; return; }
-  if(d.k==="loadout"){ netLobby.loadouts[from] = d.L; return; }
+  if(d && d.k==="loadout"){
+    netLobby.loadouts[from] = d.L;
+    if(typeof netHostBroadcastCos==="function") netHostBroadcastCos(false); // su skin, para todos
+    if(!netMatch && typeof netRefreshLobby==="function") netRefreshLobby();
+    return;
+  }
+  if(!d || !netMatch) return;
   const h = heroes && heroes[from];
   if(!h || !h._net) return;
   const n = h._net;
@@ -645,6 +651,7 @@ function netApplySnapshot(s){
 function netGuestOnMsg(from, d){
   if(!d) return;
   switch(d.k){
+    case "cos": netLobby.cos = d.m || {}; if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
     case "start": netGuestStartRun(d); return;
     case "s":
       if(!netMatch || netMatch.role!=="guest"){ if(!netMatch) netSendToHost({k:"needFull"}); return; }

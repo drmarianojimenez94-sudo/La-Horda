@@ -258,3 +258,56 @@ Documentos: `LA_HORDA_CODEX.md` y `LA_HORDA_CODEX_MISSING_ASSETS.md`.
 | **Resultado** | ✅ `t_codex` OK · 18 suites de `tools/items` OK · `t_func` 94/94 · *smoke* de Fortaleza y Micelial sin errores. |
 | **Regresiones** | `t_func` ahora navega los campeones a través del Códice (`#mainmenu-codex-btn` → CAMPEONES → ficha → pestañas). |
 | **Assets faltantes** | `LA_HORDA_CODEX_MISSING_ASSETS.md`: ilustraciones de los 17 jefes, panorámicas de Ciudad Maldita y Minas Profundas, VFX de 17 habilidades de 7 campeones, habilidades de los Dobladores y atlas del Abismo en alta. |
+
+---
+
+# MULTIJUGADOR PRE-ALFA — unirse con código, scroll táctil y skins
+
+Chequeo de diseño: nada contradice una regla MUST NOT. No hubo CONFLICTO DE DISEÑO. La regla canónica de
+skins se mantiene: una skin de set nunca se vende suelta; "equiparla" es poner el set completo en su campeón.
+
+## 1 · Unirse a una sala solo con el código
+
+| | |
+|---|---|
+| **Bug** | Para entrar a la partida de otro había que abrir su enlace o entrar primero a una Sala propia (JUGAR → Arena → arena → campeón). El anfitrión solo podía copiar el enlace, no el código. |
+| **Causa** | El único cuadro para unirse estaba dentro de la Sala. |
+| **Solución** | Tarjeta **🔑 UNIRSE CON CÓDIGO** en MODOS DE JUEGO (y el mismo recuadro en la Sala). Tiene nombre, campo de código, Pegar, UNIRSE y el campeón con el que entrás. Valida el largo, los caracteres (el servidor nunca usa O/0/I/1), el código normalizado y los enlaces pegados. Los errores quedan en la tarjeta: sala inexistente, SALA COMPLETA, partida comenzada, versión, servidor caído. Un intento rechazado cierra la conexión limpia. El anfitrión ve el **CÓDIGO DE SALA** en grande con **📋 COPIAR CÓDIGO**. El enlace de invitación y Copiar enlace siguen igual. |
+| **Archivos** | `index.html`, `js/net/net-lobby.js`, `js/net/net-core.js`, `css/menus.css` |
+
+## 2 · Scroll trabado en la sala online (celular)
+
+| | |
+|---|---|
+| **Bug** | Con un invitado en la sala, había partes de la Sala que no se podían scrollear ni tocar. No se llegaba a equipar skins ni al contenido de abajo. |
+| **Causa** | Un **bucle**: cada render de la Sala del invitado mandaba su loadout, el servidor reenviaba la sala a todos, eso volvía a renderizar la Sala entera y se repetía. Pasaba unas **4 veces por segundo en los dos jugadores** (medido: 19 reconstrucciones en 5 s). Los botones se reemplazaban bajo el dedo: en iPhone el toque se perdía y el scroll se cortaba. Además, `touch-action:none` en html/body dejaba el scroll de los menús a merced del motor del navegador. Y la Tienda, el Inventario y las galerías eran listas con scroll propio de 150-230 px dentro de pantallas que también scrollean. |
+| **Solución** | (1) El loadout solo se manda si cambió. (2) Ante cambios de red, refresco liviano (barra, lugares y chat) que no reemplaza el HTML si no cambió, conserva lo que se está escribiendo y espera a que se levante el dedo. (3) `touch-action:pan-x pan-y` en la página y `none` solo en el canvas del juego y los controles táctiles; `.screen` con `pan-y` y `overscroll-behavior:contain`. El zoom sigue bloqueado. (4) En pantallas bajas o táctiles hay un solo scroll por pantalla: la Tienda, el Inventario, las galerías y el cofre sin scroll anidado. |
+| **Archivos** | `js/net/net-lobby.js`, `js/ui/menus.js`, `css/base.css`, `css/menus.css` |
+
+## 3 · Autoequip de skins compradas
+
+| | |
+|---|---|
+| **Bug** | Al comprar una skin, las piezas iban al inventario y había que equipar el set a mano, pieza por pieza, para verla. |
+| **Solución** | `skinAutoEquip` equipa la skin en el campeón seleccionado si es compatible, o en el **único** campeón compatible que tengas. Guarda al instante (`persistNow`), actualiza la preview y muestra **"🎨 SKIN EQUIPADA"**. Si hay varios campeones posibles no decide por vos: queda desbloqueada y la tarjeta ofrece "Equipar en: …". Si no tenés al campeón, avisa. La Tienda muestra EQUIPAR, "✔ EQUIPADA en …" y una preview animada con la skin. En la Sala hay un recuadro **🎨 Skins** (USAR / Comprar / Tienda de skins, con vuelta a la Sala). |
+| **Archivos** | `js/systems/shop.js`, `js/ui/shop-ui.js`, `js/ui/menus.js`, `css/menus.css` |
+
+## 4 · Skins sincronizadas entre jugadores
+
+| | |
+|---|---|
+| **Bug** | En la Sala, cada lugar dibujaba al campeón con el guardado LOCAL: la skin de otro no se veía y, si vos tenías el set de ese campeón, se veía la tuya en él. |
+| **Solución** | El loadout del invitado lleva su skin, calculada con su guardado. El anfitrión la reparte a todos (`{k:"cos"}`) solo cuando cambia, cuando entra alguien o cuando alguien se reconecta. Cada lugar dibuja una skin explícita (`data-skin`; "" = ninguna). En partida ya viajaba en `skinSet`, que calcula el anfitrión con el equipo real de cada uno. Verificado en partida, al revivir y tras una reconexión. |
+| **Archivos** | `js/net/net-lobby.js`, `js/net/net-game.js`, `js/ui/menus.js`, `js/systems/set-effects.js` |
+
+## Pruebas
+
+- `tools/net-test/lobby_code_skins.js desktop` y `mobile`: 45/45 cada uno. Clientes independientes contra el
+  relay real y B en iPhone horizontal con toques y swipes reales.
+- `server/test-relay.js` OK · `t_func` 94/94 · 18 suites de `tools/items` OK · `t_codex` OK · smokes de Fortaleza
+  y Micelial sin errores.
+- `e2e.js 2`: su partida de prueba no arrancaba porque el Bosque está bloqueado en un guardado nuevo (orden
+  canónico); el test ahora marca la Fábrica como completada. Queda con el mismo resultado que `main`: 36 pasan.
+- **Pre-existentes, fallan igual en `main`:** `e2e` (jefe y victoria del Bosque), `campaign-gate` y `loop`
+  (esperan el orden y el oro inicial viejos) y `disconnect` (URL vacía). Quedan para una actualización aparte
+  de esos tests.
