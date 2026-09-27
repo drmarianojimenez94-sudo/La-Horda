@@ -4,6 +4,8 @@
 //
 // uso: node tools/net-test/e2e.js <humanos 1-4> [--fifth] [--long]
 //   requiere el sitio servido (python3 -m http.server 8771) y el relay (PORT=8799 node server/relay.js)
+//   (el anfitrión entra con ?dev=1; los invitados abren el enlace de invitación, sin ?dev=1: su
+//   guardado es el propio -campaña real-, por eso se les marcan Ciudad y Fortaleza como superadas)
 //   variables: SITE (default http://127.0.0.1:8771), RELAY (default ws://127.0.0.1:8799)
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
@@ -21,7 +23,9 @@ const CHAMP_LABEL = { tanque: 'Tanque', mago: 'Mago', guerrero: 'Asesino', sopor
 
 async function newClient(browser, i, url) {
   const ctx = await browser.newContext({ viewport: { width: 1000, height: 560 } });
-  // guardado propio de cada jugador: campeones en nivel 12, Bosque abierto (orden canónico: se completa la Fábrica)
+  // guardado propio de cada jugador: campeones en nivel 12, Bosque abierto (orden canónico CAMPAIGN_ORDER:
+  // se completan la Ciudad Maldita y la Fortaleza; sin eso el invitado no tiene el Bosque abierto y, con
+  // razón, la victoria cooperativa no se lo cuenta como superado -ver netGuestEnd-)
   await ctx.addInitScript(([i]) => {
     try {
       if (!localStorage.getItem('__seeded')) {
@@ -36,7 +40,7 @@ async function newClient(browser, i, url) {
   page.on('dialog', d => d.accept());
   await page.goto(url, { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i]]);
+  await page.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i]]);
   return { ctx, page, errors, i };
 }
 const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
@@ -152,12 +156,20 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     check('move.guest_sees_host', Math.hypot(gv.x - p1[0].x, gv.y - p1[0].y) < 40, { gv, host: p1[0] });
   }
   // ---------------- mismos enemigos ----------------
+  // La horda aparece de a tandas: si justo cae una tanda entre las dos lecturas la cuenta difiere
+  // sin que haya desincronización. Se toman hasta 6 muestras (cada ~250 ms) y basta con que una
+  // coincida (misma lista o a lo sumo 2 de diferencia), igual que antes.
   await sleep(400);
-  const eh = await ev(host, () => enemies.filter(e => e.alive).map(e => e.type).sort().join(','));
   for (const g of guests) {
-    const eg = await ev(g, () => enemies.filter(e => e.alive !== false).map(e => e.type).sort().join(','));
-    const same = eg === eh || Math.abs(eg.split(',').length - eh.split(',').length) <= 2;
-    check(`world.guest${g.i}_same_enemies`, same && eh.length > 0, { host: eh.slice(0, 120), guest: eg.slice(0, 120) });
+    let eh = '', eg = '', same = false;
+    for (let k = 0; k < 6 && !same; k++) {
+      if (k) await sleep(250);
+      [eh, eg] = await Promise.all([
+        ev(host, () => enemies.filter(e => e.alive).map(e => e.type).sort().join(',')),
+        ev(g, () => enemies.filter(e => e.alive !== false).map(e => e.type).sort().join(','))]);
+      same = eh.length > 0 && (eg === eh || Math.abs(eg.split(',').length - eh.split(',').length) <= 2);
+    }
+    check(`world.guest${g.i}_same_enemies`, same, { host: eh.slice(0, 120), guest: eg.slice(0, 120) });
   }
   // ---------------- habilidades simultáneas ----------------
   if (guests.length) {
@@ -172,14 +184,20 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     check('skills.guest_sees_own_cooldown', gcd > 0, gcd);
   }
   // ---------------- fuego amigo OFF (sin bloquear curas) ----------------
+  // Los escudos (habilidades, objetos: itemShield) absorben golpes sin bajar la vida: se vacían antes
+  // de cada golpe para que "la vida no cambió" signifique "el golpe no se aplicó" y no "lo absorbió
+  // un escudo" (con escudo, un fuego amigo roto pasaría desapercibido y un golpe enemigo válido
+  // parecería no hacer daño).
   const ff = await ev(host, () => {
-    const a = heroes[0], b = heroes[1]; const hp0 = b.hp;
+    const a = heroes[0], b = heroes[1];
+    const noShield = () => { b.shield = 0; b.itemShield = 0; b.invulnTimer = 0; b.emergencyShieldUsed = true; };
+    noShield(); const hp0 = b.hp;
     damageHero(b, 50, a); // golpe directo de un aliado
     damageHero(b, 50, { src: a, x: a.x, y: a.y }); // proyectil de un aliado
     damageHero(b, 50, { owner: a, x: a.x, y: a.y }); // invocación de un aliado
     const hp1 = b.hp;
     b.hp = Math.max(1, b.hp - 30); const before = b.hp; b.hp = Math.min(b.maxHp, b.hp + 20); // una cura sigue funcionando
-    const e = enemies.find(x => x.alive); const hp2 = b.hp; if (e) damageHero(b, 5, e); // un enemigo sí daña
+    const e = enemies.find(x => x.alive); noShield(); const hp2 = b.hp; if (e) damageHero(b, 5, e); // un enemigo sí daña
     return { hp0, hp1, healed: b.hp >= before, enemyHits: b.hp < hp2 || !e };
   });
   check('ff.allies_cannot_damage_allies', ff.hp0 === ff.hp1, ff);
@@ -199,10 +217,13 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   }
   // ---------------- caída y revive (humano) ----------------
   if (guests.length) {
-    await ev(host, () => { const g = heroes[1]; g.hp = 1; damageHero(g, 99999, enemies.find(e => e.alive) || { x: 0, y: 0, rank: 'normal' }); });
+    // El set "La Última Profecía" (champSetPreventDeath) de un aliado cercano salva de la muerte una vez
+    // cada 40 s y los escudos absorben el golpe: se ponen en enfriamiento/vacían para que la caída sea
+    // determinista (lo que se prueba es que el invitado vea su propia caída, no el set).
+    const dn = await ev(host, () => { const g = heroes[1]; for (const h of heroes) h._prophecyAt = runElapsedMs; g.shield = 0; g.itemShield = 0; g.invulnTimer = 0; g.emergencyShieldUsed = true; const pre = { shield: g.shield, itemShield: g.itemShield, invuln: g.invulnTimer, tk: heroDmgTakenMult(g) }; g.hp = 1; damageHero(g, 99999, enemies.find(e => e.alive) || { x: 0, y: 0, rank: 'normal' }); return { pre, alive: g.alive, hp: g.hp }; });
     await sleep(400);
-    const downed = await ev(guests[0], () => player.alive);
-    check('revive.guest_sees_self_down', downed === false);
+    const downed = await ev(guests[0], () => ({ alive: player.alive, hp: player.hp }));
+    check('revive.guest_sees_self_down', downed.alive === false, { host: dn, guest: downed });
     const stillPlaying = await ev(host, () => state);
     check('revive.match_continues_with_humans_alive', stillPlaying === 'playing', stillPlaying);
     await ev(host, () => { const g = heroes[1]; player.x = g.x + 20; player.y = g.y; });
@@ -212,12 +233,19 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     const back = await ev(guests[0], () => player.alive);
     check('revive.guest_revived', back === true);
     // curación de emergencia pedida por el invitado: la aplica el anfitrión, una sola vez
-    await ev(host, () => { const g = heroes[1]; g.hp = g.maxHp*0.3; g.emergCharges = 1; });
+    // Antes se exigía pct < 0.9 como prueba de "una sola vez", pero la vida también sube por otras
+    // curas legítimas (el Soporte bot cura aliados heridos, regeneración, la cura en el tiempo de la
+    // propia emergencia: EMERG_CFG 30% al instante + 20% en 2,5 s) y se vio 0.907 con una sola
+    // aplicación. Ahora "una sola vez" se mide directo: stats.emergHeals sube exactamente 1 y la
+    // carga queda en 0; y la cura instantánea tiene que notarse (>= +25% de la vida máxima).
+    const em0 = await ev(host, () => { const g = heroes[1]; g.hp = g.maxHp*0.3; g.emergCharges = 1; return { heals: (g.stats && g.stats.emergHeals) || 0 }; });
     await sleep(300);
+    const pctBefore = await ev(host, () => heroes[1].hp/heroes[1].maxHp);
     await ev(guests[0], () => { emergPress(); emergPress(); });
     await sleep(500);
-    const em = await ev(host, () => ({ pct: heroes[1].hp/heroes[1].maxHp, charges: heroes[1].emergCharges }));
-    check('emerg.guest_heal_applied_once', em.pct > 0.55 && em.pct < 0.9 && em.charges === 0, em);
+    const em = await ev(host, () => ({ pct: heroes[1].hp/heroes[1].maxHp, charges: heroes[1].emergCharges, heals: (heroes[1].stats && heroes[1].stats.emergHeals) || 0 }));
+    em.before = pctBefore; em.healsDelta = em.heals - em0.heals;
+    check('emerg.guest_heal_applied_once', em.healsDelta === 1 && em.charges === 0 && em.pct - pctBefore >= 0.25, em);
   }
   // ---------------- refuerzo entre niveles: cada humano elige ----------------
   await ev(host, () => { levelTimer = levelDuration + 1; });
@@ -231,19 +259,51 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   check('buff.resumed_level2', lv.every(s => s.state === 'playing' && s.runLevel === 2), lv);
   if (LONG) { await sleep(20000); }
   // ---------------- jefe + victoria compartida ----------------
+  // El Bosque ya no hace aparecer al jefe al instante: startBossFight() primero dispara la secuencia
+  // de las runas (bosBossIntro, bos-ruins.js: se desbordan ~3,2 s y estallan ~1,4 s) y recién al
+  // final se crea el Guardián Ancestral. Se espera a que exista en el ANFITRIÓN y después se exige
+  // que cada invitado lo vea (por la sincronización de red, no por su propio tiempo).
   await ev(host, () => { runLevel = LEVEL_COUNT; enemies.forEach(e => e.alive = false); startBossFight(); });
-  await sleep(1500);
-  const bossSeen = await Promise.all(all.map(c => ev(c, () => !!(boss && boss.type))));
+  const introOk = await ev(host, () => !!(typeof BOS !== 'undefined' && BOS.finale) || !!(boss && boss.type));
+  check('boss.intro_started', introOk);
+  let hostBossAt = -1;
+  for (let k = 0; k < 100; k++) { if (await ev(host, () => !!(boss && boss.alive && boss.type))) { hostBossAt = k * 100; break; } await sleep(100); }
+  check('boss.host_spawns_after_intro', hostBossAt >= 0, { waitedMs: hostBossAt });
+  // 1,5 s de margen para la red (igual que antes, pero contado desde que el jefe existe)
+  let bossSeen = [];
+  for (let k = 0; k < 15; k++) { bossSeen = await Promise.all(all.map(c => ev(c, () => !!(boss && boss.type)))); if (bossSeen.every(Boolean)) break; await sleep(100); }
   check('boss.everyone_sees_boss', bossSeen.every(Boolean), bossSeen);
   const bossHp = await Promise.all(all.map(c => ev(c, () => boss ? Math.round(boss.hp) : -1)));
-  check('boss.same_hp', bossHp.every(h => Math.abs(h - bossHp[0]) <= Math.max(50, bossHp[0] * 0.05)), bossHp);
-  // matar al jefe (con todas sus fases)
-  for (let k = 0; k < 6; k++) { await ev(host, () => { if (boss && boss.alive) damageEnemy(boss, boss.hp + 10, { src: heroes[0] }); }); await sleep(250); }
-  for (let k = 0; k < 60; k++) { const ok = await Promise.all(all.map(c => ev(c, () => state === 'victory'))); if (ok.every(Boolean)) break; await sleep(150); }
+  check('boss.same_hp', bossHp[0] > 0 && bossHp.every(h => Math.abs(h - bossHp[0]) <= Math.max(50, bossHp[0] * 0.05)), bossHp);
+  // matar al jefe con TODAS sus fases: el director (boss-patterns.js) pone un piso de vida por fase
+  // (bossPhaseFloor: un golpe no cruza dos umbrales) y el Guardián se transforma al 65% con corteza
+  // (x0,15 de daño y vida mínima del 61% durante 2,1 s, boss-guardian.js). Se golpea en cada cuadro
+  // de a un golpe "letal" hasta que muere de verdad (máx. 40 s) y se registran las fases vistas.
+  const phasesSeen = new Set();
+  let bossDead = false;
+  for (let k = 0; k < 160 && !bossDead; k++) {
+    const r = await ev(host, () => {
+      if (!boss) return { dead: true };
+      const ph = boss.bd ? boss.bd.phase : -1, tf = !!boss._gdTf;
+      if (boss.alive) damageEnemy(boss, boss.hp + 10, { src: heroes[0] });
+      return { dead: !boss.alive, ph, tf };
+    });
+    if (r.ph !== undefined) phasesSeen.add(r.ph + (r.tf ? 't' : ''));
+    bossDead = r.dead;
+    if (!bossDead) await sleep(250);
+  }
+  // el Guardián tiene 3 fases (0, 1 = transformado, 2 = "El Bosque Muere con Él"): morir sin pasar por la
+  // última significaría que el piso de fase no funciona o que la pelea terminó por otra vía
+  const lastPhase = await ev(host, () => { const d = BOSS_DESIGNS.guardian_ancestral; return d && d.phases ? d.phases.length - 1 : 2; });
+  check('boss.killed_through_all_phases', bossDead && [...phasesSeen].some(p => parseInt(p, 10) === lastPhase), { bossDead, lastPhase, phases: [...phasesSeen] });
+  // victoria: el Guardián suelta su cristal (crystalAward) y la pantalla llega ~3,4 s después
+  for (let k = 0; k < 100; k++) { const ok = await Promise.all(all.map(c => ev(c, () => state === 'victory'))); if (ok.every(Boolean)) break; await sleep(150); }
   const vic = await Promise.all(all.map(c => ev(c, () => ({ state, cleared: !!(save.arenasCleared || {}).bosque }))));
   vic.forEach((v, i) => check(`victory.client${i}`, v.state === 'victory' && v.cleared, v));
+  const allVictory = vic.every(v => v.state === 'victory');
+  if (!allVictory) check('after.skipped_no_victory', false, 'sin victoria no se puede probar volver a la sala ni la revancha');
   // volver a la sala con el mismo código
-  if (guests.length) {
+  if (guests.length && allVictory) {
     await host.page.evaluate(() => { victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep(); });
     await host.page.click('#again-btn');
     await sleep(600);
@@ -253,7 +313,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     check('after.host_guest_champ_restored', hostChamp === 12, hostChamp);
   }
   // revancha: todos vuelven a la sala y el anfitrión comienza otra partida
-  if (guests.length) {
+  if (guests.length && allVictory) {
     for (const g of guests) { await g.page.evaluate(() => { victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep(); }); await g.page.click('#again-btn'); }
     await sleep(700);
     const lobbyStates = await Promise.all(guests.map(g => ev(g, () => ({ state, code: net.code }))));
