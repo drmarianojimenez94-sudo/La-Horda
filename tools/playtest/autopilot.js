@@ -87,6 +87,31 @@
     const btn = document.getElementById("btn-revive");
     if(btn) btn.dispatchEvent(new PointerEvent("pointerup", {bubbles:true}));
   }
+  // CAMINO alrededor de muros/edificios (arenas con geometría: Ciudad, Minas, Laberinto, Fortaleza...).
+  // Antes el piloto iba en línea recta hacia el enemigo más cercano y se quedaba empujando contra una
+  // casa (se vio en la Ciudad: jugador quieto 10+ minutos detrás de un edificio con la Dama del Telón
+  // del otro lado). Un humano rodea: con la grilla de navegación del juego (AID_NAV, la misma de los
+  // enemigos) se arma un campo de distancias desde el objetivo y se sigue el gradiente (aidNavDir).
+  const _nav = {D:null, Q:null, cell:-1, t:-1e9};
+  function pathDir(tx, ty){
+    if(typeof AID_NAV==="undefined" || !AID_NAV.on || !AID_NAV.blocked || typeof aidLineClear!=="function") return null;
+    if(aidLineClear(player.x, player.y, tx, ty)) return null;
+    const N = AID_NAV, n = N.W*N.H, c0 = aidNavCell(tx, ty); if(c0 < 0) return null;
+    if(!_nav.D || _nav.D.length!==n){ _nav.D = new Uint16Array(n); _nav.Q = new Int32Array(n); _nav.cell = -1; }
+    if(c0!==_nav.cell || AP.clock - _nav.t > 700){
+      const D = _nav.D, Q = _nav.Q; D.fill(65535); let qh = 0, qt = 0; D[c0] = 0; Q[qt++] = c0;
+      while(qh < qt){ const c = Q[qh++], d = D[c]+1, i = c % N.W, j = (c-i)/N.W;
+        if(i>0 && !N.blocked[c-1] && D[c-1]===65535){ D[c-1] = d; Q[qt++] = c-1; }
+        if(i<N.W-1 && !N.blocked[c+1] && D[c+1]===65535){ D[c+1] = d; Q[qt++] = c+1; }
+        if(j>0 && !N.blocked[c-N.W] && D[c-N.W]===65535){ D[c-N.W] = d; Q[qt++] = c-N.W; }
+        if(j<N.H-1 && !N.blocked[c+N.W] && D[c+N.W]===65535){ D[c+N.W] = d; Q[qt++] = c+N.W; } }
+      _nav.cell = c0; _nav.t = AP.clock;
+    }
+    const pc = aidNavCell(player.x, player.y); if(pc < 0 || _nav.D[pc]===65535 && !N.blocked[pc]) return null; // inalcanzable: derecho
+    const d = aidNavDir(player, _nav.D);
+    return d ? {x:d.x, y:d.y} : null;
+  }
+  const towards = (tx, ty) => pathDir(tx, ty) || norm(tx-player.x, ty-player.y);
   function tick(dt){
     if(!AP.on || state!=="playing" || !player || !player.alive) return;
     AP.clock += dt; const now = AP.clock;
@@ -111,17 +136,21 @@
       if(hpPct < 0.6 || player.energy < player.maxEnergy*0.25) for(const p of potions){ const d = Math.hypot(p.x-player.x,p.y-player.y); if(d<pd && d<500){ pd=d; pot=p; } }
       // downed ally to revive
       let down = null; for(const a of allies){ if(!a.alive){ const d=Math.hypot(a.x-player.x,a.y-player.y); if(d<700 && close<6){ down=a; } } }
-      if(down){ const n = norm(down.x-player.x, down.y-player.y); const d = Math.hypot(down.x-player.x, down.y-player.y); if(d > REVIVE_RANGE*0.6){ mx += n.x*1.4; my += n.y*1.4; } }
-      else if(pot){ const n = norm(pot.x-player.x, pot.y-player.y); mx += n.x*1.3; my += n.y*1.3; }
+      if(down){ const n = towards(down.x, down.y); const d = Math.hypot(down.x-player.x, down.y-player.y); if(d > REVIVE_RANGE*0.6){ mx += n.x*1.4; my += n.y*1.4; } }
+      else if(pot){ const n = towards(pot.x, pot.y); mx += n.x*1.3; my += n.y*1.3; }
       if(hpPct < 0.35 || close > 7){ const n = norm(tx,ty); mx += n.x*1.8; my += n.y*1.8; }
       else if(nearest){
         const want = ranged ? 210 : 55;
         const n = norm(nearest.x-player.x, nearest.y-player.y);
-        if(nd > want+30){ mx += n.x; my += n.y; } else if(nd < want-40){ mx -= n.x*1.1; my -= n.y*1.1; }
+        if(nd > want+30){ const w = towards(nearest.x, nearest.y); mx += w.x; my += w.y; } else if(nd < want-40){ mx -= n.x*1.1; my -= n.y*1.1; }
         else { mx += -n.y*0.5; my += n.x*0.5; } // strafe
       }
       // stay away from the arena edge
-      const r = Math.hypot(player.x, player.y); if(r > ARENA_RADIUS*0.8){ mx -= player.x/r*1.5; my -= player.y/r*1.5; }
+      // (el coliseo es un octágono alrededor del origen; las arenas con mapa propio -Ciudad, Minas,
+      // Fortaleza, Micelial- tienen sus propios bordes y el recorte del juego ya los respeta: ahí este
+      // tirón hacia el centro alejaba al jugador de jefes y subjefes pegados a un lado del mapa)
+      const ownMap = typeof arenaHas==="function" && arenaHas("inside") && currentArena!=="abismo";
+      const r = Math.hypot(player.x, player.y); if(!ownMap && r > ARENA_RADIUS*0.8){ mx -= player.x/r*1.5; my -= player.y/r*1.5; }
       const l = Math.hypot(mx,my);
       AP._mv = l > 0.1 ? {x:mx/l, y:my/l} : {x:0,y:0};
     }
