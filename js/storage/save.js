@@ -91,12 +91,25 @@ function applyPlaytestUnlock(){
   save.starterChosen = true;
   if(changed) persist();
 }
+// MODO DESARROLLADOR (auditoría pre-alfa): los regalos de prueba de abajo (nivel 90, todas las arenas,
+// todas las skins) ya NO se dan a cualquier perfil nuevo: un jugador que recibe el enlace por primera vez
+// juega la campaña real (guardián de regalo, Arena 01, nivel 1). Los perfiles que ya los recibieron los
+// conservan (quedan marcados en el guardado). Para darlos en un perfil nuevo: abrir el juego con ?dev=1
+// (queda recordado en ese navegador; ?dev=0 lo apaga).
+function laHordaDevMode(){
+  if(typeof window==="undefined" || window.__campaignMode) return false;
+  try{
+    const q = new URLSearchParams(location.search).get("dev");
+    if(q==="1") localStorage.setItem("laHordaDev", "1"); else if(q==="0") localStorage.removeItem("laHordaDev");
+    return localStorage.getItem("laHordaDev")==="1";
+  }catch(e){ return false; }
+}
 // PEDIDO DEL USUARIO (al terminar la prueba de la Ciudad Maldita): TODAS las arenas abiertas (también la
 // Divina) y TODOS los guardianes liberados en nivel 90, UNA sola vez por perfil (testUnlock90V1). Los puntos
 // de talento de esos niveles se suman igual que al subir jugando (1 por nivel); no se tocan objetos, oro
 // ni lo que ya estaba completado. Las pruebas automáticas de campaña lo saltean (window.__campaignMode).
 function applyTestUnlock90(){
-  if(save.testUnlock90V1 || (typeof window!=="undefined" && window.__campaignMode)) return;
+  if(save.testUnlock90V1 || !laHordaDevMode()) return;
   for(const k in save.champions){
     const c = save.champions[k];
     c.unlocked = true;
@@ -113,7 +126,7 @@ function applyTestUnlock90(){
 // de cada set con arte y se equipan en su guardián, igual que al comprarla en la Tienda. Las piezas
 // equipadas no ocupan lugar en el inventario, así que entran aunque esté lleno.
 function applyTestSkins(){
-  if(save.testSkinsV1 || (typeof window!=="undefined" && window.__campaignMode)) return;
+  if(save.testSkinsV1 || !laHordaDevMode()) return;
   if(typeof SET_SKINS==="undefined" || typeof makeDesignedItem!=="function" || typeof skinEquipOn!=="function") return;
   for(const id in SET_SKINS){
     const k = skinSetChamp(id);

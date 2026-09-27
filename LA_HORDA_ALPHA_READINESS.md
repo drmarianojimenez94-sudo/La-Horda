@@ -1,5 +1,8 @@
 # LA HORDA — Alpha Readiness Gate (Alpha 0.1)
 
+> **Documento histórico.** El estado actual (auditoría pre-alfa con puntaje, P0–P3 y alfa mínima) está en
+> [`LA_HORDA_ALPHA_AUDIT.md`](LA_HORDA_ALPHA_AUDIT.md) y [`LA_HORDA_ALPHA_CHECKLIST.md`](LA_HORDA_ALPHA_CHECKLIST.md).
+
 > Veredictos por categoría: **PASS** · **PASS WITH ISSUES** · **FAIL** · **UNKNOWN / HUMAN TEST REQUIRED**.
 > Sin puntajes. Cada veredicto cita la evidencia (prueba ejecutada o su ausencia).
 > Detalle en `LA_HORDA_PLAYTEST_REPORT.md`.

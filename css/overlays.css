@@ -33,6 +33,11 @@
 #run-intro{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; gap:2vw; padding:12px 16px;
   background:radial-gradient(ellipse at 30% 50%, #3e2810, #0c070a 70%); cursor:pointer; animation:riIn .45s ease-out;}
 #run-intro.hidden{display:none;}
+#run-intro .ri-card{max-height:calc(100vh - 16px); overflow-y:auto; -webkit-overflow-scrolling:touch;}
+/* página del prólogo (primera partida): solo el relato, sin la ficha */
+#run-intro.ri-prologue .ri-row{display:none;}
+#run-intro.ri-prologue .ri-say{font-size:1.2rem; line-height:1.12;}
+@media (max-height:500px){ #run-intro.ri-prologue .ri-say{font-size:0.98rem; line-height:1.04;} }
 @keyframes riIn{from{opacity:0} to{opacity:1}}
 #run-intro .ri-art{flex:0 0 42%; height:min(92vh, 520px); max-width:520px; background:transparent !important; position:static !important; width:auto;}
 #run-intro .ri-card{flex:1 1 auto; max-width:520px; background:linear-gradient(180deg, rgba(34,22,12,0.92), rgba(14,9,6,0.94));

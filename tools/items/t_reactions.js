@@ -28,8 +28,8 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     damageEnemy(a, 100, {src:player, heavy:true, critChanceOverride:0}); const frozenHit = h0 - a.hp; const b = __foe(-60, 0); damageEnemy(b, 100, {src:player, heavy:true, critChanceOverride:0});
     return { ratio: frozenHit / (5000 - b.hp), unfrozen: !(a.frozenTimer > 0), shard: n.hp < 5000 }; });
   check('REACT.quiebre_golpe_pesado_sobre_congelado', sh.ratio > 1.6 && sh.unfrozen && sh.shard, sh);
-  const va = await E(() => { __start('laberinto'); const a = __foe(60, 0); a.slowAmt = 0.9; a.slowTimer = 2000; const h0 = a.hp; damageEnemy(a, 100, {src:player, burn:true}); const d1 = h0 - a.hp;
-    const b = __foe(-60, 0); damageEnemy(b, 100, {src:player, burn:true}); return { ratio: d1 / (5000 - b.hp), wet: a.wetTimer > 0, thawed: !(a.slowAmt > 0) }; });
+  const va = await E(() => { __start('laberinto'); const a = __foe(60, 0); a.slowAmt = 0.9; a.slowTimer = 2000; const h0 = a.hp; damageEnemy(a, 100, {src:player, burn:true, critChanceOverride:0}); const d1 = h0 - a.hp;
+    const b = __foe(-60, 0); damageEnemy(b, 100, {src:player, burn:true, critChanceOverride:0}); /* sin críticos: la proporción no depende del azar */ return { ratio: d1 / (5000 - b.hp), wet: a.wetTimer > 0, thawed: !(a.slowAmt > 0) }; });
   check('REACT.vapor_fuego_sobre_congelado_deja_mojado', va.ratio > 1.4 && va.wet && va.thawed, va);
   const hm = await E(() => { __start('laberinto', 'guerrero'); const a = __foe(60, 0); a.bleedTimer = 3000; a.bleedDmg = 50; damageEnemy(a, 10, {src:player, forceCrit:true}); updateRunTimers(16); return { gone: a.bleedTimer === 0, hp: a.hp }; });
   check('REACT.hemorragia_el_sangrado_entra_de_golpe', hm.gone && hm.hp < 5000 - 200, hm);

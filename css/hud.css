@@ -187,7 +187,9 @@
 #joy-knob{
   position:absolute; width:42px; height:42px; border-radius:50%;
   background:rgba(255,122,46,0.55); border:2px solid rgba(255,207,92,0.8);
-  left:calc(24px + env(safe-area-inset-left,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  /* anclado al borde de ARRIBA de la base (10px + 92 - 42 = 60px): el translate(25px,25px) de input.js
+     lo baja al centro. Anclado abajo, el +25 lo corría hacia afuera y quedaba medio cortado por el borde. */
+  left:calc(24px + env(safe-area-inset-left,0px)); bottom:calc(60px + env(safe-area-inset-bottom,0px));
   transform:translate(25px,25px);
 }
 

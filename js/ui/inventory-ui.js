@@ -100,7 +100,8 @@ function renderChampInventory(panel, classKey, rerender){
   } else {
     html += '<div class="inv-list">' + list.map(it=>itemCardHTML(it, {classKey, actions:true, compare: prepCompareOpenUid===it.uid})).join("") + '</div>';
   }
-  html += `<button class="inv-debug-btn prep-debug-gen" ${stashFull()?"disabled":""}>[Prueba] Generar objeto al azar — para testear sin esperar a derrotar un subjefe</button>`;
+  if(typeof laHordaDevMode==="function" && laHordaDevMode()) // herramienta de prueba: solo con ?dev=1
+    html += `<button class="inv-debug-btn prep-debug-gen" ${stashFull()?"disabled":""}>[Prueba] Generar objeto al azar — para testear sin esperar a derrotar un subjefe</button>`;
   panel.innerHTML = html;
   panel.querySelectorAll(".inv-card").forEach(card=> card.addEventListener("click", ev=>{
     if(ev.target.closest("button")) return;

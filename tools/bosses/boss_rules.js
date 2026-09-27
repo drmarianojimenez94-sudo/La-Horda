@@ -19,7 +19,7 @@ const want = a => !only.length || only.includes(a);
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ')));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::/.test(m.text())) errors.push('console: ' + m.text()); });
-  await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/index.html?dev=1`, { waitUntil: 'load' }); // escenario de prueba: guardianes y arenas liberados (modo desarrollador)
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   const E = (fn, a) => page.evaluate(fn, a);
   const shot = n => page.screenshot({ path: path.join(outdir, n + '.png') });

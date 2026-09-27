@@ -41,6 +41,9 @@ function netDebugRefresh(force){
 (function(){
   const b = document.getElementById("net-debug-btn");
   if(b) b.addEventListener("click", ()=> netDebugToggle());
-  try{ if(new URLSearchParams(location.search).get("debug")==="1") setTimeout(()=>netDebugToggle(true), 300); }catch(e){}
+  let dbg = false; try{ dbg = new URLSearchParams(location.search).get("debug")==="1"; }catch(e){}
+  if(dbg) setTimeout(()=>netDebugToggle(true), 300);
+  // el botón "B1" es una herramienta de desarrollo: al jugador le tapaba los títulos. Solo con ?debug=1 o ?dev=1.
+  if(b && !dbg && !(typeof laHordaDevMode==="function" && laHordaDevMode())) b.style.display = "none";
   setInterval(()=>{ if(_netDbgOpen) netDebugRefresh(); }, 1000);
 })();

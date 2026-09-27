@@ -21,7 +21,7 @@ function renderChampGrid(){
       <canvas class="champ-preview" width="104" height="104" style="background:${cls.color}22;" data-class-key="${key}"></canvas>
       <div class="champ-name">${cls.name}</div>
       <div class="champ-role">${cls.role}</div>
-      <div class="champ-lvl">${owned ? `Nv. ${champ.level}` : `🔒 Tienda · 🪙 ${typeof fmtGold==="function" ? fmtGold(CHAMPION_PRICE_GOLD) : CHAMPION_PRICE_GOLD}`}</div>
+      <div class="champ-lvl">${typeof HUB_ROLE_LABEL!=="undefined" && HUB_ROLE_LABEL[cls.roleCategory] ? HUB_ROLE_LABEL[cls.roleCategory] + " · " : ""}${owned ? `Nv. ${champ.level}` : `🔒 Tienda · 🪙 ${typeof fmtGold==="function" ? fmtGold(CHAMPION_PRICE_GOLD) : CHAMPION_PRICE_GOLD}`}</div>
     `;
     card.addEventListener("click", ()=>{
       // modo campaña: los guardianes que no tenés se compran en la Tienda
