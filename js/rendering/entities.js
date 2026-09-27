@@ -39,7 +39,7 @@ function drawHero(h){
   }
   drawHeroOverlays(h, colossal, spinning);
 }
-// Cuerpo del campeón según su arte real (atlas / poses recortadas / procedural de respaldo).
+// Cuerpo del guardia según su arte real (atlas / poses recortadas / procedural de respaldo).
 // Lo comparten el dibujo normal, el hit flash y la caída al morir.
 function drawHeroBody(h, drawScale, spinning, stealthed){
   if(champPackPending(h.classKey)) return; // nunca el arte viejo mientras baja el redibujado
@@ -500,7 +500,7 @@ function _drawProjCore(p){
   ctx.drawImage(glowSprite(rgb), p.x-g, p.y-g, g*2, g*2);
   ctx.globalCompositeOperation = "source-over";
   ctx.globalAlpha = 1;
-  const style = p.sprite ? null : projStyleOf(p); // forma propia de cada campeón (skill-evolution.js)
+  const style = p.sprite ? null : projStyleOf(p); // forma propia de cada guardia (skill-evolution.js)
   if(style && drawProjStyle(p, style, r)){ ctx.restore(); return; }
   if((p.sprite==="hsOrb" || p.sprite==="gcHand") && acua2Ready(p.sprite)){
     // orbe del Hechicero / restos del Golem (arte de su hoja)

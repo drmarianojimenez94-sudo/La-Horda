@@ -20,7 +20,7 @@
    Las pruebas de tools/regression/t_camera.js vigilan que esto no vuelva a romperse.
    ============================================================ */
 const canvas = document.getElementById("game");
-let ctx = canvas.getContext("2d"); // let (no const): la previsualización de campeones lo pisa un instante para dibujar en su propio canvas chico
+let ctx = canvas.getContext("2d"); // let (no const): la previsualización de guardias lo pisa un instante para dibujar en su propio canvas chico
 let VW = 0, VH = 0, DPR = 1;
 function computeCamZoom(w, h){
   return Math.max(Math.min(w, h)/VIEW_WORLD_SHORT, Math.max(w, h)/VIEW_WORLD_LONG_MAX);

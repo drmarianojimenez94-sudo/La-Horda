@@ -16,7 +16,7 @@
 const TALENT_MAX = 10;      // tope de puntos de talento invertibles por habilidad
 const ULT_MIN_ARENA_LEVEL = 5; // la ulti no está disponible hasta este nivel de la arena
 const USE_LVL_CAP = 40;     // tope de niveles de uso (crecimiento lento, siempre mínimo)
-const ULT_POINTS_MIN_LEVEL = 20; // la ulti queda en su nivel base hasta que el campeón llega a este nivel
+const ULT_POINTS_MIN_LEVEL = 20; // la ulti queda en su nivel base hasta que el guardia llega a este nivel
 function masteryOf(classKey, idx){
   const c = save.champions[classKey];
   return idx==="ult" ? c.ultMastery : c.skillMastery[idx];

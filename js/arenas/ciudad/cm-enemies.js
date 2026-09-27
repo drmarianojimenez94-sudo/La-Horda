@@ -3,7 +3,7 @@
    js/arenas/ciudad/cm-enemies.js
    Los nueve enemigos de la Ciudad Maldita (números en CM_CFG). Cada uno presiona una parte de
    "decidir qué vale la pena salvar":
-     Saqueador Maldito     presión cuerpo a cuerpo; si no hay campeones cerca, va por los civiles (con aviso)
+     Saqueador Maldito     presión cuerpo a cuerpo; si no hay guardias cerca, va por los civiles (con aviso)
      Perro del Albañal     sale de las cloacas; rápido; muerde a los civiles que corren o van últimos en la fila
      Raptor                SECUESTRADOR: busca civiles, los agarra (aviso) y escapa por un borde.
                            Estados SEARCH / CHASE_CIVILIAN / GRAB / ESCAPE / INTERRUPTED / COMBAT.
@@ -13,8 +13,8 @@
      Acechante             salta entre tejados (nodos): aviso en el piso, cae, pelea y vuelve a subir
      Campanero             canaliza una CAMPANA: si termina, llegan refuerzos (y se revelan civiles cerca).
                            Objetivo prioritario: cortarlo con daño o control.
-     Sectario Fanático     en grupo; se prepara para ESTALLAR (aviso): daña campeones, civiles y edificios
-     Espectro Ciudadano    atraviesa paredes; drena a un campeón o asusta a un civil
+     Sectario Fanático     en grupo; se prepara para ESTALLAR (aviso): daña guardias, civiles y edificios
+     Espectro Ciudadano    atraviesa paredes; drena a un guardia o asusta a un civil
    Cada IA devuelve true (el motor saltea la persecución genérica). Solo corre en el anfitrión.
    ============================================================ */
 let _cmEid = 0;
@@ -53,7 +53,7 @@ function cmAISaqueador(e, dt, tgt, dist){
   e.atkCd = 1e6; e.atkCd2 = (e.atkCd2||0) - dt;
   if(e.lungeCd===undefined) e.lungeCd = cmRand(1200, C.lungeCd[1]);
   e.lungeCd -= dt;
-  // golpe a un civil (con aviso): solo si no hay campeones cerca que lo defiendan
+  // golpe a un civil (con aviso): solo si no hay guardias cerca que lo defiendan
   if(e.civWind){
     e.civWind -= dt; const c = cmCivById(e.civT);
     if(!c || !cmCivFree(c)){ e.civWind = 0; e.cmBusy = false; return true; }
@@ -227,7 +227,7 @@ function cmAIVerdugo(e, dt, tgt, dist){
   }
   const hd = dist;
   const si = cmNearestStruct(e.x, e.y, true);
-  // un campeón que se le planta enfrente lo distrae
+  // un guardia que se le planta enfrente lo distrae
   if(hd < C.heroAggroR || si < 0){
     if(e.smashCd <= 0 && hd < C.smashR){ cmVerdugoWind(e, tgt.x, tgt.y, -1); return true; }
     if(hd > e.radius + tgt.radius - 4) cmStep(e, tgt, hd, dt);
@@ -292,7 +292,7 @@ function cmAIAcechante(e, dt, tgt, dist){
   if(A.st==="roof"){
     e.cmRoof = 1; e.dmgTakenMult = 0.05;
     if(A.t >= A.d){
-      // objetivo: un campeón o (a veces) el civil más atrás de una fila
+      // objetivo: un guardia o (a veces) el civil más atrás de una fila
       let tx = tgt.x, ty = tgt.y;
       const c = Math.random() < 0.3 ? cmNearestCiv(e.x, e.y, 650, c=>c.st===CIV.FOLLOW || c.st===CIV.RUN) : null;
       if(c){ tx = c.x; ty = c.y; A.civ = c.id; cmCivWarn(c, C.leapWarn); } else A.civ = 0;
@@ -422,7 +422,7 @@ function cmAISectario(e, dt, tgt, dist){
     e.sp = {t:0}; e.cmBusy = true;
     vfxTelegraph({shape:0, follow:e, r:C.primeR, dur:C.primeWind, rgb:"255,110,30"});
     playSfx("cmFuse"); floatText(e.x, e.y - 60, "¡VA A ESTALLAR!", "warn");
-    if(!tutSeen("cm_sect")) cmTutSay("cm_sect", "El SECTARIO se prepara para ESTALLAR: lastima a campeones, civiles y edificios. Alejate o terminalo antes.", 7000);
+    if(!tutSeen("cm_sect")) cmTutSay("cm_sect", "El SECTARIO se prepara para ESTALLAR: lastima a guardias, civiles y edificios. Alejate o terminalo antes.", 7000);
     return true;
   }
   if(dist > e.radius + tgt.radius - 4) cmStep(e, tgt, dist, dt);

@@ -71,7 +71,7 @@ const CODEX_FIRST_LEVEL = {cm_saqueador:1, cm_perro:2, cm_raptor:3, cm_verdugo:4
   golem_cristal:10, cristal_servo:10, cristal_volador:10};
 
 /* ============================================================
-   CAMPEONES — origen e historia (el rol, las habilidades y los números salen de CLASSES)
+   GUARDIAS — origen e historia (el rol, las habilidades y los números salen de CLASSES)
    ============================================================ */
 const CODEX_CHAMP_LORE = {
   tanque:{origin:"Muralla de la Ciudad Maldita", history:"Fue capitán de la guardia de la ciudad cuando la Horda volvió. Sostuvo la puerta norte tres noches seguidas y nadie sabe cómo sigue en pie. Desde entonces camina adelante de todos: dice que ya tiene la costumbre de recibir los golpes."},
@@ -90,7 +90,7 @@ const CODEX_CHAMP_LORE = {
 
 /* Demos de habilidades: qué patrón de efecto usa la preview y qué arte real suma.
    fx: nova | spin | cone | slash | dash | charge | blink | proj | chain | zone | rain | trap | wall | buff | heal | summon | ult
-   set/pack: animación con nombre del atlas del campeón (CHAMP_PACK) · extra: estado de dibujo (spinTimer...)
+   set/pack: animación con nombre del atlas del guardia (CHAMP_PACK) · extra: estado de dibujo (spinTimer...)
    vfx: claves reales (VFX_SPR_EXTRA / SE_FX / hojas de efectos; "axiom:k", "skill:k", "asesino:hab/clip" = hojas por celdas;
    sylvaRain/sylvaTrap/sylvaWolf/musashiGhost = secuencias sueltas). vfxH: alto relativo del efecto. Lo que no figura se deduce de los datos
    de la habilidad (codexSkillFx). Orden: [habilidad 1, habilidad 2, habilidad 3, definitiva]. */
@@ -108,7 +108,7 @@ const CODEX_SKILL_FX = {
   libertador:[{fx:"dash", set:"bayo_emb", color:"220,230,255", vfx:"blood_01"}, {fx:"summon", set:"command", color:"170,200,255", vfx:["spectral_01","spectral_03"], vfxAt:"self"}, {fx:"charge", set:"charge", pack:"libertador_horse", color:"230,240,255", vfx:"dust_02"}, {fx:"ult", set:"ult_cast", color:"220,240,255", vfx:"frost_01"}],
   eren:      [{fx:"dash", set:"hook_fly", color:"220,200,180", vfx:"fx_hook_01"}, {fx:"buff", set:"instinct", color:"255,200,90"}, {fx:"buff", set:"advance", color:"255,120,70"}, {fx:"ult", set:"roar", pack:"eren_titan", color:"255,150,80", vfx:"fx_bolt_01", vfxAt:"self"}]
 };
-// Animaciones extra con nombre que se ofrecen como botón en la ficha del campeón (si su atlas las tiene).
+// Animaciones extra con nombre que se ofrecen como botón en la ficha del guardia (si su atlas las tiene).
 const CODEX_CHAMP_EXTRA_ANIMS = {
   libertador:[{label:"Disparo", set:"fire"}, {label:"A caballo", set:"m_run", pack:"libertador_horse"}],
   eren:[{label:"Carrera", set:"run"}, {label:"El Portador", set:"walk_side", pack:"eren_titan"}],
@@ -126,7 +126,7 @@ const CODEX_CREATURES = {
     lore:"Antiguos habitantes de la ciudad. La Horda les dejó las manos y les sacó todo lo demás: ahora saquean las casas de sus vecinos.",
     origin:"Los barrios de la Ciudad Maldita.",
     horde:"La primera infantería de la Horda en la ciudad.",
-    behavior:"Cuerpo a cuerpo y en grupo. Si no hay campeones cerca, va por los civiles.",
+    behavior:"Cuerpo a cuerpo y en grupo. Si no hay guardias cerca, va por los civiles.",
     attacks:["Corte","Embestida con aviso (cono)","Golpe a un civil con aviso (!)"],
     mech:"Quedate cerca de los civiles que escoltás: el Saqueador solo los ataca cuando están solos."},
   cm_perro:{family:"Bestia de las cloacas", anims:[{l:"Salto", s:"leap"},{l:"Emerger", s:"emerge"}],
@@ -140,7 +140,7 @@ const CODEX_CREATURES = {
     lore:"Busca a los vivos, los agarra y trata de llevárselos hacia un portal o una salida. Nadie sabe adónde.",
     origin:"Los callejones de la Ciudad Maldita.",
     horde:"Recolector de la Horda.",
-    behavior:"Busca civiles (no prioriza a los campeones). Estados: busca, persigue, agarra, escapa, interrumpido.",
+    behavior:"Busca civiles (no prioriza a los guardias). Estados: busca, persigue, agarra, escapa, interrumpido.",
     attacks:["Agarrar civil (aviso)","Huida con el civil hacia un borde"],
     mech:"Pegale fuerte, aturdilo o matalo: SUELTA al civil. Si llega al borde, el civil se pierde."},
   cm_verdugo:{family:"Monstruo de asedio", anims:[{l:"Golpe vertical", s:"chop"},{l:"Barrido", s:"sweep"},{l:"Destruye puerta", s:"smash"}],
@@ -169,7 +169,7 @@ const CODEX_CREATURES = {
     origin:"La catedral maldita.",
     horde:"Fieles del Presentador.",
     behavior:"Cuerpo a cuerpo; herido o pegado a vos, se prepara para ESTALLAR.",
-    attacks:["Golpe","Explosión con aviso (daña campeones, civiles y edificios)"],
+    attacks:["Golpe","Explosión con aviso (daña guardias, civiles y edificios)"],
     mech:"Alejate del círculo naranja o terminalo antes."},
   cm_campanero:{family:"Soporte", anims:[{l:"Golpe de campana", s:"bell"},{l:"Canalizar", s:"channel"}],
     lore:"Pervierte las campanas de la ciudad. Si completa su ritual, atrae refuerzos de la Horda.",
@@ -182,7 +182,7 @@ const CODEX_CREATURES = {
     lore:"Almas atrapadas en la maldición de la ciudad. Frágiles pero numerosas.",
     origin:"Las calles de la Ciudad Maldita.",
     horde:"Ecos de los que no se salvaron.",
-    behavior:"Atraviesa paredes. Drena a un campeón o asusta a un civil.",
+    behavior:"Atraviesa paredes. Drena a un guardia o asusta a un civil.",
     attacks:["Drenado (se cura)","Posesión: el civil entra en pánico"],
     mech:"Frágil: un golpe fuerte lo disuelve."},
   /* ---- 02 · Fábrica Sin Fin ---- */
@@ -542,14 +542,14 @@ const CODEX_CREATURES = {
     horde:"Capitanes de la infantería.",
     behavior:"Gira su arma cuando estás cerca.",
     attacks:["Giro de arma","Embestida en línea recta"],
-    mech:"En el nivel 4 aparece como CAMPEÓN de la Horda (subjefe)."},
+    mech:"En el nivel 4 aparece como GUARDIA de la Horda (subjefe)."},
   demonio_menor:{family:"Demonio",
     lore:"Demonios menores de la Horda: pequeños, crueles y siempre en llamas.",
     origin:"La dimensión de la Horda.",
     horde:"Soldados de fuego.",
     behavior:"Hace llover fuego sobre tu posición.",
     attacks:["Lluvia de fuego"],
-    mech:"En el nivel 7 aparece como CAMPEÓN de la Horda (subjefe)."},
+    mech:"En el nivel 7 aparece como GUARDIA de la Horda (subjefe)."},
   demonio_mago:{family:"Demonio",
     lore:"Hechiceros de la Horda. Aprendieron magia de los que corrompieron.",
     origin:"La dimensión de la Horda.",
@@ -576,16 +576,16 @@ const CODEX_BOSS_LORE = {
     lore:"El Maestro de Ceremonias conduce la función; el Tramoyista mueve el escenario. Los dos trabajan para el Presentador.",
     history:"Suenan aplausos en la ciudad vacía y se levanta el telón. Si uno cae, el otro se enfurece.",
     phases:[{name:"Juntos", desc:"El Maestro marca, el Tramoyista deja caer decorado sobre la marca."},{name:"Furia", desc:"El que queda se vuelve más rápido."}],
-    abilities:[{name:"Marca", desc:"Un círculo sigue a un campeón y estalla.", fx:{fx:"zone", set:"cast", color:"255,60,90", vfx:"cmMark"}},
+    abilities:[{name:"Marca", desc:"Un círculo sigue a un guardia y estalla.", fx:{fx:"zone", set:"cast", color:"255,60,90", vfx:"cmMark"}},
       {name:"Zona", desc:"Anillo rojo que daña y frena.", fx:{fx:"zone", color:"255,50,90", vfx:"cmMaeZone"}},
       {name:"Teletransporte", desc:"Si lo encierran, desaparece.", fx:{fx:"dash", set:"tp", color:"255,80,110"}},
-      {name:"Caída de decorado", desc:"Utilería pesada sobre los campeones (círculo naranja).", fx:{fx:"rain", set:"wreck", color:"255,150,60", vfx:"cmScenery"}},
+      {name:"Caída de decorado", desc:"Utilería pesada sobre los guardias (círculo naranja).", fx:{fx:"rain", set:"wreck", color:"255,150,60", vfx:"cmScenery"}},
       {name:"Barricadas", desc:"Muros de madera temporales (duran poco, nunca encierran).", fx:{fx:"line", set:"drag", color:"200,140,80"}}]},
   cm_dama:{title:"Nadie aplaude en la oscuridad", campaign:"Subjefe del nivel 9 de la Ciudad Maldita, después del apagón.",
     lore:"La Dama del Telón baja la cortina sobre la ciudad. Donde ella pasa, la función se vuelve un eco de sí misma.",
     history:"Se apagan las luces y un reflector la encuentra en medio de la plaza.",
     phases:[{name:"Telones", desc:"Telones en línea, zonas oscuras y proyectiles."},{name:"Estallido (30%)", desc:"Una explosión grande con aviso."}],
-    abilities:[{name:"Telón", desc:"Columnas rojas que caen en línea hacia un campeón.", fx:{fx:"line", color:"255,40,60", vfx:"cmCurtain"}},
+    abilities:[{name:"Telón", desc:"Columnas rojas que caen en línea hacia un guardia.", fx:{fx:"line", color:"255,40,60", vfx:"cmCurtain"}},
       {name:"Zona oscura", desc:"Daña y frena.", fx:{fx:"zone", color:"170,60,255", vfx:"cmDarkZone"}},
       {name:"Espejismos", desc:"Copias frágiles: la verdadera tiene barra de vida.", fx:{fx:"summon", set:"mirror", color:"255,90,120"}},
       {name:"Ecos", desc:"Repite la marca del Maestro y el decorado del Tramoyista; invoca almas.", fx:{fx:"summon", set:"summon", color:"255,80,110", vfx:"cmSpectators"}}]},
@@ -594,7 +594,7 @@ const CODEX_BOSS_LORE = {
     history:"Espera en el escenario frente a la catedral. Los civiles que salvaste no vienen a verlo caer.",
     phases:[{name:"Acto I", desc:"Abanicos de proyectiles, reflectores y telones."},{name:"Acto II", desc:"Transformación: ecos de sus ayudantes y pilares en el escenario."},{name:"Acto III", desc:"La verdadera forma: espectadores espectrales y la OVACIÓN FINAL."}],
     abilities:[{name:"Proyectiles", desc:"Abanico de esferas rojas.", fx:{fx:"proj", set:"cast", color:"255,60,90", vfx:"cmPreBolt"}},
-      {name:"Marca del espectáculo", desc:"Un reflector sigue a un campeón y estalla.", fx:{fx:"zone", color:"255,50,80", vfx:"cmShowMark"}},
+      {name:"Marca del espectáculo", desc:"Un reflector sigue a un guardia y estalla.", fx:{fx:"zone", color:"255,50,80", vfx:"cmShowMark"}},
       {name:"Telón del caos", desc:"Columnas de fuego en línea.", fx:{fx:"line", color:"255,40,40", vfx:"cmChaosCurtain"}},
       {name:"Ovación final", desc:"Cubrite detrás de un pilar del escenario.", fx:{fx:"ult", color:"255,70,110", vfx:"cmFinalBoom"}}]},
   dragon_forja:{title:"Nacido en el Horno", campaign:"Subjefe del nivel 6 de la Fábrica Sin Fin. Su muerte vuela la compuerta blindada hacia el Interior Industrial.",
@@ -618,7 +618,7 @@ const CODEX_BOSS_LORE = {
       {name:"Ejecución Oxidada", desc:"Fase 3: línea roja enorme con 1,5 s de aviso. Nunca es un golpe inevitable.", fx:{fx:"line", set:"exec", color:"255,60,40", vfx:"fortExecWave"}}]},
   dobladores:{title:"Los Cuatro Reflejos", campaign:"Subjefes del nivel 9 de las Ruinas: aparecen los cuatro juntos.",
     lore:"Reflejos de héroes que cayeron en las Ruinas antes que vos. El bosque corrompido guardó su forma y la llenó de otra cosa: un guerrero, una arquera, un pícaro y un clérigo que pelean como lo harían ellos.",
-    history:"El Guardián Ancestral los usaba para probar a quienes buscaban el cristal. Ninguno pasó la prueba. Ahora prueban a los campeones.",
+    history:"El Guardián Ancestral los usaba para probar a quienes buscaban el cristal. Ninguno pasó la prueba. Ahora prueban a los guardias.",
     phases:[{name:"Los cuatro a la vez", desc:"Mientras vivan, la horda normal no aparece."}],
     abilities:[{name:"Guerrero", desc:"Embiste y golpea en área.", fx:{fx:"charge", color:"220,90,80"}},
       {name:"Arquera", desc:"Dispara desde lejos.", fx:{fx:"proj", color:"190,255,140"}},
@@ -683,7 +683,7 @@ const CODEX_BOSS_LORE = {
       {name:"Barrido", desc:"Cubre todo su alrededor.", fx:{fx:"nova", color:"120,200,255", vfx:"fxWaterSplash"}},
       {name:"Refuerzos", desc:"Llama criaturas del arrecife.", fx:{fx:"summon", color:"100,200,230"}}]},
   leviatan:{title:"Terror de las Profundidades", campaign:"Jefe final de la Arena Acuática (nivel 10). El canon lo llama \"el Kraken\". No es un Guardián.",
-    lore:"El Leviatán es el Kraken de las leyendas: la bestia que rodea las ruinas hundidas y que ya estaba ahí cuando se hundieron. Con dos cristales en manos de los campeones, la realidad se dobla y él sale del agua.",
+    lore:"El Leviatán es el Kraken de las leyendas: la bestia que rodea las ruinas hundidas y que ya estaba ahí cuando se hundieron. Con dos cristales en manos de los guardias, la realidad se dobla y él sale del agua.",
     history:"Los marineros lo llamaban Kraken; el Códice usa su nombre verdadero. Tiene tres vidas y cada una es más rápida que la anterior.",
     phases:[{name:"Primera vida", desc:"Muerde desde el borde, embiste, burbujas y coletazos."},{name:"Segunda vida", desc:"Suma la Oleada y el Remolino."},{name:"Tercera vida", desc:"Todo más rápido."}],
     abilities:[{name:"Mordida desde el borde", desc:"No pelees pegado a la orilla.", fx:{fx:"cone", color:"90,190,240"}},
@@ -718,7 +718,7 @@ const CODEX_BOSS_LORE = {
       {name:"Gancho", desc:"Engancha y arrastra al borde: usá una habilidad para soltarte.", fx:{fx:"proj", set:"drag", color:"200,160,255", vfx:"abChain"}}]},
   ab_morador:{title:"El Que Mora Debajo", campaign:"Jefe final del Abismo (nivel 10). El punto de no retorno.",
     lore:"Nunca se muestra entero. Vive en el fondo del pozo del Abismo y todo este tiempo estuvo debajo de las ruinas, esperando que alguien pisara donde no debía.",
-    history:"Los heraldos anuncian su Ojo, los tentáculos son sus brazos y el Carcelero le cuida el territorio. Al caer, el mundo se rompe y los campeones cruzan a la dimensión de la Horda.",
+    history:"Los heraldos anuncian su Ojo, los tentáculos son sus brazos y el Carcelero le cuida el territorio. Al caer, el mundo se rompe y los guardias cruzan a la dimensión de la Horda.",
     phases:[{name:"Tentáculos (100-66%)", desc:"Tentáculos en los bordes y rayo gravitatorio."},{name:"Geometría (66-33%)", desc:"Cambia la forma del piso con aviso largo."},{name:"La verdadera escala (33-0%)", desc:"Mandíbula bajo el pozo, onda del abismo y siluetas gigantes."}],
     abilities:[{name:"Tentáculos", desc:"Aplastan y agrietan; romperlos le abre el ojo.", fx:{fx:"line", color:"170,110,255", vfx:"abMorTents"}},
       {name:"Rayo Gravitatorio", desc:"Ralentiza.", fx:{fx:"line", color:"200,160,255", vfx:"abMorRay"}},
@@ -726,7 +726,7 @@ const CODEX_BOSS_LORE = {
       {name:"Mandíbula", desc:"Succión con aviso desde el pozo.", fx:{fx:"nova", color:"190,80,220", vfx:"abMorSuck"}},
       {name:"Onda del Abismo", desc:"Onda expansiva.", fx:{fx:"ult", color:"170,100,255", vfx:"abMorWave"}}]},
   hechicero_supremo:{title:"El que te guió hasta acá", campaign:"Subjefe del nivel 9 de la Arena Infernal. Al caer no muere: huye al corazón del Infierno.",
-    lore:"El Hechicero Supremo guió a los campeones desde la Ciudad Maldita: claro, cálido, con alas de luz. Explicó los cristales, las Cicatrices y los Guardianes. Nunca explicó cómo sabía tanto.",
+    lore:"El Hechicero Supremo guió a los guardias desde la Ciudad Maldita: claro, cálido, con alas de luz. Explicó los cristales, las Cicatrices y los Guardianes. Nunca explicó cómo sabía tanto.",
     history:"Aparece en la pantalla previa de cada arena, en la voz que te enseña a pelear y en la proyección que surgió del humo de la Ciudad Maldita.",
     spoiler:"Es el CUARTO GUARDIÁN: el primero y líder de los Cuatro. Se quedó en la dimensión de la Horda por decisión propia y encadenó al Forjador cuando se negó a fundir los cristales en uno solo. Te guiaba hasta él.",
     phases:[{name:"El guía (100-50%)", desc:"Orbe sagrado, pilares y meteoros."},{name:"Revela su poder (50%)", desc:"Suma el Juicio."}],
@@ -737,7 +737,7 @@ const CODEX_BOSS_LORE = {
   hechicero_final:{title:"Cuarto Guardián · El plan de los cuatro cristales", campaign:"GUARDIÁN 4. Jefe final de la campaña (Arena Infernal, nivel 10): tres formas seguidas.",
     lore:"Con los cristales de los tres Guardianes en su poder y el suyo propio, el Hechicero Supremo intenta fundirlos en uno solo para convertirse en la Horda entera.",
     history:"El Forjador, encadenado en el fondo de la Arena Infernal, se negó a hacerlo. El Hechicero lo intenta igual.",
-    spoiler:"Forma 1: el ÁNGEL CORROMPIDO, con los poderes de los cuatro Guardianes. Forma 2: el GOLEM DE CUERPOS, cosido con todos los que cayeron en el camino. Forma 3: el REY DE LA HORDA, la Horda entera en un cuerpo. El plan de fusión fracasa; los cristales siguen necesitando portadores… y los campeones empiezan a ocupar el lugar de los Guardianes.",
+    spoiler:"Forma 1: el ÁNGEL CORROMPIDO, con los poderes de los cuatro Guardianes. Forma 2: el GOLEM DE CUERPOS, cosido con todos los que cayeron en el camino. Forma 3: el REY DE LA HORDA, la Horda entera en un cuerpo. El plan de fusión fracasa; los cristales siguen necesitando portadores… y los guardias empiezan a ocupar el lugar de los Guardianes.",
     phases:[{name:"Ángel Corrompido", desc:"Los poderes de los Guardianes: niebla, anillos de hielo, pilares y el Juicio de los Cuatro."},{name:"Golem de Cuerpos", desc:"Lento: rodealo. Nova Profana: pegate a él.", spoiler:true},{name:"Rey de la Horda", desc:"Repite lo peor de todas las formas y se regenera bajo el 40%.", spoiler:true}],
     abilities:[{name:"Niebla del Olvido", desc:"Poder del Guardián Ancestral: salí de la nube.", fx:{fx:"zone", set:"cast", color:"150,230,120"}},
       {name:"Anillos de Escarcha", desc:"Poder del Mago Gélido: esperá el hueco.", fx:{fx:"nova", set:"cast", color:"150,225,255"}},
@@ -763,7 +763,7 @@ const CODEX_BOSS_LORE = {
    y la Cicatriz salen de CAMPAIGN_ORDER / ARENA_MODS / ARENA_BRIEF / CAMPAIGN_STORY).
    ============================================================ */
 const CODEX_ARENA_LORE = {
-  ciudad:{lore:"La ciudad de los campeones. La Horda volvió, la defendieron, y algo quedó roto: desde ese día la llaman la Ciudad Maldita.",
+  ciudad:{lore:"La ciudad de los guardias. La Horda volvió, la defendieron, y algo quedó roto: desde ese día la llaman la Ciudad Maldita.",
     history:"En medio del humo apareció la proyección del Hechicero Supremo: los antiguos Guardianes están cayendo y los cristales que mantienen limitada a la Horda tienen que recuperarse.",
     why:"Es el origen: acá nace la primera Cicatriz.", objective:"Encontrar y RESCATAR a los civiles, proteger los refugios y vencer al Presentador.",
     mechanics:["Civiles escondidos: rescatalos (acción contextual) y escoltalos a una zona segura","Estructuras con vida: no se reparan; si caen todas las críticas, derrota","Techos que se desvanecen al entrar a una casa"],
@@ -808,11 +808,11 @@ const CODEX_ARENA_LORE = {
     hazards:["El borde","Zonas gravitatorias","Filamentos del vacío"]},
   infernal:{lore:"La dimensión de la Horda. El fuego del piso, las fisuras de donde sale la horda y, en el fondo, alguien encadenado.",
     history:"El Forjador está prisionero acá: se negó a fundir los cristales. El Hechicero Supremo espera en el corazón del Infierno con el plan de los cuatro cristales.",
-    why:"Los campeones cruzaron el Abismo. Ya no hay vuelta atrás.", objective:"Cerrar las fisuras, sobrevivir hasta el nivel 9 y enfrentar la verdad del Hechicero.",
+    why:"Los guardias cruzaron el Abismo. Ya no hay vuelta atrás.", objective:"Cerrar las fisuras, sobrevivir hasta el nivel 9 y enfrentar la verdad del Hechicero.",
     mechanics:["Fisuras: cerralas (✖) para cortar la horda","Tus habilidades pegan menos","El hielo enfría las fisuras"],
     hazards:["Ignición","Pozos de lava","Erupciones"]},
   divina:{lore:"Las Cinco Pruebas Divinas: un asedio 4 contra 4 más allá de la campaña. Los que vencieron a la Horda prueban si merecen portar los cristales.",
-    history:"Después del final, los cristales siguen necesitando portadores. La Arena Divina es donde los campeones empiezan a ocupar el lugar de los Guardianes.",
+    history:"Después del final, los cristales siguen necesitando portadores. La Arena Divina es donde los guardias empiezan a ocupar el lugar de los Guardianes.",
     why:"Postgame: se abre al completar la Arena Infernal.", objective:"Derribar las torres y el castillo enemigo antes que los tuyos.",
     mechanics:["Asedio 4 contra 4","Torres y castillos","Jefes finales de cada bioma como pruebas"],
     hazards:["Torres enemigas"], postgame:true}

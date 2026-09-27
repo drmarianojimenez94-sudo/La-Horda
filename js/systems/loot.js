@@ -29,7 +29,7 @@ function lootTierWeights(arena, grade, pity, defeat){
   }
   return w;
 }
-// owned: Set de designIds que el campeón ya tiene (inventario), para elegir set/pieza.
+// owned: Set de designIds que el guardia ya tiene (inventario), para elegir set/pieza.
 function _rollSetPiece(arena, owned, rng, classKey){
   const aw = SET_ARENA_WEIGHTS[arena] || SET_ARENA_WEIGHTS.infernal;
   const sw = {};
@@ -82,7 +82,7 @@ function rollLoot(o){
   if(o.victory) for(const t in LOOT_PITY) pityAfter[t] = got[t] ? 0 : (pity[t]||0) + 1;
   return {items, pity:pityAfter, grade};
 }
-// Elige un campeón para un objeto "de campeón": el que jugás (CROSS_DROP_OWN_CHAMP) o cualquier otro.
+// Elige un guardia para un objeto "de guardia": el que jugás (CROSS_DROP_OWN_CHAMP) o cualquier otro.
 function _crossChamp(classKey, candidates){
   if(!candidates.length) return null;
   if(candidates.includes(classKey) && Math.random() < CROSS_DROP_OWN_CHAMP) return classKey;
@@ -106,7 +106,7 @@ function _rollChampionDesigned(classKey, rarity){
   const mine = pool.filter(d=>d.champion===ch);
   return mine[(Math.random()*mine.length)|0].id;
 }
-// Convierte la especificación en un objeto real del juego (puede ser de otro campeón: botín cruzado).
+// Convierte la especificación en un objeto real del juego (puede ser de otro guardia: botín cruzado).
 function materializeLoot(spec, classKey, arena){
   arena = arena || currentArena;
   if(spec.tier==="set") return makeDesignedItem(spec.designId);

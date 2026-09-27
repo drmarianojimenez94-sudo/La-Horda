@@ -4,18 +4,18 @@
    CIUDAD MALDITA — el corazón de la arena: CIVILES y ESTRUCTURAS.
 
    CIVIL (vive en cmS.civ, lo simula SOLO el anfitrión; el invitado lo ve por el netState):
-     HIDDEN   escondido (casa o callejón). Pistas: sollozos y un "?" cuando un campeón anda cerca.
+     HIDDEN   escondido (casa o callejón). Pistas: sollozos y un "?" cuando un guardia anda cerca.
      IDLE     descubierto, agachado: RESCATAR (mantener la acción contextual) lo pone a seguirte.
-     FOLLOW   sigue a su campeón (migas de pan por las puertas). Si su campeón cae o se aleja demasiado,
+     FOLLOW   sigue a su guardia (migas de pan por las puertas). Si su guardia cae o se aleja demasiado,
               se queda quieto (IDLE) y cualquiera lo puede volver a rescatar.
      PANIC    grito de la Plañidera / golpe / Espectro: corre lejos de la amenaza y después vuelve.
      RUN      su refugio cayó: corre solo al refugio en pie más cercano (hay que cubrirlo).
      HURT     recibió un golpe (tambaleo corto).
      KIDNAPPED lo carga un Raptor hacia el borde. Pegarle, aturdirlo o matarlo lo suelta.
-     FLEE     recién soltado: corre hacia el campeón más cercano.
+     FLEE     recién soltado: corre hacia el guardia más cercano.
      RESCUED  llegó a una zona segura: +1 RESCATADO (entra y desaparece).
      DEAD     murió (queda el cuerpo): +1 PERDIDO.
-   Los civiles NO son enemigos: ningún ataque de campeón los toca (inmunes por construcción).
+   Los civiles NO son enemigos: ningún ataque de guardia los toca (inmunes por construcción).
    Solo los dañan ataques enemigos con aviso (cmHurtCiv).
 
    ESTRUCTURA: vida -> INTACTA / DAÑADA / CRÍTICA / DESTRUIDA (sin reparación). Consecuencias en
@@ -82,7 +82,7 @@ function cmCivPanic(c, fromX, fromY, ms){
   c.st = CIV.PANIC; c.t = 0; c.pd = ms || CM_CFG.civ.panicMs; c.px = fromX; c.py = fromY;
 }
 
-/* ---------------- migas de pan (los civiles siguen el camino real del campeón) ---------------- */
+/* ---------------- migas de pan (los civiles siguen el camino real del guardia) ---------------- */
 function cmTrailTick(){
   heroes.forEach((h, i)=>{
     if(!h.alive) return;
@@ -92,7 +92,7 @@ function cmTrailTick(){
   });
 }
 function cmFollowTarget(c, h, order){
-  // con línea libre y cerca: un lugar en la fila detrás del campeón
+  // con línea libre y cerca: un lugar en la fila detrás del guardia
   const d = Math.hypot(h.x - c.x, h.y - c.y), gap = CM_CFG.civ.followGap*(order + 1);
   c._lt = (c._lt||0) - 16;
   if(c._lt <= 0){ c._lt = 220; c._los = d < 420 && aidLineClear(c.x, c.y, h.x, h.y); c._tp = null;

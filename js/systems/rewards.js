@@ -90,7 +90,7 @@ function rollItemType(classKey){
 }
 // Legendario/Mítico: en vez de una fórmula procedural ("Espada legendaria +50%"), se elige
 // entre los objetos DISEÑADOS a mano de esa rareza (sección 12) -si por algún motivo no hay
-// ninguno disponible para el campeón+rareza+tipo pedido, cae de vuelta a lo procedural para
+// ninguno disponible para el guardia+rareza+tipo pedido, cae de vuelta a lo procedural para
 // nunca dejar al jugador sin recompensa-.
 function rollDesignedItem(classKey, rarity, preferredType){
   const pool = designedItemsFor(classKey).filter(d=>d.rarity===rarity);
@@ -99,7 +99,7 @@ function rollDesignedItem(classKey, rarity, preferredType){
   const chosen = (sameType.length ? sameType : pool)[Math.floor(Math.random()*(sameType.length?sameType.length:pool.length))];
   return makeDesignedItem(chosen.id);
 }
-// Une los pasos: puntaje -> rareza (con azar) -> tipo relevante para el campeón -> objeto
+// Une los pasos: puntaje -> rareza (con azar) -> tipo relevante para el guardia -> objeto
 // (diseñado a mano si es legendario/mítico, procedural si es común/raro/muy raro).
 function generateReward(classKey, score){
   const rarity = rollRarity(score);

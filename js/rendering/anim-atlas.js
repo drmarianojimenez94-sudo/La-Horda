@@ -11,10 +11,10 @@
    cuando llegaba un pack de arte nuevo (Mago, Sanador, Tanque/Asesino, enemigos del
    Laberinto, habilidades de Axiom/Dragón/Demonio de Hielo, etc.), cada uno con su
    propio esquema de frames/fps/anchor/flip. Esto es el arranque de consolidarlos en
-   UNA sola API reutilizable, migrando de a un campeón por vez para no romper nada.
+   UNA sola API reutilizable, migrando de a un guardia por vez para no romper nada.
 
    Esta capa es puro RENDER: no sabe nada de vida, daño, cooldowns ni reglas de juego.
-   Cada campeón/enemigo sigue decidiendo por su cuenta "qué clip tocar ahora" (idle vs
+   Cada guardia/enemigo sigue decidiendo por su cuenta "qué clip tocar ahora" (idle vs
    walk vs cast...) exactamente igual que antes -eso es lógica de juego, no de dibujo-,
    y se lo pasa a este motor como un simple string.
 
@@ -82,7 +82,7 @@ function wrapAnimImage(img, readyGetter, def){ return { img, ready:readyGetter, 
 // Dibuja el frame `n` de `clip` con tamaño y ancla EXPLÍCITOS (ratio 0-1 del ancho/alto del
 // propio dibujo, no un pivote en píxeles del atlas) — el criterio que ya usaban enemigos y
 // efectos (tamaño proporcional al radio de colisión o al radio de una habilidad), a diferencia
-// de drawAnimFrame (pivote fijo + targetHeight), el criterio de los sprites de campeones.
+// de drawAnimFrame (pivote fijo + targetHeight), el criterio de los sprites de guardias.
 // Mismo animFrameIndex/animFireEvents de siempre por debajo: es el mismo reloj de animación.
 function drawAnimFrameSized(img, clip, n, x, y, w, h, anchorXRatio, anchorYRatio, flip, alpha, rotation){
   const f = clip.frames[n];

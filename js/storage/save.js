@@ -14,7 +14,7 @@ const SAVE_KEY = "laHordaSave_v1";
 // + puntos de talento invertidos manualmente (alloc). Ambos se suman.
 function mkMastery(){ return {useXp:0, useLvl:1, alloc:0}; }
 // Talentos/Maestría (permanentes, ver sección "TALENTOS Y MAESTRÍAS" más abajo): nodes/picks/
-// mastery/masteryNodes son independientes por campeón, cambiar de campeón nunca comparte esto.
+// mastery/masteryNodes son independientes por guardia, cambiar de guardia nunca comparte esto.
 function mkTalentState(){ return { nodes:{}, picks:{}, mastery:null, masteryNodes:{} }; }
 // Nota: no puede iterar EQUIP_SLOT_TYPES acá (ese const se define más abajo en el archivo y
 // defaultSave() ya corre en la carga inicial del módulo, antes de esa línea) -> las 6 ranuras
@@ -61,27 +61,27 @@ function defaultSave(){
     campaignResetV3:true,   // 3er reinicio (antes de la prueba real con un amigo): idem
     testStageV1:true,       // BUGFIX 01: reinicio de la etapa de prueba (nivel 1, bloqueados, solo la Arena 1, 10.000 de oro UNA vez)
     startGoldNotice:false,  // aviso del regalo inicial pendiente de mostrar (se muestra una vez y se apaga)
-    starterChosen:false,    // todavía no eligió su campeón de regalo (pantalla "Tu primer campeón")
+    starterChosen:false,    // todavía no eligió su guardia de regalo (pantalla "Tu primer guardia")
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0, unico:0}, // protección suave contra la mala suerte (oculta), ver js/data/loot.js
-    stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los campeones): ver js/systems/items.js
+    stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los guardias): ver js/systems/items.js
     crystals:{ancestral:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
     shop:null               // ofertas de objetos del día (js/systems/shop.js)
   };
 }
 // ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
-// campeones, objetos y sets. Va en el guardado nuevo (defaultSave) o se da en el reinicio de la etapa
+// guardias, objetos y sets. Va en el guardado nuevo (defaultSave) o se da en el reinicio de la etapa
 // (testStageReset, marcado con testStageV1): recargar, reconectar, morir o cambiar de arena no lo repite
 // porque el oro se lee siempre del guardado persistido.
 const TEST_START_GOLD = 10000;
 let save = defaultSave();
-// MODO PRUEBA (pedido para seguir probando): todos los campeones liberados y todas las arenas de la
+// MODO PRUEBA (pedido para seguir probando): todos los guardias liberados y todas las arenas de la
 // campaña abiertas, en guardados nuevos y viejos. No toca niveles, oro, objetos ni talentos.
 // Para volver al modo campaña normal, poner esto en false. (Las pruebas automáticas de la campaña
 // lo apagan definiendo window.__campaignMode antes de cargar la página.)
-// BUGFIX 01: apagado. La campaña es secuencial (solo la Arena 1 abierta) y los campeones se compran.
+// BUGFIX 01: apagado. La campaña es secuencial (solo la Arena 1 abierta) y los guardias se compran.
 const PLAYTEST_UNLOCK_ALL = false;
 function applyPlaytestUnlock(){
   if(!PLAYTEST_UNLOCK_ALL) return;
@@ -90,8 +90,25 @@ function applyPlaytestUnlock(){
   save.starterChosen = true;
   if(changed) persist();
 }
+// PEDIDO DEL USUARIO (al terminar la prueba de la Ciudad Maldita): TODAS las arenas abiertas (también la
+// Divina) y TODOS los guardias liberados en nivel 90, UNA sola vez por perfil (testUnlock90V1). Los puntos
+// de talento de esos niveles se suman igual que al subir jugando (1 por nivel); no se tocan objetos, oro
+// ni lo que ya estaba completado. Las pruebas automáticas de campaña lo saltean (window.__campaignMode).
+function applyTestUnlock90(){
+  if(save.testUnlock90V1 || (typeof window!=="undefined" && window.__campaignMode)) return;
+  for(const k in save.champions){
+    const c = save.champions[k];
+    c.unlocked = true;
+    if((c.level||1) < 90){ c.talentPoints = (c.talentPoints||0) + (90 - (c.level||1)); c.level = 90; c.xp = 0; }
+  }
+  save.starterChosen = true;
+  save.legacyOpenArenas = ARENA_ORDER.slice();
+  save.divineArenaUnlocked = true;
+  save.testUnlock90V1 = true;
+  persist();
+}
 function loadSave(){
-  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); }
+  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); }
 }
 function _loadSaveInner(){
   try{
@@ -105,8 +122,8 @@ function _loadSaveInner(){
       save.champions = {};
       Object.keys(defChamps).forEach(k=>{
         const base = defChamps[k], loaded = (parsed.champions||{})[k] || {};
-        // Object.assign no pisa "unlocked" si el campeón ya estaba guardado de antes sin ese
-        // campo -> las partidas viejas conservan sus campeones ya jugados como desbloqueados.
+        // Object.assign no pisa "unlocked" si el guardia ya estaba guardado de antes sin ese
+        // campo -> las partidas viejas conservan sus guardias ya jugados como desbloqueados.
         const merged = Object.assign({}, base, loaded);
         merged.skillMastery = [0,1,2].map(i => Object.assign(mkMastery(), (loaded.skillMastery||[])[i] || {}));
         merged.ultMastery = Object.assign(mkMastery(), loaded.ultMastery || {});
@@ -130,7 +147,7 @@ function _loadSaveInner(){
       save.crystals = Object.assign(defaultSave().crystals, parsed.crystals||{});
       // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
       // Acuática tenía abierto el Hielo, y lo conserva (una sola vez, al cargar por primera vez).
-      // MODO CAMPAÑA: la prueba de campaña arranca de cero para todos -todos los campeones a
+      // MODO CAMPAÑA: la prueba de campaña arranca de cero para todos -todos los guardias a
       // nivel 1, sin talentos ni maestría, bloqueados (se elige uno de regalo y el resto se
       // compra), campaña y oro en cero-. Los objetos se conservan. El guardado anterior queda
       // copiado entero en localStorage (SAVE_KEY + "_antesDeCampania") por si hay que volver
@@ -166,7 +183,7 @@ function _loadSaveInner(){
     }
   }catch(e){ save = defaultSave(); }
 }
-// Inventario de la cuenta (stashV1): antes cada campeón tenía su propio inventario. Se juntan todos
+// Inventario de la cuenta (stashV1): antes cada guardia tenía su propio inventario. Se juntan todos
 // en save.stash sin perder nada (aunque pase los 30 espacios: solo se frena el botín nuevo hasta
 // vender/descartar). Los objetos procedurales pasan a ser universales. Los "Únicos de prueba"
 // ([PLACEHOLDER]) se convierten en Legendarios: un Único real es un jackpot diseñado a mano.
@@ -185,7 +202,7 @@ function migrateToAccountStash(parsed){
       it.name = (typeof proceduralItemName==="function") ? proceduralItemName(it.type, "legendario", it.legendProc) : "Legendario";
     }
   }
-  // equipo que apunte a objetos inexistentes -> vacío; un objeto en dos campeones -> se queda en el primero
+  // equipo que apunte a objetos inexistentes -> vacío; un objeto en dos guardias -> se queda en el primero
   const used = new Set();
   for(const k in save.champions){
     const eq = save.champions[k].equipment;
@@ -240,7 +257,7 @@ function campaignReset(raw){
   persist();
 }
 // BUGFIX 01 — reinicio de la etapa de prueba (una sola vez por perfil, marcado con testStageV1):
-// campeones a nivel 1 y bloqueados (se elige UNO de regalo, el resto se compra), solo la Arena 1
+// guardias a nivel 1 y bloqueados (se elige UNO de regalo, el resto se compra), solo la Arena 1
 // abierta, inventario y equipo vacíos y 10.000 de oro. El guardado anterior queda copiado en
 // localStorage (SAVE_KEY + "_antesDeEtapaPrueba").
 function testStageReset(raw){
@@ -253,7 +270,7 @@ function testStageReset(raw){
   save.testStageV1 = true; save.startGoldNotice = true;
   persist();
 }
-// ¿Tiene que elegir todavía su campeón de regalo? Solo mientras no tenga ningún campeón propio
+// ¿Tiene que elegir todavía su guardia de regalo? Solo mientras no tenga ningún guardia propio
 // (save.starterChosen queda como registro de que ya lo eligió).
 function needsStarterChampion(){
   return !Object.keys(save.champions).some(k=>save.champions[k].unlocked);
@@ -265,7 +282,7 @@ function needsStarterChampion(){
 let _persistTimer = null;
 function persistNow(){
   if(_persistTimer){ clearTimeout(_persistTimer); _persistTimer = null; }
-  // B1: mientras el anfitrión simula a un invitado, su campeón usa los datos del invitado;
+  // B1: mientras el anfitrión simula a un invitado, su guardia usa los datos del invitado;
   // netPersistView escribe siempre los datos propios del anfitrión.
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }catch(e){ /* storage unavailable, continue in-memory */ }

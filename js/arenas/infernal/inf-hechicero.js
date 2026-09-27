@@ -201,7 +201,7 @@ Object.assign(BOSS_ATTACKS, {
     hechLater(650, ()=>{
       for(const p of spots){
         if(iceWalls.length >= ICE_WALL_MAX) break;
-        if(heroes.some(h=>h.alive && Math.hypot(h.x-p.x, h.y-p.y) < 22 + (h.radius||18) + 2)) continue; // nunca encima de un campeón
+        if(heroes.some(h=>h.alive && Math.hypot(h.x-p.x, h.y-p.y) < 22 + (h.radius||18) + 2)) continue; // nunca encima de un guardia
         const c = {x:p.x, y:p.y}; clampToArena(c);
         iceWalls.push({x:c.x, y:c.y, r:22, life:4600, maxLife:4600, st:1, flip:false, img:0});
         vfxBurst(c.x, c.y-10, 5, "rock", 90, 320, 3, 0, -40, 0);
@@ -374,7 +374,7 @@ function hechEnemyTick(e, dt, tgt, dist){
       if(e.cineT <= 2900 && !e._stole){
         e._stole = true;
         if(typeof crystalSteal==="function") crystalSteal(player.x, player.y, e.x, e.y);
-        _hSay(e, crystalsOwned().length >= 3 ? "«Los tres cristales. Gracias, campeón.»" : "«Los que no me trajiste… se los arranqué yo.»");
+        _hSay(e, crystalsOwned().length >= 3 ? "«Los tres cristales. Gracias, guardia.»" : "«Los que no me trajiste… se los arranqué yo.»");
       }
       if(e.cineT <= 1100 && !e._wings){
         e._wings = true; vfxShake(12); playSfx("bossRoar"); flashScreen(0.4, "255,60,60");

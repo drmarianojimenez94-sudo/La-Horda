@@ -176,3 +176,13 @@ loop, disconnect) quedan documentadas como pendientes, sin cambios.
 Sin fuego amigo (los civiles tampoco reciben daño de campeones), sin núcleo de explosión de cadáveres, sin dash
 universal, sin crafteo de Únicos, sin pay-to-win, sin placeholders feos. Los Cuatro Guardianes siguen siendo el
 Mago Gélido, el Guardián Élfico, el Guardián del Laberinto y el Hechicero: El Presentador no es un Guardián.
+
+## 11. Pedido adicional (al terminar la prueba)
+- **"Guardias" en vez de "campeones"** en todo el texto visible del juego (menús, Códice, tienda, HUD, guía del
+  Hechicero, carteles). Las claves internas (`"campeones"`, ids de botones, campos del guardado) no cambian, así
+  que ningún guardado ni enlace se rompe. Los Cuatro Guardianes siguen llamándose Guardianes.
+- **Todas las arenas abiertas** (las 9 jugables + la Arena Divina) y **todos los guardias liberados en nivel 90**,
+  una sola vez por perfil (`save.testUnlock90V1`, `applyTestUnlock90` en `js/storage/save.js`). Se suman los
+  puntos de talento de esos niveles (1 por nivel, igual que al subir jugando); no se tocan oro, objetos ni lo
+  completado. Las pruebas automáticas de campaña lo saltean (`window.__campaignMode`).
+- La arena elegida por defecto en un perfil nuevo es la Ciudad Maldita (Arena 01).

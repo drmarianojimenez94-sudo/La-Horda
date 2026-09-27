@@ -1,18 +1,18 @@
 "use strict";
 /* ============================================================
    js/systems/progression.js
-   Progresión permanente: XP y niveles de campeón, oro, reliquias y castigo por
+   Progresión permanente: XP y niveles de guardia, oro, reliquias y castigo por
    abandonar la arena.
    ============================================================ */
 
 // Curva de experiencia: RÁPIDA al comienzo (los primeros 10 niveles cuestan la mitad que antes: el
-// jugador siente crecer a su campeón partida a partida) y cada vez MÁS LENTA (término cúbico): se
+// jugador siente crecer a su guardia partida a partida) y cada vez MÁS LENTA (término cúbico): se
 // cruza con la curva anterior cerca del nivel 35 y el nivel 60 cuesta el doble. No hay un nivel
 // final "objetivo": el final de la campaña cae donde caiga (ver LA_HORDA_PROGRESSION_ECONOMY_REPORT.md),
 // y el endgame pide mucho más esfuerzo. Sin multiplicadores: XP real de enemigos y victorias.
 function xpToNext(level){ return Math.round(90 + level*26 + 0.16*Math.pow(level,3)); }
 // MODO DEV (solo para probar, NO es el ritmo del juego): ?devxp=5 en la URL multiplica toda la XP de
-// campeón (1–20). Muestra un cartel fijo "DEV XP ×N" para que nunca se confunda con el juego real.
+// guardia (1–20). Muestra un cartel fijo "DEV XP ×N" para que nunca se confunda con el juego real.
 const DEV_XP_MULT = (()=>{ try{ const v = parseFloat(new URLSearchParams(location.search).get("devxp")); return v > 1 ? Math.min(20, v) : 1; }catch(e){ return 1; } })();
 if(DEV_XP_MULT > 1) window.addEventListener("DOMContentLoaded", ()=>{ const b = document.createElement("div"); b.id = "dev-xp-badge"; b.textContent = "DEV XP ×" + DEV_XP_MULT;
   b.style.cssText = "position:fixed;left:50%;bottom:2px;transform:translateX(-50%);z-index:9999;font:10px monospace;color:#ffd24a;background:rgba(0,0,0,0.6);padding:1px 6px;border-radius:4px;pointer-events:none"; document.body.appendChild(b); });
@@ -37,8 +37,8 @@ function grantXP(champKey, amount){
    Morir o abandonar antes del jefe final resta un porcentaje de la XP y del oro GANADOS EN
    ESA PARTIDA (no del total acumulado): perder duele, pero nunca te deja por debajo del nivel
    y del oro con los que entraste, así que no se puede quedar trabado retrocediendo.
-   Calibrado con 360 partidas simuladas desde cero (0%, 25%, 35% y 50%, 3 campeones x 30
-   partidas): con 50% ningún campeón perdió jamás un nivel y el ritmo para pasar arenas fue el
+   Calibrado con 360 partidas simuladas desde cero (0%, 25%, 35% y 50%, 3 guardias x 30
+   partidas): con 50% ningún guardia perdió jamás un nivel y el ritmo para pasar arenas fue el
    mismo en todos los casos (el freno real es la dificultad de cada arena); lo que sí baja es
    la velocidad de subida (~Nv. 51-60 vs ~56-76 a las 30 partidas) y el oro juntado (-25/-50%).
    ============================================================ */

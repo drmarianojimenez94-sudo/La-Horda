@@ -3,10 +3,10 @@
    js/systems/items.js
    Sistema de objetos: creación, equipar, inventario, vender, fusionar, sets y pasivas.
    INVENTARIO DE LA CUENTA: los objetos viven en save.stash (30 espacios, compartidos por todos
-   los campeones: el botín es CRUZADO, podés ganar objetos de cualquier campeón). Cada campeón
+   los guardias: el botín es CRUZADO, podés ganar objetos de cualquier guardia). Cada guardia
    guarda en `equipment` los uid de lo que lleva puesto; lo equipado no ocupa espacio.
    Compatibilidad: los objetos genéricos y las piezas de set sirven a cualquiera; los diseñados
-   para un campeón (champion:"mago", Únicos...) solo a ese campeón.
+   para un guardia (champion:"mago", Únicos...) solo a ese guardia.
    Durante una partida en red, el registro del invitado trae sus propios objetos equipados
    (champ.loadoutItems) y se usan esos en vez del inventario del anfitrión.
    ============================================================ */
@@ -20,7 +20,7 @@ function itemPoolFor(champKey){
 }
 function stashItems(){ if(!Array.isArray(save.stash)) save.stash = []; return save.stash; }
 function findStashItem(uid){ return stashItems().find(it=>it.uid===uid) || null; }
-// Qué campeón lleva puesto un objeto (o null).
+// Qué guardia lleva puesto un objeto (o null).
 function itemEquippedBy(uid){
   if(!uid) return null;
   for(const k in save.champions){ const eq = save.champions[k].equipment; if(eq && Object.values(eq).includes(uid)) return k; }
@@ -28,13 +28,13 @@ function itemEquippedBy(uid){
 }
 function stashUsedSlots(){ return stashItems().filter(it=>!itemEquippedBy(it.uid)).length; }
 function stashFull(){ return stashUsedSlots() >= INVENTORY_CAPACITY; }
-// ¿Este campeón puede usar este objeto? Genéricos y sets: todos. Diseñados de campeón: solo él.
+// ¿Este guardia puede usar este objeto? Genéricos y sets: todos. Diseñados de guardia: solo él.
 function canEquipItem(champKey, it){
   if(!it) return false;
   if(it.designed && it.champion && it.champion!==champKey) return false;
   return true;
 }
-// Bots: solo se ponen, en ranuras vacías, objetos diseñados PARA su campeón que nadie use (el
+// Bots: solo se ponen, en ranuras vacías, objetos diseñados PARA su guardia que nadie use (el
 // inventario es de la cuenta: nunca le sacan un objeto genérico al jugador).
 function autoEquipBest(classKey){
   const champ = save.champions[classKey];
@@ -53,13 +53,13 @@ function autoEquipBest(classKey){
 function weaponLabelFor(classKey){ return CLASS_WEAPON_LABEL[classKey] || ITEM_TYPES.arma.label; }
 
 function rarityIndex(r){ return RARITIES.indexOf(r); }
-// Cuenta piezas del set X equipadas por el campeón (0 si no tiene ninguna).
+// Cuenta piezas del set X equipadas por el guardia (0 si no tiene ninguna).
 function equippedSetCount(champKey, setId){
   let n = 0;
   EQUIP_SLOT_TYPES.forEach(type=>{ const it = equippedItem(champKey, type); if(it && it.set===setId) n++; });
   return n;
 }
-// Todos los bonus de set (de cualquier set) actualmente ACTIVOS para un campeón, listos para
+// Todos los bonus de set (de cualquier set) actualmente ACTIVOS para un guardia, listos para
 // concatenar en equippedPassives(). Se recalcula siempre en caliente a partir de lo equipado
 // -nunca queda un bonus "fantasma" al desequipar una pieza, sección 8-.
 function activeSetBonusEffects(champKey){
@@ -80,7 +80,7 @@ function setProgressFor(champKey, setId){
   return {set, count, total:Object.keys(set.pieces).length,
     thresholds: set.thresholds.map(th=>({count:th.count, desc:th.desc, active:count>=th.count}))};
 }
-// Sets con al menos 1 pieza equipada por el campeón (para mostrar en el panel de equipamiento).
+// Sets con al menos 1 pieza equipada por el guardia (para mostrar en el panel de equipamiento).
 function activeSetIdsFor(champKey){
   return Object.keys(SET_DB).filter(id=>equippedSetCount(champKey,id)>0);
 }
@@ -107,7 +107,7 @@ function makeDesignedItem(designId){
     desc: `${d.lore} · +${Math.round(value*100)}% ${ITEM_TYPES[d.type].statLabel}${extra}${(d.skillMods||d.skillOvercap)?" · Modifica una habilidad":""}`
   };
 }
-// IDs de objetos diseñados disponibles para un campeón (los suyos + las piezas de set
+// IDs de objetos diseñados disponibles para un guardia (los suyos + las piezas de set
 // universales, champion:null). Se usan al generar recompensas de rareza legendario/mítico.
 function designedItemsFor(classKey){
   return Object.values(DESIGNED_ITEMS).filter(d=> d.champion===null || d.champion===classKey);
@@ -128,7 +128,7 @@ function instancePassive(def){
 }
 let ITEM_UID_SEQ = 1;
 // Genera un objeto nuevo 100% a partir de datos (sin casos especiales por objeto).
-// type: "arma"|"casco"|"escudo" · rarity: una de RARITIES · champKey: compatible con ese campeón (o null = cualquiera)
+// type: "arma"|"casco"|"escudo" · rarity: una de RARITIES · champKey: compatible con ese guardia (o null = cualquiera)
 function _pickFrom(arr){ return arr[(Math.random()*arr.length)|0]; }
 function _genderize(q, noun){ return q.replace("{o}", ITEM_NOUN_FEM[noun] ? (ITEM_NOUN_PLURAL[noun] ? "as" : "a") : (ITEM_NOUN_PLURAL[noun] ? "os" : "o")); }
 // Nombre de un objeto procedural: "Yelmo Templado", "Hoja de Karzul, del Golpe Sísmico"...
@@ -146,7 +146,7 @@ function rollItemFamily(arena){ return _pick(ARENA_ITEM_FAMILIES[arena] || ARENA
 function rollFamilyProc(family){ return _pick(ITEM_FAMILIES[family].procs, Math.random); }
 // Genera un objeto procedural con IDENTIDAD FIJA (item-identity.js): la pieza (sustantivo) define
 // su pasiva; en Muy Raro y Legendario la familia define su mecánica y su nombre. Los procedurales
-// son UNIVERSALES (cualquier campeón los usa). opts = {arena, family}.
+// son UNIVERSALES (cualquier guardia los usa). opts = {arena, family}.
 // Nunca genera Únicos: los Únicos se diseñan a mano (UNIQUE_DESIGNS).
 function makeItem(type, rarity, champKey, opts){
   opts = opts || {};
@@ -189,7 +189,7 @@ function itemLevelMult(it){ return 1 + ITEM_LEVEL_STEP*(itemLevel(it)-1); }
 function itemStat(it){ return it ? it.value * (it.roll||1) * itemLevelMult(it) : 0; }
 // Rango posible del stat de ESTE objeto en su nivel actual (para el tooltip: "+19% (17–21%)").
 function itemStatRange(it){ const m = it.value*itemLevelMult(it); return [m*ITEM_ROLL_RANGE[0], m*ITEM_ROLL_RANGE[1]]; }
-// Devuelve el objeto equipado en una ranura de un campeón (o null)
+// Devuelve el objeto equipado en una ranura de un guardia (o null)
 function equippedItem(champKey, type){
   const champ = save.champions[champKey];
   const uid = champ && champ.equipment && champ.equipment[type];
@@ -197,7 +197,7 @@ function equippedItem(champKey, type){
   return itemPoolFor(champKey).find(it=>it.uid===uid) || null;
 }
 // Junta todas las pasivas (normales + míticas + el % garantizado de pechera/guantes/botas +
-// bonus de set activos) de los 6 ítems equipados de un campeón.
+// bonus de set activos) de los 6 ítems equipados de un guardia.
 // PASIVAS IDÉNTICAS NO SE ACUMULAN: si dos objetos traen la misma pasiva de catálogo (mismo id,
 // ej. dos "Ojo Certero"), cuenta solo la más fuerte. Los STATS (el % garantizado de cada pieza y las
 // propiedades con número de los objetos con nombre) sí se suman, como siempre.
@@ -224,7 +224,7 @@ function equippedPassives(champKey){
 // Suma el valor de todas las pasivas equipadas que coincidan con un efecto dado (p.ej. "dmg_mult").
 // Caché por cuadro: passiveSum se consulta decenas de veces por cada golpe (daño, crítico,
 // robo de vida, cooldown...) y antes rearmaba la lista de objetos+talentos en cada consulta.
-// Ahora se arma una vez por campeón y por cuadro (update() llama a invalidatePassiveCache), y
+// Ahora se arma una vez por guardia y por cuadro (update() llama a invalidatePassiveCache), y
 // también al equipar/comprar talentos fuera de la partida.
 let _passiveFrame = 1;
 const _passiveCache = {};
@@ -254,7 +254,7 @@ function legendProcOf(it){
   for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;
   return LEGEND_PROC_IDS[h % LEGEND_PROC_IDS.length];
 }
-// Poderes activos de un campeón: {procId: potencia}. Dos objetos con el MISMO poder no se suman:
+// Poderes activos de un guardia: {procId: potencia}. Dos objetos con el MISMO poder no se suman:
 // vale el más fuerte (regla de pasivas duplicadas). Mismo caché por cuadro que passiveSum.
 function heroProcs(champKey){
   if(!champKey || !save || !save.champions[champKey]) return null;
@@ -316,7 +316,7 @@ function mythicExecuteBonus(h){
   if(!h.hp || !h.maxHp || h.hp >= h.maxHp*0.5 || !h.classKey) return 0;
   return passiveSum(h.classKey, "mythic_execute");
 }
-// Equipar: si otro campeón lo tenía puesto, se lo saca (un objeto está en un solo campeón).
+// Equipar: si otro guardia lo tenía puesto, se lo saca (un objeto está en un solo guardia).
 function equipItem(champKey, uid){
   const champ = save.champions[champKey];
   const item = itemPoolFor(champKey).find(it=>it.uid===uid);
@@ -336,7 +336,7 @@ function unequipItem(champKey, type){
   persist();
 }
 // Guarda un objeto en el inventario de la cuenta (NO lo equipa). champKey queda por compatibilidad
-// con el código que ya lo pasaba; el objeto es de la cuenta, no de ese campeón.
+// con el código que ya lo pasaba; el objeto es de la cuenta, no de ese guardia.
 function addItemToInventory(champKey, item){
   if(!item) return null;
   if(stashFull()) return null; // inventario lleno

@@ -1,11 +1,11 @@
 "use strict";
 /* ============================================================
    js/ui/inventory-ui.js
-   INVENTARIO (objetos de la cuenta, compartidos por todos los campeones):
-   - renderChampInventory(): vista POR CAMPEÓN (la Sala y la ficha de Mis Campeones): equipo puesto,
+   INVENTARIO (objetos de la cuenta, compartidos por todos los guardias):
+   - renderChampInventory(): vista POR GUARDIA (la Sala y la ficha de Mis Guardias): equipo puesto,
      sets, objetos compatibles/recomendados/todos, equipar y desequipar con un toque.
-   - Mi Inventario (pestaña en Mis Campeones): todos los objetos con filtros (rareza, tipo,
-     campeón, sets), RECETAS de Míticos ordenadas por progreso y COLECCIÓN (catálogo descubierto).
+   - Mi Inventario (pestaña en Mis Guardias): todos los objetos con filtros (rareza, tipo,
+     guardia, sets), RECETAS de Míticos ordenadas por progreso y COLECCIÓN (catálogo descubierto).
    ============================================================ */
 
 // Qué efectos le importan a cada rol (para "Recomendados").
@@ -78,8 +78,8 @@ function _bindItemActions(panel, classKey, rerender){
   }));
 }
 
-/* ---------------- vista por campeón ---------------- */
-let champInvFilter = "compatibles"; // ordenados por relevancia para el rol del campeón
+/* ---------------- vista por guardia ---------------- */
+let champInvFilter = "compatibles"; // ordenados por relevancia para el rol del guardia
 function renderChampInventory(panel, classKey, rerender){
   if(!panel) return;
   const champ = save.champions[classKey];
@@ -127,7 +127,7 @@ const myInvFilter = {rarity:"todas", type:"todos", champ:"todos"};
 function openMyInventory(tab){ myInvTab = tab || myInvTab; setState("inventory"); renderMyInventory(); }
 function renderMyInventory(){
   const used = stashUsedSlots();
-  document.getElementById("myinv-sub").textContent = `${used}/${INVENTORY_CAPACITY} espacios · ${stashItems().length} objetos en total (lo equipado no ocupa espacio) · compartido por todos tus campeones`;
+  document.getElementById("myinv-sub").textContent = `${used}/${INVENTORY_CAPACITY} espacios · ${stashItems().length} objetos en total (lo equipado no ocupa espacio) · compartido por todos tus guardias`;
   setHubTabs("myinv-tabs", myInvTab);
   const panel = document.getElementById("myinv-panel");
   if(myInvTab==="recetas") renderRecipesPanel(panel);
@@ -137,7 +137,7 @@ function renderMyInventory(){
 function renderMyItemsPanel(panel){
   const rarChips = [["todas","Todas"],["comun","Común"],["raro","Raro"],["muyraro","Muy Raro"],["legendario","Legendario"],["mitico","Mítico"],["set","Set"],["unico","Único"]];
   const typeChips = [["todos","Todos"]].concat(EQUIP_SLOT_TYPES.map(t=>[t, ITEM_TYPES[t].icon+" "+ITEM_TYPES[t].label]));
-  const champOpts = [["todos","Todos los campeones"],["universal","Sirve a cualquiera"]].concat(Object.keys(CLASSES).map(k=>[k, "Para "+CLASSES[k].name]));
+  const champOpts = [["todos","Todos los guardias"],["universal","Sirve a cualquiera"]].concat(Object.keys(CLASSES).map(k=>[k, "Para "+CLASSES[k].name]));
   let html = `<div class="inv-filters">${rarChips.map(([k,l])=>`<button class="inv-chip ${myInvFilter.rarity===k?"on":""}" data-f-rar="${k}" ${k!=="todas"&&k!=="set"&&RARITY_META[k]?`style="color:${RARITY_META[k].color}"`:(k==="set"?`style="color:${SET_COLOR}"`:"")}>${l}</button>`).join("")}</div>
     <div class="inv-filters">${typeChips.map(([k,l])=>`<button class="inv-chip ${myInvFilter.type===k?"on":""}" data-f-type="${k}">${l}</button>`).join("")}</div>
     <div class="inv-filters"><select id="myinv-champ">${champOpts.map(([k,l])=>`<option value="${k}" ${myInvFilter.champ===k?"selected":""}>${l}</option>`).join("")}</select></div>`;
@@ -194,7 +194,7 @@ function renderCollectionPanel(panel){
   const groups = [
     ["Legendarios con nombre", Object.keys(NAMED_LEGENDARIES), RARITY_META.legendario.color],
     ["Míticos", Object.keys(DESIGNED_ITEMS).filter(id=>DESIGNED_ITEMS[id].rarity==="mitico"), RARITY_META.mitico.color],
-    ["Legendarios de campeón", Object.keys(DESIGNED_ITEMS).filter(id=>{ const d = DESIGNED_ITEMS[id]; return d.rarity==="legendario" && d.champion && !d.named && !d.set; }), RARITY_META.legendario.color],
+    ["Legendarios de guardia", Object.keys(DESIGNED_ITEMS).filter(id=>{ const d = DESIGNED_ITEMS[id]; return d.rarity==="legendario" && d.champion && !d.named && !d.set; }), RARITY_META.legendario.color],
     ["Piezas de set", Object.keys(DESIGNED_ITEMS).filter(id=>DESIGNED_ITEMS[id].set), SET_COLOR],
     ["Únicos", Object.keys(UNIQUE_DESIGNS), RARITY_META.unico.color]
   ];

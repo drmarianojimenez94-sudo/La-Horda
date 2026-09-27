@@ -83,7 +83,7 @@ function render(){
   fxGlowBegin(); drawAxiomVfxActive(); fxGlowEnd();
   drawChampFxGround(); // El Libertador / Eren: escarcha, grietas, avisos de pisada
 
-  // héroes caídos (se dibujan bajo los vivos); en la Arena Divina también los campeones rivales,
+  // héroes caídos (se dibujan bajo los vivos); en la Arena Divina también los guardias rivales,
   // que antes desaparecían en el acto al morir
   for(const h of heroes){ if(!h.alive) drawFallenHero(h); }
   if(divinaMode){ for(const h of divinaEnemies){ if(!h.alive && !h.isBossChamp && h.classKey) drawFallenHero(h); } }
@@ -106,7 +106,7 @@ function render(){
   for(const w of iceWalls){ if(inView(w.x, w.y, 80)) _entPush(w.y, null, null, w); }
   if(!player.duelActive) aidPushTall(); // columnas, árboles, muros del Laberinto, estructuras de la Divina
   if(divinaMode){
-    // Los campeones divinos son "héroes" (drawHero), salvo en el nivel de jefes (nivel 6),
+    // Los guardias divinos son "héroes" (drawHero), salvo en el nivel de jefes (nivel 6),
     // donde son entidades tipo enemigo (drawEnemy) — ver makeDivinaBossChamp.
     for(const h of divinaEnemies){ if(h.alive){ if(h.isBossChamp) _entPush(h.y, h, null); else _entPush(h.y, null, h); } }
     for(const m of divinaMinions){ if(m.alive) _entPush(m.y, m, null); }
@@ -128,7 +128,7 @@ function render(){
     }
   }
   for(const h of heroes){ if(h.wolf) drawSpectralWolf(h.wolf); }
-  if(netMatch) netDrawNameTags(); // B1: nombre de cada amigo sobre su campeón
+  if(netMatch) netDrawNameTags(); // B1: nombre de cada amigo sobre su guardia
   drawMusashiAfterimages();
   drawDownedMarkers();
   for(const h of heroes){

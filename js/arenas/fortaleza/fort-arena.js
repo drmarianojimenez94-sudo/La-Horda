@@ -10,7 +10,7 @@ VFX_PAL.steam = ["#e8e8e0","#c8c8c0","#ffffff","235,235,225"];
 ENEMY_PROJ_COLOR.arana = "#ffb040";
 
 /* ---------------- atlas reales (tools/art/fortaleza/build_fortaleza.py -> meta.json) ----------------
-   hMul = alto dibujado / radio. Escala pedida respecto de un campeón (x1.0 ≈ 65 u de alto):
+   hMul = alto dibujado / radio. Escala pedida respecto de un guardia (x1.0 ≈ 65 u de alto):
    Carcelero 1.1 · Dragón de Bronce 0.9 · Autómata 1.3 · Prisionero 1.1 · Engendro 0.6 ·
    Verdugo 1.4 · Araña 0.8 · Caballero 2.2 · Dragón de la Forja 3.5 */
 const FORT_ATLAS_META = {"carcelero":{"w":270,"h":108,"cols":8,"refH":95,"anchor":0.9444,"hMul":2.73,"sets":{"idle":[8,9],"walk":[10,11,12,11],"atk":[0,1],"chain":[2,3],"hit":[5,6],"death":[7,4]}},

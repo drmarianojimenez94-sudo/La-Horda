@@ -124,21 +124,21 @@
     <button class="mode-card mainmenu-codex" id="mainmenu-codex-btn">
       <div class="mode-card-icon">📖</div>
       <div class="mode-card-title">CÓDICE</div>
-      <div class="mode-card-desc">Campeones, bestiario, jefes y arenas: el archivo del mundo de La Horda. Elegí campeón, equipo, talentos y skins.</div>
+      <div class="mode-card-desc">Guardias, bestiario, jefes y arenas: el archivo del mundo de La Horda. Elegí guardia, equipo, talentos y skins.</div>
     </button>
     <button class="mode-card" id="mainmenu-tienda-btn">
       <div class="mode-card-icon">🪙</div>
       <div class="mode-card-title">TIENDA</div>
-      <div class="mode-card-desc">Todos los campeones (con su ficha) y, más adelante, skins, armas y mascotas.</div>
+      <div class="mode-card-desc">Todos los guardias (con su ficha) y, más adelante, skins, armas y mascotas.</div>
     </button>
     </div>
     <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
     <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
   </div>
 
-  <!-- MODO CAMPAÑA: el campeón de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
+  <!-- MODO CAMPAÑA: el guardia de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
   <div id="starter-screen" class="screen hidden">
-    <div class="arena-title">Tu primer campeón</div>
+    <div class="arena-title">Tu primer guardia</div>
     <div class="lobby-sub">Elegí uno: es tu regalo para empezar la campaña. Los demás se desbloquean en la Tienda por <b id="starter-price">1.000</b> de oro.</div>
     <div id="starter-grid"></div>
     <div class="starter-confirm hidden" id="starter-confirm">
@@ -147,7 +147,7 @@
     </div>
   </div>
 
-  <!-- CÓDICE (js/ui/codex/): CAMPEONES · BESTIARIO · JEFES · ARENAS. Reemplaza a "Mis Campeones". -->
+  <!-- CÓDICE (js/ui/codex/): GUARDIAS · BESTIARIO · JEFES · ARENAS. Reemplaza a "Mis Guardias". -->
   <div id="codex-screen" class="screen hidden">
     <div class="cx-top">
       <button class="cx-back" id="codex-back-btn">‹ Menú</button>
@@ -155,7 +155,7 @@
     </div>
     <div id="codex-body" class="cx-view"></div>
   </div>
-  <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los campeones), recetas de Míticos y colección -->
+  <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los guardias), recetas de Míticos y colección -->
   <div id="inventory-screen" class="screen hidden">
     <div class="arena-title">Mi Inventario</div>
     <div class="lobby-sub" id="myinv-sub"></div>
@@ -167,22 +167,22 @@
     <div id="myinv-panel"></div>
     <button class="btn secondary" id="myinv-back-btn">Volver al Códice</button>
   </div>
-  <!-- FICHA INDIVIDUAL DE CAMPEÓN -->
+  <!-- FICHA INDIVIDUAL DE GUARDIA -->
   <div id="champdetail-screen" class="screen hidden">
     <div id="champdetail-body"></div>
     <button class="btn secondary" id="champdetail-back-btn">Volver a la tienda</button>
   </div>
 
-  <!-- TIENDA: catálogo de campeones (animados, con precio y ficha) + resto de la tienda más adelante -->
+  <!-- TIENDA: catálogo de guardias (animados, con precio y ficha) + resto de la tienda más adelante -->
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
     <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
     <div class="shop-tabs" id="shop-tabs">
-      <button class="shop-tab on" data-shop-tab="campeones">Campeones</button>
+      <button class="shop-tab on" data-shop-tab="campeones">Guardias</button>
       <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
       <button class="shop-tab" data-shop-tab="skins">Skins</button>
     </div>
-    <div class="lobby-note shop-test-note">Etapa de prueba: todos los campeones y todos los objetos cuestan 1.000 de oro.</div>
+    <div class="lobby-note shop-test-note">Etapa de prueba: todos los guardias y todos los objetos cuestan 1.000 de oro.</div>
     <div id="shop-panel"></div>
     <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
@@ -211,7 +211,7 @@
     <button class="btn secondary" id="modeselect-back-btn">Volver</button>
   </div>
 
-  <!-- ARENA DIVINA: asedio 4v4 real contra un equipo rival de campeones divinos, con torres,
+  <!-- ARENA DIVINA: asedio 4v4 real contra un equipo rival de guardias divinos, con torres,
        castillo, muerte definitiva y oleadas de refuerzos para ambos bandos. -->
   <div id="divina-screen" class="screen hidden">
     <div class="arena-title" style="color:#d9a8ff;">Arena Divina</div>
@@ -219,10 +219,10 @@
       <div style="font-size:2rem; margin-bottom:10px;">👁</div>
       <div style="font-weight:700; margin-bottom:8px; color:#d9a8ff;">Asedio 4 contra 4</div>
       <div style="font-size:0.78rem; color:var(--text-dim); line-height:1.5; max-width:320px;">
-        Enfrentá con tu equipo de 4 a un equipo rival de campeones divinos. Cada bando defiende
+        Enfrentá con tu equipo de 4 a un equipo rival de guardias divinos. Cada bando defiende
         2 torres y un castillo -mientras te quede al menos una torre en pie, tu castillo es
         invulnerable-. Derribá las 2 torres y el castillo enemigo antes de que hagan lo mismo
-        con el tuyo. La muerte de un campeón en esta arena es definitiva.
+        con el tuyo. La muerte de un guardia en esta arena es definitiva.
       </div>
     </div>
     <button class="btn wide" id="divina-explore-btn" style="margin-top:16px;">Entrar al asedio</button>
@@ -237,7 +237,7 @@
   </div>
 
   <!-- SALA / LOBBY (previa a entrar a la arena): 4 lugares -pensados para multijugador; por ahora
-       los otros 3 los ocupan bots- y el equipamiento del campeón elegido. -->
+       los otros 3 los ocupan bots- y el equipamiento del guardia elegido. -->
   <div id="prep-screen" class="screen hidden">
     <div class="arena-title" id="lobby-title">Sala</div>
     <div class="lobby-sub" id="lobby-sub"></div>
@@ -254,7 +254,7 @@
     <div id="prep-talents-panel" class="hidden"></div>
     <div id="prep-skills-panel" class="hidden"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>
-    <button class="btn secondary" id="prep-back-btn">Volver a elegir campeón</button>
+    <button class="btn secondary" id="prep-back-btn">Volver a elegir guardia</button>
   </div>
 
   <!-- MENU -->

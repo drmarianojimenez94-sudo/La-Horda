@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/ui/champion-select.js
-   Selección de campeón con vista previa animada y línea de guardado.
+   Selección de guardia con vista previa animada y línea de guardado.
    ============================================================ */
 
 /* ============================================================
@@ -24,7 +24,7 @@ function renderChampGrid(){
       <div class="champ-lvl">${owned ? `Nv. ${champ.level}` : `🔒 Tienda · 🪙 ${typeof fmtGold==="function" ? fmtGold(CHAMPION_PRICE_GOLD) : CHAMPION_PRICE_GOLD}`}</div>
     `;
     card.addEventListener("click", ()=>{
-      // modo campaña: los campeones que no tenés se compran en la Tienda
+      // modo campaña: los guardias que no tenés se compran en la Tienda
       if(!owned){ if(typeof showNetToast==="function") showNetToast(`${cls.name} está bloqueado: se desbloquea en la Tienda por ${CHAMPION_PRICE_GOLD} de oro.`); return; }
       selectedClass = key; if(typeof netRememberChamp==="function") netRememberChamp(key); renderChampGrid();
     });
@@ -32,7 +32,7 @@ function renderChampGrid(){
   });
   startChampPreviewLoop();
 }
-// Previsualización animada de cada campeón en la grilla de selección: en vez de un ícono
+// Previsualización animada de cada guardia en la grilla de selección: en vez de un ícono
 // fijo, dibuja al personaje real de costado (mirando a la derecha) con su propio ciclo de
 // caminata, reusando el mismo arte/atlas que se ve en la partida -no un dibujo aparte-.
 // Para eso se pisa momentáneamente la variable global `ctx` (el resto del juego dibuja
@@ -43,7 +43,7 @@ function drawChampionPreviewFrame(cvs, key){
   pctx.clearRect(0,0,cvs.width,cvs.height);
   drawChampFigure(pctx, key, cvs.width/2, cvs.height*0.86, 2.0, 1, performance.now()%100000, true);
 }
-// Dibuja a un campeón con su arte real sobre cualquier canvas (vista previa de la selección y
+// Dibuja a un guardia con su arte real sobre cualquier canvas (vista previa de la selección y
 // la pantalla de título). `fx` = hacia dónde mira (1 derecha, -1 izquierda).
 // extra (opcional): estado de animación para las previews del Códice (attackAnim, *CastKind, spinTimer,
 // _codexSkin...). Se copia sobre el héroe falso: el dibujo es el mismo camino que en partida.
@@ -61,7 +61,7 @@ function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving, extra){
   ctx = pctx;
   try{
     if(fake._codexSkin && typeof drawSetSkin==="function" && drawSetSkin(fake, scale, 1)){
-      // skin de set de un campeón de atlas viejo (Mago, Asesino, Sanadora, Tanque): preview del Códice
+      // skin de set de un guardia de atlas viejo (Mago, Asesino, Sanadora, Tanque): preview del Códice
     }
     else if(key==="mago") drawMagoAtlas(fake, scale, 1);
     else if(key==="soporte") drawSoporteAtlas(fake, scale, 1);
@@ -81,7 +81,7 @@ function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving, extra){
     }
     else if(DIR_ATLASES[key]) drawDirAtlasHero(DIR_ATLASES[key], fake, scale, 1);
     else {
-      // Campeones sin atlas de bitmap propio usan el sprite procedural genérico (GRIDS/PAL,
+      // Guardias sin atlas de bitmap propio usan el sprite procedural genérico (GRIDS/PAL,
       // ver buildSprites). buildSprites() antes solo se llamaba desde startRun(): en la primera
       // visita a un menú SPRITES todavía no existía y la figura quedaba en negro.
       if(!SPRITES[key]) buildSprites();

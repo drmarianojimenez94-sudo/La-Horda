@@ -4,7 +4,7 @@
    TIENDA DE OBJETOS: ofertas que cambian una vez por día (fecha local). Complementa el botín,
    no lo reemplaza: pocas ofertas, precios altos, nunca Míticos ni Únicos (esos se ganan).
      - 2 Raros (~300) · 2 Muy Raros (~1.100) · 1 espacio "destacado" que un día de cada tres trae
-       un Legendario con nombre (~5.000, lo mismo que un campeón); los demás días, otro Muy Raro.
+       un Legendario con nombre (~5.000, lo mismo que un guardia); los demás días, otro Muy Raro.
    Las ofertas se generan al primer ingreso del día y se guardan en save.shop (así no cambian al
    recargar). Estructura pensada para crecer (monedas premium, cosméticos, intercambio) sin rehacer:
    una oferta es {id, item, price, currency, sold}.
@@ -57,8 +57,8 @@ function shopBuy(offerId){
 /* ============================================================
    CATÁLOGO COMPLETO DE PRUEBA (BUGFIX 01)
    Etapa de prueba: TODO objeto del juego está en la tienda y cuesta lo mismo (SHOP_TEST_PRICE), y
-   todos los campeones cuestan CHAMPION_PRICE_GOLD. Fuente única: DESIGNED_ITEMS (legendarios con
-   nombre, míticos, únicos, objetos de campeón y piezas de set) + los 26 arquetipos procedurales
+   todos los guardias cuestan CHAMPION_PRICE_GOLD. Fuente única: DESIGNED_ITEMS (legendarios con
+   nombre, míticos, únicos, objetos de guardia y piezas de set) + los 26 arquetipos procedurales
    (ITEM_NOUNS) en cada categoría que puede salir en el botín. Nada se regala: se compra con oro.
    Para cerrar la prueba: SHOP_TEST_MODE = false (vuelven las ofertas del día de arriba).
    ============================================================ */
@@ -112,7 +112,7 @@ function shopBuyCatalog(key, tier){
 }
 function shopBuyChampion(id){
   const cat = CHAMPION_CATALOG.find(c=>c.id===id), champ = save.champions[id];
-  if(!cat || !champ) return {ok:false, reason:"Ese campeón no existe"};
+  if(!cat || !champ) return {ok:false, reason:"Ese guardia no existe"};
   if(champ.unlocked) return {ok:false, reason:"Ya es tuyo"};
   if((save.gold||0) < cat.priceGold) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${cat.priceGold})`};
   save.gold -= cat.priceGold; champ.unlocked = true; save.starterChosen = true;
@@ -123,16 +123,16 @@ function shopBuyChampion(id){
 function shopSetMissing(setId){ const owned = ownedDesignIds(); return setPieceIds(setId).filter(id=>!owned.has(id)); }
 
 /* ---------------- Skins de set: equipar / autoequipar ----------------
-   Una skin de set se ve cuando su set está COMPLETO en su campeón (regla canónica: nunca se vende
-   suelta). "Equipar la skin" = ponerle a ese campeón todas las piezas del set que ya tenés.
-   Al comprarla se autoequipa si el destino no es ambiguo: el campeón seleccionado (si es compatible)
-   o el ÚNICO campeón compatible que tenés. Si hay varios posibles (sets universales), no se decide
+   Una skin de set se ve cuando su set está COMPLETO en su guardia (regla canónica: nunca se vende
+   suelta). "Equipar la skin" = ponerle a ese guardia todas las piezas del set que ya tenés.
+   Al comprarla se autoequipa si el destino no es ambiguo: el guardia seleccionado (si es compatible)
+   o el ÚNICO guardia compatible que tenés. Si hay varios posibles (sets universales), no se decide
    por el jugador: queda desbloqueada y la tarjeta ofrece "Equipar en: …". */
 function skinSetChamp(setId){
   const sk = typeof SET_SKINS!=="undefined" && SET_SKINS[setId]; if(!sk) return null;
   return sk.champ || setPieceIds(setId).map(p=>(DESIGNED_ITEMS[p]||{}).champion).find(Boolean) || null;
 }
-// Campeones TUYOS que pueden llevar la skin.
+// Guardias TUYOS que pueden llevar la skin.
 function skinCompatibleChamps(setId){
   const c = skinSetChamp(setId);
   return Object.keys(save.champions).filter(k=>save.champions[k].unlocked!==false && CLASSES[k] && (!c || c===k));
@@ -147,7 +147,7 @@ function skinEquipOn(setId, k){
   for(const it of stashItems()){
     if(!it || it.set!==setId || !canEquipItem(k, it)) continue;
     const cur = bySlot[it.type];
-    // si hay piezas repetidas, la de mejor nivel (y la que ya lleva puesta este campeón)
+    // si hay piezas repetidas, la de mejor nivel (y la que ya lleva puesta este guardia)
     const score = x => (itemEquippedBy(x.uid)===k ? 1e6 : 0) + (x.level||0);
     if(!cur || score(it) > score(cur)) bySlot[it.type] = it;
   }
@@ -156,7 +156,7 @@ function skinEquipOn(setId, k){
   if(typeof persistNow==="function") persistNow(); else persist();
   return skinIsActiveOn(setId, k);
 }
-// Después de comprar: {equipped, target, choices}. choices = campeones posibles cuando es ambiguo.
+// Después de comprar: {equipped, target, choices}. choices = guardias posibles cuando es ambiguo.
 function skinAutoEquip(setId){
   if(!skinOwnedFull(setId)) return {equipped:false, target:null, choices:[]};
   const comp = skinCompatibleChamps(setId);

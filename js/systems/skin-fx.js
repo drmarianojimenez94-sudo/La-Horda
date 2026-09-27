@@ -2,10 +2,10 @@
 /* ============================================================
    js/systems/skin-fx.js
    HABILIDADES CON LA SKIN DE SET: misma mecánica, otro aspecto.
-   Con el set completo del dueño (activeSetSkin, set-effects.js) cada lanzamiento del campeón:
+   Con el set completo del dueño (activeSetSkin, set-effects.js) cada lanzamiento del guardia:
    - suma los efectos pintados de la hoja de la skin (panel "Efectos y proyectiles", recortados por
      tools/art/skins_sets/fx.py -> skin-fx-meta.js) en el lugar que corresponde: frente al
-     campeón (tajos), sobre él (auras/sellos), en el punto de impacto (zonas, trampas, cadenas) o
+     guardia (tajos), sobre él (auras/sellos), en el punto de impacto (zonas, trampas, cadenas) o
      como arte del proyectil;
    - tiñe con el color de la skin lo que el kit ya dibuja en ese lanzamiento (partículas,
      proyectiles, ráfagas y ondas del VFX central, destello de lanzamiento). La sangre y el
@@ -37,8 +37,8 @@ for(const k in SKIN_FX_SRC){
 /* ---- Plan por skin ----
    tint: color de la skin (null = se respeta el color elemental del kit, p.ej. el Mago).
    basic / 0 / 1 / 2 / ult: pasos {c: clip, m: modo, h: alto en px, d: ms, n: copias}
-     modos: front (delante, girado hacia donde mira) · self (sobre el campeón, lo sigue) ·
-            feet (en el piso del campeón) · aim (punto de impacto: zonas/trampas/cadenas que creó
+     modos: front (delante, girado hacia donde mira) · self (sobre el guardia, lo sigue) ·
+            feet (en el piso del guardia) · aim (punto de impacto: zonas/trampas/cadenas que creó
             el lanzamiento; si no hay, el enemigo apuntado o delante) · proj (arte del proyectil) ·
             origin / dest (antes / después de un salto). */
 const SKIN_FX_PLAN = {
@@ -144,7 +144,7 @@ function skinFxOf(h){
     if(SKIN_TINT && !SKIN_FX_KEEP_PAL.has(pal)){ pal = "t_" + SKIN_TINT; if(!VFX_PAL[pal]) _vfxPalFromKey(pal); }
     return conv.call(this, x, y, pal, ...rest);
   };
-  // destello de lanzamiento / color de identidad del campeón
+  // destello de lanzamiento / color de identidad del guardia
   window.fxHeroRgb = function(h){
     const s = skinFxOf(h);
     if(s && (s.P.glow || s.P.tint)) return hexToRgb(s.P.glow || s.P.tint);

@@ -11,7 +11,7 @@
    Vive en su propio contenedor (#net-chat) para que las actualizaciones de la sala no borren
    lo que uno está escribiendo. Solo en la Sala: durante la partida no distrae.
    ============================================================ */
-const NET_CHAT_QUICK = ["¡Listo!", "Esperen un toque", "¡Vamos!", "Cambio de campeón", "¿Quién tanquea?", "gg"];
+const NET_CHAT_QUICK = ["¡Listo!", "Esperen un toque", "¡Vamos!", "Cambio de guardia", "¿Quién tanquea?", "gg"];
 const NET_CHAT_MAX = 120;
 const netChat = { log: [], unread: 0, open: true, sendAt: 0 };
 

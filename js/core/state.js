@@ -5,7 +5,7 @@
    temporizadores, arena elegida...). Lo leen y escriben casi todos los sistemas.
    ============================================================ */
 
-let currentArena = "fortaleza"; // arranca en la primera arena JUGABLE del orden canónico (Ciudad Maldita está en construcción)
+let currentArena = "ciudad"; // arranca en la primera arena JUGABLE del orden canónico (Arena 01: la Ciudad Maldita)
 
 /* ============================================================
    GAME STATE
@@ -14,7 +14,7 @@ let state = "menu"; // title | modeselect | menu | prep | playing | buff | pause
 let selectedClass = "guerrero";
 let player, enemies, projectiles, particles, embers;
 let allies, heroes, potions, fireWalls, traps;
-let axiomZones; // zonas con demora/agrupamiento de Axiom (Error 404 y Bug de Colisión) — mismo patrón que traps/fireWalls, propio para no tocar el de otros campeones
+let axiomZones; // zonas con demora/agrupamiento de Axiom (Error 404 y Bug de Colisión) — mismo patrón que traps/fireWalls, propio para no tocar el de otros guardias
 let sylvaRainZones; // Lluvia de la Cazadora: zona con demora que converge en la Presa al estallar, mismo patrón que axiomZones pero propio de Sylva
 let chainFX, sparkFX; // efectos con sprites reales: segmentos de rayo (CadenaRelampagos) y ráfagas puntuales
 let asesinoFx; // efectos con sprites reales de las 4 habilidades del Asesino

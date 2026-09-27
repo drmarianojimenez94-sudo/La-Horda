@@ -527,7 +527,7 @@ function update(dt){
       const burstSize = runLevel<=1 ? 3 : (runLevel<=3 ? 2 : 1);
       for(let i=0;i<burstSize;i++) maybeAssignRole(spawnEnemy(pickFromPool(spawnPoolFor(runLevel)), false));
     } else if(spawnTimer<=0){
-      spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el campeón caiga
+      spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el guardia caiga
     }
     const subBossLevels = arenaDef() ? (arenaDef().subBossLevels||[]) : ((currentArena==="hielo"||currentArena==="laberinto"||currentArena==="acuatica") ? [6] : (currentArena==="bosque" ? [9] : [4,7,9]));
     if(subBossLevels.includes(runLevel) && !midBossSpawned && levelTimer > levelDuration*0.45){
@@ -562,7 +562,7 @@ function update(dt){
           ? "dragon_hielo"
           : (runLevel===4 ? "esqueleto_h" : (runLevel===7 ? "demonio_menor" : "golem"));
         const champ = spawnEnemy(champType, false, true);
-        showBanner("¡" + champ.name + " campeón!");
+        showBanner("¡" + champ.name + " guardia!");
       }
     }
     levelTimer += dt;

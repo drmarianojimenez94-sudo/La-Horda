@@ -24,7 +24,7 @@ Object.assign(ANIM_PROFILES, {
 });
 
 /* ---------------- atlas reales ----------------
-   hMul = alto dibujado / radio. Escala respecto de un campeón (≈ 65 u): Saqueador 1.0 · Perro 0.7 ·
+   hMul = alto dibujado / radio. Escala respecto de un guardia (≈ 65 u): Saqueador 1.0 · Perro 0.7 ·
    Verdugo 1.6 · Campanero 1.35 · subjefes 1.8–2.0 · Presentador 2.1 → 3.0 (forma verdadera). */
 const CM_HMUL = {cm_saqueador:3.1, cm_perro:2.3, cm_raptor:3.1, cm_verdugo:2.9, cm_planidera:3.2, cm_acechante:2.8, cm_campanero:2.9, cm_sectario:3.1, cm_espectro:3.2,
   cm_maestro:3.8, cm_tramoyista:2.7, cm_dama:3.7, cm_presentador:3.5, cm_presentador2:3.3, cm_presentador3:3.4, cm_aldeano:2.6, cm_mujer:2.6, cm_nino:2.2};
@@ -40,7 +40,7 @@ if(typeof CIUDAD_FX!=="undefined") for(const k in CIUDAD_FX){
 
 /* ---------------- guías de jefe (boss-hud.js) ---------------- */
 ARENA_BOSS_TIPS.cm_maestro = {epithet:"Conduce la función", phases:[{hp:1}], tips:[
-  "MARCA a un campeón: el círculo lo sigue y después estalla. Alejate de tus compañeros.",
+  "MARCA a un guardia: el círculo lo sigue y después estalla. Alejate de tus compañeros.",
   "Abre ZONAS rojas en el piso y se teletransporta si lo encerrás.",
   "Si el Tramoyista cae primero, el Maestro se enfurece (y al revés)."]};
 ARENA_BOSS_TIPS.cm_tramoyista = {epithet:"Mueve el escenario", phases:[{hp:1}], tips:[
@@ -48,7 +48,7 @@ ARENA_BOSS_TIPS.cm_tramoyista = {epithet:"Mueve el escenario", phases:[{hp:1}], 
   "Arma BARRICADAS de madera: duran poco, rodealas.",
   "Golpe en cono con aviso: nunca te quedes adelante de él."]};
 ARENA_BOSS_TIPS.cm_dama = {epithet:"Nadie aplaude en la oscuridad", phases:[{hp:1}, {hp:0.3}], tips:[
-  "Los TELONES caen en línea hacia un campeón: salí de la fila de círculos.",
+  "Los TELONES caen en línea hacia un guardia: salí de la fila de círculos.",
   "Crea ESPEJISMOS: el verdadero tiene barra de vida y sombra.",
   "Invoca ECOS de la función anterior. Al 30% ESTALLA: alejate."]};
 ARENA_BOSS_TIPS.cm_presentador = {epithet:"El dueño del espectáculo", phases:[{hp:1}, {hp:0.66}, {hp:0.33}], tips:[

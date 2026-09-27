@@ -1,8 +1,8 @@
 "use strict";
 /* ============================================================
    js/ui/menus.js
-   Menús: botones del título y menú principal, tienda, ficha de campeón, selección
-   de arena y Sala previa a la partida (equipamiento reutilizable por campeón).
+   Menús: botones del título y menú principal, tienda, ficha de guardia, selección
+   de arena y Sala previa a la partida (equipamiento reutilizable por guardia).
    ============================================================ */
 
 /* ============================================================
@@ -17,7 +17,7 @@ document.addEventListener("touchstart", startMusic, {once:true, capture:true});
 document.addEventListener("click", startMusic, {once:true, capture:true});
 document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   startMusic();
-  // modo campaña: la primera vez se elige el campeón de regalo
+  // modo campaña: la primera vez se elige el guardia de regalo
   if(needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   setState("mainmenu");
   renderMainMenu();
@@ -68,12 +68,12 @@ function grantPlaytestV1Bonus(){
 function renderMainMenu(){
   if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
   // BUGFIX 01: aviso único del regalo de la etapa de prueba (10.000 de oro)
-  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Etapa de prueba: recibiste 10.000 de oro. Probá campeones, objetos y sets en la Tienda."); }
+  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Etapa de prueba: recibiste 10.000 de oro. Probá guardias, objetos y sets en la Tienda."); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
 // Vista previa animada genérica: cualquier <canvas class="champ-anim" data-class-key="..."> visible
-// dibuja al campeón con su arte real (drawChampFigure) caminando. Un solo bucle para toda la UI;
+// dibuja al guardia con su arte real (drawChampFigure) caminando. Un solo bucle para toda la UI;
 // se apaga solo cuando no queda ninguno visible.
 let champAnimLoopRunning = false;
 function startChampAnimLoop(){
@@ -85,7 +85,7 @@ function startChampAnimLoop(){
     const t = performance.now()%100000;
     for(const cvs of list){
       const g = cvs.getContext("2d");
-      // data-skin: skin a mostrar ("" = ninguna). Sin el atributo, la del guardado local (tus campeones).
+      // data-skin: skin a mostrar ("" = ninguna). Sin el atributo, la del guardado local (tus guardias).
       const ex = cvs.dataset.skin !== undefined ? {_codexSkin:cvs.dataset.skin || null} : undefined;
       g.clearRect(0,0,cvs.width,cvs.height);
       if(cvs.dataset.idle){
@@ -126,7 +126,7 @@ function renderChampDetail(champId){
     const canAfford = save.gold >= catEntry.priceGold;
     html += `
       <div class="cd-section cd-unlock-box">
-        <div>🔒 Campeón bloqueado</div>
+        <div>🔒 Guardia bloqueado</div>
         <div class="cd-unlock-price">${fmtGold(catEntry.priceGold)} 🪙</div>
         ${canAfford
           ? `<button class="btn wide" id="cd-unlock-btn">Desbloquear</button>`
@@ -233,7 +233,7 @@ function renderArenaGrid(){
       <span class="arena-card-badge soon">PRÓXIMAMENTE</span>
       <div class="arena-card-icon">⚔</div>
       <div class="arena-card-title">Coliseo</div>
-      <div class="arena-card-desc">Campeones contra campeones (PvP). Se abre después de las Pruebas Divinas.</div>
+      <div class="arena-card-desc">Guardias contra guardias (PvP). Se abre después de las Pruebas Divinas.</div>
     </button>`;
   grid.innerHTML = normalCards + divinaCard;
   grid.querySelectorAll(".arena-card:not(.locked)").forEach(card=>{
@@ -253,8 +253,8 @@ function updateMenuBrandSub(){
   if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
-  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese campeón está bloqueado: desbloquealo en la Tienda."); return; }
-  // B1: dentro de una sala online la elección de campeón vuelve a la misma sala
+  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese guardia está bloqueado: desbloquealo en la Tienda."); return; }
+  // B1: dentro de una sala online la elección de guardia vuelve a la misma sala
   if(netInRoom()){
     setState("prep"); renderPrepSummary();
     if(net.role==="guest") netSendLoadout(true);
@@ -296,7 +296,7 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
 });
 // SALA (lobby) antes de entrar a la arena: 4 lugares -pensada para multijugador; hoy el lugar 1 es
 // el jugador y los otros 3 los ocupan bots, uno por cada rol que falta, igual que siempre-, y
-// debajo el equipamiento completo del campeón elegido. "Comenzar" arranca la partida con ESE equipo.
+// debajo el equipamiento completo del guardia elegido. "Comenzar" arranca la partida con ESE equipo.
 function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
@@ -341,7 +341,7 @@ function renderPrepSummary(){
   renderPrepTabs();
   startChampAnimLoop();
 }
-// Skins del campeón elegido, en la Sala: ver cuál lleva, usar una que ya tiene o comprarla ahí mismo
+// Skins del guardia elegido, en la Sala: ver cuál lleva, usar una que ya tiene o comprarla ahí mismo
 // (se autoequipa). Cada jugador ve y cambia SOLO las suyas; los demás la ven por la sala (net-lobby.js).
 function prepSkinsHTML(){
   if(typeof SET_SKINS==="undefined" || typeof skinSetChamp!=="function") return "";
@@ -373,14 +373,14 @@ function bindPrepSkins(box){
   }));
 }
 let prepCompareOpenUid = null; // qué tarjeta tiene la comparación abierta, en esta pantalla
-// Equipamiento de un campeón (equipar/desequipar/comparar/vender/descartar/fusionar). Es el
-// ÚNICO lugar donde se cambian objetos: la Sala antes de la partida y la ficha de Mis Campeones.
+// Equipamiento de un guardia (equipar/desequipar/comparar/vender/descartar/fusionar). Es el
+// ÚNICO lugar donde se cambian objetos: la Sala antes de la partida y la ficha de Mis Guardias.
 // En partida no se puede (el juego es multijugador: no va a haber pausa para equiparse).
 // rerender: qué volver a dibujar después de un cambio (la pantalla que contiene el panel).
 function renderPrepInventory(){
   renderChampInventory(document.getElementById("prep-inventory-panel"), selectedClass, renderPrepSummary);
 }
-// renderChampInventory (vista de objetos por campeón): js/ui/inventory-ui.js
+// renderChampInventory (vista de objetos por guardia): js/ui/inventory-ui.js
 function netBackToRoomIfAny(){
   // B1: al terminar una partida online, "volver a la sala" mantiene el mismo código
   netCancelAutoReturn();

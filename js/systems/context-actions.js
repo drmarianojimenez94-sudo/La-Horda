@@ -150,7 +150,7 @@ function ctxBotObjective(h, dt, target){
 
 // Camino hacia un objetivo cuando hay obstáculos: campo de distancias sobre la grilla de navegación
 // (js/ai/navigation.js) sembrado en el objetivo, con los obstáculos INFLADOS una celda más que para
-// los enemigos (un campeón grande que dobla pegado a la punta de un muro se traba). Los objetivos no
+// los enemigos (un guardia grande que dobla pegado a la punta de un muro se traba). Los objetivos no
 // se mueven: el campo se calcula una vez por objetivo.
 const _ctxFields = new Map();
 function _ctxBuildField(t){
