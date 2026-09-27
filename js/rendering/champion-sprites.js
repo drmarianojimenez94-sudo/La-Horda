@@ -227,26 +227,45 @@ function champPackDir(h){
 function champPackScale(P, h, drawScale){
   return h.radius*2.7*(drawScale/(h.scale||2.0))/(P.refH || P.sets.idle_down[0].height);
 }
-// Set para estado+dirección: perfil izquierdo propio si existe (si no, espejo del derecho), y si falta
-// la dirección se usa el perfil y después el de frente (p.ej. golpe/muerte dibujados de una sola vista).
+// Set para estado+dirección. Los sets ya vienen completos desde champPackNormalize (izquierda propia
+// o perfil espejado, estados clonados); acá solo se elige la vista y, si falta, la más parecida:
+// arriba -> (fix.up) -> perfil -> frente; frente -> perfil. Frente/espalda dibujados de 3/4 hacia la
+// derecha traen su variante "_l" (espejada) para cuando mira a la izquierda.
 function champPackSet(P, st, dir, h){
-  if(P.sets[st] && !P.sets[st+"_down"]) return {arr:P.sets[st], flip:!!h._pleft};
-  if(dir==="side" && h._pleft && P.sets[st+"_left"]) return {arr:P.sets[st+"_left"], flip:false};
-  if(dir==="up" && h._pleft && P.sets[st+"_up_left"]) return {arr:P.sets[st+"_up_left"], flip:false};
-  for(const d of [dir, "side", "down"]){
-    const arr = P.sets[st+"_"+d];
-    if(arr) return {arr, flip: d==="side" && !!h._pleft};
+  const left = !!(h && h._pleft);
+  if(P.sets[st] && !P.sets[st+"_down"] && !P.sets[st+"_side"]) return {arr:P.sets[st], flip:left};
+  if(dir==="up" && left && P.sets[st+"_up_left"]) return {arr:P.sets[st+"_up_left"], flip:false};
+  const horiz = left ? "left" : "side";
+  const order = dir==="side" ? [horiz, "down", "up"]
+              : dir==="up" ? (P.upFrom==="down" ? ["up", "down", horiz] : ["up", horiz, "down"])
+              : ["down", horiz, "up"];
+  for(const d of order){
+    const arr = (left && P.sets[st+"_"+d+"_l"]) || P.sets[st+"_"+d];
+    if(arr) return {arr, flip:false};
   }
   return null;
 }
-// Un cuadro del pack: en modo atlas `arr` guarda índices de la grilla; en el modo viejo (Axiom), imágenes.
+// Un cuadro del pack: en modo atlas `v` es el índice de la grilla (negativo = ~v espejado) y se ancla
+// en su punto de apoyo (champPackFeet); en el modo viejo (Axiom), una imagen.
 function champPackDrawFrame(P, v, x, y, s, flip, alpha){
   if(P.atlas){
+    if(v < 0){ v = ~v; flip = !flip; }
+    if(!P.footX && P.ready) champPackFeet(P);
+    const ax = (P.footX && P.footX[v]) || 0.5;
     const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
-    drawAnimFrameSized(P.atlas, clip, 0, x, y, P.fw*s, P.fh*s, 0.5, P.anchor, flip, alpha);
+    drawAnimFrameSized(P.atlas, clip, 0, x, y, P.fw*s, P.fh*s, ax, P.anchor, flip, alpha);
   } else {
     drawAnimFrameSized(v, {frames:[{x:0, y:0, w:v.width, h:v.height}]}, 0, x, y, v.width*s, v.height*s, 0.5, 0.94, flip, alpha);
   }
+}
+// ¿El ataque en curso es un lanzamiento? abilities.js marca _packCastUntil con el reloj del ANFITRIÓN
+// (en red los invitados reciben ese número, que en su reloj no significa nada): se usa solo como aviso
+// de "hubo un lanzamiento nuevo" y cada cliente arma su propio vencimiento con el attackAnim que queda.
+function champPackCasting(h){
+  const u = h._packCastUntil || 0;
+  if(u === Infinity) return true; // previews del Códice
+  if(u !== h._pcuSeen){ h._pcuSeen = u; h._pcuLocal = u ? animNow + Math.max(0, h.attackAnim||0) : 0; }
+  return animNow < (h._pcuLocal||0);
 }
 function drawChampPack(key, h, drawScale, alpha){
   const base = h._codexPack || key; // preview del Códice: otro atlas del mismo guardián (a caballo, El Portador)
@@ -266,7 +285,7 @@ function drawChampPack(key, h, drawScale, alpha){
   h._aPrev = a;
   let st, prog = null;
   if(h.hurtTimer>0){ st = "hit"; prog = 1 - h.hurtTimer/160; }
-  else if(a>0){ st = animNow < (h._packCastUntil||0) ? "cast" : "attack"; prog = 1 - a/(h._aDur||a); }
+  else if(a>0){ st = champPackCasting(h) ? "cast" : "attack"; prog = 1 - a/(h._aDur||a); }
   else if(h.sylvaCharging && P.sets.aim) st = "aim";
   else st = h.moving ? "walk" : "idle";
   const pick = champPackSet(P, st, dir, h) || (st==="cast" && champPackSet(P, "attack", dir, h)) || champPackSet(P, "idle", dir, h);

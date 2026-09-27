@@ -53,6 +53,8 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   "_navT","_nmx","_nmy","_navBlocked","_tgt","_tgtT","_dangerT","atkCd","recentDamage","_hitSfxAt","_hurtSfxAt","_setFrame","path",
   // estado de animación que calcula el propio renderizador de cada cliente
   "_an",
+  // atlas de guardianes (champion-sprites.js): vista/espejo, duración del ataque y relojes de render locales
+  "_pdir","_pleft","_aPrev","_aDur","_deadAt","_pcuSeen","_pcuLocal",
   // revivir: el candado/progreso viaja (_reviveBy/_reviveT/_reviveDur); esto es interno del anfitrión
   "_revTouchAt","_revHold",
   // acción contextual: el progreso viaja en el estado de la arena; esto es interno del anfitrión
