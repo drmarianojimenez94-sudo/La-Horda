@@ -61,6 +61,7 @@ const ITEM_FAMILIES = {
 // Peso de cada familia cuando cae un Muy Raro / Legendario procedural en esa arena. Los
 // Legendarios con nombre y los Sets ya tienen su propia afinidad (legendaries.js, SET_ARENA_WEIGHTS).
 const ARENA_ITEM_FAMILIES = {
+  ciudad:    {fuego:3, sangre:3, bastion:2, caza:1},      // la ciudad arde: saqueadores, perros y estructuras que defender
   bosque:    {sangre:4, caza:4, luz:1},                  // Jinete, bestias, cacería: sangrado y movilidad
   acuatica:  {rayo:5, hielo:1, caza:1},                  // anguilas y medusas: rayo, control (Mojado + rayo)
   fortaleza: {bastion:5, fuego:2, impacto:1},            // forja y murallas: defensa, fuego de fragua
@@ -68,13 +69,14 @@ const ARENA_ITEM_FAMILIES = {
   hielo:     {hielo:6, bastion:1},
   abismo:    {arcano:4, impacto:3, caza:1},                // el vacío: gravedad, empujes, lo que vive debajo                       // el Mago de Hielo: congelar, ralentizar, controlar
   laberinto: {impacto:5, sangre:3, caza:1, arcano:1},    // Minotauro y Guardián: fuerza, impacto, sangrado, embestida
+  minas:     {luz:3, impacto:3, fuego:2, arcano:1},      // la luz es territorio: Titán de Piedra, Cerbero y el Umbral
   infernal:  {fuego:5, impacto:2, sangre:1, arcano:1},   // demonios: fuego, riesgo, crítico
   divina:    {bastion:2, luz:2, arcano:2, impacto:1}
 };
 // Texto para la pantalla previa / Mi Inventario: "qué conviene buscar acá".
 const ARENA_LOOT_HINT = {
-  bosque:"Sangrado y cacería", acuatica:"Tormenta y control", fortaleza:"Bastión y fuego de forja", micelial:"Podredumbre y luz",
-  hielo:"Hielo y control", laberinto:"Impacto y sangrado", infernal:"Fuego e impacto", divina:"Bastión, luz y arcano"
+  ciudad:"Fuego y sangrado", bosque:"Sangrado y cacería", acuatica:"Tormenta y control", fortaleza:"Bastión y fuego de forja", micelial:"Podredumbre y luz",
+  hielo:"Hielo y control", laberinto:"Impacto y sangrado", abismo:"Arcano e impacto", minas:"Luz e impacto", infernal:"Fuego e impacto", divina:"Bastión, luz y arcano"
 };
 
 /* ---------------- 4) Poder nuevo de la familia Podredumbre (reusa la Plaga) ---------------- */
@@ -97,7 +99,7 @@ const ITEM_ROLL_RANGE = [0.90, 1.10];  // dos copias del mismo objeto: stats ent
 const GEM_UPGRADE_BASE = {comun:1, raro:2, muyraro:3, legendario:5, set:6, mitico:8, unico:10};
 const GEM_UPGRADE_GROWTH = 1.5;
 // Gemas ganadas jugando (al terminar la arena). Nunca se compran: no son moneda premium.
-const GEMS_PER_VICTORY = {bosque:2, acuatica:3, fortaleza:4, micelial:4, hielo:5, abismo:5, laberinto:6, infernal:8, divina:6};
+const GEMS_PER_VICTORY = {ciudad:2, bosque:2, acuatica:3, fortaleza:4, micelial:4, hielo:5, abismo:5, laberinto:6, minas:7, infernal:8, divina:6};
 const GEMS_GRADE_MULT = {C:0.6, B:0.8, A:1, S:1.25, "S+":1.5};
 const GEMS_DEFEAT_AFTER_SUBBOSS = 1;   // perder después del subjefe deja 1 gema
 
