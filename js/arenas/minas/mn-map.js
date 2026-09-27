@@ -78,6 +78,11 @@ function mnClamp(ent){
     for(const s of solids){ const dx = ent.x - s.x, dy = ent.y - s.y, min = s.r + r*0.9, d = Math.hypot(dx, dy); if(d < min){ const q = d || 0.01; ent.x = s.x + dx/q*min; ent.y = s.y + dy/q*min; moved = true; } }
     if(!moved) break;
   }
+  // Una embestida o un empujón que termina DENTRO de una roca pegada al borde hacía que el empuje la
+  // sacara por el lado de afuera: el guardián quedaba fuera del mapa, trabado para siempre y sin poder
+  // llegar al Portal (simulación: 5 de 11 partidas). Si después de todo sigue en un lugar no caminable,
+  // se lo lleva al punto libre más cercano.
+  if(!mnInside(ent.x, ent.y, 0)){ const q = mnNearestFree(ent.x, ent.y, r); ent.x = q.x; ent.y = q.y; }
 }
 function mnNearestFree(x, y, pad){
   if(mnInside(x, y, pad||20)) return {x, y};
