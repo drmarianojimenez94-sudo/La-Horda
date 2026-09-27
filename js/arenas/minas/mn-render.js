@@ -19,7 +19,57 @@ function _mnImg(key, src){ if(MN_IMG[key]) return MN_IMG[key]; const im = new Im
 (function mnLoadArt(){
   if(typeof MINAS_TEX!=="undefined") for(const k in MINAS_TEX) _mnImg(k, MINAS_TEX[k]);
   if(typeof MINAS_PIECES!=="undefined") for(const k in MINAS_PIECES) MINAS_PIECES[k].forEach((s, i)=>_mnImg(k + "_" + i, s));
+  // hoja de ASSETS ADICIONALES (tools/art/minas/extract_extra.py): piso de tierra, roca, props, luces, portal, cadenas
+  if(typeof MINAS_EXTRA!=="undefined"){
+    for(const k in MINAS_EXTRA.tex) _mnImg(k, MINAS_EXTRA.tex[k]);
+    for(const k in MINAS_EXTRA.props) _mnImg("x_" + k, MINAS_EXTRA.props[k]);
+    MINAS_EXTRA.portal.forEach((s, i)=>_mnImg("portal_" + i, s));
+    for(const k in MINAS_EXTRA.chains) MINAS_EXTRA.chains[k].forEach((s, i)=>_mnImg(k + "_" + i, s));
+  }
 })();
+function _mnRockTex(){ return MN_OK.tex_roca_mina ? "tex_roca_mina" : "tex_roca"; }
+function _mnFloorTex(S){ const k = "tex_tierra_" + S.id; return MN_OK[k] ? k : S.floor; }
+// UTILERÍA SUELTA por sector (solo decorado, sin colisión): vagonetas, cajas, barriles, herramientas, cristales,
+// vetas y MONTONES DE ROCA por toda la mina. Posiciones fijas por sector (hash), lejos de luces, entrada, salida y
+// rieles; las piezas grandes (rocas, cubos, estalagmitas) van pegadas a las paredes y a las masas de roca.
+const MN_DECO_H = {vagoneta:78, caja:58, barril:44, balde:30, carbon:36, cubo_piedra:78, caja_chica:40, caja_rota:48, estalagmitas:92,
+  estacas:58, herramientas:34, piedras:58, viga:112, cristales_azules:70, cristales_rojos:70, veta_gris:56, veta_roja:52, veta_piedras:60,
+  veta_brasa:60, veta_violeta:66, rocas_cristal:70, rocas_grandes:92, cristal_roto:54};
+const MN_DECO_BIG = {cubo_piedra:1, estalagmitas:1, rocas_grandes:1, piedras:1, rocas_cristal:1, viga:1};
+const MN_DECO_POOL = [
+  ["vagoneta","caja","barril","balde","caja_chica","carbon","herramientas","viga","piedras","piedras","rocas_grandes","cubo_piedra"],
+  ["vagoneta","caja_rota","barril","carbon","cubo_piedra","estacas","herramientas","piedras","piedras","rocas_grandes","caja"],
+  ["cristales_azules","veta_gris","rocas_cristal","piedras","estalagmitas","rocas_grandes","veta_piedras","cristales_azules"],
+  ["veta_violeta","cristal_roto","estalagmitas","rocas_grandes","estacas","piedras","veta_piedras","veta_violeta"],
+  ["veta_brasa","veta_roja","cristales_rojos","rocas_grandes","estalagmitas","cubo_piedra","piedras","veta_piedras"],
+  ["veta_brasa","cristales_rojos","estalagmitas","rocas_grandes","piedras","veta_roja","veta_brasa"]];
+const _MN_DECO = {};
+function _mnDecoFor(sec){
+  if(_MN_DECO[sec]) return _MN_DECO[sec];
+  const S = MN_SECTORS[sec], B = MN_BOUNDS, out = [], pool = MN_DECO_POOL[sec] || MN_DECO_POOL[0];
+  const rocks = S.gate ? S.rocks.concat([{x0:-420, y0:-760, x1:420, y1:-580}]) : S.rocks;
+  const rockD = (x, y)=>{ let d = Infinity; for(const r of rocks){ const dx = Math.max(r.x0 - x, 0, x - r.x1), dy = Math.max(r.y0 - y, 0, y - r.y1); d = Math.min(d, Math.hypot(dx, dy)); } return d; };
+  const railD = (x, y)=>{ let d = Infinity; for(const R of S.rails){ for(let i=0;i+3<R.length;i+=2){ const ax = R[i], ay = R[i+1], bx = R[i+2], by = R[i+3], vx = bx - ax, vy = by - ay, l2 = vx*vx + vy*vy || 1;
+    const q = Math.max(0, Math.min(1, ((x - ax)*vx + (y - ay)*vy)/l2)); d = Math.min(d, Math.hypot(x - ax - vx*q, y - ay - vy*q)); } } return d; };
+  for(let i=0;i<220 && out.length < 22;i++){
+    const x = B.x0 + 60 + _mnHash(i, 400 + sec)*(B.x1 - B.x0 - 120), y = B.y0 + 70 + _mnHash(i, 500 + sec)*(B.y1 - B.y0 - 130);
+    const rd = rockD(x, y), edge = Math.min(x - B.x0, B.x1 - x, y - B.y0, B.y1 - y);
+    if(rd < 26) continue;
+    if(S.pillars.some(p=>Math.hypot(p.x - x, p.y - y) < p.r + 50)) continue;
+    if(S.lights.some(L=>Math.hypot(L.x - x, L.y - y) < 95)) continue;
+    if(S.props.some(q=>Math.hypot(q.x - x, q.y - y) < 90)) continue;
+    if(Math.hypot(S.entry.x - x, S.entry.y - y) < 220 || (S.exit && Math.hypot(S.exit.x - x, S.exit.y - y) < 170)) continue;
+    if(railD(x, y) < 40) continue;
+    if(S.gate && y < -250 && Math.abs(x) < 520) continue;              // frente de la puerta del Umbral: libre para pelear
+    if(out.some(o=>Math.hypot(o.x - x, o.y - y) < 110)) continue;
+    const nearWall = rd < 150 || edge < 170;
+    let k = pool[Math.floor(_mnHash(i, 600 + sec)*pool.length)];
+    if(MN_DECO_BIG[k] && !nearWall) k = ["piedras","herramientas","balde","carbon","veta_piedras"].find(q=>pool.includes(q)) || "piedras";
+    if(!nearWall && _mnHash(i, 700 + sec) < 0.35) continue;             // el centro queda más despejado
+    out.push({k, x, y, h:MN_DECO_H[k]*(0.85 + _mnHash(i, 800 + sec)*0.3), f:_mnHash(i, 900 + sec) < 0.5});
+  }
+  return (_MN_DECO[sec] = out);
+}
 function _mnPat(key, sc){
   const id = key + "@" + (sc||2);
   if(MN_PAT[id]) return MN_PAT[id];
@@ -63,7 +113,7 @@ function _mnFx(key, i, x, y, h, alpha, anchorY){ const k = _mnFxImg(key, i); if(
 function _mnView(){ const R = mnViewRect(); return {x0:R.x - 80, x1:R.x + R.w + 80, y0:R.y - 140, y1:R.y + R.h + 120}; }
 function _mnVis(V, x0, y0, x1, y1){ return !(x1 < V.x0 || x0 > V.x1 || y1 < V.y0 || y0 > V.y1); }
 function _mnHash(i, k){ let h = (i*374761393 + k*668265263) ^ 0x5bd1e995; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0)/4294967296; }
-function mnRenderReset(){}
+function mnRenderReset(){ _mnDeadAt = 0; _mnLastAct = 0; _mnChainBreakAt = -1e9; }
 function mnRenderTick(dt){}
 
 /* ---------------- piso ---------------- */
@@ -72,13 +122,13 @@ function mnDrawWorld(now){
   const V = _mnView(), B = MN_BOUNDS, S = mnSector(), t = now;
   ctx.imageSmoothingEnabled = false;
   // fuera de la sala: roca maciza de la mina (nunca un vacío negro)
-  _mnFillPat("tex_roca", 2, "#1a1412", V.x0 - 50, V.y0 - 50, V.x1 - V.x0 + 100, V.y1 - V.y0 + 100);
+  _mnFillPat(_mnRockTex(), 2, "#1a1412", V.x0 - 50, V.y0 - 50, V.x1 - V.x0 + 100, V.y1 - V.y0 + 100);
   ctx.fillStyle = `rgba(${S.tone},0.35)`; ctx.fillRect(V.x0 - 50, V.y0 - 50, V.x1 - V.x0 + 100, V.y1 - V.y0 + 100);
   ctx.fillStyle = "rgba(0,0,0,0.62)"; ctx.fillRect(V.x0 - 50, V.y0 - 50, V.x1 - V.x0 + 100, V.y1 - V.y0 + 100);
   const ix0 = Math.max(B.x0, V.x0), iy0 = Math.max(B.y0, V.y0), ix1 = Math.min(B.x1, V.x1), iy1 = Math.min(B.y1, V.y1);
   if(ix1 > ix0 && iy1 > iy0){
-    _mnFillPat(S.floor, 2, "#2a2018", ix0, iy0, ix1 - ix0, iy1 - iy0);
-    ctx.fillStyle = `rgba(${S.tone},0.42)`; ctx.fillRect(ix0, iy0, ix1 - ix0, iy1 - iy0);
+    _mnFillPat(_mnFloorTex(S), 2, "#2a2018", ix0, iy0, ix1 - ix0, iy1 - iy0);
+    ctx.fillStyle = `rgba(${S.tone},${MN_OK["tex_tierra_" + S.id] ? 0.16 : 0.42})`; ctx.fillRect(ix0, iy0, ix1 - ix0, iy1 - iy0);
     if(mnS.hell > 0){ ctx.fillStyle = `rgba(90,14,4,${0.22*mnS.hell})`; ctx.fillRect(ix0, iy0, ix1 - ix0, iy1 - iy0); }
     // borde de la sala: sombra interior contra la roca
     ctx.strokeStyle = "rgba(0,0,0,0.55)"; ctx.lineWidth = 18; ctx.strokeRect(B.x0 + 9, B.y0 + 9, B.x1 - B.x0 - 18, B.y1 - B.y0 - 18);
@@ -165,9 +215,10 @@ function mnPushTall(){
   for(const r of mnRocksNow()){ if(_mnVis(V, r.x0 - 10, r.y0 - MN_ROCK_H - 20, r.x1 + 10, r.y1 + 10)) _entPush(r.y1, null, null, null, {arena:1, mn:"rock", r}); }
   for(const p of S.pillars){ if(_mnVis(V, p.x - p.r - 30, p.y - p.r*3, p.x + p.r + 30, p.y + p.r)) _entPush(p.y + p.r*0.3, null, null, null, {arena:1, mn:"pillar", p}); }
   for(const p of S.props){ if(_mnVis(V, p.x - 80, p.y - 140, p.x + 80, p.y + 30)) _entPush(p.y, null, null, null, {arena:1, mn:"prop", p}); }
+  for(const d of _mnDecoFor(mnS.sec)){ if(_mnVis(V, d.x - 70, d.y - d.h - 20, d.x + 70, d.y + 20)) _entPush(d.y, null, null, null, {arena:1, mn:"deco", d}); }
   for(const L of mnS.lights){ if(_mnVis(V, L.x - 60, L.y - 150, L.x + 60, L.y + 30)) _entPush(L.y, null, null, null, {arena:1, mn:"light", L}); }
   for(const R of mnS.rubble){ if(R.t >= 0 && _mnVis(V, R.x - 70, R.y - 90, R.x + 70, R.y + 30)) _entPush(R.y, null, null, null, {arena:1, mn:"rubble", R}); }
-  if(S.gate && _mnVis(V, -460, -900, 460, -560)) _entPush(-600, null, null, null, {arena:1, mn:"gate"});
+  if(S.gate && _mnVis(V, -460, -960, 460, -560)) _entPush(MN_GATE_Y, null, null, null, {arena:1, mn:"gate"});
   if(mnS.portal.st!=="none"){ const G = S.portal||MN_SECTORS[5].portal; _entPush(G.y + 20, null, null, null, {arena:1, mn:"portal"}); }
   if(mnS.cb.st==="dying" || mnS.cb.st==="dead"){ const P = mnS.cb; if(P.x!==undefined) _entPush(P.y, null, null, null, {arena:1, mn:"cdeath"}); }
 }
@@ -177,18 +228,26 @@ function mnDrawTall(it, now){
     case "rock": _mnDrawRock(it.r); break;
     case "pillar": _mnDrawPillar(it.p, t); break;
     case "prop": _mnDrawProp(it.p, t); break;
+    case "deco": { const d = it.d; ctx.save(); ctx.fillStyle = "rgba(0,0,0,0.38)"; ctx.beginPath(); ctx.ellipse(d.x, d.y + 2, d.h*0.42, d.h*0.13, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
+      _mnPiece("x_" + d.k, d.x, d.y + 4, d.h, 1, d.f, 1, mnS.hell > 0.3 ? `rgba(90,20,6,${0.18*mnS.hell})` : null);
+      if(d.k==="veta_brasa" || d.k==="cristales_rojos") _mnGlow(d.x, d.y - d.h*0.4, d.h, "255,80,30", 0.18 + 0.08*Math.sin(t*3 + d.x));
+      else if(d.k==="cristales_azules" || d.k==="rocas_cristal") _mnGlow(d.x, d.y - d.h*0.4, d.h, "110,170,255", 0.16);
+      else if(d.k==="veta_violeta" || d.k==="cristal_roto") _mnGlow(d.x, d.y - d.h*0.4, d.h, "190,80,255", 0.16);
+      break; }
     case "light": _mnDrawLight(it.L, t); break;
     case "rubble": { const R = it.R, a = Math.min(1, (R.d - R.t)/500, R.t/150);
       ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.beginPath(); ctx.ellipse(R.x, R.y + 6, R.r + 10, R.r*0.45, 0, 0, Math.PI*2); ctx.fill();
-      const pat = _mnPat("tex_roca", 2); ctx.fillStyle = pat || "#4a3a30";
+      const pat = _mnPat(_mnRockTex(), 2); ctx.fillStyle = pat || "#4a3a30";
       ctx.beginPath(); ctx.moveTo(R.x - R.r, R.y + 4); ctx.lineTo(R.x - R.r*0.6, R.y - R.r*0.9); ctx.lineTo(R.x - R.r*0.1, R.y - R.r*1.3); ctx.lineTo(R.x + R.r*0.5, R.y - R.r); ctx.lineTo(R.x + R.r, R.y + 4); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = "#1a120c"; ctx.lineWidth = 3; ctx.stroke(); ctx.fillStyle = "rgba(255,190,120,0.12)"; ctx.fill(); ctx.restore(); break; }
     case "gate": _mnDrawGate(t); break;
     case "portal": _mnDrawPortal(t); break;
     case "cdeath": { const P = mnS.cb, T = P.st==="dead" ? 99999 : (P.t||0), C = ENEMY_ATLAS_PACK.mn_cerbero;
       if(C && C.ready){ const arr = C.sets.death || C.sets.idle, n = Math.min(arr.length - 1, Math.floor(T/(MN_CFG.cerbero.deathMs*0.75/arr.length)));
-        const fade = P.st==="dead" ? Math.max(0, 1 - (mnS.portal.t||0)/2500) : 1;
-        if(fade > 0.02) _mnAtlasFrame("mn_cerbero", "death", n, P.x, P.y, 58*MN_HMUL.mn_cerbero, P.fx < 0, fade, false); }
+        if(P.st==="dead" && !_mnDeadAt) _mnDeadAt = animNow;
+        const fade = P.st==="dead" ? Math.max(0, 1 - (animNow - _mnDeadAt)/2500) : 1;
+        if(fade > 0.02) _mnAtlasFrame("mn_cerbero", "death", n, P.x, P.y, 58*MN_HMUL.mn_cerbero, P.fx < 0, fade, false);
+        if(P.st==="dead" && MN_OK.cadena_restos_0) _mnPiece("cadena_restos_0", P.x, P.y + 10, 46, Math.min(1, 1.2 - fade)); }
       break; }
   }
 }
@@ -196,10 +255,10 @@ function _mnDrawRock(r){
   const H = MN_ROCK_H, S = mnSector(), w = r.x1 - r.x0, h = r.y1 - r.y0;
   ctx.save();
   // techo (desplazado hacia arriba) y cara frontal
-  _mnFillPat("tex_roca", 2, "#3a3030", r.x0, r.y0 - H, w, h);
+  _mnFillPat(_mnRockTex(), 2, "#3a3030", r.x0, r.y0 - H, w, h);
   ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.fillRect(r.x0, r.y0 - H, w, h);
   ctx.fillStyle = S.rockTint; ctx.fillRect(r.x0, r.y0 - H, w, h);
-  _mnFillPat("tex_roca", 2, "#4a3a34", r.x0, r.y1 - H, w, H);
+  _mnFillPat(_mnRockTex(), 2, "#4a3a34", r.x0, r.y1 - H, w, H);
   const g = ctx.createLinearGradient(0, r.y1 - H, 0, r.y1); g.addColorStop(0, "rgba(255,210,160,0.10)"); g.addColorStop(1, "rgba(0,0,0,0.55)");
   ctx.fillStyle = g; ctx.fillRect(r.x0, r.y1 - H, w, H);
   if(mnS.hell > 0.2){ ctx.fillStyle = `rgba(255,60,10,${0.08*mnS.hell})`; ctx.fillRect(r.x0, r.y1 - H, w, H); }
@@ -212,23 +271,23 @@ function _mnDrawPillar(p, t){
   ctx.save();
   ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.beginPath(); ctx.ellipse(p.x, p.y + 4, p.r*1.05, p.r*0.42, 0, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.moveTo(p.x - p.r, p.y); ctx.lineTo(p.x - p.r*0.8, p.y - H); ctx.quadraticCurveTo(p.x, p.y - H - p.r*0.4, p.x + p.r*0.8, p.y - H); ctx.lineTo(p.x + p.r, p.y); ctx.closePath();
-  ctx.fillStyle = _mnPat("tex_roca", 2) || "#4a3a34"; ctx.fill();
+  ctx.fillStyle = _mnPat(_mnRockTex(), 2) || "#4a3a34"; ctx.fill();
   const g = ctx.createLinearGradient(p.x - p.r, 0, p.x + p.r, 0); g.addColorStop(0, "rgba(0,0,0,0.5)"); g.addColorStop(0.45, "rgba(255,220,180,0.08)"); g.addColorStop(1, "rgba(0,0,0,0.6)");
   ctx.fillStyle = g; ctx.fill(); ctx.fillStyle = S.rockTint; ctx.fill();
   ctx.strokeStyle = "rgba(10,6,4,0.9)"; ctx.lineWidth = 3; ctx.stroke();
   ctx.restore();
   // vetas: cristales en las columnas de los sectores profundos (y apoyos de madera arriba)
-  if(mnS.sec===2) _mnPiece("cristal_azul_0", p.x + p.r*0.35, p.y - H*0.35, p.r*1.2, 0.95);
-  else if(mnS.sec===3) _mnPiece("cristal_azul_0", p.x - p.r*0.3, p.y - H*0.4, p.r*1.1, 0.95, false, 1, "rgba(170,40,220,0.55)");
-  else if(mnS.sec >= 4) _mnPiece("cristal_rojo_0", p.x + p.r*0.3, p.y - H*0.3, p.r, 0.9);
+  if(mnS.sec===2) _mnPiece(MN_OK.x_cristales_azules ? "x_cristales_azules" : "cristal_azul_0", p.x + p.r*0.35, p.y - H*0.3, p.r*1.1, 0.95);
+  else if(mnS.sec===3) { if(!_mnPiece("x_veta_violeta", p.x - p.r*0.3, p.y - H*0.3, p.r*1.1, 0.95)) _mnPiece("cristal_azul_0", p.x - p.r*0.3, p.y - H*0.4, p.r*1.1, 0.95, false, 1, "rgba(170,40,220,0.55)"); }
+  else if(mnS.sec >= 4) _mnPiece(MN_OK.x_cristales_rojos ? "x_cristales_rojos" : "cristal_rojo_0", p.x + p.r*0.3, p.y - H*0.25, p.r, 0.9);
   else if(mnS.sec <= 1){ ctx.save(); ctx.fillStyle = "#4a2e18"; ctx.fillRect(p.x - p.r - 4, p.y - H - 6, p.r*2 + 8, 10); ctx.fillRect(p.x - p.r - 2, p.y - H, 7, H); ctx.fillRect(p.x + p.r - 5, p.y - H, 7, H); ctx.restore(); }
 }
 function _mnDrawProp(p, t){
   switch(p.k){
     case "andamio": _mnPiece("andamio_0", p.x, p.y + 4, 120); break;
     case "riel": _mnPiece("riel_0", p.x, p.y + 4, 90); break;
-    case "cristal_azul": _mnGlow(p.x, p.y - 40, 90, "120,180,255", 0.25); _mnPiece("cristal_azul_0", p.x, p.y + 4, 90); break;
-    case "cristal_morado": _mnGlow(p.x, p.y - 40, 90, "190,80,255", 0.28); _mnPiece("cristal_azul_0", p.x, p.y + 4, 96, 1, false, 1, "rgba(170,40,220,0.55)"); break;
+    case "cristal_azul": _mnGlow(p.x, p.y - 40, 90, "120,180,255", 0.25); if(!_mnPiece("x_cristales_azules", p.x, p.y + 4, 78)) _mnPiece("cristal_azul_0", p.x, p.y + 4, 90); break;
+    case "cristal_morado": _mnGlow(p.x, p.y - 40, 90, "190,80,255", 0.28); if(!_mnPiece("x_veta_violeta", p.x, p.y + 4, 74)) _mnPiece("cristal_azul_0", p.x, p.y + 4, 96, 1, false, 1, "rgba(170,40,220,0.55)"); break;
     case "cristal_inestable": { const a = 0.3 + 0.2*Math.sin(t*5 + p.x); _mnGlow(p.x, p.y - 40, 100, "255,60,40", a); _mnPiece("cristal_inestable_0", p.x, p.y + 6, 96); break; }
     case "estalactita": _mnPiece("estalactita_0", p.x, p.y + 4, 110); break;
     case "pozo": { const a = 0.3 + 0.15*Math.sin(t*3); _mnGlow(p.x, p.y - 10, 110, "170,60,255", a); _mnPiece("pozo_0", p.x, p.y + 30, 110); break; }
@@ -245,11 +304,19 @@ function _mnDrawLight(L, t){
   ctx.save(); ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(L.x, L.y + 4, 22, 8, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
   const off = L.st===0, dim = off ? "rgba(10,10,20,0.62)" : null;
   if(a > 0) _mnGlow(L.x, L.y - 60, 80 + 30*a, rgb, 0.35*a);
+  const flick = L.st===1 && Math.sin(t*22 + L.i*3) > 0.2;
   switch(L.k){
-    case "farol": _mnPiece("lampara_0", L.x, L.y + 6, 92, 1, false, 1, dim); break;
-    case "brasero": { const f = off ? 0 : (L.st===1 && Math.sin(t*22) > 0) ? 1 : 2; if(!_mnPiece("lampara_apaga_" + f, L.x, L.y + 6, 104)) _mnPiece("lampara_0", L.x, L.y + 6, 92, 1, false, 1, dim);
-      if(!off){ _mnFx("mnHowl", ((t*12 + L.i)|0) % 5, L.x, L.y - 70, 44*(0.6 + 0.4*a), 0.9*a, 1); } break; }
-    case "cristal": _mnPiece("cristal_azul_0", L.x, L.y + 6, 86, 1, false, 1, dim); break;
+    case "farol":
+      if(MN_OK.x_lampara_encendida){ _mnPiece(flick ? "x_lampara_parpadeo" : "x_lampara_encendida", L.x, L.y + 6, 96, 1, false, 1, off ? "rgba(8,8,16,0.72)" : null); break; }
+      _mnPiece("lampara_0", L.x, L.y + 6, 92, 1, false, 1, dim); break;
+    case "brasero":
+      if(MN_OK.x_antorcha){ _mnPiece("x_antorcha", L.x, L.y + 6, 108, 1, false, 1, off ? "rgba(8,6,10,0.75)" : (flick ? "rgba(40,10,0,0.35)" : null));
+        if(!off) _mnFx("mnHowl", ((t*12 + L.i)|0) % 5, L.x, L.y - 74, 30*(0.6 + 0.4*a), 0.65*a, 1); break; }
+      { const f = off ? 0 : flick ? 1 : 2; if(!_mnPiece("lampara_apaga_" + f, L.x, L.y + 6, 104)) _mnPiece("lampara_0", L.x, L.y + 6, 92, 1, false, 1, dim);
+        if(!off){ _mnFx("mnHowl", ((t*12 + L.i)|0) % 5, L.x, L.y - 70, 44*(0.6 + 0.4*a), 0.9*a, 1); } } break;
+    case "cristal":
+      if(MN_OK.x_cristal_luz){ if(off) _mnPiece("x_cristal_roto", L.x, L.y + 6, 70, 1, false, 1, "rgba(10,10,30,0.45)"); else _mnPiece("x_cristal_luz", L.x, L.y + 6, 84, flick ? 0.75 : 1); break; }
+      _mnPiece("cristal_azul_0", L.x, L.y + 6, 86, 1, false, 1, dim); break;
     case "nucleo": _mnPiece("nucleo_luz_0", L.x, L.y + 24, 110, 1, false, 1, dim); break;
   }
   // el Devoraluz / un Consumidor van por esta luz: aro violeta que late
@@ -257,11 +324,39 @@ function _mnDrawLight(L, t){
   if(hunted && !off){ const q = 0.5 + 0.5*Math.sin(t*10); ctx.save(); ctx.strokeStyle = `rgba(200,90,255,${0.5 + 0.4*q})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(L.x, L.y, 46 + q*8, 18 + q*3, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore(); }
   if(off && L.off > 0){ ctx.save(); ctx.fillStyle = "rgba(255,200,140,0.7)"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.fillText("…", L.x, L.y - 96); ctx.restore(); }
 }
+// PUERTA DEL UMBRAL con los paneles de la hoja (sellada -> grietas -> apertura -> portal activo -> idle). Se apoya
+// sobre la pared norte; el aro del portal late y echa brasas. Sin la hoja se usa el dibujo por código de abajo.
+const MN_GATE_W = 500, MN_GATE_Y = -574;   // el aro del portal entra en pantalla parado en ATRAVESAR
+function _mnGatePanel(i, alpha){
+  const k = "portal_" + i; if(!MN_OK[k]) return null;
+  const im = MN_IMG[k], H = MN_GATE_W*im.height/im.width;
+  ctx.save(); ctx.imageSmoothingEnabled = false; ctx.globalAlpha *= alpha;
+  ctx.drawImage(im, -MN_GATE_W/2, MN_GATE_Y - H, MN_GATE_W, H); ctx.restore();
+  return H;
+}
 function _mnDrawGate(t){
+  if(MN_OK.portal_0 && MN_OK.portal_4){
+    const P = mnS.portal, C = mnS.cb, hot = C.act >= 3 || C.st==="dying" || C.st==="dead";
+    let H = 0;
+    if(P.st==="none"){ H = _mnGatePanel(hot ? 1 : 0, 1); if(hot) _mnGlow(0, MN_GATE_Y - H*0.45, 220, "255,40,10", 0.25 + 0.15*Math.sin(t*5)); }
+    else if(P.st==="opening"){ const q = Math.min(1, P.t/MN_CFG.cerbero.portalMs);
+      if(q < 0.5){ _mnGatePanel(1, 1); H = _mnGatePanel(2, q*2); } else { _mnGatePanel(2, 1); H = _mnGatePanel(3, (q - 0.5)*2); }
+      _mnGlow(0, MN_GATE_Y - H*0.45, 260*q + 60, "255,50,10", 0.35 + 0.3*q); }
+    else { const used = P.st==="used"; H = _mnGatePanel(used ? 3 : 4, 1);
+      const pul = 0.5 + 0.5*Math.sin(t*3.2), cy = MN_GATE_Y - H*0.44, R = H*0.26;
+      _mnGlow(0, cy, R*2.4, "255,40,10", (used ? 0.25 : 0.4) + 0.2*pul);
+      // remolino suave dentro del aro (movimiento sobre el panel quieto)
+      ctx.save(); ctx.beginPath(); ctx.ellipse(0, cy, R*0.78, R*0.98, 0, 0, Math.PI*2); ctx.clip(); ctx.globalCompositeOperation = "lighter"; ctx.lineCap = "round";
+      for(let k=0;k<3;k++){ ctx.strokeStyle = `rgba(255,${60 + k*30},30,${0.22 + 0.1*pul})`; ctx.lineWidth = 4; ctx.beginPath();
+        for(let st=0;st<=22;st++){ const q = st/22, r = 1 - q*0.9, a = t*1.4 + k*2.09 + q*4; const x = Math.cos(a)*r*R*0.78, y = cy + Math.sin(a)*r*R*0.98; st ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); }
+      ctx.restore();
+      if(Math.random() < 0.4) vfxBurst(mnRand(-R, R), cy + mnRand(-R, R), 1, "ember", 50, 1000, 3, 0, -70, 0); }
+    return;
+  }
   const G = MN_SECTORS[5].gate, open = mnS.portal.st!=="none", hot = open || mnS.cb.act >= 3;
   ctx.save();
   // arco de piedra
-  _mnFillPat("tex_roca", 2, "#2a1a14", -440, -900, 880, 300);
+  _mnFillPat(_mnRockTex(), 2, "#2a1a14", -440, -900, 880, 300);
   ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(-440, -900, 880, 300);
   ctx.fillStyle = "rgba(70,12,4,0.45)"; ctx.fillRect(-440, -900, 880, 300);
   ctx.strokeStyle = "rgba(10,4,2,0.9)"; ctx.lineWidth = 4; ctx.strokeRect(-440, -900, 880, 300);
@@ -281,6 +376,7 @@ function _mnDrawGate(t){
 // negro, espirales que giran hacia adentro, borde incandescente con lenguas de fuego y ceniza que sube.
 function _mnDrawPortal(t){
   const G = MN_SECTORS[5].portal, P = mnS.portal, grow = P.st==="opening" ? Math.min(1, P.t/MN_CFG.cerbero.portalMs) : 1, used = P.st==="used";
+  if(MN_OK.portal_4){ _mnGlow(G.x, G.y, 200*grow, "255,50,10", (used ? 0.2 : 0.35)*grow); return; }   // el portal es el panel de la puerta
   const H = 260*grow, W = H*0.62, cx = G.x, cy = G.y - H*0.5;
   if(H < 24) return; // (los radios del borde interno necesitan un mínimo)
   _mnGlow(cx, cy, H*0.95, "255,50,10", 0.5*grow);
@@ -330,13 +426,50 @@ function mnDrawEnemyBody(e){
 }
 
 /* ---------------- sobre las entidades: oscuridad, avisos, proyectiles ---------------- */
+// CADENAS DE CERBERO: eslabones a lo largo de la curva (de las argollas junto a la puerta al cuello), argollas con la
+// secuencia "tensionada" de la hoja, ROTURA al pasar al Acto 2 y RESTOS en el suelo después.
+let _mnLastAct = 0, _mnChainBreakAt = -1e9, _mnDeadAt = 0;
+const MN_CHAIN_ANCHORS = [-220, 220];
+function _mnChainLinks(x0, y0, cx, cy, x1, y1, t, taut){
+  ctx.save(); ctx.lineCap = "round";
+  const L = Math.hypot(x1 - x0, y1 - y0) + Math.hypot(cx - x0, cy - y0)*0.3, n = Math.max(8, Math.floor(L/13));
+  for(let i=0;i<=n;i++){
+    const q = i/n, u = 1 - q, x = u*u*x0 + 2*u*q*cx + q*q*x1, y = u*u*y0 + 2*u*q*cy + q*q*y1 + (taut ? Math.sin(t*20 + i)*0.8 : 0);
+    const tx = 2*u*(cx - x0) + 2*q*(x1 - cx), ty = 2*u*(cy - y0) + 2*q*(y1 - cy), a = Math.atan2(ty, tx);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(a);
+    if(i % 2){ ctx.strokeStyle = "#1a1416"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(6, 0); ctx.stroke();
+      ctx.strokeStyle = "rgba(160,150,150,0.8)"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-5, -1); ctx.lineTo(5, -1); ctx.stroke(); }
+    else { ctx.strokeStyle = "#241c1e"; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.ellipse(0, 0, 8, 4.5, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = `rgba(255,${110 + (i*13 % 60)},50,0.55)`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(0, -0.5, 7, 3.5, 0, Math.PI*1.05, Math.PI*1.9); ctx.stroke(); }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function _mnDrawChains(Cb, t){
+  if(!mnS || mnS.sec!==5) return;
+  const act = mnS.cb.act || 0;
+  if(_mnLastAct===1 && act >= 2) _mnChainBreakAt = animNow;
+  _mnLastAct = act;
+  const since = animNow - _mnChainBreakAt, hasSheet = MN_OK.cadena_tension_0;
+  if(Cb && act===1){
+    for(const sx of MN_CHAIN_ANCHORS){
+      const x1 = Cb.x + (sx < 0 ? -14 : 14), y1 = Cb.y - 36, taut = Math.hypot(Cb.x - 0, Cb.y + 380) > MN_CFG.cerbero.chainR*0.85;
+      _mnChainLinks(sx, MN_GATE_Y + 8, (sx + x1)/2, Math.max(MN_GATE_Y + 60, (MN_GATE_Y + y1)/2) + (taut ? 10 : 70), x1, y1, t, taut);
+      if(hasSheet) _mnPiece("cadena_tension_" + (((t*8)|0) % 6), sx, MN_GATE_Y + 14, 96, 1, sx > 0);
+    }
+  } else if(act >= 2 || mnS.cb.st==="dying" || mnS.cb.st==="dead"){
+    if(since < 1500 && MN_OK.cadena_rotura_0){ const f = Math.min(5, Math.floor(since/250));
+      for(const sx of MN_CHAIN_ANCHORS) _mnPiece("cadena_rotura_" + f, sx, MN_GATE_Y + 16, 100, 1, sx > 0); }
+    else if(MN_OK.cadena_restos_0){ for(const sx of MN_CHAIN_ANCHORS) _mnPiece("cadena_restos_0", sx, MN_GATE_Y + 26, 44, 0.95, sx > 0); }
+    if(since < 1500 && Cb){ _mnChainLinks(Cb.x - 60, Cb.y - 10, Cb.x - 90, Cb.y + 20, Cb.x - 140, Cb.y + 30, t, false); _mnChainLinks(Cb.x + 60, Cb.y - 10, Cb.x + 90, Cb.y + 20, Cb.x + 140, Cb.y + 30, t, false); }
+  }
+}
 function mnDrawTop(){
   if(!mnS || !player) return;
   const t = animNow/1000, V = _mnView();
   // cadenas de Cerbero (Acto 1): desde los costados de la puerta
   const Cb = mnCerbEntity && mnCerbEntity();
-  if(Cb && mnS.cb.act===1){ ctx.save(); ctx.strokeStyle = "#5a5058"; ctx.lineWidth = 5; ctx.setLineDash([9, 5]);
-    for(const sx of [-200, 200]){ ctx.beginPath(); ctx.moveTo(sx, -610); ctx.quadraticCurveTo((sx + Cb.x)/2, Math.max(-560, Cb.y) + 60, Cb.x, Cb.y - 30); ctx.stroke(); } ctx.setLineDash([]); ctx.restore(); }
+  _mnDrawChains(Cb, t);
   // rayos de absorción (Consumidor / Devoraluz comiendo)
   for(const e of enemies){
     if(!e.alive) continue;
