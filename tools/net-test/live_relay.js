@@ -41,12 +41,24 @@ function client(origin) {
   check("health", !!health, { ms: out.wakeMs, health });
   if (!health) { console.log(JSON.stringify(out)); process.exit(1); }
 
+  // 1b) diagnóstico: ¿circulan mensajes? ping → pong (con y sin Origin)
+  for (const o of [ORIGIN, undefined]) {
+    try {
+      const p = await client(o); const tp = Date.now();
+      p.send({ t: "ping", c: 7 });
+      const pong = await p.wait(m => m.t === "pong", 15000).catch(() => null);
+      console.log("INFO ping origin=" + (o || "(ninguno)") + " " + JSON.stringify({ pong: !!pong, ms: Date.now() - tp, inbox: p.inbox.slice(0, 3), closed: p.closed() }));
+      try { p.ws.close(); } catch (e) {}
+    } catch (e) { console.log("INFO ping origin=" + (o || "(ninguno)") + " connectError " + String(e && e.message || e)); }
+  }
+
   // 2) crear sala + unirse con código (Origin del juego publicado)
+  let a = null;
   try {
-    const a = await client(ORIGIN);
+    a = await client(ORIGIN);
     const tc = Date.now();
     a.send({ t: "create", protocol: 1, build: BUILD, arena: "ciudad", champ: "tanque", level: 1, name: "Telefono A", clientId: "live-A-" + Date.now() });
-    const ja = await a.wait(m => m.t === "joined" || m.t === "error");
+    const ja = await a.wait(m => m.t === "joined" || m.t === "error", 20000);
     out.createMs = Date.now() - tc;
     check("create", ja.t === "joined" && ja.slot === 0 && /^[A-Z2-9]{4,8}$/.test(ja.room && ja.room.code || ""), ja.t === "joined" ? { code: ja.room.code, ms: out.createMs } : ja);
     if (ja.t === "joined") {
@@ -65,7 +77,7 @@ function client(origin) {
       a.send({ t: "leave" });
       await sleep(300); a.ws.close(); b.ws.close();
     }
-  } catch (e) { check("create_join", false, String(e && e.message || e)); }
+  } catch (e) { check("create_join", false, { err: String(e && e.message || e), inbox: a && a.inbox.slice(0, 5), closed: a && a.closed() }); }
 
   // 3) informativo: origen no autorizado → aviso claro, sin colgarse
   try {
