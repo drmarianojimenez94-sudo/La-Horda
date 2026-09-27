@@ -28,6 +28,15 @@ function isArenaUnlocked(key){
   if(Array.isArray(save.legacyOpenArenas) && save.legacyOpenArenas.includes(key)) return true;
   return key === campaignFrontier();
 }
+// La arena que sigue a `key` en la campaña, si ya está abierta (después de ganar `key`, la siguiente
+// jugable). null si `key` es la última o si la siguiente sigue cerrada. Lo usan la victoria (seguir a
+// la próxima arena sin salir de la Sala) y la Sala online (el anfitrión vuelve con ella elegida).
+function nextCampaignArena(key){
+  const i = ARENA_ORDER.indexOf(key);
+  if(i < 0) return null;
+  const n = ARENA_ORDER[i+1];
+  return n && isArenaUnlocked(n) ? n : null;
+}
 // La arena que se muestra/juega por defecto: la elegida si está abierta; si no, la frontera.
 function ensurePlayableArena(){
   if(typeof currentArena==="undefined" || currentArena==="divina") return;

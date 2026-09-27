@@ -192,9 +192,37 @@ const VICTORY_STEPS = [
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%;"></div></div>
       <div class="vic-sub" style="margin-top:-6px;">${champ.xp} / ${need} XP para el próximo nivel</div>
       <div class="vic-xp-row"><span>Oro total</span><b>${victoryData.gold}</b></div>
-      <div class="vic-xp-row"><span>Inventario de la cuenta</span><b>${stashUsedSlots()}/${INVENTORY_CAPACITY}</b></div>`;
+      <div class="vic-xp-row"><span>Inventario de la cuenta</span><b>${stashUsedSlots()}/${INVENTORY_CAPACITY}</b></div>
+      ${victoryNextNoteHTML()}`;
   }
 ];
+// SEGUIR A LA PRÓXIMA ARENA sin salir de la Sala: solo, "Continuar" lleva a la Sala con la siguiente
+// arena ya elegida (mismo guardián, equipo y bots); online, el anfitrión vuelve a la sala con ella
+// elegida (netFinishMatch) y la puede cambiar ahí; los invitados la ven al volver.
+function victoryIsOnline(){ return !!(netMatch || netInRoom()); }
+function victoryNextArena(){ return victoryData ? nextCampaignArena(victoryData.arena) : null; }
+function victoryNextNoteHTML(){
+  if(!victoryData || ARENA_ORDER.indexOf(victoryData.arena) < 0) return "";
+  const next = victoryNextArena();
+  const name = next ? _lobbyArenaName(next) : "";
+  let txt;
+  if(!victoryIsOnline()) txt = next ? `Próxima arena: <b>${name}</b>. Con <b>Continuar</b> volvés a la Sala con ella elegida (la podés cambiar ahí).` : `Completaste la última arena de la campaña. Con <b>Continuar</b> volvés a la Sala para elegir otra.`;
+  else if(net.role==="host") txt = next ? `Al volver al lobby, la sala queda con la próxima arena elegida: <b>${name}</b>. La podés cambiar antes de comenzar.` : `Al volver al lobby elegís en la Sala la próxima arena.`;
+  else txt = `Al volver al lobby, el anfitrión elige la próxima arena${next ? ` (la siguiente es <b>${name}</b>)` : ""}.`;
+  return `<div class="vic-next-note" id="vic-next-note">▶ ${txt}</div>`;
+}
+function victoryGoNextArena(){
+  const from = victoryData ? victoryData.arena : currentArena;
+  const next = nextCampaignArena(from);
+  currentArena = next || from;
+  lobbyNextArena = next || null;
+  if(next && save.justUnlockedArena===next){ save.justUnlockedArena = null; persist(); }
+  updateMenuBrandSub();
+  if(!lobbyAlliesValid(selectedClass)) lobbyAllies = pickLobbyAllies(selectedClass); // los mismos bots si siguen valiendo
+  setState("prep");
+  renderPrepSummary();
+  if(next && typeof showNetToast==="function") showNetToast(`Arena elegida: ${_lobbyArenaName(next)}. La podés cambiar arriba.`);
+}
 
 function renderVictoryStep(){
   const body = document.getElementById("victory-step-body");
@@ -213,13 +241,17 @@ function renderVictoryStep(){
   } else body.classList.remove("loot-shown");
   const nextBtn = document.getElementById("victory-next-btn");
   const isLast = victoryStep === VICTORY_STEPS.length-1;
-  nextBtn.textContent = isLast ? "Continuar" : "Continuar";
+  // último paso, jugando solo en una arena de la campaña: "Continuar" sigue a la próxima arena (Sala)
+  const soloNext = isLast && !victoryIsOnline() && ARENA_ORDER.indexOf(victoryData.arena) >= 0;
+  const nx = soloNext ? victoryNextArena() : null;
+  nextBtn.textContent = !soloNext ? "Continuar" : (nx ? `Continuar ▶ ${_lobbyArenaName(nx)}` : "Continuar a la Sala");
   nextBtn.classList.toggle("hidden", false);
-  document.getElementById("again-btn").textContent = (netMatch || netInRoom()) ? "VOLVER AL LOBBY" : "Volver a entrar";
+  document.getElementById("again-btn").textContent = victoryIsOnline() ? "VOLVER AL LOBBY" : (soloNext ? "Repetir esta arena" : "Volver a entrar");
   netEndLabels();
   document.getElementById("again-btn").classList.toggle("hidden", !isLast);
+  document.getElementById("again-btn").classList.toggle("secondary", soloNext);
   document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
-  if(isLast) nextBtn.classList.add("hidden");
+  if(isLast && !soloNext) nextBtn.classList.add("hidden");
 
   if(victoryStep!==2 || !body.querySelector(".chest-host")) bindLootButtons(body);
 }
@@ -234,5 +266,6 @@ function showVictoryScreen(){
   if(netMatch) netOnEndScreen(true);
 }
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
-  if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); }
+  if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); return; }
+  if(state==="victory" && !victoryIsOnline()) victoryGoNextArena(); // último paso (solo): a la Sala, con la próxima arena
 });

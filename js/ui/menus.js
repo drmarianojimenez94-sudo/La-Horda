@@ -285,6 +285,7 @@ function _prepStartFailed(err){
   gameAlert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
 }
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
+  lobbyNextArena = null; // la marca "SIGUIENTE" de la Sala dura hasta la próxima partida
   try{
     if(netInRoom()){
       if(net.role!=="host") return; // el anfitrión decide cuándo comenzar
@@ -319,12 +320,70 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
     _prepStartFailed(err);
   }
 });
+/* ---------------- ARENA DE LA SALA ----------------
+   La arena se elige también DENTRO de la Sala (vos solo con bots, o el anfitrión de una sala online):
+   así, después de ganar, se sigue a la próxima arena sin salir de la Sala ni perder el grupo, el
+   equipo ni los bots. Los invitados ven la arena que eligió el anfitrión (nombre, ícono y reseña) y
+   un aviso si todavía no la tienen desbloqueada (juegan igual, pero no les cuenta para la campaña:
+   ver netGuestEnd). */
+let lobbyNextArena = null; // la "siguiente" tras una victoria (se marca en la Sala hasta elegir otra)
+function _lobbyArenaName(k){ const a = ARENA_MODS[k]||{}; const n = campaignNumberLabel(k); return (n ? n + " — " : "") + (a.label||k); }
+function renderLobbyArena(){
+  const box = document.getElementById("lobby-arena"); if(!box) return;
+  const a = ARENA_MODS[currentArena];
+  if(!a || ARENA_ORDER.indexOf(currentArena) < 0){ box.innerHTML = ""; box._html = ""; box.classList.add("hidden"); return; }
+  box.classList.remove("hidden");
+  const online = typeof netInRoom==="function" && netInRoom();
+  const guest = online && net.role==="guest";
+  let html;
+  if(guest){
+    const mine = isArenaUnlocked(currentArena), need = campaignFrontier();
+    html = `<div class="la-head">ARENA <span class="la-by">· la elige el anfitrión</span></div>
+      <div class="la-card" data-la-current="${currentArena}"><span class="la-ico">${a.icon||""}</span>
+        <span class="la-txt"><b class="la-name">${_lobbyArenaName(currentArena)}</b><span class="la-desc">${a.desc||""}</span></span></div>
+      ${mine ? "" : `<div class="la-warn" id="la-no-credit">⚠ Todavía no desbloqueaste esta arena: la jugás con el grupo, pero <b>no te cuenta para tu campaña</b>${need ? ` (primero completá ${_lobbyArenaName(need)})` : ""}.</div>`}`;
+  } else {
+    // abiertas + la próxima cerrada (para que se vea qué sigue)
+    const firstLocked = ARENA_ORDER.find(k=>!isArenaUnlocked(k));
+    const list = ARENA_ORDER.filter(k=>isArenaUnlocked(k) || k===firstLocked);
+    const chips = list.map(k=>{
+      const A = ARENA_MODS[k]||{}, open = isArenaUnlocked(k), sel = k===currentArena;
+      const tag = !open ? "" : (k===lobbyNextArena ? `<span class="la-tag next">SIGUIENTE</span>` : (save.justUnlockedArena===k ? `<span class="la-tag">¡NUEVA!</span>` : ((save.arenasCleared||{})[k] ? `<span class="la-done">✔</span>` : "")));
+      return `<button class="la-chip ${sel?"sel":""}" data-lobby-arena="${k}" ${open?"":"disabled"} aria-pressed="${sel}">${open?(A.icon||""):"🔒"} ${_lobbyArenaName(k)}${tag}</button>`;
+    }).join("");
+    let warn = "";
+    if(online && typeof netLobby!=="undefined"){
+      // invitados que no tienen esta arena abierta (su juego lo informa con el equipo: loadout.open)
+      const out = (net.room ? net.room.slots : []).map((s,i)=>{ const L = i>0 && s && s.connected ? netLobby.loadouts[i] : null;
+        return L && Array.isArray(L.open) && !L.open.includes(currentArena) ? s.name : null; }).filter(Boolean);
+      if(out.length) warn = `<div class="la-warn" id="la-guest-no-credit">⚠ ${out.join(", ")} todavía no ${out.length>1?"tienen":"tiene"} esta arena desbloqueada: ${out.length>1?"juegan":"juega"} igual, pero no ${out.length>1?"les":"le"} cuenta para su campaña.</div>`;
+    }
+    html = `<div class="la-head">ARENA <span class="la-by">· ${online ? "tus amigos la ven al instante" : "tocá otra para cambiarla"}</span></div>
+      <div class="la-strip">${chips}</div>
+      <div class="la-desc">${a.icon||""} ${a.desc||""}</div>${warn}`;
+  }
+  if(box._html === html && box.innerHTML) return; // sin cambios: no reemplaza botones bajo el dedo
+  box._html = html; box.innerHTML = html;
+  box.querySelectorAll("[data-lobby-arena]").forEach(b=> b.addEventListener("click", ()=> pickLobbyArena(b.getAttribute("data-lobby-arena"))));
+  const strip = box.querySelector(".la-strip"), sel = box.querySelector(".la-chip.sel");
+  if(strip && sel) strip.scrollLeft = Math.max(0, sel.offsetLeft - strip.offsetLeft - 8); // la elegida, a la vista
+}
+function pickLobbyArena(key){
+  if(typeof netInRoom==="function" && netInRoom() && net.role!=="host") return; // la elige el anfitrión
+  if(!isArenaUnlocked(key) || key===currentArena) return;
+  currentArena = key;
+  if(save.justUnlockedArena===key){ save.justUnlockedArena = null; persist(); }
+  updateMenuBrandSub();
+  if(typeof netInRoom==="function" && netInRoom()) netSend({t:"update", arena:key});
+  renderPrepSummary();
+}
 // SALA (lobby) antes de entrar a la arena: 4 lugares -pensada para multijugador; hoy el lugar 1 es
 // el jugador y los otros 3 los ocupan bots, uno por cada rol que falta, igual que siempre-, y
 // debajo el equipamiento completo del guardián elegido. "Comenzar" arranca la partida con ESE equipo.
 function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
+  renderLobbyArena();
   netRenderLobbyBar();
   netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online
   if(netInRoom()){

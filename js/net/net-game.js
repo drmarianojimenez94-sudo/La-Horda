@@ -236,7 +236,8 @@ function netBuildLoadout(){
   const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
-    skin:(typeof champSkinId==="function" ? champSkinId(k) : null)}; // cosmético: la skin de SU guardado (sala)
+    skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
+    open:ARENA_ORDER.filter(a=>isArenaUnlocked(a))}; // SUS arenas abiertas: el anfitrión avisa en la Sala si alguna no le cuenta para la campaña
 }
 function netLoadoutRecord(L){
   const rec = mkChampion(true);
@@ -288,7 +289,7 @@ function netHostStartGame(){
     backups:null, recording:false, lastSnapAt:0, lastKeyAt:0, snapN:0, last:{}, lastG:{}, lastH:[{},{},{},{}], ents:new Map(),
     buffPicks:null, ended:false, startedAt:performance.now()};
   netSend({t:"start"});
-  netLobby.matches++;
+  netLobby.matches++; netLobby.lastArena = currentArena;
   netApplyGuestLoadouts();
   lobbyAllies = slots.slice(1).map(s=>s.champ);
   startRun(1);
@@ -792,7 +793,16 @@ function netFinishMatch(){
   netRestoreBackups();
   netMatch = null;
   persistNow();
-  if(wasHost && net.room) netSend({t:"lobby"});
+  if(wasHost && net.room){
+    // tras una victoria: la sala vuelve con la próxima arena elegida, en el mismo mensaje (relay nuevo)
+    // y con un "update" (relay viejo, que ignora el campo del "lobby"). El anfitrión la puede cambiar.
+    const next = netLobby.nextArena; netLobby.nextArena = null;
+    if(next && isArenaUnlocked(next) && next!==currentArena){
+      currentArena = next; lobbyNextArena = next;
+      if(typeof updateMenuBrandSub==="function") updateMenuBrandSub();
+      netSend({t:"lobby", arena:next}); netSend({t:"update", arena:next});
+    } else netSend({t:"lobby"});
+  }
 }
 function netQuitMatch(){
   if(!netMatch) return;

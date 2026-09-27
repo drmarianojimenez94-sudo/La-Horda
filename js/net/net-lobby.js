@@ -55,15 +55,13 @@ function netRenderLobbyBar(){
   } else if(net.role==="host"){
     const url = netInviteUrl();
     const dup = netDuplicateChamps();
-    const arenaOpts = ARENA_ORDER.filter(k=>isArenaUnlocked(k)).map(k=>`<option value="${k}" ${k===currentArena?"selected":""}>${(ARENA_MODS[k]||{}).label||k}</option>`).join("");
     bar._next = `<div class="net-row">${nameInput}</div>
       <div class="net-room-code"><span class="net-room-code-lbl">CÓDIGO DE SALA</span><span class="net-room-code-val" id="net-room-code">${net.code}</span>
         <button class="btn small" id="net-copy-code-btn">📋 COPIAR CÓDIGO</button></div>
       <div class="net-row"><button class="btn small secondary" id="net-copy-btn">🔗 Copiar enlace</button>
         ${navigator.share ? `<button class="btn small" id="net-share-btn">📨 Invitar</button>` : ""}
         <button class="btn secondary small" id="net-close-btn">Cerrar sala</button></div>
-      <div class="net-row"><label class="net-name net-arena">Arena <select id="net-arena-sel">${arenaOpts}</select></label></div>
-      <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots.</div>
+      <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots. La arena la cambiás arriba, sin cerrar la sala.</div>
       <div class="net-link">${url}</div>
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Hay guardianes repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
@@ -75,7 +73,7 @@ function netRenderLobbyBar(){
     bar._next = `<div class="net-row">${nameInput}<span class="net-code">SALA <b>${net.code}</b> · Anfitrión: ${(net.room.slots[0]||{}).name||"?"}</span>
         <button class="btn small ${me.ready?"ready-on":""}" id="net-ready-btn" ${hostBusy?"disabled":""}>${me.ready ? "✔ LISTO" : "Marcar LISTO"}</button>
         <button class="btn secondary small" id="net-leave-btn">Salir de la sala</button></div>
-      <div class="net-hint">Elegí tu guardián y prepará tu equipo. Arena: <b>${(ARENA_MODS[currentArena]||{}).label||""}</b> (la elige el anfitrión).</div>
+      <div class="net-hint">Elegí tu guardián y prepará tu equipo. La arena la elige el anfitrión (arriba ves cuál es).</div>
       ${hostBusy ? `<div class="net-wait-host">El anfitrión todavía está en la partida/resultados: cuando vuelva a la sala vas a poder marcar LISTO.</div>` : ""}
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Tu guardián ya lo usa otro jugador: elegí otro.</div>` : ""}`;
@@ -117,13 +115,6 @@ function netRenderLobbyBar(){
     netSendLoadout(true); netSend({t:"update", ready:!me.ready});
   });
   bar.querySelectorAll("[data-net-champ]").forEach(b=> b.addEventListener("click", ()=> netPickChamp(b.getAttribute("data-net-champ"))));
-  const as = document.getElementById("net-arena-sel");
-  if(as) as.addEventListener("change", ()=>{
-    if(!isArenaUnlocked(as.value)) return;
-    currentArena = as.value; updateMenuBrandSub();
-    netSend({t:"update", arena:currentArena});
-    renderPrepSummary();
-  });
   const lv = document.getElementById("net-leave-btn");
   if(lv) lv.addEventListener("click", ()=>{ netLeaveRoom(); setState("mainmenu"); renderMainMenu(); });
 }
@@ -199,7 +190,8 @@ function netRenderLobbySlots(){
       const dup = netDuplicateChamps().length>0;
       const waiting = netNotReady().length;
       startBtn.disabled = dup;
-      const verb = netLobby.matches>0 ? `Reintentar · ${(ARENA_MODS[currentArena]||{}).label||""}` : "Comenzar";
+      const lbl = (ARENA_MODS[currentArena]||{}).label||"";
+      const verb = netLobby.matches>0 ? (netLobby.lastArena===currentArena ? `Reintentar · ${lbl}` : `Comenzar · ${lbl}`) : "Comenzar";
       startBtn.textContent = `${verb} (${netHumanCount()} ${netHumanCount()===1?"jugador":"jugadores"} + ${4-netHumanCount()} bots)` + (waiting ? ` · faltan ${waiting} LISTO` : "");
       startBtn.classList.remove("hidden");
     } else {
@@ -259,6 +251,7 @@ function netRefreshLobby(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
   document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
+  renderLobbyArena();
   netRenderLobbyBar();
   if(typeof netRenderChat==="function") netRenderChat(); // silenciados/estado del chat (incremental: no reconstruye)
   netRenderLobbySlots();
@@ -293,7 +286,11 @@ netOn("joined", (m)=>{
 });
 netOn("room", (room)=>{
   if(netMatch && netIsHost()) netHostOnRoom(room);
-  if(net.role==="guest" && !netIsGuestPlaying() && room.arena && room.arena!==currentArena){ currentArena = room.arena; }
+  if(net.role==="guest" && !netIsGuestPlaying() && room.arena && room.arena!==currentArena){
+    currentArena = room.arena;
+    // en la Sala: aviso de la arena nueva que eligió el anfitrión (en los resultados se ve al volver)
+    if(state==="prep" && ARENA_MODS[currentArena]) showNetToast(`El anfitrión eligió la arena ${_lobbyArenaName(currentArena)}` + (isArenaUnlocked(currentArena) ? "" : " (no te cuenta para la campaña: todavía no la desbloqueaste)"));
+  }
   // el anfitrión volvió a la sala: los invitados que siguen en los resultados lo siguen solos
   if(net.role==="guest" && room.state==="lobby" && (state==="gameover" || state==="victory")) netStartAutoReturn(4, "El anfitrión volvió a la sala");
   if(net.role==="host") netHostBroadcastCos(false);
@@ -430,9 +427,11 @@ function netIsGuestPlaying(){ return !!(netMatch && netMatch.role==="guest" && !
 /* ---------------- LOOP DE LA SALA: partida -> resultados -> la MISMA sala ----------------
    Derrota (team wipe) o victoria -> resultados -> VOLVER AL LOBBY. El anfitrión vuelve (botón, o
    solo a los 20 s en una derrota) y la sala pasa a "esperando": los invitados que siguen en los
-   resultados vuelven solos a los pocos segundos. Misma sala, mismo código, misma arena, mismos
-   jugadores; LISTO vuelve a NO LISTO (lo resetea el servidor) y cada uno puede cambiar de
-   guardián, equipo y talentos antes de marcar LISTO otra vez. */
+   resultados vuelven solos a los pocos segundos. Misma sala, mismo código, mismos jugadores y,
+   tras una DERROTA, la misma arena; tras una VICTORIA, la sala vuelve con la próxima arena de la
+   campaña ya elegida (el anfitrión la puede cambiar en la Sala: renderLobbyArena). LISTO vuelve a
+   NO LISTO (lo resetea el servidor) y cada uno puede cambiar de guardián, equipo y talentos antes
+   de marcar LISTO otra vez. */
 function netEndLabels(){
   const online = !!(netMatch || netInRoom());
   const back = netLobby.roomGone ? "Volver al menú" : "VOLVER AL LOBBY";
@@ -467,6 +466,8 @@ function netStartAutoReturn(secs, why){
 // Llamado al mostrar la pantalla de derrota/victoria de una partida online.
 function netOnEndScreen(victory){
   netLobby.roomGone = false;
+  // tras una victoria, el anfitrión vuelve a la sala con la PRÓXIMA arena ya elegida (netFinishMatch)
+  netLobby.nextArena = (net.role==="host" && victory) ? nextCampaignArena(currentArena) : null;
   netEndLabels();
   if(net.role==="host" && !victory) netStartAutoReturn(20);
   // el invitado que llega tarde a los resultados y el anfitrión ya volvió: lo sigue
