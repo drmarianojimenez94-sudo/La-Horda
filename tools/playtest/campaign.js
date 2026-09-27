@@ -56,7 +56,23 @@ async function runOne(page, job) {
       minHpPct: __CP.minHpPct, idleSecs: Math.round(__CP.idleMs / 1000), peakEnemies: __CP.peakEnemies, allyDowns: __CP.allyDowns,
       items: __CP.items, bigHits: __CP.bigHits, killer: __CP.killer || null, buffs: __CP.buffs, levelAt: __CP.levelAt, top,
       xpGain: (save.champions[job.cls].level - lvl0) + ' lv / ' + Math.round(save.champions[job.cls].xp - xp0) + ' xp', goldGain: save.gold - gold0, apErr: __AP.err || null,
+      exit: __AP.exit ? { seenS: Math.round(__AP.exit.seenAt / 1000), reachedS: __AP.exit.reachedAt === null ? null : Math.round(__AP.exit.reachedAt / 1000), holds: __AP.exit.holds } : null,
       after: { lv: save.champions[job.cls].level, totXp: totalXpForChamp(job.cls), gold: save.gold, cleared: Object.keys(save.arenasCleared || {}).length } };
+    // partida que no terminó (tope de tiempo): foto del estado para diagnosticar dónde se trabó
+    if (state === 'playing') {
+      const R = v => Math.round(v);
+      const ent = e => e ? { type: e.type, alive: e.alive, hp: R(e.hp), max: R(e.maxHp), x: R(e.x), y: R(e.y), dmgTakenMult: e.dmgTakenMult, encMult: e._encMult, stun: R(e.stunTimer || 0), rank: e.rank } : null;
+      const byType = {}; for (const e of enemies) if (e.alive) byType[e.type] = (byType[e.type] || 0) + 1;
+      const st = { levelTimer: R(levelTimer), levelDuration: levelDuration > 1e8 ? 'inf' : R(levelDuration), levelClearing, runEnding, bossActive,
+        hold: (typeof arenaHas === 'function' && arenaHas('holdLevel')) ? !!arenaHook('holdLevel') : null,
+        boss: ent(boss), champ: ent(activeChampion), byType,
+        player: { x: R(player.x), y: R(player.y), walkable: (typeof arenaHas === 'function' && arenaHas('inside')) ? !!arenaHook('inside', player.x, player.y, 0) : null, alive: player.alive, hp: R(player.hp), joy: joyVec && { x: +joyVec.x.toFixed(2), y: +joyVec.y.toFixed(2) }, ctxHold: player._ctxHold },
+        allies: allies.map(a => ({ k: a.classKey, alive: a.alive, x: R(a.x), y: R(a.y) })) };
+      try { const ts = ctxTargets(); if (ts) st.ctx = ts.map(t => ({ id: t.id, kind: t.kind, x: R(t.x), y: R(t.y), r: t.r, prog: R(t.prog || 0), dur: t.dur, done: !!t.done })); } catch (e) {}
+      if (typeof mnS !== 'undefined' && mnS && job.arena === 'minas') st.minas = { sec: mnS.sec, portal: mnS.portal && { st: mnS.portal.st, t: R(mnS.portal.t || 0) }, cb: mnS.cb && { st: mnS.cb.st } };
+      if (typeof cmS !== 'undefined' && cmS && job.arena === 'ciudad') st.ciudad = { sub: cmS.sub && { st: cmS.sub.st, t: R(cmS.sub.t) }, pr: cmS.pr && { st: cmS.pr.st, act: cmS.pr.act, t: R(cmS.pr.t) }, saved: cmS.saved, lost: cmS.lost };
+      res.stall = st;
+    }
     // leave the run cleanly so the next job starts from a menu state
     try { if (typeof clearRunTimers === 'function') clearRunTimers(); } catch (e) {}
     state = 'menu';

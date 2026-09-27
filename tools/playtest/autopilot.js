@@ -42,6 +42,51 @@
     }
     return hit ? v : null;
   }
+  // Acción contextual reservada a humanos (los bots nunca la toman: botWorth 0 / maxBots 0). Se usa
+  // la misma API que un jugador: caminar con joyVec (siguiendo el campo de navegación de la acción
+  // contextual, ctxNavDir, si hay muros) y MANTENER el botón contextual (#btn-revive -> ctxBtnStart
+  // -> ctxSetHold). El progreso y el final (mnPortalEnter -> completeArenaByExit) los decide el juego.
+  const HUMAN_EXIT_KINDS = ["mn_portal"];
+  let exitHoldMs = 0;
+  function humanExitTarget(){
+    if(typeof ctxTargets!=="function") return null;
+    const ts = ctxTargets(); if(!ts) return null;
+    for(const t of ts){ if(!t.done && HUMAN_EXIT_KINDS.includes(t.kind)) return t; }
+    return null;
+  }
+  function humanExit(dt){
+    const t = humanExitTarget();
+    if(!t){ if(AP.exit && AP.exit.holding){ releaseCtx(); AP.exit.holding = false; } return false; }
+    const ex = AP.exit || (AP.exit = {seenAt:AP.clock, holds:0, holding:false, reachedAt:null});
+    const d = Math.hypot(t.x-player.x, t.y-player.y);
+    basicHeld = false;
+    if(d > t.r*0.55){
+      if(ex.holding){ releaseCtx(); ex.holding = false; }
+      let dir = (d > 90 && typeof ctxNavDir==="function") ? ctxNavDir(player, t) : null;
+      if(!dir) dir = norm(t.x-player.x, t.y-player.y);
+      // un peligro telegrafiado encima pesa más que llegar (un humano esquiva y sigue)
+      const dz = dangerAt(player.x, player.y);
+      let mx = dir.x, my = dir.y; if(dz){ const n = norm(dz.x, dz.y); mx += n.x*2; my += n.y*2; }
+      const l = Math.hypot(mx, my)||1; joyVec = {x:mx/l, y:my/l};
+      return true;
+    }
+    joyVec = {x:0, y:0};
+    if(ex.reachedAt===null) ex.reachedAt = AP.clock;
+    if(player._ctxHold !== t.id){
+      // el juego suelta la acción si algo la corta (aturdido, fuera de rango): se vuelve a apretar
+      const btn = document.getElementById("btn-revive");
+      if(btn){ btn.dispatchEvent(new PointerEvent("pointerup", {bubbles:true})); if(typeof updateReviveBtn==="function") updateReviveBtn(); btn.dispatchEvent(new PointerEvent("pointerdown", {bubbles:true})); }
+      if(player._ctxHold !== t.id && typeof ctxCanUse==="function" && ctxCanUse(player, t) && typeof ctxSetHold==="function") ctxSetHold(t);
+      if(player._ctxHold === t.id) ex.holds++;
+    }
+    ex.holding = player._ctxHold === t.id;
+    exitHoldMs = ex.holding ? exitHoldMs + dt : 0;
+    return true;
+  }
+  function releaseCtx(){
+    const btn = document.getElementById("btn-revive");
+    if(btn) btn.dispatchEvent(new PointerEvent("pointerup", {bubbles:true}));
+  }
   function tick(dt){
     if(!AP.on || state!=="playing" || !player || !player.alive) return;
     AP.clock += dt; const now = AP.clock;
@@ -83,6 +128,9 @@
     joyVec = AP._mv || {x:0,y:0};
     // La Fortaleza se recorre por sectores: el piloto de tools/fortaleza/sim-helpers.js sabe la ruta.
     if(currentArena==="fortaleza" && window.__fs) window.__fs.autopilot(dt);
+    // Salidas que SOLO puede tomar un humano (p.ej. el Portal Infernal de las Minas: "ATRAVESAR EL
+    // UMBRAL", CTX_KINDS.mn_portal, maxBots:0): ir hasta el objetivo y mantener la acción contextual.
+    if(humanExit(dt)) return;
     // revive
     const nd = (typeof nearestDownedAlly==="function") ? nearestDownedAlly() : null;
     if(nd){ reviveHold += dt; if(reviveHold > 1300){ tryReviveAlly(nd); reviveHold = 0; } } else reviveHold = 0;
@@ -128,6 +176,7 @@
     selectedClass = cls; currentArena = arena;
     startRun(level||1);
     if(window.__fs) window.__fs.wi = 0;
+    AP.exit = null;
     AP.on = true;
   };
 })();
