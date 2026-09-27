@@ -29,6 +29,9 @@ const RES_CFG = {
   jui:{dmg:1.12}
 };
 const RESO = {run:null, stolen:false};
+// Solo tocan a los enemigos "de a pie": nunca a partes de jefes (brazos del Leviatán = apéndices),
+// estructuras, trampas ni invocaciones, que tienen reglas propias de encuentro (boss_rules.js).
+const RES_FOE_RANK = {normal:1, subelite:1, elite:1};
 
 function resonanceJuicioOpen(){ return !!(save.arenasCleared && save.arenasCleared.infernal); }
 function resonanceAvailable(){ const l = crystalsOwned().slice(); if(resonanceJuicioOpen()) l.push("juicio"); return l; }
@@ -88,8 +91,8 @@ function resonanceTick(dt){
       const r2 = RES_CFG.esc.r*RES_CFG.esc.r;
       for(const e of enemies){
         if(!e.alive || e.hp <= 0 || e.cineT > 0) continue;
+        const big = e.rank === "jefe" || e.rank === "subjefe"; if(!big && (!RES_FOE_RANK[e.rank] || e.structure || ENEMY_BASE[e.type] && ENEMY_BASE[e.type].structure)) continue;
         const dx = e.x - h.x, dy = e.y - h.y; if(dx*dx + dy*dy > r2) continue;
-        const big = e.rank === "jefe" || e.rank === "subjefe";
         e.slowAmt = Math.max(e.slowAmt||0, big ? RES_CFG.esc.slowBoss : RES_CFG.esc.slow);
         e.slowTimer = Math.max(e.slowTimer||0, RES_CFG.esc.tickMs + 250);
       }
@@ -115,7 +118,7 @@ function resonanceOnHurt(h, dmg){
   R.cd = RES_CFG.anc.rootCd;
   const r2 = RES_CFG.anc.rootR*RES_CFG.anc.rootR; let n = 0;
   for(const e of enemies){
-    if(!e.alive || e.hp <= 0 || e.rank === "jefe" || e.rank === "subjefe") continue;
+    if(!e.alive || e.hp <= 0 || e.cineT > 0 || !RES_FOE_RANK[e.rank] || e.structure || (ENEMY_BASE[e.type] && ENEMY_BASE[e.type].structure)) continue;
     const dx = e.x - h.x, dy = e.y - h.y; if(dx*dx + dy*dy > r2) continue;
     e.stunTimer = Math.max(e.stunTimer||0, RES_CFG.anc.rootMs); n++;
   }
