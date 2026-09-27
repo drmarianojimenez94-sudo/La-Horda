@@ -1,6 +1,7 @@
 // Pruebas de las mecánicas de identidad de las arenas del camino de siempre (ARENA_EXT) y del
 // sistema de acción contextual (js/systems/context-actions.js). Sin dibujar salvo las capturas.
 //   (python3 -m http.server 8771 &) ; node tools/identity/t_identity.js [carpeta_capturas]
+//   variables: SE_BASE_URL (default http://127.0.0.1:8771), ONLY=bos,inf,hie,tut,acu,lab,env (secciones)
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
 const path = require('path');
@@ -208,29 +209,47 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   }
 
   if (want('bos')) {
-    // ---------------- Ruinas: runas y emboscadas ----------------
+    // ---------------- Ruinas: RUNAS INVERTIDAS (bos-ruins.js) y emboscadas ----------------
+    // Las 4 runas ya no son un poder del jugador: despiertan SOLAS (controlada -> activándose ->
+    // activa -> corrupción avanzada) y el equipo las CONTIENE manteniendo la acción contextual
+    // ("Contener"). Contenida = SELLADA un rato y sus raíces castigan a la horda cercana.
     await E(() => { __start('bosque', 1); __calm(); window.__ua = window.__ua || updateAllies; updateAllies = function(){}; });
-    const rn = await E(() => ({ n: BOS.runes.length, ready0: BOS.runes.filter(bosReady).length, pos: BOS.runes.map(r => aidInside(r.x, r.y, 20)) }));
-    check('BOS.cuatro_runas_en_los_menhires', rn.n === 4 && rn.ready0 === 0 && rn.pos.every(Boolean), rn);
-    const ch = await E(() => { let t = 0; while (!BOS.runes.some(bosReady) && t < 30000){ __step(500); t += 500; } return { t, ready: BOS.runes.filter(bosReady).map(r=>r.id) }; });
-    check('BOS.la_primera_runa_se_carga_pronto', ch.ready.length >= 1 && ch.t <= 14000, ch);
+    const rn = await E(() => ({ n: BOS.runes.length, st: BOS.runes.map(r => r.st), ctx: (ctxTargets() || []).length, pos: BOS.runes.map(r => aidInside(r.x, r.y, 20)) }));
+    check('BOS.cuatro_runas_en_los_menhires_controladas', rn.n === 4 && rn.st.every(s => s === 'ctrl') && rn.ctx === 0 && rn.pos.every(Boolean), rn);
+    const ch = await E(() => { let t = 0; while (!BOS.runes.some(r => r.st === 'arming') && t < 40000){ __step(500); t += 500; } return { t, first: BOS_CFG.firstArmMs, arming: BOS.runes.filter(r => r.st === 'arming').map(r => r.id), ctx: (ctxTargets() || []).length }; });
+    check('BOS.la_primera_runa_despierta_sola_y_pronto', ch.arming.length === 1 && ch.t <= ch.first + 1000 && ch.ctx === 1, ch);
+    // sin contener: se activa, suelta horda corrompida y con el tiempo pasa a corrupción avanzada
+    const esc = await E(() => {
+      BOS.armT = 1e12; const r = BOS.runes.find(x => x.st === 'arming'); let t = 0;
+      while (r.st === 'arming' && t < 20000){ __step(250); t += 250; }
+      const litAt = t, n0 = enemies.length; __step(BOS_CFG.spawnEvery.active + 500); t += BOS_CFG.spawnEvery.active + 500;
+      const spawned = enemies.filter(e => e.alive && e._bosCorrupt).length;
+      while (r.st === 'active' && t < 60000){ __step(500); t += 500; enemies.length = 0; }
+      const out = { litAt, armMs: BOS_CFG.armMs(1), spawned, n0, st: r.st, corruptAt: t }; enemies.length = 0; return out;
+    });
+    check('BOS.runa_sin_contener_se_activa_y_suelta_horda_corrompida', esc.litAt <= esc.armMs + 500 && esc.spawned >= 1, esc);
+    check('BOS.runa_activa_mucho_tiempo_pasa_a_corrupcion', esc.st === 'corrupt', esc);
     const use = await E(async () => {
-      const r = BOS.runes.find(bosReady); player.x = r.x; player.y = r.y + 10;
-      const foes = []; for (let i = 0; i < 6; i++){ const e = spawnEnemy('duende_bosque', false); e.x = r.x + (Math.random()-0.5)*300; e.y = r.y + (Math.random()-0.5)*200; e.speed = 0; foes.push(e); }
-      const far = spawnEnemy('duende_bosque', false); far.x = r.x + 700; far.y = r.y; far.speed = 0;
+      const r = BOS.runes[0]; for (const x of BOS.runes) if (x !== r) bosSetState(x, 'sealed'); bosSetState(r, 'active'); r.spawnT = 1e12; BOS.armT = 1e12;
+      player.x = r.x; player.y = r.y + 10;
+      const foes = []; for (let i = 0; i < 6; i++){ const e = spawnEnemy('duende_bosque', false); e.x = r.x + (Math.random()-0.5)*300; e.y = r.y + (Math.random()-0.5)*200; e.speed = 0; e.dmg = 0; foes.push(e); }
+      const far = spawnEnemy('duende_bosque', false); far.x = r.x + 700; far.y = r.y; far.speed = 0; far.dmg = 0;
       const hp0 = foes.map(e => e.hp);
       updateReviveBtn(); const b = document.getElementById('btn-revive'); const lbl = b.querySelector('.lbl').textContent;
-      b.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true })); for (let i = 0; i < 70; i++) update(16); b.dispatchEvent(new PointerEvent('pointerup', { bubbles:true }));
+      // mantener el botón (el progreso lo lleva ctxUpdate dentro de update): 2,6 s para una runa activa
+      b.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true }));
+      let frames = 0; while (r.st === 'active' && frames < 400){ update(16); frames++; }
+      b.dispatchEvent(new PointerEvent('pointerup', { bubbles:true }));
       const stunned = foes.filter(e => e.alive ? e.stunTimer > 1000 : true).length, hurt = foes.filter((e, i) => !e.alive || e.hp < hp0[i]).length;
-      const res = { lbl, charge: r.charge, stunned, hurt, farStun: far.stunTimer||0 }; enemies.length = 0; return res;
+      const res = { lbl, st: r.st, ms: frames*16, need: BOS_CFG.containMs.active, stunned, hurt, farStun: far.stunTimer||0, ctxLeft: (ctxTargets() || []).length }; enemies.length = 0; return res;
     });
-    check('BOS.activar_runa_con_el_boton', use.lbl === 'Activar' && use.charge < 0.1, use);
-    check('BOS.la_runa_atrapa_y_lastima_alrededor', use.stunned === 6 && use.hurt === 6 && use.farStun === 0, use);
+    check('BOS.contener_runa_manteniendo_el_boton', use.lbl === 'Contener' && use.st === 'sealed' && use.ms >= use.need - 50 && use.ms <= use.need + 400 && use.ctxLeft === 0, use);
+    check('BOS.las_raices_atrapan_y_lastiman_alrededor', use.stunned === 6 && use.hurt === 6 && use.farStun === 0, use);
     await shot('bos_runa');
-    const boss = await E(() => { const r = BOS.runes[0]; r.charge = 1; const e = spawnEnemy('duende_bosque', false); e.rank = 'jefe'; e.hp = e.maxHp = 10000; e.x = r.x + 50; e.y = r.y; e.speed = 0; const hp = e.hp; CTX_KINDS.bos_rune.onComplete(r, [player]); const out = { stun: e.stunTimer, pct: +(1 - e.hp/hp).toFixed(3) }; enemies.length = 0; return out; });
+    const boss = await E(() => { const r = BOS.runes[1]; bosSetState(r, 'active'); const e = spawnEnemy('duende_bosque', false); e.rank = 'jefe'; e.hp = e.maxHp = 10000; e.x = r.x + 50; e.y = r.y; e.speed = 0; const hp = e.hp; CTX_KINDS.bos_rune.onComplete(r, [player]); const out = { stun: e.stunTimer, pct: +(1 - e.hp/hp).toFixed(3) }; enemies.length = 0; return out; });
     check('BOS.el_jefe_apenas_se_frena', boss.stun <= 400 && boss.pct <= 0.02, boss);
-    const rech = await E(() => { const r = BOS.runes[0]; r.charge = 0; __step(16000); const half = r.charge; __step(17000); return { half: +half.toFixed(2), full: bosReady(r) }; });
-    check('BOS.la_runa_se_recarga', rech.half > 0.4 && rech.half < 0.6 && rech.full, rech);
+    const rech = await E(() => { const r = BOS.runes[0]; BOS.armT = 1e12; __step(BOS_CFG.sealMs/2); const half = r.st; __step(BOS_CFG.sealMs/2 + 1000); return { half, after: r.st }; });
+    check('BOS.la_runa_contenida_queda_sellada_y_despues_vuelve', rech.half === 'sealed' && rech.after === 'ctrl', rech);
     // emboscada: aviso y después la jauría sale de la maleza
     const amb = await E(() => {
       __start('bosque', 3); __calm(); updateAllies = function(){}; BOS.ambT = 10; __step(50);
@@ -246,18 +265,18 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('BOS.nivel1_sin_emboscadas', amb1 === 0, amb1);
     const ambB = await E(() => { __start('bosque', 3); __calm(); updateAllies = function(){}; activeChampion = {alive:true}; BOS.ambT = 10; __step(2000); const n = BOS.amb.length; activeChampion = null; return n; });
     check('BOS.sin_emboscadas_con_subjefe', ambB === 0, ambB);
-    // bots: activan la runa si hay horda encima
+    // bots: van a contener una runa activa (lo deciden solos con botWorth / ctxBotObjective)
     await E(() => { updateAllies = __ua; });
     const bot = await E(() => {
-      __start('bosque', 3); __calm(); BOS.ambT = 1e12; const r = BOS.runes[1]; r.charge = 1; for (const x of BOS.runes) if (x !== r) x.charge = 0;
-      player.x = r.x - 150; player.y = r.y; for (const h of allies){ h.x = r.x - 120 + (Math.random()-0.5)*60; h.y = r.y + 40; }
-      const foes = []; for (let i = 0; i < 6; i++){ const e = spawnEnemy('duende_bosque', false); e.x = r.x + 80 + (Math.random()-0.5)*80; e.y = r.y + (Math.random()-0.5)*80; e.speed = 0; e.dmg = 0; e.hp = e.maxHp = 1e6; foes.push(e); }
-      let t = 0; while (bosReady(r) && t < 20000){ __step(250); t += 250; }
-      return { used: !bosReady(r), t };
+      __start('bosque', 3); __calm(); BOS.ambT = 1e12; BOS.armT = 1e12; const r = BOS.runes[1]; for (const x of BOS.runes) if (x !== r) bosSetState(x, 'sealed'); bosSetState(r, 'active'); r.spawnT = 1e12;
+      player.x = r.x - 250; player.y = r.y; for (const h of allies){ h.x = r.x - 220 + (Math.random()-0.5)*60; h.y = r.y + 40; }
+      let t = 0; while (r.st === 'active' && t < 20000){ __step(250); t += 250; enemies.length = 0; }
+      const hb = r.by >= 0 ? heroes[r.by] : null; return { st: r.st, t, by: hb ? hb.classKey : null, byBot: !!hb && hb !== player };
     });
-    check('BOS.los_bots_usan_la_runa_con_horda', bot.used, bot);
-    const run = await E(() => { __start('bosque', 2); let t = 0, runes = 0, ambs = 0, seen = new Set(); while (state === 'playing' && runLevel <= 4 && t < 300000){ __step(500); t += 500; for (const a of BOS.amb) if (!seen.has(a.id)){ seen.add(a.id); ambs++; } for (const h of heroes) runes = Math.max(runes, 0) + 0; } const used = heroes.reduce((s, h) => s + ((h.stats && h.stats.runes)||0), 0); return { lv: runLevel, t: t/1000, ambs, used, st: state }; });
-    check('BOS.partida_real_niveles_2_a_4', run.lv >= 4 && run.ambs >= 1 && run.st !== 'menu', run);
+    check('BOS.los_bots_contienen_la_runa', bot.st === 'sealed' && bot.byBot, bot);
+    const run = await E(() => { __start('bosque', 2); let t = 0, ambs = 0, armed = 0, seen = new Set(), prev = BOS.runes.map(r => r.st); while (state === 'playing' && runLevel <= 4 && t < 300000){ __step(500); t += 500; for (const a of BOS.amb) if (!seen.has(a.id)){ seen.add(a.id); ambs++; } BOS.runes.forEach((r, i) => { if (r.st === 'arming' && prev[i] !== 'arming') armed++; prev[i] = r.st; }); } const used = heroes.reduce((s, h) => s + ((h.stats && h.stats.runes)||0), 0); return { lv: runLevel, t: t/1000, ambs, armed, used, st: state }; });
+    check('BOS.partida_real_niveles_2_a_4', run.lv >= 4 && run.ambs >= 1 && run.armed >= 1 && run.st !== 'menu', run);
+    check('BOS.partida_real_los_bots_contienen_runas', run.used >= 1, run);
   }
 
   if (want('tut')) {
