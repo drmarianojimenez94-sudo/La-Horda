@@ -205,7 +205,7 @@ function killEnemy(e){
   // Ahora la XP la gana quien dio el golpe final, sea el jugador o un aliado — así los
   // bots también suben de nivel durante la partida, simulando a otros jugadores.
   // B1: si el que remató es un invitado, la XP/oro van a SU guardado (el anfitrión se lo avisa)
-  // y se calculan con SUS refuerzos; el registro local de su campeón solo sigue la partida.
+  // y se calculan con SUS refuerzos; el registro local de su guardia solo sigue la partida.
   const killer = e.lastHitBy && e.lastHitBy.classKey ? e.lastHitBy : null;
   const krs = (killer && killer._net) ? killer._net.runStats : runStats;
   if(killer){

@@ -194,13 +194,13 @@ function drawGroundSigil(h){
 }
 
 // Fase 5 — Arena Divina: aura sagrada sobre los 4 enemigos "divinos". No toca su sprite (el
-// mismo campeón, la misma silueta, tal como pide el diseño): solo agrega resplandor pulsante
+// mismo guardia, la misma silueta, tal como pide el diseño): solo agrega resplandor pulsante
 // y un anillo de runas rotando bajo los pies, dibujado ANTES del sprite para que quede detrás.
 function drawDivineAura(h){
   const now = performance.now()/1000;
   const pulse = 0.6+0.4*Math.sin(now*2.2 + h.x*0.01);
   // El aura crece con el nivel de la Arena Divina (y por lo tanto con el nivel de personaje
-  // del equipo enemigo, 10 por nivel): en el nivel 10 (campeón nivel 100) debe notarse mucho
+  // del equipo enemigo, 10 por nivel): en el nivel 10 (guardia nivel 100) debe notarse mucho
   // más grande e intensa que en el nivel 1. Tope en 2.5x para que no se descontrole.
   const lvlScale = Math.min(2.5, 1 + (divinaLevel-1)*0.17);
   const R = 58*lvlScale;

@@ -1,22 +1,22 @@
 "use strict";
 /* ============================================================
    js/systems/skill-evolution.js
-   IDENTIDAD POR CAMPEÓN + EVOLUCIÓN DE HABILIDADES (Nv. 1 / 3 / 5 / 7 / 10).
+   IDENTIDAD POR GUARDIA + EVOLUCIÓN DE HABILIDADES (Nv. 1 / 3 / 5 / 7 / 10).
    Antes subir una habilidad era solo "más número" (daño, área, cooldown). Ahora cada hito
-   cambia CÓMO juega la habilidad, con la firma propia del campeón:
+   cambia CÓMO juega la habilidad, con la firma propia del guardia:
      Nv.1   la habilidad base.
-     Nv.3   FIRMA        los golpes de la habilidad dejan el estado propio del campeón (sangrado del
+     Nv.3   FIRMA        los golpes de la habilidad dejan el estado propio del guardia (sangrado del
                          Asesino, aturdida del Tanque, quemadura/escarcha/descarga del Mago según el
                          elemento, marca de la Cazadora...). Esos estados habilitan las REACCIONES
                          de los compañeros (hielo + golpe pesado, sangrado + golpe pesado...).
      Nv.5   ÍMPETU       rematar con la habilidad le recorta 25% del enfriamiento restante (una vez
                          por lanzamiento). En la ulti: devuelve algo de carga.
      Nv.7   RESONANCIA   golpear con la habilidad a un enemigo que YA tiene tu firma lo hace estallar
-                         (25% del golpe alrededor, del color del campeón).
+                         (25% del golpe alrededor, del color del guardia).
      Nv.10  FORMA FINAL  cada 3er lanzamiento sale potenciado: +50% de poder, +20% de área y un
                          destello propio.
    Los tiers visuales de ability-vfx.js usan los mismos hitos (tierOf: 3/5/7).
-   IDENTIDAD: cada campeón tiene su forma de proyectil y estela (flecha, daga, orbe, runa,
+   IDENTIDAD: cada guardia tiene su forma de proyectil y estela (flecha, daga, orbe, runa,
    glifo, bala con humo, alma...), además del color y la paleta de impacto que ya tenía.
    Todo corre donde corre la simulación (anfitrión); los invitados lo ven por lo replicado.
    >>> Balance: EVO_CFG y CHAMP_IDENTITY.
@@ -107,9 +107,9 @@ function skillEvoOnHit(src, e, dmg, opts){
   const sig = evoSigFor(src, ev.sk);
   // IMPACTO QUE CRECE CON EL NIVEL (playtest de evolución: las habilidades de golpe directo -Corte
   // Sangrante, Triple Golpe, Flecha Perforante- se veían iguales del Nv.1 al 7 porque su efecto es
-  // el golpe, no el lanzamiento). Anillo del color del campeón en el enemigo: más grande y con más
+  // el golpe, no el lanzamiento). Anillo del color del guardia en el enemigo: más grande y con más
   // capas en cada hito. Un impacto por enemigo cada 180 ms (no satura con golpes múltiples).
-  const win = (runElapsedMs/100)|0; if(src._evoFxWin !== win){ src._evoFxWin = win; src._evoFxN = 0; } // tope: 6 impactos por campeón cada 100 ms
+  const win = (runElapsedMs/100)|0; if(src._evoFxWin !== win){ src._evoFxWin = win; src._evoFxN = 0; } // tope: 6 impactos por guardia cada 100 ms
   if(inView(e.x, e.y, 40) && (e._evoFxAt===undefined || runElapsedMs - e._evoFxAt > 180) && src._evoFxN++ < 6){
     e._evoFxAt = runElapsedMs;
     const rgb = hexToRgb(src.cls.glow||"#ffffff"), T = ev.lvl >= 10 ? 5 : ev.lvl >= 7 ? 4 : ev.lvl >= 5 ? 3 : 2, pr = src===player ? 1 : 0;

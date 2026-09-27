@@ -2,7 +2,7 @@
 /* ============================================================
    js/champions/champ-shared.js
    Piezas comunes a El Libertador (libertador.js) y Eren (eren.js), enganchadas al motor en
-   pocos puntos para no tocar a ningún otro campeón:
+   pocos puntos para no tocar a ningún otro guardia:
    - champFx: UNA colección de efectos de mundo (zonas, avisos, jinetes espectrales, pisadas,
      escarcha). Es lógica liviana + dibujo; se sincroniza sola en cooperativo (NET_COLLS).
      Regla de rendimiento: 12 Granaderos o 9 siluetas gigantes son UN efecto con UNA zona de
@@ -111,7 +111,7 @@ function heroMoveLocked(h){
   if(h.classKey==="eren") return erenMoveLocked(h);
   return false;
 }
-// Golpe letal: ¿la evita algo propio del campeón? (Soldado Cabral). true = no muere.
+// Golpe letal: ¿la evita algo propio del guardia? (Soldado Cabral). true = no muere.
 function heroPreventDeath(h, src){
   if(h && h.classKey==="libertador" && libertadorPreventDeath(h, src)) return true;
   return champSetPreventDeath(h); // set La Última Profecía

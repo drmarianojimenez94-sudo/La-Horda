@@ -7,7 +7,7 @@
 /* ============================================================
    AXIOM — zonas con demora/agrupamiento (Error 404 y Bug de Colisión). Mismo patrón que
    traps/fireWalls (array propio, se actualiza cada frame, se filtra al vencer), separado del
-   sistema de trampas del Asesino para no tocar nada de otro campeón.
+   sistema de trampas del Asesino para no tocar nada de otro guardia.
    ============================================================ */
 function updateAxiomZones(dt){
   for(const z of axiomZones){

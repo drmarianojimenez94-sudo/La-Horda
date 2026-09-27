@@ -228,7 +228,7 @@ function netPickBots(humanChamps, n){
   }
   return out;
 }
-// Datos de campeón que manda cada invitado (solo lo que el anfitrión necesita para simularlo:
+// Datos de guardia que manda cada invitado (solo lo que el anfitrión necesita para simularlo:
 // nivel, habilidades, talentos y los objetos EQUIPADOS; nunca el resto del inventario).
 function netBuildLoadout(){
   const k = selectedClass, c = save.champions[k];
@@ -248,7 +248,7 @@ function netLoadoutRecord(L){
   rec.equipment = Object.assign(mkEquipment(), L.equipment||{});
   return rec;
 }
-// Mientras dura la partida, save.champions[campeón del invitado] apunta a SU loadout (así toda
+// Mientras dura la partida, save.champions[guardia del invitado] apunta a SU loadout (así toda
 // la simulación -stats, maestrías, talentos, objetos- usa sus datos reales). El guardado del
 // anfitrión nunca lo ve: netPersistView entrega los datos originales al escribir.
 function netApplyGuestLoadouts(){

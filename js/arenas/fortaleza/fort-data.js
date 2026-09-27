@@ -158,7 +158,7 @@ const FORT_CFG = {
 };
 
 // ---------------- fichas de enemigo (se suman a ENEMY_BASE) ----------------
-// Escala relativa pedida: campeón 1.0 (radio ~23). hMul = alto dibujado / radio.
+// Escala relativa pedida: guardia 1.0 (radio ~23). hMul = alto dibujado / radio.
 Object.assign(ENEMY_BASE, {
   carcelero:      {name:"Carcelero Deforme",    rank:"normal",   hp:40,  dmg:8,  speed:74,  radius:26, xp:10, gold:4, scale:3.6, color:"#8a4a3a", ranged:false},
   dragon_bronce:  {name:"Dragón de Bronce",     rank:"normal",   hp:18,  dmg:5,  speed:112, radius:21, xp:6,  gold:2, scale:3.0, color:"#c07a3a", ranged:false, flying:true, mech:true},

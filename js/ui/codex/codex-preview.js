@@ -3,14 +3,14 @@
    js/ui/codex/codex-preview.js
    CodexSpritePreview — el componente reutilizable de previews animadas del Códice.
    Dibuja SIEMPRE con el arte y el camino de dibujo reales del juego (drawChampFigure / drawChampPack
-   para campeones, animPose + drawEnemyBody para criaturas y jefes, VFX_SPR_EXTRA / SE_FX para efectos):
+   para guardias, animPose + drawEnemyBody para criaturas y jefes, VFX_SPR_EXTRA / SE_FX para efectos):
    no hay sprites propios del Códice. Lo que no tiene arte se muestra con la mejor representación
    existente y queda registrado en LA_HORDA_CODEX_MISSING_ASSETS.md.
 
    codexPreview(canvas, spec) registra un canvas; un solo bucle (rAF) dibuja los que están a la vista
    (IntersectionObserver) y se apaga solo cuando no queda ninguno. spec:
      kind:  "champ" | "enemy" | "group" | "ambient"
-     key:   clase del campeón o tipo de ENEMY_BASE      forms: [tipos] (jefes de varias formas)
+     key:   clase del guardia o tipo de ENEMY_BASE      forms: [tipos] (jefes de varias formas)
      anim:  "idle" | "walk" | "attack" | "cast" | "set" | "skill"
      set:   animación con nombre del atlas (packSet del enemigo o set del CHAMP_PACK)
      skill: {fx, color, vfx, anim, set, pack, extra, dummies}   (demo de habilidad en loop)
@@ -149,8 +149,8 @@ function _cxAmbient(g, W, H, now, arena){
   }
 }
 
-/* ---------------- campeones ---------------- */
-// Escala de dibujo de campeón para que ocupe ~frac del alto del canvas.
+/* ---------------- guardias ---------------- */
+// Escala de dibujo de guardia para que ocupe ~frac del alto del canvas.
 function _cxChampScale(H, frac){ return H*frac/40; }
 function _cxDrawChamp(g, key, x, y, sc, t, S, extra){
   const saved = ctx; ctx = g;
@@ -288,7 +288,7 @@ function _cxSkillScene(g, p, W, H, t, dt){
     if(K.set){ ex._codexSet = K.set; ex._codexT = (q - 0.05)*CX_SKILL_LOOP; ex._codexPack = K.pack; ex._codexFps = K.fps; }
     else { const a = Math.max(0, 520 - (q - 0.05)*CX_SKILL_LOOP); ex.attackAnim = a; ex._aPrev = 1e9; ex._aDur = 520; if(K.anim !== "attack") ex._packCastUntil = Infinity; }
   }
-  // desplazamientos (embestidas, parpadeos): el campeón se mueve durante el efecto
+  // desplazamientos (embestidas, parpadeos): el guardia se mueve durante el efecto
   let px = cx;
   if(K.fx === "dash" || K.fx === "charge"){ const k = Math.max(0, Math.min(1, (q - 0.3)/0.25)); px = cx + (tx - cx - W*0.08)*Math.sin(k*Math.PI/2)*(q < 0.8 ? 1 : Math.max(0, 1 - (q-0.8)/0.2)); }
   if(K.fx === "blink"){ px = q > 0.45 && q < 0.85 ? tx - W*0.12 : cx; }

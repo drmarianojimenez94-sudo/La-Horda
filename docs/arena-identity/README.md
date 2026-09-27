@@ -26,7 +26,7 @@ enteramente sobre él.
 
 | Arena | Orden (canon, ver `docs/lore/LA_HORDA_LORE_BIBLE.md`) | Código propio | Ficha |
 |---|---|---|---|
-| Ciudad Maldita (`ciudad`) | 01 · en construcción | — (slot `comingSoon` en `ARENA_MODS`) | — |
+| **Ciudad Maldita** (`ciudad`) | **01** | **`js/arenas/ciudad/`** (registrada en `ARENA_DEFS`) | [ciudad.md](ciudad.md) |
 | **La Fábrica Sin Fin** (`fortaleza`) | **02** | **`js/arenas/fortaleza/`** (registrada en `ARENA_DEFS`) | [fortaleza.md](fortaleza.md) |
 | Ruinas Célticas / Élficas (`bosque`) | 03 · Guardián 1 | bloques en `update.js`/`spawning.js`, `aidBuildBosque` + **`js/arenas/bosque/`** (`ARENA_EXT`) | [bosque.md](bosque.md) |
 | **El Reino Fúngico** (`micelial`) | **04** | **`js/arenas/micelial/`** (registrada en `ARENA_DEFS`) | [micelial.md](micelial.md) |

@@ -104,7 +104,7 @@ const MIC_CFG = {
 };
 
 // ---------------- fichas de enemigo (se suman a ENEMY_BASE) ----------------
-// Escala relativa pedida: campeón 1.0 (~65 u de alto). hMul = alto dibujado / radio (mic-arena.js).
+// Escala relativa pedida: guardia 1.0 (~65 u de alto). hMul = alto dibujado / radio (mic-arena.js).
 Object.assign(ENEMY_BASE, {
   infectado:  {name:"Infectado Micelial",   rank:"normal",   hp:30,  dmg:8,  speed:80,  radius:23, xp:7,  gold:2,  scale:3.4, color:"#b050c0", ranged:false},
   acechador:  {name:"Acechador de Esporas", rank:"subelite", hp:36,  dmg:10, speed:128, radius:21, xp:11, gold:4,  scale:3.2, color:"#6a5ad0", ranged:false},

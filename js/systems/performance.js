@@ -5,7 +5,7 @@
    Cada rol se mide por lo que su rol aporta, no por daño bruto: así un tanque o un soporte
    pueden sacar S+ igual que un asesino. Casi todo se mide como PARTE DEL EQUIPO (qué porción
    del daño a élites hiciste, cuánto del daño recibido por el equipo curaste, etc.) o por
-   minuto: no depende de la arena, del nivel de los campeones ni de lo que duró la partida.
+   minuto: no depende de la arena, del nivel de los guardias ni de lo que duró la partida.
      TANQUE  — daño mitigado/absorbido, amenazas controladas, proteger aliados, revivir,
                supervivencia, participación en el jefe.
      SOPORTE — curación EFECTIVA (no cuenta lo que sobra), escudos/potenciaciones, revivir,

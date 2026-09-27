@@ -4,7 +4,7 @@
    LA HISTORIA DE LA CAMPAÑA en el ORDEN CANÓNICO (Lore Bible: docs/lore/LA_HORDA_LORE_BIBLE.md;
    estado de la historia: docs/lore/LA_HORDA_STORY_STATE.md).
    - Las CICATRICES DE LA HORDA (término provisional): alteraciones que aparecen cuando el sello se
-     debilita. Conectan las arenas: los campeones las siguen para encontrar cristales y Guardianes.
+     debilita. Conectan las arenas: los guardias las siguen para encontrar cristales y Guardianes.
      Por ahora se expresan con textos, carteles y la voz del Hechicero (no es una mecánica jugable).
    - Prólogo de la Ciudad Maldita (arena 01, en construcción): se cuenta antes de la primera arena
      jugable hasta que la Ciudad exista como arena.
@@ -33,16 +33,16 @@ const CAMPAIGN_STORY = {
              scar:"Tres cristales. La Cicatriz se rasga: más allá ya no hay piso, solo el Abismo.",
              say:"Tres. Con los tres juntos, la Cicatriz va a ser la más grande de todas. No te detengas ahora."},
   abismo:   {title:"EL ABISMO", sub:"El punto de no retorno.",
-             scar:"El mundo se rompe. Los campeones cruzan hacia la dimensión de la Horda.",
+             scar:"El mundo se rompe. Los guardias cruzan hacia la dimensión de la Horda.",
              say:"Cruzaste. Ya no hay vuelta atrás. Te espero en el corazón del Infierno."},
   infernal: {title:"LA ARENA INFERNAL", sub:"La dimensión de la Horda. Alguien está encadenado en el fondo.", guardian:4}
 };
-const CAMPAIGN_PROLOGUE = "La Horda volvió a la ciudad donde estaban los campeones. La defendieron, pero algo quedó roto: " +
+const CAMPAIGN_PROLOGUE = "La Horda volvió a la ciudad donde estaban los guardias. La defendieron, pero algo quedó roto: " +
   "en medio del humo apareció la proyección del Hechicero Supremo. Los antiguos Guardianes están cayendo, dijo, y los cristales " +
   "que mantienen limitada a la Horda tienen que recuperarse. Donde la Horda pasó quedó una CICATRIZ, y marca el camino. " +
   "La ciudad ya no es la misma: desde ese día la llaman la Ciudad Maldita.";
 const CAMPAIGN_ENDING = "El Rey de la Horda cayó y su plan de fundir los cristales fracasó. Pero los cristales no pueden destruirse, " +
-  "y la Horda tampoco: es la maldad que existe en el mundo. Los cristales siguen necesitando portadores… Los nuevos campeones " +
+  "y la Horda tampoco: es la maldad que existe en el mundo. Los cristales siguen necesitando portadores… Los nuevos guardias " +
   "empiezan a ocupar el lugar de los Guardianes.";
 
 // Cartel de título al entrar a una arena (nivel 1). Las arenas con cartel propio lo muestran ellas.
@@ -71,7 +71,7 @@ function campaignOnVictory(arena, firstClear){
   if(S.scar && typeof showBanner==="function") setTimeout(()=>showBanner("✦ " + S.scar), firstClear ? 5200 : 2600);
   if(firstClear && S.say && typeof tutSay==="function") setTimeout(()=>{ try{ tutSay("story_after_" + arena, S.say, null, 11000, true); }catch(e){} }, 7600);
 }
-// Guardián del Laberinto (subjefe): antes de caer, advierte a los campeones.
+// Guardián del Laberinto (subjefe): antes de caer, advierte a los guardias.
 function campaignLabyrinthWarning(x, y){
   if(typeof floatText==="function") floatText(x, y - 90, "«El que te guía… no le entregues los cristales…»", "crit");
   if(typeof showBanner==="function") setTimeout(()=>showBanner("El Guardián del Laberinto intentó advertirte algo antes de caer"), 900);

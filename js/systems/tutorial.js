@@ -64,10 +64,10 @@ function tutTick(){
     if(TUT.lx===null){ TUT.lx = player.x; TUT.ly = player.y; TUT.k0 = st.kills||0; }
     TUT.moved += Math.hypot(player.x-TUT.lx, player.y-TUT.ly); TUT.lx = player.x; TUT.ly = player.y;
     if(!tutSeen("b_move")){
-      if(!TUT.key) tutSay("b_move", "Bienvenido, campeón. Soy el Hechicero y te voy a guiar. Primero: movete.", "Movete con el joystick", 14000);
+      if(!TUT.key) tutSay("b_move", "Bienvenido, guardia. Soy el Hechicero y te voy a guiar. Primero: movete.", "Movete con el joystick", 14000);
       if(TUT.moved > 260) tutDone("b_move");
     } else if(!tutSeen("b_attack")){
-      if(!TUT.key) tutSay("b_attack", "¡Ahí viene la horda! Mantené apretado Ataque: tu campeón le pega solo al más cercano.", "Mantené Ataque para pelear", 16000);
+      if(!TUT.key) tutSay("b_attack", "¡Ahí viene la horda! Mantené apretado Ataque: tu guardia le pega solo al más cercano.", "Mantené Ataque para pelear", 16000);
       if((st.kills||0) > TUT.k0) tutDone("b_attack");
     } else if(!tutSeen("b_skill")){
       if(!TUT.key) tutSay("b_skill", "Tus habilidades pegan mucho más fuerte que el ataque. Tocá una; si la mantenés, podés apuntarla.", "Tocá una habilidad (mantené y arrastrá para apuntar)", 16000);

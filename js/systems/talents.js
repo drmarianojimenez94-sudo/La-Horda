@@ -16,15 +16,15 @@ function talentSkillCdMult(classKey, skillKey){
 }
 
 /* ============================================================
-   TALENTOS Y MAESTRÍAS (permanentes por campeón)
+   TALENTOS Y MAESTRÍAS (permanentes por guardia)
    ============================================================
    Arquitectura data-driven: TALENT_TREES[classKey] = {masteryRequirement, nodes:[...], masteries:{...}}
    define TODO el contenido; el motor de abajo (compra/validación/aplicación) es genérico y no
-   sabe nada de ningún campeón en particular -agregar/balancear un talento es tocar solo su
+   sabe nada de ningún guardia en particular -agregar/balancear un talento es tocar solo su
    entrada de datos, nunca esta sección-.
 
    Moneda: reutiliza exactamente save.champions[classKey].talentPoints, la MISMA que ya reparte
-   grantXP() (1 por nivel de campeón) y que investTalentPoint() ya gasta en subir de 0 a
+   grantXP() (1 por nivel de guardia) y que investTalentPoint() ya gasta en subir de 0 a
    TALENT_MAX(10) cada una de las 4 ranuras del kit (3 habilidades + ulti, hasta 40 puntos en
    total). El árbol de talentos y la Maestría compiten por ESA MISMA bolsa de puntos -no crean
    una moneda nueva-, simplemente se vuelven comprables recién a partir de cierto nivel de

@@ -49,7 +49,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   await page.click('#mainmenu-codex-btn'); await sleep(400);
   check('HOME.abre', await vis('#codex-screen'));
   const home = await E(() => [...document.querySelectorAll('#codex-body .cx-home-title')].map(e => e.textContent.replace(/[^A-ZÁÉÍÓÚ]/g, '')));
-  check('HOME.cuatro_secciones', JSON.stringify(home) === '["CAMPEONES","BESTIARIO","JEFES","ARENAS"]', home);
+  check('HOME.cuatro_secciones', JSON.stringify(home) === '["GUARDIAS","BESTIARIO","JEFES","ARENAS"]', home);
   const homeArt = await E(() => document.querySelectorAll('#codex-body .cx-home-card canvas').length);
   check('HOME.arte_real_animado', homeArt >= 5, homeArt);
   if (OUT) await page.screenshot({ path: OUT + '/codex_home.png' });
@@ -138,7 +138,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('DESC.progreso_real_revela_todo', vetStates.c === 'defeated' && vetStates.b === 'defeated' && vetStates.n.creatures[2] === vetStates.n.creatures[1], vetStates);
 
   // campeones: galería → ficha → elegir → equipo/talentos/maestría → skins
-  await E(() => { codexStack = [codexStack[0]]; codexGo('list', 'campeones', 'CAMPEONES'); }); await sleep(250);
+  await E(() => { codexStack = [codexStack[0]]; codexGo('list', 'campeones', 'GUARDIAS'); }); await sleep(250);
   await page.click('#codex-body .cx-champ-card[data-go="champ:musashi"]'); await sleep(300);
   check('CAMP.ficha_con_preview', await vis('#codex-body .cx-entry-champ .cx-stage-pv'));
   await page.click('#cx-pick-btn'); await sleep(200);
@@ -169,7 +169,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('CAMP.skin_abre_la_tienda_real_y_vuelve', inShop.st === 'shop' && inShop.tab === 'skins' && await vis('#codex-screen'), inShop);
   }
   // Mi Inventario desde el Códice
-  await E(() => { codexStack = [codexStack[0]]; codexGo('list', 'campeones', 'CAMPEONES'); }); await sleep(200);
+  await E(() => { codexStack = [codexStack[0]]; codexGo('list', 'campeones', 'GUARDIAS'); }); await sleep(200);
   await page.click('#codex-inv-btn'); await sleep(250);
   const invOk = await vis('#inventory-screen');
   await page.click('#myinv-back-btn'); await sleep(250);

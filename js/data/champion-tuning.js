@@ -8,7 +8,7 @@
    empujes, sangrado y daño de las definitivas. La lógica está en js/champions/libertador.js y
    js/champions/eren.js y nunca repite estos valores.
    Convenciones: *Ms = milisegundos, *Pct/*Mult = proporción (0.2 = +20%), dmgMult = veces el
-   daño base del campeón (ya escalado por nivel, objetos, talentos y maestría de la habilidad).
+   daño base del guardia (ya escalado por nivel, objetos, talentos y maestría de la habilidad).
    ============================================================ */
 const SM_CFG = {
   // Fusil de Granadero (básico): pocos disparos, cada uno importa
@@ -32,7 +32,7 @@ const SM_CFG = {
 };
 const EREN_CFG = {
   // FURIA = la barra de la definitiva (ultCharge 0..ultMax). Además de lo que carga pegando
-  // (igual que cualquier campeón), sube al recibir daño y con el 3er golpe del combo.
+  // (igual que cualquier guardia), sube al recibir daño y con el 3er golpe del combo.
   fury:     {perHpPctTaken:0.9, comboThird:5, lowHpBonus:1.0, titanGainMult:0.55},
   // Doble hoja (básico): combo de 3
   blades:   {combo:[1.0, 1.0, 1.45], windowMs:900},

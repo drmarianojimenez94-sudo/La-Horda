@@ -98,7 +98,7 @@ function drawDivinaStructProjectiles(){
   }
 }
 
-// ---- Colores de equipo: anillo bajo los pies de cada campeón (tuyo o rival) mientras estás
+// ---- Colores de equipo: anillo bajo los pies de cada guardia (tuyo o rival) mientras estás
 // en la Arena Divina, para distinguir a simple vista quién pelea para cada bando.
 function drawDivinaTeamRing(ent, side){
   // Pedido explícito: "es un juego 2D, no alcanza un circulito" -además del anillo en el piso

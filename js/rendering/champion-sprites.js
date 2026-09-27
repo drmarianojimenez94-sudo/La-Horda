@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/rendering/champion-sprites.js
-   Cómo se DIBUJA el cuerpo de cada campeón con su arte real (atlas, direcciones,
+   Cómo se DIBUJA el cuerpo de cada guardia con su arte real (atlas, direcciones,
    poses de habilidad, caída/muerte, invocaciones del Nigromante, lobo de Sylva).
    ============================================================ */
 
@@ -12,7 +12,7 @@
 
    PRUEBA PILOTO de migración al motor ANIM ATLAS de arriba: magoAtlasFrame/drawMagoAtlas/
    drawMagoFallen conservan exactamente la misma firma de siempre (los siguen llamando
-   drawHero, la previsualización de campeones y el dibujo de cadáveres, sin cambios ahí),
+   drawHero, la previsualización de guardias y el dibujo de cadáveres, sin cambios ahí),
    pero ahora delegan en el motor genérico en vez de tener su propia lógica de frames a
    mano. Se agrega además UN evento de ejemplo ("cast_release", en el clip "cast") que
    dispara una ráfaga de partículas en el momento exacto en que el Mago suelta el
@@ -31,7 +31,7 @@ const MAGO_ANIM_DEF = buildAnimDefFromLegacy(MAGO_ATLAS, MAGO_TARGET_HEIGHT, { c
 const MAGO_ANIM_ATLAS = wrapAnimImage(MAGO_IMG, ()=>MAGO_IMG_READY, MAGO_ANIM_DEF);
 
 // Qué clip tocar según el estado actual del Mago (reposo/caminar/lanzar/daño) — esto sigue
-// siendo decisión del propio campeón, el motor de animación no sabe nada de estas reglas.
+// siendo decisión del propio guardia, el motor de animación no sabe nada de estas reglas.
 function magoResolveClip(h){
   if(h.attackAnim>0) return "cast";
   if(h.hurtTimer>0) return "hurt";
@@ -46,7 +46,7 @@ function magoCastReleaseFx(eventName, h){
   }
 }
 // Dibuja al Mago usando el atlas real (vía el motor genérico de animación); misma firma que
-// antes, así que drawHero/la previsualización de campeones no necesitan cambiar nada.
+// antes, así que drawHero/la previsualización de guardias no necesitan cambiar nada.
 function drawMagoAtlas(h, drawScale, alpha){
   return drawAnimAtlas(MAGO_ANIM_ATLAS, magoResolveClip(h), h, drawScale, alpha, (ev)=>magoCastReleaseFx(ev,h));
 }
@@ -249,7 +249,7 @@ function champPackDrawFrame(P, v, x, y, s, flip, alpha){
   }
 }
 function drawChampPack(key, h, drawScale, alpha){
-  const base = h._codexPack || key; // preview del Códice: otro atlas del mismo campeón (a caballo, El Portador)
+  const base = h._codexPack || key; // preview del Códice: otro atlas del mismo guardia (a caballo, El Portador)
   const P = CHAMP_PACK[typeof setSkinPackKey==="function" ? setSkinPackKey(h, base) : base]; // skin de set completo
 
   if(!P || !P.ready) return false;
@@ -485,13 +485,13 @@ function drawRealFallen(h, alpha){
   drawAnimFrameSized(img, d.clip, 0, h.x, h.y, w, hh, 0.5, 0.85, (h.fx||0) < -0.12, alpha);
   return true;
 }
-// Campeón caído (propio o, en la Arena Divina, rival): reacción al golpe, caída de costado y
+// Guardia caído (propio o, en la Arena Divina, rival): reacción al golpe, caída de costado y
 // queda tendido semitransparente, o la pose real de muerte cuando existe arte para eso.
 function drawFallenHero(h){
   const skinPack = typeof setSkinPackKey==="function" && setSkinPackKey(h, h.classKey) !== h.classKey;
   if((CHAMP_PACK[h.classKey] || skinPack) && drawChampPackDeath(h)) return; // muerte con sus frames reales (o los de su skin de set)
   if(h.classKey==="mago" && drawMagoFallen(h, 0.5)) return; // el propio arte ya lo muestra boca abajo
-  // DEATH del campeón con su propio sprite real: reacción al golpe, caída de costado y
+  // DEATH del guardia con su propio sprite real: reacción al golpe, caída de costado y
   // queda tendido semitransparente (antes: siempre el sprite procedural, fuera cual fuera el arte).
   if(!h._deadAt){ h._deadAt = animNow; vfxBurst(h.x, h.y-20, 12, "blood", 120, 420, 3, 2, -30, 0); }
   const dp = Math.min(1, (animNow-h._deadAt)/620);

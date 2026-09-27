@@ -68,7 +68,7 @@ async function boot(browser, initSave){
     const { E, errors, page } = await boot(browser, old);
     const r = await E(() => ({ gold: save.gold, lvl: save.champions.mago.level, open: ARENA_ORDER.filter(isArenaUnlocked), flag: save.testStageV1,
       backup: !!localStorage.getItem(SAVE_KEY + '_antesDeEtapaPrueba') }));
-    check('TEST.reinicio_unico_de_la_etapa_de_prueba', r.gold === 10000 && r.lvl === 1 && r.open.join() === 'fortaleza' /* orden canónico: la primera jugable es la Fábrica (02) */ && r.flag === true, r);
+    check('TEST.reinicio_unico_de_la_etapa_de_prueba', r.gold === 10000 && r.lvl === 1 && r.open.join() === 'ciudad' /* orden canónico: la primera jugable es la Ciudad Maldita (01) */ && r.flag === true, r);
     check('TEST.respaldo_del_guardado_anterior', r.backup, r);
     // volver a cargar el guardado (como al reabrir el juego): el regalo no se repite
     check('TEST.el_regalo_no_se_repite_al_recargar', await E(() => { save.gold = 42; persist(); loadSave(); return save.gold; }) === 42, null);
