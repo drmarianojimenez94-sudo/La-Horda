@@ -15,6 +15,7 @@ const AID_NAV = { cell:40, x0:-1340, y0:-940, W:67, H:47, on:false, blocked:null
 const AID_NAV_DEFAULT = {x0:-1340, y0:-940, W:67, H:47};
 function aidNavBuild(){
   const N = AID_NAV;
+  N.ver = (N.ver||0) + 1;   // los campos de camino de las acciones contextuales se recalculan con la geometría nueva
   // grilla propia de la arena (La Fortaleza es un mapa mucho más grande que el coliseo)
   const def = arenaDef(), nb = def && def.navBounds;
   const want = nb ? {x0:nb.x0, y0:nb.y0, W:Math.ceil((nb.x1-nb.x0)/N.cell), H:Math.ceil((nb.y1-nb.y0)/N.cell)} : AID_NAV_DEFAULT;

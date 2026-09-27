@@ -7,7 +7,7 @@ const [jobsFile, outFile, port] = [process.argv[2], process.argv[3], process.arg
 const jobs = JSON.parse(fs.readFileSync(jobsFile, 'utf8'));
 const HOOKS = () => {
   if (window.__CP) return; const CP = window.__CP = {};
-  CP.reset = () => { CP.dmgSrc = {}; CP.items = []; CP.buffs = []; CP.levelAt = {}; CP.bossAt = null; CP.bossDeadAt = null; CP.idleMs = 0; CP.peakEnemies = 0; CP.minHpPct = 100; CP.revives = 0; CP.allyDowns = 0; CP.bigHits = []; };
+  CP.reset = () => { CP.killer = null; CP.fallInfo = null; CP.falls = 0; CP.hangs = 0; CP.dmgSrc = {}; CP.items = []; CP.buffs = []; CP.levelAt = {}; CP.bossAt = null; CP.bossDeadAt = null; CP.idleMs = 0; CP.peakEnemies = 0; CP.minHpPct = 100; CP.revives = 0; CP.allyDowns = 0; CP.bigHits = []; };
   CP.reset();
   const dh = window.damageHero;
   window.damageHero = function (h, amount, src) {
@@ -19,6 +19,12 @@ const HOOKS = () => {
       if (a0 && !h.alive) CP.killer = k + ' (hit ' + Math.round(amount) + ', hp antes ' + Math.round(hp0) + '/' + Math.round(h.maxHp) + ', nivel ' + runLevel + ')'; }
     else if (a0 && !h.alive) CP.allyDowns++;
   };
+  // Abismo: colgarse del borde y caer al vacío no pasan por damageHero
+  if (typeof window.abHangFall === 'function') { const hf = window.abHangFall; window.abHangFall = function (h, H) { if (h === player) { CP.falls++; CP.killer = 'caída al vacío (nivel ' + runLevel + ')';
+      try { const R = CP.lastRescue; const pi = R ? abPlatAt(R.x, R.y, 0) : -1;
+        CP.fallInfo = { hang: [Math.round(H.lx), Math.round(H.ly)], rescue: R ? [R.x, R.y, Math.round((runElapsedMs - R.t))] : null, botsAtHang: R ? R.bots : null, rescuePlat: pi, rescuePlatSt: pi >= 0 ? abS.p[pi].st : null, enemiesNear: enemies.filter(e => e.alive && Math.hypot(e.x - H.lx, e.y - H.ly) < 300).length,
+          bots: heroes.filter(o => o !== h).map(o => ({ k: o.classKey, alive: o.alive, hang: !!o.abHang, goal: o._ctxGoal, hold: o._ctxHold, d: R ? Math.round(Math.hypot(o.x - R.x, o.y - R.y)) : null, reach: R && typeof abReachable === 'function' ? abReachable(o, R) : null, hp: Math.round(100 * o.hp / o.maxHp), x: Math.round(o.x), y: Math.round(o.y), onPlat: abPlatAt(o.x, o.y, 0) })) }; } catch (e) { CP.fallInfo = { err: String(e) }; } } return hf(h, H); }; }
+  if (typeof window.abHangStart === 'function') { const hs = window.abHangStart; window.abHangStart = function (h, n) { const was = h === player && h.alive && !h.abHang; const r = hs(h, n); if (was) { CP.hangs++; const R = abS.rescue[abS.rescue.length - 1]; CP.lastRescue = R ? { x: R.x, y: R.y, t: runElapsedMs, bots: heroes.filter(o => o !== h).map(o => ({ k: o.classKey, x: Math.round(o.x), y: Math.round(o.y), alive: o.alive })) } : null; } return r; }; }
   const ai = window.addItemToInventory;
   window.addItemToInventory = function (k, item) { const r = ai(k, item); if (r) CP.items.push((item.rarity || '?') + ':' + (item.type || item.slot || '?')); return r; };
   __AP.pickBuff = function () { const c = document.querySelector('#buff-cards .buff-card'); if (c) { const n = c.querySelector('.buff-name'); CP.buffs.push(n ? n.textContent : '?'); c.click(); return true; } return false; };
@@ -54,7 +60,7 @@ async function runOne(page, job) {
       bossSecs: __CP.bossAt !== null ? ((__CP.bossDeadAt || Math.round(t / 1000)) - __CP.bossAt) : null, bossType: boss ? boss.type : null, bossHpLeftPct: boss && boss.alive ? Math.round(100 * boss.hp / boss.maxHp) : 0,
       dmgShare: Math.round(100 * (st.dmgDealt || 0) / Math.max(1, (st.dmgDealt || 0) + allyDmg)), casts: st.skillCasts || 0, dmgTaken: Math.round(st.dmgTaken || 0), healDone: Math.round(st.healDone || 0),
       minHpPct: __CP.minHpPct, idleSecs: Math.round(__CP.idleMs / 1000), peakEnemies: __CP.peakEnemies, allyDowns: __CP.allyDowns,
-      items: __CP.items, bigHits: __CP.bigHits, killer: __CP.killer || null, buffs: __CP.buffs, levelAt: __CP.levelAt, top,
+      items: __CP.items, bigHits: __CP.bigHits, killer: __CP.killer || null, falls: __CP.falls, hangs: __CP.hangs, fallInfo: __CP.fallInfo || null, buffs: __CP.buffs, levelAt: __CP.levelAt, top,
       xpGain: (save.champions[job.cls].level - lvl0) + ' lv / ' + Math.round(save.champions[job.cls].xp - xp0) + ' xp', goldGain: save.gold - gold0, apErr: __AP.err || null,
       exit: __AP.exit ? { seenS: Math.round(__AP.exit.seenAt / 1000), reachedS: __AP.exit.reachedAt === null ? null : Math.round(__AP.exit.reachedAt / 1000), holds: __AP.exit.holds } : null,
       after: { lv: save.champions[job.cls].level, totXp: totalXpForChamp(job.cls), gold: save.gold, cleared: Object.keys(save.arenasCleared || {}).length } };

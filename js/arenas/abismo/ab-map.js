@@ -341,7 +341,7 @@ function abRescue(h, by, solo){
   if(by && by.stats) by.stats.alliesSaved = (by.stats.alliesSaved||0) + 1;
 }
 CTX_KINDS.ab_rescue = {
-  label:"RESCATAR", icon:"🤝", color:"#e8c8ff", farOk:true, maxBots:1, pointer:()=>true, decay:0.2,
+  label:"RESCATAR", icon:"🤝", color:"#e8c8ff", farOk:true, maxBots:2, urgent:true, pointer:()=>true, decay:0.2,
   canUse:(h, t)=>!h.abHang && heroes[t.h] !== h,
   onComplete:(t, users)=>{ const h = heroes[t.h]; if(h) abRescue(h, users[0]); },
   botWorth:(h, t)=>(heroes[t.h] && heroes[t.h] !== h && !h.abHang) ? 9 : 0
