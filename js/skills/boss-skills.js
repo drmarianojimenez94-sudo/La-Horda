@@ -494,7 +494,9 @@ function drawIceWall(w){
 // Árbol de la Muralla de Árboles (Guardián Ancestral): cuadros gdTreeWall de su hoja.
 function drawTreeWall(w, grow, fade){
   const F = VFX_SPR_EXTRA.gdTreeWall; if(!F || !F.ready()) return false;
-  const img = F.imgs[(w.img||0) % F.imgs.length], h = 92*grow, s = h/img.height;
+  // w.img sale de 0-3 (lo sortea la IA, no se toca para no mover el azar ni la red); con los 7 árboles
+  // de la hoja, los que salen espejados toman los otros 3 cuadros (4-6) -solo dibujo-
+  const img = F.imgs[((w.img||0) + (w.flip ? 4 : 0)) % F.imgs.length], h = 92*grow, s = h/img.height;
   drawShadow(w.x, w.y, w.r*1.2);
   ctx.save(); ctx.globalAlpha = fade; ctx.translate(w.x, w.y+6); if(w.flip) ctx.scale(-1,1);
   ctx.imageSmoothingEnabled = false; ctx.drawImage(img, -img.width*s/2, -h, img.width*s, h); ctx.restore();

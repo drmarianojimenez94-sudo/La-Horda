@@ -60,7 +60,7 @@ FX = {   # clave vfxSprite -> (secciones y rango de cuadros, ¿de suelo?)
     'gdSpikes':    (R('heavy', 3, 6), True),
     'gdThorns':    (R('thorns', 0, 6), True),
     'gdLeafRain':  (R('leafrain', 0, 7), False),
-    'gdTreeWall':  (R('walls', 0, 4), False),
+    'gdTreeWall':  (R('walls', 0, 7), False),   # los 7 árboles de la hoja (antes 4: 4-6 quedaban sin usar)
     'gdCorrupt':   (R('corrupt', 0, 6), True),
     'gdImpact':    (R('fx_impacto', 0, 1), False),
     'gdLeaves':    (R('fx_hojas', 0, 1), False),
