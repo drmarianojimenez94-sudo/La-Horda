@@ -30,6 +30,7 @@ async function newClient(browser, i, url) {
       }
     } catch (e) {}
   }, [i]);
+  await ctx.addInitScript(() => { window.__autoConfirm = true; }); // diálogos propios (game-dialog.js): aceptar solos, como page.on('dialog')
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));

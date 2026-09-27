@@ -108,7 +108,7 @@ function netRenderLobbyBar(){
   const sh = document.getElementById("net-share-btn");
   if(sh) sh.addEventListener("click", ()=>{ navigator.share({title:"LA HORDA", text:`Sumate a mi sala de LA HORDA (${(ARENA_MODS[currentArena]||{}).label||""})`, url:netInviteUrl()}).catch(()=>{}); });
   const cl = document.getElementById("net-close-btn");
-  if(cl) cl.addEventListener("click", ()=>{ if(confirm("¿Cerrar la sala? Los jugadores conectados vuelven al menú.")){ netLeaveRoom(); renderPrepSummary(); } });
+  if(cl) cl.addEventListener("click", ()=>{ gameConfirm("¿Cerrar la sala? Los jugadores conectados vuelven al menú.", {okText:"Cerrar sala", danger:true}).then(ok=>{ if(ok){ netLeaveRoom(); renderPrepSummary(); } }); });
   const rd = document.getElementById("net-ready-btn");
   if(rd) rd.addEventListener("click", ()=>{
     const me = net.room.slots[net.slot]||{};

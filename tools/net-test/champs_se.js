@@ -15,6 +15,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const mk = async (url, i) => {
     const ctx = await b.newContext({ viewport: { width: 844, height: 390 } });
     await ctx.addInitScript(([n]) => { try { if (!localStorage.getItem('__s')) { localStorage.clear(); localStorage.setItem('__s', '1'); localStorage.setItem('horda_name', n); } } catch (e) {} }, ['J' + (i + 1)]);
+    await ctx.addInitScript(() => { window.__autoConfirm = true; }); // diálogos propios (game-dialog.js): aceptar solos, como page.on('dialog')
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('dialog', d => d.accept());
     await p.goto(url);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const x = document.getElementById('title-continue-btn'); return x && !x.disabled; })) break; await sleep(100); }
