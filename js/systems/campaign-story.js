@@ -58,10 +58,24 @@ function campaignTitleCard(){
 }
 function campaignArenaKicker(key){ return "ARENA " + campaignNumberLabel(key); }
 // Prólogo (Ciudad Maldita): una vez por perfil, al entrar por primera vez a la primera arena jugable.
+// En partida solo lo muestra antes, la ficha del Hechicero (run-intro.js). En cooperativo online no hay
+// ficha (bloquearía a los demás): el prólogo espera a la primera pantalla de refuerzos, con el juego
+// quieto, en vez de taparte media pantalla en pleno combate.
+let _campaignPendingPrologue = false;
 function campaignMaybePrologue(){
   if(typeof save==="undefined" || save.storyPrologueSeen || currentArena!==ARENA_ORDER[0]) return;
   save.storyPrologueSeen = true; if(typeof persist==="function") persist();
-  if(typeof tutSay==="function") setTimeout(()=>{ try{ tutSay("story_prologue", CAMPAIGN_PROLOGUE, null, 16000, true); }catch(e){} }, 5600);
+  _campaignPendingPrologue = true;
+}
+// La llaman las pantallas de refuerzo (buff-choice.js y net-game.js).
+function campaignStoryOnBuff(){
+  const scr = document.getElementById("buffscreen"); if(!scr) return;
+  let el = document.getElementById("buff-story");
+  if(!_campaignPendingPrologue){ if(el) el.classList.add("hidden"); return; }
+  _campaignPendingPrologue = false;
+  if(!el){ el = document.createElement("div"); el.id = "buff-story"; scr.insertBefore(el, document.getElementById("buff-cards")); }
+  el.innerHTML = `<div class="bs-who">EL HECHICERO SUPREMO · LA NOCHE EN QUE VOLVIÓ LA HORDA</div><div class="bs-say">«${CAMPAIGN_PROLOGUE}»</div>`;
+  el.classList.remove("hidden");
 }
 // Al completar una arena por primera vez: la Cicatriz que se abre hacia la siguiente.
 function campaignOnVictory(arena, firstClear){

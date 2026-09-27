@@ -10,7 +10,7 @@
    Tocar un objeto abre su ficha completa (itemDetailHTML en modo tienda).
    ============================================================ */
 let shopTab = "campeones", shopCat = "set", shopTier = {};
-const SHOP_CATS = [["set", "Sets"], ["legendario", "Legendarios"], ["mitico", "Míticos"], ["unico", "Únicos"], ["campeon", "De guardián"], ["base", "Básicos"]];
+const SHOP_CATS = [["set", "Sets"], ["legendario", "Legendarios"], ["campeon", "De guardián"], ["base", "Básicos"]]; // Míticos (receta) y Únicos (botín) no se venden
 const TIER_LABEL = {comun:"Común", raro:"Raro", muyraro:"Muy Raro", legendario:"Legendario", mitico:"Mítico"};
 
 function renderShop(){
@@ -76,9 +76,9 @@ function _shopItemCard(entry, tier){
       ${lines}${tiers}
     </div>
     <div class="shop-item-buy">
-      <div class="shop-price">🪙 ${fmtGold(entry.price)}</div>
+      <div class="shop-price">🪙 ${fmtGold(shopPriceOf(entry, tier))}</div>
       ${n ? `<div class="shop-st own">Tenés ${n}</div>` : '<div class="shop-st">No comprado</div>'}
-      <button class="shop-btn" data-buy-item="${entry.key}" ${save.gold < entry.price ? "disabled" : ""}>Comprar</button>
+      <button class="shop-btn" data-buy-item="${entry.key}" ${save.gold < shopPriceOf(entry, tier) ? "disabled" : ""}>Comprar</button>
     </div>
   </div>`;
 }
@@ -110,7 +110,7 @@ function renderShopObjects(panel){
     ev.stopPropagation();
     const key = b.getAttribute("data-buy-item"), r = shopBuyCatalog(key, shopTier[key]||"raro");
     if(!r.ok){ alert(r.reason); return; }
-    _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−1.000 de oro)`, r.item.set || r.item.rarity==="legendario" ? "lootLegend" : "ready");
+    _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−${fmtGold(shopPriceOf(shopCatalog().find(e=>e.key===key), shopTier[key]||"raro"))} de oro)`, r.item.set || r.item.rarity==="legendario" ? "lootLegend" : "ready");
     _shopFlash(document.querySelector(`.shop-item[data-item="${CSS.escape(key)}"]`));
   }));
   panel.querySelectorAll("[data-buy-set]").forEach(b=> b.addEventListener("click", ()=>{
@@ -133,13 +133,13 @@ function openShopItemPreview(entry, tier){
   let el = document.getElementById("item-preview");
   if(!el){ el = document.createElement("div"); el.id = "item-preview"; document.body.appendChild(el); }
   el.innerHTML = `<div class="ip-backdrop" data-ip-close></div><div class="ip-panel">${itemDetailHTML(it, null, {shop:true})}
-    <div class="ip-actions"><button class="primary" data-ip-buy ${save.gold < entry.price ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(entry.price)}</button><button data-ip-close>Cerrar</button></div></div>`;
+    <div class="ip-actions"><button class="primary" data-ip-buy ${save.gold < shopPriceOf(entry, tier) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(shopPriceOf(entry, tier))}</button><button data-ip-close>Cerrar</button></div></div>`;
   el.classList.remove("hidden");
   const close = ()=>{ el.classList.add("hidden"); el.innerHTML = ""; };
   el.querySelectorAll("[data-ip-close]").forEach(b=>b.addEventListener("click", close));
   el.querySelector("[data-ip-buy]").addEventListener("click", ()=>{
     const r = shopBuyCatalog(entry.key, tier); if(!r.ok){ alert(r.reason); return; }
-    close(); _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−1.000 de oro)`, "lootLegend");
+    close(); _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−${fmtGold(shopPriceOf(entry, tier))} de oro)`, "lootLegend");
   });
 }
 

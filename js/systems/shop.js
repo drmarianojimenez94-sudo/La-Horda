@@ -55,16 +55,27 @@ function shopBuy(offerId){
 }
 
 /* ============================================================
-   CATÁLOGO COMPLETO DE PRUEBA (BUGFIX 01)
-   Etapa de prueba: TODO objeto del juego está en la tienda y cuesta lo mismo (SHOP_TEST_PRICE), y
-   todos los guardianes cuestan CHAMPION_PRICE_GOLD. Fuente única: DESIGNED_ITEMS (legendarios con
-   nombre, míticos, únicos, objetos de guardián y piezas de set) + los 26 arquetipos procedurales
-   (ITEM_NOUNS) en cada categoría que puede salir en el botín. Nada se regala: se compra con oro.
-   Para cerrar la prueba: SHOP_TEST_MODE = false (vuelven las ofertas del día de arriba).
+   CATÁLOGO DE LA TIENDA (alfa)
+   Fuente única: DESIGNED_ITEMS (legendarios con nombre, objetos de guardián y piezas de set) + los
+   26 arquetipos procedurales (ITEM_NOUNS) en cada rareza que puede salir en el botín.
+   Auditoría pre-alfa: antes TODO costaba 1.000 (etapa de prueba) y con el regalo de 10.000 de oro
+   se compraba el mejor equipo del juego en 2 minutos. Ahora el precio va por rareza, y los
+   MÍTICOS (se fabrican con receta) y los ÚNICOS (solo botín) ya no se venden: siguen siendo metas.
    ============================================================ */
 const SHOP_TEST_MODE = true;
-const SHOP_TEST_PRICE = 1000;
-const SHOP_ARCHETYPE_TIERS = ["comun", "raro", "muyraro", "legendario", "mitico"];
+const SHOP_PRICES = {
+  base: { comun:150, raro:400, muyraro:900, legendario:2500 }, // arquetipos, por rareza
+  campeon: 1500,      // objetos propios de un guardián
+  legendario: 3000,   // legendarios con nombre
+  set: 1200           // cada pieza de set (una skin = su set completo)
+};
+const SHOP_TEST_PRICE = SHOP_PRICES.set; // precio por pieza de set (lo usan "comprar lo que falta" y las skins)
+const SHOP_ARCHETYPE_TIERS = ["comun", "raro", "muyraro", "legendario"];
+function shopPriceOf(entry, tier){
+  if(!entry) return 0;
+  if(entry.kind==="archetype") return SHOP_PRICES.base[tier] || SHOP_PRICES.base.raro;
+  return SHOP_PRICES[entry.cat] || SHOP_PRICES.campeon;
+}
 // Categoría de tienda de un objeto diseñado (una sola por objeto: no hay dos definiciones)
 function shopCategoryOf(d){
   if(d.set) return "set";
@@ -76,9 +87,11 @@ function shopCategoryOf(d){
 let _shopCatalog = null;
 function shopCatalog(){
   if(_shopCatalog) return _shopCatalog;
-  const designed = Object.keys(DESIGNED_ITEMS).map(id=>({key:"d:"+id, kind:"designed", id, cat:shopCategoryOf(DESIGNED_ITEMS[id]), price:SHOP_TEST_PRICE}));
+  const designed = Object.keys(DESIGNED_ITEMS).map(id=>({key:"d:"+id, kind:"designed", id, cat:shopCategoryOf(DESIGNED_ITEMS[id])}))
+    .filter(e=>e.cat!=="mitico" && e.cat!=="unico" && !DESIGNED_ITEMS[e.id].mythic && DESIGNED_ITEMS[e.id].rarity!=="unico" && DESIGNED_ITEMS[e.id].rarity!=="mitico");
+  designed.forEach(e=>{ e.price = shopPriceOf(e); });
   const base = [];
-  for(const type of EQUIP_SLOT_TYPES) for(const noun of (ITEM_NOUNS[type]||[])) base.push({key:"a:"+type+":"+noun, kind:"archetype", type, noun, cat:"base", price:SHOP_TEST_PRICE});
+  for(const type of EQUIP_SLOT_TYPES) for(const noun of (ITEM_NOUNS[type]||[])) base.push({key:"a:"+type+":"+noun, kind:"archetype", type, noun, cat:"base", price:SHOP_PRICES.base.raro});
   return (_shopCatalog = designed.concat(base));
 }
 // Objeto de muestra (para la tarjeta y la ficha): mismo objeto que se entrega al comprar, sin uid de inventario
@@ -101,11 +114,12 @@ function shopBuyCatalog(key, tier){
   const entry = shopCatalog().find(e=>e.key===key);
   if(!entry) return {ok:false, reason:"Ese objeto no existe"};
   if(entry.kind==="archetype" && !SHOP_ARCHETYPE_TIERS.includes(tier)) return {ok:false, reason:"Categoría inválida"};
-  if((save.gold||0) < entry.price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${entry.price})`};
+  const price = shopPriceOf(entry, tier);
+  if((save.gold||0) < price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${price})`};
   if(stashFull()) return {ok:false, reason:`Tu inventario está lleno (${INVENTORY_CAPACITY}/${INVENTORY_CAPACITY}): vendé o descartá algo`};
   const it = entry.kind==="designed" ? makeDesignedItem(entry.id) : makeItem(entry.type, tier, null, {noun:entry.noun});
   it.bought = true;
-  save.gold -= entry.price;
+  save.gold -= price;
   addItemToInventory(null, it);
   persist();
   return {ok:true, item:it};

@@ -68,7 +68,7 @@ function grantPlaytestV1Bonus(){
 function renderMainMenu(){
   if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
   // BUGFIX 01: aviso único del regalo de la etapa de prueba (10.000 de oro)
-  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Etapa de prueba: recibiste 10.000 de oro. Probá guardianes, objetos y sets en la Tienda."); }
+  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Regalo de bienvenida: 10.000 de oro para la Tienda (guardianes, objetos y skins)."); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
@@ -284,6 +284,14 @@ document.getElementById("prep-start-btn").addEventListener("click", ()=>{
       if(!isArenaUnlocked(currentArena)){ alert("Esa arena todavía no la desbloqueaste."); return; }
       const nr = netNotReady();
       if(nr.length && !confirm(`${nr.map(s=>s.name).join(", ")} todavía no ${nr.length>1?"están":"está"} LISTO. ¿Comenzar igual?`)) return;
+      // el arte de las arenas todavía baja (preload.js): se arranca apenas termine
+      if(typeof assetsAllReady==="function" && !assetsAllReady()){
+        const sb = document.getElementById("prep-start-btn");
+        if(sb){ sb.disabled = true; sb.textContent = "Preparando la arena… " + assetsRestPct() + "%"; }
+        whenAssetsReady(()=>{ if(sb){ sb.disabled = false; sb.textContent = "Comenzar"; } if(netInRoom() && net.role==="host") netHostStartGame(); },
+          pct=>{ if(sb) sb.textContent = "Preparando la arena… " + pct + "%"; });
+        return;
+      }
       netHostStartGame();
       return;
     }

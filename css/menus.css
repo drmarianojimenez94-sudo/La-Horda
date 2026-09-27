@@ -183,10 +183,11 @@
   .brand{ font-size:0.85rem; margin-top:2px; }
   .brand-sub{ font-size:0.62rem; margin-bottom:10px; }
   .arena-title{ font-size:0.85rem; margin-bottom:10px; }
-  .champ-grid{ grid-template-columns:repeat(4,1fr); gap:8px; max-width:600px; margin-bottom:12px; }
-  .champ-card{ padding:8px 5px 7px; gap:3px; }
+  /* 12 guardianes en 2 filas de 6, con el sprite bien visible (antes 34 px: casi no se distinguían) */
+  .champ-grid{ grid-template-columns:repeat(6,1fr); gap:6px; max-width:840px; margin-bottom:10px; }
+  .champ-card{ padding:6px 4px 6px; gap:2px; }
   .champ-icon{ width:34px; height:34px; font-size:1rem; }
-  .champ-preview{ width:34px; height:34px; }
+  .champ-preview{ width:64px; height:64px; }
   .champ-name{ font-size:0.72rem; }
   .champ-role{ display:none; }
   .champ-lvl{ font-size:0.6rem; margin-top:0; }
