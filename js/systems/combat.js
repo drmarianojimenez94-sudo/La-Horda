@@ -78,7 +78,7 @@ function damageEnemy(e, amount, opts){
   else if(src===player) netQuiet(()=>floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null));
   if(src===player && !src.isRemote && (!player._hitSfxAt || performance.now()-player._hitSfxAt>90)){
     player._hitSfxAt = performance.now();
-    playSfx(crit ? "crit" : "hit");
+    playSfx(crit ? "crit" : "hit", typeof sfxMatTag==="function" ? sfxMatTag(e) : null); // el material del enemigo cambia el golpe (audio.js)
   }
   vfxHit(e, src, opts, crit);
   if(!opts.fromProc || pow>=3) impactFeedback(e, dmg, crit, opts, pow, src);
