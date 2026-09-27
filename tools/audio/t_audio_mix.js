@@ -84,18 +84,18 @@ function pageHarness() {
     performance.now = origNow; fakeMs = null;
     // métricas sobre las muestras
     const L = buf.getChannelData(0), R = buf.getChannelData(1);
-    let pk = 0, s2 = 0, nan = 0, clip = 0; const N = L.length;
+    let pk = 0, s2 = 0, nan = 0, clip = 0, knee = 0; const N = L.length;
     const win = Math.round(SR * 0.4), wins = [];
     let ws = 0, wn = 0;
     const i0 = Math.floor((opt.from || 0) * SR);
     for (let i = i0; i < N; i++) {
       const a = L[i], b = R[i];
       if (a !== a || b !== b) { nan++; continue; }
-      const m = Math.max(Math.abs(a), Math.abs(b)); if (m > pk) pk = m; if (m >= 0.8913) clip++;
+      const m = Math.max(Math.abs(a), Math.abs(b)); if (m > pk) pk = m; if (m >= 0.8913) clip++; if (m >= 0.7079) knee++;
       const e = (a * a + b * b) / 2; s2 += e; ws += e; wn++;
       if (wn === win) { wins.push(Math.sqrt(ws / wn)); ws = 0; wn = 0; }
     }
-    const res = { dur, wall_ms: Math.round(wall), dsp_load_pct: +(100 * wall / 1000 / dur).toFixed(1), peak_dBFS: db(pk), rms_dBFS: db(Math.sqrt(s2 / Math.max(1, N - i0))), nan, clip,
+    const res = { dur, wall_ms: Math.round(wall), dsp_load_pct: +(100 * wall / 1000 / dur).toFixed(1), peak_dBFS: db(pk), over3dB_pct: +(100 * knee / Math.max(1, N - i0)).toFixed(3), rms_dBFS: db(Math.sqrt(s2 / Math.max(1, N - i0))), nan, clip,
       rms_win_max_dBFS: db(Math.max(...wins)), created: H.created, byType: H.byType,
       live_max: Math.max(...liveSeries.map(x => x[1])), live_end: liveSeries[liveSeries.length - 1][1],
       never_stopped: H.src.filter(r => r[1] === Infinity).length, errs: errs.slice(0, 3) };
@@ -178,7 +178,7 @@ function pageHarness() {
       return best;
     });
     out.combat = combat;
-    info('combate', { peak: combat.peak_dBFS, rms: combat.rms_dBFS, rmsWinMax: combat.rms_win_max_dBFS, nodos: combat.created, vivos_max: combat.live_max, vivos_fin: combat.live_end, sin_stop: combat.never_stopped, dsp: combat.dsp_load_pct + '%', wall: combat.wall_ms });
+    info('combate', { peak: combat.peak_dBFS, sobre_3dB_pct: combat.over3dB_pct, rms: combat.rms_dBFS, rmsWinMax: combat.rms_win_max_dBFS, nodos: combat.created, vivos_max: combat.live_max, vivos_fin: combat.live_end, sin_stop: combat.never_stopped, dsp: combat.dsp_load_pct + '%', wall: combat.wall_ms });
     info('combate_rms_por_ventana_400ms', combat.winsDb);
     check('MIX.combate_sin_NaN', combat.nan === 0, combat.nan);
     check('MIX.combate_pico_bajo_-1dBFS', combat.peak_dBFS < -1, combat.peak_dBFS);
@@ -227,6 +227,27 @@ function pageHarness() {
     info('arenas_distancia_espectral_minima_dB', { d: +minD.toFixed(2), par: pair });
     check('MIX.arenas_musica_sin_NaN_ni_clipping', arenas.every(a => per[a].nan === 0 && per[a].peak_dBFS < -1), arenas.map(a => per[a].peak_dBFS));
     check('MIX.arenas_con_identidad_propia', minD > 1.5, { minD: +minD.toFixed(2), pair });
+
+    // ---------------- 3b) materiales y variación por disparo ----------------
+    const mats = await E(async () => {
+      const out = {};
+      for (const m of ['flesh', 'wet', 'stone', 'bone', 'shell', 'ice', 'magic', 'fire', 'metal']) {
+        const r = await __AH.render(0.6, [[0.05, () => playSfx('kill', m)]], { spectrum: true, specFrom: 0.04 });
+        out[m] = { bands: r.bands, centroid_hz: r.centroid_hz, peak: r.peak_dBFS };
+      }
+      const a = await __AH.render(0.6, [[0.05, () => playSfx('hit', 'flesh')]], { spectrum: true, specFrom: 0.04 });
+      const b = await __AH.render(0.6, [[0.05, () => playSfx('hit', 'flesh')]], { spectrum: true, specFrom: 0.04 });
+      let d = 0; for (let k = 0; k < a.bands.length; k++) d += Math.abs(a.bands[k] - b.bands[k]);
+      return { out, varDiff: +(d / a.bands.length).toFixed(2), varPk: [a.peak_dBFS, b.peak_dBFS] };
+    });
+    const mk = Object.keys(mats.out); let mMin = 1e9, mPair = null;
+    for (let i = 0; i < mk.length; i++) for (let j = i + 1; j < mk.length; j++) {
+      const A = mats.out[mk[i]].bands, B = mats.out[mk[j]].bands; let d = 0; for (let k = 0; k < A.length; k++) d += Math.abs(A[k] - B[k]); d /= A.length;
+      if (d < mMin) { mMin = d; mPair = mk[i] + '/' + mk[j]; }
+    }
+    info('materiales_centroide_hz', Object.fromEntries(mk.map(k => [k, mats.out[k].centroid_hz])));
+    check('SFX.materiales_suenan_distinto', mMin > 1.5, { minD: +mMin.toFixed(2), par: mPair });
+    check('SFX.variacion_por_disparo', mats.varDiff > 0.1, { dif_dB: mats.varDiff, picos: mats.varPk });
 
     // ---------------- 4) mute y volúmenes ----------------
     const vol = await E(async () => {
@@ -283,8 +304,8 @@ function pageHarness() {
         L.modes[typeof M !== 'undefined' ? M.mode : '?'] = 1;
       }, 100);
       // costo REAL en el hilo principal: tiempo dentro de playSfx + secuenciador, sumado por cuadro
-      const F = window.__fc = { acc: 0, frames: [], calls: 0 };
-      const wrap = (name) => { const f = window[name]; window[name] = function () { const a = performance.now(); try { return f.apply(this, arguments); } finally { F.acc += performance.now() - a; if (name === 'playSfx') F.calls++; } }; };
+      const F = window.__fc = { acc: 0, frames: [], calls: 0, by: { playSfx: 0, _schedTick: 0 }, maxBy: { playSfx: 0, _schedTick: 0 } };
+      const wrap = (name) => { const f = window[name]; window[name] = function () { const a = performance.now(); try { return f.apply(this, arguments); } finally { const d = performance.now() - a; F.acc += d; F.by[name] += d; if (d > F.maxBy[name]) F.maxBy[name] = d; if (name === 'playSfx') F.calls++; } }; };
       wrap('playSfx'); wrap('_schedTick');
       if (typeof M !== 'undefined' && M.timer) { clearInterval(M.timer); M.timer = setInterval(() => window._schedTick(), 25); }
       const fr = () => { F.frames.push(F.acc); F.acc = 0; requestAnimationFrame(fr); }; requestAnimationFrame(fr);
@@ -293,13 +314,33 @@ function pageHarness() {
     for (let k = 0; k < 22; k++) { await sleep(1000); await E(() => { if (state === 'buff' && window.__AP) __AP.pickBuff(); }).catch(() => {}); }
     const live = await E(() => { const L = window.__lv, db = x => x > 0 ? Math.round(20 * Math.log10(x) * 10) / 10 : -120;
       return { ctx: audioCtx && audioCtx.state, t: audioCtx ? Math.round(audioCtx.currentTime) : 0, peak_dBFS: db(L.pk), clip: L.clip, rms_play_dBFS: db(Math.sqrt(L.s / Math.max(1, L.n))), modes: Object.keys(L.modes), st: state, apErr: window.__AP && __AP.err || null,
-        frame: (() => { const f = window.__fc.frames.slice(30).sort((a, b) => a - b); const n = f.length; return { frames: n, sfx_calls: window.__fc.calls, avg_ms: +(f.reduce((a, b) => a + b, 0) / n).toFixed(3), p95_ms: +f[Math.floor(n * 0.95)].toFixed(3), p99_ms: +f[Math.floor(n * 0.99)].toFixed(3), max_ms: +f[n - 1].toFixed(2) }; })() }; });
+        frame: (() => { const f = window.__fc.frames.slice(30).sort((a, b) => a - b); const n = f.length; return { frames: n, sfx_calls: window.__fc.calls, avg_ms: +(f.reduce((a, b) => a + b, 0) / n).toFixed(3), p95_ms: +f[Math.floor(n * 0.95)].toFixed(3), p99_ms: +f[Math.floor(n * 0.99)].toFixed(3), max_ms: +f[n - 1].toFixed(2), total_sfx_ms: Math.round(window.__fc.by.playSfx), total_sched_ms: Math.round(window.__fc.by._schedTick), max_call_ms: { sfx: +window.__fc.maxBy.playSfx.toFixed(1), sched: +window.__fc.maxBy._schedTick.toFixed(1) } }; })() }; });
     info('partida_en_vivo', live);
     check('JUEGO.audio_corre', live.ctx === 'running' && live.t > 10, live);
     check('JUEGO.pico_en_vivo_bajo_-1dBFS', live.peak_dBFS < -1, live.peak_dBFS);
     check('JUEGO.costo_audio_por_cuadro_menor_1ms', live.frame.p95_ms < 1.0 && live.frame.avg_ms < 0.5, live.frame);
     check('JUEGO.volumen_en_partida_razonable', live.rms_play_dBFS > -36 && live.rms_play_dBFS < -8, live.rms_play_dBFS);
     check('JUEGO.sin_errores_de_consola', errors.length === 0 && !live.apErr, errors.slice(0, 4).concat(live.apErr ? [live.apErr] : []));
+
+    // ---------------- 7) jefe real en tiempo real: rugido, música del jefe, muerte y victoria ----------------
+    await E(() => { window.__AP.on = false; window.__lv.modes = {}; window.__lv.pk = 0; window.__lv.clip = 0;
+      for (const k of Object.keys(save.champions)) save.champions[k].unlocked = true;
+      selectedClass = 'guerrero'; currentArena = 'hielo'; lobbyAllies = ['tanque', 'soporte', 'mago']; startRun(10);
+      for (const h of heroes) h.invulnTimer = 1e9; runLevel = LEVEL_COUNT; levelTimer = levelDuration + 1; });
+    let bt = null;
+    for (let k = 0; k < 40 && !bt; k++) { await sleep(150); bt = await E(() => boss && boss.alive ? boss.type : null); }
+    await sleep(1800);
+    const kill = () => E(() => { if (boss && boss.alive) { boss.hp = 1; damageEnemy(boss, 1e8, { src: player }); } for (const h of heroes) h.invulnTimer = 1e9; });
+    await kill(); await sleep(1500); await kill();
+    for (let k = 0; k < 16; k++) { await sleep(500); if (await E(() => state !== 'playing')) break; }
+    await sleep(1500);
+    const bossRun = await E(() => { const L = window.__lv, db = x => x > 0 ? Math.round(20 * Math.log10(x) * 10) / 10 : -120;
+      return { boss: null, modes: Object.keys(L.modes), st: state, peak_dBFS: db(L.pk), clip: L.clip, spaces: typeof AU !== 'undefined' ? Object.keys(AU.spaces || {}) : [], spaceKey: typeof AU !== 'undefined' ? AU.spaceKey : null }; });
+    bossRun.boss = bt;
+    info('jefe_en_vivo', bossRun);
+    check('JUEGO.jefe_musica_jefe_y_victoria', !!bt && bossRun.modes.includes('boss') && bossRun.modes.includes('victory') && bossRun.st === 'victory', bossRun);
+    check('JUEGO.jefe_pico_bajo_-1dBFS', bossRun.peak_dBFS < -1 && bossRun.clip === 0, bossRun.peak_dBFS);
+    check('JUEGO.jefe_sin_errores_de_consola', errors.length === 0, errors.slice(0, 4));
   } catch (e) {
     console.log('ERROR ' + (e && e.stack || e)); fails++;
   } finally {
