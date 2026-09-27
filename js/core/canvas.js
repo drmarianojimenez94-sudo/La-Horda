@@ -31,8 +31,26 @@ function _viewportBox(){
   if(!w || !h){ w = window.innerWidth; h = window.innerHeight; }
   return {w:Math.max(1, Math.round(w)), h:Math.max(1, Math.round(h))};
 }
+// Resolución adaptable: si el juego va lento varios segundos (celular con poca GPU: el costo es pintar
+// píxeles), la resolución INTERNA baja a 75% y después a 60%; el pixel art se amplía nítido
+// (image-rendering: pixelated). Medido en el Reino Micelial: dibujo 15 ms -> 2,5 ms, 30 -> 60 FPS.
+// ?res=0.75 la fija (pruebas); en pruebas automatizadas no se adapta sola salvo con ?resadapt=1.
+const RES_LEVELS = [1, 0.75, 0.6];
+const _resQ = new URLSearchParams(location.search);
+const RES = { i:0, slowMs:0, fastMs:0, flips:0, lock:false,
+  fixed: _resQ.has("res") ? Math.max(0.4, Math.min(1, parseFloat(_resQ.get("res"))||1)) : null,
+  auto: !(navigator.webdriver && !_resQ.has("resadapt")) };
+function resScale(){ return RES.fixed!=null ? RES.fixed : RES_LEVELS[RES.i]; }
+function _dprNow(){ return Math.min(window.devicePixelRatio||1, 2)*resScale(); }
+function resAdapt(dt, playing){
+  if(RES.fixed!=null || !RES.auto || !playing) { RES.slowMs = RES.fastMs = 0; return; }
+  const ema = typeof vfxFrameEma==="number" ? vfxFrameEma : 16;
+  if(ema > 24){ RES.slowMs += dt; RES.fastMs = 0; } else if(ema < 17.5){ RES.fastMs += dt; RES.slowMs = 0; } else { RES.slowMs = Math.max(0, RES.slowMs - dt); RES.fastMs = 0; }
+  if(RES.slowMs > 2500 && RES.i < RES_LEVELS.length-1){ RES.i++; RES.slowMs = 0; RES.flips++; if(RES.flips >= 4) RES.lock = true; resize(true); }
+  else if(RES.fastMs > 9000 && RES.i > 0 && !RES.lock){ RES.i--; RES.fastMs = 0; resize(true); }
+}
 function resize(force){
-  const b = _viewportBox(), dpr = Math.min(window.devicePixelRatio||1, 2);
+  const b = _viewportBox(), dpr = _dprNow();
   if(!force && b.w===VW && b.h===VH && dpr===DPR) return false;
   VW = b.w; VH = b.h; DPR = dpr;
   canvas.width = Math.round(VW*DPR); canvas.height = Math.round(VH*DPR);
@@ -46,7 +64,7 @@ function resize(force){
 }
 // Chequeo por cuadro: si la caja real cambió y el navegador no avisó, se corrige.
 function ensureCanvasSize(){
-  if(canvas.clientWidth !== VW || canvas.clientHeight !== VH || Math.min(window.devicePixelRatio||1, 2) !== DPR) resize();
+  if(canvas.clientWidth !== VW || canvas.clientHeight !== VH || _dprNow() !== DPR) resize();
 }
 window.addEventListener("resize", ()=>resize());
 window.addEventListener("orientationchange", ()=>{ resize(); setTimeout(()=>resize(), 250); });

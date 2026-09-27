@@ -13,7 +13,7 @@
 // Tienda por CHAMPION_PRICE_GOLD de oro. Para agregar un guardián nuevo alcanza con sumar una fila.
 // ETAPA DE PRUEBA (BUGFIX 01): todos los guardianes a 1.000 de oro para poder probarlos. El precio de
 // la economía final era 5.000 (un guardián nuevo como meta real): volver a ese valor al cerrar la prueba.
-const CHAMPION_PRICE_GOLD = 1000;
+const CHAMPION_PRICE_GOLD = 2500; // alfa: con el regalo de 10.000 alcanzan para 4 (antes 1.000: se compraban todos de entrada)
 const CHAMPION_PRICE_GOLD_FINAL = 5000; // precio definitivo (se vuelve a él al terminar la etapa de prueba)
 const CHAMPION_CATALOG = [
   {id:"tanque",   priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
@@ -102,8 +102,10 @@ const CLASSES = {
     // rol más cercano) — un poco más de daño/escalado de daño, un poco menos de vida/defensa
     // que el mago. No es un sistema de balance nuevo, son los mismos cuatro números de siempre.
     //   mago:  HP 95  Dmg 11 Def 0.06 hpGrowth 0.70 dmgGrowth 1.45
-    //   axiom: HP 84  Dmg 13 Def 0.05 hpGrowth 0.62 dmgGrowth 1.52   (más frágil, más daño)
-    baseHP:84, baseDmg:13, baseDef:0.05, baseSpeed:158, energyMax:105, energyRegen:8.5, hpGrowthMult:0.62, dmgGrowthMult:1.52,
+    //   axiom: HP 92  Dmg 13 Def 0.05 hpGrowth 0.62 dmgGrowth 1.52   (más frágil, más daño)
+    // Auditoría pre-alfa: con 84 de vida moría en el nivel 2 de la Arena 01 (simulación); 92 sigue
+    // siendo el mago más frágil pero aguanta el arranque. La identidad (cañón de cristal) no cambia.
+    baseHP:92, baseDmg:13, baseDef:0.05, baseSpeed:158, energyMax:105, energyRegen:8.5, hpGrowthMult:0.62, dmgGrowthMult:1.52,
     basicRange:340, basicCd:540, basicArc:false, ranged:true,
     // Las 4 habilidades reales de Axiom (diseño: Error 404 / Sobrescribir / Bug de Colisión /
     // Force Quit). Progresión por el sistema general de siempre (allocLevel/mastería), sin

@@ -414,9 +414,13 @@ function cmDrawScreen(){
   let sx = px - (CM_STRUCTS.length*26)/2 + 13;
   CM_STRUCTS.forEach((s, i)=>{ const S = cmS.st[i], col = ["#7dffa0", "#ffd24a", "#ff5a3a", "#555"][S.st]; ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(sx - 11, py + 12, 22, 16); ctx.fillStyle = col; ctx.font = "12px sans-serif"; ctx.fillText(s.id==="puerta" ? "⛩" : s.id==="torre" ? "🗼" : s.id==="capilla" ? "⛪" : "🏠", sx, py + 25); if(S.hit > 0){ ctx.strokeStyle = "#ff5a3a"; ctx.strokeRect(sx - 11, py + 12, 22, 16); } sx += 26; });
   // alertas prioritarias con flecha hacia su lugar
+  // como mucho 2 a la vez (1 si el Hechicero está hablando), primero las urgentes (secuestro, muerte) y
+  // después las más nuevas: a los 2-3 minutos se juntaban tutorial + 4 alertas + carteles en un teléfono chico
   let ay = py + 50;
-  for(const A of cmS.alerts){
-    if(A.t > A.d) continue;
+  const tutOn = typeof TUT!=="undefined" && !!TUT.key;
+  const _pri = k=>k==="kid" || k==="grab" || k==="lost" ? 0 : 1;
+  const shown = cmS.alerts.filter(A=>A.t <= A.d).sort((a, b)=>_pri(a.k) - _pri(b.k) || a.t - b.t).slice(0, tutOn ? 1 : 2);
+  for(const A of shown){
     const a = Math.min(1, (A.d - A.t)/400);
     const col = A.k==="lost" ? "255,110,90" : A.k==="bell" || A.k==="kid" || A.k==="grab" ? "255,170,60" : A.k==="run" ? "255,220,120" : "255,120,90";
     ctx.globalAlpha = a; ctx.font = "bold 12px sans-serif";

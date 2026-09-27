@@ -22,6 +22,7 @@ function loop(t){
     if(typeof netTick==="function") netTick(dt); // B1: estado compartido / derrota del equipo
     updateFeedback(dt);
     render();
+    resAdapt(dt, state==="playing"); // resolución adaptable (js/core/canvas.js)
   }catch(err){
     // Antes: un error sin capturar acá frenaba requestAnimationFrame para siempre y la
     // pantalla quedaba congelada en negro sin ningún aviso. Ahora se atrapa, se muestra

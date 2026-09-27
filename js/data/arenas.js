@@ -84,8 +84,12 @@ Object.assign(ARENA_MODS, {
   // escondidos que hay que encontrar, rescatar y escoltar; estructuras que la Horda derriba; subjefes
   // en el nivel 9 y El Presentador en el 10 (js/arenas/ciudad/).
   ciudad:   { label:"Ciudad Maldita", icon:"🏚", desc:"Arena 01. Donde empieza todo: la ciudad que defendiste cuando la Horda volvió.", hazardName:"La Ciudad Arde",
-              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.12, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.9, enemyRegenPct:0, hazard:null, hasWalls:false,
-              potionMult:1.3 },
+              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.10, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:1.0, enemyRegenPct:0, hazard:null, hasWalls:false,
+              // Auditoría pre-alfa: es la PRIMERA arena de un jugador nuevo y era la más dura de la campaña
+              // (simulación: 4 derrotas en el nivel 9 antes de ganar, 45-60 min). Más amable sin cambiar su
+              // identidad: el daño enemigo crece más lento, el guardián pega normal, -12% de vida enemiga y
+              // más pociones.
+              potionMult:1.6, enemyHpMult:0.88 },
   // MINAS PROFUNDAS (Arena 09, la última antes de la Infernal): "LA LUZ ES TERRITORIO". Descenso por seis
   // sectores; los enemigos apagan las luces y el equipo las reenciende; Devoraluz, Titán de Piedra y
   // Cerbero. Matar a Cerbero NO termina la partida: hay que ATRAVESAR EL UMBRAL (js/arenas/minas/).

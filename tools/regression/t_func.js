@@ -13,6 +13,7 @@ async function newPage(browser, site, { save = seedSave(), mobile = false, portr
   const ctx = await browser.newContext(mobile
     ? { viewport: portrait ? { width: 390, height: 844 } : { width: 844, height: 390 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1' }
     : { viewport: { width: 1280, height: 800 } });
+  await ctx.addInitScript(() => { window.__autoConfirm = true; }); // diálogos propios (game-dialog.js): aceptar solos, como page.on('dialog')
   const page = await ctx.newPage();
   page.setDefaultTimeout(8000);
   await ctx.addInitScript(() => { window.__campaignMode = true; }); // la regresión prueba la campaña real (sin el modo prueba de save.js)

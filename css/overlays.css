@@ -74,3 +74,77 @@
   #run-intro{flex-direction:column;}
   #run-intro .ri-art{flex:0 0 38vh; width:100%; height:38vh;}
 }
+
+/* Prólogo en cooperativo: en la primera pantalla de refuerzos (campaign-story.js) */
+#buff-story{ max-width:620px; margin:0 auto 10px; padding:8px 12px; border:2px solid #b08a4a; border-radius:6px;
+  background:linear-gradient(180deg, rgba(34,22,12,0.92), rgba(14,9,6,0.94)); text-align:left; }
+#buff-story.hidden{ display:none; }
+#buff-story .bs-who{ font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:2px; color:#ffd98a; margin-bottom:4px; }
+#buff-story .bs-say{ font-family:'VT323',monospace; font-size:1.05rem; line-height:1.08; color:#ffe9c2; font-style:italic; }
+/* ---------- Diálogo propio del juego (game-dialog.js): reemplaza confirm()/alert() nativos ---------- */
+/* z-index 130: por encima de #run-intro / #net-toast (60), .loot-overlay (80) y #item-preview (120),
+   que también abre avisos (mejorar objeto, comprar desde la ficha). */
+#game-dialog{
+  position:fixed; inset:0; z-index:130;
+  display:flex; align-items:center; justify-content:center;
+  padding: calc(10px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px));
+  box-sizing:border-box;
+  background: radial-gradient(ellipse at 50% 45%, rgba(60,20,8,0.55), rgba(0,0,0,0.82) 70%);
+  animation: gdFade .14s ease-out;
+  touch-action:manipulation; overscroll-behavior:contain;
+}
+#game-dialog .gd-panel{
+  position:relative; width:100%; max-width:480px; max-height:100%;
+  display:flex; flex-direction:column; box-sizing:border-box;
+  padding:14px 18px 16px;
+  background:linear-gradient(160deg, var(--panel), #0f0805);
+  border:3px solid #000; border-radius:0;
+  box-shadow: inset 2px 2px 0 rgba(255,180,120,0.18), inset -2px -2px 0 rgba(0,0,0,0.5), 0 0 0 2px var(--panel-b), 6px 6px 0 #000, 0 0 28px rgba(255,122,46,0.18);
+  color:var(--text); text-align:center;
+  animation: gdPop .16s ease-out;
+}
+#game-dialog .gd-panel::before{ /* filo de brasa arriba */
+  content:""; position:absolute; left:0; right:0; top:0; height:3px;
+  background:linear-gradient(90deg, transparent, var(--ember1), var(--ember3), var(--ember1), transparent);
+}
+#game-dialog .gd-title{
+  font-family:var(--font-retro); font-size:1.15rem; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--ember3); text-shadow:2px 2px 0 #000; margin:2px 0 6px; flex:0 0 auto;
+}
+#game-dialog .gd-msg{
+  font-family:var(--font-retro); font-size:1.35rem; line-height:1.18; color:var(--text);
+  white-space:pre-line; overflow-wrap:anywhere; word-break:normal;
+  flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y;
+  padding:4px 4px 2px; margin-bottom:14px;
+}
+#game-dialog .gd-actions{ display:flex; gap:14px; justify-content:center; flex:0 0 auto; }
+#game-dialog .gd-btn{
+  flex:1 1 0; min-width:120px; max-width:220px; min-height:48px;
+  font-size:1.35rem; padding:8px 14px; line-height:1.1;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+}
+#game-dialog .gd-btn.secondary{ font-size:1.25rem; }
+#game-dialog .gd-btn:focus{ outline:none; }
+#game-dialog .gd-btn:focus-visible{ outline:2px solid var(--ember3); outline-offset:2px; }
+#game-dialog.gd-alert .gd-btn{ max-width:260px; }
+/* acción peligrosa (abandonar, cerrar la sala, decisiones permanentes) */
+#game-dialog.gd-danger .gd-panel{ box-shadow: inset 2px 2px 0 rgba(255,140,110,0.18), inset -2px -2px 0 rgba(0,0,0,0.5), 0 0 0 2px #5a1a10, 6px 6px 0 #000, 0 0 30px rgba(255,61,31,0.25); }
+#game-dialog.gd-danger .gd-panel::before{ background:linear-gradient(90deg, transparent, var(--ember2), #ff9a6a, var(--ember2), transparent); }
+#game-dialog.gd-danger .gd-title{ color:#ff9a6a; }
+#game-dialog.gd-danger .gd-ok{ background:linear-gradient(180deg, #7a1c10, #3e0c06); color:#ffe0d0; }
+@keyframes gdFade{ from{opacity:0;} to{opacity:1;} }
+@keyframes gdPop{ from{transform:scale(0.94); opacity:0;} to{transform:scale(1); opacity:1;} }
+/* iPhone acostado (844x390): más compacto pero con botones de 44px o más */
+@media (orientation: landscape) and (max-height: 520px){
+  #game-dialog .gd-panel{ max-width:560px; padding:10px 16px 12px; }
+  #game-dialog .gd-title{ font-size:1.05rem; margin:2px 0 4px; }
+  #game-dialog .gd-msg{ font-size:1.25rem; line-height:1.12; margin-bottom:10px; }
+  #game-dialog .gd-btn{ min-height:46px; font-size:1.3rem; padding:6px 12px; }
+  #game-dialog .gd-btn.secondary{ font-size:1.2rem; padding:6px 12px; }
+}
+@media (orientation: portrait){ #game-dialog{ visibility:hidden; } } /* el aviso de girar el teléfono manda */
+
+/* Pausa: volumen de música y efectos */
+.pause-audio{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 10px; font-family:var(--font-retro); color:var(--text); font-size:0.9rem; }
+.pause-audio label{ display:flex; align-items:center; gap:6px; }
+.pause-audio input[type=range]{ width:150px; height:28px; accent-color:var(--ember1); }

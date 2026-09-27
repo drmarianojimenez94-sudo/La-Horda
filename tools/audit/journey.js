@@ -12,6 +12,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const browser = await chromium.launch({ args: ['--no-sandbox'] });
   const ctx = await browser.newContext({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   if (campaign) await ctx.addInitScript(() => { window.__campaignMode = true; });
+  await ctx.addInitScript(() => { window.__autoConfirm = true; }); // diálogos propios (game-dialog.js): aceptar solos, como page.on('dialog')
   const page = await ctx.newPage();
   const errors = [], missing = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));

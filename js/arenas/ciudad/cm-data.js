@@ -117,9 +117,10 @@ Object.assign(ENEMY_BASE, {
   cm_campanero: {name:"Campanero",               rank:"elite",    hp:240, dmg:14, speed:60,  radius:30, xp:30, gold:12, scale:4.4, color:"#b06030", ranged:false, dropsItem:true},
   cm_sectario:  {name:"Sectario Fanático",       rank:"normal",   hp:34,  dmg:10, speed:98,  radius:20, xp:9,  gold:3,  scale:3.2, color:"#b02020", ranged:false},
   cm_espectro:  {name:"Espectro Ciudadano",      rank:"normal",   hp:26,  dmg:8,  speed:84,  radius:19, xp:8,  gold:2,  scale:3.0, color:"#7ab0e0", ranged:false},
-  cm_maestro:   {name:"Maestro de Ceremonias",   rank:"subjefe",  hp:1100,dmg:22, speed:70,  radius:32, xp:90, gold:36, scale:6.0, color:"#a02030", ranged:true, range:420, projSpeed:260, dropsItem:true},
-  cm_tramoyista:{name:"El Tramoyista",           rank:"subjefe",  hp:1500,dmg:26, speed:52,  radius:48, xp:100,gold:40, scale:7.0, color:"#8a5030", ranged:false, dropsItem:true},
-  cm_dama:      {name:"La Dama del Telón",       rank:"subjefe",  hp:1700,dmg:24, speed:62,  radius:36, xp:120,gold:48, scale:7.0, color:"#c02040", ranged:true, range:420, projSpeed:240, dropsItem:true},
+  // nivel 9 (Arena 01, la primera de un jugador nuevo): -25% de vida a los tres subjefes (auditoría pre-alfa)
+  cm_maestro:   {name:"Maestro de Ceremonias",   rank:"subjefe",  hp:850, dmg:22, speed:70,  radius:32, xp:90, gold:36, scale:6.0, color:"#a02030", ranged:true, range:420, projSpeed:260, dropsItem:true},
+  cm_tramoyista:{name:"El Tramoyista",           rank:"subjefe",  hp:1150,dmg:26, speed:52,  radius:48, xp:100,gold:40, scale:7.0, color:"#8a5030", ranged:false, dropsItem:true},
+  cm_dama:      {name:"La Dama del Telón",       rank:"subjefe",  hp:1300,dmg:24, speed:62,  radius:36, xp:120,gold:48, scale:7.0, color:"#c02040", ranged:true, range:420, projSpeed:240, dropsItem:true},
   cm_cometa:    {name:"Gran Número",             rank:"normal",   hp:60,  dmg:0,  speed:150, radius:26, xp:0,  gold:0,  scale:3.0, color:"#ff8030", ranged:false, noDivina:true},
   cm_espejismo: {name:"Espejismo de la Dama",    rank:"normal",   hp:1,   dmg:0,  speed:62,  radius:36, xp:0,  gold:0,  scale:7.0, color:"#c02040", ranged:false, noDivina:true},
   cm_presentador:{name:"El Presentador",         rank:"jefe",     hp:5200,dmg:32, speed:58,  radius:40, xp:420,gold:200,scale:8.0, color:"#c01030", ranged:true, range:460, projSpeed:260, dropsItem:true}

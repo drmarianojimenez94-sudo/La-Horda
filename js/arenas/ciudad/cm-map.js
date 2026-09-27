@@ -126,6 +126,9 @@ function cmClamp(ent){
     for(const s of cmSolidsNow()){ const dx = ent.x - s.x, dy = ent.y - s.y, min = s.r + r*0.9, d = Math.hypot(dx, dy); if(d < min){ const q = d || 0.01; ent.x = s.x + dx/q*min; ent.y = s.y + dy/q*min; moved = true; } }
     if(!moved) break;
   }
+  // igual que en las Minas: si una embestida lo dejó dentro de una pared pegada al borde, el empuje
+  // podía sacarlo por afuera del mapa; se lo lleva al punto libre más cercano
+  if(!cmInside(ent.x, ent.y, 0)){ const q = cmNearestFree(ent.x, ent.y, r); ent.x = q.x; ent.y = q.y; }
 }
 // ¿En qué edificio está este punto? (interior: para el fundido local del techo y los escondites)
 function cmBuildingAt(x, y){

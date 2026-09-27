@@ -169,31 +169,38 @@ function renderTalentTree(panel, classKey, rerender){
       const nodeId = btn.getAttribute("data-node");
       const isMastery = btn.getAttribute("data-mastery")==="1";
       const buyFn = isMastery ? buyMasteryNode : buyTalentNode;
-      let res = buyFn(classKey, nodeId, false);
+      const done = res=>{
+        if(res.ok) rerender();
+        else if(res.reason) gameAlert(res.reason);
+      };
+      const res = buyFn(classKey, nodeId, false);
       if(res.needsConfirm){
         const node = isMastery ? masteryMiniNodeById(classKey, nodeId) : talentNodeById(classKey, nodeId);
         const msg = isMastery
           ? `Vas a invertir un punto de Maestría en "${node.name}". Esta decisión es permanente. ¿Deseas continuar?`
           : `"${node.name}" es una elección irreversible: bloqueará permanentemente su alternativa. ¿Deseas continuar?`;
-        if(confirm(msg)) res = buyFn(classKey, nodeId, true);
-        else return;
+        gameConfirm(msg, {okText:"Continuar", danger:true}).then(ok=>{ if(ok) done(buyFn(classKey, nodeId, true)); });
+        return;
       }
-      if(res.ok) rerender();
-      else if(res.reason) alert(res.reason);
+      done(res);
     });
   });
   panel.querySelectorAll(".mastery-pick-btn").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const masteryId = btn.getAttribute("data-mastery-id");
-      let res = pickMastery(classKey, masteryId, false);
+      const done = res=>{
+        if(res.ok) rerender();
+        else if(res.reason) gameAlert(res.reason);
+      };
+      const res = pickMastery(classKey, masteryId, false);
       if(res.needsConfirm){
         const m = tree.masteries[masteryId];
-        if(confirm(`Vas a convertirte en "${m.name}". Esta decisión es PERMANENTE: las otras dos Maestrías quedarán bloqueadas para siempre en este guardián. ¿Deseas continuar?`)){
-          res = pickMastery(classKey, masteryId, true);
-        } else return;
+        gameConfirm(`Vas a convertirte en "${m.name}". Esta decisión es PERMANENTE: las otras dos Maestrías quedarán bloqueadas para siempre en este guardián. ¿Deseas continuar?`, {okText:"Continuar", danger:true}).then(ok=>{
+          if(ok) done(pickMastery(classKey, masteryId, true));
+        });
+        return;
       }
-      if(res.ok) rerender();
-      else if(res.reason) alert(res.reason);
+      done(res);
     });
   });
 }

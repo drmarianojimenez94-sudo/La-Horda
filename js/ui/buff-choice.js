@@ -10,6 +10,7 @@
 function openBuffChoice(){
   setState("buff");
   document.getElementById("buff-title").textContent = `Nivel ${runLevel} superado — elige un refuerzo`;
+  if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff(); // prólogo pendiente del cooperativo
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
   const pool = [...BUFF_POOL].sort(()=>Math.random()-0.5).slice(0,3);

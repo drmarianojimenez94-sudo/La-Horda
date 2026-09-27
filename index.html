@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/panels.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/codex.css">
+<link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
 
@@ -102,7 +103,7 @@
     <canvas id="title-canvas"></canvas>
     <div class="brand title-brand">LA HORDA</div>
     <div class="brand-sub">UN CAMINO AL INFIERNO, LLENO DE MONSTRUOS</div>
-    <button class="btn wide" id="title-continue-btn">Toca para continuar</button>
+    <button class="btn wide" id="title-continue-btn" disabled>Cargando…</button>
     <!-- B1: invitación a una sala online (?room=CÓDIGO en la URL) -->
     <label class="hidden" id="title-join-name">Tu nombre <input maxlength="16" placeholder="Jugador"></label>
     <button class="btn wide hidden" id="title-join-btn">Unirse a la sala</button>
@@ -139,7 +140,7 @@
   <!-- MODO CAMPAÑA: el guardián de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
   <div id="starter-screen" class="screen hidden">
     <div class="arena-title">Tu primer guardián</div>
-    <div class="lobby-sub">Elegí uno: es tu regalo para empezar la campaña. Los demás se desbloquean en la Tienda por <b id="starter-price">1.000</b> de oro.</div>
+    <div class="lobby-sub">Elegí uno: es tu regalo para empezar la campaña. Los demás se desbloquean en la Tienda por <b id="starter-price">2.500</b> de oro.</div>
     <div id="starter-grid"></div>
     <div class="starter-confirm hidden" id="starter-confirm">
       <div id="starter-confirm-text"></div>
@@ -176,13 +177,13 @@
   <!-- TIENDA: catálogo de guardianes (animados, con precio y ficha) + resto de la tienda más adelante -->
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
-    <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
+    <div class="save-line" id="shop-gold-line"></div>
     <div class="shop-tabs" id="shop-tabs">
       <button class="shop-tab on" data-shop-tab="campeones">Guardianes</button>
       <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
       <button class="shop-tab" data-shop-tab="skins">Skins</button>
     </div>
-    <div class="lobby-note shop-test-note">Etapa de prueba: todos los guardianes y todos los objetos cuestan 1.000 de oro.</div>
+    <div class="lobby-note shop-test-note">Guardianes: 2.500 de oro. Los objetos cuestan según su rareza. Míticos y Únicos no se venden: se fabrican o se consiguen peleando.</div>
     <div id="shop-panel"></div>
     <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
@@ -281,7 +282,7 @@
   <!-- GAME OVER -->
   <div id="gameover-screen" class="screen hidden">
     <div class="arena-title" style="color:#c62828;" id="go-title">La Horda te ha consumido</div>
-    <div class="brand" style="font-size:1.6rem;" id="go-stats">Nivel 1 · 0 bajas</div>
+    <div class="brand" id="go-stats">Nivel 1 · 0 bajas</div>
     <div class="save-line" id="go-progress"></div>
     <div style="height:18px;"></div>
     <button class="btn wide" id="retry-btn">Reintentar desde el Nivel 1</button>
@@ -302,6 +303,10 @@
   <div id="pause-screen" class="screen hidden">
     <div class="arena-title">Pausa</div>
     <div class="pause-note">En las partidas online no hay pausa. Objetos y talentos se cambian en la Sala antes de entrar; las habilidades se suben en partida con el <b>+</b> que aparece sobre cada botón.</div>
+    <div class="pause-audio">
+      <label>🎵 Música <input type="range" id="vol-music" min="0" max="100" step="5"></label>
+      <label>💥 Efectos <input type="range" id="vol-sfx" min="0" max="100" step="5"></label>
+    </div>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
     <button class="btn secondary" id="quit-btn">Abandonar arena</button>
@@ -322,6 +327,8 @@
         <div class="ri-tap">tocá en cualquier lado para empezar</div>
       </div>
     </div>
+<script src="js/assets/asset-webp.js"></script>
+<script src="js/assets/lazy-images.js"></script>
 <script src="js/assets/asset-manifest.js"></script>
 <script src="js/assets/preload.js"></script>
 <script src="js/vendor/cadena-relampagos.js"></script>
@@ -345,6 +352,7 @@
 <script src="js/core/constants.js"></script>
 <script src="js/core/utils.js"></script>
 <script src="js/storage/save.js"></script>
+<script src="js/ui/game-dialog.js"></script>
 <script src="js/core/canvas.js"></script>
 <script src="js/core/anti-zoom.js"></script>
 <script src="js/core/state.js"></script>

@@ -46,7 +46,10 @@ Lo que **queda abierto** para una alfa real:
    hasta la primera victoria en simulación.
 4. **La economía de "etapa de prueba":** 10.000 de oro y todo a 1.000. Es una DECISIÓN del dueño.
 
-**ALPHA READINESS SCORE: 58 / 100.** Antes de esta auditoría, ~46 / 100. El detalle está en la sección 26.
+**ALPHA READINESS SCORE: 73 / 100** después de la segunda pasada (sección 27). Antes era 58 / 100 y, antes de
+la primera auditoría, ~46 / 100. El multijugador publicado quedó verificado en vivo, la carga hasta el
+título bajó de 52 s a 14 s y la Arena 01 se gana al primer intento en simulación. El detalle de la
+primera pasada está en la sección 26.
 
 ## 2. Alcance y método
 
@@ -417,3 +420,185 @@ Escala 0–10, sin inflar. Es el estado **después** de las correcciones de esta
 4. **[P1]** Medir la carga real en 4G. Si pasa de ~20 s, priorizar D3.
 
 Con 1 hecho y 2–4 decididos, la alfa cerrada está en condiciones de salir.
+
+---
+
+## 27. Segunda pasada: "llegar a 80" (qué se arregló, qué se midió y la nota nueva)
+
+Todo lo de esta sección se midió con herramientas que quedan en el repositorio. Lo que no se pudo
+medir sigue marcado **NOT VERIFIED IN RUNTIME**.
+
+### 27.1 Multijugador: por qué "crear sala no hacía nada" y qué se hizo
+
+- **Causa raíz:** el servidor de salas (Render) rechazaba en silencio las conexiones que venían del
+  juego publicado. El filtro de orígenes (`ALLOWED_ORIGINS`) no incluía la página de GitHub Pages, y el
+  rechazo cortaba la conexión **sin decir nada**: el botón quedaba "conectando" para siempre.
+- **Arreglo en el servidor** (`server/relay.js`, `render.yaml`): la página publicada y sus previews
+  siempre están permitidas. Si rechaza a alguien, primero manda el motivo (`ORIGIN`) y después corta.
+- **Arreglo en el juego** (`js/net/net-core.js`, `js/net/net-lobby.js`):
+  - despierta al servidor al abrir el juego;
+  - reintenta hasta ~100 s con un contador visible ("Despertando el servidor… N s");
+  - si lo rechazan, muestra un cartel con el motivo;
+  - confirma que de verdad entró a la sala antes de seguir.
+- **Verificado EN VIVO** con el workflow nuevo `.github/workflows/live-check.yml` (GitHub Actions, que sí
+  llega a Render):
+  - relay publicado: `/health` 220–315 ms; **crear sala 76 ms**; **unirse con código 100 ms**; el
+    anfitrión ve al invitado; un origen no autorizado recibe el aviso `ORIGIN`;
+  - **dos iPhone emulados** abren el juego de GitHub Pages contra el relay real y hacen el flujo completo:
+    - crear sala, unirse con código y validaciones del código;
+    - sala llena, unirse por enlace;
+    - partida con skins, revivir, reconexión y recarga;
+    - scroll táctil de Tienda, Inventario y Modos;
+    - **0 errores de JavaScript**.
+- **Sigue NOT VERIFIED IN RUNTIME:** Safari de un iPhone físico con datos móviles. Chromium emulado no es
+  Safari. El workflow se puede correr a mano desde Actions o queda programado una vez por día.
+
+### 27.2 Carga inicial
+
+- Antes se precargaban **1.366 imágenes (≈51 MB) antes del título**.
+- Ahora la carga va en dos tandas (`js/assets/lazy-images.js`, `js/assets/preload.js`):
+  - **antes del título**, solo lo necesario;
+  - **mientras mirás el menú**, el arte de arenas, enemigos, jefes y efectos.
+- Además, **WebP sin pérdida** verificado píxel por píxel: 1.326 de 1.364 imágenes, 49,4 → 37,3 MB.
+- Ninguna partida empieza con arte a medio bajar: el botón dice "Preparando la arena… N %" hasta que
+  termina.
+- `tools/audit/loadtime.js`, 4G simulado (12 Mbit/s):
+
+| | Antes | Ahora |
+|---|---|---|
+| Tiempo hasta "Toca para continuar" | 52,5 s | **13,9 s** |
+| MB bajados hasta el título | 54,3 | **14,4** |
+| Pedidos de arte de arenas antes del título | cientos | **0** |
+
+### 27.3 Bugs reales encontrados por las simulaciones y arreglados
+
+| Bug | Evidencia | Arreglo | Prueba nueva |
+|---|---|---|---|
+| **Minas: guardián trabado fuera del mapa.** La Embestida (y otros desplazamientos) lo metía en una roca del borde; el empuje lo sacaba por afuera y no podía volver: el Portal quedaba inalcanzable | 5 de 11 partidas simuladas | Si después del empuje sigue en un lugar no caminable, va al punto libre más cercano | `tools/minas/t_clamp.js`: falla en `main`, pasa acá |
+| **Ciudad: mismo caso** en la pared de arriba | 1 caso en `main` | Idem | `tools/ciudad/t_clamp.js` |
+| **iPhone: el audio quedaba mudo** al volver de otra app o de una llamada | Contexto "interrumpido" que nadie reanudaba | Se reanuda al volver a la pestaña y en el próximo toque | Probado: suspendido → toque → vuelve a sonar |
+| **Bots quietos frente a pasos angostos:** el camino con obstáculos inflados cerraba los puentes del Abismo | Sonda: 2 de 3 bots sin moverse | Campo de camino sin inflar como respaldo; se recalcula si cambia el mapa | Sonda: el rescate llega en 4,6 s (antes 7,7 s) |
+| "Atascos" de 22 min en la Ciudad | Eran del **piloto automático** (empujaba contra los edificios), no del juego | El piloto rodea muros | 41 partidas de la Ciudad sin llegar al tope |
+
+### 27.4 Interfaz en el teléfono
+
+- `tools/audit/ui_layout.js` recorre con toques reales **43 pantallas** en iPhone 14 y en iPhone SE
+  apaisados. En cada una mide:
+  - botones de menos de 40 px;
+  - cosas que se salen de la pantalla;
+  - textos de menos de 11 px;
+  - botones principales que quedan fuera de la vista.
+- **Antes: 294 y 297 problemas. Ahora: 0 y 0** (`css/mobile.css`, solo para pantallas bajas o táctiles).
+  El escritorio no cambió: se comparó la posición y el tamaño de cada elemento.
+- Diálogos propios con la estética del juego en vez de `confirm()`/`alert()` del navegador.
+- Volumen de música y de efectos en la pausa.
+- Como mucho **2 alertas de civiles a la vez** en la Ciudad (1 si habla el Hechicero); antes se
+  apilaban 4 más el tutorial.
+
+### 27.5 Fluidez
+
+- `tools/audit/fps.js` mide en Chromium sin placa de video, con dibujado
+  por software.
+- La **lógica** del juego es liviana: `update` ≈ 1–2,7 ms por cuadro.
+- El costo está en **pintar píxeles**. El Reino Micelial dibujaba en 15 ms por cuadro y quedaba en
+  30 FPS.
+- Nuevo: **resolución adaptable** (`js/core/canvas.js`):
+  - si el juego va lento 2,5 s, la resolución interna baja a 75 % y, si hace falta, a 60 %;
+  - el pixel art se amplía nítido;
+  - cuando se recupera, vuelve a subir.
+  - **Micelial: 30 → 60 FPS**. La Ciudad (60 FPS) no cambia.
+- **NOT VERIFIED IN RUNTIME:** fluidez en un teléfono real. La emulación con CPU 4× más lenta también
+  frena el dibujado por software (en un teléfono lo hace la GPU), así que su número (8–12 FPS) no
+  representa un aparato real.
+
+### 27.6 Progresión, economía y balance (simulación, piloto automático)
+
+- **Campaña completa de punta a punta por primera vez.** El piloto ahora cruza el Portal de las Minas.
+- Perfil nuevo, nivel 1, un solo guardián:
+
+| Guardián | Partidas hasta ganar la Infernal | Minutos simulados | Muros |
+|---|---|---|---|
+| Mago | **12** | 79 | ninguno (máximo 2 intentos por arena) |
+| Tanque | **19** | 140 | Bosque (4 intentos), **Abismo (7 intentos)** |
+
+- **Arena 01:** con los dos se gana al **primer intento**. Antes costaba 5 intentos y 45–60 min.
+- En nivel 1, los 12 guardianes ganan la Ciudad al primer intento 7 de 12 veces. Casi todas las
+  derrotas son en el nivel 9 (Saqueador).
+- **Abismo con el Tanque (abierto, para observar con personas):** pierde por **caer al vacío** con 89 %
+  de vida.
+  - En solitario, caer termina la partida.
+  - Los bots no llegan a rescatarlo cuando el derrumbe cortó los puentes.
+  - Se probaron tres cambios y se revirtieron los que no mejoraban la medición (2 de 12 ganadas antes y
+    después).
+  - Queda como decisión de diseño: extender la regla de "trepar solo" cuando nadie puede llegar.
+- **Economía** (precios nuevos por rareza; Míticos y Únicos fuera de la Tienda):
+  - una victoria en la Ciudad deja ~930 de oro en ~10 min, y las arenas siguientes 1.000–2.850 en ~7 min;
+  - un guardián (2.500) cuesta 2–3 victorias al principio y 1–2 después;
+  - el regalo único de 10.000 lo decidió el dueño y se mantuvo.
+
+### 27.7 Regresión de esta pasada (rama final, todo junto)
+
+| Suite | Resultado |
+|---|---|
+| `tools/items/t_*.js` | **18/18 OK** |
+| Smokes de arena (Fábrica, Ciudad, Minas, Micelial) | **4/4 OK**, 0 errores |
+| `tools/minas/t_clamp.js`, `tools/ciudad/t_clamp.js` (nuevas) | OK (fallan en `main`) |
+| `tools/identity/t_identity.js` | **OK** (84 chequeos; antes fallaba en `main`) |
+| `tools/bosses/boss_rules.js` | **OK** (todos los jefes) |
+| `tools/regression/t_camera.js` | 72/72 |
+| `tools/audit/journey.js` (jugador nuevo en móvil) | 0 errores |
+| `tools/audit/ui_layout.js` (nueva) | 0 problemas en iPhone 14 y SE |
+| Red: `coldstart`, protocolo del relay, `campaign-gate`, `minas_coop`, `ciudad_coop`, `disconnect` | todas OK |
+| Red: `lobby_code_skins` en móvil y escritorio | OK |
+| Red: `e2e.js 2` y `e2e.js 4 --fifth` | **0 fallas** (antes fallaban en `main`) |
+| En vivo (GitHub Actions): relay publicado + 2 iPhone emulados contra GitHub Pages | OK |
+
+Pruebas que eran intermitentes también en `main` y quedaron deterministas (las mecánicas no cambiaron):
+- **Bosque:** los bots contenían la runa antes de que se encendiera.
+- **Presentador:** los bots le cortaban el Gran Número antes de que la prueba mirara.
+
+### 27.8 Puntuación nueva (0–10, sin inflar)
+
+| # | Categoría | Antes | Ahora | Por qué |
+|---|---|---|---|---|
+| 1 | Primera impresión | 7 | **8** | Título 4 veces antes (13,9 s en 4G simulado). |
+| 2 | Onboarding / claridad | 6 | **7** | Prólogo antes de jugar (también en cooperativo) y menos textos a la vez. |
+| 3 | Controles táctiles | 6 | **7** | Todo lo tocable mide 40 px o más en las 43 pantallas; diálogos propios. Sensación: NOT VERIFIED. |
+| 4 | Combate | 7 | 7 | Sin cambios; la sensación con el dedo sigue NOT VERIFIED. |
+| 5 | Enemigos / IA | 7 | 7 | Bots mejores en pasos angostos; el Saqueador sigue siendo el que más mata en el nivel 9. |
+| 6 | Jefes | 7 | **8** | 101/101 reglas; el jefe final se gana en simulación; los "atascos" eran del piloto. |
+| 7 | Identidad de arenas | 8 | 8 | |
+| 8 | Guardianes | 6 | **7** | Axiom corregido; 7 de 12 ganan la Arena 01 al primer intento en nivel 1. |
+| 9 | Progresión | 5 | **7** | Arena 01 al primer intento; campaña completa en 12–19 partidas; queda el Abismo con el Tanque. |
+| 10 | Economía | 3 | **7** | Precios por rareza; un guardián cada 2–3 victorias. El regalo de 10.000 es decisión del dueño. |
+| 11 | Loot / ítems | 6 | **7** | La Tienda ya no vende Míticos ni Únicos. |
+| 12 | UI/UX móvil | 6 | **8** | 0 problemas medidos en iPhone 14 y SE (antes ~295); volumen; diálogos propios. |
+| 13 | Dirección de arte | 7 | 7 | Siguen faltando 3 piezas P0 (no se inventa arte). |
+| 14 | Juice / game feel | 7 | 7 | |
+| 15 | Audio | 4 | **5** | Mezcla medida (pico −3 dB, sin saturar), volúmenes y el arreglo de iPhone. Solo síntesis; oído humano: NOT VERIFIED. |
+| 16 | Narrativa / lore | 6 | **7** | Prólogo en su lugar, también en cooperativo. |
+| 17 | Multijugador | 6 | **8** | Relay publicado verificado en vivo y flujo de 2 teléfonos emulados contra el juego publicado. Safari real: NOT VERIFIED. |
+| 18 | Estabilidad técnica | 8 | **9** | 0 errores en toda la regresión; 2 trabas reales encontradas y cerradas con pruebas; chequeo diario en vivo. |
+| 19 | Rendimiento / carga | 5 | **8** | 14 s hasta el título en 4G; resolución adaptable (Micelial 30 → 60 FPS). Teléfono real: NOT VERIFIED. |
+| 20 | Persistencia | 8 | 8 | |
+| | **Promedio** | 6,25 | **7,35** | |
+
+**ALPHA READINESS SCORE: 73 / 100** (antes 58).
+- El promedio × 10 da 73,5. Ya no se resta nada: los tres riesgos que podían arruinar la sesión de un
+  desconocido quedaron cerrados y medidos:
+  - relay público: verificado en vivo;
+  - carga de 51 MB: 14 MB hasta el título;
+  - muro de la Arena 01: se gana al primer intento.
+
+### 27.9 Qué falta para 80, y por qué no se puede "cerrar" desde este entorno
+
+Para 80 el promedio tiene que ser 8. Las categorías que siguen en 5–7 no suben con más código sin
+verificar; suben con estas tres cosas:
+
+1. **Personas con teléfonos reales (3–5, una tarde):** combate con el dedo (4), controles (3), audio
+   (15), onboarding (2) y fluidez real (19). Es lo que más puntos mueve: +4 a +6.
+2. **Arte P0** (`LA_HORDA_MISSING_ASSETS.md`: Cerbero en alta, pared agrietada, Ángel Corrompido): +1 en
+   arte y juice.
+3. **Audio grabado o música compuesta**, en vez de síntesis: +2 en audio.
+
+Con 1 hecho, y 2 o 3 en marcha, el juego queda en el rango 78–82 **medido**, no estimado.

@@ -52,8 +52,38 @@ tocar el balance: ver [ARCHITECTURE.md](ARCHITECTURE.md).**
 - **Progresión persistente** en `localStorage`: niveles, oro, maestría de habilidades,
   árboles de talentos, objetos con rarezas/sets/fusión; exportación/importación por código.
 - **Códice** (guardianes, bestiario, jefes y arenas) y **Tienda** (guardianes, objetos/sets y skins;
-  en la etapa de prueba todo cuesta 1.000 de oro y un perfil nuevo recibe 10.000 una vez).
+  precio por rareza; guardianes a 2.500; Míticos y Únicos no se venden; un perfil nuevo recibe 10.000 de oro una vez).
 - **Cooperativo online** de hasta 4 guardianes (sala con código de 6 letras; relay en `server/`).
+
+## Carga de imágenes
+
+- **Dos tandas** (`js/assets/lazy-images.js` + `js/assets/preload.js`): primero lo que se ve en título,
+  menús, Sala y guardianes (~11 MB); el arte de las arenas y los efectos (~28 MB) baja mientras se
+  navegan los menús. La partida espera a que esté todo ("Preparando la arena… N %"): nunca se juega con
+  arte a medio cargar.
+- **WebP sin pérdida**: `python3 tools/art/webp_convert.py` genera una copia `.webp` (mismos píxeles) de
+  cada PNG del manifiesto y la lista `js/assets/asset-webp.js`. **Si agregás o cambiás una imagen, volvé a
+  correrlo** (si no, se usa el PNG, que también funciona).
+- Medición con red 4G simulada: `node tools/audit/loadtime.js` (título: 52,5 s → 13,9 s).
+
+## Servidor del multijugador
+
+`server/relay.js`, desplegado en Render con `render.yaml`. Acepta conexiones del juego publicado
+(GitHub Pages) y de las previews. En el plan gratuito se duerme: el juego lo despierta al abrir y, al
+crear o unirse, reintenta solo hasta ~100 s mostrando "Despertando el servidor… N s". Si el servidor
+rechaza la conexión, la Sala muestra el motivo. Prueba: `node tools/net-test/coldstart.js`.
+
+**Verificación del juego publicado:** el workflow `Live check` (`.github/workflows/live-check.yml`) corre
+una vez por día y a mano desde la pestaña Actions. Despierta el relay de Render, crea una sala y se une
+con el código (`tools/net-test/live_relay.js`), hace el flujo de la Sala con dos iPhone emulados contra
+GitHub Pages y mide la carga en 4G.
+
+## Pruebas de celular y fluidez
+
+- `node tools/audit/ui_layout.js`: 43 pantallas en iPhone 14 y SE apaisados (botones de menos de 40 px,
+  textos chicos, cosas fuera de pantalla). Los ajustes para celular están en `css/mobile.css`.
+- `node tools/audit/fps.js [arena] [cpu]`: fluidez. Si el juego va lento, la resolución interna baja sola
+  (75 % / 60 %; `js/core/canvas.js`); `?res=0.75` la fija para probar.
 
 ## Modo desarrollador
 

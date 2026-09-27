@@ -11,6 +11,7 @@ let WebSocket;
 try { WebSocket = require('ws'); } catch (e) { WebSocket = require(require('path').join(__dirname, '../../server/node_modules/ws')); }
 const SITE = process.env.SITE || 'http://127.0.0.1:8771';
 const RELAY = process.env.RELAY || 'ws://127.0.0.1:8799';
+const SITE_ORIGIN = new URL(SITE).origin; // SITE puede traer ruta (GitHub Pages: .../La-Horda)
 const HOST_MODE = process.argv[2] === 'mobile' ? 'mobile' : 'desktop';
 const OUT = process.argv[3];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -21,8 +22,9 @@ const DESK = { viewport: { width: 1000, height: 560 } };
 
 async function client(browser, mobile, name, champ, url) {
   const ctx = await browser.newContext(Object.assign({}, mobile ? PHONE : DESK));
-  await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: SITE });
+  await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: SITE_ORIGIN });
   await ctx.addInitScript(([n]) => { try { if (!localStorage.getItem('__s')) { localStorage.clear(); localStorage.setItem('__s', '1'); localStorage.setItem('horda_name', n); } } catch (e) {} }, [name]);
+  await ctx.addInitScript(() => { window.__autoConfirm = true; }); // diálogos propios (game-dialog.js): aceptar solos, como page.on('dialog')
   const page = await ctx.newPage();
   const errors = [], dialogs = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -115,7 +117,7 @@ const toast = (c) => ev(c, () => (document.getElementById('net-toast') || {}).te
   const build = await ev(A, () => NET_CONFIG.build);
   const raws = [];
   for (let i = 0; i < 3; i++) {
-    const ws = new WebSocket(RELAY); await new Promise(res => ws.on('open', res));
+    const ws = new WebSocket(RELAY, { origin: SITE_ORIGIN }); await new Promise(res => ws.on('open', res));
     ws.send(JSON.stringify({ t: 'join', protocol: 1, build, code, champ: ['tanque', 'soporte', 'axiom'][i], level: 5, name: 'Relleno' + i, clientId: 'raw' + i + Date.now() }));
     raws.push(ws);
   }

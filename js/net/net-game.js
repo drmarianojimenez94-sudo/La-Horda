@@ -739,6 +739,7 @@ function netGuestCast(idx, aim){
 function netGuestShowBuffs(d){
   setState("buff");
   document.getElementById("buff-title").textContent = `Nivel ${d.level} superado — elige tu refuerzo`;
+  if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff();
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
   (d.opts||[]).forEach(id=>{

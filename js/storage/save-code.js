@@ -18,7 +18,7 @@ function applySaveCode(code){
 }
 document.getElementById("export-save-btn").addEventListener("click", ()=>{
   const code = serializeSaveCode();
-  const finish = ()=> alert("Código copiado. Guardalo en Notas — con eso podés restaurar tu progreso (nivel, ítems, oro) en cualquier momento, aunque el navegador borre los datos.");
+  const finish = ()=> gameAlert("Código copiado. Guardalo en Notas — con eso podés restaurar tu progreso (nivel, ítems, oro) en cualquier momento, aunque el navegador borre los datos.");
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(code).then(finish).catch(()=> prompt("Copiá este código a mano (seleccionalo todo):", code));
   } else {
@@ -31,8 +31,8 @@ document.getElementById("import-save-btn").addEventListener("click", ()=>{
   try{
     applySaveCode(code);
     renderChampGrid(); renderSaveLine();
-    alert("¡Progreso restaurado!");
+    gameAlert("¡Progreso restaurado!");
   }catch(e){
-    alert("Ese código no es válido o está incompleto.");
+    gameAlert("Ese código no es válido o está incompleto.");
   }
 });

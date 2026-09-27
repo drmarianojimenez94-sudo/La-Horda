@@ -68,7 +68,7 @@ function grantPlaytestV1Bonus(){
 function renderMainMenu(){
   if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
   // BUGFIX 01: aviso único del regalo de la etapa de prueba (10.000 de oro)
-  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Etapa de prueba: recibiste 10.000 de oro. Probá guardianes, objetos y sets en la Tienda."); }
+  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Regalo de bienvenida: 10.000 de oro para la Tienda (guardianes, objetos y skins)."); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
 }
@@ -269,29 +269,54 @@ document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   setState("arenaselect"); renderArenaGrid();
 });
 document.getElementById("prep-back-btn").addEventListener("click", ()=>{
-  if(netInRoom()){
-    if(net.role==="host" && netHumanCount()>1 && !confirm("¿Salir? La sala se cierra para tus amigos.")) return;
-    netLeaveRoom();
+  const go = ()=>{
+    if(netInRoom()) netLeaveRoom();
+    lobbyAllies = null;
+    setState("menu"); renderChampGrid(); renderSaveLine();
+  };
+  if(netInRoom() && net.role==="host" && netHumanCount()>1){
+    gameConfirm("¿Salir? La sala se cierra para tus amigos.", {okText:"Salir", danger:true}).then(ok=>{ if(ok) go(); });
+    return;
   }
-  lobbyAllies = null;
-  setState("menu"); renderChampGrid(); renderSaveLine();
+  go();
 });
+function _prepStartFailed(err){
+  console.error("Error al arrancar la partida:", err);
+  gameAlert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
+}
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
   try{
     if(netInRoom()){
       if(net.role!=="host") return; // el anfitrión decide cuándo comenzar
       if(netDuplicateChamps().length){ netRenderLobbyBar(); return; }
-      if(!isArenaUnlocked(currentArena)){ alert("Esa arena todavía no la desbloqueaste."); return; }
+      if(!isArenaUnlocked(currentArena)){ gameAlert("Esa arena todavía no la desbloqueaste."); return; }
       const nr = netNotReady();
-      if(nr.length && !confirm(`${nr.map(s=>s.name).join(", ")} todavía no ${nr.length>1?"están":"está"} LISTO. ¿Comenzar igual?`)) return;
-      netHostStartGame();
+      // arranque del anfitrión: espera al arte de las arenas (preload.js) y re-chequea la sala
+      const hostStart = ()=>{
+        if(!netInRoom() || net.role!=="host" || state!=="prep") return;
+        if(netDuplicateChamps().length){ netRenderLobbyBar(); return; }
+        if(typeof assetsAllReady==="function" && !assetsAllReady()){
+          const sb = document.getElementById("prep-start-btn");
+          if(sb){ sb.disabled = true; sb.textContent = "Preparando la arena… " + assetsRestPct() + "%"; }
+          whenAssetsReady(()=>{ if(sb){ sb.disabled = false; sb.textContent = "Comenzar"; } hostStart(); },
+            pct=>{ if(sb) sb.textContent = "Preparando la arena… " + pct + "%"; });
+          return;
+        }
+        try{ netHostStartGame(); }catch(err){ _prepStartFailed(err); }
+      };
+      if(nr.length){
+        gameConfirm(`${nr.map(s=>s.name).join(", ")} todavía no ${nr.length>1?"están":"está"} LISTO. ¿Comenzar igual?`, {okText:"Comenzar"}).then(ok=>{
+          if(ok) hostStart(); // mientras estaba abierto el diálogo la sala pudo cambiar: hostStart re-chequea
+        });
+        return;
+      }
+      hostStart();
       return;
     }
     // el Hechicero presenta la arena antes de empezar (run-intro.js)
     runIntroShow(currentArena, ()=>{ try{ startRun(1); }catch(err){ console.error("Error al arrancar la partida:", err); } });
   }catch(err){
-    console.error("Error al arrancar la partida:", err);
-    alert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
+    _prepStartFailed(err);
   }
 });
 // SALA (lobby) antes de entrar a la arena: 4 lugares -pensada para multijugador; hoy el lugar 1 es
@@ -362,14 +387,16 @@ function bindPrepSkins(box){
   if(sh) sh.addEventListener("click", ()=>{ codexReturnTo = "prep"; shopTab = "skins"; setState("shop"); renderShop(); });
   box.querySelectorAll("[data-prep-skin-use]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-prep-skin-use");
-    if(skinEquipOn(id, selectedClass)) _skinEquippedFeedback(id, selectedClass); else alert("No se pudo equipar: revisá que tengas todas las piezas.");
+    if(skinEquipOn(id, selectedClass)) _skinEquippedFeedback(id, selectedClass); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas.");
     renderPrepSummary();
   }));
   box.querySelectorAll("[data-prep-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-prep-skin-buy");
-    if(!confirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`)) return;
-    shopBuySkin(id);
-    renderPrepSummary();
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return;
+      shopBuySkin(id);
+      renderPrepSummary();
+    });
   }));
 }
 let prepCompareOpenUid = null; // qué tarjeta tiene la comparación abierta, en esta pantalla
@@ -403,14 +430,35 @@ function netLeaveAfterMatch(){
   return gone;
 }
 document.getElementById("menu-btn-1").addEventListener("click", ()=>{
-  if(net.role==="host" && netHumanCount()>1 && !confirm("¿Cerrar la sala? Tus amigos vuelven al menú.")) return;
-  if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
-  if(currentArena==="divina"){ setState("divina"); return; }
-  setState("menu"); renderChampGrid(); renderSaveLine();
+  const go = ()=>{
+    if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
+    if(currentArena==="divina"){ setState("divina"); return; }
+    setState("menu"); renderChampGrid(); renderSaveLine();
+  };
+  if(net.role==="host" && netHumanCount()>1){
+    gameConfirm("¿Cerrar la sala? Tus amigos vuelven al menú.", {okText:"Cerrar sala", danger:true}).then(ok=>{ if(ok) go(); });
+    return;
+  }
+  go();
 });
 document.getElementById("again-btn").addEventListener("click", ()=>{ if(netBackToRoomIfAny()) return; startRun(1); });
 document.getElementById("menu-btn-2").addEventListener("click", ()=>{
-  if(net.role==="host" && netHumanCount()>1 && !confirm("¿Cerrar la sala? Tus amigos vuelven al menú.")) return;
-  if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
-  setState("menu"); renderChampGrid(); renderSaveLine();
+  const go = ()=>{
+    if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
+    setState("menu"); renderChampGrid(); renderSaveLine();
+  };
+  if(net.role==="host" && netHumanCount()>1){
+    gameConfirm("¿Cerrar la sala? Tus amigos vuelven al menú.", {okText:"Cerrar sala", danger:true}).then(ok=>{ if(ok) go(); });
+    return;
+  }
+  go();
 });
+
+// Volumen de música / efectos en la pausa (audio.js los guarda en este navegador)
+(function(){
+  for(const [id, kind] of [["vol-music","music"],["vol-sfx","sfx"]]){
+    const el = document.getElementById(id); if(!el) continue;
+    el.value = Math.round((typeof audioVol!=="undefined" ? audioVol[kind] : 1)*100);
+    el.addEventListener("input", ()=>{ if(typeof setAudioVolume==="function") setAudioVolume(kind, el.value/100); if(kind==="sfx" && typeof playSfx==="function") playSfx("ready"); /* muestra del volumen de efectos */ });
+  }
+})();

@@ -94,11 +94,32 @@ function ctxNetMsg(h, d){
   if(t && ctxCanUse(h, t, 24)) h._ctxHold = t.id;
 }
 // Bots: ¿hay algún objetivo que valga la pena? Devuelve {mx,my,target...} para botMove o null.
+// Objetivos URGENTES (k.urgent: rescatar a un compañero colgado del borde): le ganan a cualquier otro,
+// se miran en cada cuadro y no esperan a que el bot termine lo que estaba haciendo.
+function _ctxUrgentFor(h, ts){
+  let best = null, bd = Infinity;
+  for(const c of ts){
+    const k = CTX_KINDS[c.kind]; if(!k || !k.urgent || c.done || !k.botWorth) continue;
+    if(k.canUse && !k.canUse(h, c)) continue;
+    if(k.botWorth(h, c) < 1) continue;
+    let going = 0; for(const o of heroes){ if(o!==h && o._ctxGoal===c.id) going++; }
+    if(going >= (k.maxBots || 2)) continue;
+    const d = Math.hypot(h.x-c.x, h.y-c.y); if(d < bd){ bd = d; best = c; }
+  }
+  return best;
+}
+function ctxHasUrgent(h){
+  const ts = ctxTargets(); if(!ts || !ts.length) return false;
+  const cur = h._ctxGoal!=null ? ctxFind(h._ctxGoal) : null;
+  if(cur && !cur.done && CTX_KINDS[cur.kind] && CTX_KINDS[cur.kind].urgent) return true;
+  return !!_ctxUrgentFor(h, ts);
+}
 function ctxBotObjective(h, dt, target){
   const ts = ctxTargets(); if(!ts) return null;
   // sigue con el que tenía
   let t = h._ctxGoal!=null ? ctxFind(h._ctxGoal) : null;
   if(t && (t.done || !CTX_KINDS[t.kind])) t = null;
+  if(!(t && CTX_KINDS[t.kind].urgent)){ const u = _ctxUrgentFor(h, ts); if(u){ t = u; h._ctxHold = null; } }
   h._ctxGoalT = (h._ctxGoalT||0) - dt;
   if(!t && h._ctxGoalT <= 0){
     h._ctxGoalT = 600;
@@ -163,23 +184,29 @@ function _ctxBuildField(t){
       if(N.blocked[jj*W+ii]){ infl[c] = 1; break; }
     }
   }
-  const D = new Uint16Array(n).fill(65535), q = new Int32Array(n);
-  let qh = 0, qt = 0;
-  const s0 = aidNavCell(t.x, t.y); if(s0 < 0) return {D, infl};
-  D[s0] = 0; q[qt++] = s0; infl[s0] = 0;
+  const s0 = aidNavCell(t.x, t.y);
+  if(s0 >= 0) infl[s0] = 0;
+  // dos campos: con los obstáculos inflados (camino cómodo) y sin inflar (para pasos angostos como
+  // los puentes del Abismo, que inflados quedan cerrados y el bot "no encontraba camino")
+  return {D:_ctxBfs(s0, infl, W, H, n), D2:_ctxBfs(s0, N.blocked, W, H, n), infl};
+}
+function _ctxBfs(s0, blk, W, H, n){
+  const D = new Uint16Array(n).fill(65535); if(s0 < 0) return D;
+  const q = new Int32Array(n); let qh = 0, qt = 0;
+  D[s0] = 0; q[qt++] = s0;
   while(qh < qt){
     const c = q[qh++], d = D[c]+1, i = c % W, j = (c-i)/W;
-    if(i>0 && !infl[c-1] && D[c-1]===65535){ D[c-1] = d; q[qt++] = c-1; }
-    if(i<W-1 && !infl[c+1] && D[c+1]===65535){ D[c+1] = d; q[qt++] = c+1; }
-    if(j>0 && !infl[c-W] && D[c-W]===65535){ D[c-W] = d; q[qt++] = c-W; }
-    if(j<H-1 && !infl[c+W] && D[c+W]===65535){ D[c+W] = d; q[qt++] = c+W; }
+    if(i>0 && !blk[c-1] && D[c-1]===65535){ D[c-1] = d; q[qt++] = c-1; }
+    if(i<W-1 && !blk[c+1] && D[c+1]===65535){ D[c+1] = d; q[qt++] = c+1; }
+    if(j>0 && !blk[c-W] && D[c-W]===65535){ D[c-W] = d; q[qt++] = c-W; }
+    if(j<H-1 && !blk[c+W] && D[c+W]===65535){ D[c+W] = d; q[qt++] = c+W; }
   }
-  return {D, infl};
+  return D;
 }
 function ctxNavDir(h, t){
   const N = AID_NAV;
   if(!N.on || !N.blocked) return null;
-  const key = t.x + "," + t.y + "," + N.W + "x" + N.H;
+  const key = t.x + "," + t.y + "," + N.W + "x" + N.H + "," + (N.ver||0);
   let f = _ctxFields.get(t.id);
   if(!f || f.key!==key){
     f = Object.assign(_ctxBuildField(t), {key}); _ctxFields.set(t.id, f);
@@ -196,7 +223,21 @@ function ctxNavDir(h, t){
     if(di && dj && (N.blocked[j*W+ii] || N.blocked[jj*W+i] || f.infl[j*W+ii] || f.infl[jj*W+i])) continue; // no cortar esquinas
     if(f.D[k] < bd){ bd = f.D[k]; best = k; }
   }
-  if(best < 0 || bd===65535) return null;
+  if(best < 0 || bd===65535){
+    // sin camino con los obstáculos inflados: probar el campo sin inflar (paso angosto)
+    const D2 = f.D2; best = -1; bd = D2 ? D2[c] : 65535;
+    if(D2) for(let dj=-1; dj<=1; dj++) for(let di=-1; di<=1; di++){
+      if(!di && !dj) continue;
+      const ii = i+di, jj = j+dj; if(ii<0||jj<0||ii>=W||jj>=N.H) continue;
+      const k = jj*W+ii; if(N.blocked[k]) continue;
+      if(di && dj && (N.blocked[j*W+ii] || N.blocked[jj*W+i])) continue;
+      if(D2[k] < bd){ bd = D2[k]; best = k; }
+    }
+    if(best < 0 || bd===65535) return null;
+    const bi2 = best % W, bj2 = (best-bi2)/W;
+    const tx2 = N.x0 + (bi2+0.5)*N.cell, ty2 = N.y0 + (bj2+0.5)*N.cell, dx2 = tx2-h.x, dy2 = ty2-h.y, l2 = Math.hypot(dx2, dy2)||1;
+    return {x:dx2/l2, y:dy2/l2, pathD:D2[c]===65535 ? null : D2[c]*N.cell};
+  }
   const bi = best % W, bj = (best-bi)/W;
   const tx = N.x0 + (bi+0.5)*N.cell, ty = N.y0 + (bj+0.5)*N.cell, dx = tx-h.x, dy = ty-h.y, l = Math.hypot(dx, dy)||1;
   return {x:dx/l, y:dy/l, pathD:f.D[c]===65535 ? null : f.D[c]*N.cell}; // pathD: distancia por el camino (para medir avance)

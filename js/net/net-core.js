@@ -43,6 +43,9 @@ function netAvailable(){ return !!netServerUrl(); }
 // Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min
 // sin uso y tarda ~1 minuto en arrancar): así, para cuando tocás "Crear sala", ya está listo.
 let _netWarmAt = 0;
+// Se despierta también apenas abre el juego: mientras el jugador elige guardián y arena (~1 min),
+// el servidor ya está arrancando.
+setTimeout(()=>{ try{ if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
 function netWarmup(){
   const u = netServerUrl(); if(!u || performance.now() - _netWarmAt < 60000) return;
   _netWarmAt = performance.now();
@@ -75,23 +78,25 @@ function netSend(obj){
   if(!net.ws || net.ws.readyState!==1) return false;
   try{ net.ws.send(JSON.stringify(obj)); return true; }catch(e){ return false; }
 }
-function netConnect(){
+// Conexión con reintentos. En el plan gratuito (Render) el servidor se duerme sin uso: mientras
+// arranca, rechaza o corta las conexiones. Antes eso era un "Falló la conexión" al primer intento;
+// ahora se reintenta solo durante hasta ~100 s (despertándolo de nuevo en cada intento) y onTick
+// avisa cuántos segundos lleva, para mostrar "Despertando el servidor… 23 s".
+const NET_CONNECT_BUDGET_MS = 100000;
+function _netConnectOnce(url, maxMs){
   return new Promise((resolve, reject)=>{
-    const url = netServerUrl();
-    if(!url){ reject(new Error("Servidor online no configurado")); return; }
-    if(net.ws && net.ws.readyState===1){ resolve(); return; }
     net.status = "connecting";
     let ws;
     try{ ws = new WebSocket(url); }catch(e){ net.status = "error"; reject(e); return; }
     net.ws = ws;
-    // Hosting gratuito (Render): el servidor se duerme sin uso y tarda ~1 minuto en despertar.
-    const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.close(); }catch(e){} reject(new Error("No se pudo conectar al servidor (tiempo agotado)")); } }, 75000);
+    const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.onclose = null; ws.close(); }catch(e){} net.status = "closed"; if(net.ws===ws) net.ws = null; reject(new Error("tiempo agotado")); } }, maxMs);
     ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url}); resolve(); };
     ws.onerror = ()=>{ netLog("NETWORK_ERROR", {where:"socket"}); };
-    ws.onclose = ()=>{
+    ws.onclose = (ev)=>{
       clearTimeout(timer);
-      const wasOpen = net.status==="open";
-      net.status = "closed"; net.ws = null;
+      net.lastClose = { code: ev && ev.code, reason: ev && ev.reason, at: performance.now() };
+      const wasOpen = net.status==="open" && net.ws===ws;
+      if(net.ws===ws){ net.status = "closed"; net.ws = null; }
       if(!wasOpen){ reject(new Error("No se pudo conectar al servidor")); return; }
       netLog("DISCONNECTED");
       _netEmit("socketClosed");
@@ -101,6 +106,36 @@ function netConnect(){
       _netHandle(m);
     };
   });
+}
+function netConnect(onTick, budgetMs){
+  const url = netServerUrl();
+  if(!url) return Promise.reject(new Error("Servidor online no configurado"));
+  if(net.ws && net.ws.readyState===1) return Promise.resolve();
+  if(typeof navigator!=="undefined" && navigator.onLine===false) return Promise.reject(new Error("No hay conexión a Internet"));
+  if(net._connecting) return net._connecting; // un solo intento en curso
+  const budget = budgetMs || NET_CONNECT_BUDGET_MS;
+  const t0 = performance.now(); let attempt = 0;
+  const tick = onTick ? setInterval(()=>{ try{ onTick(Math.round((performance.now()-t0)/1000), attempt); }catch(e){} }, 1000) : 0;
+  net._connecting = (async ()=>{
+    try{
+      for(;;){
+        attempt++;
+        const left = budget - (performance.now()-t0);
+        try{ await _netConnectOnce(url, Math.max(4000, Math.min(30000, left))); return; }
+        catch(e){
+          if(performance.now()-t0 + 2500 >= budget) throw new Error("el servidor no respondió. Probá de nuevo en un minuto");
+          netLog("RECONNECT", {connectAttempt:attempt, err:String(e && e.message || e)});
+          _netWarmAt = -1e9; netWarmup();
+          await new Promise(r=>setTimeout(r, Math.min(4000, 1000 + 700*attempt)));
+        }
+      }
+    }finally{ if(tick) clearInterval(tick); net._connecting = null; }
+  })();
+  return net._connecting;
+}
+// Texto para el botón mientras conecta: primero "Conectando…", y si tarda, que se entienda por qué.
+function netConnectLabel(secs){
+  return secs < 4 ? "Conectando…" : `Despertando el servidor… ${secs} s (puede tardar hasta 1 minuto)`;
 }
 function _netHandle(m){
   switch(m.t){
@@ -140,6 +175,7 @@ function _netHandle(m){
       return;
     case "error":
       if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
+      if(!net.room) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
       if(m.code==="ROOM_FULL") netLog("ROOM_FULL"); else netLog("NETWORK_ERROR", {code:m.code});
       _netEmit("error", m);
       return;
@@ -148,14 +184,41 @@ function _netHandle(m){
 function _netReset(){
   net.role = null; net.slot = -1; net.room = null; net.code = null; net.wantReconnect = false;
 }
-async function netCreateRoom(arena, champ, level){
-  await netConnect();
-  netSend({t:"create", protocol:NET_PROTOCOL, build:NET_CONFIG.build, arena, champ, level, name:netPlayerName(), clientId:netClientId()});
+// Por qué se cortó la conexión antes de tener sala: texto claro para el cartel.
+function netCloseExplanation(){
+  const c = net.lastClose || {};
+  if(c.code===1008 && /origin/.test(c.reason||"")) return "el servidor no acepta conexiones desde esta página (dirección no autorizada en el servidor)";
+  if(c.code===1008) return "el servidor rechazó la conexión (" + (c.reason||"política") + ")";
+  if(c.code===1006 || !c.code) return "se cortó la conexión con el servidor (red inestable o el servidor se reinició)";
+  return "el servidor cerró la conexión (código " + c.code + (c.reason ? ", " + c.reason : "") + ")";
 }
-async function netJoinRoom(code, champ, level){
-  await netConnect();
+// Crear/unirse no termina al mandar el pedido: espera la respuesta REAL del servidor (la sala, un
+// error con motivo o que corte). Antes, si el servidor cortaba (p. ej. página no autorizada), el
+// botón quedaba en "Conectando…" y no aparecía ningún cartel.
+function _netAwaitJoin(ms){
+  return new Promise((resolve, reject)=>{
+    const t0 = performance.now();
+    const iv = setInterval(()=>{
+      if(net.room && net.role){ clearInterval(iv); resolve(); return; }
+      if(net._joinError){ const m = net._joinError; net._joinError = null; clearInterval(iv);
+        const e = new Error((typeof NET_ERRORS!=="undefined" && NET_ERRORS[m.code]) || m.msg || m.code); e.handled = true; e.code = m.code; reject(e); return; }
+      if(!net.ws || net.ws.readyState > 1){ clearInterval(iv); reject(new Error(netCloseExplanation())); return; }
+      if(performance.now() - t0 > ms){ clearInterval(iv); reject(new Error("el servidor no respondió al pedido de sala")); }
+    }, 100);
+  });
+}
+async function netCreateRoom(arena, champ, level, onTick){
+  await netConnect(onTick);
+  net._joinError = null;
+  netSend({t:"create", protocol:NET_PROTOCOL, build:NET_CONFIG.build, arena, champ, level, name:netPlayerName(), clientId:netClientId()});
+  await _netAwaitJoin(15000);
+}
+async function netJoinRoom(code, champ, level, onTick, budgetMs){
+  await netConnect(onTick, budgetMs);
+  net._joinError = null;
   net.code = String(code||"").toUpperCase();
   netSend({t:"join", protocol:NET_PROTOCOL, build:NET_CONFIG.build, code:net.code, champ, level, name:netPlayerName(), clientId:netClientId()});
+  await _netAwaitJoin(15000);
 }
 function netLeaveRoom(){
   if(net.role) netSend({t:"leave"}); // sin sala (p.ej. un "unirse" rechazado) no hay nada que avisar
@@ -199,6 +262,6 @@ function netTryReconnect(){
   const delay = Math.min(8000, 800 * net.reconnectAttempts);
   setTimeout(()=>{
     if(!net.wantReconnect) return;
-    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1).catch(()=> netTryReconnect());
+    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1, null, 12000).catch(()=> netTryReconnect());
   }, delay);
 }
