@@ -470,6 +470,12 @@ medir sigue marcado **NOT VERIFIED IN RUNTIME**.
 | MB bajados hasta el título | 54,3 | **14,4** |
 | Pedidos de arte de arenas antes del título | cientos | **0** |
 
+**Medido en vivo sobre el juego publicado** (GitHub Pages, desde GitHub Actions, 4G simulado, después del merge):
+- título en **9,4 s** (antes 38 s) y 12,5 MB bajados hasta el título (antes 52,7 MB);
+- 0 pedidos de arte de arenas antes del título;
+- con caché, 0,75 s;
+- la partida arrancó con todo cargado y en WebP.
+
 ### 27.3 Bugs reales encontrados por las simulaciones y arreglados
 
 | Bug | Evidencia | Arreglo | Prueba nueva |
