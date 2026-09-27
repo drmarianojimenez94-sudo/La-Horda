@@ -85,9 +85,9 @@ function netRenderLobbyBar(){
   const c = document.getElementById("net-create-btn");
   if(c) c.addEventListener("click", async ()=>{
     if(!isArenaUnlocked(currentArena)){ netLobby.lastError = "Esa arena todavía no la desbloqueaste."; netRenderLobbyBar(); return; }
-    c.disabled = true; c.textContent = "Conectando… (si el servidor dormía, hasta 1 minuto)"; netLobby.lastError = "";
+    c.disabled = true; c.textContent = netConnectLabel(0); netLobby.lastError = "";
     const ni2 = document.getElementById("net-name-input"); if(ni2) netSetPlayerName(ni2.value);
-    try{ await netCreateRoom(currentArena, selectedClass, save.champions[selectedClass].level); }
+    try{ await netCreateRoom(currentArena, selectedClass, save.champions[selectedClass].level, secs=>{ if(c.isConnected) c.textContent = netConnectLabel(secs); }); }
     catch(e){ netLobby.lastError = "No se pudo conectar al servidor online: "+(e.message||e); netLog("NETWORK_ERROR", {create:String(e.message||e)}); netRenderLobbyBar(); showNetToast("⚠ Falló la conexión: "+(e.message||e)); }
   });
   const jb = document.getElementById("net-join-btn");
@@ -363,9 +363,9 @@ function showNetToast(text){
   });
   async function doJoin(){
     if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
-    btn.disabled = true; btn.textContent = "Conectando… (hasta 1 minuto si el servidor dormía)";
+    btn.disabled = true; btn.textContent = netConnectLabel(0);
     try{
-      await netJoinRoom(code, selectedClass, (save.champions[selectedClass]||{}).level||1);
+      await netJoinRoom(code, selectedClass, (save.champions[selectedClass]||{}).level||1, secs=>{ btn.textContent = netConnectLabel(secs); });
     }catch(e){
       if(status) status.textContent = "No se pudo conectar: "+(e.message||e);
       netLog("NETWORK_ERROR", {join:String(e.message||e)});
@@ -524,9 +524,9 @@ async function netJoinWithCode(raw, btn, label){
   netLobby.lastError = "";
   _netJoinBusy = true;
   if(btn){ btn.disabled = true; btn.textContent = "Conectando…"; }
-  _netSetJoinStatus(`Buscando la sala ${inv.code}… (hasta 1 minuto si el servidor dormía)`);
+  _netSetJoinStatus(`Buscando la sala ${inv.code}…`);
   let ok = true;
-  try{ await netJoinRoom(inv.code, selectedClass, (save.champions[selectedClass]||{}).level||1); }
+  try{ await netJoinRoom(inv.code, selectedClass, (save.champions[selectedClass]||{}).level||1, secs=>{ if(secs >= 4) _netSetJoinStatus(`Buscando la sala ${inv.code}… ${netConnectLabel(secs)}`); }); }
   catch(e){ ok = false; _netSetJoinStatus("No se pudo conectar al servidor: "+(e.message||e), true); netLog("NETWORK_ERROR", {join:String(e.message||e)}); showNetToast("⚠ Falló la conexión: "+(e.message||e)); }
   _netJoinBusy = false;
   if(btn && btn.isConnected){ btn.disabled = false; btn.textContent = label || "UNIRSE"; }

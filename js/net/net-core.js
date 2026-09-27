@@ -43,6 +43,9 @@ function netAvailable(){ return !!netServerUrl(); }
 // Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min
 // sin uso y tarda ~1 minuto en arrancar): así, para cuando tocás "Crear sala", ya está listo.
 let _netWarmAt = 0;
+// Se despierta también apenas abre el juego: mientras el jugador elige guardián y arena (~1 min),
+// el servidor ya está arrancando.
+setTimeout(()=>{ try{ if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
 function netWarmup(){
   const u = netServerUrl(); if(!u || performance.now() - _netWarmAt < 60000) return;
   _netWarmAt = performance.now();
@@ -75,23 +78,24 @@ function netSend(obj){
   if(!net.ws || net.ws.readyState!==1) return false;
   try{ net.ws.send(JSON.stringify(obj)); return true; }catch(e){ return false; }
 }
-function netConnect(){
+// Conexión con reintentos. En el plan gratuito (Render) el servidor se duerme sin uso: mientras
+// arranca, rechaza o corta las conexiones. Antes eso era un "Falló la conexión" al primer intento;
+// ahora se reintenta solo durante hasta ~100 s (despertándolo de nuevo en cada intento) y onTick
+// avisa cuántos segundos lleva, para mostrar "Despertando el servidor… 23 s".
+const NET_CONNECT_BUDGET_MS = 100000;
+function _netConnectOnce(url, maxMs){
   return new Promise((resolve, reject)=>{
-    const url = netServerUrl();
-    if(!url){ reject(new Error("Servidor online no configurado")); return; }
-    if(net.ws && net.ws.readyState===1){ resolve(); return; }
     net.status = "connecting";
     let ws;
     try{ ws = new WebSocket(url); }catch(e){ net.status = "error"; reject(e); return; }
     net.ws = ws;
-    // Hosting gratuito (Render): el servidor se duerme sin uso y tarda ~1 minuto en despertar.
-    const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.close(); }catch(e){} reject(new Error("No se pudo conectar al servidor (tiempo agotado)")); } }, 75000);
+    const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.onclose = null; ws.close(); }catch(e){} net.status = "closed"; if(net.ws===ws) net.ws = null; reject(new Error("tiempo agotado")); } }, maxMs);
     ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url}); resolve(); };
     ws.onerror = ()=>{ netLog("NETWORK_ERROR", {where:"socket"}); };
     ws.onclose = ()=>{
       clearTimeout(timer);
-      const wasOpen = net.status==="open";
-      net.status = "closed"; net.ws = null;
+      const wasOpen = net.status==="open" && net.ws===ws;
+      if(net.ws===ws){ net.status = "closed"; net.ws = null; }
       if(!wasOpen){ reject(new Error("No se pudo conectar al servidor")); return; }
       netLog("DISCONNECTED");
       _netEmit("socketClosed");
@@ -101,6 +105,36 @@ function netConnect(){
       _netHandle(m);
     };
   });
+}
+function netConnect(onTick, budgetMs){
+  const url = netServerUrl();
+  if(!url) return Promise.reject(new Error("Servidor online no configurado"));
+  if(net.ws && net.ws.readyState===1) return Promise.resolve();
+  if(typeof navigator!=="undefined" && navigator.onLine===false) return Promise.reject(new Error("No hay conexión a Internet"));
+  if(net._connecting) return net._connecting; // un solo intento en curso
+  const budget = budgetMs || NET_CONNECT_BUDGET_MS;
+  const t0 = performance.now(); let attempt = 0;
+  const tick = onTick ? setInterval(()=>{ try{ onTick(Math.round((performance.now()-t0)/1000), attempt); }catch(e){} }, 1000) : 0;
+  net._connecting = (async ()=>{
+    try{
+      for(;;){
+        attempt++;
+        const left = budget - (performance.now()-t0);
+        try{ await _netConnectOnce(url, Math.max(4000, Math.min(30000, left))); return; }
+        catch(e){
+          if(performance.now()-t0 + 2500 >= budget) throw new Error("el servidor no respondió. Probá de nuevo en un minuto");
+          netLog("RECONNECT", {connectAttempt:attempt, err:String(e && e.message || e)});
+          _netWarmAt = -1e9; netWarmup();
+          await new Promise(r=>setTimeout(r, Math.min(4000, 1000 + 700*attempt)));
+        }
+      }
+    }finally{ if(tick) clearInterval(tick); net._connecting = null; }
+  })();
+  return net._connecting;
+}
+// Texto para el botón mientras conecta: primero "Conectando…", y si tarda, que se entienda por qué.
+function netConnectLabel(secs){
+  return secs < 4 ? "Conectando…" : `Despertando el servidor… ${secs} s (puede tardar hasta 1 minuto)`;
 }
 function _netHandle(m){
   switch(m.t){
@@ -148,12 +182,12 @@ function _netHandle(m){
 function _netReset(){
   net.role = null; net.slot = -1; net.room = null; net.code = null; net.wantReconnect = false;
 }
-async function netCreateRoom(arena, champ, level){
-  await netConnect();
+async function netCreateRoom(arena, champ, level, onTick){
+  await netConnect(onTick);
   netSend({t:"create", protocol:NET_PROTOCOL, build:NET_CONFIG.build, arena, champ, level, name:netPlayerName(), clientId:netClientId()});
 }
-async function netJoinRoom(code, champ, level){
-  await netConnect();
+async function netJoinRoom(code, champ, level, onTick, budgetMs){
+  await netConnect(onTick, budgetMs);
   net.code = String(code||"").toUpperCase();
   netSend({t:"join", protocol:NET_PROTOCOL, build:NET_CONFIG.build, code:net.code, champ, level, name:netPlayerName(), clientId:netClientId()});
 }
@@ -199,6 +233,6 @@ function netTryReconnect(){
   const delay = Math.min(8000, 800 * net.reconnectAttempts);
   setTimeout(()=>{
     if(!net.wantReconnect) return;
-    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1).catch(()=> netTryReconnect());
+    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1, null, 12000).catch(()=> netTryReconnect());
   }, delay);
 }
