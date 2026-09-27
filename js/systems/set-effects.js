@@ -321,6 +321,7 @@ function setSkinImage(id){
 // el equipo real de cada jugador) y viaja en el héroe como `skinSet` (se fija en updateSets).
 function activeSetSkin(h){
   if(!h || !h.classKey) return null;
+  if(h._codexSkin !== undefined){ const d = h._codexSkin ? SET_SKINS[h._codexSkin] : null; return d && (!d.champ || d.champ === h.classKey) ? d : null; } // preview del Códice
   if(typeof netIsGuest === "function" && netIsGuest() && h.skinSet !== undefined){
     const d = h.skinSet ? SET_SKINS[h.skinSet] : null;
     return d && (!d.champ || d.champ === h.classKey) ? d : null;

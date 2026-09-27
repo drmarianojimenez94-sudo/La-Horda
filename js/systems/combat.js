@@ -156,6 +156,7 @@ function damageEnemy(e, amount, opts){
 
 function killEnemy(e){
   e.alive = false;
+  if(typeof codexNoteKill==="function" && (!divinaMode || (ENEMY_BASE[e.type]||{}).rank==="jefe")) codexNoteKill(e.type); // Códice: derrotada (en la Divina solo cuentan los jefes)
   // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
   e._deathKind = goreDeathKind(e);
   if(e.role) roleOnDeath(e);

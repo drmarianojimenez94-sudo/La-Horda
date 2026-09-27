@@ -32,12 +32,20 @@ document.getElementById("mainmenu-back-btn").addEventListener("click", ()=>{
   setState("title");
 });
 document.getElementById("mainmenu-tienda-btn").addEventListener("click", ()=>{
+  if(typeof codexReturnTo!=="undefined") codexReturnTo = null;
   setState("shop"); renderShop();
 });
+// La Tienda y la ficha de compra vuelven al Códice si se abrieron desde ahí (codexReturnTo).
+function _backToCodexIfAny(){
+  if(typeof codexReturnTo==="undefined" || codexReturnTo!=="codex") return false;
+  codexReturnTo = null; setState("codex"); codexRender(); return true;
+}
 document.getElementById("shop-back-btn").addEventListener("click", ()=>{
+  if(_backToCodexIfAny()) return;
   setState("mainmenu"); renderMainMenu();
 });
 document.getElementById("champdetail-back-btn").addEventListener("click", ()=>{
+  if(_backToCodexIfAny()) return;
   setState("shop"); renderShop();
 });
 // PLAYTEST V1: bono único de 2.000 de oro para cada jugador (una sola vez por guardado, nunca

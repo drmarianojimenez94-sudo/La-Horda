@@ -211,6 +211,5 @@ function renderCollectionPanel(panel){
   }).join("");
   panel.innerHTML = `<div class="lobby-note">Descubiertos: <b>${seen}/${total}</b>. Lo que alguna vez tuviste queda registrado aunque lo vendas.</div>` + body;
 }
-document.getElementById("mychamps-tab-inv").addEventListener("click", ()=> openMyInventory("objetos"));
-document.getElementById("myinv-back-btn").addEventListener("click", ()=>{ setState("champions"); renderMyChampions(); });
+document.getElementById("myinv-back-btn").addEventListener("click", ()=>{ if(typeof codexReturnTo!=="undefined") codexReturnTo = null; if(codexStack.length){ setState("codex"); codexRender(); } else openCodex(); });
 document.querySelectorAll("#myinv-tabs .hub-tab").forEach(t=> t.addEventListener("click", ()=>{ myInvTab = t.dataset.tab; renderMyInventory(); }));

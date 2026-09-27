@@ -52,6 +52,7 @@ function defaultSave(){
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
     micelialMigrated:true,  // idem para el Reino Micelial (4ta arena, antes del Hielo)
     abismoMigrated:true,    // idem para la Arena del Abismo (antes del Laberinto): save.legacyLabOpen
+    codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
     legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave

@@ -249,9 +249,16 @@ function champPackDrawFrame(P, v, x, y, s, flip, alpha){
   }
 }
 function drawChampPack(key, h, drawScale, alpha){
-  const P = CHAMP_PACK[typeof setSkinPackKey==="function" ? setSkinPackKey(h, key) : key]; // skin de set completo
+  const base = h._codexPack || key; // preview del Códice: otro atlas del mismo campeón (a caballo, El Portador)
+  const P = CHAMP_PACK[typeof setSkinPackKey==="function" ? setSkinPackKey(h, base) : base]; // skin de set completo
 
   if(!P || !P.ready) return false;
+  // preview del Códice: una animación con nombre del atlas (disparo, gancho, orden de mando...), en loop
+  if(h._codexSet && P.sets[h._codexSet]){
+    const arr = P.sets[h._codexSet], n = Math.floor((h._codexT||0)/(h._codexFps||140)) % arr.length;
+    champPackDrawFrame(P, arr[n], h.x, h.y, champPackScale(P, h, drawScale), false, alpha);
+    return true;
+  }
   const dir = champPackDir(h);
   // detecta el comienzo de cada ataque/cast para conocer su duración real (varía con la velocidad de ataque)
   const a = h.attackAnim||0;

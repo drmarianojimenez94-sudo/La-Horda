@@ -45,7 +45,9 @@ function drawChampionPreviewFrame(cvs, key){
 }
 // Dibuja a un campeón con su arte real sobre cualquier canvas (vista previa de la selección y
 // la pantalla de título). `fx` = hacia dónde mira (1 derecha, -1 izquierda).
-function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving){
+// extra (opcional): estado de animación para las previews del Códice (attackAnim, *CastKind, spinTimer,
+// _codexSkin...). Se copia sobre el héroe falso: el dibujo es el mismo camino que en partida.
+function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving, extra){
   const cls = CLASSES[key];
   if(!cls || champPackPending(key)) return;
   const fake = {
@@ -54,10 +56,14 @@ function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving){
     classKey:key, cls, scale, radius:12*scale, // algunos sets (Musashi, Sylva, Nigromante) se dimensionan por el radio
     colossalTimer:0, growTimer:0, spinTimer:0, stealthTimer:0
   };
+  if(extra) Object.assign(fake, extra);
   const saved = ctx;
   ctx = pctx;
   try{
-    if(key==="mago") drawMagoAtlas(fake, scale, 1);
+    if(fake._codexSkin && typeof drawSetSkin==="function" && drawSetSkin(fake, scale, 1)){
+      // skin de set de un campeón de atlas viejo (Mago, Asesino, Sanadora, Tanque): preview del Códice
+    }
+    else if(key==="mago") drawMagoAtlas(fake, scale, 1);
     else if(key==="soporte") drawSoporteAtlas(fake, scale, 1);
     else if(key==="segador") drawSegadorReal(fake, scale, 1);
     else if(key==="axiom") drawAxiomReal(fake, scale, 1);

@@ -199,6 +199,7 @@ function netPlayEvent(ev){
       case "gold": grantGold(args[0]); return;
       case "hurt": registerPlayerHurt(args[0], {x:args[1], y:args[2]}); return;
       case "useXp": gainSkillUseXp(selectedClass, args[0]); return;
+      case "vfxOnDeath": if(typeof codexNoteKill==="function" && args[0] && args[0].type && (!divinaMode || (ENEMY_BASE[args[0].type]||{}).rank==="jefe")) codexNoteKill(args[0].type); break; // Códice (invitado)
     }
     const f = NET_ORIG[name] || window[name];
     if(typeof f==="function") f.apply(null, args);
@@ -625,6 +626,7 @@ function netApplySnapshot(s){
         o[k] = netDecode(d[k]);
         if(typeof d[k]==="number" && netIsDownTimer(k)) (o._tk || (o._tk = new Set())).add(k);
       }
+      if(o._new && name==="enemies" && o.type && typeof codexNoteSeen==="function") codexNoteSeen(o.type); // Códice (invitado), igual que spawnEnemy en el anfitrión
       delete o._new;
     }
   }
