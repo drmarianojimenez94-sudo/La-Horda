@@ -31,6 +31,11 @@ const ENEMY_ANIM_DEF = {
 // frames originales no eran cuadrados de 119px -- drawEnemyAtlas usa ENEMY_ATLAS_GRID[e.type]
 // cuando existe, si no cae al tamaño global de siempre.
 const ENEMY_ATLAS_GRID = { lobo_artico: {cols:4, w:96, h:105} };
+// Unidad de escala (tools/art/enemy_coverage.js): la celda de 119px de estos atlas trae mucho aire
+// alrededor, así que dibujados a radio*2.7 quedaban en ~1.7-1.9 radios de alto, contra ~2.4-2.7 del
+// resto de los enemigos con arte real (el Esqueleto medía 40px al lado de un Zombi de 63px). Este
+// multiplicador los lleva a ~2.3 radios. Solo cambia el dibujo: radio/hitbox iguales.
+const ENEMY_ATLAS_SIZE_MUL = { esqueleto:1.25, demonio_menor:1.25, demonio_mago:1.35, demonio_mayor:1.35 };
 // Dirección cardinal dominante a partir del vector de mirada del enemigo
 function enemyAtlasDir(e){
   const fx = e.fx||0, fy = e.fy!==undefined?e.fy:1;
@@ -79,19 +84,22 @@ for(const _t in REAL_ANIM_DEF){
 const REAL_ANIM_SETS = {
   minotauro:         { side:[8,9,10,11,12,13,14,15,16,17,18,19], sideNat:1, up:[4,5,6] },
   esfinge:           { down:[0,1,2,3], up:[4,5,7,8,9], side:[17,19,20,21], sideNat:1 },
-  medusa:            { down:[0,1,2,3], up:[4,5,6,7,8], side:[20,21,22,23,24], sideNat:1, atk:[9,10,11,12] },
+  // hit (opcional) = cuadro real de "golpeado"; atkNat (opcional) = el ataque es de perfil y mira hacia
+  // ese lado en el arte (se espeja según hacia dónde mire el enemigo, como el perfil de caminar)
+  medusa:            { down:[0,1,2,3], up:[4,5,6,7,8], side:[20,21,22,23,24], sideNat:1, atk:[9,10,11,12], hit:[14] },
   druida_arena:      { down:[0,1,2,3], up:[4,5,6,7,8], side:[20,21,22,23,26,29], sideNat:1, atk:[9,10,11,12] },
   // perfil: solo frames que miran a la izquierda (antes se mezclaban 4 y 12, que miran a la derecha,
-  // y el escorpión se daba vuelta a cada paso)
-  escorpion_gigante: { down:[0,1,8], side:[5,6,7,6], sideNat:-1 },
+  // y el escorpión se daba vuelta a cada paso). Ataque: los cuadros 10/3/11 de la misma tira (cola
+  // arqueada sobre la cabeza, picando hacia adelante), que nadie dibujaba.
+  escorpion_gigante: { down:[0,1,8], side:[5,6,7,6], sideNat:-1, atk:[10,3,11,3], atkNat:-1 },
   golem_piedra:      { down:[1], side:[24,26,28], sideNat:-1 },
 };
 for(const _t in REAL_ANIM_SETS){
   const d = REAL_ANIM_DEF[_t], set = REAL_ANIM_SETS[_t], atlas = REAL_ANIM_ATLASES[_t];
   if(!d || !atlas) continue;
   const mk = (idx, fps) => idx ? { frames: idx.map(i => ({x:i*d.w, y:0, w:d.w, h:d.h})), fps, loop:true } : null;
-  atlas.dirClips = { down: mk(set.down, 7), up: mk(set.up, 7), side: mk(set.side, 9), atk: mk(set.atk, 10) };
-  atlas.sideNat = set.sideNat;
+  atlas.dirClips = { down: mk(set.down, 7), up: mk(set.up, 7), side: mk(set.side, 9), atk: mk(set.atk, 10), hit: mk(set.hit, 10) };
+  atlas.sideNat = set.sideNat; atlas.atkNat = set.atkNat || 0;
 }
 function drawRealAnimSprite(e){
   if(ENEMY_ATLAS_PACK[e.type] && ENEMY_ATLAS_PACK[e.type].ready) return false; // canon nuevo (atlas por sets) manda
@@ -107,7 +115,8 @@ function drawRealAnimSprite(e){
     else if(ax > ay*1.3) dir = 0; else dir = e.fy>0 ? 1 : 2;
     e._rdir = dir;
     if(e.fx < -0.12) e._rfaceL = true; else if(e.fx > 0.12) e._rfaceL = false;
-    if(e.attackAnim>0 && dc.atk){ clip = dc.atk; flip = false; }
+    if(e.attackAnim>0 && dc.atk){ clip = dc.atk; flip = atlas.atkNat ? (atlas.atkNat>0 ? !!e._rfaceL : !e._rfaceL) : false; }
+    else if(e.alive!==false && e.hitFlash>55 && dc.hit){ clip = dc.hit; flip = false; }
     else if(dir===1 && dc.down){ clip = dc.down; flip = false; }
     else if(dir===2 && dc.up){ clip = dc.up; flip = false; }
     else { clip = dc.side; flip = atlas.sideNat>0 ? !!e._rfaceL : !e._rfaceL; }
@@ -120,7 +129,7 @@ function drawRealAnimSprite(e){
   return true;
 }
 const PACK_ANIM = {
-  duende_bosque: { img:PACK_DUENDE_IMG, ready:PACK_DUENDE_READY,
+  duende_bosque: { img:PACK_DUENDE_IMG, ready:PACK_DUENDE_READY, outline:true,
     walk:["walk1","walk2","walk3","walk4","walk5"], idle:["idle1","idle2","idle3"],
     atk:["atk1","atk2","atk3","atk4"], hit:["hit1"], death:["death1","death2","death3"] },
   // Packs 3-4: Guardián del Laberinto (antes prestaba el Gólem), Zombi y Esqueleto Cornudo (antes
@@ -140,48 +149,121 @@ const PACK_ANIM = {
   demonio_hielo_fuego: { img:PACK_DEMH_IMG, ready:PACK_DEMH_READY,
     walk:["walk1", "walk2", "walk3", "walk2"], idle:["idle1", "idle2", "idle3"],
     atk:["atk1", "atk2", "atk3"], hit:["hit1", "hit2"], death:["death1", "death2", "death3", "death4"] },
-  // cuadrúpedo: más ancho que alto, así que se escala a menos alto que un humanoide del mismo radio
-  bestia_bosque: { img:PACK_BESTIA_IMG, ready:PACK_BESTIA_READY, hMul:2.1,
+  // cuadrúpedo: más ancho que alto, así que se escala a menos alto que un humanoide del mismo radio.
+  // (2.1 lo dejaba en ~1,4 radios de alto, más chico que el Duende de radio 18: 3.0 lo lleva a ~2,
+  // lo mismo que los otros cuadrúpedos con arte real -Lobo Ártico, Cù-Sìth-.) outline: contorno oscuro
+  // de 1px que su recorte (pintado y suavizado) no trae y el resto del bestiario sí.
+  bestia_bosque: { img:PACK_BESTIA_IMG, ready:PACK_BESTIA_READY, hMul:3.0, outline:true,
     walk:["walk1","walk2","walk3","walk4","walk5"], idle:["idle1","idle2","idle3","idle4"],
     atk:["atk1","atk2","atk3"], hit:["hit1"], death:["death1","death2","death3","death4"] },
   ent: { img:PACK_TREANT_IMG, ready:PACK_TREANT_READY,
     walk:["walk1", "walk2", "walk3", "walk4"], idle:["idle1", "idle2", "idle3", "idle4"],
     atk:["atk1", "atk2", "atk3", "atk4"], hit:["hit1", "hit2"], death:["death1", "death2", "death3", "death4", "death5"] },
 };
+// RESPALDO GENÉRICO DE ESTADOS (tools/art/enemy_coverage.js): si a una hoja le falta un estado, se
+// clona el más parecido que sí tenga, en vez de romper o caer al sprite procedural. Orden: ataque ->
+// conjuro -> quieto -> caminar; golpeado -> quieto -> caminar; muerte -> golpeado (último cuadro de
+// impacto, con el desvanecido de vfxDrawDying encima) -> quieto -> caminar; quieto <-> caminar.
+const PACK_SET_FALLBACK = { atk:["cast","idle","walk"], hit:["idle","walk"], death:["hit","idle","walk"], idle:["walk"], walk:["idle"] };
+function packSet(P, name){
+  const sets = P.sets || P; // hojas por atlas (P.sets) o recortes sueltos de PACK_ANIM (listas en P)
+  const s = sets[name]; if(Array.isArray(s) && s.length) return s;
+  const fb = PACK_SET_FALLBACK[name];
+  if(fb) for(const k of fb){ const t = sets[k]; if(Array.isArray(t) && t.length) return t; }
+  for(const k in sets){ const t = sets[k]; if(Array.isArray(t) && t.length) return t; }
+  return null;
+}
+// Vista dominante con histéresis (0 perfil, 1 abajo, 2 arriba), la misma que usan las tiras del Laberinto.
+function packDir(e){
+  const ax = Math.abs(e.fx||0), ay = Math.abs(e.fy||0);
+  let dir = e._pdir||0;
+  if(dir===0){ if(ay > ax*1.3) dir = e.fy>0 ? 1 : 2; } else if(ax > ay*1.3) dir = 0; else dir = e.fy>0 ? 1 : 2;
+  e._pdir = dir;
+  return dir;
+}
+// Vista de frente/espalda de un estado si la hoja la trae (walk_down, atk_up, hit_down...); si no, la
+// de perfil de siempre (el espejo izquierda/derecha lo pone el dibujo según fx).
+function packDirSet(P, base, arr, e){
+  const d = P.sets[base+"_down"], u = P.sets[base+"_up"];
+  if(!d && !u) return arr;
+  const dir = packDir(e);
+  return dir===1 && d ? d : (dir===2 && u ? u : arr);
+}
+// ARTE YA RECORTADO QUE NADIE DIBUJABA: las hojas de la Ciudad y del Abismo se cortaron de grillas de
+// direcciones (tools/art/ciudad|abismo/extract.py): cada fila de la hoja (quieto, caminar, ataque,
+// golpeado...) quedó en el atlas como 3 celdas seguidas frente/perfil/espalda. Los sets solo tomaban
+// el perfil, así que el golpe y el ataque de frente y de espalda estaban en el atlas sin usarse. Acá se
+// derivan atk_down/atk_up/hit_down/hit_up de esa grilla, solo si la hoja la respeta (quieto 0-2 y
+// caminar 3-5 de frente/espalda) y la celda tiene dibujo. Se llama una vez, cuando carga el atlas.
+const _PACK_DIR_DONE = new WeakSet();
+function packDeriveDirSets(P){
+  const S = P.sets;
+  if(!S || _PACK_DIR_DONE.has(S) || !P.ready) return;
+  _PACK_DIR_DONE.add(S);
+  if(!S.walk_down || !S.walk_up || S.walk_down[0]!==3 || S.walk_up[0]!==5) return;
+  const base = new Set([].concat(S.idle||[], S.walk||[], S.walk_down||[], S.walk_up||[]));
+  const used = new Set(); for(const k in S) if(Array.isArray(S[k])) for(const v of S[k]) used.add(v);
+  const total = Math.floor(P.atlas.naturalWidth/P.fw)*Math.floor(P.atlas.naturalHeight/P.fh);
+  let g = null;
+  // píxeles con dibujo de una celda (0 si no se puede leer)
+  const ink = (i)=>{
+    if(i<0 || i>=total) return 0;
+    try{
+      if(!g){ const c = document.createElement("canvas"); c.width = P.fw; c.height = P.fh; g = c.getContext("2d", {willReadFrequently:true}); }
+      g.clearRect(0, 0, P.fw, P.fh);
+      g.drawImage(P.atlas, (i % P.cols)*P.fw, Math.floor(i/P.cols)*P.fh, P.fw, P.fh, 0, 0, P.fw, P.fh);
+      const d = g.getImageData(0, 0, P.fw, P.fh).data; let n = 0;
+      for(let k=3;k<d.length;k+=4) if(d[k] > 40) n++;
+      return n;
+    }catch(err){ return 0; }
+  };
+  // la vista de frente/espalda tiene que ser un cuerpo entero (no un recorte suelto de la celda vecina):
+  // al menos 60% del dibujo de la vista de perfil de la misma fila
+  const put = (name, side)=>{
+    if(side < 7 || side % 3 !== 1) return;
+    const ref = Math.max(ink(side), P.fw*P.fh*0.04);
+    const ok = (i)=> !base.has(i) && ink(i) >= ref*0.6;
+    if(!S[name+"_down"] && ok(side-1)) S[name+"_down"] = [side-1];
+    if(!S[name+"_up"] && ok(side+1)) S[name+"_up"] = [side+1];
+  };
+  // una celda de la grilla va sola en el set; las secuencias de paneles aparte (golpe en 6 cuadros...)
+  // son índices seguidos y no tienen vistas de frente/espalda
+  const lone = (arr, v) => !arr.includes(v-1) && !arr.includes(v+1);
+  if(S.hit && S.hit.length && lone(S.hit, S.hit[0])) put("hit", S.hit[0]);
+  const atk = S.atk||[];
+  let a = atk.find(v => v >= 7 && v % 3 === 1 && lone(atk, v));
+  if(a===undefined && ![6,7,8].some(v => used.has(v))) a = 7; // ataque en panel aparte: la fila 3 de la grilla es la del ataque
+  if(a!==undefined) put("atk", a);
+}
 // Atlas del redraw (Dama del Bosque / Doppelgängers): mismas reglas de estado que el pack de abajo.
 function drawEnemyAtlasPack(e){
   const P = (e.atlasKey && ENEMY_ATLAS_PACK[e.atlasKey] && ENEMY_ATLAS_PACK[e.atlasKey].ready) ? ENEMY_ATLAS_PACK[e.atlasKey] : ENEMY_ATLAS_PACK[e.type]; // atlasKey: otra paleta del mismo cuerpo (Guardián en furia)
   if(!P || !P.ready) return false;
+  if(!_PACK_DIR_DONE.has(P.sets)) packDeriveDirSets(P); // por si el atlas cargó antes que este script
   if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;
   e._pkAtkLast = e.attackAnim;
   let arr, n;
   const dead = !e.alive || e._dyingP != null; // en el invitado, la copia del enemigo que muere puede seguir marcada viva
   if(dead){
-    arr = P.sets.death;
+    arr = packSet(P, "death"); if(!arr) return false;
     if(e._dyingP != null) n = Math.floor(e._dyingP*arr.length*1.25);
     else { if(!e._diedAt) e._diedAt = animNow; n = Math.floor((animNow-e._diedAt)/220); }
-  } else if(e.packSet && e.packTimer>0 && P.sets[e.packSet]){
+  } else if(e.packSet && e.packTimer>0 && P.sets[e.packSet] && P.sets[e.packSet].length){
     // animación de habilidad pedida por la IA (cadena, aliento, embestida, fases del jefe...)
     arr = P.sets[e.packSet];
     const q = e.packDur ? 1 - e.packTimer/e.packDur : 0;
     n = arr.length > 1 && e.packDur > 1500 ? Math.floor((e.animT||0)/150) : Math.floor(Math.max(0, Math.min(0.999, q))*arr.length);
   } else if(e.attackAnim>0){
-    arr = P.sets.atk; n = Math.floor(Math.max(0, Math.min(0.999, 1 - e.attackAnim/(e._pkAtkMax||280)))*arr.length);
+    arr = packDirSet(P, "atk", packSet(P, "atk"), e); n = Math.floor(Math.max(0, Math.min(0.999, 1 - e.attackAnim/(e._pkAtkMax||280)))*arr.length);
   } else if(e.hitFlash>55){
-    arr = P.sets.hit; n = 0;
+    arr = packDirSet(P, "hit", packSet(P, "hit"), e); n = 0;
   } else if(e.stunTimer>0){
-    arr = P.sets.idle; n = Math.floor((e.animT||0)/220);
+    arr = packSet(P, "idle"); n = Math.floor((e.animT||0)/220);
   } else {
-    arr = P.sets.walk; n = Math.floor((e.animT||0)/140);
     // vistas de frente/espalda si la hoja las trae (con histéresis, igual que las tiras del Laberinto)
-    if(P.sets.walk_down || P.sets.walk_up){
-      const ax = Math.abs(e.fx||0), ay = Math.abs(e.fy||0);
-      let dir = e._pdir||0;
-      if(dir===0){ if(ay > ax*1.3) dir = e.fy>0 ? 1 : 2; } else if(ax > ay*1.3) dir = 0; else dir = e.fy>0 ? 1 : 2;
-      e._pdir = dir;
-      if(dir===1 && P.sets.walk_down) arr = P.sets.walk_down; else if(dir===2 && P.sets.walk_up) arr = P.sets.walk_up;
-    }
+    arr = packDirSet(P, "walk", packSet(P, "walk"), e); n = Math.floor((e.animT||0)/140);
   }
+  if(!arr) return false;
   const v = !dead ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
   const s = e.radius*(P.hMul||2.6)/P.refH;
   const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
@@ -213,28 +295,55 @@ function drawPackSprite(e){
   // de cada golpe como referencia para repartir los frames a lo largo de todo el golpe
   if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;
   e._pkAtkLast = e.attackAnim;
+  const S = n => packSet(d, n); // mismo respaldo de estados que las hojas por atlas (packSet lee .sets)
   if(!e.alive){
-    let i;
-    if(e._dyingP != null) i = Math.floor(e._dyingP*d.death.length*1.25); // atado a la duración de la muerte
+    let i; const arr = S("death");
+    if(e._dyingP != null) i = Math.floor(e._dyingP*arr.length*1.25); // atado a la duración de la muerte
     else { if(!e._diedAt) e._diedAt = animNow; i = Math.floor((animNow-e._diedAt)/220); }
-    key = d.death[Math.min(d.death.length-1, i)];
+    key = arr[Math.min(arr.length-1, i)];
   } else if(e.attackAnim>0){
-    const p = Math.max(0, Math.min(0.999, 1 - e.attackAnim/(e._pkAtkMax||280)));
-    key = d.atk[Math.floor(p*d.atk.length)];
+    const p = Math.max(0, Math.min(0.999, 1 - e.attackAnim/(e._pkAtkMax||280))), arr = S("atk");
+    key = arr[Math.floor(p*arr.length)];
   } else if(e.hitFlash>55){
-    key = d.hit[0];
+    key = S("hit")[0];
   } else if(e.stunTimer>0){
-    key = d.idle[Math.floor((e.animT||0)/220)%d.idle.length];
+    const arr = S("idle"); key = arr[Math.floor((e.animT||0)/220)%arr.length];
   } else {
-    key = d.walk[Math.floor((e.animT||0)/120)%d.walk.length];
+    const arr = S("walk"); key = arr[Math.floor((e.animT||0)/120)%arr.length];
   }
-  const img = d.img[key];
+  let img = d.img[key];
   if(!img || !d.ready[key]) return false;
   // misma escala para todos los frames (tomada del primer frame de caminata), así los recortes
   // de distinto alto -p.ej. la muerte tendido en el piso- no cambian de tamaño el personaje
   const s = e.radius*(d.hMul||2.6)/d.img.walk1.height;
-  drawAnimFrameSized(img, {frames:[{x:0, y:0, w:img.width, h:img.height}]}, 0, e.x, e.y, img.width*s, img.height*s, 0.5, 0.92, e.fx < -0.12, undefined);
+  let w = img.width, h = img.height, ay = 0.92;
+  if(d.outline){ const o = packOutlined(img); if(o){ img = o; ay = (0.92*h + 1)/(h + 2); w += 2; h += 2; } }
+  drawAnimFrameSized(img, {frames:[{x:0, y:0, w, h}]}, 0, e.x, e.y, w*s, h*s, 0.5, ay, e.fx < -0.12, undefined);
   return true;
+}
+// Contorno oscuro de 1px (en píxeles del recorte) para los recortes pintados/suavizados que no lo
+// traen (Duende y Bestia del Bosque): se arma UNA vez por imagen en un lienzo +2px y se reusa. La
+// silueta toma solo los píxeles bien opacos, así el borde suave del recorte no deja un halo gris.
+const _PACK_OUTLINE = new WeakMap();
+function packOutlined(img){
+  let c = _PACK_OUTLINE.get(img);
+  if(c !== undefined) return c;
+  c = null;
+  try{
+    const w = img.width, h = img.height;
+    const sil = document.createElement("canvas"); sil.width = w; sil.height = h;
+    const g0 = sil.getContext("2d"); g0.drawImage(img, 0, 0);
+    const d = g0.getImageData(0, 0, w, h), p = d.data;
+    for(let i=0;i<p.length;i+=4){ const on = p[i+3] > 90; p[i] = 18; p[i+1] = 12; p[i+2] = 10; p[i+3] = on ? 235 : 0; }
+    g0.putImageData(d, 0, 0);
+    c = document.createElement("canvas"); c.width = w + 2; c.height = h + 2;
+    const g = c.getContext("2d"); g.imageSmoothingEnabled = false;
+    g.drawImage(sil, 0, 1); g.drawImage(sil, 2, 1); g.drawImage(sil, 1, 0); g.drawImage(sil, 1, 2);
+    g.drawImage(img, 1, 1);
+    c._srcImg = img; // de qué recorte real sale (lo lee tools/art/enemy_coverage.js)
+  }catch(err){ c = null; } // imagen sin decodificar o lienzo contaminado: se dibuja el recorte tal cual
+  _PACK_OUTLINE.set(img, c);
+  return c;
 }
 
 // Dibuja el sprite real (frame único, con leve balanceo y espejo por dirección) para los
@@ -313,7 +422,7 @@ function drawEnemyAtlas(e){
   const state = e.attackAnim>0 ? "atacar" : "caminar";
   const clip = atlas.def.clips[state+"_"+dir];
   const n = animFrameIndex(clip, e.animT);
-  const size = e.radius*2.7; // tamaño visual proporcional al radio de colisión ya existente
+  const size = e.radius*2.7*(ENEMY_ATLAS_SIZE_MUL[e.type]||1); // tamaño visual proporcional al radio de colisión ya existente
   const sizeH = size*(clip.frames[n].h/clip.frames[n].w);
   drawAnimFrameSized(atlas.img, clip, n, e.x, e.y, size, sizeH, 0.5, 0.85, clip.flip, undefined);
   return true;

@@ -119,6 +119,13 @@ function animProfileOf(ent){
     if(ENEMY_ANIM_ATLASES[ent.type]) p.tier = "full";
     else if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[ent.type]) p.tier = "full"; // hojas de jefes: animación real completa
     else if(REAL_ANIM_ATLASES[ent.type]) p.tier = "walk";
+    // hojas por atlas / recortes sueltos (tools/art/enemy_coverage.js): con ciclo de caminar real van
+    // como el resto de los packs ("partial"); con un solo cuadro de caminar, el balanceo completo del
+    // preset tapa la falta de ciclo (walk de 1 cuadro -> bob). Antes, los tipos que además tenían un
+    // static.png viejo de respaldo (Gólem de Hielo, Ent, Dobladores...) caían en "static" y se sumaba el
+    // balanceo entero ENCIMA de su caminata real.
+    else if(_animPackWalkFrames(ent.type) > 1) p.tier = "partial";
+    else if(_animPackWalkFrames(ent.type) === 1) p.tier = "static";
     else if(ICE_REAL_IMG[ent.type]){ p.tier = "static"; p.hasBob = true; }
     else if(ACUA_ENEMY_TYPES[ent.type]) p.tier = "static";
     else p.tier = "partial";
@@ -128,6 +135,13 @@ function animProfileOf(ent){
   p.isBoss = ent.rank==="jefe" || ent.rank==="subjefe";
   ent._ap = p;
   return p;
+}
+// Cuadros DISTINTOS del ciclo de caminar de perfil que trae la hoja del tipo (-1 = no tiene hoja).
+function _animPackWalkFrames(type){
+  const P = typeof ENEMY_ATLAS_PACK!=="undefined" && ENEMY_ATLAS_PACK[type];
+  if(P && P.sets){ const w = P.sets.walk || P.sets.idle; return w ? new Set(w).size : 0; }
+  const d = typeof PACK_ANIM!=="undefined" && PACK_ANIM[type];
+  return d && d.walk ? new Set(d.walk).size : -1;
 }
 const ACUA_ENEMY_TYPES = {tiburon_joven:1, tiburon_blanco:1, cangrejo_acorazado:1, medusa_electrica:1, sirena_abisal:1, anguila_electrica:1, kraken_joven:1, leviatan:1};
 

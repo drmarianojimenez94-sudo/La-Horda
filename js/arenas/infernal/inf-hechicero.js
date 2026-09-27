@@ -38,7 +38,10 @@ const HECH_TYPES = {hechicero_supremo:1, golem_cuerpos:1, angel_corrompido:1};
 
 /* ---------------- arte ---------------- */
 enemyAtlasPackLoad("hechicero_supremo", HECH_DIR+"atlas.png", {"w":102,"h":113,"cols":8,"refH":112,"anchor":0.9823,
-  "sets":{"idle":[0,1,2,3],"walk":[0,1,2,3],"cast":[16,17,18,19,20,21,22,23],"atk":[24,25,26,27],"hit":[28,29,30,31],"death":[33,34,35,36,37,38],"kneel":[36]}});
+  // caminar: las celdas 4-15 del atlas son los 12 cuadros de caminata de la hoja (tools/art/hechicero/
+  // build.py), que no se usaban (caminaba con el idle). Mezclan vistas: 4-6 de frente, 8/10/11 de perfil
+  // mirando a la derecha; se toman por vista para que no gire sobre sí mismo al caminar.
+  "sets":{"idle":[0,1,2,3],"walk":[8,10,11,10],"walk_down":[4,5,6,5],"cast":[16,17,18,19,20,21,22,23],"atk":[24,25,26,27],"hit":[28,29,30,31,32],"death":[33,34,35,36,37,38],"kneel":[36]}});
 ENEMY_ATLAS_PACK.hechicero_supremo.hMul = 4.2; // más grande que un héroe: se lee como subjefe
 enemyAtlasPackLoad("golem_cuerpos", HECH_DIR+"golem/atlas.png", {"w":327,"h":274,"cols":3,"refH":274,"anchor":0.9927,
   "sets":{"idle":[1],"walk":[1],"atk":[2],"slam":[2],"hit":[1],"tf":[3,4,5],"pre":[6],"death":[2,5,4,3]}});
