@@ -11,6 +11,9 @@ Cada celda se recorta con la máscara u2net del motor de tools/art/hielo_jefes/e
 muerte y los golpes suman lo que brilla (partículas/filo).
 Escribe assets/sprites/champions/<campeón>/skins/<set>/atlas.png (+ titan.png para Eren),
 un retrato de preview y js/assets/set-skins-meta.js (champPackLoadAtlas + SET_SKINS).
+Las hojas traen columnas de vista mezcladas (izquierda mirando a la derecha, "espalda" de frente...):
+los arreglos por skin (espejos, cuadros rotos, caminatas de 4 pasos) NO van acá sino en CHAMP_PACK_FIX
+(js/assets/champion-sprites.js), así sobreviven a regenerar este meta. Auditoría: tools/art/skin_audit.js.
 usage: python3 extract.py <frames_dir>
 """
 import json, os, sys

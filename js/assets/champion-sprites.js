@@ -248,9 +248,144 @@ const CHAMP_PACK = {};
    de referencia (cabeza a pies) para escalar igual que el resto del roster. Solo cambia el dibujo:
    habilidades, tiempos y VFX siguen siendo los del código. Recortado con tools/art/sheet_extract.py.
    ============================================================ */
+// Arreglos de datos por pack (ver champPackNormalize más abajo). Auditoría: tools/art/skin_audit.js.
+// Las hojas de las skins de set traían columnas de vista mezcladas (la "izquierda" mirando a la derecha,
+// "espalda" de frente, perfiles de 3/4): se arma el perfil derecho con cuadros que de verdad miran a la
+// derecha y la izquierda sale de su espejo. CP_M(i) = cuadro i espejado.
+const CP_M = i => ~i;
+const CHAMP_PACK_FIX = {
+  // Asesino, Jack el Destripador: TODAS las columnas miran a la derecha (no hay izquierda ni espalda).
+  // Caminata de 4 pasos con los cuadros de caminar/correr de las columnas que miran igual.
+  // Muerte: 37/40 venían partidos y 41 con restos del fondo -> de pie, cayendo, tendido (36, 38, 39).
+  skin_nocturno: { left:"mirror", up:"down", turn:["down"], drop:[37, 40, 41],
+    sets:{ walk_side:[8, 14, 11, 17], walk_down:[6, 12, 10, 16], run:[8, 14, 11, 17] } },
+  // Musashi, Samurái Legendario: la izquierda mira a la derecha; el "perfil" quieto (2) y de golpe (32)
+  // son de frente: el perfil derecho real es la columna 3/4 (1, 7, 31). Ataque/lanzar de frente con el
+  // filo hacia la derecha (18, 24) y el paso largo (12) se espejan al mirar a la izquierda.
+  skin_errante: { left:"mirror", turnFrames:[12, 18, 24],
+    sets:{ idle_side:[1], walk_side:[7, 13, 8, 12], attack_side:[1, 20, 20], cast_side:[1, 26, 26], hit_side:[31],
+           run:[12, 13, 15, 16], walk_up:[10, 4, 17, 4] } },
+  // Sylva, Flecha de Fuego: izquierda dudosa (17/23 de frente) -> espejo; ataque de espalda = lanzar de
+  // espalda; el lanzar de frente (24) venía agujereado -> 27.
+  skin_manada: { left:"mirror", turnFrames:[6, 12, 18],
+    sets:{ walk_side:[8, 14, 7, 13], run:[12, 13, 14, 15], walk_up:[10, 3, 10, 4], attack_up:[4, 28, 28], cast_down:[0, 27, 27] } },
+  // Eren, Titán Bestia: frente, 3/4 y perfil miran a la derecha; la "izquierda" es espalda de 3/4.
+  skin_legion: { left:"mirror", turn:["down"],
+    sets:{ walk_side:[8, 14, 7, 13], walk_down:[6, 12, 7, 13], walk_up:[10, 16, 11, 17], run:[12, 13, 14, 13] } },
+  // La Profeta, Ángel Caído: la izquierda mira a la derecha; correr de frente/espalda eran perfiles y la
+  // caminata de "espalda" (10) es de frente: arriba alterna las dos espaldas reales (4, 29).
+  skin_profecia: { left:"mirror",
+    sets:{ walk_side:[8, 12, 11, 13], walk_down:[6, 0, 7, 1], walk_up:[4, 29], attack_down:[0, 21, 21], run:[12, 13, 14, 15] } },
+  // Segador, Leónidas: el "perfil" es espalda de 3/4; el perfil derecho real es la columna 3/4 (1, 7, 19, 25, 31)
+  // y el frente también mira a la derecha. 40 traía una mancha negra suelta.
+  skin_marea: { left:"mirror", turn:["down"], drop:[40],
+    sets:{ idle_side:[1], walk_side:[7, 13, 1, 12], attack_side:[1, 19, 19], cast_side:[1, 25, 25], hit_side:[31],
+           walk_up:[10, 4], run:[12, 13, 14, 15] } },
+  // Axiom, Skin Z: 13 y 23 venían partidos (cabeza suelta); no hay espalda real ("espalda" = de frente).
+  skin_sistema: { left:"mirror", up:"down", drop:[13, 23], turnFrames:[17],
+    sets:{ walk_side:[7, 12, 6, 14], walk_down:[8, 10], run:[7, 12, 6, 14], hit_side:[24], hit_down:[25] } },
+  // Mago, Ángel Arcano: la izquierda es correcta salvo el quieto (5 mira a la derecha); el frente es de 3/4
+  // hacia la derecha.
+  skin_convergencia: { turn:["down"], sets:{ idle_left:[CP_M(2)], attack_left:[CP_M(2), 23, 23], cast_left:[CP_M(2), 23, 23] } },
+};
+/* ---- Relleno de huecos del atlas (solo espeja / clona cuadros que ya existen, nunca inventa arte) ----
+   En los arrays de sets, un índice NEGATIVO n es el cuadro ~n (= -n-1) ESPEJADO horizontalmente
+   (champPackDrawFrame lo resuelve). Reglas genéricas, para todo pack:
+   - Una sola vista horizontal: la otra es su espejo (izquierda = perfil espejado, o al revés).
+   - Estado sin una dirección: champPackSet cae a la vista más parecida (arriba -> perfil -> frente).
+   - Estados que faltan: correr = caminar, lanzar = ataque (reposo + golpe), ataque = lanzar,
+     golpe/caminar = reposo, reposo = primer cuadro de caminar.
+   - Caminatas de 1-2 cuadros se rellenan a 4 intercalando el reposo de esa vista (a,i,b,i).
+   Arreglos por pack (CHAMP_PACK_FIX, auditados con tools/art/skin_audit.js), todos opcionales:
+     left:"mirror"  la "izquierda" del atlas mira igual que el perfil: se descarta y se espeja el perfil
+     side:"mirror"  al revés: el perfil está mal, se usa la izquierda espejada
+     up:"down"|"side"  no hay vista de espalda real: arriba usa el frente (o el perfil)
+     turn:["down","up"]  esas vistas están dibujadas de 3/4 hacia la derecha: se espejan al mirar a la izquierda
+     turnFrames:[i...]  lo mismo, solo para esos cuadros (p.ej. un ataque de perfil dentro del set de frente)
+     drop:[i...]    cuadros rotos: afuera de todos los sets
+     sets:{...}     sets explícitos (después del drop, antes del relleno) */
+const CP_DIRS = ["down","side","left","up"];
+const CP_STATES = ["idle","walk","run","attack","cast","hit","death"];
+const cpMirror = arr => arr.map(v => ~v);
+function champPackNormalize(src, fix){
+  fix = fix || {};
+  const drop = new Set(fix.drop || []), S = {};
+  for(const k in src){ const a = src[k].filter(v => !drop.has(v) && !drop.has(~v)); if(a.length) S[k] = a.slice(); }
+  if(fix.sets) for(const k in fix.sets) S[k] = fix.sets[k].slice();
+  if(fix.left === "mirror") for(const st of CP_STATES){ delete S[st+"_left"]; delete S[st+"_up_left"]; }
+  if(fix.side === "mirror") for(const st of CP_STATES) delete S[st+"_side"];
+  if(fix.up) for(const st of CP_STATES){ delete S[st+"_up"]; delete S[st+"_up_left"]; }
+  const has = (st, d) => !!S[st+"_"+d], anyDir = st => CP_DIRS.some(d => has(st, d));
+  // estados que faltan: se clonan del más cercano, por dirección
+  const cloneState = (to, from, fn) => { if(anyDir(to) || !anyDir(from)) return; for(const d of CP_DIRS) if(has(from, d)) S[to+"_"+d] = fn(S[from+"_"+d], d); };
+  cloneState("idle", "walk", a => a.slice(0, 1));
+  cloneState("walk", "idle", a => a.slice());
+  cloneState("attack", "cast", a => a.slice());
+  cloneState("cast", "attack", a => a.slice());
+  cloneState("hit", "idle", a => a.slice(0, 1));
+  // caminata corta: se intercala el reposo de esa vista (paso - apoyo - paso - apoyo)
+  const pad = (arr, idle) => {
+    if(!arr || arr.length >= 4) return arr;
+    const i = idle && idle.find(v => arr.indexOf(v) < 0);
+    if(i === undefined) return arr.length === 1 ? arr : arr.length === 2 ? arr : [arr[0], arr[1], arr[2], arr[1]];
+    return arr.length === 1 ? [arr[0], i, arr[0], i] : arr.length === 2 ? [arr[0], i, arr[1], i] : arr.concat([i]);
+  };
+  for(const d of CP_DIRS.concat(["up_left"])) if(S["walk_"+d]) S["walk_"+d] = pad(S["walk_"+d], S["idle_"+d]);
+  if(S.run && !S.run_down) S.run = pad(S.run, S.idle_side);
+  if(!S.run && S.walk_side) S.run = S.walk_side.slice();
+  // una sola vista horizontal: la otra es su espejo
+  for(const st of CP_STATES){
+    if(has(st, "side") && !has(st, "left")) S[st+"_left"] = cpMirror(S[st+"_side"]);
+    else if(has(st, "left") && !has(st, "side")) S[st+"_side"] = cpMirror(S[st+"_left"]);
+  }
+  // frente/espalda dibujados de 3/4 hacia la derecha (toda la vista o cuadros sueltos): variante
+  // "<set>_l" con esos cuadros espejados, para cuando el guardián mira a la izquierda
+  const turn = new Set(fix.turn || []), tf = new Set(fix.turnFrames || []);
+  for(const st of CP_STATES) for(const d of ["down", "up"]){
+    const a = S[st+"_"+d]; if(!a) continue;
+    if(turn.has(d) || a.some(v => tf.has(v))) S[st+"_"+d+"_l"] = a.map(v => (turn.has(d) || tf.has(v)) ? ~v : v);
+  }
+  return S;
+}
+// Punto de apoyo horizontal (mediana de los píxeles de piernas y torso): el cuadro se ancla ahí -y se
+// espeja alrededor de ahí-, así el cuerpo queda sobre el mismo punto mire a donde mire (los cuadros
+// vienen centrados por su caja, que se corre con el arma o la capa). Se usa UN valor por set (la
+// mediana de sus cuadros) para no agregar vaivén dentro de un ciclo: dentro del set los cuadros
+// conservan su posición relativa de siempre.
+function champPackFeet(P){
+  const raw = {};
+  P.footX = {};
+  try{
+    const img = P.atlas, W = img.naturalWidth, H = img.naturalHeight; if(!W || !H) return;
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const g = c.getContext("2d", {willReadFrequently:true}); g.drawImage(img, 0, 0);
+    const D = g.getImageData(0, 0, W, H).data, n = Math.floor(W/P.fw)*Math.floor(H/P.fh);
+    for(let v=0; v<n; v++){
+      const x0 = (v % P.cols)*P.fw, y0 = Math.floor(v/P.cols)*P.fh;
+      let top = -1, bot = -1, minX = P.fw, maxX = -1;
+      for(let y=0; y<P.fh; y++) for(let x=0; x<P.fw; x++) if(D[((y0+y)*W + x0+x)*4+3] > 100){ if(top < 0) top = y; bot = y; if(x < minX) minX = x; if(x > maxX) maxX = x; }
+      if(top < 0) continue;
+      const cols = new Array(P.fw).fill(0), yA = Math.round(bot - (bot-top)*0.6); let tot = 0;
+      for(let y=yA; y<=bot; y++) for(let x=0; x<P.fw; x++) if(D[((y0+y)*W + x0+x)*4+3] > 100){ cols[x]++; tot++; }
+      let acc = 0, med = (minX+maxX)/2;
+      for(let x=0; x<P.fw; x++){ acc += cols[x]; if(acc*2 >= tot){ med = x + 0.5; break; } }
+      const box = (minX+maxX+1)/2, lim = P.fw*0.18;
+      raw[v] = Math.max(box-lim, Math.min(box+lim, med))/P.fw;
+    }
+  }catch(e){ return; /* sin acceso a los píxeles (file://): centro de la caja, como antes */ }
+  const rank = k => /^walk_/.test(k) ? 0 : /^idle_/.test(k) ? 1 : /^run/.test(k) ? 2 : 3; // el ciclo de caminar manda
+  const keys = Object.keys(P.sets).sort((a, b) => rank(a) - rank(b));
+  for(const k of keys){
+    const vs = P.sets[k].map(v => v < 0 ? ~v : v).filter(v => raw[v] !== undefined);
+    if(!vs.length) continue;
+    const m = vs.map(v => raw[v]).sort((a, b) => a - b)[vs.length >> 1];
+    for(const v of vs) if(P.footX[v] === undefined) P.footX[v] = m;
+  }
+}
 function champPackLoadAtlas(key, src, meta){
-  const img = new Image();
-  const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:meta.sets, ready:false };
+  const img = new Image(), fix = Object.assign({}, CHAMP_PACK_FIX[key], meta.fix);
+  const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:champPackNormalize(meta.sets, fix),
+              rawSets:meta.sets, upFrom:fix.up || null, fix, ready:false };
   img.onload = ()=>{ P.ready = true; };
   img.onerror = ()=>{ P.failed = true; }; // solo entonces se usa el arte anterior como respaldo
   img.src = src;
