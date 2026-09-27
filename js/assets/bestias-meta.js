@@ -17,7 +17,4 @@ Object.assign(BOSS_SHEET_FX, {
 });
 // Muertes de 4 cuadros para cuerpos que siguen con su arte de siempre (drawDeathPack).
 const DEATH_PACK_META = {
-  esfinge: {"src":"assets/sprites/enemies/laberinto/esfinge/muerte/atlas.png","hMul":2.55,"meta":{"w":54,"h":80,"cols":8,"refH":76,"anchor":0.975,"sets":{"death":[0,1,2,3],"walk":[0]}}},
-  medusa: {"src":"assets/sprites/enemies/laberinto/medusa/muerte/atlas.png","hMul":2.5,"meta":{"w":60,"h":81,"cols":8,"refH":77,"anchor":0.9753,"sets":{"death":[0,1,2,3],"walk":[0]}}},
-  druida_arena: {"src":"assets/sprites/enemies/laberinto/druida_arena/muerte/atlas.png","hMul":2.5,"meta":{"w":57,"h":91,"cols":8,"refH":87,"anchor":0.978,"sets":{"death":[0,1,2,3],"walk":[0]}}},
 };

@@ -58,7 +58,7 @@ const HELPERS = () => {
   const away = () => E(() => heroes.forEach((h, k) => { if (h !== player) { h.x = player.x - 900 - k * 60; h.y = player.y + 300; h.stunTimer = 60000; } }));
 
   // atlas listos
-  for (const t of ['hada_escarcha', 'enjambre_hadas', 'enjambre_hadas_rosa', 'enjambre_hadas_oro', 'cu_sith', 'dragoncito_hielo', 'angel_hielo', 'dama_bosque', 'esfinge', 'medusa', 'druida_arena']) {
+  for (const t of ['hada_escarcha', 'enjambre_hadas', 'enjambre_hadas_rosa', 'enjambre_hadas_oro', 'cu_sith', 'dragoncito_hielo', 'angel_hielo', 'dama_bosque']) {
     check('atlas.' + t, await E(t => __hb.ready(t), t));
   }
   check('fx.hoja', await E(() => ['hbDragAliento', 'hbAngelPrisma', 'hbCuMordida', 'hbDamaHechizo'].every(k => VFX_SPR_EXTRA[k] && vfxSprReady(k))));
@@ -165,14 +165,15 @@ const HELPERS = () => {
     await E(() => __hb.clear());
   }
 
-  /* ---------------- LABERINTO: muertes de 4 cuadros ---------------- */
+  /* ---------------- LABERINTO: su caída de siempre (sin las muertes de otro diseño) ---------------- */
   await E(() => __hb.start('laberinto', 7)); await sleep(800); await E(() => __hb.clear()); await away();
   for (const t of ['esfinge', 'medusa', 'druida_arena']) {
     const i = await E(t => { player.x = 0; player.y = 0; const i = __hb.spawn(t, 120, 20); const e = enemies[i]; e.speed = 0; e.ranged = false; e.dmg = 0; return i; }, t);
     await sleep(500); await shot(t + '_vivo'); await clip(t + '_vivo');
-    await killAndShoot(i, t, true);
+    await killAndShoot(i, t, false);
     await E(() => __hb.clear());
   }
+  check('laberinto_sin_muertes_de_otro_diseno', await E(() => Object.keys(DEATH_PACK).length === 0));
 
   check('sin_errores', errors.length === 0, errors.slice(0, 5));
   await browser.close();

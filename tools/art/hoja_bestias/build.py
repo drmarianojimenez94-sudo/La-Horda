@@ -128,9 +128,14 @@ if __name__ == '__main__':
         'atk': F('cusith', 'bite', [0, 1]), 'hit': F('cusith', 'hurt', [0, 1]),
         'howl': F('cusith', 'bite', [1]), 'death': F('cusith', 'death', [0, 1, 2, 3], dc)}, 2.45)
     # ---------------- Laberinto: solo muertes ----------------
-    for ent, dest, hm in (('esfinge_muerte', 'enemies/laberinto/esfinge/muerte', 2.55), ('medusa_muerte', 'enemies/laberinto/medusa/muerte', 2.5),
+    # DESACTIVADO (integración S5): las muertes de la hoja son OTRO diseño (esfinge alada, Medusa violeta,
+    # druida con astas) que el cuerpo vivo del juego (esfinge encapuchada, Medusa humana, druida encapuchado):
+    # rompe la regla "un solo diseño" (NO FRANKENSTEIN). Vuelven a su caída de siempre. Para reactivarlas,
+    # sacar el "if False" y volver a correr este script.
+    if False:
+     for ent, dest, hm in (('esfinge_muerte', 'enemies/laberinto/esfinge/muerte', 2.55), ('medusa_muerte', 'enemies/laberinto/medusa/muerte', 2.5),
                           ('druida_muerte', 'enemies/laberinto/druida_arena/muerte', 2.5)):
-        D[ent.replace('_muerte', '').replace('druida', 'druida_arena')] = build('assets/sprites/' + dest, {'death': F(ent, 'death', [0, 1, 2, 3]), 'walk': F(ent, 'death', [0])}, hm)
+         D[ent.replace('_muerte', '').replace('druida', 'druida_arena')] = build('assets/sprites/' + dest, {'death': F(ent, 'death', [0, 1, 2, 3]), 'walk': F(ent, 'death', [0])}, hm)
     # ---------------- Efectos ----------------
     fxd = {'hielo': 'assets/vfx/enemies/hielo', 'bosque': 'assets/vfx/enemies/bosque'}
     for key, ent, sec, arena, ground in (('hbDragAliento', 'dragoncito_fx', 'aliento', 'hielo', False),                                          ('hbAngelPrisma', 'angel_fx', 'impacto', 'hielo', True), ('hbCuMordida', 'cusith_fx', 'mordida', 'bosque', False),

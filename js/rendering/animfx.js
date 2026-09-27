@@ -78,9 +78,9 @@ const ANIM_PROFILES = {
   jinete_sin_cabeza:  {speed:0.9, weight:2.0, lunge:20, impact:2.2, material:"shadow", particle:"shadow", death:"collapse"},
   escorpion_gigante:  {speed:1.4, weight:0.7, lunge:10, material:"chitin"},
   golem_piedra:       {speed:0.55,weight:2.2, lunge:12, impact:2.0, material:"rock", death:"crumble"},
-  medusa:             {speed:1.0, basic:"ranged", material:"stone", death:"frames", corpse:false},  // muerte de 4 cuadros (DEATH_PACK)
-  druida_arena:       {basic:"cast", cast:1.4, material:"sand", death:"frames", corpse:false},
-  esfinge:            {speed:0.9, weight:1.6, basic:"ranged", impact:1.6, material:"sand", death:"frames"},  // queda el montón de arena
+  medusa:             {speed:1.0, basic:"ranged", material:"stone"},
+  druida_arena:       {basic:"cast", cast:1.4, material:"sand"},
+  esfinge:            {speed:0.9, weight:1.6, basic:"ranged", impact:1.6, material:"sand"},
   guardian_laberinto: {speed:0.6, weight:2.2, lunge:14, impact:2.1, material:"rock", death:"frames"},
   minotauro:          {speed:1.0, weight:1.9, amp:0.9, lunge:26, impact:2.4, material:"flesh", death:"collapse"},
   tiburon_joven:      {speed:1.4, weight:0.8, lunge:16, material:"water", death:"sink"},

@@ -61,12 +61,13 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('NET.invitado_dibuja_con_arte', ['angel_hielo', 'cu_sith', 'dragoncito_hielo', 'enjambre_hadas', 'hada_escarcha'].every(t => gv.drawn[t] > 0), gv.drawn);
   check('NET.invitado_ve_hadas_robando_calor', gv.steal >= 1, { steal: gv.steal });
   check('NET.invitado_colores_de_hadas', gv.keys >= 2, { keys: gv.keys });
-  // muerte de 4 cuadros en el invitado
+  // muerte en el invitado (la Esfinge usa su caída de siempre: se mira que muera sin errores)
   await H.p.evaluate(() => { const s = enemies.find(e => e.type === 'esfinge'); s.lastHitBy = heroes[0]; s.hp = 5; damageEnemy(s, 20, { src: heroes[0] }); });
   await sleep(700);
   const dd = await G.p.evaluate(() => window.__drawn.muerte_esfinge || 0);
   await G.p.screenshot({ path: path.join(OUT, 'net_invitado_esfinge_muerte.png') });
-  check('NET.invitado_muerte_esfinge_con_cuadros', dd > 0, { dd });
+  const gone = await G.p.evaluate(() => !enemies.some(e => e.type === 'esfinge' && e.alive && e.hp > 0));
+  check('NET.invitado_ve_morir_la_esfinge', gone && dd === 0, { dd, gone });
   check('NET.sin_errores', H.errs.length === 0 && G.errs.length === 0, { host: H.errs.slice(0, 3), guest: G.errs.slice(0, 3) });
   await b.close();
   console.log(fails ? `FALLAS: ${fails}` : 'TODO OK');

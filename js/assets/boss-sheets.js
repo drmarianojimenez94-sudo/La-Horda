@@ -19,8 +19,8 @@ for(const k in BOSS_SHEET_FX){
   const imgs = F.srcs.map(s=>{ const im = new Image(); im.src = s; return im; });
   VFX_SPR_EXTRA[k] = { imgs, ready:()=>imgs.every(im=>im.complete && im.naturalWidth > 0), ground:F.ground };
 }
-// Muertes de 4 cuadros (hoja de bestias) para cuerpos que siguen con su arte de siempre: Esfinge,
-// Medusa y Druida de Arena. Las dibuja drawDeathPack mientras el cuerpo cae (vfx.js).
+// Muertes de 4 cuadros para cuerpos que siguen con su arte de siempre (las dibuja drawDeathPack mientras
+// el cuerpo cae). Hoy vacío: las de la hoja de bestias eran otro diseño que el cuerpo vivo (build.py).
 const DEATH_PACK = {};
 if(typeof DEATH_PACK_META!=="undefined") for(const k in DEATH_PACK_META){
   const A = DEATH_PACK_META[k], img = new Image(), M = A.meta;
