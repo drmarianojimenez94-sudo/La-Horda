@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/panels.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/codex.css">
+<link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
 
@@ -176,7 +177,7 @@
   <!-- TIENDA: catálogo de guardianes (animados, con precio y ficha) + resto de la tienda más adelante -->
   <div id="shop-screen" class="screen hidden">
     <div class="arena-title">Tienda</div>
-    <div class="save-line" id="shop-gold-line" style="margin-bottom:12px;"></div>
+    <div class="save-line" id="shop-gold-line"></div>
     <div class="shop-tabs" id="shop-tabs">
       <button class="shop-tab on" data-shop-tab="campeones">Guardianes</button>
       <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
@@ -281,7 +282,7 @@
   <!-- GAME OVER -->
   <div id="gameover-screen" class="screen hidden">
     <div class="arena-title" style="color:#c62828;" id="go-title">La Horda te ha consumido</div>
-    <div class="brand" style="font-size:1.6rem;" id="go-stats">Nivel 1 · 0 bajas</div>
+    <div class="brand" id="go-stats">Nivel 1 · 0 bajas</div>
     <div class="save-line" id="go-progress"></div>
     <div style="height:18px;"></div>
     <button class="btn wide" id="retry-btn">Reintentar desde el Nivel 1</button>
