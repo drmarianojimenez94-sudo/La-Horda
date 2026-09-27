@@ -66,7 +66,12 @@ const RUN_INTRO = { open:false, raf:0, t0:0, onGo:null, prologue:false, arena:nu
 
 function runIntroShow(arena, onGo){
   const el = document.getElementById("run-intro"); const B = ARENA_BRIEF[arena];
-  if(!el || !B){ onGo(); return; }
+  if(!el || !B){
+    // sin ficha: igual se espera a que termine de bajar el arte de las arenas (preload.js)
+    if(typeof assetsAllReady==="function" && !assetsAllReady()){ if(typeof showNetToast==="function") showNetToast("Preparando la arena…"); whenAssetsReady(onGo); }
+    else onGo();
+    return;
+  }
   // Primera vez en la primera arena: antes de la ficha, el prólogo de la campaña (con la partida
   // todavía sin empezar, en vez de taparte la pantalla en pleno combate).
   RUN_INTRO.prologue = typeof save!=="undefined" && !save.storyPrologueSeen && typeof ARENA_ORDER!=="undefined" &&
@@ -85,7 +90,14 @@ function runIntroFill(el, arena, B){
   const M = ARENA_MODS[arena] || {};
   const pro = !!RUN_INTRO.prologue;
   el.classList.toggle("ri-prologue", pro);
-  el.querySelector(".ri-go").textContent = pro ? "SEGUIR ▸" : "¡A LA BATALLA!";
+  const go = el.querySelector(".ri-go");
+  go.textContent = pro ? "SEGUIR ▸" : "¡A LA BATALLA!"; go.disabled = false;
+  // todavía baja el arte de las arenas: el botón lo dice y se habilita solo al terminar
+  if(!pro && typeof assetsAllReady==="function" && !assetsAllReady()){
+    go.disabled = true; go.textContent = "Preparando la arena… " + assetsRestPct() + "%";
+    whenAssetsReady(()=>{ if(!RUN_INTRO.prologue){ go.disabled = false; go.textContent = "¡A LA BATALLA!"; } },
+      pct=>{ if(!RUN_INTRO.prologue && go.disabled) go.textContent = "Preparando la arena… " + pct + "%"; });
+  }
   const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá en cualquier lado para empezar";
   if(pro){
     el.querySelector(".ri-arena").textContent = "LA NOCHE EN QUE VOLVIÓ LA HORDA";
@@ -108,6 +120,7 @@ function runIntroGo(){
     runIntroFill(document.getElementById("run-intro"), RUN_INTRO.arena, ARENA_BRIEF[RUN_INTRO.arena]);
     return;
   }
+  if(typeof assetsAllReady==="function" && !assetsAllReady()) return; // "Preparando la arena…"
   RUN_INTRO.open = false; cancelAnimationFrame(RUN_INTRO.raf);
   document.getElementById("run-intro").classList.add("hidden");
   const fn = RUN_INTRO.onGo; RUN_INTRO.onGo = null; if(fn) fn();
