@@ -214,7 +214,7 @@ button.cx-card:hover, button.cx-home-card:hover, button.cx-chapter:hover, button
 
 /* ---------- landscape bajo (celulares ~390 px de alto) ---------- */
 @media (max-height:480px) and (orientation:landscape){
-  .cx-top{ min-height:36px; margin-bottom:4px; } .cx-back{ min-height:36px; font-size:1.05rem; }
+  .cx-top{ min-height:40px; margin-bottom:4px; } .cx-back{ min-height:40px; font-size:1.05rem; }
   .cx-home-head{ margin:0 0 6px; } .cx-home-brand{ font-size:1rem; } .cx-home-sub{ font-size:0.95rem; }
   .cx-home-grid{ gap:8px; } .cx-home-art{ height:clamp(96px, 34vh, 170px); }
   .cx-home-blurb{ display:none; } .cx-home-txt{ padding:6px 8px 8px; }
