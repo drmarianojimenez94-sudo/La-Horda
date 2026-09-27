@@ -194,6 +194,20 @@
       <div class="mode-card-title">Arena</div>
       <div class="mode-card-desc">Sobrevive oleadas de monstruos, derrota a los subjefes y al jefe final — incluye la Arena Divina.</div>
     </button>
+    <!-- B1: unirse a la sala de un amigo con SOLO el código (sin enlace externo) -->
+    <div class="mode-card join-card" id="mode-join-card">
+      <div class="mode-card-icon">🔑</div>
+      <div class="mode-card-title">UNIRSE CON CÓDIGO</div>
+      <div class="mode-card-desc">¿Un amigo creó una sala? Escribí su código de 6 letras y entrás directo a su Sala.</div>
+      <div class="join-code-row">
+        <input id="mode-join-code" class="multi-input net-code-input" placeholder="Código (ej. QKL58J)" maxlength="200" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters">
+        <button class="btn small" id="mode-join-paste">📋 Pegar</button>
+        <button class="btn small net-join-go" id="mode-join-btn">UNIRSE</button>
+      </div>
+      <div class="join-code-meta"><label class="net-name">Tu nombre <input id="mode-join-name" maxlength="16" placeholder="Jugador"></label>
+        <span class="join-code-champ" id="mode-join-champ"></span></div>
+      <div class="net-err join-status" id="mode-join-status"></div>
+    </div>
     <button class="btn secondary" id="modeselect-back-btn">Volver</button>
   </div>
 

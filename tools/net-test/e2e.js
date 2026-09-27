@@ -21,7 +21,7 @@ const CHAMP_LABEL = { tanque: 'Tanque', mago: 'Mago', guerrero: 'Asesino', sopor
 
 async function newClient(browser, i, url) {
   const ctx = await browser.newContext({ viewport: { width: 1000, height: 560 } });
-  // guardado propio de cada jugador: campeones en nivel 12, Bosque abierto
+  // guardado propio de cada jugador: campeones en nivel 12, Bosque abierto (orden canónico: se completa la Fábrica)
   await ctx.addInitScript(([i]) => {
     try {
       if (!localStorage.getItem('__seeded')) {
@@ -36,7 +36,7 @@ async function newClient(browser, i, url) {
   page.on('dialog', d => d.accept());
   await page.goto(url, { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; selectedClass = c; persistNow(); }, [CHAMPS[i]]);
+  await page.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i]]);
   return { ctx, page, errors, i };
 }
 const ev = (c, fn, arg) => c.page.evaluate(fn, arg);

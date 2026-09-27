@@ -9,6 +9,7 @@
     linear-gradient(180deg, #0d0705 0%, #070403 100%);
   text-align:center;
   overflow-y:auto; -webkit-overflow-scrolling:touch;
+  touch-action:pan-y; overscroll-behavior:contain; /* scroll vertical con el dedo, sin arrastrar la página */
 }
 .brand{
   font-family:var(--font-pixel); font-size:1.35rem; letter-spacing:0; margin:0 0 10px 0; line-height:1.6;
@@ -408,3 +409,42 @@
 .arena-card.soon .arena-card-desc i{ color:#b9a98a; font-style:normal; font-size:0.85rem; }
 .arena-card-badge.soon{ color:#cfc4ae; background:rgba(120,110,90,0.18); border-color:#6f6452; }
 .arena-grid-sep{ grid-column:1 / -1; text-align:center; letter-spacing:0.3em; font-size:0.8rem; color:#b59ae0; margin:6px 0 -2px; opacity:0.85; }
+
+/* ---------- UNIRSE CON CÓDIGO (Modos de juego y Sala) + código de la sala del anfitrión ---------- */
+.join-card{ cursor:default; text-align:center; }
+.join-card:active{ transform:none; }
+.join-code-row{ display:flex; gap:6px; align-items:center; margin-top:8px; }
+.join-code-row .multi-input{ flex:1; min-width:0; width:auto; }
+.net-code-input{ font-family:var(--font-retro); font-size:1.15rem !important; letter-spacing:0.18em; text-transform:uppercase; text-align:center; }
+.net-code-input::placeholder{ letter-spacing:0.04em; text-transform:none; font-size:0.9rem; }
+.net-join-go{ font-weight:700; min-width:92px; }
+.join-code-meta{ display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; justify-content:center; margin-top:6px; font-size:0.7rem; color:var(--text-dim); }
+.join-code-meta input{ width:110px; }
+.join-status, #net-join-status{ min-height:1em; }
+.join-status.ok, #net-join-status.ok{ color:#9fe0a8; }
+.net-join-title{ font-family:var(--font-retro); color:var(--ember3); font-size:1.05rem; letter-spacing:0.04em; }
+.net-room-code{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 10px; margin:6px 0; padding:6px 10px;
+  border:2px solid rgba(255,160,90,0.55); background:rgba(40,20,10,0.7); }
+.net-room-code-lbl{ font-family:var(--font-retro); font-size:0.9rem; color:var(--text-dim); letter-spacing:0.08em; }
+.net-room-code-val{ font-family:var(--font-retro); font-size:1.9rem; line-height:1; color:#ffd27a; letter-spacing:0.22em; text-shadow:2px 2px 0 #000; user-select:all; -webkit-user-select:all; }
+.lobby-skin{ font-size:0.62rem; color:#e3b8ff; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.shop-skin-anim{ width:84px; height:84px; flex:none; background:#0c0a10; border-radius:8px; }
+.shop-skin-equip{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+@media (max-width:520px){ .shop-skin{ flex-wrap:wrap; } .shop-skin-img, .shop-skin-anim{ width:64px; height:64px; } }
+/* skins en la Sala */
+.prep-skins{ margin-top:8px; text-align:left; }
+.prep-skins-title{ font-size:0.8rem; color:#e3b8ff; margin-bottom:4px; }
+.prep-skins-list{ display:flex; flex-direction:column; gap:6px; }
+.prep-skin{ display:flex; gap:8px; align-items:center; padding:5px 6px; border:1px solid var(--panel-b); background:var(--panel-a); }
+.prep-skin.on{ border-color:#ffd76a; }
+.prep-skin-anim{ width:56px; height:56px; flex:none; background:#0c0a10; }
+.prep-skin-info{ flex:1; min-width:0; display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; }
+.prep-skin-name{ font-weight:700; font-size:0.8rem; color:#ffd76a; width:100%; }
+.prep-skin-sub{ font-size:0.66rem; color:var(--text-dim); }
+.prep-skin-on{ font-size:0.72rem; color:#9fe0a8; }
+/* Celular horizontal / pantallas bajas: UN solo scroll (el de la pantalla). Las listas con scroll propio
+   de 150-230 px (tienda, inventario, galerías) quedaban anidadas dentro de una pantalla que también
+   scrollea: con el dedo había que "acertarle" a la caja correcta y el contenido de abajo costaba alcanzarlo. */
+@media (max-height:600px), (pointer:coarse) and (max-height:760px){
+  #shop-panel, .inv-list, .inv-list.tall, #gallery-grid, #shop-champ-grid, .chest-host .chest-items{ max-height:none !important; overflow:visible !important; }
+}
