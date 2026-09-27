@@ -302,6 +302,10 @@
   <div id="pause-screen" class="screen hidden">
     <div class="arena-title">Pausa</div>
     <div class="pause-note">En las partidas online no hay pausa. Objetos y talentos se cambian en la Sala antes de entrar; las habilidades se suben en partida con el <b>+</b> que aparece sobre cada botón.</div>
+    <div class="pause-audio">
+      <label>🎵 Música <input type="range" id="vol-music" min="0" max="100" step="5"></label>
+      <label>💥 Efectos <input type="range" id="vol-sfx" min="0" max="100" step="5"></label>
+    </div>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
     <button class="btn secondary" id="quit-btn">Abandonar arena</button>

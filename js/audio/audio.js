@@ -21,6 +21,18 @@
 let audioCtx = null, masterGain = null, musicGain = null, sfxGain = null;
 let musicBus = null, musicDuck = null, reverbSend = null, _noiseBuf = null;
 let audioEnabled = true, musicStarted = false;
+// Volumen de música y de efectos (0..1), elegido por el jugador en la pausa y recordado en este navegador.
+const AUDIO_BASE = { music:0.34, sfx:0.55 };
+// Nivel maestro: medido con tools/audit/audio_levels.js la mezcla salía a ~-31 dBFS de RMS (muy bajo para
+// el parlante de un celular); x1.7 la lleva a ~-26 dBFS (pico ~-3 dBFS, sin saturar) y el compresor sigue evitando picos.
+const AUDIO_MASTER = 1.7;
+const audioVol = (()=>{ try{ const v = JSON.parse(localStorage.getItem("horda_vol")||"null"); if(v && typeof v.music==="number" && typeof v.sfx==="number") return v; }catch(e){} return { music:1, sfx:1 }; })();
+function setAudioVolume(kind, v){
+  v = Math.max(0, Math.min(1, +v || 0)); audioVol[kind] = v;
+  try{ localStorage.setItem("horda_vol", JSON.stringify(audioVol)); }catch(e){}
+  const g = kind==="music" ? musicGain : sfxGain;
+  if(g && audioCtx) g.gain.setTargetAtTime(AUDIO_BASE[kind]*v, audioCtx.currentTime, 0.05);
+}
 
 function _mkReverb(){
   const len = Math.floor(audioCtx.sampleRate*2.2), ir = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
@@ -37,14 +49,14 @@ function initAudio(){
     const comp = audioCtx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
     comp.connect(audioCtx.destination);
-    masterGain = audioCtx.createGain(); masterGain.gain.value = audioEnabled?1:0; masterGain.connect(comp);
-    musicGain = audioCtx.createGain(); musicGain.gain.value = 0.34; musicGain.connect(masterGain);
+    masterGain = audioCtx.createGain(); masterGain.gain.value = audioEnabled?AUDIO_MASTER:0; masterGain.connect(comp);
+    musicGain = audioCtx.createGain(); musicGain.gain.value = AUDIO_BASE.music*audioVol.music; musicGain.connect(masterGain);
     musicDuck = audioCtx.createGain(); musicDuck.gain.value = 1; musicDuck.connect(musicGain);
     musicBus = audioCtx.createGain(); musicBus.gain.value = 0; musicBus.connect(musicDuck);
     const rev = _mkReverb(); const revOut = audioCtx.createGain(); revOut.gain.value = 0.9;
     reverbSend = audioCtx.createGain(); reverbSend.gain.value = 0.32;
     reverbSend.connect(rev); rev.connect(revOut); revOut.connect(musicDuck);
-    sfxGain = audioCtx.createGain(); sfxGain.gain.value = 0.55; sfxGain.connect(masterGain);
+    sfxGain = audioCtx.createGain(); sfxGain.gain.value = AUDIO_BASE.sfx*audioVol.sfx; sfxGain.connect(masterGain);
     _noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate);
     const nd = _noiseBuf.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i] = Math.random()*2-1;
     // En iPhone/Safari el contexto arranca "suspendido": resume() tiene que llamarse durante el
@@ -55,7 +67,7 @@ function initAudio(){
 function setAudioEnabled(on){
   audioEnabled = on;
   if(audioCtx && audioCtx.state==="suspended") audioCtx.resume().catch(()=>{});
-  if(masterGain) masterGain.gain.setTargetAtTime(on?1:0, audioCtx.currentTime, 0.05);
+  if(masterGain) masterGain.gain.setTargetAtTime(on?AUDIO_MASTER:0, audioCtx.currentTime, 0.05);
   const btn = document.getElementById("mute-btn");
   if(btn) btn.textContent = on ? "🔊" : "🔇";
 }

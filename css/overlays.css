@@ -143,3 +143,8 @@
   #game-dialog .gd-btn.secondary{ font-size:1.2rem; padding:6px 12px; }
 }
 @media (orientation: portrait){ #game-dialog{ visibility:hidden; } } /* el aviso de girar el teléfono manda */
+
+/* Pausa: volumen de música y efectos */
+.pause-audio{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 10px; font-family:var(--font-retro); color:var(--text); font-size:0.9rem; }
+.pause-audio label{ display:flex; align-items:center; gap:6px; }
+.pause-audio input[type=range]{ width:150px; height:28px; accent-color:var(--ember1); }

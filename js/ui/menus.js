@@ -453,3 +453,12 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{
   }
   go();
 });
+
+// Volumen de música / efectos en la pausa (audio.js los guarda en este navegador)
+(function(){
+  for(const [id, kind] of [["vol-music","music"],["vol-sfx","sfx"]]){
+    const el = document.getElementById(id); if(!el) continue;
+    el.value = Math.round((typeof audioVol!=="undefined" ? audioVol[kind] : 1)*100);
+    el.addEventListener("input", ()=>{ if(typeof setAudioVolume==="function") setAudioVolume(kind, el.value/100); if(kind==="sfx" && typeof playSfx==="function") playSfx("ready"); /* muestra del volumen de efectos */ });
+  }
+})();
