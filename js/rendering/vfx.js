@@ -344,7 +344,7 @@ function vfxOnDeath(e){
   slot.style = boss && prof.death!=="frames" ? "boss" : prof.death;
   slot.kind = e._deathKind || "normal";
   // el cuerpo queda en el suelo (gore.js): la animación de caída no se desvanece
-  slot.corpse = !boss && e.rank!=="subjefe" && !(GORE_MAT[goreMatOf(e)]||{}).noCorpse && slot.style!=="dissolve" && slot.style!=="sink" && (e.radius||20) <= 60;
+  slot.corpse = !boss && e.rank!=="subjefe" && prof.corpse!==false && !(GORE_MAT[goreMatOf(e)]||{}).noCorpse && slot.style!=="dissolve" && slot.style!=="sink" && (e.radius||20) <= 60;
   slot.dur = boss ? 2300 : (e.rank==="subjefe" ? 1300 : (prof.death==="frames" ? 900 : (vfxLoad<0.6 ? 380 : 560)));
   e.attackAnim = 0; e.fxAnim = null; e.skillAnim = null; e.hitFlash = 0;
   e._dyingP = 0;

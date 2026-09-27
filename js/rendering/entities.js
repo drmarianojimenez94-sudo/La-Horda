@@ -287,6 +287,8 @@ function drawEnemy(e){
 function drawEnemyBody(e){
   if(arenaHas("drawEnemyBody") && arenaHook("drawEnemyBody", e)){
     // cuerpo propio de la arena (El Reino Micelial: núcleos, raíces, la Madre por partes)
+  } else if((!e.alive || e._dyingP != null) && drawDeathPack(e)){ // (_dyingP: en el invitado la copia del enemigo puede seguir "viva")
+    // muerte de 4 cuadros de la hoja de bestias (Esfinge, Medusa, Druida de Arena)
   } else if(drawBossFxReplace(e)){
     // habilidad del Dragón de Hielo en curso: reemplaza al sprite normal, no dibujar nada más
   } else if(drawAcuaticaReal(e)){

@@ -224,6 +224,9 @@ function update(dt){
     if(e.encStatic){ if(e._ax!==undefined){ e.x = e._ax; e.y = e._ay; } e.atkCd = 1e6; continue; }
     if(BOSS_SKILL_TYPES[e.type] && updateBossSkills(e, dt, tgt, dist)) continue;
 
+    // ---- Conductas de la hoja de bestias (Dragoncito, Ángel, Hadas de Escarcha, Cù-Sìth): js/enemies/bestias-ai.js ----
+    if(BESTIA_AI[e.type] && BESTIA_AI[e.type](e, dt, tgt, dist)) continue;
+
     // ---- IA propia de la arena (ARENA_DEFS[arena].enemyAI[tipo]): true = ya actuó este cuadro ----
     { const aai = arenaEnemyAI(e.type); if(aai && aai(e, dt, tgt, dist)) continue; }
 

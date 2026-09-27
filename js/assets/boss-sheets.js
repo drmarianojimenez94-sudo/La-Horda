@@ -19,6 +19,16 @@ for(const k in BOSS_SHEET_FX){
   const imgs = F.srcs.map(s=>{ const im = new Image(); im.src = s; return im; });
   VFX_SPR_EXTRA[k] = { imgs, ready:()=>imgs.every(im=>im.complete && im.naturalWidth > 0), ground:F.ground };
 }
+// Muertes de 4 cuadros (hoja de bestias) para cuerpos que siguen con su arte de siempre: Esfinge,
+// Medusa y Druida de Arena. Las dibuja drawDeathPack mientras el cuerpo cae (vfx.js).
+const DEATH_PACK = {};
+if(typeof DEATH_PACK_META!=="undefined") for(const k in DEATH_PACK_META){
+  const A = DEATH_PACK_META[k], img = new Image(), M = A.meta;
+  const P = { atlas:img, fw:M.w, fh:M.h, cols:M.cols, refH:M.refH, anchor:M.anchor, frames:M.sets.death, hMul:A.hMul, ready:false };
+  img.onload = ()=>{ P.ready = true; };
+  img.src = A.src;
+  DEATH_PACK[k] = P;
+}
 // Animación de habilidad sobre el cuerpo (la descuenta bossSheetTick, no la IA de cada arena).
 function bossSheetPack(e, set, ms){
   const P = ENEMY_ATLAS_PACK[e.type];

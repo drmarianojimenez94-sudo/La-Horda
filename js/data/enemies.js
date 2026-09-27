@@ -26,8 +26,10 @@ const ENEMY_BASE = {
   // de combate/rango/rol ya queda definitiva. El jefe final es en 2 fases (ver
   // startBossFight/onBossDefeated): Mago de Hielo y Cristal -> Ángel Caído de Hielo.
   lobo_artico:        {name:"Lobo Ártico",              rank:"normal",   hp:16,  dmg:5,  speed:112, radius:18, xp:3,  gold:1,  scale:2.8, color:"#cfe4ee", ranged:false, visualAlias:"esqueleto"},
+  // Hadas de Escarcha (esbirros): llegan de a tres, roban el calor de los braseros (js/enemies/bestias-ai.js)
+  hada_escarcha:      {name:"Hada de Escarcha",         rank:"normal",   hp:9,   dmg:3,  speed:98,  radius:14, xp:2,  gold:1,  scale:2.4, color:"#bfe4ff", ranged:false, visualAlias:"esqueleto"},
   golem_hielo:        {name:"Gólem de Hielo",           rank:"normal",   hp:62,  dmg:9,  speed:44,  radius:24, xp:6,  gold:2,  scale:3.4, color:"#8fc4e0", ranged:false, visualAlias:"zombie", slowOnHit:0.25},
-  dragoncito_hielo:   {name:"Dragoncito de Hielo",      rank:"subelite", hp:48,  dmg:8,  speed:104, radius:20, xp:9,  gold:3,  scale:3.2, color:"#a8dcff", ranged:true, range:260, projSpeed:240, visualAlias:"esqueleto_h"},
+  dragoncito_hielo:   {name:"Dragoncito de Hielo",      rank:"elite",    hp:100, dmg:10, speed:96,  radius:23, xp:16, gold:6,  scale:3.4, color:"#a8dcff", ranged:true, range:260, projSpeed:240, visualAlias:"esqueleto_h"},
   angel_hielo:        {name:"Ángel de Hielo y Cristal", rank:"elite",    hp:110, dmg:13, speed:66,  radius:26, xp:16, gold:6,  scale:3.8, color:"#9ec8e8", ranged:true, range:280, projSpeed:230, visualAlias:"demonio_menor", freezeOnHit:true},
   demonio_hielo_fuego:{name:"Demonio de Hielo y Fuego", rank:"elite",    hp:150, dmg:15, speed:96,  radius:28, xp:22, gold:9,  scale:4.0, color:"#4a6ea8", ranged:false, dropsItem:true, visualAlias:"demonio_mago", slowOnHit:0.3, burnOnHit:true},
   dragon_hielo:       {name:"Tundraverx, Soberano de Hielo", rank:"elite", hp:420, dmg:20, speed:50, radius:44, xp:60, gold:24, scale:6.0, color:"#7fc0f0", ranged:true, range:320, projSpeed:260, dropsItem:true, visualAlias:"golem"},
@@ -44,7 +46,7 @@ const ENEMY_BASE = {
   duende_bosque:   {name:"Duende del Bosque",  rank:"normal",   hp:18,  dmg:5,  speed:88,  radius:18, xp:3,  gold:1, scale:2.8, color:"#7a9a4a", ranged:false, visualAlias:"esqueleto"},
   enjambre_hadas:  {name:"Enjambre de Hadas",  rank:"normal",   hp:14,  dmg:4,  speed:78,  radius:16, xp:4,  gold:1, scale:2.6, color:"#d68ce0", ranged:true, range:230, projSpeed:220, visualAlias:"esqueleto_h"},
   bestia_bosque:   {name:"Bestia del Bosque",  rank:"subelite", hp:46,  dmg:9,  speed:118, radius:22, xp:8,  gold:3, scale:3.2, color:"#8a6a42", ranged:false, visualAlias:"zombie"},
-  cu_sith:         {name:"Cù-Sìth",            rank:"subelite", hp:64,  dmg:11, speed:110, radius:25, xp:12, gold:4, scale:3.6, color:"#3e6b3e", ranged:false, visualAlias:"demonio_menor"},
+  cu_sith:         {name:"Cù-Sìth",            rank:"elite",    hp:150, dmg:13, speed:112, radius:27, xp:22, gold:9, scale:3.8, color:"#3e6b3e", ranged:false, visualAlias:"demonio_menor"},
   ent:             {name:"Ent",                rank:"elite",    hp:340, dmg:19, speed:38,  radius:38, xp:32, gold:13,scale:5.2, color:"#5a4a2e", ranged:false, dropsItem:true, visualAlias:"golem"},
   dama_bosque:     {name:"Dama del Bosque",    rank:"elite",    hp:150, dmg:16, speed:60,  radius:27, xp:30, gold:12,scale:4.0, color:"#2e3a2e", ranged:true, range:300, projSpeed:240, dropsItem:true, visualAlias:"demonio_mago"},
 

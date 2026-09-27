@@ -38,7 +38,7 @@ const ENEMY_TYPE_RESIST = {
 const INNATE_WET = {tiburon_joven:1, tiburon_blanco:1, medusa_electrica:1, cangrejo_acorazado:1, sirena_abisal:1, anguila_electrica:1, kraken_joven:1, leviatan:1};
 // Tipo del daño que hacen los enemigos a los héroes (para las resistencias de los objetos).
 const ENEMY_ARENA_DMG = {hielo:"ice", infernal:"fire"};
-const ENEMY_TYPE_DMG = {medusa_electrica:"lightning", anguila_electrica:"lightning", dragoncito_hielo:"ice", angel_hielo:"ice", dragon_hielo:"ice",
+const ENEMY_TYPE_DMG = {medusa_electrica:"lightning", anguila_electrica:"lightning", dragoncito_hielo:"ice", angel_hielo:"ice", hada_escarcha:"ice", dragon_hielo:"ice",
   mago_hielo_cristal:"ice", cristal_volador:"ice", angel_caido_hielo:"ice", demonio_menor:"fire", demonio_mago:"fire", demonio_mayor:"fire", demonio_hielo_fuego:"fire"};
 
 function dmgKindOf(opts){

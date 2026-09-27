@@ -17,6 +17,7 @@ SHEETS = {
     'P34': 'art-source/pack_canon/img3_img4_bosque_campeones_a.png (IMG 3 bosque y elementales · IMG 4 campeones A)',
     'P13': 'art-source/pack_canon/img1_img3_laberinto_hielo_bosque.png (IMG 1 laberinto · IMG 2 y 3 versiones cortas)',
     'P2':  'art-source/pack_canon/img2_hielo_menores.png (IMG 2 hielo menores, versión completa)',
+    'HB':  'tools/art/hoja_bestias/sheet.png (reenvío de P13, idéntica píxel a píxel: se usaron las Hadas, las muertes del Laberinto y los VFX)',
 }
 
 E = []  # entidades
@@ -80,17 +81,22 @@ ent(entity='Servo de Cristal / Cristal Volador (esbirros del Mago)', canon='hoja
     artgate='PASS', available='servo: idle 3 · caminar 4 · ataque 2 · muerte 3 — volador: idle 3 · movimiento 4 · ataque 4 · muerte 4', missing='hurt (ambos)',
     vfx='cristal flotante al aparecer', alternatives='—', rejected='—', notes='Nuevo patrón del Mago: Esbirros de Cristal (fases 2 y 3).')
 ent(entity='Dragoncito de Hielo (élite)', canon='P2 (IMG 2 completa) → assets/sprites/enemies/hielo/dragoncito_hielo/v2/atlas.png', status='CANONICAL_SET · REPLACE_FULL_SET',
-    artgate='PASS', available='vuelo 4 · ataque 3 · hurt 2 · muerte 4 · frente 4 · espalda 4', missing='—', vfx='proyectil de hielo, impacto',
-    alternatives='P13 (IMG 2 corta: sin hurt/frente/espalda) · static.png (1 cuadro)', rejected='P13 → DUPLICATE · static.png → reemplazado', notes='')
+    artgate='PASS', available='vuelo 4 · ataque 3 · hurt 2 · muerte 4 · frente 4 · espalda 4', missing='—', vfx='proyectil de hielo, impacto · aliento (HB/P13, para el Aliento de Escarcha)',
+    alternatives='P13/HB (otro dibujo del dragoncito, solo perfil: vuelo 4 · ataque 2 · muerte 4) · static.png (1 cuadro)', rejected='P13/HB → DUPLICATE (menos animaciones, sin frente/espalda/hurt) · static.png → reemplazado',
+    notes='Élite desde la hoja de bestias: Aliento de Escarcha (cono con aviso, js/enemies/bestias-ai.js).')
 ent(entity='Ángel de Hielo y Cristal (élite)', canon='P2 (IMG 2 completa) → assets/sprites/enemies/hielo/angel_hielo/v2/atlas.png', status='CANONICAL_SET · REPLACE_FULL_SET',
-    artgate='PASS', available='vuelo 4 · ataque 3 · cast 4 · hurt 2 · muerte 4 · frente 4 · espalda 4', missing='—', vfx='proyectil de cristal, nova',
-    alternatives='P13 (IMG 2 corta) · static.png (estatua con escudo, 1 cuadro)', rejected='P13 → DUPLICATE · static.png → reemplazado', notes='')
-ent(entity='Enjambre de Hadas (minions del Bosque)', canon='P2 (IMG 2 completa) → assets/sprites/enemies/bosque/enjambre_hadas/v2/atlas.png', status='CANONICAL_SET · REPLACE_FULL_SET',
-    artgate='PASS (hadas azules en el Bosque: se leen como magia fría, contrastan con el verde)', available='idle/vuelo 4 · direcciones 4 · ataque 3 · muerte 4', missing='hurt',
-    vfx='proyectil, estallido', alternatives='P13 (IMG 2 corta) · static.png (1 cuadro) · variantes de color', rejected='P13 → DUPLICATE · variantes → no se usan', notes='')
-ent(entity='Cù-Sìth (élite del Bosque)', canon='P34 (IMG 3 con hurt) → assets/sprites/enemies/bosque/cu_sith/v2/atlas.png', status='CANONICAL_SET · REPLACE_FULL_SET',
-    artgate='PASS', available='corrida 4 · mordida 3 · hurt 2 · muerte 4', missing='idle propio (usa la corrida)', vfx='tajo de la mordida',
-    alternatives='P13 (IMG 3 sin hurt) · static.png (1 cuadro)', rejected='P13 → DUPLICATE · static.png → reemplazado', notes='')
+    artgate='PASS', available='vuelo 4 · ataque 3 · cast 4 · hurt 2 · muerte 4 · frente 4 · espalda 4', missing='—', vfx='proyectil de cristal, nova · pilar de cristal (HB/P13, para el Prisma Helado)',
+    alternatives='P13/HB (otro dibujo: ángel alado sin capucha, vuelo 4 · ataque 2 · muerte 4) · static.png (estatua con escudo, 1 cuadro)', rejected='P13/HB → DUPLICATE (menos animaciones, sin cast/frente/espalda) · static.png → reemplazado',
+    notes='Prisma Helado (círculo con aviso bajo 1-2 guardianes, js/enemies/bestias-ai.js).')
+ent(entity='Enjambre de Hadas (minions del Bosque)', canon='HB/P13 variantes de color → assets/sprites/enemies/bosque/enjambre_hadas/v3/atlas.png (verde · rosa · oro)', status='CANONICAL_SET · REPLACE_FULL_SET',
+    artgate='PASS (el Bosque deja de usar hadas azules: el azul es de la Gélida)', available='vuelo 4 por color · muerte 4 (la de la fila grande, con el tono de cada color)', missing='hurt · ataque propio',
+    vfx='proyectil, estallido (P2)', alternatives='P2 hadas azules (v2)', rejected='P2 azules → pasan a ser las Hadas de Escarcha de la Gélida (en la versión grande de HB)', notes='Cada hada nace con un color al azar (atlasKey).')
+ent(entity='Hadas de Escarcha (esbirros de la Gélida, NUEVA)', canon='HB/P13 fila grande azul → assets/sprites/enemies/hielo/hada_escarcha/atlas.png', status='CANONICAL_SET (entidad nueva)',
+    artgate='PASS', available='vuelo 4 (3 poses) · muerte 4', missing='hurt · ataque propio', vfx='hilo de luz fría (código)', alternatives='—', rejected='—',
+    notes='Llegan de a tres y roban el calor de los braseros (js/enemies/bestias-ai.js).')
+ent(entity='Cù-Sìth (élite del Bosque)', canon='P34 (IMG 3 completa) → assets/sprites/enemies/bosque/cu_sith/v3/atlas.png (recortado de nuevo, sin halo)', status='CANONICAL_SET · REPLACE_FULL_SET',
+    artgate='PASS', available='corrida 4 · mordida 2 · hurt 2 · muerte 4', missing='idle propio (usa la corrida)', vfx='tajo de la mordida',
+    alternatives='P13/HB (mismo dibujo, versión corta) · v2 (mismo P34 con halo oscuro pegado) · static.png', rejected='P13/HB → DUPLICATE · v2 → reemplazado por un recorte limpio', notes='Élite: Tres Aullidos (js/enemies/bestias-ai.js).')
 ent(entity='Gólem del Infernal ("Gólem")', canon='P34 IMG 3 "Gólem de Fuego" → assets/sprites/enemies/infernal/golem/v2/atlas.png', status='CANON_SELECTED_BUT_INCOMPLETE · REPLACE_FULL_SET',
     artgate='PASS (identidad de arena: el gólem de lava se lee como Infernal; el gris era el mismo que el del Laberinto)', available='idle/caminar 4 · ataque 2 · muerte 4',
     missing='hurt · ataque cuerpo a cuerpo de 3+ cuadros', vfx='proyectil de fuego, impacto', alternatives='atlas.png gris actual', rejected='gris → reemplazado', notes='')
@@ -100,29 +106,12 @@ ent(entity='Gólem de Piedra (subjefe del Laberinto)', canon='P13 IMG 1 → asse
 ent(entity='Gólem de Hielo', canon='assets/sprites/enemies/hielo/golem_hielo/ (Pack 3)', status='USE (se conserva)', artgate='PASS', available='idle 2 · caminar 3 · ataque 4 · golpe 2 · muerte 4',
     missing='—', vfx='—', alternatives='P34 "Gólem de Hielo (variante)"', rejected='variante → DUPLICATE (menos animaciones; y el Hielo ya tiene el Gólem de Cristal azul oscuro: con la variante habría dos gólems iguales)', notes='')
 ent(entity='Dama del Bosque (jefa)', canon='assets/sprites/enemies/bosque/dama_bosque/v2/atlas.png (redraw RD6)', status='USE (se conserva)', artgate='PASS',
-    available='idle 4 · caminar 4 · ataque 4 · golpe 4 · muerte 6', missing='—', vfx='de código', alternatives='P34 "Dama del Bosque" (druida verde con astas)',
-    rejected='P34 → REJECT_INCONSISTENT (otro diseño: cambiaría la identidad de una jefa ya completa)', notes='Sus VFX verdes (raíces, hojas) no combinan con la Dama roja/blanca: no se usan.')
-ent(entity='Esfinge · Medusa · Druida de Arena (Laberinto)', canon='walk-strip.png actuales', status='USE (se conservan)', artgate='PASS', available='caminar de perfil',
-    missing='muerte 4 · ataque · hurt', vfx='—', alternatives='P13 "Muertes - Arena Laberinto"',
-    rejected='las 3 muertes → REJECT_INCONSISTENT: Esfinge con alas azules (la actual no tiene), Medusa de piel verde (la actual es de piel clara), Druida con astas (el actual es encapuchado). Mezclarlas sería un Frankenstein.',
-    notes='Hace falta la hoja completa de cada uno (mismo diseño que el actual) — ver lista de faltantes.')
-
-# ---------------- CAMPEONES ----------------
-for name, cur, new in [
-    ('Tanque (Caballero)', 'assets/sprites/champions/tanque/atlas.png (referencia maestra de la biblia de arte)', 'P34 IMG 4 Tanque'),
-    ('Asesino / Segador Olvidado', 'guerrero/atlas.png y segador/v2/atlas.png', 'P34 IMG 4 Asesino'),
-    ('Soporte (Curador)', 'soporte/atlas.png', 'P34 IMG 4 Soporte'),
-    ('La Profeta', 'profeta/v2/atlas.png (redraw RD3)', 'P56 IMG 5 Profeta + P79 IMG 7 reexports'),
-    ('La Cazadora (Sylva)', 'cazadora/v2/atlas.png (redraw RD5)', 'P56 IMG 5 Sylva'),
-    ('Musashi', 'musashi/v2/atlas.png', 'P56 ajuste de ataque básico'),
-    ('Nigromante', 'nigromante/v2/atlas.png', 'P56 idle limpio · P79 Demon Soul Slash · demonio slam'),
-]:
-    ent(entity=f'{name} (campeón)', canon=cur, status='USE (se conserva) · lo nuevo: PARTIAL_USE (solo VFX)',
-        artgate='El canon actual PASS; la versión nueva REJECT_INCONSISTENT como cuerpo',
-        available='set completo de 4 direcciones (idle/caminar abajo, perfil, izquierda, arriba) + ataque, cast, hurt, muerte',
-        missing='según ficha del campeón', vfx='nuevos disponibles: ver auditoría (VFX por campeón)', alternatives=new,
-        rejected=f'{new} → REJECT_INCONSISTENT: es otro diseño de personaje (proporciones realistas, otra cara/ropa/arma) frente al roster chibi de 13 campeones, y no trae las vistas de espaldas/izquierda que usa el juego. Cambiar uno solo rompe el roster.',
-        notes='Si el equipo decide pasar TODO el roster al estilo realista, tiene que ser una hoja completa por campeón (las 4 direcciones), no campeón por campeón.')
+    available='idle 4 · caminar 4 · ataque 4 · golpe 4 · muerte 6', missing='—', vfx='hechizo verde de HB/P13 como proyectil (su color ya era verde)', alternatives='P34/HB "Dama del Bosque" (druida verde con astas)',
+    rejected='P34/HB → REJECT_INCONSISTENT (otro diseño: cambiaría la identidad de una jefa ya completa; HB además no trae cuadros de lanzar hechizo)', notes='Revisado de nuevo con la hoja de bestias: se mantiene.')
+ent(entity='Esfinge · Medusa · Druida de Arena (Laberinto)', canon='walk-strip.png actuales (cuerpo vivo) + muerte de 4 cuadros de HB/P13 (.../muerte/atlas.png)', status='USE (cuerpo) · PARTIAL_USE (muerte)', artgate='PASS con reparo', available='caminar de perfil · muerte 4 (hoja de bestias)',
+    missing='muerte del mismo diseño · ataque · hurt', vfx='—', alternatives='—',
+    rejected='—',
+    notes='Pedido explícito: la muerte de HB se engancha aunque el diseño difiere (Esfinge alada, Medusa de piel verde, Druida con astas). Dura menos de 1 s y arranca con el destello del golpe. Se quita borrando su entrada en DEATH_PACK_META (tools/art/hoja_bestias/build.py). El Minotauro NO se tocó: su atlas v3 ya trae una muerte de 4 cuadros del mismo diseño.')
 ent(entity='Duende · Zombi · Lobo Espectral · Demonio Nigromántico (ajustes)', canon='packs actuales', status='USE (se conservan)', artgate='PASS',
     available='sets actuales', missing='Duende: 2º ataque · Zombi: ataque propio · Lobo: carrera · Demonio: golpe al suelo (pedidos viejos)', vfx='—',
     alternatives='P56 ajustes (duende ataque 1/2, zombi ataque, lobo carrera, demonio slam) · P79 Demon Soul Slash',

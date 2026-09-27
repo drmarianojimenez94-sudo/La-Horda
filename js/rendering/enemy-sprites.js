@@ -155,7 +155,8 @@ function drawEnemyAtlasPack(e){
   if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;
   e._pkAtkLast = e.attackAnim;
   let arr, n;
-  if(!e.alive){
+  const dead = !e.alive || e._dyingP != null; // en el invitado, la copia del enemigo que muere puede seguir marcada viva
+  if(dead){
     arr = P.sets.death;
     if(e._dyingP != null) n = Math.floor(e._dyingP*arr.length*1.25);
     else { if(!e._diedAt) e._diedAt = animNow; n = Math.floor((animNow-e._diedAt)/220); }
@@ -181,11 +182,26 @@ function drawEnemyAtlasPack(e){
       if(dir===1 && P.sets.walk_down) arr = P.sets.walk_down; else if(dir===2 && P.sets.walk_up) arr = P.sets.walk_up;
     }
   }
-  const v = e.alive ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
+  const v = !dead ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
   const s = e.radius*(P.hMul||2.6)/P.refH;
   const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
   // voladores (Dragones de la Fortaleza): el cuerpo se dibuja en el aire, la sombra queda en el piso
   drawAnimFrameSized(P.atlas, clip, 0, e.x, e.y + (e.hover||0), P.fw*s, P.fh*s, 0.5, P.anchor, e.fx < -0.12, undefined);
+  return true;
+}
+// Muerte de 4 cuadros (DEATH_PACK, boss-sheets.js), atada al avance de la muerte (_dyingP) igual que
+// los packs: el cuerpo vivo sigue con su tira/atlas de siempre y recién al morir cambia a esta hoja.
+function drawDeathPack(e){
+  const P = typeof DEATH_PACK!=="undefined" && DEATH_PACK[e.type];
+  if(!P || !P.ready) return false;
+  const arr = P.frames;
+  let n;
+  if(e._dyingP != null) n = Math.floor(e._dyingP*arr.length*1.25);
+  else { if(!e._diedAt) e._diedAt = animNow; n = Math.floor((animNow-e._diedAt)/220); }
+  const v = arr[Math.min(arr.length-1, n)];
+  const s = e.radius*P.hMul/P.refH;
+  const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
+  drawAnimFrameSized(P.atlas, clip, 0, e.x, e.y, P.fw*s, P.fh*s, 0.5, P.anchor, e.fx < -0.12, undefined);
   return true;
 }
 function drawPackSprite(e){

@@ -165,7 +165,8 @@ Object.assign(BOSS_ATTACKS, {
     bossAnnounce(e, "Zona Corrupta", "salí del charco rojo: queda un rato"); return true; },
   gdSummon(e, t, d){
     const type = Math.random() < 0.5 ? "cu_sith" : "enjambre_hadas";
-    if(!skSummon(e, type, e.hp < e.maxHp*0.3 ? 4 : 3)) return false;
+    const low = e.hp < e.maxHp*0.3;
+    if(!skSummon(e, type, type==="cu_sith" ? (low ? 3 : 2) : (low ? 4 : 3))) return false; // Cù-Sìth: élite, de a menos
     bossSheetPack(e, "roots", 900);
     bossAnnounce(e, "Llamado del Bosque", "matá a los invocados rápido"); return true; },
   gdJudgment(e, t, d){
