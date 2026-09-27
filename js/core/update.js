@@ -76,6 +76,7 @@ function update(dt){
   // B1 cooperativo: los héroes de los invitados usan exactamente el mismo código (ver net-game.js)
   if(netMatch && netMatch.role==="host") netHostUpdateRemotes(dt);
 
+  bossEncounterTick(dt); // ventanas EXPUESTO de los jefes (boss-encounter.js)
   // enemies
   for(const e of enemies){
     if(!e.alive) continue;
@@ -218,6 +219,8 @@ function update(dt){
 
     // ---- Habilidades especiales de jefes/subjefes (módulo updateBossSkills): mientras un
     // enemigo canaliza o embiste, no se mueve ni ataca de la forma normal. ----
+    // Piezas quietas de un encuentro de jefe (focos de hielo, etc.: boss-encounter.js): no caminan ni atacan.
+    if(e.encStatic){ if(e._ax!==undefined){ e.x = e._ax; e.y = e._ay; } e.atkCd = 1e6; continue; }
     if(BOSS_SKILL_TYPES[e.type] && updateBossSkills(e, dt, tgt, dist)) continue;
 
     // ---- IA propia de la arena (ARENA_DEFS[arena].enemyAI[tipo]): true = ya actuó este cuadro ----

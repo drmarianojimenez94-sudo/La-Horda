@@ -322,7 +322,7 @@ const VFX_DYING_MAX = 40, vfxDying = [];
 let vfxDyingN = 0;
 for(let i=0;i<VFX_DYING_MAX;i++) vfxDying.push({e:null, t:0, dur:0, dx:0, dy:0, style:"fall", boss:false, side:1});
 function vfxOnDeath(e){
-  if(!ENEMY_BASE[e.type]) return false;
+  if(!ENEMY_BASE[e.type] || e.vanishOnDeath) return false;   // vanishOnDeath: se va sin morir en escena (p.ej. el Dragón huye)
   const prof = animProfileOf(e);
   const boss = e.rank==="jefe";
   const big = boss || e.rank==="subjefe";

@@ -492,6 +492,19 @@ function mnDrawTop(){
     ctx.fillRect(Math.round(e.x - 5 + (e.fx||0)*3), Math.round(e.y - hh), 3, 2); ctx.fillRect(Math.round(e.x + 3 + (e.fx||0)*3), Math.round(e.y - hh), 3, 2); ctx.restore();
     if(e.rank==="elite" || e.rank==="subjefe") _mnGlow(e.x, e.y - hh, 16, col, 0.25);
   }
+  // Cerbero: medidor de EXPOSICIÓN (aro dorado bajo sus patas: se llena mientras lo alumbran 2+ fuentes) y, expuesto,
+  // sus tres sombras separándose del cuerpo
+  const Ce = mnCerbEntity && mnCerbEntity();
+  if(Ce && Ce.alive){
+    const pct = Ce._mnExpPct || 0, R = Ce.radius*1.5;
+    if(pct > 0.02 && !(Ce._expT > 0)){ ctx.save(); ctx.strokeStyle = "rgba(0,0,0,0.5)"; ctx.lineWidth = 7; ctx.beginPath(); ctx.ellipse(Ce.x, Ce.y + 6, R, R*0.42, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = `rgba(255,220,110,${0.6 + 0.3*Math.sin(t*12)})`; ctx.lineWidth = 5; ctx.beginPath(); ctx.ellipse(Ce.x, Ce.y + 6, R, R*0.42, -Math.PI/2, -Math.PI/2, -Math.PI/2 + pct*Math.PI*2); ctx.stroke(); ctx.restore(); }
+    if(Ce._expT > 0){
+      for(let k=0;k<3;k++){ const a = t*1.6 + k*2.09, ox = Math.cos(a)*44, oy = Math.sin(a)*18;
+        _mnAtlasFrame("mn_cerbero", "hit", 0, Ce.x + ox, Ce.y + oy, 58*MN_HMUL.mn_cerbero*0.92, Ce.fx < 0, 0.28, true); }
+      _mnGlow(Ce.x, Ce.y - 60, 180, "255,230,120", 0.3 + 0.15*Math.sin(t*9));
+    } else if(Ce._mnDarkPow){ _mnGlow(Ce.x, Ce.y - 60, 140, "150,30,200", 0.22 + 0.1*Math.sin(t*5)); }
+  }
   // lanzallamas de Cerbero (es luz: va encima de la oscuridad)
   for(const e of enemies){
     if(!e.alive || !e.mnFlame) continue;

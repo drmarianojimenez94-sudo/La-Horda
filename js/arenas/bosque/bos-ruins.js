@@ -38,6 +38,12 @@ const BOS_CFG = {
   pulseEvery: 7000, pulseR: 170, pulseDmg: 0.07,       // % de la vida media del equipo
   buffPerRune: 0.08,            // +daño de los enemigos nuevos por runa activa (corrupción: +0.06 más)
   corruptedBuff: {dmg:1.15, speed:1.10},
+  // JEFE (boss identity): ROMPÉ LA CORRUPCIÓN DEL BOSQUE PARA EXPONER AL GUARDIÁN. Durante la pelea las runas vuelven a
+  // corromperse: cada runa activa le da ESCUDO DE RAÍCES y regeneración; purificarla (acción) lo EXPONE un momento y le duele.
+  // Sus propios golpes pesados / raíces rompen las runas que caen cerca (posicionalo). 4 purificaciones -> pierde la
+  // conexión: se transforma en la BESTIA (más rápida, más física, más vulnerable).
+  bossRearm:[11000, 17000], bossArmMs:3200, bossShield:[1, 0.55, 0.38, 0.28, 0.22], bossRegen:0.0035, bossPurDmg:0.035,
+  bossPurExpose:2600, bossBreakAt:4, bossBeastMult:1.15, bossKiteR:600, bossKiteMs:4000, bossMaxActive:[4, 2],
   rootR: 280, rootStun: [2200, 900, 350], rootDmg: [0.20, 0.06, 0.015],
   surgeCd: 40000, surgeN: lvl => 6 + lvl,
   finaleArmMs: 3200, finaleBlastMs: 1400,
@@ -85,11 +91,12 @@ function bosUpdate(dt){
       }
     }
   }
+  if(bossActive && boss && boss.alive && boss.type==="guardian_ancestral") bosBossRule(dt);
   for(const r of BOS.runes){
     if(r.flash > 0) r.flash -= dt;
     r.t += dt;
     if(r.st==="arming"){
-      r.arm = Math.min(1, r.t / BOS_CFG.armMs(runLevel));
+      r.arm = Math.min(1, r.t / (bossActive ? BOS_CFG.bossArmMs : BOS_CFG.armMs(runLevel)));
       if(r.arm >= 1){ bosSetState(r, "active"); r.spawnT = 2500; bosOnLit(r); }
     } else if(r.st==="active" || r.st==="corrupt"){
       if(r.st==="active" && r.t >= BOS_CFG.corruptAfter){ bosSetState(r, "corrupt"); r.pulseT = 2500; floatText(r.x, r.y-120, "¡Corrupción avanzada!", "crit"); playSfx("bosRuneReady"); }
@@ -105,7 +112,7 @@ function bosUpdate(dt){
         }
       }
     } else if(r.st==="sealed"){
-      if(r.t >= BOS_CFG.sealMs) bosSetState(r, "ctrl");
+      if(r.t >= BOS_CFG.sealMs && !bossActive) bosSetState(r, "ctrl");
     }
   }
   // Oleada de Corrupción: las 4 activas a la vez
@@ -238,6 +245,7 @@ CTX_KINDS.bos_rune = {
   onComplete(r, users){
     const was = r.st;
     bosSetState(r, "sealed"); r.flash = 900; r.by = heroes.indexOf(users[0]);
+    if(bossActive && boss && boss.alive && boss.type==="guardian_ancestral") bosBossPurified(r, users[0]);
     // premio: las raíces élficas castigan a la horda cercana (más fuerte si la contuvieron temprano)
     const k = was==="arming" ? 1.25 : 1;
     let hit = 0;
@@ -263,6 +271,46 @@ CTX_KINDS.bos_rune = {
     return Math.max(0.5, base - n*0.25);
   }
 };
+/* ---- JEFE: la corrupción del bosque protege al Guardián ---- */
+function bosBossRule(dt){
+  const C = BOS_CFG, e = boss, beast = !!e._gdDone;
+  BOS.bossT = (BOS.bossT === undefined ? 4000 : BOS.bossT) - dt;
+  const lit = BOS.runes.filter(bosIsLit).length, awake = bosAwakeCount();
+  if(BOS.bossT <= 0){
+    BOS.bossT = C.bossRearm[beast ? 1 : 0]*(0.85 + Math.random()*0.3);
+    const pool = BOS.runes.filter(r=>r.st==="sealed" || r.st==="ctrl");
+    if(pool.length && awake < C.bossMaxActive[beast ? 1 : 0]){ const r = pool[(Math.random()*pool.length)|0]; bosArm(r); if(inView(r.x, r.y, 60)) floatText(r.x, r.y - 140, "¡El Guardián la corrompe!", "crit"); }
+  }
+  // escudo de raíces + regeneración por runa activa
+  const shield = C.bossShield[Math.min(C.bossShield.length - 1, lit)];
+  e._encMult = shield*(beast ? C.bossBeastMult : 1);
+  e._encTag = lit ? `ESCUDO DE RAÍCES ×${lit}` : (beast ? "LA BESTIA: MÁS VULNERABLE" : null);
+  if(lit && !(e._gdTf > 0) && e.hp < e.maxHp) e.hp = Math.min(e.maxHp, e.hp + e.maxHp*C.bossRegen*lit*dt/1000);
+  if(lit && Math.random() < dt/300) vfxBurst(e.x + (Math.random()-0.5)*e.radius, e.y - e.radius, 1, "leaf", 50, 600, 3, 0, -40, 0);
+  // ANTI-KITE: todos lejos -> despierta una runa y lanza raíces a los que huyen
+  if(bossHeroesFarMs(e, C.bossKiteR, dt) > C.bossKiteMs){
+    e._kiteMs = 0;
+    const pool = BOS.runes.filter(r=>r.st==="sealed" || r.st==="ctrl"); if(pool.length) bosArm(pool[0]);
+    for(const h of heroes){ if(h.alive && Math.hypot(h.x - e.x, h.y - e.y) > C.bossKiteR) bossStrike(h.x, h.y, 70, 1100, e.dmg*0.9, "root", {slow:0.45, slowDur:1400}); }
+    showBanner("El bosque persigue a los que huyen");
+  }
+}
+function bosBossPurified(r, by, byBoss){
+  const C = BOS_CFG, e = boss; if(!e || !e.alive) return;
+  BOS.pur = (BOS.pur||0) + 1;
+  damageEnemy(e, e.maxHp*C.bossPurDmg*(e._encMult ? 1/e._encMult : 1), {src:by || e, critChanceOverride:0, fromProc:true});
+  bossExpose(e, C.bossPurExpose, 1.45, null);
+  floatText(e.x, e.y - e.radius*2.6, byBoss ? "¡ROMPIÓ SU PROPIA RAÍZ!" : "¡LA CONEXIÓN SE CORTA!", "crit");
+  if(!tutSeen("gd_rune")) tutSay("gd_rune", "Cada runa corrupta protege y cura al Guardián. PURIFICALAS (mantené la acción) o hacé que su Golpe del Bosque caiga encima: le duele y queda EXPUESTO.", null, 10000, true);
+  // pierde la conexión con el bosque: la transformación llega antes
+  if(!e._gdDone && !(e._gdTf > 0) && BOS.pur >= C.bossBreakAt && e.hp > e.maxHp*GUARD_CFG.transformAt){ e.hp = e.maxHp*GUARD_CFG.transformAt - 1; showBanner("¡EL GUARDIÁN PIERDE SU CONEXIÓN CON EL BOSQUE!"); }
+}
+// sus golpes (raíces, lluvia de hojas, golpe pesado) rompen las runas corruptas donde caen
+function bosBossStrike(s){
+  if(currentArena!=="bosque" || !bossActive || !boss || boss.type!=="guardian_ancestral") return;
+  for(const r of BOS.runes){ if(bosIsLit(r) && Math.hypot(r.x - s.x, r.y - s.y) <= s.r + 60){ bosSetState(r, "sealed"); r.flash = 900; vfxShock(r.x, r.y, 20, 200, "140,230,110", 600, 3); bosBossPurified(r, null, true); } }
+}
+BOSS_STRIKE_HOOKS.push(bosBossStrike);
 /* ---- NIVEL 10: las runas se desbordan -> explosión -> Guardián Ancestral Corrompido ---- */
 // startBossFight (waves.js) llama acá primero: true = la secuencia arrancó (el jefe sale al final).
 function bosBossIntro(){

@@ -31,7 +31,8 @@ const HIE_CFG = {
   warmR: 150,
   fuel: [48000, 64000], // ms encendido
   lightMs: 1400,        // mantener para encender
-  fireLightR: 60        // fuego a esta distancia lo enciende
+  fireLightR: 60,       // fuego a esta distancia lo enciende
+  stormRate: 16         // por segundo, aun moviéndose, durante la Gran Helada del Mago (hie-boss.js)
 };
 const HIE = { br:[] };
 
@@ -88,7 +89,9 @@ function hieUpdate(dt){
       continue;
     }
     const still = moved < HIE_CFG.stillSpeed*sec || h.stunTimer > 0;
-    if(still){ h._stillT += dt; if(h._stillT > HIE_CFG.grace) h._cold += HIE_CFG.coldRate*rule*lvMult*sec; }
+    const bc = HIE.bossCold||1;   // pelea con el Mago Gélido: el frío aprieta más (hie-boss.js)
+    if(still){ h._stillT += dt; if(h._stillT > HIE_CFG.grace) h._cold += HIE_CFG.coldRate*rule*lvMult*bc*sec; }
+    else if(HIE.storm){ h._stillT = 0; h._cold += HIE_CFG.stormRate*sec; }   // Gran Helada: ni moverse alcanza, hay que refugiarse
     else { h._stillT = 0; h._cold = Math.max(0, h._cold - HIE_CFG.warmRate*sec); }
     if(h._cold >= 100){
       h._cold = HIE_CFG.resetTo; h._coldHits = (h._coldHits||0) + 1; // (telemetría: cuántas veces lo enfrió la quietud)
@@ -152,12 +155,13 @@ function hieBotNudge(h, target){
 }
 // ---- red ----
 function hieNetState(){
-  return {b:HIE.br.map(b=>[b.lit?1:0, b.fuel|0, b.prog|0, b.by]), c:heroes.map(h=>Math.round(h._cold||0))};
+  return {b:HIE.br.map(b=>[b.lit?1:0, b.fuel|0, b.prog|0, b.by]), c:heroes.map(h=>Math.round(h._cold||0)), s:HIE.storm?1:0};
 }
 function hieApplyNetState(s){
   if(!s) return;
   if(s.b) s.b.forEach((a, i)=>{ const b = HIE.br[i]; if(!b) return; b.lit = !!a[0]; b.fuel = a[1]; b.prog = a[2]; b.by = a[3]; b.done = b.lit; });
   if(s.c) s.c.forEach((v, i)=>{ if(heroes[i]) heroes[i]._cold = v; });
+  HIE.storm = s.s ? 1 : 0;
 }
 // ---- dibujo ----
 function hieArtBrazierOff(){

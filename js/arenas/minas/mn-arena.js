@@ -258,4 +258,4 @@ ARENA_DEFS.minas = {
   applyNetState:mnApplyNetState
 };
 // internos del anfitrión que no hace falta mandar por red
-window.addEventListener("load", ()=>{ if(typeof NET_SKIP_KEYS==="undefined") return; for(const k of ["amb","lWind","acCd","breathCd","_grp","atkCd2"]) NET_SKIP_KEYS.add(k); });
+window.addEventListener("load", ()=>{ if(typeof NET_SKIP_KEYS==="undefined") return; for(const k of ["amb","lWind","acCd","breathCd","_grp","atkCd2","_mnForceT"]) NET_SKIP_KEYS.add(k); });

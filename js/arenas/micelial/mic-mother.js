@@ -205,6 +205,7 @@ function micMotherFightWorld(dt){
       micTickDmg(h, h.maxHp*(C.infectDps + C.infectDpsRamp*3*M.inf)*dt/1000);
     }
   }
+  micNetRule(dt);   // REGLA: cortá la red para exponer el corazón (mic-network.js)
 }
 
 /* ---------------- IA de la Madre ---------------- */
@@ -370,7 +371,7 @@ function micBossDefeated(b){
   runEnding = true; bossActive = false;
   for(const o of enemies){ if(o.alive && o!==b){ o.alive = false; o.hp = 0; vfxOnDeath(o); } }
   enemies = enemies.filter(o=>o.alive);
-  micS.clouds.length = 0; micS.hal.length = 0; bossStrikes.length = 0;
+  micS.clouds.length = 0; micS.hal.length = 0; bossStrikes.length = 0; M.net = null;
   for(const h of heroes){ h.slowAmt = 0; h.slowTimer = 0; }
   if(typeof bossHudHide==="function") bossHudHide();
   hitStop(110, true); slowMo(0.3, 1400);

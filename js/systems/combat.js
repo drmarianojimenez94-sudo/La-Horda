@@ -10,6 +10,7 @@ function damageEnemy(e, amount, opts){
   const src = opts.src || player;
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
+  if(e._encMult || e._expT > 0) dmg *= bossEncounterDmgMult(e); // regla del jefe: blindaje/escudo propio o ventana EXPUESTO (boss-encounter.js)
   if(e._evoMarkT) dmg *= evoDmgTakenMult(e); // marca/marchitar de la Firma (skill-evolution.js)
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
   // e.fy ya apuntan hacia donde está mirando (su objetivo actual), así que compara contra eso

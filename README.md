@@ -41,6 +41,10 @@ tocar el balance: ver [ARCHITECTURE.md](ARCHITECTURE.md).**
   09 **Minas Profundas** (la luz es territorio; matar a Cerbero abre el Portal Infernal y hay que
   atravesarlo; ver `docs/arena-identity/minas.md`) · 10 Arena Infernal —, 10 niveles cada una, subjefes y
   jefe final por arena. Fichas en `docs/arena-identity/`.
+- **Jefes con REGLA propia**: cada jefe final tiene una mecánica que hay que resolver (red de núcleos,
+  paredes agrietadas, tentáculos, Gran Helada, Convergencia…) con ventana EXPUESTO, anti-kite y anti-facetank.
+  Ver [LA_HORDA_BOSS_IDENTITY.md](LA_HORDA_BOSS_IDENTITY.md) (matriz y exploits) y
+  [LA_HORDA_BOSS_ASSET_MANIFEST.md](LA_HORDA_BOSS_ASSET_MANIFEST.md); pruebas en `tools/bosses/boss_rules.js`.
 - **10 campeones**: Tanque, Asesino, Mago, Soporte, Segador Olvidado, Axiom, La Profeta,
   Musashi, Sylva (Cazadora del Bosque) y Nigromante, cada uno con 3 habilidades y ulti.
 - **Arena Divina**: asedio 4v4 con torres, castillos, minions y campeones divinos.
