@@ -286,6 +286,17 @@
 #net-debug-panel .nd-row span:last-child{ text-align:right; word-break:break-all; }
 #net-debug-panel .nd-log{ margin-top:6px; color:#9fb8cf; }
 #prep-screen{ justify-content:flex-start; } /* contenido alto (equipo/árbol): que se pueda scrollear desde arriba */
+/* "Comenzar" quedaba al final de 4 pantallas de inventario: ahora queda siempre a mano, pegado abajo */
+#prep-start-btn{ position:sticky; bottom:calc(6px + env(safe-area-inset-bottom,0px)); z-index:6; flex-shrink:0;
+  box-shadow:0 -6px 14px rgba(0,0,0,0.65), 4px 4px 0 #000; }
+/* celulares apaisados: las arenas en dos columnas (antes, una tarjeta por pantalla: 5 pantallas de scroll) */
+@media (max-height:500px) and (orientation:landscape){
+  #arena-grid{ max-width:760px; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+  #arena-grid .arena-card{ margin-bottom:0; padding:10px 12px; }
+  #arena-grid .arena-card-icon{ font-size:1.1rem; margin-bottom:2px; }
+  #arena-grid .arena-card-title{ font-size:1.1rem; padding-right:70px; }
+  #arena-grid .arena-card-desc{ font-size:0.85rem; line-height:1.2; }
+}
 /* B1: cuadro para unirse pegando el enlace/código (ahora dentro de la Sala) */
 .multi-box{ font-family:var(--font-retro); width:min(560px, 92vw); background:rgba(20,12,8,0.7); border:2px solid #000; box-shadow:inset 0 0 0 1px rgba(255,160,90,0.15);
   padding:10px 12px; margin:6px 0; display:flex; flex-direction:column; gap:6px; }

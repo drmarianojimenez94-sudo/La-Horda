@@ -16,7 +16,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 15; save.champions[k].unlocked = true; } selectedClass = c; }, [champ]);
     return { p, errs };
   };
-  const H = await mk(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, 'Mariano', 'mago');
+  const H = await mk(`${SITE}/index.html?dev=1&server=${encodeURIComponent(RELAY)}`, 'Mariano', 'mago');
   await H.p.evaluate(() => { document.getElementById('title-continue-btn').click(); setState('prep'); currentArena = 'bosque'; lobbyAllies = pickLobbyAllies(selectedClass); renderPrepSummary(); });
   await H.p.evaluate(() => document.getElementById('net-create-btn').click());
   for (let k = 0; k < 50 && !(await H.p.evaluate(() => net.code)); k++) await sleep(100);

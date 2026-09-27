@@ -250,7 +250,7 @@ function renderArenaGrid(){
 function updateMenuBrandSub(){
   ensurePlayableArena();
   const el = document.getElementById("menu-brand-sub");
-  if(el) el.textContent = `HORDE SURVIVAL · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
+  if(el) el.textContent = `SUPERVIVENCIA A LA HORDA · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
   if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese guardián está bloqueado: desbloquealo en la Tienda."); return; }

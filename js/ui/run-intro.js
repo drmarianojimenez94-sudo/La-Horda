@@ -11,6 +11,11 @@
    Ojo de la historia: acá parece un ángel. En la Arena Infernal se revela (inf-hechicero.js).
    ============================================================ */
 const ARENA_BRIEF = {
+  ciudad: {
+    say:"Esta es tu ciudad, guardián, y la Horda volvió. No podés salvarlos a todos. Pero vas a intentarlo.",
+    kill:"La horda que derriba las ESTRUCTURAS: si caen todas las críticas, la ciudad cae y perdés. En el nivel 9, los subjefes; en el 10, El Presentador.",
+    help:"Los CIVILES escondidos: acercate y MANTENÉ RESCATAR, y llevalos a un refugio (escudo verde). Cada rescate da oro y XP.",
+    goal:"Sobreviví 10 niveles, protegé la ciudad y derrotá a El Presentador."},
   fortaleza: {
     say:"La Ciudad Maldita resistió, pero la Horda dejó una CICATRIZ. Seguila: empieza en esta fábrica que no para nunca.",
     kill:"Trampas (vapor, rejillas al rojo, prensas y cadenas), puentes que se mueven, el Dragón de la Forja y el Caballero Oxidado.",
@@ -46,18 +51,47 @@ const ARENA_BRIEF = {
     kill:"El borde (si caés, quedás colgado: un compañero te sube), el Jinete que carga en línea, el Carcelero y sus cadenas y lo que vive debajo.",
     help:"Mirá las GRIETAS: una plataforma crítica tiembla y larga piedras antes de caer. Empujá a la horda al vacío y usá al Jinete como arma.",
     goal:"Sobreviví a las ruinas, vencé al Carcelero del Vacío y enfrentá a El Que Mora Debajo."},
+  minas: {
+    say:"Debajo del Abismo hay minas, y debajo de las minas, una puerta. Acá la LUZ ES TERRITORIO.",
+    kill:"La oscuridad (recibís más daño y te emboscan), el Devoraluz que apaga las lámparas, el Titán de Piedra (nivel 8) y Cerbero.",
+    help:"Si una luz se apaga, acercate y MANTENÉ ENCENDER. Cerbero se expone a la luz y se enfurece en la oscuridad.",
+    goal:"Derrotá a Cerbero y ATRAVESÁ el Portal Infernal que se abre: recién ahí termina la arena."},
   infernal: {
     say:"La dimensión de la Horda. Tus habilidades pegan menos acá: jugá con cuidado… y traeme los cristales.",
     kill:"Las FISURAS de donde sale la horda, el fuego del piso y lo que te espera en el nivel 9.",
     help:"Cerrá las fisuras: mantené ✖ junto a una (quema un poco, pero corta la horda). Alguien está encadenado en el fondo.",
     goal:"Llegá al corazón del Infierno. Ahí te voy a estar esperando."}
 };
-const RUN_INTRO = { open:false, raf:0, t0:0, onGo:null };
+const RUN_INTRO = { open:false, raf:0, t0:0, onGo:null, prologue:false, arena:null };
 
 function runIntroShow(arena, onGo){
   const el = document.getElementById("run-intro"); const B = ARENA_BRIEF[arena];
   if(!el || !B){ onGo(); return; }
+  // Primera vez en la primera arena: antes de la ficha, el prólogo de la campaña (con la partida
+  // todavía sin empezar, en vez de taparte la pantalla en pleno combate).
+  RUN_INTRO.prologue = typeof save!=="undefined" && !save.storyPrologueSeen && typeof ARENA_ORDER!=="undefined" &&
+    arena===ARENA_ORDER[0] && typeof CAMPAIGN_PROLOGUE==="string";
+  if(RUN_INTRO.prologue){ save.storyPrologueSeen = true; if(typeof persist==="function") persist(); }
+  runIntroFill(el, arena, B);
+  el.classList.remove("hidden");
+  RUN_INTRO.open = true; RUN_INTRO.onGo = onGo; RUN_INTRO.t0 = performance.now(); RUN_INTRO.arena = arena;
+  cancelAnimationFrame(RUN_INTRO.raf);
+  const cv = el.querySelector("canvas");
+  const draw = ()=>{ if(!RUN_INTRO.open) return; runIntroDraw(cv, (performance.now()-RUN_INTRO.t0)/1000); RUN_INTRO.raf = requestAnimationFrame(draw); };
+  draw();
+  if(typeof playSfx==="function") playSfx("ready");
+}
+function runIntroFill(el, arena, B){
   const M = ARENA_MODS[arena] || {};
+  const pro = !!RUN_INTRO.prologue;
+  el.classList.toggle("ri-prologue", pro);
+  el.querySelector(".ri-go").textContent = pro ? "SEGUIR ▸" : "¡A LA BATALLA!";
+  const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá en cualquier lado para empezar";
+  if(pro){
+    el.querySelector(".ri-arena").textContent = "LA NOCHE EN QUE VOLVIÓ LA HORDA";
+    el.querySelector(".ri-say").textContent = "«" + CAMPAIGN_PROLOGUE + "»";
+    return;
+  }
   el.querySelector(".ri-arena").textContent = (M.icon ? M.icon + " " : "") + (typeof campaignNumberLabel==="function" && campaignNumberLabel(arena) ? campaignNumberLabel(arena) + " — " : "") + (M.label || arena).toUpperCase();
   el.querySelector(".ri-say").textContent = "«" + B.say + "»";
   el.querySelector(".ri-kill").textContent = B.kill;
@@ -65,17 +99,15 @@ function runIntroShow(arena, onGo){
   el.querySelector(".ri-goal").textContent = B.goal;
   const cr = el.querySelector(".ri-crystals");
   if(cr){ const show = typeof crystalRowHtml==="function" && (crystalsOwned().length > 0 || CRYSTAL_BY_ARENA[arena] || arena==="infernal"); cr.innerHTML = show ? crystalRowHtml() : ""; cr.style.display = show ? "" : "none"; }
-  el.classList.remove("hidden");
-  RUN_INTRO.open = true; RUN_INTRO.onGo = onGo; RUN_INTRO.t0 = performance.now();
-  cancelAnimationFrame(RUN_INTRO.raf);
-  const cv = el.querySelector("canvas");
-  const draw = ()=>{ if(!RUN_INTRO.open) return; runIntroDraw(cv, (performance.now()-RUN_INTRO.t0)/1000); RUN_INTRO.raf = requestAnimationFrame(draw); };
-  draw();
-  if(typeof playSfx==="function") playSfx("ready");
 }
 function runIntroGo(){
   if(!RUN_INTRO.open) return;
   if(performance.now() - RUN_INTRO.t0 < 450) return; // un toque apurado del botón "Comenzar" no la saltea
+  if(RUN_INTRO.prologue){ // del prólogo pasa a la ficha de la arena
+    RUN_INTRO.prologue = false; RUN_INTRO.t0 = performance.now();
+    runIntroFill(document.getElementById("run-intro"), RUN_INTRO.arena, ARENA_BRIEF[RUN_INTRO.arena]);
+    return;
+  }
   RUN_INTRO.open = false; cancelAnimationFrame(RUN_INTRO.raf);
   document.getElementById("run-intro").classList.add("hidden");
   const fn = RUN_INTRO.onGo; RUN_INTRO.onGo = null; if(fn) fn();

@@ -21,7 +21,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } save.arenasCleared = { bosque: true, acuatica: true, hielo: true, laberinto: true, infernal: true }; selectedClass = c; }, [CH[i]]);
     return { p, errs, i };
   };
-  const H = await mk(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, 0);
+  const H = await mk(`${SITE}/index.html?dev=1&server=${encodeURIComponent(RELAY)}`, 0);
   await H.p.evaluate(() => { document.getElementById('title-continue-btn').click(); currentArena = 'bosque'; setState('prep'); renderPrepSummary(); document.getElementById('net-create-btn').click(); });
   for (let k = 0; k < 50 && !(await H.p.evaluate(() => net.code)); k++) await sleep(100);
   const url = await H.p.evaluate(() => netInviteUrl());

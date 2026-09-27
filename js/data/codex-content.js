@@ -64,7 +64,12 @@ const CODEX_BOSSES = [
   {id:"jinete_sin_cabeza",  arena:"divina",    role:"jefe",    level:6,  forms:["jinete_sin_cabeza"]}
 ];
 // Tipos que el Códice no muestra como entrada propia (y por qué): el test lo exige explícito.
-const CODEX_EXCLUDED = {cm_espejismo:"Copia frágil de la Dama del Telón: se describe en su ficha."};
+const CODEX_EXCLUDED = {cm_espejismo:"Copia frágil de la Dama del Telón: se describe en su ficha.",
+  // piezas de la REGLA de un jefe (boss-encounter.js): no son criaturas sueltas, se describen en la ficha de su jefe
+  cm_cometa:"Cometa del Gran Número de El Presentador: se describe en su ficha.",
+  foco_hielo:"Foco de Hielo de la Gran Helada del Mago Gélido: se describe en su ficha.",
+  lev_tentaculo:"Tentáculo del Leviatán (golpe, agarre o corriente): se describe en su ficha.",
+  foco_convergencia:"Foco de cristal de la Convergencia del Hechicero Supremo: se describe en su ficha."};
 
 // Nivel en que aparece cada criatura de las arenas con roster propio por etapas (las demás se leen
 // de spawnPoolFor en vivo).

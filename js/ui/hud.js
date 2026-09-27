@@ -25,7 +25,9 @@ function showBanner(text){
   b.textContent = text;
   // si la guía del jefe está en pantalla, el cartel baja un poco para no pisarla
   const intro = document.getElementById("boss-intro");
-  b.classList.toggle("low", !!(intro && !intro.classList.contains("hidden")));
+  // …y lo mismo con el cartel de título de la arena (si no, los dos textos se pisan al entrar)
+  const card = typeof _arenaTitleUntil!=="undefined" && performance.now() < _arenaTitleUntil;
+  b.classList.toggle("low", !!(intro && !intro.classList.contains("hidden")) || card);
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
 }
 

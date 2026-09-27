@@ -44,7 +44,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
 (async () => {
   const browser = await chromium.launch({ args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
   // ---------------- anfitrión: menú -> arena -> campeón -> pre-sala -> crear sala ----------------
-  const host = await newClient(browser, 0, `${SITE}/index.html?server=${encodeURIComponent(RELAY)}`);
+  const host = await newClient(browser, 0, `${SITE}/index.html?dev=1&server=${encodeURIComponent(RELAY)}`);
   await host.page.click('#title-continue-btn');
   await host.page.click('#mainmenu-jugar-btn');
   await host.page.click('#mode-arena-btn');

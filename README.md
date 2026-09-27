@@ -45,12 +45,22 @@ tocar el balance: ver [ARCHITECTURE.md](ARCHITECTURE.md).**
   paredes agrietadas, tentáculos, Gran Helada, Convergencia…) con ventana EXPUESTO, anti-kite y anti-facetank.
   Ver [LA_HORDA_BOSS_IDENTITY.md](LA_HORDA_BOSS_IDENTITY.md) (matriz y exploits) y
   [LA_HORDA_BOSS_ASSET_MANIFEST.md](LA_HORDA_BOSS_ASSET_MANIFEST.md); pruebas en `tools/bosses/boss_rules.js`.
-- **10 campeones**: Tanque, Asesino, Mago, Soporte, Segador Olvidado, Axiom, La Profeta,
-  Musashi, Sylva (Cazadora del Bosque) y Nigromante, cada uno con 3 habilidades y ulti.
+- **12 guardianes**: Tanque, Asesino, Mago, Soporte, Segador Olvidado, Axiom, La Profeta,
+  Musashi, La Cazadora, Nigromante, El Libertador y Eren, cada uno con 3 habilidades y ulti.
+  Un perfil nuevo elige **un guardián de regalo**; los demás se compran en la Tienda.
 - **Arena Divina**: asedio 4v4 con torres, castillos, minions y campeones divinos.
 - **Progresión persistente** en `localStorage`: niveles, oro, maestría de habilidades,
   árboles de talentos, objetos con rarezas/sets/fusión; exportación/importación por código.
-- **Galería de campeones** y **tienda** (la tienda todavía es un stub marcado "en construcción").
+- **Códice** (guardianes, bestiario, jefes y arenas) y **Tienda** (guardianes, objetos/sets y skins;
+  en la etapa de prueba todo cuesta 1.000 de oro y un perfil nuevo recibe 10.000 una vez).
+- **Cooperativo online** de hasta 4 guardianes (sala con código de 6 letras; relay en `server/`).
+
+## Modo desarrollador
+
+Los regalos de prueba (todos los guardianes en nivel 90, todas las arenas y todas las skins) **solo** se
+dan con `?dev=1` en la URL (queda recordado en ese navegador; `?dev=0` lo apaga). Un perfil nuevo sin
+ese parámetro juega la campaña real. `?dev=1` también muestra el botón de red "B1" y el generador de
+objetos de prueba de la Sala; `?debug=1` abre solo el panel de red.
 
 ## Estado del proyecto
 
