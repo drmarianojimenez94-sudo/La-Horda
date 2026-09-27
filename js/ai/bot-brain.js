@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/ai/bot-brain.js
-   Cooperación de los bots según su ROL (roleCategory del guardia):
+   Cooperación de los bots según su ROL (roleCategory del guardián):
    - TANQUE: intercepta. Se pone entre el jugador y la amenaza más cercana a él, y se pega al jefe.
    - ASESINO: prioriza élites, subjefes y jefes (y lo que esté por morir).
    - MAGO: busca el grupo más denso para que sus áreas rindan.

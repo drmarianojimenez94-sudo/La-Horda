@@ -32,7 +32,7 @@ const RARITY_META = {
   unico:      {label:"Único",      color:"#b06aff", passives:4} // + 1 pasiva mítica, igual que mítico
 };
 // Tipos de equipamiento: 6 ranuras base (sección "IDENTIDAD DE LOS SLOTS"). El nombre que
-// ve cada guardia puede variar (bastón/grimorio/etc.) vía CLASS_SLOT_LABELS más abajo, pero
+// ve cada guardián puede variar (bastón/grimorio/etc.) vía CLASS_SLOT_LABELS más abajo, pero
 // la ranura interna ("slot") es siempre una de estas 6 -data-driven, nada hardcodeado al
 // Caballero-. Agregar un tipo nuevo es sumar una entrada acá + una fila en RARITY_VALUES.
 const ITEM_TYPES = {
@@ -44,7 +44,7 @@ const ITEM_TYPES = {
   botas:    {label:"Botas",    icon:"👢", slot:"botas",    statLabel:"velocidad de movimiento"}
 };
 const EQUIP_SLOT_TYPES = Object.keys(ITEM_TYPES); // ["arma","escudo","casco","pechera","guantes","botas"]
-// Nombre que ve cada guardia para la ranura "arma" (identidad, sección 3): puramente
+// Nombre que ve cada guardián para la ranura "arma" (identidad, sección 3): puramente
 // cosmético, el slot interno sigue siendo "arma" para todo el motor de items/comparación.
 const CLASS_WEAPON_LABEL = {
   tanque:"Espada", guerrero:"Daga", mago:"Bastón", soporte:"Báculo",
@@ -125,7 +125,7 @@ const PASSIVE_DB_MYTHIC = [
 const SET_DB = {
   lucifer: {
     id:"lucifer", name:"Set de Lucifer", rarity:"legendario",
-    lore:"Forjado en las profundidades del Infierno para un guardia caído que se negó a arrodillarse.",
+    lore:"Forjado en las profundidades del Infierno para un guardián caído que se negó a arrodillarse.",
     pieces:{
       arma:"Espada de Lucifer", escudo:"Escudo de Lucifer", casco:"Casco de Lucifer",
       pechera:"Pechera de Lucifer", guantes:"Guantes de Lucifer", botas:"Botas de Lucifer"
@@ -143,8 +143,8 @@ const SET_DB = {
    LEGENDARIOS Y MÍTICOS DISEÑADOS A MANO (sección 12/13)
    ============================================================
    Cantidad MODERADA a propósito (calidad > cantidad): 1 legendario + 1 mítico realmente
-   distintivo por guardia, cada uno reutilizando una bandera YA cableada en castAbility para
-   la habilidad real de ese guardia (las mismas que ya usan sus propios Talentos especiales),
+   distintivo por guardián, cada uno reutilizando una bandera YA cableada en castAbility para
+   la habilidad real de ese guardián (las mismas que ya usan sus propios Talentos especiales),
    así el modificador es mecánicamente real desde el día uno, no solo un +X% genérico con
    nombre bonito. `skillMods` usa el mismo formato {targetSkill,flag/key,value} que ya consume
    computeTalentMods(). Índices de habilidad: 0/1/2 = las 3 skills en el orden de CLASSES,
@@ -207,10 +207,10 @@ Object.keys(SET_DB.lucifer.pieces).forEach(type=>{
 // slots nuevos -pechera/guantes/botas- como una pasiva más, reusando el mismo balde de
 // passiveSum sin tocar ninguna fórmula de combate existente.
 const SLOT_GUARANTEED_EFFECT = { pechera:"hp_mult", guantes:"atkspeed_mult", botas:"speed_mult" };
-// INVENTARIO DE LA CUENTA (save.stash): 30 espacios compartidos por todos los guardias. Lo equipado
-// no ocupa espacio (vive en el guardia que lo lleva). Ver js/systems/items.js.
+// INVENTARIO DE LA CUENTA (save.stash): 30 espacios compartidos por todos los guardianes. Lo equipado
+// no ocupa espacio (vive en el guardián que lo lleva). Ver js/systems/items.js.
 const INVENTORY_CAPACITY = 30;
-// Valor de venta por rareza. Economía: un guardia cuesta 5.000 de oro (CHAMPION_PRICE_GOLD) y la
+// Valor de venta por rareza. Economía: un guardián cuesta 5.000 de oro (CHAMPION_PRICE_GOLD) y la
 // basura NO debe pagarlo. Común casi nada; Legendario vale, pero venderlo duele (un Legendario de
 // tienda cuesta ~5.000); un Mítico se vende por mucho menos de lo que vale; el Único no se vende.
 const SELL_VALUE = {comun:3, raro:10, muyraro:35, legendario:320, mitico:1100, unico:0};

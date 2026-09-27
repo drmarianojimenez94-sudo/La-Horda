@@ -8,7 +8,7 @@
 /* ============================================================
    SYLVA — Lluvia de la Cazadora (AoE con demora que converge en la Presa). Mismo patrón que
    axiomZones (array propio, se actualiza cada frame, se filtra al vencer) para no tocar nada
-   del resto de guardias.
+   del resto de guardianes.
    ============================================================ */
 function updateSylvaRainZones(dt){
   for(const z of sylvaRainZones){

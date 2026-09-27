@@ -1,8 +1,8 @@
 "use strict";
 /* ============================================================
    js/ui/starter-select.js
-   MODO CAMPAÑA (prueba): "Tu primer guardia". Al entrar por primera vez (o al abrir un enlace de
-   invitación sin guardia propio) cada jugador elige UN guardia de regalo. Los demás quedan
+   MODO CAMPAÑA (prueba): "Tu primer guardián". Al entrar por primera vez (o al abrir un enlace de
+   invitación sin guardián propio) cada jugador elige UN guardián de regalo. Los demás quedan
    bloqueados y se compran en la Tienda (CHAMPION_PRICE_GOLD). Se muestran todos animados,
    quietos y respirando. `onDone` sigue el camino que se había interrumpido (menú o unirse a sala).
    ============================================================ */
@@ -58,7 +58,7 @@ document.getElementById("starter-no-btn").addEventListener("click", ()=>{
   document.getElementById("starter-confirm").classList.add("hidden");
   document.querySelectorAll(".starter-card").forEach(c=>c.classList.remove("sel"));
 });
-// El guardia seleccionado siempre tiene que ser uno PROPIO (si no, el primero que tenga).
+// El guardián seleccionado siempre tiene que ser uno PROPIO (si no, el primero que tenga).
 function ensureOwnedSelection(){
   if(save.champions[selectedClass] && save.champions[selectedClass].unlocked) return true;
   const own = Object.keys(CLASSES).find(k=>save.champions[k] && save.champions[k].unlocked);

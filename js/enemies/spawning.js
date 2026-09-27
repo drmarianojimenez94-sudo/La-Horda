@@ -37,7 +37,7 @@ function spawnPoolForLaberinto(level){
 }
 // Ruinas del Bosque: roster real (Duendes/Hadas -> Bestias/Cù-Sìth -> Ents/Dama del Bosque).
 // El nivel 9 no aparece acá: ahí saltan los 4 Dobladores juntos (ver update()), y mientras
-// estén vivos se corta la aparición normal, igual que con cualquier guardia/subjefe.
+// estén vivos se corta la aparición normal, igual que con cualquier guardián/subjefe.
 function spawnPoolForBosque(level){
   const pool = [{t:"duende_bosque", w:10}, {t:"enjambre_hadas", w:6}];
   if(level >= 3) pool.push({t:"bestia_bosque", w:5});
@@ -120,7 +120,7 @@ function spawnEnemy(type, atBoss, champion){
   enemies.push(e);
   if(typeof codexNoteSeen==="function") codexNoteSeen(type); // Códice: criatura descubierta
   if(arenaHas("placeSpawn")) arenaHook("placeSpawn", e, atBoss, champion); // puertas/túneles propios de la arena
-  // Un guardia (subjefe) detiene la aparición normal de monstruos mientras esté vivo,
+  // Un guardián (subjefe) detiene la aparición normal de monstruos mientras esté vivo,
   // salvo que se marque explícitamente como "caótico" (permite que sigan apareciendo).
   if(champion && !e.allowChaosSpawn) activeChampion = e;
   return e;

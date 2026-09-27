@@ -14,7 +14,7 @@
    descargan: a los héroes adentro les pega poco y los frena; a los enemigos les pega fuerte y
    los aturde. La Cadena Eléctrica de la anguila salta más lejos si el primer golpeado está
    parado en uno. Atraer a la horda al charco antes de la descarga = jugar con el agua.
-   Red: el invitado aplica las corrientes a SU guardia (predicción) y el anfitrión no se lo
+   Red: el invitado aplica las corrientes a SU guardián (predicción) y el anfitrión no se lo
    corrige; enemigos, bots y chorros los mueve el anfitrión.
    Arte: procedural (sin sprites de corriente todavía, ver LA_HORDA_MISSING_ASSETS.md).
    ============================================================ */
@@ -165,7 +165,7 @@ function acuDischarge(z){
   if(hitE >= 3) floatText(z.x, z.y-60, `¡Descarga! ×${hitE}`, "crit");
 }
 function acuGuestUpdate(dt){
-  // predicción: el invitado arrastra a su propio guardia con las mismas corrientes
+  // predicción: el invitado arrastra a su propio guardián con las mismas corrientes
   if(player && player.alive && !player.duelActive && !(player.stunTimer>0)) acuPush(player, 1, dt);
   if(acuaCurrent && acuaCurrent.active && player && player.alive){
     const push = 34*(1+0.09*arenaRuleStacks());

@@ -7,7 +7,7 @@
                   + protección suave contra la mala suerte (oculta)
    Categorías: común (blanco) · raro (azul) · muy raro (amarillo) · legendario (naranja) ·
    mítico (rojo) · SET (verde, sinergia entre piezas) · ÚNICO (violeta, jackpot: extraordinariamente raro).
-   El botín es CRUZADO: puede caer un objeto de cualquier guardia (va al inventario de la cuenta).
+   El botín es CRUZADO: puede caer un objeto de cualquier guardián (va al inventario de la cuenta).
    >>> Todo el balance del botín se toca acá.
    ============================================================ */
 const LOOT_TIERS = ["comun","raro","muyraro","legendario","mitico","set","unico"];
@@ -60,9 +60,9 @@ const LOOT_PITY = {
   unico:     {step:0.010, cap:3.00}
 };
 // Qué clase de objeto sale cuando la categoría es Legendario / Mítico / Único.
-const LEGEND_SOURCE = {named:0.62, champion:0.13, procedural:0.25}; // con nombre (receta) · de un guardia · procedural con nombre
+const LEGEND_SOURCE = {named:0.62, champion:0.13, procedural:0.25}; // con nombre (receta) · de un guardián · procedural con nombre
 const MYTHIC_SOURCE = {recipe:0.70, champion:0.30};
-// Botín cruzado: si sale un objeto propio de un guardia, es del que estás jugando con esta probabilidad
+// Botín cruzado: si sale un objeto propio de un guardián, es del que estás jugando con esta probabilidad
 // (si no, de cualquier otro: colección, venta, futuro intercambio).
 const CROSS_DROP_OWN_CHAMP = 0.5;
 // Legendarios con nombre que te faltan para una receta que ya empezaste pesan más (objetivo de farmeo).
@@ -83,6 +83,6 @@ const SET_ARENA_WEIGHTS = {
 // Sets en los que ya tenés piezas pesan más (se puede perseguir uno), y las piezas que te
 // faltan pesan más que las repetidas (los duplicados existen, pero no dominan).
 const SET_OWNED_BIAS = 1.7, SET_MISSING_PIECE_BIAS = 2.2;
-// Sets de guardia (js/data/champion-sets.js): el del guardia que jugás pesa mucho más; los de
-// otros guardias también pueden caer (botín cruzado), con poco peso.
-const SET_CHAMPION_BIAS = 14, SET_OTHER_CHAMP_W = 0.35; // 14: ~45% de las piezas de set son del set de TU guardia (lootsim2: set completo en ~100-150 victorias finales)
+// Sets de guardián (js/data/champion-sets.js): el del guardián que jugás pesa mucho más; los de
+// otros guardianes también pueden caer (botín cruzado), con poco peso.
+const SET_CHAMPION_BIAS = 14, SET_OTHER_CHAMP_W = 0.35; // 14: ~45% de las piezas de set son del set de TU guardián (lootsim2: set completo en ~100-150 victorias finales)

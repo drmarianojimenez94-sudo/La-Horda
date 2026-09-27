@@ -117,7 +117,7 @@ function itemDamageMult(h, e, opts){
   if(!h || !h.classKey) return 1;
   let m = 1, p;
   // Daño según vida faltante (Sangre del Berserker 2p, Corazón Carmesí): antes SOLO funcionaba con
-  // el Segador (lo lee su pasiva). Para el resto de los guardias se aplica acá, con la misma fórmula.
+  // el Segador (lo lee su pasiva). Para el resto de los guardianes se aplica acá, con la misma fórmula.
   if(h.classKey!=="segador" && h.maxHp){ const b = passiveSum(h.classKey, "missinghp_dmg_bonus"); if(b) m *= 1 + b*Math.max(0, 1 - h.hp/h.maxHp); }
   if((p = _procPower(h, "burn_vs")) && e.burnTimer>0) m *= 1 + 0.25*p;
   if((p = _procPower(h, "execute_edge")) && e.rank!=="jefe" && e.rank!=="subjefe" && e.hp < e.maxHp*0.2) m *= 1 + 0.6*p;

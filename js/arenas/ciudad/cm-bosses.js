@@ -192,7 +192,7 @@ function cmAITramoyista(e, dt, tgt, dist){
     }
     return true;
   }
-  // decorado sobre la marca del Maestro (o sobre los guardias)
+  // decorado sobre la marca del Maestro (o sobre los guardianes)
   if(e._dropOn || e.dropCd <= 0){
     const targets = e._dropOn ? [heroes[e._dropOn - 1]].filter(Boolean) : heroes.filter(h=>h.alive).slice(0, 3);
     e._dropOn = 0; e.dropCd = cmRand(C.dropCd[0], C.dropCd[1])*rage;

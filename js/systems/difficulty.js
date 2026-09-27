@@ -2,19 +2,19 @@
 /* ============================================================
    js/systems/difficulty.js
    Dificultad de la partida. Antes los enemigos solo sumaban hasta +120% de vida según el nivel
-   de los guardias, mientras el daño de un guardia crece ~5x (nivel 30) y hasta ~14x con
-   maestrías: con guardias subidos el juego se volvía trivial (y con nivel bajo, imposible).
+   de los guardianes, mientras el daño de un guardián crece ~5x (nivel 30) y hasta ~14x con
+   maestrías: con guardianes subidos el juego se volvía trivial (y con nivel bajo, imposible).
    Ahora la horda sigue el PODER REAL del equipo (daño y vida de los 4 héroes que entran, con
    sus maestrías), sin alcanzarlo del todo: subir de nivel sigue sintiéndose, pero la arena
    sigue siendo un desafío. Se calcula una sola vez al empezar la partida.
    >>> Perillas generales de balance: DIFF.
    ============================================================ */
 const DIFF = {
-  hpFollow: 0.4,    // cuánto del poder ofensivo del equipo se traslada a la vida enemiga (menos = el nivel del guardia pesa más;
+  hpFollow: 0.4,    // cuánto del poder ofensivo del equipo se traslada a la vida enemiga (menos = el nivel del guardián pesa más;
                     // era 0.66: con 0.4, en campañas de prueba el nivel 30 gana ~52% vs ~40% y el nivel 10 no cambia)
   dmgFollow: 0.45,  // cuánto de la vida del equipo se traslada al daño enemigo
-  // Dificultad general: sube con el nivel promedio de los guardias (de x1.0 en nivel 1 hasta
-  // el valor indicado desde el nivel 10). Con guardias nuevos no se castiga de más.
+  // Dificultad general: sube con el nivel promedio de los guardianes (de x1.0 en nivel 1 hasta
+  // el valor indicado desde el nivel 10). Con guardianes nuevos no se castiga de más.
   enemyDmg: 1.22,   // +22% de daño enemigo
   enemyHp: 1.12,    // +12% de vida enemiga
   spawn: 0.86,      // intervalo entre apariciones (menor = más enemigos)

@@ -10,7 +10,7 @@
      myth_dawn    Alba Eterna          — cada curación deja suelo consagrado.
      myth_echo    Eco del Vacío        — 25% de repetir la habilidad al 60%.
      myth_eclipse Eclipse              — críticos marcan; los marcados bajo 25% se ejecutan.
-   Y los ÚNICOS (UNIQUE_POWERS): apariencia + VFX + comportamiento de una habilidad del guardia.
+   Y los ÚNICOS (UNIQUE_POWERS): apariencia + VFX + comportamiento de una habilidad del guardián.
    Solo corre en el anfitrión (la simulación); los invitados ven los efectos por el estado replicado.
    Todos tienen tope o enfriamiento interno.
    ============================================================ */
@@ -219,7 +219,7 @@ function drawMythicGrounds(){
    ÚNICOS — cada uno cambia apariencia, VFX y una habilidad. Lectura rápida por héroe.
    ============================================================ */
 function heroUniqueKey(h){ return h && h.classKey ? heroUnique(h.classKey) : null; }
-// Aura del Único alrededor del guardia (la dibuja entities.js debajo del cuerpo).
+// Aura del Único alrededor del guardián (la dibuja entities.js debajo del cuerpo).
 function drawUniqueAura(h){
   const u = heroUniqueKey(h); if(!u) return;
   const rgb = UNIQUE_POWERS[u].aura;

@@ -174,7 +174,7 @@ function triggerBasic(caster){
     // Bug corregido: antes SOLO el jugador atacaba en la Arena Divina (los 3 aliados no
     // hacían nada salvo caminar) porque acá abajo, para cualquier otro caster, se buscaba
     // target en `enemies` -que en la Arena Divina siempre está vacío-. Ahora cualquiera de
-    // tu equipo (o del rival) busca objetivo entre guardias/minions/estructuras hostiles.
+    // tu equipo (o del rival) busca objetivo entre guardianes/minions/estructuras hostiles.
     const mySide = caster.isDivineFoe ? "enemy" : "player";
     const hit = divinaHostiles(mySide, caster.x, caster.y, cls.basicRange + 40);
     if(!hit) return;
@@ -316,7 +316,7 @@ function castAbility(caster, sk, isUlt, idx){
   // habilidad sin tocar los puntos permanentes invertidos -por eso esto usa una copia
   // (effectiveMasteryFor), nunca masteryOf() a secas, que sigue siendo lo que ve la UI-.
   const mastery = effectiveMasteryFor(caster.classKey, skillKey);
-  // anticipación: destello del color del guardia al lanzar + firma de nivel (fx-contrast.js)
+  // anticipación: destello del color del guardián al lanzar + firma de nivel (fx-contrast.js)
   vfxCastFlash(caster.x, caster.y, fxHeroRgb(caster), isUlt, caster.classKey ? allocLevel(mastery) : 0);
   // Talentos de ESTA habilidad puntual (ver sección TALENTOS Y MAESTRÍAS más arriba): powerMult
   // se suma al mismo escalado que ya usa la maestría (afecta daño Y curación por igual, tal
@@ -335,7 +335,7 @@ function castAbility(caster, sk, isUlt, idx){
   const dmgElem = sk.element==="fire" ? dmg0*arenaMods().fireDmgMult : sk.element==="ice" ? dmg0*arenaMods().iceDmgMult : dmg0;
   const dmg = dmgElem * (arenaMods().abilityDmgMult!==undefined ? arenaMods().abilityDmgMult : 1);
   // Activación: la ulti se anuncia en grande; las habilidades normales ya no tapan la pantalla
-  // con su nombre (el botón y el efecto lo comunican), solo un anillo del color del guardia.
+  // con su nombre (el botón y el efecto lo comunican), solo un anillo del color del guardián.
   if(caster===player){
     if(isUlt){ showBanner("★ "+sk.name); flashScreen(0.22, hexToRgb(caster.cls.glow)); }
     playSfx(isUlt?"ult":"cast");
@@ -361,7 +361,7 @@ function castAbility(caster, sk, isUlt, idx){
       erenCast(caster, sk, isUlt, dmg, AREA, DUR, POWER); break;
 
     case "placeholder": {
-      // Se mantiene por si algún futuro guardia necesita un slot vacío temporal (ya no lo usa
+      // Se mantiene por si algún futuro guardián necesita un slot vacío temporal (ya no lo usa
       // Axiom, que tiene sus 4 habilidades reales más abajo).
       if(caster===player) floatText(caster.x, caster.y-50, "En desarrollo", null);
       break;

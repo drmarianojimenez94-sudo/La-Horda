@@ -6,10 +6,10 @@
    tiene ahora tres capas:
      1) una "sombra de contraste" oscura y suave debajo (sin ella, el brillo aditivo se lava en
         pisos claros: nieve de la Gélida, lava de la Infernal, esporas del Micelial),
-     2) el color propio (del guardia / del elemento),
+     2) el color propio (del guardián / del elemento),
      3) un núcleo o filo casi blanco (lo que el ojo agarra primero).
    Más dos momentos que faltaban:
-     - ANTICIPACIÓN: al lanzar, un destello corto en el guardia con su color (se ve quién lanzó),
+     - ANTICIPACIÓN: al lanzar, un destello corto en el guardián con su color (se ve quién lanzó),
      - IMPACTO: al pegar una habilidad, una estrella de luz de 1–2 cuadros sobre el enemigo.
    En red viaja el destello de lanzamiento (uno por habilidad); la estrella de impacto se dibuja
    donde se calcula el daño (puede haber decenas por cuadro y taparía eventos importantes).
@@ -92,7 +92,7 @@ function _fxCastTier(f, q, a){
   if(L >= 5){ ctx.fillStyle = "#ffffff";
     for(let i=0;i<10;i++){ const an = i*0.628 + 0.3, ph = (q*1.3 + i*0.09) % 1, sx = x + Math.cos(an)*R*0.8, sy = y + 4 + Math.sin(an)*R*0.34 - ph*70;
       ctx.globalAlpha = a*(1 - ph); ctx.fillRect(sx - 1.5, sy - 4, 3, 8); } }
-  // Nv.7: columna de luz del color del guardia
+  // Nv.7: columna de luz del color del guardián
   if(L >= 7){ const H = f.ult ? 190 : 140, W = R*0.55;
     const g = ctx.createLinearGradient(0, y - H, 0, y); g.addColorStop(0, `rgba(${f.rgb},0)`); g.addColorStop(0.7, `rgba(${f.rgb},${0.45*a})`); g.addColorStop(1, `rgba(255,255,255,${0.7*a})`);
     ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(x - W/2, y - H, W, H);

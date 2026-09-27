@@ -1,14 +1,14 @@
 "use strict";
 /* ============================================================
    js/ui/title-scene.js
-   Pantalla de título: un ejército de héroes pixelados (el arte real de los 10 guardias, en
+   Pantalla de título: un ejército de héroes pixelados (el arte real de los 10 guardianes, en
    tres filas de profundidad) marchando hacia la horda, que se asoma desde la oscuridad con
    ojos rojos. Brasas que suben y resplandor de fuego. Solo se anima mientras el título está a
    la vista (~30 fps) y se ajusta al tamaño/densidad de la pantalla.
    ============================================================ */
 const TITLE_HERO_KEYS = ["guerrero","tanque","mago","soporte","segador","axiom","profeta","musashi","cazadora","nigromante","libertador","eren"];
 let _titleRaf = null, _titleLast = 0, _titleCast = null, _titleEmbers = [], _titleEyes = [];
-// Cada set de arte viene a otra escala: se mide la altura real (píxeles opacos) de cada guardia
+// Cada set de arte viene a otra escala: se mide la altura real (píxeles opacos) de cada guardián
 // una vez cargado su arte y se normaliza, para que el ejército se vea parejo.
 const _titleNorm = {}; let _titleNormAt = 0;
 
@@ -34,7 +34,7 @@ function _titleSetup(cvs){
   if(cvs.width !== Math.round(w*dpr) || cvs.height !== Math.round(h*dpr)){ cvs.width = Math.round(w*dpr); cvs.height = Math.round(h*dpr); _titleCast = null; }
   if(_titleCast) return true;
   const W = cvs.width, H = cvs.height, unit = Math.min(W/844, H/390);
-  // tres filas: atrás (chicas, oscuras), medio y adelante (grandes). Mezcla de guardias.
+  // tres filas: atrás (chicas, oscuras), medio y adelante (grandes). Mezcla de guardianes.
   const rows = [
     {n:12, y:0.55, s:0.95, a:0.55, spd:10},
     {n:10, y:0.67, s:1.3,  a:0.8,  spd:16},
@@ -84,7 +84,7 @@ function _titleFrame(now){
   }
   // ejército de héroes marchando (caminata en el lugar + avance lento que da la vuelta); las
   // filas de atrás, más chicas y más transparentes, dan profundidad.
-  // mientras dice "Cargando…" no se dibuja ningún guardia: así nunca aparece un arte a medio
+  // mientras dice "Cargando…" no se dibuja ningún guardián: así nunca aparece un arte a medio
   // cargar (o el respaldo viejo); el ejército entra recién con el arte definitivo.
   const contBtn = document.getElementById("title-continue-btn");
   const loading = !!(contBtn && contBtn.disabled && /Cargando/.test(contBtn.textContent));

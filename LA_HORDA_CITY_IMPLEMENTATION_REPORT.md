@@ -178,11 +178,16 @@ universal, sin crafteo de Únicos, sin pay-to-win, sin placeholders feos. Los Cu
 Mago Gélido, el Guardián Élfico, el Guardián del Laberinto y el Hechicero: El Presentador no es un Guardián.
 
 ## 11. Pedido adicional (al terminar la prueba)
-- **"Guardias" en vez de "campeones"** en todo el texto visible del juego (menús, Códice, tienda, HUD, guía del
+- **"Guardianes" en vez de "campeones"** en todo el texto visible del juego (menús, Códice, tienda, HUD, guía del
   Hechicero, carteles). Las claves internas (`"campeones"`, ids de botones, campos del guardado) no cambian, así
-  que ningún guardado ni enlace se rompe. Los Cuatro Guardianes siguen llamándose Guardianes.
-- **Todas las arenas abiertas** (las 9 jugables + la Arena Divina) y **todos los guardias liberados en nivel 90**,
+  que ningún guardado ni enlace se rompe. (Primero se había usado "guardias"; se corrigió a "guardianes" a pedido.)
+  Donde el lore nombra a la vez a los héroes y a los Cuatro Guardianes, a estos se los llama "antiguos Guardianes".
+- **Todas las arenas abiertas** (las 9 jugables + la Arena Divina) y **todos los guardianes liberados en nivel 90**,
   una sola vez por perfil (`save.testUnlock90V1`, `applyTestUnlock90` en `js/storage/save.js`). Se suman los
   puntos de talento de esos niveles (1 por nivel, igual que al subir jugando); no se tocan oro, objetos ni lo
   completado. Las pruebas automáticas de campaña lo saltean (`window.__campaignMode`).
+- **Todas las skins compradas y puestas**, una sola vez por perfil (`save.testSkinsV1`, `applyTestSkins` en
+  `js/storage/save.js`): como una skin es su set completo, se agregan como compradas las piezas que falten de los 9
+  sets con arte y se equipan en su guardián (igual que al comprarla en la Tienda). No cuesta oro y las piezas
+  equipadas no ocupan lugar en el inventario.
 - La arena elegida por defecto en un perfil nuevo es la Ciudad Maldita (Arena 01).

@@ -6,7 +6,7 @@
    Una ciudad todavía viva: los CIVILES se esconden en casas y callejones; hay que encontrarlos,
    RESCATARLOS (acción contextual) y escoltarlos a un REFUGIO o a la PUERTA DE EVACUACIÓN mientras
    la Horda saquea, secuestra y derriba lo que queda en pie. Los civiles son inmunes a los ataques
-   de los guardias (no son enemigos: viven en el estado de la arena) y pueden morir de forma justa
+   de los guardianes (no son enemigos: viven en el estado de la arena) y pueden morir de forma justa
    (ataques con aviso, secuestros que se pueden interrumpir).
 
    Lógica: cm-map.js (geometría, colisión, navegación, apariciones) · cm-civilians.js (civiles,
@@ -103,7 +103,7 @@ const CM_CFG = {
 };
 
 // ---------------- fichas de enemigo (se suman a ENEMY_BASE) ----------------
-// Escala: guardia 1.0 (~65 u de alto). hMul = alto dibujado / radio (cm-arena.js).
+// Escala: guardián 1.0 (~65 u de alto). hMul = alto dibujado / radio (cm-arena.js).
 Object.assign(ENEMY_BASE, {
   cm_saqueador: {name:"Saqueador Maldito",       rank:"normal",   hp:38,  dmg:10, speed:92,  radius:20, xp:8,  gold:2,  scale:3.2, color:"#8a3030", ranged:false},
   cm_perro:     {name:"Perro del Albañal",       rank:"normal",   hp:22,  dmg:7,  speed:170, radius:18, xp:6,  gold:1,  scale:2.8, color:"#6a3a3a", ranged:false},

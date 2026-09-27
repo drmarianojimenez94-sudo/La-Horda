@@ -1,10 +1,10 @@
 "use strict";
 /* ============================================================
    js/data/champion-sets.js
-   UN SET PROPIO POR GUARDIA (verde, 4 piezas, solo lo puede equipar ese guardia).
+   UN SET PROPIO POR GUARDIÁN (verde, 4 piezas, solo lo puede equipar ese guardián).
    Progresión: 2 piezas = bonus útil · 3 piezas = interacción con su kit · 4 piezas (completo) =
-   cambia el loop del guardia. El comportamiento vive en js/systems/champion-sets.js.
-   Caen en cualquier arena (el botín es cruzado); el set del guardia que estás jugando pesa más
+   cambia el loop del guardián. El comportamiento vive en js/systems/champion-sets.js.
+   Caen en cualquier arena (el botín es cruzado); el set del guardián que estás jugando pesa más
    (ver SET_CHAMPION_BIAS en js/systems/loot.js).
    ============================================================ */
 const CHAMPION_SETS = {
@@ -115,6 +115,6 @@ const CHAMPION_SETS = {
     });
   }
 })();
-// Guardia dueño de un set (o null si es un set universal).
+// Guardián dueño de un set (o null si es un set universal).
 function setChampionAffinity(setId){ const S = SET_DB[setId]; return S && S.champion || null; }
 function championSetOf(classKey){ for(const id in SET_DB) if(SET_DB[id].champion===classKey) return id; return null; }

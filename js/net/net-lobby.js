@@ -45,7 +45,7 @@ function netRenderLobbyBar(){
         <div class="net-hint">Creá una sala para invitar hasta 3 amigos. Si no invitás a nadie, jugás con bots como siempre.</div>
         <div class="net-join-box">
           <div class="net-join-title">🔑 UNIRSE CON CÓDIGO</div>
-          <div class="net-hint">¿Un amigo creó una sala? Escribí su código de 6 letras (o pegá su enlace): entrás a SU arena con el guardia que elegiste.</div>
+          <div class="net-hint">¿Un amigo creó una sala? Escribí su código de 6 letras (o pegá su enlace): entrás a SU arena con el guardián que elegiste.</div>
           <div class="net-row"><input id="net-join-code" class="multi-input net-code-input" placeholder="Código (ej. QKL58J)" maxlength="200" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters">
             <button class="btn small" id="net-paste-btn">📋 Pegar</button><button class="btn small net-join-go" id="net-join-btn">UNIRSE</button></div>
         </div>
@@ -65,7 +65,7 @@ function netRenderLobbyBar(){
       <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots.</div>
       <div class="net-link">${url}</div>
       ${netChampStripHTML()}
-      ${dup.length ? `<div class="net-err">Hay guardias repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
+      ${dup.length ? `<div class="net-err">Hay guardianes repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
       ${netLobby.lastError ? `<div class="net-err">${netLobby.lastError}</div>` : ""}`;
   } else {
     const me = net.room.slots[net.slot] || {};
@@ -74,10 +74,10 @@ function netRenderLobbyBar(){
     bar._next = `<div class="net-row">${nameInput}<span class="net-code">SALA <b>${net.code}</b> · Anfitrión: ${(net.room.slots[0]||{}).name||"?"}</span>
         <button class="btn small ${me.ready?"ready-on":""}" id="net-ready-btn" ${hostBusy?"disabled":""}>${me.ready ? "✔ LISTO" : "Marcar LISTO"}</button>
         <button class="btn secondary small" id="net-leave-btn">Salir de la sala</button></div>
-      <div class="net-hint">Elegí tu guardia y prepará tu equipo. Arena: <b>${(ARENA_MODS[currentArena]||{}).label||""}</b> (la elige el anfitrión).</div>
+      <div class="net-hint">Elegí tu guardián y prepará tu equipo. Arena: <b>${(ARENA_MODS[currentArena]||{}).label||""}</b> (la elige el anfitrión).</div>
       ${hostBusy ? `<div class="net-wait-host">El anfitrión todavía está en la partida/resultados: cuando vuelva a la sala vas a poder marcar LISTO.</div>` : ""}
       ${netChampStripHTML()}
-      ${dup.length ? `<div class="net-err">Tu guardia ya lo usa otro jugador: elegí otro.</div>` : ""}`;
+      ${dup.length ? `<div class="net-err">Tu guardián ya lo usa otro jugador: elegí otro.</div>` : ""}`;
   }
   if(!_netCommitHTML(bar, "barHTML")) return; // idéntica: los botones ya tienen sus eventos
   const ni = document.getElementById("net-name-input");
@@ -110,7 +110,7 @@ function netRenderLobbyBar(){
   const rd = document.getElementById("net-ready-btn");
   if(rd) rd.addEventListener("click", ()=>{
     const me = net.room.slots[net.slot]||{};
-    if(!me.ready && netDuplicateChamps().includes(selectedClass)){ showNetToast("Ese guardia ya lo usa otro jugador: elegí otro."); return; }
+    if(!me.ready && netDuplicateChamps().includes(selectedClass)){ showNetToast("Ese guardián ya lo usa otro jugador: elegí otro."); return; }
     netSendLoadout(true); netSend({t:"update", ready:!me.ready});
   });
   bar.querySelectorAll("[data-net-champ]").forEach(b=> b.addEventListener("click", ()=> netPickChamp(b.getAttribute("data-net-champ"))));
@@ -144,8 +144,8 @@ function _netCommitHTML(el, key){
   if(keep){ const n = document.getElementById(keep.id); if(n){ n.value = keep.v; try{ n.focus({preventScroll:true}); n.setSelectionRange(keep.s, keep.e); }catch(e){} } }
   return true;
 }
-// Elegir guardia DENTRO de la sala (anfitrión e invitados): los que usa otro jugador salen
-// deshabilitados. Cambiar de guardia te saca el LISTO (tenés que prepararte de nuevo).
+// Elegir guardián DENTRO de la sala (anfitrión e invitados): los que usa otro jugador salen
+// deshabilitados. Cambiar de guardián te saca el LISTO (tenés que prepararte de nuevo).
 function netTakenChamps(){
   const t = new Set();
   if(net.room) net.room.slots.forEach((s,i)=>{ if(s && s.connected && i!==net.slot) t.add(s.champ); });
@@ -157,11 +157,11 @@ function netChampStripHTML(){
     const c = CLASSES[k], lv = save.champions[k].level;
     return `<button class="net-champ ${k===selectedClass?"sel":""}" data-net-champ="${k}" ${taken.has(k)&&k!==selectedClass?"disabled":""} title="${c.name}">${c.icon||""} ${c.name} · ${lv}</button>`;
   }).join("");
-  return `<div class="net-hint">Tu guardia:</div><div class="net-champs">${btns}</div>`;
+  return `<div class="net-hint">Tu guardián:</div><div class="net-champs">${btns}</div>`;
 }
 function netPickChamp(k){
   if(!CLASSES[k] || !save.champions[k] || k===selectedClass) return;
-  if(netTakenChamps().has(k)){ showNetToast("Ese guardia ya lo usa otro jugador."); return; }
+  if(netTakenChamps().has(k)){ showNetToast("Ese guardián ya lo usa otro jugador."); return; }
   selectedClass = k; netRememberChamp(k);
   if(net.role==="guest"){ netSend({t:"update", ready:false}); netSendLoadout(true); }
   else netSend({t:"update", champ:k, level:save.champions[k].level});
@@ -206,7 +206,7 @@ function netRenderLobbySlots(){
   }
   startChampAnimLoop();
 }
-// El invitado le manda al anfitrión los datos de su guardia (solo lo equipado) cada vez que
+// El invitado le manda al anfitrión los datos de su guardián (solo lo equipado) cada vez que
 // cambian en la pre-sala: así entra a la partida con ESE equipo.
 // Solo se manda si CAMBIÓ algo (o si se pide `now`): antes cada render de la sala mandaba el loadout,
 // el servidor reenviaba la sala a todos, eso volvía a renderizar... un bucle de ~4 veces por segundo
@@ -357,7 +357,7 @@ function showNetToast(text){
     try{ startMusic(); }catch(e){}
     const inp = document.querySelector("#title-join-name input");
     if(inp) netSetPlayerName(inp.value);
-    // modo campaña: un invitado nuevo también elige primero su guardia de regalo, y recién ahí entra
+    // modo campaña: un invitado nuevo también elige primero su guardián de regalo, y recién ahí entra
     if(typeof needsStarterChampion==="function" && needsStarterChampion()){ openStarterSelect(()=>{ setState("title"); doJoin(); }); return; }
     doJoin();
   });
@@ -396,7 +396,7 @@ function netRenderModeJoin(){
     const v = inp.value;
     const pre = netValidateCode(v); if(pre.err){ _netSetJoinStatus(pre.err, true); inp.focus(); return; }
     inp.value = pre.code;
-    // modo campaña: si todavía no eligió su guardia de regalo, primero eso y después entra
+    // modo campaña: si todavía no eligió su guardián de regalo, primero eso y después entra
     if(typeof needsStarterChampion==="function" && needsStarterChampion()){
       openStarterSelect(()=>{ setState("modeselect"); netRenderModeJoin(); netJoinWithCode(pre.code, btn, "UNIRSE"); });
       return;
@@ -427,7 +427,7 @@ function netIsGuestPlaying(){ return !!(netMatch && netMatch.role==="guest" && !
    solo a los 20 s en una derrota) y la sala pasa a "esperando": los invitados que siguen en los
    resultados vuelven solos a los pocos segundos. Misma sala, mismo código, misma arena, mismos
    jugadores; LISTO vuelve a NO LISTO (lo resetea el servidor) y cada uno puede cambiar de
-   guardia, equipo y talentos antes de marcar LISTO otra vez. */
+   guardián, equipo y talentos antes de marcar LISTO otra vez. */
 function netEndLabels(){
   const online = !!(netMatch || netInRoom());
   const back = netLobby.roomGone ? "Volver al menú" : "VOLVER AL LOBBY";
@@ -469,7 +469,7 @@ function netOnEndScreen(victory){
 }
 
 /* ---------------- UNIRSE pegando el enlace o el código (desde la Sala) ----------------
-   La única entrada al cooperativo es la Arena (modo campaña): Arena -> elegir arena -> guardia ->
+   La única entrada al cooperativo es la Arena (modo campaña): Arena -> elegir arena -> guardián ->
    Sala. Ahí se crea la sala online o se pega el enlace/código de la sala de un amigo (también
    sigue andando abrir directamente el enlace de invitación: ver netSetupJoinFromUrl). */
 // Acepta el enlace completo (…index.html?room=QKL58J[&server=…]), "SALA QKL58J" o el código solo.
@@ -519,7 +519,7 @@ async function netJoinWithCode(raw, btn, label){
   if(inv.server) net.serverOverride = inv.server;
   if(!netAvailable()){ _netSetJoinStatus("El modo online no está configurado en esta versión.", true); return false; }
   if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
-  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ _netSetJoinStatus("Elegí primero un guardia tuyo.", true); return false; }
+  if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ _netSetJoinStatus("Elegí primero un guardián tuyo.", true); return false; }
   if(netInRoom()) netLeaveRoom();
   netLobby.lastError = "";
   _netJoinBusy = true;
@@ -536,7 +536,7 @@ async function netJoinFromInput(){
   const ni = document.getElementById("net-name-input"); if(ni) netSetPlayerName(ni.value);
   await netJoinWithCode((document.getElementById("net-join-code")||{}).value, document.getElementById("net-join-btn"), "UNIRSE");
 }
-// El guardia elegido la última vez (en la selección o la sala) queda recordado.
+// El guardián elegido la última vez (en la selección o la sala) queda recordado.
 // Se llama desde main.js después de loadSave().
 function netRestoreLastChamp(){
   try{

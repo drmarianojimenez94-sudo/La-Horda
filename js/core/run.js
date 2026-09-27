@@ -46,7 +46,7 @@ function startDivinaExploration(){
   buildDivinaStructures();
 }
 // Bots que acompañan al jugador: uno de cada uno de los otros 3 roles (Tanque/Asesino/Mago/
-// Soporte, el que no sea el tuyo), sorteando si hay más de un guardia en un mismo rol.
+// Soporte, el que no sea el tuyo), sorteando si hay más de un guardián en un mismo rol.
 let lobbyAllies = null;
 function pickLobbyAllies(mine){
   const ROLE_ORDER = ["tanque","asesino","mago","soporte"];
@@ -100,13 +100,13 @@ function startRun(fromLevel){
   player = makePlayer();
   // Talentos de crítico (sección 4/32): a diferencia de dmg/cd/def/lifesteal -que se consultan
   // en caliente vía passiveSum en cada fórmula-, crítico vive en runStats (igual que los buffs
-  // de nivel de la Horda), así que el bonus permanente del guardia se suma una sola vez acá,
+  // de nivel de la Horda), así que el bonus permanente del guardián se suma una sola vez acá,
   // al arrancar la partida.
   runStats.critChance += passiveSum(player.classKey, "crit_chance_add");
   runStats.critMult = (runStats.critMult||1.8) + passiveSum(player.classKey, "crit_mult_add");
-  // Los otros tres guardias entran a la arena junto al jugador (bots aliados por ahora).
+  // Los otros tres guardianes entran a la arena junto al jugador (bots aliados por ahora).
   // Se arma SIEMPRE por rol: un aliado de cada uno de los otros 3 roles (Tanque/Asesino/Mago/
-  // Soporte, el que no sea el tuyo), sorteando al azar si en el futuro hay más de un guardia
+  // Soporte, el que no sea el tuyo), sorteando al azar si en el futuro hay más de un guardián
   // dentro de un mismo rol (como pasa ahora entre Tanque y Segador Olvidado, ambos "tanque").
   allies = [];
   // El equipo lo arma la Sala (lobby) antes de entrar; si se arranca por otro camino (reintentar,
@@ -115,7 +115,7 @@ function startRun(fromLevel){
   others.forEach((k,i)=>{
     autoEquipBest(k); // el bot se pone lo mejor que tenga disponible de partidas anteriores
     const ang = (i/others.length)*Math.PI*2 + Math.PI/4;
-    // B1: los guardias de amigos conectados entran como humanos (sin los ajustes de bot)
+    // B1: los guardianes de amigos conectados entran como humanos (sin los ajustes de bot)
     allies.push(makeHero(k, !netIsHumanChamp(k), Math.cos(ang)*70, Math.sin(ang)*70));
   });
   heroes = [player, ...allies];

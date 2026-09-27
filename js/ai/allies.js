@@ -5,7 +5,7 @@
    ============================================================ */
 
 /* ============================================================
-   ALIADOS CONTROLADOS POR IA (los otros 3 guardias)
+   ALIADOS CONTROLADOS POR IA (los otros 3 guardianes)
    ============================================================ */
 function botTryAbilities(h){
   botMaybeEmergency(h); // curación de emergencia por debajo del 30% (pacing.js)
