@@ -537,14 +537,24 @@ function drawSkeletonMinion(sk){
   const isMage = sk.type==="mage";
   const SP = CHAMP_PACK.nigro_skel;
   if(SP && SP.ready){
+    if(sk._ph===undefined) sk._ph = (++_nigroPhaseSeq*317) % 1000;
     const pre = isMage ? "mage_" : "warrior_";
     const arr = sk.attackAnim>0 ? SP.sets[pre+"atk"] : sk.moving ? SP.sets[pre+"walk"] : SP.sets[pre+"idle"];
-    const v = arr[Math.floor(animNow/180) % arr.length];
+    // cada esqueleto con su propio paso (antes marchaban todos al mismo compás)
+    const v = arr[Math.floor((animNow + sk._ph)/180) % arr.length];
     const targetH = 46*(sk.scale||1), s = targetH/SP.refH;
-    drawShadow(sk.x, sk.y, 16);
+    const rise = Math.min(1, (sk.age||0)/NIGRO_SKEL_RISE_MS);
+    drawShadow(sk.x, sk.y, 16*(0.4 + 0.6*rise));
+    nigroSummonMark(sk.x, sk.y, 15);
     sk._animKey = "nigro_skel";
     const Pk = animPose(sk, animProfileOf(sk), false);
-    ctx.save(); animApply(sk.x, sk.y, Pk);
+    ctx.save();
+    if(rise < 1){
+      // sale de la tierra: se ve de los pies para arriba a medida que sube
+      ctx.beginPath(); ctx.rect(sk.x - 50, sk.y - targetH*1.3, 100, targetH*1.3 + 6); ctx.clip();
+      ctx.translate(0, targetH*(1 - _ease(rise)));
+    }
+    animApply(sk.x, sk.y, Pk);
     champPackDrawFrame(SP, v, sk.x, sk.y, s, (sk.fx||0) < -0.12, sk.hitFlash>0?0.6:1);
     ctx.restore();
     if(sk.hp<sk.maxHp){
@@ -579,28 +589,201 @@ function drawSkeletonMinion(sk){
     ctx.fillStyle="#7ad48a"; ctx.fillRect(sk.x-16,sk.y-targetH-10,32*Math.max(0,sk.hp/sk.maxHp),4);
   }
 }
-// Gólem invocado (Crear Golem): único, con piel visual segun el talento de Maestro de Golems
-// (piedra por defecto, fuego/hielo si el talento correspondiente fue elegido -ver
-// nigromanteGolemSkin()-, coherente con que la eleccion tambien cambia la forma demoniaca).
+// ============================================================
+// Gólem invocado (Gólem de Carne): único, con el arte de su elemento (Maestro de Gólems, ver
+// nigromanteGolemSkin() y nigro-elements.js). Atlas por gólem (js/assets/nigro-golems-meta.js):
+//   - Piedra: frente / perfil / espalda, caminata de 5 cuadros, golpe en 2 tiempos con el impacto
+//     de la hoja en el piso, se arma de los escombros al aparecer y se deshace en ellos al morir.
+//   - Fuego / Hielo: idle-caminata, ataque (chorro de fuego / rayo y estallido de hielo al objetivo),
+//     aparece con su muerte al revés (brasas / cristales que se juntan) y muere con sus 4 cuadros.
+//   - Tormenta / Plaga: el de piedra recoloreado.
+// Todo esto es solo dibujo: vida, daño, alcance y tiempos siguen siendo los de nigromante.js.
+// ============================================================
+const NIGRO_GOLEM_BODY_H = 92;      // alto del cuerpo en el mundo (~1,4 veces un guardián)
+const NIGRO_GOLEM_RISE_STEP = 120;  // ms por cuadro al armarse
+const NIGRO_GOLEM_DEATH_STEP = 150; // ms por cuadro al deshacerse
+const NIGRO_SKEL_RISE_MS = 300;     // el esqueleto sale de la tierra
+let _nigroPhaseSeq = 0;
+const nigroGolemRemains = [];       // gólems y esqueletos que se deshacen (muerte / absorción): solo visual
+const nigroGolemFx = [];            // impactos, chorros y rayos de los golpes del gólem: solo visual
+
+function nigroGolemClip(A, idx){
+  if(!A.clips) A.clips = [];
+  let c = A.clips[idx];
+  if(!c){ const f = A.meta.frames[idx]; c = A.clips[idx] = { frames:[{x:f[0], y:f[1], w:f[2], h:f[3]}], w:f[2], h:f[3], ax:f[4]/f[2], ay:f[5]/f[3] }; }
+  return c;
+}
+function nigroGolemDraw(A, idx, x, y, s, flip, alpha, rot, ax, ay){
+  const c = nigroGolemClip(A, idx);
+  drawAnimFrameSized(A.img, c, 0, x, y, c.w*s, c.h*s, ax!==undefined ? ax : c.ax, ay!==undefined ? ay : c.ay, flip, alpha, rot);
+}
+function nigroGolemScale(A){ return NIGRO_GOLEM_BODY_H / A.meta.refH; }
+// Cuadros con los que se arma: los escombros (piedra) o la muerte al revés (fuego, hielo).
+function nigroGolemRiseSet(A){
+  const S = A.meta.sets;
+  if(S.rise) return S.rise;
+  if(!S._riseRev && S.death) S._riseRev = S.death.slice().reverse();
+  return S._riseRev || null;
+}
+// Marca de invocación: un óvalo verde tenue a los pies, para distinguir el ejército propio de la
+// horda sobre los pisos oscuros (Minas, Abismo, Infernal) sin tapar el sprite.
+function nigroSummonMark(x, y, r){
+  ctx.save();
+  ctx.globalAlpha = 0.32*ANIM_ALPHA_MUL; ctx.strokeStyle = "#5ae68c"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.ellipse(x, y + 3, r, r*0.36, 0, 0, Math.PI*2); ctx.stroke();
+  ctx.restore();
+}
+
+// Pose actual del gólem: {idx, flip}. Dirección con la misma histéresis que los guardianes.
+function nigroGolemPose(g, A){
+  const S = A.meta.sets, t = animNow;
+  const dir = champPackDir(g), left = !!g._pleft;
+  const rise = nigroGolemRiseSet(A);
+  const age = g.age||0;
+  if(rise && age < rise.length*NIGRO_GOLEM_RISE_STEP) return { idx:rise[Math.floor(age/NIGRO_GOLEM_RISE_STEP)], flip:left };
+  const a = g.attackAnim||0;
+  if(a > 0 && S.atk){
+    // golpe: carga (40 %) y descarga; los cuadros miran a la derecha y se espejan hacia la izquierda
+    const prog = 1 - a/(g._aDur||a), arr = S.atk;
+    return { idx:arr[Math.min(arr.length-1, Math.floor(prog*arr.length*1.25))], flip:left };
+  }
+  if(S.walk_side){ // piedra: 4 direcciones
+    if(g.moving){
+      const arr = dir==="side" ? S.walk_side : (dir==="up" ? S.walk_up : S.walk_down);
+      return { idx:arr[Math.floor((t + g._ph)/(dir==="side" ? 140 : 230)) % arr.length], flip:dir==="side" && left };
+    }
+    const arr = S["idle_"+dir] || S.idle_down;
+    return { idx:arr[Math.floor((t + g._ph)/420) % arr.length], flip:dir==="side" && left };
+  }
+  const arr = g.moving ? S.walk : S.idle;
+  return { idx:arr[Math.floor((t + g._ph)/(g.moving ? 150 : 460)) % arr.length], flip:left };
+}
+
+// Golpe nuevo (flanco de subida de attackAnim): el efecto propio de cada gólem.
+function nigroGolemAttackFx(g, A){
+  const S = A.meta.sets, big = !!g.slamBig, s = nigroGolemScale(A);
+  g.slamBig = false;
+  const dx = g._pleft ? -1 : 1;
+  const T = g.target && g.target.alive ? g.target : null;
+  const tx = T ? T.x : g.x + (g.fx||1)*70, ty = T ? T.y : g.y + (g.fy||0)*70;
+  if(nigroGolemFx.length > 10) nigroGolemFx.shift();
+  if(big){
+    // ¡Aplasta!: cae en el lugar -impacto de piedra, o el estallido de brasas / cristales del piso-
+    if(S.fx_slam) nigroGolemFx.push({ kind:"frames", A, arr:S.fx_slam, x:g.x, y:g.y + 4, s:s*1.35, t0:animNow, step:95, add:false });
+    else nigroGolemFx.push({ kind:"frames", A, arr:[S.death[S.death.length-1]], x:g.x, y:g.y + 4, s:s*1.2, t0:animNow, step:380, add:true });
+    return;
+  }
+  if(S.fx_slam){
+    // el puño llega al piso en el segundo cuadro del golpe (40 % de la animación)
+    nigroGolemFx.push({ kind:"frames", A, arr:S.fx_slam, x:g.x + dx*40, y:g.y + 6, s:s*0.62, t0:animNow + (g._aDur||320)*0.4, step:90, add:false });
+  } else if(S.fx_stream){
+    nigroGolemFx.push({ kind:"stream", A, idx:S.fx_stream[0], x:g.x + dx*22, y:g.y - 34, tx, ty:ty - 18, t0:animNow + 40, dur:340 });
+  } else if(S.fx_bolt){
+    nigroGolemFx.push({ kind:"bolt", A, idx:S.fx_bolt[0], x:g.x + dx*24, y:g.y - 30, tx, ty:ty - 18, t0:animNow + 60, dur:200 });
+    nigroGolemFx.push({ kind:"burst", A, idx:S.fx_burst[0], x:tx, y:ty - 14, t0:animNow + 250, dur:280 });
+  }
+}
+
 function drawGolemReal(g){
   const skin = g.skin||"stone";
-  const img = nigroGolemImage(skin, g.attackAnim>0); // arte real o provisorio por elemento (nigro-elements.js)
-  if(!img) return;
-  const flip = (g.fx||0) < -0.12;
-  const targetH = 96;
-  const s = targetH/img.height;
-  const clip = { frames: [{x:0,y:0,w:img.width,h:img.height}] };
-  drawShadow(g.x, g.y, 34);
-  nigroDrawElementAura(g.x, g.y, skin, 38, animNow/1000);
+  const A = nigroGolemAtlas(skin); // (nigro-elements.js) null mientras baja su arte
+  if(!A) return;
+  if(g._ph===undefined) g._ph = (++_nigroPhaseSeq*433) % 1000;
+  const a = g.attackAnim||0;
+  if(a > (g._aPrev||0) + 1){ g._aDur = a; nigroGolemAttackFx(g, A); }
+  g._aPrev = a;
+  const s = nigroGolemScale(A), H = NIGRO_GOLEM_BODY_H;
+  const P = nigroGolemPose(g, A);
+  drawShadow(g.x, g.y, 30);
+  nigroSummonMark(g.x, g.y, 30);
+  nigroDrawElementAura(g.x, g.y, skin, 36, animNow/1000);
   g._animKey = "nigro_golem";
   const Pg = animPose(g, animProfileOf(g), false);
   ctx.save(); animApply(g.x, g.y, Pg);
-  drawAnimFrameSized(img, clip, 0, g.x, g.y, img.width*s, img.height*s, 0.5, 0.94, flip, g.hitFlash>0?0.6:1);
+  nigroGolemDraw(A, P.idx, g.x, g.y, s, P.flip, 1);
+  if(g.hitFlash>0){ // golpe recibido: destello claro sobre la silueta (antes: el gólem se volvía medio transparente)
+    ctx.globalCompositeOperation = "lighter";
+    nigroGolemDraw(A, P.idx, g.x, g.y, s, P.flip, 0.35);
+  }
   ctx.restore();
-  nigroDrawElementDetail(g.x, g.y, skin, targetH, animNow/1000);
+  nigroDrawElementDetail(g.x, g.y, skin, H, animNow/1000);
   if(g.hp<g.maxHp){
-    ctx.fillStyle="rgba(0,0,0,0.5)"; ctx.fillRect(g.x-26,g.y-targetH-14,52,5);
-    ctx.fillStyle="#8fae7a"; ctx.fillRect(g.x-26,g.y-targetH-14,52*Math.max(0,g.hp/g.maxHp),5);
+    ctx.fillStyle="rgba(0,0,0,0.5)"; ctx.fillRect(g.x-26,g.y-H-14,52,5);
+    ctx.fillStyle="#8fae7a"; ctx.fillRect(g.x-26,g.y-H-14,52*Math.max(0,g.hp/g.maxHp),5);
+  }
+}
+
+// El gólem muere o lo absorbe la Encarnación del Abismo: se deshace con sus cuadros reales
+// (escombros / brasas / cristales) en vez de desaparecer de golpe.
+function nigroGolemDeathFx(g){
+  const A = nigroGolemAtlas(g.skin||"stone");
+  if(!A || !A.meta.sets.death) return;
+  if(nigroGolemRemains.length > 12) nigroGolemRemains.shift();
+  nigroGolemRemains.push({ kind:"golem", A, x:g.x, y:g.y, flip:!!g._pleft, t0:animNow, arr:A.meta.sets.death });
+  vfxBurst(g.x, g.y - 30, 12, g.skin==="fire" ? "ember" : (g.skin==="ice" ? "ice" : "rock"), 140, 520, 3.5, 1, -30, 0);
+}
+// Esqueleto que cae: se desarma hundiéndose en la tierra con una lluvia de huesos.
+function nigroSkeletonDeathFx(sk){
+  const SP = CHAMP_PACK.nigro_skel;
+  if(!SP || !SP.ready) return;
+  if(nigroGolemRemains.length > 12) nigroGolemRemains.shift();
+  const arr = SP.sets[sk.type==="mage" ? "mage_idle" : "warrior_idle"];
+  nigroGolemRemains.push({ kind:"skel", SP, v:arr[0], x:sk.x, y:sk.y, flip:(sk.fx||0) < -0.12, t0:animNow, s:46*(sk.scale||1)/SP.refH, h:46*(sk.scale||1) });
+  vfxBurst(sk.x, sk.y - 22, 8, "bone", 110, 420, 3, 1, -40, 0);
+}
+function nigroRemainsDone(r){
+  const t = animNow - r.t0;
+  return r.kind==="golem" ? t > r.arr.length*NIGRO_GOLEM_DEATH_STEP + 420 : t > 420;
+}
+function drawNigroRemains(r){
+  const t = animNow - r.t0;
+  if(r.kind==="golem"){
+    const n = Math.min(r.arr.length-1, Math.floor(t/NIGRO_GOLEM_DEATH_STEP));
+    const hold = t - r.arr.length*NIGRO_GOLEM_DEATH_STEP;
+    const alpha = hold > 0 ? Math.max(0, 1 - hold/420) : 1;
+    drawShadow(r.x, r.y, 30*alpha);
+    nigroGolemDraw(r.A, r.arr[n], r.x, r.y, nigroGolemScale(r.A), r.flip, alpha);
+  } else {
+    const k = Math.min(1, t/420), sink = _ease(k);
+    ctx.save();
+    ctx.beginPath(); ctx.rect(r.x - 50, r.y - r.h*1.4, 100, r.h*1.4 + 4); ctx.clip();
+    ctx.translate(r.x, r.y + r.h*0.55*sink); ctx.rotate((r.flip ? -1 : 1)*0.35*sink); ctx.translate(-r.x, -r.y);
+    champPackDrawFrame(r.SP, r.v, r.x, r.y, r.s, r.flip, 1 - k*0.85);
+    ctx.restore();
+  }
+}
+// Efectos de los golpes del gólem (encima de las entidades).
+function drawNigroGolemFx(){
+  for(let i = nigroGolemFx.length - 1; i >= 0; i--){
+    const f = nigroGolemFx[i], t = animNow - f.t0;
+    if(t < 0) continue;
+    const dur = f.kind==="frames" ? f.arr.length*f.step + 120 : f.dur;
+    if(t > dur){ nigroGolemFx.splice(i, 1); continue; }
+    if(!inView(f.x, f.y, 200)) continue;
+    const k = t/dur;
+    ctx.save();
+    if(f.kind==="frames"){
+      if(f.add) ctx.globalCompositeOperation = "lighter";
+      const n = Math.min(f.arr.length-1, Math.floor(t/f.step));
+      nigroGolemDraw(f.A, f.arr[n], f.x, f.y, f.s, false, k > 0.75 ? (1 - k)/0.25 : 1);
+    } else if(f.kind==="stream"){
+      // el chorro sale de la mano y se estira hasta el objetivo
+      ctx.globalCompositeOperation = "lighter";
+      const c = nigroGolemClip(f.A, f.idx), L = Math.max(90, Math.hypot(f.tx - f.x, f.ty - f.y));
+      const grow = Math.min(1, k/0.3), sx = L*grow/c.w, sy = Math.min(1.4, Math.max(0.7, sx))*0.9;
+      const ang = Math.atan2(f.ty - f.y, f.tx - f.x);
+      drawAnimFrameSized(f.A.img, c, 0, f.x, f.y, c.w*sx, c.h*sy, 0, 0.62, false, k > 0.6 ? (1 - k)/0.4 : 1, ang);
+    } else if(f.kind==="bolt"){
+      ctx.globalCompositeOperation = "lighter";
+      const c = nigroGolemClip(f.A, f.idx), s = 1.3;
+      const x = f.x + (f.tx - f.x)*k, y = f.y + (f.ty - f.y)*k;
+      drawAnimFrameSized(f.A.img, c, 0, x, y, c.w*s, c.h*s, 0.8, 0.5, false, 1, Math.atan2(f.ty - f.y, f.tx - f.x));
+    } else if(f.kind==="burst"){
+      ctx.globalCompositeOperation = "lighter";
+      const c = nigroGolemClip(f.A, f.idx), s = 1.1 + 0.35*k;
+      drawAnimFrameSized(f.A.img, c, 0, f.x, f.y, c.w*s, c.h*s, 0.72, 0.55, false, 1 - k*k);
+    }
+    ctx.restore();
   }
 }
 

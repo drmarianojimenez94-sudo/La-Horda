@@ -104,6 +104,17 @@ function render(){
   }
   for(const h of heroes){ if(h.alive) _entPush(h.y, null, h); }
   for(const w of iceWalls){ if(inView(w.x, w.y, 80)) _entPush(w.y, null, null, w); }
+  // ejército del Nigromante (gólem, esqueletos y los que se están deshaciendo): ordenado por
+  // profundidad con todo lo demás (antes se dibujaba encima de todo, tapando enemigos y columnas)
+  for(const h of heroes){
+    if(h.golem && inView(h.golem.x, h.golem.y, 160)) _entPush(h.golem.y, null, null, null, null, h.golem);
+    if(h.skeletons) for(const sk of h.skeletons) if(inView(sk.x, sk.y, 90)) _entPush(sk.y, null, null, null, null, sk);
+  }
+  for(let i = nigroGolemRemains.length - 1; i >= 0; i--){
+    const r = nigroGolemRemains[i];
+    if(nigroRemainsDone(r)){ nigroGolemRemains.splice(i, 1); continue; }
+    if(inView(r.x, r.y, 160)) _entPush(r.y, null, null, null, null, r);
+  }
   if(!player.duelActive) aidPushTall(); // columnas, árboles, muros del Laberinto, estructuras de la Divina
   if(divinaMode){
     // Los guardianes divinos son "héroes" (drawHero), salvo en el nivel de jefes (nivel 6),
@@ -120,6 +131,7 @@ function render(){
   for(const it of ents){
     if(it.p){ aidDrawTall(it.p, animNow/1000); continue; }
     if(it.w){ drawIceWall(it.w); continue; }
+    if(it.s){ const o = it.s; if(o.t0!==undefined && o.kind) drawNigroRemains(o); else if(o.owner && o.owner.golem===o) drawGolemReal(o); else drawSkeletonMinion(o); continue; }
     if(it.e){
       if(divinaMode && (it.e.isBossChamp || it.e.side)) drawDivinaTeamRing(it.e, it.e.side || "enemy");
       drawEnemy(it.e);
@@ -131,10 +143,7 @@ function render(){
   if(netMatch) netDrawNameTags(); // B1: nombre de cada amigo sobre su guardián
   drawMusashiAfterimages();
   drawDownedMarkers();
-  for(const h of heroes){
-    if(h.golem) drawGolemReal(h.golem);
-    if(h.skeletons && h.skeletons.length) for(const sk of h.skeletons) drawSkeletonMinion(sk);
-  }
+  drawNigroGolemFx(); // impactos / chorros / rayos de los golpes del gólem
   drawAcua2Overlays();
   drawBossSkillOverlay();
   fxGlowBegin(); vfxDrawSprites(); fxGlowEnd();

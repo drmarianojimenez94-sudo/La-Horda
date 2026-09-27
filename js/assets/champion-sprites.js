@@ -547,16 +547,23 @@ NIGRO_SKEL_IMG.spawnWarrior.src = "assets/sprites/champions/nigromante/skeleton/
 NIGRO_SKEL_IMG.spawnMage = new Image();
 NIGRO_SKEL_READY.spawnMage = false;
 NIGRO_SKEL_IMG.spawnMage.onload = () => { NIGRO_SKEL_READY.spawnMage = true; };
-NIGRO_SKEL_IMG.spawnMage.src = "assets/sprites/champions/nigromante/skeleton/spawnMage.png";const NIGRO_GOLEM_IMG = {};
+NIGRO_SKEL_IMG.spawnMage.src = "assets/sprites/champions/nigromante/skeleton/spawnMage.png";
+const NIGRO_GOLEM_IMG = {};
 const NIGRO_GOLEM_READY = {};
-NIGRO_GOLEM_IMG.stone = new Image(); NIGRO_GOLEM_READY.stone=false; NIGRO_GOLEM_IMG.stone.onload=()=>{ NIGRO_GOLEM_READY.stone=true; };
-NIGRO_GOLEM_IMG.stone.src = "assets/sprites/champions/nigromante/golem/stone.png";
-NIGRO_GOLEM_IMG.stoneAtk = new Image(); NIGRO_GOLEM_READY.stoneAtk=false; NIGRO_GOLEM_IMG.stoneAtk.onload=()=>{ NIGRO_GOLEM_READY.stoneAtk=true; };
-NIGRO_GOLEM_IMG.stoneAtk.src = "assets/sprites/champions/nigromante/golem/stoneAtk.png";
-NIGRO_GOLEM_IMG.fire = new Image(); NIGRO_GOLEM_READY.fire=false; NIGRO_GOLEM_IMG.fire.onload=()=>{ NIGRO_GOLEM_READY.fire=true; };
-NIGRO_GOLEM_IMG.fire.src = "assets/sprites/champions/nigromante/golem/fire.png";
-NIGRO_GOLEM_IMG.ice = new Image(); NIGRO_GOLEM_READY.ice=false; NIGRO_GOLEM_IMG.ice.onload=()=>{ NIGRO_GOLEM_READY.ice=true; };
-NIGRO_GOLEM_IMG.ice.src = "assets/sprites/champions/nigromante/golem/ice.png";
+// Gólem del Nigromante: un atlas por elemento (piedra = subjefe del Laberinto con 4 direcciones,
+// caminata, golpe, escombros e impacto; fuego y hielo = variantes con idle/caminata, ataque y
+// muerte). Datos: js/assets/nigro-golems-meta.js (tools/art/nigromante_golems/build.py).
+// Tormenta y Plaga usan el de piedra recoloreado (nigro-elements.js).
+const NIGRO_GOLEM_ATLAS = {};
+function nigroGolemAtlasLoad(key){
+  const M = NIGRO_GOLEM_META[key], img = new Image();
+  const A = { img, meta:M, ready:false, failed:false, clips:null };
+  img.onload = ()=>{ A.ready = true; };
+  img.onerror = ()=>{ A.failed = true; };
+  img.src = M.src;
+  NIGRO_GOLEM_ATLAS[key] = A;
+}
+for(const k of ["stone", "fire", "ice"]) nigroGolemAtlasLoad(k);
 
 // Ráfaga de materialización real al invocar el Golem (antes sin usar).
 NIGRO_GOLEM_IMG.spawn = new Image();
