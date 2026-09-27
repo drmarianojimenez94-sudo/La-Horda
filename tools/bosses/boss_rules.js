@@ -95,7 +95,10 @@ const want = a => !only.length || only.includes(a);
     await god(); await sleep(500);
     ok('bos_guardian', await E(() => !!boss && boss.type === 'guardian_ancestral'));
     await E(() => { BOS.bossT = 0; });
-    for (let k = 0; k < 14; k++) { await sleep(500); if (await E(() => BOS.runes.some(bosIsLit))) break; }
+    // la runa que se arma es al azar: si le toca una donde hay un guardián parado, los bots la contienen
+    // antes de que se encienda. El equipo espera junto al jefe mientras se enciende (intermitente si no).
+    const huddle = () => E(() => { heroes.forEach((h, i) => { h.x = boss.x + 70 * Math.cos(i * 1.6); h.y = boss.y + 70 * Math.sin(i * 1.6); clampToArena(h); }); });
+    for (let k = 0; k < 14; k++) { await huddle(); await sleep(500); if (await E(() => BOS.runes.some(bosIsLit))) break; }
     ok('bos_runa_escudo', await E(() => BOS.runes.some(bosIsLit) && boss._encMult < 1 && /RA[IÍ]CES/.test(boss._encTag || '')));
     await shot('bos_escudo');
     const hpG = await E(() => boss.hp);
