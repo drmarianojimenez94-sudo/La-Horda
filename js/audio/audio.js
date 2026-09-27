@@ -64,6 +64,11 @@ function initAudio(){
     if(audioCtx.state==="suspended") audioCtx.resume().catch(()=>{});
   }catch(e){ console.error("No se pudo crear el audio:", e); audioCtx = null; }
 }
+// iPhone/Safari: al volver de otra app, de una llamada o con la pantalla bloqueada, el contexto queda
+// "suspended"/"interrupted" y el juego sigue mudo. Se reanuda al volver a la pestaña y en el próximo toque.
+function _audioWake(){ if(audioCtx && audioCtx.state!=="running" && audioCtx.state!=="closed") audioCtx.resume().catch(()=>{}); }
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) _audioWake(); });
+["touchend", "pointerup", "keydown"].forEach(ev=>document.addEventListener(ev, _audioWake, {passive:true, capture:true}));
 function setAudioEnabled(on){
   audioEnabled = on;
   if(audioCtx && audioCtx.state==="suspended") audioCtx.resume().catch(()=>{});
