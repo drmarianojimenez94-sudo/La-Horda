@@ -20,15 +20,15 @@
 
 | # | Arena | ID interno (no cambia) | Jefe canon | ¿Guardián? | Rol narrativo |
 |---|---|---|---|---|---|
-| 01 | **Ciudad Maldita** | `ciudad` (*en construcción*) | — | No | Origen. La Horda vuelve a la ciudad de los campeones; aparece la proyección del Hechicero; nace la primera Cicatriz. |
+| 01 | **Ciudad Maldita** | `ciudad` | El Presentador (subjefes: Maestro + Tramoyista, Dama del Telón) | No | Origen. La Horda vuelve a la ciudad de los guardianes; aparece la proyección del Hechicero; nace la primera Cicatriz. |
 | 02 | **Fábrica Sin Fin** | `fortaleza` | Caballero de la Armadura Oxidada (subjefe: Dragón de la Forja) | **No** | La Horda contaminó las máquinas de otra civilización. Primera persecución de la Cicatriz. |
 | 03 | **Ruinas Célticas / Élficas** | `bosque` | Guardián Ancestral → Bestia del Bosque | **GUARDIÁN 1** | Primer cristal. Revelación: los monstruos alguna vez fueron héroes. |
 | 04 | **Reino Fúngico** | `micelial` | Madre Espora | **No** | El micelio guarda ecos de los Guardianes (y de alguien más). |
 | 05 | **Arena Gélida** | `hielo` | Mago Gélido → Demonio Gélido | **GUARDIÁN 2** | Segundo cristal. Primeras pistas de que la historia del Hechicero está incompleta. |
 | 06 | **Arena Acuática** | `acuatica` | Leviatán (el "Kraken" del canon; subjefe: Kraken Joven) | **No** | Con dos cristales la realidad se vuelve inestable. |
-| 07 | **Minas Profundas** | `minas` (*en construcción*) | — | No | Luz, oscuridad, exploración: el descenso. |
-| 08 | **Laberinto** | `laberinto` | Guardián del Laberinto → Minotauro | **GUARDIÁN 3** | Tercer cristal. El Guardián advierte: no entregar los cristales al Hechicero (sin diálogo definitivo). |
-| 09 | **Abismo** | `abismo` | El Que Mora Debajo | No | Punto de no retorno: los campeones cruzan a la dimensión de la Horda. |
+| 07 | **Laberinto** | `laberinto` | Guardián del Laberinto → Minotauro | **GUARDIÁN 3** | Tercer cristal. El Guardián advierte: no entregar los cristales al Hechicero (sin diálogo definitivo). |
+| 08 | **Abismo** | `abismo` | El Que Mora Debajo | No | Punto de no retorno: el mundo se rompe y debajo se abre una mina que baja hacia el calor. |
+| 09 | **Minas Profundas** | `minas` | Cerbero, Guardián del Umbral Infernal (subjefe: Titán de Piedra; evento élite: Devoraluz) | **No** | El descenso: la luz es territorio. Matar a Cerbero **no** termina la arena: se abre el Portal Infernal y los guardianes lo **atraviesan** hacia la dimensión de la Horda. |
 | 10 | **Arena Infernal** | `infernal` | Hechicero Supremo → Rey / Demonio de la Horda | **GUARDIÁN 4** | El Forjador prisionero; revelación del Hechicero; el plan de fusión fracasa; final. |
 
 **Postgame (fuera de las diez):** **Arena Divina** — se desbloquea al completar la Arena Infernal y
@@ -41,7 +41,7 @@ conserva **Las Cinco Pruebas Divinas**. Es el puente hacia **COLISEO — PRÓXIM
 - **GUARDIÁN 3:** Laberinto — **Guardián del Laberinto → Minotauro**. Cristal de Piedra (ámbar).
 - **GUARDIÁN 4:** Arena Infernal — **Hechicero Supremo → Rey / Demonio de la Horda**. Cristal del Juicio (oro blanco).
 
-**NO son Guardianes:** el **Leviatán** (el "Kraken" del canon) ni el Kraken Joven, la **Madre Espora**, el **Caballero de la Armadura Oxidada** ni el **Dragón de la Forja** (el "Dragón Steampunk" del canon). Son criaturas de la
+**NO son Guardianes:** **Cerbero** (se llama "Guardián del Umbral", pero es un perro de la Horda que custodia una puerta, no uno de los Cuatro), el **Titán de Piedra**, el **Devoraluz**, el **Presentador**, el **Leviatán** (el "Kraken" del canon) ni el Kraken Joven, la **Madre Espora**, el **Caballero de la Armadura Oxidada** ni el **Dragón de la Forja** (el "Dragón Steampunk" del canon). Son criaturas de la
 Horda (o corrompidas por ella) que los campeones cruzan en el camino. Ningún texto, cristal ni UI debe
 presentarlos como Guardianes.
 
@@ -50,8 +50,8 @@ presentarlos como Guardianes.
 - Por ahora se expresan con **textos, carteles, diálogos del Hechicero y transiciones** (cartel "✦" al
   completar cada arena). No hay sistema jugable nuevo.
 - Evolución: una grieta (Ciudad) → rastro entre máquinas (Fábrica) → late con cada cristal (Ruinas,
-  Gélida) → inestable (Acuática) → se hunde (Minas, Laberinto) → se rasga en el Abismo → la dimensión
-  de la Horda.
+  Gélida) → inestable (Acuática) → se hunde (Laberinto) → se rasga en el Abismo → baja por las Minas hasta el
+  Umbral Infernal → la dimensión de la Horda.
 - VFX y cinemáticas propias: pendientes (ver `LA_HORDA_CINEMATICS.md`).
 
 ## 5. El Hechicero Supremo — arco
@@ -62,8 +62,9 @@ presentarlos como Guardianes.
 | 03 Ruinas | Primer cristal: "yo te lo cuido". Reconoce que los monstruos fueron héroes. |
 | 04 Reino Fúngico | Desestima los ecos de las esporas ("no importan"). |
 | 05 Gélida | "No preguntes cómo sé tanto de ellos. Todavía no." La historia no cierra. |
-| 06–08 | Cada vez más interesado en los cristales que en los campeones. Descarta la advertencia del Guardián del Laberinto ("deliraba"). |
-| 09 Abismo | "Ya no hay vuelta atrás. Te espero en el corazón del Infierno." |
+| 06–07 | Cada vez más interesado en los cristales que en los guardianes. Descarta la advertencia del Guardián del Laberinto ("deliraba"). |
+| 08 Abismo | "Debajo del Abismo hay minas… y debajo de las minas, una puerta. Otros bajaron antes que vos." |
+| 09 Minas | Al atravesar el Umbral: "Ya no hay vuelta atrás. Te espero en el corazón del Infierno." |
 | 10 Infernal, nivel 9 | Se revela: fue el primero y líder de los Cuatro, se quedó por decisión propia. Pelea como subjefe y huye. |
 | 10 Infernal, jefe final | Explica que el Forjador se negó a fundir los cristales. Pelea en 3 formas y se convierte en el **Rey de la Horda**. |
 
@@ -81,7 +82,7 @@ los Guardianes (gancho para Arena Divina, Coliseo y temporadas).
 
 | # | Canon | Código actual | Cómo se adaptó |
 |---|---|---|---|
-| C1 | Arena 01 Ciudad Maldita y 07 Minas Profundas | No existen como arenas jugables | Slots **EN CONSTRUCCIÓN** en el selector (IDs `ciudad`/`minas`, `comingSoon`). El desbloqueo las saltea. La Ciudad se cuenta como **prólogo** antes de la Fábrica. Cuando existan, se agregan al orden jugable con una migración. |
+| C1 | Arena 01 Ciudad Maldita y Minas Profundas | Eran slots EN CONSTRUCCIÓN | **Resuelto:** las dos son jugables. La Ciudad es la Arena 01. Las Minas son la **Arena 09**, la última antes de la Infernal (el canon viejo la ponía 07: se movió para que el descenso lleve directo al Umbral Infernal). Guardados viejos: `ciudadV1Migrate` y `minasV1Migrate` conservan todo lo abierto. |
 | C2 | Jefe de la Fábrica: Dragón Steampunk | Subjefe **Dragón de la Forja**; jefe final **Caballero de la Armadura Oxidada** | **Resuelto (decisión del autor): manda el código.** El canon se adapta: el Dragón de la Forja es el "Dragón Steampunk" (subjefe) y el Caballero de la Armadura Oxidada es el jefe final de la Fábrica. |
 | C3 | Jefe de la Acuática: Kraken | Subjefe **Kraken Joven** (nivel 6); jefe final **Leviatán** | **Resuelto (decisión del autor):** el "Kraken" del canon **es el Leviatán**, jefe final de la Acuática. El Kraken Joven sigue como subjefe. Ninguno es Guardián. |
 | C4 | Guardián Ancestral → **Bestia del Bosque** | El Guardián se transforma a su forma "Corrompido" (misma pelea); `bestia_bosque` existe como enemigo común | Cartel de transformación: "NACE LA BESTIA DEL BOSQUE". Falta arte de la forma Bestia (ver Cinematics). |
@@ -91,6 +92,7 @@ los Guardianes (gancho para Arena Divina, Coliseo y temporadas).
 | C8 | La Madre Espora NO es Guardiana | Canon V1: era la Guardiana 1 y daba el Cristal de Espora | Corregido: el cristal pasa a las Ruinas (**Cristal Ancestral**). Los guardados viejos migran (`campaignV2Migrate`). El ataque del jefe final que usaba "esporas" pasa a ser la **Niebla del Olvido** del Guardián Ancestral (misma mecánica). |
 | C9 | Cristal de Piedra al vencer al Guardián del Laberinto → Minotauro | Se daba al matar al subjefe (nivel 6) | Ahora se entrega al completar el Laberinto (Minotauro). El subjefe deja la advertencia. |
 | C10 | Arena Divina: postgame tras la Infernal | Se desbloqueaba con todas las arenas completas | Ahora: al completar la Arena Infernal. |
+| C12 | Victoria de las Minas por matar al jefe | La victoria de todas las arenas era la muerte del jefe final | Las Minas usan `defeatOutcome:"exit"` (dato del jefe): matar a Cerbero abre el Portal Infernal y la victoria llega cuando un jugador humano lo atraviesa (`completeArenaByExit`, un solo cierre, validado por el anfitrión). |
 | C11 | Orden anterior (Bosque → Acuática → Fortaleza → Micelial → Hielo → Abismo → Laberinto → Infernal) | — | Reemplazado por el orden de la sección 2. La curva de dificultad sigue la posición nueva. |
 
 ## 9. Reglas de tono

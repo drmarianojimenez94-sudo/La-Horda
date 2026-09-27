@@ -28,7 +28,7 @@ const ARENA_MODS = {
   hielo:    { label:"Arena Gélida",      icon:"❄", desc:"Arena 05. El frío es el enemigo. Acá espera el segundo Guardián.", hazardName:"Furia del Vendaval Helado",
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0.148, unlockLevel:0,
               heroSpeedMult:0.90, heroCdMult:1.10, heroEnergyRegenMult:0.85, abilityDmgMult:1.0, heroDmgMult:0.85, enemyRegenPct:0, hazard:"nova_gelida", hasWalls:false },
-  laberinto:{ label:"Laberinto", icon:"🗿", desc:"Arena 08. Muros, sismos y maná escaso. Acá espera el tercer Guardián.", hazardName:"Maldición del Minotauro",
+  laberinto:{ label:"Laberinto", icon:"🗿", desc:"Arena 07. Muros, sismos y maná escaso. Acá espera el tercer Guardián.", hazardName:"Maldición del Minotauro",
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0.16, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:0.50, abilityDmgMult:1.0, heroDmgMult:0.85, enemyRegenPct:0, hazard:"sismo", hasWalls:true,
               // Era un muro (~12% de victorias a nivel 30 vs ~37-40% en Hielo/Infernal): más pociones
@@ -64,7 +64,7 @@ const ARENA_MODS = {
   // UN RECURSO": ruinas suspendidas sobre el vacío con plataformas que se agrietan, colapsan y el
   // Abismo reconstruye entre oleadas; caer no mata (quedás colgado del borde y un compañero te
   // rescata) y a los enemigos SÍ se los puede tirar al vacío (js/arenas/abismo/).
-  abismo:   { label:"Abismo", icon:"🕳", desc:"Arena 09. El punto de no retorno: el mundo se rompe y el piso también pelea.", hazardName:"El Vacío",
+  abismo:   { label:"Abismo", icon:"🕳", desc:"Arena 08. El punto de no retorno: el mundo se rompe y el piso también pelea.", hazardName:"El Vacío",
               fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.18, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.86, enemyRegenPct:0, hazard:null, hasWalls:false,
               potionMult:1.3 },
@@ -78,7 +78,7 @@ const ARENA_MODS = {
 };
 // Arenas del ORDEN CANÓNICO que todavía no existen en el juego: aparecen en el selector con su número
 // (EN CONSTRUCCIÓN) pero no se pueden jugar y el desbloqueo las saltea hasta que se construyan.
-// (Decisión del usuario, 2026-09: Minas Profundas no tiene mapa, enemigos ni jefe todavía. La Ciudad Maldita ya es jugable.)
+// (Hoy las diez arenas del orden canónico son jugables.)
 Object.assign(ARENA_MODS, {
   // CIUDAD MALDITA (Arena 01, jugable): "NO PODÉS SALVARLOS A TODOS. PERO VAS A INTENTARLO." Civiles
   // escondidos que hay que encontrar, rescatar y escoltar; estructuras que la Horda derriba; subjefes
@@ -86,17 +86,22 @@ Object.assign(ARENA_MODS, {
   ciudad:   { label:"Ciudad Maldita", icon:"🏚", desc:"Arena 01. Donde empieza todo: la ciudad que defendiste cuando la Horda volvió.", hazardName:"La Ciudad Arde",
               fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.12, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.9, enemyRegenPct:0, hazard:null, hasWalls:false,
               potionMult:1.3 },
-  minas:    { label:"Minas Profundas", icon:"⛏", comingSoon:true, desc:"Arena 07. El descenso hacia el territorio del tercer Guardián: luz, oscuridad y supervivencia.", hazardName:"—",
-              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.155, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.86, enemyRegenPct:0, hazard:null, hasWalls:false }
+  // MINAS PROFUNDAS (Arena 09, la última antes de la Infernal): "LA LUZ ES TERRITORIO". Descenso por seis
+  // sectores; los enemigos apagan las luces y el equipo las reenciende; Devoraluz, Titán de Piedra y
+  // Cerbero. Matar a Cerbero NO termina la partida: hay que ATRAVESAR EL UMBRAL (js/arenas/minas/).
+  minas:    { label:"Minas Profundas", icon:"⛏", desc:"Arena 09. La luz es territorio. Y el camino baja hasta la puerta del Infierno.", hazardName:"La Oscuridad",
+              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.17, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.86, enemyRegenPct:0, hazard:null, hasWalls:false,
+              potionMult:1.3 }
 });
 /* ORDEN CANÓNICO DE LA CAMPAÑA (Lore Bible: docs/lore/LA_HORDA_LORE_BIBLE.md). Los IDs internos NO
    cambian (los guardados siguen apuntando a la misma arena); lo que cambia es el orden.
      01 Ciudad Maldita · 02 Fábrica Sin Fin (fortaleza) · 03 Ruinas Célticas/Élficas
      (bosque, 1er Guardián) · 04 Reino Fúngico (micelial) · 05 Arena Gélida (hielo, 2º Guardián) ·
-     06 Arena Acuática · 07 Minas Profundas (en construcción) · 08 Laberinto (3er Guardián) ·
-     09 Abismo · 10 Arena Infernal (4º Guardián: el Hechicero Supremo).
+     06 Arena Acuática · 07 Laberinto (3er Guardián) · 08 Abismo · 09 Minas Profundas (la última
+     antes del Infierno: el Umbral se cruza al final) · 10 Arena Infernal (4º Guardián: el Hechicero Supremo).
+     (Decisión del usuario, 2026-09: las Minas pasan del 07 al 09 — son el camino físico al Infierno.)
    Arena Divina queda FUERA de las diez: postgame (se abre al completar la Infernal). */
-const CAMPAIGN_ORDER = ["ciudad","fortaleza","bosque","micelial","hielo","acuatica","minas","laberinto","abismo","infernal"];
+const CAMPAIGN_ORDER = ["ciudad","fortaleza","bosque","micelial","hielo","acuatica","laberinto","abismo","minas","infernal"];
 // Arenas JUGABLES en el orden canónico (lo que usan el desbloqueo, la sala online y los cierres de nivel).
 const ARENA_ORDER = CAMPAIGN_ORDER.filter(k=>ARENA_MODS[k] && !ARENA_MODS[k].comingSoon);
 // Orden anterior (para migrar guardados: nadie pierde una arena que ya tenía abierta).

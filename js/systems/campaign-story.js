@@ -26,15 +26,17 @@ const CAMPAIGN_STORY = {
              scar:"Dos cristales juntos: la Cicatriz se vuelve inestable y arrastra hacia el agua.",
              say:"Dos cristales. ¿Por qué me mirás así? Lo que dijo el Mago antes de caer eran delirios de la Horda."},
   acuatica: {title:"LA ARENA ACUÁTICA", sub:"Con dos cristales, la realidad empieza a doblarse.",
-             scar:"La Cicatriz desciende por unas minas olvidadas, hacia un laberinto de piedra.",
-             say:"Las Minas Profundas… otros buscaron los cristales antes que vos. No terminaron bien. Seguí bajando."},
-  minas:    {title:"LAS MINAS PROFUNDAS", sub:"El descenso hacia el territorio del tercer Guardián."},
+             scar:"La Cicatriz se hunde en la piedra, hacia un laberinto antiguo.",
+             say:"Un laberinto. Allí espera el tercero de los Cuatro. No te detengas."},
   laberinto:{title:"EL LABERINTO", sub:"Acá espera el tercer Guardián.", guardian:3,
              scar:"Tres cristales. La Cicatriz se rasga: más allá ya no hay piso, solo el Abismo.",
              say:"Tres. Con los tres juntos, la Cicatriz va a ser la más grande de todas. No te detengas ahora."},
   abismo:   {title:"EL ABISMO", sub:"El punto de no retorno.",
-             scar:"El mundo se rompe. Los guardianes cruzan hacia la dimensión de la Horda.",
-             say:"Cruzaste. Ya no hay vuelta atrás. Te espero en el corazón del Infierno."},
+             scar:"El mundo se rompe. Debajo de los escombros se abre una mina que baja hasta el calor.",
+             say:"Debajo del Abismo hay minas… y debajo de las minas, una puerta. Otros bajaron antes que vos. Seguí bajando."},
+  minas:    {title:"LAS MINAS PROFUNDAS", sub:"La luz es territorio. Y el camino baja al Infierno.",
+             scar:"Atravesaste el Umbral. Del otro lado arde la dimensión de la Horda.",
+             say:"Cruzaste el Umbral. Ya no hay vuelta atrás. Te espero en el corazón del Infierno."},
   infernal: {title:"LA ARENA INFERNAL", sub:"La dimensión de la Horda. Alguien está encadenado en el fondo.", guardian:4}
 };
 const CAMPAIGN_PROLOGUE = "La Horda volvió a la ciudad donde estaban los guardianes. La defendieron, pero algo quedó roto: " +
@@ -46,7 +48,7 @@ const CAMPAIGN_ENDING = "El Rey de la Horda cayó y su plan de fundir los crista
   "empiezan a ocupar el lugar de los Guardianes.";
 
 // Cartel de título al entrar a una arena (nivel 1). Las arenas con cartel propio lo muestran ellas.
-const CAMPAIGN_OWN_TITLE = {fortaleza:1, micelial:1, abismo:1};
+const CAMPAIGN_OWN_TITLE = {fortaleza:1, micelial:1, abismo:1, ciudad:1, minas:1};
 function campaignTitleCard(){
   if(typeof currentArena==="undefined" || (typeof divinaMode!=="undefined" && divinaMode) || CAMPAIGN_OWN_TITLE[currentArena]) return;
   const S = CAMPAIGN_STORY[currentArena]; if(!S || typeof arenaTitleCard!=="function") return;

@@ -76,7 +76,7 @@ function startRun(fromLevel){
   resetRunTransients();
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
-  runEnding = false;
+  runEnding = false; _arenaExitDone = false;
   crystalReset();
   kills = 0;
   runElapsedMs = 0;
@@ -212,6 +212,9 @@ function onBossDefeated(){
   // Arenas con secuencia de muerte propia (El Reino Micelial): la arena termina la victoria
   // más tarde llamando a finishBossVictory().
   if(arenaHas("bossDefeated") && arenaHook("bossDefeated", boss)) return;
+  // Jefes cuya derrota NO es la victoria (ENEMY_BASE[tipo].defeatOutcome === "exit"): la arena abre una
+  // salida y la victoria llega con completeArenaByExit(). Si la arena no manejó la muerte (no debería
+  // pasar), se cierra con la victoria normal para no dejar la partida trabada.
   bossActive = false;
   if(typeof setMusicMode==="function") setMusicMode("victory");
   bossDeathFeedback();
@@ -247,6 +250,18 @@ function finishBossVictory(){
   }
   runLater(wait, ()=>{ if(state==="playing") showVictoryScreen(); });
 }
+
+// Victoria por SALIDA (p.ej. atravesar el Portal Infernal de las Minas Profundas): la primera
+// interacción válida cierra la arena para todo el equipo; cualquier otra llamada se ignora
+// (sin doble victoria, doble recompensa ni doble desbloqueo). La valida el anfitrión.
+let _arenaExitDone = false;
+function completeArenaByExit(){
+  if(_arenaExitDone || runEnding) return false;
+  _arenaExitDone = true;
+  finishBossVictory();
+  return true;
+}
+function bossDefeatOutcome(type){ return (ENEMY_BASE[type] && ENEMY_BASE[type].defeatOutcome) || "victory"; }
 
 function onPlayerDeath(){
   player.alive = false;

@@ -38,8 +38,8 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const reg = await E(() => ({ order: ARENA_ORDER.slice(), def: !!ARENA_DEFS.abismo, mods: !!ARENA_MODS.abismo, rules: !!ARENA_RULES.abismo,
     atlas: Object.keys(ABISMO_ATLAS).filter(k => ENEMY_ATLAS_PACK[k] && ENEMY_ATLAS_PACK[k].ready).length, fx: Object.keys(ABISMO_FX).length,
     enemies: ['ab_errante','ab_acechador','ab_heraldo','ab_devorador','ab_tejedor','ab_jinete','ab_carcelero','ab_morador'].every(t => ENEMY_BASE[t]) }));
-  // Orden canónico (docs/lore/LA_HORDA_LORE_BIBLE.md): Laberinto (08) → Abismo (09, punto de no retorno) → Infernal (10)
-  check('ORDEN.abismo_entre_laberinto_e_infernal', reg.order.indexOf('abismo') > reg.order.indexOf('laberinto') && reg.order.indexOf('abismo') === reg.order.indexOf('infernal') - 1, reg.order);
+  // Orden canónico (docs/lore/LA_HORDA_LORE_BIBLE.md): Laberinto (07) → Abismo (08, punto de no retorno) → Minas (09) → Infernal (10)
+  check('ORDEN.abismo_entre_laberinto_y_minas', reg.order.indexOf('abismo') > reg.order.indexOf('laberinto') && reg.order.indexOf('abismo') === reg.order.indexOf('minas') - 1 && reg.order.indexOf('minas') === reg.order.indexOf('infernal') - 1, reg.order);
   check('REGISTRO.arena_mods_reglas', reg.def && reg.mods && reg.rules);
   check('ARTE.7_atlas_cargados', reg.atlas === 7, reg);
   check('ARTE.fx_de_la_hoja', reg.fx >= 30, reg.fx);

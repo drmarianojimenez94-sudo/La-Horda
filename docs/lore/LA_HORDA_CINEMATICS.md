@@ -28,4 +28,4 @@
   Enano/gigante herrero, fragua apagada, cadenas infernales.
 - **Cicatriz de la Horda (VFX):** apertura (8 frames), loop (6), cierre (6). Grieta en el aire, bordes
   violeta y negro, partículas que caen hacia arriba.
-- **Ciudad Maldita / Minas Profundas:** se piden con sus arenas (mapa, enemigos, jefe) cuando se diseñen.
+- **Ciudad Maldita / Minas Profundas:** implementadas por código con el arte de sus hojas. Minas: descenso entre sectores (fundido + cartel de profundidad), muerte de Cerbero en 3 tiempos y apertura del Portal Infernal (procedural, ver `LA_HORDA_MINES_MISSING_ASSETS.md`).

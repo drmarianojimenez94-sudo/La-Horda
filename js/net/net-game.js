@@ -559,7 +559,7 @@ function netGuestStartRun(msg){
   const mine = msg.slots[net.slot];
   if(mine) selectedClass = mine.champ;
   if(!reconnecting) markRunStartProgress(selectedClass);
-  clearRunTimers(); resetRunTransients(); runEnding = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
+  clearRunTimers(); resetRunTransients(); runEnding = false; if(typeof _arenaExitDone!=="undefined") _arenaExitDone = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
   runStats = freshRunStats();
   iceWalls.length = 0; bossStrikes.length = 0;
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];

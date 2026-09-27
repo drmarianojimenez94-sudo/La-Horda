@@ -32,9 +32,9 @@ enteramente sobre él.
 | **El Reino Fúngico** (`micelial`) | **04** | **`js/arenas/micelial/`** (registrada en `ARENA_DEFS`) | [micelial.md](micelial.md) |
 | Arena Gélida (`hielo`) | 05 · Guardián 2 | bloques en `update.js`/`boss-skills.js`, `aidBuildHielo` + **`js/arenas/hielo/`** (`ARENA_EXT`) | [hielo.md](hielo.md) |
 | Arena Acuática (`acuatica`) | 06 | `js/arenas/acuatica.js` + bloques en `update.js` + **`js/arenas/acuatica/`** (`ARENA_EXT`) | [acuatica.md](acuatica.md) |
-| Minas Profundas (`minas`) | 07 · en construcción | — (slot `comingSoon` en `ARENA_MODS`) | — |
-| Laberinto (`laberinto`) | 08 · Guardián 3 | muros en `collision.js`, `aidLabyrinthLayout` + **`js/arenas/laberinto/`** (`ARENA_EXT`) | [laberinto.md](laberinto.md) |
-| **El Abismo** (`abismo`) | **09** | **`js/arenas/abismo/`** (registrada en `ARENA_DEFS`) | [abismo.md](abismo.md) |
+| Laberinto (`laberinto`) | 07 · Guardián 3 | muros en `collision.js`, `aidLabyrinthLayout` + **`js/arenas/laberinto/`** (`ARENA_EXT`) | [laberinto.md](laberinto.md) |
+| **El Abismo** (`abismo`) | **08** | **`js/arenas/abismo/`** (registrada en `ARENA_DEFS`) | [abismo.md](abismo.md) |
+| **Minas Profundas** (`minas`) | **09** | **`js/arenas/minas/`** (registrada en `ARENA_DEFS`) | [minas.md](minas.md) |
 | Arena Infernal (`infernal`) | 10 · Guardián 4 | `aidBuildInfernal`, pozos de lava en `hazards.js` + **`js/arenas/infernal/`** (`ARENA_EXT`) | [infernal.md](infernal.md) |
 | Arena Divina (postgame, se abre al completar la Infernal) | — | `js/arenas/divina.js`, `js/rendering/divina.js` | [divina.md](divina.md) |
 
