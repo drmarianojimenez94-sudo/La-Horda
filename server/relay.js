@@ -18,6 +18,7 @@
      PORT             puerto HTTP/WebSocket (Render/Railway/Fly lo ponen solos)
      ALLOWED_ORIGINS  lista separada por comas de orígenes permitidos (ej:
                       "https://rawcdn.githack.com,https://raw.githack.com"). Vacío = cualquiera.
+                      Si hay lista, siempre se suman el juego publicado y sus previews (ALWAYS_ALLOWED).
      MAX_ROOMS        tope de salas simultáneas (default 300)
      SIM_LATENCY_MS   SOLO PRUEBAS: demora artificial de cada mensaje (default 0)
    ============================================================ */
@@ -32,7 +33,12 @@ const MAX_MSG_BYTES = 256 * 1024;
 const RECONNECT_GRACE_MS = 3 * 60 * 1000;   // un invitado caído conserva su lugar este tiempo
 const ROOM_IDLE_MS = 45 * 60 * 1000;        // salas sin actividad se borran
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin 0/O/1/I para dictarlo sin errores
-const ALLOWED = (process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
+// Orígenes que SIEMPRE se aceptan si se configuró una lista: el juego publicado (GitHub Pages) y sus
+// previews. Antes render.yaml solo permitía las previews de githack, y el juego publicado quedaba
+// rechazado en silencio: "crear sala" no hacía nada (auditoría pre-alfa).
+const ALWAYS_ALLOWED = ["https://drmarianojimenez94-sudo.github.io", "https://rawcdn.githack.com", "https://raw.githack.com"];
+const ALLOWED_ENV = (process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
+const ALLOWED = ALLOWED_ENV.length ? [...new Set(ALLOWED_ENV.concat(ALWAYS_ALLOWED))] : [];
 // CHAT DE LA SALA: texto corto, anti-spam en el servidor y lista de palabras tapadas configurable
 // (CHAT_BLOCKLIST="palabra1,palabra2"). El anfitrión puede silenciar a un jugador. El registro
 // solo guarda metadatos (sala, lugar, largo, si se tapó algo): nunca el texto.
@@ -246,7 +252,12 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocketServer({ server, maxPayload: MAX_MSG_BYTES });
 wss.on("connection", (ws, req) => {
   const origin = req.headers.origin || "";
-  if(ALLOWED.length && !ALLOWED.some(a => origin === a || origin.startsWith(a))){ ws.close(1008, "origin"); return; }
+  if(ALLOWED.length && !ALLOWED.some(a => origin === a || origin.startsWith(a))){
+    // se avisa el motivo antes de cortar, para que el juego pueda mostrarlo
+    log("NETWORK_ERROR", { origin_rejected: origin });
+    try{ ws.send(JSON.stringify({ t:"error", code:"ORIGIN", origin })); }catch(e){}
+    ws.close(1008, "origin"); return;
+  }
   ws._alive = true;
   ws.on("pong", () => { ws._alive = true; });
   ws.on("message", (buf) => {

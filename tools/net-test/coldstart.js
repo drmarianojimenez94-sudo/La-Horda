@@ -14,11 +14,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x) : '')); if (!ok) fails++; };
 (async () => {
   const browser = await chromium.launch({ args: ['--no-sandbox'] });
-  const phone = async () => {
+  const phone = async (relayUrl) => {
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true });
     await ctx.addInitScript(() => { window.__campaignMode = true; });
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
-    await p.goto(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`);
+    await p.goto(`${SITE}/index.html?server=${encodeURIComponent(relayUrl || RELAY)}`);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
     await p.evaluate(() => { save.starterChosen = true; save.champions.mago.unlocked = true; selectedClass = 'mago'; currentArena = 'ciudad'; setState('prep'); renderPrepSummary(); });
     return { p, errs };
@@ -48,8 +48,19 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const humans = await A.p.evaluate(() => net.room ? net.room.slots.filter(s => s && s.connected).length : 0);
   check('A_ve_2_jugadores', humans === 2, humans);
   check('sin_errores', A.errs.length + B.errs.length === 0, A.errs.concat(B.errs).slice(0, 3));
-  // servidor inalcanzable del todo: el error llega con un mensaje claro (no se cuelga)
-  await browser.close(); if (relay) relay.kill();
+  if (relay) relay.kill();
+  // servidor que RECHAZA esta página (ALLOWED_ORIGINS sin este origen): antes el botón quedaba en
+  // "Conectando…" sin ningún cartel. Ahora tiene que aparecer el motivo.
+  const R2 = spawn(process.execPath, [path.join(__dirname, '../../server/relay.js')], { env: { ...process.env, PORT: String(PORT + 1), ALLOWED_ORIGINS: 'https://ejemplo.invalid' }, stdio: 'ignore' });
+  await sleep(1200);
+  const C = await phone(`ws://127.0.0.1:${PORT + 1}`);
+  await C.p.evaluate(() => document.getElementById('net-create-btn').click());
+  let rej = null;
+  for (let k = 0; k < 60; k++) { await sleep(250); rej = await C.p.evaluate(() => ({ err: netLobby.lastError, toast: (document.getElementById('net-toast') || {}).textContent || '', btn: (document.getElementById('net-create-btn') || {}).textContent || '', code: net.code })); if (rej.err) break; }
+  check('rechazo_muestra_motivo', /no acepta conexiones desde esta p/.test(rej.err) && /no acepta/.test(rej.toast), rej);
+  check('rechazo_no_queda_colgado', !/Conectando|Despertando/.test(rej.btn) && !rej.code, rej.btn);
+  R2.kill();
+  await browser.close();
   console.log(`SUMMARY ${fails ? 'FAIL' : 'OK'} fails=${fails}`);
   process.exit(fails ? 1 : 0);
 })();
