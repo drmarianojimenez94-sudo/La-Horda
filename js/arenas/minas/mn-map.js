@@ -40,7 +40,7 @@ function mnNewState(){
 }
 
 /* ---------------- geometría ---------------- */
-function mnRocksNow(){ const S = mnSector(); return S.gate ? S.rocks.concat([{x0:-420, y0:-760, x1:420, y1:-620}]) : S.rocks; }
+function mnRocksNow(){ const S = mnSector(); return S.gate ? S.rocks.concat([{x0:-420, y0:-760, x1:420, y1:-580}]) : S.rocks; }
 function mnSolidsNow(){
   const S = mnSector(); const L = S.pillars.slice();
   if(mnS && mnS.rubble.length) for(const r of mnS.rubble) if(r.t >= 0) L.push(r);

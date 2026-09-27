@@ -64,7 +64,7 @@ function mnLightOff(L, cause, tempMs){
   }
 }
 function mnRelight(L, by){
-  if(!L) return;
+  if(!L || L.perm) return;                       // el Umbral se la comió: no vuelve
   L.e = 1; L.st = 2; L.off = 0; L.dr = 0; L.dev = 0;
   mnS.relit++;
   playSfx("mnRelight");
@@ -99,6 +99,7 @@ function mnLightsUpdate(dt){
     if(L.hit > 0) L.hit -= dt;
     if(L.dr > 0) L.dr -= dt;
     if(L.st===0){
+      if(L.perm) continue;
       if(L.off > 0){ L.off -= dt; if(L.off <= 0){ L.off = 0; L.e = 0.7; mnLightSt(L); playSfx("mnRelight"); } }
       continue;
     }
@@ -118,7 +119,7 @@ function mnLightsUpdate(dt){
   // objetivos de la acción contextual: ENCENDER luces apagadas o casi apagadas (se conserva el progreso)
   const old = new Map(mnS.ctx.map(t=>[t.id, t])); mnS.ctx = [];
   for(const L of mnS.lights){
-    if(L.st===2 || (L.st===1 && L.e > 0.3)) continue;
+    if(L.perm || L.st===2 || (L.st===1 && L.e > 0.3)) continue;
     const id = "L" + L.i, t = old.get(id) || {id, li:L.i, r:86, kind:"mn_light", dur:C.relightMs, prog:0};
     if(!t.done){ t.x = L.x; t.y = L.y + 10; mnS.ctx.push(t); }
   }

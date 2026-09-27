@@ -168,6 +168,7 @@ function goreDeathKind(e){
   return "normal";
 }
 function goreOnDeath(e, kind, dx, dy){
+  if(e.vanishOnDeath) return;
   const mat = GORE_MAT[goreMatOf(e)], R = e.radius||20, big = R > 30;
   const cx = e.x, cy = e.y - R*0.6;
   if(!inView(e.x, e.y, 120)) return;

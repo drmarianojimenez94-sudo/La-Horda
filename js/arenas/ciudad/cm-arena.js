@@ -208,7 +208,8 @@ function cmBotTarget(h, range){
     if(!e.alive || e.cmRoof) continue;
     const d = Math.hypot(e.x - h.x, e.y - h.y); if(d > range*1.4) continue;
     let s = -Infinity;
-    if(e.type==="cm_raptor" && e.rp && (e.rp.st==="ESCAPE" || e.rp.st==="GRAB")) s = 900 - d*0.3;
+    if(e.type==="cm_cometa") s = 1100 - d*0.25;                          // interceptar el Gran Número (defiende la ciudad y expone al jefe)
+    else if(e.type==="cm_raptor" && e.rp && (e.rp.st==="ESCAPE" || e.rp.st==="GRAB")) s = 900 - d*0.3;
     else if(e.type==="cm_campanero" && e.cp && e.cp.st==="channel") s = 820 - d*0.3;
     else if(e.type==="cm_verdugo" && e.vw && e.vw.si >= 0) s = 620 - d*0.4;
     else if(e.type==="cm_planidera") s = 460 - d*0.45;
@@ -254,7 +255,7 @@ ARENA_DEFS.ciudad = {
   spawnIntervalMult:cmSpawnIntervalMult,
   placeSpawn:(e, atBoss)=>cmPlaceSpawn(e, atBoss),
   holdLevel:cmHoldLevel,
-  enemyAI:Object.assign({cm_maestro:cmAIMaestro, cm_tramoyista:cmAITramoyista, cm_dama:cmAIDama, cm_espejismo:cmAIEspejismo, cm_presentador:cmAIPresentador}, CM_ENEMY_AI),
+  enemyAI:Object.assign({cm_maestro:cmAIMaestro, cm_tramoyista:cmAITramoyista, cm_dama:cmAIDama, cm_espejismo:cmAIEspejismo, cm_presentador:cmAIPresentador, cm_cometa:cmAICometa}, CM_ENEMY_AI),
   enemyKilled:cmEnemyKilled,
   afterEnemies:cmAfterEnemies,
   bossDefeated:cmBossDefeated,

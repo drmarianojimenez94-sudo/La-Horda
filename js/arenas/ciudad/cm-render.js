@@ -314,6 +314,16 @@ function _cmDrawCiv(c, t){
 function cmDrawEnemyBody(e){
   if(!cmS) return false;
   if(e.cmRoof) return true;                         // en el tejado: se dibuja en drawTop (encima de los techos)
+  if(e.type==="cm_cometa"){   // cometa del Gran Número: bola de fuego con estela y la línea hacia su blanco
+    const t = animNow/1000;
+    ctx.save(); ctx.strokeStyle = "rgba(255,140,60,0.35)"; ctx.lineWidth = 3; ctx.setLineDash([12, 10]); ctx.lineDashOffset = -t*40;
+    ctx.beginPath(); ctx.moveTo(e.x, e.y - 20); ctx.lineTo(e.gnTx, e.gnTy); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+    _cmGlow(e.x, e.y - 24, 90, "255,120,40", 0.55 + 0.15*Math.sin(t*14));
+    for(let k=1;k<5;k++) _cmGlow(e.x - (e.fx||0)*k*18, e.y - 24 - (e.fy||0)*k*18, 40 - k*6, "255,90,20", 0.35 - k*0.06);
+    _cmFx("cmFire", ((t*12)|0) % 4, e.x, e.y + 6, 70, 1, 1);
+    _cmFx("cmPreBolt", ((t*10)|0) % 3, e.x, e.y - 24, 46, 0.9, 0.5);
+    return true;
+  }
   if(e.type==="cm_espejismo"){ ctx.save(); ctx.globalAlpha = 0.55 + 0.15*Math.sin(animNow/120); const r = drawEnemyAtlasPack(Object.assign({}, e, {type:"cm_dama"})); ctx.restore(); return r; }
   if(e.type==="cm_espectro"){ ctx.save(); ctx.globalAlpha = 0.75; ctx.globalCompositeOperation = "lighter"; const r = drawEnemyAtlasPack(e); ctx.restore(); _cmGlow(e.x, e.y - 30, 50, "120,190,255", 0.18); return r; }
   if(e.type==="cm_raptor"){
@@ -329,6 +339,8 @@ function cmDrawEnemyBody(e){
 function cmDrawTop(){
   if(!cmS || !player) return;
   const t = animNow/1000, V = _cmView();
+  // Gran Número DESVIADO: vuelve volando contra el Presentador
+  for(const R of (cmS.refl||[])){ _cmGlow(R.x, R.y, 70, "255,220,120", 0.7); _cmFx("cmPreBolt", ((t*12)|0) % 3, R.x, R.y, 50, 1, 0.5); }
   // Acechantes en los tejados
   for(const e of enemies){
     if(!e.alive || !e.cmRoof) continue;

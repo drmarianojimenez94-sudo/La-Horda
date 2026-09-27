@@ -194,6 +194,7 @@ function micAINucleo(e, dt){
 }
 function micNucleoKilled(e){
   e._micRecd = 1;
+  if(e.micLink) micNetCut(e);
   micS.recede.push({x:e.x, y:e.y, r:micNucleoRadius(e), t:0});
   if(micS.recede.length > 8) micS.recede.shift();
   vfxBurst(e.x, e.y-20, 22, "micSpore", 170, 800, 4, 2, -60, 0);

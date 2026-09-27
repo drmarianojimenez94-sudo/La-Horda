@@ -352,6 +352,7 @@ function cmPresController(dt){
       }
     }
     if(P.act===3){ cmS.dark = Math.min(0.42, cmS.dark + dt/3000); cmSpectatorsUpdate(dt); }
+    cmReflUpdate(dt);
     return;
   }
   if(P.st==="dying"){
@@ -417,8 +418,42 @@ function cmAIPresentador(e, dt, tgt, dist){
     }
     return true;
   }
+  // GRAN NÚMERO en carga: si le sacan suficiente vida se corta y queda EXPUESTO; si no, sale el cometa
+  e.gnCd = (e.gnCd === undefined ? 9000 : e.gnCd) - dt;
+  if(bossHeroesFarMs(e, C.kiteR, dt) > C.kiteMs && !e.gn){ e._kiteMs = 0; e.gnCd = Math.min(e.gnCd, 0); if(!e._kiteSaid){ e._kiteSaid = 1; showBanner("«¿Se van? Entonces el público paga la entrada.» — ataca la ciudad"); } }
+  if(e.gn){
+    e.gn.t += dt; cmBossPack(e, "cast", 400);
+    if(Math.random() < dt/120) vfxBurst(e.x + cmRand(-40, 40), e.y - 80, 2, "ember", 70, 500, 3, 1, -50, 0);
+    if(e.gn.hp0 - e.hp >= e.maxHp*C.gnBreakPct){
+      e.gn = null; e.cmBusy = false; e.gnCd = cmRand(C.gnCd[0], C.gnCd[1]);
+      bossExpose(e, C.gnExposeMs, 1.6, "¡LE CORTASTE LA FUNCIÓN! El Presentador queda EXPUESTO");
+      return true;
+    }
+    if(e.gn.t >= C.gnWind){
+      const n = act===1 ? 1 : 2, used = [];
+      for(let k=0;k<n;k++){
+        let si = -1, bd = Infinity;
+        CM_STRUCTS.forEach((q, i)=>{ if(cmS.st[i].st===CM_ST.DESTROYED || used.includes(i)) return; const p = cmStructAttackPt(i, e.x, e.y), d = Math.hypot(p.x - e.x, p.y - e.y) + (q.critical ? 0 : 900); if(d < bd){ bd = d; si = i; } });
+        if(si < 0) break; used.push(si);
+        const p = cmStructAttackPt(si, e.x, e.y), c = cmSpawnAt("cm_cometa", e.x + (k ? 40 : -40), e.y + 40);
+        c.maxHp = c.hp = Math.max(40, Math.round(e.dmg*2.4)); c.gnSi = si; c.gnTx = Math.round(p.ex); c.gnTy = Math.round(p.ey); c.gnFrom = cmId(e);
+        cmAlert("struct", p.ex, p.ey, `¡EL GRAN NÚMERO VA HACIA ${CM_STRUCTS[si].name.toUpperCase()}!`, 4200);
+      }
+      e.gn = null; e.cmBusy = false; e.gnCd = cmRand(C.gnCd[0], C.gnCd[1])*(act===3 ? 0.8 : 1);
+      playSfx("cmBlast"); vfxShake(6);
+      if(!tutSeen("cm_gn")) cmTutSay("cm_gn", "¡El GRAN NÚMERO va hacia la ciudad! Rompé el cometa o ponete en el medio: REBOTA contra el Presentador y lo deja EXPUESTO.", 10000, true);
+    }
+    return true;
+  }
   if(e.cast){ e.cast.t += dt; if(e.cast.t >= e.cast.d){ const f = e.cast.fn; e.cast = null; e.cmBusy = false; if(f) f(); } return true; }
   const cast = (set, ms, fn)=>{ cmBossPack(e, set, ms + 200); e.cast = {t:0, d:ms, fn}; e.cmBusy = true; };
+  if(e.gnCd <= 0 && !e.ov && CM_STRUCTS.some((q, i)=>cmS.st[i].st!==CM_ST.DESTROYED)){
+    e.gn = {t:0, hp0:e.hp}; e.cmBusy = true;
+    showBanner("«¡Y AHORA… EL GRAN NÚMERO!» — cortale la función (pegale fuerte) o interceptá el cometa");
+    vfxTelegraph({shape:0, x:e.x, y:e.y, r:e.radius*2.4, dur:C.gnWind, rgb:"255,150,60", follow:e});
+    playSfx("cmApplause");
+    return true;
+  }
   if(act===3 && e.ovCd <= 0){
     e.ovCd = cmRand(C.ovationCd[0], C.ovationCd[1]);
     if(cmS.pillars.filter(p=>p.t >= 0).length < 3) cmPresPillars(e, 4, 250);
@@ -470,6 +505,39 @@ function cmAIPresentador(e, dt, tgt, dist){
   _cmFace(e, tgt.x, tgt.y);
   return true;
 }
+// COMETA DEL GRAN NÚMERO: cruza la ciudad despacio hacia la estructura marcada. Un guardián que lo toca o lo rompe
+// lo DESVÍA: rebota hacia el Presentador (EXPUESTO al llegar). Si llega, la estructura recibe un golpe enorme.
+function cmAICometa(e, dt){
+  e.atkCd = 1e6; e.cmBusy = true;
+  const dx = e.gnTx - e.x, dy = e.gnTy - e.y, d = Math.hypot(dx, dy);
+  if(d < 30){
+    const S = cmS.st[e.gnSi];
+    if(S && S.st!==CM_ST.DESTROYED) cmHitStruct(e.gnSi, S.max*CM_CFG.presentador.gnStructPct, e);
+    if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmBoom", e.x, e.y, 200, 800, {anchorY:0.7});
+    vfxShake(8); playSfx("cmBlast");
+    e.gnArrived = true; e.alive = false; e.hp = 0;
+    return true;
+  }
+  const v = CM_CFG.presentador.gnSpd*dt/1000; e.x += dx/d*v; e.y += dy/d*v; e.fx = dx/d; e.fy = dy/d;
+  for(const h of heroes){ if(h.alive && Math.hypot(h.x - e.x, h.y - e.y) < e.radius + (h.radius||18)){ bossHitHero(h, (boss ? boss.dmg : 30)*0.35, {from:e}); damageEnemy(e, e.hp + 1, {src:h}); break; } }
+  if(Math.random() < dt/60) vfxBurst(e.x, e.y - 20, 2, "ember", 60, 500, 3, 1, -20, 0);
+  return true;
+}
+function cmCometDeflected(e){
+  const P = cmPresEntity(); if(!P || e.gnArrived) return;
+  cmS.refl = cmS.refl || []; cmS.refl.push({x:Math.round(e.x), y:Math.round(e.y - 20), t:0});
+  floatText(e.x, e.y - 50, "¡DESVIADO!", "heal"); playSfx("shatter");
+}
+function cmReflUpdate(dt){
+  const P = cmPresEntity(); if(!cmS.refl || !cmS.refl.length) return;
+  for(let i=cmS.refl.length-1;i>=0;i--){
+    const R = cmS.refl[i]; R.t += dt;
+    if(!P){ cmS.refl.splice(i, 1); continue; }
+    const dx = P.x - R.x, dy = (P.y - 50) - R.y, d = Math.hypot(dx, dy), v = 700*dt/1000;
+    if(d <= v + 10){ cmS.refl.splice(i, 1); bossExpose(P, CM_CFG.presentador.gnExposeMs, 1.6, "¡SU PROPIO NÚMERO LO GOLPEA! El Presentador queda EXPUESTO"); if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmBoom", P.x, P.y - 40, 180, 700, {anchorY:0.7}); continue; }
+    R.x += dx/d*v; R.y += dy/d*v;
+  }
+}
 // ¿Hay un pilar entre el Presentador y el héroe?
 function cmCovered(e, h){
   for(const p of cmS.pillars){
@@ -488,7 +556,7 @@ function cmBossDefeated(b){
   runEnding = true; bossActive = false;
   for(const o of enemies){ if(o.alive && o!==b){ o.alive = false; o.hp = 0; vfxOnDeath(o); } }
   enemies = enemies.filter(o=>o.alive);
-  cmS.drops.length = 0; cmS.zones.length = 0; cmS.shots.length = 0; cmS.spec = [];
+  cmS.drops.length = 0; cmS.zones.length = 0; cmS.shots.length = 0; cmS.spec = []; cmS.refl = [];
   if(typeof bossHudHide==="function") bossHudHide();
   hitStop(120, true); slowMo(0.3, 1600);
   playSfx("cmCurtain"); showBanner("EL PRESENTADOR CAE DE RODILLAS…");
@@ -496,6 +564,7 @@ function cmBossDefeated(b){
 }
 function cmEnemyKilled(e){
   if(!cmS) return;
+  if(e.type==="cm_cometa"){ cmCometDeflected(e); return; }
   if(e.type==="cm_raptor"){ const c = cmS.civ.find(o=>o.st===CIV.KIDNAPPED && o.by===e.cmId); if(c) cmCivRelease(c); }
   if(e.type==="cm_campanero" && e.cp && e.cp.bell >= 0 && cmS.bells[e.cp.bell].by===e.cmId){ cmS.bells[e.cp.bell].by = 0; cmS.bells[e.cp.bell].t = 0; }
   if(e.type==="cm_maestro" || e.type==="cm_tramoyista" || e.type==="cm_dama"){ vfxShake(10); flashScreen(0.2, "255,150,160"); playSfx("cmApplause"); }

@@ -431,6 +431,7 @@ function fortUpdate(dt){
   fortUpdateCoreRotors(dt);
   fortUpdateSlide(dt);
   fortKnightUpdate(dt);
+  fortDuoUpdate(dt);                 // amo y bestia (fort-duo.js)
   fortDragonDirector(dt);
   fortTrapsUpdate(dt);
   fortEnemyWorldUpdate(dt);

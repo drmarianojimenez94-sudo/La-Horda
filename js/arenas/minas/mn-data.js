@@ -120,7 +120,11 @@ const MN_CFG = {
           lightR:420, collapseCd:[14000, 17000], rubbleMs:10000, maxRubble:4, p2At:0.5 },
   cerbero:{ p2At:0.66, p3At:0.33, flameCd:[6500, 8000], flameWind:1100, flameMs:1500, flameR:400, flameArc:0.55, stompCd:[7000, 9000], stompWind:900, stompR:210,
             biteCd:[3200, 4200], biteWind:650, biteR:160, howlCd:[14000, 17000], howlWind:1200, chargeCd:[9000, 11000], chargeWind:900,
-            summonCd:[16000, 20000], chainR:420, deathMs:6200, portalMs:3200, portalUseMs:900 }
+            summonCd:[16000, 20000], chainR:420, deathMs:6200, portalMs:3200, portalUseMs:900,
+            // REGLA: ILUMINÁ AL GUARDIÁN DEL INFIERNO. Fuentes que lo alumbran a la vez (brasero cercano 1, parpadeando 0.5,
+            // antorchas de guardianes pegados hasta 1): con 2 o más se llena la exposición -> EXPUESTO (sus sombras se separan)
+            exposeNeed:2, exposeMs:2200, exposeWin:5200, exposeCd:9000, exposeReach:1.25,
+            darkSpd:1.22, darkCd:0.7, pounceWind:650, kiteR:640, kiteMs:3500, dieEvery:16000, keepLights:3 }
 };
 
 // ---------------- fichas de enemigo (se suman a ENEMY_BASE) ----------------

@@ -421,8 +421,7 @@ function abEnemyKilled(e){
   if(e.type==="ab_carcelero") abCarceleroKilled(e);
   else if(e.type==="ab_tentaculo"){
     const b = abMoradorEntity();
-    if(b){ b.hp = Math.max(1, b.hp - b.maxHp*0.04); b.hitFlash = 120; floatText(b.x, b.y - 120, "¡EL OJO SE ABRE!", "crit"); b.dmgTakenMult = 1.5; b._eyeOpenUntil = runElapsedMs + 3000;
-      runLater(3000, ()=>{ if(b.alive) b.dmgTakenMult = 1; }); }
+    if(b){ b.hitFlash = 120; b._eyeOpenUntil = runElapsedMs + AB_RULE.exposeMs; abRuleTentacleCut(b); }   // ab-boss-rule.js
     if(typeof ABISMO_FX!=="undefined") bossSheetFx("abMorDisint", e.x, e.y, 90, 600, {anchorY:0.8});
   } else if(e.type==="ab_devorador"){
     if(inView(e.x, e.y, 80) && typeof ABISMO_FX!=="undefined") bossSheetFx("abDevFrag", e.x, e.y, 70, 500, {anchorY:0.7});

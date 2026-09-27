@@ -63,6 +63,7 @@ function fortDragonDirector(dt){
 }
 function fortAIDragon(e, dt, tgt, dist){
   const C = FORT_CFG.dragon;
+  if(fortDragonFleeTick(e, dt)) return true;       // nivel 6: huye herido hacia su amo (fort-duo.js)
   const over = !!e.fortOverload;
   const k = over ? 0.65 : 1;
   e.dcd -= dt; e.breathCd -= dt; e.bombCd -= dt; e.flapCd -= dt; e.atkCd = 1e6;
@@ -109,6 +110,7 @@ function fortAIDragon(e, dt, tgt, dist){
     const q = Math.min(1, B.t/B.dur);
     const a = B.a0 + (B.a1-B.a0)*q, cdx = Math.cos(a), cdy = Math.sin(a);
     B.ca = a;
+    fortDuoBreathTick(e, B, cdx, cdy);             // nivel 10: su fuego también calienta la armadura del amo
     for(const h of heroes){
       if(!h.alive) continue;
       const hx = h.x-e.x, hy = h.y-e.y, hd = Math.hypot(hx,hy);
@@ -183,7 +185,18 @@ function fortAIDragon(e, dt, tgt, dist){
   return true;
 }
 function fortDragonKilled(e){
+  if(e.fortCompanion){   // nivel 10: la bestia cae junto a su amo (sin compuerta ni cierre de nivel)
+    vfxShock(e.x, e.y, 30, 380, "255,200,120", 1000, 2); vfxBurst(e.x, e.y-40, 40, "ember", 320, 1000, 5, 2, -80, 0);
+    vfxSprite("fortExplosionB", 0, e.x, e.y+20, 220, 1000, null, 0.3, false, 0.8); vfxShake(12); playSfx("fortBlast");
+    return;
+  }
   const D = fortS.dragon; if(D) D.state = "dead";
+  if(e.fortFled){
+    if(typeof setMusicMode==="function") setMusicMode("wave", runLevel);
+    runLater(600, ()=>{ if(!fortS) return; fortOpenGate("g_blast", "blast"); showBanner("En su huida, el Dragón reventó la compuerta hacia el Interior"); });
+    levelTimer = Math.max(levelTimer, levelDuration - 5500);
+    return;
+  }
   vfxShock(e.x, e.y, 30, 380, "255,200,120", 1000, 2);
   vfxBurst(e.x, e.y-40, 40, "ember", 320, 1000, 5, 2, -80, 0);
   vfxBurst(e.x, e.y-20, 30, "rock", 280, 900, 5, 2, -60, 0);
@@ -422,6 +435,7 @@ function fortKnightToPhase(e, p){
 }
 function fortKnightKilled(e){
   if(fortS && fortS.knight) fortS.knight.state = "dead";
+  for(const o of enemies){ if(o.alive && o.fortCompanion){ o.alive = false; o.hp = 0; vfxOnDeath(o); showBanner("La bestia se derrumba junto a su amo."); } }
   for(const o of enemies){ if(o.alive && o!==e && o.fortAdd){ o.alive = false; o.hp = 0; vfxOnDeath(o); } }
   vfxShock(e.x, e.y, 30, 460, "255,210,160", 1200, 2);
   vfxBurst(e.x, e.y-60, 40, "rock", 300, 1100, 5, 2, -70, 0);

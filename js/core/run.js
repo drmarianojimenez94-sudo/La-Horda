@@ -209,6 +209,9 @@ function onBossDefeated(){
     showBanner(boss.acuaticaPhase===2 ? "¡EL LEVIATÁN SE ENFURECE!" : "¡EL LEVIATÁN DESATA TODO SU PODER!");
     return; // sigue la pelea de jefe, todavía no termina la partida
   }
+  // El jefe cayó de verdad: se cancelan sus golpes pendientes, avisos, proyectiles y peligros de la arena
+  // (nada de daño póstumo injusto), aunque la arena tenga su propia secuencia de muerte.
+  bossDeathCleanup();
   // Arenas con secuencia de muerte propia (El Reino Micelial): la arena termina la victoria
   // más tarde llamando a finishBossVictory().
   if(arenaHas("bossDefeated") && arenaHook("bossDefeated", boss)) return;

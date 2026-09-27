@@ -65,3 +65,13 @@ en la pantalla previa).
 - En cooperativo el premio viaja como evento (`crystalAward`), cada jugador lo guarda en su partida.
 - Final: `js/arenas/infernal/inf-hechicero.js`.
 - Test: `tools/items/t_crystals.js`.
+
+
+## 6. Canon de los jefes (pass de identidad)
+
+- **Fábrica — AMO Y BESTIA:** el jefe es el Caballero de la Armadura Oxidada; el Dragón de la Forja es SU bestia. En el nivel 6 no muere: huye herido al trono de su amo y en el 10 pelean juntos. Solo el fuego del Dragón calienta esa armadura hasta quebrarla.
+- **Acuática:** el Leviatán es el Kraken adulto del canon. No es un Guardián.
+- **Minas "EL DESCENSO":** el Devoraluz es una élite (evento), no un jefe. Cerbero, *Guardián del Umbral* (título, no uno de los Cuatro), custodia el Portal Infernal: matarlo abre el portal; cruzarlo es la victoria.
+- **Los Cuatro Guardianes** siguen siendo los únicos Guardianes: Guardián Ancestral → Bestia del Bosque · Mago Gélido → Demonio Gélido · Guardián del Laberinto → Minotauro · Hechicero Supremo → Rey de la Horda.
+- **Foreshadowing del Hechicero:** el mural de las cuatro figuras en la Arena Infernal, sus consejos "demasiado bien informados" y, en la pelea final, la CONVERGENCIA: quiere fundir los cuatro cristales en uno. El Forjador se negó y por eso está encadenado.
+- Reglas de cada encuentro: `LA_HORDA_BOSS_IDENTITY.md`.

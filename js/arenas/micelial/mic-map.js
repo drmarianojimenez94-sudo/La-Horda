@@ -263,7 +263,9 @@ function micBotTarget(h, range){
     if(!e.alive) continue;
     const d = Math.hypot(e.x-h.x, e.y-h.y); if(d > range) continue;
     let s = -Infinity;
-    if(e.type==="chaman") s = 500 - d*0.4;
+    const ns = micNetBotScore(e, d);
+    if(ns !== null) s = ns;
+    else if(e.type==="chaman") s = 500 - d*0.4;
     else if(e.type==="raiz_absorcion") s = 460 - d*0.4;
     else if(e.type==="nucleo_micelial" && e.nuc && (e.nuc.st >= 3 || inf >= 5)) s = 380 + e.nuc.st*30 - d*0.45;
     else if(e.type==="madre_espora" && micS.mo.ph===3 && micS.mo.st==="fight") s = 420 - d*0.2;

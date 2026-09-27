@@ -179,11 +179,60 @@ function mnCerbController(dt){
     }
   }
 }
+// REGLA DE CERBERO (boss identity): la luz lo expone; la oscuridad lo vuelve más feroz; el Umbral se come luces.
+function mnCerbLightScore(e){
+  const C = MN_CFG.cerbero; let n = 0, br = 0;
+  for(const L of mnS.lights){ if(L.st > 0 && Math.hypot(L.x - e.x, L.y - e.y) < L.r*C.exposeReach){ n += L.st===2 ? 1 : 0.5; br++; } }
+  let tor = 0; heroes.forEach((h, i)=>{ if(h.alive && Math.hypot(h.x - e.x, h.y - e.y) < mnTorchR(i) + e.radius) tor += 0.5; });
+  return {score:n + Math.min(1, tor), sources:br};
+}
+function mnCerbRule(e, dt){
+  const C = MN_CFG.cerbero, P = mnS.cb, act = P.act||1;
+  const L = mnCerbLightScore(e);
+  e._mnDarkPow = L.sources===0;
+  if(e._mnExpCd > 0) e._mnExpCd -= dt;
+  if(!(e._expT > 0) && !(e._mnExpCd > 0)){
+    if(L.score >= C.exposeNeed) e._mnExp = (e._mnExp||0) + dt*(1 + 0.4*(L.score - C.exposeNeed));
+    else e._mnExp = Math.max(0, (e._mnExp||0) - dt*0.5);
+    if(e._mnExp >= C.exposeMs){
+      e._mnExp = 0; e._mnExpCd = C.exposeCd; e.mnFlame = null; e.cast = null; e.mnBusy = false;
+      bossExpose(e, C.exposeWin, 1.75, "¡LA LUZ SEPARA SUS SOMBRAS! CERBERO ESTÁ EXPUESTO");
+      P.shadowT = 1400; playSfx("mnTripleRoar");
+      if(!tutSeen("mn_cexp")) mnTutSay("mn_cexp", "¡Eso! Iluminado por varias fuentes a la vez, sus sombras se separan y queda EXPUESTO: pegale con todo. Mantené los braseros encendidos y llevalo a la luz.", 9000, true);
+    }
+  }
+  e._mnExpPct = Math.min(1, (e._mnExp||0)/C.exposeMs);
+  e._encTag = e._expT > 0 ? null : e._mnDarkPow ? "EN LA OSCURIDAD: MÁS FEROZ" : L.score >= C.exposeNeed ? "ILUMINADO: SUS SOMBRAS SE SEPARAN" : null;
+  // ANTI-KITE: lejos de todos por un rato -> lluvia de brasas (encadenado) o embestida al más lejano
+  if(bossHeroesFarMs(e, C.kiteR, dt) > C.kiteMs && !e.cast && !e.mnFlame){
+    e._kiteMs = 0; const far = bossFarthestHero(e.x, e.y);
+    if(far){
+      if(act===1){ for(const h of heroes){ if(!h.alive) continue; for(let k=0;k<3;k++) mnDrop("meteor", h.x + mnRand(-70, 70), h.y + mnRand(-60, 60), 70, 1100 + k*180, e.dmg*0.7, {fire:48}); } showBanner("LLUVIA DE BRASAS: el Umbral castiga a los que huyen"); }
+      else { e.chargeCd = 0; e._mnForceT = far; }
+    }
+  }
+  // ACTO 3: el Umbral devora luces para siempre (quedan al menos 3: siempre se lo puede exponer)
+  if(act >= 3){
+    P.dieT = (P.dieT||0) + dt;
+    if(P.dieT >= C.dieEvery){
+      P.dieT = 0;
+      const alive = mnS.lights.filter(q=>!q.perm);
+      if(alive.length > C.keepLights){
+        let best = null, bd = -1; for(const q of alive){ const d = Math.hypot(q.x - e.x, q.y - e.y); if(d > bd){ bd = d; best = q; } }
+        best.perm = true; mnLightOff(best, "El Umbral", 0); mnAlert("light", best.x, best.y, "EL UMBRAL DEVORÓ UNA LUZ PARA SIEMPRE", 3200);
+        vfxBurst(best.x, best.y - 40, 16, "ember", 120, 900, 3, 1, -60, 0);
+      }
+    }
+  }
+  if(P.shadowT > 0) P.shadowT -= dt;
+}
 function mnAICerbero(e, dt, tgt, dist){
   const C = MN_CFG.cerbero, P = mnS.cb, act = P.act||1;
   e.atkCd = 1e6;
   if(P.st!=="fight"){ return true; }
-  const sp = act===3 ? 0.72 : act===2 ? 0.85 : 1;
+  mnCerbRule(e, dt);
+  if(e._mnForceT && e._mnForceT.alive){ tgt = e._mnForceT; dist = Math.hypot(tgt.x - e.x, tgt.y - e.y); }
+  const sp = (act===3 ? 0.72 : act===2 ? 0.85 : 1)*(e._mnDarkPow ? C.darkCd : 1);
   for(const k of ["flameCd", "stompCd", "biteCd", "howlCd", "chargeCd", "summonCd"]) e[k] = (e[k]||2000) - dt;
   // LANZALLAMAS en curso: barrido del cono con daño por tics; deja fuego en el piso
   if(e.mnFlame){
@@ -230,11 +279,14 @@ function mnAICerbero(e, dt, tgt, dist){
     playSfx("mnPortalHum");
     return true;
   }
-  if(act >= 2 && e.chargeCd <= 0 && dist > 220 && dist < 700){
-    e.chargeCd = mnRand(C.chargeCd[0], C.chargeCd[1])*sp; _mnFace(e, tgt.x, tgt.y);
-    const L = Math.min(620, dist + 120), x2 = e.x + e.fx*L, y2 = e.y + e.fy*L;
-    mnLine("charge", e.x, e.y, x2, y2, 70, C.chargeWind, e.dmg*1.3, {from:mnId(e), knock:60});
-    cast("run", C.chargeWind + 200); playSfx("mnGrowl");
+  if((act >= 2 || e._mnDarkPow) && e.chargeCd <= 0 && dist > 220 && dist < (e._mnForceT ? 1400 : 700)){
+    e.chargeCd = mnRand(C.chargeCd[0], C.chargeCd[1])*sp; _mnFace(e, tgt.x, tgt.y); e._mnForceT = null;
+    let L = Math.min(e._mnDarkPow ? 520 : 620, dist + 120), x2 = e.x + e.fx*L, y2 = e.y + e.fy*L;
+    if(act===1){ const A = MN_SECTORS[5].chain, d2 = Math.hypot(x2 - A.x, y2 - A.y); if(d2 > C.chainR){ x2 = A.x + (x2 - A.x)/d2*C.chainR; y2 = A.y + (y2 - A.y)/d2*C.chainR; } }
+    const wind = e._mnDarkPow ? C.pounceWind : C.chargeWind;
+    mnLine("charge", e.x, e.y, x2, y2, 70, wind, e.dmg*(e._mnDarkPow ? 1.1 : 1.3), {from:mnId(e), knock:60});
+    cast("run", wind + 200); playSfx("mnGrowl");
+    if(e._mnDarkPow) floatText(e.x, e.y - e.radius*2.2, "ZARPAZO DE SOMBRA", null);
     return true;
   }
   if(e.biteCd <= 0 && dist < C.biteR + 50){
@@ -248,7 +300,7 @@ function mnAICerbero(e, dt, tgt, dist){
   if(act===1){
     const nx = e.x + (tgt.x - e.x)/(dist||1)*40, ny = e.y + (tgt.y - e.y)/(dist||1)*40;
     if(Math.hypot(nx - A.x, ny - A.y) < C.chainR && dist > e.radius + 50) mnStep(e, tgt, dist, dt, 0.8);
-  } else if(dist > e.radius + 60) mnStep(e, tgt, dist, dt);
+  } else if(dist > e.radius + 60) mnStep(e, tgt, dist, dt, e._mnDarkPow ? C.darkSpd : 1);
   if(act===1){ const d = Math.hypot(e.x - A.x, e.y - A.y); if(d > C.chainR){ e.x = A.x + (e.x - A.x)/d*C.chainR; e.y = A.y + (e.y - A.y)/d*C.chainR; } }
   _mnFace(e, tgt.x, tgt.y);
   return true;

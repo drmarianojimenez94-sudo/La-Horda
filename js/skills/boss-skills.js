@@ -139,6 +139,8 @@ function updateBossSkillWorld(dt){
       if(s.t >= s.delay){
         const o = s.o ? Object.assign({from:s}, s.o) : null;
         for(const h of heroes){ if(h.alive && Math.hypot(h.x-s.x, h.y-s.y) <= s.r + (h.radius||18)*0.5) bossHitHero(h, s.dmg, o); }
+        if(typeof arenaHas==='function' && arenaHas("strikeLanded")) arenaHook("strikeLanded", s); // p.ej. el Bombardeo del Dragón calienta al Caballero
+        if(typeof BOSS_STRIKE_HOOKS!=='undefined') for(const f of BOSS_STRIKE_HOOKS) f(s);
         const pal = s.kind==="rock" ? "rock" : (s.kind==="fire" ? "ember" : (s.kind==="holy" ? "holy" : (s.kind==="root" ? "leaf" : (s.kind==="water" ? "water" : "ice"))));
         vfxBurst(s.x, s.y-8, 12, pal, 150, 420, 3, 1, -60, 0);
         vfxShock(s.x, s.y, s.r*0.3, s.r*1.2, BOSS_STRIKE_RGB[s.kind]||"255,255,255", 360, 1);
@@ -252,6 +254,7 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
     // Minotauro: si la embestida lo estampa contra un muro (o el borde de la arena), queda
     // aturdido y VULNERABLE -contrajuego del Laberinto: pararse delante de una pared-.
     if(e.minoCharge && (Math.abs(e.x-bx) + Math.abs(e.y-by) > 2 || bossInWall(e))){
+      if(typeof labBossCrash==="function" && labBossCrash(e)) return true;   // jefe del Laberinto: paredes agrietadas (lab-boss.js)
       e.bossCharge = null; e.minoCharge = false; e.chargeQueue = 0;
       e.stunTimer = 2200; e.crashTimer = 2200; e.crashVuln = true;
       vfxShock(e.x, e.y, e.radius*0.3, e.radius*2.2, "220,190,140", 520, 2);

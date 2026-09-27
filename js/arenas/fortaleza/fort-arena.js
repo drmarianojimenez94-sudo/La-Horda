@@ -117,6 +117,8 @@ ARENA_DEFS.fortaleza = {
   spawnIntervalMult:()=>1.4,             // menos enemigos por minuto, pero más duros (élites, subélites)
   placeSpawn:(e, atBoss, champ)=>{ fortInitEnemy(e); fortPlaceSpawn(e, atBoss); },
   holdLevel:fortHoldLevel,
+  ctxTargets:fortDuoCtxTargets,          // válvulas de vapor del Caballero (fort-duo.js)
+  strikeLanded:fortDuoStrike,            // el Bombardeo del Dragón calienta la armadura de su amo
   enemyTarget:fortEnemyTarget,
   enemyAI:Object.assign({dragon_forja:fortAIDragon, caballero:fortAIKnight}, FORT_ENEMY_AI),
   enemyKilled:fortEnemyKilled,

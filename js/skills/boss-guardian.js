@@ -133,6 +133,7 @@ Object.assign(BOSS_ATTACKS, {
     bossSheetPack(e, "heavy", 1100);
     skCircleSlam(e, 240, 900, 1.45, {knock:95, stun:300}, "220,90,60", null, "bossGroundSlam", ()=>{
       bossSheetFx("gdSpikes", e.x, e.y + 10, 220, 700, {anchorY:0.9});
+      if(typeof bosBossStrike==="function") bosBossStrike({x:e.x, y:e.y, r:240});   // el Golpe del Bosque rompe las runas corruptas cercanas
       e.crashVuln = true; e.crashTimer = GUARD_CFG.heavyVulnMs; e.stunTimer = Math.max(e.stunTimer||0, GUARD_CFG.heavyVulnMs);
       bossHudHint("Báculo clavado", "¡pegale ahora, está VULNERABLE!");
     });

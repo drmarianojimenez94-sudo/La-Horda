@@ -174,6 +174,7 @@ function micDrawWorld(now){
   }
   // territorio infectado de los núcleos (y el que se retira)
   for(const e of enemies){ if(e.alive && e.type==="nucleo_micelial" && e.nuc && inView(e.x, e.y, e.nuc.rr + 40)) _micDrawInfection(e.x, e.y, e.nuc.rr, e.nuc.st, t, 1); }
+  micDrawNetLinks(t);
   for(const z of micS.recede){ const q = 1 - Math.min(1, z.t/MIC_CFG.nucleo.recedeMs); if(q > 0 && inView(z.x, z.y, z.r)) _micDrawInfection(z.x, z.y, z.r*q, 2, t, q); }
   // manchón donde el suelo se tragó al Micelio
   if(micS.mi.st==="sink" || micS.mi.st==="dead"){ const q = micS.mi.st==="sink" ? Math.min(1, micS.mi.t/2600) : 1; _micDrawInfection(micS.mi.x, micS.mi.y, 170*q, 3, t, q*0.8); }
@@ -500,6 +501,7 @@ function _micDrawMotherDying(now){
 function micDrawTop(){
   if(!micS) return;
   const t = animNow/1000;
+  micDrawNetHeart(t);
   // nubes de esporas (translúcidas, sobre todos)
   for(const c of micS.clouds){
     if(!inView(c.x, c.y, c.r + 60)) continue;

@@ -32,19 +32,21 @@ Prioridad:
 
 ---
 
+> **Actualización (hoja «ASSETS ADICIONALES»):** portal por etapas, cadenas de Cerbero, piso de tierra, roca, utilería, luces y cristales ya están integrados (`tools/art/minas/extract_extra.py`). Sigue pendiente MN-A03 (destello de cruce) y los frames de Cerbero en alta resolución (ver `LA_HORDA_BOSS_ASSET_MANIFEST.md`, P0).
+
 ## P0 — lo que más se nota
 
 | ID | Estado | Dónde se usa | Tamaño / frames | Prioridad |
 |---|---|---|---|---|
-| MN-A01 Portal Infernal · bucle abierto | SUSTITUTO (óvalo de fuego vectorial en `mn-render.js`) | cierre de la arena: objetivo "ATRAVIESA EL UMBRAL" | 128×192 · 8 cuadros en bucle | P0 |
-| MN-A02 Portal Infernal · apertura | SUSTITUTO (el óvalo crece) | los 3,2 s tras la muerte de Cerbero | 128×192 · 10 cuadros | P0 |
+| MN-A01 Portal Infernal · bucle abierto | ✅ ENTREGADO (hoja extra: paneles «activo / idle», `portal_3..4.png` + remolino) | cierre de la arena: objetivo "ATRAVIESA EL UMBRAL" | 128×192 · 8 cuadros en bucle | P0 |
+| MN-A02 Portal Infernal · apertura | ✅ ENTREGADO (hoja extra: «sello cerrado / grietas / apertura», `portal_0..2.png`) | los 3,2 s tras la muerte de Cerbero | 128×192 · 10 cuadros | P0 |
 | MN-A03 Portal Infernal · cruce (destello al atravesar) | FALTA | el instante de la victoria | 192×192 · 8 cuadros | P0 |
 | MN-A04 Puerta del Umbral · cerrada / quebrándose / abierta | SUSTITUTO (arco dibujado + `puerta_mina` recoloreada) | fondo del sector Umbral | 320×224 · 1 + 6 + 1 cuadros | P0 |
-| MN-A05 Cadenas de Cerbero · eslabón, ancla y rotura | SUSTITUTO (dibujadas por código) | Acto 1 de Cerbero (restricción) y paso al Acto 2 | eslabón 16×32 (tile vertical) · ancla 64×64 · rotura 96×96 × 6 cuadros | P0 |
+| MN-A05 Cadenas de Cerbero · eslabón, ancla y rotura | ✅ ENTREGADO (hoja extra: tensionada / rotura / caída / restos, `cadena_*`) | Acto 1 de Cerbero (restricción) y paso al Acto 2 | eslabón 16×32 (tile vertical) · ancla 64×64 · rotura 96×96 × 6 cuadros | P0 |
 | MN-A06 Lanzallamas de Cerbero · cono | PARCIAL (se estira `mnFlame` de la hoja) | ataque principal del jefe | 320×128 · inicio 3 + bucle 6 + fin 3 cuadros, apuntando a la derecha | P0 |
 | MN-A07 Brasero · encendido / parpadeo / apagado | SUSTITUTO (`lampara_apaga_*`) | fuente de luz de los sectores profundos | 48×64 · 4 + 4 + 1 cuadros | P0 |
 | MN-A08 Farol · parpadeo | PARCIAL (1 cuadro + oscurecido por código) | fuente de luz más común | 48×64 · 4 cuadros en bucle + 1 apagado | P0 |
-| MN-A09 Masa de roca · autotile | PARCIAL (`tex_roca` se repite y parece ladrillo) | paredes y bloques de todos los sectores | 16 tiles de 32×32 (bordes, esquinas y relleno) · 3 paletas (marrón, gris-azul, basalto con brasas) | P0 |
+| MN-A09 Masa de roca · autotile | ✅ MEJORADO (hoja extra: `tex_roca_mina.png` + rocas y utilería repartidas por toda la mina; el autotile de bordes sigue siendo deseable, P2) | paredes y bloques de todos los sectores | 16 tiles de 32×32 (bordes, esquinas y relleno) · 3 paletas (marrón, gris-azul, basalto con brasas) | P0 |
 
 **MN-A01 / A02 / A03 — Portal Infernal**
 > Pixel art, modern dark fantasy, 16-bit, crisp pixels, transparent background. A vertical oval hellgate portal carved
@@ -93,7 +95,7 @@ Prioridad:
 | MN-B04 Antorcha personal del guardián | SUSTITUTO (solo el círculo de luz) | cada guardián lleva luz propia | 16×32 · 4 cuadros en bucle + 1 "sofocada" (Escupidor) | P1 |
 | MN-B05 Jaula del montacargas + cable | SUSTITUTO (dibujada por código) | entrada de cada sector (descenso) | 96×112 · 1 cuadro + 4 cuadros de bajada | P1 |
 | MN-B06 Escombros del Titán | SUSTITUTO (roca de la hoja recortada) | derrumbes del Titán (bloquean y cubren) | 3 variantes de 64×48 | P1 |
-| MN-B07 Pisos por sector | SUSTITUTO (procedurales `tex_piso_*`) | 6 sectores | 64×64 sin costuras × 6 (superior, galerías, vetas, corrompida, profundidades, umbral) | P1 |
+| MN-B07 Pisos por sector | ✅ ENTREGADO (piso de TIERRA de la hoja extra: `tex_tierra_{sector}.png`, sin costuras) | 6 sectores | 64×64 sin costuras × 6 (superior, galerías, vetas, corrompida, profundidades, umbral) | P1 |
 | MN-B08 Íconos del HUD de luz | SUSTITUTO (emoji 🔥 / 🌑) | panel "Luces N/M · A OSCURAS" | 16×16 · encendida, parpadeo, apagada, a oscuras | P1 |
 | MN-B09 Retrato de Cerbero para carteles | PARCIAL (recorte del cuerpo) | cartel de jefe y Códice | 96×96 · 1 quieto + 1 rugiendo | P1 |
 | MN-B10 Carteles de sector | FALTA (texto sobre fondo) | cartel del descenso con profundidad | 480×96 · 6 placas de madera o hierro con el nombre del sector | P1 |

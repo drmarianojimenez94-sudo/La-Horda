@@ -391,6 +391,15 @@ function _fortDrawGate(G, now){
 
 /* ---------------- capa superior (sobre las entidades) ---------------- */
 function fortDrawTop(){
+  // Caballero: la armadura se calienta con el fuego de su bestia (oscuro -> rojo -> incandescente)
+  for(const e of enemies){
+    if(!e.alive || e.type!=="caballero" || !(e._fHeat > 5)) continue;
+    const q = Math.min(1, e._fHeat/FORT_CFG.duo.heatMax), t = animNow/1000, pul = q >= 1 ? 0.5 + 0.5*Math.sin(t*14) : 0.5 + 0.5*Math.sin(t*5);
+    const rgb = q >= 1 ? "255,240,200" : q > 0.5 ? "255,120,40" : "200,60,20";
+    ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = (0.18 + 0.5*q)*(0.7 + 0.3*pul);
+    ctx.drawImage(glowSprite(rgb), e.x - e.radius*2, e.y - e.radius*3.4, e.radius*4, e.radius*4); ctx.restore();
+    if(q >= 1 && Math.random() < 0.3) vfxBurst(e.x + (Math.random()-0.5)*e.radius*1.4, e.y - e.radius*1.6 - Math.random()*e.radius, 1, "ember", 50, 500, 3, 0, -50, 0);
+  }
   if(!fortS) return;
   const now = animNow/1000;
   // cadenas del Carcelero, rayos de reparación de la Araña, brillo de Sobrepresión/Sobrecarga

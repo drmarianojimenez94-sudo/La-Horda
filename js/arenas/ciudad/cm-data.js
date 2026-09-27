@@ -99,7 +99,10 @@ const CM_CFG = {
   tramoyista:{ slamCd:[3000, 3800], slamWind:900, slamR:130, dropCd:[7000, 9000], dropWind:1100, dropR:90, barCd:[11000, 14000], barMs:8000, throwCd:[5200, 6800], throwWind:750 },
   dama:{ curtainCd:[7000, 9000], curtainWind:1100, boltCd:[3000, 3800], darkCd:[9000, 12000], darkR:170, darkMs:5000, mirrorCd:[13000, 16000], summonCd:[14000, 18000], burstAt:0.3 },
   presentador:{ p2At:0.66, p3At:0.33, transformMs:3200, boltCd:[2400, 3000], markCd:[7000, 8500], curtainCd:[8000, 10000], echoCd:[9000, 11000],
-                pillarMs:12000, ovationCd:[15000, 18000], ovationWind:3000, ovationPct:0.45, spectatorCd:[3200, 4400], deathMs:9500 }
+                pillarMs:12000, ovationCd:[15000, 18000], ovationWind:3000, ovationPct:0.45, spectatorCd:[3200, 4400], deathMs:9500,
+                // REGLA (boss identity): PROTEGÉ LA CIUDAD Y USÁ SUS ATAQUES CONTRA ÉL. El GRAN NÚMERO carga (cortable con daño)
+                // y manda un cometa lento contra una estructura en pie: interceptarlo lo devuelve contra él -> EXPUESTO.
+                gnCd:[19000, 23000], gnWind:2300, gnBreakPct:0.07, gnSpd:150, gnStructPct:0.28, gnExposeMs:5200, kiteR:650, kiteMs:4000 }
 };
 
 // ---------------- fichas de enemigo (se suman a ENEMY_BASE) ----------------
@@ -117,6 +120,7 @@ Object.assign(ENEMY_BASE, {
   cm_maestro:   {name:"Maestro de Ceremonias",   rank:"subjefe",  hp:1100,dmg:22, speed:70,  radius:32, xp:90, gold:36, scale:6.0, color:"#a02030", ranged:true, range:420, projSpeed:260, dropsItem:true},
   cm_tramoyista:{name:"El Tramoyista",           rank:"subjefe",  hp:1500,dmg:26, speed:52,  radius:48, xp:100,gold:40, scale:7.0, color:"#8a5030", ranged:false, dropsItem:true},
   cm_dama:      {name:"La Dama del Telón",       rank:"subjefe",  hp:1700,dmg:24, speed:62,  radius:36, xp:120,gold:48, scale:7.0, color:"#c02040", ranged:true, range:420, projSpeed:240, dropsItem:true},
+  cm_cometa:    {name:"Gran Número",             rank:"normal",   hp:60,  dmg:0,  speed:150, radius:26, xp:0,  gold:0,  scale:3.0, color:"#ff8030", ranged:false, noDivina:true},
   cm_espejismo: {name:"Espejismo de la Dama",    rank:"normal",   hp:1,   dmg:0,  speed:62,  radius:36, xp:0,  gold:0,  scale:7.0, color:"#c02040", ranged:false, noDivina:true},
   cm_presentador:{name:"El Presentador",         rank:"jefe",     hp:5200,dmg:32, speed:58,  radius:40, xp:420,gold:200,scale:8.0, color:"#c01030", ranged:true, range:460, projSpeed:260, dropsItem:true}
 });
