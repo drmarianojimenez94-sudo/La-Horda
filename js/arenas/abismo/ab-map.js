@@ -310,9 +310,23 @@ function abHangUpdate(dt){
     H.t += dt;
     if(!h || !h.alive || !h.abHang){ abS.hang.splice(k, 1); _abRescueDrop(H.h); continue; }
     h.abHang.t = H.t; h.x = H.hx; h.y = H.hy;
-    // regla de seguridad: si NADIE puede rescatarlo (todos colgados o caídos, o juega solo), trepa solo, más lento
-    const helper = heroes.some(o=>o!==h && o.alive && !o.abHang);
-    if(!helper || H.solo > 0){ H.solo = (H.solo||0) + dt; if(H.solo >= AB_CFG.hang.soloClimbMs){ abRescue(h, null, true); continue; } }
+    // regla de seguridad: si NADIE puede rescatarlo (todos colgados o caídos, o juega solo), trepa solo, más lento.
+    // "Puede" = una persona en pie (decide ella), o un bot que a los 3,5 s ya está cerca del punto de rescate:
+    // cuando el derrumbe corta los puentes los bots no llegan, y jugando solo eso terminaba la partida
+    // (simulación: el Tanque perdía 10 de 12 veces así en el Abismo).
+    const R = abS.rescue.find(r=>r.h===H.h);
+    const helper = heroes.some(o=>{
+      if(o===h || !o.alive || o.abHang) return false;
+      if(o===player || o.isRemote) return true;
+      if(H.t < 3500) return true;
+      if(!R) return false;
+      const d = Math.hypot(o.x - R.x, o.y - R.y);
+      return H.t < 5500 ? d < 480 : (d < 160 || R.prog > 0);   // más tarde, solo cuenta el que ya está llegando
+    });
+    if(!helper || H.solo > 0){
+      if(!(H.solo > 0)) H.dur = Math.max(H.dur, H.t + AB_CFG.hang.soloClimbMs + 250);   // empezó a trepar: termina de subir
+      H.solo = (H.solo||0) + dt; if(H.solo >= AB_CFG.hang.soloClimbMs){ abRescue(h, null, true); continue; }
+    }
     if(H.t >= H.dur){ abS.hang.splice(k, 1); _abRescueDrop(H.h); abHangFall(h, H); }
   }
 }

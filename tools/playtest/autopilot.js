@@ -94,6 +94,12 @@
   // enemigos) se arma un campo de distancias desde el objetivo y se sigue el gradiente (aidNavDir).
   const _nav = {D:null, Q:null, cell:-1, t:-1e9};
   function pathDir(tx, ty){
+    // Abismo: se camina por el grafo de plataformas del propio juego (puentes), no por la grilla
+    if(typeof currentArena!=="undefined" && currentArena==="abismo" && typeof abPathDir==="function" && typeof abPlatAt==="function"){
+      const ia = abPlatAt(player.x, player.y, 0), ib = abPlatAt(tx, ty, 0);
+      if(ia >= 0 && ib >= 0 && ia !== ib){ const d = abPathDir(player, {x:tx, y:ty}); return {x:d.x, y:d.y}; }
+      return null;
+    }
     if(typeof AID_NAV==="undefined" || !AID_NAV.on || !AID_NAV.blocked || typeof aidLineClear!=="function") return null;
     if(aidLineClear(player.x, player.y, tx, ty)) return null;
     const N = AID_NAV, n = N.W*N.H, c0 = aidNavCell(tx, ty); if(c0 < 0) return null;
