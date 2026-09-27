@@ -95,23 +95,26 @@ async function canvasNonBlank(page) {
     await sleep(150);
     check('nav.shop_skins', (await page.locator('#shop-panel .shop-skin').count()) >= 4);
     await page.click('#shop-back-btn');
-    // Mis Campeones: inventario de campeones -> ficha con equipo / talentos (árbol) / habilidades
-    await page.click('#mainmenu-campeones-btn');
-    check('nav.mychamps', await vis(page, '#champions-screen'));
-    const mcount = await page.locator('#mychamps-grid .mychamp-card').count();
-    // modo campaña: en Mis Campeones solo está el de regalo (los demás se compran en la Tienda)
-    check('nav.mychamps_cards', mcount === 1, mcount);
-    await page.locator('#mychamps-grid .mychamp-card').first().click();
-    check('nav.champhub', await vis(page, '#champhub-screen'));
-    await page.click('#champhub-tabs .hub-tab[data-tab="talentos"]');
-    const tnodes = await page.locator('#champhub-panel .tt-node').count();
-    check('nav.champhub_tree', tnodes >= 12 && (await page.locator('#champhub-panel .tt-col').count()) === 3, tnodes);
-    await page.click('#champhub-tabs .hub-tab[data-tab="habilidades"]');
-    check('nav.champhub_skills', (await page.locator('#champhub-panel .mastery-row').count()) === 4);
-    await page.click('#champhub-tabs .hub-tab[data-tab="equipo"]');
-    check('nav.champhub_equip', (await page.locator('#champhub-panel .inv-capacity').count()) === 1);
-    await page.click('#champhub-back-btn');
-    await page.click('#champions-back-btn');
+    // CÓDICE → CAMPEONES (antes "Mis Campeones"): galería -> ficha con equipo / talentos (árbol) / maestría
+    check('nav.no_campeones_tab', (await page.locator('#mainmenu-campeones-btn').count()) === 0);
+    await page.click('#mainmenu-codex-btn');
+    check('nav.codex', await vis(page, '#codex-screen'));
+    check('nav.codex_sections', (await page.locator('#codex-body .cx-home-card').count()) === 4);
+    await page.click('#codex-body [data-sec="campeones"]');
+    const mcount = await page.locator('#codex-body .cx-champ-card:not(.locked)').count();
+    // modo campaña: solo el de regalo es tuyo (los demás se ven bloqueados y se compran en la Tienda)
+    check('nav.mychamps_cards', mcount === 1 && (await page.locator('#codex-body .cx-champ-card').count()) >= 12, mcount);
+    await page.locator('#codex-body .cx-champ-card:not(.locked)').first().click();
+    check('nav.champhub', await vis(page, '#codex-body .cx-entry-champ'));
+    await page.click('#codex-body [data-ctab="talentos"]');
+    const tnodes = await page.locator('#cx-hub-panel .tt-node').count();
+    check('nav.champhub_tree', tnodes >= 12 && (await page.locator('#cx-hub-panel .tt-col').count()) === 3, tnodes);
+    await page.click('#codex-body [data-ctab="habilidades"]');
+    check('nav.champhub_skills', (await page.locator('#cx-hub-panel .mastery-row').count()) === 4);
+    await page.click('#codex-body [data-ctab="equipo"]');
+    check('nav.champhub_equip', (await page.locator('#cx-hub-panel .inv-capacity').count()) === 1);
+    await page.click('#codex-body [data-ctab="ficha"]');
+    await page.click('#codex-back-btn'); await page.click('#codex-back-btn'); await page.click('#codex-back-btn');
     await page.click('#mainmenu-jugar-btn');
     check('nav.modeselect', await vis(page, '#modeselect-screen'));
     await page.click('#mode-arena-btn');
@@ -178,16 +181,17 @@ async function canvasNonBlank(page) {
     await ctx.close();
   }
 
-  // F5 talents UI purchase (Mis Campeones -> ficha -> Talentos, árbol)
+  // F5 talents UI purchase (Códice -> Campeones -> ficha -> Talentos, árbol)
   {
     const { ctx, page, errors } = await newPage(browser, site, { save: seedSave({ level: 95, tp: 60, alloc: 0 }) });
     await waitImages(page);
-    await page.click('#title-continue-btn'); await page.click('#mainmenu-campeones-btn');
-    await page.click('#mychamps-grid .mychamp-card[data-champ="nigromante"]');
-    await page.click('#champhub-tabs .hub-tab[data-tab="talentos"]'); await sleep(200);
+    await page.click('#title-continue-btn'); await page.click('#mainmenu-codex-btn');
+    await page.click('#codex-body [data-sec="campeones"]');
+    await page.click('#codex-body .cx-champ-card[data-go="champ:nigromante"]');
+    await page.click('#codex-body [data-ctab="talentos"]'); await sleep(200);
     const before = await page.evaluate(() => window.__T.ev('save.champions.nigromante.talentPoints'));
     let bought = 0;
-    for (let i = 0; i < 6; i++) { const b = page.locator('#champhub-panel .tt-buy').first(); if (!(await b.count())) break; await b.click({ timeout: 800 }).catch(() => {}); bought++; await sleep(60); }
+    for (let i = 0; i < 6; i++) { const b = page.locator('#cx-hub-panel .tt-buy').first(); if (!(await b.count())) break; await b.click({ timeout: 800 }).catch(() => {}); bought++; await sleep(60); }
     const after = await page.evaluate(() => window.__T.ev('save.champions.nigromante.talentPoints'));
     check('talents.buy_ui', bought > 0 && after < before, { bought, before, after });
     const errs = await gameErrors(page, errors);

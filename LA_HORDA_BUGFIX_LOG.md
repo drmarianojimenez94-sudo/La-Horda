@@ -237,3 +237,24 @@ de las 8 arenas sin errores, anfitrión + invitado sincronizados (niveles 9 y 10
 | **Resultado** | ✅ Todo en verde. |
 | **Regresiones** | `t_items` (la primera arena abierta es la Fábrica), `t_abismo` (Abismo entre Laberinto e Infernal) y `t_func` (elige arenas por ID) actualizados. |
 | **Assets faltantes** | Bestia del Bosque, Forjador, VFX de Cicatriz, arenas Ciudad Maldita y Minas Profundas (ver `docs/lore/LA_HORDA_CINEMATICS.md`). |
+
+---
+
+# EL CÓDICE — rework de interfaz (MODOS DE JUEGO · CÓDICE · TIENDA)
+
+Chequeo de diseño: el pedido no contradice ninguna regla MUST NOT. No hubo CONFLICTO DE DISEÑO. El Códice solo
+lee los sistemas: no cambia combate, balance, economía, drops, IA, multijugador, progresión, estadísticas ni habilidades.
+Documentos: `LA_HORDA_CODEX.md` y `LA_HORDA_CODEX_MISSING_ASSETS.md`.
+
+## Hallazgos del QA del Códice
+
+| | |
+|---|---|
+| **Bug** | (1) La ficha de la Madre Espora mostraba el escenario vacío. (2) Las demos del Asesino, Axiom y la Cazadora (trampa, lluvia, Lobo Espectral) y el Paso Fantasma de Musashi usaban formas procedurales aunque el juego ya tenía su arte. (3) Al sacar la sección Mis Campeones, el listener de la pestaña `mychamps-tab-inv` quedaba colgado de un elemento que ya no existía. |
+| **Causa** | (1) En partida, la Madre Espora es parte del escenario (`micDrawWorld`) y `drawEnemyBody` no dibuja nada para ella. (2) La preview solo buscaba en `VFX_SPR_EXTRA`, `SE_FX` y `ACUA2`, y no en las hojas por celdas (`ASESINO_HAB`, `AXIOM_VFX`, `SKILL_ATLAS`) ni en las secuencias sueltas. (3) El código de `inventory-ui.js` no se había migrado. |
+| **Solución** | (1) `_cxDrawMother` dibuja el retrato real (`mother/mp_full`), con respiración, sombrero que late y brazos al atacar, igual que en la partida. (2) `_cxAtlasFrame` / `_cxSeqImgs` y claves nuevas en `CODEX_SKILL_FX`: `asesino:hab/clip`, `axiom:k`, `sylvaTrap`, `sylvaRain`, `sylvaWolf` y `musashiGhost`. (3) Se quitó el listener. |
+| **Archivos** | `js/ui/codex/codex-preview.js`, `js/data/codex-content.js`, `js/ui/inventory-ui.js` |
+| **Pruebas** | `tools/items/t_codex.js`, con el chequeo nuevo `FICHAS.ninguna_preview_vacia`: ninguna criatura ni forma de jefe puede quedar sin píxeles. |
+| **Resultado** | ✅ `t_codex` OK · 18 suites de `tools/items` OK · `t_func` 94/94 · *smoke* de Fortaleza y Micelial sin errores. |
+| **Regresiones** | `t_func` ahora navega los campeones a través del Códice (`#mainmenu-codex-btn` → CAMPEONES → ficha → pestañas). |
+| **Assets faltantes** | `LA_HORDA_CODEX_MISSING_ASSETS.md`: ilustraciones de los 17 jefes, panorámicas de Ciudad Maldita y Minas Profundas, VFX de 17 habilidades de 7 campeones, habilidades de los Dobladores y atlas del Abismo en alta. |

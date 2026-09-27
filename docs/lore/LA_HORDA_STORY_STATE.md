@@ -11,7 +11,7 @@
 | 03 | Ruinas Célticas / Élficas | ✅ 🟡 | Guardián 1. El Guardián Ancestral se corrompe ("NACE LA BESTIA DEL BOSQUE"). Cristal Ancestral + línea "alguna vez fueron héroes". Falta arte de la forma Bestia. |
 | 04 | Reino Fúngico | ✅ | Madre Espora (no Guardiana). Cicatriz: ecos de los Guardianes "y de alguien más"; el Hechicero los desestima. |
 | 05 | Arena Gélida | ✅ | Guardián 2. "NACE EL DEMONIO GÉLIDO". Cristal de Escarcha + "no preguntes cómo sé tanto de ellos". |
-| 06 | Arena Acuática | ✅ | Kraken Joven y Leviatán (no Guardianes). Cicatriz: la realidad se dobla; el Hechicero nombra las Minas. |
+| 06 | Arena Acuática | ✅ | Kraken Joven (subjefe) y Leviatán (jefe final: el "Kraken" del canon). No son Guardianes. Cicatriz: la realidad se dobla; el Hechicero nombra las Minas. |
 | 07 | Minas Profundas | ⬜ | Slot **EN CONSTRUCCIÓN**. Se menciona en los textos del descenso. |
 | 08 | Laberinto | ✅ | Guardián 3. El Guardián del Laberinto (subjefe) advierte "no le entregues los cristales…" antes de caer. Cristal de Piedra al vencer al Minotauro. |
 | 09 | Abismo | ✅ | "El punto de no retorno". Cicatriz: los campeones cruzan a la dimensión de la Horda. |
@@ -35,7 +35,7 @@
 
 ## Pendientes narrativos
 1. Arenas 01 Ciudad Maldita y 07 Minas Profundas (diseño + arte + migración para insertarlas).
-2. Decisiones de canon abiertas: jefe de la Fábrica (C2) y jefe de la Acuática (C3), ver Lore Bible §8.
+2. ~~Decisiones de canon abiertas~~ Resueltas: Fábrica = Caballero (jefe) + Dragón de la Forja (subjefe); el Kraken del canon es el Leviatán (Lore Bible §8, C2/C3).
 3. Forma "Bestia del Bosque" del Guardián Ancestral (arte).
 4. El Forjador como entidad (arte + escena en la Infernal).
 5. Líneas de muerte de cada Guardián ("lo que fueron").

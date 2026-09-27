@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/hud.css">
 <link rel="stylesheet" href="css/panels.css">
 <link rel="stylesheet" href="css/overlays.css">
+<link rel="stylesheet" href="css/codex.css">
 </head>
 <body>
 
@@ -114,21 +115,23 @@
   <div id="mainmenu-screen" class="screen hidden">
     <div class="brand" style="margin-bottom:6px;">LA HORDA</div>
     <div class="brand-sub" style="margin-bottom:28px;">UN VIAJE ÉPICO · UN RPG DE FANTASÍA</div>
+    <div class="mainmenu-pillars">
     <button class="mode-card mainmenu-play" id="mainmenu-jugar-btn">
       <div class="mode-card-icon">⚔</div>
       <div class="mode-card-title">MODOS DE JUEGO</div>
       <div class="mode-card-desc">Arena (campaña, sola o con amigos: la sala online se arma después de elegir la arena).</div>
     </button>
-    <button class="mode-card" id="mainmenu-campeones-btn">
-      <div class="mode-card-icon">🛡</div>
-      <div class="mode-card-title">MIS CAMPEONES</div>
-      <div class="mode-card-desc">Tus campeones: equipamiento, habilidades y árbol de talentos.</div>
+    <button class="mode-card mainmenu-codex" id="mainmenu-codex-btn">
+      <div class="mode-card-icon">📖</div>
+      <div class="mode-card-title">CÓDICE</div>
+      <div class="mode-card-desc">Campeones, bestiario, jefes y arenas: el archivo del mundo de La Horda. Elegí campeón, equipo, talentos y skins.</div>
     </button>
     <button class="mode-card" id="mainmenu-tienda-btn">
       <div class="mode-card-icon">🪙</div>
       <div class="mode-card-title">TIENDA</div>
       <div class="mode-card-desc">Todos los campeones (con su ficha) y, más adelante, skins, armas y mascotas.</div>
     </button>
+    </div>
     <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
     <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
   </div>
@@ -144,17 +147,13 @@
     </div>
   </div>
 
-  <!-- MIS CAMPEONES: inventario de campeones propios (hoy todos; más adelante 4 de arranque y el
-       resto se compra en la Tienda). Cada uno abre su ficha con equipo, habilidades y talentos. -->
-  <div id="champions-screen" class="screen hidden">
-    <div class="arena-title">Mis Campeones</div>
-    <div class="lobby-sub" id="champions-sub"></div>
-    <div class="hub-tabs hub-tabs-top">
-      <button class="hub-tab active" id="mychamps-tab-champs">Campeones</button>
-      <button class="hub-tab" id="mychamps-tab-inv">🎒 Mi Inventario</button>
+  <!-- CÓDICE (js/ui/codex/): CAMPEONES · BESTIARIO · JEFES · ARENAS. Reemplaza a "Mis Campeones". -->
+  <div id="codex-screen" class="screen hidden">
+    <div class="cx-top">
+      <button class="cx-back" id="codex-back-btn">‹ Menú</button>
+      <nav class="cx-crumbs" id="codex-crumbs" aria-label="Ubicación en el Códice"></nav>
     </div>
-    <div id="mychamps-grid"></div>
-    <button class="btn secondary" id="champions-back-btn">Volver</button>
+    <div id="codex-body" class="cx-view"></div>
   </div>
   <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los campeones), recetas de Míticos y colección -->
   <div id="inventory-screen" class="screen hidden">
@@ -166,19 +165,8 @@
       <button class="hub-tab" data-tab="coleccion">Colección</button>
     </div>
     <div id="myinv-panel"></div>
-    <button class="btn secondary" id="myinv-back-btn">Volver a Mis Campeones</button>
+    <button class="btn secondary" id="myinv-back-btn">Volver al Códice</button>
   </div>
-  <div id="champhub-screen" class="screen hidden">
-    <div id="champhub-head"></div>
-    <div class="hub-tabs" id="champhub-tabs">
-      <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
-      <button class="hub-tab" data-tab="talentos">Talentos</button>
-      <button class="hub-tab" data-tab="habilidades">Habilidades</button>
-    </div>
-    <div id="champhub-panel"></div>
-    <button class="btn secondary" id="champhub-back-btn">Volver a Mis Campeones</button>
-  </div>
-
   <!-- FICHA INDIVIDUAL DE CAMPEÓN -->
   <div id="champdetail-screen" class="screen hidden">
     <div id="champdetail-body"></div>
@@ -488,6 +476,10 @@
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/loot-ceremony.js"></script>
 <script src="js/ui/end-screens.js"></script>
+<script src="js/data/codex-content.js"></script>
+<script src="js/ui/codex/codex-track.js"></script>
+<script src="js/ui/codex/codex-preview.js"></script>
+<script src="js/ui/codex/codex.js"></script>
 <script src="js/core/run.js"></script>
 <script src="js/core/update.js"></script>
 <script src="js/core/loop.js"></script>

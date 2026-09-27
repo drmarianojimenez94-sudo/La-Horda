@@ -21,11 +21,11 @@
 | # | Arena | ID interno (no cambia) | Jefe canon | ¿Guardián? | Rol narrativo |
 |---|---|---|---|---|---|
 | 01 | **Ciudad Maldita** | `ciudad` (*en construcción*) | — | No | Origen. La Horda vuelve a la ciudad de los campeones; aparece la proyección del Hechicero; nace la primera Cicatriz. |
-| 02 | **Fábrica Sin Fin** | `fortaleza` | Dragón Steampunk | **No** | La Horda contaminó las máquinas de otra civilización. Primera persecución de la Cicatriz. |
+| 02 | **Fábrica Sin Fin** | `fortaleza` | Caballero de la Armadura Oxidada (subjefe: Dragón de la Forja) | **No** | La Horda contaminó las máquinas de otra civilización. Primera persecución de la Cicatriz. |
 | 03 | **Ruinas Célticas / Élficas** | `bosque` | Guardián Ancestral → Bestia del Bosque | **GUARDIÁN 1** | Primer cristal. Revelación: los monstruos alguna vez fueron héroes. |
 | 04 | **Reino Fúngico** | `micelial` | Madre Espora | **No** | El micelio guarda ecos de los Guardianes (y de alguien más). |
 | 05 | **Arena Gélida** | `hielo` | Mago Gélido → Demonio Gélido | **GUARDIÁN 2** | Segundo cristal. Primeras pistas de que la historia del Hechicero está incompleta. |
-| 06 | **Arena Acuática** | `acuatica` | Kraken | **No** | Con dos cristales la realidad se vuelve inestable. |
+| 06 | **Arena Acuática** | `acuatica` | Leviatán (el "Kraken" del canon; subjefe: Kraken Joven) | **No** | Con dos cristales la realidad se vuelve inestable. |
 | 07 | **Minas Profundas** | `minas` (*en construcción*) | — | No | Luz, oscuridad, exploración: el descenso. |
 | 08 | **Laberinto** | `laberinto` | Guardián del Laberinto → Minotauro | **GUARDIÁN 3** | Tercer cristal. El Guardián advierte: no entregar los cristales al Hechicero (sin diálogo definitivo). |
 | 09 | **Abismo** | `abismo` | El Que Mora Debajo | No | Punto de no retorno: los campeones cruzan a la dimensión de la Horda. |
@@ -41,7 +41,7 @@ conserva **Las Cinco Pruebas Divinas**. Es el puente hacia **COLISEO — PRÓXIM
 - **GUARDIÁN 3:** Laberinto — **Guardián del Laberinto → Minotauro**. Cristal de Piedra (ámbar).
 - **GUARDIÁN 4:** Arena Infernal — **Hechicero Supremo → Rey / Demonio de la Horda**. Cristal del Juicio (oro blanco).
 
-**NO son Guardianes:** el **Kraken**, la **Madre Espora** ni el **Dragón Steampunk**. Son criaturas de la
+**NO son Guardianes:** el **Leviatán** (el "Kraken" del canon) ni el Kraken Joven, la **Madre Espora**, el **Caballero de la Armadura Oxidada** ni el **Dragón de la Forja** (el "Dragón Steampunk" del canon). Son criaturas de la
 Horda (o corrompidas por ella) que los campeones cruzan en el camino. Ningún texto, cristal ni UI debe
 presentarlos como Guardianes.
 
@@ -82,8 +82,8 @@ los Guardianes (gancho para Arena Divina, Coliseo y temporadas).
 | # | Canon | Código actual | Cómo se adaptó |
 |---|---|---|---|
 | C1 | Arena 01 Ciudad Maldita y 07 Minas Profundas | No existen como arenas jugables | Slots **EN CONSTRUCCIÓN** en el selector (IDs `ciudad`/`minas`, `comingSoon`). El desbloqueo las saltea. La Ciudad se cuenta como **prólogo** antes de la Fábrica. Cuando existan, se agregan al orden jugable con una migración. |
-| C2 | Jefe de la Fábrica: Dragón Steampunk | Subjefe **Dragón de la Forja**; jefe final **Caballero de la Armadura Oxidada** | No se reemplazan jefes. El Dragón de la Forja es la lectura steampunk del canon; el Caballero queda como jefe final. **Decisión pendiente** del autor: ¿el Caballero sigue como jefe final o el Dragón pasa a ser el jefe? |
-| C3 | Jefe de la Acuática: Kraken | Subjefe **Kraken Joven** (nivel 6); jefe final **Leviatán** | Sin cambios de jefe. Ninguno es Guardián. **Pendiente:** confirmar si el canon "Kraken" es el Leviatán o si el Kraken debe ser el jefe final. |
+| C2 | Jefe de la Fábrica: Dragón Steampunk | Subjefe **Dragón de la Forja**; jefe final **Caballero de la Armadura Oxidada** | **Resuelto (decisión del autor): manda el código.** El canon se adapta: el Dragón de la Forja es el "Dragón Steampunk" (subjefe) y el Caballero de la Armadura Oxidada es el jefe final de la Fábrica. |
+| C3 | Jefe de la Acuática: Kraken | Subjefe **Kraken Joven** (nivel 6); jefe final **Leviatán** | **Resuelto (decisión del autor):** el "Kraken" del canon **es el Leviatán**, jefe final de la Acuática. El Kraken Joven sigue como subjefe. Ninguno es Guardián. |
 | C4 | Guardián Ancestral → **Bestia del Bosque** | El Guardián se transforma a su forma "Corrompido" (misma pelea); `bestia_bosque` existe como enemigo común | Cartel de transformación: "NACE LA BESTIA DEL BOSQUE". Falta arte de la forma Bestia (ver Cinematics). |
 | C5 | Mago Gélido → **Demonio Gélido** | Fase 2: `angel_caido_hielo` ("Ángel Caído de Hielo") | Mismo jefe y mismo arte; en la campaña se muestra como **"Demonio Gélido — Ángel Caído"** y el cartel dice "NACE EL DEMONIO GÉLIDO". En la Arena Divina conserva su nombre original. |
 | C6 | Hechicero Supremo → **Rey / Demonio de la Horda** | 3 formas: Ángel Corrompido → Golem de Cuerpos → `demonio_mayor` (designKey `demonio_final`) | Mismas formas y mecánicas. La forma final se muestra como **"Rey de la Horda — Forma Final"**. |
