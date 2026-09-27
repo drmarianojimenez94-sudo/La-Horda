@@ -285,8 +285,8 @@ const UNCALM = () => { if (window.__calm) clearInterval(window.__calm); window._
     expectChamps = ['tanque', newB, 'soporte', 'musashi'];
     if (round === 2) {
       await ev(A, () => { save.arenasCleared.acuatica = true; save.arenasCleared.bosque = true; renderPrepSummary(); });
-      await A.page.selectOption('#net-arena-sel', 'bosque'); // (queda igual si ya lo estaba)
-      await A.page.selectOption('#net-arena-sel', 'hielo').catch(() => {});
+      // selector de arena de la Sala (tarjetas #lobby-arena): tocar la elegida no cambia nada; una cerrada no se puede tocar
+      for (const k of ['bosque', 'hielo']) await ev(A, (k) => { const b = document.querySelector(`[data-lobby-arena="${k}"]:not([disabled])`); if (b) b.click(); }, k);
       const arenaNow = await ev(A, () => currentArena);
       await waitAll(guests, () => true);
       await sleep(400);

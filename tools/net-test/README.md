@@ -13,6 +13,10 @@ node tools/net-test/e2e.js 3                        # 3 humanos + 1 bot
 node tools/net-test/e2e.js 4 --fifth                # 4 humanos y un 5º rechazado (SALA COMPLETA)
 node tools/net-test/disconnect.js                   # caída/reconexión, abandono, anfitrión que se va
 node tools/net-test/campaign-gate.js                # la campaña no se saltea con salas online
+SITE=http://127.0.0.1:8771 RELAY=ws://127.0.0.1:8799 node tools/net-test/next_arena.js
+                                                    # siguiente arena sin salir de la Sala: victoria -> misma sala con la
+                                                    #   próxima arena elegida, el anfitrión la cambia en la Sala y el invitado
+                                                    #   la ve en vivo (aviso si no le cuenta para la campaña); y solo
 node tools/net-test/loop.js 3                       # PLAYTEST V1 (P0): ciclo completo con 4 jugadores:
                                                     #   campeón de regalo, Arena -> Sala -> Unirse pegando enlace/código,
                                                     #   campeón en la sala, REVIVE 1-5, team wipe ->

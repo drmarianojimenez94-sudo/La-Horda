@@ -1,7 +1,8 @@
 "use strict";
 // Prueba de protocolo del relay (sin navegador): anfitrión + 3 invitados, el 5º rechazado por
 // SALA COMPLETA, bloqueo al comenzar, reconexión con el mismo clientId, reenvío de mensajes y
-// cierre de la sala cuando se va el anfitrión.  Uso: node test-relay.js
+// cierre de la sala cuando se va el anfitrión, y cambio de arena desde la sala entre partidas
+// (siguiente arena tras una victoria).  Uso: node test-relay.js  (PORT=8795 para otro puerto)
 process.env.PORT = process.env.PORT || "8799";
 const { server } = require("./relay.js");
 const WebSocket = require("ws");
@@ -100,6 +101,13 @@ function client(){
   guests[1].send({ t: "update", ready: true });
   const rp = await host.wait(m => m.t === "room" && m.room.slots[2]);
   check("ready.ignored_while_playing", rp.room.slots[2].ready === false, rp.room.slots[2]);
+  // en partida la arena NO se cambia (ni el anfitrión): solo desde la sala, entre partidas
+  host.send({ t: "update", arena: "hielo" });
+  const ap = await host.wait(m => m.t === "room" && m.room.state === "playing");
+  check("arena.not_changed_while_playing", ap.room.arena === "bosque", ap.room.arena);
+  // un invitado no puede devolver la sala a la espera
+  guests[0].send({ t: "lobby" });
+  check("lobby.only_host", (await guests[0].wait(m => m.t === "error")).code === "NOT_HOST");
   // fin de partida: la MISMA sala vuelve a esperar, todos siguen, LISTO en NO
   host.inbox.length = 0; guests[0].inbox.length = 0;
   host.send({ t: "lobby" });
@@ -116,6 +124,25 @@ function client(){
   host.send({ t: "start" });
   const again = await host.wait(m => m.t === "room" && m.room.state === "playing");
   check("lobby.restart_same_players", again.room.slots.filter(Boolean).length === 4);
+  // SIGUIENTE ARENA: tras una victoria el anfitrión vuelve a la sala con la próxima arena en el MISMO
+  // mensaje "lobby" (campo opcional): la primera actualización que ven los invitados ya la trae
+  for (const g of [guests[0], guests[1], back]) g.inbox.length = 0;
+  host.send({ t: "lobby", arena: "micelial" });
+  const nx = await Promise.all([guests[0], guests[1], back].map(g => g.wait(m => m.t === "room")));
+  check("next_arena.lobby_carries_arena_atomic", nx.every(m => m.room.state === "lobby" && m.room.arena === "micelial" && m.room.code === code), nx.map(m => [m.room.state, m.room.arena]));
+  check("next_arena.same_players", nx[0].room.slots.filter(Boolean).length === 4);
+  // un "lobby" sin arena (cliente viejo) la deja como estaba
+  host.send({ t: "start" }); await host.wait(m => m.t === "room" && m.room.state === "playing");
+  host.send({ t: "lobby" });
+  const old = await guests[0].wait(m => m.t === "room" && m.room.state === "lobby");
+  check("next_arena.old_client_lobby_keeps_arena", old.room.arena === "micelial", old.room.arena);
+  // y el anfitrión la sigue pudiendo cambiar desde la sala antes de comenzar
+  host.send({ t: "update", arena: "hielo" });
+  check("next_arena.host_picks_other_in_lobby", !!(await back.wait(m => m.t === "room" && m.room.arena === "hielo")));
+  guests[1].inbox.length = 0;
+  host.send({ t: "start" });
+  const ng = await guests[1].wait(m => m.t === "room" && m.room.state === "playing");
+  check("next_arena.start_with_new_arena", ng.room.arena === "hielo", ng.room.arena);
   // el anfitrión se va: la sala se cierra para todos
   host.ws.close();
   const closed = await Promise.all([guests[0], guests[1], back].map(g => g.wait(m => m.t === "closed")));

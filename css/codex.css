@@ -130,7 +130,7 @@ button.cx-card:hover, button.cx-home-card:hover, button.cx-chapter:hover, button
 .cx-panel{ overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; padding:0 4px 18px 0; }
 .cx-panel-head{ position:relative; padding:2px 0 8px; }
 .cx-stepper{ position:absolute; right:0; top:0; display:flex; gap:6px; }
-.cx-step{ width:42px; height:40px; font-size:1.4rem; color:var(--cx-ink); background:#1b100b; border:2px solid var(--cx-metal); cursor:pointer; }
+.cx-step{ width:42px; height:42px; /* con 40 justos a veces medía 39,9 px (auditoría móvil: blanco táctil chico) */ font-size:1.4rem; color:var(--cx-ink); background:#1b100b; border:2px solid var(--cx-metal); cursor:pointer; }
 .cx-kicker{ font-family:var(--font-retro); font-size:1.05rem; color:var(--cx-rune); letter-spacing:1px; padding-right:96px; }
 .cx-title{ margin:2px 0 2px; font-family:var(--font-pixel); font-size:1.2rem; line-height:1.45; color:var(--cx-gold); text-shadow:0 2px 0 #2a1206; padding-right:96px; }
 .cx-title.set{ color:#6fe88f; }

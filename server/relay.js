@@ -159,8 +159,12 @@ function handle(ws, msg){
         if(msg.champ !== undefined) me.champ = clean(msg.champ, 24);
         if(msg.level !== undefined) me.level = msg.level|0;
         if(msg.name !== undefined) me.name = clean(msg.name, 24) || me.name;
-        // el anfitrión puede cambiar la arena desde la sala (entre partidas)
-        if(msg.arena !== undefined && ws._slot === 0) room.arena = clean(msg.arena, 24) || room.arena;
+        // el anfitrión puede cambiar la arena desde la sala (entre partidas); en partida no se toca
+        if(msg.arena !== undefined && ws._slot === 0){
+          const a = clean(msg.arena, 24) || room.arena;
+          if(a !== room.arena) log("ROOM_ARENA", { code: room.code, arena: a });
+          room.arena = a;
+        }
       } else if(msg.champ !== undefined && ws._slot > 0){
         // un invitado que ya volvió a la sala mientras el anfitrión mira los resultados
         me.champ = clean(msg.champ, 24);
@@ -183,6 +187,10 @@ function handle(ws, msg){
     case "lobby": { // el anfitrión vuelve la sala al estado de espera (fin de partida)
       if(ws._slot !== 0) return send(ws, { t: "error", code: "NOT_HOST" });
       room.state = "lobby";
+      // opcional: la arena de la próxima partida (tras una victoria, la siguiente de la campaña) viaja
+      // en el mismo mensaje, así los invitados ven la sala y la arena nueva en una sola actualización.
+      // Un cliente viejo no lo manda (y uno viejo que lo recibe ignora el campo): sigue todo igual.
+      if(msg.arena !== undefined) room.arena = clean(msg.arena, 24) || room.arena;
       room.slots.forEach((m, i) => { if(m){ if(i > 0) m.ready = false; if(i > 0 && !m.ws) room.slots[i] = null; } });
       broadcastRoom(room);
       return;
