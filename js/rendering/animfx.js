@@ -43,7 +43,7 @@ const ANIM_PROFILES = {
   eren:       {speed:1.4, weight:0.9, amp:0.8, recoil:0.8, lunge:14, cast:1.0, impact:1.3, particle:"blood",  basic:"melee",  tier:"static"},
   // ---- invocaciones ----
   nigro_skel: {speed:1.4, weight:0.6, amp:1.1, lunge:8,  impact:0.8, particle:"bone", material:"bone", tier:"static"},
-  nigro_golem:{speed:0.55,weight:2.4, amp:0.6, lunge:12, impact:2.0, particle:"rock", material:"rock", tier:"static"},
+  nigro_golem:{speed:0.55,weight:2.4, amp:0.6, lunge:12, impact:2.0, particle:"rock", material:"rock", tier:"full"}, // atlas con caminata y golpe reales
   // ---- enemigos (personalidad; el resto usa el default ajustado por rango/tamaño) ----
   esqueleto:          {speed:1.4, weight:0.6, amp:1.2, lunge:8,  impact:0.8, material:"bone",  death:"crumble"},
   esqueleto_h:        {speed:1.2, weight:0.9, amp:1.0, lunge:10, impact:1.0, material:"bone",  death:"frames"},

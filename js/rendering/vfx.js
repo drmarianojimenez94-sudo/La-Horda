@@ -173,7 +173,8 @@ const VFX_SPR_EXTRA = {
   // Materialización real al invocar esqueletos/Golem (antes sin usar).
   nigroSkeletonSpawnWarrior: { imgs:[NIGRO_SKEL_IMG.spawnWarrior], ready:()=>NIGRO_SKEL_READY.spawnWarrior && !(CHAMP_PACK.nigro_skel && CHAMP_PACK.nigro_skel.ready), ground:false },
   nigroSkeletonSpawnMage: { imgs:[NIGRO_SKEL_IMG.spawnMage], ready:()=>NIGRO_SKEL_READY.spawnMage && !(CHAMP_PACK.nigro_skel && CHAMP_PACK.nigro_skel.ready), ground:false },
-  nigroGolemSpawn: { imgs:[NIGRO_GOLEM_IMG.spawn], ready:()=>NIGRO_GOLEM_READY.spawn, ground:false },
+  // (dibuja al gólem viejo: con el atlas nuevo el gólem se arma solo -escombros / brasas / cristales-)
+  nigroGolemSpawn: { imgs:[NIGRO_GOLEM_IMG.spawn], ready:()=>NIGRO_GOLEM_READY.spawn && !(NIGRO_GOLEM_ATLAS.stone && NIGRO_GOLEM_ATLAS.stone.ready), ground:false },
   // Pack de VFX propio (dibujado a mano vía formas vectoriales, no arte de guardián): cristal/runa
   // de hielo del Mago, tajo del Segador y su ulti, sanación/escudo del Soporte, salpicadura de agua.
   fxIceCrystal:      { imgs:NEWFX_IMG.iceCrystal,      ready:()=>newfxReady('iceCrystal'),      ground:false },

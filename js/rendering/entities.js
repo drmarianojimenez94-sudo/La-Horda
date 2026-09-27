@@ -464,10 +464,10 @@ function drawEnemyOverlays(e){
 
 const _entPool = [], _entList = [];
 let _entN = 0;
-function _entPush(y, e, h, w, p){
+function _entPush(y, e, h, w, p, s){
   let it = _entPool[_entN];
-  if(!it){ it = _entPool[_entN] = {y:0, e:null, h:null, w:null, p:null}; }
-  it.y = y; it.e = e; it.h = h; it.w = w||null; it.p = p||null; _entN++;
+  if(!it){ it = _entPool[_entN] = {y:0, e:null, h:null, w:null, p:null, s:null}; }
+  it.y = y; it.e = e; it.h = h; it.w = w||null; it.p = p||null; it.s = s||null; _entN++;
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){
