@@ -13,7 +13,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const ctx = await browser.newContext({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
   await ctx.addInitScript(() => { window.__campaignMode = true; });
   const page = await ctx.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
-  await page.goto(`${BASE}/index.html`);
+  await page.goto(`${BASE}/index.html${process.env.Q || ""}`);
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
   await page.addScriptTag({ path: path.join(__dirname, '../playtest/autopilot.js') });
   await page.evaluate((a) => { save.starterChosen = true; for (const k in save.champions) { save.champions[k].unlocked = true; save.champions[k].level = 30; } __AP.start('mago', a, 8); }, ARENA);
