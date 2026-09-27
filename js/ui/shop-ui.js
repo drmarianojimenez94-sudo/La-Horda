@@ -2,7 +2,7 @@
 /* ============================================================
    js/ui/shop-ui.js
    TIENDA en tres pestañas (BUGFIX 01, etapa de prueba):
-   - Guardias: todos los de CHAMPION_CATALOG, animados, con rol, historia, habilidades, precio y compra.
+   - Guardianes: todos los de CHAMPION_CATALOG, animados, con rol, historia, habilidades, precio y compra.
    - Objetos y sets: TODO el catálogo (shopCatalog en js/systems/shop.js) por categoría; los sets se
      muestran como conjunto (piezas que tenés / que faltan, bonus y cuáles tenés activos).
    - Skins: las skins de set que existen (SET_SKINS); se activan con el set COMPLETO, así que la
@@ -10,7 +10,7 @@
    Tocar un objeto abre su ficha completa (itemDetailHTML en modo tienda).
    ============================================================ */
 let shopTab = "campeones", shopCat = "set", shopTier = {};
-const SHOP_CATS = [["set", "Sets"], ["legendario", "Legendarios"], ["mitico", "Míticos"], ["unico", "Únicos"], ["campeon", "De guardia"], ["base", "Básicos"]];
+const SHOP_CATS = [["set", "Sets"], ["legendario", "Legendarios"], ["mitico", "Míticos"], ["unico", "Únicos"], ["campeon", "De guardián"], ["base", "Básicos"]];
 const TIER_LABEL = {comun:"Común", raro:"Raro", muyraro:"Muy Raro", legendario:"Legendario", mitico:"Mítico"};
 
 function renderShop(){
@@ -31,7 +31,7 @@ function _shopAfterBuy(msg, sfx){
   renderShop(); if(typeof renderSaveLine==="function") renderSaveLine();
 }
 
-/* ---------------- Guardias ---------------- */
+/* ---------------- Guardianes ---------------- */
 function renderShopChampions(panel){
   panel.innerHTML = '<div class="shop-champ-list">' + CHAMPION_CATALOG.map(c=>{
     const cls = CLASSES[c.id], champ = save.champions[c.id], owned = champ.unlocked, sel = owned && selectedClass===c.id;
@@ -154,7 +154,7 @@ function renderShopSkins(panel){
     const previewKey = champ || comp[0];
     let action;
     if(miss.length) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`;
-    else if(!comp.length) action = `<div class="shop-item-sub">Skin desbloqueada: conseguí a <b>${champ ? CLASSES[champ].name : "un guardia"}</b> en la pestaña Guardias para usarla.</div>`;
+    else if(!comp.length) action = `<div class="shop-item-sub">Skin desbloqueada: conseguí a <b>${champ ? CLASSES[champ].name : "un guardián"}</b> en la pestaña Guardianes para usarla.</div>`;
     else {
       const rest = comp.filter(k=>!activeOn.includes(k));
       action = rest.length ? `<div class="shop-skin-equip">${activeOn.length ? "" : '<span class="shop-item-sub">Desbloqueada · </span>'}${rest.map(k=>`<button class="shop-btn" data-skin-equip="${id}" data-skin-champ="${k}">${comp.length>1 ? "Equipar en " + CLASSES[k].name : "EQUIPAR"}</button>`).join("")}</div>` : "";
@@ -170,7 +170,7 @@ function renderShopSkins(panel){
       </div></div>`;
   }).join("");
   const pending = Object.keys(SET_DB).filter(id=>!withSkin.includes(id)).map(id=>SET_DB[id].name);
-  panel.innerHTML = `<div class="lobby-note">Una skin de set nunca se vende suelta: aparece cuando equipás el set COMPLETO en su guardia.</div>
+  panel.innerHTML = `<div class="lobby-note">Una skin de set nunca se vende suelta: aparece cuando equipás el set COMPLETO en su guardián.</div>
     <div class="shop-skin-list">${cards || '<div class="inv-empty">Todavía no hay skins.</div>'}</div>
     <div class="shop-soon-box shop-soon-small">Sets sin skin todavía (arte pendiente, ver docs/assets_faltantes/skins_sets/): ${pending.join(" · ")}. Con el set completo se ve su aura plena.</div>`;
   panel.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
@@ -208,7 +208,7 @@ function _shopAfterSkinBuy(id, n){
   const r = skinAutoEquip(id), sk = SET_SKINS[id], nm = sk.name || SET_DB[id].name;
   if(r.equipped){ _skinEquippedFeedback(id, r.target); }
   else if(!skinOwnedFull(id)) { if(typeof showNetToast==="function") showNetToast(`🛒 ${n} pieza${n>1?"s":""} de ${SET_DB[id].name}`); }
-  else if(r.choices.length > 1){ if(typeof showNetToast==="function") showNetToast(`🔓 Skin ${nm} desbloqueada: elegí en qué guardia equiparla`); }
+  else if(r.choices.length > 1){ if(typeof showNetToast==="function") showNetToast(`🔓 Skin ${nm} desbloqueada: elegí en qué guardián equiparla`); }
   else { const c = skinSetChamp(id); if(typeof showNetToast==="function") showNetToast(`🔓 Skin ${nm} desbloqueada${c ? ": conseguí a " + CLASSES[c].name + " para usarla" : ""}`); }
   if(typeof playSfx==="function" && !r.equipped) playSfx("lootLegend");
   if(state==="shop") renderShop();

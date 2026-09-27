@@ -20,10 +20,10 @@
    - e.bossCharge: embestida en línea recta (Minotauro, Jinete, Ángel Caído).
    - bossStrikes: golpes diferidos en un punto del suelo (estalactitas, rocas, calabazas,
      castigo sagrado): aviso circular y, al cumplirse la demora, daño en el área.
-   - iceWalls: segmentos sólidos del Muro de Hielo -los guardias no los atraviesan
+   - iceWalls: segmentos sólidos del Muro de Hielo -los guardianes no los atraviesan
      (resolveWallCollision), nunca aparecen encima de un campeón-.
    - Escarcha (h.frostStacks): cada golpe helado suma una carga (ralentiza más y más); a las
-     FROST_FREEZE_STACKS el guardia queda congelado un instante y las cargas se reinician.
+     FROST_FREEZE_STACKS el guardián queda congelado un instante y las cargas se reinician.
    ============================================================ */
 let iceWalls = [];
 let bossStrikes = [];
@@ -31,7 +31,7 @@ const FROST_FREEZE_STACKS = 4;
 const ICE_WALL_MAX = 30;
 // Tipos con kit propio en updateBossSkills. Los subjefes "campeón" genéricos de la Arena
 // Infernal (esqueleto_h / demonio_menor / golem agrandados) también reciben uno, pero solo
-// cuando realmente son guardias (rank subjefe), nunca en su versión común.
+// cuando realmente son guardianes (rank subjefe), nunca en su versión común.
 // (Los jefes finales -Jinete, Ángel, Minotauro, Demonio Mayor, Mago, Leviatán- ahora los maneja
 // el director de fases de boss-patterns.js; acá quedan subjefes y élites con kit propio.)
 const BOSS_SKILL_TYPES = {demonio_hielo_fuego:1, doblador_guerrero:1,
@@ -56,7 +56,7 @@ function addFrost(h, n){
     vfxShock(h.x, h.y, 8, 46, "160,220,255", 380, 2);
   }
 }
-// Golpe de una habilidad de jefe sobre un guardia, con sus efectos de control opcionales.
+// Golpe de una habilidad de jefe sobre un guardián, con sus efectos de control opcionales.
 function bossHitHero(h, dmg, o){
   if(!h || !h.alive) return;
   _avoidableHit = true;
@@ -104,7 +104,7 @@ function raiseIceWall(plan){
   for(const p of plan){
     if(iceWalls.length >= ICE_WALL_MAX) break;
     let x = p.x, y = p.y, ok = false;
-    // nunca encima de un guardia: se corre hacia afuera hasta un lugar libre (o se descarta)
+    // nunca encima de un guardián: se corre hacia afuera hasta un lugar libre (o se descarta)
     for(let k=0; k<4 && !ok; k++){
       ok = true;
       for(const h of heroes){ if(h.alive && Math.hypot(h.x-x, h.y-y) < R + (h.radius||18) + 4){ ok = false; break; } }
@@ -116,7 +116,7 @@ function raiseIceWall(plan){
     vfxBurst(c.x, c.y-14, 6, "ice", 90, 300, 2.5, 0, -40, 0);
   }
 }
-// Empuja a un guardia fuera de los segmentos del Muro de Hielo (llamado desde resolveWallCollision).
+// Empuja a un guardián fuera de los segmentos del Muro de Hielo (llamado desde resolveWallCollision).
 function resolveIceWalls(ent){
   if(!iceWalls.length || !ent.classKey) return;
   const rad = ent.radius || 18;
@@ -129,7 +129,7 @@ function resolveIceWalls(ent){
   }
 }
 
-// Una vez por frame (desde update): escarcha de los guardias, golpes diferidos y muros.
+// Una vez por frame (desde update): escarcha de los guardianes, golpes diferidos y muros.
 function updateBossSkillWorld(dt){
   for(const h of heroes){ if(h.frostTimer>0){ h.frostTimer -= dt; if(h.frostTimer<=0) h.frostStacks = 0; } }
   if(bossStrikes.length){
@@ -498,7 +498,7 @@ function drawTreeWall(w, grow, fade){
   return true;
 }
 // Pilar de piedra del Laberinto de Piedra (Ángel Corrompido, poder del Guardián del Laberinto):
-// usa el mismo sistema que el Muro de Hielo (colisión con guardias, red), otro dibujo.
+// usa el mismo sistema que el Muro de Hielo (colisión con guardianes, red), otro dibujo.
 function drawStonePillar(w, grow, fade){
   const h = 70*grow, r = w.r;
   drawShadow(w.x, w.y, r*1.2);

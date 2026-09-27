@@ -275,7 +275,7 @@ PAL.musashi = {
 };
 
 // Sylva, La Cazadora del Bosque: reusa temporalmente la silueta esbelta del Asesino (mismo
-// patrón ya usado 3 veces en este roster para arrancar un guardia nuevo sin arte propio de
+// patrón ya usado 3 veces en este roster para arrancar un guardián nuevo sin arte propio de
 // respaldo) con paleta verde bosque/cuero. Es solo el RESPALDO silencioso: la imagen principal
 // es su sprite real (SYLVA_REAL_IMG, ver más abajo), esto solo se ve si algo no cargara.
 PAL.cazadora = {a:"#0d140d", b:"#3a5a34", c:"#5c8a52", d:"#24391f", e:"#c9a876", f:"#8a6a3a", g:"#2e4a2a", h:"#16220f", i:"#101a0c", j:"#5c3a1e", k:"#8a5a2e", l:"#a87840", m:"#c99a68", n:"#e8d8b8", o:"#7a9a68", p:"#3e5a34"};

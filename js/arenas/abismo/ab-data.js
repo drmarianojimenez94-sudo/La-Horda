@@ -4,7 +4,7 @@
    ARENA DEL ABISMO — datos: mapa de plataformas, balance y fichas de enemigos.
    Identidad: "EL TERRENO ES UN RECURSO". Ruinas suspendidas sobre el vacío: las plataformas se
    agrietan (STABLE -> CRACKED -> CRITICAL -> COLLAPSE), avisan antes de caer y el Abismo las
-   reconstruye entre niveles. Caer no mata al guardia (queda colgado del borde y un compañero lo
+   reconstruye entre niveles. Caer no mata al guardián (queda colgado del borde y un compañero lo
    sube); a los enemigos SÍ se los puede tirar al vacío. Debajo vive El Que Mora Debajo.
 
    Lógica: ab-map.js (geometría, estados, caída/rescate, seguridad) · ab-enemies.js (6 enemigos)
@@ -88,7 +88,7 @@ const AB_CFG = {
 };
 
 // ---------------- fichas de enemigo (se suman a ENEMY_BASE) ----------------
-// Escala: guardia 1.0 (~65 u de alto). hMul = alto dibujado / radio (ab-arena.js).
+// Escala: guardián 1.0 (~65 u de alto). hMul = alto dibujado / radio (ab-arena.js).
 Object.assign(ENEMY_BASE, {
   ab_errante:  {name:"Errante del Vacío",      rank:"normal",   hp:40,  dmg:10, speed:76,  radius:22, xp:8,  gold:2,  scale:3.4, color:"#8a4a6a", ranged:false},
   ab_acechador:{name:"Acechador del Borde",    rank:"subelite", hp:34,  dmg:11, speed:148, radius:20, xp:11, gold:4,  scale:3.0, color:"#7a4ad0", ranged:false},

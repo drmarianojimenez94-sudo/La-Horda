@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/assets/champion-sprites.js
-   Carga de los sprites reales de guardias, invocaciones y formas especiales
+   Carga de los sprites reales de guardianes, invocaciones y formas especiales
    (assets/sprites/champions/). Cada imagen tiene su bandera READY.
    ============================================================ */
 
@@ -243,7 +243,7 @@ SEGADOR_REAL_IMG["up"].src = "assets/sprites/champions/segador/dir-up.png";
 const CHAMP_PACK = {};
 
 /* ============================================================
-   REDRAW (hojas "La Horda — estilo oficial", docs/ART_REPLACEMENT_QUEUE.md): un atlas por guardia,
+   REDRAW (hojas "La Horda — estilo oficial", docs/ART_REPLACEMENT_QUEUE.md): un atlas por guardián,
    grilla de cuadros del mismo tamaño con los pies en la misma línea (anchor). refH = alto del cuerpo
    de referencia (cabeza a pies) para escalar igual que el resto del roster. Solo cambia el dibujo:
    habilidades, tiempos y VFX siguen siendo los del código. Recortado con tools/art/sheet_extract.py.
@@ -256,7 +256,7 @@ function champPackLoadAtlas(key, src, meta){
   img.src = src;
   CHAMP_PACK[key] = P;
 }
-// El arte redibujado de este guardia todavía está bajando: no se dibuja NADA (antes se veía un
+// El arte redibujado de este guardián todavía está bajando: no se dibuja NADA (antes se veía un
 // instante el arte viejo descartado, ej. en el título mientras decía "Cargando…").
 function champPackPending(key){ const P = CHAMP_PACK[key]; return !!(P && !P.ready && !P.failed); }
 champPackLoadAtlas("segador", "assets/sprites/champions/segador/v2/atlas.png", {"w":91,"h":107,"cols":8,"refH":75,"anchor":0.9439,"sets":{"idle_down":[17,18,19,20],"idle_side":[29],"idle_left":[25],"idle_up":[33],"walk_down":[21,22,23,24],"walk_side":[29,30,31,32],"walk_left":[25,26,27,28],"walk_up":[33,34,35,36],"attack_side":[0,1,2,3],"cast_side":[4,5,6],"hit_down":[13,14,15,16],"death_down":[7,8,9,10,11,12]}});

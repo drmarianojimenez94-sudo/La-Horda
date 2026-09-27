@@ -1,6 +1,6 @@
 "use strict";
 /* GENERADO por tools/art/skins_sets/extract.py (no editar a mano).
-   Skins de set completo: atlas con el mismo formato que el del guardia base (CHAMP_PACK).
+   Skins de set completo: atlas con el mismo formato que el del guardián base (CHAMP_PACK).
    SET_SKINS[set].packs remapea la clave del atlas base a la de la skin (ver set-effects.js). */
 champPackLoadAtlas("skin_manada", "assets/sprites/champions/cazadora/skins/manada/atlas.png", {"w":76,"h":61,"cols":8,"refH":57,"anchor":0.9672,"sets":{"idle_down":[0],"walk_down":[6,12],"attack_down":[0,18,18],"cast_down":[0,24,24],"hit_down":[30],"idle_side":[2],"walk_side":[8,14],"attack_side":[2,20,20],"cast_side":[2,26,26],"hit_side":[32],"idle_left":[5],"walk_left":[11,17],"attack_left":[5,23,23],"cast_left":[5,29,29],"hit_left":[35],"idle_up":[4],"walk_up":[10,16],"attack_up":[4,22,22],"cast_up":[4,28,28],"hit_up":[34],"death_down":[36,37,38,39,40,41],"run":[8,14],"aim":[26]}});
 champPackLoadAtlas("skin_errante", "assets/sprites/champions/musashi/skins/errante/atlas.png", {"w":76,"h":66,"cols":8,"refH":56,"anchor":0.9697,"sets":{"idle_down":[0],"walk_down":[6,12],"attack_down":[0,18,18],"cast_down":[0,24,24],"hit_down":[30],"idle_side":[2],"walk_side":[8,14],"attack_side":[2,20,20],"cast_side":[2,26,26],"hit_side":[32],"idle_left":[5],"walk_left":[11,17],"attack_left":[5,23,23],"cast_left":[5,29,29],"hit_left":[35],"idle_up":[4],"walk_up":[10,16],"attack_up":[4,22,22],"cast_up":[4,28,28],"hit_up":[34],"death_down":[36,37,38,39,40,41],"run":[8,14]}});

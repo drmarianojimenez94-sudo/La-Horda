@@ -28,7 +28,7 @@ const ANIM_TIER = {
 };
 const ANIM_DEFAULT = {speed:1, weight:1, amp:1, recoil:1, lunge:8, cast:1, impact:1, particle:"spark", material:"flesh", basic:"melee", death:"fall", tier:null};
 const ANIM_PROFILES = {
-  // ---- guardias ----
+  // ---- guardianes ----
   tanque:     {speed:0.8, weight:1.6, amp:0.7, recoil:1.2, lunge:12, cast:0.8, impact:1.5, particle:"spark",  basic:"melee",  tier:"full"},
   guerrero:   {speed:1.3, weight:0.8, amp:0.9, recoil:0.8, lunge:14, cast:0.8, impact:1.1, particle:"blood",  basic:"melee",  tier:"full"},
   mago:       {speed:0.9, weight:0.8, amp:0.5, recoil:0.4, lunge:2,  cast:1.6, impact:1.0, particle:"arcane", basic:"cast",   tier:"full"},

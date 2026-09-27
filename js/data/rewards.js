@@ -6,7 +6,7 @@
    ============================================================ */
 
 // Fórmula de puntaje por rol: cada métrica se normaliza contra un valor de referencia
-// ("una partida muy buena en esa métrica") y se pondera. Así ningún guardia se compara
+// ("una partida muy buena en esa métrica") y se pondera. Así ningún guardián se compara
 // por números en bruto (daño vs. curación no son comparables), sino por qué tan cerca
 // estuvo cada uno de una partida ejemplar EN SU PROPIO ROL. Todo esto es fácil de tocar
 // después sin afectar el generador de recompensas.
@@ -42,7 +42,7 @@ const SCORE_CONFIG = {
   ]
 };
 // Pedido explícito: el sistema de recompensas se comparte por CLASE DE ROL, no una fórmula
-// bespoke por guardia. Axiom se mide como mago, el Segador Olvidado ("Berserk") como tanque,
+// bespoke por guardián. Axiom se mide como mago, el Segador Olvidado ("Berserk") como tanque,
 // Musashi y la Cazadora del Bosque como asesino/guerrero, el Nigromante como mago -mismas
 // referencias (SCORE_CONFIG.mago/tanque/guerrero), no copias, así un ajuste de balance futuro
 // a esa fórmula base se propaga sola a todos los que la comparten-. Antes Axiom/Segador ni
@@ -63,10 +63,10 @@ SCORE_CONFIG.eren = SCORE_CONFIG.guerrero;
 // escala mítico/legendario queda igual de accesible que antes.
 const RARITY_WEIGHTS_LOW  = {comun:54, raro:29, muyraro:13.5, legendario:4.7, mitico:1.4, unico:0.06};
 const RARITY_WEIGHTS_HIGH = {comun:18, raro:26, muyraro:27,   legendario:19,  mitico:9,   unico:1.0};
-// Afinidad de objetos por guardia: no es una restricción dura, es un peso de probabilidad
-// (así se puede ampliar a más guardias/objetos después sin reescribir esto). Guantes/botas
+// Afinidad de objetos por guardián: no es una restricción dura, es un peso de probabilidad
+// (así se puede ampliar a más guardianes/objetos después sin reescribir esto). Guantes/botas
 // pesan igual para todos (velocidad de ataque/movimiento le sirve a cualquiera); lo que cambia
-// por guardia es cuánto le interesa daño puro (arma) contra supervivencia (escudo/casco/pechera).
+// por guardián es cuánto le interesa daño puro (arma) contra supervivencia (escudo/casco/pechera).
 const CHAMP_ITEM_AFFINITY = {
   tanque:   {arma:0.10, escudo:0.24, casco:0.20, pechera:0.22, guantes:0.12, botas:0.12},
   guerrero: {arma:0.30, escudo:0.08, casco:0.12, pechera:0.14, guantes:0.20, botas:0.16},

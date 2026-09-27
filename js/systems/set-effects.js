@@ -86,7 +86,7 @@ function setsOnHit(h, e, dmg, crit, opts){
     damageEnemy(e, _setBase(h)*0.3, {src:h, fromProc:true, burn:true});
     vfxBurst(e.x, e.y-12, 5, "ember", 90, 260, 3, 0, -30, 0);
   }
-  champSetsOnHit(h, e, dmg, crit, opts); // sets de guardia (js/systems/champion-sets.js)
+  champSetsOnHit(h, e, dmg, crit, opts); // sets de guardián (js/systems/champion-sets.js)
 }
 function setsOnKill(h, e){
   const c = heroSetCounts(h); if(!c) return;
@@ -305,7 +305,7 @@ function drawSetAuras(){
 /* ---------------- skins de set completo ---------------- */
 // Registro de arte de skin por set (js/assets/set-skins-meta.js, generado por
 // tools/art/skins_sets/extract.py): SET_SKINS[setId] = {champ, name, preview, packs:{claveBase: claveSkin}}.
-// La skin REMAPEA el atlas del guardia (CHAMP_PACK) solo mientras el set está COMPLETO: cada estado
+// La skin REMAPEA el atlas del guardián (CHAMP_PACK) solo mientras el set está COMPLETO: cada estado
 // (caminar, atacar, habilidades, forma titán de Eren...) sigue su propia lógica, cambia el dibujo.
 // Sets sin arte: el set completo se ve con su aura plena (docs/assets_faltantes/skins_sets/).
 // Formato viejo (una sola imagen, {src}) se sigue aceptando por si llega una pose suelta.
@@ -316,7 +316,7 @@ function setSkinImage(id){
   let im = _SET_SKIN_IMG[id]; if(!im){ im = _SET_SKIN_IMG[id] = new Image(); im.src = d.src; }
   return im.complete && im.naturalWidth ? im : null;
 }
-// Skin activa del héroe: su set principal COMPLETO y con arte (y del guardia correcto).
+// Skin activa del héroe: su set principal COMPLETO y con arte (y del guardián correcto).
 // En red, cada invitado tiene SU guardado: la skin de los demás la decide el anfitrión (que conoce
 // el equipo real de cada jugador) y viaja en el héroe como `skinSet` (se fija en updateSets).
 function activeSetSkin(h){
@@ -342,7 +342,7 @@ function setSkinPackKey(h, key){
 function drawSetSkin(h, drawScale, alpha){
   const d = activeSetSkin(h); if(!d) return false;
   if(d.packs){
-    // guardias con atlas propio (CHAMP_PACK): los dibuja su camino de siempre con el atlas remapeado.
+    // guardianes con atlas propio (CHAMP_PACK): los dibuja su camino de siempre con el atlas remapeado.
     // Los de atlas viejo (Mago, Asesino, Sanadora, Tanque) no pasan por drawChampPack: se dibujan acá.
     if(CHAMP_PACK[h.classKey] || !d.packs[h.classKey]) return false;
     return drawChampPack(h.classKey, h, drawScale, alpha);

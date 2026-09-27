@@ -1,10 +1,10 @@
 "use strict";
 /* ============================================================
    js/data/talent-trees.js
-   DATOS de los árboles de talentos (nodos, ramas y maestrías) de cada guardia.
+   DATOS de los árboles de talentos (nodos, ramas y maestrías) de cada guardián.
    ============================================================ */
 
-const TALENT_TREES = {}; // contenido real cargado más abajo, uno por guardia (ver "ÁRBOLES DE TALENTOS")
+const TALENT_TREES = {}; // contenido real cargado más abajo, uno por guardián (ver "ÁRBOLES DE TALENTOS")
 TALENT_TREES.axiom = {
   masteryRequirement: 8,
   nodes: [
@@ -629,7 +629,7 @@ TALENT_TREES.profeta = {
           mods:r=>[{targetSkill:0, flag:"presagioSpinBonus", value:0.20*r}]}
       ]},
     elegida: {id:"elegida", branch:"elegida", name:"Elegida Absoluta",
-      desc:"Puede convertir temporalmente a otro guardia en una versión tremendamente poderosa de sí mismo.",
+      desc:"Puede convertir temporalmente a otro guardián en una versión tremendamente poderosa de sí mismo.",
       miniTree:[
         {id:"pr_m_ele_1", maxRank:2, cost:4, requires:null, name:"Fusión Suprema",
           desc:"El empoderamiento de Ascensión del Elegido es muchísimo más fuerte.",

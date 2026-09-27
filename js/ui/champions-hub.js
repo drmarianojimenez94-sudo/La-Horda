@@ -1,19 +1,19 @@
 "use strict";
 /* ============================================================
    js/ui/champions-hub.js
-   Pestañas compartidas de gestión del guardia. "Mis Guardias" pasó a ser CÓDICE → GUARDIAS
+   Pestañas compartidas de gestión del guardián. "Mis Guardianes" pasó a ser CÓDICE → GUARDIANES
    (js/ui/codex/codex.js). Junto con la Sala es el único lugar donde se cambia el equipo: en partida
    no se puede (multijugador, sin pausa).
    ============================================================ */
 const HUB_ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
-// La ficha de cada guardia (equipamiento, talentos en árbol, maestría) vive ahora en el CÓDICE →
-// GUARDIAS (js/ui/codex/codex.js), con los mismos paneles de siempre (renderChampInventory,
+// La ficha de cada guardián (equipamiento, talentos en árbol, maestría) vive ahora en el CÓDICE →
+// GUARDIANES (js/ui/codex/codex.js), con los mismos paneles de siempre (renderChampInventory,
 // renderTalentTree, renderSkillsPanel). Acá queda lo compartido y la Sala.
 function setHubTabs(tabsId, active){
   document.querySelectorAll(`#${tabsId} .hub-tab`).forEach(t=> t.classList.toggle("active", t.dataset.tab===active));
 }
 
-// Sala: las mismas 3 pestañas para el guardia elegido, justo antes de entrar.
+// Sala: las mismas 3 pestañas para el guardián elegido, justo antes de entrar.
 let prepTab = "equipo";
 function renderPrepTabs(){
   setHubTabs("prep-tabs", prepTab);

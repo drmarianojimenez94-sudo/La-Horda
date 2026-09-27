@@ -101,7 +101,7 @@ const GEMS_PER_VICTORY = {bosque:2, acuatica:3, fortaleza:4, micelial:4, hielo:5
 const GEMS_GRADE_MULT = {C:0.6, B:0.8, A:1, S:1.25, "S+":1.5};
 const GEMS_DEFEAT_AFTER_SUBBOSS = 1;   // perder después del subjefe deja 1 gema
 
-/* ---------------- 6) Efecto mecánico de los objetos de guardia (tooltip) ---------------- */
+/* ---------------- 6) Efecto mecánico de los objetos de guardián (tooltip) ---------------- */
 // Separado del lore: NOMBRE · EFECTO (qué hace, con números) · LORE. Verificado contra abilities.js.
 const DESIGNED_EFFECT_TEXT = {
   tanque_leg:"Embestida: durante la carga recibís 10% menos daño (0,5 s).",

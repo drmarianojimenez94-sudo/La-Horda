@@ -18,12 +18,12 @@ function pickDivinaTeamClasses(){
     return pool[(Math.random()*pool.length)|0];
   });
 }
-// Fase 3: arma el equipo enemigo "divino" -mismos guardias y habilidades de siempre, pero
+// Fase 3: arma el equipo enemigo "divino" -mismos guardianes y habilidades de siempre, pero
 // escalados al nivel que corresponde ("10 niveles de personaje por cada nivel de Arena
 // Divina")- SIN tocar save.champions en ningún momento: usa el parámetro de nivel opcional
 // de computePlayerStats/makeHero, así el nivel real del jugador queda intacto.
 function spawnDivinaEnemyTeam(){
-  // Nivel 6: en vez de otro equipo de guardias, el rival son los 4 jefes finales de las
+  // Nivel 6: en vez de otro equipo de guardianes, el rival son los 4 jefes finales de las
   // arenas normales (ver makeDivinaBossChamp más arriba).
   if(divinaLevel===DIVINA_BOSS_LEVEL){
     divinaEnemies = DIVINA_BOSS_TYPES.map((type,i)=>{
@@ -207,7 +207,7 @@ function damageDivinaStructure(s, amount, src){
 }
 
 // ============================================================
-// ARENA DIVINA — combate por bando: unifica guardias, oleadas de minions y estructuras bajo
+// ARENA DIVINA — combate por bando: unifica guardianes, oleadas de minions y estructuras bajo
 // una sola noción de "objetivo hostil", para que cualquier cosa que pelee en el asedio (tuya
 // o del equipo enemigo) pueda trabar combate con lo que tenga cerca, no solo con los héroes
 // (antes tus 3 aliados no atacaban NADA en la Arena Divina: ver triggerBasic/updateAllies).
@@ -276,7 +276,7 @@ function updateDivinaStructProjectiles(dt){
   }
   divinaStructProjectiles = divinaStructProjectiles.filter(p=>p.life>0);
 }
-// Daño porcentual escalado de torres/castillo contra un guardia (sección de daño true, ignora
+// Daño porcentual escalado de torres/castillo contra un guardián (sección de daño true, ignora
 // defensa/escudos: es daño de asedio, no un golpe cuerpo a cuerpo más). Reusa el mismo bloque de
 // manejo de muerte que damageHero (onPlayerDeath / caída de aliado) para no duplicar esa lógica
 // mal, solo que sin pasar por la mitigación genérica.

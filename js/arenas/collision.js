@@ -46,7 +46,7 @@ function buildLabyrinthWalls(){
 }
 // Empuja a "ent" fuera de cualquier muro con el que se esté superponiendo
 function resolveWallCollision(ent){
-  resolveIceWalls(ent); // Muro de Hielo del Demonio de Hielo y Fuego (solo bloquea guardias)
+  resolveIceWalls(ent); // Muro de Hielo del Demonio de Hielo y Fuego (solo bloquea guardianes)
   aidResolveCircles(ent, 0.9); // obstáculos sólidos del escenario (columnas, menhires, pilares...)
   if(!labyrinthWalls.length) return;
   const rad = ent.radius || 18;

@@ -1,9 +1,9 @@
 "use strict";
 /* ============================================================
    js/systems/champion-sets.js
-   Comportamiento de los SETS DE GUARDIA (datos en js/data/champion-sets.js). Se engancha a los
+   Comportamiento de los SETS DE GUARDIÁN (datos en js/data/champion-sets.js). Se engancha a los
    mismos eventos que los sets universales (js/systems/set-effects.js: setsOnHit/Kill/Cast/Hurt,
-   updateSets) y a unos pocos puntos del kit de cada guardia (Paso Perfecto, Trampa del Bosque,
+   updateSets) y a unos pocos puntos del kit de cada guardián (Paso Perfecto, Trampa del Bosque,
    Giro del Presagio, básico de Musashi, forma titánica de Eren...). Todo con tope o enfriamiento.
    ============================================================ */
 const _normalish = e => e.rank==="normal" || e.rank==="subelite" || e.rank==="elite";

@@ -21,7 +21,7 @@ Object.assign(ANIM_PROFILES, {
 });
 
 /* ---------------- atlas reales ----------------
-   hMul = alto dibujado / radio. Escala respecto de un guardia (x1.0 ≈ 65 u):
+   hMul = alto dibujado / radio. Escala respecto de un guardián (x1.0 ≈ 65 u):
    Errante 1.1 · Acechador 0.85 (va agazapado) · Heraldo 1.2 · Devorador 1.8 · Tejedor 1.0 (araña,
    ancho) · Jinete 1.7 · Carcelero 3.2 (gigante encadenado). El Que Mora Debajo: por partes. */
 const AB_HMUL = {ab_errante:3.25, ab_acechador:2.75, ab_heraldo:3.5, ab_devorador:3.1, ab_tejedor:2.7, ab_jinete:3.25, ab_carcelero:3.35};

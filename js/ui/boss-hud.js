@@ -10,9 +10,9 @@ const SUBBOSS_TIPS = {
   kraken_joven:      {epithet:"Guardián del Arrecife", tips:["Si te agarra, pegale al Kraken para soltarte.", "El Barrido cubre todo su alrededor: alejate cuando brilla.", "Invoca refuerzos: no te quedes rodeado."]},
   guardian_laberinto:{epithet:"Centinela de Piedra", tips:["El Pisotón aturde: salí del círculo antes de que caiga.", "Las rocas caen donde estás: seguí moviéndote."]},
   dragon_hielo:      {epithet:"Soberano de Hielo", tips:["El Aliento es un cono al frente: rodealo.", "La escarcha se acumula: 4 golpes helados te congelan."]},
-  esqueleto_h:       {epithet:"Guardia de la Horda", tips:["Gira su arma cuando estás cerca: alejate a tiempo.", "Embiste en línea recta: movete de costado."]},
-  demonio_menor:     {epithet:"Guardia de la Horda", tips:["Hace llover fuego sobre tu posición: no te quedes quieto."]},
-  golem:             {epithet:"Guardia de la Horda", tips:["Su Pisotón aturde: salí del círculo.", "Lanza rocas a distancia."]}
+  esqueleto_h:       {epithet:"Guardián de la Horda", tips:["Gira su arma cuando estás cerca: alejate a tiempo.", "Embiste en línea recta: movete de costado."]},
+  demonio_menor:     {epithet:"Guardián de la Horda", tips:["Hace llover fuego sobre tu posición: no te quedes quieto."]},
+  golem:             {epithet:"Guardián de la Horda", tips:["Su Pisotón aturde: salí del círculo.", "Lanza rocas a distancia."]}
 };
 let hudBoss = null, _bossChip = 1, _bossHintT = 0, _bossIntroT = 0, _bossIntroDelay = 0, _bossPhaseTxt = "";
 const _bh = {};

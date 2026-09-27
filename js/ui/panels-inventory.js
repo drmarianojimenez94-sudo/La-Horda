@@ -1,12 +1,12 @@
 "use strict";
 /* ============================================================
    js/ui/panels-inventory.js
-   Equipamiento (grilla, sets, comparación, fusión: lo usan la Sala y Mis Guardias) y la
+   Equipamiento (grilla, sets, comparación, fusión: lo usan la Sala y Mis Guardianes) y la
    pestaña de Estadísticas de la pausa.
    ============================================================ */
 
 
-// Foto completa de las estadísticas RESULTANTES de un guardia (sección 5: "qué gano y qué
+// Foto completa de las estadísticas RESULTANTES de un guardián (sección 5: "qué gano y qué
 // pierdo"). Se apoya en las mismas fórmulas reales de combate (computePlayerStats/passiveSum),
 // nunca en una copia aparte -así la comparación nunca puede mentir respecto de lo que pasa en
 // partida-. energyRegen/critChance parten de sus bases reales (cls.energyRegen, 0.04 de
@@ -165,7 +165,7 @@ function handleFuseClick(classKey, groupKey){
   const result = fuseItems(classKey, uids);
   if(!result.ok) alert(result.reason||"No se pudo fusionar.");
 }
-// Fase 4: pestaña "Estadísticas" — desglosa base del guardia vs. bonus de objetos equipados.
+// Fase 4: pestaña "Estadísticas" — desglosa base del guardián vs. bonus de objetos equipados.
 function renderStatsPanel(){
   const panel = document.getElementById("stats-panel");
   if(!panel || !player) return;

@@ -268,10 +268,10 @@ function renderParty(){
 
 /* ============================================================
    SUBIR HABILIDADES EN PARTIDA
-   El juego es multijugador: no hay pausa para repartir puntos. Cuando el guardia tiene puntos
+   El juego es multijugador: no hay pausa para repartir puntos. Cuando el guardián tiene puntos
    sin gastar, aparece un "+" chico delante de cada botón de habilidad que se puede subir; el
    sugerido (suggestedSkillInvest) late en dorado. La ulti recién acepta puntos desde el nivel
-   ULT_POINTS_MIN_LEVEL del guardia. Cada botón muestra además el nivel actual de la habilidad.
+   ULT_POINTS_MIN_LEVEL del guardián. Cada botón muestra además el nivel actual de la habilidad.
    ============================================================ */
 const SKILL_PLUS_IDS = [["btn-s1",0],["btn-s2",1],["btn-s3",2],["btn-ult","ult"]];
 let _skillLvlKey = "", _skillPlusHintShown = false;

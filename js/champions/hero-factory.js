@@ -29,7 +29,7 @@ function makeHero(classKey, isBot, spawnX, spawnY, levelOverride, isDivineFoe){
     maxEnergy:Math.round(cls.energyMax*tEnergy), energy:Math.round(cls.energyMax*tEnergy),
     baseDmg: base.dmg * (isBot && !isDivineFoe ? 0.72 : 1), def:base.def, baseSpeed:base.speed*(isBot?0.95:1)*arenaMods().heroSpeedMult,
     // Axiom — Teletransporte con cargas (ver resolveTeleportCd): 0 cargas extra por defecto,
-    // como siempre; solo guardias con el talento correspondiente arrancan con más de 1.
+    // como siempre; solo guardianes con el talento correspondiente arrancan con más de 1.
     teleportChargeMax, teleportChargesBanked: teleportChargeMax, teleportChargeTimer:0,
     ultCharge:0, ultMax:100,
     shield:0, shieldTimer:0,
@@ -78,7 +78,7 @@ function makeHero(classKey, isBot, spawnX, spawnY, levelOverride, isDivineFoe){
     nigroTransformTimer:0, nigroDemonForm:false, nigroDemonTimer:0, nigroDemonMaxTimer:0,
     nigroAbsorbedSkeletons:0, nigroAbsorbedGolem:false, nigroGolemSkin:"stone",
     // Fase 2 — evaluación de desempeño por rol: contadores que se acumulan durante la partida
-    // y se usan al final para puntuar la contribución de cada guardia (ver computeRoleScore).
+    // y se usan al final para puntuar la contribución de cada guardián (ver computeRoleScore).
     // duelVictories: Senda del Rōnin (Musashi) -progresión INTRAPARTIDA, nunca permanente de
     // cuenta, se reinicia sola en cada partida nueva porque stats se recrea acá cada vez.
     stats:{dmgDealt:0, dmgToBoss:0, kills:0, abilityHits:0, healDone:0, healEffective:0,

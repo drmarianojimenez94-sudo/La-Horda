@@ -1,18 +1,18 @@
 "use strict";
 /* ============================================================
    js/data/champions.js
-   DATOS de guardias: catálogo (orden, desbloqueo) y CLASSES (vida, daño,
+   DATOS de guardianes: catálogo (orden, desbloqueo) y CLASSES (vida, daño,
    defensa, velocidad, energía, alcance, habilidades con sus costos/cooldowns/valores).
-   >>> Acá se ajusta el balance de cada guardia y sus habilidades.
+   >>> Acá se ajusta el balance de cada guardián y sus habilidades.
    ============================================================ */
 
-// Catálogo de guardias: estructura de datos separada del progreso guardado, para poder
-// agregar guardias nuevos sin tocar la interfaz de la Galería/Tienda.
-// MODO CAMPAÑA (prueba): cada jugador ELIGE UN guardia de regalo al empezar (pantalla "Tu primer
-// guardia", js/ui/starter-select.js); todos los demás arrancan bloqueados y se compran en la
-// Tienda por CHAMPION_PRICE_GOLD de oro. Para agregar un guardia nuevo alcanza con sumar una fila.
-// ETAPA DE PRUEBA (BUGFIX 01): todos los guardias a 1.000 de oro para poder probarlos. El precio de
-// la economía final era 5.000 (un guardia nuevo como meta real): volver a ese valor al cerrar la prueba.
+// Catálogo de guardianes: estructura de datos separada del progreso guardado, para poder
+// agregar guardianes nuevos sin tocar la interfaz de la Galería/Tienda.
+// MODO CAMPAÑA (prueba): cada jugador ELIGE UN guardián de regalo al empezar (pantalla "Tu primer
+// guardián", js/ui/starter-select.js); todos los demás arrancan bloqueados y se compran en la
+// Tienda por CHAMPION_PRICE_GOLD de oro. Para agregar un guardián nuevo alcanza con sumar una fila.
+// ETAPA DE PRUEBA (BUGFIX 01): todos los guardianes a 1.000 de oro para poder probarlos. El precio de
+// la economía final era 5.000 (un guardián nuevo como meta real): volver a ese valor al cerrar la prueba.
 const CHAMPION_PRICE_GOLD = 1000;
 const CHAMPION_PRICE_GOLD_FINAL = 5000; // precio definitivo (se vuelve a él al terminar la etapa de prueba)
 const CHAMPION_CATALOG = [

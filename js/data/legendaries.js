@@ -52,7 +52,7 @@ const ITEM_NOUN_PLURAL = {Guanteletes:1, Guantes:1, Brazales:1, "Puños":1, Bota
 const ITEM_QUALITY = {
   comun:  ["Gastad{o}","Oxidad{o}","de Hierro Viejo","Remendad{o}"],
   raro:   ["Templad{o}","de Acero Azul","Reforzad{o}","del Veterano"],
-  muyraro:["de Acero Negro","Rúnic{o}","del Guardia","Grabad{o} en Oro"]
+  muyraro:["de Acero Negro","Rúnic{o}","del Guardián","Grabad{o} en Oro"]
 };
 const LEGEND_PROPER_NAMES = ["Morvath","Ilsande","Karzul","Veyra","Thorgrim","Ashkael","Nerith","Obrecht","Selvane","Durmak",
   "Ysmera","Galdric","Vaelith","Brunhal","Coriane","Zherath"];
@@ -182,10 +182,10 @@ const RECIPE_MYTHICS = {
 };
 
 /* ---------------- ÚNICOS: jackpot, diseñados a mano ---------------- */
-// Arquitectura: cada Único es de UN guardia y su poder (UNIQUE_POWERS) puede cambiar apariencia
+// Arquitectura: cada Único es de UN guardián y su poder (UNIQUE_POWERS) puede cambiar apariencia
 // (aura/tinte), VFX y el comportamiento de una habilidad. Implementación: js/systems/mythic-powers.js
-// (uniqueOf / uniqueHook). Nunca caen como objeto genérico: si la rareza "único" sale y el guardia
-// no tiene Único diseñado, cae uno de otro guardia (el botín es cruzado). Nunca se fabrican.
+// (uniqueOf / uniqueHook). Nunca caen como objeto genérico: si la rareza "único" sale y el guardián
+// no tiene Único diseñado, cae uno de otro guardián (el botín es cruzado). Nunca se fabrican.
 const UNIQUE_POWERS = {
   uniq_archimago:{name:"Fuego del Vacío", desc:"Tu fuego se vuelve violeta y quema el doble de tiempo. El Muro de Fuego te sigue. La Cadena de Relámpago salta 3 veces más y deja a cada objetivo en llamas.",
     aura:"176,106,255", champion:"mago"},

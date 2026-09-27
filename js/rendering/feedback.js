@@ -38,7 +38,7 @@ let _ultImpactDone = false;
 //   2 HABILIDAD  reacción más grande; un micro hit-stop y un golpe de sonido por lanzamiento (no por enemigo).
 //   3 PESADO     crítico / golpe enorme: hit-stop, temblor, tambaleo (stagger), sangre fuerte.
 //   4 ULTI       el primer impacto frena el tiempo (hit-stop + cámara lenta breve), temblor grande.
-// Algunos guardias pegan "pesado" por naturaleza (IMPACT_WEIGHT): el Tanque se siente masa.
+// Algunos guardianes pegan "pesado" por naturaleza (IMPACT_WEIGHT): el Tanque se siente masa.
 const IMPACT_FLASH_MS = [90, 90, 115, 150, 180];
 const IMPACT_KNOCK = [0, 4, 8, 15, 20];          // retroceso físico (unidades) a comunes
 const IMPACT_STAGGER = [0, 0, 0, 110, 200];      // tambaleo (ms) a comunes/sub-élites; élites la mitad

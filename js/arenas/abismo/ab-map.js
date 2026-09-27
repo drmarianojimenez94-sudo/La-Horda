@@ -9,7 +9,7 @@
      y queda al menos el 55 % del mapa. Si no, queda CRÍTICA ("la sostienen las runas").
    - La entrada (h2) nunca cae. Nunca se destruye terreno sano de un golpe: el daño estructural
      baja estados; el derrumbe siempre avisa (grietas, temblor, piedras que caen, sonido) ~1,7 s.
-   - Caer no mata: el guardia queda COLGADO del borde (no puede soltarse solo) hasta que un compañero
+   - Caer no mata: el guardián queda COLGADO del borde (no puede soltarse solo) hasta que un compañero
      lo suba (acción contextual RESCATAR). Si se acaba el tiempo, cae y usa el sistema normal de
      muerte/revivir (su cuerpo queda en el borde, al alcance de los compañeros).
    - Caminar nunca tira a nadie: clamp() devuelve al borde. Solo cae lo que fue EMPUJADO.

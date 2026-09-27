@@ -2,18 +2,18 @@
 /* ============================================================
    js/ui/codex/codex.js
    EL CÓDICE — uno de los tres pilares del menú (MODOS DE JUEGO · CÓDICE · TIENDA). Enciclopedia
-   interactiva del mundo: GUARDIAS (con toda la gestión que antes era "Mis Guardias": elegir,
+   interactiva del mundo: GUARDIANES (con toda la gestión que antes era "Mis Guardianes": elegir,
    equipamiento, talentos, maestría, skins), BESTIARIO, JEFES y ARENAS, todo conectado entre sí.
 
    Arquitectura (data-driven): CODEX_SECTIONS define las secciones (sumar RELIQUIAS = sumar una
    fila); codexEntry(tipo, id) arma cada ficha desde los datos reales del juego + js/data/codex-content.js;
-   los renderizadores son por TIPO (guardia / criatura / jefe / arena / set), nunca por entrada.
+   los renderizadores son por TIPO (guardián / criatura / jefe / arena / set), nunca por entrada.
    Descubrimiento: DESCONOCIDO → DESCUBIERTO → DERROTADO (→ DOMINADO), desde save.codex (lo que se vio
    y se mató, js/ui/codex/codex-track.js) y el progreso real de la campaña (arenas completadas).
    Previews: CodexSpritePreview (codex-preview.js), siempre con el arte real.
    ============================================================ */
 const CODEX_SECTIONS = [
-  {id:"campeones", label:"GUARDIAS", icon:"🛡", blurb:"Tus héroes: historia, habilidades en acción, skins, equipo y talentos."},
+  {id:"campeones", label:"GUARDIANES", icon:"🛡", blurb:"Tus héroes: historia, habilidades en acción, skins, equipo y talentos."},
   {id:"bestiario", label:"BESTIARIO", icon:"☠", blurb:"Las criaturas de cada arena: qué son, de dónde vienen y cómo pelean."},
   {id:"jefes",     label:"JEFES",     icon:"♛", blurb:"Guardianes, subjefes y jefes: fases, habilidades y su lugar en la historia."},
   {id:"arenas",    label:"ARENAS",    icon:"⛩", blurb:"La campaña capítulo por capítulo: el camino de las Cicatrices."}
@@ -23,7 +23,7 @@ const CODEX_SECTIONS = [
 const CODEX_MASTERY = {normal:60, subelite:30, elite:15, invocacion:40, estructura:20, apendice:10, subjefe:3, jefe:3};
 
 let codexStack = [];          // navegación: [{view, id, sub, label}]
-let codexChampTab = "ficha";   // pestaña de la ficha de guardia
+let codexChampTab = "ficha";   // pestaña de la ficha de guardián
 let codexFilter = {bestiario:"todas", jefes:"todas"};
 
 /* ============================================================
@@ -215,7 +215,7 @@ function codexHomeHtml(){
   const N = codexCounts();
   const owned = CHAMPION_CATALOG.filter(c=>save.champions[c.id] && save.champions[c.id].unlocked).map(c=>c.id);
   const heroes = owned.concat(CHAMPION_CATALOG.map(c=>c.id).filter(k=>!owned.includes(k))).slice(0, 3);
-  // arte REAL de cada sección: guardias, la criatura más reciente que conocés, un jefe conocido (o su silueta), una arena
+  // arte REAL de cada sección: guardianes, la criatura más reciente que conocés, un jefe conocido (o su silueta), una arena
   const knownCre = codexCreatureOrder().filter(t=>codexKnown(codexCreatureState(t)));
   const cre = knownCre.length ? knownCre[knownCre.length-1] : "esqueleto";
   const knownBoss = CODEX_BOSSES.filter(b=>codexKnown(codexBossState(b)));
@@ -254,7 +254,7 @@ function codexChampListHtml(){
       ${sel ? '<span class="cx-card-flag">EN JUEGO</span>' : ""}
     </button>`;
   }).join("");
-  return `<div class="cx-list-head"><div class="cx-list-title">GUARDIAS</div>
+  return `<div class="cx-list-head"><div class="cx-list-title">GUARDIANES</div>
       <button class="cx-btn" id="codex-inv-btn">🎒 Mi Inventario</button></div>
     <div class="cx-grid cx-grid-champs">${cards}</div>`;
 }
@@ -339,7 +339,7 @@ function codexBindAnimChips(body){
 }
 function _statRow(k, v){ return `<div class="cx-stat"><span>${k}</span><b>${v}</b></div>`; }
 
-/* ---------------- GUARDIA ---------------- */
+/* ---------------- GUARDIÁN ---------------- */
 function codexChampHtml(key){
   const cls = CLASSES[key], cat = CHAMPION_CATALOG.find(c=>c.id===key), ch = save.champions[key];
   const own = ch && ch.unlocked, L = CODEX_CHAMP_LORE[key] || {};
@@ -350,7 +350,7 @@ function codexChampHtml(key){
       <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div></div>
     ${_animChips(codexChampAnimList(key))}
     <div class="cx-stage-actions">${own
-      ? (sel ? `<div class="cx-active">✔ Tu guardia para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`)
+      ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`)
       : `<button class="cx-btn primary" id="cx-buy-btn">🔒 Desbloquear en la Tienda · 🪙 ${fmtGold(cat.priceGold)}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
       <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle">${_cxEsc(cls.role)}</div>
@@ -620,7 +620,7 @@ function codexArenaBossesHtml(a){
     return `<button class="cx-mini boss" data-go="boss:${b.id}">${_pv(spec, "cx-pv cx-mini-pv")}<span>${k ? _cxEsc(codexBossName(b)) : "???"}</span><i>${b.role==="jefe"?"Jefe":"Subjefe"}${b.guardian && codexFullyKnown(s) ? " · Guardián" : ""}</i></button>`; }).join("")}</div>`;
 }
 
-/* ---------------- SET (contextual: desde jefes, arenas, guardias, skins) ---------------- */
+/* ---------------- SET (contextual: desde jefes, arenas, guardianes, skins) ---------------- */
 function codexSetHtml(id){
   const S = SET_DB[id]; if(!S) return "";
   const full = typeof setFullCount==="function" ? setFullCount(id) : 4, miss = typeof shopSetMissing==="function" ? shopSetMissing(id) : [];

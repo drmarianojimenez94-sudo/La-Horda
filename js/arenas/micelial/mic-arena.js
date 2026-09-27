@@ -27,7 +27,7 @@ Object.assign(ANIM_PROFILES, {
 });
 
 /* ---------------- atlas reales (tools/art/micelial/build_micelial.py -> meta.json) ----------------
-   hMul = alto dibujado / radio. Escala respecto de un guardia (x1.0 ≈ 65 u de alto):
+   hMul = alto dibujado / radio. Escala respecto de un guardián (x1.0 ≈ 65 u de alto):
    Infectado 1.05 · Acechador 0.9 · Hinchado 1.7 · Peregrino 1.15 · Sabueso 0.7 · Chamán 1.4 ·
    Micelio Primigenio 3.0 · La Madre Espora ≈ 8.6 (retrato por partes, mic-render.js) */
 const MIC_ATLAS_META = {

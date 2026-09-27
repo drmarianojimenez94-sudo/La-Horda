@@ -1,8 +1,8 @@
 "use strict";
 /* ============================================================
    js/ui/panels-skills.js
-   Paneles de habilidades (niveles/maestría) y ÁRBOL DE TALENTOS de un guardia. Se usan fuera
-   de la partida: en la Sala (antes de entrar) y en la ficha de Mis Guardias. En partida las
+   Paneles de habilidades (niveles/maestría) y ÁRBOL DE TALENTOS de un guardián. Se usan fuera
+   de la partida: en la Sala (antes de entrar) y en la ficha de Mis Guardianes. En partida las
    habilidades se suben con los "+" del HUD (ver js/ui/hud.js) y los talentos no se tocan.
    ============================================================ */
 
@@ -14,7 +14,7 @@ function renderSkillsPanel(panel, classKey, rerender){
   const champ = save.champions[classKey];
   const items = cls.skills.map((sk,i)=>({sk, idx:i, m:champ.skillMastery[i]}))
     .concat([{sk:cls.ultimate, idx:"ult", m:champ.ultMastery}]);
-  let html = `<div class="talent-points">Puntos disponibles: <b>${champ.talentPoints}</b> <span class="tp-note">(1 por nivel de guardia; se comparten con los talentos)</span></div><div class="mastery-list">`;
+  let html = `<div class="talent-points">Puntos disponibles: <b>${champ.talentPoints}</b> <span class="tp-note">(1 por nivel de guardián; se comparten con los talentos)</span></div><div class="mastery-list">`;
   items.forEach(({sk,idx,m})=>{
     const tLvl = allocLevel(m);
     const tMaxed = tLvl>=TALENT_MAX;
@@ -55,7 +55,7 @@ function renderSkillsPanel(panel, classKey, rerender){
 
 /* ============================================================
    ÁRBOL DE TALENTOS
-   Raíz (el guardia) -> 3 ramas en columnas, cada una una cadena de nodos unidos por una línea
+   Raíz (el guardián) -> 3 ramas en columnas, cada una una cadena de nodos unidos por una línea
    (común -> común -> común -> especial...), las bifurcaciones exclusivas lado a lado ("elegí
    uno") y, coronando cada rama, su Maestría (nivel 90) con su mini-árbol si es la elegida.
    Cada nodo: ícono con su rango, nombre y explicación al lado.
@@ -128,7 +128,7 @@ function renderTalentTree(panel, classKey, rerender){
   const cls = CLASSES[classKey];
   const champ = save.champions[classKey];
   const tree = talentTreeFor(classKey);
-  if(!tree){ panel.innerHTML = `<div class="talent-lock-banner">Este guardia todavía no tiene árbol de talentos.</div>`; return; }
+  if(!tree){ panel.innerHTML = `<div class="talent-lock-banner">Este guardián todavía no tiene árbol de talentos.</div>`; return; }
   const st = talentState(classKey);
   const branches = [...new Set(tree.nodes.map(n=>n.branch))];
   let html = `<div class="tt-wrap">
@@ -188,7 +188,7 @@ function renderTalentTree(panel, classKey, rerender){
       let res = pickMastery(classKey, masteryId, false);
       if(res.needsConfirm){
         const m = tree.masteries[masteryId];
-        if(confirm(`Vas a convertirte en "${m.name}". Esta decisión es PERMANENTE: las otras dos Maestrías quedarán bloqueadas para siempre en este guardia. ¿Deseas continuar?`)){
+        if(confirm(`Vas a convertirte en "${m.name}". Esta decisión es PERMANENTE: las otras dos Maestrías quedarán bloqueadas para siempre en este guardián. ¿Deseas continuar?`)){
           res = pickMastery(classKey, masteryId, true);
         } else return;
       }

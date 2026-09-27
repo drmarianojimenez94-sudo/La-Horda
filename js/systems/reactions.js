@@ -4,7 +4,7 @@
    REACCIONES ENTRE ESTADOS y RESISTENCIAS por tipo de daño.
    Tipo de daño de un golpe (lo decide damageEnemy con las opciones del golpe):
      fire (quema) · ice (ralentiza/congela) · lightning (cadena/descarga) · bleed · physical.
-   REACCIONES (universales: el estado lo puede poner un guardia y explotarlo OTRO):
+   REACCIONES (universales: el estado lo puede poner un guardián y explotarlo OTRO):
      CONDUCCIÓN  rayo sobre un enemigo MOJADO: el rayo salta a todos los mojados cercanos y los aturde.
      QUIEBRE     golpe pesado (crítico/pesado/ulti) sobre un CONGELADO: +80% de daño, rompe el hielo
                  y las esquirlas lastiman alrededor.

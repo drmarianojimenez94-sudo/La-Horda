@@ -2,7 +2,7 @@
 /* ============================================================
    js/systems/terrain-tags.js
    Etiqueta de entorno "terrain": DAÑO ESTRUCTURAL de las habilidades (metadata por TIPO de
-   habilidad, nunca por guardia). Hoy la escucha la Arena del Abismo (agrieta / derrumba
+   habilidad, nunca por guardián). Hoy la escucha la Arena del Abismo (agrieta / derrumba
    plataformas); cualquier arena futura puede escucharla con envOn("terrain", key, fn).
    - Se emite DESPUÉS de castAbility en el punto apuntado (caster._lastAimPt, que guarda aimPoint)
      o sobre el propio lanzador (at:"self": golpes que caen donde está el héroe).

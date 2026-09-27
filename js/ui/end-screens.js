@@ -28,14 +28,14 @@ function showGameOverScreen(divinaOutcome){
       retryBtn.textContent = `Reintentar — Nivel ${divinaLevel}`;
       document.getElementById("go-stats").textContent = `Arena Divina · Nivel ${divinaLevel}`;
       document.getElementById("go-progress").innerHTML =
-        `<b style="color:#ff8a6a;">Los 4 guardias divinos destruyeron tu castillo.</b><br><b style="color:#d29aff;">Esto es un prototipo de combate: no se te descontó XP ni oro.</b>`;
+        `<b style="color:#ff8a6a;">Los 4 guardianes divinos destruyeron tu castillo.</b><br><b style="color:#d29aff;">Esto es un prototipo de combate: no se te descontó XP ni oro.</b>`;
     } else {
       title.textContent = "Tu equipo ha caído";
       title.style.color = "#c62828";
       retryBtn.textContent = `Reintentar — Nivel ${divinaLevel}`;
       document.getElementById("go-stats").textContent = `Arena Divina · Nivel ${divinaLevel}`;
       document.getElementById("go-progress").innerHTML =
-        `Tu equipo cayó ante los 4 guardias divinos.<br><b style="color:#d29aff;">Esto es un prototipo de combate: no se te descontó XP ni oro.</b>`;
+        `Tu equipo cayó ante los 4 guardianes divinos.<br><b style="color:#d29aff;">Esto es un prototipo de combate: no se te descontó XP ni oro.</b>`;
     }
     return;
   }
@@ -139,7 +139,7 @@ const VICTORY_STEPS = [
         <div class="res-row"><span>Resultado</span><b style="color:#7dffa0;">VICTORIA</b></div>
         <div class="res-row"><span>Arena</span><b>${A.label||"—"}</b></div>
         <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
-        <div class="res-row"><span>Guardia</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
+        <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
         <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
         ${victoryData.arenaRows||""}
       </div>`;
@@ -186,7 +186,7 @@ const VICTORY_STEPS = [
     const need = xpToNext(champ.level);
     const pct = Math.min(100, Math.round(champ.xp/need*100));
     return `
-      <div class="vic-xp-row"><span>Guardia</span><b>${CLASSES[victoryData.classKey].name}</b></div>
+      <div class="vic-xp-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name}</b></div>
       <div class="vic-xp-row"><span>Bonus de XP por victoria (performance ${victoryData.perf.grade})</span><b style="color:var(--ember3);">+${victoryData.victoryXpBonus}</b></div>
       <div class="vic-xp-row"><span>Nivel actual</span><b>${champ.level}</b></div>
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%;"></div></div>

@@ -25,8 +25,8 @@ const DIVINA_LAYOUT = [
   {type:"tower",    side:"player", x:260,  y:560,  hp:600}
 ];
 
-// ---- Torres y castillo: atacan solas a cualquier guardia/minion enemigo a su alcance (nunca
-// disparan contra otra estructura). Contra GUARDIAS el daño es porcentual y escalado por
+// ---- Torres y castillo: atacan solas a cualquier guardián/minion enemigo a su alcance (nunca
+// disparan contra otra estructura). Contra GUARDIANES el daño es porcentual y escalado por
 // impacto consecutivo (pedido explícito): 1º 10% de su vida máxima, 2º 25%, 3º 30%, 4º ejecuta
 // -así ninguna estructura queda invalidada por cuánto haya escalado el daño del jugador con el
 // tiempo, algo que con daño plano fijo (versión anterior) hacía que las torres murieran casi
@@ -37,9 +37,9 @@ const DIVINA_TOWER_HIT_RESET_MS = 9000; // sin recibir un nuevo impacto en este 
 const DIVINA_WAVE_INTERVAL = 13000; // pedido explícito: oleadas más rápidas (antes 20000ms)
 const DIVINA_WAVE_SIZE = 4;
 
-// ---- Nivel 6 de la Arena Divina: en vez de otro equipo de 4 guardias, el rival son los 4
+// ---- Nivel 6 de la Arena Divina: en vez de otro equipo de 4 guardianes, el rival son los 4
 // jefes finales de las arenas normales (uno por bioma), reutilizando sus stats de ENEMY_BASE
-// pero envueltos como "guardia divino" -puede recibir daño con damageHero, atacar estructuras,
+// pero envueltos como "guardián divino" -puede recibir daño con damageHero, atacar estructuras,
 // retirarse, etc., igual que cualquier otro divinaEnemies- (ver spawnDivinaEnemyTeam).
 const DIVINA_BOSS_LEVEL = 6;
 const DIVINA_BOSS_TYPES = ["demonio_mayor","angel_caido_hielo","jinete_sin_cabeza","minotauro"];
