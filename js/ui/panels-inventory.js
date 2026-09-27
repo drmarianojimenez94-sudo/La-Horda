@@ -163,7 +163,7 @@ function handleFuseClick(classKey, groupKey){
   const uids = fusableGroups(classKey).flat().filter(it=>it.type===type && it.rarity===rarity).slice(0,3).map(it=>it.uid);
   if(uids.length!==3) return;
   const result = fuseItems(classKey, uids);
-  if(!result.ok) alert(result.reason||"No se pudo fusionar.");
+  if(!result.ok) gameAlert(result.reason||"No se pudo fusionar.");
 }
 // Fase 4: pestaña "Estadísticas" — desglosa base del guardián vs. bonus de objetos equipados.
 function renderStatsPanel(){

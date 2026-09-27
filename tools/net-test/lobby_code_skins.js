@@ -23,6 +23,7 @@ async function client(browser, mobile, name, champ, url) {
   const ctx = await browser.newContext(Object.assign({}, mobile ? PHONE : DESK));
   await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: SITE });
   await ctx.addInitScript(([n]) => { try { if (!localStorage.getItem('__s')) { localStorage.clear(); localStorage.setItem('__s', '1'); localStorage.setItem('horda_name', n); } } catch (e) {} }, [name]);
+  await ctx.addInitScript(() => { window.__autoConfirm = true; }); // diálogos propios (game-dialog.js): aceptar solos, como page.on('dialog')
   const page = await ctx.newPage();
   const errors = [], dialogs = [];
   page.on('pageerror', e => errors.push(e.message));

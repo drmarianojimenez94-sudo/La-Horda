@@ -180,11 +180,23 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
     return;
   }
   const lootMsg = runLevel >= DEFEAT_LOOT.minLevel ? " Igual te llevás un objeto por haber llegado al nivel "+runLevel+"." : "";
-  if(netIsHost() && !confirm("Sos el anfitrión: si abandonás, la partida termina para todos. ¿Seguir?")) return;
-  if(!confirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg)) return;
-  applyArenaFailurePenalty(player.classKey);
-  if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
-  document.getElementById("pause-screen").classList.add("hidden");
-  if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
-  setState("menu"); renderChampGrid(); renderSaveLine();
+  // Diálogos propios (game-dialog.js). En una partida online el juego sigue corriendo mientras se
+  // decide: si la partida terminó entretanto (ya no estamos en pausa/jugando), no se aplica nada.
+  const st0 = state;
+  const stillHere = ()=> state===st0 && !!player;
+  const abandon = ()=>{
+    gameConfirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg, {okText:"Abandonar", cancelText:"Seguir jugando", danger:true}).then(ok=>{
+      if(!ok || !stillHere()) return;
+      applyArenaFailurePenalty(player.classKey);
+      if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
+      document.getElementById("pause-screen").classList.add("hidden");
+      if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
+      setState("menu"); renderChampGrid(); renderSaveLine();
+    });
+  };
+  if(netIsHost()){
+    gameConfirm("Sos el anfitrión: si abandonás, la partida termina para todos. ¿Seguir?", {okText:"Seguir", danger:true}).then(ok=>{ if(ok && stillHere()) abandon(); });
+    return;
+  }
+  abandon();
 });

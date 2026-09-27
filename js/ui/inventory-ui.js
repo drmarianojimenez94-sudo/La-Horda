@@ -68,13 +68,18 @@ function _bindItemActions(panel, classKey, rerender){
     ev.stopPropagation();
     const it = findStashItem(b.getAttribute("data-inv-sell"));
     const warn = it && (it.rarity==="legendario"||it.rarity==="mitico"||it.set) ? "\nEs un objeto valioso: si lo necesitás para una receta o un set, no lo vas a recuperar." : "";
-    if(!confirm(`¿Vender por ${sellValueOf(it)} de oro? No se puede deshacer.${warn}`)) return;
-    sellItem(classKey, it.uid); prepCompareOpenUid = null; rerender(); if(typeof renderSaveLine==="function") renderSaveLine();
+    gameConfirm(`¿Vender por ${sellValueOf(it)} de oro? No se puede deshacer.${warn}`, {okText:"Vender"}).then(ok=>{
+      if(!ok) return;
+      sellItem(classKey, it.uid); prepCompareOpenUid = null; rerender(); if(typeof renderSaveLine==="function") renderSaveLine();
+    });
   }));
   panel.querySelectorAll("[data-inv-discard]").forEach(b=> b.addEventListener("click", ev=>{
     ev.stopPropagation();
-    if(!confirm("¿Descartar este objeto sin recompensa? No se puede deshacer.")) return;
-    discardItem(classKey, b.getAttribute("data-inv-discard")); prepCompareOpenUid = null; rerender();
+    const uid = b.getAttribute("data-inv-discard");
+    gameConfirm("¿Descartar este objeto sin recompensa? No se puede deshacer.", {okText:"Descartar", danger:true}).then(ok=>{
+      if(!ok) return;
+      discardItem(classKey, uid); prepCompareOpenUid = null; rerender();
+    });
   }));
 }
 
@@ -110,7 +115,7 @@ function renderChampInventory(panel, classKey, rerender){
   panel.querySelectorAll("[data-champ-filter]").forEach(b=> b.addEventListener("click", ()=>{ champInvFilter = b.getAttribute("data-champ-filter"); rerender(); }));
   panel.querySelectorAll("[data-prep-unequip]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); unequipItem(classKey, b.getAttribute("data-prep-unequip")); rerender(); }));
   panel.querySelectorAll("[data-prep-fuse]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); handleFuseClick(classKey, b.getAttribute("data-prep-fuse")); rerender(); }));
-  panel.querySelectorAll("[data-reforge]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); const r = reforgeSetDuplicates(classKey, b.getAttribute("data-reforge")); if(!r.ok) alert(r.reason); rerender(); }));
+  panel.querySelectorAll("[data-reforge]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); const r = reforgeSetDuplicates(classKey, b.getAttribute("data-reforge")); if(!r.ok) gameAlert(r.reason); rerender(); }));
   const openInv = panel.querySelector("[data-open-myinv]"); if(openInv) openInv.addEventListener("click", ev=>{ ev.preventDefault(); if(state==="prep") return; openMyInventory("objetos"); });
   _bindItemActions(panel, classKey, rerender);
   const dbg = panel.querySelector(".prep-debug-gen");
@@ -183,12 +188,14 @@ function renderRecipesPanel(panel){
   panel.innerHTML = html;
   panel.querySelectorAll("[data-craft]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-craft");
-    if(!confirm(`¿Fabricar ${DESIGNED_ITEMS[id].name}? Los 3 legendarios se consumen.`)) return;
-    const res = craftMythic(id);
-    if(!res.ok){ alert(res.reason); return; }
-    if(typeof playSfx==="function") playSfx("lootMythic");
-    renderMyInventory();
-    if(typeof showLootCeremonyForItem==="function") showLootCeremonyForItem(res.item);
+    gameConfirm(`¿Fabricar ${DESIGNED_ITEMS[id].name}? Los 3 legendarios se consumen.`, {okText:"Fabricar"}).then(ok=>{
+      if(!ok) return;
+      const res = craftMythic(id);
+      if(!res.ok){ gameAlert(res.reason); return; }
+      if(typeof playSfx==="function") playSfx("lootMythic");
+      renderMyInventory();
+      if(typeof showLootCeremonyForItem==="function") showLootCeremonyForItem(res.item);
+    });
   }));
 }
 function renderCollectionPanel(panel){

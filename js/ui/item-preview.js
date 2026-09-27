@@ -68,7 +68,7 @@ function openItemPreview(uid, classKey, rerender){
   const close = ()=>{ el.classList.add("hidden"); el.innerHTML = ""; if(rerender) rerender(); };
   el.querySelectorAll("[data-ip-close]").forEach(b=>b.addEventListener("click", close));
   const up = el.querySelector("[data-ip-upgrade]");
-  if(up) up.addEventListener("click", ()=>{ const r = upgradeItemLevel(uid); if(!r.ok) alert(r.reason); openItemPreview(uid, classKey, rerender); if(typeof renderSaveLine==="function") renderSaveLine(); });
+  if(up) up.addEventListener("click", ()=>{ const r = upgradeItemLevel(uid); if(!r.ok) gameAlert(r.reason); openItemPreview(uid, classKey, rerender); if(typeof renderSaveLine==="function") renderSaveLine(); });
   const eq = el.querySelector("[data-ip-equip]"); if(eq) eq.addEventListener("click", ()=>{ equipItem(classKey, uid); openItemPreview(uid, classKey, rerender); });
   const un = el.querySelector("[data-ip-unequip]"); if(un) un.addEventListener("click", ()=>{ unequipItem(classKey, it.type); openItemPreview(uid, classKey, rerender); });
 }
