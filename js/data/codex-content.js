@@ -16,6 +16,7 @@ const CODEX_RANK_LABEL = {normal:"Común", subelite:"Subélite", elite:"Élite",
 
 // Criaturas de cada arena, en el orden en que aparecen (el Bestiario se agrupa así).
 const CODEX_ARENA_ROSTER = {
+  ciudad:    ["cm_saqueador","cm_perro","cm_raptor","cm_verdugo","cm_planidera","cm_acechante","cm_sectario","cm_campanero","cm_espectro"],
   fortaleza: ["carcelero","dragon_bronce","prisionero","engendro","arana","automata","verdugo"],
   bosque:    ["duende_bosque","enjambre_hadas","bestia_bosque","cu_sith","dama_bosque","ent"],
   micelial:  ["infectado","sabueso","acechador","peregrino","hinchado","chaman","nucleo_micelial","raiz_absorcion"],
@@ -38,6 +39,9 @@ const CODEX_SPECIAL_RANK = {
 //   revelan recién al derrotarlo (no se adelantan transformaciones). guardian: 1-4 (canon).
 //   veil: sin descubrir no se muestra ni la silueta (revelaciones grandes de la historia).
 const CODEX_BOSSES = [
+  {id:"cm_funcion",         arena:"ciudad",    role:"subjefe", level:9,  forms:["cm_maestro","cm_tramoyista"], group:true},
+  {id:"cm_dama",            arena:"ciudad",    role:"subjefe", level:9,  forms:["cm_dama"]},
+  {id:"cm_presentador",     arena:"ciudad",    role:"jefe",    level:10, forms:["cm_presentador","cm_presentador#cm_presentador2","cm_presentador#cm_presentador3"], hidden:1},
   {id:"dragon_forja",       arena:"fortaleza", role:"subjefe", level:6,  forms:["dragon_forja"]},
   {id:"caballero",          arena:"fortaleza", role:"jefe",    level:10, forms:["caballero"]},
   {id:"dobladores",         arena:"bosque",    role:"subjefe", level:9,  forms:["doblador_guerrero","doblador_arquera","doblador_picaro","doblador_clerigo"], group:true},
@@ -57,11 +61,12 @@ const CODEX_BOSSES = [
   {id:"jinete_sin_cabeza",  arena:"divina",    role:"jefe",    level:6,  forms:["jinete_sin_cabeza"]}
 ];
 // Tipos que el Códice no muestra como entrada propia (y por qué): el test lo exige explícito.
-const CODEX_EXCLUDED = {};
+const CODEX_EXCLUDED = {cm_espejismo:"Copia frágil de la Dama del Telón: se describe en su ficha."};
 
 // Nivel en que aparece cada criatura de las arenas con roster propio por etapas (las demás se leen
 // de spawnPoolFor en vivo).
-const CODEX_FIRST_LEVEL = {infectado:1, sabueso:1, acechador:2, peregrino:3, hinchado:3, chaman:4, nucleo_micelial:3, raiz_absorcion:6,
+const CODEX_FIRST_LEVEL = {cm_saqueador:1, cm_perro:2, cm_raptor:3, cm_verdugo:4, cm_planidera:5, cm_acechante:6, cm_sectario:6, cm_campanero:7, cm_espectro:7,
+  infectado:1, sabueso:1, acechador:2, peregrino:3, hinchado:3, chaman:4, nucleo_micelial:3, raiz_absorcion:6,
   ab_errante:1, ab_acechador:2, ab_heraldo:3, ab_devorador:4, ab_tejedor:5, ab_jinete:6, ab_tentaculo:10, engendro:3,
   golem_cristal:10, cristal_servo:10, cristal_volador:10};
 
@@ -116,6 +121,70 @@ const CODEX_CHAMP_EXTRA_ANIMS = {
    (behavior/attacks/mech). family = linaje; anims = animaciones con nombre de su atlas para la preview.
    ============================================================ */
 const CODEX_CREATURES = {
+  /* ---- 01 · Ciudad Maldita ---- */
+  cm_saqueador:{family:"Ciudadano corrompido", anims:[{l:"Corte", s:"slash"},{l:"Embestida", s:"rush"}],
+    lore:"Antiguos habitantes de la ciudad. La Horda les dejó las manos y les sacó todo lo demás: ahora saquean las casas de sus vecinos.",
+    origin:"Los barrios de la Ciudad Maldita.",
+    horde:"La primera infantería de la Horda en la ciudad.",
+    behavior:"Cuerpo a cuerpo y en grupo. Si no hay campeones cerca, va por los civiles.",
+    attacks:["Corte","Embestida con aviso (cono)","Golpe a un civil con aviso (!)"],
+    mech:"Quedate cerca de los civiles que escoltás: el Saqueador solo los ataca cuando están solos."},
+  cm_perro:{family:"Bestia de las cloacas", anims:[{l:"Salto", s:"leap"},{l:"Emerger", s:"emerge"}],
+    lore:"Perros deformes que viven en los desagües. Se mueven en manada y huelen el miedo.",
+    origin:"Las cloacas bajo la ciudad.",
+    horde:"Jauría de la Horda.",
+    behavior:"Sale por las rejillas. Rápido y frágil.",
+    attacks:["Mordida","Salto con aviso"],
+    mech:"Muerde a los civiles que corren solos o van últimos en la fila."},
+  cm_raptor:{family:"Secuestrador", anims:[{l:"Agarrar civil", s:"grab"},{l:"Llevar civil", s:"carry"},{l:"Soltar", s:"drop"}],
+    lore:"Busca a los vivos, los agarra y trata de llevárselos hacia un portal o una salida. Nadie sabe adónde.",
+    origin:"Los callejones de la Ciudad Maldita.",
+    horde:"Recolector de la Horda.",
+    behavior:"Busca civiles (no prioriza a los campeones). Estados: busca, persigue, agarra, escapa, interrumpido.",
+    attacks:["Agarrar civil (aviso)","Huida con el civil hacia un borde"],
+    mech:"Pegale fuerte, aturdilo o matalo: SUELTA al civil. Si llega al borde, el civil se pierde."},
+  cm_verdugo:{family:"Monstruo de asedio", anims:[{l:"Golpe vertical", s:"chop"},{l:"Barrido", s:"sweep"},{l:"Destruye puerta", s:"smash"}],
+    lore:"Un monstruo colosal que derriba puertas, muros y refugios. Sus golpes son lentos pero devastadores.",
+    origin:"Las murallas caídas de la ciudad.",
+    horde:"Ariete viviente de la Horda.",
+    behavior:"Va por los EDIFICIOS (refugios, capilla, puerta de evacuación). Si te le plantás, te pelea a vos.",
+    attacks:["Golpe vertical con aviso (cono)","Destruye estructura"],
+    mech:"Las estructuras no se reparan: frenalo antes de que llegue."},
+  cm_planidera:{family:"Espíritu", anims:[{l:"Lamento", s:"wail"},{l:"Grito de pánico", s:"scream"}],
+    lore:"El espíritu de una antigua habitante de la ciudad. Su lamento enloquece a los vivos.",
+    origin:"Las casas vacías.",
+    horde:"Voz de la Horda.",
+    behavior:"A distancia; mantiene la distancia.",
+    attacks:["Lágrima (proyectil)","Grito de Pánico con aviso (círculo)"],
+    mech:"Su grito hace entrar en PÁNICO a los civiles cercanos: se dispersan."},
+  cm_acechante:{family:"Asesino de los tejados", anims:[{l:"Ataque aéreo", s:"dive"},{l:"Escalada", s:"climb"}],
+    lore:"Una criatura que se mueve entre los tejados y las cornisas. Cae sobre sus objetivos.",
+    origin:"Los techos de la Ciudad Maldita.",
+    horde:"Cazador emboscado de la Horda.",
+    behavior:"Salta entre tejados (no se lo puede herir arriba), cae con aviso, pelea y vuelve a subir.",
+    attacks:["Caída desde el tejado (círculo rojo en el piso)"],
+    mech:"Salí del círculo rojo. A veces elige al último civil de una fila."},
+  cm_sectario:{family:"Fanático", anims:[{l:"Prepara explosión", s:"prep"}],
+    lore:"Fanáticos que todavía adoran al Presentador. Atacan en grupo y se sacrifican para explotar.",
+    origin:"La catedral maldita.",
+    horde:"Fieles del Presentador.",
+    behavior:"Cuerpo a cuerpo; herido o pegado a vos, se prepara para ESTALLAR.",
+    attacks:["Golpe","Explosión con aviso (daña campeones, civiles y edificios)"],
+    mech:"Alejate del círculo naranja o terminalo antes."},
+  cm_campanero:{family:"Soporte", anims:[{l:"Golpe de campana", s:"bell"},{l:"Canalizar", s:"channel"}],
+    lore:"Pervierte las campanas de la ciudad. Si completa su ritual, atrae refuerzos de la Horda.",
+    origin:"El Campanario, la Capilla y la plaza.",
+    horde:"Heraldo de la Horda.",
+    behavior:"Camina hasta una campana y CANALIZA. Si termina, llegan refuerzos (y se revelan civiles cerca).",
+    attacks:["Campanazo que empuja","Canalizar la campana"],
+    mech:"Prioridad: cortale la campana con daño fuerte o control."},
+  cm_espectro:{family:"Fantasma", anims:[{l:"Drenado", s:"drain"},{l:"Posesión", s:"possess"}],
+    lore:"Almas atrapadas en la maldición de la ciudad. Frágiles pero numerosas.",
+    origin:"Las calles de la Ciudad Maldita.",
+    horde:"Ecos de los que no se salvaron.",
+    behavior:"Atraviesa paredes. Drena a un campeón o asusta a un civil.",
+    attacks:["Drenado (se cura)","Posesión: el civil entra en pánico"],
+    mech:"Frágil: un golpe fuerte lo disuelve."},
   /* ---- 02 · Fábrica Sin Fin ---- */
   carcelero:{family:"Humano deformado", anims:[{l:"Tirón de cadena", s:"chain"}],
     lore:"Los antiguos carceleros de la Fábrica nunca dejaron sus puestos. La Horda les soldó las cadenas a la carne y les dejó una sola orden: que nadie salga.",
@@ -503,6 +572,31 @@ const CODEX_CREATURES = {
    CODEX_SKILL_FX; set = animación con nombre del atlas del jefe).
    ============================================================ */
 const CODEX_BOSS_LORE = {
+  cm_funcion:{title:"La función comienza", campaign:"Subjefes del nivel 9 de la Ciudad Maldita: pelean juntos.",
+    lore:"El Maestro de Ceremonias conduce la función; el Tramoyista mueve el escenario. Los dos trabajan para el Presentador.",
+    history:"Suenan aplausos en la ciudad vacía y se levanta el telón. Si uno cae, el otro se enfurece.",
+    phases:[{name:"Juntos", desc:"El Maestro marca, el Tramoyista deja caer decorado sobre la marca."},{name:"Furia", desc:"El que queda se vuelve más rápido."}],
+    abilities:[{name:"Marca", desc:"Un círculo sigue a un campeón y estalla.", fx:{fx:"zone", set:"cast", color:"255,60,90", vfx:"cmMark"}},
+      {name:"Zona", desc:"Anillo rojo que daña y frena.", fx:{fx:"zone", color:"255,50,90", vfx:"cmMaeZone"}},
+      {name:"Teletransporte", desc:"Si lo encierran, desaparece.", fx:{fx:"dash", set:"tp", color:"255,80,110"}},
+      {name:"Caída de decorado", desc:"Utilería pesada sobre los campeones (círculo naranja).", fx:{fx:"rain", set:"wreck", color:"255,150,60", vfx:"cmScenery"}},
+      {name:"Barricadas", desc:"Muros de madera temporales (duran poco, nunca encierran).", fx:{fx:"line", set:"drag", color:"200,140,80"}}]},
+  cm_dama:{title:"Nadie aplaude en la oscuridad", campaign:"Subjefe del nivel 9 de la Ciudad Maldita, después del apagón.",
+    lore:"La Dama del Telón baja la cortina sobre la ciudad. Donde ella pasa, la función se vuelve un eco de sí misma.",
+    history:"Se apagan las luces y un reflector la encuentra en medio de la plaza.",
+    phases:[{name:"Telones", desc:"Telones en línea, zonas oscuras y proyectiles."},{name:"Estallido (30%)", desc:"Una explosión grande con aviso."}],
+    abilities:[{name:"Telón", desc:"Columnas rojas que caen en línea hacia un campeón.", fx:{fx:"line", color:"255,40,60", vfx:"cmCurtain"}},
+      {name:"Zona oscura", desc:"Daña y frena.", fx:{fx:"zone", color:"170,60,255", vfx:"cmDarkZone"}},
+      {name:"Espejismos", desc:"Copias frágiles: la verdadera tiene barra de vida.", fx:{fx:"summon", set:"mirror", color:"255,90,120"}},
+      {name:"Ecos", desc:"Repite la marca del Maestro y el decorado del Tramoyista; invoca almas.", fx:{fx:"summon", set:"summon", color:"255,80,110", vfx:"cmSpectators"}}]},
+  cm_presentador:{title:"El dueño del espectáculo", campaign:"Jefe final de la Ciudad Maldita (nivel 10). No es un Guardián.",
+    lore:"«Todo esto es un espectáculo… y ustedes son sus invitados especiales.» El Presentador convirtió la caída de la ciudad en una función.",
+    history:"Espera en el escenario frente a la catedral. Los civiles que salvaste no vienen a verlo caer.",
+    phases:[{name:"Acto I", desc:"Abanicos de proyectiles, reflectores y telones."},{name:"Acto II", desc:"Transformación: ecos de sus ayudantes y pilares en el escenario."},{name:"Acto III", desc:"La verdadera forma: espectadores espectrales y la OVACIÓN FINAL."}],
+    abilities:[{name:"Proyectiles", desc:"Abanico de esferas rojas.", fx:{fx:"proj", set:"cast", color:"255,60,90", vfx:"cmPreBolt"}},
+      {name:"Marca del espectáculo", desc:"Un reflector sigue a un campeón y estalla.", fx:{fx:"zone", color:"255,50,80", vfx:"cmShowMark"}},
+      {name:"Telón del caos", desc:"Columnas de fuego en línea.", fx:{fx:"line", color:"255,40,40", vfx:"cmChaosCurtain"}},
+      {name:"Ovación final", desc:"Cubrite detrás de un pilar del escenario.", fx:{fx:"ult", color:"255,70,110", vfx:"cmFinalBoom"}}]},
   dragon_forja:{title:"Nacido en el Horno", campaign:"Subjefe del nivel 6 de la Fábrica Sin Fin. Su muerte vuela la compuerta blindada hacia el Interior Industrial.",
     lore:"El canon lo llama el Dragón Steampunk: el más grande de los dragones mecánicos de la Fábrica, alimentado por el horno principal. Los obreros lo construyeron para custodiar la fundición; la Horda solo le sacó el freno.",
     history:"Durmió encerrado detrás de la compuerta del horno durante siglos. Cuando la Cicatriz llegó a la Fábrica, el calor lo despertó.",
@@ -671,7 +765,9 @@ const CODEX_BOSS_LORE = {
 const CODEX_ARENA_LORE = {
   ciudad:{lore:"La ciudad de los campeones. La Horda volvió, la defendieron, y algo quedó roto: desde ese día la llaman la Ciudad Maldita.",
     history:"En medio del humo apareció la proyección del Hechicero Supremo: los antiguos Guardianes están cayendo y los cristales que mantienen limitada a la Horda tienen que recuperarse.",
-    why:"Es el origen: acá nace la primera Cicatriz.", objective:"Sobrevivir a la noche en que la Horda volvió.", soon:true},
+    why:"Es el origen: acá nace la primera Cicatriz.", objective:"Encontrar y RESCATAR a los civiles, proteger los refugios y vencer al Presentador.",
+    mechanics:["Civiles escondidos: rescatalos (acción contextual) y escoltalos a una zona segura","Estructuras con vida: no se reparan; si caen todas las críticas, derrota","Techos que se desvanecen al entrar a una casa"],
+    hazards:["Secuestros del Raptor","Grito de pánico","Campanas que llaman refuerzos"]},
   fortaleza:{lore:"Una fábrica de otra civilización que nunca dejó de funcionar. La Horda contaminó hasta sus máquinas: los carceleros siguen en sus puestos, los dragones de bronce siguen volando y los prisioneros siguen presos.",
     history:"La Cicatriz que nació en la Ciudad Maldita se abre acá, entre hornos y engranajes. El Caballero de la Armadura Oxidada juró que nadie saldría de su prisión.",
     why:"Siguiendo la primera Cicatriz de la Horda.", objective:"Cruzar la Fábrica sector por sector y vencer al Caballero.",

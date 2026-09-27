@@ -78,16 +78,20 @@ const ARENA_MODS = {
 };
 // Arenas del ORDEN CANÓNICO que todavía no existen en el juego: aparecen en el selector con su número
 // (EN CONSTRUCCIÓN) pero no se pueden jugar y el desbloqueo las saltea hasta que se construyan.
-// (Decisión del usuario, 2026-09: Ciudad Maldita y Minas Profundas no tienen mapa, enemigos ni jefe todavía.)
+// (Decisión del usuario, 2026-09: Minas Profundas no tiene mapa, enemigos ni jefe todavía. La Ciudad Maldita ya es jugable.)
 Object.assign(ARENA_MODS, {
-  ciudad:   { label:"Ciudad Maldita", icon:"🏚", comingSoon:true, desc:"Arena 01. Donde empieza todo: la ciudad que defendiste cuando la Horda volvió.", hazardName:"—",
-              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.12, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.9, enemyRegenPct:0, hazard:null, hasWalls:false },
+  // CIUDAD MALDITA (Arena 01, jugable): "NO PODÉS SALVARLOS A TODOS. PERO VAS A INTENTARLO." Civiles
+  // escondidos que hay que encontrar, rescatar y escoltar; estructuras que la Horda derriba; subjefes
+  // en el nivel 9 y El Presentador en el 10 (js/arenas/ciudad/).
+  ciudad:   { label:"Ciudad Maldita", icon:"🏚", desc:"Arena 01. Donde empieza todo: la ciudad que defendiste cuando la Horda volvió.", hazardName:"La Ciudad Arde",
+              fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.12, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.9, enemyRegenPct:0, hazard:null, hasWalls:false,
+              potionMult:1.3 },
   minas:    { label:"Minas Profundas", icon:"⛏", comingSoon:true, desc:"Arena 07. El descenso hacia el territorio del tercer Guardián: luz, oscuridad y supervivencia.", hazardName:"—",
               fireDmgMult:1.0, iceDmgMult:1.0, enemyDmgPerWave:0.155, unlockLevel:0, heroSpeedMult:1.0, heroCdMult:1.0, heroEnergyRegenMult:1.0, abilityDmgMult:1.0, heroDmgMult:0.86, enemyRegenPct:0, hazard:null, hasWalls:false }
 });
 /* ORDEN CANÓNICO DE LA CAMPAÑA (Lore Bible: docs/lore/LA_HORDA_LORE_BIBLE.md). Los IDs internos NO
    cambian (los guardados siguen apuntando a la misma arena); lo que cambia es el orden.
-     01 Ciudad Maldita (en construcción) · 02 Fábrica Sin Fin (fortaleza) · 03 Ruinas Célticas/Élficas
+     01 Ciudad Maldita · 02 Fábrica Sin Fin (fortaleza) · 03 Ruinas Célticas/Élficas
      (bosque, 1er Guardián) · 04 Reino Fúngico (micelial) · 05 Arena Gélida (hielo, 2º Guardián) ·
      06 Arena Acuática · 07 Minas Profundas (en construcción) · 08 Laberinto (3er Guardián) ·
      09 Abismo · 10 Arena Infernal (4º Guardián: el Hechicero Supremo).

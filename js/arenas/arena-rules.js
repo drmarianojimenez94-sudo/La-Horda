@@ -61,7 +61,8 @@ const ARENA_RULES = {
   infernal:  {name:"Tierra Maldita",      icon:"🔥", summary:n=>`Curación −${Math.round(Math.min(50,n*5))}% · pozos de lava`},
   fortaleza: {name:"Engranajes Implacables", icon:"⚙", summary:n=>`Trampas +${n*5}% de daño · la Fortaleza acelera`},
   abismo:    {name:"El Vacío Llama",       icon:"🕳", summary:n=>`Las plataformas se agrietan +${n*6}% más rápido · algo se mueve debajo`},
-  micelial:  {name:"La Colonia se Expande", icon:"🍄", summary:n=>`Núcleos crecen +${n*6}% más rápido · la Madre despierta`}
+  micelial:  {name:"La Colonia se Expande", icon:"🍄", summary:n=>`Núcleos crecen +${n*6}% más rápido · la Madre despierta`},
+  ciudad:    {name:"La Ciudad Arde",       icon:"🏚", summary:n=>`Los edificios reciben +${n*4}% de daño · la Horda saquea más fuerte`}
 };
 let arenaRuleBossTimer = 0, arenaRuleBossStacks = 0;
 function arenaRule(){ return (!divinaMode && ARENA_RULES[currentArena]) || null; }

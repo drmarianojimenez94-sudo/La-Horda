@@ -54,6 +54,7 @@ function defaultSave(){
     abismoMigrated:true,    // idem para la Arena del Abismo (antes del Laberinto): save.legacyLabOpen
     codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
+    ciudadV1:true,          // la Ciudad Maldita (Arena 01) pasó a ser jugable (ver loadSave: nadie pierde la arena que ya tenía abierta)
     legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
@@ -152,6 +153,9 @@ function _loadSaveInner(){
       // (save.legacyOpenArenas); lo nuevo se abre por la frontera del orden canónico. Los cristales
       // pasan a los Guardianes canónicos (Bosque, Gélida, Laberinto): la Madre Espora ya no es Guardiana.
       if(!parsed.campaignV2){ campaignV2Migrate(parsed); persist(); }
+      // La Ciudad Maldita (Arena 01) se volvió jugable: pasa a ser la frontera de la campaña. Quien ya había
+      // avanzado conserva abierta la arena que tenía como frontera (y todo lo que ya había superado).
+      if(!parsed.ciudadV1){ ciudadV1Migrate(); persist(); }
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
@@ -205,6 +209,14 @@ function campaignV2Migrate(parsed){
   save.crystals = {ancestral: !!cleared.bosque, escarcha: !!(c.escarcha || cleared.hielo), piedra: !!(c.piedra || cleared.laberinto)};
   save.campaignV2 = true;
 }
+function ciudadV1Migrate(){
+  save.ciudadV1 = true;
+  const cleared = save.arenasCleared || {};
+  if(!Object.keys(cleared).some(k=>cleared[k])) return;             // perfil sin nada completado: arranca por la Ciudad
+  const oldFrontier = ARENA_ORDER.filter(k=>k!=="ciudad").find(k=>!cleared[k]);
+  save.legacyOpenArenas = Array.isArray(save.legacyOpenArenas) ? save.legacyOpenArenas : [];
+  if(oldFrontier && !save.legacyOpenArenas.includes(oldFrontier)) save.legacyOpenArenas.push(oldFrontier);
+}
 function campaignReset(raw){
   try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeCampania")) localStorage.setItem(SAVE_KEY+"_antesDeCampania", raw); }catch(e){}
   for(const k in save.champions){
@@ -217,7 +229,7 @@ function campaignReset(raw){
   save.arenasCleared = defaultSave().arenasCleared;
   save.crystals = defaultSave().crystals;
   save.legacyHieloOpen = false; save.legacyLabOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true; save.abismoMigrated = true;
-  save.campaignV2 = true; save.legacyOpenArenas = [];
+  save.campaignV2 = true; save.legacyOpenArenas = []; save.ciudadV1 = true;
   save.divineArenaUnlocked = false;
   save.starterChosen = false; save.lastChamp = null;
   save.playtestV1Bonus = true;
