@@ -63,7 +63,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   // ---- persiste al recargar + pantalla previa ----
   await boot();
   const r3 = await E(() => { const n = crystalsOwned(); runIntroShow('infernal', ()=>{}); const el = document.querySelector('#run-intro .ri-crystals');
-    return { n, on: el.querySelectorAll('.cr-gem.on').length, all: el.querySelectorAll('.cr-gem').length, txt: el.textContent, vis: getComputedStyle(el).display !== 'none' }; });
+    return { n, on: el.querySelectorAll('.cr-gems .cr-gem.on').length, all: el.querySelectorAll('.cr-gems .cr-gem').length, txt: el.textContent, vis: getComputedStyle(el).display !== 'none' }; });
   check('CR.persisten_al_recargar', r3.n.length === 2 && r3.n.includes('piedra') && r3.n.includes('escarcha'), r3);
   check('CR.pantalla_previa_muestra_2_de_3', r3.vis && r3.on === 2 && r3.all === 3 && /2\/3/.test(r3.txt), r3);
   if (OUT) { await sleep(300); await page.screenshot({ path: OUT + '/crystal_intro.png' }); }

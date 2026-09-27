@@ -110,7 +110,7 @@ function runIntroFill(el, arena, B){
   el.querySelector(".ri-help").textContent = B.help;
   el.querySelector(".ri-goal").textContent = B.goal;
   const cr = el.querySelector(".ri-crystals");
-  if(cr){ const show = typeof crystalRowHtml==="function" && (crystalsOwned().length > 0 || CRYSTAL_BY_ARENA[arena] || arena==="infernal"); cr.innerHTML = show ? crystalRowHtml() : ""; cr.style.display = show ? "" : "none"; }
+  if(cr){ const show = typeof crystalRowHtml==="function" && (crystalsOwned().length > 0 || CRYSTAL_BY_ARENA[arena] || arena==="infernal"); cr.innerHTML = show ? crystalRowHtml() + (typeof resonancePickerHtml==="function" ? '<div class="res-wrap">' + resonancePickerHtml() + '</div>' : "") : ""; if(show && typeof resonanceBindPicker==="function") resonanceBindPicker(cr); cr.style.display = show ? "" : "none"; }
 }
 function runIntroGo(){
   if(!RUN_INTRO.open) return;

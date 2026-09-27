@@ -236,7 +236,8 @@ function netBuildLoadout(){
   const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
-    skin:(typeof champSkinId==="function" ? champSkinId(k) : null)}; // cosmético: la skin de SU guardado (sala)
+    skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
+    crystal:(typeof resonanceChosen==="function" ? resonanceChosen() : null)}; // el cristal que lleva (crystal-resonance.js)
 }
 function netLoadoutRecord(L){
   const rec = mkChampion(true);

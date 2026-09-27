@@ -374,6 +374,7 @@ function hechEnemyTick(e, dt, tgt, dist){
       if(e.cineT <= 2900 && !e._stole){
         e._stole = true;
         if(typeof crystalSteal==="function") crystalSteal(player.x, player.y, e.x, e.y);
+        if(typeof resonanceSteal==="function") resonanceSteal(); // la resonancia se apaga: se los llevó
         _hSay(e, crystalsOwned().length >= 3 ? "«Los tres cristales. Gracias, guardián.»" : "«Los que no me trajiste… se los arranqué yo.»");
       }
       if(e.cineT <= 1100 && !e._wings){

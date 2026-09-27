@@ -38,6 +38,13 @@ const CRYSTAL_LINES = {
 };
 const CRYSTAL_COUNT_LINES = ["", " Es el primero de tres. Guardalo bien: cuando llegue el momento, yo te lo cuido.", " Ya tenés dos. Las Cicatrices los sienten: prestá atención.",
   " Los tres. La Cicatriz que abran va a ser la más grande de todas… Te espero del otro lado."];
+// Lo que dice cada Guardián al quedar libre (el Hechicero después lo desmiente: "deliraba").
+// Es lo que fueron antes de la Horda: héroes que cuidaban el sello, no bestias.
+const GUARDIAN_LAST_WORDS = {
+  ancestral: "«Gracias… Hacía siglos que la Horda no me dejaba dormir. Llevá mi cristal encima: todavía te puede cuidar. Y no se lo des a nadie. A nadie.»",
+  escarcha: "«El frío se va… Éramos cuatro, ¿sabés? Tres caímos peleando. El cuarto no cayó: eligió quedarse del otro lado.»",
+  piedra: "«Cerré mil caminos para que la Horda no pasara… y el que los abrió fue uno de nosotros. Preguntale a tu guía por qué te guía.»"
+};
 function crystalLine(key){ return CRYSTAL_LINES[key] + CRYSTAL_COUNT_LINES[crystalsOwned().length]; }
 
 /* ---------------- ceremonia (local en cada cliente) ---------------- */
@@ -54,6 +61,7 @@ function crystalAward(key, x, y){
   if(typeof vfxShock==="function") vfxShock(x, y, 20, 150, D.rgb, 700, 3);
   if(typeof vfxBurst==="function") vfxBurst(x, y - 20, 18, "cr_"+key, 120, 900, 3, 2, -60);
   if(typeof playSfx==="function") playSfx("crystal");
+  if(GUARDIAN_LAST_WORDS[key] && typeof arenaTitleCard==="function") arenaTitleCard("LAS ÚLTIMAS PALABRAS", D.guardian.replace(/^el /, "").toUpperCase(), GUARDIAN_LAST_WORDS[key], 3300);
 }
 // Final: el Hechicero le arranca los cristales al jugador (vuelan del héroe hacia él).
 function crystalSteal(fromX, fromY, toX, toY){
