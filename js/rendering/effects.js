@@ -93,16 +93,18 @@ function _drawFloatText(f){
   const rise = (f.kind===4 ? 30 : (f.kind===1 ? 40 : 34)) * (1-(1-q)*(1-q));
   const pop = f.kind===1 ? 1 + 0.6*f.pop*f.pop : 1 + 0.3*f.pop*f.pop;
   const a = q < 0.65 ? 1 : (1-q)/0.35;
-  const size = st.size*(f.sc||1)*pop/CAM_ZOOM;
+  // tamaño en pasos de 1 px de pantalla: pocas cadenas de fuente distintas (el cambio de fuente es lo caro)
+  const size = Math.max(8, Math.round(st.size*(f.sc||1)*pop))/CAM_ZOOM;
   ctx.globalAlpha = a;
-  ctx.font = `bold ${size.toFixed(1)}px Georgia, serif`;
+  if(size !== _ftFontSize){ _ftFontSize = size; ctx.font = `bold ${size.toFixed(2)}px Georgia, serif`; }
   const x = f.x + f.vx*q, y = f.y - rise/CAM_ZOOM*0.9;
   ctx.lineWidth = (f.kind===1 ? 4.5 : 3.5)/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
   ctx.fillStyle = (f.kind<=1 && f.dk && FT_DMG_COL[f.dk]) ? (f.kind===1 && f.dk==="physical" ? st.fill : FT_DMG_COL[f.dk]) : st.fill;
   ctx.fillText(f.text, x, y);
 }
+let _ftFontSize = 0;
 function drawFloatTexts(){
-  ctx.save();
+  ctx.save(); _ftFontSize = 0;
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
   // dos pasadas: los críticos siempre arriba de los números chicos
   for(const f of floatTexts){ if(f.on && f.kind!==1 && inView(f.x, f.y, 120)) _drawFloatText(f); }

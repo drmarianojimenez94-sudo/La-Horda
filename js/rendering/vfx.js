@@ -454,7 +454,7 @@ function vfxHit(e, src, opts, crit){
   const pw = e._lastHitPow || 1, mat = prof.material;
   let mdx = 0, mdy = -1;
   if(src && src!==e){ const ddx = e.x-src.x, ddy = e.y-src.y, dl = Math.hypot(ddx, ddy); if(dl > 1){ mdx = ddx/dl; mdy = ddy/dl; } }
-  vfxSpray(x, y, [0, 2, 3, 5, 7][pw] || 2, mat, mdx, mdy, 110 + pw*30, 300 + pw*40, mat==="rock"||mat==="stone"||mat==="ice" ? 3 : 2.5, prio===2?1:0);
+  vfxSpray(x, y, [0, 1, 2, 4, 6][pw] || 1, mat, mdx, mdy, 110 + pw*30, 300 + pw*40, mat==="rock"||mat==="stone"||mat==="ice" ? 3 : 2.5, prio===2?1:0);
   if(crit) vfxBurst(x, y, 2, pal, 40, 180, 3, prio, 0, 1);
   if(crit && prio===2) vfxShock(e.x, e.y, 6, 26+(e.radius||20), "255,255,255", 220, 1);
   // Salpicadura real de agua en golpes a enemigos acuáticos (además de las partículas genéricas).
