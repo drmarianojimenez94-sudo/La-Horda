@@ -18,6 +18,7 @@ const ev = (c, fn, a) => c.page.evaluate(fn, a);
 async function waitFor(c, fn, arg, ms = 10000) { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await ev(c, fn, arg)) return true; await sleep(100); } return false; }
 async function waitAll(cs, fn, ms = 10000) { const t0 = Date.now(); while (Date.now() - t0 < ms) { const r = await Promise.all(cs.map(c => ev(c, fn))); if (r.every(Boolean)) return true; await sleep(100); } return false; }
 async function tap(c, sel) {
+  await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, sel).catch(() => {}); // pestaña de la Sala que lo contiene (js/ui/prep-sections.js)
   const el = await c.page.$(sel); if (!el) throw new Error('no existe ' + sel);
   await el.evaluate(e => e.scrollIntoView({ block: 'center', inline: 'center' })); await sleep(150);
   const b = await el.boundingBox(); if (!b) throw new Error('invisible ' + sel);

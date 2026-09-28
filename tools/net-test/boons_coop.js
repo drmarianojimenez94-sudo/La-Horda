@@ -23,7 +23,7 @@ async function client(browser, name, champ) {
   return { ctx, page, errors, name };
 }
 const ev = (c, fn, a) => c.page.evaluate(fn, a);
-async function press(c, sel) { await c.page.click(sel); await sleep(450); }
+async function press(c, sel) { await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, sel).catch(() => {}); await c.page.click(sel); await sleep(450); } // prepSecReveal: pestaña de la Sala que lo contiene
 async function waitFor(c, fn, a, ms) { for (let k = 0; k < (ms || 20000)/150; k++) { if (await ev(c, fn, a)) return true; await sleep(150); } return false; }
 (async () => {
   const browser = await chromium.launch({ args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
