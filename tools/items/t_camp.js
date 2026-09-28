@@ -142,7 +142,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
       slow: slowMoScale, slowT: slowMoTimer, btn: !!(el && el.querySelector('.cc-read')) }; });
   check('CRONICA.se_lee_al_levantarla', cr.has && cr.on && /Las llaves/.test(cr.title) && /muros corridos/.test(cr.t) && cr.btn, cr);
   check('CRONICA.pausa_suave_en_solitario', cr.slow > 0 && cr.slow < 0.5 && cr.slowT >= 3000 && cr.slowT <= 4200, cr);
-  await shot('camp_06_cronica_tarjeta');
+  await sleep(500); await shot('camp_06_cronica_tarjeta');
   await tap('#chron-card .cc-read');
   const rd = await E(() => { const el = document.getElementById('chron-read'); return { on: !!el && !el.classList.contains('hidden'), txt: el ? el.textContent : '', slow: slowMoScale }; });
   check('CRONICA.leer_en_el_Codice_abre_la_pagina_entera_y_detiene', rd.on && /Siempre me sobra una/.test(rd.txt) && /C[ÓO]DICE › CR[ÓO]NICAS/.test(rd.txt) && rd.slow < 0.01, { on: rd.on, slow: rd.slow });
@@ -157,8 +157,8 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('CRONICA.la_tarjeta_se_va_sola_en_3_4_s', gone.hidden && gone.slow === 1, gone);
   // en red: sin pausa
   const net = await E(() => { chronCardReset(); const saved = netMatch; netMatch = { role: 'host' }; slowMoScale = 1; slowMoTimer = 0;
-    const ok = campChronCard('ecos_1'); const r = { ok, slow: slowMoScale, t: slowMoTimer, on: !document.getElementById('chron-card').classList.contains('hidden') }; chronCardReset(); netMatch = saved; return r; });
-  check('CRONICA.en_cooperativo_sin_pausa', net.ok && net.on && net.slow === 1 && net.t === 0, net);
+    const ok = campChronCard('ecos_1'); const r = { ok, slow: slowMoScale, t: slowMoTimer, on: !document.getElementById('chron-card').classList.contains('hidden'), btn: document.querySelector('#chron-card .cc-read').style.display }; chronCardReset(); netMatch = saved; return r; });
+  check('CRONICA.en_cooperativo_sin_pausa', net.ok && net.on && net.slow === 1 && net.t === 0 && net.btn === 'none', net);
 
   check('ERRORES', errors.length === 0, errors.slice(0, 5));
   console.log('SUMMARY', JSON.stringify({ fails }));

@@ -22,7 +22,8 @@
 
    CRÓNICA LEGIBLE — al pisar una página, su texto aparece 3-4 s en una tarjeta (story.js → campChronCard).
    Solo: el tiempo se frena casi del todo mientras se lee (pausa suave). Cooperativo: sin pausa (la
-   simulación es de todos). "Leer en el Códice" abre la página entera, en pergamino, en el lugar.
+   simulación es de todos). "Leer en el Códice" (solo) abre la página entera, en pergamino, en el lugar;
+   en red ese botón no está: la página queda en el Códice para después.
    ============================================================ */
 const CAMP = {open:false, pending:null, ctx:null, lines:null, idx:{}, cur:null, onDone:null, raf:0, t0:0, lastState:null, img:{}, spr:{}, sparks:[]};
 const CAMP_ORDER = ["seer", "hech", "smith"];
@@ -376,11 +377,13 @@ function chronExcerpt(P){
 function campChronCard(id){
   const P = typeof chroniclePage==="function" ? chroniclePage(id) : null; if(!P) return false;
   const B = chronicleBook(P.book), el = chronCardEl();
-  el.querySelector(".cc-k").textContent = "✒ CRÓNICA · " + (B ? B.name : "");
+  el.querySelector(".cc-k").textContent = "CRÓNICA · " + (B ? B.name : "");
   el.querySelector(".cc-title").textContent = "«" + P.title + "»";
   el.querySelector(".cc-t").textContent = chronExcerpt(P);
+  // en red la partida no se detiene por nadie: la página entera queda para el Códice, después
+  el.querySelector(".cc-read").style.display = _ccOnline() ? "none" : "";
   CHRON_CARD.id = id;
-  el.classList.remove("hidden", "out"); void el.offsetWidth; el.classList.add("in");
+  el.classList.remove("hidden", "out"); void el.offsetWidth; el.classList.add("in"); document.body.classList.add("chron-card-on");
   clearTimeout(CHRON_CARD.timer);
   CHRON_CARD.timer = setTimeout(chronCardHide, CHRON_CARD_MS);
   chronSoftPause(CHRON_CARD_MS);
@@ -389,7 +392,7 @@ function campChronCard(id){
 function chronCardHide(){
   const el = CHRON_CARD.el; if(!el || el.classList.contains("hidden")) return;
   clearTimeout(CHRON_CARD.timer);
-  el.classList.remove("in"); el.classList.add("out");
+  el.classList.remove("in"); el.classList.add("out"); document.body.classList.remove("chron-card-on");
   setTimeout(()=>{ if(el.classList.contains("out")) el.classList.add("hidden"); }, 320);
   if(!CHRON_CARD.reading) chronSoftPause(0);
 }
@@ -424,4 +427,4 @@ function chronReadClose(){
   CHRON_CARD.reading = false; chronSoftPause(0);
 }
 // Si la partida termina con la tarjeta o el pergamino abiertos, se cierran sin dejar el tiempo frenado.
-function chronCardReset(){ clearTimeout(CHRON_CARD.timer); if(CHRON_CARD.el) CHRON_CARD.el.classList.add("hidden"); chronReadClose(); chronSoftPause(0); }
+function chronCardReset(){ clearTimeout(CHRON_CARD.timer); if(CHRON_CARD.el) CHRON_CARD.el.classList.add("hidden"); chronReadClose(); chronSoftPause(0); document.body.classList.remove("chron-card-on"); }

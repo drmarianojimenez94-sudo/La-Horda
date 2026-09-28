@@ -55,6 +55,7 @@ function storySay(who, text, o){
 // Cuántos OTROS textos hay en pantalla: el cartel grande (arenaTitleCard), la guía del jefe y el cartel del centro.
 function storyOtherTexts(){
   let n = 0;
+  if(document.body.classList.contains("chron-card-on")) n += 2; // se está leyendo una Crónica (camp.js): la voz espera
   if(typeof _arenaTitleUntil!=="undefined" && performance.now() < _arenaTitleUntil) n++;
   const bi = document.getElementById("boss-intro"); if(bi && !bi.classList.contains("hidden") && !bi.classList.contains("fade")) n++;
   const cb = document.getElementById("center-banner");
