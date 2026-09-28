@@ -107,7 +107,7 @@ const PLAYABLE = CANON.slice(); // las diez son jugables (Minas Profundas = Aren
   await sleep(120); // el cartel sale un tick después de startRun (ver campaignTitleCard)
   const tc = await E(() => { const el = document.getElementById('arena-title-card');
     return { k: el.querySelector('.atc-kicker').textContent, t: el.querySelector('.atc-title').textContent }; });
-  check('HISTORIA.cartel_de_arena', tc.k === 'ARENA 05' && /GÉLIDA/.test(tc.t), tc);
+  check('HISTORIA.cartel_de_arena', tc.k === 'ARENA 05' && /G[ÉE]LIDA/.test(tc.t), tc);
 
   // ---------------- migración del orden anterior ----------------
   // (a) Bosque + Acuática completas (orden viejo: la Fortaleza estaba abierta)

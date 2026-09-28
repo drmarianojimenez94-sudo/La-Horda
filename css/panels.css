@@ -86,6 +86,12 @@
 
 /* ---------- Fase 3: secuencia de la pantalla de Victoria ---------- */
 #victory-step-body{ width:100%; max-width:380px; text-align:left; }
+.vic-hero{ font-family:var(--font-pixel); font-size:clamp(1.3rem, 5vw, 2.1rem); color:#ffd98a; text-align:center; letter-spacing:4px;
+  margin:2px 0 8px; text-shadow:0 0 14px rgba(255,190,90,0.65), 3px 3px 0 #2a1206; animation:vicHeroIn 0.6s ease-out; }
+@keyframes vicHeroIn{ from{ opacity:0; transform:scale(1.25); } to{ opacity:1; transform:none; } }
+/* cofre en horizontal: el objeto al lado del cofre necesita ancho (en 380 px la ficha quedaba en una columna
+   de 160 px y "Equipar / Guardar" caían debajo del botón pegajoso "Continuar") */
+@media (min-aspect-ratio: 4/3){ #victory-step-body:has(.chest-host){ max-width:min(720px, 94vw); } }
 .vic-sub{ text-align:center; color:var(--text-dim); font-size:0.78rem; margin-bottom:14px; }
 .vic-role-line{ text-align:center; font-size:0.9rem; margin-bottom:10px; }
 .vic-role-line b{ color:var(--ember3); }
@@ -186,7 +192,7 @@
 
 /* ---------- Resultados: calificación y botín (Loot & Sets V1) ---------- */
 .res-rows{ width:100%; max-width:420px; margin:6px auto 10px; }
-.res-row{ display:flex; justify-content:space-between; gap:10px; padding:4px 2px; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.95rem; }
+.res-row{ display:flex; justify-content:space-between; gap:10px; padding:4px 2px; border-bottom:1px solid rgba(255,255,255,0.06); font-family:var(--font-retro); font-size:1.12rem; line-height:1; }
 .res-row span{ color:var(--text-dim); }
 .perf-grade{ font-family:var(--font-pixel); font-size:3.2rem; color:var(--gc); text-align:center; line-height:1.1;
   text-shadow:0 0 18px var(--gc), 3px 3px 0 #000; animation:gradeIn 0.6s cubic-bezier(.2,1.6,.4,1); }
@@ -440,3 +446,9 @@
 .ip-actions button:disabled{ opacity:0.45; cursor:default; }
 @media (max-width:420px){ #item-preview{ padding:8px; } #item-preview .ip-panel{ max-height:94vh; max-height:94dvh; padding:10px; } .ip-top .ip-art{ width:56px; height:56px; } }
 .ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }
+
+/* Derrota: el golpe es el título (grande, en pixel) y el resultado va debajo en letra de cuerpo. Antes era al
+   revés: "La Horda te ha consumido" chiquito y "Nivel 2 · 77 bajas · Calificación C" gigante en dos renglones. */
+#go-title{ font-family:var(--font-pixel); font-size:clamp(1rem, 3.6vw, 1.7rem); line-height:1.4; margin-bottom:10px;
+  text-shadow:3px 3px 0 #000, 0 0 16px rgba(198,40,40,0.55); }
+#gameover-screen #go-stats{ font-family:var(--font-retro); font-size:1.6rem; line-height:1.1; text-shadow:2px 2px 0 #000; margin-bottom:4px; }

@@ -78,5 +78,5 @@
   /* el Hechicero */
   #run-intro .ri-who{ font-size:0.7rem; letter-spacing:1px; }
   #run-intro .ri-k, #buff-story .bs-who{ font-size:0.7rem; letter-spacing:0; }
-  #run-intro .ri-go{ font-size:0.72rem; }
+  #run-intro .ri-go{ font-size:0.9rem; }
 }

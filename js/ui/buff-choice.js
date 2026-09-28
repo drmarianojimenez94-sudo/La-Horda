@@ -9,7 +9,11 @@
    ============================================================ */
 function openBuffChoice(){
   setState("buff");
-  document.getElementById("buff-title").textContent = `Nivel ${runLevel} superado — elige un refuerzo`;
+  document.getElementById("buff-title").textContent = `Nivel ${runLevel} superado — elegí un refuerzo`;
+  // la nota de la sala solo tiene sentido en línea (y cada humano elige el suyo: no hay votación)
+  const vn = document.getElementById("vote-note");
+  // (visibility y no display: es el último hijo de la pantalla y su margen automático la mantiene centrada)
+  if(vn) vn.style.visibility = (typeof netMatch!=="undefined" && netMatch) ? "" : "hidden";
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff(); // prólogo pendiente del cooperativo
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";

@@ -48,7 +48,7 @@ function showGameOverScreen(divinaOutcome){
   const perf = computePerformance(player);
   const loot = grantEndOfRunLoot(player.classKey, perf, false);
   const lootLine = loot.items.length ? loot.items.map(it=>{ const tm = LOOT_TIER_META[itemTier(it)]; return `<b style="color:${tm.color};">${it.name}</b>`; }).join(", ") : (runLevel>=DEFEAT_LOOT.minLevel ? "inventario lleno" : `sin botín (desde el nivel ${DEFEAT_LOOT.minLevel} te llevás un objeto aunque pierdas)`);
-  document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} bajas · Performance <b style="color:${perf.color};">${perf.grade}</b>`;
+  document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} bajas · Calificación <b style="color:${perf.color};">${perf.grade}</b>`;
   const arenaRows = arenaHas("resultsHTML") ? (arenaHook("resultsHTML", false)||"") : "";   // p.ej. civiles rescatados (Ciudad Maldita)
   document.getElementById("go-progress").innerHTML =
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
@@ -132,11 +132,11 @@ function revealLootSfx(body){
 const VICTORY_STEPS = [
   // 0. RESULTADO
   function(){
-    document.getElementById("victory-step-title").textContent = "¡Victoria!";
     const A = ARENA_MODS[victoryData.arena]||{};
-    return `<div class="vic-sub">${A.label||"Arena"} — Completada</div>
+    // la victoria se anuncia tan grande como la derrota (antes era una fila más de la tabla, bajo un título chico)
+    document.getElementById("victory-step-title").textContent = (A.label||"Arena") + " — Completada";
+    return `<div class="vic-hero">VICTORIA</div>
       <div class="res-rows">
-        <div class="res-row"><span>Resultado</span><b style="color:#7dffa0;">VICTORIA</b></div>
         <div class="res-row"><span>Arena</span><b>${A.label||"—"}</b></div>
         <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
         <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
@@ -146,7 +146,7 @@ const VICTORY_STEPS = [
   },
   // 1. PERFORMANCE
   function(){
-    document.getElementById("victory-step-title").textContent = "Performance";
+    document.getElementById("victory-step-title").textContent = "Calificación";
     const P = victoryData.perf;
     const rows = P.parts.map(p=>`<div class="perf-row"><span class="perf-label">${p.label}</span>
       <div class="perf-bar"><i style="width:${Math.round(p.value*100)}%"></i></div></div>`).join("");
@@ -187,7 +187,7 @@ const VICTORY_STEPS = [
     const pct = Math.min(100, Math.round(champ.xp/need*100));
     return `
       <div class="vic-xp-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name}</b></div>
-      <div class="vic-xp-row"><span>Bonus de XP por victoria (performance ${victoryData.perf.grade})</span><b style="color:var(--ember3);">+${victoryData.victoryXpBonus}</b></div>
+      <div class="vic-xp-row"><span>Bonus de XP por victoria (calificación ${victoryData.perf.grade})</span><b style="color:var(--ember3);">+${victoryData.victoryXpBonus}</b></div>
       <div class="vic-xp-row"><span>Nivel actual</span><b>${champ.level}</b></div>
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%;"></div></div>
       <div class="vic-sub" style="margin-top:-6px;">${champ.xp} / ${need} XP para el próximo nivel</div>

@@ -13,7 +13,12 @@ function updateAbilityButtons(){
     if(!el) return;
     const icoEl = el.querySelector(".ico");
     const labelEl = el.querySelector("div:not(.ico):not(.cd-overlay)");
-    if(icoEl) icoEl.textContent = sk.ico;
+    // ícono pixel de la habilidad si existe (el mismo del panel de Habilidades); si no, el glifo de siempre
+    const img = (typeof SKILL_ICON_IMG!=="undefined") ? SKILL_ICON_IMG[sk.name] : null;
+    if(icoEl){
+      if(img){ if(icoEl._img !== img){ icoEl.innerHTML = `<img class="ico-img" src="${img}" alt="">`; icoEl._img = img; } }
+      else { icoEl.textContent = sk.ico; icoEl._img = null; }
+    }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
   });
