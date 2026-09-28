@@ -26,9 +26,17 @@
      MAX_ROOMS        tope de salas simultáneas (default 300)
      DATABASE_URL, DATA_DIR, ...  cuentas de usuario (ver server/accounts.js)
      SIM_LATENCY_MS   SOLO PRUEBAS: demora artificial de cada mensaje (default 0)
+
+   SALAS PÚBLICAS: el anfitrión puede marcar su sala como pública ("create"/"update" con public:true).
+   Las públicas que esperan en la Sala, no están llenas y tienen al anfitrión conectado se listan en
+   GET /api/rooms[?build=B1-2] y con el mensaje {t:"rooms"}: arena, dificultad, humanos/4, rango de
+   nivel y el nombre del anfitrión (nada más: ni ids de cliente, ni IPs, ni el chat). Con límite de
+   pedidos por IP/conexión. Un cliente viejo nunca manda public: sus salas siguen siendo privadas.
+   INTERCAMBIO dentro de la sala: server/trades.js ({t:"trade"}; diseño antiduplicación ahí).
    ============================================================ */
 const http = require("http");
 const crypto = require("crypto");
+const path = require("path");
 const { WebSocketServer } = require("ws");
 
 const PROTOCOL = 1;             // debe coincidir con NET_PROTOCOL del cliente (js/net/net-core.js)
@@ -66,6 +74,37 @@ function chatFilter(text){
 }
 
 const rooms = new Map(); // code -> room
+// Salas públicas: lista cacheada 1 s, límite por IP (HTTP) y por conexión (WS), y tope de filas.
+const ROOMS_LIST_MAX = 40, ROOMS_CACHE_MS = 1000, ROOMS_HTTP_PER_10S = 30, ROOMS_WS_MIN_GAP_MS = 900;
+let _roomsCache = { at: 0, list: [] };
+function publicRoomList(build){
+  const now = Date.now();
+  if(now - _roomsCache.at > ROOMS_CACHE_MS){
+    const list = [];
+    for(const r of rooms.values()){
+      if(!r.pub || r.state !== "lobby") continue;
+      const host = r.slots[0];
+      if(!host || !host.ws) continue;
+      const humans = humanCount(r);
+      if(humans >= MAX_HUMANS) continue;
+      const lv = r.slots.filter(Boolean).map(m => m.level | 0).filter(n => n > 0);
+      list.push({ code: r.code, arena: r.arena, diff: r.diff || "normal", humans, max: MAX_HUMANS,
+        lvMin: lv.length ? Math.min(...lv) : 1, lvMax: lv.length ? Math.max(...lv) : 1, host: host.name, _build: r.build, _t: r.created });
+    }
+    list.sort((a, b) => (b.humans - a.humans) || (b._t - a._t)); // las que ya tienen gente, primero
+    _roomsCache = { at: now, list };
+  }
+  const b = clean(build, 40);
+  return _roomsCache.list.filter(r => !b || !r._build || r._build === b).slice(0, ROOMS_LIST_MAX)
+    .map(r => ({ code: r.code, arena: r.arena, diff: r.diff, humans: r.humans, max: r.max, lvMin: r.lvMin, lvMax: r.lvMax, host: r.host }));
+}
+const _roomsHits = new Map(); // ip -> {n, until}
+function roomsRateOk(ip){
+  const now = Date.now(); let e = _roomsHits.get(ip);
+  if(!e || e.until <= now){ e = { n: 0, until: now + 10000 }; _roomsHits.set(ip, e); }
+  if(_roomsHits.size > 5000) for(const [k, v] of _roomsHits) if(v.until <= now) _roomsHits.delete(k);
+  return ++e.n <= ROOMS_HTTP_PER_10S;
+}
 
 function log(ev, data){ console.log(new Date().toISOString(), ev, data ? JSON.stringify(data) : ""); }
 function newCode(){
@@ -80,7 +119,7 @@ function newCode(){
 function clean(s, max){ return String(s == null ? "" : s).replace(/[<>\u0000-\u001f]/g, "").slice(0, max); }
 function publicRoom(room){
   return {
-    code: room.code, arena: room.arena, state: room.state, hostSlot: 0, protocol: PROTOCOL,
+    code: room.code, arena: room.arena, state: room.state, hostSlot: 0, protocol: PROTOCOL, pub: !!room.pub, diff: room.diff || "",
     slots: room.slots.map((m, i) => m ? { slot: i, name: m.name, champ: m.champ, level: m.level, ready: !!m.ready,
       connected: !!m.ws, host: i === 0, muted: !!m.muted } : null)
   };
@@ -102,6 +141,7 @@ function closeRoom(room, reason){
     if(m && m.ws){ send(m.ws, { t: "closed", reason }); m.ws._room = null; }
   }
   rooms.delete(room.code);
+  trades.roomEvent(room.code);
   log("ROOM_CLOSED", { code: room.code, reason });
 }
 function humanCount(room){ return room.slots.filter(Boolean).length; }
@@ -111,6 +151,15 @@ function handle(ws, msg){
   const me = room ? room.slots[ws._slot] : null;
   switch(msg.t){
     case "ping": send(ws, { t: "pong", c: msg.c }); return;
+    case "rooms": { // lista de salas públicas (también en GET /api/rooms)
+      const now = Date.now();
+      if(ws._roomsAt && now - ws._roomsAt < ROOMS_WS_MIN_GAP_MS) return send(ws, { t: "error", code: "ROOMS_SLOW" });
+      ws._roomsAt = now;
+      return send(ws, { t: "rooms", list: publicRoomList(msg.build) });
+    }
+    case "trade": // intercambio (server/trades.js): terminar uno pendiente no necesita sala
+      if(typeof msg.op !== "string") return;
+      return trades.handle(ws, msg, room && me ? { room, slot: ws._slot, me } : null);
     case "create": {
       if(msg.protocol !== PROTOCOL) return send(ws, { t: "error", code: "VERSION", msg: "Versión distinta del servidor" });
       if(room) return send(ws, { t: "error", code: "ALREADY_IN_ROOM" });
@@ -118,12 +167,13 @@ function handle(ws, msg){
       const code = newCode();
       if(!code) return send(ws, { t: "error", code: "SERVER_FULL" });
       const r = { code, arena: clean(msg.arena, 24), build: clean(msg.build, 40), state: "lobby",
-        slots: [null, null, null, null], touched: Date.now(), created: Date.now(), chat: [] };
+        slots: [null, null, null, null], touched: Date.now(), created: Date.now(), chat: [],
+        pub: msg.public === true, diff: clean(msg.diff, 12) };
       r.slots[0] = { ws, clientId: clean(msg.clientId, 64), name: clean(msg.name, 24) || "Anfitrión",
         champ: clean(msg.champ, 24), level: msg.level|0, ready: true, lostAt: 0 };
       rooms.set(code, r);
       ws._room = code; ws._slot = 0;
-      log("ROOM_CREATED", { code, arena: r.arena });
+      log("ROOM_CREATED", { code, arena: r.arena, pub: r.pub });
       send(ws, { t: "joined", slot: 0, host: true, room: publicRoom(r) });
       return;
     }
@@ -177,6 +227,9 @@ function handle(ws, msg){
           if(a !== room.arena) log("ROOM_ARENA", { code: room.code, arena: a });
           room.arena = a;
         }
+        // sala pública / dificultad elegida: solo el anfitrión (un cliente viejo no los manda)
+        if(ws._slot === 0 && msg.public !== undefined){ room.pub = msg.public === true; log("ROOM_PUBLIC", { code: room.code, pub: room.pub }); }
+        if(ws._slot === 0 && msg.diff !== undefined) room.diff = clean(msg.diff, 12);
       } else if(msg.champ !== undefined && ws._slot > 0){
         // un invitado que ya volvió a la sala mientras el anfitrión mira los resultados
         me.champ = clean(msg.champ, 24);
@@ -192,6 +245,7 @@ function handle(ws, msg){
       // quienes perdieron la conexión antes de comenzar no ocupan un lugar en la partida
       room.slots.forEach((m, i) => { if(i > 0 && m && !m.ws) room.slots[i] = null; });
       room.state = "playing";
+      trades.roomEvent(room.code); // en partida no se intercambia: las ofertas abiertas se anulan
       log("GAME_START", { code: room.code, humans: humanCount(room) });
       broadcastRoom(room);
       return;
@@ -241,7 +295,7 @@ function handle(ws, msg){
     case "kick": {
       if(ws._slot !== 0) return;
       const i = msg.slot|0;
-      if(i > 0 && room.slots[i]){ const m = room.slots[i]; if(m.ws){ send(m.ws, { t: "closed", reason: "kicked" }); m.ws._room = null; } room.slots[i] = null; broadcastRoom(room); }
+      if(i > 0 && room.slots[i]){ trades.roomEvent(room.code, i); const m = room.slots[i]; if(m.ws){ send(m.ws, { t: "closed", reason: "kicked" }); m.ws._room = null; } room.slots[i] = null; broadcastRoom(room); }
       return;
     }
     case "leave": { leave(ws, "left"); return; }
@@ -255,6 +309,7 @@ function leave(ws, why){
   ws._room = null;
   if(!m || m.ws !== ws) return;
   if(slot === 0){ closeRoom(room, "host_left"); return; }
+  trades.roomEvent(room.code, slot);
   if(room.state === "lobby" || why === "left"){ room.slots[slot] = null; }
   else { m.ws = null; m.lostAt = Date.now(); } // en partida: conserva el lugar para reconectar
   log("PLAYER_DISCONNECTED", { code: room.code, slot, why });
@@ -262,9 +317,23 @@ function leave(ws, why){
 }
 
 const accounts = require("./accounts.js").create({ log, originAllowed });
+const trades = require("./trades.js").create({ log, send, dataDir: process.env.DATA_DIR || path.join(__dirname, "data") });
+function roomsHttp(req, res){
+  const origin = req.headers.origin || "";
+  const h = { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff", "vary": "Origin" };
+  if(origin && !originAllowed(origin)){ res.writeHead(403, h); res.end('{"error":"ORIGIN"}'); return; }
+  h["access-control-allow-origin"] = origin || "*";
+  if(req.method === "OPTIONS"){ h["access-control-allow-methods"] = "GET, OPTIONS"; res.writeHead(204, h); res.end(); return; }
+  if(req.method !== "GET"){ res.writeHead(405, h); res.end('{"error":"METHOD"}'); return; }
+  const ip = req.socket.remoteAddress || "?";
+  if(!roomsRateOk(ip)){ h["retry-after"] = "10"; res.writeHead(429, h); res.end('{"error":"TOO_MANY"}'); return; }
+  let build = ""; try{ build = new URL(req.url, "http://x").searchParams.get("build") || ""; }catch(e){}
+  res.writeHead(200, h); res.end(JSON.stringify({ protocol: PROTOCOL, rooms: publicRoomList(build) }));
+}
 const server = http.createServer((req, res) => {
-  if(accounts.handle(req, res)) return; // /api/* (cuentas y guardado en la nube)
   const p = req.url.split("?")[0];
+  if(p === "/api/rooms" || p === "/api/rooms/") return roomsHttp(req, res); // salas públicas (antes que las cuentas)
+  if(accounts.handle(req, res)) return; // /api/* (cuentas y guardado en la nube)
   if(p === "/" || p === "/health"){
     res.writeHead(200, { "content-type": "text/plain; charset=utf-8", "access-control-allow-origin": "*", "cache-control": "no-store" });
     res.end(`LA HORDA relay OK · protocolo ${PROTOCOL} · salas ${rooms.size}\n${accounts.healthLine()}\n`);
@@ -308,4 +377,4 @@ setInterval(() => {
 
 const PORT = parseInt(process.env.PORT || "8787", 10);
 server.listen(PORT, () => log("RELAY_LISTENING", { port: PORT, protocol: PROTOCOL, allowed: ALLOWED }));
-module.exports = { server, rooms, chatFilter, accounts, originAllowed };
+module.exports = { server, rooms, chatFilter, accounts, originAllowed, trades, publicRoomList };
