@@ -100,6 +100,10 @@ const CM_CFG = {
   dama:{ curtainCd:[7000, 9000], curtainWind:1100, boltCd:[3000, 3800], darkCd:[9000, 12000], darkR:170, darkMs:5000, mirrorCd:[13000, 16000], summonCd:[14000, 18000], burstAt:0.3 },
   presentador:{ p2At:0.66, p3At:0.33, transformMs:3200, boltCd:[2400, 3000], markCd:[7000, 8500], curtainCd:[8000, 10000], echoCd:[9000, 11000],
                 pillarMs:12000, ovationCd:[15000, 18000], ovationWind:3000, ovationPct:0.62, spectatorCd:[3200, 4400], deathMs:9500,
+                // OVACIÓN sin pilar en NORMAL (reseña §6.4 #5: el primer jefe era un muro): 40 % de la vida. Duele y
+                // enseña, pero con un reflector encima ya no borra. Pesadilla e Infierno siguen con ovationPct (62 %).
+                // Medido con tools/playtest/boss_presentador.js (partida desde el nivel 1, cubriéndose y sin cubrirse).
+                ovationPctNormal:0.40,
                 // PRIMER JEFE QUE AMENACE (reseña #6: al Mago le sacó 9 de 179 en toda la pelea). Los telegrafiados
                 // (reflectores, telones, ecos, espectadores) pegan telMult veces su base: un reflector que te agarra
                 // quieto saca ~1/4 de la vida del nivel esperado y la Ovación sin pilar, 62 %. Todos siguen con su
