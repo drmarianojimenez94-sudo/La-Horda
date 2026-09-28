@@ -1,0 +1,120 @@
+/* ============================================================
+   css/story.css — la historia jugando (js/systems/story.js): retratos del cuadro de voz, escenas en las
+   pantallas de fin de partida, el epílogo por pantallas y las CRÓNICAS del Códice.
+   Sin arte nuevo: los retratos que no son del Hechicero se dibujan con CSS (ojos en la oscuridad, gema,
+   brasa, esporas, pergamino) en la misma paleta oscura del resto.
+   ============================================================ */
+
+/* ---------- cuadro de voz: quién habla ---------- */
+#tut-panel[data-face]:not([data-face="hech"]) .tut-face{ position:relative; background:radial-gradient(circle at 50% 40%, #3a1410, #0c0504 72%); border-color:#8a3a2a; box-shadow:0 0 8px rgba(200,60,40,0.45); }
+#tut-panel[data-face]:not([data-face="hech"]) .tut-face::before,
+#tut-panel[data-face]:not([data-face="hech"]) .tut-face::after{ content:""; position:absolute; }
+/* jefe: dos ojos que arden en la oscuridad */
+#tut-panel[data-face="boss"] .tut-face::after{ left:24%; top:42%; width:5px; height:3px; background:#ff5a3a; box-shadow:0 0 5px #ff3a1a, 12px 0 0 #ff5a3a, 12px 0 5px #ff3a1a; }
+@media (max-height:500px){ #tut-panel[data-face="boss"] .tut-face::after{ width:4px; box-shadow:0 0 4px #ff3a1a, 9px 0 0 #ff5a3a, 9px 0 4px #ff3a1a; } }
+#tut-panel[data-face="boss"]{ border-color:#8a2a2a; box-shadow:0 0 14px rgba(170,40,30,0.45); }
+#tut-panel[data-face="boss"] .tut-who{ color:#ff9a7a; }
+/* Guardián: la gema de un cristal */
+#tut-panel[data-face="guardian"] .tut-face{ background:radial-gradient(circle at 50% 45%, #1c3a44, #060c10 72%); border-color:#6fc3ef; box-shadow:0 0 8px rgba(110,200,240,0.5); }
+#tut-panel[data-face="guardian"] .tut-face::after{ left:32%; top:22%; width:36%; height:36%; transform:rotate(45deg); background:linear-gradient(135deg, #e4f7ff, #6fc3ef 55%, #2a5f86); box-shadow:0 0 8px rgba(150,225,255,0.8); }
+#tut-panel[data-face="guardian"]{ border-color:#4a7a9a; box-shadow:0 0 14px rgba(90,170,220,0.4); }
+#tut-panel[data-face="guardian"] .tut-who{ color:#bfe8ff; }
+/* el Forjador: una brasa entre cadenas */
+#tut-panel[data-face="forge"] .tut-face{ background:radial-gradient(circle at 50% 62%, #ffb04a 0 12%, #a3400e 26%, #2a0e04 60%, #0a0402 80%); border-color:#c9782a; box-shadow:0 0 10px rgba(255,140,40,0.55); }
+#tut-panel[data-face="forge"] .tut-face::before{ left:10%; right:10%; top:30%; height:2px; background:repeating-linear-gradient(90deg, #6a6058 0 4px, transparent 4px 6px); }
+#tut-panel[data-face="forge"] .tut-face::after{ left:10%; right:10%; top:52%; height:2px; background:repeating-linear-gradient(90deg, #6a6058 0 4px, transparent 4px 6px); }
+#tut-panel[data-face="forge"]{ border-color:#8a5a2a; box-shadow:0 0 14px rgba(220,120,40,0.4); }
+#tut-panel[data-face="forge"] .tut-who{ color:#ffc07a; }
+/* ecos del micelio: esporas */
+#tut-panel[data-face="echo"] .tut-face{ background:radial-gradient(circle at 30% 35%, #b8f070 0 7%, transparent 9%), radial-gradient(circle at 66% 58%, #8ad050 0 6%, transparent 8%), radial-gradient(circle at 42% 74%, #d8ff9a 0 4%, transparent 6%), radial-gradient(circle at 50% 50%, #1e3212, #060a04 75%); border-color:#79c255; box-shadow:0 0 8px rgba(140,220,90,0.45); }
+#tut-panel[data-face="echo"]{ border-color:#4a7a3a; box-shadow:0 0 14px rgba(110,190,70,0.35); }
+#tut-panel[data-face="echo"] .tut-who{ color:#c8f0a0; }
+/* Crónicas: una hoja de pergamino con lacre */
+#tut-panel[data-face="chron"] .tut-face{ background:linear-gradient(135deg, #f4e4bc, #d8bd84); border-color:#b08a52; box-shadow:0 0 8px rgba(255,214,140,0.5); }
+#tut-panel[data-face="chron"] .tut-face::before{ left:20%; right:24%; top:26%; height:45%; background:repeating-linear-gradient(180deg, #6b4a28 0 2px, transparent 2px 6px); }
+#tut-panel[data-face="chron"] .tut-face::after{ right:14%; bottom:14%; width:22%; height:22%; background:#8e1b16; border-radius:50%; }
+#tut-panel[data-face="chron"]{ border-color:#8a6a3a; box-shadow:0 0 14px rgba(255,200,120,0.35); }
+#tut-panel[data-face="chron"] .tut-who{ color:#ffd98a; }
+
+/* ---------- ficha previa: acto y voz del guardián ---------- */
+#run-intro .ri-act{ font-family:'Press Start 2P',monospace; font-size:0.45rem; letter-spacing:2px; color:#b89a6a; margin-top:4px; }
+#run-intro .ri-act:empty{ display:none; }
+#run-intro .ri-hero{ font-family:'VT323',monospace; font-size:1.05rem; line-height:1.05; color:#d8cbb4; margin:-4px 0 6px; padding-left:8px; border-left:2px solid rgba(255,217,138,0.35); }
+#run-intro .ri-hero b{ font-style:normal; margin-right:4px; }
+#run-intro.ri-prologue .ri-hero, #run-intro.ri-prologue .ri-act{ display:none; }
+@media (max-height:500px){ #run-intro .ri-hero{ font-size:0.92rem; margin:-2px 0 4px; } #run-intro .ri-act{ font-size:0.38rem; } }
+
+/* ---------- pantallas de fin de partida ---------- */
+.story-vic{ margin:10px auto 0; max-width:560px; text-align:left; padding:8px 12px; border:1px solid rgba(176,128,64,0.45);
+  background:linear-gradient(180deg, rgba(34,20,12,0.85), rgba(14,8,6,0.85)); box-shadow:inset 0 0 0 1px rgba(255,200,120,0.08); }
+.story-vic .sv-k{ font-family:'Press Start 2P',monospace; font-size:0.48rem; letter-spacing:2px; color:#e0b060; margin-bottom:4px; }
+.story-vic .sv-q{ font-family:'VT323',monospace; font-size:1.02rem; line-height:1.05; color:#f0e0c8; font-style:italic; }
+.story-vic .sv-hero{ font-family:'VT323',monospace; font-size:1.02rem; line-height:1.05; color:#d8cbb4; margin-top:6px; font-style:italic; }
+.story-vic .sv-hero b{ color:var(--hc, #ffd98a); font-style:normal; margin-right:4px; }
+.story-vic .sv-scar{ font-family:'VT323',monospace; font-size:1rem; line-height:1.05; color:#e8d6ff; font-style:italic; }
+.story-vic .sv-say{ font-family:'VT323',monospace; font-size:0.96rem; line-height:1.05; color:#ffe9c2; margin-top:5px; font-style:italic; }
+.story-vic .sv-say b{ font-family:'Press Start 2P',monospace; font-size:0.42rem; font-style:normal; color:#ffd98a; letter-spacing:1px; margin-right:5px; }
+.story-vic .sv-chron{ font-family:'VT323',monospace; font-size:1rem; color:#ffd98a; margin-top:6px; }
+.story-vic .sv-chron span{ color:#a8916a; }
+.story-vic .sv-epi{ margin-top:8px; }
+.story-vic.scar{ border-color:rgba(140,100,190,0.5); }
+.story-def{ font-family:'VT323',monospace; font-size:1.1rem; color:#d8cbb4; font-style:italic; margin-bottom:6px; }
+.story-def b{ color:var(--hc, #ffd98a); font-style:normal; }
+@media (max-height:500px){ .story-vic{ padding:5px 9px; margin-top:6px; } .story-vic .sv-q, .story-vic .sv-scar{ font-size:0.98rem; } .story-vic .sv-hero, .story-vic .sv-say{ font-size:0.92rem; } }
+
+/* ---------- EPÍLOGO por pantallas ---------- */
+#story-cine{ position:fixed; inset:0; z-index:60; background:#050303; overflow:hidden; cursor:pointer; user-select:none; -webkit-user-select:none; }
+#story-cine.hidden{ display:none; }
+#story-cine .sc-bg{ position:absolute; inset:-4%; background:#050303 center/cover no-repeat; filter:blur(2px) saturate(0.8) brightness(0.62); }
+#story-cine .sc-bg.pan{ animation:scPan 22s ease-in-out forwards; }
+@keyframes scPan{ from{ transform:scale(1.02) translateX(-1.5%); opacity:0; } 4%{ opacity:1; } to{ transform:scale(1.1) translateX(1.5%); opacity:1; } }
+#story-cine .sc-art{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; background:transparent !important; }
+#story-cine .sc-veil{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(5,3,3,0.2) 0%, rgba(5,3,3,0.35) 45%, rgba(5,3,3,0.92) 100%); }
+#story-cine .sc-box{ position:absolute; left:50%; bottom:calc(14% + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); width:min(88vw, 760px); text-align:center; opacity:0; }
+#story-cine .sc-box.in{ animation:scIn 1.1s ease-out forwards; }
+@keyframes scIn{ from{ opacity:0; transform:translate(-50%, 10px); } to{ opacity:1; transform:translate(-50%, 0); } }
+#story-cine .sc-kicker{ font-family:'Press Start 2P',monospace; font-size:0.62rem; letter-spacing:4px; color:#e0b060; margin-bottom:10px; text-shadow:0 2px 0 #000; }
+#story-cine .sc-kicker:empty{ display:none; }
+#story-cine .sc-text{ font-family:'VT323',monospace; font-size:clamp(1.15rem, 3.2vw, 1.6rem); line-height:1.12; color:#f0e4d0; text-shadow:0 2px 0 #000, 0 0 14px rgba(0,0,0,0.9); }
+#story-cine .sc-line{ margin-top:14px; }
+#story-cine .sc-who{ font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:2px; color:#ffc07a; margin-bottom:4px; }
+#story-cine .sc-say{ font-family:'VT323',monospace; font-size:clamp(1.1rem, 3vw, 1.5rem); line-height:1.1; color:#ffe9c2; font-style:italic; text-shadow:0 2px 0 #000; }
+#story-cine .sc-note{ margin-top:12px; font-family:'VT323',monospace; font-size:1.1rem; color:#9be07a; text-shadow:0 2px 0 #000; }
+#story-cine .sc-note:empty{ display:none; }
+#story-cine.final .sc-kicker{ font-size:clamp(1.2rem, 5vw, 2.4rem); color:#ffdcb0; letter-spacing:6px; -webkit-text-stroke:1px #3a0a04; }
+#story-cine.final .sc-box{ bottom:auto; top:40%; }
+#story-cine .sc-tap{ position:absolute; left:0; right:0; bottom:calc(4% + env(safe-area-inset-bottom,0px)); text-align:center; font-family:'VT323',monospace; font-size:1rem; color:#a8916a; animation:scBlink 2.4s ease-in-out infinite; }
+@keyframes scBlink{ 0%,100%{ opacity:0.45; } 50%{ opacity:1; } }
+#story-cine .sc-skip{ position:absolute; top:calc(10px + env(safe-area-inset-top,0px)); right:calc(10px + env(safe-area-inset-right,0px)); min-height:40px; padding:6px 14px;
+  font-family:'VT323',monospace; font-size:1.1rem; color:#d8cbb4; background:rgba(20,12,8,0.7); border:1px solid rgba(176,128,64,0.55); cursor:pointer; }
+@media (max-height:500px){ #story-cine .sc-box{ bottom:16%; } #story-cine .sc-line{ margin-top:8px; } #story-cine .sc-note{ margin-top:6px; } }
+
+/* ---------- CÓDICE › CRÓNICAS ---------- */
+.cx-home-chron{ font:inherit; color:inherit; cursor:pointer; display:flex; align-items:center; gap:12px; width:100%; margin-top:12px; padding:10px 14px; text-align:left !important; }
+.cx-home-chron .cxc-ico{ flex:0 0 auto; width:34px; height:42px; position:relative; background:linear-gradient(135deg, #f4e4bc, #cdb07a); border:2px solid #2a170a; box-shadow:0 0 10px rgba(255,214,140,0.45); }
+.cx-home-chron .cxc-ico::before{ content:""; position:absolute; left:5px; right:9px; top:8px; height:18px; background:repeating-linear-gradient(180deg, #6b4a28 0 2px, transparent 2px 6px); }
+.cx-home-chron .cxc-ico::after{ content:""; position:absolute; right:4px; bottom:4px; width:8px; height:8px; background:#8e1b16; }
+.cx-home-chron .cxc-title{ font-family:var(--font-pixel); font-size:0.78rem; color:var(--cx-gold); letter-spacing:1px; display:flex; align-items:center; gap:7px; }
+.cx-home-chron .cxc-txt{ flex:1 1 auto; display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cx-chron-head-epi{ margin-left:auto; }
+.cx-chron-books{ display:flex; flex-direction:column; gap:10px; max-width:1000px; margin:0 auto; }
+.cx-chron-book{ padding:10px 12px; }
+.cx-chron-book h3{ margin:0; font-family:var(--font-retro); font-weight:normal; font-size:1.25rem; color:var(--cx-gold); }
+.cx-chron-book .cx-dim{ font-size:0.8rem; }
+.cx-chron-pages{ display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+.cx-chron-page{ min-height:40px; padding:6px 10px; font-family:var(--font-retro); font-size:1.05rem; color:var(--cx-ink); cursor:pointer;
+  background:linear-gradient(180deg, #3a2213, #1d100a); border:1px solid var(--cx-metal); text-align:left; }
+.cx-chron-page.missing{ color:var(--cx-dim); border-style:dashed; cursor:default; }
+.cx-chron-page .cxp-n{ color:var(--cx-rune); margin-right:5px; }
+.cx-chron-page .cxp-where{ display:block; font-size:0.85rem; color:var(--cx-dim); }
+.cx-parchment{ max-width:680px; margin:0 auto; padding:18px 22px 20px; color:#3a2412; position:relative;
+  background:radial-gradient(ellipse at 30% 20%, #f6e8c4, #e4cc96 70%, #cdb07a); border:2px solid #2a170a; box-shadow:0 0 0 2px #6b4a28, 0 6px 22px rgba(0,0,0,0.7); }
+.cx-parchment .cxp-book{ font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:2px; color:#7a4a1c; }
+.cx-parchment h2{ margin:6px 0 10px; font-family:Georgia, serif; font-size:1.35rem; color:#3a1a08; }
+.cx-parchment p{ margin:0 0 10px; font-family:Georgia, serif; font-size:1rem; line-height:1.45; white-space:pre-line; }
+.cx-parchment .cxp-sign{ text-align:right; font-family:Georgia, serif; font-style:italic; color:#6b4a28; margin-top:6px; }
+.cx-parchment .cxp-seal{ position:absolute; right:14px; bottom:-10px; width:26px; height:26px; background:radial-gradient(circle at 40% 35%, #d8453a, #8e1b16 70%); border-radius:50%; box-shadow:0 2px 0 #2a0a06; }
+.cx-chron-nav{ display:flex; justify-content:space-between; align-items:center; gap:10px; max-width:680px; margin:0 auto 10px; }
+.cx-voice{ font-family:var(--font-retro); font-size:1.05rem; line-height:1.1; color:var(--cx-ink); margin:3px 0; }
+.cx-voice i{ color:var(--cx-dim); font-style:normal; margin-right:6px; }
+@media (max-height:480px) and (orientation:landscape){ .cx-parchment{ padding:12px 14px 14px; } .cx-parchment p{ font-size:0.92rem; line-height:1.35; } }

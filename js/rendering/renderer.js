@@ -154,6 +154,7 @@ function render(){
   fxGlowBegin(); vfxDrawSprites(); fxGlowEnd();
   resonanceDraw(); // gema del cristal que lleva cada guardián (crystal-resonance.js)
   crystalDraw(); // cristal de un Guardián volando al jugador (crystals.js)
+  if(typeof storyPagesDraw==="function") storyPagesDraw(); // páginas de las Crónicas en el piso (story.js)
   drawFxContrastTop(); // anticipación al lanzar + estrella de impacto (fx-contrast.js)
   if(arenaHas("drawTop")) arenaHook("drawTop");
   ctxDraw(); // aviso + progreso de las acciones contextuales

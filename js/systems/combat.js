@@ -253,9 +253,11 @@ function killEnemy(e){
     }
   }
   if(e.type==="guardian_laberinto" && !netIsGuest() && typeof campaignLabyrinthWarning==="function") campaignLabyrinthWarning(e.x, e.y); // advierte antes de caer; su cristal queda libre al vencer al Minotauro (su forma corrompida)
+  if(e!==boss && typeof storyOnKill==="function") storyOnKill(e); // su última frase y las Crónicas que suelta (story.js)
   if(e.type==="hechicero_supremo" && hechOnDefeat(e)) return; // no muere: huye (inf-hechicero.js)
   if(e===boss){
     onBossDefeated();
+    if(!e.alive && typeof storyOnKill==="function") storyOnKill(e); // un jefe que "revive" (otra vida) todavía no habla
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
