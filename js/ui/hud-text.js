@@ -32,8 +32,12 @@ function _hudBannerNow(text){
   b.classList.toggle("low", !!(intro && !intro.classList.contains("hidden")) && !title);
   // urgente con el cartel de arena arriba: justo debajo de ese cartel (no encima, ni en el medio de la pelea)
   const card = title ? document.getElementById("arena-title-card") : null, cr = card ? card.getBoundingClientRect() : null;
-  b.style.top = cr && cr.height ? Math.round(cr.bottom + 20) + "px" : "";
-  clearTimeout(HUDTXT.tmo); if(cr && cr.height) HUDTXT.tmo = setTimeout(()=>{ b.style.top = ""; }, 2300);
+  // caído ("CAÍSTE", hud.js: hudStackLayout lo baja con .downed): si además está el cartel de arena, el
+  // central va debajo de los dos (antes el top en línea le ganaba a .downed y se pisaban)
+  const dn = document.getElementById("downed-overlay"), dr = dn && !dn.classList.contains("hidden") ? dn.getBoundingClientRect() : null;
+  const below = Math.max(cr && cr.height ? cr.bottom : 0, cr && cr.height && dr && dr.height ? dr.bottom : 0);
+  b.style.top = below ? Math.round(below + 20) + "px" : "";
+  clearTimeout(HUDTXT.tmo); if(below) HUDTXT.tmo = setTimeout(()=>{ b.style.top = ""; }, 2300);
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
   HUDTXT.cur = String(text); HUDTXT.until = performance.now() + HUDTXT_READ_MS;
   _hudBlockAt = 0; // las placas del canvas se corren ya (no esperan la próxima medición)
