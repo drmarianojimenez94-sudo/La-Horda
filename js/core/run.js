@@ -246,7 +246,7 @@ function finishBossVictory(){
   const firstClear = !save.arenasCleared[currentArena];
   save.arenasCleared[currentArena] = true;
   const nextArena = ARENA_ORDER.find(k=>k!==currentArena && !wasOpen[k] && isArenaUnlocked(k));
-  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${campaignNumberLabel(nextArena)} — ${(ARENA_MODS[nextArena]||{}).label||nextArena}`), 2600); }
+  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${campaignNumberLabel(nextArena)} — ${(ARENA_MODS[nextArena]||{}).label||nextArena}`, 2), 2600); }
   if(currentArena==="infernal" && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;
     setTimeout(()=>showBanner("🔓 POSTGAME: ARENA DIVINA — LAS CINCO PRUEBAS"), firstClear ? 9000 : 2600);

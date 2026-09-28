@@ -48,6 +48,9 @@ function hudBannerPush(text, prio){
   if(HUDTXT.run !== (typeof runStats!=="undefined" ? runStats : null)){ HUDTXT.run = typeof runStats!=="undefined" ? runStats : null; HUDTXT.q.length = 0; }
   if(s===HUDTXT.cur && now < HUDTXT.until) return;           // el mismo cartel otra vez: ya se está leyendo
   if(HUDTXT.q.some(x=>x.text===s)) return;                     // ya está en la cola
+  // fuera de la partida (victoria, derrota, Sala): no hay nada con qué pisarse y la cola se vacía al salir del
+  // juego, así que se muestra ya (p. ej. "02 — Fábrica abierta" al ganar se perdía en la cola)
+  if(typeof state!=="undefined" && state!=="playing" && state!=="paused"){ _hudBannerNow(s); return; }
   const busy = now < HUDTXT.until, title = _hudTitleOn(now);
   if(prio >= 2 || (!busy && !title)){ _hudBannerNow(s); return; }
   HUDTXT.q.push({text:s, prio, at:now});
