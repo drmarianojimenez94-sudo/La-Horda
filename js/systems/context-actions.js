@@ -28,8 +28,11 @@ const CTX_KINDS = {};
 const CTX_RATE = [0, 1, 1.6, 2, 2.3];
 
 function ctxTargets(){
-  if(state!=="playing" || !arenaHas("ctxTargets")) return null;
-  return arenaHook("ctxTargets") || null;
+  if(state!=="playing") return null;
+  const a = arenaHas("ctxTargets") ? (arenaHook("ctxTargets") || null) : null;
+  const x = typeof endlessCtxTargets==="function" ? endlessCtxTargets() : null; // Horda Infinita: rescates
+  if(!x) return a;
+  return (a && a.length) ? a.concat(x) : x;
 }
 function ctxFind(id){
   const ts = ctxTargets(); if(!ts || id==null) return null;

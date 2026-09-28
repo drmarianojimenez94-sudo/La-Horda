@@ -71,6 +71,7 @@ function updateHUD(){
   const emblemHtml = (champMastery && tree && tree.masteries[champMastery]) ? ` <span class="mastery-emblem" title="Maestría: ${tree.masteries[champMastery].name}">★</span>` : "";
   plevelEl.innerHTML = `${CLASSES[player.classKey].name} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`;
   document.getElementById("hud-level").textContent = Math.min(runLevel,10);
+  if(typeof endlessHudTick==="function") endlessHudTick(); // Horda Infinita: ronda, puntaje y mutadores
   document.getElementById("hud-kills").textContent = kills;
   const totalSec = Math.floor((runElapsedMs||0)/1000);
   document.getElementById("hud-timer").textContent = Math.floor(totalSec/60)+":"+String(totalSec%60).padStart(2,"0");

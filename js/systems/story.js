@@ -27,7 +27,8 @@ function _stEsc(s){ return String(s==null ? "" : s).replace(/[&<>"]/g, c=>({"&":
 function _stQuiet(fn){ return typeof netQuiet==="function" ? netQuiet(fn) : fn(); } // efectos solo míos (no viajan por la red)
 function storyCampaignOn(){
   return typeof currentArena!=="undefined" && typeof ARENA_ORDER!=="undefined" && ARENA_ORDER.includes(currentArena) &&
-    !(typeof divinaMode!=="undefined" && divinaMode);
+    !(typeof divinaMode!=="undefined" && divinaMode) &&
+    !(typeof endlessOn==="function" && endlessOn()); // Horda Infinita: sin Crónicas, actos ni epílogo de campaña
 }
 function storyEnsureRun(){
   if(typeof runStats==="undefined" || STORY.run === runStats) return;

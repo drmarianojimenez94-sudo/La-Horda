@@ -455,7 +455,7 @@ function netHostOpenBuffs(){
     if(s.kind!=="human" || s.slot===0) continue;
     const h = heroes[s.slot];
     if(!h || !h._net || !h._net.connected){ netMatch.buffPicks[s.slot] = "skip"; continue; }
-    const opts = [...BUFF_POOL].sort(()=>Math.random()-0.5).slice(0,3).map(b=>b.id);
+    const opts = [...((typeof endlessOn==="function" && endlessOn()) ? endlessBuffPool() : BUFF_POOL)].sort(()=>Math.random()-0.5).slice(0,3).map(b=>b.id);
     netMatch.buffPicks[s.slot] = null;
     netMatch["buffOpts"+s.slot] = opts;
     netSendTo(s.slot, {k:"buffs", opts, level:runLevel});
@@ -466,7 +466,7 @@ function netHostBuffPicked(slot, id){
   const opts = netMatch["buffOpts"+slot] || [];
   const b = BUFF_POOL.find(x=>x.id===id && opts.includes(x.id)) || BUFF_POOL.find(x=>x.id===opts[0]);
   const h = heroes[slot];
-  if(b && h) netWithHero(h, ()=>{ b.apply(runStats); refreshEquippedStats(); });
+  if(b && h) netWithHero(h, ()=>{ b.apply(runStats); refreshEquippedStats(); if(typeof endlessOn==="function" && endlessOn()) endlessOnBuffPicked(h, b.id); });
   netMatch.buffPicks[slot] = b ? b.id : "skip";
   netHostTryResume();
 }
@@ -477,10 +477,11 @@ function netHostTryResume(){
   if(pending.length && performance.now() < netMatch.buffDeadline){ netBuffWaitingText(pending); return; }
   for(const k of pending) netHostBuffPicked(k|0, null); // se acabó el tiempo: refuerzo automático
   netMatch.buffPicks = null;
-  runLevel++;
+  const endless = typeof endlessOn==="function" && endlessOn();
+  if(!endless) runLevel++;
   heroes.forEach((h,i)=>{ const s = netMatch.slots[i]; if(s && s.kind==="human" && h.alive){ h.hp = Math.min(h.maxHp, h.hp + h.maxHp*0.25); h.energy = h.maxEnergy; } });
-  beginLevel();
-  setState("playing");
+  if(endless){ setState("playing"); endlessAdvance(); } // Horda Infinita: próxima ronda (y cada 5, la Cicatriz a otra arena)
+  else { beginLevel(); setState("playing"); }
   netBroadcast({k:"resume"});
 }
 function netBuffWaitingText(pending){
@@ -802,7 +803,7 @@ function netGuestCast(idx, aim){
 }
 function netGuestShowBuffs(d){
   setState("buff");
-  document.getElementById("buff-title").textContent = `Nivel ${d.level} superado — elige tu refuerzo`;
+  document.getElementById("buff-title").textContent = (typeof endlessOn==="function" && endlessOn()) ? `Ronda ${EN.round} contenida — elegí tu refuerzo` : `Nivel ${d.level} superado — elige tu refuerzo`;
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff();
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
@@ -810,7 +811,7 @@ function netGuestShowBuffs(d){
     const b = BUFF_POOL.find(x=>x.id===id); if(!b) return;
     const el = document.createElement("div");
     el.className = "buff-card";
-    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>`;
+    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>${(typeof endlessOn==="function" && endlessOn()) ? endlessBuffHint(b) : ""}`;
     el.addEventListener("click", ()=>{
       netSendToHost({k:"buff", id});
       cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>. Esperando al resto del equipo…</div>`;

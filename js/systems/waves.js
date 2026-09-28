@@ -20,6 +20,7 @@ function beginLevel(){
   updateArenaRuleChip();
   const ruleTxt = arenaRuleStacks()>0 ? " · " + arenaRuleLevelText() : "";
   showBanner(runLevel===LEVEL_COUNT ? "NIVEL 10 — EL JEFE ESPERA" + ruleTxt : `NIVEL ${runLevel}` + ruleTxt);
+  if(typeof endlessOn==="function" && endlessOn()) endlessBeginLevel(); // Horda Infinita: duración y cartel de la ronda
   if(arenaHas("beginLevel")) arenaHook("beginLevel"); // puertas, sectores y jefes de la arena
   if(runLevel===1 && typeof campaignTitleCard==="function"){ campaignTitleCard(); campaignMaybePrologue(); } // "ARENA NN" + prólogo de la Ciudad Maldita (campaign-story.js)
 }
@@ -31,6 +32,7 @@ function scaleBossStats(e, type){
   e.hp = e.maxHp = Math.round(ENEMY_BASE[type].hp * runDifficulty.hp * DIFF.bossHp * (DIFF.bossHpType[type]||1) * (arenaMods().enemyHpMult||1));
   e.dmg = Math.round(runDifficulty.avgHp * (DIFF.bossDmgPct[currentArena]||0.12));
   e.basicMult = DIFF.bossBasicMult;
+  if(typeof endlessOn==="function" && endlessOn()) endlessScaleBoss(e);
 }
 // Llegada del jefe: la horda que quedaba se dispersa (muere con su animación, sin premio),
 // temblor, rugido y cambio de música. Después aparece su guía con 3 consejos (boss-hud.js).
@@ -78,6 +80,7 @@ function startBossFight(){
 let levelClearing = 0;
 function beginLevelClear(){
   levelClearing = 1500;
+  if(typeof endlessOn==="function" && endlessOn()) endlessOnRoundClear();
   let n = 0;
   for(const o of enemies){
     if(!o.alive || o.rank==="subjefe" || o.rank==="jefe") continue;
@@ -90,5 +93,6 @@ function beginLevelClear(){
   enemies = enemies.filter(o=>o.alive);
   vfxShock(player.x, player.y, 30, 900, "255,220,140", 900, 2);
   flashScreen(0.25, "255,230,170"); playSfx("clear");
-  showBanner(`¡NIVEL ${runLevel} SUPERADO!`);
+  if(!(typeof endlessOn==="function" && endlessOn())) showBanner(`¡NIVEL ${runLevel} SUPERADO!`);
+  else showBanner(`¡RONDA ${EN.round} CONTENIDA!`);
 }

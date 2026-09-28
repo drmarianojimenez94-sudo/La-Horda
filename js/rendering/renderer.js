@@ -157,6 +157,7 @@ function render(){
   if(typeof storyPagesDraw==="function") storyPagesDraw(); // páginas de las Crónicas en el piso (story.js)
   drawFxContrastTop(); // anticipación al lanzar + estrella de impacto (fx-contrast.js)
   if(arenaHas("drawTop")) arenaHook("drawTop");
+  if(typeof endlessDrawWorld==="function") endlessDrawWorld(); // Horda Infinita: cofres y cristales para rescatar
   ctxDraw(); // aviso + progreso de las acciones contextuales
   fxGlowBegin(); drawChampFxTop(); fxGlowEnd(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
 

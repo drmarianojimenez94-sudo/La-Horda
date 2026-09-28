@@ -12,6 +12,7 @@ const POTION_LIFE = 22000, POTION_PICK_R = 46;
 // muros del Laberinto y obstáculos sólidos (antes podía caer dentro de un muro y quedar a la
 // vista pero imposible de agarrar).
 function dropPotion(x, y, type){
+  if(type==="heal" && typeof endlessOn==="function" && endlessOn() && endlessNoHeal()) return; // mutador "Sin pociones"
   const p = {x:x+(Math.random()-0.5)*40, y:y+(Math.random()-0.5)*40, radius:12, life:POTION_LIFE, phase:Math.random()*6, type};
   clampToArena(p); resolveWallCollision(p); clampToArena(p);
   delete p.radius;

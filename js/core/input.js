@@ -174,6 +174,7 @@ document.getElementById("resume-btn").addEventListener("click", ()=>{
   setState("playing");
 });
 document.getElementById("quit-btn").addEventListener("click", ()=>{
+  if(typeof endlessOn==="function" && endlessOn()){ endlessQuitFromPause(); return; } // Horda Infinita: terminar = resultados (sin castigo)
   if(divinaMode){
     divinaMode = false;
     setState("divina");

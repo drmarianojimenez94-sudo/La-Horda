@@ -501,6 +501,7 @@ function update(dt){
 
   updateAllies(dt);
   updateRevives(dt);
+  if(typeof endlessOn==="function" && endlessOn()) endlessUpdate(dt); // Horda Infinita: rescates y su reloj
   ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);
   updateEmergency(dt); // curación de emergencia: la parte que entra de a poco
@@ -524,14 +525,14 @@ function update(dt){
     // el piso ya reducido a 560ms-, para que una cuenta veterana enfrente más enemigos por
     // minuto sin depender solo del nivel de la arena en esta partida puntual.
     updatePacing(dt); // montaña rusa del nivel: calentamiento, oleada con aviso, respiro, clímax (pacing.js)
-    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1)) * pacingIntervalMult();
+    const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1) * (typeof endlessOn==="function" && endlessOn() ? endlessSpawnIntervalMult() : 1)) * pacingIntervalMult();
     if(spawnTimer<=0 && !activeChampion){
       spawnTimer = spawnInterval;
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo
       // (sección "ritmo de oleadas" — preferir muchos enemigos débiles a pocos con mucha vida,
       // más sensación de horda desde temprano). Se reduce a 1 desde el nivel 4 en adelante, así
       // que NO afecta el ritmo ya calibrado de niveles medios/tardíos ni la curva de dificultad.
-      const burstSize = runLevel<=1 ? 3 : (runLevel<=3 ? 2 : 1);
+      const burstSize = (runLevel<=1 ? 3 : (runLevel<=3 ? 2 : 1)) + (typeof endlessOn==="function" && endlessOn() ? endlessExtraBurst() : 0);
       for(let i=0;i<burstSize;i++) maybeAssignRole(spawnEnemy(pickFromPool(spawnPoolFor(runLevel)), false));
     } else if(spawnTimer<=0){
       spawnTimer = 400; // reintenta pronto sin acumular una ráfaga cuando el guardián caiga
@@ -573,7 +574,7 @@ function update(dt){
       }
     }
     levelTimer += dt;
-    if(levelTimer >= levelDuration && !levelClearing && !arenaHook("holdLevel")){
+    if(levelTimer >= levelDuration && !levelClearing && !arenaHook("holdLevel") && !(typeof endlessOn==="function" && endlessOn() && endlessHoldLevel())){
       if(runLevel === LEVEL_COUNT){
         startBossFight();
       } else {

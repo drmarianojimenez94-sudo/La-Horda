@@ -9,6 +9,7 @@
    ============================================================ */
 function showGameOverScreen(divinaOutcome){
   if(netIsHost()) netHostAnnounceEnd(false); // B1: la derrota es de todo el equipo
+  if(typeof endlessOn==="function" && endlessOn()){ endlessEndRun("defeat"); return; } // Horda Infinita: resultados, récords y botín
   setState("gameover");
   const title = document.getElementById("go-title");
   const retryBtn = document.getElementById("retry-btn");
