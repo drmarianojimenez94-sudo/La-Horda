@@ -7,6 +7,11 @@ contra el servidor real `server/relay.js`, todo en esta máquina.
 python3 -m http.server 8771 &                       # el juego (desde la raíz del repo)
 (cd server && npm install && PORT=8799 node relay.js &)
 node server/test-relay.js                           # protocolo del servidor (sin navegador)
+node server/test-accounts.js                        # CUENTAS: API /api (registro, login, límite, guardado con versión)
+SITE=http://127.0.0.1:8771 RELAY_PORT=8812 node tools/net-test/accounts.js
+                                                    # CUENTAS en navegadores (levanta su propio servidor): invitado sin red,
+                                                    #   crear cuenta, sesión recordada, sync entre dos navegadores, conflicto,
+                                                    #   clave incorrecta, límite de intentos, cola sin conexión, beacon al cerrar
 node tools/net-test/e2e.js 1                        # solo (1 humano + 3 bots)
 node tools/net-test/e2e.js 2                        # 2 humanos + 2 bots
 node tools/net-test/e2e.js 3                        # 3 humanos + 1 bot

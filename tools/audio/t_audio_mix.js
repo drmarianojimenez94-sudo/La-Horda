@@ -4,6 +4,10 @@
 // por cuadro) y la música de cada arena de la campaña. Mide sobre las muestras:
 //   pico (dBFS), RMS, clipping (pico < -1 dBFS), NaN, nodos vivos (que no crezcan sin fin),
 //   huecos de silencio en las transiciones y cuánto se diferencian las arenas entre sí (espectro).
+// MÚSICA COMPUESTA (js/audio/music-score.js): que cada modo, cada jefe de arena y cada fase del jefe
+//   suenen distinto (distancia espectral), que la horda sume capas, que el loop sea largo, que el
+//   director ponga el tema del Hechicero / su pantalla previa, golpes sin saturar y nodos estables.
+//   AUDIO_ONLY=music node tools/audio/t_audio_mix.js   (solo esta parte, para iterar)
 // Después, en un AudioContext real: costo en el hilo principal por cuadro (playSfx + secuenciador) y
 // una partida corta con el piloto automático sin errores de consola.
 //   node tools/audio/t_audio_mix.js            (levanta su propio servidor en 127.0.0.1:8796)
@@ -46,7 +50,7 @@ function pageHarness() {
   const pn = performance.now.bind(performance); let fakeMs = null;
   // Reinicia el motor para renderizar sobre un contexto nuevo (el juego no lo expone: se usa lo global)
   H.reset = () => {
-    try { if (typeof M !== 'undefined') { if (M.timer) clearInterval(M.timer); Object.assign(M, { mode: 'off', pending: null, step: 0, bar: 0, next: 0, timer: null, wanted: null }); } } catch (e) {}
+    try { if (typeof M !== 'undefined') { if (M.timer) clearInterval(M.timer); Object.assign(M, { mode: 'off', pending: null, step: 0, bar: 0, next: 0, timer: null, wanted: null, S: null, pk: null, sec: null, vl: null, dirT: 0, seam: false, auto: null }); } } catch (e) {}
     try { for (const k of Object.keys(_sfxLast)) delete _sfxLast[k]; } catch (e) {}
     try { _sfxVoices = []; } catch (e) {}
     try { if (typeof _audioResetGraph === 'function') _audioResetGraph(); } catch (e) {}
@@ -151,6 +155,8 @@ function pageHarness() {
     await page.evaluate(pageHarness);
     const E = (fn, a) => page.evaluate(fn, a);
 
+    const ONLY_MUSIC = process.env.AUDIO_ONLY === 'music';
+    if (!ONLY_MUSIC) {
     // ---------------- 1) ráfaga típica de combate + música ----------------
     const combat = await E(async () => { window.__combatEv = () => {
       const ev = [];
@@ -206,6 +212,7 @@ function pageHarness() {
     check('MIX.estres_nodos_acotados', stress.live_max < 700 && stress.live_second <= stress.live_first * 1.25 + 20, { max: stress.live_max, a: stress.live_first, b: stress.live_second });
     check('MIX.estres_se_liberan_al_terminar', stress.live_end < 60, stress.live_end);
     check('MIX.estres_fuentes_con_fin', stress.never_stopped <= 4, stress.never_stopped);
+    }
 
     // ---------------- 3) identidad musical por arena ----------------
     const arenas = await E(() => CAMPAIGN_ORDER.slice());
@@ -227,6 +234,164 @@ function pageHarness() {
     info('arenas_distancia_espectral_minima_dB', { d: +minD.toFixed(2), par: pair });
     check('MIX.arenas_musica_sin_NaN_ni_clipping', arenas.every(a => per[a].nan === 0 && per[a].peak_dBFS < -1), arenas.map(a => per[a].peak_dBFS));
     check('MIX.arenas_con_identidad_propia', minD > 1.5, { minD: +minD.toFixed(2), pair });
+
+    // ---------------- 3c) música compuesta (music-score.js): modos, jefes, fases, capas, golpes ----------------
+    const dist = (A, B) => { let d = 0; for (let k = 0; k < A.length; k++) d += Math.abs(A[k] - B[k]); return +(d / A.length).toFixed(2); };
+    const minPair = (obj) => { const ks = Object.keys(obj); let m = 1e9, p = null; for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) { const d = dist(obj[ks[i]].bands, obj[ks[j]].bands); if (d < m) { m = d; p = ks[i] + '/' + ks[j]; } } return { d: m, par: p }; };
+    // escena falsa de la partida para el director musical (enemigos, jefe, Hechicero, pantalla previa)
+    await E(() => { window.__scene = (o) => { o = o || {};
+      enemies = Array.from({ length: o.n || 0 }, () => ({ alive: true }));
+      boss = o.boss || null; activeChampion = o.ac || null; RUN_INTRO.open = !!o.intro;
+      M.int = o.int0 || 0; M.phaseT = 1; M.phase = 1; M.auto = null; M.err = null; M.vl = null; };
+    });
+    // a) cada MODO suena distinto (y ninguno satura ni tira errores)
+    const modeList = [['title', 'ciudad', 'title'], ['menu', 'ciudad', 'menu'], ['intro', 'ciudad', 'intro'], ['wave', 'ciudad', 'wave'], ['prelude', 'ciudad', 'prelude'],
+      ['boss', 'ciudad', 'boss'], ['sorcerer', 'infernal', 'boss'], ['victory', 'ciudad', 'victory'], ['defeat', 'ciudad', 'defeat']];
+    const modes = {};
+    for (const [name, arena, mode] of modeList) {
+      modes[name] = await E(async (a) => {
+        const r = await __AH.render(a.mode === 'defeat' ? 7 : 10, [[0, () => { __scene({ n: a.mode === 'wave' ? 12 : 0, intro: a.mode === 'intro' }); setMusicMode(a.mode, 4); }]], { arena: a.arena, spectrum: true, specFrom: 1.2 });
+        r.pk = M.pk; r.err = M.err; delete r.liveSeries; delete r.winsDb; return r;
+      }, { mode, arena });
+      const r = modes[name];
+      info('modo_' + name, { pieza: r.pk, peak: r.peak_dBFS, rms: r.rms_dBFS, centroide_hz: r.centroid_hz, nodos: r.created, vivos_max: r.live_max, dsp: r.dsp_load_pct + '%', err: r.err });
+    }
+    const mm = minPair(modes);
+    info('modos_distancia_espectral_minima_dB', mm);
+    check('MUS.modos_sin_NaN_clipping_ni_errores', Object.values(modes).every(r => r.nan === 0 && r.peak_dBFS < -1 && !r.err && r.errs.length === 0), Object.fromEntries(Object.entries(modes).map(([k, r]) => [k, [r.peak_dBFS, r.err]])));
+    check('MUS.modos_con_volumen_audible', Object.values(modes).every(r => r.rms_dBFS > -40 && r.rms_dBFS < -10), Object.fromEntries(Object.entries(modes).map(([k, r]) => [k, r.rms_dBFS])));
+    check('MUS.hechicero_tiene_su_tema', modes.sorcerer.pk === 'sorcerer' && modes.boss.pk === 'boss', [modes.sorcerer.pk, modes.boss.pk]);
+    check('MUS.cada_modo_suena_distinto', mm.d > 1.5, mm);
+
+    // b) el JEFE de cada arena suena distinto (mismo tema, otro modo/tempo/timbre/batería)
+    const bosses = {};
+    for (const a of arenas) {
+      bosses[a] = await E(async (a) => { const r = await __AH.render(8, [[0, () => { __scene({ boss: { alive: true, hp: 80, maxHp: 100 } }); setMusicMode('boss'); }]], { arena: a, spectrum: true, specFrom: 1.2 });
+        r.err = M.err; delete r.liveSeries; delete r.winsDb; return r; }, a);
+    }
+    const bm = minPair(bosses);
+    info('jefes_por_arena', Object.fromEntries(arenas.map(a => [a, { peak: bosses[a].peak_dBFS, rms: bosses[a].rms_dBFS, c: bosses[a].centroid_hz }])));
+    info('jefes_distancia_espectral_minima_dB', bm);
+    check('MUS.jefes_sin_clipping_ni_errores', arenas.every(a => bosses[a].peak_dBFS < -1 && bosses[a].nan === 0 && !bosses[a].err), arenas.map(a => bosses[a].peak_dBFS));
+    check('MUS.jefe_de_cada_arena_suena_distinto', bm.d > 1.5, bm);
+
+    // c) FASES del jefe: según su vida entra otra sección con más capas (y cambia la mezcla)
+    const phases = await E(async () => {
+      const out = {};
+      for (const [k, hp] of [['f1', 90], ['f2', 50], ['f3', 12]]) {
+        const r = await __AH.render(9, [[0, () => { __scene({ boss: { alive: true, hp, maxHp: 100 } }); setMusicMode('boss'); }]], { arena: 'ciudad', spectrum: true, specFrom: 1.5, from: 1.5 });
+        out[k] = { bands: r.bands, rms: r.rms_dBFS, peak: r.peak_dBFS, c: r.centroid_hz, sec: M.sec && M.sec.key, phase: M.phase, nodos: r.created, err: M.err };
+      }
+      // Hechicero: sus 3 formas (bossPhase)
+      for (const ph of [1, 2, 3]) {
+        const r = await __AH.render(9, [[0, () => { __scene({ boss: { alive: true, hp: 90, maxHp: 100, bossPhase: ph } }); setMusicMode('boss'); }]], { arena: 'infernal', spectrum: true, specFrom: 1.5, from: 1.5 });
+        out['h' + ph] = { bands: r.bands, rms: r.rms_dBFS, peak: r.peak_dBFS, c: r.centroid_hz, sec: M.sec && M.sec.key, phase: M.phase, err: M.err, steps: M.sec && M.sec.steps };
+      }
+      // cambio de fase EN VIVO: el jefe baja de 90 % a 20 % a mitad de la pelea
+      const live = await __AH.render(12, [[0, () => { __scene({ boss: { alive: true, hp: 90, maxHp: 100 } }); setMusicMode('boss'); }], [5, () => { boss.hp = 20; }]], { arena: 'ciudad' });
+      out.live = { sec: M.sec && M.sec.key, phase: M.phase, peak: live.peak_dBFS, err: M.err };
+      return out;
+    });
+    info('fases_jefe', Object.fromEntries(Object.entries(phases).map(([k, v]) => [k, { rms: v.rms, peak: v.peak, c: v.c, sec: v.sec, fase: v.phase, steps: v.steps }])));
+    const dPh = { f12: dist(phases.f1.bands, phases.f2.bands), f23: dist(phases.f2.bands, phases.f3.bands), h12: dist(phases.h1.bands, phases.h2.bands), h23: dist(phases.h2.bands, phases.h3.bands) };
+    info('fases_distancia_espectral_dB', dPh);
+    check('MUS.fases_jefe_eligen_su_seccion', phases.f1.sec === 'P1' && phases.f2.sec === 'P2' && phases.f3.sec === 'P3' && phases.h1.sec === 'H1' && phases.h2.sec === 'H2' && phases.h3.sec === 'H3', [phases.f1.sec, phases.f2.sec, phases.f3.sec, phases.h1.sec, phases.h2.sec, phases.h3.sec]);
+    check('MUS.fases_jefe_cambian_la_mezcla', dPh.f12 > 1 && dPh.f23 > 1 && dPh.h12 > 1 && dPh.h23 > 1, dPh);
+    check('MUS.fase_3_mas_intensa_que_fase_1', phases.f3.rms > phases.f1.rms, [phases.f1.rms, phases.f2.rms, phases.f3.rms]);
+    check('MUS.cambio_de_fase_en_vivo', phases.live.phase === 3 && /^P3/.test(phases.live.sec || '') && phases.live.peak < -1, phases.live);
+    check('MUS.hechicero_forma_3_rompe_el_vals_a_4_4', phases.h1.steps === 12 && phases.h3.steps === 16, [phases.h1.steps, phases.h3.steps]);
+    check('MUS.fases_sin_clipping_ni_errores', Object.values(phases).every(v => v.peak < -1 && !v.err), Object.values(phases).map(v => v.peak));
+
+    // d) INTENSIDAD: con más horda entran más capas (melodía, charles, metales)
+    const inten = await E(async () => {
+      const out = {};
+      for (const [k, n] of [['calma', 0], ['horda', 30]]) {
+        const r = await __AH.render(10, [[0, () => { __scene({ n, int0: n ? 1 : 0 }); setMusicMode('wave', 1); }]], { arena: 'ciudad', spectrum: true, specFrom: 2, from: 2 });
+        out[k] = { bands: r.bands, rms: r.rms_dBFS, nodos: r.created, int: +M.int.toFixed(2) };
+      }
+      return out;
+    });
+    const dInt = dist(inten.calma.bands, inten.horda.bands);
+    info('intensidad_capas', { calma: { rms: inten.calma.rms, nodos: inten.calma.nodos, int: inten.calma.int }, horda: { rms: inten.horda.rms, nodos: inten.horda.nodos, int: inten.horda.int }, dist_dB: dInt });
+    check('MUS.mas_horda_mas_capas', inten.horda.nodos > inten.calma.nodos * 1.2 && inten.horda.rms > inten.calma.rms && dInt > 1, { dist: dInt, rms: [inten.calma.rms, inten.horda.rms], nodos: [inten.calma.nodos, inten.horda.nodos] });
+
+    // e) forma larga: secciones A/B/... distintas, el loop no es corto ni idéntico
+    const forms = await E(() => { const o = {};
+      for (const k of Object.keys(MUSIC_SCORE)) { const S = _msPiece(k), secs = S.pform ? [].concat(...Object.values(S.pform)) : S.form;
+        let bars = 0, steps16 = 0; for (const s of secs) { bars += S._c[s].bars; steps16 += S._c[s].bars * S._c[s].steps; }
+        const chords = new Set(secs.map(s => S.sec[s].ch || S.sec[S.sec[s].from].ch));
+        o[k] = { secciones: secs.length, distintas: new Set(secs).size, compases: bars, seg: +(steps16 * 60 / (S.bpm * (S.arena ? 1 : 1)) / 4).toFixed(1), progresiones: chords.size }; }
+      return o; });
+    info('formas', forms);
+    check('MUS.oleadas_loop_largo_con_secciones', forms.wave.distintas >= 3 && forms.wave.seg >= 60 && forms.wave.progresiones >= 3, forms.wave);
+    check('MUS.jefe_y_hechicero_con_6_secciones', forms.boss.distintas >= 6 && forms.sorcerer.distintas >= 6, [forms.boss, forms.sorcerer]);
+
+    // e2) COMPOSICIÓN (análisis de la partitura, sin audio): la melodía cae en notas del acorde en los
+    // tiempos fuertes y las voces del pad se mueven poco (conducción de voces)
+    const comp = await E(() => {
+      const out = {}; const sv = { key: M.key, sc: M.sc, ext: M.ext, vl: M.vl };
+      for (const pk of Object.keys(MUSIC_SCORE)) {
+        const S = _msPiece(pk); M.key = S.key; M.sc = MUSIC_SCALES[S.scale]; M.ext = '';
+        let strong = 0, inChord = 0, moves = 0, changes = 0, vl = [55, 60, 64, 67];
+        for (const sk of Object.keys(S._c)) {
+          const sec = S._c[sk], L = sec.bars * sec.steps;
+          for (let T = 0; T < L; T++) {
+            const c = _chordAt(sec, T);
+            if ((T % sec.ch.len) === c.at) { const k = _chordOf(c), nv = _voiceLead(vl, k.root, k.iv, 50, 76); for (let v = 0; v < 4; v++) moves += Math.abs(nv[v] - vl[v]); changes++; vl = nv; }
+            for (const p of sec.parts) { if (p.p !== 'mel' || p.hz) continue; const e = p.mel.by[T % p.mel.len]; if (!e) continue;
+              const beat = sec.steps === 12 ? 4 : 4; if (T % beat) continue;
+              const k = _chordOf(c), pcs = k.iv.map(x => (k.root + x) % 12), n = _degN(e.deg, e.acc);
+              strong++; if (pcs.includes(((n % 12) + 12) % 12)) inChord++; }
+          }
+        }
+        out[pk] = { consonancia_pct: strong ? Math.round(100 * inChord / strong) : null, mov_voz_prom: +(moves / Math.max(1, changes) / 4).toFixed(2) };
+      }
+      Object.assign(M, sv); return out;
+    });
+    info('composicion', comp);
+    const consOk = Object.values(comp).every(v => v.consonancia_pct === null || v.consonancia_pct >= 55), vlOk = Object.values(comp).every(v => v.mov_voz_prom <= 2.5);
+    check('MUS.melodia_en_notas_del_acorde_en_tiempos_fuertes', consOk, Object.fromEntries(Object.entries(comp).map(([k, v]) => [k, v.consonancia_pct])));
+    check('MUS.conduccion_de_voces_movimiento_chico', vlOk, Object.fromEntries(Object.entries(comp).map(([k, v]) => [k, v.mov_voz_prom])));
+
+    // f) director: pantalla previa (vals angelical), Hechicero subjefe y empalme título -> menú
+    const dir = await E(async () => {
+      const out = {};
+      let r = await __AH.render(4, [[0, () => { __scene({}); setMusicMode('menu'); }], [1, () => { RUN_INTRO.open = true; }], [3.2, () => { out.introPk = M.pk; out.introMode = M.mode; RUN_INTRO.open = false; }]], { arena: 'ciudad' });
+      out.after = M.pending ? M.pending.mode : M.mode;
+      r = await __AH.render(5, [[0, () => { __scene({ n: 8 }); setMusicMode('wave', 9); }], [1, () => { activeChampion = { alive: true, type: 'hechicero_supremo', hp: 50, maxHp: 100 }; }],
+        [3, () => { out.sorcPk = M.pk; out.sorcMode = M.mode; activeChampion = null; }]], { arena: 'infernal' });
+      out.sorcAfter = M.pending ? M.pending.mode : M.mode;
+      r = await __AH.render(19, [[0, () => { __scene({}); setMusicMode('title'); }], [2, () => { setMusicMode('menu'); out.seamPend = !!M.pending; }]], { arena: 'ciudad' });
+      out.seamPk = M.pk; out.seamPeak = r.peak_dBFS; out.seamMin = Math.min(...r.winsDb.slice(3));
+      __scene({}); return out;
+    });
+    info('director', dir);
+    check('MUS.pantalla_previa_pone_el_vals_del_hechicero', dir.introPk === 'intro' && dir.after === 'menu', dir);
+    check('MUS.hechicero_subjefe_pone_su_tema_y_vuelve', dir.sorcPk === 'sorcerer' && dir.sorcMode === 'boss' && dir.sorcAfter === 'wave', dir);
+    check('MUS.titulo_empalma_con_menu_sin_corte', dir.seamPk === 'menu' && !dir.seamPend && dir.seamMin > -45, dir);
+
+    // g) GOLPES (stingers) en la tonalidad de la música: subida de nivel, cristal, cofre legendario
+    const st = await E(async () => {
+      const out = {};
+      for (const k of ['levelup', 'crystal', 'lootLegend', 'victory']) {
+        const r = await __AH.render(4, [[0, () => { __scene({ n: 10 }); setMusicMode('wave', 3); }], [1.5, () => { playSfx(k); out[k + '_root'] = M.chRoot; }]], { arena: 'hielo', from: 1.4 });
+        out[k] = { peak: r.peak_dBFS, err: r.errs.length, rms: r.rms_dBFS };
+      }
+      return out;
+    });
+    info('golpes', st);
+    check('MUS.golpes_sin_clipping', ['levelup', 'crystal', 'lootLegend', 'victory'].every(k => st[k].peak < -1 && st[k].err === 0), st);
+
+    // h) nodos estables: 30 s de jefe en fase 3 con la horda llena, sin fuentes colgadas
+    const stab = await E(async () => {
+      const r = await __AH.render(30, [[0, () => { __scene({ n: 30, boss: { alive: true, hp: 10, maxHp: 100 } }); setMusicMode('boss'); }]], { arena: 'minas' });
+      const a = r.liveSeries.filter(x => x[0] > 3 && x[0] < 16).map(x => x[1]), b = r.liveSeries.filter(x => x[0] >= 16 && x[0] < 29).map(x => x[1]);
+      return { peak: r.peak_dBFS, live_max: r.live_max, a: Math.max(...a), b: Math.max(...b), never: r.never_stopped, created: r.created, dsp: r.dsp_load_pct, err: M.err };
+    });
+    info('nodos_musica_30s', stab);
+    check('MUS.nodos_estables', stab.live_max < 400 && stab.b <= stab.a * 1.25 + 20 && stab.never <= 4 && !stab.err, stab);
+    check('MUS.jefe_fase3_pico_bajo_-1dBFS', stab.peak < -1, stab.peak);
+    if (process.env.AUDIO_ONLY === 'music') throw new Error('__solo_musica__');
 
     // ---------------- 3b) materiales y variación por disparo ----------------
     const mats = await E(async () => {
@@ -342,7 +507,7 @@ function pageHarness() {
     check('JUEGO.jefe_pico_bajo_-1dBFS', bossRun.peak_dBFS < -1 && bossRun.clip === 0, bossRun.peak_dBFS);
     check('JUEGO.jefe_sin_errores_de_consola', errors.length === 0, errors.slice(0, 4));
   } catch (e) {
-    console.log('ERROR ' + (e && e.stack || e)); fails++;
+    if (String(e && e.message) !== '__solo_musica__') { console.log('ERROR ' + (e && e.stack || e)); fails++; }
   } finally {
     await browser.close();
     if (server) server.kill();

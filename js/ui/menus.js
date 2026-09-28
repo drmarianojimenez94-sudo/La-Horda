@@ -17,11 +17,16 @@ document.addEventListener("touchstart", startMusic, {once:true, capture:true});
 document.addEventListener("click", startMusic, {once:true, capture:true});
 document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   startMusic();
+  // CUENTAS: sin sesión recordada aparece la pantalla Entrar / Crear cuenta / Invitado (js/net/account.js)
+  if(typeof accountGate==="function" && accountGate(titleContinue)) return;
+  titleContinue();
+});
+function titleContinue(){
   // modo campaña: la primera vez se elige el guardián de regalo
   if(needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   setState("mainmenu");
   renderMainMenu();
-});
+}
 document.getElementById("mute-btn").addEventListener("click", ()=>{
   setAudioEnabled(!audioEnabled);
 });

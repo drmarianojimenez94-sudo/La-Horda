@@ -391,6 +391,18 @@ function champPackLoadAtlas(key, src, meta){
   img.src = src;
   CHAMP_PACK[key] = P;
 }
+// CROMA (js/systems/cromas.js): mismo meta y grilla que el atlas base, otra imagen (recoloreada).
+// El punto de apoyo (footX) sale igual porque el alfa es idéntico: se reusa si ya estaba calculado.
+function champPackCloneAtlas(key, baseKey, src){
+  const B = CHAMP_PACK[baseKey]; if(!B) return null;
+  const img = new Image();
+  const P = Object.assign({}, B, { atlas:img, ready:false, failed:false, footX:B.footX || null, cromaOf:baseKey });
+  img.onload = ()=>{ P.ready = true; };
+  img.onerror = ()=>{ P.failed = true; }; // sin la imagen se sigue viendo el atlas base (setSkinPackKey)
+  img.src = src;
+  CHAMP_PACK[key] = P;
+  return P;
+}
 // El arte redibujado de este guardián todavía está bajando: no se dibuja NADA (antes se veía un
 // instante el arte viejo descartado, ej. en el título mientras decía "Cargando…").
 function champPackPending(key){ const P = CHAMP_PACK[key]; return !!(P && !P.ready && !P.failed); }

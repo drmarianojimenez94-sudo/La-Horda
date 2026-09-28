@@ -378,7 +378,8 @@ function hechEnemyTick(e, dt, tgt, dist){
         e._stole = true;
         if(typeof crystalSteal==="function") crystalSteal(player.x, player.y, e.x, e.y);
         if(typeof resonanceSteal==="function") resonanceSteal(); // la resonancia se apaga: se los llevó
-        _hSay(e, crystalsOwned().length >= 3 ? "«Los tres cristales. Gracias, guardián.»" : "«Los que no me trajiste… se los arranqué yo.»");
+        const line = crystalsOwned().length >= 3 ? "Los tres cristales. Gracias, guardián. Sin vos no habría podido tocarlos." : "Los que no me trajiste, se los arranqué yo a sus dueños. Ya no hacen falta manos limpias.";
+        if(typeof storySay==="function") storySay({name:"EL HECHICERO SUPREMO", face:"hech"}, line, {wait:9000}); else _hSay(e, "«" + line + "»");
       }
       if(e.cineT <= 1100 && !e._wings){
         e._wings = true; vfxShake(12); playSfx("bossRoar"); flashScreen(0.4, "255,60,60");
@@ -415,7 +416,7 @@ function hechSpawnSubboss(){
   activeChampion = h;
   vfxShock(h.x, h.y, 20, 220, "255,225,140", 800, 2); flashScreen(0.35, "255,235,180");
   arenaTitleCard("SUBJEFE", "EL HECHICERO SUPREMO", "El cuarto Guardián. El que te guió hasta acá nunca estuvo de tu lado.", 4400);
-  _hSay(h, "«Te guié hasta acá. Ahora dame lo que despertó en vos.»");
+  // (lo que dice va en el cuadro de voz: el cartel grande + el cuadro ya son los dos textos de este momento)
   if(typeof tutSay==="function") tutSay("hech_betrayal", "¿Creíste que te guiaba para salvarte? Yo fui el primero de los Cuatro Guardianes, su líder. Me quedé en esta dimensión por decisión propia. Te guiaba hasta mí.", "Derrotá al Hechicero Supremo", 9000, true);
   return h;
 }
@@ -425,9 +426,8 @@ function hechOnDefeat(e){
   vfxSprite("hsOrbBurst", 0, e.x, e.y-30, 160, 700, null, 0.25, false, 0.5);
   vfxShock(e.x, e.y, 20, 260, "255,225,140", 900, 2); flashScreen(0.4, "255,235,180"); vfxShake(8);
   vfxBurst(e.x, e.y-40, 26, "holy", 180, 700, 4, 2, -60, 0);
-  floatText(e.x, e.y - e.radius*2.6, "«Todavía no… nos vemos al final del camino.»", "crit");
-  // El Forjador (prisionero del Hechicero: se negó a fundir los cristales). Solo una voz: no hay entidad nueva.
-  setTimeout(()=>{ try{ if(state==="playing") showBanner("Una voz encadenada: «No le des los cristales… me negué a fundirlos y por eso me encerró»"); }catch(err){} }, 3200);
+  // Lo que dice al huir y la voz del Forjador (prisionero: se negó a fundir los cristales) van en el cuadro
+  // de voz, en ese orden (BOSS_VOICES.hechicero_supremo.death, js/data/story-text.js; killEnemy → storyOnKill).
   showBanner("EL HECHICERO HUYE… TE ESPERA EN EL CORAZÓN DEL INFIERNO");
   if(hudBoss===e && typeof bossHudHide==="function") bossHudHide();
   return true;
@@ -461,8 +461,7 @@ function hechAngelFallen(){
   g.x = px; g.y = py; clampToArena(g);
   g.cine = "intro"; g.cineT = 2600;
   boss = g;
-  showBanner("LAS ALAS SE QUIEBRAN… LA HORDA LE DA UN CUERPO");
-  floatText(px, py - 140, "«Todos los que cayeron en el camino… ahora son míos.»", "crit");
+  showBanner("LAS ALAS SE QUIEBRAN… LA HORDA LE DA UN CUERPO"); // (lo que dice: BOSS_VOICES.angel_corrompido.death)
   return true;
 }
 // El Golem se rompe: de sus restos nace el Demonio Mayor (forma 3). true = sigue la pelea.
