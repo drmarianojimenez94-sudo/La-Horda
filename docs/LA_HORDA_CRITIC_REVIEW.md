@@ -1,6 +1,9 @@
 # LA HORDA — Reseña de crítico (retro / indie), vara Diablo II = 100
 
-> **Versión final.** Puntúa la rama integrada `claude/horda-latest-updates-gv4tlf` (cuentas, logros, desafíos,
+> **Re-auditoría (§6, al final): 66 / 100** sobre `4d29b99`, con casi toda la lista A/B/C/E/F implementada.
+> Lo de abajo (§1-§5) es la primera auditoría: **59 / 100**.
+>
+> **Versión de la primera auditoría.** Puntúa la rama integrada `claude/horda-latest-updates-gv4tlf` (cuentas, logros, desafíos,
 > pase, juice, música compuesta, historia en tres actos, cromas) más las correcciones de esta rama.
 > Primera versión: commit `2fc34a4`.
 
@@ -207,3 +210,112 @@ cerca.** Faltan sistemas y contenido, no solo pulido. El pulido suma entre 3 y 5
 - Si en la próxima iteración se hace solo lo de la sección A (loot en el piso, afijos, talentos tempranos y
   refuerzos que cambian habilidades), el juego pasa de 59 a unos 72.
 - **Con las secciones B, C y E llega a 80-85. El 90 necesita arte y audio profesional.**
+
+---
+
+## 6. Re-auditoría sobre `4d29b99`: **66 / 100** (antes 59)
+
+### 6.1 Cómo se volvió a jugar
+
+- **Perfil nuevo en iPhone 14 acostado (844×390), con toques reales.** Arranque corto (`?primera=1`): título →
+  primer guardián (Mago) → prólogo → Ciudad Maldita. **Son 3 toques de "jugar" hasta la primera pelea; antes eran 8.**
+  Carga hasta el botón listo: 37 s con otra regresión corriendo en la máquina (no representativo).
+- **Ciudad completa, cuatro intentos:**
+  1. Joystick y botones con toques reales al principio, después el piloto automático en tiempo real: cayó en el
+     nivel 9 ante los subjefes.
+  2. Piloto automático en tiempo real: cayó ante el Presentador con el 34 % de su vida.
+  3. Niveles 1-9 acelerados y el jefe en tiempo real: cayó con el Presentador al 12 %. La Ovación Final le sacó
+     104 de 184 de un golpe.
+  4. Para ver lo que viene después, **con el jugador invulnerable (declarado)**: victoria → cofre → Campamento de
+     los Portadores → hub.
+- **Campaña acelerada, 10 arenas:** piloto automático sin dibujar, contando botín del piso y élites con nombre.
+  Después, 3 arenas en tiempo real (Gélida, Abismo, Bosque) con Musashi Nv. 40.
+- **Sala de a dos:** relay real en el puerto 8811. `tools/net-test/ground_loot_coop.js` dio 11/11 en la segunda
+  corrida; la primera se cortó por un tiempo de espera. `tools/net-test/shots.js`, sin errores en el anfitrión ni
+  en el invitado.
+- **Pruebas rápidas:**
+  - Todas las `tools/items/t_*.js` pasan, 0 fallas: `t_boons` 80, `t_ground_loot` 44, `t_difficulty` 33,
+    `t_camp` 31, `t_endless` 28, `t_story` 36, `t_quests` 32 y el resto.
+  - `t_juice` 20/20.
+  - `t_hit_react`: 35/35 al repetirla. La primera corrida falló `destello_blanco…` con el acechador del Reino
+    Fúngico; parece intermitente.
+  - `ui_layout`: 0 problemas.
+
+### 6.2 Puntaje por categoría (antes → después)
+
+| # | Categoría | Peso | Antes | Ahora | Qué cambió, contra Diablo II / III |
+|---|---|---|---|---|---|
+| 1 | Primera impresión | 3 | 6,5 | **7,0** | Pie en español ("ALFA COOPERATIVA"), prólogo con "Saltar" y hub nuevo con "JUGAR". Sigue el cartel de "10.000 de oro" encima de las fichas del hub |
+| 2 | Onboarding | 3 | 6,5 | **7,5** | Título → guardián → prólogo → pelea. El Hechicero se esconde al recibir daño. A la altura de Diablo III |
+| 3 | Controles táctiles | 4 | 7,0 | 7,0 | Sin cambios: falta apuntar las habilidades con arrastre (Immortal) |
+| 4 | Combate / juice | 9 | 6,5 | **7,0** | Retroceso por peso, destello en todos y cadáveres despedidos. El Presentador ahora mata: el golpe se siente con consecuencia |
+| 5 | Variedad de enemigos | 4 | 6,5 | **7,0** | Élites con nombre dorado y modificadores de Diablo II ("Gruthul el Ciego · Extra Fuerte · Aura de Escarcha"). Pero hay **inflación**: 30-42 élites con nombre por partida en la Gélida, el Laberinto y la Infernal. En Diablo II un campeón es un evento; acá es ruido |
+| 6 | Jefes | 6 | 7,0 | **7,5** | El Presentador amenaza de verdad. **Riesgo:** mató al piloto automático en los 3 intentos en que llegó a él (ver 6.4) |
+| 7 | Identidad de arenas | 5 | 7,5 | 7,5 | Variantes por semilla: solo decorado sin colisión, runas y braseros. Se nota poco |
+| 8 | Guardianes / builds | 9 | 5,0 | **6,5** | Talentos desde el nivel 5 en 5 escalones. 61 refuerzos que transforman habilidades, con rareza, mejoras y dúos: es el sistema de bendiciones de Hades y funciona. Faltan sinergias por puntos (Diablo II) y un respec visible |
+| 9 | Progresión / retención | 6 | 6,0 | **6,5** | Sin castigo en la primera arena y en las 3 primeras derrotas. Campamento entre arenas. El XP de victoria es enorme (+5554: Nv. 18 → 23 de golpe) |
+| 10 | Rejugabilidad / endgame | 6 | 4,5 | **6,0** | Pesadilla e Infierno (×2,5 / ×5,5 de vida y mejor botín), Horda Infinita y variantes. Faltan ladder o temporada con reinicio y mapas de verdad al azar (el trazado es fijo) |
+| 11 | Economía | 3 | 4,5 | **5,0** | La Mística (re-tirar un afijo por oro) es la primera salida real del oro. El regalo de 10.000 de oro sigue |
+| 12 | Loot | 9 | 4,5 | **6,5** | Es el salto más grande: objetos reales en el piso, haz por rareza, nombre al acercarse, afijos con rango `[2-5]`, ▲▼ contra lo equipado y botín instanciado de a dos. **Pero cae poco:** 0-5 objetos por partida en las arenas 1-4 (casi todos comunes); 11-19 en las arenas 7-10. Diablo II "llueve". Y los comunes siguen con 1 afijo |
+| 13 | UI / UX | 5 | 6,5 | **7,0** | Hub claro, Sala por pestañas, avisos apilados. Quedan Georgia en los Talentos del Códice y en la ficha de objeto, y texto sobre texto en élites, banners y guía (6.4) |
+| 14 | Dirección de arte | 8 | 6,5 | 6,5 | La Madre Espora ya se lee. El campamento luce, pero la vidente Veda está ampliada y borrosa, de otra resolución. La Ciudad y el Abismo siguen con arte de baja resolución |
+| 15 | Audio | 5 | 4,0 | 4,0 | **NOT VERIFIED** de oído; sin cambios que se puedan medir acá |
+| 16 | Narrativa | 5 | 6,0 | **7,0** | Campamento con el Hechicero, Anselmo el herrero y Veda la vidente: buena prosa y reactiva a la arena ("Lloraba a los muertos por oficio; desde la noche de las campanas, los lloro antes"). Cierres de acto y Crónica legible. Para llegar a Diablo II faltan misiones con decisión y personajes que se muevan |
+| 17 | Multijugador | 5 | 6,5 | **7,0** | Botín instanciado, élites iguales en el invitado, chat de frases rápidas. Sin partidas públicas ni intercambio |
+| 18 | Rendimiento | 2 | 6,5 | 6,5 | **NOT VERIFIED** (máquina compartida) |
+| 19 | Pulido / bugs | 3 | 6,0 | **6,5** | Sin errores de consola. Encontré textos que se pisan (arreglé los triviales, 6.3) |
+| | **Total ponderado** | 100 | **59,1** | **66,2** | |
+
+**Lectura honesta:** la lista se implementó bien y se nota jugando. Aun así, **66 no es 85**: lo que falta ya no es
+un sistema ausente, sino **cantidad y calidad**:
+- más botín y más interesante;
+- audio y arte de un solo nivel;
+- builds con sinergias;
+- endgame con metas.
+
+### 6.3 Arreglos triviales de esta pasada (solo CSS)
+
+| Qué | Dónde |
+|---|---|
+| En el teléfono, el cartel central caía encima de la guía del jefe (la guía está abajo; el cartel bajaba al 47 %) | `css/hud.css` (`#center-banner.low`) |
+| El título de la derrota ocupaba todo el ancho y el aviso de Desafíos lo cortaba | `css/panels.css` (`#go-title` en pantallas bajas) |
+| Sala online: los botones de guardián y las frases del chat salían en Arial; el "Comenzar" pegajoso deshabilitado era semitransparente y su texto se mezclaba con el chat | `css/mobile.css` |
+
+Capturas nuevas en `docs/critic/`:
+- `re1_campamento`
+- `re2_elites_texto_encimado`
+- `re3_presentador_ciudad`
+- `re4_antes_cartel_sobre_guia`
+- `re5_antes_sala_invitado_arial`
+
+### 6.4 Lo que todavía falta, priorizado (para ir de 66 a 85-90)
+
+| # | Problema | Evidencia | Propuesta concreta | Pts | Tipo | Dueño |
+|---|---|---|---|---|---|---|
+| 1 | Audio sintetizado | Todo el juego (NOT VERIFIED de oído) | 8-10 temas grabados (uno por acto o arena) y golpes, gritos y ambiente grabados. Es lo que más separa del ambiente de Diablo II | +4 | A | Audio |
+| 2 | Arte de dos resoluciones | Ciudad, Abismo, Veda en el campamento, emojis como íconos (🏰 🌵 🎽), 48 íconos de habilidad faltantes | Rehacer pisos y techos al tamaño de píxel de los guardianes, más un juego de íconos pixel de 16×16 | +3 | A | Arte |
+| 3 | Cae poco botín y los comunes aburren | Autopiloto: 0-5 objetos por partida en las arenas 1-4; comunes con 1 afijo | Horda común ×5 (0,001 → 0,005), élites ×2; comunes con 2 afijos; un "Único" con nombre y poder que cambie la build desde la arena 3 | +3 | C | Diseño / T7 |
+| 4 | Builds sin sinergias | Talentos por rama sin interacción entre habilidades | Sinergias al estilo Diablo II ("+8 % de daño de Nova por cada punto en Cadena"), respec por oro y un equipo de 2 piezas que cambie una habilidad | +3 | C | T5 |
+| 5 | El primer jefe puede ser un muro | El piloto automático cayó 3 de 3 veces ante el Presentador (quedó al 34 %, 12 % y 6 %), más una caída ante los subjefes en el nivel 9. La herramienta del equipo da 5/5, pero arranca en el nivel 10 con 9 refuerzos | Probar con 3 humanos nuevos. Si pierden 2 o más veces, en Normal la Ovación Final pasa del 62 % al 40 % de la vida sin pilar y el pilar se marca en el piso | +1,5 | C | T4 / T7 |
+| 6 | Inflación de élites con nombre | 30-42 por partida en arenas 5-10; nombre repetido ("★ Gruthul el Ciego" dos veces) y placas bajo el panel de aliados (`re2`) | Tope de 4-8 por partida; una sola placa; no dibujarla debajo del HUD | +1 | C | T7 |
+| 7 | Endgame sin meta | Pesadilla, Infierno y Horda Infinita existen, pero sin ranking | Temporada con personajes nuevos y ranking de la Horda Infinita; mapas con trazado al azar (no solo decorado) | +2,5 | C / D | T6 / Diseño |
+| 8 | Controles de habilidades | Las habilidades apuntan solas | Apuntar arrastrando el botón (Immortal), opcional en Opciones | +1,5 | C | T4 |
+| 9 | Economía | Regalo de 10.000 de oro (4 guardianes el primer día) | Regalo = 1 guardián; el oro va a la Mística, los engarces y el respec | +1 | D | T3 / T6 |
+| 10 | Tipografía y texto sobre texto | Georgia en los Talentos del Códice y en la ficha de objeto; banners, voces, nombres de élite y números juntos en el centro | Terminar la unificación en VT323; como mucho 2 textos grandes a la vez en el centro (cola de avisos) | +1 | C | T3 / T1 |
+| 11 | Multijugador abierto | Solo sala por código | Lista de salas públicas e intercambio dentro de la sala | +1,5 | C | T7 |
+| 12 | XP de victoria desmedida | +5554 XP al ganar la Ciudad (Nv. 18 → 23) | Tope por arena o escala con la calificación sobre el XP del nivel, para que los talentos de los escalones 4-5 no lleguen en la arena 2 | +0,5 | C | Diseño |
+
+**Suma posible: unos 23 puntos.**
+- Con los de código (3, 4, 5, 6, 7, 8, 9, 10, 11, 12) el juego llega a **80-82**.
+- Con arte y audio profesional (1 y 2), a **86-89**.
+- El 90 pide además calidad sostenida en 10 arenas, y eso se ve con jugadores reales, no en esta máquina.
+
+### 6.5 NOT VERIFIED
+
+- **Audio y música de oído.**
+- **Teléfonos físicos:** todo fue emulación de Chromium.
+- **FPS y tiempos de carga:** la máquina estaba compartida con otra regresión (carga 2-19; 37 s hasta el botón).
+- **Si un humano nuevo vence al Presentador en 1-2 intentos:** el piloto automático no se cubre con los pilares y
+  no sirve para decidirlo.
+- **Pesadilla e Infierno:** solo las cubren `t_difficulty` (33 pasadas); no los jugué.
+- **La Horda Infinita:** solo la cubre `t_endless`; no la jugué.
