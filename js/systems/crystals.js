@@ -45,7 +45,10 @@ const GUARDIAN_LAST_WORDS = {
   escarcha: "«El frío se va… Éramos cuatro, ¿sabés? Tres caímos peleando. El cuarto no cayó: eligió quedarse del otro lado.»",
   piedra: "«Cerré mil caminos para que la Horda no pasara… y el que los abrió fue uno de nosotros. Preguntale a tu guía por qué te guía.»"
 };
-function crystalLine(key){ return CRYSTAL_LINES[key] + CRYSTAL_COUNT_LINES[crystalsOwned().length]; }
+function crystalLine(key){
+  if(CRYSTAL_FX.key===key && CRYSTAL_FX.had) return "Otra vez el " + CRYSTAL_DEFS[key].name + ". Ya lo tenías: el Guardián vuelve a caer, y su cristal vuelve a vos.";
+  return CRYSTAL_LINES[key] + CRYSTAL_COUNT_LINES[crystalsOwned().length];
+}
 
 /* ---------------- ceremonia (local en cada cliente) ---------------- */
 // El cristal sale del Guardián caído, sube con una columna de luz, gira y vuela hacia el jugador.
@@ -82,7 +85,8 @@ function crystalTick(dt){
     if(typeof flashScreen==="function") flashScreen(0.35, D.rgb);
     if(typeof showBanner==="function") showBanner("◆ " + D.name.toUpperCase() + " — " + n + "/3 ◆");
     if(player && typeof vfxShock==="function") vfxShock(player.x, player.y - 20, 10, 110, D.rgb, 520, 3);
-    if(typeof tutSay==="function") setTimeout(()=>{ try{ tutSay("c_" + F.key + (F.had ? "_r" : ""), F.had ? "Otra vez el " + D.name + ". Ya lo tenías: el Guardián vuelve a caer, y su cristal vuelve a vos." : crystalLine(F.key), null, 11000, true); }catch(err){} }, 500);
+    // lo que dice el Hechicero del cristal se lee en la escena de salida (pantalla de victoria, story.js):
+    // acá ya están el cartel de las últimas palabras y el del cristal (nunca más de 2 textos a la vez)
   }
   if(F.t > T + 400) F.on = false;
 }

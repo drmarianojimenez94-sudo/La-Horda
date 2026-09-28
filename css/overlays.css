@@ -173,6 +173,8 @@
 .pause-audio{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 10px; font-family:var(--font-retro); color:var(--text); font-size:0.9rem; }
 .pause-audio label{ display:flex; align-items:center; gap:6px; }
 .pause-audio input[type=range]{ width:150px; height:28px; accent-color:var(--ember1); }
+.pause-audio .pause-motion{ min-height:40px; cursor:pointer; }
+.pause-audio input[type=checkbox]{ width:24px; height:24px; accent-color:var(--ember1); margin:0; }
 
 /* ---------- Invitado: la partida arrancó y todavía baja el arte de la arena (net-game.js: netGuestHoldStart) ---------- */
 #net-loading{position:fixed; inset:0; z-index:90; display:flex; flex-direction:column; align-items:center; justify-content:center;

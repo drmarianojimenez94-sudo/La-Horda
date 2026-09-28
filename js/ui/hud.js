@@ -157,6 +157,11 @@ function updateHUD(){
   document.getElementById("ult-ring").style.background = `conic-gradient(var(--ult) ${ultPct*3.6}deg, #2a1c10 0deg)`;
   const ultBtn = document.getElementById("btn-ult");
   const ultReady = (player.ultCharge>=player.ultMax && player.ultCd<=0 && runLevel>=ULT_MIN_ARENA_LEVEL && !(player.classKey==="eren" && erenUltBlocked(player))) || !!player.erenRumblingReady;
+  if(ultReady && !ultBtn.classList.contains("ready") && !ultBtn.classList.contains("locked")){
+    // ulti lista: destello del botón + aro dorado en el guardián (juice.js), una sola vez por carga
+    ultBtn.classList.remove("ready-pop"); void ultBtn.offsetWidth; ultBtn.classList.add("ready-pop");
+    if(typeof juiceUltReady==="function") juiceUltReady();
+  }
   ultBtn.classList.toggle("ready", ultReady);
   ultBtn.classList.toggle("rumble", !!player.erenRumblingReady);
   ultBtn.classList.toggle("locked", runLevel<ULT_MIN_ARENA_LEVEL);

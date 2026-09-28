@@ -9,3 +9,6 @@ Thumbs.db
 node_modules/
 dist/
 __pycache__/
+
+# Cuentas sin base de datos (server/accounts.js): datos locales del servidor, nunca al repo
+server/data/

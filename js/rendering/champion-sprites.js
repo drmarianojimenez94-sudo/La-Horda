@@ -186,7 +186,19 @@ function drawProfetaAtlas(h, drawScale, alpha){
 }
 
 function drawDirAtlasHero(entry, h, drawScale, alpha){
-  return drawAnimAtlas(entry.animAtlas, dirAtlasResolveClip(entry.animAtlas, h), h, drawScale, alpha);
+  // croma (js/systems/cromas.js): la misma grilla con la imagen recoloreada, si ya bajó
+  const ci = typeof cromaImage==="function" ? cromaImage(h, h.classKey + "_atlas") : null;
+  const A = ci ? { img:ci, ready:()=>true, def:entry.animAtlas.def } : entry.animAtlas;
+  return drawAnimAtlas(A, dirAtlasResolveClip(A, h), h, drawScale, alpha);
+}
+// Poses de habilidad del Caballero (js/vendor/caballerito-habilidades.js) con la croma puesta: se
+// cambian un instante las imágenes del módulo por las recoloreadas y se devuelven al terminar.
+function _knightCromaSwap(h){
+  if(typeof cromaImage!=="function") return null;
+  const I = CaballeritoHabilidades.images, prev = {};
+  let any = false;
+  for(const k of ["torbellino", "estampida", "grito"]){ const im = cromaImage(h, k); if(im){ prev[k] = I[k]; I[k] = im; any = true; } }
+  return any ? prev : null;
 }
 // Overlays de las 3 habilidades reales del Caballero (Torbellino/Estampida/Grito de Guerra):
 // reemplazan momentáneamente el sprite de dirección mientras esas habilidades están activas.
@@ -198,19 +210,24 @@ function drawKnightAbilityFx(h, drawScale, alpha){
   ctx.globalAlpha = alpha!==undefined ? alpha : 1;
   ctx.imageSmoothingEnabled = false;
   let drew = true;
-  if(h.dashFxTimer>0){
-    const age = (1050 - h.dashFxTimer)/1000;
-    CaballeritoHabilidades.drawDash(ctx, age, h.x, h.y, size, h.dashFxFlip);
-  } else if(h.spinTimer>0){
-    const age = Math.max(0, (h.spinMaxTimer - h.spinTimer))/1000;
-    CaballeritoHabilidades.draw(ctx, "torbellino", "activo", age, h.x, h.y, size);
-  } else if(h.growTimer>0 && h.growMaxTimer>0){
-    const age = Math.max(0, (h.growMaxTimer - h.growTimer))/1000;
-    CaballeritoHabilidades.draw(ctx, "grito", "activo", age, h.x, h.y, size);
-  } else {
-    drew = false;
+  const swap = (h.dashFxTimer>0 || h.spinTimer>0 || (h.growTimer>0 && h.growMaxTimer>0)) ? _knightCromaSwap(h) : null;
+  try{
+    if(h.dashFxTimer>0){
+      const age = (1050 - h.dashFxTimer)/1000;
+      CaballeritoHabilidades.drawDash(ctx, age, h.x, h.y, size, h.dashFxFlip);
+    } else if(h.spinTimer>0){
+      const age = Math.max(0, (h.spinMaxTimer - h.spinTimer))/1000;
+      CaballeritoHabilidades.draw(ctx, "torbellino", "activo", age, h.x, h.y, size);
+    } else if(h.growTimer>0 && h.growMaxTimer>0){
+      const age = Math.max(0, (h.growMaxTimer - h.growTimer))/1000;
+      CaballeritoHabilidades.draw(ctx, "grito", "activo", age, h.x, h.y, size);
+    } else {
+      drew = false;
+    }
+  } finally {
+    if(swap) Object.assign(CaballeritoHabilidades.images, swap);
+    ctx.restore();
   }
-  ctx.restore();
   return drew;
 }
 // Dirección de la pose (abajo / perfil / arriba) con histéresis, para que no parpadee en diagonal.
@@ -410,7 +427,7 @@ function drawMusashiAfterimages(){
 // fija en cada case del switch de castAbility junto al attackAnim generico) y la secuencia de
 // transformacion de la ultimate (h.nigroTransformTimer, ver enterAbyssForm).
 function drawNigromanteReal(h, drawScale, alpha){
-  const P = CHAMP_PACK.nigromante;
+  const P = CHAMP_PACK[typeof setSkinPackKey==="function" ? setSkinPackKey(h, "nigromante") : "nigromante"]; // (croma: otra paleta)
   if(P && P.ready){
     // Encarnación del Abismo: la pose "especial/ultimate" de la hoja mientras dura la transformación
     if(h.nigroTransformTimer>0 && P.sets.ult){
