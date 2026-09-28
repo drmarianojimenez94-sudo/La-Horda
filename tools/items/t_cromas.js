@@ -166,7 +166,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('UI.tarjetas_de_cromas_en_la_tienda', ui.cards === ui.total && ui.hayBoton && /1\.?500/.test(ui.precio), ui);
   await page.click('#shop-panel [data-croma-buy="tanque_juicio"]');
   await sleep(200);
-  const ok = await page.$('.game-modal .btn, #game-modal-ok, [data-modal-ok]');
+  const ok = await page.$('.gd-ok, .game-modal .btn, #game-modal-ok, [data-modal-ok]');
   if (ok) await ok.click(); else await page.evaluate(() => { const b = [...document.querySelectorAll('button')].find(b => /^Comprar$/.test(b.textContent.trim()) && b.offsetParent); if (b) b.click(); });
   await sleep(300);
   const after = await E(() => ({ owned: cromaOwned('tanque_juicio'), eq: cromaEquippedId('tanque'), gold: save.gold,
