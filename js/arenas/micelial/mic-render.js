@@ -81,7 +81,7 @@ function micRenderTick(dt){
 }
 
 /* ---------------- utilidades ---------------- */
-function _micView(){ const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM, cy = player.y - CAM_LIFT; return {x0:player.x - hw - 40, x1:player.x + hw + 40, y0:cy - hh - CAM_Y_ANCHOR/CAM_ZOOM - 40, y1:cy + hh + 60}; }
+function _micView(){ const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM, cy = camCenterY(); return {x0:player.x - hw - 40, x1:player.x + hw + 40, y0:cy - hh - 40, y1:cy + hh + 60}; }
 // Tono del Reino según la etapa (el brillo de los hongos acompaña al fondo).
 function micStageRgb(){ if(!micS) return "190,90,255"; if(micS.dead) return "150,150,150"; return ["190,90,255","170,120,255","150,230,110","255,150,70","255,90,150","150,150,150"][micS.stage]; }
 function micHueRgb(t){ const P = [[60,230,255],[70,110,255],[255,60,220],[160,70,255],[255,110,190],[90,255,150]]; const i = Math.floor(t)%P.length, j = (i+1)%P.length, f = t - Math.floor(t); const c = P[i].map((v,k)=>Math.round(v + (P[j][k]-v)*f)); return c.join(","); }
@@ -602,10 +602,11 @@ function micCamLift(){
   if(!micS || !player) return 0;
   const st = micS.mo.st;
   if(st!=="reveal" && st!=="fight" && st!=="dying") return 0;
-  const R = _micMotherRect(), hh = VH/2/CAM_ZOOM;
+  // (arriba y abajo del jugador no se ve lo mismo: el anclaje de la cámara depende del alto, camFitAnchor)
+  const R = _micMotherRect(), up = (VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM, down = (VH/2 + CAM_Y_ANCHOR)/CAM_ZOOM;
   if(Math.abs(player.x - MIC_MOTHER_POS.x) > 1000 || player.y > 900) return 0;
-  const need = player.y - (R.y - 30) - hh;
-  return Math.max(0, Math.min(need, hh - 130));
+  const need = player.y - (R.y - 30) - up;
+  return Math.max(0, Math.min(need, down - 130));
 }
 
 /* ---------------- pantalla ---------------- */

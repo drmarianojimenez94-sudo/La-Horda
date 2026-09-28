@@ -83,7 +83,7 @@ function aidGrade(now){
   if(!player || player.duelActive) return;
   const A = currentArena;
   const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM;
-  const x0 = player.x - hw - 40, y0 = player.y - CAM_LIFT - hh - 40, W = hw*2+80, H = hh*2+80; // (CAM_LIFT: ver camera.js)
+  const x0 = player.x - hw - 40, y0 = camCenterY() - hh - 40, W = hw*2+80, H = hh*2+80; // (CAM_LIFT: ver camera.js)
   ctx.save();
   if(A==="infernal"){
     // calor que sube desde abajo + borde oscuro: hostil, pero sin teñir todo de rojo

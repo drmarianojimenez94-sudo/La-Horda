@@ -80,7 +80,8 @@ const CLASSES = {
     ultimate:{name:"Bendición Suprema", ico:"★", cd:32000, kind:"team_grand_buff", healPct:0.3, dmgBonus:0.28, defBonus:0.3, duration:6500, radius:280, desc:"Cura y bendice a todo el equipo con ataque y defensa"}
   },
   segador:{
-    name:"Segador Olvidado", icon:"🗡", color:"#c62828", glow:"#ff8a7a",
+    // hudName: nombre corto para el HUD en partida (reseña #28); los menús usan siempre el completo
+    name:"Segador Olvidado", hudName:"Segador", icon:"🗡", color:"#c62828", glow:"#ff8a7a",
     role:"Berserker / tanque ofensivo. Cuanto más daño recibe, más peligroso se vuelve.", roleCategory:"tanque",
     // Vida muy alta, defensa alta, daño alto, velocidad media-baja: tanque ofensivo cuerpo
     // a cuerpo, no un tanque pasivo. energyRegen casi nulo a propósito: su recurso (Furia)
@@ -118,7 +119,7 @@ const CLASSES = {
     ultimate:{name:"Force Quit", ico:"★", cd:33000, kind:"force_quit_ult", radius:230, dmgMult:1.6, eliteMult:0.55, freezeDuration:4000, desc:"Fuerza el cierre de la realidad: 4 segundos de colores invertidos donde nadie más se mueve — al terminar, todo el daño cae de golpe sobre los enemigos cercanos"}
   },
   profeta:{
-    name:"La Profeta", icon:"✧", color:"#4fd8c4", glow:"#bffff0",
+    name:"La Profeta", hudName:"Profeta", icon:"✧", color:"#4fd8c4", glow:"#bffff0",
     role:"Sanadora de apoyo cuerpo a cuerpo. Cura, protege y potencia a un aliado elegido.", roleCategory:"soporte",
     // Balance: sanadora pero CUERPO A CUERPO (a diferencia de soporte, que es a distancia) ->
     // algo más de vida y defensa que soporte para compensar tener que pelear de cerca, pero
@@ -154,7 +155,7 @@ const CLASSES = {
     ultimate:{name:"Último Duelo", ico:"★", cd:28000, kind:"last_duel_ult", duration:13000, speedMult:1.25, atkSpeedMult:1.35, dmgMult:1.25, critChanceBonus:0.15, critMultBonus:0.4, ghostStepCdMult:0.4, desc:"Se transporta con su objetivo de duelo a una arena privada: 1 contra 1 hasta que uno de los dos caiga o se acabe el tiempo"}
   },
   cazadora:{
-    name:"La Cazadora", icon:"🏹", color:"#5c9a4a", glow:"#c8f0a8",
+    name:"La Cazadora", hudName:"Cazadora", icon:"🏹", color:"#5c9a4a", glow:"#c8f0a8",
     role:"Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.", roleCategory:"asesino",
     // Vida y defensa las más bajas del roster (mago:95/0.06 es la referencia más frágil que
     // había; Sylva queda un poco por debajo todavía), a cambio de la velocidad de movimiento
@@ -187,7 +188,7 @@ const CLASSES = {
     ultimate:{name:"Encarnación del Abismo", ico:"★", cd:38000, kind:"abyss_incarnation_ult", duration:11000, hpMult:1.9, dmgMult:1.8, desc:"Absorbe temporalmente a todo tu ejército y te transforma en un Demonio Nigromántico; tu poder escala con cuántos absorbiste"}
   },
   libertador:{
-    name:"El Libertador", icon:"🎖", color:"#2f4f9a", glow:"#9fc4ff",
+    name:"El Libertador", hudName:"Libertador", icon:"🎖", color:"#2f4f9a", glow:"#9fc4ff",
     role:"Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta, mando y caballería.", roleCategory:"asesino",
     // José de San Martín. Tirador pesado: MUY pocos disparos (recarga larga, SM_CFG.musket) con
     // mucho daño cada uno; vida y defensa de guerrero liviano porque también entra cuerpo a cuerpo.

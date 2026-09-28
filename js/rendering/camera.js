@@ -12,10 +12,13 @@ function updateCamLift(){
   CAM_LIFT += (want - CAM_LIFT)*0.06;
   if(Math.abs(CAM_LIFT) < 0.5 && want===0) CAM_LIFT = 0;
 }
+// Centro de la pantalla en el mundo (y): el jugador no está en el medio, está CAM_Y_ANCHOR px arriba
+// o abajo (camFitAnchor, canvas.js). Los recortes "qué se ve" se centran acá, no en el jugador.
+function camCenterY(){ return player.y - CAM_LIFT + CAM_LEAD_Y + CAM_Y_ANCHOR/CAM_ZOOM; }
 function inView(x, y, pad){
   pad = pad || 140;
   const hw = VW/2/CAM_ZOOM + pad, hh = VH/2/CAM_ZOOM + pad;
-  return Math.abs(x-(player.x + CAM_LEAD_X)) < hw && Math.abs(y-(player.y - CAM_LIFT + CAM_LEAD_Y)) < hh;
+  return Math.abs(x-(player.x + CAM_LEAD_X)) < hw && Math.abs(y-camCenterY()) < hh;
 }
 // (CAM_LEAD_X/Y: adelanto suave de la cámara hacia donde se apunta, ver juice.js; 0 con "Reducir movimiento")
 function worldToScreen(x,y){

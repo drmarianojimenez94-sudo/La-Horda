@@ -127,6 +127,7 @@ function registerPlayerHurt(dmg, src){
   const pct = dmg/Math.max(1, player.maxHp);
   hurtFlash = Math.min(1, Math.max(hurtFlash, 0.5 + pct*4));
   JUICE_STATS.vignette++;
+  if(typeof tutDuck==="function") tutDuck(); // la voz del Hechicero se agacha mientras te pegan (tutorial.js)
   if(src && typeof src.x==="number" && (src.x!==player.x || src.y!==player.y)){
     const ang = Math.atan2(src.y-player.y, src.x-player.x);
     let merged = false;
