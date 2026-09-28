@@ -68,9 +68,10 @@ async function client(browser, name, champ, cleared, url) {
   await waitFor(H, () => typeof assetsAllReady !== 'function' || assetsAllReady(), null, 60000);
   await tap(H, '#prep-start-btn');
   const playing = await waitAll([H, G], () => state === 'playing' && currentArena === 'ciudad', 30000);
-  const st = await Promise.all([H, G].map(c => ev(c, () => ({ role: netMatch && netMatch.role, diff: netMatch && netMatch.diff, cur: diffCurrent(), seed: runMapSeed(), pick: mapVariantPick('bos_runes', 2), hud: (document.getElementById('hud-diff') || {}).textContent || '', tier: runDifficulty && runDifficulty.tier }))));
+  const st = await Promise.all([H, G].map(c => ev(c, () => ({ role: netMatch && netMatch.role, diff: netMatch && netMatch.diff, cur: diffCurrent(), seed: runMapSeed(), pick: mapVariantPick('bos_runes', 2), lay: mapLayoutOn(), hud: (document.getElementById('hud-diff') || {}).textContent || '', tier: runDifficulty && runDifficulty.tier }))));
   check('partida.los_dos_en_pesadilla', playing && st.every(s => s.diff === 'pesadilla' && s.cur === 'pesadilla' && /PESADILLA/.test(s.hud)) && st[0].tier === 'pesadilla', st);
   check('partida.misma_semilla', st[0].seed && st[0].seed === st[1].seed && st[0].pick === st[1].pick, st);
+  check('partida.trazado_al_azar_en_pesadilla_para_los_dos', st.every(s => s.lay), st.map(s => s.lay));
   // victoria: al anfitrión le cuenta Pesadilla, al invitado (sin Pesadilla abierta) no
   await ev(H, () => { enemies.length = 0; finishBossVictory(); });
   const vic = await waitAll([H, G], () => state === 'victory', 20000);
@@ -88,7 +89,8 @@ async function client(browser, name, champ, cleared, url) {
   await waitFor(G, () => currentArena === 'bosque' && netLobby.diff === 'normal', null, 8000);
   await tap(H, '#prep-start-btn');
   const p2 = await waitAll([H, G], () => state === 'playing' && currentArena === 'bosque' && BOS.runes && BOS.runes.length === 4, 30000);
-  const rn = await Promise.all([H, G].map(c => ev(c, () => ({ seed: runMapSeed(), runes: BOS.runes.map(r => r.id + '@' + r.x + ',' + r.y).join(' '), diff: netMatch.diff, hud: !!document.getElementById('hud-diff') }))));
+  const rn = await Promise.all([H, G].map(c => ev(c, () => ({ seed: runMapSeed(), runes: BOS.runes.map(r => r.id + '@' + r.x + ',' + r.y).join(' '), diff: netMatch.diff, hud: !!document.getElementById('hud-diff'), lay: aidSolids.filter(x => x.lay).length + (mapLayoutOn() ? 100 : 0) }))));
+  check('partida2.normal_sin_trazado_al_azar', rn.every(r => r.lay === 0), rn.map(r => r.lay));
   check('partida2.runas_iguales_en_los_dos', p2 && rn[0].runes === rn[1].runes && rn[0].seed === rn[1].seed, rn);
   check('partida2.normal_sin_etiqueta', rn.every(r => r.diff === 'normal' && !r.hud), rn);
   // tercera partida: la Gélida (el anillo de braseros gira según la semilla): mismos braseros en los dos

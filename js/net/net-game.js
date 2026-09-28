@@ -342,7 +342,8 @@ function netHostStartGame(){
   return true;
 }
 function netStartMessage(){
-  return {k:"start", arena:currentArena, seed:netMatch.seed, diff:netMatch.diff || "normal", slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
+  // lay: trazado al azar (js/arenas/arena-layouts.js) — lo decide el anfitrión
+  return {k:"start", arena:currentArena, seed:netMatch.seed, diff:netMatch.diff || "normal", lay:(typeof mapLayoutOn==="function" && mapLayoutOn()) ? 1 : 0, slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
 }
 // Cada cuadro, en update(): héroes de los invitados.
 function netHostUpdateRemotes(dt){
@@ -617,7 +618,7 @@ function netHostTick(){
 function netGuestStartRun(msg){
   // reconexión = misma sala y la partida anterior NO había terminado (si terminó, es una nueva)
   const reconnecting = !!(netMatch && netMatch.role==="guest" && netMatch.code===net.code && !netMatch.ended);
-  netMatch = {role:"guest", mySlot:net.slot, seed:msg.seed, slots:msg.slots, arena:msg.arena, code:net.code, diff:msg.diff || "normal",
+  netMatch = {role:"guest", mySlot:net.slot, seed:msg.seed, slots:msg.slots, arena:msg.arena, code:net.code, diff:msg.diff || "normal", lay:!!msg.lay,
     ents:new Map(), colls:{}, lastInAt:0, posAuth:-1, pendingFull:false, started:true, ended:false,
     runStartMarked: reconnecting ? true : false};
   currentArena = msg.arena;
