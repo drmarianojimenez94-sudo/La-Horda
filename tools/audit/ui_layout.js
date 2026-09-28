@@ -173,15 +173,17 @@ async function runViewport(browser, vp, report) {
   await tap(page, '#title-continue-btn');
   await snap(page, 'mainmenu', { primary: [{ css: '#hub-play-btn' }] });
   // hub con todos los accesos (Horda Infinita bloqueada y Desafíos, como si ya existieran esos módulos)
-  await js(page, () => { window.endlessOpen = () => {}; window.endlessUnlocked = () => false; window.questsOpen = () => {}; renderMainMenu(); });
+  // (si esos módulos ya están cargados se usan los reales; si no, un reemplazo mínimo que después se saca)
+  await js(page, () => { const st = window.__hubStubs = {}; if (typeof window.endlessOpen !== 'function') { st.endless = 1; window.endlessOpen = () => {}; window.endlessUnlocked = () => false; }
+    if (typeof window.questsOpen !== 'function') { st.quests = 1; window.questsOpen = () => {}; } renderMainMenu(); });
   await snap(page, 'mainmenu_full', { primary: [{ css: '#hub-play-btn' }, { css: '#hub-endless-btn' }, { css: '#mainmenu-quests-btn' }] });
-  await js(page, () => { delete window.endlessOpen; delete window.endlessUnlocked; delete window.questsOpen; renderMainMenu(); openHubOptions(); });
+  await js(page, () => { const st = window.__hubStubs || {}; if (st.endless) { delete window.endlessOpen; delete window.endlessUnlocked; } if (st.quests) delete window.questsOpen; renderMainMenu(); openHubOptions(); });
   await snap(page, 'options', { root: '#hub-options', primary: [{ css: '#opt-close-btn' }] });
   await js(page, () => closeHubOptions());
-  await js(page, () => { window.endlessOpen = () => {}; });
+  await js(page, () => { if (typeof window.endlessOpen !== 'function') { window.endlessOpen = () => {}; window.__hubStubs.endless2 = 1; } });
   await tap(page, '#mainmenu-jugar-btn');
   await snap(page, 'modes', { primary: [{ css: '#mode-join-btn' }, { css: '#mode-arena-btn' }] });
-  await js(page, () => { delete window.endlessOpen; });
+  await js(page, () => { if (window.__hubStubs.endless2) delete window.endlessOpen; });
   await tap(page, '#mode-arena-btn');
   await snap(page, 'arenaselect');
   await tap(page, '.arena-card:not(.locked)');

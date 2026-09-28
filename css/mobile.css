@@ -79,4 +79,8 @@
   #run-intro .ri-who{ font-size:0.7rem; letter-spacing:1px; }
   #run-intro .ri-k, #buff-story .bs-who{ font-size:0.7rem; letter-spacing:0; }
   #run-intro .ri-go{ font-size:0.72rem; }
+
+  /* narrativa (story.css) y casilla "Reducir movimiento" de la pausa: mínimo 11 px / 40 px en el celular */
+  #run-intro .ri-act, .story-vic .sv-k, .story-vic .sv-say b{ font-size:0.7rem; letter-spacing:0; }
+  .pause-motion input[type=checkbox]{ width:40px; height:40px; margin:0 0 0 6px; accent-color:var(--ember1); vertical-align:middle; }
 }
