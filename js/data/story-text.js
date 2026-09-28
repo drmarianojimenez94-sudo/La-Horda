@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/data/story-text.js
-   TEXTOS DE LA HISTORIA (datos, no lógica). Canon: docs/lore/LA_HORDA_LORE_BIBLE.md (§11-§14 son de
+   TEXTOS DE LA HISTORIA (datos, no lógica). Canon: docs/lore/LA_HORDA_LORE_BIBLE.md (§10-§13 son de
    este archivo: actos, voces, Crónicas, epílogo). La lógica que los muestra vive en js/systems/story.js.
    Reglas de tono (biblia §9): el Hechicero habla CLARO y la sospecha va en una frase al final; los
    Guardianes eran héroes y sus textos dicen lo que fueron; la Horda NUNCA habla (las bestias no tienen

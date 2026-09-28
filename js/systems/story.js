@@ -2,7 +2,7 @@
 /* ============================================================
    js/systems/story.js
    LA HISTORIA JUGANDO: voces de los jefes, Crónicas coleccionables, escenas de salida y el epílogo.
-   Los textos están en js/data/story-text.js (canon: docs/lore/LA_HORDA_LORE_BIBLE.md §11-§14).
+   Los textos están en js/data/story-text.js (canon: docs/lore/LA_HORDA_LORE_BIBLE.md §10-§13).
    - VOCES: cada jefe se presenta (al aparecer su barra: bossHudShow), habla al cambiar de fase
      (bossHudPhase) y al caer (killEnemy → storyOnKill). Usa el cuadro de voz del tutorial (tutSay) con
      otro nombre y otro retrato, en una COLA: una línea por vez, y nunca más de 2 textos en pantalla

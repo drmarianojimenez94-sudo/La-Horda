@@ -14,7 +14,7 @@
 // scar = lo que se ve al completar la arena (la Cicatriz que se abre hacia la siguiente); say = lo que dice
 // el Hechicero (escena de salida, último paso de la pantalla de victoria: story.js). En las arenas de los
 // Guardianes habla con la línea de su cristal (crystalLine, crystals.js) y `say` queda vacío.
-// Arco (biblia §5 y §11): ACTO I mentor cálido · ACTO II cada vez más interesado en los cristales que en
+// Arco (biblia §5 y §10): ACTO I mentor cálido · ACTO II cada vez más interesado en los cristales que en
 // vos · ACTO III ya no disimula del todo. La sospecha va siempre en la última frase.
 const CAMPAIGN_STORY = {
   ciudad:   {title:"LA CIUDAD MALDITA", sub:"Todavía es una ciudad viva. Todavía.",
