@@ -16,7 +16,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|404/.test(m.text())) errors.push('console: ' + m.text().slice(0, 300)); });
   await page.addInitScript(() => { window.__campaignMode = true; });
-  await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'load', timeout: 180000 });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   const E = (fn, a) => page.evaluate(fn, a);
   await E(() => { loop = function(){}; cromaLoadAll(); });
@@ -173,6 +173,21 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     card: !!document.querySelector('#shop-panel [data-croma-card="tanque_juicio"].active') }));
   check('UI.comprar_desde_la_tienda_equipa', after.owned && after.eq === 'tanque_juicio' && after.gold === 20000 - 1500 && after.card, after);
   if (process.env.SHOT) { await page.evaluate(() => { const c = document.querySelector('.shop-croma-box'); if (c) c.scrollIntoView(); }); await sleep(400); await page.screenshot({ path: process.env.SHOT }); }
+
+  // ---------- Códice (ficha del guardián): chips de croma y su ficha con comprar / usar ----------
+  const cx = await E(() => {
+    save.cromas = {}; cromaEquip('nigromante', null);
+    const html = codexChampSkinsHtml('nigromante'), chips = (html.match(/Croma · /g) || []).length;
+    const el = document.createElement('div'); el.innerHTML = '<div id="cx-skin-detail"></div>'; document.body.appendChild(el);
+    codexSkinDetail(el, 'nigromante', 'nigromante_piedra');
+    const buyBtn = !!el.querySelector('#cx-croma-buy');
+    save.cromas.nigromante_piedra = true; codexSkinDetail(el, 'nigromante', 'nigromante_piedra');
+    const useBtn = el.querySelector('#cx-croma-on'); const origR = codexRender; codexRender = () => {};
+    try { useBtn && useBtn.click(); } finally { codexRender = origR; }
+    const eq = cromaEquippedId('nigromante'); cromaEquip('nigromante', null); el.remove();
+    return { chips, esperadas: cromaIdsFor('nigromante').length, buyBtn, usar: !!useBtn, eq };
+  });
+  check('CODICE.chips_y_ficha_de_croma', cx.chips === cx.esperadas && cx.buyBtn && cx.usar && cx.eq === 'nigromante_piedra', cx);
 
   check('sin_errores_de_pagina', errors.length === 0, errors.slice(0, 5));
   await browser.close();

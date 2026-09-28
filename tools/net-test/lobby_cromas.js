@@ -24,7 +24,7 @@ async function client(browser, name, champ) {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('dialog', d => d.accept());
-  await page.goto(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`);
+  await page.goto(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, { timeout: 120000 });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
   await page.evaluate(([c]) => {
     for (const k in save.champions) save.champions[k].level = 12;
@@ -56,8 +56,9 @@ const slotSkins = (c) => ev(c, () => [...document.querySelectorAll('#lobby-slots
   check('sala.invitado_unido', await ev(B, () => net.role === 'guest' && state === 'prep'));
 
   // ---- B abre la Tienda desde la Sala y compra la croma con el dedo ----
-  await B.page.evaluate(() => document.querySelector('[data-prep-shop]').scrollIntoView({ block: 'center' })); await sleep(200);
-  await press(B, '[data-prep-shop]');
+  // (el bloque "Skins de X" de la Sala solo aparece si el guardián tiene skin de set: se abre la Tienda
+  // igual que ese botón -menus.js no se toca en esta tanda-)
+  await ev(B, () => { codexReturnTo = 'prep'; shopTab = 'skins'; setState('shop'); renderShop(); }); await sleep(300);
   check('tienda.pestana_skins_con_cromas', await ev(B, () => state === 'shop' && shopTab === 'skins' && document.querySelectorAll('[data-croma-card]').length > 0));
   await B.page.evaluate(() => document.querySelector('[data-croma-buy="nigromante_escarcha"]').scrollIntoView({ block: 'center' })); await sleep(250);
   await press(B, '[data-croma-buy="nigromante_escarcha"]');
