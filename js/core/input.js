@@ -169,6 +169,12 @@ document.getElementById("pause-btn").addEventListener("click", ()=>{
   if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); return; }
   if(state==="playing"){ setState("paused"); renderStatsPanel(); }
 });
+// Celular: una llamada, una notificación o cambiar de app en plena partida SOLO. Antes el juego
+// quedaba congelado y al volver seguía de golpe, con la horda encima y sin aviso. Ahora vuelve en
+// pausa (en cooperativo no hay pausa: la partida es de todos y la sigue el anfitrión).
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState==="hidden" && state==="playing" && !netMatch && typeof renderStatsPanel==="function"){ setState("paused"); renderStatsPanel(); }
+});
 document.getElementById("resume-btn").addEventListener("click", ()=>{
   if(netMatch){ document.getElementById("pause-screen").classList.add("hidden"); return; }
   setState("playing");
