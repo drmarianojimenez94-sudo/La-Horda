@@ -19,6 +19,10 @@ const CODEX_SECTIONS = [
   {id:"arenas",    label:"ARENAS",    icon:"⛩", blurb:"La campaña capítulo por capítulo: el camino de las Cicatrices."}
   // Futuro: {id:"reliquias", label:"RELIQUIAS", icon:"✦", blurb:"..."} — sumar su lista/renderizador por tipo.
 ];
+// CRÓNICAS: las páginas que se encuentran jugando la campaña (js/systems/story.js, textos en
+// js/data/story-text.js). Va como franja debajo de las cuatro secciones grandes.
+const CODEX_CHRON_SECTION = {id:"cronicas", label:"CRÓNICAS", icon:"✒", blurb:"Páginas perdidas por el camino: diarios, cartas y cantos que cuentan lo que el Hechicero calló."};
+function codexSectionDef(id){ return CODEX_SECTIONS.find(s=>s.id===id) || (id===CODEX_CHRON_SECTION.id ? CODEX_CHRON_SECTION : null); }
 // Kills para DOMINAR una criatura (arquitectura lista; se muestra como sello).
 const CODEX_MASTERY = {normal:60, subelite:30, elite:15, invocacion:40, estructura:20, apendice:10, subjefe:3, jefe:3};
 
@@ -124,10 +128,10 @@ function codexCur(){ return codexStack[codexStack.length-1]; }
 // Destino de un vínculo cruzado ("tipo:id"): arma la etiqueta correcta para el rastro de migas.
 function codexLink(target){
   const [view, id] = target.split(":");
-  const sec = {champ:"campeones", creature:"bestiario", boss:"jefes", arena:"arenas", set:null}[view];
+  const sec = {champ:"campeones", creature:"bestiario", boss:"jefes", arena:"arenas", set:null, chron:"cronicas"}[view];
   // si el vínculo lleva a otra sección, el rastro pasa por esa sección (CÓDICE > ARENAS > ...)
   const inSec = codexStack.some(s=>s.view==="list" && s.id===sec);
-  if(sec && !inSec){ codexStack = [codexStack[0], {view:"list", id:sec, label:CODEX_SECTIONS.find(s=>s.id===sec).label}]; }
+  if(sec && !inSec){ codexStack = [codexStack[0], {view:"list", id:sec, label:codexSectionDef(sec).label}]; }
   codexGo(view, id, codexLinkLabel(view, id));
 }
 function codexLinkLabel(view, id){
@@ -136,6 +140,7 @@ function codexLinkLabel(view, id){
   if(view==="boss"){ const b = codexBossDef(id); return b && codexKnown(codexBossState(b)) ? codexBossName(b) : "???"; }
   if(view==="arena") return codexArenaTag(id);
   if(view==="set") return (SET_DB[id]||{}).name || id;
+  if(view==="chron"){ const P = typeof chroniclePage==="function" ? chroniclePage(id) : null; return P && chronicleHas(id) ? P.title : "???"; }
   return id;
 }
 
@@ -163,6 +168,7 @@ function codexRender(fresh){
   else if(cur.view === "boss") html = codexBossHtml(cur.id);
   else if(cur.view === "arena") html = codexArenaHtml(cur.id);
   else if(cur.view === "set") html = codexSetHtml(cur.id);
+  else if(cur.view === "chron") html = codexChronHtml(cur.id);
   body.innerHTML = html;
   body.className = "cx-view cx-view-" + cur.view + (fresh ? " cx-enter" : "");
   body.scrollTop = 0;
@@ -173,7 +179,7 @@ function codexBind(body, cur){
   body.querySelectorAll("canvas[data-pv]").forEach(cv=>{ try{ codexPreview(cv, JSON.parse(cv.dataset.pv)); }catch(e){} });
   body.querySelectorAll("[data-go]").forEach(el=>el.addEventListener("click", ev=>{ ev.stopPropagation(); codexLink(el.dataset.go); }));
   body.querySelectorAll("[data-sec]").forEach(el=>el.addEventListener("click", ()=>{
-    const s = CODEX_SECTIONS.find(x=>x.id===el.dataset.sec); codexGo("list", s.id, s.label);
+    const s = codexSectionDef(el.dataset.sec); codexGo("list", s.id, s.label);
   }));
   body.querySelectorAll("[data-filter]").forEach(el=>el.addEventListener("click", ()=>{ codexFilter[cur.id] = el.dataset.filter; codexRender(); }));
   // navegación entre fichas de la misma lista (flechas y deslizar)
@@ -189,6 +195,7 @@ function codexBind(body, cur){
   if(inv) inv.addEventListener("click", ()=>{ codexReturnTo = "codex"; openMyInventory("objetos"); });
   if(cur.view === "champ") codexBindChamp(body, cur.id);
   if(cur.view === "creature" || cur.view === "boss") codexBindAnimChips(body);
+  if(cur.view === "chron") body.querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click", ()=>codexStep(+b.dataset.step)));
 }
 // Lista (en orden) de la que forma parte la ficha actual, para ‹ › y deslizar.
 function codexSiblings(cur){
@@ -196,6 +203,7 @@ function codexSiblings(cur){
   if(cur.view==="creature") return codexCreatureOrder();
   if(cur.view==="boss") return CODEX_BOSSES.map(b=>b.id);
   if(cur.view==="arena") return [...CAMPAIGN_ORDER, "divina"];
+  if(cur.view==="chron") return CHRONICLE_PAGES.filter(p=>chronicleHas(p.id)).map(p=>p.id);
   return [];
 }
 function codexStep(d){
@@ -232,7 +240,9 @@ function codexHomeHtml(){
       ${card(CODEX_SECTIONS[1], _pv({kind:"enemy", key:cre, anim:"walk", arena:codexArenaOfType(cre), silhouette:!knownCre.length}), `${N.creatures[0]} / ${N.creatures[1]} descubiertas · ${N.creatures[2]} derrotadas`)}
       ${card(CODEX_SECTIONS[2], _pv(!knownBoss.length && boss.veil ? {kind:"ambient", arena:boss.arena, veil:true} : {kind:"enemy", forms:codexBossTypes(boss).slice(0,1), key:codexBossTypes(boss)[0], anim:"idle", arena:boss.arena, silhouette:!knownBoss.length}), `${N.bosses[0]} / ${N.bosses[1]} descubiertos · ${N.bosses[2]} derrotados`)}
       ${card(CODEX_SECTIONS[3], `<div class="cx-home-arena" style="background-image:url('${arenaImg}')"></div>${_pv({kind:"ambient", arena:"infernal", bg:"none"}, "cx-pv cx-amb")}`, `${N.arenas[0]} / ${N.arenas[1]} completadas`)}
-    </div></div>`;
+    </div>${typeof CHRONICLE_PAGES!=="undefined" ? `<button class="cx-sec cx-home-chron" data-sec="${CODEX_CHRON_SECTION.id}"><span class="cxc-ico" aria-hidden="true"></span>
+      <span class="cxc-txt"><span class="cxc-title"><span class="cx-home-ico">${CODEX_CHRON_SECTION.icon}</span>${CODEX_CHRON_SECTION.label}</span><span class="cx-home-blurb">${CODEX_CHRON_SECTION.blurb}</span></span>
+      <span class="cx-home-count">${chronicleCount()} / ${CHRONICLE_PAGES.length} páginas</span></button>` : ""}</div>`;
 }
 function codexArenaImage(a){ return `assets/ui/codex/arenas/${a}.jpg`; }
 
@@ -242,6 +252,7 @@ function codexListHtml(sec){
   if(sec === "bestiario") return codexBestiaryHtml();
   if(sec === "jefes") return codexBossListHtml();
   if(sec === "arenas") return codexArenaListHtml();
+  if(sec === "cronicas") return codexChronListHtml();
   return "";
 }
 function codexChampListHtml(){
@@ -360,6 +371,8 @@ function codexChampHtml(key){
   if(codexChampTab === "ficha" || !own){
     const sk = [...cls.skills, cls.ultimate];
     panel += _sec("¿Quién es?", `<blockquote class="cx-quote">«${_cxEsc(cat.lore)}»</blockquote>${L.origin ? `<div class="cx-origin">Origen: <b>${_cxEsc(L.origin)}</b></div>` : ""}${_p(L.history)}`, "lore");
+    const HV = typeof HERO_VOICES!=="undefined" ? HERO_VOICES[key] : null;
+    if(HV) panel += _sec("Su voz", `<div class="cx-voice"><i>Al elegirlo</i>«${_cxEsc(HV.pick)}»</div><div class="cx-voice"><i>Al ganar</i>«${_cxEsc(HV.win)}»</div><div class="cx-voice"><i>Al caer</i>«${_cxEsc(HV.fall)}»</div>`, "lore");
     panel += _sec("Habilidades · tocá una para verla", `<div class="cx-skills">${sk.map((s, i)=>`<button class="cx-skill" data-skill="${i}">
         <span class="cx-skill-ico">${s.ico||"★"}</span><span class="cx-skill-txt"><b>${_cxEsc(s.name)}</b>${i===3?' <i class="cx-ult">Definitiva</i>':""}
         <span class="cx-skill-desc">${_cxEsc(s.desc||"")}</span><span class="cx-skill-num">${codexSkillNumbers(s, i===3)}</span></span></button>`).join("")}</div>`, "combat");
@@ -599,6 +612,10 @@ function codexArenaHtml(a){
   if(L.soon){ panel += _sec("En construcción", `<p>Esta arena todavía no se puede jugar: su historia se cuenta ${a==="ciudad" ? "como prólogo antes de la Fábrica Sin Fin" : "en los textos del descenso hacia el Laberinto"}.</p>`); return codexEntryHtml(stage, panel, "cx-entry-arena"); }
   if(L.mechanics) panel += _sec("Mecánicas exclusivas", `<div class="cx-attacks">${L.mechanics.map(x=>`<div class="cx-attack">✦ ${_cxEsc(x)}</div>`).join("")}</div>`, "combat");
   if(brief) panel += _sec("Peligros", `<div class="cx-mech">☠ ${_cxEsc(brief.kill)}</div><div class="cx-mech ok">✚ ${_cxEsc(brief.help)}</div>${L.hazards ? `<div class="cx-hazards">${L.hazards.map(h=>`<span class="cx-chip static">${_cxEsc(h)}</span>`).join("")}</div>` : ""}`, "combat");
+  if(typeof CHRONICLE_PAGES!=="undefined"){
+    const pages = CHRONICLE_PAGES.filter(p=>p.arena===a);
+    if(pages.length) panel += _sec("Crónicas de esta arena", `<div class="cx-chron-pages">${pages.map(codexChronPageBtn).join("")}</div>`, "lore");
+  }
   if(CODEX_ARENA_ROSTER[a]) panel += _sec("Criaturas", codexArenaRosterHtml(a));
   panel += _sec("Guardián · Subjefe · Jefe", codexArenaBossesHtml(a));
   const sets = codexArenaSets(a).slice(0, 4), legs = codexArenaLegends(a).slice(0, 4);
@@ -634,6 +651,35 @@ function codexSetHtml(id){
   panel += _sec("Bonus", (S.thresholds||[]).map(th=>`<div class="cx-phase"><span class="cx-phase-n">${th.count}</span><div class="cx-dim">${_cxEsc(th.desc)}</div></div>`).join(""), "combat");
   panel += _sec("Tus piezas", `<p>${full - miss.length} de ${full}${skin ? " · con el set completo aparece la skin <b>" + _cxEsc(skin.name) + "</b>" : ""}.</p>`);
   return codexEntryHtml(stage, panel, "cx-entry-set");
+}
+
+/* ---------------- CRÓNICAS (lista por libro y página de lectura) ---------------- */
+const _CX_ROMAN = ["", "I", "II", "III", "IV", "V", "VI"];
+function codexChronPageBtn(P){
+  const has = chronicleHas(P.id);
+  const where = `${campaignNumberLabel(P.arena)} · ${codexArenaName(P.arena)} — ${STORY_SRC_LABEL[P.src] || ""}`;
+  return has ? `<button class="cx-chron-page" data-go="chron:${P.id}"><span class="cxp-n">${_CX_ROMAN[P.n] || P.n}.</span>${_cxEsc(P.title)}</button>`
+    : `<div class="cx-chron-page missing"><span class="cxp-n">${_CX_ROMAN[P.n] || P.n}.</span>???<span class="cxp-where">${_cxEsc(where)}</span></div>`;
+}
+function codexChronListHtml(){
+  const books = CHRONICLE_BOOKS.map(B=>{
+    const pages = CHRONICLE_PAGES.filter(p=>p.book===B.id), known = pages.filter(p=>chronicleHas(p.id)).length;
+    return `<div class="cx-sec cx-chron-book"><h3>${known ? _cxEsc(B.name) : "???"}</h3>
+      <div class="cx-dim">${known ? _cxEsc(B.author) + " · " + _cxEsc(B.blurb) : "Todavía no encontraste ninguna página de este libro."} · ${known}/${pages.length}</div>
+      <div class="cx-chron-pages">${pages.map(codexChronPageBtn).join("")}</div></div>`;
+  }).join("");
+  const epi = save.storyEpilogueSeen ? `<button class="cx-btn cx-chron-head-epi" data-story-epilogue>▶ Ver el epílogo</button>` : "";
+  return `<div class="cx-list-head"><div class="cx-list-title">CRÓNICAS · ${chronicleCount()} / ${CHRONICLE_PAGES.length} páginas</div>${epi}</div>
+    <div class="cx-chron-books">${books}</div>`;
+}
+function codexChronHtml(id){
+  const P = chroniclePage(id); if(!P) return "";
+  if(!chronicleHas(id)) return `<div class="cx-parchment"><h2>???</h2><p>Esta página todavía no la encontraste.</p></div>`;
+  const B = chronicleBook(P.book);
+  const paras = P.text.split("\n\n").map(t=>`<p>${_cxEsc(t)}</p>`).join("");
+  return `<div class="cx-chron-nav">${codexStepper()}<button class="cx-link" data-go="arena:${P.arena}">⛩ ${_cxEsc(codexArenaTag(P.arena))}</button></div>
+    <article class="cx-parchment"><div class="cxp-book">${_cxEsc(B.name.toUpperCase())} · ${_CX_ROMAN[P.n] || P.n}</div>
+    <h2>${_cxEsc(P.title)}</h2>${paras}<div class="cxp-sign">— ${_cxEsc(B.author)}</div><span class="cxp-seal" aria-hidden="true"></span></article>`;
 }
 
 /* ---------------- botones fijos ---------------- */

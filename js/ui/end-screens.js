@@ -50,7 +50,7 @@ function showGameOverScreen(divinaOutcome){
   const lootLine = loot.items.length ? loot.items.map(it=>{ const tm = LOOT_TIER_META[itemTier(it)]; return `<b style="color:${tm.color};">${it.name}</b>`; }).join(", ") : (runLevel>=DEFEAT_LOOT.minLevel ? "inventario lleno" : `sin botín (desde el nivel ${DEFEAT_LOOT.minLevel} te llevás un objeto aunque pierdas)`);
   document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} bajas · Performance <b style="color:${perf.color};">${perf.grade}</b>`;
   const arenaRows = arenaHas("resultsHTML") ? (arenaHook("resultsHTML", false)||"") : "";   // p.ej. civiles rescatados (Ciudad Maldita)
-  document.getElementById("go-progress").innerHTML =
+  document.getElementById("go-progress").innerHTML = (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
     Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
     <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de lo ganado en esta partida (${penalty.xpLost} de XP${penalty.afterLevel<penalty.beforeLevel?`, volviste a Nv. ${penalty.afterLevel}`:""} y ${penalty.goldLost} de oro).</b>${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
@@ -142,7 +142,7 @@ const VICTORY_STEPS = [
         <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
         <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
         ${victoryData.arenaRows||""}
-      </div>`;
+      </div>${typeof storyVictoryHtml==="function" ? storyVictoryHtml(victoryData) : ""}`;
   },
   // 1. PERFORMANCE
   function(){
@@ -193,6 +193,7 @@ const VICTORY_STEPS = [
       <div class="vic-sub" style="margin-top:-6px;">${champ.xp} / ${need} XP para el próximo nivel</div>
       <div class="vic-xp-row"><span>Oro total</span><b>${victoryData.gold}</b></div>
       <div class="vic-xp-row"><span>Inventario de la cuenta</span><b>${stashUsedSlots()}/${INVENTORY_CAPACITY}</b></div>
+      ${typeof storyVictoryScarHtml==="function" ? storyVictoryScarHtml(victoryData) : ""}
       ${victoryNextNoteHTML()}`;
   }
 ];
