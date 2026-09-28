@@ -82,6 +82,7 @@ async function client(browser, name, champ, cleared, url) {
   await waitFor(H, () => state === 'prep', null, 15000);
   if (await ev(G, () => state === 'victory')) { await ev(G, () => { victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep(); }); await tap(G, '#again-btn'); }
   await waitAll([H, G], () => state === 'prep', 15000);
+  await sleep(600); await Promise.all([H, G].map(c => ev(c, () => { if (typeof campClose === 'function') campClose(true); }))); // el campamento (camp.js) se abre al volver a la Sala
   await ev(H, () => { diffSetSelected('normal'); pickLobbyArena('bosque'); renderPrepSummary(); netHostBroadcastCos(true); });
   await waitFor(G, () => currentArena === 'bosque' && netLobby.diff === 'normal', null, 8000);
   await tap(H, '#prep-start-btn');
@@ -97,6 +98,7 @@ async function client(browser, name, champ, cleared, url) {
   await waitFor(H, () => state === 'prep', null, 15000);
   if (await ev(G, () => state === 'victory')) { await ev(G, () => { victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep(); }); await tap(G, '#again-btn'); }
   await waitAll([H, G], () => state === 'prep', 15000);
+  await sleep(600); await Promise.all([H, G].map(c => ev(c, () => { if (typeof campClose === 'function') campClose(true); }))); // el campamento (camp.js) se abre al volver a la Sala
   await ev(H, () => { pickLobbyArena('hielo'); renderPrepSummary(); });
   await waitFor(G, () => currentArena === 'hielo', null, 8000);
   await tap(H, '#prep-start-btn');
