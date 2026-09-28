@@ -69,7 +69,8 @@ function defaultSave(){
     stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los guardianes): ver js/systems/items.js
     crystals:{ancestral:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
-    shop:null               // ofertas de objetos del día (js/systems/shop.js)
+    shop:null,              // ofertas de objetos del día (js/systems/shop.js)
+    quests:null             // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
   };
 }
 // ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
@@ -143,7 +144,9 @@ function applyTestSkins(){
   persist();
 }
 function loadSave(){
-  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); applyTestSkins(); }
+  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); applyTestSkins();
+    // logros/desafíos/pase: completa los campos que falten (guardados viejos) y rota los desafíos del día
+    if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
 function _loadSaveInner(){
   try{

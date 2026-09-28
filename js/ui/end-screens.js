@@ -37,6 +37,7 @@ function showGameOverScreen(divinaOutcome){
       document.getElementById("go-progress").innerHTML =
         `Tu equipo cayó ante los 4 guardianes divinos.<br><b style="color:#d29aff;">Esto es un prototipo de combate: no se te descontó XP ni oro.</b>`;
     }
+    if(typeof questsOnRunEnd==="function") questsOnRunEnd(divinaOutcome==="victory", {divina:true});
     return;
   }
   title.textContent = "La Horda te ha consumido";
@@ -54,6 +55,7 @@ function showGameOverScreen(divinaOutcome){
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
     Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
     <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de lo ganado en esta partida (${penalty.xpLost} de XP${penalty.afterLevel<penalty.beforeLevel?`, volviste a Nv. ${penalty.afterLevel}`:""} y ${penalty.goldLost} de oro).</b>${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
+  if(typeof questsOnRunEnd==="function") questsOnRunEnd(false); // después del castigo: lo que dan los desafíos no se descuenta
 }
 /* ============================================================
    FASE 3 — PANTALLA DE VICTORIA COMPLETA
@@ -263,6 +265,7 @@ function showVictoryScreen(){
   victoryData = buildVictoryData();
   victoryStep = 0;
   renderVictoryStep();
+  if(typeof questsOnRunEnd==="function") questsOnRunEnd(true); // logros, desafíos y XP de cuenta
   if(netMatch) netOnEndScreen(true);
 }
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{

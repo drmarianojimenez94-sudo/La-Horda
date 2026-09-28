@@ -587,6 +587,7 @@ function netGuestStartRun(msg){
   const mine = msg.slots[net.slot];
   if(mine) selectedClass = mine.champ;
   if(!reconnecting) markRunStartProgress(selectedClass);
+  if(typeof questsOnRunStart==="function") questsOnRunStart(reconnecting); // logros/desafíos del invitado: cuentan en SU guardado
   clearRunTimers(); resetRunTransients(); runEnding = false; if(typeof _arenaExitDone!=="undefined") _arenaExitDone = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
   runStats = freshRunStats();
   iceWalls.length = 0; bossStrikes.length = 0;
