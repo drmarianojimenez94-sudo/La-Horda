@@ -478,3 +478,5 @@
 /* Pausa: refuerzos de habilidad de la incursión (nombre, habilidad y qué hace) */
 .stat-row.boon-row{ align-items:flex-start; gap:8px; }
 .stat-row.boon-row small{ color:var(--text-dim); font-size:0.66rem; line-height:1.25; }
+/* teléfono acostado: el título de la derrota ocupaba todo el ancho y el aviso de Desafíos (arriba a la derecha) lo cortaba */
+@media (max-height:500px){ #go-title{ font-size:min(2.7vw, 1.4rem); max-width:calc(100vw - 300px); margin-left:auto; margin-right:auto; } }
