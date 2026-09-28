@@ -22,16 +22,18 @@ function openBuffChoice(){
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff(); // prólogo pendiente del cooperativo
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
-  const pool = [...BUFF_POOL].sort(()=>Math.random()-0.5).slice(0,3);
-  pool.forEach(b=>{
+  // 3 cartas: 1-2 refuerzos que TRANSFORMAN una habilidad del guardián (js/data/boons.js; un dúo
+  // habilitado sale primero) mezclados con los genéricos de siempre.
+  const opts = boonBuildOffers(player, BUFF_POOL, false);
+  opts.forEach(opt=>{
     const el = document.createElement("div");
-    el.className = "buff-card";
-    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>`;
+    el.className = buffOptClass(opt);
+    el.innerHTML = buffOptHTML(opt, player);
     el.addEventListener("click", ()=>{
-      b.apply(runStats);
-      refreshEquippedStats(); // refuerzos de vida máxima (Vitalidad, Baluarte, Cañón de Cristal) aplican ya, no recién en la próxima partida
+      if(state!=="buff") return;
+      buffApplyOpt(player, opt); // genérico: runStats + refreshEquippedStats (la vida máxima aplica ya) · refuerzo: player.boons
       // B1: en cooperativo cada humano elige el suyo; se sigue cuando eligieron todos
-      if(netIsHost()){ cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>.</div>`; netHostPickedLocal(); return; }
+      if(netIsHost()){ cards.innerHTML = `<div class="net-wait">Elegiste <b>${buffOptName(opt)}</b>.</div>`; netHostPickedLocal(); return; }
       runLevel++;
       player.hp = Math.min(player.maxHp, player.hp + player.maxHp*0.25);
       player.energy = player.maxEnergy;
@@ -40,5 +42,13 @@ function openBuffChoice(){
     });
     cards.appendChild(el);
   });
+  buffOwnedRefresh(player);
   if(netIsHost()) netHostOpenBuffs();
+}
+// Debajo de las cartas: los refuerzos de habilidad que ya tiene este héroe (la build de la incursión).
+function buffOwnedRefresh(h){
+  const cards = document.getElementById("buff-cards"); if(!cards || !cards.parentNode) return;
+  let el = document.getElementById("boon-owned");
+  if(!el){ el = document.createElement("div"); el.id = "boon-owned"; cards.parentNode.insertBefore(el, cards.nextSibling); }
+  el.innerHTML = boonOwnedLineHTML(h);
 }

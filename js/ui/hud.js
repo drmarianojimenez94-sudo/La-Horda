@@ -21,6 +21,7 @@ function updateAbilityButtons(){
     }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
+    if(typeof boonDecorateButton==="function") boonDecorateButton(el, sk); // refuerzos que la transforman: marca + texto en el tooltip
   });
 }
 
@@ -102,6 +103,7 @@ function updateHUD(){
   // El Libertador / Eren: indicadores propios (Disparo de Oficial, Cabral, montura / Furia,
   // Seguir Adelante, transformación, regeneración, El Retumbar, agotado). Solo se toca el DOM si cambió.
   if(player.cls !== _hudLastCls){ _hudLastCls = player.cls; updateAbilityButtons(); }
+  if(typeof boonHudTick==="function") boonHudTick(); // refuerzos de habilidad nuevos (también los del invitado, que llegan por snapshot)
   const seHudEl = document.getElementById("se-hud");
   if(seHudEl){
     const html = player.classKey==="libertador" ? libertadorHudHtml(player) : player.classKey==="eren" ? erenHudHtml(player) : "";

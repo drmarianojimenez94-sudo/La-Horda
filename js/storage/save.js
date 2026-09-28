@@ -56,6 +56,7 @@ function defaultSave(){
     codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
     ciudadV1:true,          // la Ciudad Maldita (Arena 01) pasó a ser jugable (ver loadSave: nadie pierde la arena que ya tenía abierta)
+    talentTreeV2:true,      // el árbol de talentos tiene su propia bolsa desde el nivel 5 (ver talentTreeV2Migrate)
     minasV1:true,           // las Minas Profundas (Arena 09) pasaron a ser jugables y la campaña se reordenó (ver minasV1Migrate)
     legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
@@ -217,6 +218,12 @@ function _loadSaveInner(){
       // Las Minas Profundas se volvieron jugables como Arena 09 (Laberinto 07 · Abismo 08 · Minas 09 · Infernal 10):
       // quien ya tenía abierta una arena la conserva (en particular la Infernal para quien ya superó el Abismo).
       if(!parsed.minasV1){ minasV1Migrate(); persist(); }
+      // TALENTOS TEMPRANOS (talentTreeV2): el árbol pasó a tener su propia bolsa de puntos (desde el
+      // nivel 5, ver treePointsEarned en talents.js). Nadie pierde nada: lo que se había gastado en el
+      // árbol vuelve a la bolsa del kit, los nodos comprados quedan y los puntos del árbol se dan
+      // retroactivos según el nivel (si gastó más de lo que hoy daría su nivel, la diferencia queda
+      // en treeBonus para que nunca quede "debiendo").
+      if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
@@ -226,6 +233,17 @@ function _loadSaveInner(){
       save.startGoldNotice = true; persist(); // perfil nuevo: el regalo ya viene en defaultSave; queda guardado desde ya
     }
   }catch(e){ save = defaultSave(); }
+}
+function talentTreeV2Migrate(){
+  save.talentTreeV2 = true;
+  if(typeof treePointsSpent!=="function") return;
+  for(const k in save.champions){
+    const c = save.champions[k];
+    const spent = treePointsSpent(k);
+    if(spent <= 0) continue;
+    c.talentPoints = (c.talentPoints||0) + spent;
+    c.treeBonus = Math.max(0, spent - treePointsEarned(c.level||1));
+  }
 }
 // Inventario de la cuenta (stashV1): antes cada guardián tenía su propio inventario. Se juntan todos
 // en save.stash sin perder nada (aunque pase los 30 espacios: solo se frena el botín nuevo hasta
@@ -296,7 +314,7 @@ function campaignReset(raw){
     const c = save.champions[k];
     c.level = 1; c.xp = 0; c.talentPoints = 0; c.unlocked = false;
     c.skillMastery = [mkMastery(), mkMastery(), mkMastery()]; c.ultMastery = mkMastery();
-    c.talents = mkTalentState();
+    c.talents = mkTalentState(); c.treeBonus = 0;
   }
   save.gold = 0;
   save.arenasCleared = defaultSave().arenasCleared;

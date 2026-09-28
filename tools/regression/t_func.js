@@ -190,10 +190,10 @@ async function canvasNonBlank(page) {
     await page.click('#codex-body [data-sec="campeones"]');
     await page.click('#codex-body .cx-champ-card[data-go="champ:nigromante"]');
     await page.click('#codex-body [data-ctab="talentos"]'); await sleep(200);
-    const before = await page.evaluate(() => window.__T.ev('save.champions.nigromante.talentPoints'));
+    const before = await page.evaluate(() => window.__T.ev('treePointsAvailable("nigromante")'));
     let bought = 0;
     for (let i = 0; i < 6; i++) { const b = page.locator('#cx-hub-panel .tt-buy').first(); if (!(await b.count())) break; await b.click({ timeout: 800 }).catch(() => {}); bought++; await sleep(60); }
-    const after = await page.evaluate(() => window.__T.ev('save.champions.nigromante.talentPoints'));
+    const after = await page.evaluate(() => window.__T.ev('treePointsAvailable("nigromante")'));
     check('talents.buy_ui', bought > 0 && after < before, { bought, before, after });
     const errs = await gameErrors(page, errors);
     check('talents.no_errors', errs.length === 0, errs);

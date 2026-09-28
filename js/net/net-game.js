@@ -478,7 +478,9 @@ function netHostOpenBuffs(){
     if(s.kind!=="human" || s.slot===0) continue;
     const h = heroes[s.slot];
     if(!h || !h._net || !h._net.connected){ netMatch.buffPicks[s.slot] = "skip"; continue; }
-    const opts = [...((typeof endlessOn==="function" && endlessOn()) ? endlessBuffPool() : BUFF_POOL)].sort(()=>Math.random()-0.5).slice(0,3).map(b=>b.id);
+    // cartas armadas con SU guardián (h): 1-2 refuerzos que transforman sus habilidades + genéricos
+    const endless = typeof endlessOn==="function" && endlessOn();
+    const opts = boonBuildOffers(h, endless ? endlessBuffPool() : BUFF_POOL, endless);
     netMatch.buffPicks[s.slot] = null;
     netMatch["buffOpts"+s.slot] = opts;
     netSendTo(s.slot, {k:"buffs", opts, level:runLevel});
@@ -487,10 +489,11 @@ function netHostOpenBuffs(){
 function netHostBuffPicked(slot, id){
   if(!netMatch.buffPicks || netMatch.buffPicks[slot]!==null) return;
   const opts = netMatch["buffOpts"+slot] || [];
-  const b = BUFF_POOL.find(x=>x.id===id && opts.includes(x.id)) || BUFF_POOL.find(x=>x.id===opts[0]);
+  const pick = opts.includes(id) ? id : opts[0]; // solo una de SUS cartas; sin elección (tiempo): la primera
   const h = heroes[slot];
-  if(b && h) netWithHero(h, ()=>{ b.apply(runStats); refreshEquippedStats(); if(typeof endlessOn==="function" && endlessOn()) endlessOnBuffPicked(h, b.id); });
-  netMatch.buffPicks[slot] = b ? b.id : "skip";
+  const ok = !!pick && !!h && (!!boonParseOpt(pick) || !!BUFF_POOL.find(x=>x.id===pick));
+  if(ok) netWithHero(h, ()=>{ buffApplyOpt(h, pick); if(!boonParseOpt(pick) && typeof endlessOn==="function" && endlessOn()) endlessOnBuffPicked(h, pick); });
+  netMatch.buffPicks[slot] = ok ? pick : "skip";
   netHostTryResume();
 }
 function netHostPickedLocal(){ if(netMatch.buffPicks) netMatch.buffPicks[0] = "done"; netHostTryResume(); }
@@ -842,16 +845,19 @@ function netGuestShowBuffs(d){
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
   (d.opts||[]).forEach(id=>{
-    const b = BUFF_POOL.find(x=>x.id===id); if(!b) return;
+    const pb = boonParseOpt(id), b = pb ? null : BUFF_POOL.find(x=>x.id===id);
+    if(!pb && !b) return;
     const el = document.createElement("div");
-    el.className = "buff-card";
-    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>${(typeof endlessOn==="function" && endlessOn()) ? endlessBuffHint(b) : ""}`;
+    el.className = buffOptClass(id);
+    // su héroe (player) trae sus refuerzos por el snapshot: mejoras y dúos se ven igual que en el anfitrión
+    el.innerHTML = buffOptHTML(id, player, (b && typeof endlessOn==="function" && endlessOn()) ? endlessBuffHint(b) : "");
     el.addEventListener("click", ()=>{
       netSendToHost({k:"buff", id});
-      cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>. Esperando al resto del equipo…</div>`;
+      cards.innerHTML = `<div class="net-wait">Elegiste <b>${buffOptName(id)}</b>. Esperando al resto del equipo…</div>`;
     });
     cards.appendChild(el);
   });
+  if(typeof buffOwnedRefresh==="function") buffOwnedRefresh(player);
 }
 function netGuestEnd(d){
   if(!netMatch || netMatch.ended) return;
