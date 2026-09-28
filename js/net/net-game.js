@@ -337,7 +337,7 @@ function netHostStartGame(){
   return true;
 }
 function netStartMessage(){
-  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true)};
+  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
 }
 // Cada cuadro, en update(): héroes de los invitados.
 function netHostUpdateRemotes(dt){
@@ -544,9 +544,13 @@ function _netDeltaOf(lastMap, obj, full){
   lastMap.__sent = 1;
   return any ? d : null;
 }
-function netBuildSnapshot(full){
+function netBuildSnapshot(full, forOne){ // forOne: estado para UN invitado (entra/vuelve): no se lleva los eventos ni las partículas de todos
   const M = netMatch;
   const snap = {k:"s", n:++M.snapN};
+  // el estado para UN invitado se arma con referencias propias: antes pisaba las del resto y el
+  // siguiente snapshot le llegaba a los demás como diferencia contra un estado que nunca vieron
+  // (enemigos nuevos sin tipo ni vida, bajas que no llegaban: fantasmas quietos hasta 10 s)
+  const saved = forOne ? [M.last, M.lastG, M.lastH] : null;
   if(full){ M.last = {}; M.lastG = {}; M.lastH = [{},{},{},{}]; snap.full = 1; }
   // ids para referencias: todos los enemigos vivos tienen id antes de serializar
   for(const e of enemies) netIdOf(e);
@@ -577,6 +581,7 @@ function netBuildSnapshot(full){
     if(u.length || r.length || full) snap.c[name] = {u, r};
   }
   // partículas nuevas (efímeras: se mandan una vez y cada invitado las anima)
+  if(forOne){ M.last = saved[0]; M.lastG = saved[1]; M.lastH = saved[2]; return snap; }
   const p = [];
   for(const pt of particles){ if(pt._s) continue; pt._s = 1; if(p.length < 90){ const s = netSer(pt, 1); if(s) p.push(s); } }
   if(p.length) snap.p = p;
