@@ -35,7 +35,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const r0 = await E(() => { const q = save.quests; return { v: q && q.v, dk: q.daily.key, today: questsDayKey(), nd: q.daily.list.length, nw: q.weekly.list.length,
     titles: q.titles, granted: q.season.granted, gold: save.gold, ach: Object.keys(q.ach).length, retro: q.retro }; });
   check('Q.perfil_nuevo_tiene_quests_normalizado', r0.v === 1 && r0.nd === 3 && r0.nw === 3 && r0.dk === r0.today && r0.retro === false, r0);
-  check('Q.pase_nivel1_da_titulo_sin_tocar_el_oro', r0.granted === 1 && r0.titles.includes('t1_nuevo') && r0.gold === 10000 && r0.ach === 0, r0);
+  check('Q.pase_nivel1_da_titulo_sin_tocar_el_oro', r0.granted === 1 && r0.titles.includes('t1_nuevo') && r0.gold === 0 /* perfil nuevo sin oro de regalo */ && r0.ach === 0, r0);
 
   // ---------------- rotación por fecha ----------------
   const r1 = await E(() => {

@@ -27,6 +27,34 @@ function renderShop(){
   else if(shopTab==="campeones") renderShopChampions(panel);
   else if(shopTab==="objetos") renderShopObjects(panel);
   else renderShopSkins(panel);
+  _shopVoucherMount(panel);
+}
+/* ---------------- Vale de skin (regalo inicial, js/systems/starter-gift.js) ----------------
+   Mientras tengas un vale sin canjear: un cartel arriba de la vitrina y de Skins, y cada skin o croma
+   que no tenés suma "🎟 Canjear vale" (la skin queda tuya y equipada, sin cobrar oro). */
+function _shopVoucherBtn(id){
+  if(typeof skinVoucherCanRedeem!=="function" || !skinVoucherCanRedeem(id)) return "";
+  return `<button class="shop-btn hot shop-vale-btn" data-voucher="${id}">🎟 Canjear vale</button>`;
+}
+function _shopVoucherMount(panel){
+  const n = typeof skinVoucherCount==="function" ? skinVoucherCount() : 0;
+  if(!n || (shopTab!=="destacados" && shopTab!=="skins")) return;
+  const box = document.createElement("div"); box.className = "shop-vale-banner";
+  box.innerHTML = `🎁 <b>Tenés una skin de regalo: elegila.</b> Tocá <b>🎟 Canjear vale</b> en la skin o croma que quieras: el precio queda cubierto.${n>1 ? ` (${n} vales)` : ""}`;
+  panel.insertBefore(box, panel.firstChild);
+  panel.querySelectorAll("[data-voucher]").forEach(b=> b.addEventListener("click", ev=>{
+    ev.stopPropagation();
+    const id = b.getAttribute("data-voucher"), d = typeof skinDefOf==="function" ? skinDefOf(id) : null;
+    const nm = (d && d.name) || (SET_DB[id] && SET_DB[id].name) || id;
+    const extra = SET_SKINS[id] && SET_DB[id] ? ` (trae las piezas del set ${SET_DB[id].name} que te faltan)` : "";
+    gameConfirm(`¿Canjear tu vale de skin por ${nm}${extra}?`, {okText:"Canjear"}).then(ok=>{
+      if(!ok) return;
+      const r = skinVoucherRedeem(id); if(!r.ok){ gameAlert(r.reason); return; }
+      const who = r.champ && CLASSES[r.champ] ? CLASSES[r.champ].name : "";
+      _shopAfterBuy(`🎨 ¡Es tuya! ${nm}${r.equipped ? " · equipada" + (who ? " en " + who : "") : (who ? " · conseguí a " + who + " para usarla" : "")}`, "levelup");
+      if(r.kind==="set" && r.equipped && typeof netInRoom==="function" && netInRoom() && typeof cromaAfterEquip==="function") cromaAfterEquip(r.champ);
+    });
+  }));
 }
 function _shopFlash(el){ if(!el) return; el.classList.remove("shop-bought"); void el.offsetWidth; el.classList.add("shop-bought"); }
 function _shopAfterBuy(msg, sfx){
@@ -102,7 +130,7 @@ function renderShopShowcase(panel){
       <div class="shop-bundle-art"><img src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
       <div class="shop-bundle-name">${sk.name || S.name}</div>
       <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · ${n} piezas + skin</div>
-      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}</div>
+      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}${_shopVoucherBtn(id)}</div>
     </div>`;
   }).join("");
   // cromas: cosméticas sueltas (js/ui/shop-cromas.js da los productos); las que no tenés primero
@@ -116,7 +144,7 @@ function renderShopShowcase(panel){
       <div class="shop-bundle-art"><img src="${p.preview}" alt="" loading="lazy">${p.owned ? "" : _shopTagNew(key)}</div>
       <div class="shop-bundle-name">${p.name}</div>
       <div class="shop-item-sub"><span style="color:${p.color}">◆</span> ${p.champName} · ${p.crystalLabel}</div>
-      <div class="shop-deal-buy">${act}</div>
+      <div class="shop-deal-buy">${act}${_shopVoucherBtn(p.id)}</div>
     </div>`;
   }).join("");
   // guardianes por desbloquear
@@ -313,7 +341,7 @@ function renderShopSkins(panel){
     const eq = champ ? equippedSetCount(champ, id) : 0, active = activeOn.length > 0;
     const previewKey = champ || comp[0];
     let action;
-    if(miss.length) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`;
+    if(miss.length) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>${_shopVoucherBtn(id)}`;
     else if(!comp.length) action = `<div class="shop-item-sub">Skin desbloqueada: conseguí a <b>${champ ? CLASSES[champ].name : "un guardián"}</b> en la pestaña Guardianes para usarla.</div>`;
     else {
       const rest = comp.filter(k=>!activeOn.includes(k));

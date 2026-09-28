@@ -53,7 +53,7 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
 #prep-screen .inv-slot .slot-lv, #prep-screen .tt-rank{ font-size:0.85rem; }
 #prep-screen .net-name input, #modeselect-screen .net-name input, #prep-screen .net-code-input{ font-family:var(--font-retro); font-size:1.1rem; }
 #modeselect-screen .net-name{ font-size:1.05rem; }
-#starter-confirm-text{ font-size:1.25rem; }
+#starter-confirm-text, #starter-skin-confirm-text{ font-size:1.25rem; }
 #hub-options .opt-note{ font-size:1rem; line-height:1.2; }
 #arenaselect-screen .arena-grid-sep{ font-family:var(--font-pixel); font-size:0.7rem; }
 #net-toast{ font-size:1.05rem; line-height:1.15; }
