@@ -192,7 +192,10 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
   const st0 = state;
   const stillHere = ()=> state===st0 && !!player;
   const abandon = ()=>{
-    gameConfirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg, {okText:"Abandonar", cancelText:"Seguir jugando", danger:true}).then(ok=>{
+    const forgive = typeof arenaFailureForgiveReason==="function" && arenaFailureForgiveReason();
+    const costMsg = forgive ? "Cuenta como una derrota, pero esta vez la Horda te perdona: no perdés XP ni oro."
+      : "Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras.";
+    gameConfirm("¿Abandonar la arena? "+costMsg+lootMsg, {okText:"Abandonar", cancelText:"Seguir jugando", danger:true}).then(ok=>{
       if(!ok || !stillHere()) return;
       applyArenaFailurePenalty(player.classKey);
       if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);

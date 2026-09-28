@@ -26,6 +26,7 @@
    ============================================================ */
 const BOS_CFG = {
   runeIdx: [1, 3, 5, 7],        // menhires con runa (de los 8 del círculo)
+  runeIdxAlt: [0, 2, 4, 6],     // variante por semilla: los otros cuatro menhires (mismo anillo, mismos sólidos)
   ring: 300,
   firstArmMs: 22000,            // la primera runa despierta pronto (después de los básicos; la enseña el Hechicero)
   armEvery: lvl => Math.max(9000, 27000 - lvl*1900),   // cada cuánto despierta otra runa
@@ -57,7 +58,9 @@ const BOS_STATE_TXT = {ctrl:"CONTROLADA", arming:"ACTIVÁNDOSE", active:"ACTIVA"
 const BOS = { runes:[], amb:[], ambT:0, nextA:1, armT:0, surgeT:0, finale:null };
 
 function bosResetRun(){
-  BOS.runes = BOS_CFG.runeIdx.map((i)=>{
+  // variante por semilla de la partida (en cooperativo, la del anfitrión): qué cuatro menhires llevan runa
+  const idx = (typeof mapVariantPick==="function" && mapVariantPick("bos_runes", 2)===1) ? BOS_CFG.runeIdxAlt : BOS_CFG.runeIdx;
+  BOS.runes = idx.map((i)=>{
     const a = i/8*6.283 + Math.PI/8;
     const p = aidOnRing(BOS_CFG.ring, BOS_CFG.ring, a);
     return { id:"rn"+i, kind:"bos_rune", mx:Math.round(p.x), my:Math.round(p.y), x:Math.round(p.x), y:Math.round(p.y)+30, r:70, h:132,

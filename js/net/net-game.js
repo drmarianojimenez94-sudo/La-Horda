@@ -314,6 +314,7 @@ function netHostStartGame(){
   });
   const seed = (Math.random()*0x7fffffff)|0 || 7;
   netMatch = {role:"host", mySlot:0, seed, slots, arena:currentArena, loadouts:(netLobby.loadouts||{}),
+    diff: typeof diffEffective==="function" ? diffEffective(currentArena) : "normal", // la dificultad la elige el anfitrión
     backups:null, recording:false, lastSnapAt:0, lastKeyAt:0, snapN:0, last:{}, lastG:{}, lastH:[{},{},{},{}], ents:new Map(),
     buffPicks:null, ended:false, startedAt:performance.now()};
   netSend({t:"start"});
@@ -340,7 +341,7 @@ function netHostStartGame(){
   return true;
 }
 function netStartMessage(){
-  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
+  return {k:"start", arena:currentArena, seed:netMatch.seed, diff:netMatch.diff || "normal", slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
 }
 // Cada cuadro, en update(): héroes de los invitados.
 function netHostUpdateRemotes(dt){
@@ -615,7 +616,7 @@ function netHostTick(){
 function netGuestStartRun(msg){
   // reconexión = misma sala y la partida anterior NO había terminado (si terminó, es una nueva)
   const reconnecting = !!(netMatch && netMatch.role==="guest" && netMatch.code===net.code && !netMatch.ended);
-  netMatch = {role:"guest", mySlot:net.slot, seed:msg.seed, slots:msg.slots, arena:msg.arena, code:net.code,
+  netMatch = {role:"guest", mySlot:net.slot, seed:msg.seed, slots:msg.slots, arena:msg.arena, code:net.code, diff:msg.diff || "normal",
     ents:new Map(), colls:{}, lastInAt:0, posAuth:-1, pendingFull:false, started:true, ended:false,
     runStartMarked: reconnecting ? true : false};
   currentArena = msg.arena;
@@ -647,6 +648,7 @@ function netGuestStartRun(msg){
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
   const hudArenaEl = document.getElementById("hud-arena");
   if(hudArenaEl) hudArenaEl.textContent = (ARENA_MODS[currentArena]||{}).label || "";
+  if(typeof diffHudMark==="function") diffHudMark();
   netApplySnapshot(msg.snap);
   if(typeof setMusicMode==="function") setMusicMode("wave", runLevel);
   setState("playing");
@@ -747,7 +749,7 @@ function netApplySnapshot(s){
 function netGuestOnMsg(from, d){
   if(!d) return;
   switch(d.k){
-    case "cos": netLobby.cos = d.m || {}; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
+    case "cos": netLobby.cos = d.m || {}; if(d.d) netLobby.diff = d.d; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
     case "start":
       if(typeof assetsAllReady==="function" && !assetsAllReady()){ netGuestHoldStart(d); return; }
       netGuestStartRun(d); return;
@@ -870,7 +872,9 @@ function netGuestEnd(d){
       save.arenasCleared = save.arenasCleared || {};
       save.arenasCleared[currentArena] = true;
     }
-    grantGold(80);
+    // Pesadilla/Infierno: igual, solo si ya la tenía abierta en esta arena (difficulty-tiers.js)
+    if(typeof diffMarkCleared==="function") diffMarkCleared(currentArena, netMatch.diff, diffArenaUnlocked(currentArena, netMatch.diff));
+    grantGold(Math.round(80*(typeof diffGoldMult==="function" ? diffGoldMult() : 1)));
     persist();
     showVictoryScreen();
   } else {

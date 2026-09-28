@@ -55,8 +55,19 @@ function showGameOverScreen(divinaOutcome){
   document.getElementById("go-progress").innerHTML = (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
     Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
-    <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de lo ganado en esta partida (${penalty.xpLost} de XP${penalty.afterLevel<penalty.beforeLevel?`, volviste a Nv. ${penalty.afterLevel}`:""} y ${penalty.goldLost} de oro).</b>${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
+    ${defeatPenaltyLineHTML(penalty)}${typeof diffResultRowHTML==="function" ? diffResultRowHTML(false) : ""}${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
   if(typeof questsOnRunEnd==="function") questsOnRunEnd(false); // después del castigo: lo que dan los desafíos no se descuenta
+}
+// Renglón del castigo de la derrota: lo que se perdió o, en las primeras derrotas, el perdón
+// (progression.js: arenaFailureForgiveReason).
+function defeatPenaltyLineHTML(p){
+  if(p && p.forgiven){
+    const why = p.forgiven==="arena" ? "En la primera arena se aprende sin castigo."
+      : (p.forgivenLeft > 0 ? `Te ${p.forgivenLeft===1?"queda":"quedan"} ${p.forgivenLeft} derrota${p.forgivenLeft===1?"":"s"} sin castigo; después se pierde la mitad de lo ganado en la partida.`
+        : "Fue la última sin castigo: desde ahora perder cuesta la mitad de lo ganado en la partida.");
+    return `<b class="go-forgiven" style="color:#9fe8a8;">Esta vez la Horda te perdona: no perdiste XP ni oro.</b><br><span style="color:#cfc6b0;">${why}</span>`;
+  }
+  return `<b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${p.lostPct}% de lo ganado en esta partida (${p.xpLost} de XP${p.afterLevel<p.beforeLevel?`, volviste a Nv. ${p.afterLevel}`:""} y ${p.goldLost} de oro).</b>`;
 }
 /* ============================================================
    FASE 3 — PANTALLA DE VICTORIA COMPLETA
@@ -82,7 +93,7 @@ function buildVictoryData(){
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
   // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño. Es lo que
   // separa a quien juega bien (pocas derrotas) en la curva de la campaña (ver xpToNext).
-  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
+  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100) * (typeof diffCurrent==="function" ? diffTier(diffCurrent()).xp : 1));
   grantXP(classKey, victoryXpBonus);
   return {
     classKey, perf, score:perf.score, rewards:loot.items, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
@@ -142,6 +153,7 @@ const VICTORY_STEPS = [
       <div class="res-rows">
         <div class="res-row"><span>Arena</span><b>${A.label||"—"}</b></div>
         <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
+        ${typeof diffResultRowHTML==="function" ? diffResultRowHTML(true) : ""}
         <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
         <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
         ${victoryData.arenaRows||""}

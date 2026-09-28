@@ -20,9 +20,10 @@ function _pick(weights, rng){
 function lootTierWeights(arena, grade, pity, defeat){
   const base = ARENA_LOOT[arena] || ARENA_LOOT.bosque;
   const g = GRADE_LOOT[grade] || GRADE_LOOT.A;
+  const df = typeof diffLootFactor==="function" ? diffLootFactor() : 1; // Pesadilla/Infierno: mejor rareza
   const w = {};
   for(const t of LOOT_TIERS){
-    let v = base[t] * Math.pow(g.factor, TIER_EXP[t]);
+    let v = base[t] * Math.pow(g.factor * df, TIER_EXP[t]);
     if(pity && LOOT_PITY[t]) v *= 1 + Math.min(LOOT_PITY[t].cap, LOOT_PITY[t].step*(pity[t]||0));
     if(defeat && (t==="legendario" || t==="set" || t==="mitico" || t==="unico")) v *= DEFEAT_LOOT.highTierMult;
     w[t] = v;
@@ -150,6 +151,9 @@ function grantEndOfRunLoot(classKey, perf, victory){
     if(stashFull()){ inventoryFull = true; break; }
     const it = materializeLoot(spec, classKey, currentArena);
     it.lootTier = spec.tier;
+    // Pesadilla/Infierno: el objeto cae con nivel (lo mismo que subirlo con Gemas)
+    const lb = typeof diffItemLevelBonus==="function" ? diffItemLevelBonus() : 0;
+    if(lb > 0) it.level = Math.min(ITEM_MAX_LEVEL, itemLevel(it) + lb);
     addItemToInventory(classKey, it);
     items.push(it);
   }

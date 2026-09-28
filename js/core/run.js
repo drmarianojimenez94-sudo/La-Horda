@@ -85,6 +85,8 @@ function startRun(fromLevel){
   screenShake = 0;
   const hudArenaEl = document.getElementById("hud-arena");
   if(hudArenaEl) hudArenaEl.textContent = (ARENA_MODS[currentArena]||{}).label || "";
+  if(typeof diffHudMark==="function") diffHudMark(); // Pesadilla / Infierno junto al nombre de la arena
+  if(typeof diffNewSoloSeed==="function") diffNewSoloSeed(); // semilla del mapa (en cooperativo manda netMatch.seed)
   runStats = freshRunStats();
   if(typeof endlessOn==="function" && endlessOn()) endlessOnRunStart(); // Horda Infinita: nivel del tramo según la ronda
   iceWalls.length = 0; bossStrikes.length = 0; if(typeof guardReset==="function") guardReset();
@@ -232,7 +234,8 @@ function finishBossVictory(){
   if(typeof endlessOn==="function" && endlessOn()){ endlessBossDown(); return; } // Horda Infinita: el jefe es una ronda, no el cierre de la arena
   bossActive = false;
   if(typeof setMusicMode==="function") setMusicMode("victory");
-  grantGold(80);
+  grantGold(Math.round(80*(typeof diffGoldMult==="function" ? diffGoldMult() : 1)));
+  const pesOpen0 = typeof diffTierOpen==="function" && diffTierOpen("pesadilla");
   // ORDEN CANÓNICO (CAMPAIGN_ORDER): la campaña es secuencial -la primera victoria en una arena abre la
   // siguiente arena jugable (la frontera, ver campaignFrontier)-. Completar la Arena Infernal abre la
   // Arena Divina (postgame).
@@ -246,6 +249,8 @@ function finishBossVictory(){
     save.divineArenaUnlocked = true;
     setTimeout(()=>showBanner("🔓 POSTGAME: ARENA DIVINA — LAS CINCO PRUEBAS"), firstClear ? 9000 : 2600);
   }
+  // Pesadilla/Infierno (difficulty-tiers.js): progreso de esa dificultad y aviso si se abrió la siguiente
+  if(typeof diffMarkCleared==="function"){ const dv = diffMarkCleared(currentArena, diffCurrent()); diffAnnounceOpened(dv.opened || diffOpenedByNormal(pesOpen0)); }
   persist();
   runEnding = true;
   if(typeof campaignOnVictory==="function") campaignOnVictory(currentArena, firstClear); // la Cicatriz hacia la próxima arena

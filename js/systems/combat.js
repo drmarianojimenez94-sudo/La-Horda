@@ -281,7 +281,7 @@ function damageHero(h, amount, src){
   if(!modeRules().friendlyFire && src && src!==h){ const atk = allyAttackerOf(src); if(atk && atk!==h) return; }
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
-    if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
+    if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap*(typeof diffHitCapMult==="function" ? diffHitCapMult() : 1)); // Pesadilla/Infierno suben el tope
     amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h) * heroResistMult(h, src) * (arenaHook("heroDmgTakenMult", h)||1); // (Minas: +daño a oscuras)
   }
   if(h.stats){

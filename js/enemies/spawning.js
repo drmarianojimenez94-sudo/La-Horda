@@ -77,9 +77,12 @@ function spawnPoolForAcuatica(level){
   return pool;
 }
 function pickFromPool(pool){
-  let total = 0; for(const p of pool) total += p.w;
+  // Pesadilla/Infierno: élites y subélites más frecuentes (difficulty-tiers.js)
+  const ew = typeof diffEliteWeight==="function" ? diffEliteWeight : null;
+  const wOf = p => ew ? p.w*ew(p.t) : p.w;
+  let total = 0; for(const p of pool) total += wOf(p);
   let r = Math.random()*total;
-  for(const p of pool){ r -= p.w; if(r <= 0) return p.t; }
+  for(const p of pool){ r -= wOf(p); if(r <= 0) return p.t; }
   return pool[0].t;
 }
 

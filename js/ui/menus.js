@@ -380,8 +380,10 @@ function renderLobbyArena(){
       <div class="la-strip">${chips}</div>
       <div class="la-desc">${a.icon||""} ${a.desc||""}</div>${warn}`;
   }
+  if(typeof diffPickerHtml==="function"){ const dh = diffPickerHtml(); if(dh) html += `<div class="diff-wrap">${dh}</div>`; } // Normal/Pesadilla/Infierno (difficulty-tiers.js)
   if(box._html === html && box.innerHTML) return; // sin cambios: no reemplaza botones bajo el dedo
   box._html = html; box.innerHTML = html;
+  if(typeof diffBindPicker==="function") diffBindPicker(box);
   box.querySelectorAll("[data-lobby-arena]").forEach(b=> b.addEventListener("click", ()=> pickLobbyArena(b.getAttribute("data-lobby-arena"))));
   const strip = box.querySelector(".la-strip"), sel = box.querySelector(".la-chip.sel");
   if(strip && sel) strip.scrollLeft = Math.max(0, sel.offsetLeft - strip.offsetLeft - 8); // la elegida, a la vista

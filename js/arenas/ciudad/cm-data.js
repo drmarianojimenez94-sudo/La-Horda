@@ -99,7 +99,12 @@ const CM_CFG = {
   tramoyista:{ slamCd:[3000, 3800], slamWind:900, slamR:130, dropCd:[7000, 9000], dropWind:1100, dropR:90, barCd:[11000, 14000], barMs:8000, throwCd:[5200, 6800], throwWind:750 },
   dama:{ curtainCd:[7000, 9000], curtainWind:1100, boltCd:[3000, 3800], darkCd:[9000, 12000], darkR:170, darkMs:5000, mirrorCd:[13000, 16000], summonCd:[14000, 18000], burstAt:0.3 },
   presentador:{ p2At:0.66, p3At:0.33, transformMs:3200, boltCd:[2400, 3000], markCd:[7000, 8500], curtainCd:[8000, 10000], echoCd:[9000, 11000],
-                pillarMs:12000, ovationCd:[15000, 18000], ovationWind:3000, ovationPct:0.45, spectatorCd:[3200, 4400], deathMs:9500,
+                pillarMs:12000, ovationCd:[15000, 18000], ovationWind:3000, ovationPct:0.62, spectatorCd:[3200, 4400], deathMs:9500,
+                // PRIMER JEFE QUE AMENACE (reseña #6: al Mago le sacó 9 de 179 en toda la pelea). Los telegrafiados
+                // (reflectores, telones, ecos, espectadores) pegan telMult veces su base: un reflector que te agarra
+                // quieto saca ~1/4 de la vida del nivel esperado y la Ovación sin pilar, 62 %. Todos siguen con su
+                // aviso en el piso (1,0-1,8 s) y la Ovación con 3 s y pilares: se esquivan leyendo, no con suerte.
+                telMult:1.9,
                 // REGLA (boss identity): PROTEGÉ LA CIUDAD Y USÁ SUS ATAQUES CONTRA ÉL. El GRAN NÚMERO carga (cortable con daño)
                 // y manda un cometa lento contra una estructura en pie: interceptarlo lo devuelve contra él -> EXPUESTO.
                 gnCd:[19000, 23000], gnWind:2300, gnBreakPct:0.07, gnSpd:150, gnStructPct:0.28, gnExposeMs:5200, kiteR:650, kiteMs:4000 }

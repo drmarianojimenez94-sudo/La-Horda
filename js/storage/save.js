@@ -73,7 +73,10 @@ function defaultSave(){
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
     cromas:{},              // cromas compradas (cosméticas, oro del juego): {id:true}; la equipada va en champions[k].croma (js/systems/cromas.js)
     shop:null,              // ofertas de objetos del día (js/systems/shop.js)
-    quests:null             // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
+    quests:null,            // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
+    // DIFICULTADES (js/systems/difficulty-tiers.js): arenas superadas en Pesadilla / Infierno (Normal es
+    // arenasCleared), la elegida en la Sala y las derrotas de la cuenta (las 3 primeras no se castigan)
+    diffCleared:{pesadilla:{}, infierno:{}}, diffSelected:"normal", defeatCount:0
   };
 }
 // ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
@@ -225,6 +228,11 @@ function _loadSaveInner(){
       // en treeBonus para que nunca quede "debiendo").
       if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
+      // dificultades: guardados de antes no las tienen (todo en Normal); forma segura siempre
+      const dc = (parsed.diffCleared && typeof parsed.diffCleared==="object") ? parsed.diffCleared : {};
+      save.diffCleared = {pesadilla:Object.assign({}, dc.pesadilla||{}), infierno:Object.assign({}, dc.infierno||{})};
+      if(!["normal","pesadilla","infierno"].includes(save.diffSelected)) save.diffSelected = "normal";
+      save.defeatCount = Math.max(0, parsed.defeatCount|0);
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
       // sesión que solo mira sin tocar nada perdería el arreglo al cerrar el navegador.
@@ -318,6 +326,7 @@ function campaignReset(raw){
   }
   save.gold = 0;
   save.arenasCleared = defaultSave().arenasCleared;
+  save.diffCleared = {pesadilla:{}, infierno:{}}; save.diffSelected = "normal";
   save.crystals = defaultSave().crystals;
   save.legacyHieloOpen = false; save.legacyLabOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true; save.abismoMigrated = true;
   save.campaignV2 = true; save.legacyOpenArenas = []; save.ciudadV1 = true; save.minasV1 = true;

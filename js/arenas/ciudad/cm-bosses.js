@@ -397,7 +397,7 @@ function cmSpectatorsUpdate(dt){
   const C = CM_CFG.presentador;
   for(const s of (cmS.spec||[])){
     s.t += dt;
-    if(s.t >= C.spectatorCd[1]){ s.t = cmRand(0, C.spectatorCd[1] - C.spectatorCd[0]); const h = cmRandHero(); cmDrop("spect", h.x + cmRand(-40, 40), h.y + cmRand(-40, 40), 56, 1000, (boss ? boss.dmg : 20)*0.5); }
+    if(s.t >= C.spectatorCd[1]){ s.t = cmRand(0, C.spectatorCd[1] - C.spectatorCd[0]); const h = cmRandHero(); cmDrop("spect", h.x + cmRand(-40, 40), h.y + cmRand(-40, 40), 56, 1000, (boss ? boss.dmg : 20)*0.5*C.telMult); }
   }
 }
 function cmAIPresentador(e, dt, tgt, dist){
@@ -466,8 +466,8 @@ function cmAIPresentador(e, dt, tgt, dist){
     // ECOS LIMITADOS de los subjefes (uno por vez)
     e.echoCd = cmRand(C.echoCd[0], C.echoCd[1])*sp;
     const k = (e._echo = ((e._echo||0) + 1) % 3);
-    if(k===0){ cast("cast", 700, ()=>{ const h = cmRandHero(); cmDrop("mae", h.x, h.y, 100, 1700, e.dmg*1.1, {follow:heroes.indexOf(h) + 1}); cmZone("mae", tgt.x, tgt.y, 140, 4000, {dps:e.dmg*0.3, arm:900}); vfxTelegraph({shape:0, x:tgt.x, y:tgt.y, r:140, dur:900, rgb:"255,60,90"}); showBanner("Eco: el Maestro de Ceremonias"); }); }
-    else if(k===1){ cast("cast", 700, ()=>{ for(const h of heroes.filter(q=>q.alive)) cmDrop("scenery", h.x, h.y, 90, 1200, e.dmg); showBanner("Eco: el Tramoyista"); }); }
+    if(k===0){ cast("cast", 700, ()=>{ const h = cmRandHero(); cmDrop("mae", h.x, h.y, 100, 1700, e.dmg*1.1*C.telMult, {follow:heroes.indexOf(h) + 1}); cmZone("mae", tgt.x, tgt.y, 140, 4000, {dps:e.dmg*0.3, arm:900}); vfxTelegraph({shape:0, x:tgt.x, y:tgt.y, r:140, dur:900, rgb:"255,60,90"}); showBanner("Eco: el Maestro de Ceremonias"); }); }
+    else if(k===1){ cast("cast", 700, ()=>{ for(const h of heroes.filter(q=>q.alive)) cmDrop("scenery", h.x, h.y, 90, 1200, e.dmg*C.telMult); showBanner("Eco: el Tramoyista"); }); }
     else { cast("cast", 700, ()=>{ for(let j=0;j<2;j++){ const p = cmNearestFree(e.x + cmRand(-240, 240), e.y + cmRand(-180, 180), 40); const m = cmSpawnAt("cm_espejismo", p.x, p.y); m.maxHp = m.hp = 1; m.atlasKey = "cm_dama"; } showBanner("Eco: la Dama del Telón"); }); }
     playSfx("cmWhisper");
     return true;
@@ -475,7 +475,7 @@ function cmAIPresentador(e, dt, tgt, dist){
   if(e.markCd <= 0){
     e.markCd = cmRand(C.markCd[0], C.markCd[1])*sp;
     const L = heroes.filter(h=>h.alive).sort(()=>Math.random() - 0.5).slice(0, act===1 ? 1 : 2);
-    for(const h of L){ cmDrop("mark", h.x, h.y, 100, 1800, e.dmg*1.2, {follow:heroes.indexOf(h) + 1}); floatText(h.x, h.y - 80, "¡EN EL REFLECTOR!", "warn"); }
+    for(const h of L){ cmDrop("mark", h.x, h.y, 100, 1800, e.dmg*1.2*C.telMult, {follow:heroes.indexOf(h) + 1}); floatText(h.x, h.y - 80, "¡EN EL REFLECTOR!", "warn"); }
     cast("cast", 600, null); playSfx("cmSpot");
     return true;
   }
@@ -483,7 +483,7 @@ function cmAIPresentador(e, dt, tgt, dist){
     e.curtainCd = cmRand(C.curtainCd[0], C.curtainCd[1])*sp;
     const h = cmRandHero(), dx = h.x - e.x, dy = h.y - e.y, d = Math.hypot(dx, dy)||1;
     cast("cast", 500, null);
-    for(let k=0;k<7;k++){ const q = 0.2 + k*0.17; cmDrop("curtain", e.x + dx*q*1.2, e.y + dy*q*1.2, 60, 1000 + k*130, e.dmg*1.1); }
+    for(let k=0;k<7;k++){ const q = 0.2 + k*0.17; cmDrop("curtain", e.x + dx*q*1.2, e.y + dy*q*1.2, 60, 1000 + k*130, e.dmg*1.1*C.telMult); }
     playSfx("cmCurtain");
     return true;
   }
