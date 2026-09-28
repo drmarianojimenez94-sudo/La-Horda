@@ -12,7 +12,11 @@
      anfitrión; estado de la partida del anfitrión hacia todos).
 
    Qué NO hace: no simula el juego. La única simulación la corre el navegador del anfitrión
-   (host autoritativo); este servidor es un "cartero" liviano, sin base de datos ni secretos.
+   (host autoritativo); este servidor es un "cartero" liviano.
+
+   CUENTAS (server/accounts.js): el mismo servidor atiende /api/* (crear cuenta, entrar, guardado
+   en la nube). Con DATABASE_URL usa Postgres; sin eso, archivos en disco (se pierden al redeployar
+   en el plan gratuito: /health lo avisa). Ver docs/ACCOUNTS_DEPLOY.md.
 
    Variables de entorno (todas opcionales):
      PORT             puerto HTTP/WebSocket (Render/Railway/Fly lo ponen solos)
@@ -20,6 +24,7 @@
                       "https://rawcdn.githack.com,https://raw.githack.com"). Vacío = cualquiera.
                       Si hay lista, siempre se suman el juego publicado y sus previews (ALWAYS_ALLOWED).
      MAX_ROOMS        tope de salas simultáneas (default 300)
+     DATABASE_URL, DATA_DIR, ...  cuentas de usuario (ver server/accounts.js)
      SIM_LATENCY_MS   SOLO PRUEBAS: demora artificial de cada mensaje (default 0)
    ============================================================ */
 const http = require("http");
@@ -39,6 +44,13 @@ const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin 0/O/1/I para di
 const ALWAYS_ALLOWED = ["https://drmarianojimenez94-sudo.github.io", "https://rawcdn.githack.com", "https://raw.githack.com"];
 const ALLOWED_ENV = (process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
 const ALLOWED = ALLOWED_ENV.length ? [...new Set(ALLOWED_ENV.concat(ALWAYS_ALLOWED))] : [];
+// ¿Se acepta este origen? (lo usan el WebSocket y la API de cuentas). Coincidencia exacta; una
+// entrada que termina en ":" o "*" vale como prefijo (ej. "http://localhost:" = cualquier puerto).
+// Antes bastaba con que EMPEZARA igual, y "https://drmarianojimenez94-sudo.github.io.otro.com" pasaba.
+function originAllowed(origin){
+  if(!ALLOWED.length) return true;
+  return ALLOWED.some(a => origin === a || (/[:*]$/.test(a) && origin.startsWith(a.replace(/\*$/, ""))));
+}
 // CHAT DE LA SALA: texto corto, anti-spam en el servidor y lista de palabras tapadas configurable
 // (CHAT_BLOCKLIST="palabra1,palabra2"). El anfitrión puede silenciar a un jugador. El registro
 // solo guarda metadatos (sala, lugar, largo, si se tapó algo): nunca el texto.
@@ -249,10 +261,13 @@ function leave(ws, why){
   broadcastRoom(room);
 }
 
+const accounts = require("./accounts.js").create({ log, originAllowed });
 const server = http.createServer((req, res) => {
-  if(req.url === "/" || req.url === "/health"){
-    res.writeHead(200, { "content-type": "text/plain; charset=utf-8", "access-control-allow-origin": "*" });
-    res.end(`LA HORDA relay OK · protocolo ${PROTOCOL} · salas ${rooms.size}\n`);
+  if(accounts.handle(req, res)) return; // /api/* (cuentas y guardado en la nube)
+  const p = req.url.split("?")[0];
+  if(p === "/" || p === "/health"){
+    res.writeHead(200, { "content-type": "text/plain; charset=utf-8", "access-control-allow-origin": "*", "cache-control": "no-store" });
+    res.end(`LA HORDA relay OK · protocolo ${PROTOCOL} · salas ${rooms.size}\n${accounts.healthLine()}\n`);
     return;
   }
   res.writeHead(404); res.end();
@@ -260,7 +275,7 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocketServer({ server, maxPayload: MAX_MSG_BYTES });
 wss.on("connection", (ws, req) => {
   const origin = req.headers.origin || "";
-  if(ALLOWED.length && !ALLOWED.some(a => origin === a || origin.startsWith(a))){
+  if(!originAllowed(origin)){
     // se avisa el motivo antes de cortar, para que el juego pueda mostrarlo
     log("NETWORK_ERROR", { origin_rejected: origin });
     try{ ws.send(JSON.stringify({ t:"error", code:"ORIGIN", origin })); }catch(e){}
@@ -293,4 +308,4 @@ setInterval(() => {
 
 const PORT = parseInt(process.env.PORT || "8787", 10);
 server.listen(PORT, () => log("RELAY_LISTENING", { port: PORT, protocol: PROTOCOL, allowed: ALLOWED }));
-module.exports = { server, rooms, chatFilter };
+module.exports = { server, rooms, chatFilter, accounts, originAllowed };
