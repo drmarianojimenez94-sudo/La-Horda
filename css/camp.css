@@ -41,7 +41,7 @@
 }
 
 /* ---------- la Crónica al levantarla ---------- */
-#chron-card{ position:fixed; left:50%; top:calc(56px + env(safe-area-inset-top,0px)); transform:translateX(-50%); z-index:30; width:min(calc(100vw - 32px), 460px);
+#chron-card{ position:fixed; left:50%; top:calc(56px + env(safe-area-inset-top,0px)); transform:translateX(-50%); z-index:46; width:min(calc(100vw - 32px), 460px);
   padding:9px 14px 8px; color:#3a2412; pointer-events:none;
   background:radial-gradient(ellipse at 30% 20%, #f6e8c4, #e4cc96 70%, #cdb07a); border:2px solid #2a170a; box-shadow:0 0 0 2px #6b4a28, 0 6px 22px rgba(0,0,0,0.7); }
 #chron-card.hidden{ display:none; }

@@ -103,8 +103,12 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('SUBJEFE.guardian_del_laberinto_se_presenta_y_advierte', /Cerré mil caminos/.test(s1.intro.text) && /llaves eran cuatro/.test(s1.death.text), s1);
   check('CRONICAS.el_subjefe_suelta_una_pagina', JSON.stringify(s1.pages) === '["sub"]', s1.pages);
   const s2 = await E(() => { __read(); __quiet(); const p = STORY.pages[0]; player.x = p.x; player.y = p.y; __step(32); __quiet(); __step(32);
-    return { has: chronicleHas('laberinto_2'), left: STORY.pages.length, tut: __tut() }; });
-  check('CRONICAS.se_junta_al_pisarla_y_se_avisa', s2.has && s2.left === 0 && s2.tut.who === 'CRÓNICAS' && /Las llaves/.test(s2.tut.text), s2);
+    const cc = document.getElementById('chron-card');
+    const card = cc ? { on: !cc.classList.contains('hidden'), title: cc.querySelector('.cc-title').textContent, t: cc.querySelector('.cc-t').textContent } : null;
+    if (typeof chronCardReset === 'function') chronCardReset();
+    return { has: chronicleHas('laberinto_2'), left: STORY.pages.length, tut: __tut(), card }; });
+  // (la página se lee al levantarla: tarjeta de la Crónica, camp.js; la prueba completa es tools/items/t_camp.js)
+  check('CRONICAS.se_junta_al_pisarla_y_se_avisa', s2.has && s2.left === 0 && s2.card && s2.card.on && /Las llaves/.test(s2.card.title) && /muros corridos/.test(s2.card.t), s2);
   // páginas del piso: nivel 4 (y solo si te falta alguna)
   const w1 = await E(() => { __start('bosque', 4); __step(48); const n = STORY.pages.filter(p => p.src === 'world').length;
     save.chronicles.cantos_1 = 1; save.chronicles.cantos_2 = 1; __start('bosque', 4); __step(48); const n2 = STORY.pages.length;

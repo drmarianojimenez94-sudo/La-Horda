@@ -42,11 +42,12 @@ conserva **Las Cinco Pruebas Divinas**. Es el puente hacia **COLISEO — PRÓXIM
 - **GUARDIÁN 4:** Arena Infernal — **Hechicero Supremo → Rey / Demonio de la Horda**. Cristal del Juicio (oro blanco).
 
 **Numeración y títulos (para que no se contradigan):** "GUARDIÁN 1-4" (I-IV en el Códice) es el **orden en
-que los portadores los encuentran**, un rótulo de la campaña. Dentro de la historia, el único que tiene
-título es **el Primero**: el líder de los Cuatro, el que juzgaba (el Hechicero Supremo). Por eso ningún texto
-llama "el primero de los Cuatro" al Guardián Ancestral (es "el primer Guardián caído" o "el Guardián de la
-Niebla") ni "el cuarto" al Hechicero dentro de un diálogo: el Mago Gélido dice «El Primero no cayó», y el
-cartel de la revelación, «El Primero de los Cuatro».
+que los portadores los encuentran**, un rótulo de la campaña. Dentro de la historia, los Cuatro se nombran
+por **rango**: **el Primero** (el líder, el que juzgaba: el Hechicero Supremo), el Segundo (el Mago Gélido), el
+Tercero (el del Laberinto) y el Guardián de la Niebla (el Ancestral, el más viejo, que no lleva número). Por
+eso ningún texto llama "el primero de los Cuatro" al Guardián Ancestral (es "el primer Guardián caído" o "el
+Guardián de la Niebla") ni "el cuarto" al Hechicero dentro de un diálogo: el Mago Gélido dice «El Primero no
+cayó», y el cartel de la revelación, «El Primero de los Cuatro».
 
 **NO son Guardianes:** **Cerbero** (se llama "Guardián del Umbral", pero es un perro de la Horda que custodia una puerta, no uno de los Cuatro), el **Titán de Piedra**, el **Devoraluz**, el **Presentador**, el **Leviatán** (el "Kraken" del canon) ni el Kraken Joven, la **Madre Espora**, el **Caballero de la Armadura Oxidada** ni el **Dragón de la Forja** (el "Dragón Steampunk" del canon). Son criaturas de la
 Horda (o corrompidas por ella) que los campeones cruzan en el camino. Ningún texto, cristal ni UI debe
