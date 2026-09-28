@@ -309,17 +309,19 @@ function endlessOpenBuffChoice(){
   document.getElementById("buff-title").textContent = `Ronda ${EN.round} contenida — elegí un refuerzo`;
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
-  const pool = endlessBuffPool().sort(()=>Math.random()-0.5).slice(0,3);
-  pool.forEach(b=>{
+  // 2 genéricos con sus sinergias de la Horda + 1 refuerzo que transforma una habilidad del guardián
+  // (el mismo pool de la campaña, js/data/boons.js: dura toda la corrida, igual que los genéricos)
+  const opts = boonBuildOffers(player, endlessBuffPool(), true);
+  opts.forEach(opt=>{
+    const b = boonParseOpt(opt) ? null : BUFF_POOL.find(x=>x.id===opt);
     const el = document.createElement("div");
-    el.className = "buff-card";
-    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>${endlessBuffHint(b)}`;
+    el.className = buffOptClass(opt);
+    el.innerHTML = buffOptHTML(opt, player, b ? endlessBuffHint(b) : "");
     el.addEventListener("click", ()=>{
       if(state!=="buff") return;
-      b.apply(runStats);
-      refreshEquippedStats();
-      endlessOnBuffPicked(player, b.id);
-      if(netIsHost()){ cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>.</div>`; netHostPickedLocal(); return; }
+      buffApplyOpt(player, opt);
+      if(b) endlessOnBuffPicked(player, b.id);
+      if(netIsHost()){ cards.innerHTML = `<div class="net-wait">Elegiste <b>${buffOptName(opt)}</b>.</div>`; netHostPickedLocal(); return; }
       player.hp = Math.min(player.maxHp, player.hp + player.maxHp*ENDLESS_CFG.hpRefillOnRound);
       player.energy = player.maxEnergy;
       setState("playing");
@@ -327,6 +329,7 @@ function endlessOpenBuffChoice(){
     });
     cards.appendChild(el);
   });
+  if(typeof buffOwnedRefresh==="function") buffOwnedRefresh(player);
   if(netIsHost()) netHostOpenBuffs();
 }
 

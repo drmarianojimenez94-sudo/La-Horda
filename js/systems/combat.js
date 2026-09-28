@@ -8,6 +8,7 @@ function damageEnemy(e, amount, opts){
   opts = opts || {};
   if(e.cineT > 0) return; // cinemática de un jefe (inf-hechicero.js): intocable mientras habla o se transforma
   const src = opts.src || player;
+  if(_boonRec) boonRecHit(e, amount, src, opts); // refuerzos de habilidad: quién recibió ESTE lanzamiento
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
   if(e._encMult || e._expT > 0) dmg *= bossEncounterDmgMult(e); // regla del jefe: blindaje/escudo propio o ventana EXPUESTO (boss-encounter.js)

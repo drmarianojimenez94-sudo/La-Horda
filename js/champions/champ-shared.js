@@ -147,6 +147,7 @@ function updateChampFx(dt){
   for(const f of champFx){
     f.life -= dt;
     if(f.type==="rumbleStep") erenUpdateRumbleStep(f, dt);
+    else if(f.type==="boonZone") boonZoneTick(f, dt); // refuerzos de habilidad (js/systems/boons.js)
   }
   champFx = champFx.filter(f=>f.life > 0);
 }
@@ -169,6 +170,7 @@ function drawChampFxGround(){
     else if(f.type==="crack") erenDrawCrack(f);
     else if(f.type==="rumbleStep") erenDrawRumbleTelegraph(f);
     else if(f.type==="ring") seDrawRing(f);
+    else if(f.type==="boonZone") boonDrawZone(f);
   }
 }
 // Capa superior (sobre los personajes): jinetes, siluetas, pies gigantes, cables.

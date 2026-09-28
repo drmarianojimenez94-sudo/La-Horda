@@ -88,6 +88,7 @@ function spawnNigroSkeleton(h, type, mods){
 function killNigroSkeleton(sk){
   sk.alive = false;
   if(typeof nigroSkeletonDeathFx==="function") nigroSkeletonDeathFx(sk); // se desarma hundiéndose (solo dibujo)
+  if(typeof boonOnMinionDeath==="function") boonOnMinionDeath(sk.owner, sk); // refuerzo "Huesos Tóxicos": estalla el propio esqueleto
   particles.push({x:sk.x,y:sk.y, life:280, ring:true, maxLife:280, maxR:26, color:"#7ad48a"});
   if(sk.type==="mage") return;
 }

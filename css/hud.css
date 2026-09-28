@@ -407,3 +407,6 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 .ally-name, .top-pill > span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
 /* celular acostado: el cartel central en un renglón casi siempre (a 2rem "4 civiles escondidos en la ciudad" se partía) */
 @media (max-height:500px){ #center-banner{ font-size:1.55rem; max-width:min(560px, 70vw); } }
+/* Marca de refuerzo de habilidad en el botón (color de la rareza; dorado = dúo; número = cuántos) */
+.boon-pip{position:absolute; top:5px; left:7px; min-width:9px; height:9px; padding:0 1px; box-shadow:0 0 0 1px #000;
+  font:8px/9px monospace; color:#000; text-align:center; pointer-events:none; z-index:2;}

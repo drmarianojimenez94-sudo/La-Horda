@@ -368,7 +368,7 @@ function codexChampHtml(key){
       : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < cat.priceGold ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(cat.priceGold)}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
       <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle">${_cxEsc(cls.role)}</div>
-      ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b></div>` : ""}
+      ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b> · Talentos: <b>${treePointsAvailable(key)}</b></div>` : ""}
       <div class="cx-tabs cx-scroll-x">${tabs.map(([t,l])=>`<button class="cx-tab ${codexChampTab===t?"on":""} ${!own && t!=="ficha"?"dim":""}" data-ctab="${t}">${l}</button>`).join("")}</div></div>`;
   let panel = head;
   if(codexChampTab === "ficha" || !own){

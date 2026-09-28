@@ -66,6 +66,8 @@ function setChampFromTotalXp(champKey, totalXp){
   const maxAllowed = Math.max(0, lv-1);
   // Si con el nivel nuevo hay más puntos invertidos en maestría de los que el nivel permite, se
   // retiran los que sobran (de la habilidad con más invertido) y vuelven como puntos sin gastar.
+  // (El árbol de talentos tiene su propia bolsa, derivada del nivel: treePointsAvailable en
+  // talents.js. Bajar de nivel no le saca nodos; solo tarda más en dar el próximo punto.)
   const allocRefs = [...c.skillMastery, c.ultMastery];
   let spentAlloc = allocRefs.reduce((s,m)=>s+m.alloc,0);
   while(spentAlloc > maxAllowed){
