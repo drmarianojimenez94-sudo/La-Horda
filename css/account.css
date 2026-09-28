@@ -1,0 +1,128 @@
+/* css/account.css — Pantalla de cuenta (Entrar / Crear cuenta / Invitado), perfil, conflicto de
+   guardado (nube vs este dispositivo) y chip mínimo del menú. Ver js/net/account.js. */
+#account-screen{
+  background:
+    radial-gradient(circle at 12% 92%, rgba(255,110,30,0.30), transparent 42%),
+    radial-gradient(circle at 88% 14%, rgba(180,210,255,0.14), transparent 40%),
+    linear-gradient(100deg, #2a0f08 0%, #200d0c 28%, #150e14 48%, #0a1018 66%, #070f14 100%);
+  justify-content:center;
+}
+#account-screen .acc-panel{
+  position:relative; width:100%; max-width:400px; margin:auto 0;
+  padding:14px 18px 16px;
+  background:linear-gradient(160deg, var(--panel), #0f0805);
+  border:3px solid #000;
+  box-shadow: inset 2px 2px 0 rgba(255,180,120,0.18), inset -2px -2px 0 rgba(0,0,0,0.5), 0 0 0 2px var(--panel-b), 6px 6px 0 #000, 0 0 28px rgba(255,122,46,0.16);
+  color:var(--text); text-align:center;
+}
+#account-screen .acc-panel::before{ /* filo de brasa arriba, como los diálogos */
+  content:""; position:absolute; left:0; right:0; top:0; height:3px;
+  background:linear-gradient(90deg, transparent, var(--ember1), var(--ember3), var(--ember1), transparent);
+}
+.acc-brand{ font-family:var(--font-pixel); font-size:0.95rem; color:var(--ember3); letter-spacing:0.08em; margin:4px 0 6px;
+  text-shadow:3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; }
+.acc-title{ font-family:var(--font-retro); font-size:1.45rem; color:var(--ember1); text-shadow:2px 2px 0 #000; margin-bottom:10px; letter-spacing:0.04em; text-transform:uppercase; }
+
+.acc-tabs{ display:flex; gap:0; margin:0 0 12px; border:2px solid #000; }
+.acc-tab{ flex:1; font-family:var(--font-retro); font-size:1.15rem; padding:7px 6px; cursor:pointer;
+  background:#120b08; color:var(--text-dim); border:0; border-right:2px solid #000; }
+.acc-tab:last-child{ border-right:0; }
+.acc-tab.on{ background:linear-gradient(180deg, #4a2210, #2a1208); color:var(--ember3); box-shadow: inset 2px 2px 0 rgba(255,180,120,0.25); }
+.acc-tab:focus-visible, .acc-choice:focus-visible, .account-chip:focus-visible{ outline:2px solid var(--ember3); outline-offset:2px; }
+
+.acc-form{ display:flex; flex-direction:column; align-items:stretch; gap:8px; text-align:left; }
+.acc-field{ display:flex; flex-direction:column; gap:3px; font-family:var(--font-retro); font-size:1.05rem; color:var(--text-dim); }
+.acc-field i{ font-style:normal; opacity:0.7; }
+.acc-field input{
+  width:100%; box-sizing:border-box; padding:8px 10px; font-family:var(--font-retro); font-size:1.25rem; /* >=16px: iOS no hace zoom */
+  background:#0e0906; color:var(--text); border:2px solid #000; border-radius:0;
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.6), 0 0 0 1px #3a1c10;
+}
+.acc-field input:focus{ outline:none; box-shadow: inset 2px 2px 0 rgba(0,0,0,0.6), 0 0 0 2px var(--ember1); }
+.acc-field input:disabled{ opacity:0.55; }
+.acc-field input::placeholder{ color:#6e5a4c; }
+.acc-inline{ display:flex; gap:8px; }
+.acc-inline input{ flex:1; min-width:0; }
+.acc-inline .btn.small{ flex:0 0 auto; padding:6px 14px; font-size:1.05rem; }
+.acc-submit{ align-self:center; margin-top:6px; }
+.acc-submit:disabled, .acc-choice:disabled{ opacity:0.6; cursor:wait; }
+.acc-status{ min-height:1.3em; font-family:var(--font-retro); font-size:1.08rem; line-height:1.15; color:var(--text-dim); text-align:center; }
+.acc-status.err{ color:#ff8a6a; }
+.acc-status.warn{ color:var(--ember3); }
+.acc-status.ok{ color:#9be39b; }
+
+.acc-or{ display:flex; align-items:center; gap:10px; margin:10px 0 8px; font-family:var(--font-retro); color:var(--text-dim); font-size:1rem; }
+.acc-or::before, .acc-or::after{ content:""; flex:1; height:2px; background:linear-gradient(90deg, transparent, #3a1c10, transparent); }
+.acc-guest{ margin:0 auto; display:block; }
+.acc-note{ font-family:var(--font-retro); font-size:1rem; line-height:1.15; color:var(--text-dim); margin-top:8px; }
+.acc-back{ display:block; margin:12px auto 0; }
+
+/* perfil */
+.acc-who{ display:flex; align-items:center; gap:12px; text-align:left; margin-bottom:8px; }
+.acc-avatar{ width:44px; height:44px; flex:0 0 44px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-pixel); font-size:1rem; color:var(--ember3); background:#2a1208; border:3px solid #000;
+  box-shadow: inset 2px 2px 0 rgba(255,180,120,0.3), 3px 3px 0 #000; }
+.acc-who-name{ font-family:var(--font-retro); font-size:1.5rem; color:var(--text); line-height:1; overflow-wrap:anywhere; }
+.acc-who-user{ font-family:var(--font-retro); font-size:1rem; color:var(--text-dim); }
+.acc-sync{ font-family:var(--font-retro); font-size:1.08rem; padding:6px 8px; margin-bottom:10px; background:#0e0906; border:2px solid #000; color:var(--text-dim); }
+.acc-sync.ok{ color:#9be39b; }
+.acc-sync.warn{ color:var(--ember3); }
+.acc-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+.acc-actions .btn{ flex:1 1 140px; }
+.btn.acc-danger{ color:#ff9a7a; }
+
+/* conflicto: nube vs este dispositivo */
+.acc-conflict{ display:flex; gap:10px; margin:10px 0 6px; }
+.acc-choice{
+  flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:3px; padding:10px 10px 8px; cursor:pointer; text-align:left;
+  font-family:var(--font-retro); color:var(--text);
+  background:linear-gradient(160deg, #22140c, #0f0805); border:3px solid #000;
+  box-shadow: inset 1px 1px 0 rgba(255,180,120,0.18), 4px 4px 0 #000;
+}
+.acc-choice:active{ transform:translate(2px,2px); box-shadow: inset 1px 1px 0 rgba(255,180,120,0.18), 2px 2px 0 #000; }
+.acc-choice-title{ font-size:1.3rem; color:var(--ember3); text-shadow:2px 2px 0 #000; }
+.acc-choice-when{ font-size:0.95rem; color:var(--text-dim); min-height:1em; margin-bottom:2px; }
+.acc-sum-row{ display:flex; justify-content:space-between; gap:6px; font-size:1.05rem; color:var(--text-dim); border-bottom:1px dotted #3a1c10; }
+.acc-sum-row b{ color:var(--text); font-weight:400; }
+.acc-sum-empty{ font-size:1rem; color:var(--text-dim); }
+.acc-choice-go{ margin-top:6px; text-align:center; font-size:1.15rem; padding:5px 4px; color:var(--text);
+  background:linear-gradient(180deg, #4a2210, #2a1208); border:2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,180,120,0.3); }
+.acc-conflict-note{ margin-top:0; }
+
+/* chip mínimo del menú principal (solo si el menú no trae uno propio con [data-account-chip]) */
+.account-chip{
+  position:absolute; z-index:3; top:calc(10px + env(safe-area-inset-top,0px)); right:calc(12px + env(safe-area-inset-right,0px));
+  display:flex; align-items:center; gap:7px; max-width:46vw; padding:4px 10px 4px 4px; cursor:pointer;
+  font-family:var(--font-retro); font-size:1.1rem; color:var(--text);
+  background:linear-gradient(180deg, #2a1208, #150a05); border:2px solid #000; box-shadow: inset 1px 1px 0 rgba(255,180,120,0.25), 3px 3px 0 #000;
+}
+.account-chip:active{ transform:translate(1px,1px); box-shadow: inset 1px 1px 0 rgba(255,180,120,0.25), 2px 2px 0 #000; }
+.acc-chip-av{ width:24px; height:24px; flex:0 0 24px; display:flex; align-items:center; justify-content:center; font-family:var(--font-pixel); font-size:0.6rem;
+  color:var(--ember3); background:#3a1c10; border:2px solid #000; }
+.acc-chip-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+.acc-chip-sync{ color:var(--text-dim); font-size:1rem; }
+
+/* celular acostado (pantallas bajas): todo más compacto para que entre sin scroll */
+@media (orientation: landscape) and (max-height: 520px){
+  #account-screen{ justify-content:flex-start; }
+  #account-screen .acc-panel{ max-width:620px; padding:8px 14px 10px; }
+  .acc-brand{ display:none; }
+  .acc-title{ font-size:1.1rem; margin-bottom:6px; }
+  .acc-tabs{ margin-bottom:6px; }
+  .acc-tab{ padding:4px 6px; font-size:1rem; }
+  .acc-form{ display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; }
+  .acc-form .acc-submit, .acc-form .acc-status{ grid-column:1 / -1; }
+  .acc-rename{ display:flex; }
+  .acc-field{ font-size:0.95rem; }
+  .acc-field input{ padding:5px 8px; font-size:1.1rem; }
+  .acc-submit{ margin-top:2px; }
+  .acc-or{ margin:4px 0; }
+  .acc-note{ font-size:0.92rem; margin-top:4px; }
+  .acc-conflict{ margin:6px 0 4px; }
+  .acc-choice{ padding:6px 8px; }
+  .acc-sum-row{ font-size:0.95rem; }
+  .account-chip{ font-size:0.95rem; top:calc(6px + env(safe-area-inset-top,0px)); }
+}
+@media (max-width: 420px) and (orientation: portrait){
+  .acc-conflict{ flex-direction:column; }
+}
