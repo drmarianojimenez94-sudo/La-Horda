@@ -18,16 +18,22 @@
    ============================================================ */
 const TUT = { key:null, until:0, goal:null, basicsStep:0, moved:0, lx:null, ly:null, k0:0, r0:0, reviveAt:0 };
 function tutFlags(){ if(!save.tut) save.tut = {}; return save.tut; }
-function tutSeen(key){ return !!tutFlags()[key]; }
-function tutMark(key){ if(!tutSeen(key)){ tutFlags()[key] = 1; persist(); } }
+// Las claves que empiezan con "~" son líneas de una sola vez en ESTA partida (voces de la historia,
+// js/systems/story.js): nunca se guardan como vistas.
+function tutSeen(key){ return key.charAt(0)!=="~" && !!tutFlags()[key]; }
+function tutMark(key){ if(key.charAt(0)!=="~" && !tutSeen(key)){ tutFlags()[key] = 1; persist(); } }
 // Muestra una línea del Hechicero (si ese concepto no se enseñó todavía). `goal` = el objetivo
 // concreto ("Mantené ✚..."). `ms` = cuánto queda si nadie lo cumple (después se da por visto).
 // `urgent` = pasa por encima de un consejo que se esté mostrando (p.ej. revivir a un caído).
-function tutSay(key, text, goal, ms, urgent){
+// `who` = quién habla, si no es el Hechicero: {name, face} (voces de la historia, story.js). El retrato
+// cambia con data-face (css/story.css).
+function tutSay(key, text, goal, ms, urgent, who){
   if(tutSeen(key) || (!urgent && TUT.key && TUT.key!==key && performance.now() < TUT.until - 1500)) return false;
   if(urgent && TUT.key && TUT.key!==key && !TUT.key.startsWith("b_")) tutMark(TUT.key); // el que se tapa se da por visto
   const el = document.getElementById("tut-panel"); if(!el) return false;
   el.querySelector(".tut-text").textContent = text;
+  const wh = el.querySelector(".tut-who"); if(wh) wh.textContent = who && who.name ? who.name : "EL HECHICERO";
+  el.dataset.face = who && who.face ? who.face : "hech";
   const g = el.querySelector(".tut-goal"); g.textContent = goal ? "▶ " + goal : ""; g.classList.remove("done");
   el.classList.remove("hidden", "show"); void el.offsetWidth; el.classList.add("show");
   TUT.key = key; TUT.goal = goal || null; TUT.until = performance.now() + (ms || 9000);
@@ -93,4 +99,5 @@ function tutTick(){
   if(!tutSeen("revive") && TUT.key!=="revive" && player.alive && heroes.some(h=>h!==player && !h.alive))
     tutSay("revive", "¡Cayó un compañero! Parate al lado y mantené ✚ para revivirlo.", "Mantené ✚ junto al caído para revivirlo", 12000, true);
   if(TUT.key==="revive" && (st.revives||0) > 0) tutDone("revive");
+  if(typeof storyTick==="function") storyTick(); // voces de la historia y Crónicas (js/systems/story.js)
 }

@@ -13,13 +13,33 @@ function updateAbilityButtons(){
     if(!el) return;
     const icoEl = el.querySelector(".ico");
     const labelEl = el.querySelector("div:not(.ico):not(.cd-overlay)");
-    if(icoEl) icoEl.textContent = sk.ico;
+    // ícono pixel de la habilidad si existe (el mismo del panel de Habilidades); si no, el glifo de siempre
+    const img = (typeof SKILL_ICON_IMG!=="undefined") ? SKILL_ICON_IMG[sk.name] : null;
+    if(icoEl){
+      if(img){ if(icoEl._img !== img){ icoEl.innerHTML = `<img class="ico-img" src="${img}" alt="">`; icoEl._img = img; } }
+      else { icoEl.textContent = sk.ico; icoEl._img = null; }
+    }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
   });
 }
 
-let _hudLastCls = null, _hudLastSe = null;
+let _hudLastCls = null, _hudLastSe = null, _hudStackH = -1;
+// El bloque de estado del guardián crece con sus indicadores propios (Nigromante con gólem y
+// Abismo: 4 filas más; El Libertador / Eren con su línea): en celular apaisado pisaba la pastilla
+// de Arena/Nivel/Bajas, que tiene posición fija. Se corren hacia abajo la pastilla y los aliados
+// lo que haga falta (y los aliados pierden ese alto de su tope, para no invadir los botones).
+function hudStackLayout(){
+  const st = document.getElementById("player-status"), top = document.querySelector("#hud .top"), party = document.getElementById("party");
+  if(!st || !top || !party) return;
+  const h = st.offsetHeight;
+  if(h === _hudStackH) return;
+  _hudStackH = h;
+  const d = h ? Math.max(0, st.offsetTop + h + 6 - top.offsetTop) : 0;
+  top.style.transform = d ? `translateY(${d}px)` : "";
+  party.style.transform = d ? `translateY(${d}px)` : "";
+  party.style.maxHeight = d ? Math.max(80, 140 - d) + "px" : "";
+}
 function showBanner(text){
   const b = document.getElementById("center-banner");
   b.textContent = text;
@@ -37,6 +57,8 @@ function updateDownedOverlay(){
   const el = document.getElementById("downed-overlay"); if(!el) return;
   const show = !!(netMatch && player && !player.alive && state==="playing" && !runEnding);
   el.classList.toggle("hidden", !show);
+  // el cartel central ("NIVEL 7", "RUNA ACTIVA…") caía justo detrás de este y no se leía ninguno
+  const cb = document.getElementById("center-banner"); if(cb) cb.classList.toggle("downed", show);
   if(!show) return;
   const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
   const alive = heroes.filter(h=>h.alive).length;
@@ -71,6 +93,7 @@ function updateHUD(){
   const emblemHtml = (champMastery && tree && tree.masteries[champMastery]) ? ` <span class="mastery-emblem" title="Maestría: ${tree.masteries[champMastery].name}">★</span>` : "";
   plevelEl.innerHTML = `${CLASSES[player.classKey].name} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`;
   document.getElementById("hud-level").textContent = Math.min(runLevel,10);
+  if(typeof endlessHudTick==="function") endlessHudTick(); // Horda Infinita: ronda, puntaje y mutadores
   document.getElementById("hud-kills").textContent = kills;
   const totalSec = Math.floor((runElapsedMs||0)/1000);
   document.getElementById("hud-timer").textContent = Math.floor(totalSec/60)+":"+String(totalSec%60).padStart(2,"0");
@@ -137,6 +160,7 @@ function updateHUD(){
     nigroHudEl.classList.add("hidden");
     document.getElementById("btn-pact").classList.add("hidden");
   }
+  hudStackLayout();
   // curación de emergencia: lista (verde), urgente (<35% vida, late) o gastada hasta el próximo nivel
   const eb = document.getElementById("btn-emerg");
   if(eb){
@@ -152,6 +176,11 @@ function updateHUD(){
   document.getElementById("ult-ring").style.background = `conic-gradient(var(--ult) ${ultPct*3.6}deg, #2a1c10 0deg)`;
   const ultBtn = document.getElementById("btn-ult");
   const ultReady = (player.ultCharge>=player.ultMax && player.ultCd<=0 && runLevel>=ULT_MIN_ARENA_LEVEL && !(player.classKey==="eren" && erenUltBlocked(player))) || !!player.erenRumblingReady;
+  if(ultReady && !ultBtn.classList.contains("ready") && !ultBtn.classList.contains("locked")){
+    // ulti lista: destello del botón + aro dorado en el guardián (juice.js), una sola vez por carga
+    ultBtn.classList.remove("ready-pop"); void ultBtn.offsetWidth; ultBtn.classList.add("ready-pop");
+    if(typeof juiceUltReady==="function") juiceUltReady();
+  }
   ultBtn.classList.toggle("ready", ultReady);
   ultBtn.classList.toggle("rumble", !!player.erenRumblingReady);
   ultBtn.classList.toggle("locked", runLevel<ULT_MIN_ARENA_LEVEL);

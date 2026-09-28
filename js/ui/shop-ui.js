@@ -1,7 +1,8 @@
 "use strict";
 /* ============================================================
    js/ui/shop-ui.js
-   TIENDA en tres pestañas (BUGFIX 01, etapa de prueba):
+   TIENDA: vitrina (★ Destacados: destacado del día, ofertas diarias, paquetes de skins y guardianes)
+   y tres pestañas de catálogo completo (BUGFIX 01):
    - Guardianes: todos los de CHAMPION_CATALOG, animados, con rol, historia, habilidades, precio y compra.
    - Objetos y sets: TODO el catálogo (shopCatalog en js/systems/shop.js) por categoría; los sets se
      muestran como conjunto (piezas que tenés / que faltan, bonus y cuáles tenés activos).
@@ -9,18 +10,21 @@
      tarjeta vende las piezas que te faltan (regla canónica: la skin nunca se compra suelta).
    Tocar un objeto abre su ficha completa (itemDetailHTML en modo tienda).
    ============================================================ */
-let shopTab = "campeones", shopCat = "set", shopTier = {};
+let shopTab = "destacados", shopCat = "set", shopTier = {};
 const SHOP_CATS = [["set", "Sets"], ["legendario", "Legendarios"], ["campeon", "De guardián"], ["base", "Básicos"]]; // Míticos (receta) y Únicos (botín) no se venden
 const TIER_LABEL = {comun:"Común", raro:"Raro", muyraro:"Muy Raro", legendario:"Legendario", mitico:"Mítico"};
 
 function renderShop(){
-  document.getElementById("shop-gold-line").innerHTML = `Oro: <b>${fmtGold(save.gold)}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b> &nbsp;·&nbsp; Inventario: <b>${stashUsedSlots()}/${INVENTORY_CAPACITY}</b>`;
+  const prem = typeof SHOP_PREMIUM!=="undefined" && SHOP_PREMIUM.enabled ? `<span class="ui-chip">${SHOP_PREMIUM.icon} 0</span>` : ""; // apagada (ver shop.js)
+  document.getElementById("shop-gold-line").innerHTML = `<span class="ui-chip gold">🪙 <b>${fmtGold(save.gold)}</b></span><span class="ui-chip" title="Inventario">🎒 ${stashUsedSlots()}/${INVENTORY_CAPACITY}</span>${prem}`;
   document.querySelectorAll("[data-shop-tab]").forEach(b=>{
     b.classList.toggle("on", b.getAttribute("data-shop-tab")===shopTab);
-    b.onclick = ()=>{ shopTab = b.getAttribute("data-shop-tab"); renderShop(); };
+    b.onclick = ()=>{ shopTab = b.getAttribute("data-shop-tab"); renderShop(); const p = document.getElementById("shop-screen"); if(p) p.scrollTop = 0; };
   });
   const panel = document.getElementById("shop-panel"); if(!panel) return;
-  if(shopTab==="campeones") renderShopChampions(panel);
+  panel.className = "shop-panel-" + shopTab;
+  if(shopTab==="destacados") renderShopShowcase(panel);
+  else if(shopTab==="campeones") renderShopChampions(panel);
   else if(shopTab==="objetos") renderShopObjects(panel);
   else renderShopSkins(panel);
 }
@@ -29,6 +33,163 @@ function _shopAfterBuy(msg, sfx){
   if(typeof playSfx==="function") playSfx(sfx || "ready");
   if(typeof showNetToast==="function") showNetToast(msg);
   renderShop(); if(typeof renderSaveLine==="function") renderSaveLine();
+}
+// Comprar un guardián (con confirmación: son 2.500 de oro). featured: la oferta del día (con descuento).
+function shopConfirmChampion(id, featured, after){
+  const cat = CHAMPION_CATALOG.find(c=>c.id===id); if(!cat) return;
+  const p = featured ? featured.price : cat.priceGold;
+  gameConfirm(`¿Desbloquear a ${CLASSES[id].name} por ${fmtGold(p)} de oro?`, {okText:"Desbloquear"}).then(ok=>{
+    if(!ok) return;
+    const r = featured ? shopBuyFeatured() : shopBuyChampion(id);
+    if(!r.ok){ gameAlert(r.reason); return; }
+    selectedClass = id; save.lastChamp = id; if(typeof netRememberChamp==="function") netRememberChamp(id);
+    _shopAfterBuy(`🔓 ${CLASSES[id].name} desbloqueado: ya es tu guardián para jugar`, "levelup");
+    if(after) after();
+  });
+}
+
+/* ---------------- ★ Destacados (vitrina) ----------------
+   Destacado del día con arte grande animado, ofertas del día (rotación diaria determinística, ver
+   shopDailyShowcase en js/systems/shop.js), paquetes de skins (el set completo = la skin) y los
+   guardianes por desbloquear. Etiquetas NUEVO (todavía no lo viste) y OFERTA (−X %). */
+function _shopSeen(){ if(!save.shopSeen || typeof save.shopSeen!=="object") save.shopSeen = {}; return save.shopSeen; }
+function _shopTagNew(key){ return _shopSeen()[key] ? "" : '<span class="ui-tag new">NUEVO</span>'; }
+function _shopPriceHTML(price, base){ return `<span class="shop-price">${base && base > price ? `<s>${fmtGold(base)}</s> ` : ""}🪙 ${fmtGold(price)}</span>`; }
+function _shopRenewTxt(){ const m = shopMinutesToRenew(); return m >= 60 ? `${Math.floor(m/60)} h ${m%60} min` : `${m} min`; }
+function renderShopShowcase(panel){
+  const sc = shopDailyShowcase(), f = sc.featured, seenNow = [];
+  let hero = "";
+  if(f){
+    const isSkin = f.kind==="skin", sk = isSkin ? SET_SKINS[f.id] : null, S = isSkin ? SET_DB[f.id] : null;
+    const champ = isSkin ? (skinSetChamp(f.id) || selectedClass) : f.id, cls = CLASSES[champ] || {};
+    const cat = !isSkin ? CHAMPION_CATALOG.find(c=>c.id===f.id) : null;
+    const key = "feat:" + f.kind + ":" + f.id; seenNow.push(key);
+    const title = isSkin ? (sk.name || "Skin de " + S.name) : cls.name;
+    const sub = isSkin ? `Paquete de skin · set ${S.name} completo (${setPieceIds(f.id).length} piezas)${skinSetChamp(f.id) ? " · " + cls.name : " · universal"}` : `Guardián · ${cls.role || ""}`;
+    const desc = isSkin ? (S.lore || S.theme || "") : (cat ? cat.lore : "");
+    const act = f.owned ? '<span class="shop-st own">✔ Ya es tuyo</span>'
+      : `<button class="shop-btn hot" id="shop-feat-buy" ${save.gold < f.price ? "disabled" : ""}>${isSkin ? "Comprar paquete" : "Desbloquear"}</button>`;
+    hero = `<div class="shop-hero ${isSkin ? "skin" : "champ"}" data-feat="${f.kind}:${f.id}" style="--hc:${cls.color || "#ff7a2e"}">
+      <div class="shop-hero-art">
+        ${isSkin ? `<img class="shop-hero-img" src="${sk.preview || sk.src}" alt="">` : ""}
+        <canvas class="champ-anim shop-hero-anim" width="176" height="176" data-class-key="${champ}" data-skin="${isSkin ? f.id : ""}"></canvas>
+      </div>
+      <div class="shop-hero-info">
+        <div class="shop-hero-tags"><span class="ui-tag hot">★ DEL DÍA</span>${!f.owned && f.off ? `<span class="ui-tag sale">OFERTA −${f.off}%</span>` : ""}${_shopTagNew(key)}</div>
+        <div class="shop-hero-title" style="color:${cls.color || "var(--ember3)"}">${title}</div>
+        <div class="shop-hero-sub">${sub}</div>
+        <div class="shop-hero-desc">${desc}</div>
+        <div class="shop-hero-buy">${f.owned ? "" : _shopPriceHTML(f.price, f.base)}${act}</div>
+      </div></div>`;
+  }
+  // ofertas del día
+  const deals = sc.deals.map(d=>{
+    const entry = shopCatalog().find(e=>e.key===d.key); if(!entry) return "";
+    const it = shopPreviewItem(entry, d.tier), col = itemColor(it), sold = shopDealBought(d.id);
+    return `<div class="shop-deal ${sold ? "sold" : ""}" data-deal="${d.id}" style="--ic:${col}">
+      <div class="shop-deal-head"><div class="shop-deal-ico">${itemIconHTML(it)}<span class="ui-tag sale">−${d.off}%</span></div><div class="shop-deal-meta"><div class="shop-deal-name" style="color:${col}">${it.name}</div>
+        <div class="shop-item-sub">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label}${it.designed && it.champion ? ` · ${CLASSES[it.champion].name}` : ""}</div></div></div>
+      <div class="shop-deal-buy">${sold ? '<span class="shop-st own">✔ Comprado hoy</span>' : `<button class="shop-btn" data-deal-buy="${d.id}" ${save.gold < d.price ? "disabled" : ""}>🪙 ${fmtGold(d.price)} <s class="shop-was">${fmtGold(d.base)}</s></button>`}</div>
+    </div>`;
+  }).join("");
+  // paquetes de skins (set completo = skin)
+  const skinIds = typeof SET_SKINS!=="undefined" ? Object.keys(SET_SKINS).filter(id=>SET_DB[id]) : [];
+  const bundles = skinIds.map(id=>{
+    const sk = SET_SKINS[id], S = SET_DB[id], miss = shopSetMissing(id), n = setPieceIds(id).length, champ = skinSetChamp(id);
+    const key = "skin:" + id; seenNow.push(key);
+    const own = !miss.length;
+    return `<div class="shop-bundle ${own ? "owned" : ""}" data-bundle="${id}">
+      <div class="shop-bundle-art"><img src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
+      <div class="shop-bundle-name">${sk.name || S.name}</div>
+      <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · ${n} piezas + skin</div>
+      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}</div>
+    </div>`;
+  }).join("");
+  // cromas: cosméticas sueltas (js/ui/shop-cromas.js da los productos); las que no tenés primero
+  const cromaList = typeof shopCromaProducts==="function" ? shopCromaProducts().sort((a,b)=>(a.owned-b.owned) || (b.champOwned-a.champOwned)) : [];
+  const cromas = cromaList.map(p=>{
+    const key = "croma:" + p.id; seenNow.push(key);
+    const act = !p.owned ? `<button class="shop-btn" data-croma-buy="${p.id}" ${save.gold < p.price ? "disabled" : ""}>🪙 ${fmtGold(p.price)}</button>`
+      : p.equipped ? '<span class="shop-st own">✔ Equipada</span>'
+      : p.champOwned ? `<button class="shop-btn sec" data-croma-on="${p.id}">Equipar</button>` : '<span class="shop-st own">✔ Tuya</span>';
+    return `<div class="shop-bundle shop-croma-card ${p.owned ? "owned" : ""}" data-croma-card="${p.id}">
+      <div class="shop-bundle-art"><img src="${p.preview}" alt="" loading="lazy">${p.owned ? "" : _shopTagNew(key)}</div>
+      <div class="shop-bundle-name">${p.name}</div>
+      <div class="shop-item-sub"><span style="color:${p.color}">◆</span> ${p.champName} · ${p.crystalLabel}</div>
+      <div class="shop-deal-buy">${act}</div>
+    </div>`;
+  }).join("");
+  // guardianes por desbloquear
+  const locked = CHAMPION_CATALOG.filter(c=>!(save.champions[c.id]||{}).unlocked);
+  const champs = locked.map(c=>{
+    const cls = CLASSES[c.id];
+    return `<div class="shop-mini-champ" data-champ="${c.id}">
+      <canvas class="champ-anim shop-mini-anim" width="72" height="72" data-class-key="${c.id}" data-idle="1" data-skin="" style="background:${cls.color}1c;"></canvas>
+      <div class="shop-bundle-name" style="color:${cls.color}">${cls.name}</div>
+      <div class="shop-deal-buy"><button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < c.priceGold ? "disabled" : ""}>🪙 ${fmtGold(c.priceGold)}</button></div>
+    </div>`;
+  }).join("");
+  panel.innerHTML = `<div class="shop-show-top">${hero}
+      <div class="shop-deals-box"><div class="shop-row-head"><span class="shop-row-title">OFERTAS DEL DÍA</span><span class="shop-renew" id="shop-renew" title="Las ofertas se renuevan a la medianoche">⟳ ${_shopRenewTxt()}</span></div>
+      <div class="shop-deals-grid">${deals}</div></div></div>
+    ${bundles ? `<div class="shop-row-head"><span class="shop-row-title">PAQUETES DE SKINS</span><span class="shop-renew">el set completo de piezas + su skin</span></div><div class="shop-strip ui-scroll-x">${bundles}</div>` : ""}
+    ${cromas ? `<div class="shop-row-head"><span class="shop-row-title">CROMAS</span><span class="shop-renew">otra paleta · solo cosmético</span></div><div class="shop-strip ui-scroll-x">${cromas}</div>` : ""}
+    ${champs ? `<div class="shop-row-head"><span class="shop-row-title">GUARDIANES</span><span class="shop-renew">${locked.length} por desbloquear</span></div><div class="shop-strip ui-scroll-x">${champs}</div>` : ""}
+    <div class="shop-fair">⚖ Todo se consigue jugando: se paga con el oro que ganás en las arenas. No hay compras con dinero real. Míticos y Únicos no se venden: se fabrican o se ganan peleando.</div>`;
+  const fb = panel.querySelector("#shop-feat-buy");
+  if(fb) fb.addEventListener("click", ()=>{
+    if(f.kind==="champ"){ shopConfirmChampion(f.id, f); return; }
+    const nm = SET_SKINS[f.id].name || SET_DB[f.id].name;
+    gameConfirm(`¿Comprar el paquete ${nm} (set ${SET_DB[f.id].name} completo) por ${fmtGold(f.price)} de oro?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return;
+      const r = shopBuyFeatured(); if(!r.ok){ gameAlert(r.reason); return; }
+      _shopAfterSkinBuy(f.id, r.n);
+    });
+  });
+  panel.querySelectorAll("[data-deal-buy]").forEach(b=> b.addEventListener("click", ev=>{
+    ev.stopPropagation();
+    const id = b.getAttribute("data-deal-buy"), r = shopBuyDeal(id);
+    if(!r.ok){ gameAlert(r.reason); return; }
+    _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (oferta del día)`, "lootLegend");
+    _shopFlash(document.querySelector(`.shop-deal[data-deal="${id}"]`));
+  }));
+  panel.querySelectorAll(".shop-deal").forEach(card=> card.addEventListener("click", ev=>{
+    if(ev.target.closest("button")) return;
+    const d = sc.deals.find(x=>x.id===card.getAttribute("data-deal")); if(!d) return;
+    openShopItemPreview(shopCatalog().find(e=>e.key===d.key), d.tier);
+  }));
+  _bindSkinBuy(panel);
+  panel.querySelectorAll("[data-champ-buy]").forEach(b=> b.addEventListener("click", ()=> shopConfirmChampion(b.getAttribute("data-champ-buy"))));
+  panel.querySelectorAll("[data-croma-buy]").forEach(b=> b.addEventListener("click", ()=>{
+    const id = b.getAttribute("data-croma-buy"), d = CROMA_SKINS[id], ch = save.champions[d.champ];
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return;
+      const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+      if(ch && ch.unlocked) cromaEquip(d.champ, id); // recién comprada: se pone en su guardián
+      _shopAfterBuy(`🎨 CROMA ${d.name}${ch && ch.unlocked ? " · equipada" : " · comprada"}`, "levelup");
+    });
+  }));
+  panel.querySelectorAll("[data-croma-on]").forEach(b=> b.addEventListener("click", ()=>{
+    const id = b.getAttribute("data-croma-on"), d = CROMA_SKINS[id];
+    if(cromaEquip(d.champ, id)) _shopAfterBuy(`🎨 CROMA EQUIPADA · ${d.name}`, "levelup");
+  }));
+  // lo que se vio hoy deja de ser NUEVO la próxima vez; las ofertas del día ya no marcan el hub
+  const seen = _shopSeen(); let ch = false;
+  for(const k of seenNow) if(!seen[k]){ seen[k] = true; ch = true; }
+  if(save.shopDealsSeen !== sc.day){ save.shopDealsSeen = sc.day; ch = true; }
+  if(ch) persist();
+  startChampAnimLoop();
+}
+// el contador "se renuevan en…" se actualiza solo mientras la vitrina está abierta
+setInterval(()=>{ if(typeof state!=="undefined" && state==="shop"){ const el = document.getElementById("shop-renew"); if(el) el.textContent = "⟳ " + _shopRenewTxt(); } }, 30000);
+function _bindSkinBuy(panel){
+  panel.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
+    const id = b.getAttribute("data-skin-buy");
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return;
+      shopBuySkin(id);
+    });
+  }));
 }
 
 /* ---------------- Guardianes ---------------- */
@@ -53,11 +214,8 @@ function renderShopChampions(panel){
     </div>`;
   }).join("") + '</div>';
   panel.querySelectorAll("[data-champ-buy]").forEach(b=> b.addEventListener("click", ()=>{
-    const id = b.getAttribute("data-champ-buy"), r = shopBuyChampion(id);
-    if(!r.ok){ gameAlert(r.reason); return; }
-    selectedClass = id;
-    _shopAfterBuy(`🔓 ${CLASSES[id].name} desbloqueado: ya lo podés elegir`, "levelup");
-    _shopFlash(document.querySelector(`.shop-champ-row[data-champ="${id}"]`));
+    const id = b.getAttribute("data-champ-buy");
+    shopConfirmChampion(id, null, ()=> _shopFlash(document.querySelector(`.shop-champ-row[data-champ="${id}"]`)));
   }));
   panel.querySelectorAll("[data-champ-detail]").forEach(b=> b.addEventListener("click", ()=>{ renderChampDetail(b.getAttribute("data-champ-detail")); setState("champdetail"); }));
   startChampAnimLoop();
@@ -175,18 +333,13 @@ function renderShopSkins(panel){
   panel.innerHTML = `<div class="lobby-note">Una skin de set nunca se vende suelta: aparece cuando equipás el set COMPLETO en su guardián.</div>
     <div class="shop-skin-list">${cards || '<div class="inv-empty">Todavía no hay skins.</div>'}</div>
     <div class="shop-soon-box shop-soon-small">Sets sin skin todavía (arte pendiente, ver docs/assets_faltantes/skins_sets/): ${pending.join(" · ")}. Con el set completo se ve su aura plena.</div>`;
-  panel.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
-    const id = b.getAttribute("data-skin-buy");
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`, {okText:"Comprar"}).then(ok=>{
-      if(!ok) return;
-      shopBuySkin(id);
-    });
-  }));
+  _bindSkinBuy(panel);
   panel.querySelectorAll("[data-skin-equip]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-skin-equip"), k = b.getAttribute("data-skin-champ");
     if(skinEquipOn(id, k)) _skinEquippedFeedback(id, k); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas en el inventario.");
     renderShop();
   }));
+  if(typeof shopCromaMount==="function") shopCromaMount(panel); // cromas sueltas por oro (js/ui/shop-cromas.js)
   startChampAnimLoop();
 }
 // Compra las piezas que faltan de una skin (desde la Tienda o la Sala) y la autoequipa si corresponde.

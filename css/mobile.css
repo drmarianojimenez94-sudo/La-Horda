@@ -78,5 +78,9 @@
   /* el Hechicero */
   #run-intro .ri-who{ font-size:0.7rem; letter-spacing:1px; }
   #run-intro .ri-k, #buff-story .bs-who{ font-size:0.7rem; letter-spacing:0; }
-  #run-intro .ri-go{ font-size:0.72rem; }
+  #run-intro .ri-go{ font-size:0.9rem; }
+  /* historia (story.css): rótulos en pixel de 6-8 px, ilegibles en el teléfono; mínimo 11 px */
+  #run-intro .ri-act, .story-vic .sv-k, .story-vic .sv-say b{ font-size:0.7rem; letter-spacing:1px; line-height:1.4; }
+  /* casilla "Reducir movimiento" de la pausa: mínimo 40 px en el celular */
+  .pause-motion input[type=checkbox]{ width:40px; height:40px; margin:0 0 0 6px; accent-color:var(--ember1); vertical-align:middle; }
 }

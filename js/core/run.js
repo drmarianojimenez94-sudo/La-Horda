@@ -86,6 +86,7 @@ function startRun(fromLevel){
   const hudArenaEl = document.getElementById("hud-arena");
   if(hudArenaEl) hudArenaEl.textContent = (ARENA_MODS[currentArena]||{}).label || "";
   runStats = freshRunStats();
+  if(typeof endlessOn==="function" && endlessOn()) endlessOnRunStart(); // Horda Infinita: nivel del tramo según la ronda
   iceWalls.length = 0; bossStrikes.length = 0; if(typeof guardReset==="function") guardReset();
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
@@ -132,6 +133,7 @@ function startRun(fromLevel){
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
   if(arenaHas("runStart")) arenaHook("runStart"); // mapa propio: estado inicial y héroes en la entrada
   beginLevel();
+  if(typeof questsOnRunStart==="function") questsOnRunStart(); // logros y desafíos: empieza a contar esta partida
   setState("playing");
 }
 
@@ -227,6 +229,7 @@ function onBossDefeated(){
 // Cierre de la victoria (arena superada, desbloqueos, pantalla final). Lo llama onBossDefeated o,
 // si la arena tiene su propia secuencia de muerte del jefe, la arena cuando esa secuencia termina.
 function finishBossVictory(){
+  if(typeof endlessOn==="function" && endlessOn()){ endlessBossDown(); return; } // Horda Infinita: el jefe es una ronda, no el cierre de la arena
   bossActive = false;
   if(typeof setMusicMode==="function") setMusicMode("victory");
   grantGold(80);

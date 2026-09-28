@@ -61,7 +61,7 @@ function netRenderLobbyBar(){
       <div class="net-row"><button class="btn small secondary" id="net-copy-btn">🔗 Copiar enlace</button>
         ${navigator.share ? `<button class="btn small" id="net-share-btn">📨 Invitar</button>` : ""}
         <button class="btn secondary small" id="net-close-btn">Cerrar sala</button></div>
-      <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots. La arena la cambiás arriba, sin cerrar la sala.</div>
+      <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MULTIJUGADOR → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots. La arena la cambiás arriba, sin cerrar la sala.</div>
       <div class="net-link">${url}</div>
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Hay guardianes repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
@@ -177,7 +177,7 @@ function netRenderLobbySlots(){
       <div class="lobby-tag p${i}">${tag}</div>
       <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-skin="${skin}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
       <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>
-      ${skin && SET_SKINS[skin] ? `<div class="lobby-skin">🎨 ${SET_SKINS[skin].name}</div>` : ""}
+      ${skin && (typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]) ? `<div class="lobby-skin">🎨 ${(typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]).name}</div>` : ""}
       <div class="lobby-meta">${cls.name} · ${NET_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv||1}</div>
       ${st}
@@ -377,7 +377,7 @@ function showNetToast(text){
   }
 })();
 
-/* ---------------- MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO ----------------
+/* ---------------- MULTIJUGADOR → 🔑 UNIRSE CON CÓDIGO ----------------
    Dos jugadores abren LA HORDA cada uno por su lado: uno crea la sala (Arena → Sala → Crear sala
    online) y le dicta el código al otro, que lo escribe acá y entra directo a esa Sala. */
 function netRenderModeJoin(){

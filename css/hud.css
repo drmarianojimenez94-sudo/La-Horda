@@ -124,11 +124,13 @@
 
 #center-banner{
   position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
-  font-size:1.4rem; color:var(--ember3); text-shadow:0 0 16px rgba(255,122,46,0.7);
+  font-family:var(--font-retro); font-size:2rem; line-height:1; color:var(--ember3); max-width:min(640px, 80vw);
+  text-shadow:2px 2px 0 #1a0a04, -1px -1px 0 #1a0a04, 1px -1px 0 #1a0a04, -1px 1px 0 #1a0a04, 0 0 16px rgba(255,122,46,0.7);
   opacity:0; pointer-events:none; text-align:center; letter-spacing:0.05em;
 }
 #center-banner.show{animation:bannerPop 2.1s ease-out forwards;}
 #center-banner.low{top:47%;}
+#center-banner.downed{top:66%;} /* con el cartel de "CAÍSTE" (cooperativo) en pantalla, va debajo */
 @keyframes bannerPop{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.85);} 12%{opacity:1; transform:translate(-50%,-50%) scale(1);} 78%{opacity:1;} 100%{opacity:0;} }
 
 /* ---------- Jefes (js/ui/boss-hud.js) ---------- */
@@ -202,6 +204,7 @@
   user-select:none;
 }
 .ability-btn .ico{font-size:1.25rem; line-height:1;}
+.ability-btn .ico .ico-img{ display:block; width:1.55em; height:1.55em; margin:0 auto; image-rendering:pixelated; image-rendering:crisp-edges; pointer-events:none; }
 .ability-btn.basic{width:72px; height:72px; right:calc(16px + env(safe-area-inset-right,0px)); bottom:calc(14px + env(safe-area-inset-bottom,0px)); border-color:#e0824a;}
 .ability-btn.s1{width:54px; height:54px; right:calc(96px + env(safe-area-inset-right,0px)); bottom:calc(16px + env(safe-area-inset-bottom,0px));}
 .ability-btn.s2{width:54px; height:54px; right:calc(138px + env(safe-area-inset-right,0px)); bottom:calc(70px + env(safe-area-inset-bottom,0px));}
@@ -261,7 +264,13 @@
 .ability-btn.ready:not(.basic):not(.ult):not(.revive){border-color:#ffcf5c; box-shadow:0 0 12px rgba(255,190,80,0.5);}
 .ability-btn.active{border-color:#7dffa0; box-shadow:0 0 14px rgba(125,255,160,0.7);}
 .ability-btn.ready-pop{animation:readyPop 0.45s ease-out;}
-@keyframes readyPop{ 0%{transform:scale(1.2); box-shadow:0 0 26px rgba(255,220,120,1);} 100%{transform:scale(1);} }
+@keyframes readyPop{ 0%{transform:scale(1.2); box-shadow:inset 0 0 0 40px rgba(255,250,225,0.75), 0 0 26px rgba(255,220,120,1);} 35%{box-shadow:inset 0 0 0 40px rgba(255,250,225,0), 0 0 20px rgba(255,220,120,0.8);} 100%{transform:scale(1);} }
+/* ulti lista: destello blanco + pop más grande, después sigue el pulso de siempre */
+.ability-btn.ult.ready.ready-pop{animation:ultReadyPop 0.6s ease-out, ultPulse 1.4s ease-in-out 0.6s infinite;}
+@keyframes ultReadyPop{ 0%{transform:scale(1.35); box-shadow:inset 0 0 0 40px rgba(255,255,235,0.9), 0 0 34px rgba(255,200,60,1);} 40%{transform:scale(0.96); box-shadow:inset 0 0 0 40px rgba(255,255,235,0), 0 0 26px rgba(255,190,50,0.9);} 100%{transform:scale(1);} }
+/* "Reducir movimiento" (pausa): sin pops ni pulsos de escala en los botones */
+body.reduce-motion .ability-btn.ready-pop, body.reduce-motion .ability-btn.ult.ready.ready-pop{animation:none;}
+body.reduce-motion .ability-btn.ult.ready{animation:none;}
 
 #pause-btn{
   position:fixed; top:calc(10px + env(safe-area-inset-top,0px)); left:calc(170px + env(safe-area-inset-left,0px));
@@ -343,6 +352,12 @@
   #tut-panel .tut-who{ font-size:0.42rem; margin-bottom:2px; }
   #tut-panel .tut-text{ font-size:0.9rem; }
   #tut-panel .tut-goal{ font-size:0.92rem; margin-top:2px; }
+  /* Guía del jefe: arriba tapaba al jefe (que casi siempre entra por arriba) y a la barra de estado de la
+     arena (civiles, luces, runas). En el teléfono va abajo al centro, en el lugar del Hechicero, que se
+     esconde mientras se ve la guía (sin :has, en navegadores viejos, quedan los dos como antes). */
+  #boss-intro{ top:auto; bottom:calc(8px + env(safe-area-inset-bottom,0px)); left:50%;
+    width:max(250px, min(380px, calc(100vw - 440px))); background:rgba(24,8,4,0.86); padding:5px 10px 6px; }
+  #tut-panel:has(~ #boss-intro:not(.hidden)){ visibility:hidden; }
 }
 
 /* Botones secundarios (Pacto del Nigromante, curación de emergencia): chicos y separados de las habilidades */
@@ -360,3 +375,35 @@
 #nigro-souls-pips i{ display:inline-block; width:6px; height:9px; margin-right:1px; background:#1e3a28; border:1px solid #2e5a3c; }
 #nigro-souls-pips i.on{ background:#5ae68c; border-color:#b8ffcf; box-shadow:0 0 4px #5ae68c; }
 #nigro-souls-pips i.pact{ border-color:#ffe36a; }
+
+/* ---------- Tipografía del HUD: una sola familia pixel ----------
+   Antes el HUD mezclaba Georgia con serifas (vida, arena, aliados, botones, jefe) con las dos fuentes pixel
+   de los carteles y del Hechicero: tres familias en la misma pantalla. Todo lo chico pasa a VT323 (con el
+   tamaño corregido: a igual px, VT323 es más chica que Georgia) y el nombre del jefe a la fuente de títulos. */
+#hud, #controls, #floaters{ font-family:var(--font-retro); }
+.top-pill{ font-size:0.95rem; line-height:1; letter-spacing:0.01em; gap:1px; }
+#hud .top{ width:auto; min-width:150px; max-width:210px; }
+.top-pill > span{ white-space:nowrap; } /* "Nivel 6/10 · Bajas 120" en un renglón (antes el número caía abajo) */
+#arena-rule-chip{ font-size:0.92rem; }
+#plevel{ font-size:0.95rem; line-height:1; }
+.ally-name{ font-size:0.86rem; }
+.bar-label{ font-size:0.9rem; }
+#se-hud, #musashi-hud, #sylva-hud, #nigromante-hud{ font-size:0.9rem; line-height:1.05; }
+#ult-label{ font-size:0.9rem; line-height:1; }
+.ability-btn{ font-size:0.84rem; font-weight:normal; letter-spacing:0; }
+.ability-btn.sec{ font-size:0.78rem; }
+.revive-btn{ font-size:0.86rem; font-weight:normal; }
+.float-text{ font-size:1.15rem; font-weight:normal; }
+.float-text.crit{ font-size:1.4rem; }
+#boss-name{ font-family:var(--font-pixel); font-size:0.78rem; font-weight:normal; letter-spacing:0.04em; }
+#boss-hud.sub #boss-name{ font-size:0.66rem; }
+#boss-epithet{ font-size:0.98rem; }
+#boss-status{ font-size:0.92rem; line-height:1; }
+#boss-hint{ font-size:1.05rem; }
+#boss-intro .bi-name{ font-family:var(--font-pixel); font-size:0.5rem; font-weight:normal; letter-spacing:2px; margin-bottom:4px; }
+#boss-intro .bi-tips{ font-size:1rem; line-height:1.05; }
+/* nombres largos (Segador Olvidado, "Mariano · Mago") en un renglón, con puntos suspensivos si no entran */
+#plevel{ white-space:normal; }
+.ally-name, .top-pill > span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+/* celular acostado: el cartel central en un renglón casi siempre (a 2rem "4 civiles escondidos en la ciudad" se partía) */
+@media (max-height:500px){ #center-banner{ font-size:1.55rem; max-width:min(560px, 70vw); } }

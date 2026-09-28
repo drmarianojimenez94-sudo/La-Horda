@@ -220,6 +220,13 @@ function _cxDrawMother(g, e){
   g.restore();
   return true;
 }
+// Tope de ampliación (px de pantalla por unidad del mundo): un bicho común mide ~60 unidades y en la ficha
+// grande se ampliaba ×7 u ×8 hasta verse como un mosaico borroso. Con el tope queda nítido y a buen tamaño;
+// los jefes (enormes en el mundo) no llegan al tope y se ven igual que antes.
+function _cxMaxZoom(g){
+  const c = g && g.canvas, dpr = (c && c.clientWidth) ? c.width/c.clientWidth : 1;
+  return 2.6*dpr;
+}
 // Ajuste automático: se mide una vez la caja real del sprite (píxeles no transparentes) en reposo.
 function _cxMeasure(type){
   const c = _cxFitCache[type]; if(c) return c;
@@ -245,7 +252,7 @@ function _cxEnemyScene(g, p, W, H, t, dt){
   if(S.atlas) e.atlasKey = S.atlas; // otra paleta del mismo cuerpo (p.ej. la Bestia del Bosque)
   _cxAnimEnemy(e, S.anim, S.set, t, dt);
   const box = m || {w:(e.radius||20)*2.4, h:(e.radius||20)*3, cx:0, bottom:0};
-  const k = Math.min(W*0.78/box.w, H*0.8/box.h) * (S.scale || 1);
+  const k = Math.min(W*0.78/box.w, H*0.8/box.h, _cxMaxZoom(g)) * (S.scale || 1);
   _cxDrawEnemy(g, e, W/2 - box.cx*k, H*0.9 - box.bottom*k, k);
   return null;
 }
@@ -264,7 +271,7 @@ function _cxGroupScene(g, p, W, H, t, dt){
     const m = _cxMeasure(type), e = p.ents[type] || (p.ents[type] = _cxFakeEnemy(type));
     _cxAnimEnemy(e, S.anim, null, t + i*250, dt);
     const box = m || {w:60, h:80, cx:0, bottom:0}, cw = W/list.length;
-    const k = Math.min(cw*0.9/box.w, H*0.7/box.h);
+    const k = Math.min(cw*0.9/box.w, H*0.7/box.h, _cxMaxZoom(g));
     _cxDrawEnemy(g, e, cw*(i + 0.5) - box.cx*k, H*0.9 - box.bottom*k, k);
   });
 }

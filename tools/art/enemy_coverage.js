@@ -34,7 +34,7 @@ const ARENA_FALLBACK = { cm_: 'ciudad', mn_: 'minas', ab_: 'abismo', lev_: 'acua
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::/.test(m.text())) errors.push('console: ' + m.text()); });
-  await page.goto(`${BASE}/index.html?dev=1`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/index.html?dev=1`, { waitUntil: 'load', timeout: 180000 }); // con la máquina cargada, 30 s no alcanzan
   for (let i = 0; i < 300; i++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
   await sleep(800);
   // todas las imágenes de arenas tienen que estar decodificadas antes de medir
@@ -114,7 +114,8 @@ const ARENA_FALLBACK = { cm_: 'ciudad', mn_: 'minas', ab_: 'abismo', lev_: 'acua
     const chunk = results.slice(p * PER, (p + 1) * PER).map(r => ({ t: r.t, arena: r.arena, rank: r.rank, src: r.src, walkFrames: r.walkFrames }));
     const dims = await page.evaluate(drawSheet, { chunk, STATES, id: 'sheet' + p });
     await page.setViewportSize({ width: Math.max(800, dims[0]), height: Math.max(600, dims[1]) });
-    await (await page.$('#sheet' + p)).screenshot({ path: path.join(outdir, `contact_${String(p + 1).padStart(2, '0')}.png`) });
+    // captura por recorte de la página (la del elemento esperaba a que "quedara quieto" y con la máquina cargada vencía a los 30 s)
+    await page.screenshot({ path: path.join(outdir, `contact_${String(p + 1).padStart(2, '0')}.png`), clip: { x: 0, y: 0, width: dims[0], height: dims[1] }, timeout: 120000 });
     await page.evaluate((id) => document.getElementById(id).remove(), 'sheet' + p);
   }
   const bad = results.filter(r => STATES.some(s => /vacío|error/.test(r.src[s])));

@@ -74,8 +74,9 @@ function damageEnemy(e, amount, opts){
   }
   e.lastHitBy = src;
   // B1: los números de daño de un invitado se ven solo en SU pantalla
-  if(src && src.isRemote){ netEmitTo(src._netSlot, "floatText", [e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null]); }
-  else if(src===player) netQuiet(()=>floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null));
+  // (tipo de daño -> color; golpes seguidos al mismo enemigo se agrupan en un número que crece, ver floatText)
+  if(src && src.isRemote){ netEmitTo(src._netSlot, "floatText", [e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null, dmgKind]); }
+  else if(src===player) netQuiet(()=>floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null, dmgKind, e));
   if(src===player && !src.isRemote && (!player._hitSfxAt || performance.now()-player._hitSfxAt>90)){
     player._hitSfxAt = performance.now();
     playSfx(crit ? "crit" : "hit", typeof sfxMatTag==="function" ? sfxMatTag(e) : null); // el material del enemigo cambia el golpe (audio.js)
@@ -102,6 +103,7 @@ function damageEnemy(e, amount, opts){
   if(opts.knockback){
     const ang = Math.atan2(e.y-src.y, e.x-src.x);
     e.x += Math.cos(ang)*46; e.y += Math.sin(ang)*46;
+    e._kbVis = (e._kbVis||0) + 46; // se dibuja deslizándose (animfx.js)
     e._kbAt = runElapsedMs; e._kbBy = src; // Abismo: un empujón de habilidad puede tirarlo al vacío
   }
   if(opts.pull){
@@ -184,8 +186,10 @@ function killEnemy(e){
   // nuevo Rastreo" -acá el cambio es forzado porque ya no hay a quién rastrear-).
   for(const h of heroes){ if(h.huntTarget===e){ sylvaClearTrack(h); } }
   kills++;
+  if(typeof endlessOn==="function" && endlessOn()) endlessOnKill(e); // Horda Infinita: puntaje
   if(arenaHas("enemyKilled")) arenaHook("enemyKilled", e); // muertes con efecto propio de la arena
   if(e.lastHitBy && e.lastHitBy.classKey && (e.lastHitBy===player || inView(e.x, e.y, 0))) killFeedback(e, e.lastHitBy===player);
+  juiceOnKill(e.lastHitBy); // racha de bajas (juice.js): contador visible + sorbo de energía por escalón
   if(e.rank==="subjefe") subjefesDefeated++;
   if(e.lastHitBy && e.lastHitBy.stats) e.lastHitBy.stats.kills++;
   if(e.lastHitBy && e.lastHitBy.classKey==="segador"){
@@ -250,9 +254,11 @@ function killEnemy(e){
     }
   }
   if(e.type==="guardian_laberinto" && !netIsGuest() && typeof campaignLabyrinthWarning==="function") campaignLabyrinthWarning(e.x, e.y); // advierte antes de caer; su cristal queda libre al vencer al Minotauro (su forma corrompida)
+  if(e!==boss && typeof storyOnKill==="function") storyOnKill(e); // su última frase y las Crónicas que suelta (story.js)
   if(e.type==="hechicero_supremo" && hechOnDefeat(e)) return; // no muere: huye (inf-hechicero.js)
   if(e===boss){
     onBossDefeated();
+    if(!e.alive && typeof storyOnKill==="function") storyOnKill(e); // un jefe que "revive" (otra vida) todavía no habla
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.

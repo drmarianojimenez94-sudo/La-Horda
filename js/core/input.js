@@ -169,11 +169,18 @@ document.getElementById("pause-btn").addEventListener("click", ()=>{
   if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); return; }
   if(state==="playing"){ setState("paused"); renderStatsPanel(); }
 });
+// Celular: una llamada, una notificación o cambiar de app en plena partida SOLO. Antes el juego
+// quedaba congelado y al volver seguía de golpe, con la horda encima y sin aviso. Ahora vuelve en
+// pausa (en cooperativo no hay pausa: la partida es de todos y la sigue el anfitrión).
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState==="hidden" && state==="playing" && !netMatch && typeof renderStatsPanel==="function"){ setState("paused"); renderStatsPanel(); }
+});
 document.getElementById("resume-btn").addEventListener("click", ()=>{
   if(netMatch){ document.getElementById("pause-screen").classList.add("hidden"); return; }
   setState("playing");
 });
 document.getElementById("quit-btn").addEventListener("click", ()=>{
+  if(typeof endlessOn==="function" && endlessOn()){ endlessQuitFromPause(); return; } // Horda Infinita: terminar = resultados (sin castigo)
   if(divinaMode){
     divinaMode = false;
     setState("divina");
@@ -189,6 +196,7 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
       if(!ok || !stillHere()) return;
       applyArenaFailurePenalty(player.classKey);
       if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
+      if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true});
       document.getElementById("pause-screen").classList.add("hidden");
       if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
       setState("menu"); renderChampGrid(); renderSaveLine();

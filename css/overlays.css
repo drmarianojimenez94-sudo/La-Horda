@@ -17,14 +17,23 @@
 /* ---------- Buff choice ---------- */
 #buffscreen{z-index:25;}
 .buff-cards{display:flex; gap:14px; width:100%; max-width:420px; flex-wrap:wrap; justify-content:center;}
+/* cartas con el mismo marco pixel que el resto de los paneles (antes redondeadas y en Georgia) */
 .buff-card{
   flex:1; min-width:140px; background:linear-gradient(160deg, var(--panel), #0f0805);
-  border:1.5px solid var(--panel-b); border-radius:14px; padding:16px 12px; cursor:pointer;
+  border:2px solid var(--panel-b); border-radius:2px; padding:14px 12px; cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(255,160,80,0.08), 4px 4px 0 #000; transition:border-color .12s, transform .12s;
 }
-.buff-card:active{border-color:var(--ember1);}
+.buff-card:hover{border-color:#8a4a22;}
+.buff-card:active{border-color:var(--ember1); transform:translateY(1px);}
 .buff-card .ico{font-size:1.6rem; margin-bottom:6px;}
-.buff-name{font-weight:700; font-size:0.92rem; margin-bottom:4px;}
-.buff-desc{font-size:0.72rem; color:var(--text-dim); line-height:1.4;}
+.buff-name{font-family:var(--font-retro); font-size:1.3rem; line-height:1.05; color:var(--ember3); margin-bottom:4px; letter-spacing:0.02em;}
+.buff-desc{font-family:var(--font-retro); font-size:1.05rem; color:var(--text-dim); line-height:1.1;}
+/* celular acostado: las tres cartas en una fila (antes la tercera caía sola abajo) */
+@media (max-height:500px) and (min-aspect-ratio:4/3){
+  #buff-title{ font-size:1.35rem; margin-bottom:12px; }
+  .buff-cards{ max-width:min(760px, 94vw); flex-wrap:nowrap; }
+  .buff-card{ padding:12px 10px; }
+}
 
 /* ---------- misc ---------- */
 #vote-note{font-size:0.68rem; color:var(--text-dim); margin-top:16px; max-width:340px;}
@@ -67,7 +76,8 @@
 #run-intro .res-pick.on{border-color:var(--c, #bfe8ff); background:rgba(60,80,110,0.8); box-shadow:0 0 8px var(--c, rgba(191,232,255,0.5)); color:#fff;}
 #run-intro .res-desc{font-size:0.68rem; color:#cfe6f5; line-height:1.3;}
 #run-intro .res-desc b{color:#fff;}
-#run-intro .ri-go{margin-top:10px; width:100%; font-size:0.8rem; padding:10px; background:linear-gradient(180deg,#c9922e,#8a5a14); border-color:#ffd98a; color:#fff8e6;}
+#run-intro .ri-go{margin-top:10px; width:100%; font-size:0.8rem; padding:10px; background:linear-gradient(180deg,#c9922e,#8a5a14); border-color:#ffd98a; color:#fff8e6;
+  text-shadow:0 1px 0 #3a2206, 1px 0 0 #3a2206, 0 -1px 0 #3a2206, -1px 0 0 #3a2206; letter-spacing:1px;} /* texto claro sobre dorado: con contorno se lee */
 #run-intro .ri-tap{text-align:center; font-family:'VT323',monospace; font-size:0.95rem; color:#a8916a; margin-top:4px;}
 @media (max-height: 500px){
   #run-intro{gap:10px; padding:6px 12px;}
@@ -163,6 +173,8 @@
 .pause-audio{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 10px; font-family:var(--font-retro); color:var(--text); font-size:0.9rem; }
 .pause-audio label{ display:flex; align-items:center; gap:6px; }
 .pause-audio input[type=range]{ width:150px; height:28px; accent-color:var(--ember1); }
+.pause-audio .pause-motion{ min-height:40px; cursor:pointer; }
+.pause-audio input[type=checkbox]{ width:24px; height:24px; accent-color:var(--ember1); margin:0; }
 
 /* ---------- Invitado: la partida arrancó y todavía baja el arte de la arena (net-game.js: netGuestHoldStart) ---------- */
 #net-loading{position:fixed; inset:0; z-index:90; display:flex; flex-direction:column; align-items:center; justify-content:center;

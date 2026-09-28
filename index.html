@@ -7,15 +7,22 @@
 <meta name="theme-color" content="#0b0705">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<!-- fuentes pixel servidas desde el juego (antes Google Fonts: sin red o con el CDN bloqueado, todo caía a
+     Georgia/monoespaciada con otro ancho y el HUD se desarmaba). Ver css/base.css -->
+<link rel="preload" href="assets/fonts/vt323-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/press-start-2p-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/menus.css">
 <link rel="stylesheet" href="css/hud.css">
 <link rel="stylesheet" href="css/panels.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/codex.css">
+<link rel="stylesheet" href="css/ui-kit.css">
+<link rel="stylesheet" href="css/story.css">
 <link rel="stylesheet" href="css/mobile.css">
+<link rel="stylesheet" href="css/quests.css">
+<link rel="stylesheet" href="css/account.css">
+<link rel="stylesheet" href="css/endless.css">
 </head>
 <body>
 
@@ -63,7 +70,7 @@
     </div>
     <div id="ult-meter">
       <div id="ult-ring"><div id="ult-ring-inner">★</div></div>
-      <div id="ult-label">Ultimate</div>
+      <div id="ult-label">Definitiva</div>
     </div>
     <div id="boss-hud" class="hidden">
       <div id="boss-name-row"><span id="boss-name"></span><span id="boss-epithet"></span></div>
@@ -114,30 +121,59 @@
     <div class="build-tag">LA HORDA — B1 COOPERATIVE PLAYTEST</div>
   </div>
 
-  <!-- MODO DE JUEGO -->
-  <!-- MENÚ PRINCIPAL: LA HORDA -->
-  <div id="mainmenu-screen" class="screen hidden">
-    <div class="brand" style="margin-bottom:6px;">LA HORDA</div>
-    <div class="brand-sub" style="margin-bottom:28px;">UN VIAJE ÉPICO · UN RPG DE FANTASÍA</div>
-    <div class="mainmenu-pillars">
-    <button class="mode-card mainmenu-play" id="mainmenu-jugar-btn">
-      <div class="mode-card-icon">⚔</div>
-      <div class="mode-card-title">MODOS DE JUEGO</div>
-      <div class="mode-card-desc">Arena (campaña, sola o con amigos: la sala online se arma después de elegir la arena).</div>
-    </button>
-    <button class="mode-card mainmenu-codex" id="mainmenu-codex-btn">
-      <div class="mode-card-icon">📖</div>
-      <div class="mode-card-title">CÓDICE</div>
-      <div class="mode-card-desc">Guardianes, bestiario, jefes y arenas: el archivo del mundo de La Horda. Elegí guardián, equipo, talentos y skins.</div>
-    </button>
-    <button class="mode-card" id="mainmenu-tienda-btn">
-      <div class="mode-card-icon">🪙</div>
-      <div class="mode-card-title">TIENDA</div>
-      <div class="mode-card-desc">Todos los guardianes (con su ficha) y, más adelante, skins, armas y mascotas.</div>
-    </button>
+  <!-- MENÚ PRINCIPAL (HUB): JUGAR continúa la campaña; accesos a Guardianes, Tienda, Multijugador,
+       Códice y Desafíos; arriba el perfil (nombre, nivel de cuenta y oro). js/ui/hub.js -->
+  <div id="mainmenu-screen" class="screen hidden hub-screen">
+    <div class="hub-top">
+      <button class="hub-profile" id="hub-profile-btn" data-account-chip aria-label="Perfil">
+        <canvas class="champ-anim hub-profile-anim" width="40" height="40" data-class-key="mago" data-idle="1"></canvas>
+        <span class="hub-profile-txt"><b class="hub-profile-name" id="hub-profile-name">Jugador</b><span class="hub-profile-lvl" id="hub-profile-lvl"></span></span>
+        <span class="hub-gold" id="hub-gold">🪙 0</span>
+      </button>
+      <div class="hub-brand">LA HORDA</div>
+      <button class="ui-icon-btn" id="hub-options-btn" aria-label="Opciones" title="Opciones">⚙</button>
+      <button class="ui-icon-btn" id="mainmenu-back-btn" aria-label="Volver al título" title="Volver al título">⏏</button>
     </div>
-    <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
-    <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
+    <div class="hub-main">
+      <div class="hub-modes">
+        <!-- MODO CAMPAÑA: la historia en orden (Arena 01 → 10); JUGAR sigue en la próxima arena -->
+        <button class="hub-play" id="hub-play-btn">
+          <span class="hub-play-art"><canvas class="champ-anim hub-play-anim" width="132" height="132" data-class-key="mago" data-idle="1"></canvas></span>
+          <span class="hub-play-txt">
+            <span class="hub-play-kicker" id="hub-play-kicker">MODO CAMPAÑA</span>
+            <span class="hub-play-title">JUGAR</span>
+            <span class="hub-play-arena" id="hub-play-arena"></span>
+            <span class="hub-play-champ" id="hub-play-champ"></span>
+          </span>
+        </button>
+        <!-- HORDA INFINITA (supervivencia): aparece sola cuando existe window.endlessOpen -->
+        <button class="hub-endless hidden" id="hub-endless-btn"><span class="hub-endless-ico">♾</span><span class="hub-endless-txt"><b>HORDA INFINITA</b><span class="hub-endless-sub" id="hub-endless-sub">Supervivencia sin fin</span></span><span class="ui-tag hidden" id="hub-endless-lock">🔒</span></button>
+      </div>
+      <div class="hub-grid" id="hub-grid">
+        <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
+        <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span></button>
+        <button class="hub-tile" id="mainmenu-jugar-btn"><span class="hub-tile-ico">🌐</span><span class="hub-tile-title">MULTIJUGADOR</span><span class="hub-tile-sub">Sala con código · modos</span></button>
+        <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>
+        <button class="hub-tile hidden" id="mainmenu-quests-btn" data-quests-open><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag new hub-tile-badge qs-badge hidden" id="hub-badge-quests"></span></button>
+      </div>
+    </div>
+    <div class="save-line hidden" id="mainmenu-gold-line"></div>
+  </div>
+  <!-- OPCIONES (desde el hub): nombre, volumen y código de guardado -->
+  <div id="hub-options" class="ui-modal hidden" role="dialog" aria-label="Opciones">
+    <div class="ui-modal-back" data-opt-close></div>
+    <div class="ui-panel ui-modal-panel">
+      <div class="ui-panel-title">⚙ Opciones</div>
+      <label class="opt-row">Tu nombre <input id="opt-name" maxlength="16" placeholder="Jugador"></label>
+      <label class="opt-row">🎵 Música <input type="range" id="opt-vol-music" min="0" max="100" step="5"></label>
+      <label class="opt-row">💥 Efectos <input type="range" id="opt-vol-sfx" min="0" max="100" step="5"></label>
+      <div class="opt-note">El progreso se guarda en este navegador. Para llevarlo a otro lado, usá el código de guardado.</div>
+      <div class="opt-btns">
+        <button class="btn small" id="opt-export-btn">Copiar código de guardado</button>
+        <button class="btn small secondary" id="opt-import-btn">Restaurar con código</button>
+      </div>
+      <button class="btn wide" id="opt-close-btn" data-opt-close>Listo</button>
+    </div>
   </div>
 
   <!-- MODO CAMPAÑA: el guardián de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
@@ -161,7 +197,12 @@
   </div>
   <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los guardianes), recetas de Míticos y colección -->
   <div id="inventory-screen" class="screen hidden">
-    <div class="arena-title">Mi Inventario</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="myinv-back-btn">‹ Volver</button>
+      <div class="ui-topbar-title">MI INVENTARIO</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+
     <div class="lobby-sub" id="myinv-sub"></div>
     <div class="hub-tabs" id="myinv-tabs">
       <button class="hub-tab active" data-tab="objetos">Objetos</button>
@@ -169,39 +210,46 @@
       <button class="hub-tab" data-tab="coleccion">Colección</button>
     </div>
     <div id="myinv-panel"></div>
-    <button class="btn secondary" id="myinv-back-btn">Volver al Códice</button>
   </div>
   <!-- FICHA INDIVIDUAL DE GUARDIÁN -->
   <div id="champdetail-screen" class="screen hidden">
+    <div class="ui-topbar">
+      <button class="ui-back" id="champdetail-back-btn">‹ Volver</button>
+      <div class="ui-topbar-title">FICHA DEL GUARDIÁN</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
     <div id="champdetail-body"></div>
-    <button class="btn secondary" id="champdetail-back-btn">Volver a la tienda</button>
   </div>
 
-  <!-- TIENDA: catálogo de guardianes (animados, con precio y ficha) + resto de la tienda más adelante -->
+  <!-- TIENDA (vitrina): destacado del día, ofertas diarias, paquetes de skins y catálogo completo.
+       Todo se paga con oro ganado jugando: no hay compras con dinero real. js/ui/shop-ui.js -->
   <div id="shop-screen" class="screen hidden">
-    <div class="arena-title">Tienda</div>
-    <div class="save-line" id="shop-gold-line"></div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="shop-back-btn">‹ Menú</button>
+      <div class="ui-topbar-title">TIENDA</div>
+      <div class="ui-wallet" id="shop-gold-line"></div>
+    </div>
     <div class="shop-tabs" id="shop-tabs">
-      <button class="shop-tab on" data-shop-tab="campeones">Guardianes</button>
-      <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
+      <button class="shop-tab on" data-shop-tab="destacados">★ Destacados</button>
+      <button class="shop-tab" data-shop-tab="campeones">Guardianes</button>
+      <button class="shop-tab" data-shop-tab="objetos">Objetos</button>
       <button class="shop-tab" data-shop-tab="skins">Skins</button>
     </div>
-    <div class="lobby-note shop-test-note">Guardianes: 2.500 de oro. Los objetos cuestan según su rareza. Míticos y Únicos no se venden: se fabrican o se consiguen peleando.</div>
     <div id="shop-panel"></div>
-    <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
+  <!-- MODOS Y MULTIJUGADOR: MODO CAMPAÑA (la historia en orden, elegir arena) y HORDA INFINITA a la
+       derecha; unirse a la sala de un amigo con el código o crear una sala, a la izquierda. -->
   <div id="modeselect-screen" class="screen hidden">
-    <div class="arena-title">Elegí el modo de juego</div>
-    <button class="mode-card" id="mode-arena-btn">
-      <div class="mode-card-icon">⚔</div>
-      <div class="mode-card-title">Arena</div>
-      <div class="mode-card-desc">Sobrevive oleadas de monstruos, derrota a los subjefes y al jefe final — incluye la Arena Divina.</div>
-    </button>
+    <div class="ui-topbar">
+      <button class="ui-back" id="modeselect-back-btn">‹ Menú</button>
+      <div class="ui-topbar-title">MODOS Y MULTIJUGADOR</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+    <div class="mode-cols">
     <!-- B1: unirse a la sala de un amigo con SOLO el código (sin enlace externo) -->
     <div class="mode-card join-card" id="mode-join-card">
-      <div class="mode-card-icon">🔑</div>
-      <div class="mode-card-title">UNIRSE CON CÓDIGO</div>
+      <div class="mode-card-title">🔑 UNIRSE CON CÓDIGO</div>
       <div class="mode-card-desc">¿Un amigo creó una sala? Escribí su código de 6 letras y entrás directo a su Sala.</div>
       <div class="join-code-row">
         <input id="mode-join-code" class="multi-input net-code-input" placeholder="Código (ej. QKL58J)" maxlength="200" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters">
@@ -211,14 +259,30 @@
       <div class="join-code-meta"><label class="net-name">Tu nombre <input id="mode-join-name" maxlength="16" placeholder="Jugador"></label>
         <span class="join-code-champ" id="mode-join-champ"></span></div>
       <div class="net-err join-status" id="mode-join-status"></div>
+      <div class="mode-create-row"><span>¿Invitás vos?</span><button class="btn small" id="mode-create-btn">🌐 CREAR SALA</button></div>
     </div>
-    <button class="btn secondary" id="modeselect-back-btn">Volver</button>
+    <div class="mode-side">
+      <button class="mode-card mode-campaign" id="mode-arena-btn">
+        <div class="mode-card-title">⚔ MODO CAMPAÑA</div>
+        <div class="mode-card-desc">La historia en orden, de la Arena 01 a la 10. Elegí cualquier arena que ya abriste y rejugala, sola o con amigos.</div>
+      </button>
+      <button class="mode-card mode-endless hidden" id="mode-endless-btn">
+        <div class="mode-card-title">♾ HORDA INFINITA <span class="ui-tag hidden" id="mode-endless-lock">🔒</span></div>
+        <div class="mode-card-desc" id="mode-endless-desc">Supervivencia: oleadas sin fin, cada vez más duras. ¿Hasta dónde llegás?</div>
+      </button>
+    </div>
+    </div>
   </div>
 
   <!-- ARENA DIVINA: asedio 4v4 real contra un equipo rival de guardianes divinos, con torres,
        castillo, muerte definitiva y oleadas de refuerzos para ambos bandos. -->
   <div id="divina-screen" class="screen hidden">
-    <div class="arena-title" style="color:#d9a8ff;">Arena Divina</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="divina-back-btn">‹ Arenas</button>
+      <div class="ui-topbar-title">ARENA DIVINA</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+
     <div class="shop-soon-box" style="border-color:#7a4fae;">
       <div style="font-size:2rem; margin-bottom:10px;">👁</div>
       <div style="font-weight:700; margin-bottom:8px; color:#d9a8ff;">Asedio 4 contra 4</div>
@@ -230,20 +294,27 @@
       </div>
     </div>
     <button class="btn wide" id="divina-explore-btn" style="margin-top:16px;">Entrar al asedio</button>
-    <button class="btn secondary" id="divina-back-btn" style="margin-top:10px;">Volver</button>
   </div>
 
   <!-- SELECCIÓN DE ARENA -->
   <div id="arenaselect-screen" class="screen hidden">
-    <div class="arena-title">Elegí la arena</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="arenaselect-back-btn">‹ Modos</button>
+      <div class="ui-topbar-title">MODO CAMPAÑA</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+    <div class="ui-sub">La historia en orden: elegí la arena (Arena 01 → 10)</div>
     <div id="arena-grid"></div>
-    <button class="btn secondary" id="arenaselect-back-btn">Volver</button>
   </div>
 
   <!-- SALA / LOBBY (previa a entrar a la arena): 4 lugares -pensados para multijugador; por ahora
        los otros 3 los ocupan bots- y el equipamiento del guardián elegido. -->
   <div id="prep-screen" class="screen hidden">
-    <div class="arena-title" id="lobby-title">Sala</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="prep-back-btn">‹ Menú</button>
+      <div class="ui-topbar-title" id="lobby-title">Sala</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
     <div class="lobby-sub" id="lobby-sub"></div>
     <div id="lobby-arena" class="hidden"></div>
     <div id="net-bar"></div>
@@ -259,16 +330,18 @@
     <div id="prep-talents-panel" class="hidden"></div>
     <div id="prep-skills-panel" class="hidden"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>
-    <button class="btn secondary" id="prep-back-btn">Volver a elegir guardián</button>
   </div>
 
   <!-- MENU -->
   <div id="menu-screen" class="screen hidden">
-    <div class="brand">LA HORDA</div>
-    <div class="brand-sub" id="menu-brand-sub">SUPERVIVENCIA A LA HORDA</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="menu-back-btn">‹ Volver</button>
+      <div class="ui-topbar-title">ELEGÍ TU GUARDIÁN</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+    <div class="ui-sub" id="menu-brand-sub">SUPERVIVENCIA A LA HORDA</div>
     <div class="champ-grid" id="champ-grid"></div>
     <button class="btn wide" id="start-btn">Entrar a la Arena</button>
-    <button class="btn secondary" id="menu-back-btn">Volver</button>
     <div class="save-line" id="save-line"></div>
     <div class="save-code-row">
       <button class="btn secondary small" id="export-save-btn">Copiar código de guardado</button>
@@ -278,9 +351,9 @@
 
   <!-- BUFF CHOICE -->
   <div id="buffscreen" class="screen hidden">
-    <div class="arena-title" id="buff-title">Nivel superado — elige un refuerzo</div>
+    <div class="arena-title" id="buff-title">Nivel superado — elegí un refuerzo</div>
     <div class="buff-cards" id="buff-cards"></div>
-    <div id="vote-note">En una partida de hasta 4 jugadores, esta elección se decide por voto del equipo.</div>
+    <div id="vote-note">El refuerzo dura hasta el final de esta incursión.</div>
   </div>
 
   <!-- GAME OVER -->
@@ -310,6 +383,7 @@
     <div class="pause-audio">
       <label>🎵 Música <input type="range" id="vol-music" min="0" max="100" step="5"></label>
       <label>💥 Efectos <input type="range" id="vol-sfx" min="0" max="100" step="5"></label>
+      <label class="pause-motion" title="Apaga sacudidas de cámara, congelados de golpe, cámara lenta y pulsos de pantalla">🌀 Reducir movimiento <input type="checkbox" id="opt-reduce-motion"></label>
     </div>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
@@ -353,6 +427,7 @@
 <script src="js/data/divina.js"></script>
 <script src="js/data/enemies.js"></script>
 <script src="js/data/buffs.js"></script>
+<script src="js/data/quests.js"></script>
 <script src="js/core/constants.js"></script>
 <script src="js/core/utils.js"></script>
 <script src="js/storage/save.js"></script>
@@ -379,6 +454,7 @@
 <script src="js/rendering/camera.js"></script>
 <script src="js/rendering/effects.js"></script>
 <script src="js/rendering/feedback.js"></script>
+<script src="js/rendering/juice.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
 <script src="js/assets/boss-sheets-meta.js"></script>
@@ -399,6 +475,8 @@
 <script src="js/systems/reactions.js"></script>
 <script src="js/systems/set-effects.js"></script>
 <script src="js/assets/set-skins-meta.js"></script>
+<script src="js/systems/cromas.js"></script>
+<script src="js/assets/croma-skins-meta.js"></script>
 <script src="js/assets/abismo-meta.js"></script>
 <script src="js/assets/ciudad-meta.js"></script>
 <script src="js/assets/minas-meta.js"></script>
@@ -425,6 +503,7 @@
 <script src="js/systems/crystals.js"></script>
 <script src="js/systems/crystal-resonance.js"></script>
 <script src="js/systems/campaign-story.js"></script>
+<script src="js/systems/quests.js"></script>
 <script src="js/champions/hero-factory.js"></script>
 <script src="js/champions/segador.js"></script>
 <script src="js/champions/mago.js"></script>
@@ -510,6 +589,7 @@
 <script src="js/ai/navigation.js"></script>
 <script src="js/ai/bot-brain.js"></script>
 <script src="js/ai/allies.js"></script>
+<script src="js/audio/music-score.js"></script>
 <script src="js/audio/audio.js"></script>
 <script src="js/storage/save-code.js"></script>
 <script src="js/ui/champion-select.js"></script>
@@ -521,18 +601,24 @@
 <script src="js/ui/panels-inventory.js"></script>
 <script src="js/ui/hud.js"></script>
 <script src="js/ui/boss-hud.js"></script>
+<script src="js/ui/pixel-font-fix.js"></script>
 <script src="js/ui/run-intro.js"></script>
 <script src="js/ui/menus.js"></script>
+<script src="js/ui/hub.js"></script>
 <script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/item-icons.js"></script>
 <script src="js/ui/item-preview.js"></script>
 <script src="js/ui/shop-ui.js"></script>
+<script src="js/ui/shop-cromas.js"></script>
 <script src="js/ui/inventory-ui.js"></script>
 <script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/loot-ceremony.js"></script>
 <script src="js/ui/end-screens.js"></script>
+<script src="js/ui/quests-ui.js"></script>
 <script src="js/data/codex-content.js"></script>
+<script src="js/data/story-text.js"></script>
+<script src="js/data/body-swaps.js"></script>
 <script src="js/ui/codex/codex-track.js"></script>
 <script src="js/ui/codex/codex-preview.js"></script>
 <script src="js/ui/codex/codex.js"></script>
@@ -542,12 +628,16 @@
 <script src="js/net/net-config.js"></script>
 <script src="js/net/net-core.js"></script>
 <script src="js/net/net-game.js"></script>
+<script src="js/systems/story.js"></script>
 <script src="js/net/net-lobby.js"></script>
 <script src="js/net/net-chat.js"></script>
 <script src="js/net/net-debug.js"></script>
+<script src="js/net/account.js"></script>
 <script src="js/assets/skin-fx-meta.js"></script>
 <script src="js/systems/skin-fx.js"></script>
 <script src="js/systems/terrain-tags.js"></script>
+<script src="js/data/endless.js"></script>
+<script src="js/systems/endless.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

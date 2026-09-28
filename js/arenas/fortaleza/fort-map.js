@@ -453,11 +453,22 @@ function fortGuestUpdate(dt){
   fortTrapsGuestUpdate(dt);
 }
 // Estado que el anfitrión manda (compacto; el invitado lo aplica y rearma la geometría).
-function fortNetState(){ if(!fortS) return null; const s = Object.assign({}, fortS); delete s._navSig; return s; }
+// Las válvulas de vapor del Caballero (fortS.duo.valves[i]) quedan a 4 niveles de profundidad y el
+// snapshot corta ahí (netSer): al invitado le llegaban como null, no las veía ni podía abrirlas y el
+// dibujo de acciones contextuales tiraba error en cada cuadro (se cortaba el resto del render:
+// proyectiles, partículas, textos). Viajan aparte, a un nivel más arriba.
+function fortNetState(){
+  if(!fortS) return null;
+  const s = Object.assign({}, fortS); delete s._navSig;
+  if(fortS.duo && fortS.duo.valves){ s._valves = fortS.duo.valves; s.duo = Object.assign({}, fortS.duo); delete s.duo.valves; }
+  return s;
+}
 function fortApplyNetState(v){
   if(!v) return;
   if(!fortS){ fortS = fortNewState(); fortTrapsReset(); }
   Object.assign(fortS, v);
+  if(fortS.duo) fortS.duo.valves = Array.isArray(v._valves) ? v._valves.filter(Boolean) : [];
+  delete fortS._valves;
   fortGeomDirty = true;
 }
 

@@ -237,7 +237,8 @@ function packDeriveDirSets(P){
 }
 // Atlas del redraw (Dama del Bosque / Doppelgängers): mismas reglas de estado que el pack de abajo.
 function drawEnemyAtlasPack(e){
-  const P = (e.atlasKey && ENEMY_ATLAS_PACK[e.atlasKey] && ENEMY_ATLAS_PACK[e.atlasKey].ready) ? ENEMY_ATLAS_PACK[e.atlasKey] : ENEMY_ATLAS_PACK[e.type]; // atlasKey: otra paleta del mismo cuerpo (Guardián en furia)
+  const bsk = typeof bodySwapKey==="function" ? (bodySwapKey(e.atlasKey) || bodySwapKey(e.type)) : null; // cuerpo prestado (js/data/body-swaps.js)
+  const P = bsk ? ENEMY_ATLAS_PACK[bsk] : ((e.atlasKey && ENEMY_ATLAS_PACK[e.atlasKey] && ENEMY_ATLAS_PACK[e.atlasKey].ready) ? ENEMY_ATLAS_PACK[e.atlasKey] : ENEMY_ATLAS_PACK[e.type]); // atlasKey: otra paleta del mismo cuerpo (Guardián en furia)
   if(!P || !P.ready) return false;
   if(!_PACK_DIR_DONE.has(P.sets)) packDeriveDirSets(P); // por si el atlas cargó antes que este script
   if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;
@@ -412,7 +413,7 @@ function drawAcuaticaReal(e){
   const targetH = e.radius*2.6;
   const sc = targetH/img.height;
   const clip = { frames: [{x:0,y:0,w:img.width,h:img.height}] };
-  drawAnimFrameSized(img, clip, 0, e.x, e.y, img.width*sc, img.height*sc, 0.5, 0.72, flip, e.hitFlash>60?0.6:1);
+  drawAnimFrameSized(img, clip, 0, e.x, e.y, img.width*sc, img.height*sc, 0.5, 0.72, flip, 1); // (el golpe se ve con el destello blanco común, no volviéndose transparente)
   return true;
 }
 function drawEnemyAtlas(e){

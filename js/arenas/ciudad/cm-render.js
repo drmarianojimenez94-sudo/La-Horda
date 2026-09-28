@@ -41,7 +41,7 @@ function _cmPiece(key, x, y, h, alpha, flip, anchorY){
 }
 function _cmGlow(x, y, r, rgb, a){ if(a <= 0.01) return; ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, a); ctx.drawImage(glowSprite(rgb), x - r, y - r, r*2, r*2); ctx.restore(); }
 function _cmAtlasFrame(type, set, n, x, y, h, flip, alpha, loop){
-  const P = ENEMY_ATLAS_PACK[type]; if(!P || !P.ready) return false;
+  const P = ENEMY_ATLAS_PACK[(typeof bodySwapKey==="function" && bodySwapKey(type)) || type]; if(!P || !P.ready) return false; // cuerpo prestado (body-swaps.js)
   const arr = P.sets[set] || P.sets.idle; if(!arr || !arr.length) return false;
   const v = loop===false ? arr[Math.min(arr.length - 1, Math.max(0, n))] : arr[((n % arr.length) + arr.length) % arr.length];
   const s = h/P.refH;
@@ -248,7 +248,14 @@ function _cmDrawBuilding(b, t){
   const ry0 = b.y0 - HH, ry1 = b.y1 - HH;
   if(b.kind==="torre" || b.kind==="campanario"){
     _cmFillPat("tex_muralla", 2, "#3a3440", b.x0, ry0, W, ry1 - ry0);
-    ctx.fillStyle = "#2a1016"; ctx.beginPath(); ctx.moveTo(b.x0 - 8, ry1); ctx.lineTo(b.cx, ry0 - 110); ctx.lineTo(b.x1 + 8, ry1); ctx.closePath(); ctx.fill();
+    // aguja de la torre: antes era un triángulo liso de un solo color (en el teléfono parecía un error de dibujo).
+    // Ahora lleva las tejas del resto de los techos, una cara en sombra (volumen) y el borde marcado.
+    const _spire = ()=>{ ctx.beginPath(); ctx.moveTo(b.x0 - 8, ry1); ctx.lineTo(b.cx, ry0 - 110); ctx.lineTo(b.x1 + 8, ry1); ctx.closePath(); };
+    ctx.save(); _spire(); ctx.fillStyle = "#2a1016"; ctx.fill(); ctx.clip();
+    _cmFillPat("tex_techo", 2, "#5a1e24", b.x0 - 8, ry0 - 110, W + 16, ry1 - ry0 + 110, 0.75);
+    ctx.fillStyle = "rgba(10,4,8,0.42)"; ctx.fillRect(b.cx, ry0 - 110, W/2 + 8, ry1 - ry0 + 110);          // cara en sombra
+    ctx.restore();
+    ctx.save(); _spire(); ctx.strokeStyle = "#140810"; ctx.lineWidth = 4; ctx.stroke(); ctx.restore();
     _cmFillPat("tex_techo", 2, "#5a1e24", b.x0 + 20, ry1 - 60, W - 40, 60, 0.6);
     if(b.kind==="campanario"){ ctx.fillStyle = "#c08a30"; ctx.beginPath(); ctx.arc(b.cx, ry1 - 30, 18, Math.PI, 0); ctx.fill(); _cmGlow(b.cx, ry1 - 30, 60, "255,180,80", 0.3); }
   } else if(b.kind==="catedral"){

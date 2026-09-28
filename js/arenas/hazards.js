@@ -120,7 +120,7 @@ function updateArenaHazards(dt){
     // Sismo del Laberinto Maldito: a diferencia de los otros peligros (que golpean a uno solo
     // a la vez), esto sacude TODA la arena y golpea a los 4 héroes juntos, un poco cada uno.
     arenaHazardTimer = (9000 + Math.random()*5000)*hzMult;
-    screenShake = Math.max(screenShake||0, 14);
+    vfxShake(14); // (evento: también tiembla en la pantalla de los invitados)
     for(const h of heroes){
       if(!h.alive) continue;
       h.hp = Math.max(0, h.hp - h.maxHp*0.045);

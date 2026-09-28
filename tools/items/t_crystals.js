@@ -47,9 +47,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   if (OUT) await page.screenshot({ path: OUT + '/crystal_flight.png' });
   const r1b = await E(() => { __step(1800); return { done: !CRYSTAL_FX.on, banner: (document.getElementById('center-banner')||{}).textContent || '' }; });
   check('CR.llega_al_jugador_con_cartel', r1b.done && /PIEDRA/.test(r1b.banner) && /1\/3/.test(r1b.banner), r1b);
-  await sleep(700);
-  const tut = await E(() => (document.querySelector('#tut-panel .tut-text')||{}).textContent || '');
-  check('CR.el_hechicero_comenta', /Cristal de Piedra/.test(tut) && /primero de tres/.test(tut), tut.slice(0, 90));
+  // lo que dice el Hechicero del cristal se lee en la escena de salida (último paso de la victoria, story.js)
+  const tut = await E(() => storyVictoryScarHtml({arena:'laberinto', classKey:'guerrero'}));
+  check('CR.el_hechicero_comenta', /Cristal de Piedra/.test(tut) && /primero de tres/.test(tut), tut.slice(0, 200));
   // ---- Reino Fúngico: la Madre Espora NO es Guardiana (sin cristal) ----
   const rM = await E(() => { __start('micelial', 1); state = 'playing'; boss = null; finishBossVictory(); return { fx: CRYSTAL_FX.on, n: crystalsOwned().length, keys: Object.keys(CRYSTAL_DEFS) }; });
   check('CR.madre_espora_no_da_cristal', !rM.fx && rM.n === 1 && !rM.keys.includes('espora'), rM);

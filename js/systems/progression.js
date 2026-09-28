@@ -28,7 +28,7 @@ function grantXP(champKey, amount){
     leveled = true;
   }
   persist();
-  if(leveled) playSfx("levelup");
+  if(leveled){ playSfx("levelup"); if(typeof juiceLevelUp==="function") juiceLevelUp(champKey, c.level); } // destello + aro dorado en partida (juice.js)
   return leveled;
 }
 

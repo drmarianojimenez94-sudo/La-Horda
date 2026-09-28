@@ -138,12 +138,13 @@ function resonanceDmgMult(src, e){
 /* ---------------- dibujo: la gema que acompaña al portador ---------------- */
 function resonanceDraw(){
   if(!heroes || !heroes.length) return;
-  const guest = netMatch && netMatch.role === "guest";
   const now = animNow/1000;
   for(const h of heroes){
     if(!h.alive) continue;
-    // el invitado no simula: ve la de su propio guardián según su guardado
-    const k = guest ? (h === player && !RESO.stolen ? resonanceChosen() : null) : (h._res && h._res.k);
+    // la resonancia (h._res) viaja en el snapshot de cada héroe: el invitado ve las gemas de TODOS los
+    // portadores, igual que el anfitrión (antes solo la propia, sacada de su guardado, y le seguía
+    // brillando después de que el Hechicero se los arranca)
+    const k = h._res && h._res.k;
     if(!k || !inView(h.x, h.y, 80)) continue;
     const D = resonanceColor(k), a = now*1.7 + (h._netSlot||0);
     const x = h.x + Math.cos(a)*22, y = h.y - 58 + Math.sin(a*2)*3;

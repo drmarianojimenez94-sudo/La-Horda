@@ -17,11 +17,16 @@ document.addEventListener("touchstart", startMusic, {once:true, capture:true});
 document.addEventListener("click", startMusic, {once:true, capture:true});
 document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   startMusic();
+  // CUENTAS: sin sesión recordada aparece la pantalla Entrar / Crear cuenta / Invitado (js/net/account.js)
+  if(typeof accountGate==="function" && accountGate(titleContinue)) return;
+  titleContinue();
+});
+function titleContinue(){
   // modo campaña: la primera vez se elige el guardián de regalo
   if(needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   setState("mainmenu");
   renderMainMenu();
-});
+}
 document.getElementById("mute-btn").addEventListener("click", ()=>{
   setAudioEnabled(!audioEnabled);
 });
@@ -71,6 +76,7 @@ function renderMainMenu(){
   if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Regalo de bienvenida: 10.000 de oro para la Tienda (guardianes, objetos y skins)."); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
+  if(typeof renderHub==="function") renderHub(); // el hub (js/ui/hub.js)
 }
 // Vista previa animada genérica: cualquier <canvas class="champ-anim" data-class-key="..."> visible
 // dibuja al guardián con su arte real (drawChampFigure) caminando. Un solo bucle para toda la UI;
@@ -243,6 +249,7 @@ function renderArenaGrid(){
       if(key==="divina"){ setState("divina"); return; }
       currentArena = key;
       updateMenuBrandSub();
+      prepReturnTo = null; champSelectFromPrep = false; _menuBackLabel();
       setState("menu"); renderChampGrid(); renderSaveLine();
     });
   });
@@ -250,10 +257,12 @@ function renderArenaGrid(){
 function updateMenuBrandSub(){
   ensurePlayableArena();
   const el = document.getElementById("menu-brand-sub");
-  if(el) el.textContent = `SUPERVIVENCIA A LA HORDA · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
+  const n = campaignNumberLabel(currentArena);
+  if(el) el.textContent = `${n ? "Arena " + n + " · " : ""}${(ARENA_MODS[currentArena]||{}).label||""} — elegí con quién entrar`;
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
   if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese guardián está bloqueado: desbloquealo en la Tienda."); return; }
+  champSelectFromPrep = false; _menuBackLabel();
   // B1: dentro de una sala online la elección de guardián vuelve a la misma sala
   if(netInRoom()){
     setState("prep"); renderPrepSummary();
@@ -265,13 +274,22 @@ document.getElementById("start-btn").addEventListener("click", ()=>{
   setState("prep");
   renderPrepSummary();
 });
+let champSelectFromPrep = false; // "Cambiar" desde la Sala: elegir guardián y volver a la misma Sala
 document.getElementById("menu-back-btn").addEventListener("click", ()=>{
+  if(champSelectFromPrep){ champSelectFromPrep = false; setState("prep"); renderPrepSummary(); return; }
   setState("arenaselect"); renderArenaGrid();
 });
+function _menuBackLabel(){ const b = document.getElementById("menu-back-btn"); if(b) b.textContent = champSelectFromPrep ? "‹ Sala" : "‹ Arenas"; }
+function openChampSelectFromPrep(){
+  champSelectFromPrep = true; _menuBackLabel();
+  setState("menu"); renderChampGrid(); renderSaveLine();
+}
 document.getElementById("prep-back-btn").addEventListener("click", ()=>{
   const go = ()=>{
     if(netInRoom()) netLeaveRoom();
     lobbyAllies = null;
+    // entraste con JUGAR (hub): "‹ Menú" vuelve al hub; si no, a elegir guardián como siempre
+    if(typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu"){ prepReturnTo = null; setState("mainmenu"); renderMainMenu(); return; }
     setState("menu"); renderChampGrid(); renderSaveLine();
   };
   if(netInRoom() && net.role==="host" && netHumanCount()>1){
@@ -380,9 +398,20 @@ function pickLobbyArena(key){
 // SALA (lobby) antes de entrar a la arena: 4 lugares -pensada para multijugador; hoy el lugar 1 es
 // el jugador y los otros 3 los ocupan bots, uno por cada rol que falta, igual que siempre-, y
 // debajo el equipamiento completo del guardián elegido. "Comenzar" arranca la partida con ESE equipo.
+// Cabecera del equipamiento en la Sala: guardián elegido + "Cambiar" (elegir otro sin salir de la Sala).
+function prepEquipHeadHTML(){
+  const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
+  return `<div class="lobby-equip-title">${cls.name} · Nv. ${champ.level} <button class="btn small secondary prep-change-btn" id="prep-change-btn">⇄ Cambiar guardián</button></div>`;
+}
+function bindPrepEquipHead(box){
+  const b = box.querySelector("#prep-change-btn");
+  if(b) b.addEventListener("click", openChampSelectFromPrep);
+}
 function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
+  const back = document.getElementById("prep-back-btn");
+  if(back) back.textContent = netInRoom() ? "‹ Salir" : ((typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu") ? "‹ Menú" : "‹ Guardián");
   renderLobbyArena();
   netRenderLobbyBar();
   netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online
@@ -392,8 +421,8 @@ function renderPrepSummary(){
     netRenderLobbySlots();
     const box = document.getElementById("prep-summary");
     const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
-    box.innerHTML = `<div class="lobby-equip-title">${cls.name} · Nv. ${champ.level}</div><div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>${prepSkinsHTML()}`;
-    bindPrepSkins(box);
+    box.innerHTML = `${prepEquipHeadHTML()}<div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>${prepSkinsHTML()}`;
+    bindPrepSkins(box); bindPrepEquipHead(box);
     renderPrepTabs();
     if(net.role==="guest") netSendLoadout(false);
     else netHostBroadcastCos(false);
@@ -420,8 +449,8 @@ function renderPrepSummary(){
   }).join("");
   const box = document.getElementById("prep-summary");
   const cls = CLASSES[selectedClass], champ = save.champions[selectedClass];
-  box.innerHTML = `<div class="lobby-equip-title">${cls.name} · Nv. ${champ.level}</div><div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>${prepSkinsHTML()}`;
-  bindPrepSkins(box);
+  box.innerHTML = `${prepEquipHeadHTML()}<div class="lobby-note">Preparate acá: en partida no se puede cambiar el equipo ni los talentos.</div>${prepSkinsHTML()}`;
+  bindPrepSkins(box); bindPrepEquipHead(box);
   renderPrepTabs();
   startChampAnimLoop();
 }

@@ -85,7 +85,10 @@ async function canvasNonBlank(page) {
     // el catálogo de campeones vive dentro de la Tienda
     await page.click('#mainmenu-tienda-btn');
     check('nav.shop', await vis(page, '#shop-screen'));
-    // Tienda (BUGFIX 01): 3 pestañas; Campeones con fila animada por campeón, Objetos con todo el catálogo
+    // Tienda: abre en ★ Destacados (vitrina del día); Guardianes con fila animada por guardián, Objetos con todo el catálogo
+    check('nav.shop_showcase', (await page.locator('#shop-panel .shop-deal').count()) >= 4);
+    await page.click('#shop-tabs [data-shop-tab="campeones"]');
+    await sleep(150);
     const gcount = await page.locator('#shop-panel .shop-champ-row').count();
     check('nav.shop_champions', gcount >= 10, gcount);
     await page.click('#shop-tabs [data-shop-tab="objetos"]');

@@ -132,7 +132,7 @@ const NET_GLOBALS = {
   levelTimer:[()=>levelTimer, v=>{ levelTimer = v; }], levelDuration:[()=>levelDuration, v=>{ levelDuration = v; }],
   kills:[()=>kills, v=>{ kills = v; }], bossActive:[()=>bossActive, v=>{ bossActive = v; }],
   boss:[()=>boss, v=>{ boss = v; }], activeChampion:[()=>activeChampion, v=>{ activeChampion = v; }],
-  subjefesDefeated:[()=>subjefesDefeated, v=>{ subjefesDefeated = v; }], screenShake:[()=>screenShake, v=>{ screenShake = v; }],
+  subjefesDefeated:[()=>subjefesDefeated, v=>{ subjefesDefeated = v; }], // (screenShake ya no viaja: cada pantalla tiembla con SUS eventos, ver juice.js)
   axiomForceQuitFlash:[()=>axiomForceQuitFlash, v=>{ axiomForceQuitFlash = v; }], axiomFreezeTimer:[()=>axiomFreezeTimer, v=>{ axiomFreezeTimer = v; }],
   runElapsedMs:[()=>runElapsedMs, v=>{ runElapsedMs = v; }], levelClearing:[()=>levelClearing, v=>{ levelClearing = v; }],
   arenaRuleBossStacks:[()=>arenaRuleBossStacks, v=>{ arenaRuleBossStacks = v; }], arenaRuleBossTimer:[()=>arenaRuleBossTimer, v=>{ arenaRuleBossTimer = v; }],
@@ -162,8 +162,20 @@ function netHookEvents(){
     };
   }
 }
+// Eventos que no se pueden perder aunque el cuadro venga cargado (recompensas del invitado, muertes,
+// avisos del jefe/arena). Antes TODO se cortaba a los 260 eventos por snapshot: en el barrido de fin
+// de nivel (una muerte + una XP por enemigo y por invitado) el invitado perdía parte de su XP y los
+// últimos enemigos desaparecían sin su muerte. Los cosméticos (números, chispas, sonidos) siguen con tope.
+const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHudShow","bossHudHide","bossHudPhase","bossHudHint",
+  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip"]);
+let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){
-  if(_netEvents.length > 260) return;
+  if((name==="xp" || name==="gold") && to!==undefined && typeof args[0]==="number"){
+    const key = name + to, i = _netRewardIdx.get(key);
+    if(i!==undefined && _netEvents[i]){ _netEvents[i][1][0] += args[0]; return; }
+    _netRewardIdx.set(key, _netEvents.length); _netEvents.push([name, [args[0]], to]); return;
+  }
+  if(_netEvents.length > (NET_KEEP_EVENTS.has(name) ? 1200 : 260)) return;
   const inline = NET_INLINE_EVENTS.has(name);
   const a = args.map(x=>{
     if(inline && x && typeof x==="object" && x.type!==undefined){
@@ -249,6 +261,7 @@ function netBuildLoadout(){
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
     skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
+    croma:(typeof cromaEquippedId==="function" ? cromaEquippedId(k) : null), // cosmético: su croma (js/systems/cromas.js)
     crystal:(typeof resonanceChosen==="function" ? resonanceChosen() : null), // el cristal que lleva (crystal-resonance.js)
     open:ARENA_ORDER.filter(a=>isArenaUnlocked(a))}; // SUS arenas abiertas: el anfitrión avisa en la Sala si alguna no le cuenta para la campaña
 }
@@ -260,6 +273,8 @@ function netLoadoutRecord(L){
   if(L.talents) rec.talents = Object.assign(mkTalentState(), L.talents);
   rec.loadoutItems = Array.isArray(L.items) ? L.items.slice(0, 6) : []; // sus objetos equipados (ver itemPoolFor)
   rec.equipment = Object.assign(mkEquipment(), L.equipment||{});
+  // su croma: solo un id que exista y sea de ese guardián (cosmético; la compra la valida SU juego)
+  if(L.croma && typeof CROMA_SKINS!=="undefined" && CROMA_SKINS[L.croma] && CROMA_SKINS[L.croma].champ===L.champ) rec.croma = L.croma;
   return rec;
 }
 // Mientras dura la partida, save.champions[guardián del invitado] apunta a SU loadout (así toda
@@ -325,7 +340,7 @@ function netHostStartGame(){
   return true;
 }
 function netStartMessage(){
-  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true)};
+  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
 }
 // Cada cuadro, en update(): héroes de los invitados.
 function netHostUpdateRemotes(dt){
@@ -338,7 +353,10 @@ function netHostUpdateRemotes(dt){
     if(Math.hypot(h.x-n.px, h.y-n.py) > 2) n.posAuth++;
     const canMove = h.alive && !(h.stunTimer>0) && !h.fused && !(axiomFreezeTimer>0 && axiomFreezeCaster!==h) && !h.duelActive && !heroMoveLocked(h);
     if(inp){
-      h.fx = inp.fx; h.fy = inp.fy;
+      // la mirada sale del joystick solo mientras camina (igual que el jugador local): quieto, mira a
+      // lo que ataca. Antes se pisaba cada cuadro con la del joystick y el guardián del invitado
+      // parpadeaba entre su objetivo y la última dirección en que caminó con cada golpe.
+      if(inp.mv){ h.fx = inp.fx; h.fy = inp.fy; }
       if(canMove && inp.pa===n.posAuth){
         const d = Math.hypot(inp.x-h.x, inp.y-h.y);
         const allowed = (h._spd||h.baseSpeed||200) * ((now-n.lastAt)/1000 + 0.35) + 40;
@@ -396,7 +414,15 @@ function netHostOnMsg(from, d){
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(useSkill(d.idx|0, d.aim||null)) netEmitTo(from, "useXp", [d.idx|0]); });
       return;
-    case "ult": if(state==="playing" && h.alive) netWithHero(h, ()=> useUltimate()); return;
+    case "ult":
+      if(state==="playing" && h.alive){
+        // la XP de uso de la ulti va al guardado del invitado (antes se sumaba solo a la copia de su
+        // guardián en el anfitrión, que se descarta al terminar: la ulti nunca subía de uso en cooperativo)
+        const u0 = h.ultCharge, c0 = h.ultCd||0;
+        netWithHero(h, ()=> useUltimate());
+        if(h.ultCharge < u0 || (h.ultCd||0) > c0) netEmitTo(from, "useXp", ["ult"]);
+      }
+      return;
     case "pact": if(state==="playing" && h.alive) nigroTogglePact(h); return; // Nigromante invitado
     case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
@@ -452,7 +478,7 @@ function netHostOpenBuffs(){
     if(s.kind!=="human" || s.slot===0) continue;
     const h = heroes[s.slot];
     if(!h || !h._net || !h._net.connected){ netMatch.buffPicks[s.slot] = "skip"; continue; }
-    const opts = [...BUFF_POOL].sort(()=>Math.random()-0.5).slice(0,3).map(b=>b.id);
+    const opts = [...((typeof endlessOn==="function" && endlessOn()) ? endlessBuffPool() : BUFF_POOL)].sort(()=>Math.random()-0.5).slice(0,3).map(b=>b.id);
     netMatch.buffPicks[s.slot] = null;
     netMatch["buffOpts"+s.slot] = opts;
     netSendTo(s.slot, {k:"buffs", opts, level:runLevel});
@@ -463,7 +489,7 @@ function netHostBuffPicked(slot, id){
   const opts = netMatch["buffOpts"+slot] || [];
   const b = BUFF_POOL.find(x=>x.id===id && opts.includes(x.id)) || BUFF_POOL.find(x=>x.id===opts[0]);
   const h = heroes[slot];
-  if(b && h) netWithHero(h, ()=>{ b.apply(runStats); refreshEquippedStats(); });
+  if(b && h) netWithHero(h, ()=>{ b.apply(runStats); refreshEquippedStats(); if(typeof endlessOn==="function" && endlessOn()) endlessOnBuffPicked(h, b.id); });
   netMatch.buffPicks[slot] = b ? b.id : "skip";
   netHostTryResume();
 }
@@ -474,10 +500,11 @@ function netHostTryResume(){
   if(pending.length && performance.now() < netMatch.buffDeadline){ netBuffWaitingText(pending); return; }
   for(const k of pending) netHostBuffPicked(k|0, null); // se acabó el tiempo: refuerzo automático
   netMatch.buffPicks = null;
-  runLevel++;
+  const endless = typeof endlessOn==="function" && endlessOn();
+  if(!endless) runLevel++;
   heroes.forEach((h,i)=>{ const s = netMatch.slots[i]; if(s && s.kind==="human" && h.alive){ h.hp = Math.min(h.maxHp, h.hp + h.maxHp*0.25); h.energy = h.maxEnergy; } });
-  beginLevel();
-  setState("playing");
+  if(endless){ setState("playing"); endlessAdvance(); } // Horda Infinita: próxima ronda (y cada 5, la Cicatriz a otra arena)
+  else { beginLevel(); setState("playing"); }
   netBroadcast({k:"resume"});
 }
 function netBuffWaitingText(pending){
@@ -521,9 +548,13 @@ function _netDeltaOf(lastMap, obj, full){
   lastMap.__sent = 1;
   return any ? d : null;
 }
-function netBuildSnapshot(full){
+function netBuildSnapshot(full, forOne){ // forOne: estado para UN invitado (entra/vuelve): no se lleva los eventos ni las partículas de todos
   const M = netMatch;
   const snap = {k:"s", n:++M.snapN};
+  // el estado para UN invitado se arma con referencias propias: antes pisaba las del resto y el
+  // siguiente snapshot le llegaba a los demás como diferencia contra un estado que nunca vieron
+  // (enemigos nuevos sin tipo ni vida, bajas que no llegaban: fantasmas quietos hasta 10 s)
+  const saved = forOne ? [M.last, M.lastG, M.lastH] : null;
   if(full){ M.last = {}; M.lastG = {}; M.lastH = [{},{},{},{}]; snap.full = 1; }
   // ids para referencias: todos los enemigos vivos tienen id antes de serializar
   for(const e of enemies) netIdOf(e);
@@ -554,10 +585,11 @@ function netBuildSnapshot(full){
     if(u.length || r.length || full) snap.c[name] = {u, r};
   }
   // partículas nuevas (efímeras: se mandan una vez y cada invitado las anima)
+  if(forOne){ M.last = saved[0]; M.lastG = saved[1]; M.lastH = saved[2]; return snap; }
   const p = [];
   for(const pt of particles){ if(pt._s) continue; pt._s = 1; if(p.length < 90){ const s = netSer(pt, 1); if(s) p.push(s); } }
   if(p.length) snap.p = p;
-  if(_netEvents.length){ snap.v = _netEvents; _netEvents = []; }
+  if(_netEvents.length){ snap.v = _netEvents; _netEvents = []; _netRewardIdx = new Map(); }
   return snap;
 }
 function netHostTick(){
@@ -569,7 +601,7 @@ function netHostTick(){
   if(key) netMatch.lastKeyAt = now;
   const snap = netBuildSnapshot(key);
   const str = JSON.stringify({t:"msg", d:snap});
-  if(str.length > 240000){ snap.p = []; snap.v = []; }
+  if(str.length > 240000){ snap.p = []; snap.v = (snap.v||[]).filter(ev=>NET_KEEP_EVENTS.has(ev[0])); } // lo cosmético se descarta; recompensas y muertes, no
   netMatch.lastSnapBytes = str.length;
   netBroadcast(snap);
 }
@@ -587,13 +619,14 @@ function netGuestStartRun(msg){
   const mine = msg.slots[net.slot];
   if(mine) selectedClass = mine.champ;
   if(!reconnecting) markRunStartProgress(selectedClass);
+  if(typeof questsOnRunStart==="function") questsOnRunStart(reconnecting); // logros/desafíos del invitado: cuentan en SU guardado
   clearRunTimers(); resetRunTransients(); runEnding = false; if(typeof _arenaExitDone!=="undefined") _arenaExitDone = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
   runStats = freshRunStats();
   iceWalls.length = 0; bossStrikes.length = 0;
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
   hazardZones = []; activeAxiomVfx = []; musashiAfterimages = [];
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
-  vfxResetRun(); resetFeedback(); bossHudHide(); boss = null; bossActive = false; activeChampion = null;
+  vfxResetRun(); resetFeedback(); bossHudHide(); if(typeof crystalReset==="function") crystalReset(); boss = null; bossActive = false; activeChampion = null;
   levelClearing = 0; levelTimer = 0; levelDuration = 1;
   // héroes en orden de slot; el propio es "player"
   heroes = msg.slots.map((s,i)=>{ const h = makeHero(s.champ, s.kind==="bot", 0, 0); h._netSlot = i; h.netName = s.name; return h; });
@@ -667,7 +700,9 @@ function netApplySnapshot(s){
     for(const k in d){
       if(own && k==="x"){ h._hx = d.x; continue; }
       if(own && k==="y"){ h._hy = d.y; continue; }
-      if(own && (k==="fx"||k==="fy"||k==="moving"||k==="animT"||k==="sylvaCharging")) continue;
+      // quieto, la mirada propia la decide el anfitrión (se da vuelta hacia lo que ataca, como en solitario)
+      if(own && (k==="fx"||k==="fy")){ if(!h.moving && typeof d[k]==="number") h[k] = d[k]; continue; }
+      if(own && (k==="moving"||k==="animT"||k==="sylvaCharging")) continue;
       if(!own && (k==="x"||k==="y")){ if(k==="x") h._tx = d.x; else h._ty = d.y; continue; }
       if(!own && k==="animT") continue;
       h[k] = netDecode(d[k]);
@@ -725,7 +760,10 @@ function netGuestOnMsg(from, d){
 function netGuestUpdate(dt){
   runElapsedMs += dt;
   vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
-  if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
+  // ceremonia del cristal de un Guardián (llega como evento crystalAward/crystalSteal): sin su reloj
+  // el cristal quedaba congelado en el piso del jefe, sin volar al jugador ni cartel "◆ … n/3 ◆"
+  if(typeof crystalTick==="function") crystalTick(dt);
+  screenShakeDecay(dt); // curva exponencial con tope (juice.js)
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si
   // algo externo lo movió (posAuth) o si el movimiento no fue posible.
@@ -798,7 +836,8 @@ function netGuestCast(idx, aim){
 }
 function netGuestShowBuffs(d){
   setState("buff");
-  document.getElementById("buff-title").textContent = `Nivel ${d.level} superado — elige tu refuerzo`;
+  document.getElementById("buff-title").textContent = (typeof endlessOn==="function" && endlessOn()) ? `Ronda ${EN.round} contenida — elegí tu refuerzo` : `Nivel ${d.level} superado — elegí tu refuerzo`;
+  if(typeof buffNoteRefresh==="function") buffNoteRefresh();
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff();
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
@@ -806,7 +845,7 @@ function netGuestShowBuffs(d){
     const b = BUFF_POOL.find(x=>x.id===id); if(!b) return;
     const el = document.createElement("div");
     el.className = "buff-card";
-    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>`;
+    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>${(typeof endlessOn==="function" && endlessOn()) ? endlessBuffHint(b) : ""}`;
     el.addEventListener("click", ()=>{
       netSendToHost({k:"buff", id});
       cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>. Esperando al resto del equipo…</div>`;
@@ -889,6 +928,7 @@ function netOnMatchClosed(reason, role){
   document.getElementById("go-title").textContent = reason==="host_left" ? "El anfitrión se desconectó" : "Se perdió la conexión";
   document.getElementById("go-stats").textContent = "La partida terminó";
   document.getElementById("go-progress").innerHTML = "La XP y el oro que ganaste hasta ahora ya quedaron guardados (sin castigo).";
+  if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true}); // lo jugado cuenta para sus estadísticas
   document.getElementById("retry-btn").classList.add("hidden");
 }
 
