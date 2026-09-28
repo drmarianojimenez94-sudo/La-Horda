@@ -320,3 +320,4 @@
 .ui-sub{ font-family:var(--ui-font); font-size:1.05rem; color:var(--ui-dim); margin:-2px 0 8px; letter-spacing:0.02em; }
 #prep-screen .ui-topbar-title{ color:var(--ui-accent); }
 @media (max-width:700px){ .cx-tabs{ gap:3px; } .cx-tab{ padding:6px 3px; font-size:0.92rem; } }
+@media (max-height:520px){ .ui-back, .ui-icon-btn{ min-height:40px; } .ui-topbar{ margin-bottom:4px; } #shop-screen .shop-tabs{ padding:2px 0 4px; margin-bottom:2px; } }

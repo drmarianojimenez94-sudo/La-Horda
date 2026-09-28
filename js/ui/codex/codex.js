@@ -495,7 +495,8 @@ function codexSkinsTabHtml(key){
     const st = on ? "" : full ? "Tenés el set completo" : `${setPieceIds(id).length - miss.length}/${setPieceIds(id).length} piezas`;
     html += card(id, sk.name || S.name, `Set ${_cxEsc(S.name || id)}`, st, act, on);
   }
-  return _sec("Skins · tocá una para verla", `<div class="gx-skins">${html}</div>
+  const none = ids.length ? "" : `<div class="cx-dim">${_cxEsc(CLASSES[key].name)} todavía no tiene skins de set: por ahora luce su apariencia base.</div>`;
+  return _sec("Skins · tocá una para verla", `<div class="gx-skins">${html}</div>${none}
     <div class="cx-dim">Una skin aparece con su set COMPLETO puesto: USAR equipa las piezas que ya tenés. Nunca se vende suelta.</div>`, "skins");
 }
 function codexBindSkinsTab(body, key, cv){
