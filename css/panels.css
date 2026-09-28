@@ -393,7 +393,7 @@
 .chest-items .loot-card{ animation:lootIn 0.45s ease-out forwards; }
 .loot-card.tier-unico{ --tc:#b06aff; box-shadow:0 0 30px rgba(176,106,255,0.95); animation:lootIn 0.6s ease-out forwards, mythPulse 0.9s ease-in-out 0.6s infinite alternate; }
 .loot-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.78); z-index:80; display:flex; align-items:center; justify-content:center; }
-.loot-overlay-box{ width:min(560px, 92vw); max-height:92vh; overflow:auto; background:#140c08; border:1px solid var(--panel-b); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; align-items:center; }
+.loot-overlay-box{ width:min(560px, 92vw); max-height:92vh; max-height:92dvh; overflow:auto; background:#140c08; border:1px solid var(--panel-b); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; align-items:center; }
 .loot-overlay-body{ width:100%; }
 .loot-summary-line{ text-align:center; font-size:0.72rem; color:var(--text-dim); margin:0 0 4px; }
 .loot-summary-note{ font-size:0.55rem; opacity:0.7; margin-top:1px; }
@@ -438,5 +438,5 @@
 .ip-actions button{ flex:1; padding:8px; border-radius:9px; border:1px solid var(--panel-b); background:var(--panel-b); color:var(--text); font-family:inherit; font-weight:700; font-size:0.7rem; cursor:pointer; }
 .ip-actions button.primary{ background:var(--ember1); color:#1a0e06; border-color:var(--ember1); }
 .ip-actions button:disabled{ opacity:0.45; cursor:default; }
-@media (max-width:420px){ #item-preview{ padding:8px; } #item-preview .ip-panel{ max-height:94vh; padding:10px; } .ip-top .ip-art{ width:56px; height:56px; } }
+@media (max-width:420px){ #item-preview{ padding:8px; } #item-preview .ip-panel{ max-height:94vh; max-height:94dvh; padding:10px; } .ip-top .ip-art{ width:56px; height:56px; } }
 .ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }

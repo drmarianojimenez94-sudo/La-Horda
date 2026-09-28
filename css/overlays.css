@@ -33,13 +33,13 @@
 #run-intro{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; gap:2vw; padding:12px 16px;
   background:radial-gradient(ellipse at 30% 50%, #3e2810, #0c070a 70%); cursor:pointer; animation:riIn .45s ease-out;}
 #run-intro.hidden{display:none;}
-#run-intro .ri-card{max-height:calc(100vh - 16px); overflow-y:auto; -webkit-overflow-scrolling:touch;}
+#run-intro .ri-card{max-height:calc(100vh - 16px); max-height:calc(100dvh - 16px); overflow-y:auto; -webkit-overflow-scrolling:touch;}
 /* página del prólogo (primera partida): solo el relato, sin la ficha */
 #run-intro.ri-prologue .ri-row{display:none;}
 #run-intro.ri-prologue .ri-say{font-size:1.2rem; line-height:1.12;}
 @media (max-height:500px){ #run-intro.ri-prologue .ri-say{font-size:0.98rem; line-height:1.04;} }
 @keyframes riIn{from{opacity:0} to{opacity:1}}
-#run-intro .ri-art{flex:0 0 42%; height:min(92vh, 520px); max-width:520px; background:transparent !important; position:static !important; width:auto;}
+#run-intro .ri-art{flex:0 0 42%; height:min(92vh, 520px); height:min(92dvh, 520px); max-width:520px; background:transparent !important; position:static !important; width:auto;}
 #run-intro .ri-card{flex:1 1 auto; max-width:520px; background:linear-gradient(180deg, rgba(34,22,12,0.92), rgba(14,9,6,0.94));
   border:2px solid #b08a4a; border-radius:8px; padding:12px 14px; box-shadow:0 0 22px rgba(255,200,110,0.25);}
 #run-intro .ri-who{font-family:'Press Start 2P',monospace; font-size:0.55rem; letter-spacing:3px; color:#ffd98a;}
@@ -71,7 +71,7 @@
 #run-intro .ri-tap{text-align:center; font-family:'VT323',monospace; font-size:0.95rem; color:#a8916a; margin-top:4px;}
 @media (max-height: 500px){
   #run-intro{gap:10px; padding:6px 12px;}
-  #run-intro .ri-art{flex-basis:36%; height:94vh;}
+  #run-intro .ri-art{flex-basis:36%; height:94vh; height:94dvh;}
   #run-intro .ri-card{padding:7px 10px;}
   #run-intro .ri-arena{font-size:0.72rem; margin:4px 0;}
   #run-intro .ri-say{font-size:1.02rem; margin-bottom:4px;}
@@ -79,6 +79,11 @@
   #run-intro .ri-k{font-size:0.42rem;}
   #run-intro .ri-go{margin-top:5px; padding:7px; font-size:0.66rem;}
   #run-intro .ri-tap{display:none;}
+}
+/* Android acostado con barra de direcciones (~320-340 px de alto): la figura del Hechicero se quedaba con casi
+   todo el ancho (su ancho mínimo sale del alto) y la ficha quedaba de una palabra por renglón */
+@media (max-height: 340px){
+  #run-intro .ri-art{min-width:0; flex-basis:34%;}
 }
 @media (max-width: 640px) and (orientation: portrait){
   #run-intro{flex-direction:column;}
@@ -158,3 +163,10 @@
 .pause-audio{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 10px; font-family:var(--font-retro); color:var(--text); font-size:0.9rem; }
 .pause-audio label{ display:flex; align-items:center; gap:6px; }
 .pause-audio input[type=range]{ width:150px; height:28px; accent-color:var(--ember1); }
+
+/* ---------- Invitado: la partida arrancó y todavía baja el arte de la arena (net-game.js: netGuestHoldStart) ---------- */
+#net-loading{position:fixed; inset:0; z-index:90; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; padding:24px; text-align:center; background:rgba(5,3,2,0.9); color:var(--text);}
+#net-loading .nl-title{font-family:var(--font-pixel); font-size:0.8rem; color:var(--ember3); letter-spacing:0.04em;}
+#net-loading .nl-pct{font-family:var(--font-retro); font-size:1.5rem; color:#ffe9c2;}
+#net-loading .nl-sub{font-size:0.8rem; color:var(--text-dim); max-width:360px;}

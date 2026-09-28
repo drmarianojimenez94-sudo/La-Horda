@@ -69,4 +69,9 @@ function ensureCanvasSize(){
 window.addEventListener("resize", ()=>resize());
 window.addEventListener("orientationchange", ()=>{ resize(); setTimeout(()=>resize(), 250); });
 if(window.visualViewport) window.visualViewport.addEventListener("resize", ()=>resize());
+// Chrome (sobre todo en Android, al volver de otra app con poca memoria de GPU) puede perder el contexto 2D y
+// recuperarlo solo: vuelve con la transformación en cero y el suavizado prendido (pixel art borroso y fuera
+// de escala hasta el próximo cambio de tamaño). Al recuperarlo se reaplica todo.
+canvas.addEventListener("contextrestored", ()=>resize(true));
+document.addEventListener("fullscreenchange", ()=>{ resize(); setTimeout(()=>resize(), 250); });
 resize(true);

@@ -3,13 +3,16 @@
 #   phones: dos iPhone emulados abren el juego de GitHub Pages y hacen el flujo real de la Sala
 #           (crear, unirse con código, sala llena, enlace de invitación) contra el relay publicado.
 #   load:   carga del juego publicado con 4G simulado (tiempo hasta "Toca para continuar").
+#   android: Chrome para Android emulado (Pixel 7 y Galaxy S9+ acostados): solo, pantalla y una sala online
+#           iPhone (anfitrión) + Android con red de celular (invitado) comparando lo que dibuja cada uno
+#           (tools/audit/android.js).
 # Se corre a mano (Actions → "Live check" → Run workflow) o sola cada día.
 name: Live check
 on:
   workflow_dispatch:
   push:
     branches: ["claude/**"]
-    paths: [".github/workflows/live-check.yml", "tools/net-test/live_relay.js"]
+    paths: [".github/workflows/live-check.yml", "tools/net-test/live_relay.js", "tools/audit/android.js"]
   schedule:
     - cron: "17 11 * * *"
 permissions:
@@ -51,3 +54,16 @@ jobs:
         with: { node-version: 22 }
       - run: npm install --no-save --no-audit --no-fund playwright@1 && npx playwright install --with-deps chromium
       - run: SE_BASE_URL="$SITE" node tools/audit/loadtime.js load-out
+  android:
+    needs: relay
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install --no-save --no-audit --no-fund playwright@1 && npx playwright install --with-deps chromium
+      - run: node tools/audit/android.js todo android-shots
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: android-shots, path: android-shots, if-no-files-found: ignore }

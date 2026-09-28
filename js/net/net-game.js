@@ -62,7 +62,12 @@ const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onH
   // Gélida: el frío viaja en el estado de la arena; esto es interno del anfitrión / de la IA
   "_cold","_stillT","_cx","_cy","_hieWarm","_hieSide","_coldHits",
   // La Fortaleza: forma caminable cacheada (se recalcula en cada cliente) e internos del anfitrión
-  "_fs","_strT","_fortStranded","_ux","_uy","_ut","_stk"]);
+  "_fs","_strT","_fortStranded","_ux","_uy","_ut","_stk",
+  // estado propio del RENDERIZADOR de cada cliente (lo escribe el dibujo, no la simulación). Mandarlo pisaba
+  // el del invitado: _deadAt/_diedAt vienen en el reloj del anfitrión (performance.now de OTRA página), así
+  // que el guardián caído se veía parado/torcido o sin su animación de muerte; y la dirección del dibujo
+  // (_pdir/_pleft/_rdir/_rfaceL) y la duración del golpe (_aPrev/_aDur/_pkAtk*) saltaban a la del anfitrión.
+  "_deadAt","_diedAt","_pdir","_pleft","_rdir","_rfaceL","_aPrev","_aDur","_pkAtkLast","_pkAtkMax"]);
 // Se mandan solo en los snapshots completos (cada ~4 s y al terminar): cambian todo el tiempo y
 // solo hacen falta para la pantalla final (estadísticas de rendimiento).
 const NET_KEYFRAME_ONLY = new Set(["stats"]);
@@ -201,7 +206,12 @@ function netPlayEvent(ev){
       case "gold": grantGold(args[0]); return;
       case "hurt": registerPlayerHurt(args[0], {x:args[1], y:args[2]}); return;
       case "useXp": gainSkillUseXp(selectedClass, args[0]); return;
-      case "vfxOnDeath": if(typeof codexNoteKill==="function" && args[0] && args[0].type && (!divinaMode || (ENEMY_BASE[args[0].type]||{}).rank==="jefe")) codexNoteKill(args[0].type); break; // Códice (invitado)
+      case "vfxOnDeath":
+        if(typeof codexNoteKill==="function" && args[0] && args[0].type && (!divinaMode || (ENEMY_BASE[args[0].type]||{}).rank==="jefe")) codexNoteKill(args[0].type); // Códice (invitado)
+        // el anfitrión no manda a los muertos (sale de la lista): acá seguía "vivo" y la animación de muerte
+        // usaba los cuadros de caminar/quieto en vez de los de muerte
+        if(args[0] && typeof args[0]==="object"){ args[0].alive = false; args[0].hp = 0; }
+        break;
     }
     const f = NET_ORIG[name] || window[name];
     if(typeof f==="function") f.apply(null, args);
@@ -371,6 +381,7 @@ function netHostCheckDefeat(){
 function netHostOnMsg(from, d){
   if(d && d.k==="loadout"){
     netLobby.loadouts[from] = d.L;
+    if(typeof skinFxPreloadIds==="function" && d.L) skinFxPreloadIds([d.L.skin]); // sus efectos de skin, antes de empezar
     if(typeof netHostBroadcastCos==="function") netHostBroadcastCos(false); // su skin, para todos
     if(!netMatch && typeof netRefreshLobby==="function") netRefreshLobby();
     return;
@@ -399,7 +410,15 @@ function netHostOnMsg(from, d){
     case "ctx": ctxNetMsg(h, d); return; // acción contextual: mantener (on:1) / soltar (on:0)
     case "invest": investTalentPoint(h.classKey, d.idx==="ult" ? "ult" : (d.idx|0)); return;
     case "buff": netHostBuffPicked(from, d.id); return;
-    case "needFull": netSendTo(from, netStartMessage()); return;
+    case "loading": // el invitado todavía baja el arte de la arena (netGuestHoldStart): lo maneja un bot hasta que entre
+      if(n.connected){
+        n.connected = false; n.loading = true; h.isRemote = false; h._revHold = -1; h._ctxHold = null; cancelRevivesBy(h);
+        showBanner(`${h.netName||h.cls.name} está cargando la arena — lo maneja un bot`);
+      }
+      return;
+    case "needFull":
+      if(n.loading){ n.loading = false; n.connected = true; h.isRemote = true; n.in = null; n.posAuth++; showBanner(`${h.netName||h.cls.name} entró a la partida`); }
+      netSendTo(from, netStartMessage()); return;
     case "quit":
       n.connected = false; h.isRemote = false; h._revHold = -1; h._ctxHold = null; cancelRevivesBy(h); // lo sigue un bot hasta el final
       showBanner(`${h.netName||h.cls.name} abandonó la partida (lo controla un bot)`);
@@ -413,6 +432,7 @@ function netHostOnRoom(room){
     if(i===0 || !netMatch.slots[i] || netMatch.slots[i].kind!=="human" || !h._net) return;
     const s = room.slots[i];
     const connected = !!(s && s.connected);
+    if(h._net.loading){ if(!connected) h._net.loading = false; return; } // cargando el arte: entra con needFull
     if(!connected && h._net.connected){
       h._net.connected = false; h.isRemote = false; h._revHold = -1; h._ctxHold = null;
       cancelRevivesBy(h); // desconectarse interrumpe su revivir (el bot, si quiere, empieza de cero)
@@ -478,14 +498,18 @@ function _netDeltaOf(lastMap, obj, full){
     if(!fresh && (NET_KEYFRAME_ONLY.has(k) || NET_LOCAL_ANIM.has(k))) continue;
     const raw = obj[k];
     if(typeof raw==="number" && netIsDownTimer(k)){
-      // temporizador que baja: se manda solo si se aparta de lo que el invitado ya predice
+      // temporizador que baja: se manda solo si se aparta de lo que el invitado ya predice, o si SUBIÓ
+      // desde el snapshot anterior (se reinició). Antes solo contaba el apartamiento (>= 140 ms): un golpe
+      // (hitFlash 90-180 ms, hurtTimer 160 ms) casi nunca llegaba y el invitado no veía el destello ni la
+      // pose de dolor de enemigos, guardianes e invocaciones.
       const L = lastMap[k];
       if(!fresh && L && typeof L==="object" && L.t!==undefined){
+        const rose = raw > L.r + 0.5; L.r = raw;
         const pred = Math.max(0, L.v - (now - L.t));
-        if(Math.abs(Math.max(0, raw) - pred) < 140) continue;
+        if(!rose && Math.abs(Math.max(0, raw) - pred) < 140) continue;
       }
       const v = Math.round(raw);
-      lastMap[k] = {v, t:now}; d[k] = v; any = true;
+      lastMap[k] = {v, t:now, r:raw}; d[k] = v; any = true;
       continue;
     }
     // posición y orientación: 1 decimal alcanza (y cambia menos seguido)
@@ -592,6 +616,36 @@ function netGuestStartRun(msg){
   setState("playing");
   netLog(reconnecting ? "RECONNECT" : "GAME_START", {arena:currentArena, slot:net.slot});
 }
+// El anfitrión arrancó y a este invitado todavía le falta bajar el arte de las arenas (segunda tanda de
+// lazy-images.js: enemigos, jefes, escenarios, efectos). Entrar así era jugar con la horda dibujada con
+// los sprites de respaldo, jefes invisibles y efectos que no aparecían (celular con datos móviles). Igual
+// que la partida local, se espera a que esté todo: mientras tanto su guardián lo maneja un bot en el
+// anfitrión ({k:"loading"}) y al terminar se pide el estado de ese momento ({k:"needFull"}).
+function netGuestHoldStart(msg){
+  const first = !netLobby.heldStart, newMatch = !first && netLobby.heldStart.seed!==msg.seed;
+  netLobby.heldStart = msg; netLobby.heldCode = net.code;
+  netGuestLoadingUI(assetsRestPct());
+  if(first || newMatch) netSendToHost({k:"loading"}); // (otra partida mientras seguía cargando: que la sepa también)
+  if(!first) return;
+  whenAssetsReady(()=>{
+    const m = netLobby.heldStart, code = netLobby.heldCode;
+    netLobby.heldStart = null; netGuestLoadingUI(null);
+    if(!m || net.role!=="guest" || !net.room || net.code!==code || (netMatch && netMatch.role==="guest" && !netMatch.ended)) return;
+    netSendToHost({k:"needFull"});
+  }, pct=>{ if(netLobby.heldStart) netGuestLoadingUI(pct); });
+}
+function netGuestLoadingUI(pct){
+  let el = document.getElementById("net-loading");
+  if(pct===null){ if(el) el.classList.add("hidden"); return; }
+  if(!el){
+    el = document.createElement("div"); el.id = "net-loading";
+    el.innerHTML = `<div class="nl-title">¡La partida ya empezó!</div><div class="nl-pct"></div>` +
+      `<div class="nl-sub">Tu guardián lo maneja un bot hasta que termine de bajar el arte de la arena.</div>`;
+    document.body.appendChild(el);
+  }
+  el.classList.remove("hidden");
+  el.querySelector(".nl-pct").textContent = "Preparando la arena… " + pct + " %";
+}
 function netApplySnapshot(s){
   const M = netMatch;
   if(!s) return;
@@ -655,10 +709,12 @@ function netApplySnapshot(s){
 function netGuestOnMsg(from, d){
   if(!d) return;
   switch(d.k){
-    case "cos": netLobby.cos = d.m || {}; if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
-    case "start": netGuestStartRun(d); return;
+    case "cos": netLobby.cos = d.m || {}; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
+    case "start":
+      if(typeof assetsAllReady==="function" && !assetsAllReady()){ netGuestHoldStart(d); return; }
+      netGuestStartRun(d); return;
     case "s":
-      if(!netMatch || netMatch.role!=="guest"){ if(!netMatch) netSendToHost({k:"needFull"}); return; }
+      if(!netMatch || netMatch.role!=="guest"){ if(!netMatch && !netLobby.heldStart) netSendToHost({k:"needFull"}); return; }
       netApplySnapshot(d); return;
     case "buffs": netGuestShowBuffs(d); return;
     case "resume": if(netIsGuest() && state==="buff") setState("playing"); return;

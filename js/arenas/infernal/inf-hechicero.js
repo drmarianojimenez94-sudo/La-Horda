@@ -164,7 +164,7 @@ BOSS_DESIGNS.hechicero_supremo = {
 };
 
 /* ---------------- ataques del Ángel Corrompido: los poderes de los Cuatro Guardianes ---------------- */
-function _acEl(e, k){ e.acEl = k; e.acElT = animNow; }
+function _acEl(e, k){ e.acEl = k; e.acElT = runElapsedMs; } // reloj de la partida: viaja igual al invitado
 function _acHitIn(x, y, r, dmg, o){ for(const h of heroes){ if(h.alive && Math.hypot(h.x-x, h.y-y) <= r + (h.radius||18)*0.5) bossHitHero(h, dmg, o); } }
 Object.assign(BOSS_ATTACKS, {
   // NIEBLA DEL OLVIDO (Guardián Ancestral, 1er Guardián): nubes que quedan 4 s en el piso; adentro, daño y lentitud
@@ -302,7 +302,7 @@ function hechDrawAngelBack(e, pose){
 function hechDrawAngelFront(e){
   if(typeof crystalDrawGem!=="function") return;
   const H = _hAngelH(e), cx = e.x, cy = e.y - H*0.55, t = animNow/1000, keys = ["ancestral","escarcha","piedra","juicio"];
-  const hot = e.acElT && animNow - e.acElT < 1600 ? e.acEl : null;
+  const hot = e.acElT && runElapsedMs - e.acElT >= 0 && runElapsedMs - e.acElT < 1600 ? e.acEl : null;
   ctx.save();
   for(let i=0;i<4;i++){
     const k = keys[i], D = k==="juicio" ? CRYSTAL_JUICIO : CRYSTAL_DEFS[k], an = t*1.3 + i*Math.PI/2;
