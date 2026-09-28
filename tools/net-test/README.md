@@ -12,6 +12,10 @@ SITE=http://127.0.0.1:8771 RELAY_PORT=8812 node tools/net-test/accounts.js
                                                     # CUENTAS en navegadores (levanta su propio servidor): invitado sin red,
                                                     #   crear cuenta, sesión recordada, sync entre dos navegadores, conflicto,
                                                     #   clave incorrecta, límite de intentos, cola sin conexión, beacon al cerrar
+SITE=http://127.0.0.1:8771 RELAY_PORT=8812 node tools/net-test/leaderboard.js
+                                                    # RANKING SEMANAL de la Horda Infinita (levanta su propio servidor): invitado
+                                                    #   ve la tabla y su récord queda local, puesto en resultados, orden y filtro por
+                                                    #   guardián, puntaje imposible rechazado, pendiente sin conexión, recompensa
 node tools/net-test/e2e.js 1                        # solo (1 humano + 3 bots)
 node tools/net-test/e2e.js 2                        # 2 humanos + 2 bots
 node tools/net-test/e2e.js 3                        # 3 humanos + 1 bot
