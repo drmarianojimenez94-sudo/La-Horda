@@ -324,3 +324,9 @@ body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.r
 #prep-screen .ui-topbar-title{ color:var(--ui-accent); }
 @media (max-width:700px){ .cx-tabs{ gap:3px; } .cx-tab{ padding:6px 3px; font-size:0.92rem; } }
 @media (max-height:520px){ .ui-back, .ui-icon-btn{ min-height:40px; } .ui-topbar{ margin-bottom:4px; } #shop-screen .shop-tabs{ padding:2px 0 4px; margin-bottom:2px; } }
+/* DESAFÍOS: el botón del hub reemplaza al acceso mínimo de quests.css (que lo ponía flotando arriba) */
+#mainmenu-screen .hub-grid #mainmenu-quests-btn{ position:relative; top:auto; right:auto; margin:0; z-index:auto; min-height:0; }
+#mainmenu-screen #hub-badge-quests{ position:absolute; top:6px; right:6px; margin:0; min-width:0; line-height:1.15; font-size:0.85rem; }
+.hub-grid.hub-grid-6 .hub-tile-title{ font-size:1.1rem; } .hub-grid.hub-grid-6 .hub-tile-ico{ width:34px; height:34px; font-size:1.1rem; } .hub-grid.hub-grid-6 .hub-tile{ padding:6px 8px; gap:6px; }
+.hub-grid.hub-grid-6 .hub-tile:not(#mainmenu-quests-btn){ flex-direction:column; align-items:flex-start; justify-content:center; gap:3px; }
+.hub-tile-title{ line-height:1.2; } @media (max-width:700px){ .hub-main{ grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); } .hub-tile-title{ letter-spacing:0; } }

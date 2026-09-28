@@ -43,10 +43,10 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   if (!(await vis('#mainmenu-screen'))) await E(() => { setState('mainmenu'); renderMainMenu(); });
   // menú principal tipo hub (js/ui/hub.js): JUGAR (Modo Campaña) + accesos; el Códice sigue siendo uno de ellos
   const menu = await E(() => [...document.querySelectorAll('#mainmenu-screen .hub-tile:not(.hidden) .hub-tile-title')].map(e => e.textContent.trim()));
-  check('MENU.hub_accesos', JSON.stringify(menu) === '["GUARDIANES","TIENDA","MULTIJUGADOR","CÓDICE"]', menu);
+  check('MENU.hub_accesos', JSON.stringify(menu.filter(t => t !== 'DESAFÍOS')) === '["GUARDIANES","TIENDA","MULTIJUGADOR","CÓDICE"]', menu); // + DESAFÍOS si está el sistema de desafíos
   check('MENU.sin_pestana_campeones', !(await E(() => !!document.getElementById('mainmenu-campeones-btn'))));
   const pillars = await E(() => [...document.querySelectorAll('#hub-play-btn, #mainmenu-screen .hub-tile:not(.hidden)')].map(b => { const r = b.getBoundingClientRect(); return [Math.round(r.top), Math.round(r.bottom)]; }));
-  check('MENU.todo_a_la_vista', pillars.length === 5 && pillars.every(p => p[0] >= 0 && p[1] <= 390), pillars);
+  check('MENU.todo_a_la_vista', pillars.length === menu.length + 1 && pillars.every(p => p[0] >= 50 && p[1] <= 390), pillars);
   await page.click('#mainmenu-codex-btn'); await sleep(400);
   check('HOME.abre', await vis('#codex-screen'));
   const home = await E(() => [...document.querySelectorAll('#codex-body .cx-home-title')].map(e => e.textContent.replace(/[^A-ZÁÉÍÓÚ]/g, '')));
