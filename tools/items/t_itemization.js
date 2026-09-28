@@ -56,8 +56,8 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   await E(() => { __start('bosque', 3, 'guerrero'); });
   const dup = await E(() => { __clear();
     const eff = _passiveById('pas_crit').effect;
-    const a = makeItem('arma', 'raro'); a.passives = [instancePassive(_passiveById('pas_crit'))]; a.roll = 1;
-    const b = makeItem('casco', 'raro'); b.passives = [instancePassive(_passiveById('pas_crit'))]; b.roll = 1;
+    const a = makeItem('arma', 'raro', null, { noAffixes: true }); a.passives = [instancePassive(_passiveById('pas_crit'))]; a.roll = 1;
+    const b = makeItem('casco', 'raro', null, { noAffixes: true }); b.passives = [instancePassive(_passiveById('pas_crit'))]; b.roll = 1;
     __put(a); const one = passiveSum('guerrero', eff); const st1 = computePlayerStats('guerrero').dmg;
     __put(b); const two = passiveSum('guerrero', eff);
     __clear(); const p1 = makeItem('arma', 'legendario'); p1.legendProc = 'bleed_basic'; const p2 = makeItem('guantes', 'legendario'); p2.legendProc = 'bleed_basic';
