@@ -342,8 +342,11 @@ function vfxDrawSprites(ground){
 const VFX_DYING_MAX = 40, vfxDying = [];
 let vfxDyingN = 0;
 for(let i=0;i<VFX_DYING_MAX;i++) vfxDying.push({e:null, t:0, dur:0, dx:0, dy:0, style:"fall", boss:false, side:1});
-function vfxOnDeath(e){
-  if(!ENEMY_BASE[e.type] || e.vanishOnDeath) return false;   // vanishOnDeath: se va sin morir en escena (p.ej. el Dragón huye)
+// die = [dx, dy, poder] del remate fuerte (cadáver despedido). Va como argumento aparte porque en el
+// invitado `e` llega como SU copia del enemigo (la de la última instantánea), sin los datos de la muerte.
+function vfxOnDeath(e, die){
+  if(!ENEMY_BASE[e.type] || e.vanishOnDeath) return false;
+  if(die && die.length === 3){ e._dieDx = +die[0]||0; e._dieDy = +die[1]||0; e._dieFly = +die[2]||0; }   // vanishOnDeath: se va sin morir en escena (p.ej. el Dragón huye)
   // En el anfitrión ya llega muerto; en el INVITADO llega la copia del último snapshot, que todavía
   // dice alive:true (los muertos no se mandan): sin esto la caída y el cadáver se dibujaban con el
   // cuerpo de pie (caminando), como si fueran enemigos vivos quietos alrededor del jugador.

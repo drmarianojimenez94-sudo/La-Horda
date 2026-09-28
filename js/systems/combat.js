@@ -271,7 +271,7 @@ function killEnemy(e){
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
-  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e)){
+  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e, e._dieFly ? [e._dieDx, e._dieDy, e._dieFly] : 0)){ // (2º arg: el cadáver despedido, para el invitado)
     // sin animación de muerte (fuera de cámara o sin lugar en el pool): el cadáver igual queda en el
     // suelo -es la materia prima del Nigromante, no puede depender de la cámara del anfitrión-
     if(!addCorpse(e, animProfileOf(e).death, e.fx<-0.12 ? -1 : 1, e._deathKind) && inView(e.x, e.y, 100))
