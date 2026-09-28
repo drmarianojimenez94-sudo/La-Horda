@@ -33,7 +33,7 @@ function grantXP(champKey, amount){
 }
 
 /* ============================================================
-   CASTIGO POR NO TERMINAR LA ARENA
+   CASTIGO POR NO TERMINAR LA ARENA  (con perdón para las primeras derrotas: ver más abajo)
    Morir o abandonar antes del jefe final resta un porcentaje de la XP y del oro GANADOS EN
    ESA PARTIDA (no del total acumulado): perder duele, pero nunca te deja por debajo del nivel
    y del oro con los que entraste, así que no se puede quedar trabado retrocediendo.
@@ -76,16 +76,36 @@ function setChampFromTotalXp(champKey, totalXp){
   }
   c.talentPoints = Math.max(0, maxAllowed - spentAlloc);
 }
-// Devuelve {beforeLevel, afterLevel, lostPct, xpLost, goldLost} para la pantalla de derrota
+// PRIMERAS DERROTAS SIN CASTIGO (reseña #11): perder el 50 % y bajar de nivel en la primera arena
+// espantaba al que recién empieza. No se castiga en la primera arena de la campaña (en Normal: ahí se
+// aprende) ni en las primeras FAIL_FORGIVE_FIRST derrotas de la cuenta, en cualquier arena. Después,
+// como siempre. Las derrotas se cuentan en save.defeatCount (también las perdonadas y los abandonos).
+const FAIL_FORGIVE_FIRST = 3;
+// null = se castiga; si no, el motivo del perdón ("arena" o "primeras")
+function arenaFailureForgiveReason(){
+  const first = typeof ARENA_ORDER!=="undefined" ? ARENA_ORDER[0] : "ciudad";
+  const tier = typeof diffCurrent==="function" ? diffCurrent() : "normal";
+  if(currentArena===first && tier==="normal") return "arena";
+  if((save.defeatCount||0) < FAIL_FORGIVE_FIRST) return "primeras";
+  return null;
+}
+// Devuelve {beforeLevel, afterLevel, lostPct, xpLost, goldLost, forgiven, forgivenLeft} para la pantalla de derrota
 function applyArenaFailurePenalty(champKey){
   const c = save.champions[champKey];
+  const forgiven = arenaFailureForgiveReason();
+  save.defeatCount = (save.defeatCount||0) + 1;
+  if(forgiven){
+    persist();
+    return {beforeLevel:c.level, afterLevel:c.level, lostPct:0, xpLost:0, goldLost:0, forgiven,
+      forgivenLeft: Math.max(0, FAIL_FORGIVE_FIRST - save.defeatCount)};
+  }
   const beforeLevel = c.level, total = totalXpForChamp(champKey);
   const xpLost = Math.floor(Math.max(0, total - runStartXp) * ARENA_FAIL_PENALTY_PCT);
   if(xpLost > 0) setChampFromTotalXp(champKey, total - xpLost);
   const goldLost = Math.floor(Math.max(0, save.gold - runStartGold) * ARENA_FAIL_PENALTY_PCT);
   save.gold = Math.max(0, save.gold - goldLost);
   persist();
-  return {beforeLevel, afterLevel:c.level, lostPct:Math.round(ARENA_FAIL_PENALTY_PCT*100), xpLost, goldLost};
+  return {beforeLevel, afterLevel:c.level, lostPct:Math.round(ARENA_FAIL_PENALTY_PCT*100), xpLost, goldLost, forgiven:null, forgivenLeft:0};
 }
 function grantGold(n){ save.gold += n; persist(); }
 function grantRelic(kind){ save.relics[kind] = Math.min(30, (save.relics[kind]||0)+1); persist(); }
