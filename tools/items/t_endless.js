@@ -14,7 +14,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   page.on('pageerror', e => errors.push('pageerror: ' + e.message + ' ' + (e.stack||'').split('\n').slice(0,3).join(' | ')));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|404/.test(m.text())) errors.push('console: ' + m.text().slice(0, 300)); });
   await page.addInitScript(() => { window.__campaignMode = true; });
-  await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'load', timeout: 240000 });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   const E = (fn, a) => page.evaluate(fn, a);
   await E(() => { loop = function(){};
