@@ -88,7 +88,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await off.E(() => { const k = Object.keys(save.champions)[0]; save.champions[k].unlocked = true; setState('title'); });
     await off.page.click('#title-continue-btn'); await sleep(200);
     check('invitado.recordado_en_la_pestania', (await off.state()) === 'mainmenu');
-    check('invitado.chip_invitado', /Invitado/.test(await off.E(() => (document.getElementById('account-chip') || {}).textContent || '')));
+    check('invitado.chip_invitado', /Invitado/.test(await off.E(() => (document.querySelector('[data-account-chip]') || {}).textContent || '')));
     // pruebas viejas (webdriver, sin ?account=1): la pantalla de cuenta no se interpone
     await off.boot(`${SITE}/index.html`, true);
     await off.E(() => { const k = Object.keys(save.champions)[0]; save.champions[k].unlocked = true; persist(); });
@@ -126,7 +126,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
   cs = await cloudSave(tokA);
   check('sync.sube_con_demora', cs.version === 2 && cs.data.gold === 12345, { v: cs.version, gold: cs.data && cs.data.gold });
   await A.shot('03_menu_con_chip');
-  check('chip.muestra_nombre', (await A.E(() => document.getElementById('account-chip').textContent)).includes(U_A));
+  check('chip.muestra_nombre', (await A.E(() => document.querySelector('[data-account-chip]').textContent)).includes(U_A));
   // al terminar la partida se sube enseguida (sin esperar la demora larga)
   await A.E(() => { save.gold = 13000; persist(); setState('gameover'); });
   const tGo = Date.now();
@@ -232,7 +232,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await D.page.click('#acc-guest-btn');
     await D.E(() => setState('mainmenu'));
     await D.progress(4444, 5);
-    await D.page.click('#account-chip');
+    await D.page.click('[data-account-chip]');
     await D.page.waitForSelector('#account-screen:not(.hidden)');
     await D.page.click('[data-acc-tab="register"]');
     await D.fill(U_D, PASS, { pass2: PASS });
@@ -241,7 +241,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     const csD = await cloudSave(tokD);
     check('invitado_crea_cuenta.sube_su_progreso', csD.version === 1 && csD.data.gold === 4444, { v: csD.version, gold: csD.data && csD.data.gold });
     // perfil -> cerrar sesión
-    await D.page.click('#account-chip');
+    await D.page.click('[data-account-chip]');
     await D.page.waitForSelector('#acc-logout-btn');
     await D.shot('07_perfil');
     await D.page.click('#acc-logout-btn');
