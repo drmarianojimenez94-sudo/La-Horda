@@ -608,3 +608,56 @@ verificar; suben con estas tres cosas:
 3. **Audio grabado o música compuesta**, en vez de síntesis: +2 en audio.
 
 Con 1 hecho, y 2 o 3 en marcha, el juego queda en el rango 78–82 **medido**, no estimado.
+
+## 28. Tercera pasada (S1–S8): lo que pidió el dueño después de probar de a dos, y la nota nueva
+
+El dueño probó el juego entre dos teléfonos y reportó cuatro cosas:
+- la Sala no volvía a la selección de arenas al ganar;
+- el gólem del Nigromante tenía que cambiar;
+- había muchos errores de sprites;
+- a la skin del Asesino le faltaba un lado.
+
+También pidió arte con un solo diseño, audio y bugs de juego. Todo lo de abajo quedó con prueba en el
+repositorio. Lo que no se pudo medir sigue marcado **NOT VERIFIED IN RUNTIME**.
+
+### 28.1 Qué cambió
+
+| Tema | Qué se hizo | Prueba |
+|---|---|---|
+| Sala | Al ganar, la misma sala (sola u online) vuelve con la siguiente arena elegida. Hay fila de arenas en la Sala. El invitado ve la arena del anfitrión y un aviso si no le cuenta para la campaña. El relay acepta cambiar de arena entre partidas | `tools/net-test/next_arena.js` (27 chequeos, 0 fallas) |
+| Skins | Espejo por cuadro y relleno de estados que faltan en los 19 packs. El Asesino "nocturno" ya mira a los dos lados. En el invitado, la pose de lanzar y la muerte ya no dependen del reloj del anfitrión | `tools/art/skin_audit.js` (0 fallas; antes 55) |
+| Nigromante | Gólems nuevos de la hoja (piedra, fuego, hielo; tormenta y plaga recoloreados) por rama de talentos. Aparecen, atacan y mueren con sus cuadros. Invocaciones ordenadas en profundidad, con aparición y muerte | `tools/items/t_nigro_golems.js` (57) |
+| Enemigos de la hoja | Hadas de Escarcha: roban el calor de los braseros. Dragoncito y Cù-Sìth pasan a élite con conducta propia. El Ángel de hielo suma el Prisma. Las hadas del Bosque tienen 3 colores | `tools/regression/t_bestias.js`, `t_bestias_net.js` |
+| Un solo diseño | Las muertes de la hoja para Esfinge, Medusa y Druida son otros personajes y se desactivaron. Todos los enemigos: estados y direcciones completos por espejo o clon, 22 vistas ya recortadas cableadas, escalas y contornos parejos | `tools/art/enemy_coverage.js` (104 tipos × 11 estados, 0 vacíos) |
+| Partidas de a dos | El invitado ve golpes (antes casi nunca le llegaban), muertos caídos (no de pie) y las animaciones con el reloj de la partida. El invitado que todavía baja arte entra cuando termina; mientras tanto lo maneja un bot. Los efectos de skin se precargan | `tools/bugfix/t_guest_corpses.js`, `tools/audit/android.js` |
+| Android | Pantalla completa y horizontal al tocar Continuar/Unirse/Comenzar. Instalable (manifest). Se recupera el lienzo perdido. Emulación de Pixel 7 y Galaxy S9+ sola y con red de celular | `tools/audit/android.js` (0 fallas) y job `android` en Live check |
+| Audio | Limitador (antes el combate recortaba a +1,2 dBFS; ahora −1,4). Golpes por material. Reverb sintética por arena. Música con identidad por arena (antes las 10 sonaban igual). Transiciones entre oleada, jefe y victoria | `tools/audio/t_audio_mix.js` |
+| Lore jugable | **Resonancia de los Cristales:** llevás un cristal y entrás con el don de su Guardián (Juicio solo después del final). El Hechicero la apaga al robarte los cristales. **Últimas palabras** de cada Guardián al caer | `tools/items/t_resonance.js` (16) |
+| Abismo | Si ningún compañero puede llegar a rescatarte, trepás solo: el Tanque pasa de 2 a 9 victorias de 12 | Campaña simulada |
+| Botín | Las Minas y la Ciudad tenían tablas de botín vacías (las Minas tiraban el cofre del Bosque) | `tools/bugfix/t_arena_tables.js` |
+
+### 28.2 Puntuación (0–10, sin inflar)
+
+| # | Categoría | 27 | 28 | Por qué |
+|---|---|---|---|---|
+| 5 | Enemigos / IA | 7 | **8** | Élites con conducta propia (aullido, aliento, prisma, robo de calor) |
+| 8 | Guardianes | 7 | **8** | Resonancia (elección antes de cada partida); gólems nuevos; skins completas de los dos lados |
+| 9 | Progresión | 7 | **8** | Muro del Abismo con el Tanque cerrado (9/12); sala que sigue a la próxima arena |
+| 15 | Audio | 5 | **6** | Sin recortes, con identidad por arena y por material. Oído humano: NOT VERIFIED |
+| 16 | Narrativa / lore | 7 | **8** | Los cristales se juegan; los Guardianes dicen quién fueron |
+| 13 | Dirección de arte | 7 | 7 | Más parejo, pero la Ciudad, el Abismo y la Acuática siguen con arte de baja resolución (C-1, C-2) |
+| 17 | Multijugador | 8 | 8 | Se arreglaron errores de sprites del invitado que el dueño vio. Falta volver a probar en teléfonos reales |
+| | Resto | = | = | Sin cambios |
+| | **Promedio** | 7,35 | **7,60** | |
+
+**ALPHA READINESS SCORE: 76 / 100** (antes 73).
+
+### 28.3 Por qué no 80 (ni 90) todavía
+- **Arte crítico** (`LA_HORDA_MISSING_ASSETS.md`, sección S5, C-1 a C-7): la Ciudad y el Abismo en baja
+  resolución, los comunes de la Acuática, el Gólem de Cuerpos, el Ángel Corrompido y el Cerbero. No se inventa
+  arte: hay que pedirlo.
+- **Audio grabado o compuesto:** la síntesis mejoró, pero no llega a nivel comercial.
+- **Prueba humana en teléfonos reales** (iPhone con Safari y Android con Chrome, de a dos). Las correcciones del
+  invitado están probadas en emulación: NOT VERIFIED IN RUNTIME en aparatos reales.
+- Pruebas intermitentes que también fallan en `main`: `hie_antikite` / `hie_demonio_apaga` (jefes de hielo)
+  y algunas del smoke de la Ciudad. Miden tiempo real y dependen de la carga de la máquina.
