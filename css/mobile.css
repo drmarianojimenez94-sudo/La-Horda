@@ -53,7 +53,7 @@
   .build-tag{ font-size:0.7rem; }
   .arena-card-badge, .lobby-tag, .net-hint, .net-link, .net-off, .net-champ, .lobby-skin, .prep-skin-sub,
   .prep-equip-line, #net-chat .nc-chip, #net-chat .nc-notice{ font-size:0.72rem; }
-  .starter-lore{ font-size:0.72rem; line-height:1.2; }
+  .starter-lore, .starter-skin-tag{ font-size:0.72rem; line-height:1.2; }
   /* tienda */
   .shop-champ-lore, .shop-skill, .shop-st, .shop-item-sub, .shop-eff, .shop-tier, .shop-set-theme,
   .shop-set-count, .shop-set-skin, .shop-bonus{ font-size:0.72rem; }

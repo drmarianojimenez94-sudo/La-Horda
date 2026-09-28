@@ -20,7 +20,7 @@ function shopCromaProducts(){
 function _cromaEsc(s){ return String(s==null ? "" : s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function shopCromaCardHTML(p){
   let action;
-  if(!p.owned) action = `<button class="shop-btn" data-croma-buy="${p.id}" ${save.gold < p.price ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(p.price)}</button>`;
+  if(!p.owned) action = `<button class="shop-btn" data-croma-buy="${p.id}" ${save.gold < p.price ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(p.price)}</button>${typeof _shopVoucherBtn==="function" ? _shopVoucherBtn(p.id) : ""}`;
   else if(!p.champOwned) action = `<div class="shop-item-sub">Comprada: conseguí a <b>${_cromaEsc(p.champName)}</b> en la pestaña Guardianes para usarla.</div>`;
   else if(p.equipped) action = `<button class="shop-btn sec" data-croma-off="${p.id}">Quitar</button>`;
   else action = `<button class="shop-btn" data-croma-on="${p.id}">EQUIPAR</button>`;

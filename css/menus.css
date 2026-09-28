@@ -351,6 +351,20 @@
 .starter-lore{ font-size:0.56rem; line-height:1.25; color:var(--text-dim); text-align:center; }
 .starter-confirm{ position:sticky; bottom:8px; margin:8px auto; padding:10px 14px; width:min(420px, 92vw); text-align:center;
   background:rgba(20,12,8,0.94); border:2px solid #ffcf5c; }
+/* Regalo inicial, paso 2: la skin de regalo (js/ui/starter-select.js) */
+.starter-step{ display:flex; flex-direction:column; align-items:center; width:100%; }
+.starter-step.hidden{ display:none; }
+#starter-skin-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; width:min(900px, 94vw); margin:10px auto; }
+.starter-skin-card{ position:relative; width:150px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 6px; }
+.starter-skin-card.sel{ outline:3px solid #ffcf5c; box-shadow:0 0 18px rgba(255,190,80,0.45); }
+.starter-skin-tag{ font-size:0.62rem; line-height:1.2; text-align:center; }
+.starter-skin-card .starter-lore{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.starter-skin-vale{ width:220px; cursor:default; }
+.starter-skin-own{ position:absolute; top:6px; left:50%; z-index:2; transform:translateX(-50%) rotate(-6deg); padding:3px 9px; white-space:nowrap;
+  font-size:0.8rem; color:#1a0f06; background:#ffcf5c; border:2px solid #fff3c4; box-shadow:0 0 14px rgba(255,200,90,0.7); animation:starterOwn 0.45s steps(4) both; }
+.starter-skin-card.owned{ outline:3px solid #ffcf5c; box-shadow:0 0 26px rgba(255,200,90,0.7); }
+@keyframes starterOwn{ from{ transform:translateX(-50%) rotate(-6deg) scale(1.8); opacity:0; } to{ transform:translateX(-50%) rotate(-6deg) scale(1); opacity:1; } }
+body.reduce-motion .starter-skin-own{ animation:none; }
 .champ-card.locked{ opacity:0.55; filter:grayscale(0.7); }
 /* Tienda de objetos del día */
 .shop-items-list{ max-height:none; width:100%; max-width:560px; }

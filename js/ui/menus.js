@@ -24,7 +24,9 @@ document.getElementById("title-continue-btn").addEventListener("click", ()=>{
 function titleContinue(){
   // PRIMER ARRANQUE CORTO: perfil nuevo → guardián de regalo → directo a la Ciudad jugando (sin hub, Modos,
   // Arenas ni Sala). El hub y la Sala aparecen después de la primera partida (firstRunStart, js/ui/hub.js).
-  if(needsStarterChampion()){ openStarterSelect(typeof firstRunStart==="function" ? firstRunStart : ()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
+  // REGALO INICIAL: guardián + skin (js/systems/starter-gift.js). Si cerró el juego después de elegir el
+  // guardián y antes de la skin, vuelve directo a la skin y sigue el mismo camino.
+  if(needsStarterChampion() || (typeof needsStarterSkin==="function" && needsStarterSkin())){ openStarterSelect(typeof firstRunStart==="function" ? firstRunStart : ()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   if(save.firstRun==="jugando"){ save.firstRun = "hub"; persist(); } // cerró el juego en plena primera partida
   setState("mainmenu");
   renderMainMenu();
@@ -74,8 +76,8 @@ function grantPlaytestV1Bonus(){
 }
 function renderMainMenu(){
   if(playtestBonusJustGranted && typeof showNetToast==="function"){ playtestBonusJustGranted = false; showNetToast("🎁 Playtest V1: recibiste 2.000 de oro"); }
-  // BUGFIX 01: aviso único del regalo de la etapa de prueba (10.000 de oro)
-  if(save.startGoldNotice && typeof showNetToast==="function"){ save.startGoldNotice = false; persist(); showNetToast("🎁 Regalo de bienvenida: 10.000 de oro para la Tienda (guardianes, objetos y skins)."); }
+  // REGALO INICIAL: aviso único del vale de skin (guardados de antes del regalo guardián + skin)
+  if(save.skinVoucherNotice && (save.skinVoucher|0) > 0 && typeof showNetToast==="function"){ save.skinVoucherNotice = false; persist(); showNetToast("🎁 Tenés una skin de regalo: elegila en la Tienda."); }
   const el = document.getElementById("mainmenu-gold-line");
   if(el) el.innerHTML = `Oro: <b>${save.gold}</b> &nbsp;·&nbsp; Gemas: <b>${save.gems||0}</b>`;
   if(typeof renderHub==="function") renderHub(); // el hub (js/ui/hub.js)

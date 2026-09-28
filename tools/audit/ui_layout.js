@@ -184,6 +184,11 @@ async function runViewport(browser, vp, report) {
     await tap(page, '.starter-card');
     await sleep(600);
     await snap(page, 'starter_confirm', { primary: [{ css: '#starter-yes-btn' }] });
+    // regalo inicial, paso 2: la skin de regalo del guardián elegido (camino nuevo: window.__starterGift)
+    await js(page, () => { window.__starterGift = true; });
+    await tap(page, '#starter-yes-btn');
+    await sleep(500);
+    await snap(page, 'starter_skin', { primary: [{ css: '#starter-skin-yes-btn' }] });
     await ctx.close();
   }
   // ---- perfil de desarrollo (todo desbloqueado)

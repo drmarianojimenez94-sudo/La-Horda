@@ -60,8 +60,11 @@ function renderHub(){
   // insignias: puntos de talento sin gastar, ofertas nuevas del día, desafíos
   const pts = ch.talentPoints || 0, bg = document.getElementById("hub-badge-guard");
   if(bg){ bg.textContent = pts ? `+${pts} PTS` : ""; bg.classList.toggle("hidden", !pts); }
-  const bs = document.getElementById("hub-badge-shop");
-  if(bs) bs.classList.toggle("hidden", typeof shopDayKey!=="function" || save.shopDealsSeen === shopDayKey());
+  // TIENDA: con un vale de skin sin canjear (regalo inicial) la ficha lo dice; si no, ofertas nuevas del día
+  const bs = document.getElementById("hub-badge-shop"), vale = (save.skinVoucher|0) > 0;
+  if(bs){ bs.textContent = vale ? "🎁 REGALO" : "NUEVO"; bs.classList.toggle("hidden", !vale && (typeof shopDayKey!=="function" || save.shopDealsSeen === shopDayKey())); }
+  const tsub = document.querySelector("#mainmenu-tienda-btn .hub-tile-sub");
+  if(tsub) tsub.textContent = vale ? "Tenés una skin de regalo: elegila" : "Ofertas del día · skins";
   renderEndlessCards();
   const q = document.getElementById("mainmenu-quests-btn");
   if(q) q.classList.toggle("hidden", typeof window.questsOpen!=="function");
@@ -104,7 +107,7 @@ function firstRunToHub(){
   return true;
 }
 function hubPlay(){
-  if(typeof needsStarterChampion==="function" && needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
+  if(typeof needsStarterChampion==="function" && (needsStarterChampion() || (typeof needsStarterSkin==="function" && needsStarterSkin()))){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   if(!ensureOwnedSelection()) return;
   if(save.firstRun){ save.firstRun = null; persist(); } // el resalte "SIGUIENTE" ya cumplió
   if(typeof netInRoom==="function" && netInRoom()){ setState("prep"); renderPrepSummary(); return; }
