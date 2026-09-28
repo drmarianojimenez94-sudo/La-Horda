@@ -475,3 +475,6 @@
 .talent-lock-banner.tt-progress{ color:var(--text-dim); background:rgba(255,190,90,0.06); border-color:#5a3e1e; }
 .talent-lock-banner.tt-progress b{ color:#8a7a66; font-weight:400; white-space:nowrap; }
 .talent-lock-banner.tt-progress b.tt-tier-on{ color:#ffd27a; font-weight:700; }
+/* Pausa: refuerzos de habilidad de la incursión (nombre, habilidad y qué hace) */
+.stat-row.boon-row{ align-items:flex-start; gap:8px; }
+.stat-row.boon-row small{ color:var(--text-dim); font-size:0.66rem; line-height:1.25; }

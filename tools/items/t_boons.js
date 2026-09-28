@@ -117,7 +117,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const boonCard = cards.find(c => c.classList.contains('boon')); const out = { n: cards.length, boonCards: cards.filter(c => c.classList.contains('boon')).length, txt: boonCard ? boonCard.textContent.replace(/\s+/g,' ').slice(0, 160) : '' };
     const lvl0 = runLevel; boonCard.click(); out.after = Object.keys(player.boons||{}); out.next = runLevel === lvl0 + 1 && state === 'playing';
     boonHudTick(); const btns = ['btn-s1','btn-s2','btn-s3','btn-ult'].map(id => document.getElementById(id)); out.title = btns.map(b => b.title).join(' | ').slice(0, 400); out.pip = btns.some(b => b.querySelector('.boon-pip'));
+    renderStatsPanel(); out.pause = (document.getElementById('stats-panel')||{}).textContent.includes('Refuerzos de habilidad');
     return out; });
+  check('UI.pausa_lista_los_refuerzos', ui.pause, ui.pause);
   check('UI.cartas_con_refuerzo_y_eleccion_aplica', ui.n === 3 && ui.boonCards >= 1 && /Transforma:/.test(ui.txt) && ui.after.length === 1 && ui.next, ui);
   check('UI.tooltip_y_marca_en_el_boton', /✦ /.test(ui.title) && ui.pip, ui);
 

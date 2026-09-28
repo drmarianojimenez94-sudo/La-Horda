@@ -60,7 +60,7 @@ const BOONS = [
     desc:r=>`Los provocados por el Grito Provocador reciben +${[15,22,30][r]}% de daño de todos.`,
     fx:[{t:"status", on:"area", rMul:1, status:{vuln:[0.15,0.22,0.30], vulnMs:6000}}], test:"vuln"},
   {id:"tq_duo", champ:"tanque", skill:0, name:"Ojo de la Tormenta", duo:["tq_vortice","tq_estela"], look:"stone",
-    desc:r=>"DÚO · El Torbellino abre grietas bajo tus pies: lo que atrae queda frenado y recibe daño.",
+    desc:r=>"El Torbellino abre grietas bajo tus pies: lo que atrae queda frenado y recibe daño.",
     fx:[{t:"ground", at:"caster", rMul:1, dur:3500, dps:0.7, slow:0.5}], test:"zone"},
 
   /* ---------------- ASESINO ---------------- */
@@ -77,7 +77,7 @@ const BOONS = [
     desc:r=>`El último golpe del Triple Golpe estalla alrededor del objetivo (${[80,95,110][r]} px).`,
     fx:[{t:"burst", at:"hits", r:[80,95,110], pct:[0.8,1.1,1.4]}], test:"hits"},
   {id:"as_duo", champ:"guerrero", skill:0, name:"Toxina en Cadena", duo:["as_rebote","as_veneno"], look:"poison",
-    desc:r=>"DÚO · El Corte Sangrante salta a 2 enemigos más y los deja envenenados.",
+    desc:r=>"El Corte Sangrante salta a 2 enemigos más y los deja envenenados.",
     fx:[{t:"bounce", n:2, pct:0.7, range:220, status:{poison:0.6}}], test:"poison"},
 
   /* ---------------- MAGO ---------------- */
@@ -94,7 +94,7 @@ const BOONS = [
     desc:r=>`Al alzarse, el Muro de Fuego estalla y deja ardiendo a los de adentro.`,
     fx:[{t:"burst", at:"aim", r:95, pct:[0.7,1.0,1.3], status:{burn:[0.3,0.45,0.6]}}], test:"burn"},
   {id:"mg_duo", champ:"mago", skill:1, name:"Tormenta Helada", duo:["mg_escarcha","mg_bifurcada"], look:"storm",
-    desc:r=>"DÚO · La escarcha de la Nova descarga rayos sobre los que la pisan.",
+    desc:r=>"La escarcha de la Nova descarga rayos sobre los que la pisan.",
     fx:[{t:"ground", at:"caster", rMul:0.9, dur:4000, dps:0.1, slow:0.3, zap:{every:600, pct:0.9}}], test:"zone"},
 
   /* ---------------- SOPORTE ---------------- */
@@ -111,7 +111,7 @@ const BOONS = [
     desc:r=>`El Escudo Sagrado estalla en luz: aturde ${[0.4,0.6,0.8][r]} s a los enemigos cercanos.`,
     fx:[{t:"burst", at:"caster", r:120, pct:[0.4,0.6,0.8], status:{stun:[400,600,800]}}], test:"stun"},
   {id:"sp_duo", champ:"soporte", skill:0, name:"Tierra Consagrada", duo:["sp_manantial","sp_juicio"], look:"holy",
-    desc:r=>"DÚO · El manantial también quema a los enemigos que lo pisan.",
+    desc:r=>"El manantial también quema a los enemigos que lo pisan.",
     fx:[{t:"ground", at:"caster", r:130, dur:4000, heal:0.02, dps:0.45, burn:true}], test:"zone"},
 
   /* ---------------- SEGADOR ---------------- */
@@ -128,7 +128,7 @@ const BOONS = [
     desc:r=>`El Último Aliento deja un charco de sangre que daña a los enemigos y te cura ${[1.5,2,3][r]}% por segundo.`,
     fx:[{t:"ground", at:"caster", r:110, dur:[3000,4000,5000], dps:[0.3,0.45,0.6], heal:[0.015,0.02,0.03]}], test:"zone"},
   {id:"sg_duo", champ:"segador", skill:0, name:"Hemorragia en Cadena", duo:["sg_rebote","sg_sangria"], look:"blood",
-    desc:r=>"DÚO · Cada rebote del Tajo desangra y salta una vez más.",
+    desc:r=>"Cada rebote del Tajo desangra y salta una vez más.",
     fx:[{t:"bounce", n:2, pct:0.6, range:230, status:{bleed:0.5}}], test:"bleed"},
 
   /* ---------------- AXIOM ---------------- */
@@ -145,7 +145,7 @@ const BOONS = [
     desc:r=>`Al llegar, el Teletransporte suelta un pulso que ralentiza ${[40,50,60][r]}%.`,
     fx:[{t:"burst", at:"caster", r:[90,105,120], pct:[0.5,0.7,0.9], status:{slow:[0.4,0.5,0.6]}}], test:"slow"},
   {id:"ax_duo", champ:"axiom", skill:2, name:"Colapso de Memoria", duo:["ax_residuo","ax_rastro"], look:"void",
-    desc:r=>"DÚO · El punto de salida del Teletransporte queda corrupto: zona que frena y daña.",
+    desc:r=>"El punto de salida del Teletransporte queda corrupto: zona que frena y daña.",
     fx:[{t:"ground", at:"origin", r:100, dur:4000, dps:0.45, slow:0.45}], test:"zone"},
 
   /* ---------------- LA PROFETA ---------------- */
@@ -162,7 +162,7 @@ const BOONS = [
     desc:r=>`La Danza del Augurio se repite sola 0,6 s después.`,
     fx:[{t:"echo", at:"caster", delay:600, rMul:1, pct:[0.5,0.7,0.9]}], test:"dmg"},
   {id:"pf_duo", champ:"profeta", skill:2, name:"Constelación", duo:["pf_presagio","pf_eco"], look:"holy",
-    desc:r=>"DÚO · La Danza deja un círculo de estrellas que fulmina a quien lo pise.",
+    desc:r=>"La Danza deja un círculo de estrellas que fulmina a quien lo pise.",
     fx:[{t:"ground", at:"caster", rMul:1, dur:3500, dps:0.1, zap:{every:500, pct:0.8}}], test:"zone"},
 
   /* ---------------- MUSASHI ---------------- */
@@ -179,14 +179,14 @@ const BOONS = [
     desc:r=>`Mil Cortes deja un remolino de acero que sigue cortando ${[2,2.8,3.6][r]} s.`,
     fx:[{t:"ground", at:"caster", rMul:0.8, dur:[2000,2800,3600], dps:[0.5,0.7,0.9]}], test:"zone"},
   {id:"ms_duo", champ:"musashi", skill:1, name:"Senda Carmesí", duo:["ms_filo","ms_sangre"], look:"blood",
-    desc:r=>"DÚO · El camino del Paso Fantasma queda marcado: cada corte desangra.",
+    desc:r=>"El camino del Paso Fantasma queda marcado: cada corte desangra.",
     fx:[{t:"line", w:54, pct:1.2, status:{bleed:0.6}}], test:"bleed"},
 
   /* ---------------- LA CAZADORA ---------------- */
   {id:"cz_abanico", champ:"cazadora", skill:0, name:"Abanico de Flechas", look:"nature",
     desc:r=>`La Flecha Perforante sale con ${[2,2,4][r]} flechas más en abanico.`,
     fx:[{t:"fan", n:[2,2,4], spread:0.22, pct:[0.8,1.0,1.2]}], test:"dmg"},
-  {id:"cz_raices", champ:"cazadora", skill:1, name:"Raíces Voraces", look:"nature",
+  {id:"cz_raices", champ:"cazadora", skill:1, name:"Brote Trampero", look:"nature",
     desc:r=>`La Trampa del Bosque brota al colocarse y enreda ${[0.5,0.7,0.9][r]} s a los cercanos.`,
     fx:[{t:"burst", at:"aim", r:90, pct:[0.4,0.6,0.8], status:{stun:[500,700,900]}}], test:"hits"},
   {id:"cz_zarzal", champ:"cazadora", skill:1, name:"Zarzal", look:"nature",
@@ -196,7 +196,7 @@ const BOONS = [
     desc:r=>`La Lluvia de la Cazadora deja púas clavadas en el piso (${[3,4,5][r]} s) que desangran.`,
     fx:[{t:"ground", at:"aim", rMul:0.8, dur:[3000,4000,5000], dps:[0.3,0.4,0.55], bleed:true}], test:"zone"},
   {id:"cz_duo", champ:"cazadora", skill:2, name:"Bosque Vengativo", duo:["cz_zarzal","cz_puas"], look:"nature",
-    desc:r=>"DÚO · Donde cae la Lluvia brota un zarzal enorme que frena a la horda.",
+    desc:r=>"Donde cae la Lluvia brota un zarzal enorme que frena a la horda.",
     fx:[{t:"ground", at:"aim", rMul:1.1, dur:5000, dps:0.6, slow:0.5}], test:"zone"},
 
   /* ---------------- NIGROMANTE ---------------- */
@@ -213,7 +213,7 @@ const BOONS = [
     desc:r=>`La Plaga deja una niebla que ralentiza ${[30,40,50][r]}% (${[4,5,6][r]} s).`,
     fx:[{t:"ground", at:"aim", rMul:0.9, dur:[4000,5000,6000], dps:[0.15,0.22,0.3], slow:[0.3,0.4,0.5], poison:true}], test:"zone"},
   {id:"ng_duo", champ:"nigromante", skill:0, minion:true, name:"Osario Pestilente", duo:["ng_huesos","ng_niebla"], look:"poison",
-    desc:r=>"DÚO · Cada esqueleto que cae suelta además una onda venenosa que frena a la horda.",
+    desc:r=>"Cada esqueleto que cae suelta además una onda venenosa que frena a la horda.",
     fx:[{t:"burst", at:"caster", r:95, pct:0.8, status:{poison:0.5, slow:0.4}}], test:"minion"},
 
   /* ---------------- EL LIBERTADOR ---------------- */
@@ -230,7 +230,7 @@ const BOONS = [
     desc:r=>`La Carga de San Lorenzo levanta una polvareda en su camino: ralentiza ${[35,45,55][r]}% y ahoga.`,
     fx:[{t:"ground", at:"ahead", r:110, dur:[3000,4000,5000], dps:[0.2,0.3,0.4], slow:[0.35,0.45,0.55]}], test:"zone"},
   {id:"lb_duo", champ:"libertador", skill:1, name:"Descarga de Fusilería", duo:["lb_metralla","lb_clarin"], look:"fire",
-    desc:r=>"DÚO · Al sonar el clarín, los Granaderos disparan una descarga en redondo.",
+    desc:r=>"Al sonar el clarín, los Granaderos disparan una descarga en redondo.",
     fx:[{t:"shards", at:"caster", n:8, pct:0.65}], test:"dmg"},
 
   /* ---------------- EREN ---------------- */
@@ -247,7 +247,7 @@ const BOONS = [
     desc:r=>`¡Avancen! da un escudo del ${[6,9,12][r]}% de la vida máxima a los aliados cercanos.`,
     fx:[{t:"ally", at:"caster", r:260, shield:[0.06,0.09,0.12]}], test:"shield"},
   {id:"er_duo", champ:"eren", skill:2, name:"Rugido de Vapor", duo:["er_vapor","er_grito"], look:"steam",
-    desc:r=>"DÚO · El grito deja una nube de vapor que quema y frena alrededor.",
+    desc:r=>"El grito deja una nube de vapor que quema y frena alrededor.",
     fx:[{t:"ground", at:"caster", r:140, dur:4000, dps:0.5, burn:true, slow:0.3}], test:"zone"}
 ];
 const BOON_BY_ID = {};

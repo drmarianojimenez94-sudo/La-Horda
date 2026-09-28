@@ -102,7 +102,7 @@ function buffOptHTML(opt, h, hint){
     : (()=>{ const d = boonsForChamp(b.champ).find(x=>x.duo && x.duo.includes(b.id)); if(!d) return ""; const other = BOON_BY_ID[d.duo.find(x=>x!==b.id)];
         return `<div class="boon-duo">Dúo: <b>${d.name}</b> con ${other.name}${boonOwned(h, other.id)>=0 ? " ✔" : ""}</div>`; })();
   return `<div class="ico boon-ico" style="--boon-c:${L[0]};--boon-g:${L[1]}">${ico}</div>
-    <div class="boon-tag" style="color:${R.color}">${tag}</div>
+    <div class="boon-tag" style="color:${b.duo ? "#ffd76a" : R.color}">${tag}</div>
     <div class="buff-name">${b.name}</div>
     <div class="boon-skill">Transforma: <b>${sk ? sk.name : "?"}</b></div>
     <div class="buff-desc">${b.desc(r)}</div>${duoLine}`;
@@ -125,6 +125,16 @@ function boonOwnedLineHTML(h){
   const B = heroBoons(h), ids = Object.keys(B).filter(id=>BOON_BY_ID[id]);
   if(!ids.length) return "";
   return `<div class="boon-owned">Tus refuerzos: ${ids.map(id=>{ const b = BOON_BY_ID[id]; return `<span style="color:${boonRarityOf(B[id]).color}">${b.duo?"✦✦ ":"✦ "}${b.name}</span>`; }).join(" · ")}</div>`;
+}
+
+// Pausa (panel de estadísticas): qué habilidades transformaste en esta incursión y cómo.
+function boonStatsBlockHTML(h){
+  const B = heroBoons(h), ids = Object.keys(B).filter(id=>BOON_BY_ID[id]);
+  if(!ids.length) return "";
+  return `<div class="stat-block"><div class="stat-block-title">Refuerzos de habilidad</div>` + ids.map(id=>{
+    const b = BOON_BY_ID[id], sk = boonSkillOf(b), R = boonRarityOf(B[id]);
+    return `<div class="stat-row boon-row"><span><b style="color:${b.duo ? "#ffd76a" : R.color}">${b.name}</b> · ${sk ? sk.name : ""}<br><small>${b.desc(B[id])}</small></span><b>${b.duo ? "Dúo" : R.name}</b></div>`;
+  }).join("") + `</div>`;
 }
 
 /* ---------------- HUD: tooltip y marca en el botón ---------------- */
