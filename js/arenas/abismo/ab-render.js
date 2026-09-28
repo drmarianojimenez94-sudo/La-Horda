@@ -255,7 +255,7 @@ function _abFx(key, i, x, y, h, alpha, anchorY, rot){ // frame i de un efecto de
   return _abSpr(k, x, y, h, false, alpha, anchorY===undefined ? 0.5 : anchorY, rot);
 }
 function _abAtlasFrame(type, set, idx, x, y, h, flip, alpha, scaleY){
-  const P = ENEMY_ATLAS_PACK[type]; if(!P || !P.ready) return;
+  const P = ENEMY_ATLAS_PACK[(typeof bodySwapKey==="function" && bodySwapKey(type)) || type]; if(!P || !P.ready) return; // cuerpo prestado (body-swaps.js)
   const arr = P.sets[set] || P.sets.idle, v = arr[Math.min(arr.length - 1, Math.max(0, idx))];
   const s = h/P.refH;
   drawAnimFrameSized(P.atlas, {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]}, 0, x, y, P.fw*s, P.fh*s*(scaleY||1), 0.5, P.anchor, flip, alpha);
