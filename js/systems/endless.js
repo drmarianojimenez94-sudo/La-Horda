@@ -497,7 +497,7 @@ function endlessDrawWorld(){
     }
     // segundos que quedan
     if(!t.done){
-      ctx.globalAlpha = 1; ctx.fillStyle = urgent ? "#ff8a7a" : "#fff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.globalAlpha = 1; ctx.fillStyle = urgent ? "#ff8a7a" : "#fff"; ctx.font = pxFont(12); ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(Math.ceil(t.t/1000) + "s", t.x, t.y + t.r*0.62 + 14);
     }
     ctx.restore();

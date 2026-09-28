@@ -437,7 +437,7 @@ function drawEnemyOverlays(e){
   }
   if(e.rank==="jefe" || e.rank==="subjefe"){
     ctx.save();
-    ctx.font = "bold 11px Georgia, serif";
+    ctx.font = pxFont(11);
     ctx.textAlign = "center";
     ctx.fillStyle = "rgba(0,0,0,0.8)";
     ctx.fillText(e.name, e.x+1, e.y-e.radius-21);

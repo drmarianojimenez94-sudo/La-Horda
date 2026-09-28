@@ -198,25 +198,52 @@ function screenRectUnderHud(x0, y0, x1, y1){
 // Nombre dorado y modificadores, en píxeles de PANTALLA (legibles con el zoom del teléfono): UNA placa por
 // élite, arriba del enemigo; si queda debajo del HUD, no se dibuja (el anillo dorado en el piso sigue).
 let eliteNameplatesDrawn = 0, eliteNameplatesHidden = 0; // (las pruebas lo leen)
+// Nombre dorado y modificadores, en píxeles de PANTALLA (legibles con el zoom del teléfono).
+// Jerarquía de textos (js/ui/hud-text.js): placa solo para las ELITE_PLATES_MAX élites más cercanas, sin
+// pisarse entre ellas ni al HUD (vida, aliados, barra del jefe, avisos) ni a los carteles de arriba. Si no
+// entra, sube un renglón; si tampoco, queda solo el anillo dorado del piso hasta que haya lugar.
+const ELITE_PLATES_MAX = 2;
+function hudEliteNamesShown(){
+  if(!player) return [];
+  const list = [];
+  for(const e of enemies){ if(e.alive && e.eliteName && (typeof inView!=="function" || inView(e.x, e.y, 0))) list.push(e); }
+  list.sort((a,b)=>Math.hypot(a.x-player.x, a.y-player.y) - Math.hypot(b.x-player.x, b.y-player.y));
+  return list.slice(0, ELITE_PLATES_MAX);
+}
 function eliteDrawScreenNames(){
   eliteNameplatesDrawn = 0; eliteNameplatesHidden = 0;
   if(typeof ctx==="undefined" || typeof worldToScreen!=="function" || !player) return;
-  let any = false;
+  const list = hudEliteNamesShown(); if(!list.length) return;
+  for(const e of enemies) if(e._plateAt) e._plateAt = null;
   const now = (typeof animNow!=="undefined" && animNow) || performance.now();
-  for(const e of enemies){
-    if(!e.alive || !e.eliteName || (typeof inView==="function" && !inView(e.x, e.y, 0))) continue;
+  ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  const taken = [];
+  // los textos flotantes de palabras también ocupan lugar (el número de daño no: es chico y se va rápido)
+  if(typeof floatTexts!=="undefined") for(const f of floatTexts){
+    if(!f.on || f.kind!==4) continue;
+    const p = worldToScreen(f.x, f.y), hw = String(f.text).length*5 + 6;
+    taken.push({l:p.x - hw, r:p.x + hw, t:p.y - 48, b:p.y - 12});
+  }
+  for(const e of list){
     const R = e.radius||20, s = worldToScreen(e.x, e.y - R*2.3 - (e.role ? 34 : 14));
     const intro = e._eliteIntro ? Math.max(0, 1 - (now - e._eliteIntro)/1400) : 0; // se agranda al verla por primera vez
     const f1 = Math.round(18 + 6*intro), f2 = 14;
-    const x = Math.round(s.x), y = Math.round(s.y) - 14;
-    if(!any){ ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle"; any = true; }
+    const x = Math.round(s.x);
+    const nm = "★ " + e.eliteName;
     ctx.font = f1 + "px 'VT323', monospace";
-    const nm = "★ " + e.eliteName, w = Math.ceil(ctx.measureText(nm).width) + 10;
-    const mods = (e.eliteMods||[]).map(m=>ELITE_MODS[m] ? ELITE_MODS[m].name : m).join(" · ");
+    const w = Math.ceil(ctx.measureText(nm).width) + 10;
     ctx.font = f2 + "px 'VT323', monospace";
-    const w2 = Math.ceil(ctx.measureText(mods).width) + 8, ww = Math.max(w, w2);
-    if(screenRectUnderHud(x - ww/2, y - f1/2 - 1, x + ww/2, y + 9 + f2)){ eliteNameplatesHidden++; continue; }
+    const mods = (e.eliteMods||[]).map(m=>ELITE_MODS[m] ? ELITE_MODS[m].name : m).join(" · ");
+    const w2 = Math.ceil(ctx.measureText(mods).width) + 8, W = Math.max(w, w2);
+    let y = Math.round(s.y) - 14, ok = false;
+    for(let k=0;k<3 && !ok;k++){
+      ok = (typeof hudTextFreeRect!=="function" || hudTextFreeRect(x, y + 5, W, 34, taken)) && !screenRectUnderHud(x - W/2, y - f1/2 - 1, x + W/2, y + 9 + f2);
+      if(!ok) y -= 20;
+    }
+    if(!ok){ eliteNameplatesHidden++; continue; } // queda el anillo dorado del piso
     eliteNameplatesDrawn++;
+    taken.push({l:x - W/2, r:x + W/2, t:y - 12, b:y + 25});
+    e._plateAt = {x, y};
     ctx.font = f1 + "px 'VT323', monospace";
     ctx.fillStyle = `rgba(10,6,4,${0.8 + 0.15*intro})`; ctx.fillRect(x - Math.round(w/2), y - Math.round(f1/2), w, f1);
     if(intro > 0){ ctx.fillStyle = `rgba(255,205,80,${0.8*intro})`; ctx.fillRect(x - Math.round(w/2), y + Math.round(f1/2) - 1, w, 1); }
@@ -226,5 +253,5 @@ function eliteDrawScreenNames(){
     ctx.fillStyle = "rgba(10,6,4,0.72)"; ctx.fillRect(x - Math.round(w2/2), y + 9, w2, 14);
     ctx.fillStyle = "#e8d6a8"; ctx.fillText(mods, x, y + 16);
   }
-  if(any) ctx.restore();
+  ctx.restore();
 }

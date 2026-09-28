@@ -77,7 +77,7 @@ function _cxDraw(p, now, dt){
   if(S.kind === "ambient"){
     _cxAmbient(g, W, H, now, S.arena);
     if(S.veil){ // presencia sin forma: ni siquiera la silueta (spoiler)
-      g.save(); g.globalAlpha = 0.5 + 0.3*Math.sin(now/600); g.fillStyle = "rgba(200,170,255,0.85)"; g.font = `bold ${Math.round(H*0.3)}px Georgia`;
+      g.save(); g.globalAlpha = 0.5 + 0.3*Math.sin(now/600); g.fillStyle = "rgba(200,170,255,0.85)"; g.font = pxFont(Math.round(H*0.3));
       g.textAlign = "center"; g.textBaseline = "middle"; g.shadowColor = "rgba(150,90,255,0.9)"; g.shadowBlur = H*0.08; g.fillText("?", W/2, H*0.5); g.restore();
     }
     return;
@@ -95,7 +95,7 @@ function _cxDraw(p, now, dt){
     g.save(); g.globalAlpha = 0.55 + 0.25*Math.sin(now/700); g.filter = "drop-shadow(0 0 6px rgba(160,90,255,0.9))";
     g.drawImage(b, 0, 0); g.restore();
     g.drawImage(b, 0, 0);
-    g.fillStyle = "rgba(200,170,255,0.75)"; g.font = `bold ${Math.round(H*0.16)}px Georgia`; g.textAlign = "center";
+    g.fillStyle = "rgba(200,170,255,0.75)"; g.font = pxFont(Math.round(H*0.16)); g.textAlign = "center";
     g.fillText("?", W/2, H*0.52);
     return;
   }

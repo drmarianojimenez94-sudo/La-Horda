@@ -4,7 +4,7 @@
    pestañas, y las pantallas nuevas: hub del menú principal, barra superior, vitrina de la Tienda,
    Multijugador, Opciones y la pestaña Skins de GUARDIANES.
    Pixel art oscuro: bordes cuadrados de 2-3 px negros, sombra dura, brasa como acento, VT323 para
-   botones y títulos cortos, Press Start 2P para las marcas, serif para textos largos.
+   botones y títulos cortos, Press Start 2P para las marcas, VT323 Texto (VT323 agrandada) para textos largos.
    Se carga después de los otros estilos de menú y antes de mobile.css.
    ============================================================ */
 :root{
@@ -23,7 +23,7 @@
   --ui-shadow:4px 4px 0 #000; --ui-shadow-sm:2px 2px 0 #000;
   --ui-glow:0 0 18px rgba(255,110,40,0.35);
   /* tipografías y tiempos */
-  --ui-font:var(--font-retro); --ui-font-brand:var(--font-pixel); --ui-font-body:'Georgia','Iowan Old Style','Times New Roman',serif;
+  --ui-font:var(--font-retro); --ui-font-brand:var(--font-pixel); --ui-font-body:var(--font-body);
   --ui-t:120ms; --ui-ease:cubic-bezier(.2,.8,.2,1);
 }
 

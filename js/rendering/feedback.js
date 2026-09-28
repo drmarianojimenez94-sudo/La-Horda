@@ -229,14 +229,14 @@ function drawScreenFeedback(){
       const C = ROLE_CFG[e.role], col = `rgb(${C.rgb})`;
       ctx.globalAlpha = 0.7 + 0.3*Math.sin(now/160 + n);
       _arrow(p.x, p.y, ang, 11, col, "rgba(0,0,0,0.7)");
-      ctx.font = "bold 11px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = col; ctx.fillText(C.ico, p.x - Math.cos(ang)*20, p.y - Math.sin(ang)*20 + 4);
+      ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.fillStyle = col; ctx.fillText(C.ico, p.x - Math.cos(ang)*20, p.y - Math.sin(ang)*20 + 4);
       ctx.globalAlpha = 1; n++; continue;
     }
     const col = e.rank==="jefe" ? "#ffb300" : (e.rank==="subjefe" ? "#ff8a3d" : "#ffe36a");
     const pulse = 0.7 + 0.3*Math.sin(now/180 + n);
     ctx.globalAlpha = pulse;
     _arrow(p.x, p.y, ang, e.rank==="jefe" ? 15 : 11, col, "rgba(0,0,0,0.7)");
-    if(e.rank!=="elite"){ ctx.font = "bold 11px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = col; ctx.fillText(e.rank==="jefe" ? "☠" : "◆", p.x - Math.cos(ang)*20, p.y - Math.sin(ang)*20 + 4); }
+    if(e.rank!=="elite"){ ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.fillStyle = col; ctx.fillText(e.rank==="jefe" ? "☠" : "◆", p.x - Math.cos(ang)*20, p.y - Math.sin(ang)*20 + 4); }
     ctx.globalAlpha = 1; n++;
   }
   pacingDrawWarn(now, _edgePoint, _arrow); // de dónde viene la próxima oleada
@@ -245,7 +245,7 @@ function drawScreenFeedback(){
     const ang = Math.atan2(a.y-player.y, a.x-player.x), p = _edgePoint(ang, 24);
     ctx.globalAlpha = 0.75 + 0.25*Math.sin(now/150);
     _arrow(p.x, p.y, ang, 12, "#6fdc8c", "rgba(0,40,10,0.8)");
-    ctx.font = "bold 13px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = "#6fdc8c";
+    ctx.font = pxFont(13); ctx.textAlign = "center"; ctx.fillStyle = "#6fdc8c";
     ctx.fillText("✚", p.x - Math.cos(ang)*22, p.y - Math.sin(ang)*22 + 5);
     ctx.globalAlpha = 1;
   }

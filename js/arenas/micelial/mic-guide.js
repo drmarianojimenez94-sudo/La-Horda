@@ -66,7 +66,7 @@ function micGuideScreen(){
   // contador (arriba al centro)
   const w = 24, n = nucs.length, x0 = Math.round(VW/2 - n*w/2), y0 = 54;
   ctx.fillStyle = "rgba(10,4,14,0.66)"; ctx.fillRect(x0 - 62, y0 - 4, n*w + 70, 26);
-  ctx.font = "bold 11px sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillStyle = "#e8c8ff";
+  ctx.font = pxFont(11); ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillStyle = "#e8c8ff";
   ctx.fillText("Núcleos", x0 - 56, y0 + 9);
   nucs.forEach((e, i)=>{
     const st = e.nuc ? e.nuc.st : 1, x = x0 + i*w + 3;
@@ -85,7 +85,7 @@ function micGuideScreen(){
     ctx.fillStyle = "rgba(10,4,14,0.8)"; ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = st >= 4 ? "#ff5ad0" : "#c070ff"; ctx.lineWidth = 2; ctx.stroke();
     ctx.rotate(a); ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(14, -6); ctx.lineTo(14, 6); ctx.closePath(); ctx.fill();
-    ctx.rotate(-a); ctx.fillStyle = "#fff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.rotate(-a); ctx.fillStyle = "#fff"; ctx.font = pxFont(12); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(String(st), 0, 1);
     ctx.restore();
   }

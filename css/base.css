@@ -5,6 +5,12 @@
   src:url(../assets/fonts/press-start-2p-latin.woff2) format('woff2'); }
 @font-face{ font-family:'VT323'; font-style:normal; font-weight:400; font-display:swap;
   src:url(../assets/fonts/vt323-latin.woff2) format('woff2'); }
+/* "VT323 Texto": el MISMO archivo VT323, agrandado un 20 % (size-adjust). Es la letra del cuerpo: todo lo que
+   antes heredaba Georgia (fichas de objeto, Talentos, Códice, Mística, notas) pasa a la fuente pixel sin
+   achicarse, porque a igual font-size VT323 es un 20 % más chica que Georgia (altura de la x: 0,40 contra
+   0,48). Así los tamaños que estaban pensados para Georgia (y los mínimos del celular) siguen valiendo. */
+@font-face{ font-family:'VT323 Texto'; font-style:normal; font-weight:400; font-display:swap; size-adjust:120%;
+  src:url(../assets/fonts/vt323-latin.woff2) format('woff2'); }
 :root{
   --bg:#0b0705;
   --ember1:#ff7a2e;
@@ -19,17 +25,21 @@
   --energy:#2f8fd6;
   --energy-dim:#173a52;
   --ult:#ffb300;
-  --font-pixel:'Press Start 2P', 'Georgia', monospace;
-  --font-retro:'VT323', 'Georgia', monospace;
+  --font-pixel:'Press Start 2P', monospace;
+  --font-retro:'VT323', monospace;
+  --font-body:'VT323 Texto', 'VT323', monospace;
   box-sizing:border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+/* los controles de formulario no heredan la letra (el navegador les pone la del sistema): la de la página */
+button, input, select, textarea{ font-family:inherit; }
 html,body{
   margin:0; padding:0; width:100%; height:100%;
   background:var(--bg); color:var(--text);
-  font-family:'Georgia','Iowan Old Style', 'Times New Roman', serif;
+  /* una sola familia pixel en todo el juego (antes el cuerpo era Georgia: tools/audit/ui_layout.js la busca) */
+  font-family:var(--font-body);
   overflow:hidden; overscroll-behavior:none;
   /* Paneo SÍ (para que los menús scrolleen con el dedo en cualquier navegador), pellizco y doble toque NO
      (zoom accidental). El "none" total queda solo donde se juega: el canvas y los controles táctiles. */

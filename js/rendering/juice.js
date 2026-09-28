@@ -271,11 +271,11 @@ function drawStreakHud(){
   ctx.save();
   ctx.globalAlpha = a;
   ctx.textAlign = "right"; ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round";
-  ctx.font = "bold 11px Georgia, serif";
+  ctx.font = pxFont(11);
   ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,0.85)"; ctx.strokeText("RACHA", x, y - 26);
   ctx.fillStyle = "#e8d8b0"; ctx.fillText("RACHA", x, y - 26);
   ctx.save(); ctx.translate(x, y); ctx.scale(pop, pop);
-  ctx.font = "bold 26px Georgia, serif";
+  ctx.font = pxFont(26);
   const txt = "×" + streakN;
   ctx.lineWidth = 4; ctx.strokeStyle = "rgba(40,8,0,0.95)"; ctx.strokeText(txt, 0, 0);
   ctx.fillStyle = streakTierT > 0 && ((streakTierT/90)|0) % 2 ? "#ffffff" : hot; ctx.fillText(txt, 0, 0);
@@ -286,7 +286,7 @@ function drawStreakHud(){
   ctx.fillStyle = hot; ctx.fillRect(x - w*q, y + 6, w*q, 4);
   if(streakTierT > 0){
     ctx.globalAlpha = a*Math.min(1, streakTierT/300);
-    ctx.font = "bold 11px Georgia, serif"; ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,0.85)";
+    ctx.font = pxFont(11); ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,0.85)";
     ctx.strokeText("+energía", x, y + 24); ctx.fillStyle = "#7ec8ff"; ctx.fillText("+energía", x, y + 24);
   }
   ctx.restore();
