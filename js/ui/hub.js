@@ -32,12 +32,16 @@ function renderHub(){
   const k = selectedClass, cls = CLASSES[k] || {}, ch = save.champions[k] || {};
   const acc = _hubAccount();
   // perfil: nombre y nivel de la cuenta si hay cuenta; si no, el nombre de la sala y el avance de la campaña
-  const name = (acc && (acc.name || acc.displayName || acc.username)) || (typeof netPlayerName==="function" ? netPlayerName() : "Jugador");
+  const logged = !!(acc && (acc.logged || acc.name));
+  const name = (logged && acc.name) || (typeof netPlayerName==="function" ? netPlayerName() : "Jugador");
   const cleared = ARENA_ORDER.filter(a=>(save.arenasCleared||{})[a]).length;
   const lvl = acc && (acc.level || acc.accountLevel);
+  const camp = `Campaña ${cleared}/${ARENA_ORDER.length}`;
+  // cuenta (js/net/account.js): nube al día, subiendo, pendiente o en conflicto; invitado = tocá para entrar
+  const mark = !acc ? "" : acc.conflict ? "⚠ " : acc.syncing || acc.pending ? "⏳ " : logged ? "☁ " : "";
   const set = (id, v)=>{ const el = document.getElementById(id); if(el) el.textContent = v; };
   set("hub-profile-name", name);
-  set("hub-profile-lvl", lvl ? `Nv. de cuenta ${lvl}` : `Campaña ${cleared}/${ARENA_ORDER.length}`);
+  set("hub-profile-lvl", lvl ? `${mark}Nv. de cuenta ${lvl}` : (acc && !logged ? "Invitado · Entrar" : mark + camp));
   set("hub-gold", "🪙 " + fmtGold(save.gold||0));
   // JUGAR: próxima arena + guardián
   const next = hubNextArena(), A = ARENA_MODS[next] || {}, num = campaignNumberLabel(next);

@@ -105,6 +105,20 @@ function renderShopShowcase(panel){
       <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}</div>
     </div>`;
   }).join("");
+  // cromas: cosméticas sueltas (js/ui/shop-cromas.js da los productos); las que no tenés primero
+  const cromaList = typeof shopCromaProducts==="function" ? shopCromaProducts().sort((a,b)=>(a.owned-b.owned) || (b.champOwned-a.champOwned)) : [];
+  const cromas = cromaList.map(p=>{
+    const key = "croma:" + p.id; seenNow.push(key);
+    const act = !p.owned ? `<button class="shop-btn" data-croma-buy="${p.id}" ${save.gold < p.price ? "disabled" : ""}>🪙 ${fmtGold(p.price)}</button>`
+      : p.equipped ? '<span class="shop-st own">✔ Equipada</span>'
+      : p.champOwned ? `<button class="shop-btn sec" data-croma-on="${p.id}">Equipar</button>` : '<span class="shop-st own">✔ Tuya</span>';
+    return `<div class="shop-bundle shop-croma-card ${p.owned ? "owned" : ""}" data-croma-card="${p.id}">
+      <div class="shop-bundle-art"><img src="${p.preview}" alt="" loading="lazy">${p.owned ? "" : _shopTagNew(key)}</div>
+      <div class="shop-bundle-name">${p.name}</div>
+      <div class="shop-item-sub"><span style="color:${p.color}">◆</span> ${p.champName} · ${p.crystalLabel}</div>
+      <div class="shop-deal-buy">${act}</div>
+    </div>`;
+  }).join("");
   // guardianes por desbloquear
   const locked = CHAMPION_CATALOG.filter(c=>!(save.champions[c.id]||{}).unlocked);
   const champs = locked.map(c=>{
@@ -119,6 +133,7 @@ function renderShopShowcase(panel){
       <div class="shop-deals-box"><div class="shop-row-head"><span class="shop-row-title">OFERTAS DEL DÍA</span><span class="shop-renew" id="shop-renew" title="Las ofertas se renuevan a la medianoche">⟳ ${_shopRenewTxt()}</span></div>
       <div class="shop-deals-grid">${deals}</div></div></div>
     ${bundles ? `<div class="shop-row-head"><span class="shop-row-title">PAQUETES DE SKINS</span><span class="shop-renew">el set completo de piezas + su skin</span></div><div class="shop-strip ui-scroll-x">${bundles}</div>` : ""}
+    ${cromas ? `<div class="shop-row-head"><span class="shop-row-title">CROMAS</span><span class="shop-renew">otra paleta · solo cosmético</span></div><div class="shop-strip ui-scroll-x">${cromas}</div>` : ""}
     ${champs ? `<div class="shop-row-head"><span class="shop-row-title">GUARDIANES</span><span class="shop-renew">${locked.length} por desbloquear</span></div><div class="shop-strip ui-scroll-x">${champs}</div>` : ""}
     <div class="shop-fair">⚖ Todo se consigue jugando: se paga con el oro que ganás en las arenas. No hay compras con dinero real. Míticos y Únicos no se venden: se fabrican o se ganan peleando.</div>`;
   const fb = panel.querySelector("#shop-feat-buy");
@@ -145,6 +160,19 @@ function renderShopShowcase(panel){
   }));
   _bindSkinBuy(panel);
   panel.querySelectorAll("[data-champ-buy]").forEach(b=> b.addEventListener("click", ()=> shopConfirmChampion(b.getAttribute("data-champ-buy"))));
+  panel.querySelectorAll("[data-croma-buy]").forEach(b=> b.addEventListener("click", ()=>{
+    const id = b.getAttribute("data-croma-buy"), d = CROMA_SKINS[id], ch = save.champions[d.champ];
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return;
+      const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+      if(ch && ch.unlocked) cromaEquip(d.champ, id); // recién comprada: se pone en su guardián
+      _shopAfterBuy(`🎨 CROMA ${d.name}${ch && ch.unlocked ? " · equipada" : " · comprada"}`, "levelup");
+    });
+  }));
+  panel.querySelectorAll("[data-croma-on]").forEach(b=> b.addEventListener("click", ()=>{
+    const id = b.getAttribute("data-croma-on"), d = CROMA_SKINS[id];
+    if(cromaEquip(d.champ, id)) _shopAfterBuy(`🎨 CROMA EQUIPADA · ${d.name}`, "levelup");
+  }));
   // lo que se vio hoy deja de ser NUEVO la próxima vez; las ofertas del día ya no marcan el hub
   const seen = _shopSeen(); let ch = false;
   for(const k of seenNow) if(!seen[k]){ seen[k] = true; ch = true; }
@@ -311,6 +339,7 @@ function renderShopSkins(panel){
     if(skinEquipOn(id, k)) _skinEquippedFeedback(id, k); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas en el inventario.");
     renderShop();
   }));
+  if(typeof shopCromaMount==="function") shopCromaMount(panel); // cromas sueltas por oro (js/ui/shop-cromas.js)
   startChampAnimLoop();
 }
 // Compra las piezas que faltan de una skin (desde la Tienda o la Sala) y la autoequipa si corresponde.

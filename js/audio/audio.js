@@ -10,22 +10,29 @@
             archivos): una sala corta para los efectos y una más larga para la música. Cada arena
             tiene su espacio (Gélida: caverna brillante; Minas: túnel seco; Abismo: enorme).
 
-   MÚSICA — secuenciador con programación anticipada (lookahead): cuerdas (pad + ostinato en
-   staccato + pizzicato) y percusión (bombo, redoblante, platillos, taikos), con MODOS:
-   - "menu":    pizzicato tranquilo y pad, sin batería.
-   - "wave":    oleadas: ostinato de cuerdas en semicorcheas + batería; se acelera y se llena con
-                cada nivel de la arena.
-   - "prelude": el último nivel antes del jefe: más lento, timbales, tensión.
-   - "boss":    tenebroso: cuerdas graves en semitonos, taikos, pad con la "cuerda que se
-                desafina" (la identidad del tema original del juego) y disonancias.
-   - "victory" / "defeat": cierre.
-   Cada ARENA le pone su identidad al mismo motor (MUSIC_ARENAS): tonalidad y modo, tempo, timbre
-   del pad, batería propia y un instrumento característico (Ciudad: campana; Fábrica: yunques y
-   pistones; Ruinas: flauta y bodhrán; Fúngico: pulsos húmedos; Gélida: campanas frías; Acuática:
-   gotas; Laberinto: piedra y dron; Abismo: dron y oleajes al revés; Minas: picos; Infernal: tambores
-   de guerra y metales). Los cambios de modo se cruzan entre dos buses (el viejo se apaga mientras
-   entra el nuevo) y la entrada del jefe o la victoria tienen su golpe ("stinger").
-   setMusicMode(mode, level) lo pide el juego.
+   MÚSICA — COMPUESTA: la partitura está escrita como datos en js/audio/music-score.js (leitmotiv,
+   acordes, melodías, bajos, arpegios y batería en notación compacta) y este archivo la interpreta
+   con un secuenciador con programación anticipada (lookahead). Instrumentos: cuerdas (pad, staccato,
+   pizzicato), coro, órgano, trompa, metales, flauta, celesta/campanas, arpa, lead de pulso,
+   percusión (bombo, redoblante, charles, taikos, timbales afinados al acorde, platillo, gong).
+   - LEITMOTIV "La Horda" en grados de la escala: cada pieza lo lee en su MODO (título eólico, menú
+     dórico, victoria jónica, derrota eólica corta, Hechicero locrio en 3/4 y su pantalla previa en
+     lidio "angelical"). Acordes con CONDUCCIÓN DE VOCES automática (_voiceLead).
+   - FORMAS largas con secciones A/B/A2/C y variaciones, redobles cada 4 y 8 compases: el loop de
+     las oleadas dura ~70 s y no se repite idéntico.
+   - DIRECTOR (_musicDirector, sin enganches en el juego): lee cuántos enemigos hay vivos (las capas
+     entran y salen en la barra según la INTENSIDAD), la vida o la forma del jefe (FASES 1..3: cada
+     una con su sección y más capas; golpe de platillo/gong al subir), el Hechicero Supremo como
+     subjefe (su tema) y la pantalla previa a la partida (su vals angelical).
+   - GOLPES (MUSIC_STINGERS): entrada del jefe, subida de nivel, cristal, cofre legendario y victoria,
+     tocados en la tonalidad y el acorde que suenan, a tempo.
+   Modos que pide el juego con setMusicMode(mode, level): "title" | "menu" | "wave" | "prelude" |
+   "boss" | "victory" | "defeat" ("intro" lo pone el director). Cada ARENA tiñe la misma partitura
+   (MUSIC_ARENAS): tonalidad, MODO de la escala, tempo, brillo, timbre del pad y del lead, batería
+   propia y un instrumento característico (Ciudad: campana; Fábrica: yunques y pistones; Ruinas:
+   flauta y bodhrán; Fúngico: pulsos húmedos; Gélida: campanas frías; Acuática: gotas; Laberinto:
+   piedra y dron; Abismo: dron y oleajes al revés; Minas: picos; Infernal: tambores de guerra y
+   metales). Los cambios de modo se cruzan entre dos buses (el viejo se apaga mientras entra el nuevo).
 
    EFECTOS — cada uno con PRIORIDAD y separación mínima entre repeticiones; hay un tope de
    voces simultáneas y un tope de nodos por cuadro (los de baja prioridad se descartan cuando hay
@@ -177,6 +184,13 @@ function initAudio(){
     AU.hallMix.connect(mg, 0, 0); AU.hallMix.connect(dl); dl.connect(mg, 0, 1); mg.connect(musicDuck);
     AU.buses = [0,1].map(()=>{ const dry = audioCtx.createGain(), rev = audioCtx.createGain(); dry.gain.value = 0; rev.gain.value = 0; dry.connect(musicDuck); rev.connect(AU.hallIn); return { dry, rev }; });
     AU.buses.forEach(b=>{ b.send = audioCtx.createGain(); b.send.gain.value = 0.32; b.send.connect(b.rev); });
+    // eco rítmico de la melodía y los arpegios (corchea con puntillo, se apaga con su bus)
+    AU.buses.forEach(b=>{
+      b.eg = audioCtx.createGain(); b.eg.gain.value = 0.3; b.dl = audioCtx.createDelay(1); b.dl.delayTime.value = 0.4;
+      const fb = audioCtx.createGain(); fb.gain.value = 0.3; const lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600;
+      b.eg.connect(b.dl); b.dl.connect(lp); lp.connect(fb); fb.connect(b.dl); lp.connect(b.dry);
+    });
+    AU.waves = {};
     AU.cur = 0; musicBus = AU.buses[0].dry; reverbSend = AU.buses[0].send;
     // efectos: entrada común -> volumen; un poco de todo va a la sala corta, las colas van más
     sfxGain = audioCtx.createGain(); sfxGain.gain.value = AUDIO_BASE.sfx*audioVol.sfx; sfxGain.connect(masterGain);
@@ -288,6 +302,7 @@ function iBell(n, t, vol, dur, ratio, bright){
   _env(g, t, 0.003, vol, 0, dur);
   c.connect(g); g.connect(musicBus); g.connect(reverbSend);
   c.start(t); m.start(t); c.stop(t+dur+0.1); m.stop(t+dur+0.1);
+  return g;
 }
 // Pulso húmedo (Reino Fúngico): "blup" resonante que cae de tono
 function iPulse(n, t, vol, len){
@@ -316,6 +331,7 @@ function iFlute(n, t, len, vol){
   o.connect(g); g.connect(musicBus); g.connect(reverbSend);
   o.start(t); lfo.start(t); o.stop(t+len+0.1); lfo.stop(t+len+0.1);
   _nz(t, AU.nz.pink, 0.07, vol*0.35, reverbSend, "bandpass", f*2, 2);
+  return g;
 }
 // Metales de guerra (Infernal): pila de sierras con el filtro que se abre y se cierra
 function iBrass(notes, t, len, vol, cutoff){
@@ -324,6 +340,7 @@ function iBrass(notes, t, len, vol, cutoff){
   const g = audioCtx.createGain(); _env(g, t, 0.025, vol, len*0.35, len*0.65);
   fl.connect(g); g.connect(musicBus); g.connect(reverbSend);
   for(const n of notes) for(const d of [-9, 9]){ const o = audioCtx.createOscillator(); o.type = "sawtooth"; o.frequency.value = _mf(n); o.detune.value = d; o.connect(fl); o.start(t); o.stop(t+len+0.1); }
+  return g;
 }
 // Dron grave con quinta (Laberinto, Abismo, Acuática)
 function iDrone(n, t, len, vol, cutoff){
@@ -377,38 +394,26 @@ function kHat(t, v, P){
   }
 }
 
-/* ---------------- armonía y patrones ---------------- */
-// cada acorde: [bajo, [voces del pad]] (en La; cada arena transpone)
-const CH = {
-  Am:[45,[57,60,64]], F:[41,[57,60,65]], C:[48,[55,60,64]], G:[43,[55,59,62]],
-  Dm:[38,[57,62,65]], E:[40,[56,59,64]], Em:[40,[55,59,64]], Bb:[46,[58,62,65]],
-  D:[38,[57,62,66]], Gm:[43,[55,58,62]], Ebm:[39,[58,63,66]], Am9:[45,[57,60,64,71]],
-  Fmaj7:[41,[57,60,64]], Em7:[40,[55,59,62]], Cm:[48,[55,60,63]]
-};
-const MUSIC_MODES = {
-  menu:    {bpm:74,  prog:["Am","Em","F","E"]},
-  wave:    {bpm:110, prog:["Am","F","C","G"]},
-  prelude: {bpm:88,  prog:["Dm","Am","Bb","E"]},
-  boss:    {bpm:96,  prog:["Am","Am","Bb","E"]},
-  victory: {bpm:92,  prog:["C","G","Am","F"]},
-  defeat:  {bpm:60,  prog:["Am","Dm","Am","E"]}
-};
+/* ---------------- armonía: la partitura vive en js/audio/music-score.js ---------------- */
+// Modos que el juego (o el director musical) puede pedir, y la pieza de la partitura de cada uno.
+// "boss" en la Arena Infernal es el Hechicero Supremo (su vals corrompido): ver _pieceFor.
+const MUSIC_MODES = { title:"title", menu:"menu", intro:"intro", wave:"wave", prelude:"prelude", boss:"boss", victory:"victory", defeat:"defeat" };
 // IDENTIDAD POR ARENA (CAMPAIGN_ORDER): tr = transposición (tonalidad), tempo = multiplicador,
-// bright = brillo del pad, padWave = timbre, kit = batería, prog = progresiones propias por modo,
-// layer = instrumento característico, hall / room = espacio [largo s, brillo Hz, reflexiones, tamaño].
+// bright = brillo, padWave = timbre del pad, kit = batería, sc = MODO de la escala por pieza (el
+// mismo leitmotiv suena frigio en la Fábrica, dórico en las Ruinas…), ext = acordes con 7.ª/9.ª,
+// lead = instrumento que canta la melodía, layer = instrumento característico,
+// hall / room = espacio [largo s, brillo Hz, reflexiones, tamaño].
 const PENTA = [0,3,5,7,10,12,15,17];
 // frases de la flauta de las Ruinas: [paso, grado de la pentatónica, duración en pasos]
 const FLUTE_PH = [[[0,4,4],[4,3,2],[6,2,2],[8,1,6],[14,0,2]], [[0,2,3],[3,3,1],[4,4,4],[8,5,3],[11,4,1],[12,2,4]]];
-// bajo del jefe en semitonos (cuerdas graves que se arrastran)
-const BOSS_LOW = [0,0,1,0, 0,1,3,1, 0,0,1,0, 6,5,3,1];
 const MUSIC_ARENAS = {
   _:        { tr:0, tempo:1, bright:1, kit:"std", hall:[2.0, 5200, 0.35, 1.2], room:[0.7, 6500, 0.5, 0.8] },
   // Ciudad Maldita — La eólico; campana de la ciudad que dobla
   ciudad:   { tr:0, tempo:1, bright:1, kit:"std", hall:[1.9, 4800, 0.45, 1.2], room:[0.8, 6000, 0.55, 1],
     layer(md, s, bar, t, sd, bass, pad){ if(s===0 && (bar%2===0 || md==="boss")) iBell(bass+12, t, md==="boss" ? 0.08 : 0.06, 4, 1.41, 1.4); } },
   // Fábrica Sin Fin — Sol frigio, más rápida; pistones en onda cuadrada, yunques y vapor
-  fortaleza:{ tr:-2, tempo:1.07, bright:1.1, kit:"forge", hall:[1.3, 6500, 0.6, 0.8], room:[0.55, 7500, 0.7, 0.6],
-    prog:{ wave:["Am","Bb","Am","G"], prelude:["Am","Bb","Gm","Bb"], boss:["Am","Bb","Am","E"] },
+  fortaleza:{ tr:-2, tempo:1.07, bright:1.3, kit:"forge", hall:[1.3, 6500, 0.6, 0.8], room:[0.55, 7500, 0.7, 0.6],
+    sc:{ "*":"phrygian" },
     layer(md, s, bar, t, sd, bass){
       if(s%2===0) mStac(bass + (s%8===4 ? 7 : 0), t, sd*0.7, 0.06, 420, "square");
       if(s===6 || s===14) iAnvil(t, 0.045, 620);
@@ -416,21 +421,22 @@ const MUSIC_ARENAS = {
     } },
   // Ruinas Célticas / Élficas — Si dórico; flauta pentatónica y bodhrán
   bosque:   { tr:2, tempo:0.95, bright:0.9, kit:"tribal", hall:[1.7, 4200, 0.25, 1.4], room:[0.6, 5000, 0.3, 1],
-    prog:{ wave:["Am","D","Am","G"], prelude:["Am","G","D","E"], boss:["Am","D","F","E"] },
-    layer(md, s, bar, t, sd, bass, pad){
+    sc:{ "*":"dorian" }, lead:"flute",
+    layer(md, s, bar, t, sd, bass, pad, lvl, cx){
+      if(cx && cx.melOn) return; // la flauta ya canta el leitmotiv
       const ph = FLUTE_PH[bar%2], root = 69 + 2 + (md==="boss" ? -12 : 0);
       for(const p of ph) if(p[0]===s) iFlute(root + PENTA[p[1]], t, sd*p[2]*0.95, md==="boss" ? 0.05 : 0.04);
     } },
   // Reino Fúngico — Si bemol, lento y oscuro; pulsos húmedos, pad que respira, gotas
   micelial: { tr:1, tempo:0.86, bright:0.55, padWave:"square", padLfo:0.35, kit:"wet", hall:[1.9, 2600, 0.3, 1.1], room:[0.75, 3000, 0.4, 0.9], wet:1.1,
-    prog:{ wave:["Am","Am","F","E"], prelude:["Am","F","Bb","E"], boss:["Am","Bb","Am","Bb"] },
+    sc:{ boss:"phrygian" }, lead:"choirL",
     layer(md, s, bar, t, sd, bass, pad){
       if(s===0 || s===3 || s===6 || s===10 || s===13) iPulse(pad[(s/3|0)%pad.length]-12, t, md==="boss" ? 0.07 : 0.055, sd*2.4);
       if(s===8 && bar%2===0) iDrip(t, 0.025, 1300+Math.random()*900);
     } },
   // Arena Gélida — Do, acordes abiertos; campanas frías y viento
   hielo:    { tr:3, tempo:0.94, bright:1.35, padWave:"triangle", kit:"glass", hall:[2.6, 9000, 0.3, 1.5], room:[0.9, 10000, 0.45, 1.2],
-    prog:{ wave:["Am9","Fmaj7","C","Em7"], prelude:["Am9","Fmaj7","Dm","E"], boss:["Am","Fmaj7","Bb","E"] },
+    ext:"9", lead:"celesta",
     layer(md, s, bar, t, sd, bass, pad){
       if(s%4===0) iBell(pad[(s/4)%pad.length]+24, t, 0.03, 2.4, 3.5, 2.4);
       if(md==="boss" && s===8 && bar%2===1) iBell(pad[2]+13, t, 0.03, 3, 3.5, 3);
@@ -439,15 +445,15 @@ const MUSIC_ARENAS = {
   // Arena Acuática — Sol sostenido, lenta y sumergida; pad de vidrio, batería bajo el agua,
   // burbujas en pentatónica y, con el jefe, el canto de algo enorme que se desliza allá abajo
   acuatica: { tr:-1, tempo:0.9, bright:1.1, padWave:"triangle", kit:"sub", hall:[2.4, 5500, 0.25, 1.4], room:[0.8, 5000, 0.35, 1.1], wet:1.1,
-    prog:{ wave:["Am","Em","F","G"], prelude:["Am","F","Dm","E"], boss:["Am","F","E","E"] },
+    ext:"7", lead:"horn",
     layer(md, s, bar, t, sd, bass, pad){
       if(s%2===1 && Math.random()<0.45) iDrip(t, 0.022, _mf(81 - 1 + PENTA[(Math.random()*6)|0]));
       if(s===0 && bar%2===0) iDrone(bass, t, sd*32, 0.03, 900);
       if(md==="boss" && s===4 && bar%2===0) _tone(t, "sine", _mf(pad[0]), _mf(pad[0]-5), sd*20, 0.05, reverbSend, sd*6);
     } },
   // Laberinto — Do sostenido frigio; percusión de piedra y dron de quinta
-  laberinto:{ tr:4, tempo:1, bright:0.85, kit:"stone", hall:[1.4, 4000, 0.7, 0.9], room:[0.6, 4500, 0.8, 0.7],
-    prog:{ wave:["Am","Bb","Gm","Am"], prelude:["Am","Bb","Am","E"], boss:["Am","Bb","E","Am"] },
+  laberinto:{ tr:4, tempo:1, bright:1.05, kit:"stone", hall:[1.4, 4000, 0.7, 0.9], room:[0.6, 4500, 0.8, 0.7],
+    sc:{ "*":"phrygian" }, lead:"organ",
     layer(md, s, bar, t, sd, bass){
       if(s===0 && bar%2===0) iDrone(bass-12, t, sd*32, 0.06, 300);
       if(s===2 || s===5 || s===11) dBlock(t, 1000 + (s%3)*260, 0.5);
@@ -455,15 +461,15 @@ const MUSIC_ARENAS = {
     } },
   // Abismo — Fa, tritonos; dron del vacío, oleajes al revés y un susurro agudo
   abismo:   { tr:-4, tempo:0.85, bright:0.7, kit:"void", hall:[2.8, 3500, 0.2, 1.8], room:[1.0, 4000, 0.3, 1.4], wet:1.15,
-    prog:{ wave:["Am","Ebm","Am","Bb"], prelude:["Am","Ebm","Bb","E"], boss:["Am","Ebm","Bb","E"] },
+    sc:{ "*":"phrygian", boss:"locrian" }, lead:"choirL",
     layer(md, s, bar, t, sd, bass, pad){
       if(s===0 && bar%2===0) iDrone(bass-12, t, sd*32, 0.07, 220);
       if(s===0 && bar%2===1) iSwell(t, sd*16, 0.06, 600);
       if(s===8 && bar%4===2) _tone(t, "sine", _mf(pad[0]+18), 0, 1.6, 0.02, reverbSend, 0.4);
     } },
   // Minas Profundas — Fa sostenido armónico; picos contra la roca y tambor de trabajo
-  minas:    { tr:-3, tempo:1.04, bright:0.9, kit:"mine", hall:[1.3, 3800, 0.65, 0.8], room:[0.5, 4200, 0.75, 0.6],
-    prog:{ wave:["Am","Dm","E","Am"], prelude:["Am","F","Dm","E"], boss:["Am","F","E","E"] },
+  minas:    { tr:-3, tempo:1.04, bright:0.72, kit:"mine", hall:[1.3, 3800, 0.65, 0.8], room:[0.5, 4200, 0.75, 0.6],
+    sc:{ "*":"harmonic" }, lead:"pluck",
     layer(md, s, bar, t, sd){
       if(s%4===0) dTom(t, 72, 0.5);
       if(s===7 || s===15) iAnvil(t, 0.04, 1040 + (bar%2)*140);
@@ -471,96 +477,427 @@ const MUSIC_ARENAS = {
     } },
   // Arena Infernal — Mi frigio dominante, la más rápida; tambores de guerra, metales y toms
   infernal: { tr:-5, tempo:1.1, bright:1.2, kit:"war", hall:[2.2, 4000, 0.4, 1.4], room:[0.7, 4500, 0.5, 1],
-    prog:{ wave:["Am","Bb","Am","E"], prelude:["Am","Bb","Dm","E"], boss:["Am","Bb","E","E"] },
+    sc:{ "*":"phrygdom" }, lead:"brass",
     layer(md, s, bar, t, sd, bass, pad){
       if(s===0 || s===10) iBrass([pad[0]-12, pad[0]-5], t, sd*3, 0.05, 1500);
       if(s===3 || s===6 || s===11 || s===14) dTaiko(t, 0.4);
       if(md==="boss" && s>=9 && s%2===1) dTom(t, 120-(s-9)*9, 0.5);
     } }
 };
-const M = {mode:"off", level:1, next:0, step:0, bar:0, timer:null, pending:null, arena:"_", P:MUSIC_ARENAS._};
+/* ---------------- instrumentos nuevos (melodía, arpa, coro, órgano) ---------------- */
+// Formas de onda propias (una por contexto): órgano de tubos (registros 8'-4'-2 2/3') y cuerda pulsada.
+function _pwave(kind){
+  const W = AU.waves || (AU.waves = {});
+  if(W[kind]) return W[kind];
+  const H = kind==="organ" ? [0, 1, 0.55, 0.32, 0.2, 0.05, 0.1, 0, 0.06] : [0, 1, 0.55, 0.36, 0.26, 0.18, 0.13, 0.1, 0.08, 0.06];
+  return (W[kind] = audioCtx.createPeriodicWave(new Float32Array(H.length), new Float32Array(H)));
+}
+// Voz de melodía. kind: "lead" (pulso con vibrato, retro), "horn" (trompa solemne: el filtro se abre
+// al atacar), "organ", "choirL" (una voz de coro: formante "a"), "low" (cello/contrabajo).
+function iLead(n, t, len, vol, kind){
+  const f = _mf(n), o = audioCtx.createOscillator(), fl = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+  fl.type = "lowpass"; let atk = 0.012, rel = Math.min(0.45, 0.08 + len*0.35);
+  if(kind==="organ"){ o.setPeriodicWave(_pwave("organ")); fl.frequency.value = 5000; atk = 0.02; rel = 0.12; }
+  else if(kind==="horn"){ o.type = "sawtooth"; fl.Q.value = 0.8; fl.frequency.setValueAtTime(f*1.2, t); fl.frequency.linearRampToValueAtTime(Math.min(5000, f*4.5), t+0.1); fl.frequency.setTargetAtTime(Math.min(3500, f*2.6), t+0.12, 0.25); atk = 0.06; }
+  else if(kind==="choirL"){ o.type = "sawtooth"; fl.type = "bandpass"; fl.frequency.value = Math.max(650, Math.min(1100, f*1.6)); fl.Q.value = 1.6; atk = 0.1; vol *= 2.2; }
+  else if(kind==="low"){ o.type = "sawtooth"; fl.frequency.value = 480; fl.Q.value = 0.7; atk = 0.05; rel = Math.min(0.6, rel+0.1); }
+  else { o.type = "square"; fl.frequency.value = Math.min(7000, f*5); vol *= 0.8; }
+  o.frequency.value = f;
+  const end = t + atk + len + rel;
+  if(len > 0.28 && kind!=="organ" && kind!=="low"){ // vibrato que entra de a poco en las notas largas
+    const l = audioCtx.createOscillator(), lg = audioCtx.createGain(); l.frequency.value = kind==="choirL" ? 4.8 : 5.6;
+    lg.gain.setValueAtTime(0.0001, t); lg.gain.linearRampToValueAtTime(f*0.006, t + Math.min(0.6, len*0.7));
+    l.connect(lg); lg.connect(o.frequency); l.start(t); l.stop(end + 0.05);
+  }
+  _env(g, t, atk, vol, Math.max(0, len - atk)*0.9, rel);
+  o.connect(fl); fl.connect(g); g.connect(musicBus); g.connect(reverbSend);
+  o.start(t); o.stop(end + 0.05);
+  return g;
+}
+// Cuerda pulsada: arpa (larga, redonda) o "pluck" (corta, brillante)
+function iPluck(n, t, vol, dec, harp){
+  const f = _mf(n), o = audioCtx.createOscillator(), fl = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+  if(harp) o.type = "triangle"; else o.setPeriodicWave(_pwave("pluck"));
+  o.frequency.value = f; fl.type = "lowpass";
+  fl.frequency.setValueAtTime(Math.min(12000, f*(harp ? 6 : 9)), t); fl.frequency.exponentialRampToValueAtTime(Math.max(200, f*1.4), t + dec*0.6);
+  _env(g, t, 0.003, vol, 0, dec);
+  o.connect(fl); fl.connect(g); g.connect(musicBus); g.connect(reverbSend);
+  o.start(t); o.stop(t + dec + 0.06);
+  return g;
+}
+// Coro: dos sierras por nota por dos formantes compartidos ("a" oscura), ataque lento
+function mChoir(notes, t, dur, vol, cutoff){
+  const g = audioCtx.createGain(), f1 = audioCtx.createBiquadFilter(), f2 = audioCtx.createBiquadFilter(), lp = audioCtx.createBiquadFilter();
+  f1.type = "bandpass"; f1.frequency.value = 720; f1.Q.value = 2.5;
+  f2.type = "bandpass"; f2.frequency.value = 1180; f2.Q.value = 3.5;
+  lp.type = "lowpass"; lp.frequency.value = Math.min(cutoff||2200, 5000);
+  f1.connect(lp); f2.connect(lp); lp.connect(g);
+  _env(g, t, Math.min(0.9, dur*0.3), vol*2.4*Math.min(1, 3/notes.length), dur*0.45, dur*0.45);
+  g.connect(musicBus); g.connect(reverbSend);
+  for(const n of notes) for(const d of [-9, 9]){
+    const o = audioCtx.createOscillator(); o.type = "sawtooth"; o.frequency.value = _mf(n); o.detune.value = d;
+    o.connect(f1); o.connect(f2); o.start(t); o.stop(t + dur + 0.15);
+  }
+  return g;
+}
+// Órgano de acordes (una voz por nota, sin desafinar: el vals del Hechicero)
+function mOrgan(notes, t, dur, vol){
+  const g = audioCtx.createGain(); _env(g, t, 0.02, vol*Math.min(1, 3/notes.length), Math.max(0, dur-0.05), 0.12);
+  g.connect(musicBus); g.connect(reverbSend);
+  for(const n of notes){ const o = audioCtx.createOscillator(); o.setPeriodicWave(_pwave("organ")); o.frequency.value = _mf(n); o.connect(g); o.start(t); o.stop(t + dur + 0.2); }
+  return g;
+}
+
+/* ---------------- intérprete de la partitura (music-score.js) ---------------- */
+// Se compila una vez por pieza: las cadenas pasan a eventos por semicorchea.
+function _msMel(str, aug){
+  const ev = []; let at = 0, d = 4; aug = aug||1;
+  for(const tk of String(str).replace(/\|/g, " ").trim().split(/\s+/)){
+    const m = /^(r|[1-7])([',]*)([#b]?)(?::(\d+))?$/.exec(tk); if(!m) continue;
+    if(m[4]) d = +m[4];
+    if(m[1]!=="r"){ let oc = 0; for(const c of m[2]) oc += c==="'" ? 1 : -1; ev.push({ at:at*aug, len:d*aug, deg:(+m[1]-1) + 7*oc, acc:m[3]==="#" ? 1 : (m[3]==="b" ? -1 : 0) }); }
+    at += d;
+  }
+  return { ev, len:at*aug };
+}
+function _msPat(str){
+  const ev = []; let at = 0, d = 1;
+  for(const tk of String(str).replace(/\|/g, " ").trim().split(/\s+/)){
+    const m = /^([^:]+)(?::(\d+))?$/.exec(tk); if(!m) continue;
+    if(m[2]) d = +m[2];
+    if(m[1]!=="r"){ // se decodifica acá una vez: índice de voz del arpegio / semitonos del bajo
+      const e = { at, len:d, tk:m[1], ai:-1, ao:0, semi:0 }, a = /^(\d)('*)$/.exec(m[1]);
+      if(a){ e.ai = +a[1]; e.ao = a[2].length; } else if(/^[+-]\d+$/.test(m[1])) e.semi = +m[1];
+      ev.push(e);
+    }
+    at += d;
+  }
+  // índice por paso: arranques de cada evento
+  const by = {}; for(const e of ev) by[e.at] = e;
+  return { ev, by, len:Math.max(1, at) };
+}
+function _msChords(str, steps){
+  const ev = []; let at = 0;
+  for(const tk of String(str).replace(/\|/g, " ").trim().split(/\s+/)){
+    const m = /^([b#]?)([1-7])([Mmdas]?)(7|9)?(?::(\d+))?$/.exec(tk); if(!m) continue;
+    const len = m[5] ? +m[5] : steps;
+    ev.push({ at, len, acc:m[1]==="b" ? -1 : (m[1]==="#" ? 1 : 0), deg:+m[2]-1, q:m[3]||"", ext:m[4]||"" });
+    at += len;
+  }
+  return { ev, len:Math.max(1, at) };
+}
+function _msPart(p){
+  const c = Object.assign({}, p);
+  if(p.m){ const list = Array.isArray(p.m) ? p.m : [p.m]; const ev = []; let off = 0;
+    for(const name of list){ const r = _msMel(MUSIC_MOTIFS[name] || name, p.aug); for(const e of r.ev) ev.push(Object.assign({}, e, { at:e.at + off })); off += r.len; }
+    const by = {}; for(const e of ev) by[e.at] = e; c.mel = { ev, by, len:Math.max(1, off) };
+  }
+  if(p.pat) c.pt = _msPat(p.pat);
+  return c;
+}
+function _msSection(S, key){
+  let d = S.sec[key]; if(!d) return null;
+  if(d.from){ // variación de otra sección: mismas capas, con cambios
+    const b = S.sec[d.from]; let parts = b.parts.slice();
+    if(d.swap) for(const k of Object.keys(d.swap)) parts[+k] = d.swap[k];
+    if(d.add) parts = parts.concat(d.add);
+    d = Object.assign({}, b, d, { parts, from:null });
+  }
+  const steps = d.steps || S.steps || 16;
+  return { key, bars:d.bars||8, steps, tempo:d.tempo||1, ch:_msChords(d.ch || "1", steps), parts:d.parts.map(_msPart) };
+}
+function _msPiece(name){
+  const S = MUSIC_SCORE[name]; if(!S) return null;
+  if(!S._c){ S._c = {}; for(const k of Object.keys(S.sec)) S._c[k] = _msSection(S, k); }
+  return S;
+}
+
+/* ---------------- secuenciador ---------------- */
+const M = {mode:"off", level:1, next:0, step:0, bar:0, timer:null, pending:null, arena:"_", P:MUSIC_ARENAS._,
+  S:null, pk:null, sec:null, fi:0, sb:0, key:57, sc:MUSIC_SCALES.aeolian, ext:"", vl:null, ch:null, chRoot:57, bassR:45,
+  int:0, lvBar:0, phase:1, phaseT:1, dirT:0, auto:null, seam:false, echo:null, cx:{melOn:false}};
+function _pieceFor(mode, arena){ return (mode==="boss" && arena==="infernal") ? "sorcerer" : (MUSIC_MODES[mode] || "menu"); }
 function _stepDur(){
-  const md = MUSIC_MODES[M.mode]; let bpm = md ? md.bpm : 80;
-  if(M.mode==="wave" || M.mode==="prelude" || M.mode==="boss") bpm *= (M.P.tempo||1);
+  const S = M.S; let bpm = S ? S.bpm : 80;
+  if(S && S.arena) bpm *= (M.P.tempo||1);
+  if(M.sec) bpm *= M.sec.tempo||1;
   if(M.mode==="wave") bpm += Math.min(18, (M.level-1)*2);
   return 60/bpm/4;
 }
-function _playStep(s, bar, t){
-  const md = MUSIC_MODES[M.mode]; if(!md) return;
-  const P = M.P || MUSIC_ARENAS._, arenaOn = M.mode!=="menu";
-  const prog = (arenaOn && P.prog && P.prog[M.mode]) || md.prog;
-  const ch0 = CH[prog[bar % prog.length]] || CH.Am, tr = arenaOn ? (P.tr||0) : 0;
-  const bass = ch0[0]+tr, pad = ch0[1].map(n=>n+tr);
-  const sd = _stepDur(), barLen = sd*16, lvl = M.level, br = arenaOn ? (P.bright||1) : 1, pw = arenaOn ? P.padWave : null, pl = arenaOn ? P.padLfo : 0;
-  if(M.mode==="menu"){
-    if(s===0) mPad(pad, t, barLen*1.05, 0.1, 1000);
-    if(s%2===0){ const arp = [pad[0], pad[1], pad[2], pad[1]+12, pad[2], pad[1], pad[0]+12, pad[2]]; mPizz(arp[(s/2)|0]+12, t, 0.24); }
-    if(s===0) mStac(bass, t, barLen*0.9, 0.16, 500, "triangle");
-  } else if(M.mode==="wave"){
-    if(s===0) mPad(pad, t, barLen*1.02, 0.045, 1300*br, 0, pw, pl);
-    // ostinato de cuerdas en semicorcheas (acentos en cada tiempo)
-    const tones = [pad[0], pad[2], pad[1], pad[2]];
-    const n = (s>=12 && bar%2===1) ? [pad[2]+12, pad[1]+12, pad[2], pad[1]][s-12] : tones[s%4];
-    mStac(n+12, t, sd*0.9, s%4===0 ? 0.075 : 0.045, 2600*br);
-    if(s%2===0) mStac(bass + (s%8===6 ? 12 : 0), t, sd*1.6, 0.11, 600);
-    // batería: más llena cuanto más alto el nivel
-    if(s===0 || s===8 || (lvl>=4 && s===10) || (lvl>=7 && s===3)) kKick(t, 1, P);
-    if(s===4 || s===12) kSnare(t, 1, P);
-    if(bar%4===3 && s>=13) kSnare(t, 0.5 + (s-13)*0.2, P);
-    if(lvl>=6 ? true : s%2===0) kHat(t, s%4===2 ? 1 : 0.6, P);
-  } else if(M.mode==="prelude"){
-    if(s===0) mPad(pad, t, barLen*1.05, 0.11, 1000*br, -35, pw, pl);
-    if(s%4===0) mStac(bass, t, sd*3, 0.2, 500);
-    if(s===0 || (bar%2===1 && s===12)) dTimp(t, 1.3);
-    if(s%4===2) mStac(pad[2]+12, t, sd*0.8, 0.07, 1800*br);
-  } else if(M.mode==="boss"){
-    // pad oscuro que se desafina y se afina (tema original), cuerdas graves en semitonos
-    if(s===0) mPad(bar%2===0 ? pad : [pad[0]-12, pad[1], pad[2]+1], t, barLen*1.05, 0.055, 800*br, -55, pw, pl);
-    if(s%2===0 || s>=12) mStac(bass + BOSS_LOW[s], t, sd*1.4, s%4===0 ? 0.13 : 0.08, 700);
-    if(s===0 || s===3 || s===6 || s===8 || s===11 || s===14) dTaiko(t, s===0||s===8 ? 0.85 : 0.5);
-    if(s===12) { kSnare(t, 0.9, P); kKick(t, 0.8, P); }
-    if(s%4===2) kHat(t, 0.4, P);
-    // chillido de cuerdas agudas disonantes cada 4 compases
-    if(bar%4===3 && s===8) mStac(pad[2]+25, t, barLen*0.5, 0.03, 3200);
-  } else if(M.mode==="victory"){
-    if(s===0) mPad(pad.map(x=>x+12), t, barLen*1.05, 0.09, 1600);
-    if(s%2===0){ const arp = [pad[0], pad[1], pad[2], pad[1]]; mPizz(arp[(s/2)%4]+24, t, 0.22); }
-    if(s===0) dTimp(t, 0.6);
-    if(bar>=7 && s===15) _musicRequest("menu", 1, t);
-  } else if(M.mode==="defeat"){
-    if(s===0) mPad(pad, t, barLen*1.1, 0.11, 700, -40);
-    if(s===0) mStac(bass-12, t, barLen*0.9, 0.2, 320, "triangle");
+// Arranca una pieza en el compás que viene (se llama al cruzar de modo o al encadenar piezas)
+function _pieceInit(pk){
+  const S = _msPiece(pk) || _msPiece("menu");
+  M.pk = pk; M.S = S; M.fi = 0; M.sb = 0; M.step = 0; M.seam = false;
+  const P = M.P || MUSIC_ARENAS._, ar = S.arena;
+  M.key = S.key + (ar ? (P.tr||0) : 0);
+  const scn = (ar && P.sc && (P.sc[pk] || P.sc["*"])) || S.scale;
+  M.sc = MUSIC_SCALES[scn] || MUSIC_SCALES.aeolian;
+  M.ext = ar ? (P.ext||"") : "";
+  M.phase = M.phaseT;
+  M.sec = S._c[_formOf(S)[0]];
+  // eco rítmico (corchea con puntillo) para la melodía y los arpegios
+  if(audioCtx && AU.buses[AU.cur] && AU.buses[AU.cur].dl){ const b = AU.buses[AU.cur]; b.dl.delayTime.setValueAtTime(Math.min(0.9, (S.echo||3)*_stepDur()), audioCtx.currentTime); b.eg.gain.value = S.echo ? 0.3 : 0; }
+}
+function _formOf(S){ return S.pform ? (S.pform[M.phase] || S.pform[1]) : S.form; }
+// Pasa a la sección siguiente de la forma (o encadena la pieza que sigue)
+function _nextSection(t){
+  const S = M.S, form = _formOf(S);
+  M.fi++; M.sb = 0;
+  if(M.seam && S.then){ M.mode = S.then; _pieceInit(S.then); return; }
+  if(M.fi >= form.length){
+    if(S.then){ if(S.seam){ M.mode = S.then; _pieceInit(S.then); return; } _musicRequest(S.then, 1, t); M.fi = S.loop||0; }
+    else M.fi = S.pform ? 0 : (S.loop||0);
+  }
+  M.sec = S._c[form[M.fi]];
+}
+// nota de un grado de la escala actual (índice absoluto: 7 = una octava arriba)
+function _degN(idx, acc){ const o = Math.floor(idx/7), k = idx - o*7; return M.key + M.sc[k] + 12*o + (acc||0); }
+// Acorde -> fundamental e intervalos (con la calidad forzada si la pide la partitura)
+function _chordOf(c){
+  const sc = M.sc, k = c.deg, r0 = sc[k], iv = x=>{ let d = sc[(k+x)%7] - r0; if(d < 0) d += 12; return d; };
+  let third = iv(2), fifth = iv(4); const q = c.q || (c.acc ? "M" : "");
+  if(q==="M"){ third = 4; fifth = 7; } else if(q==="m"){ third = 3; fifth = 7; } else if(q==="d"){ third = 3; fifth = 6; } else if(q==="a"){ third = 4; fifth = 8; } else if(q==="s"){ third = 5; fifth = 7; }
+  const out = [0, third, fifth], ext = c.ext || M.ext;
+  if(ext==="7") out.push(q==="M" && c.deg===4 ? 10 : iv(6)); else if(ext==="9") out.push(14);
+  return { root:M.key + r0 + (c.acc||0), iv:out };
+}
+// CONDUCCIÓN DE VOCES: 4 voces; cada una va a la nota del acorde nuevo más cercana (se prueban todas las
+// asignaciones y gana la que menos se mueve, sin cruzar voces y doblando la fundamental).
+function _voiceLead(prev, root, iv, lo, hi){
+  const pcs = iv.map(x=>((root + x) % 12 + 12) % 12), n = pcs.length, V = 4, total = Math.pow(n, V), need = (1<<n) - 1;
+  let best = null, bc = 1e9;
+  for(let code = 0; code < total; code++){
+    let c = code, used = 0, cost = 0, dbl = 0; const out = [0,0,0,0];
+    for(let v = 0; v < V; v++){
+      const j = c % n; c = (c/n)|0; if(used & (1<<j)) dbl = j; used |= 1<<j;
+      const p = prev[v]; let tn = p - (((p - pcs[j]) % 12) + 12) % 12; if(p - tn > 6) tn += 12;
+      while(tn < lo) tn += 12; while(tn > hi) tn -= 12;
+      out[v] = tn; cost += Math.abs(tn - p);
+    }
+    if(used!==need) continue;
+    if(n===3) cost += dbl===1 ? 5 : (dbl===2 ? 2 : 0); // mejor doblar la fundamental que la tercera
+    for(let v = 1; v < V; v++) if(out[v] <= out[v-1]) cost += 7; // voces cruzadas o al unísono
+    if(cost < bc){ bc = cost; best = out; }
+  }
+  return best || prev;
+}
+function _chordAt(sec, T){ const L = sec.ch.len, u = T % L; for(const c of sec.ch.ev) if(u >= c.at && u < c.at + c.len) return c; return sec.ch.ev[0]; }
+function _nextChordRoot(sec, T){ const c = _chordAt(sec, T), nx = _chordAt(sec, (T - (T % sec.ch.len)) + c.at + c.len); const r = _chordOf(nx).root; return 36 + ((r - 36) % 12 + 12) % 12; }
+// Instrumento de una nota (melodía, arpegio, bajo)
+function _play1(inst, n, t, len, vol, cut){
+  switch(inst){
+    case "flute": return iFlute(n, t, len, vol);
+    case "bell": return iBell(n, t, vol, Math.max(1.2, len*2), 1.41, 1.4);
+    case "celesta": return iBell(n, t, vol, Math.max(0.9, len*1.6), 4, 1.1);
+    case "brass": return iBrass([n], t, len, vol*1.3, cut||1500);
+    case "pluck": return iPluck(n, t, vol, Math.max(0.25, Math.min(0.9, len*1.5)), false);
+    case "harp": return iPluck(n, t, vol, 1.3, true);
+    case "pizz": return mPizz(n, t, vol);
+    case "stac": return mStac(n, t, len, vol, cut||2200);
+    case "sub": _tone(t, "sine", _mf(n), 0, len, vol); return _tone(t, "triangle", _mf(n+12), 0, len*0.6, vol*0.3);
+    default: return iLead(n, t, len, vol, inst);
+  }
+}
+function _playPad(inst, notes, t, dur, vol, cut, dt, P, arena){
+  if(inst==="choir") return mChoir(notes, t, dur, vol, cut);
+  if(inst==="organ") return mOrgan(notes, t, dur, vol);
+  const wave = inst==="glass" ? "triangle" : (arena && P.padWave) || "sawtooth";
+  return mPad(notes, t, dur, vol, cut, dt||0, wave, arena ? P.padLfo : 0);
+}
+function _vel(ch){ return ch==="X" ? 1 : ch==="x" ? 0.7 : ch==="-" ? 0.35 : ch==="r" ? 0.4 : 0; }
+function _drum(lane, ch, t, v, sd, s, P){
+  const kit = P || MUSIC_ARENAS._;
+  if(ch==="r"){ for(let i=0;i<3;i++) _drum(lane, "-", t + i*sd/3, v*(0.8 + i*0.25), sd, s, P); return; }
+  v *= _vel(ch); if(v<=0) return;
+  switch(lane){
+    case "k": kKick(t, v, kit); break;
+    case "s": kSnare(t, v, kit); break;
+    case "h": kHat(t, v, kit); break;
+    case "o": _nz(t, AU.nz.white, 0.18, 0.08*v, musicBus, "highpass", 7000); break;
+    case "T": dTaiko(t, v*0.8); break;
+    case "t": dTom(t, 190 - s*7, v*0.8); break;
+    case "m": { const f = _mf(M.bassR); _tone(t, "sine", f*1.02, f, 0.9, 0.55*v).connect(reverbSend); _nz(t, AU.nz.brown, 0.12, 0.12*v, musicBus, 0,0,0,0, 0.7); break; }
+    case "c": _nz(t, AU.nz.bright, 1.6, 0.05*v, musicBus, "highpass", 4500, 0, 0.003).connect(reverbSend); break;
+    case "g": { const f = _mf(M.bassR - 12); _tone(t, "sine", f*1.5, f*1.47, 3.2, 0.14*v, reverbSend, 0.02); _tone(t, "sine", f, f*0.99, 3.5, 0.3*v, musicBus, 0.01); _nz(t, AU.nz.brown, 2.2, 0.12*v, reverbSend, 0,0,0, 0.02, 0.5); break; }
+    case "b": dBlock(t, 900 + (s%4)*120, 0.8*v); break;
+  }
+}
+// ¿esta capa suena en este compás? (intensidad, fase del jefe, cada cuántos compases)
+function _partOn(p){
+  if(p.lv && M.lvBar < p.lv) return false;
+  if(p.lvx && M.lvBar >= p.lvx) return false;
+  if(p.ph && M.phase < p.ph) return false;
+  if(p.phx && M.phase > p.phx) return false;
+  if(p.every && M.sb % p.every) return false;
+  return true;
+}
+function _playStep(s, t){
+  const S = M.S, sec = M.sec; if(!S || !sec) return;
+  const P = M.P || MUSIC_ARENAS._, arena = !!S.arena, steps = sec.steps, sd = _stepDur();
+  const T = M.sb*steps + s, br = arena ? (P.bright||1) : 1, dyn = arena ? 0.82 + 0.3*M.int : 1;
+  // suingueo y un poco de "mano humana" en lo rítmico
+  const tg = t + (S.swing && (s & 1) ? sd*S.swing : 0);
+  // acorde: si empieza uno en este paso, las voces se conducen desde el anterior
+  const c = _chordAt(sec, T), cStart = (T % sec.ch.len) === c.at;
+  if(cStart || !M.vl){
+    const k = _chordOf(c); M.ch = k; M.chRoot = k.root;
+    M.bassR = 36 + ((k.root - 36) % 12 + 12) % 12;
+    M.vl = _voiceLead(M.vl || [55, 60, 64, 67], k.root, k.iv, 50, 76);
+  }
+  const vl = M.vl.slice().sort((a,b)=>a-b), bassR = M.bassR, fill8 = (M.sb % 8)===7, fill4 = !fill8 && (M.sb % 4)===3;
+  let melOn = false;
+  for(const p of sec.parts){
+    if(!_partOn(p)) continue;
+    const v = (p.v||0.05);
+    switch(p.p){
+      case "pad": if(cStart) _playPad(p.i, vl.map(n=>n + (p.o||0)), t, c.len*sd*1.04, v, (p.c||1100)*br, p.dt, P, arena); break;
+      case "stab": if(cStart && s===0) iBrass(vl.slice(-3).map(n=>n + (p.o||0)), t, sd*3, v*dyn, 1700*br); break;
+      case "mel": {
+        const L = p.mel.len, e = p.mel.by[T % L]; melOn = true;
+        if(!e) break;
+        const inst = (p.i==="lead" && arena && P.lead) ? P.lead : p.i;
+        const n = _degN(e.deg + (p.hz||0), e.acc) + (p.o||0), g = _play1(inst, n, t, e.len*sd*0.96, v*(arena ? 0.9 + 0.2*M.int : 1), 1500*br);
+        if(p.e && g && M.echo) try{ g.connect(M.echo); }catch(err){}
+        break;
+      }
+      case "arp": {
+        const e = p.pt.by[T % p.pt.len]; if(!e) break;
+        if(e.ai < 0) break;
+        const i = e.ai, n = vl[i % vl.length] + 12*(Math.floor(i/vl.length) + e.ao) + (p.o||0);
+        const acc = p.acc && (s % 4)===0 ? p.acc : 1, len = e.len*sd*(p.len||0.9);
+        const g = _play1(p.i, n, tg + (Math.random()-0.5)*0.004, len, v*acc*dyn*(0.93 + Math.random()*0.14), (p.c||2200)*br);
+        if(p.e && g && M.echo) try{ g.connect(M.echo); }catch(err){}
+        break;
+      }
+      case "comp": { const e = p.pt.by[T % p.pt.len]; if(e && e.tk==="x") mOrgan(vl.map(n=>n + (p.o||0)), tg, e.len*sd*(p.len||0.8), v); break; }
+      case "bass": {
+        const e = p.pt.by[T % p.pt.len]; if(!e) break;
+        const k = M.ch, tk = e.tk; let n = bassR;
+        if(tk==="F") n += k.iv[2]; else if(tk==="T") n += k.iv[1]; else if(tk==="O") n += 12; else if(tk==="S") n += (k.iv[3] || 10);
+        else if(tk==="A"){ const nx = _nextChordRoot(sec, T); n = nx + (nx > bassR ? -1 : 1); }
+        else n += e.semi;
+        n += (p.o||0);
+        const acc = p.acc && (s % 4)===0 ? p.acc : 1;
+        if(p.i==="low") iLead(n, tg, e.len*sd*0.95, v*acc, "low");
+        else _play1(p.i, n, tg, Math.max(sd*0.9, e.len*sd*0.85), v*acc*dyn, p.c||600);
+        break;
+      }
+      case "dr": {
+        const f = fill8 && p.f8 ? p.f8 : (fill4 && p.f4 ? p.f4 : null), dv = (p.v||1)*dyn;
+        for(const lane of "ksohTtmcgb"){
+          const str = (f && f[lane]!==undefined) ? f[lane] : p[lane]; if(!str) continue;
+          const ch = str[s % str.length]; if(ch && ch!==".") _drum(lane, ch, tg + (Math.random()-0.5)*0.004, dv, sd, s, arena ? P : null);
+        }
+        break;
+      }
+      case "toll": if(s===0){ iBell(bassR + 24, t, v, 4, 1.41, 1.6); iBell(bassR + 30, t + sd*2, v*0.7, 3.5, 1.41, 1.4); } break;
+      case "anvil": if(s===4 || s===8) iAnvil(t, v, 520 + (s===8 ? 90 : 0)); break;
+    }
   }
   // instrumento característico de la arena (oleadas, preludio y jefe)
-  if(P.layer && (M.mode==="wave" || M.mode==="boss" || M.mode==="prelude") && (M.mode!=="prelude" || s%2===0)) P.layer(M.mode, s, bar, t, sd, bass, pad, lvl);
+  if(arena && P.layer && steps===16 && (M.mode!=="prelude" || s%2===0)){ M.cx.melOn = melOn; P.layer(M.mode, s, M.bar, t, sd, bassR, vl, M.level, M.cx); }
 }
-// Golpe de entrada (stinger) del jefe y de la victoria
+// Cambio de fase del jefe: golpe de platillo, gong y taikos en el compás que entra
+function _phaseHit(t){
+  _drum("c", "X", t, 1, 0.1, 0, null); _drum("g", "X", t, 0.8, 0.1, 0, null); dTaiko(t, 1); dTaiko(t + 0.12, 0.6);
+}
+// Golpes (stingers) de MUSIC_STINGERS: frases cortas sobre la tonalidad y el acorde que suenan.
+// toMusic = por el bus de la música (entrada del jefe, victoria); si no, por el de efectos.
+function _musicStinger(kind, toMusic, at){
+  const G = MUSIC_STINGERS[kind]; if(!G || !audioCtx) return 0;
+  let t = at || audioCtx.currentTime + 0.02;
+  const playing = M.mode!=="off" && M.S && !M.pending;
+  if(!at && playing){ const sd = _stepDur(); let g = M.next - Math.floor((M.next - t)/sd)*sd; if(g < t) g += sd; if(g - t < 0.16) t = g; } // a tempo
+  // fundamental: la tonalidad de la pieza que entra (golpe de cruce), la que viene si hay un cruce en
+  // curso, o el acorde que está sonando
+  let root = 57;
+  if(toMusic) root = M.key;
+  else if(M.pending){ const S = MUSIC_SCORE[_pieceFor(M.pending.mode, M.pending.arena)]; if(S) root = S.key + (S.arena ? ((MUSIC_ARENAS[M.pending.arena]||{}).tr||0) : 0); }
+  else if(playing) root = M.chRoot;
+  root = 52 + ((root - 52) % 12 + 12) % 12;
+  const u = 60/G.bpm/4;
+  const mb = musicBus, rs = reverbSend;
+  if(!toMusic){ musicBus = AU.sfxIn; reverbSend = AU.wetHi; }
+  let end = 0;
+  try{
+    if(G.m){ const sc = MUSIC_SCALES[G.scale] || MUSIC_SCALES.ionian, r = G._m || (G._m = _msMel(G.m));
+      for(const e of r.ev){ const o = Math.floor(e.deg/7), k = e.deg - o*7, n = root + sc[k] + 12*o + e.acc + (G.o||0);
+        _play1(G.i, n, t + e.at*u, e.len*u*0.95, G.v); if(G.i==="brass") _play1("brass", n - 12, t + e.at*u, e.len*u*0.95, G.v*0.5);
+        end = Math.max(end, (e.at + e.len)*u); } }
+    if(G.arp){ const vl = (playing && M.vl ? M.vl : [root, root+4, root+7, root+12]).slice().sort((a,b)=>a-b), r = G._a || (G._a = _msPat(G.arp));
+      for(const e of r.ev){ if(e.ai < 0) continue; const n = vl[e.ai % vl.length] + 12*e.ao + (G.o||0);
+        iPluck(n, t + e.at*u, (G.v||0.08)*0.8, 0.9, true); end = Math.max(end, (e.at + e.len)*u); }
+      if(G.top){ const n = vl[vl.length-1] + 24 + (G.o||0); iBell(n, t + r.len*u*0.8, 0.06, 1.6, 3.5, 1.6); } }
+    if(G.pad) mChoir((playing && M.vl ? M.vl : [57, 60, 64, 67]).map(n=>n+12), t, 1.6, 0.05, 2800);
+    if(G.hit==="taiko"){ dTaiko(t, 1); dTaiko(t + 0.16, 0.6); _tone(t, "sine", 72, 28, 1.3, 0.7); }
+    if(G.hit==="timp"){ const f = _mf(root - 12); _tone(t, "sine", f*1.02, f, 1, 0.5).connect(reverbSend); _tone(t + 0.12, "sine", f*1.02, f, 1, 0.35).connect(reverbSend); }
+    if(G.gong){ _nz(t, AU.nz.bright, 1.8, 0.04, reverbSend, 0,0,0, 0.02); _tone(t, "sine", _mf(root - 24)*1.5, 0, 3, 0.12, reverbSend, 0.02); }
+  } finally { musicBus = mb; reverbSend = rs; }
+  return end + 0.4;
+}
 function _sting(kind, t){
-  const tr = M.P.tr||0;
-  if(kind==="boss"){
-    _tone(t, "sine", 72, 28, 1.3, 0.85); dTaiko(t, 1); dTaiko(t+0.18, 0.6);
-    iBrass([33+tr, 34+tr, 45+tr], t, 1.4, 0.09, 1100);
-    _nz(t,AU.nz.bright,1.8,0.04,reverbSend,0,0,0, 0.02);
-  } else if(kind==="victory"){
-    _nz(t,AU.nz.bright,1.4,0.05,musicBus,0,0,0, 0.35).connect(reverbSend);
-    dTimp(t, 1); dTimp(t+0.12, 0.7);
-  }
+  if(kind==="victory"){ _nz(t,AU.nz.bright,1.4,0.05,musicBus,0,0,0, 0.35).connect(reverbSend); _drum("m", "X", t, 1, 0.1, 0, null); _drum("m", "x", t+0.12, 1, 0.1, 0, null); return; }
+  _musicStinger(kind, true, t);
+}
+
+/* ---------------- director musical: lee la partida (sin enganches) ---------------- */
+// Cada 1/4 s mira cuántos enemigos hay vivos (intensidad: entran capas), la vida/forma del jefe (fase),
+// si está el Hechicero (su tema) y si está abierta su pantalla previa (el vals "angelical").
+function _introOpen(){ try{ return typeof RUN_INTRO!=="undefined" && !!RUN_INTRO.open; }catch(e){ return false; } }
+function _musicDirector(now){
+  if(M.dirT - now > 1) M.dirT = 0; // contexto nuevo
+  if(now < M.dirT) return; M.dirT = now + 0.25;
+  let n = 0, b = null, ac = null, intro = false;
+  try{ if(typeof enemies!=="undefined" && enemies) for(const e of enemies) if(e && e.alive) n++; }catch(e){}
+  try{ if(typeof boss!=="undefined" && boss && boss.alive) b = boss; }catch(e){}
+  try{ if(typeof activeChampion!=="undefined" && activeChampion && activeChampion.alive) ac = activeChampion; }catch(e){}
+  intro = _introOpen();
+  // intensidad 0..1: la horda (25+ vivos = todo) y, en las oleadas, el nivel de la partida
+  let tgt = Math.min(1, n/26);
+  if(M.mode==="wave") tgt = Math.max(tgt, Math.min(0.5, (M.level-1)/14));
+  const foe = b || (ac && ac.maxHp ? ac : null);
+  if(foe && foe.maxHp > 0) tgt = Math.max(tgt, 0.35 + 0.65*(1 - Math.max(0, Math.min(1, foe.hp/foe.maxHp))));
+  M.int += (tgt - M.int) * (tgt > M.int ? 0.35 : 0.08);
+  // fase del jefe: la forma del Hechicero (1..3) o su vida (>66 % / >33 % / el resto)
+  if(foe && foe.maxHp > 0){ const f = foe.hp/foe.maxHp; M.phaseT = foe.bossPhase ? Math.max(1, Math.min(3, foe.bossPhase)) : (f > 0.66 ? 1 : (f > 0.33 ? 2 : 3)); }
+  else if(M.mode!=="boss") M.phaseT = 1;
+  // el Hechicero como subjefe (nivel 9): su tema mientras está; al irse, vuelven las oleadas
+  const cur = M.pending ? M.pending.mode : M.mode;
+  const sorc = !!(ac && ac.type==="hechicero_supremo");
+  if(sorc && cur==="wave"){ _setMode("boss", M.level); M.auto = "sorc"; }
+  else if(M.auto==="sorc" && !sorc && cur==="boss" && !b){ M.auto = null; _setMode("wave", M.level); }
+  // pantalla previa a la partida (el Hechicero "angelical"): su vals en lidio
+  if(intro && (cur==="menu" || cur==="title")){ _setMode("intro"); M.auto = "intro"; }
+  else if(!intro && cur==="intro"){ M.auto = null; _setMode("menu"); }
 }
 function _schedTick(){
   if(!audioCtx || M.mode==="off") return;
   const now = audioCtx.currentTime;
+  try{ _musicDirector(now); }catch(e){}
   if(M.next < now - 0.3) M.next = now + 0.05; // la pestaña estuvo pausada: retoma sin ráfaga
   while(M.next < now + 0.14){
     if(M.pending && M.pending.at <= M.next + 0.001){ const p = M.pending; M.pending = null; _musicSwitch(p, M.next); }
+    const S = M.S;
+    if(M.step===0 && S && !M.pending){
+      // compás nuevo: foto de la intensidad (las capas entran y salen en la barra) y cambio de fase
+      M.lvBar = M.int;
+      if(S.pform && M.phaseT!==M.phase){ const up = M.phaseT > M.phase; M.phase = M.phaseT; M.fi = 0; M.sb = 0; M.sec = S._c[_formOf(S)[0]]; if(up && audioEnabled) try{ _phaseHit(M.next); }catch(e){} }
+    }
     // durante el cruce no se programan notas del modo viejo (sus colas se apagan en el otro bus);
     // en silencio (🔇) no se crean nodos
-    if(!M.pending && audioEnabled){ try{ _playStep(M.step, M.bar, M.next); }catch(e){} }
+    if(!M.pending && audioEnabled && S){ try{ _playStep(M.step, M.next); }catch(e){ if(!M.err) M.err = String(e && e.stack || e); } }
     M.next += _stepDur();
-    if(++M.step >= 16){ M.step = 0; M.bar++; }
+    if(++M.step >= (M.sec ? M.sec.steps : 16)){
+      M.step = 0; M.bar++;
+      if(M.sec && !M.pending){
+        if(++M.sb >= M.sec.bars) _nextSection(M.next);
+        else if(M.seam && M.S.then && M.sb % 4===0){ M.mode = M.S.then; _pieceInit(M.S.then); }
+      }
+    }
   }
 }
 function _musicArenaFor(mode){
-  if(mode==="menu") return "_";
+  if(mode==="menu" || mode==="title" || mode==="intro") return "_";
   return (typeof currentArena!=="undefined" && MUSIC_ARENAS[currentArena]) ? currentArena : "_";
 }
 // Cuánto dura cada cruce: fo = fundido del viejo, gap = cuándo entra el nuevo, fi = su fundido
@@ -569,6 +906,7 @@ function _musicTrans(from, to){
   if(to==="victory") return {fo:1.1, gap:0.45, fi:0.35, sting:"victory"};
   if(to==="defeat") return {fo:1.0, gap:0.6, fi:1.6};
   if(to==="prelude") return {fo:1.2, gap:0.6, fi:1.4};
+  if(to==="intro") return {fo:0.9, gap:0.3, fi:1.2};
   if(from==="boss" && to==="wave") return {fo:1.2, gap:0.7, fi:1.4};
   return {fo:0.7, gap:0.4, fi:1.0};
 }
@@ -588,20 +926,31 @@ function _musicRequest(mode, level, now){
 function _musicSwitch(p, t){
   M.mode = p.mode; M.level = p.level||1; M.step = 0; M.bar = 0;
   M.arena = p.arena; M.P = MUSIC_ARENAS[p.arena] || MUSIC_ARENAS._;
-  const b = AU.buses[AU.cur]; musicBus = b.dry; reverbSend = b.send;
+  const b = AU.buses[AU.cur]; musicBus = b.dry; reverbSend = b.send; M.echo = b.eg || null;
   for(const g of [b.dry.gain, b.rev.gain]){ g.cancelScheduledValues(t); g.setValueAtTime(0.0001, t); g.linearRampToValueAtTime(1, t+(p.fi||0.8)); }
   _setSpace(p.arena);
-  if(p.sting && audioEnabled) _sting(p.sting, t);
+  _pieceInit(_pieceFor(p.mode, p.arena));
+  M.lvBar = M.int;
+  if(p.sting && audioEnabled) try{ _sting(p.sting, t); }catch(e){}
 }
-// El juego pide el clima: "menu" | "wave" | "prelude" | "boss" | "victory" | "defeat".
-function setMusicMode(mode, level){
-  if(mode==="normal") mode = "wave"; // el Abismo lo pide así al caer el Carcelero
+// Pedido de modo (del juego o del director). El título sigue hasta cerrar su frase y pasa al menú
+// sin cortar (es la misma obertura).
+function _setMode(mode, level){
   if(!audioCtx || !MUSIC_MODES[mode]) { M.wanted = mode; M.wantedLevel = level; return; }
   const arena = _musicArenaFor(mode);
   if(M.mode===mode && !M.pending && M.arena===arena){ M.level = level||M.level; return; }
   if(M.pending && M.pending.mode===mode && M.pending.arena===arena){ M.pending.level = level||1; return; }
+  if(mode==="menu" && M.pk==="title" && !M.pending){ M.mode = "menu"; M.seam = true; return; }
   _musicRequest(mode, level, audioCtx.currentTime);
 }
+// El juego pide el clima: "title" | "menu" | "wave" | "prelude" | "boss" | "victory" | "defeat".
+function setMusicMode(mode, level){
+  if(mode==="normal") mode = "wave"; // el Abismo lo pide así al caer el Carcelero
+  if((mode==="menu" || mode==="title") && _introOpen()) mode = "intro"; // con la pantalla previa abierta manda el Hechicero
+  if(M.auto && mode!=="boss") M.auto = null;
+  _setMode(mode, level);
+}
+
 // Pausa: la música baja; al volver, sube.
 function musicOnState(s){
   if(!audioCtx) return;
@@ -611,9 +960,9 @@ function musicOnState(s){
   else if(s==="playing"){
     // entrar a jugar desde un menú (p.ej. la Arena Divina, que no pasa por beginLevel)
     const cur = M.pending ? M.pending.mode : M.mode;
-    if(cur==="menu" || cur==="defeat" || cur==="off") setMusicMode("wave", typeof runLevel==="number" ? runLevel : 1);
+    if(cur==="menu" || cur==="title" || cur==="intro" || cur==="defeat" || cur==="off") setMusicMode("wave", typeof runLevel==="number" ? runLevel : 1);
   }
-  else if(s!=="paused" && s!=="buff" && s!=="victory") setMusicMode("menu");
+  else if(s!=="paused" && s!=="buff" && s!=="victory") setMusicMode(s==="title" ? "title" : "menu");
   if(s!=="playing" && s!=="paused") _prewarmSpace();
 }
 function startMusic(){
@@ -622,6 +971,7 @@ function startMusic(){
   if(musicStarted) return;
   musicStarted = true;
   M.timer = setInterval(_schedTick, 25);
+  setTimeout(()=>{ try{ for(const k of Object.keys(MUSIC_SCORE)) _msPiece(k); for(const k of Object.keys(MUSIC_STINGERS)){ const G = MUSIC_STINGERS[k]; if(G.m) G._m = _msMel(G.m); if(G.arp) G._a = _msPat(G.arp); } }catch(e){} }, 1500);
   setMusicMode(M.wanted || "menu", M.wantedLevel);
 }
 // Compatibilidad con la versión anterior (la usaba el tema de fondo)
@@ -787,12 +1137,10 @@ function playSfx(type, src){
     case "heal": _tone(t0,"sine",660,990,0.25,0.14,D,0.02); _wet(_tone(t0,"sine",990,1485,0.25,0.07,D,0.02),1); len=0.27; break;
     case "shield": _tone(t0,"triangle",440,440,0.3,0.12,D,0.02); _wet(_tone(t0,"triangle",660,660,0.3,0.08,D,0.02),0); len=0.32; break;
     case "potion": _tone(t0,"sine",520,880,0.2,0.3,D,0.03); _tone(t0+0.02,"sine",1400,2100,0.06,0.04,D); len=0.22; break;
-    case "levelup": case "victory": {
-      const notes = type==="victory" ? [392,523.25,659.25,783.99,1046.5] : [523.25,659.25,783.99,1046.5];
-      notes.forEach((f,i)=>_wet(_tone(t0+i*0.1,"triangle",f,f,0.5,0.26,D,0.02),1));
-      if(type==="victory") _duck(0.4,900);
-      len=0.1*notes.length+0.5; break;
-    }
+    // subida de nivel, victoria, cristal y cofre legendario: GOLPES MUSICALES (MUSIC_STINGERS) que se
+    // tocan en la tonalidad y el acorde de la música que suena, a tempo
+    case "levelup": len = _musicStinger("levelup") || 0.8; _sv.n += 24; _duck(0.7, 450); break;
+    case "victory": len = _musicStinger("victory") || 1; _sv.n += 30; _duck(0.4, 900); break;
     case "cast": {
       const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); const f = audioCtx.createBiquadFilter(); f.type="lowpass"; f.Q.value = 4;
       f.frequency.setValueAtTime(700,t0); f.frequency.exponentialRampToValueAtTime(2600,t0+0.15);
@@ -829,13 +1177,13 @@ function playSfx(type, src){
     // ---- Botín ----
     case "chestDrop": _sub(t0,80,0.3,0.5,D); _noise(t0,0.2,0.25,"lowpass",600,0,D); _matHit(t0+0.02,"bone",0.6,D); len=0.32; break;
     case "chestShake": _noise(t0,0.06,0.12,"bandpass",900,2,D); _tone(t0,"square",140,120,0.05,0.05,D); len=0.07; break;
-    case "crystal": _wet(_tone(t0,"sine",660,660,0.5,0.1,D),1); _tone(t0+0.08,"sine",990,990,0.6,0.08,D); _wet(_tone(t0+0.16,"triangle",1320,1760,0.8,0.07,D,0.05),1); _noise(t0,0.5,0.08,"highpass",5000,0,D); len=0.9; break;
+    case "crystal": len = _musicStinger("crystal") || 1; _noise(t0,0.5,0.06,"highpass",5000,0,D); _sv.n += 30; _duck(0.55, 1300); break;
     case "chestOpen": _noise(t0,0.35,0.22,"bandpass",700,1.2,D); _tone(t0,"triangle",220,440,0.3,0.1,D); _wet(_tone(t0+0.18,"sine",880,1320,0.4,0.08,D,0.04),1); len=0.6; break;
     case "lootCommon": _tone(t0,"triangle",520,520,0.08,0.08,D); len=0.1; break;
     case "lootRare": _tone(t0,"triangle",660,660,0.1,0.1,D); _wet(_tone(t0+0.08,"triangle",990,990,0.14,0.09,D),0); len=0.24; break;
     case "lootVeryRare": [659.25,830.6,987.8].forEach((f,i)=>_wet(_tone(t0+i*0.07,"triangle",f,f,0.22,0.12,D,0.01),0)); len=0.4; break;
     case "lootLegend":
-      [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i)=>_wet(_tone(t0+i*0.08,"triangle",f,f,0.5,0.16,D,0.01),1));
+      _musicStinger("legend"); _sv.n += 40;
       _sub(t0,130,0.6,0.3,D); _noise(t0+0.35,0.6,0.06,"highpass",6500,0,D); _duck(0.4,1100); len=1.0; break;
     case "lootMythic":
       _tone(t0,"sawtooth",65,40,1.2,0.3,D,0.05); _wet(_noise(t0,0.9,0.25,"lowpass",500,0,D),1);

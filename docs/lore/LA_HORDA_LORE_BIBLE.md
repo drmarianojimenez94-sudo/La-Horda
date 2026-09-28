@@ -26,7 +26,7 @@
 | 04 | **Reino Fúngico** | `micelial` | Madre Espora | **No** | El micelio guarda ecos de los Guardianes (y de alguien más). |
 | 05 | **Arena Gélida** | `hielo` | Mago Gélido → Demonio Gélido | **GUARDIÁN 2** | Segundo cristal. Primeras pistas de que la historia del Hechicero está incompleta. |
 | 06 | **Arena Acuática** | `acuatica` | Leviatán (el "Kraken" del canon; subjefe: Kraken Joven) | **No** | Con dos cristales la realidad se vuelve inestable. |
-| 07 | **Laberinto** | `laberinto` | Guardián del Laberinto → Minotauro | **GUARDIÁN 3** | Tercer cristal. El Guardián advierte: no entregar los cristales al Hechicero (sin diálogo definitivo). |
+| 07 | **Laberinto** | `laberinto` | Guardián del Laberinto → Minotauro | **GUARDIÁN 3** | Tercer cristal. El Guardián advierte: «El que te guía… no le entregues los cristales. Las llaves eran cuatro… hacé la cuenta.» |
 | 08 | **Abismo** | `abismo` | El Que Mora Debajo | No | Punto de no retorno: el mundo se rompe y debajo se abre una mina que baja hacia el calor. |
 | 09 | **Minas Profundas** | `minas` | Cerbero, Guardián del Umbral Infernal (subjefe: Titán de Piedra; evento élite: Devoraluz) | **No** | El descenso: la luz es territorio. Matar a Cerbero **no** termina la arena: se abre el Portal Infernal y los guardianes lo **atraviesan** hacia la dimensión de la Horda. |
 | 10 | **Arena Infernal** | `infernal` | Hechicero Supremo → Rey / Demonio de la Horda | **GUARDIÁN 4** | El Forjador prisionero; revelación del Hechicero; el plan de fusión fracasa; final. |
@@ -47,8 +47,11 @@ presentarlos como Guardianes.
 
 ## 4. Las Cicatrices de la Horda (concepto narrativo, no mecánica)
 - Aparecen cuando el sello se debilita. Conectan las arenas: son el hilo del viaje.
-- Por ahora se expresan con **textos, carteles, diálogos del Hechicero y transiciones** (cartel "✦" al
-  completar cada arena). No hay sistema jugable nuevo.
+- Por ahora se expresan con **textos, carteles, diálogos del Hechicero y transiciones**: la **escena de
+  salida** de cada arena (bloque "✦ ACTO N · LA CICATRIZ" en la última pantalla de la victoria). No hay
+  sistema jugable nuevo.
+- Cada cristal que se mueve dobla el mundo: la Cicatriz crece con cada uno (y con el segundo aparece el mar
+  de la Acuática). Recoger los cristales no refuerza el sello, como dice el Hechicero: lo acerca a él.
 - Evolución: una grieta (Ciudad) → rastro entre máquinas (Fábrica) → late con cada cristal (Ruinas,
   Gélida) → inestable (Acuática) → se hunde (Laberinto) → se rasga en el Abismo → baja por las Minas hasta el
   Umbral Infernal → la dimensión de la Horda.
@@ -57,21 +60,29 @@ presentarlos como Guardianes.
 ## 5. El Hechicero Supremo — arco
 | Tramo | Cómo se comporta |
 |---|---|
-| Prólogo (Ciudad Maldita) | Proyección en el humo: los Guardianes están cayendo y hay que recuperar los cristales. |
-| 02 Fábrica | Mentor cálido y claro. Enseña a seguir la Cicatriz. |
+| Prólogo (Ciudad Maldita) | Proyección en el humo: los Guardianes están cayendo y hay que recuperar los cristales. Nunca toca el suelo (es una proyección: no puede cruzar a este lado). |
+| 01 Ciudad | «Esta es tu ciudad… no podés salvarlos a todos, pero vas a intentarlo.» Al caer el Presentador: «Yo te voy a indicar el camino.» |
+| 02 Fábrica | Mentor cálido y claro. Enseña a seguir la Cicatriz. «No te detengas en lo que cuelga de los techos» (el gancho de la última cadena). |
 | 03 Ruinas | Primer cristal: "yo te lo cuido". Reconoce que los monstruos fueron héroes. |
 | 04 Reino Fúngico | Desestima los ecos de las esporas ("no importan"). |
 | 05 Gélida | "No preguntes cómo sé tanto de ellos. Todavía no." La historia no cierra. |
-| 06–07 | Cada vez más interesado en los cristales que en los guardianes. Descarta la advertencia del Guardián del Laberinto ("deliraba"). |
+| 06 Acuática | «Este mar no estaba acá antes de que tomaras el segundo cristal… Protegelos. Son lo único que importa.» Al caer el Leviatán: «Los cristales están a salvo. Y vos también, supongo.» |
+| 07 Laberinto | «Traeme… traé el tercer cristal.» Descarta la advertencia del Guardián del Laberinto ("deliraba"). |
 | 08 Abismo | "Debajo del Abismo hay minas… y debajo de las minas, una puerta. Otros bajaron antes que vos." |
 | 09 Minas | Al atravesar el Umbral: "Ya no hay vuelta atrás. Te espero en el corazón del Infierno." |
 | 10 Infernal, nivel 9 | Se revela: fue el primero y líder de los Cuatro, se quedó por decisión propia. Pelea como subjefe y huye. |
-| 10 Infernal, jefe final | Explica que el Forjador se negó a fundir los cristales. Pelea en 3 formas y se convierte en el **Rey de la Horda**. |
+| 10 Infernal, jefe final | Explica que el Forjador se negó a fundir los cristales. Pelea en 3 formas y se convierte en el **Rey de la Horda**. Se va perdiendo a sí mismo («Primero… Juez… Guardián… ¿cómo era mi nombre?») y muere diciendo lo que cree: «Yo elegí quedarme… Alguien tenía que sostenerla». |
 
 ## 6. El Forjador
-El único capaz de fundir los cuatro cristales en uno. Se negó y el Hechicero lo encadenó en el fondo de
-la Arena Infernal. Hoy aparece como **voz** (cartel) y en los diálogos del Hechicero; todavía no hay
-entidad ni arte propio.
+El único capaz de fundir los cuatro cristales en uno **porque fue él quien los partió**: antes de los
+cristales hubo una sola piedra, **el Sello**, del tamaño de un corazón, que nadie podía sostener sin
+volverse otra cosa; el Forjador la partió en cuatro para que cuatro la sostuvieran sin que ninguno fuera
+su dueño. Cuando el Primero volvió a pedirle que la fundiera («una piedra entera no se puede sostener,
+pero se la puede ser»), se negó, y el Hechicero lo encadenó en el fondo de la Arena Infernal con cadenas
+de la **Fábrica Sin Fin** (la fábrica que el Primero había pagado siglos atrás; a trabajar su metal les
+había enseñado el propio Forjador). Hoy es una **voz** ("UNA VOZ ENCADENADA" en el cuadro de voz): se oye
+por primera vez en las Minas (al caer el Titán y Cerbero), al huir el Hechicero y en el epílogo, y se lee
+en las **Páginas del Forjador** (§12). Todavía no hay entidad ni arte propio.
 
 ## 7. Final
 El plan de fusión fracasa y el Rey de la Horda cae. Pero los cristales no pueden destruirse y la Horda
@@ -89,6 +100,9 @@ llevan cristal. En la pelea final, cuando el Hechicero arranca los cristales, la
 el Hechicero después desmiente ("deliraba"): el Ancestral pide no entregar el cristal "a nadie", el
 Mago Gélido cuenta que el cuarto "eligió quedarse del otro lado" y el del Laberinto dice que quien
 abrió los caminos "fue uno de nosotros".
+
+**Epílogo (§13):** el Rey cae de rodillas y vuelve a ser el Primero; las cadenas del Forjador se aflojan;
+los cristales no se pueden destruir ni fundir; los guardianes quedan como **los nuevos Guardianes**.
 
 ## 8. Contradicciones entre el código y el canon (registradas, no ocultas)
 
@@ -110,9 +124,60 @@ abrió los caminos "fue uno de nosotros".
 ## 9. Reglas de tono
 - El Hechicero habla **claro**; la sospecha va en **una frase al final**, nunca en medio de una instrucción.
 - Los Guardianes eran héroes: sus textos tienen una línea de lo que fueron.
-- La Horda nunca habla. Es una fuerza, no un personaje.
+- La Horda nunca habla. Es una fuerza, no un personaje. Las **bestias** de la Horda (Leviatán, Cerbero, El
+  Que Mora Debajo, el Micelio, el Titán, el Devoraluz, el Kraken Joven, el Dragón de la Forja) no tienen
+  voz: las comenta el Hechicero (y, en las Minas, se oye al Forjador desde abajo). Hablan los que fueron
+  personas o héroes (el Presentador, el Caballero, la Dama, los Cuatro Reflejos, los Guardianes, Tundraverx,
+  el Carcelero) y los ecos que repiten las esporas.
+- Español rioplatense sobrio: voseo, frases cortas, imágenes concretas. Nada de chistes fuera de tono.
+- Nunca más de **2 textos a la vez** en pantalla durante el combate (la cola de voces espera su turno).
 
-## 10. Dónde vive en el código
+## 10. La campaña en tres actos
+| Acto | Arenas | Hechicero | Protagonistas | Mundo |
+|---|---|---|---|---|
+| **I — EL GUÍA** | 01 Ciudad · 02 Fábrica · 03 Ruinas | Mentor cálido: explica, felicita, «yo te lo cuido». | Defensores de una ciudad que aceptan una misión. | La primera Cicatriz; la Fábrica que forjó cadenas para alguien; el primer Guardián era un héroe. |
+| **II — LOS ECOS** | 04 Reino Fúngico · 05 Gélida · 06 Acuática · 07 Laberinto | Cada vez más interesado en los cristales que en vos; desmiente todo («deliraba»). | Empiezan a escuchar: las esporas, las cartas, el faro, el Laberinto. | Cada cristal dobla la realidad: aparece un mar donde nunca hubo agua. |
+| **III — EL DESCENSO** | 08 Abismo · 09 Minas · 10 Infernal | Ya no disimula del todo; se revela, pelea, se pierde. | Descubren que otros bajaron antes (Aldren: «éramos una llave») y se vuelven portadores. | El mundo se rompe; la puerta; la dimensión de la Horda; el final. |
+
+- Cada acto tiene un **cartel** (pantalla previa, la primera vez que entrás a la arena que lo abre) y cada
+  arena, una **escena de entrada** (la ficha del Hechicero) y una **escena de salida** (última pantalla de la
+  victoria: la Cicatriz + lo que dice el Hechicero + la Crónica encontrada). En cooperativo online la
+  escena de entrada la dice el Hechicero en el cuadro de voz.
+- **Prólogo** en tres pantallas: «La noche en que volvió la Horda», «El humo», «La primera Cicatriz».
+
+## 11. Voces
+- **Jefes** (`BOSS_VOICES`): presentación al aparecer, una frase por fase y una al caer; dicen quién son y
+  qué quieren. Ejemplos canon: el Presentador («me prometieron un público que nunca se va»), el Caballero
+  («nunca supe para quién era la última cadena»), los Cuatro Reflejos («nosotros también le creímos a la
+  voz»), Tundraverx (esperaba al Mago), el Mago Gélido («Primero, ¿por qué no volviste?»), el Rey de la
+  Horda (arriba). Las muertes de los Guardianes siguen siendo **LAS ÚLTIMAS PALABRAS** (§7).
+- **Guardianes jugables** (`HERO_VOICES`): 3 líneas cada uno (al elegirlo en la ficha previa, al ganar en
+  la victoria, al caer en la derrota), sacadas de su historia del Códice. Un guardián nuevo suma su fila.
+
+## 12. Las Crónicas (páginas coleccionables)
+25 páginas en 10 libros, 2-4 por arena. Aparecen en el piso (niveles 4 y 7), las suelta el primer subjefe
+de la partida (y, rara vez, un élite) o se encuentran al completar la arena. Se leen en **Códice › CRÓNICAS**.
+No dan oro, XP ni poder. Canon nuevo que establecen:
+- **Crónica de la Noche del Regreso** (Ismena, escriba): las campanas sonaron solas; la figura del humo nunca tocó el suelo y sabía los nombres de todos.
+- **Bitácora del Último Maquinista**: el Primero pagó la Fábrica para forjar cadenas; la última, «para un solo prisionero», fue la del Forjador. El Caballero juró que nada saldría de la prisión.
+- **Cantos del Primer Guardián**: un hombre de luz dorada (uno de los Cuatro) visitó al Guardián Ancestral; después nació la Niebla del Olvido, para esconder el cristal «de la Horda, y de los que la entienden demasiado».
+- **Ecos del Micelio**: las esporas repiten a los Cuatro; el cuarto dijo «váyanse, yo me quedo» y la voz de madera lo llamó «traidor».
+- **Cartas del Mago Gélido**: le escribía al Primero, que nunca contestó; un ángel de cristal le habló con la voz del Primero; la última carta pide llevar el cristal encima y no entregarlo.
+- **Bitácora del Faro de Maren**: el mar de la Arena Acuática apareció cuando alguien se llevó el segundo cristal; lo que nada debajo (el Leviatán) sigue el brillo de los cristales.
+- **Diario del Guardián del Laberinto**: las llaves de Guardián eran cuatro; «siempre me sobra una».
+- **Diario de la Expedición de Aldren**: seis portadores que la misma voz guió antes que a vos, a abrir el Umbral desde este lado. La voz «no puede cruzar a este lado… por eso los necesito». Última línea: «No éramos guardianes. Éramos una llave».
+- **Páginas del Forjador**: el Sello entero; los Cuatro (el Primero «medía» a la Horda); la negativa y las cadenas; «los cristales no eligen al más fuerte: eligen al que los sigue llevando cuando pesan».
+- **El Libro del Juicio** (del Primero): «Si la Horda no puede morir, que tenga dueño».
+
+## 13. Epílogo y post-créditos
+Al completar la Arena Infernal por primera vez (y cuando quieras desde el Códice): pantallas de texto sobre
+el arte de las arenas — el Rey vuelve a ser el Primero («Yo elegí quedarme»), el Forjador se niega a
+fundir y a romper («los cristales siguen necesitando portadores»), la Ciudad Maldita vuelve a tocar sus
+campanas, **los nuevos Guardianes**, «Fin del Libro Primero». **Post-créditos:** unas gradas de oro y una
+voz («Portadores. Veamos si merecen serlo») → **Arena Divina**; y en el fondo del Abismo, la Horda sin rey
+empieza a crecer → **Horda Infinita**.
+
+## 14. Dónde vive en el código
 - Orden, números y slots en construcción: `js/data/arenas.js` (`CAMPAIGN_ORDER`, `ARENA_ORDER`, `campaignNumberLabel`).
 - Desbloqueo: `js/arenas/arena-rules.js` (`isArenaUnlocked`, `campaignFrontier`, `isDivinaUnlocked`).
 - Migración de guardados: `js/storage/save.js` (`campaignV2Migrate`).
@@ -120,3 +185,4 @@ abrió los caminos "fue uno de nosotros".
 - Historia (Cicatrices, prólogo, carteles, final): `js/systems/campaign-story.js`.
 - Cristales: `js/systems/crystals.js`. Final: `js/arenas/infernal/inf-hechicero.js`.
 - Fichas previas a cada arena: `js/ui/run-intro.js`.
+- Textos de actos, voces, Crónicas y epílogo: `js/data/story-text.js`. Lógica (cola de voces, páginas, pantallas de fin, epílogo): `js/systems/story.js`. Estilos: `css/story.css`. Prueba: `tools/items/t_story.js`.

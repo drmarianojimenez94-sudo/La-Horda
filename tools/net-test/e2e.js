@@ -301,6 +301,9 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   for (let k = 0; k < 100; k++) { const ok = await Promise.all(all.map(c => ev(c, () => state === 'victory'))); if (ok.every(Boolean)) break; await sleep(150); }
   const vic = await Promise.all(all.map(c => ev(c, () => ({ state, cleared: !!(save.arenasCleared || {}).bosque }))));
   vic.forEach((v, i) => check(`victory.client${i}`, v.state === 'victory' && v.cleared, v));
+  // logros/desafíos (js/systems/quests.js): cada cliente cuenta la partida en SU guardado, con SUS bajas
+  const qs = await Promise.all(all.map(c => ev(c, () => { const q = save.quests; return q ? { wins: q.stats.wins, coop: q.stats.coopRuns, coopWins: q.stats.coopWins, kills: q.stats.kills, own: player.stats.kills|0, coWin: !!q.ach.co_win } : null; })));
+  qs.forEach((q, i) => check(`quests.client${i}_cuenta_su_partida`, !!q && q.wins >= 1 && q.kills === q.own && (N < 2 ? q.coop === 0 : (q.coop === 1 && q.coopWins === 1 && q.coWin)), q));
   const allVictory = vic.every(v => v.state === 'victory');
   if (!allVictory) check('after.skipped_no_victory', false, 'sin victoria no se puede probar volver a la sala ni la revancha');
   // volver a la sala con el mismo código

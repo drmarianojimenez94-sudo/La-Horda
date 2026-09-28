@@ -26,7 +26,8 @@ function mkChampion(unlocked){
   return {level:1, xp:0, talentPoints:0, unlocked: unlocked!==false,
     skillMastery:[mkMastery(),mkMastery(),mkMastery()], ultMastery:mkMastery(),
     equipment:mkEquipment(), // uid de lo que lleva puesto; los objetos viven en save.stash (inventario de la cuenta)
-    talents: mkTalentState()};
+    talents: mkTalentState(),
+    croma:null}; // croma equipada (cosmético, js/systems/cromas.js)
 }
 // Saves de antes del rediseño de rarezas usaban ["comun","magico","raro","legendario","mitico","unico"];
 // "magico" pasó a llamarse "raro" y el viejo "raro" pasó a ser "muyraro" (ver RARITIES). Como
@@ -69,7 +70,9 @@ function defaultSave(){
     stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los guardianes): ver js/systems/items.js
     crystals:{ancestral:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
-    shop:null               // ofertas de objetos del día (js/systems/shop.js)
+    cromas:{},              // cromas compradas (cosméticas, oro del juego): {id:true}; la equipada va en champions[k].croma (js/systems/cromas.js)
+    shop:null,              // ofertas de objetos del día (js/systems/shop.js)
+    quests:null             // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
   };
 }
 // ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
@@ -143,7 +146,9 @@ function applyTestSkins(){
   persist();
 }
 function loadSave(){
-  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); applyTestSkins(); }
+  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); applyTestSkins();
+    // logros/desafíos/pase: completa los campos que falten (guardados viejos) y rota los desafíos del día
+    if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
 function _loadSaveInner(){
   try{
@@ -180,6 +185,7 @@ function _loadSaveInner(){
       save.relics = Object.assign(defaultSave().relics, parsed.relics||{});
       save.arenasCleared = Object.assign(defaultSave().arenasCleared, parsed.arenasCleared||{});
       save.crystals = Object.assign(defaultSave().crystals, parsed.crystals||{});
+      save.cromas = (parsed.cromas && typeof parsed.cromas==="object") ? Object.assign({}, parsed.cromas) : {};
       // La Fortaleza (3ra arena) llegó después: un guardado viejo que ya había superado la
       // Acuática tenía abierto el Hielo, y lo conserva (una sola vez, al cargar por primera vez).
       // MODO CAMPAÑA: la prueba de campaña arranca de cero para todos -todos los guardianes a
@@ -336,6 +342,8 @@ function persistNow(){
   // netPersistView escribe siempre los datos propios del anfitrión.
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }catch(e){ /* storage unavailable, continue in-memory */ }
+  // CUENTAS: avisa que el guardado cambió (se sube a la nube con demora: js/net/account.js)
+  if(typeof accountOnPersist==="function"){ try{ accountOnPersist(); }catch(e){} }
 }
 function persist(){
   if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();

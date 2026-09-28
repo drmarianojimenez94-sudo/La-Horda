@@ -177,7 +177,7 @@ function netRenderLobbySlots(){
       <div class="lobby-tag p${i}">${tag}</div>
       <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-skin="${skin}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
       <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>
-      ${skin && SET_SKINS[skin] ? `<div class="lobby-skin">🎨 ${SET_SKINS[skin].name}</div>` : ""}
+      ${skin && (typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]) ? `<div class="lobby-skin">🎨 ${(typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]).name}</div>` : ""}
       <div class="lobby-meta">${cls.name} · ${NET_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv||1}</div>
       ${st}

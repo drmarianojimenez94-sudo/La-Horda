@@ -242,6 +242,9 @@
 @media (prefers-reduced-motion:reduce){
   .hub-play, .hub-play::after, .shop-hero-img, .shop-hero-art::after, .ui-tag.new{ animation:none; }
 }
+/* casilla "Reducir movimiento" de la pausa (body.reduce-motion) */
+body.reduce-motion .hub-play, body.reduce-motion .hub-play::after, body.reduce-motion .shop-hero-img,
+body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.reduce-motion .ui-modal-panel{ animation:none; }
 
 /* ---------- celular acostado (pantallas bajas) ---------- */
 @media (max-height:520px){

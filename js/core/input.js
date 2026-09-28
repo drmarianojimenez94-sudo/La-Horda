@@ -189,6 +189,7 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
       if(!ok || !stillHere()) return;
       applyArenaFailurePenalty(player.classKey);
       if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
+      if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true});
       document.getElementById("pause-screen").classList.add("hidden");
       if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
       setState("menu"); renderChampGrid(); renderSaveLine();

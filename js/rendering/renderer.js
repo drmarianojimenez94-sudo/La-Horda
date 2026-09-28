@@ -13,14 +13,18 @@ function render(){
 
   ctx.save();
   ctx.imageSmoothingEnabled = false; // pixel art: siempre vecino más cercano
+  // golpe de zoom (juice.js): escala corta alrededor del centro de la cámara, solo visual
+  const _pz = camPunchZoom();
+  if(_pz !== 1){ const cy0 = VH/2 - CAM_Y_ANCHOR; ctx.translate(VW/2, cy0); ctx.scale(_pz, _pz); ctx.translate(-VW/2, -cy0); }
   ctx.scale(CAM_ZOOM, CAM_ZOOM);
-  const shakeX = screenShake>0 ? (Math.random()-0.5)*screenShake : 0;
-  const shakeY = screenShake>0 ? (Math.random()-0.5)*screenShake : 0;
+  // sacudida con curva y tope (juice.js; apagada con "Reducir movimiento")
+  const _sk = juiceShakeOffset(), shakeX = _sk.x, shakeY = _sk.y;
   // cámara alineada a píxeles del dispositivo: sin temblor de medio píxel en el pixel art
-  const _pxW = CAM_ZOOM*DPR;
-  const camTX = Math.round((VW/2/CAM_ZOOM - player.x + shakeX)*_pxW)/_pxW;
+  // (CAM_LEAD_X/Y: adelanto suave hacia donde se apunta, ver juice.js)
+  const _pxW = CAM_ZOOM*DPR*_pz;
+  const camTX = Math.round((VW/2/CAM_ZOOM - (player.x + CAM_LEAD_X) + shakeX)*_pxW)/_pxW;
   updateCamLift(); // (0 salvo con un jefe enorme en cámara, ver camera.js)
-  const camTY = Math.round(((VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - (player.y - CAM_LIFT) + shakeY)*_pxW)/_pxW;
+  const camTY = Math.round(((VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM - (player.y - CAM_LIFT + CAM_LEAD_Y) + shakeY)*_pxW)/_pxW;
   ctx.translate(camTX, camTY);
 
   // Escenario: suelo, lava, muros, braseros
@@ -124,6 +128,7 @@ function render(){
   }
   animCrowd = _animCrowdCount;
   animFlashBudget = animCrowd > 70 ? 12 : 30;
+  whiteFrameBegin(); // siluetas blancas nuevas permitidas este cuadro (juice.js)
   _entList.length = _entN;
   for(let i=0;i<_entN;i++) _entList[i] = _entPool[i];
   const ents = _entList;
@@ -149,6 +154,7 @@ function render(){
   fxGlowBegin(); vfxDrawSprites(); fxGlowEnd();
   resonanceDraw(); // gema del cristal que lleva cada guardián (crystal-resonance.js)
   crystalDraw(); // cristal de un Guardián volando al jugador (crystals.js)
+  if(typeof storyPagesDraw==="function") storyPagesDraw(); // páginas de las Crónicas en el piso (story.js)
   drawFxContrastTop(); // anticipación al lanzar + estrella de impacto (fx-contrast.js)
   if(arenaHas("drawTop")) arenaHook("drawTop");
   ctxDraw(); // aviso + progreso de las acciones contextuales

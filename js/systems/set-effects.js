@@ -319,19 +319,22 @@ function setSkinImage(id){
 // Skin activa del héroe: su set principal COMPLETO y con arte (y del guardián correcto).
 // En red, cada invitado tiene SU guardado: la skin de los demás la decide el anfitrión (que conoce
 // el equipo real de cada jugador) y viaja en el héroe como `skinSet` (se fija en updateSets).
+// CROMAS (js/systems/cromas.js): misma ruta; skinDefOf resuelve ids de set y de croma.
+function _skinDef(id){ return typeof skinDefOf === "function" ? skinDefOf(id) : (id ? SET_SKINS[id] || null : null); }
 function activeSetSkin(h){
   if(!h || !h.classKey) return null;
-  if(h._codexSkin !== undefined){ const d = h._codexSkin ? SET_SKINS[h._codexSkin] : null; return d && (!d.champ || d.champ === h.classKey) ? d : null; } // previews (Códice, Sala): skin fija, no la del guardado
+  if(h._codexSkin !== undefined){ const d = _skinDef(h._codexSkin); return d && (!d.champ || d.champ === h.classKey) ? d : null; } // previews (Códice, Sala): skin fija, no la del guardado
   if(typeof netIsGuest === "function" && netIsGuest() && h.skinSet !== undefined){
-    const d = h.skinSet ? SET_SKINS[h.skinSet] : null;
+    const d = _skinDef(h.skinSet);
     return d && (!d.champ || d.champ === h.classKey) ? d : null;
   }
-  return SET_SKINS[activeSetSkinId(h)] || null;
+  return _skinDef(activeSetSkinId(h));
 }
+// Skin a mostrar: la del set principal COMPLETO con arte; si no hay, la croma equipada en el guardián.
 function activeSetSkinId(h){
-  const id = heroMainSet(h); if(!id || setN(h, id) < setFullCount(id)) return null;
-  const d = SET_SKINS[id]; if(!d || (d.champ && d.champ !== h.classKey)) return null;
-  return id;
+  const id = heroMainSet(h);
+  if(id && setN(h, id) >= setFullCount(id)){ const d = SET_SKINS[id]; if(d && (!d.champ || d.champ === h.classKey)) return id; }
+  return typeof cromaEquippedId === "function" ? cromaEquippedId(h.classKey) : null;
 }
 // Clave de atlas a usar para `key` (p.ej. "eren", "eren_titan"): la de la skin si está activa y cargada.
 function setSkinPackKey(h, key){

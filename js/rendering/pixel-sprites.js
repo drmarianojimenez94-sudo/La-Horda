@@ -145,7 +145,8 @@ function drawSprite(img, x, y, scale, flip, tint){
   ctx.imageSmoothingEnabled = false;
   ctx.translate(x, y);
   if(flip) ctx.scale(-1,1);
-  ctx.drawImage(img, -w/2, -h*0.74, w, h);
+  const wc = ANIM_WHITE ? whiteFrame(img, 0, 0, img.width, img.height) : null; // destello de golpe (juice.js)
+  ctx.drawImage(wc || img, -w/2, -h*0.74, w, h);
   ctx.restore();
 }
 
