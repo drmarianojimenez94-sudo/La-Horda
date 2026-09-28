@@ -129,6 +129,7 @@
 }
 #center-banner.show{animation:bannerPop 2.1s ease-out forwards;}
 #center-banner.low{top:47%;}
+#center-banner.downed{top:66%;} /* con el cartel de "CAÍSTE" (cooperativo) en pantalla, va debajo */
 @keyframes bannerPop{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.85);} 12%{opacity:1; transform:translate(-50%,-50%) scale(1);} 78%{opacity:1;} 100%{opacity:0;} }
 
 /* ---------- Jefes (js/ui/boss-hud.js) ---------- */

@@ -52,6 +52,8 @@ function updateDownedOverlay(){
   const el = document.getElementById("downed-overlay"); if(!el) return;
   const show = !!(netMatch && player && !player.alive && state==="playing" && !runEnding);
   el.classList.toggle("hidden", !show);
+  // el cartel central ("NIVEL 7", "RUNA ACTIVA…") caía justo detrás de este y no se leía ninguno
+  const cb = document.getElementById("center-banner"); if(cb) cb.classList.toggle("downed", show);
   if(!show) return;
   const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
   const alive = heroes.filter(h=>h.alive).length;
