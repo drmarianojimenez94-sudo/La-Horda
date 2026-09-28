@@ -207,7 +207,7 @@ function openAffixReroll(uid, idx, classKey, onDone){
       if(onDone) onDone();
     }));
   };
-  const msg = `Re-tirar «${AFFIX_DB[itemAffixes(it)[idx].id] ? affixLabel(itemAffixes(it)[idx].id) : "afijo"}» por ${cost} de oro. Vas a ver ${AFFIX_REROLL_OPTIONS} opciones nuevas y podés quedarte con la original.${typeof it.rerollIdx!=="number" ? " Desde ahora, en este objeto solo se va a poder re-tirar este afijo." : ""}`;
+  const msg = `Re-tirar «${AFFIX_DB[itemAffixes(it)[idx].id] ? affixLabel(itemAffixes(it)[idx].id) : "afijo"}» por ${cost} de oro. Vas a ver ${AFFIX_REROLL_OPTIONS} opciones nuevas y podés quedarte con la original.${typeof it.rerollIdx!=="number" ? " Desde ahora, en este objeto solo se va a poder re-tirar este afijo y queda ligado a tu cuenta (no se puede dar a otro jugador)." : ""}`;
   if(typeof gameConfirm==="function") gameConfirm(msg, {okText:"Re-tirar"}).then(ok=>{ if(ok) go(); });
   else go();
 }

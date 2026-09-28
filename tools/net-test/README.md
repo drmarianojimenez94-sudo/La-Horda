@@ -35,6 +35,13 @@ node tools/net-test/lobby_code_skins.js mobile      #   UNIRSE CON CÓDIGO (vali
                                                     #   sin bucle de re-render, scroll táctil (Sala, Tienda, Inventario,
                                                     #   selección, modales), skin comprada autoequipada y visible para
                                                     #   todos, partida, revivir, reconexión, recarga, enlace
+node server/test-trades.js                          # SALAS PÚBLICAS + INTERCAMBIO: protocolo, ligados, quemados, reinicio
+SITE=http://127.0.0.1:8771 RELAY=ws://127.0.0.1:8799 node tools/net-test/public_rooms.js
+                                                    # sala pública -> Salas abiertas -> unirse con un toque; privada, llena,
+                                                    #   empezada, cliente viejo, contador del hub, límite de pedidos
+SITE=http://127.0.0.1:8771 RELAY=ws://127.0.0.1:8799 node tools/net-test/trade.js
+                                                    # intercambio en la Sala: selector (ligados), doble confirmación, uid
+                                                    #   quemado, rechazo, cortes antes/después del commit, caída del que da
 node tools/net-test/soak.js 60 laberinto nigromante,musashi,axiom,profeta   # resistencia
 BOSS=1 node tools/net-test/soak.js 25 hielo musashi,profeta                 # jefes
 node tools/net-test/shots.js /tmp/capturas          # capturas anfitrión / invitado

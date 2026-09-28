@@ -414,6 +414,7 @@ function renderPrepSummary(){
   netRenderLobbyBar();
   if(typeof prepSecSync==="function") prepSecSync(); // pestañas Equipo · Arena · Sala online
   netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online
+  if(typeof netRenderTrade==="function") netRenderTrade(); // intercambio en la sala (js/net/net-trade.js)
   if(netInRoom()){
     // B1: sala online real: lugares en tiempo real (vos, amigos, esperando)
     document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
