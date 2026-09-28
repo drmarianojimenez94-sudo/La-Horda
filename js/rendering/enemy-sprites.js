@@ -237,7 +237,8 @@ function packDeriveDirSets(P){
 }
 // Atlas del redraw (Dama del Bosque / Doppelgängers): mismas reglas de estado que el pack de abajo.
 function drawEnemyAtlasPack(e){
-  const P = (e.atlasKey && ENEMY_ATLAS_PACK[e.atlasKey] && ENEMY_ATLAS_PACK[e.atlasKey].ready) ? ENEMY_ATLAS_PACK[e.atlasKey] : ENEMY_ATLAS_PACK[e.type]; // atlasKey: otra paleta del mismo cuerpo (Guardián en furia)
+  const bsk = typeof bodySwapKey==="function" ? (bodySwapKey(e.atlasKey) || bodySwapKey(e.type)) : null; // cuerpo prestado (js/data/body-swaps.js)
+  const P = bsk ? ENEMY_ATLAS_PACK[bsk] : ((e.atlasKey && ENEMY_ATLAS_PACK[e.atlasKey] && ENEMY_ATLAS_PACK[e.atlasKey].ready) ? ENEMY_ATLAS_PACK[e.atlasKey] : ENEMY_ATLAS_PACK[e.type]); // atlasKey: otra paleta del mismo cuerpo (Guardián en furia)
   if(!P || !P.ready) return false;
   if(!_PACK_DIR_DONE.has(P.sets)) packDeriveDirSets(P); // por si el atlas cargó antes que este script
   if(e.attackAnim > (e._pkAtkLast||0)) e._pkAtkMax = e.attackAnim;

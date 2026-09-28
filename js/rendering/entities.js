@@ -291,6 +291,8 @@ function drawEnemy(e){
 function drawEnemyBody(e){
   if(arenaHas("drawEnemyBody") && arenaHook("drawEnemyBody", e)){
     // cuerpo propio de la arena (El Reino Micelial: núcleos, raíces, la Madre por partes)
+  } else if(typeof bodySwapKey==="function" && bodySwapKey(e.type) && drawEnemyAtlasPack(e)){
+    // cuerpo prestado de otro personaje completo (js/data/body-swaps.js): no pasa por los dibujos viejos del tipo
   } else if((!e.alive || e._dyingP != null) && drawDeathPack(e)){ // (_dyingP: en el invitado la copia del enemigo puede seguir "viva")
     // muerte de 4 cuadros de la hoja de bestias (Esfinge, Medusa, Druida de Arena)
   } else if(drawBossFxReplace(e)){

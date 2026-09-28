@@ -116,7 +116,8 @@ function animProfileOf(ent){
   if(!src.basic && ent.ranged) p.basic = "ranged";
   if(!src.weight && ent.radius) p.weight = Math.max(0.6, Math.min(2.4, ent.radius/26));
   if(!p.tier){
-    if(ENEMY_ANIM_ATLASES[ent.type]) p.tier = "full";
+    if(typeof bodySwapped==="function" && bodySwapped(ent.type)) p.tier = "partial"; // cuerpo prestado con ciclo real (body-swaps.js)
+    else if(ENEMY_ANIM_ATLASES[ent.type]) p.tier = "full";
     else if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[ent.type]) p.tier = "full"; // hojas de jefes: animación real completa
     else if(REAL_ANIM_ATLASES[ent.type]) p.tier = "walk";
     // hojas por atlas / recortes sueltos (tools/art/enemy_coverage.js): con ciclo de caminar real van

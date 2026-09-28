@@ -41,7 +41,7 @@ function _cmPiece(key, x, y, h, alpha, flip, anchorY){
 }
 function _cmGlow(x, y, r, rgb, a){ if(a <= 0.01) return; ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, a); ctx.drawImage(glowSprite(rgb), x - r, y - r, r*2, r*2); ctx.restore(); }
 function _cmAtlasFrame(type, set, n, x, y, h, flip, alpha, loop){
-  const P = ENEMY_ATLAS_PACK[type]; if(!P || !P.ready) return false;
+  const P = ENEMY_ATLAS_PACK[(typeof bodySwapKey==="function" && bodySwapKey(type)) || type]; if(!P || !P.ready) return false; // cuerpo prestado (body-swaps.js)
   const arr = P.sets[set] || P.sets.idle; if(!arr || !arr.length) return false;
   const v = loop===false ? arr[Math.min(arr.length - 1, Math.max(0, n))] : arr[((n % arr.length) + arr.length) % arr.length];
   const s = h/P.refH;
