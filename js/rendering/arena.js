@@ -594,8 +594,8 @@ function drawArena(){
   // ---------- Lava (solo la Infernal): capa pre-renderizada una vez (ver aidBuildLavaLayer) ----------
   if(aidLavaLayer){
     const L = aidLavaLayer, hw = VW/2/CAM_ZOOM + 40, hh = VH/2/CAM_ZOOM + 40;
-    const wx0 = Math.max(L.x0, player.x-hw), wy0 = Math.max(L.y0, player.y-hh);
-    const wx1 = Math.min(L.x0+L.w, player.x+hw), wy1 = Math.min(L.y0+L.h, player.y+hh);
+    const cy = camCenterY(), wx0 = Math.max(L.x0, player.x-hw), wy0 = Math.max(L.y0, cy-hh);
+    const wx1 = Math.min(L.x0+L.w, player.x+hw), wy1 = Math.min(L.y0+L.h, cy+hh);
     if(wx1 > wx0 && wy1 > wy0){
       const sx = (wx0-L.x0)*L.k, sy = (wy0-L.y0)*L.k, sw = (wx1-wx0)*L.k, sh = (wy1-wy0)*L.k;
       ctx.save(); ctx.imageSmoothingEnabled = false;

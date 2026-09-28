@@ -25,6 +25,19 @@ let VW = 0, VH = 0, DPR = 1;
 function computeCamZoom(w, h){
   return Math.max(Math.min(w, h)/VIEW_WORLD_SHORT, Math.max(w, h)/VIEW_WORLD_LONG_MAX);
 }
+// Anclaje vertical de la cámara según el alto disponible. La franja útil del centro de la pantalla va
+// desde debajo del HUD de arriba (la barra de estado de cada arena se dibuja en max(52, 8,5 % del alto)
+// y ocupa ~36 px con su fila de íconos) hasta arriba del cuadro del Hechicero (abajo al centro). El
+// cuerpo del guardián (no sus pies) va al medio de esa franja. Solo depende del tamaño de la pantalla:
+// la cámara nunca salta porque aparezca o se vaya un cartel.
+const CAM_HUD_TOP_EXTRA = 36, CAM_HUD_BOTTOM_LOW = 58, CAM_HUD_BOTTOM_TALL = 92, CAM_BODY_UNITS = 22;
+function camFitAnchor(w, h, zoom){
+  const top = Math.max(52, h*0.085) + CAM_HUD_TOP_EXTRA;
+  const bottom = h <= 500 ? CAM_HUD_BOTTOM_LOW : CAM_HUD_BOTTOM_TALL;
+  let feet = (top + (h - bottom))/2 + CAM_BODY_UNITS*zoom;
+  feet = Math.max(h*0.42, Math.min(h*0.6, feet));
+  return Math.round(h/2 - feet);
+}
 function _viewportBox(){
   // la caja real del canvas (100% de #stage); si todavía no hay layout, la ventana
   let w = canvas.clientWidth, h = canvas.clientHeight;
@@ -60,6 +73,8 @@ function resize(force){
   // sprites de pixel art se ven borrosos. Se apaga de nuevo acá, siempre.
   ctx.imageSmoothingEnabled = false;
   CAM_ZOOM = computeCamZoom(VW, VH);
+  CAM_Y_ANCHOR = camFitAnchor(VW, VH, CAM_ZOOM);
+  try{ document.documentElement.style.setProperty("--cam-hero-y", Math.round(VH/2 - CAM_Y_ANCHOR) + "px"); }catch(e){} // carteles centrales (hud.css)
   return true;
 }
 // Chequeo por cuadro: si la caja real cambió y el navegador no avisó, se corrige.

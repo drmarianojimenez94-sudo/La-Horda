@@ -53,7 +53,7 @@ function _cmFx(key, i, x, y, h, alpha, anchorY){
   const src = F.srcs[Math.min(F.srcs.length - 1, i|0)]; const k = "fx:" + src; _cmImg(k, src);
   _cmPiece(k, x, y, h, alpha, false, anchorY===undefined ? 0.5 : anchorY);
 }
-function _cmView(){ const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM, cy = player.y - CAM_LIFT; return {x0:player.x - hw - 80, x1:player.x + hw + 80, y0:cy - hh - CAM_Y_ANCHOR/CAM_ZOOM - 140, y1:cy + hh + 120}; }
+function _cmView(){ const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM, cy = camCenterY(); return {x0:player.x - hw - 80, x1:player.x + hw + 80, y0:cy - hh - 140, y1:cy + hh + 120}; }
 function _cmVis(V, x0, y0, x1, y1){ return !(x1 < V.x0 || x0 > V.x1 || y1 < V.y0 || y0 > V.y1); }
 
 // fundido local de techos: 1 = techo visible, ~0.08 = el jugador está adentro

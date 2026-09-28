@@ -50,7 +50,7 @@ function netSlotName(i){ const s = netMatch && netMatch.slots[i]; return s ? s.n
 /* ---------------- serialización con referencias ---------------- */
 const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onHit","fn","_spdAt","_hx","_hy","_tk",
   // internos de la IA/navegación del anfitrión: el invitado no los usa
-  "_navT","_nmx","_nmy","_navBlocked","_tgt","_tgtT","_dangerT","atkCd","recentDamage","_hitSfxAt","_hurtSfxAt","_setFrame","path",
+  "_navT","_nmx","_nmy","_navBlocked","_kbRx","_kbRy","_tgt","_tgtT","_dangerT","atkCd","recentDamage","_hitSfxAt","_hurtSfxAt","_setFrame","path",
   // estado de animación que calcula el propio renderizador de cada cliente
   "_an",
   // atlas de guardianes (champion-sprites.js): vista/espejo, duración del ataque y relojes de render locales
