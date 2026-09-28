@@ -178,6 +178,9 @@ async function boot(browser, opts) {
       const s = worldToScreen(player.x, player.y), head = s.y - 64 * CAM_ZOOM;
       const rc = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; };
       const tut = rc(document.getElementById('tut-panel')), ban = rc(document.getElementById('center-banner'));
+      // con el cartel del título de la arena arriba, el central va debajo de los pies (tampoco lo tapa)
+      _arenaTitleUntil = performance.now() + 4000; showBanner('NIVEL 2'); await new Promise(r => setTimeout(r, 450));
+      const banLow = rc(document.getElementById('center-banner')); _arenaTitleUntil = 0;
       const topHud = Math.max(52, VH * 0.085) + 28;
       const plevel = document.getElementById('plevel'); const plh = plevel.getBoundingClientRect().height, lh = parseFloat(getComputedStyle(plevel).lineHeight) || parseFloat(getComputedStyle(plevel).fontSize) * 1.3;
       const text0 = document.querySelector('#tut-panel .tut-text').textContent, until0 = TUT.until;
@@ -188,7 +191,7 @@ async function boot(browser, opts) {
       const keyKept = TUT.key === '~t_hit', text1 = document.querySelector('#tut-panel .tut-text').textContent, until1 = TUT.until;
       TUT.duckUntil = performance.now() - 1; tutTick();
       const back = !document.getElementById('tut-panel').classList.contains('duck') && TUT.key === '~t_hit';
-      return { VH, heroY: Math.round(s.y), heroFrac: +(s.y / VH).toFixed(3), head: Math.round(head), topHud: Math.round(topHud), tut, ban,
+      return { VH, heroY: Math.round(s.y), heroFrac: +(s.y / VH).toFixed(3), head: Math.round(head), topHud: Math.round(topHud), tut, ban, banLow,
         plevel: plevel.textContent, oneLine: plh < lh * 1.6, full: CLASSES.segador.name, ducked, op, keyKept, sameText: text0 === text1, extended: until1 > until0, back };
     });
     const overlap = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
@@ -196,7 +199,7 @@ async function boot(browser, opts) {
     check(`CAM.${v.name}.heroe_en_la_franja_libre`, r.head > r.topHud && r.heroY < r.tut.t - 4, r);
     if (v.h <= 500) check(`CAM.${v.name}.pantalla_baja_heroe_mas_abajo_que_antes`, r.heroFrac >= 0.5 && r.heroFrac <= 0.6, { heroFrac: r.heroFrac, antes: +((v.h / 2 - 34) / v.h).toFixed(3) });
     check(`CAM.${v.name}.hechicero_no_tapa_al_heroe`, !overlap(r.tut, heroBox), { tut: r.tut, heroBox });
-    check(`CAM.${v.name}.cartel_central_no_tapa_al_heroe`, !overlap(r.ban, heroBox), { ban: r.ban, heroBox });
+    check(`CAM.${v.name}.cartel_central_no_tapa_al_heroe`, !overlap(r.ban, heroBox) && !overlap(r.banLow, heroBox) && !overlap(r.banLow, r.tut), { ban: r.ban, banLow: r.banLow, heroBox });
     check(`CAM.${v.name}.hechicero_se_agacha_al_recibir_danio_y_vuelve`, r.ducked && Number(r.op) < 0.2 && r.keyKept && r.sameText && r.extended && r.back, r);
     check(`HUD.${v.name}.nombre_corto_en_una_linea`, /^Segador · Nv\./.test(r.plevel) && r.oneLine && r.full === 'Segador Olvidado', { plevel: r.plevel, oneLine: r.oneLine });
     if (OUT) { await page.evaluate(() => { tutSay('~t_hit2', 'Cada habilidad necesita recargarse: esperá a que el botón se llene otra vez para volver a usarla.', null, 60000, true); render(); }); await sleep(400); await page.screenshot({ path: `${OUT}/hit_react_${v.name}.png` }); }
