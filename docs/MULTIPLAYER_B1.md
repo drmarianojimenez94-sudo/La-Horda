@@ -139,6 +139,51 @@ Sin crear sala, la pre-sala funciona igual que antes (vos + 3 bots) y no necesit
   desconectó"), sin castigo; la XP ya ganada queda guardada. (No hay migración de anfitrión.)
 - Si el anfitrión pierde la conexión al servidor, sigue jugando solo con bots.
 
+## Salas públicas
+
+- En la Sala (pestaña **Sala online**) el anfitrión marca **🌍 Pública** antes de crear la sala (se
+  recuerda) o toca **🔒 Privada / 🌍 PÚBLICA** con la sala ya creada. Privada es lo de siempre.
+- MULTIJUGADOR → **🌍 SALAS ABIERTAS**: las públicas que esperan en la Sala, no están llenas y tienen
+  al anfitrión conectado. Cada fila: arena, dificultad, jugadores/4, rango de nivel y anfitrión;
+  **UNIRSE** entra con un toque (mismo camino que el código). Se refresca sola cada 6 s y con ↻. En el
+  hub, MULTIJUGADOR dice cuántas hay.
+- Servidor: `GET /api/rooms?build=…` y el mensaje `{t:"rooms"}` (sin ids de cliente, IPs ni chat),
+  lista cacheada 1 s, hasta 40 filas, 30 pedidos cada 10 s por IP y 1 por segundo por conexión.
+  Un cliente viejo no manda `public`: sus salas siguen privadas y entra por código como siempre.
+
+## Intercambio en la sala (sin plata real)
+
+En la Sala (nunca en partida), pestaña Sala online → **🤝 INTERCAMBIO**: le das un objeto de tu
+inventario de cuenta a otro jugador de la sala. No hay oro ni precio: es un regalo.
+
+1. A toca el nombre de B, elige el objeto (lo ligado aparece aparte, con el motivo) y lo ofrece.
+2. B ve el objeto completo (Ver ficha) y **ACEPTA** (1ª confirmación) o rechaza.
+3. A **CONFIRMA LA ENTREGA** (2ª). Se transfiere el objeto entero (identidad, afijos, nivel, pasivas).
+
+**No se pueden dar** (ligados a la cuenta): Únicos, piezas de set (arman las skins), los re-tirados
+con la Mística (la Mística ata el objeto a quien pagó el oro; el aviso de la Mística lo dice) y lo
+que está equipado.
+
+**Diseño antiduplicación** (`server/trades.js`, `js/net/net-trade.js`):
+- El relay es el único que decide y lleva un registro en disco (`DATA_DIR/trades.jsonl`, una línea
+  por cambio de estado): `offered → accepted → delivering → committed → applied` (o `aborted`).
+- Al confirmar, A saca el objeto de su inventario y lo guarda **en camino** (`save.trades.esc`): no se
+  usa, no se vende, no se vuelve a dar. B lo recibe **por llegar** (`save.trades.pend`) y contesta
+  `got`. Ese `got` es el **commit**: el relay lo escribe en disco antes de avisar a nadie.
+- Con el commit, B lo pasa a su inventario con un **uid nuevo** derivado del id del intercambio
+  (aplicarlo dos veces no crea dos) y avisa `applied`; recién ahí A recibe `done` y borra su copia.
+  El uid original queda **quemado** en el relay: una copia vieja (otra pestaña, un guardado viejo) no
+  se puede volver a dar.
+- Cortes: antes del commit el intercambio se anula (20 s sin `got`, salida, expulsión, comienzo de la
+  partida) y A recupera su objeto; después del commit cada uno, al volver a conectarse (también al
+  abrir el juego), pregunta con la clave secreta de su lado y termina su parte. Nadie pierde nada.
+- Si el relay ya no conoce un id (se borró su disco) los dos lo tratan como anulado. Único caso de
+  copia doble posible: que el disco se pierda entre `applied` y el aviso a A. En el plan gratuito de
+  Render el disco se borra al redeployar: conviene un disco persistente en `DATA_DIR`.
+- Límites: objeto de hasta 8 KB, 1 oferta abierta por jugador, 1,5 s entre ofertas y 8 por minuto,
+  60 mensajes de intercambio por minuto por conexión; los textos llegan sin HTML y el juego vuelve a
+  validar tipo, rareza, nivel y valor al recibirlo.
+
 ## Panel de desarrollo
 
 Botón **B1** arriba al centro (o `?debug=1` en la URL): sala, rol/lugar, conexión y ping,
@@ -174,7 +219,9 @@ de datos Postgres en la variable `DATABASE_URL` del servicio: paso a paso en
 ## Pruebas
 
 Ver `tools/net-test/README.md` (1–4 humanos, 5º rechazado, desconexiones, campaña,
-resistencia, jefes, latencia simulada) y `tools/net-test/lobby_code_skins.js` (unirse con código,
+resistencia, jefes, latencia simulada), `tools/net-test/public_rooms.js` (salas públicas),
+`tools/net-test/trade.js` (intercambio y cortes), `server/test-trades.js` (protocolo y reinicio del
+relay) y `tools/net-test/lobby_code_skins.js` (unirse con código,
 scroll táctil en celular, autoequip y sincronización de skins, enlace, reconexión). Lo que **no** se puede probar desde el entorno de
 desarrollo: dispositivos reales en redes distintas (ver "Prueba manual" abajo).
 
