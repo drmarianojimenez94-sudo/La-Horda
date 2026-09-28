@@ -11,8 +11,10 @@
   son los del original; solo cambia el dibujo (y el nombre cuando el cuerpo nuevo ya no corresponde).
 - **Todo está en un solo archivo:** `js/data/body-swaps.js`. Cuando llegue el arte nuevo de un personaje, se **borra su entrada**
   y vuelve solo a su dibujo y a su nombre original. Para comparar en vivo: abrir el juego con `?bodyswap=0` en la dirección.
-- Medido con `tools/art/enemy_coverage.js` (antes y después): los 14 cuerpos prestados tienen caminata de 3 a 6 cuadros reales,
-  ataque, golpe y muerte propios del donante, sin estados vacíos.
+- Son 13 personajes (16 entradas: los tres actos del Presentador y el Espejismo de la Dama van aparte). Medido con
+  `tools/art/enemy_coverage.js` antes y después, y con `tools/art/t_body_swaps.js`: todos caminan con 3 a 6 cuadros reales,
+  atacan con cuadros distintos de la caminata y tienen golpe (salvo el Maestro, que clona el quieto); todos menos la Sirena y el
+  Maestro tienen además muerte en cuadros (esos dos caen con la animación genérica de muerte).
 
 | # | Personaje (arena) | Problema hoy | Cuerpo prestado mientras tanto | Nombre en el juego |
 |---|---|---|---|---|
