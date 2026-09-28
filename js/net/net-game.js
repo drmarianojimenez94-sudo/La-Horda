@@ -398,6 +398,15 @@ function netHostCheckDefeat(){
   }
 }
 // Mensajes de los invitados
+// Apuntado a mano que manda el invitado (mantener y arrastrar el botón, js/core/aim.js): punto del mundo y
+// dirección. Se valida antes de usarlo; si viene roto, la habilidad sale con el autoapuntado (como un toque).
+function netAimSafe(a){
+  if(!a || typeof a!=="object") return null;
+  const x = +a.x, y = +a.y; let dx = +a.dx, dy = +a.dy;
+  if(!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(dx) || !Number.isFinite(dy)) return null;
+  const l = Math.hypot(dx, dy); if(l < 1e-3) return null;
+  return {x, y, dx:dx/l, dy:dy/l};
+}
 function netHostOnMsg(from, d){
   if(d && d.k==="loadout"){
     netLobby.loadouts[from] = d.L;
@@ -414,7 +423,7 @@ function netHostOnMsg(from, d){
     case "in": n.in = d; n.basic = !!d.b; return;
     case "cast":
       if(state!=="playing" || !h.alive) return;
-      netWithHero(h, ()=>{ if(useSkill(d.idx|0, d.aim||null)) netEmitTo(from, "useXp", [d.idx|0]); });
+      netWithHero(h, ()=>{ if(useSkill(d.idx|0, netAimSafe(d.aim))) netEmitTo(from, "useXp", [d.idx|0]); });
       return;
     case "ult":
       if(state==="playing" && h.alive){
@@ -429,7 +438,7 @@ function netHostOnMsg(from, d){
     case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
       if(state!=="playing" || !h.alive) return;
-      netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(d.aim||null); });
+      netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(netAimSafe(d.aim)); });
       return;
     case "revive": // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)
       if(!d.on){ h._revHold = -1; cancelRevivesBy(h); return; }
