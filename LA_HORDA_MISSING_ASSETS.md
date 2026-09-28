@@ -20,6 +20,56 @@ Detalle por sistema, si hace falta más contexto:
 **Regla que se mantiene:** hoy no hay placeholders feos en pantalla. Todo lo de abajo está dibujado
 con código (procedural) o con arte prestado de otra pieza, de forma digna.
 
+## Actualización S5 (septiembre 2026): lo que NO se puede tapar espejando ni clonando
+
+Después de esta pasada, **ningún guardián ni enemigo tiene un estado o una dirección vacía**. Lo que falta se
+completa en tiempo de dibujo, con dos herramientas:
+- `tools/art/skin_audit.js`: guardianes y skins, 19 packs, 0 fallas.
+- `tools/art/enemy_coverage.js`: 104 tipos de enemigo × 11 estados, 0 vacíos.
+
+Las formas de completar:
+- **espejo:** la izquierda es la derecha invertida;
+- **clon:** un estado toma prestado el más parecido (por ejemplo, ataque → conjuro → quieto);
+- **balanceo:** una caminata corta se rellena con el movimiento del cuerpo.
+
+Lo de abajo es lo que **no queda bien con esos rellenos**, porque no hay nada parecido para clonar o porque
+la calidad o el estilo no coinciden. Es lo que hay que pedir. Las celdas están en píxeles de arte.
+
+### Crítico (P0): se ve mal en una partida normal
+
+| # | Qué | Problema hoy | Qué pedir |
+|---|---|---|---|
+| C-1 | **Ciudad (15 tipos `cm_*`) y Abismo (`ab_*`)**. Peores: `cm_maestro`, `cm_dama`, `cm_espejismo`, `cm_presentador`, `ab_carcelero`, `ab_jinete` | Arte de 16–37 px de alto dibujado 3–5 veces más grande: pixelotes al lado de Fortaleza/Micelial/Minas (85–130 px). Caminata de 2 cuadros | Redibujo a ~2×: quieto 2–4, caminar 4–6 por dirección (perfil, frente, espalda), ataque 3–4, golpe 1–2, muerte 4. Celda ~64×80 (comunes) y ~96×128 (subjefes y Presentador) |
+| C-2 | **Acuática comunes**: Tiburón Joven, Tiburón Blanco (élite), Cangrejo, Medusa Eléctrica, Sirena | 1–2 cuadros quietos + 1 de ataque; sin golpe ni muerte; píxel grueso | Nado de perfil 4, ataque 3, golpe 1, muerte 3–4. Celda ~64×64; Tiburón Blanco ~96×64 |
+| C-3 | **Gólem de Cuerpos** (2ª forma del jefe final) | Quieto, caminar y ataque de 1 cuadro cada uno | Caminar 4, quieto 2–4, golpetazo 3–4, golpe 1. Celda ~327×274 |
+| C-4 | **Ángel Corrompido** (1ª forma del jefe final, ya era A-03) | Es el Hechicero recoloreado con alas procedurales | Hoja propia: quieto 4, caminar 4, conjuro 8, ataque 4, golpe 2, muerte 6. Celda ~102×113 |
+| C-5 | **Cerbero** (jefe de las Minas, ya era A-01) | Baja resolución (≈54×67) escalada | Todas sus animaciones en alta resolución |
+| C-6 | **Pared agrietada del Laberinto** (ya era A-02) | Grietas procedurales | Pared sana, agrietada y derrumbe (3–4 cuadros) |
+| C-7 | **Jinete del Abismo** (`ab_jinete`, élite) | Caminar de 1 cuadro; el ataque es el mismo quieto | Caminar 4 de perfil + 2–4 de frente y espalda, ataque 3–4. Celda ~56×44 a 2× |
+
+### Importante (P1)
+
+| # | Qué | Qué pedir |
+|---|---|---|
+| I-1 | Atlas infernal: Esqueleto, Demonio Menor, Demonio Hechicero, **Demonio Mayor (jefe)**, Lobo Ártico: sin golpe ni muerte propios | Golpe 1–2 y muerte 4–5 de perfil, celda 119. El jefe primero |
+| I-2 | Esfinge: ninguna vista de ataque ni de golpe | Ataque 3–4 de perfil, golpe 1, celda 82×72 |
+| I-3 | Muertes del Laberinto **en el diseño del juego**: Esfinge encapuchada, Medusa humana, Druida encapuchado. Las de la última hoja son otros personajes (esfinge alada, Medusa violeta, druida con astas) y quedaron desactivadas | Muerte 4 cuadros de cada una, mismo diseño que su caminata (celda de su tira: 72 px de alto) |
+| I-4 | Kraken y Leviatán: sin cuadros de ataque (el Kraken ataca con el quieto) | Ataque 3–4 |
+| I-5 | Escorpión Gigante: arte con ruido, sin golpe ni muerte | Golpe 1 y muerte 3 (55×44); idealmente redibujado |
+| I-6 | Recortes con basura del cuadro vecino: `cm_sectario`, muerte de `mn_escupidor`, ataque de `mn_cerbero`, muerte de `ab_errante` | Volver a recortar de la hoja original (no hace falta redibujar) |
+| I-7 | Dragoncito de hielo: su golpe es un dragón más grande que su caminata. Ángel de hielo: la muerte es una línea finita. Enjambre de hadas: ataque de un punto | Golpe del Dragoncito a la escala de su caminata; muerte del Ángel 4 cuadros; ataque de las hadas 2–3 |
+
+### Pulido (P2)
+
+- Minas, Fortaleza y Micelial: solo tienen perfil. Faltan caminar de frente y de espalda (4 cuadros por tipo).
+- Engendro de la Fortaleza: quieto 1 y muerte 1.
+- Gólem de Piedra: muerte 1.
+- Gólem infernal: ataque 1.
+- Golpe propio para la Druida y los Dobladores (hoy clonan el quieto).
+- Guardianes: las cuatro hojas viejas (Guerrero, Tanque, Mago, Soporte) se ven bien. El resto de los packs quedó
+  completo con espejo y clon (`skin_audit.js`: 0 fallas). **No hay guardián que necesite arte urgente para
+  verse bien de los dos lados.**
+
 ## Convenciones
 
 - **Escala:** 1 px de arte = 2 unidades de mundo. Un guardián mide ≈32–36 px de arte (65 u).
