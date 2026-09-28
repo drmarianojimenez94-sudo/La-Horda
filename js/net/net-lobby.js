@@ -61,7 +61,7 @@ function netRenderLobbyBar(){
       <div class="net-row"><button class="btn small secondary" id="net-copy-btn">🔗 Copiar enlace</button>
         ${navigator.share ? `<button class="btn small" id="net-share-btn">📨 Invitar</button>` : ""}
         <button class="btn secondary small" id="net-close-btn">Cerrar sala</button></div>
-      <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots. La arena la cambiás arriba, sin cerrar la sala.</div>
+      <div class="net-hint">Pasales el código <b>${net.code}</b> a tus amigos: en su juego van a MULTIJUGADOR → 🔑 UNIRSE CON CÓDIGO (o a su Sala) y lo escriben. También sirve el enlace. Aparecen acá en tiempo real. Cuando estén LISTOS, COMENZAR: los lugares libres los ocupan bots. La arena la cambiás arriba, sin cerrar la sala.</div>
       <div class="net-link">${url}</div>
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Hay guardianes repetidos (${dup.map(k=>CLASSES[k].name).join(", ")}): cada jugador tiene que usar uno distinto.</div>` : ""}
@@ -377,7 +377,7 @@ function showNetToast(text){
   }
 })();
 
-/* ---------------- MODOS DE JUEGO → 🔑 UNIRSE CON CÓDIGO ----------------
+/* ---------------- MULTIJUGADOR → 🔑 UNIRSE CON CÓDIGO ----------------
    Dos jugadores abren LA HORDA cada uno por su lado: uno crea la sala (Arena → Sala → Crear sala
    online) y le dicta el código al otro, que lo escribe acá y entra directo a esa Sala. */
 function netRenderModeJoin(){

@@ -109,12 +109,13 @@ function shopOwnedCount(entry){
   if(entry.kind==="designed") return stashItems().filter(it=>it.designId===entry.id).length;
   return stashItems().filter(it=>!it.designed && it.type===entry.type && it.noun===entry.noun).length;
 }
-function shopBuyCatalog(key, tier){
+// priceOverride: precio de una oferta del día (vitrina); sin él, el de lista.
+function shopBuyCatalog(key, tier, priceOverride){
   if(typeof state!=="undefined" && state==="playing") return {ok:false, reason:"La tienda se usa fuera de la partida"};
   const entry = shopCatalog().find(e=>e.key===key);
   if(!entry) return {ok:false, reason:"Ese objeto no existe"};
   if(entry.kind==="archetype" && !SHOP_ARCHETYPE_TIERS.includes(tier)) return {ok:false, reason:"Categoría inválida"};
-  const price = shopPriceOf(entry, tier);
+  const price = priceOverride!=null ? priceOverride : shopPriceOf(entry, tier);
   if((save.gold||0) < price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${price})`};
   if(stashFull()) return {ok:false, reason:`Tu inventario está lleno (${INVENTORY_CAPACITY}/${INVENTORY_CAPACITY}): vendé o descartá algo`};
   const it = entry.kind==="designed" ? makeDesignedItem(entry.id) : makeItem(entry.type, tier, null, {noun:entry.noun});
@@ -124,12 +125,13 @@ function shopBuyCatalog(key, tier){
   persist();
   return {ok:true, item:it};
 }
-function shopBuyChampion(id){
+function shopBuyChampion(id, priceOverride){
   const cat = CHAMPION_CATALOG.find(c=>c.id===id), champ = save.champions[id];
   if(!cat || !champ) return {ok:false, reason:"Ese guardián no existe"};
   if(champ.unlocked) return {ok:false, reason:"Ya es tuyo"};
-  if((save.gold||0) < cat.priceGold) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${cat.priceGold})`};
-  save.gold -= cat.priceGold; champ.unlocked = true; save.starterChosen = true;
+  const price = priceOverride!=null ? priceOverride : cat.priceGold;
+  if((save.gold||0) < price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${price})`};
+  save.gold -= price; champ.unlocked = true; save.starterChosen = true;
   persist();
   return {ok:true};
 }
@@ -179,4 +181,86 @@ function skinAutoEquip(setId){
   else if(comp.length === 1) target = comp[0];
   if(!target) return {equipped:false, target:null, choices:comp};
   return {equipped:skinEquipOn(setId, target), target, choices:comp};
+}
+
+/* ============================================================
+   VITRINA DE LA TIENDA: DESTACADO + OFERTAS DEL DÍA
+   Rotación diaria DETERMINÍSTICA: la semilla es la fecha local (shopDayKey), así que todos los jugadores
+   ven la misma vitrina el mismo día y no cambia al recargar. Se renueva a la medianoche.
+   - Destacado: una skin de set (su set completo, como paquete) o un guardián, con descuento. El orden
+     del día es fijo; si ya tenés el primero, pasa al siguiente de la lista.
+   - 4 ofertas: objetos del catálogo (legendarios con nombre, de guardián, básicos Muy Raros o
+     Legendarios) con 15-30 % de descuento; cada una se compra una vez por día.
+   Todo se paga con ORO ganado jugando (nada de poder se compra con dinero real). Míticos y Únicos
+   siguen fuera de la tienda.
+   ============================================================ */
+const SHOP_DEAL_OFF = [15, 20, 25, 30];
+const SHOP_DEALS_PER_DAY = 4;
+// MONEDA PREMIUM: estructura lista y APAGADA. Si algún día existe será SOLO cosmética (skins, marcos,
+// efectos) y nunca dará poder. No hay pasarela de pago: mientras enabled sea false no se muestra ni
+// cobra nada, y ningún precio del juego la usa (currency:"gold" en todas las ofertas).
+const SHOP_PREMIUM = {enabled:false, id:"brasas", name:"Brasas", icon:"✦", cosmeticOnly:true};
+function _shopShuffle(arr, rng){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = (rng()*(i+1))|0; const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function _shopDisc(base, off){ return Math.max(10, Math.round(base*(1-off/100)/10)*10); }
+let _shopShowcaseCache = null;
+function shopDailyShowcase(){
+  const day = shopDayKey();
+  if(!_shopShowcaseCache || _shopShowcaseCache.day !== day){
+    const rng = _shopRng("vitrina-"+day);
+    const skins = typeof SET_SKINS!=="undefined" ? Object.keys(SET_SKINS).filter(id=>SET_DB[id]) : [];
+    const pool = _shopShuffle(skins.map(id=>({kind:"skin", id})).concat(CHAMPION_CATALOG.map(c=>({kind:"champ", id:c.id}))), rng);
+    const featOff = SHOP_DEAL_OFF[(rng()*SHOP_DEAL_OFF.length)|0];
+    const cands = _shopShuffle(shopCatalog().filter(e=>e.cat==="legendario" || e.cat==="campeon" || e.cat==="base"), rng);
+    const deals = [], perCat = {};
+    for(const e of cands){
+      if(deals.length >= SHOP_DEALS_PER_DAY) break;
+      if((perCat[e.cat]||0) >= 2) continue;
+      perCat[e.cat] = (perCat[e.cat]||0) + 1;
+      const tier = e.kind==="archetype" ? (rng() < 0.35 ? "legendario" : "muyraro") : undefined;
+      const off = SHOP_DEAL_OFF[(rng()*SHOP_DEAL_OFF.length)|0];
+      const base = shopPriceOf(e, tier);
+      deals.push({id:"of"+deals.length, key:e.key, tier, base, off, price:_shopDisc(base, off), currency:"gold"});
+    }
+    _shopShowcaseCache = {day, pool, featOff, deals};
+  }
+  const sc = _shopShowcaseCache;
+  const owned = f => f.kind==="skin" ? skinOwnedFull(f.id) : !!(save.champions[f.id]||{}).unlocked;
+  const f = sc.pool.find(x=>!owned(x)) || sc.pool[0] || null;
+  let featured = null;
+  if(f){
+    const base = f.kind==="skin" ? shopSetMissing(f.id).length*SHOP_TEST_PRICE : (CHAMPION_CATALOG.find(c=>c.id===f.id)||{}).priceGold||0;
+    featured = {kind:f.kind, id:f.id, off:sc.featOff, base, price:base ? _shopDisc(base, sc.featOff) : 0, owned:owned(f), currency:"gold"};
+  }
+  return {day:sc.day, featured, deals:sc.deals};
+}
+function _shopDealsState(){
+  const day = shopDayKey();
+  if(!save.shopDeals || save.shopDeals.day !== day) save.shopDeals = {day, bought:{}};
+  return save.shopDeals;
+}
+function shopDealBought(id){ return !!_shopDealsState().bought[id]; }
+// Minutos que faltan para que se renueve la vitrina (medianoche local).
+function shopMinutesToRenew(){ const n = new Date(), m = new Date(n.getFullYear(), n.getMonth(), n.getDate()+1); return Math.max(1, Math.ceil((m - n)/60000)); }
+function shopBuyDeal(id){
+  const d = shopDailyShowcase().deals.find(x=>x.id===id);
+  if(!d) return {ok:false, reason:"Esa oferta ya no está"};
+  if(shopDealBought(id)) return {ok:false, reason:"Ya aprovechaste esta oferta hoy: mañana hay otras"};
+  const r = shopBuyCatalog(d.key, d.tier, d.price);
+  if(r.ok){ _shopDealsState().bought[id] = true; persist(); }
+  return r;
+}
+// Destacado del día: el guardián o la skin (su set completo, las piezas que falten) con descuento.
+function shopBuyFeatured(){
+  const f = shopDailyShowcase().featured;
+  if(!f || f.owned) return {ok:false, reason:"Ya es tuyo"};
+  if(typeof state!=="undefined" && state==="playing") return {ok:false, reason:"La tienda se usa fuera de la partida"};
+  if(f.kind==="champ") return Object.assign(shopBuyChampion(f.id, f.price), {kind:"champ", id:f.id});
+  const miss = shopSetMissing(f.id);
+  if(!miss.length) return {ok:false, reason:"Ya tenés el set completo"};
+  if((save.gold||0) < f.price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${f.price})`};
+  if(stashUsedSlots() + miss.length > INVENTORY_CAPACITY) return {ok:false, reason:`No entran las ${miss.length} piezas en tu inventario (${stashUsedSlots()}/${INVENTORY_CAPACITY}): vendé o descartá algo`};
+  for(const p of miss){ const it = makeDesignedItem(p); if(!it) continue; it.bought = true; addItemToInventory(null, it); }
+  save.gold -= f.price;
+  persist();
+  return {ok:true, kind:"skin", id:f.id, n:miss.length};
 }

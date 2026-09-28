@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="css/panels.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/codex.css">
+<link rel="stylesheet" href="css/ui-kit.css">
 <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
@@ -114,30 +115,59 @@
     <div class="build-tag">LA HORDA — B1 COOPERATIVE PLAYTEST</div>
   </div>
 
-  <!-- MODO DE JUEGO -->
-  <!-- MENÚ PRINCIPAL: LA HORDA -->
-  <div id="mainmenu-screen" class="screen hidden">
-    <div class="brand" style="margin-bottom:6px;">LA HORDA</div>
-    <div class="brand-sub" style="margin-bottom:28px;">UN VIAJE ÉPICO · UN RPG DE FANTASÍA</div>
-    <div class="mainmenu-pillars">
-    <button class="mode-card mainmenu-play" id="mainmenu-jugar-btn">
-      <div class="mode-card-icon">⚔</div>
-      <div class="mode-card-title">MODOS DE JUEGO</div>
-      <div class="mode-card-desc">Arena (campaña, sola o con amigos: la sala online se arma después de elegir la arena).</div>
-    </button>
-    <button class="mode-card mainmenu-codex" id="mainmenu-codex-btn">
-      <div class="mode-card-icon">📖</div>
-      <div class="mode-card-title">CÓDICE</div>
-      <div class="mode-card-desc">Guardianes, bestiario, jefes y arenas: el archivo del mundo de La Horda. Elegí guardián, equipo, talentos y skins.</div>
-    </button>
-    <button class="mode-card" id="mainmenu-tienda-btn">
-      <div class="mode-card-icon">🪙</div>
-      <div class="mode-card-title">TIENDA</div>
-      <div class="mode-card-desc">Todos los guardianes (con su ficha) y, más adelante, skins, armas y mascotas.</div>
-    </button>
+  <!-- MENÚ PRINCIPAL (HUB): JUGAR continúa la campaña; accesos a Guardianes, Tienda, Multijugador,
+       Códice y Desafíos; arriba el perfil (nombre, nivel de cuenta y oro). js/ui/hub.js -->
+  <div id="mainmenu-screen" class="screen hidden hub-screen">
+    <div class="hub-top">
+      <button class="hub-profile" id="hub-profile-btn" aria-label="Perfil">
+        <canvas class="champ-anim hub-profile-anim" width="40" height="40" data-class-key="mago" data-idle="1"></canvas>
+        <span class="hub-profile-txt"><b class="hub-profile-name" id="hub-profile-name">Jugador</b><span class="hub-profile-lvl" id="hub-profile-lvl"></span></span>
+        <span class="hub-gold" id="hub-gold">🪙 0</span>
+      </button>
+      <div class="hub-brand">LA HORDA</div>
+      <button class="ui-icon-btn" id="hub-options-btn" aria-label="Opciones" title="Opciones">⚙</button>
+      <button class="ui-icon-btn" id="mainmenu-back-btn" aria-label="Volver al título" title="Volver al título">⏏</button>
     </div>
-    <div class="save-line" id="mainmenu-gold-line" style="margin-top:20px;"></div>
-    <button class="btn secondary" id="mainmenu-back-btn" style="margin-top:14px;">Volver</button>
+    <div class="hub-main">
+      <div class="hub-modes">
+        <!-- MODO CAMPAÑA: la historia en orden (Arena 01 → 10); JUGAR sigue en la próxima arena -->
+        <button class="hub-play" id="hub-play-btn">
+          <span class="hub-play-art"><canvas class="champ-anim hub-play-anim" width="132" height="132" data-class-key="mago" data-idle="1"></canvas></span>
+          <span class="hub-play-txt">
+            <span class="hub-play-kicker" id="hub-play-kicker">MODO CAMPAÑA</span>
+            <span class="hub-play-title">JUGAR</span>
+            <span class="hub-play-arena" id="hub-play-arena"></span>
+            <span class="hub-play-champ" id="hub-play-champ"></span>
+          </span>
+        </button>
+        <!-- HORDA INFINITA (supervivencia): aparece sola cuando existe window.endlessOpen -->
+        <button class="hub-endless hidden" id="hub-endless-btn"><span class="hub-endless-ico">♾</span><span class="hub-endless-txt"><b>HORDA INFINITA</b><span class="hub-endless-sub" id="hub-endless-sub">Supervivencia sin fin</span></span><span class="ui-tag hidden" id="hub-endless-lock">🔒</span></button>
+      </div>
+      <div class="hub-grid" id="hub-grid">
+        <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
+        <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span></button>
+        <button class="hub-tile" id="mainmenu-jugar-btn"><span class="hub-tile-ico">🌐</span><span class="hub-tile-title">MULTIJUGADOR</span><span class="hub-tile-sub">Sala con código · modos</span></button>
+        <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>
+        <button class="hub-tile hidden" id="mainmenu-quests-btn"><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-quests"></span></button>
+      </div>
+    </div>
+    <div class="save-line hidden" id="mainmenu-gold-line"></div>
+  </div>
+  <!-- OPCIONES (desde el hub): nombre, volumen y código de guardado -->
+  <div id="hub-options" class="ui-modal hidden" role="dialog" aria-label="Opciones">
+    <div class="ui-modal-back" data-opt-close></div>
+    <div class="ui-panel ui-modal-panel">
+      <div class="ui-panel-title">⚙ Opciones</div>
+      <label class="opt-row">Tu nombre <input id="opt-name" maxlength="16" placeholder="Jugador"></label>
+      <label class="opt-row">🎵 Música <input type="range" id="opt-vol-music" min="0" max="100" step="5"></label>
+      <label class="opt-row">💥 Efectos <input type="range" id="opt-vol-sfx" min="0" max="100" step="5"></label>
+      <div class="opt-note">El progreso se guarda en este navegador. Para llevarlo a otro lado, usá el código de guardado.</div>
+      <div class="opt-btns">
+        <button class="btn small" id="opt-export-btn">Copiar código de guardado</button>
+        <button class="btn small secondary" id="opt-import-btn">Restaurar con código</button>
+      </div>
+      <button class="btn wide" id="opt-close-btn" data-opt-close>Listo</button>
+    </div>
   </div>
 
   <!-- MODO CAMPAÑA: el guardián de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
@@ -177,31 +207,35 @@
     <button class="btn secondary" id="champdetail-back-btn">Volver a la tienda</button>
   </div>
 
-  <!-- TIENDA: catálogo de guardianes (animados, con precio y ficha) + resto de la tienda más adelante -->
+  <!-- TIENDA (vitrina): destacado del día, ofertas diarias, paquetes de skins y catálogo completo.
+       Todo se paga con oro ganado jugando: no hay compras con dinero real. js/ui/shop-ui.js -->
   <div id="shop-screen" class="screen hidden">
-    <div class="arena-title">Tienda</div>
-    <div class="save-line" id="shop-gold-line"></div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="shop-back-btn">‹ Menú</button>
+      <div class="ui-topbar-title">TIENDA</div>
+      <div class="ui-wallet" id="shop-gold-line"></div>
+    </div>
     <div class="shop-tabs" id="shop-tabs">
-      <button class="shop-tab on" data-shop-tab="campeones">Guardianes</button>
+      <button class="shop-tab on" data-shop-tab="destacados">★ Destacados</button>
+      <button class="shop-tab" data-shop-tab="campeones">Guardianes</button>
       <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
       <button class="shop-tab" data-shop-tab="skins">Skins</button>
     </div>
-    <div class="lobby-note shop-test-note">Guardianes: 2.500 de oro. Los objetos cuestan según su rareza. Míticos y Únicos no se venden: se fabrican o se consiguen peleando.</div>
     <div id="shop-panel"></div>
-    <button class="btn secondary" id="shop-back-btn" style="margin-top:16px;">Volver</button>
   </div>
 
+  <!-- MODOS Y MULTIJUGADOR: MODO CAMPAÑA (la historia en orden, elegir arena) y HORDA INFINITA a la
+       derecha; unirse a la sala de un amigo con el código o crear una sala, a la izquierda. -->
   <div id="modeselect-screen" class="screen hidden">
-    <div class="arena-title">Elegí el modo de juego</div>
-    <button class="mode-card" id="mode-arena-btn">
-      <div class="mode-card-icon">⚔</div>
-      <div class="mode-card-title">Arena</div>
-      <div class="mode-card-desc">Sobrevive oleadas de monstruos, derrota a los subjefes y al jefe final — incluye la Arena Divina.</div>
-    </button>
+    <div class="ui-topbar">
+      <button class="ui-back" id="modeselect-back-btn">‹ Menú</button>
+      <div class="ui-topbar-title">MODOS Y MULTIJUGADOR</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+    <div class="mode-cols">
     <!-- B1: unirse a la sala de un amigo con SOLO el código (sin enlace externo) -->
     <div class="mode-card join-card" id="mode-join-card">
-      <div class="mode-card-icon">🔑</div>
-      <div class="mode-card-title">UNIRSE CON CÓDIGO</div>
+      <div class="mode-card-title">🔑 UNIRSE CON CÓDIGO</div>
       <div class="mode-card-desc">¿Un amigo creó una sala? Escribí su código de 6 letras y entrás directo a su Sala.</div>
       <div class="join-code-row">
         <input id="mode-join-code" class="multi-input net-code-input" placeholder="Código (ej. QKL58J)" maxlength="200" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters">
@@ -211,8 +245,19 @@
       <div class="join-code-meta"><label class="net-name">Tu nombre <input id="mode-join-name" maxlength="16" placeholder="Jugador"></label>
         <span class="join-code-champ" id="mode-join-champ"></span></div>
       <div class="net-err join-status" id="mode-join-status"></div>
+      <div class="mode-create-row"><span>¿Invitás vos?</span><button class="btn small" id="mode-create-btn">🌐 CREAR SALA</button></div>
     </div>
-    <button class="btn secondary" id="modeselect-back-btn">Volver</button>
+    <div class="mode-side">
+      <button class="mode-card mode-campaign" id="mode-arena-btn">
+        <div class="mode-card-title">⚔ MODO CAMPAÑA</div>
+        <div class="mode-card-desc">La historia en orden, de la Arena 01 a la 10. Elegí cualquier arena que ya abriste y rejugala, sola o con amigos.</div>
+      </button>
+      <button class="mode-card mode-endless hidden" id="mode-endless-btn">
+        <div class="mode-card-title">♾ HORDA INFINITA <span class="ui-tag hidden" id="mode-endless-lock">🔒</span></div>
+        <div class="mode-card-desc" id="mode-endless-desc">Supervivencia: oleadas sin fin, cada vez más duras. ¿Hasta dónde llegás?</div>
+      </button>
+    </div>
+    </div>
   </div>
 
   <!-- ARENA DIVINA: asedio 4v4 real contra un equipo rival de guardianes divinos, con torres,
@@ -235,7 +280,7 @@
 
   <!-- SELECCIÓN DE ARENA -->
   <div id="arenaselect-screen" class="screen hidden">
-    <div class="arena-title">Elegí la arena</div>
+    <div class="arena-title">Modo Campaña · elegí la arena</div>
     <div id="arena-grid"></div>
     <button class="btn secondary" id="arenaselect-back-btn">Volver</button>
   </div>
@@ -523,6 +568,7 @@
 <script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/run-intro.js"></script>
 <script src="js/ui/menus.js"></script>
+<script src="js/ui/hub.js"></script>
 <script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/item-icons.js"></script>
 <script src="js/ui/item-preview.js"></script>
