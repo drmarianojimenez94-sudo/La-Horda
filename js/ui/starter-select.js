@@ -114,7 +114,7 @@ function renderStarterSkinStep(){
     startChampAnimLoop();
     return;
   }
-  if(sub) sub.innerHTML = `Elegí una para <b style="color:${cls.color||"#ffcf5c"}">${_starterEsc(cls.name)}</b>: es tuya para siempre y la llevás puesta desde ya.`;
+  if(sub) sub.innerHTML = `Elegí una para <b style="color:${cls.color||"#ffcf5c"}">${_starterEsc(cls.name)}</b>: es tuya y la llevás puesta desde ya.`;
   grid.innerHTML = opts.map(o=>`<button class="gallery-card starter-skin-card ${_starterSkinPick===o.id?"sel":""}" data-skin-gift="${o.id}">
       <span class="starter-skin-own hidden">¡Es tuya!</span>
       <canvas class="champ-anim starter-anim" width="110" height="110" data-class-key="${k}" data-skin="${o.id}" data-idle="1" style="background:${cls.color||"#888"}1c;"></canvas>

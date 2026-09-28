@@ -40,8 +40,10 @@ function _shopVoucherMount(panel){
   const n = typeof skinVoucherCount==="function" ? skinVoucherCount() : 0;
   if(!n || (shopTab!=="destacados" && shopTab!=="skins")) return;
   const box = document.createElement("div"); box.className = "shop-vale-banner";
-  box.innerHTML = `🎁 <b>Tenés una skin de regalo: elegila.</b> Tocá <b>🎟 Canjear vale</b> en la skin o croma que quieras: el precio queda cubierto.${n>1 ? ` (${n} vales)` : ""}`;
+  box.innerHTML = `🎁 <b>Tenés una skin de regalo: elegila.</b> Tocá <b>🎟 Canjear vale</b> en la skin o croma que quieras: el precio queda cubierto.${n>1 ? ` (${n} vales)` : ""}${shopTab==="destacados" ? ' <button class="shop-btn hot" id="shop-vale-go">Ver las skins ▸</button>' : ""}`;
   panel.insertBefore(box, panel.firstChild);
+  const go = box.querySelector("#shop-vale-go");
+  if(go) go.addEventListener("click", ()=>{ shopTab = "skins"; renderShop(); const p = document.getElementById("shop-screen"); if(p) p.scrollTop = 0; });
   panel.querySelectorAll("[data-voucher]").forEach(b=> b.addEventListener("click", ev=>{
     ev.stopPropagation();
     const id = b.getAttribute("data-voucher"), d = typeof skinDefOf==="function" ? skinDefOf(id) : null;
