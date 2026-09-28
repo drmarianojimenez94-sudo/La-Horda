@@ -30,7 +30,9 @@ async function client(browser, mobile, name, champ) {
   return { ctx, page, errors, mobile, name };
 }
 const ev = (c, fn, a) => c.page.evaluate(fn, a);
-async function press(c, sel) { if (c.mobile) await c.page.tap(sel); else await c.page.click(sel); await sleep(450); }
+async function press(c, sel) {
+  await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, sel).catch(() => {}); // pestaña de la Sala que lo contiene (js/ui/prep-sections.js)
+  if (c.mobile) await c.page.tap(sel); else await c.page.click(sel); await sleep(450); }
 async function startCoop(browser) {
   const A = await client(browser, false, 'Ana', 'guerrero');
   await press(A, '#title-continue-btn'); await press(A, '#mainmenu-jugar-btn'); await press(A, '#mode-arena-btn');

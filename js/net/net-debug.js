@@ -21,7 +21,7 @@ function netDebugRefresh(force){
   const humans = net.room ? net.room.slots.filter(s=>s && s.connected).length : (netMatch ? 0 : 1);
   const synced = netMatch ? (netMatch.role==="guest" ? [...(netMatch.colls ? Object.values(netMatch.colls) : [])].reduce((a,m)=>a+m.size,0) : Object.values(netMatch.last||{}).reduce((a,m)=>a+(m.size||0),0)) : 0;
   const rows = [
-    ["Build", "LA HORDA — B1 COOPERATIVE PLAYTEST · "+NET_CONFIG.build],
+    ["Build", "LA HORDA — ALFA COOPERATIVA · "+NET_CONFIG.build],
     ["Servidor", netServerUrl() || "(no configurado)"],
     ["Conexión", net.status + (net.ping ? " · ping "+net.ping+" ms" : "")],
     ["Sala", net.code || "—"],

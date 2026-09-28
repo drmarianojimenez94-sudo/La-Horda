@@ -22,8 +22,10 @@ document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   titleContinue();
 });
 function titleContinue(){
-  // modo campaña: la primera vez se elige el guardián de regalo
-  if(needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
+  // PRIMER ARRANQUE CORTO: perfil nuevo → guardián de regalo → directo a la Ciudad jugando (sin hub, Modos,
+  // Arenas ni Sala). El hub y la Sala aparecen después de la primera partida (firstRunStart, js/ui/hub.js).
+  if(needsStarterChampion()){ openStarterSelect(typeof firstRunStart==="function" ? firstRunStart : ()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
+  if(save.firstRun==="jugando"){ save.firstRun = "hub"; persist(); } // cerró el juego en plena primera partida
   setState("mainmenu");
   renderMainMenu();
 }
@@ -196,7 +198,7 @@ document.getElementById("arenaselect-back-btn").addEventListener("click", ()=>{
   setState("modeselect");
 });
 // Tarjetas de selección de arena en el ORDEN CANÓNICO (CAMPAIGN_ORDER): 01 → 10, después la Arena
-// Divina (postgame) y el Coliseo (próximamente). Las arenas en construcción se muestran con su número
+// Divina (postgame). El Coliseo (PvP) no se muestra hasta que exista. Las arenas en construcción se muestran con su número
 // pero no se pueden elegir; las bloqueadas dicen qué hay que completar.
 function renderArenaGrid(){
   const grid = document.getElementById("arena-grid");
@@ -227,20 +229,14 @@ function renderArenaGrid(){
     </button>`;
   }).join("");
   // Arena Divina: contenido POSTGAME, fuera de las diez arenas de la campaña. Se abre al completar
-  // la Arena Infernal (isDivinaUnlocked, js/arenas/arena-rules.js). Después, el Coliseo (PvP) — próximamente.
+  // la Arena Infernal (isDivinaUnlocked, js/arenas/arena-rules.js).
   const divinaUnlocked = isDivinaUnlocked();
   const divinaCard = `<div class="arena-grid-sep">POSTGAME</div><button class="arena-card divina ${divinaUnlocked?"":"locked"}" data-arena="divina" ${divinaUnlocked?"":"disabled"}>
       <span class="arena-card-badge" style="color:#d9a8ff; border-color:#7a4fae; background:rgba(122,79,174,0.16);">POSTGAME</span>
       <div class="arena-card-icon">${divinaUnlocked?"👁":"🔒"}</div>
       <div class="arena-card-title">Arena Divina</div>
       <div class="arena-card-desc">${divinaUnlocked?"Las Cinco Pruebas Divinas: asedio 4 contra 4, derribá las torres y el castillo enemigo antes que a los tuyos.":"🔒 Completá la <b>Arena Infernal</b> para desbloquearla."}</div>
-    </button>
-    <button class="arena-card locked soon" data-arena="coliseo" disabled>
-      <span class="arena-card-badge soon">PRÓXIMAMENTE</span>
-      <div class="arena-card-icon">⚔</div>
-      <div class="arena-card-title">Coliseo</div>
-      <div class="arena-card-desc">Guardianes contra guardianes (PvP). Se abre después de las Pruebas Divinas.</div>
-    </button>`;
+    </button>`; // (el Coliseo PvP no se muestra hasta que exista: un "Próximamente" en la alfa resta)
   grid.innerHTML = normalCards + divinaCard;
   grid.querySelectorAll(".arena-card:not(.locked)").forEach(card=>{
     card.addEventListener("click", ()=>{
@@ -416,6 +412,7 @@ function renderPrepSummary(){
   if(back) back.textContent = netInRoom() ? "‹ Salir" : ((typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu") ? "‹ Menú" : "‹ Guardián");
   renderLobbyArena();
   netRenderLobbyBar();
+  if(typeof prepSecSync==="function") prepSecSync(); // pestañas Equipo · Arena · Sala online
   netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online
   if(netInRoom()){
     // B1: sala online real: lugares en tiempo real (vos, amigos, esperando)
@@ -522,6 +519,7 @@ function netLeaveAfterMatch(){
 document.getElementById("menu-btn-1").addEventListener("click", ()=>{
   const go = ()=>{
     if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
+    if(typeof firstRunToHub==="function" && firstRunToHub()) return; // primera partida: al hub (js/ui/hub.js)
     if(currentArena==="divina"){ setState("divina"); return; }
     setState("menu"); renderChampGrid(); renderSaveLine();
   };
@@ -535,6 +533,7 @@ document.getElementById("again-btn").addEventListener("click", ()=>{ if(netBackT
 document.getElementById("menu-btn-2").addEventListener("click", ()=>{
   const go = ()=>{
     if(netLeaveAfterMatch()){ setState("mainmenu"); renderMainMenu(); return; }
+    if(typeof firstRunToHub==="function" && firstRunToHub()) return; // primera partida: al hub (js/ui/hub.js)
     setState("menu"); renderChampGrid(); renderSaveLine();
   };
   if(net.role==="host" && netHumanCount()>1){

@@ -61,9 +61,9 @@ const PLAYABLE = CANON.slice(); // las diez son jugables (Minas Profundas = Aren
   // ---------------- selector (DOM) ----------------
   const g0 = await E(() => { setState('arenaselect'); renderArenaGrid();
     return [...document.querySelectorAll('#arena-grid .arena-card')].map(c => ({ k: c.dataset.arena, t: c.querySelector('.arena-card-title').textContent.trim(), dis: c.disabled, soon: c.classList.contains('soon') })); });
-  check('UI.lista_01_a_10_y_despues_divina', JSON.stringify(g0.slice(0, 10).map(c => c.t)) === JSON.stringify(NAMES) && g0[10].k === 'divina' && g0[11].k === 'coliseo', g0.map(c => c.t));
+  check('UI.lista_01_a_10_y_despues_divina', JSON.stringify(g0.slice(0, 10).map(c => c.t)) === JSON.stringify(NAMES) && g0[10].k === 'divina' && g0.length === 11, g0.map(c => c.t)); // el Coliseo (PvP) no se muestra hasta que exista
   check('UI.solo_ciudad_elegible', JSON.stringify(g0.filter(c => !c.dis).map(c => c.k)) === '["ciudad"]', g0.filter(c => !c.dis));
-  check('UI.en_construccion_y_proximamente', g0.filter(c => c.soon).map(c => c.k).join() === 'coliseo', g0.filter(c => c.soon).map(c => c.k));
+  check('UI.sin_proximamente', g0.filter(c => c.soon).length === 0 && !g0.some(c => c.k === 'coliseo'), g0.filter(c => c.soon).map(c => c.k)); // nada "Próximamente" en la alfa
   if (OUT) { await sleep(200); await page.screenshot({ path: OUT + '/arena_select_nuevo.png', fullPage: true }); }
   const g1 = await E(() => { const c = document.querySelector('#arena-grid [data-arena="minas"]'); c.click(); document.querySelector('#arena-grid [data-arena="bosque"]').click(); return currentArena; });
   check('UI.no_se_puede_saltear_ni_elegir_en_construccion', g1 === 'ciudad', g1);

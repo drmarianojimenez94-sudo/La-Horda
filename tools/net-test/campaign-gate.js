@@ -20,7 +20,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   await p.click('#mainmenu-jugar-btn'); await p.click('#mode-arena-btn');
   const cards = await p.$$eval('.arena-card:not(.divina)', els => els.map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')));
   // orden canónico (docs/lore/LA_HORDA_LORE_BIBLE.md): 01 Ciudad … 08 Abismo · 09 Minas · 10 Infernal
-  check('new_save.only_first_arena_open', cards.join(',') === 'ciudad:open,fortaleza:locked,bosque:locked,micelial:locked,hielo:locked,acuatica:locked,laberinto:locked,abismo:locked,minas:locked,infernal:locked,coliseo:locked', cards);
+  check('new_save.only_first_arena_open', cards.join(',') === 'ciudad:open,fortaleza:locked,bosque:locked,micelial:locked,hielo:locked,acuatica:locked,laberinto:locked,abismo:locked,minas:locked,infernal:locked', cards); // (sin el Coliseo: no se muestra hasta que exista)
   // completar la Ciudad abre la Fábrica, y así en orden
   const after = await p.evaluate(() => { save.arenasCleared = { ciudad: true }; save.legacyOpenArenas = []; renderArenaGrid(); return [...document.querySelectorAll('.arena-card:not(.divina)')].map(e => e.dataset.arena + ':' + (e.disabled ? 'locked' : 'open')); });
   check('progression.ciudad_opens_fabrica', after.slice(0, 3).join(',') === 'ciudad:open,fortaleza:open,bosque:locked', after);

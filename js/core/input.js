@@ -208,6 +208,7 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
       if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true});
       document.getElementById("pause-screen").classList.add("hidden");
       if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
+      if(typeof firstRunToHub==="function" && firstRunToHub()) return; // primera partida: al hub (js/ui/hub.js)
       setState("menu"); renderChampGrid(); renderSaveLine();
     });
   };

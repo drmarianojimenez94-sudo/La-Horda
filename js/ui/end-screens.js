@@ -226,7 +226,8 @@ function victoryNextNoteHTML(){
   const next = victoryNextArena();
   const name = next ? _lobbyArenaName(next) : "";
   let txt;
-  if(!victoryIsOnline()) txt = next ? `Próxima arena: <b>${name}</b>. Con <b>Continuar</b> volvés a la Sala con ella elegida (la podés cambiar ahí).` : `Completaste la última arena de la campaña. Con <b>Continuar</b> volvés a la Sala para elegir otra.`;
+  if(!victoryIsOnline() && save.firstRun==="jugando") txt = `Con <b>Continuar</b> vas al menú: <b>JUGAR</b> te lleva a la Sala, donde preparás el equipo${next ? ` y entrás a <b>${name}</b>` : ""}.`;
+  else if(!victoryIsOnline()) txt = next ? `Próxima arena: <b>${name}</b>. Con <b>Continuar</b> volvés a la Sala con ella elegida (la podés cambiar ahí).` : `Completaste la última arena de la campaña. Con <b>Continuar</b> volvés a la Sala para elegir otra.`;
   else if(net.role==="host") txt = next ? `Al volver al lobby, la sala queda con la próxima arena elegida: <b>${name}</b>. La podés cambiar antes de comenzar.` : `Al volver al lobby elegís en la Sala la próxima arena.`;
   else txt = `Al volver al lobby, el anfitrión elige la próxima arena${next ? ` (la siguiente es <b>${name}</b>)` : ""}.`;
   return `<div class="vic-next-note" id="vic-next-note">▶ ${txt}</div>`;
@@ -264,13 +265,14 @@ function renderVictoryStep(){
   // último paso, jugando solo en una arena de la campaña: "Continuar" sigue a la próxima arena (Sala)
   const soloNext = isLast && !victoryIsOnline() && ARENA_ORDER.indexOf(victoryData.arena) >= 0;
   const nx = soloNext ? victoryNextArena() : null;
-  nextBtn.textContent = !soloNext ? "Continuar" : (nx ? `Continuar ▶ ${_lobbyArenaName(nx)}` : "Continuar a la Sala");
+  const first = soloNext && typeof save!=="undefined" && save.firstRun==="jugando"; // primera partida: sigue en el hub
+  nextBtn.textContent = !soloNext ? "Continuar" : (first ? "Continuar al menú" : (nx ? `Continuar ▶ ${_lobbyArenaName(nx)}` : "Continuar a la Sala"));
   nextBtn.classList.toggle("hidden", false);
   document.getElementById("again-btn").textContent = victoryIsOnline() ? "VOLVER AL LOBBY" : (soloNext ? "Repetir esta arena" : "Volver a entrar");
   netEndLabels();
   document.getElementById("again-btn").classList.toggle("hidden", !isLast);
   document.getElementById("again-btn").classList.toggle("secondary", soloNext);
-  document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
+  document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast || first); // primera vez: "Continuar al menú" ya lo hace
   if(isLast && !soloNext) nextBtn.classList.add("hidden");
 
   if(victoryStep!==2 || !body.querySelector(".chest-host")) bindLootButtons(body);
@@ -289,8 +291,10 @@ function showVictoryScreen(){
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
   if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); return; }
   if(state==="victory" && !victoryIsOnline()){
-    // último paso (solo): el Campamento de los Portadores (camp.js) y, con "Seguir", a la Sala con la próxima arena
-    if(typeof campOpenFromVictory==="function" && campOpenFromVictory(victoryGoNextArena)) return;
-    victoryGoNextArena();
+    // último paso (solo): el Campamento de los Portadores (camp.js) y, con "Seguir", a la Sala con la próxima
+    // arena; la primera victoria del perfil nuevo va al hub, con JUGAR resaltado (hub.js: firstRunToHub)
+    const go = ()=>{ if(typeof firstRunToHub==="function" && firstRunToHub()) return; victoryGoNextArena(); };
+    if(typeof campOpenFromVictory==="function" && campOpenFromVictory(go)) return;
+    go();
   }
 });

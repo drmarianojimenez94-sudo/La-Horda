@@ -99,6 +99,7 @@ const UNCALM = () => { if (window.__calm) clearInterval(window.__calm); window._
     return waitFor(c, () => state === 'prep', null, 8000);
   };
   check('lobby.host_in_prep', await toLobby(A, FIRST[0]));
+  await A.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, '#net-join-code'); // pestaña Sala online (js/ui/prep-sections.js)
   check('lobby.join_box_visible', await A.page.isVisible('#net-join-code'));
   await A.page.click('#net-create-btn');
   await waitFor(A, () => !!net.code, null, 15000);
@@ -112,6 +113,7 @@ const UNCALM = () => { if (window.__calm) clearInterval(window.__calm); window._
     check(`lobby.client${c.i}_in_prep`, await toLobby(c, FIRST[c.i]));
     // B pega el enlace completo, C "SALA XXXXXX", D el código en minúsculas con espacios
     const paste = n === 0 ? invite : (n === 1 ? `SALA ${code}` : ` ${code.toLowerCase()} `);
+    await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, '#net-join-code'); 
     await c.page.fill('#net-join-code', paste);
     await c.page.click('#net-join-btn');
     const ok = await waitFor(c, () => state === 'prep' && !!net.room && net.role === 'guest', null, 15000);

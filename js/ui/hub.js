@@ -43,10 +43,17 @@ function renderHub(){
   set("hub-profile-name", name);
   set("hub-profile-lvl", lvl ? `${mark}Nv. de cuenta ${lvl}` : (acc && !logged ? "Invitado · Entrar" : mark + camp));
   set("hub-gold", "🪙 " + fmtGold(save.gold||0));
+  // invitado: un "?" legible sobre el retrato (tocá la ficha para entrar o crear cuenta)
+  const prof = document.getElementById("hub-profile-btn");
+  if(prof){ prof.classList.toggle("guest", !!acc && !logged); prof.setAttribute("aria-label", acc && !logged ? "Invitado: entrar o crear cuenta" : "Perfil"); }
   // JUGAR: próxima arena + guardián
   const next = hubNextArena(), A = ARENA_MODS[next] || {}, num = campaignNumberLabel(next);
   const done = !campaignFrontier();
+  // después de la primera partida: resalte suave de lo que sigue (hasta tocar JUGAR)
+  const nextHint = save.firstRun==="hub";
   set("hub-play-kicker", done ? "MODO CAMPAÑA ✔" : "MODO CAMPAÑA");
+  const pb = document.getElementById("hub-play-btn"); if(pb) pb.classList.toggle("hub-next", nextHint);
+  const nt = document.getElementById("hub-play-next"); if(nt) nt.classList.toggle("hidden", !nextHint);
   set("hub-play-arena", `${A.icon||"⚔"} ${num ? num + " · " : ""}${A.label||next}`);
   set("hub-play-champ", cls.name ? `con ${cls.name} · Nv. ${ch.level||1}` : "");
   document.querySelectorAll("#mainmenu-screen canvas.champ-anim").forEach(c=>{ c.dataset.classKey = k; });
@@ -62,9 +69,44 @@ function renderHub(){
   if(grid) grid.classList.toggle("hub-grid-6", !!q && !q.classList.contains("hidden"));
   startChampAnimLoop();
 }
+/* ---------------- PRIMER ARRANQUE CORTO ----------------
+   Perfil nuevo: título → guardián de regalo → directo a la Ciudad (Arena 01) jugando, con el Hechicero y
+   los bots de siempre, sin pasar por el hub, Modos, Arenas ni la Sala (antes eran 8 pantallas).
+   save.firstRun: "jugando" durante esa primera partida (reintentar la deja igual); al terminarla (victoria,
+   derrota o abandono) se vuelve al HUB en vez de a elegir guardián, y queda "hub": JUGAR se resalta con
+   "SIGUIENTE" hasta que se toca. Ahí recién aparece la Sala (equipo, arena, sala online). Las partidas
+   online no pasan por acá. */
+// Pruebas automáticas viejas (webdriver) siguen el camino de antes (guardián → hub), como la pantalla de
+// cuenta (_acctAutoSkip, js/net/account.js). Las que miden el camino nuevo definen window.__firstRun (o ?primera=1).
+function firstRunEnabled(){
+  try{
+    if(window.__firstRun || /[?&]primera=1\b/.test(location.search)) return true;
+    return !navigator.webdriver;
+  }catch(e){ return true; }
+}
+function firstRunStart(){
+  if(!firstRunEnabled()){ setState("mainmenu"); renderMainMenu(); return; }
+  save.firstRun = "jugando"; persist();
+  currentArena = hubNextArena(); // la frontera de un perfil nuevo: la Ciudad Maldita
+  updateMenuBrandSub();
+  lobbyAllies = pickLobbyAllies(selectedClass);
+  prepReturnTo = "mainmenu";
+  if(typeof playSfx==="function") playSfx("ready");
+  runIntroShow(currentArena, ()=>{ try{ startRun(1); }catch(err){ _prepStartFailed(err); } });
+}
+// Fin de la primera partida: al hub (true) en vez del camino de siempre (false = seguir como antes).
+function firstRunToHub(){
+  if(save.firstRun!=="jugando") return false;
+  if((typeof netInRoom==="function" && netInRoom()) || (typeof netMatch!=="undefined" && netMatch)) return false;
+  save.firstRun = "hub"; persist();
+  prepReturnTo = null;
+  setState("mainmenu"); renderMainMenu();
+  return true;
+}
 function hubPlay(){
   if(typeof needsStarterChampion==="function" && needsStarterChampion()){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   if(!ensureOwnedSelection()) return;
+  if(save.firstRun){ save.firstRun = null; persist(); } // el resalte "SIGUIENTE" ya cumplió
   if(typeof netInRoom==="function" && netInRoom()){ setState("prep"); renderPrepSummary(); return; }
   currentArena = hubNextArena();
   if(save.justUnlockedArena===currentArena){ save.justUnlockedArena = null; persist(); }
