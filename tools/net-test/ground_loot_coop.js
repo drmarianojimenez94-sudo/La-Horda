@@ -44,7 +44,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const seen = await G.p.evaluate(() => { const e = enemies.find(o => o.eliteName); return e ? { name: e.eliteName, mods: e.eliteMods } : null; });
   const hostName = await H.p.evaluate(() => __el.eliteName);
   check('GL.invitado_ve_la_elite_con_nombre', !!seen && seen.name === hostName && seen.mods.join() === 'fuego,escarcha', { seen, hostName });
-  if (SHOT_DIR) { await G.p.evaluate(() => { document.querySelectorAll('#center-banner,#tut-panel,#qs-toasts').forEach(x => x.style.display = 'none'); }); await G.p.screenshot({ path: SHOT_DIR + '/u1_coop_invitado_elite_844x390.png' }); }
+  if (SHOT_DIR) { await G.p.evaluate(() => { document.querySelectorAll('#center-banner,#tut-panel,#qs-toasts,#arena-title-card').forEach(x => x.style.display = 'none'); }); await G.p.screenshot({ path: SHOT_DIR + '/u1_coop_invitado_elite_844x390.png' }); }
 
   const n0 = await G.p.evaluate(() => groundLoot.length);
   await H.p.evaluate(() => { GROUND_LOOT_CFG.chance.named = 1; __el.hp = 1; __el.lastHitBy = player; killEnemy(__el); });
@@ -54,7 +54,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('GL.al_anfitrion_le_cae_lo_suyo', hostFloor.length >= 1, hostFloor);
   check('GL.al_invitado_le_llega_lo_suyo', guestFloor.length >= 1 && n0 === 0, guestFloor);
   check('GL.botin_instanciado_distinto', guestFloor.every(g => !hostFloor.some(h => h.uid === g.uid)), { hostFloor, guestFloor });
-  if (SHOT_DIR) { await G.p.evaluate(() => { document.querySelectorAll('#center-banner,#tut-panel,#qs-toasts').forEach(x => x.style.display = 'none'); }); await sleep(300); await G.p.screenshot({ path: SHOT_DIR + '/u1_coop_invitado_botin_844x390.png' }); }
+  if (SHOT_DIR) { await G.p.evaluate(() => { document.querySelectorAll('#center-banner,#tut-panel,#qs-toasts,#arena-title-card').forEach(x => x.style.display = 'none'); }); await sleep(300); await G.p.screenshot({ path: SHOT_DIR + '/u1_coop_invitado_botin_844x390.png' }); }
 
   // El invitado camina hasta SU objeto y lo levanta: va a SU inventario (no al del anfitrión).
   const hostStash0 = await H.p.evaluate(() => stashItems().length);

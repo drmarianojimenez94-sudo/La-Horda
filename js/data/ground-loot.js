@@ -25,7 +25,7 @@ const GROUND_LOOT_CFG = {
   highMult:{normal:0.05, subelite:0.08, elite:0.15, named:0.2, subjefe:0.3, jefe:0.45},
   pickR: 52,          // radio para levantarlo al pasar por encima
   btnR: 120,          // radio del botón contextual "Levantar"
-  nameR: 210,         // a esta distancia aparece el nombre flotante (Legendario o más: siempre en pantalla)
+  nameR: 300,         // a esta distancia aparece el nombre flotante (Legendario o más: siempre en pantalla)
   maxOnFloor: 16,     // tope por jugador (si se llena, lo más viejo y más común se levanta solo)
   scatter: 46         // dispersión alrededor del cadáver
 };
