@@ -20,6 +20,15 @@ Detalle por sistema, si hace falta más contexto:
 **Regla que se mantiene:** hoy no hay placeholders feos en pantalla. Todo lo de abajo está dibujado
 con código (procedural) o con arte prestado de otra pieza, de forma digna.
 
+## Actualización T10 (playtest): cuerpos prestados y encargo de arte
+
+Para el playtest, los personajes de C-1 (jefe y subjefes de la Ciudad), C-2 (Acuática), C-3 (Gólem de Cuerpos),
+C-7 (Jinete del Abismo), el Carcelero del Vacío e I-2 (Esfinge) se dibujan con el **cuerpo completo de otro
+personaje** del mismo papel, recoloreado con la paleta de su arena (`js/data/body-swaps.js`; `?bodyswap=0` los
+apaga). La IA y las mecánicas no cambian. Cuando llegue el arte, se borra la entrada del personaje.
+**El encargo completo** (ficha, planilla de animaciones y prompts de una imagen por vez, en español e inglés) está
+en [`docs/ART_COMMISSION_BRIEF.md`](docs/ART_COMMISSION_BRIEF.md).
+
 ## Actualización S5 (septiembre 2026): lo que NO se puede tapar espejando ni clonando
 
 Después de esta pasada, **ningún guardián ni enemigo tiene un estado o una dirección vacía**. Lo que falta se
