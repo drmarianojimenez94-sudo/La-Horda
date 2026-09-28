@@ -44,6 +44,7 @@ function bossHudShow(e){
     _bossIntroT = isSub ? 4600 : 7500;
   } else { _bossIntroDelay = 0; _bossIntroT = 0; }
   bossHudHint("", "");
+  if(typeof storyBossIntro==="function") storyBossIntro(e); // su presentación (voz del jefe, js/systems/story.js)
 }
 function bossHudHide(){
   hudBoss = null; _bossIntroDelay = 0; _bossIntroT = 0;
@@ -60,6 +61,7 @@ function bossHudHint(name, tip){
 function bossHudPhase(ph, n){
   _bossPhaseTxt = n>1 ? `Fase ${ph+1}/${n}` : "";
   bossHudStatus();
+  if(typeof storyBossPhase==="function") storyBossPhase(ph); // lo que dice al cambiar de fase (story.js)
 }
 function bossHudStatus(){
   const e = hudBoss; if(!e) return;

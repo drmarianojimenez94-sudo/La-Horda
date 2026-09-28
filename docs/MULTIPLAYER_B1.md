@@ -166,6 +166,11 @@ Plan gratuito: sin costo; se "duerme" tras 15 minutos sin uso y tarda ~1 minuto 
 (el juego lo despierta solo al entrar a la pre-sala y espera hasta 75 s al conectar); 750
 horas de instancia por mes por workspace.
 
+**Cuentas de usuario y guardado en la nube**: el mismo servicio atiende también `/api/*`
+(`server/accounts.js`). Para que las cuentas no se borren hace falta pegar la dirección de una base
+de datos Postgres en la variable `DATABASE_URL` del servicio: paso a paso en
+[`ACCOUNTS_DEPLOY.md`](ACCOUNTS_DEPLOY.md). Sin eso, salas y juego andan igual.
+
 ## Pruebas
 
 Ver `tools/net-test/README.md` (1–4 humanos, 5º rechazado, desconexiones, campaña,

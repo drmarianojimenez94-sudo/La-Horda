@@ -26,6 +26,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
   for (let i = 0; i < 300; i++) { const ok = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; }); if (ok) break; await sleep(100); }
+  // cromas (js/systems/cromas.js): se cargan a pedido; acá, todas, para auditarlas como un guardián más
+  await page.evaluate(() => { if (typeof cromaLoadAll === 'function') cromaLoadAll(); });
   // todos los atlas cargados
   for (let i = 0; i < 200; i++) { const n = await page.evaluate(() => Object.values(CHAMP_PACK).filter(P => P.atlas && !P.ready && !P.failed).length); if (!n) break; await sleep(100); }
   await sleep(300);
@@ -36,6 +38,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const list = [];
     const skinOf = {};
     for (const id in SET_SKINS) { const d = SET_SKINS[id]; for (const base in (d.packs || {})) skinOf[d.packs[base]] = { id, champ: d.champ, base }; }
+    if (typeof CROMA_SKINS !== 'undefined') for (const id in CROMA_SKINS) { const d = CROMA_SKINS[id]; for (const base in (d.packs || {})) skinOf[d.packs[base]] = { id, champ: d.champ, base }; }
     for (const key in CHAMP_PACK) {
       const P = CHAMP_PACK[key]; if (!P.atlas || P.failed) continue;
       if (ONLY && ONLY.indexOf(key) < 0) continue;

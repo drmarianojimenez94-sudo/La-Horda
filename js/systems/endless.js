@@ -576,6 +576,8 @@ function endlessEndRun(reason){
     L.gemsGained = (save.gems||0) - L.gems0;
     L.timeMs = runElapsedMs||0;
     persist(); if(typeof persistNow==="function") persistNow();
+    // logros / desafíos / XP de cuenta (T6): la partida cuenta como jugada (siempre termina en derrota o abandono)
+    if(typeof questsOnRunEnd==="function"){ try{ L.questSum = questsOnRunEnd(false, {abandon:EN.endReason==="quit", endless:true}) || L.questSum; }catch(e){ console.error(e); } }
     endlessStat("endless_score", EN.score);
     endlessStat("endless_end", round);
   }
@@ -609,6 +611,7 @@ function endlessShowResults(){
     <div class="en-res-title">${EN.endReason==="quit" ? "Contención abandonada" : "La Horda siguió avanzando"}</div>
     <div class="en-res-big"><div><span>Ronda</span><b>${EN.round}</b></div><div><span>Puntaje</span><b>${_enFmt(EN.score)}</b></div></div>
     <div class="en-res-badges">${badge(L.newGlobal, "¡NUEVO RÉCORD GLOBAL!")}${badge(L.newGuardian && !L.newGlobal, `¡Récord de ${(CLASSES[cls]||{}).name||cls}!`)}${badge(L.newWeek && !L.newGlobal && !L.newGuardian, "¡Mejor de la semana!")}</div>
+    ${L.questSum ? `<div class="qs-run-sum"><b>🏆 DESAFÍOS</b><span>+${L.questSum.xp} XP de cuenta</span>${L.questSum.pass ? `<span>Pase Nv. ${L.questSum.pass.level}${L.questSum.passUp > 0 ? " ▲" : ""}</span>` : ""}${L.questSum.chal > 0 ? `<span>${L.questSum.chal} desafío${L.questSum.chal>1?"s":""} ✔</span>` : ""}${L.questSum.ach > 0 ? `<span>${L.questSum.ach} logro${L.questSum.ach>1?"s":""} ✔</span>` : ""}</div>` : ""}
     <div class="en-res-btns">
       ${guest ? "" : `<button class="btn en-again" id="en-again-btn">⟳ UNA MÁS</button>`}
       <button class="btn secondary" id="en-back-btn">${online ? (guest ? "VOLVER A LA SALA" : "Volver a la sala") : "Volver al menú"}</button>

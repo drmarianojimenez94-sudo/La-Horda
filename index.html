@@ -15,7 +15,10 @@
 <link rel="stylesheet" href="css/panels.css">
 <link rel="stylesheet" href="css/overlays.css">
 <link rel="stylesheet" href="css/codex.css">
+<link rel="stylesheet" href="css/story.css">
 <link rel="stylesheet" href="css/mobile.css">
+<link rel="stylesheet" href="css/quests.css">
+<link rel="stylesheet" href="css/account.css">
 <link rel="stylesheet" href="css/endless.css">
 </head>
 <body>
@@ -311,6 +314,7 @@
     <div class="pause-audio">
       <label>🎵 Música <input type="range" id="vol-music" min="0" max="100" step="5"></label>
       <label>💥 Efectos <input type="range" id="vol-sfx" min="0" max="100" step="5"></label>
+      <label class="pause-motion" title="Apaga sacudidas de cámara, congelados de golpe, cámara lenta y pulsos de pantalla">🌀 Reducir movimiento <input type="checkbox" id="opt-reduce-motion"></label>
     </div>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
@@ -354,6 +358,7 @@
 <script src="js/data/divina.js"></script>
 <script src="js/data/enemies.js"></script>
 <script src="js/data/buffs.js"></script>
+<script src="js/data/quests.js"></script>
 <script src="js/core/constants.js"></script>
 <script src="js/core/utils.js"></script>
 <script src="js/storage/save.js"></script>
@@ -380,6 +385,7 @@
 <script src="js/rendering/camera.js"></script>
 <script src="js/rendering/effects.js"></script>
 <script src="js/rendering/feedback.js"></script>
+<script src="js/rendering/juice.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
 <script src="js/assets/boss-sheets-meta.js"></script>
@@ -400,6 +406,8 @@
 <script src="js/systems/reactions.js"></script>
 <script src="js/systems/set-effects.js"></script>
 <script src="js/assets/set-skins-meta.js"></script>
+<script src="js/systems/cromas.js"></script>
+<script src="js/assets/croma-skins-meta.js"></script>
 <script src="js/assets/abismo-meta.js"></script>
 <script src="js/assets/ciudad-meta.js"></script>
 <script src="js/assets/minas-meta.js"></script>
@@ -426,6 +434,7 @@
 <script src="js/systems/crystals.js"></script>
 <script src="js/systems/crystal-resonance.js"></script>
 <script src="js/systems/campaign-story.js"></script>
+<script src="js/systems/quests.js"></script>
 <script src="js/champions/hero-factory.js"></script>
 <script src="js/champions/segador.js"></script>
 <script src="js/champions/mago.js"></script>
@@ -511,6 +520,7 @@
 <script src="js/ai/navigation.js"></script>
 <script src="js/ai/bot-brain.js"></script>
 <script src="js/ai/allies.js"></script>
+<script src="js/audio/music-score.js"></script>
 <script src="js/audio/audio.js"></script>
 <script src="js/storage/save-code.js"></script>
 <script src="js/ui/champion-select.js"></script>
@@ -528,12 +538,15 @@
 <script src="js/ui/item-icons.js"></script>
 <script src="js/ui/item-preview.js"></script>
 <script src="js/ui/shop-ui.js"></script>
+<script src="js/ui/shop-cromas.js"></script>
 <script src="js/ui/inventory-ui.js"></script>
 <script src="js/ui/starter-select.js"></script>
 <script src="js/ui/buff-choice.js"></script>
 <script src="js/ui/loot-ceremony.js"></script>
 <script src="js/ui/end-screens.js"></script>
+<script src="js/ui/quests-ui.js"></script>
 <script src="js/data/codex-content.js"></script>
+<script src="js/data/story-text.js"></script>
 <script src="js/ui/codex/codex-track.js"></script>
 <script src="js/ui/codex/codex-preview.js"></script>
 <script src="js/ui/codex/codex.js"></script>
@@ -543,9 +556,11 @@
 <script src="js/net/net-config.js"></script>
 <script src="js/net/net-core.js"></script>
 <script src="js/net/net-game.js"></script>
+<script src="js/systems/story.js"></script>
 <script src="js/net/net-lobby.js"></script>
 <script src="js/net/net-chat.js"></script>
 <script src="js/net/net-debug.js"></script>
+<script src="js/net/account.js"></script>
 <script src="js/assets/skin-fx-meta.js"></script>
 <script src="js/systems/skin-fx.js"></script>
 <script src="js/systems/terrain-tags.js"></script>

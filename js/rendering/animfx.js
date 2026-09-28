@@ -304,16 +304,26 @@ function animPose(ent, prof, isHero){
   }
   an.pHit = hitV;
   if(hitV>0){
-    const h = hitV/hitMax;
+    const h = Math.min(1, hitV/hitMax);
     const powK = [1, 1, 1.45, 2.1, 2.7][hitPow];
     const kb = (isHero?4:6)*h*h*Math.min(1.4, 1.2/prof.weight)*K*powK;
-    P.ox += an.hdx*kb; P.oy += an.hdy*kb*0.6;
-    P.sx += 0.05*h*powK; P.sy -= 0.05*h*powK;
+    // el retroceso real (x/y ya movidos por impactFeedback o por un empujón) se DIBUJA deslizándose
+    // desde donde estaba en el primer tercio del golpe, en vez de saltar de un cuadro al otro
+    const kv = isHero ? 0 : Math.min(60, ent._kbVis||0), st = h > 0.66 ? (h-0.66)/0.34 : 0, back = kv*st*st;
+    P.ox += an.hdx*(kb - back); P.oy += an.hdy*(kb*0.6 - back);
+    // squash & stretch legible: aplasta al entrar el golpe (más ancho, más bajo), rebota con un
+    // estirón corto y se asienta. Más fuerte cuanto más pesado el golpe; los pesados/jefes, menos.
+    const big = prof.isBoss || ent.rank==="subjefe";
+    const S = Math.min(0.22, 0.085*powK/Math.max(0.8, prof.weight*0.8)) * (big ? 0.45 : 1) * (isHero ? 0.6 : 1);
+    const q = 1 - h;                                    // progreso del golpe 0 -> 1
+    const sq = q < 0.3 ? 1 - q/0.3*0.2 : (q < 0.62 ? 0.8 - (q-0.3)/0.32*1.25 : -0.45*(1-(q-0.62)/0.38));
+    P.sx += S*sq; P.sy -= S*sq*0.9;
     if(hitPow>=3) P.rot += (an.hdx>0?1:-1)*0.09*h*powK/2; // un golpe pesado tuerce el cuerpo
     // los jefes reciben golpes todo el tiempo: con el destello completo se veían casi blancos
     // durante toda la pelea (perdían sus colores). Destello tenue para jefes/subjefes.
-    const flashMax = isHero ? 0.45 : (prof.isBoss || ent.rank==="subjefe" ? (hitPow>=3 ? 0.35 : 0.22) : (hitPow>=3 ? 0.85 : 0.6));
-    P.flash = Math.max(P.flash, Math.max(0, (h-0.35)/0.65)*flashMax);
+    // Destello: blanco lleno los primeros cuadros y se corta rápido (antes: rampa lineal lavada).
+    const flashMax = isHero ? 0.45 : (big ? (hitPow>=3 ? 0.35 : 0.22) : (hitPow>=3 ? 0.95 : 0.8));
+    P.flash = Math.max(P.flash, (h > 0.55 ? 1 : (h/0.55)*(h/0.55))*flashMax);
   }
 
   // estela de velocidad (cargas, dashes, embestidas)

@@ -44,4 +44,5 @@ function setState(s){
     if(muteBtn) muteBtn.classList.add("hidden");
     if(screens[s]) screens[s].classList.remove("hidden");
   }
+  if(typeof accountOnState==="function"){ try{ accountOnState(s); }catch(e){} } // CUENTAS: sincronizar al terminar la partida
 }

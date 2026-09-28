@@ -133,6 +133,7 @@ function startRun(fromLevel){
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
   if(arenaHas("runStart")) arenaHook("runStart"); // mapa propio: estado inicial y héroes en la entrada
   beginLevel();
+  if(typeof questsOnRunStart==="function") questsOnRunStart(); // logros y desafíos: empieza a contar esta partida
   setState("playing");
 }
 

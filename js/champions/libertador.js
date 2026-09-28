@@ -263,7 +263,9 @@ function _smFrame(P, set, prog, flip, h, s, alpha, dx){
   return true;
 }
 function drawLibertador(h, drawScale, alpha){
-  const P = CHAMP_PACK.libertador, HP = CHAMP_PACK.libertador_horse;
+  // croma equipada (js/systems/cromas.js): mismos cuadros, otra paleta (a pie y a caballo)
+  const sk = typeof setSkinPackKey==="function";
+  const P = CHAMP_PACK[sk ? setSkinPackKey(h, "libertador") : "libertador"], HP = CHAMP_PACK[sk ? setSkinPackKey(h, "libertador_horse") : "libertador_horse"];
   if(!P || !P.ready) return false;
   const dir = champPackDir(h);
   const s = champPackScale(P, h, drawScale);

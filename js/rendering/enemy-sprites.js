@@ -412,7 +412,7 @@ function drawAcuaticaReal(e){
   const targetH = e.radius*2.6;
   const sc = targetH/img.height;
   const clip = { frames: [{x:0,y:0,w:img.width,h:img.height}] };
-  drawAnimFrameSized(img, clip, 0, e.x, e.y, img.width*sc, img.height*sc, 0.5, 0.72, flip, e.hitFlash>60?0.6:1);
+  drawAnimFrameSized(img, clip, 0, e.x, e.y, img.width*sc, img.height*sc, 0.5, 0.72, flip, 1); // (el golpe se ve con el destello blanco común, no volviéndose transparente)
   return true;
 }
 function drawEnemyAtlas(e){

@@ -132,7 +132,7 @@ const NET_GLOBALS = {
   levelTimer:[()=>levelTimer, v=>{ levelTimer = v; }], levelDuration:[()=>levelDuration, v=>{ levelDuration = v; }],
   kills:[()=>kills, v=>{ kills = v; }], bossActive:[()=>bossActive, v=>{ bossActive = v; }],
   boss:[()=>boss, v=>{ boss = v; }], activeChampion:[()=>activeChampion, v=>{ activeChampion = v; }],
-  subjefesDefeated:[()=>subjefesDefeated, v=>{ subjefesDefeated = v; }], screenShake:[()=>screenShake, v=>{ screenShake = v; }],
+  subjefesDefeated:[()=>subjefesDefeated, v=>{ subjefesDefeated = v; }], // (screenShake ya no viaja: cada pantalla tiembla con SUS eventos, ver juice.js)
   axiomForceQuitFlash:[()=>axiomForceQuitFlash, v=>{ axiomForceQuitFlash = v; }], axiomFreezeTimer:[()=>axiomFreezeTimer, v=>{ axiomFreezeTimer = v; }],
   runElapsedMs:[()=>runElapsedMs, v=>{ runElapsedMs = v; }], levelClearing:[()=>levelClearing, v=>{ levelClearing = v; }],
   arenaRuleBossStacks:[()=>arenaRuleBossStacks, v=>{ arenaRuleBossStacks = v; }], arenaRuleBossTimer:[()=>arenaRuleBossTimer, v=>{ arenaRuleBossTimer = v; }],
@@ -249,6 +249,7 @@ function netBuildLoadout(){
   return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
     skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
+    croma:(typeof cromaEquippedId==="function" ? cromaEquippedId(k) : null), // cosmético: su croma (js/systems/cromas.js)
     crystal:(typeof resonanceChosen==="function" ? resonanceChosen() : null), // el cristal que lleva (crystal-resonance.js)
     open:ARENA_ORDER.filter(a=>isArenaUnlocked(a))}; // SUS arenas abiertas: el anfitrión avisa en la Sala si alguna no le cuenta para la campaña
 }
@@ -260,6 +261,8 @@ function netLoadoutRecord(L){
   if(L.talents) rec.talents = Object.assign(mkTalentState(), L.talents);
   rec.loadoutItems = Array.isArray(L.items) ? L.items.slice(0, 6) : []; // sus objetos equipados (ver itemPoolFor)
   rec.equipment = Object.assign(mkEquipment(), L.equipment||{});
+  // su croma: solo un id que exista y sea de ese guardián (cosmético; la compra la valida SU juego)
+  if(L.croma && typeof CROMA_SKINS!=="undefined" && CROMA_SKINS[L.croma] && CROMA_SKINS[L.croma].champ===L.champ) rec.croma = L.croma;
   return rec;
 }
 // Mientras dura la partida, save.champions[guardián del invitado] apunta a SU loadout (así toda
@@ -588,6 +591,7 @@ function netGuestStartRun(msg){
   const mine = msg.slots[net.slot];
   if(mine) selectedClass = mine.champ;
   if(!reconnecting) markRunStartProgress(selectedClass);
+  if(typeof questsOnRunStart==="function") questsOnRunStart(reconnecting); // logros/desafíos del invitado: cuentan en SU guardado
   clearRunTimers(); resetRunTransients(); runEnding = false; if(typeof _arenaExitDone!=="undefined") _arenaExitDone = false; kills = 0; runElapsedMs = 0; subjefesDefeated = 0; screenShake = 0;
   runStats = freshRunStats();
   iceWalls.length = 0; bossStrikes.length = 0;
@@ -726,7 +730,7 @@ function netGuestOnMsg(from, d){
 function netGuestUpdate(dt){
   runElapsedMs += dt;
   vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
-  if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
+  screenShakeDecay(dt); // curva exponencial con tope (juice.js)
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si
   // algo externo lo movió (posAuth) o si el movimiento no fue posible.
@@ -890,6 +894,7 @@ function netOnMatchClosed(reason, role){
   document.getElementById("go-title").textContent = reason==="host_left" ? "El anfitrión se desconectó" : "Se perdió la conexión";
   document.getElementById("go-stats").textContent = "La partida terminó";
   document.getElementById("go-progress").innerHTML = "La XP y el oro que ganaste hasta ahora ya quedaron guardados (sin castigo).";
+  if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true}); // lo jugado cuenta para sus estadísticas
   document.getElementById("retry-btn").classList.add("hidden");
 }
 
