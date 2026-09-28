@@ -162,8 +162,20 @@ function netHookEvents(){
     };
   }
 }
+// Eventos que no se pueden perder aunque el cuadro venga cargado (recompensas del invitado, muertes,
+// avisos del jefe/arena). Antes TODO se cortaba a los 260 eventos por snapshot: en el barrido de fin
+// de nivel (una muerte + una XP por enemigo y por invitado) el invitado perdía parte de su XP y los
+// últimos enemigos desaparecían sin su muerte. Los cosméticos (números, chispas, sonidos) siguen con tope.
+const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHudShow","bossHudHide","bossHudPhase","bossHudHint",
+  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip"]);
+let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){
-  if(_netEvents.length > 260) return;
+  if((name==="xp" || name==="gold") && to!==undefined && typeof args[0]==="number"){
+    const key = name + to, i = _netRewardIdx.get(key);
+    if(i!==undefined && _netEvents[i]){ _netEvents[i][1][0] += args[0]; return; }
+    _netRewardIdx.set(key, _netEvents.length); _netEvents.push([name, [args[0]], to]); return;
+  }
+  if(_netEvents.length > (NET_KEEP_EVENTS.has(name) ? 1200 : 260)) return;
   const inline = NET_INLINE_EVENTS.has(name);
   const a = args.map(x=>{
     if(inline && x && typeof x==="object" && x.type!==undefined){
@@ -568,7 +580,7 @@ function netBuildSnapshot(full){
   const p = [];
   for(const pt of particles){ if(pt._s) continue; pt._s = 1; if(p.length < 90){ const s = netSer(pt, 1); if(s) p.push(s); } }
   if(p.length) snap.p = p;
-  if(_netEvents.length){ snap.v = _netEvents; _netEvents = []; }
+  if(_netEvents.length){ snap.v = _netEvents; _netEvents = []; _netRewardIdx = new Map(); }
   return snap;
 }
 function netHostTick(){
@@ -580,7 +592,7 @@ function netHostTick(){
   if(key) netMatch.lastKeyAt = now;
   const snap = netBuildSnapshot(key);
   const str = JSON.stringify({t:"msg", d:snap});
-  if(str.length > 240000){ snap.p = []; snap.v = []; }
+  if(str.length > 240000){ snap.p = []; snap.v = (snap.v||[]).filter(ev=>NET_KEEP_EVENTS.has(ev[0])); } // lo cosmético se descarta; recompensas y muertes, no
   netMatch.lastSnapBytes = str.length;
   netBroadcast(snap);
 }
