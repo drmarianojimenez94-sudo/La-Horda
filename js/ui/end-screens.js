@@ -272,5 +272,9 @@ function showVictoryScreen(){
 }
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
   if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); return; }
-  if(state==="victory" && !victoryIsOnline()) victoryGoNextArena(); // último paso (solo): a la Sala, con la próxima arena
+  if(state==="victory" && !victoryIsOnline()){
+    // último paso (solo): el Campamento de los Portadores (camp.js) y, con "Seguir", a la Sala con la próxima arena
+    if(typeof campOpenFromVictory==="function" && campOpenFromVictory(victoryGoNextArena)) return;
+    victoryGoNextArena();
+  }
 });

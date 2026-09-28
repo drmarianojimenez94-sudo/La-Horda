@@ -17,12 +17,17 @@
 /* ---------------- los tres actos ---------------- */
 const STORY_ACTS = [
   {n:"I", name:"EL GUÍA", arenas:["ciudad","fortaleza","bosque"],
-    intro:"La Horda volvió a la ciudad de los guardianes, y del humo salió una voz dorada que sabía sus nombres. Les habló de cuatro Guardianes caídos y de cuatro cristales perdidos. Les pidió que confiaran en ella. Todavía no había motivos para no hacerlo."},
+    intro:"La Horda volvió a la ciudad de los guardianes, y del humo salió una voz dorada que sabía sus nombres. Les habló de cuatro Guardianes caídos y de cuatro cristales perdidos. Les pidió que confiaran en ella. Todavía no había motivos para no hacerlo.",
+    outro:"El primer cristal late en tu bolsa, y la voz del humo dice tu nombre con más ternura que nunca. En la Ciudad dicen que tuviste suerte de encontrar un guía. Nadie pregunta quién encontró a quién."},
   {n:"II", name:"LOS ECOS", arenas:["micelial","hielo","acuatica","laberinto"],
-    intro:"Con el primer cristal, el mundo empezó a contestar. Las esporas repiten voces de hace siglos, el hielo guarda cartas que nadie respondió y un mar aparece donde nunca hubo agua. Cada eco cuenta la misma historia que el guía. Casi la misma."},
+    intro:"Con el primer cristal, el mundo empezó a contestar. Las esporas repiten voces de hace siglos, el hielo guarda cartas que nadie respondió y un mar aparece donde nunca hubo agua. Cada eco cuenta la misma historia que el guía. Casi la misma.",
+    outro:"Las esporas, las cartas, el faro y los muros dijeron lo mismo con palabras distintas: eran cuatro, y uno eligió el otro lado. La voz dorada te sigue felicitando. Cada vez felicita un poco más a los cristales."},
   {n:"III", name:"EL DESCENSO", arenas:["abismo","minas","infernal"],
-    intro:"Tres cristales pesan más de lo que deberían, y el mundo ya no los aguanta: se abre. Debajo del Abismo hay minas, y debajo de las minas, una puerta. Otros bajaron antes. Ninguno volvió para contar quién les indicó el camino."}
+    intro:"Tres cristales pesan más de lo que deberían, y el mundo ya no los aguanta: se abre. Debajo del Abismo hay minas, y debajo de las minas, una puerta. Otros bajaron antes. Ninguno volvió para contar quién les indicó el camino.",
+    outro:"El Rey cayó, y con él el nombre que había olvidado. Los cristales no se rompen, la Horda no muere, y alguien tiene que seguir cargando lo que pesa. Esta noche, la fogata es tuya."}
 ];
+// ¿Esta arena cierra su acto? (la última de STORY_ACTS[].arenas): cartel "FIN DEL ACTO" en la victoria y en el campamento.
+function storyActClosing(arena){ const a = storyActOf(arena); return a && a.arenas[a.arenas.length-1]===arena ? a : null; }
 function storyActOf(arena){ return STORY_ACTS.find(a=>a.arenas.includes(arena)) || null; }
 
 /* ---------------- quién habla (retrato del cuadro de voz) ---------------- */
