@@ -163,6 +163,52 @@ function _cmDrawGroundMarks(t, V){
   }
   // reflector (Dama / Presentador)
   if(cmS.spot){ _cmGlow(cmS.spot.x, cmS.spot.y, 200, "255,240,210", 0.25); }
+  _cmDrawCover(t, V);
+}
+// OVACIÓN FINAL (Acto III): dónde cubrirse, dibujado en el piso. Cada pilar en pie proyecta su "sombra" (la franja
+// detrás de él, mirando desde el Presentador: exactamente la zona que cuenta como a cubierto, cmCovered) con un
+// halo. Fuera de la Ovación se ve apenas; durante el aviso, fuerte y latiendo, y un aro bajo tus pies dice si ya
+// estás a cubierto (verde) o no (rojo).
+function _cmDrawCover(t, V){
+  const P = cmS.pr; if(!P || P.act!==3 || (P.st!=="fight" && P.st!=="transform") || !cmS.pillars.length) return;
+  const e = cmPresEntity(); if(!e) return;
+  const ov = !!e.ov, q = ov ? Math.min(1, e.ov.t/CM_CFG.presentador.ovationWind) : 0;
+  const pulse = 0.5 + 0.5*Math.sin(t*(ov ? 10 : 3));
+  ctx.save();
+  for(const p of cmS.pillars){
+    if(p.t < -700 || (ov && !cmPillarHolds(e, p))) continue;   // uno que se hunde antes del golpe no se marca como refugio
+    const up = p.t < 0 ? 1 + p.t/700 : Math.min(1, (p.d - p.t)/600);
+    const dx = p.x - e.x, dy = p.y - e.y, D = Math.hypot(dx, dy)||1, ang = Math.atan2(dy, dx), half = Math.asin(Math.min(0.95, (p.r + 6)/D));
+    const L = ov ? 280 : 170, a = (ov ? 0.2 + 0.14*pulse : 0.07)*up;
+    if(!_cmVis(V, Math.min(p.x, p.x + dx/D*L) - 120, Math.min(p.y, p.y + dy/D*L) - 120, Math.max(p.x, p.x + dx/D*L) + 120, Math.max(p.y, p.y + dy/D*L) + 120)) continue;
+    // sombra a cubierto: cuña desde el pilar hacia afuera
+    const x0 = e.x + Math.cos(ang - half)*D, y0 = e.y + Math.sin(ang - half)*D, x1 = e.x + Math.cos(ang + half)*D, y1 = e.y + Math.sin(ang + half)*D;
+    const x2 = e.x + Math.cos(ang + half)*(D + L), y2 = e.y + Math.sin(ang + half)*(D + L), x3 = e.x + Math.cos(ang - half)*(D + L), y3 = e.y + Math.sin(ang - half)*(D + L);
+    const g = ctx.createLinearGradient(p.x, p.y, p.x + dx/D*L, p.y + dy/D*L);
+    g.addColorStop(0, `rgba(110,255,150,${a})`); g.addColorStop(1, "rgba(110,255,150,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x2, y2); ctx.lineTo(x3, y3); ctx.closePath(); ctx.fill();
+    if(ov){
+      ctx.strokeStyle = `rgba(150,255,180,${0.55*up})`; ctx.lineWidth = 3; ctx.setLineDash([12, 9]); ctx.lineDashOffset = -t*40;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.moveTo(x0, y0); ctx.lineTo(x3, y3); ctx.stroke(); ctx.setLineDash([]);
+      // chevrones que "entran" a la sombra
+      const cx = p.x + dx/D*(p.r + 34), cy = p.y + dy/D*(p.r + 34), nx = -dy/D, ny = dx/D;
+      for(let k=0;k<2;k++){ const o = 26 + k*22 + ((t*40) % 22); ctx.strokeStyle = `rgba(190,255,200,${0.8*up})`; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(p.x + dx/D*(p.r + o) + nx*12, p.y + dy/D*(p.r + o) + ny*12); ctx.lineTo(p.x + dx/D*(p.r + o + 10), p.y + dy/D*(p.r + o + 10)); ctx.lineTo(p.x + dx/D*(p.r + o) - nx*12, p.y + dy/D*(p.r + o) - ny*12); ctx.stroke(); }
+      _cmGlow(cx, cy, 70, "110,255,150", (0.35 + 0.25*pulse)*up);
+    }
+    // halo del pilar
+    ctx.strokeStyle = `rgba(130,255,160,${(ov ? 0.55 + 0.4*pulse : 0.25)*up})`; ctx.lineWidth = ov ? 5 : 2;
+    ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r + 12, (p.r + 12)*0.55, 0, 0, Math.PI*2); ctx.stroke();
+  }
+  // tus pies durante el aviso: verde = a cubierto, rojo = te va a dar
+  if(ov && player && player.alive){
+    const ok = cmCovered(e, player), col = ok ? "120,255,150" : "255,70,90";
+    ctx.strokeStyle = `rgba(${col},${0.6 + 0.35*pulse})`; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.ellipse(player.x, player.y + 4, 34, 15, 0, 0, Math.PI*2); ctx.stroke();
+    // lo que falta: un arco que se cierra
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(player.x, player.y + 4, 42, 20, 0, -Math.PI/2, -Math.PI/2 + (1 - q)*Math.PI*2); ctx.stroke();
+  }
+  ctx.restore();
 }
 
 /* ---------------- piezas altas (orden por profundidad) ---------------- */
@@ -439,6 +485,7 @@ function cmDrawScreen(){
     ay += 24;
   }
   ctx.globalAlpha = 1;
+  _cmDrawCoverHint(t);
   // nivel 9: dos barras de vida (Maestro + Tramoyista juntos)
   if(cmS.sub.st==="fight1"){
     const L = ["cm_maestro", "cm_tramoyista"].map(k=>cmEnt(k)).filter(Boolean);
@@ -446,6 +493,31 @@ function cmDrawScreen(){
   }
   ctx.restore();
   if(!player.duelActive) _cmMinimap();
+}
+// OVACIÓN FINAL, en pantalla: bajo el guardián "¡CUBRITE!" (o "A CUBIERTO") con los segundos que faltan y, si el
+// lugar a cubierto más cercano queda fuera de vista, una flecha verde en el borde que apunta hacia él.
+function _cmDrawCoverHint(t){
+  const e = cmPresEntity(); if(!e || !e.ov || !player || !player.alive) return;
+  const left = Math.max(0, CM_CFG.presentador.ovationWind - e.ov.t)/1000, ok = cmCovered(e, player);
+  const hp = worldToScreen(player.x, player.y + 34);   // debajo de los pies: arriba están el cartel y la barra del jefe
+  ctx.save(); ctx.textAlign = "center"; ctx.font = "21px VT323, monospace";
+  const txt = ok ? `A CUBIERTO · ${left.toFixed(1)} s` : `¡CUBRITE! · ${left.toFixed(1)} s`, w = ctx.measureText(txt).width + 16;
+  ctx.fillStyle = "rgba(10,4,8,0.78)"; ctx.fillRect(hp.x - w/2, hp.y - 15, w, 21);
+  ctx.fillStyle = ok ? "#9dffb0" : (Math.sin(t*14) > 0 ? "#ff5a6a" : "#ffd0d0"); ctx.fillText(txt, hp.x, hp.y + 1);
+  const S = ok ? null : cmCoverSpot(e, player.x, player.y);
+  if(S){
+    const sp = worldToScreen(S.x, S.y), m = 34;
+    if(sp.x < m || sp.x > VW - m || sp.y < m + 40 || sp.y > VH - m){
+      // flecha en un aro alrededor del guardián (en el borde de la pantalla chocaba con los botones y el minimapa)
+      const pp = worldToScreen(player.x, player.y - 30), ang = Math.atan2(sp.y - pp.y, sp.x - pp.x);
+      const dx = Math.cos(ang), dy = Math.sin(ang), ax = pp.x + dx*96, ay = pp.y + dy*66, pl = 0.6 + 0.4*Math.sin(t*10);
+      ctx.translate(ax, ay); ctx.rotate(ang);
+      ctx.fillStyle = `rgba(120,255,150,${pl})`; ctx.strokeStyle = "rgba(0,0,0,0.75)"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(-10, -14); ctx.lineTo(-4, 0); ctx.lineTo(-10, 14); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.rotate(-ang); ctx.fillStyle = "#bfffcf"; ctx.font = "17px VT323, monospace"; ctx.fillText("PILAR", 0, dy > 0.5 ? -18 : 30);
+    }
+  }
+  ctx.restore();
 }
 function _cmMinimap(){
   const B = CM_BOUNDS, W = Math.min(150, VW*0.26), k = W/(B.x1 - B.x0), Hh = (B.y1 - B.y0)*k;

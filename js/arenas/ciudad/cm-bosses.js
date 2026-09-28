@@ -377,13 +377,21 @@ function cmPresTransform(e, act){
   showBanner(act===2 ? "ACTO II — «¡Un aplauso para mis ayudantes!»" : "ACTO III — «Ahora… la verdadera función.»");
   if(act===3) cmTutSay("cm_act3", "ACTO III: cuando anuncie la OVACIÓN FINAL, CUBRITE detrás de un pilar del escenario.", 9000, true);
 }
+// Suben n pilares alrededor del Presentador. Antes se probaban solo n ángulos fijos y los que caían fuera del
+// escenario (el Presentador está pegado a la catedral) se perdían: en la Ovación solía subir UNO solo, a veces
+// del lado de atrás. Ahora se prueban 12 ángulos en 3 radios y se aceptan los que entran, separados entre sí.
 function cmPresPillars(e, n, R){
-  const C = CM_CFG.presentador;
-  for(let k=0;k<n;k++){
-    const a = k/n*Math.PI*2 + Math.random()*0.3, p = {x:Math.round(e.x + Math.cos(a)*R), y:Math.round(e.y + Math.sin(a)*R*0.8)};
-    if(!cmInside(p.x, p.y, 40) || heroes.some(h=>h.alive && Math.hypot(h.x - p.x, h.y - p.y) < 60)) continue;
-    cmS.pillars.push({x:p.x, y:p.y, r:34, t:-700, d:C.pillarMs, v:k % 8});
+  const C = CM_CFG.presentador, placed = [], a0 = Math.random()*Math.PI*2;
+  const standing = cmS.pillars.filter(p=>p.t + 700 < p.d);
+  for(const rr of [R, R*0.8, R*1.3]){
+    for(let k=0;k<12 && placed.length < n;k++){
+      const a = a0 + k/12*Math.PI*2, p = {x:Math.round(e.x + Math.cos(a)*rr), y:Math.round(e.y + Math.sin(a)*rr*0.8)};
+      if(!cmInside(p.x, p.y, 40) || heroes.some(h=>h.alive && Math.hypot(h.x - p.x, h.y - p.y) < 60)) continue;
+      if(placed.concat(standing).some(q=>Math.hypot(q.x - p.x, q.y - p.y) < 150)) continue;
+      placed.push(p);
+    }
   }
+  placed.forEach((p, k)=>cmS.pillars.push({x:p.x, y:p.y, r:34, t:-700, d:C.pillarMs, v:k % 8}));
   playSfx("cmPillar");
 }
 function cmPresSpectators(){
@@ -412,7 +420,8 @@ function cmAIPresentador(e, dt, tgt, dist){
     if(Math.random() < dt/300) vfxBurst(e.x, e.y - 60, 4, "ember", 90, 500, 3, 1, -40, 0);
     if(e.ov.t >= C.ovationWind){
       e.ov = null; e.cmBusy = false;
-      for(const h of heroes){ if(!h.alive) continue; if(!cmCovered(e, h)){ bossHitHero(h, h.maxHp*C.ovationPct, {from:e}); floatText(h.x, h.y - 70, "¡SIN COBERTURA!", "crit"); } else floatText(h.x, h.y - 70, "¡A CUBIERTO!", "heal"); }
+      const ovPct = cmOvationPct();
+      for(const h of heroes){ if(!h.alive) continue; if(!cmCovered(e, h)){ bossHitHero(h, h.maxHp*ovPct, {from:e}); floatText(h.x, h.y - 70, "¡SIN COBERTURA!", "crit"); } else floatText(h.x, h.y - 70, "¡A CUBIERTO!", "heal"); }
       if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmFinalBoom", e.x, e.y, 360, 800, {anchorY:0.7});
       vfxShock(e.x, e.y, 60, 900, "255,70,110", 900, 2); vfxShake(14); flashScreen(0.3, "255,90,120"); playSfx("cmBlast");
     }
@@ -456,7 +465,8 @@ function cmAIPresentador(e, dt, tgt, dist){
   }
   if(act===3 && e.ovCd <= 0){
     e.ovCd = cmRand(C.ovationCd[0], C.ovationCd[1]);
-    if(cmS.pillars.filter(p=>p.t >= 0).length < 3) cmPresPillars(e, 4, 250);
+    // pilares que sigan en pie cuando caiga el golpe (antes contaba uno que se hundía a mitad del aviso: una trampa)
+    if(cmS.pillars.filter(p=>p.t >= 0 && p.d - p.t > C.ovationWind + 300).length < 3) cmPresPillars(e, 4, 250);
     e.ov = {t:0}; e.cmBusy = true;
     showBanner("«¡DE PIE PARA LA OVACIÓN FINAL!» — cubrite detrás de un pilar"); playSfx("cmApplause");
     vfxTelegraph({shape:0, x:e.x, y:e.y, r:900, dur:C.ovationWind, rgb:"255,60,100"});
@@ -537,6 +547,30 @@ function cmReflUpdate(dt){
     if(d <= v + 10){ cmS.refl.splice(i, 1); bossExpose(P, CM_CFG.presentador.gnExposeMs, 1.6, "¡SU PROPIO NÚMERO LO GOLPEA! El Presentador queda EXPUESTO"); if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmBoom", P.x, P.y - 40, 180, 700, {anchorY:0.7}); continue; }
     R.x += dx/d*v; R.y += dy/d*v;
   }
+}
+// Golpe de la Ovación sin cobertura (fracción de la vida): más suave en Normal (CM_CFG.presentador.ovationPctNormal).
+function cmOvationPct(){
+  const C = CM_CFG.presentador, k = typeof diffCurrent==="function" ? diffCurrent() : "normal";
+  return k==="normal" && C.ovationPctNormal ? C.ovationPctNormal : C.ovationPct;
+}
+// Lugar a cubierto más cercano a (x, y) durante la Ovación: detrás de un pilar en pie, mirando desde el
+// Presentador. {x, y, p (el pilar), ux, uy (hacia dónde cae la sombra)} o null. Lo usan el dibujo del piso
+// (sombra verde de cada pilar) y la flecha de pantalla cuando el pilar queda fuera de vista.
+// ¿El pilar va a estar en pie (y ya levantado) cuando caiga la Ovación? Sin Ovación en curso: si está en pie.
+function cmPillarHolds(e, p){
+  const left = e && e.ov ? Math.max(0, CM_CFG.presentador.ovationWind - e.ov.t) : 0;
+  return p.t + left >= 0 && p.t + left < p.d - 100;
+}
+function cmCoverSpot(e, x, y){
+  if(!cmS || !e) return null;
+  let best = null, bd = Infinity;
+  for(const p of cmS.pillars){
+    if(!cmPillarHolds(e, p)) continue;
+    const dx = p.x - e.x, dy = p.y - e.y, L = Math.hypot(dx, dy)||1, sx = p.x + dx/L*(p.r + 34), sy = p.y + dy/L*(p.r + 34);
+    const d = Math.hypot(sx - x, sy - y);
+    if(d < bd){ bd = d; best = {x:sx, y:sy, p, ux:dx/L, uy:dy/L, d}; }
+  }
+  return best;
 }
 // ¿Hay un pilar entre el Presentador y el héroe?
 function cmCovered(e, h){
