@@ -339,6 +339,8 @@ function persistNow(){
   // netPersistView escribe siempre los datos propios del anfitrión.
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }catch(e){ /* storage unavailable, continue in-memory */ }
+  // CUENTAS: avisa que el guardado cambió (se sube a la nube con demora: js/net/account.js)
+  if(typeof accountOnPersist==="function"){ try{ accountOnPersist(); }catch(e){} }
 }
 function persist(){
   if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
