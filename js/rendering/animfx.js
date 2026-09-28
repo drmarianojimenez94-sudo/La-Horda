@@ -323,7 +323,8 @@ function animPose(ent, prof, isHero){
     // los jefes reciben golpes todo el tiempo: con el destello completo se veían casi blancos
     // durante toda la pelea (perdían sus colores). Destello tenue para jefes/subjefes.
     // Destello: blanco lleno los primeros cuadros y se corta rápido (antes: rampa lineal lavada).
-    const flashMax = isHero ? 0.45 : (big ? (hitPow>=3 ? 0.35 : 0.22) : (hitPow>=3 ? 0.95 : 0.8));
+    // (comunes: el primer cuadro del golpe es blanco lleno; reseña #7)
+    const flashMax = isHero ? 0.45 : (big ? (hitPow>=3 ? 0.35 : 0.22) : (hitPow>=2 ? 1 : 0.9));
     P.flash = Math.max(P.flash, (h > 0.55 ? 1 : (h/0.55)*(h/0.55))*flashMax);
   }
 

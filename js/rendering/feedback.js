@@ -51,7 +51,7 @@ let _ultImpactDone = false;
 //   4 ULTI       el primer impacto frena el tiempo (hit-stop + cámara lenta breve), temblor grande.
 // Algunos guardianes pegan "pesado" por naturaleza (IMPACT_WEIGHT): el Tanque se siente masa.
 const IMPACT_FLASH_MS = [90, 90, 115, 150, 180];
-const IMPACT_KNOCK = [0, 4, 8, 15, 20];          // retroceso físico (unidades) a comunes
+const IMPACT_KNOCK = [0, 5, 10, 18, 26];         // retroceso físico (unidades) a un común de peso 1 (se divide por kbMass)
 const IMPACT_STAGGER = [0, 0, 0, 110, 200];      // tambaleo (ms) a comunes/sub-élites; élites la mitad
 const IMPACT_WEIGHT = {tanque:1.5, segador:1.3, libertador:1.35, eren:1.15};
 function impactPower(e, dmg, crit, opts, src){
@@ -87,18 +87,70 @@ function impactFeedback(e, dmg, crit, opts, pow, src){
   });
   // un invitado siente SUS golpes pesados en su pantalla (freeze-frame visual, ver juiceHitLocal)
   else if(src && src.isRemote && pow >= 3 && !opts.fromProc) netEmitTo(src._netSlot, "juiceHitLocal", [pow, big ? 1 : 0, +w.toFixed(2)]);
-  // retroceso físico y tambaleo (nunca en jefes/subjefes; menos en élites)
-  e._kbVis = 0; // cuánto se movió de golpe: el dibujo lo desliza desde donde estaba (animfx.js), sin teletransporte
+  // retroceso físico por peso (hitKnock: se desliza con colisión) y tambaleo. Nunca en jefes/subjefes
+  // ni estructuras; los élites pesan más que los comunes.
+  e._kbVis = 0;
   if(e.rank==="jefe" || e.rank==="subjefe" || e.draggedBy) return;
   const elite = e.rank==="elite";
   if(!opts.knockback){
     const dx = e.x-src.x, dy = e.y-src.y, d = Math.hypot(dx,dy)||1;
-    const k = IMPACT_KNOCK[pow] * (crit && pow===1 ? 2.2 : 1) * w * (elite ? 0.45 : 1);
-    e.x += dx/d*k; e.y += dy/d*k; e._kbVis = k;
+    hitKnock(e, dx/d, dy/d, IMPACT_KNOCK[pow] * (crit && pow===1 ? 2.2 : 1) * w, pow, src);
   }
   // tambaleo solo a comunes y sub-élites: a un élite no se le cancela su ataque telegrafiado con un crítico
   const st = elite ? 0 : IMPACT_STAGGER[pow] * (w>1.2 ? 1.3 : 1);
   if(st > 0) e.stunTimer = Math.max(e.stunTimer||0, st);
+}
+
+/* ---------------- Retroceso por peso (reacción al golpe, reseña #7) ---------------- */
+// Peso de un enemigo para los empujones: 0 = no se mueve (jefes, subjefes, estructuras, focos y núcleos
+// anclados). Sale del radio (un murciélago vuela, un gólem apenas se corre) salvo que el tipo diga kbMass.
+function kbMass(e){
+  if(!e || e.structure || e.rank==="jefe" || e.rank==="subjefe" || e.draggedBy || e.abHang || e.abFall) return 0;
+  const b = ENEMY_BASE[e.type];
+  if(b && b.kbMass!==undefined) return b.kbMass;
+  if(e.speed===0 || (b && b.speed===0)) return 0;
+  let m = Math.pow(Math.max(8, e.radius||20)/22, 1.3);
+  m = Math.max(0.45, Math.min(3, m));
+  if(e.rank==="elite") m *= 2.2; else if(e.rank==="subelite") m *= 1.4;
+  return m;
+}
+// Empuja a `e` una distancia `dist` (para peso 1) en la dirección (dx,dy) normalizada. No es un salto:
+// se DESLIZA en ~150 ms (updateHitKnock) resolviendo muros y obstáculos en cada paso, así nunca
+// atraviesa una pared. Lo simula quien simula a los enemigos (el anfitrión); el invitado ve la
+// posición que llega en las instantáneas. Abismo: un golpe fuerte (crítico/pesado/ulti) usa el
+// empujón de la arena, que SÍ puede tirarlo al vacío (recompensa); los básicos no (el borde frena).
+const HIT_KNOCK_TAU = 48, HIT_KNOCK_MAX = 70;
+const HIT_STATS = {knocks:0, blocked:0, voidShoves:0};
+function hitKnock(e, dx, dy, dist, pow, src){
+  const m = kbMass(e); if(!m || !(dist > 0)) return 0;
+  const k = Math.min(HIT_KNOCK_MAX, dist/m);
+  if(k < 0.5) return 0;
+  HIT_STATS.knocks++;
+  if(currentArena==="abismo" && typeof abShove==="function" && typeof abS!=="undefined" && abS && (pow||0) >= 3 && String(e.type).indexOf("ab_")===0){
+    HIT_STATS.voidShoves++;
+    abShove(e, dx, dy, k*1.6, src); return k*1.6;
+  }
+  // se suma a un empujón en curso (ráfagas), con tope
+  let rx = (e._kbRx||0) + dx*k, ry = (e._kbRy||0) + dy*k;
+  const l = Math.hypot(rx, ry); if(l > HIT_KNOCK_MAX){ rx *= HIT_KNOCK_MAX/l; ry *= HIT_KNOCK_MAX/l; }
+  e._kbRx = rx; e._kbRy = ry;
+  return k;
+}
+// Cada cuadro, en update() (antes del aturdimiento: un enemigo tambaleado también sale despedido).
+function updateHitKnock(e, dt){
+  if(!e._kbRx && !e._kbRy) return;
+  const f = 1 - Math.exp(-Math.min(64, dt)/HIT_KNOCK_TAU);
+  const mx = e._kbRx*f, my = e._kbRy*f;
+  e._kbRx -= mx; e._kbRy -= my;
+  const len = Math.hypot(mx, my), n = Math.max(1, Math.ceil(len/7)), sx = mx/n, sy = my/n, s2 = sx*sx + sy*sy;
+  for(let i=0;i<n;i++){
+    const ox = e.x, oy = e.y;
+    e.x += sx; e.y += sy;
+    clampToArena(e); resolveWallCollision(e);
+    // chocó (muro, obstáculo, borde): el empujón se corta ahí, no se "arrastra" por la pared
+    if(((e.x-ox)*sx + (e.y-oy)*sy) < s2*0.5){ e._kbRx = e._kbRy = 0; HIT_STATS.blocked++; break; }
+  }
+  if(Math.abs(e._kbRx) + Math.abs(e._kbRy) < 0.4){ e._kbRx = 0; e._kbRy = 0; }
 }
 
 // Bajas: una común apenas suena; una élite pega un tirón; un subjefe frena el tiempo.

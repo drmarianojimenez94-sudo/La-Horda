@@ -82,6 +82,7 @@ function update(dt){
   for(const e of enemies){
     if(!e.alive) continue;
     if(axiomFreezeTimer>0){ continue; } // Force Quit: nadie salvo Axiom actúa mientras dura
+    if(e._kbRx || e._kbRy) updateHitKnock(e, dt); // retroceso por peso en curso (feedback.js)
     if(e.frozenTimer>0) e.frozenTimer -= dt; // congelado (Invierno Sin Fin, reacciones de hielo)
     if(e.shockedTimer>0) e.shockedTimer -= dt;
     if(e.wetTimer>0) e.wetTimer -= dt;

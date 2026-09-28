@@ -173,8 +173,14 @@ let ANIM_WHITE = false;
 const _whiteCache = new Map();
 let _whitePx = 0, _whiteNew = 0, _whiteSeq = 0;
 const WHITE_PX_BUDGET = 3000000;            // ~12 MB como mucho entre todas las siluetas
-function whiteFrameBegin(){ _whiteNew = 0; }
+function whiteFrameBegin(){ _whiteNew = 0; _whiteOffLeft = JUICE_TOUCH ? 8 : 16; }
+let _whiteTried = 0; // cuántas siluetas entregó un primitivo de sprites (para saber qué caminos la soportan)
 function whiteFrame(img, sx, sy, sw, sh){
+  const c = _whiteFrame(img, sx, sy, sw, sh);
+  if(c) _whiteTried++;
+  return c;
+}
+function _whiteFrame(img, sx, sy, sw, sh){
   if(!img || sw <= 0 || sh <= 0) return null;
   if(img.naturalWidth===0) return null; // imagen todavía sin bajar: no se cachea una silueta vacía
   let id = img.__wid; if(id===undefined){ try{ id = img.__wid = ++_whiteSeq; }catch(e){ return null; } }
@@ -194,6 +200,50 @@ function whiteFrame(img, sx, sy, sw, sh){
     _whitePx -= c0.width*c0.height; _whiteCache.delete(k0);
   }
   return c;
+}
+
+/* ---------------- Destello blanco para TODOS los cuerpos (reseña #7) ---------------- */
+// Hay cuerpos que no pasan por los primitivos de sprites (la Madre Espora por partes, tentáculos del
+// Abismo, sprites reales de la Acuática, cuerpos dibujados a mano en canvas...): para esos la silueta
+// blanca se arma dibujando el cuerpo en un lienzo chico con la MISMA transformación y tiñéndolo de
+// blanco (source-in). drawEnemy aprende por tipo qué camino sirve (animProfileOf(e).whiteOff).
+// Tope de siluetas por cuadro (las que pasan el tope usan la copia aditiva de siempre).
+let _whiteOffLeft = 16;
+const _whiteOff = {cv:null, g:null};
+const FLASH_STATS = {prim:0, off:0, fallback:0};
+function juiceWhiteBody(draw, x, y, R, alpha){
+  if(_whiteOffLeft <= 0) return false;
+  const t = ctx.getTransform();
+  const up = Math.max(110, R*5.5), side = Math.max(70, R*3.4), down = Math.max(30, R*1.4);
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for(const [px, py] of [[x-side, y-up], [x+side, y-up], [x-side, y+down], [x+side, y+down]]){
+    const X = t.a*px + t.c*py + t.e, Y = t.b*px + t.d*py + t.f;
+    if(X < x0) x0 = X; if(X > x1) x1 = X; if(Y < y0) y0 = Y; if(Y > y1) y1 = Y;
+  }
+  x0 = Math.max(0, Math.floor(x0)); y0 = Math.max(0, Math.floor(y0));
+  x1 = Math.min(canvas.width, Math.ceil(x1)); y1 = Math.min(canvas.height, Math.ceil(y1));
+  const w = x1 - x0, h = y1 - y0;
+  if(w <= 0 || h <= 0) return true;               // fuera de pantalla: nada que dibujar
+  if(w*h > 700*700) return false;                 // demasiado grande: la copia aditiva alcanza
+  _whiteOffLeft--;
+  if(!_whiteOff.cv){ _whiteOff.cv = document.createElement("canvas"); _whiteOff.g = _whiteOff.cv.getContext("2d"); }
+  const cv = _whiteOff.cv, g = _whiteOff.g;
+  if(cv.width < w || cv.height < h){ cv.width = Math.max(cv.width, w); cv.height = Math.max(cv.height, h); }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "source-over"; g.globalAlpha = 1; g.filter = "none";
+  g.clearRect(0, 0, w, h);
+  g.imageSmoothingEnabled = false;
+  g.setTransform(t.a, t.b, t.c, t.d, t.e - x0, t.f - y0);
+  const main = ctx, m = ANIM_ALPHA_MUL;
+  ctx = g; ANIM_ALPHA_MUL = 1;
+  try{ draw(); } catch(err){} finally { ctx = main; ANIM_ALPHA_MUL = m; }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1;
+  g.globalCompositeOperation = "source-in"; g.fillStyle = "#fff"; g.fillRect(0, 0, w, h);
+  g.globalCompositeOperation = "source-over";
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = alpha;
+  ctx.drawImage(cv, 0, 0, w, h, x0, y0, w, h);
+  ctx.restore();
+  FLASH_STATS.off++;
+  return true;
 }
 
 /* ---------------- Tiempo real (lo llama updateFeedback) ---------------- */

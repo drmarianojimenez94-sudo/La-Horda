@@ -267,13 +267,19 @@ function drawEnemy(e){
   animApply(e.x, e.y, P);
   drawEnemyBody(e);
   if(P.flash>0.02 && (prof.isBoss || animFlashBudget-- > 0)){
-    // destello de golpe: silueta blanca del cuadro actual (juice.js); los caminos de dibujo que no
-    // pasan por los primitivos de sprites caen a la copia aditiva de siempre
+    // destello de golpe: silueta blanca del cuadro actual (juice.js). Si el cuerpo de este tipo no pasa
+    // por los primitivos de sprites (no pide silueta), se aprende y desde ahí se tiñe en un lienzo aparte
+    // (juiceWhiteBody); si se acabó el tope del cuadro, la copia aditiva de siempre.
     ctx.globalCompositeOperation = "lighter";
-    const m = ANIM_ALPHA_MUL; ANIM_ALPHA_MUL = P.flash; ctx.globalAlpha = P.flash;
-    ANIM_WHITE = true;
-    try{ drawEnemyBody(e); } finally { ANIM_WHITE = false; }
-    ANIM_ALPHA_MUL = m;
+    if(!(prof.whiteOff && juiceWhiteBody(()=>drawEnemyBody(e), e.x, e.y, (e.radius||20)*(e.scale||1), P.flash))){
+      const m = ANIM_ALPHA_MUL; ANIM_ALPHA_MUL = P.flash; ctx.globalAlpha = P.flash;
+      const n0 = _whiteTried;
+      ANIM_WHITE = true;
+      try{ drawEnemyBody(e); } finally { ANIM_WHITE = false; }
+      ANIM_ALPHA_MUL = m;
+      if(_whiteTried === n0){ prof.whiteMiss = (prof.whiteMiss||0) + 1; if(prof.whiteMiss >= 2) prof.whiteOff = true; FLASH_STATS.fallback++; }
+      else FLASH_STATS.prim++;
+    }
   }
   ctx.restore();
   if(P.glow>0.02 && P.glowRgb){
