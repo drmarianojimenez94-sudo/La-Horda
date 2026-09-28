@@ -13,15 +13,16 @@
 | **Últimas palabras** | Guardianes: cartel al liberar el cristal. Todos los jefes finales: paso 1 de la victoria. | ✅ |
 | **Voz de tu guardián** | Al elegirlo (ficha previa y Códice), al ganar (victoria) y al caer (derrota). 12/12 guardianes. | ✅ |
 | **Escena de salida** | Último paso de la victoria: "✦ ACTO N · LA CICATRIZ" + lo que dice el Hechicero + la Crónica encontrada. | ✅ |
-| **Crónicas** (25 páginas, 10 libros) | En el piso (niveles 4 y 7), las suelta el primer subjefe (y rara vez un élite), o al completar la arena. Se leen en Códice › CRÓNICAS. | ✅ |
+| **Crónicas** (25 páginas, 10 libros) | En el piso (niveles 4 y 7), las suelta el primer subjefe (y rara vez un élite), o al completar la arena. Al levantarla, su texto se lee 3-4 s en una tarjeta (solo: pausa suave; cooperativo: sin pausa) con «Leer en el Códice». Después, en Códice › CRÓNICAS. | ✅ |
 | **Epílogo + post-créditos** | Al completar la Infernal por primera vez (y desde el Códice). Texto por pantallas sobre el arte de las arenas. | ✅ 🟡 (sin arte propio del final) |
+| **Campamento de los Portadores** | Tras cada victoria de la campaña: el Hechicero (en el humo), Anselmo el herrero y Veda la vidente, una línea por arena y una reactiva cada uno. Cierre de acto (FIN DEL ACTO + 2-3 frases) acá y en la escena de salida. Solo: antes de volver a la Sala; online: cada uno al volver. Queda en Códice › CRÓNICAS › Voces del Campamento. | ✅ (arte existente recoloreado) |
 
 ## Campaña
 | # | Acto | Arena | Estado | Qué ve el jugador hoy |
 |---|---|---|---|---|
 | 01 | I | Ciudad Maldita | ✅ | Prólogo + cartel del Acto I. Voces del Maestro de Ceremonias, la Dama del Telón y el Presentador. La primera Cicatriz. Crónica de la Noche del Regreso (2). |
 | 02 | I | Fábrica Sin Fin | ✅ | El Caballero habla (juró que nadie saldría); el Hechicero comenta al Dragón. El gancho vacío de la última cadena. Bitácora del Último Maquinista (2). |
-| 03 | I | Ruinas Célticas / Élficas | ✅ 🟡 | Los Cuatro Reflejos («también le creímos a la voz»); el Guardián Ancestral se corrompe hablando. Cristal Ancestral. Cantos del Primer Guardián (2). Falta arte de la forma Bestia. |
+| 03 | I | Ruinas Célticas / Élficas | ✅ 🟡 | Los Cuatro Reflejos («también le creímos a la voz»); el Guardián Ancestral se corrompe hablando. Cristal Ancestral. Cantos del Guardián de la Niebla (2). Falta arte de la forma Bestia. |
 | 04 | II | Reino Fúngico | ✅ | Cartel del Acto II. Los ecos de las esporas hablan por la Madre Espora («yo me quedo»); el Hechicero los desestima. Ecos del Micelio (2). |
 | 05 | II | Arena Gélida | ✅ | Tundraverx y el Mago Gélido («Primero, ¿por qué no volviste?») → Demonio Gélido. Cristal de Escarcha. Cartas del Mago Gélido (3). |
 | 06 | II | Arena Acuática | ✅ | El Hechicero ya solo habla de los cristales ante el Kraken Joven y el Leviatán. Bitácora del Faro de Maren (2): el mar apareció con el segundo cristal. |
@@ -54,4 +55,4 @@
 4. ~~Líneas de muerte de cada Guardián~~ Hechas (últimas palabras + voces de todos los jefes).
 5. Epílogo con arte propio (hoy: texto sobre el arte de las arenas y los cristales dibujados en vivo).
 6. Voces grabadas (hoy todo es texto).
-7. Si la **Horda Infinita** usa arenas de la campaña, debe marcar su modo para que no suelte Crónicas (hoy `storyCampaignOn` solo excluye la Divina).
+7. ~~Horda Infinita sin Crónicas~~ Hecho: `storyCampaignOn` excluye la Divina y la Horda Infinita (tampoco hay campamento).

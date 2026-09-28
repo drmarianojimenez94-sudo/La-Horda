@@ -4,6 +4,7 @@
 //   la sala ya tiene elegida la próxima arena -> el anfitrión elige otra desde la Sala (el invitado la
 //   ve al instante, con aviso si no le cuenta para la campaña) -> vuelve a la siguiente -> COMENZAR ->
 //   los dos juegan la arena nueva.
+//   CAMPAMENTO (camp.js): online, cada uno ve el suyo al volver a la Sala; solo, entre "Continuar" y la Sala.
 //   SOLO: victoria -> "Continuar" -> la Sala con la próxima arena elegida (mismos bots) y se puede
 //   cambiar ahí mismo.
 //
@@ -93,7 +94,13 @@ async function online(browser) {
   await waitFor(H, () => state === 'prep');
   if (await ev(G, () => state === 'victory')) await tap(G, '#again-btn'); // (si no volvió solo)
   await waitAll([H, G], () => state === 'prep' && currentArena === 'bosque');
-  const hb = await ev(H, () => ({ state, code: net.code, match: !!netMatch, room: net.room.state, roomArena: net.room.arena, humans: netHumanCount(), start: document.getElementById('prep-start-btn').textContent }));
+  // EL CAMPAMENTO (camp.js): cada uno ve el suyo, local, recién al volver a la Sala (no frenó la vuelta)
+  const camps = await Promise.all([H, G].map(c => ev(c, () => { const el = document.getElementById('camp');
+    return { open: !!el && !el.classList.contains('hidden'), state, who: el ? el.querySelector('.camp-box-who').textContent : '', hero: typeof CAMP !== 'undefined' && CAMP.ctx ? CAMP.ctx.classKey : null }; })));
+  check('online.campamento_local_al_volver_a_la_sala', camps.every(x => x.open && x.state === 'prep' && /HECHICERO/.test(x.who)) && camps[0].hero === 'tanque' && camps[1].hero === 'mago', camps);
+  for (const c of [H, G]) await tap(c, '#camp .camp-go'); // "Seguir": un toque
+  check('online.campamento_se_cierra_con_seguir', (await Promise.all([H, G].map(c => ev(c, () => document.getElementById('camp').classList.contains('hidden'))))).every(Boolean));
+  const hb =await ev(H, () => ({ state, code: net.code, match: !!netMatch, room: net.room.state, roomArena: net.room.arena, humans: netHumanCount(), start: document.getElementById('prep-start-btn').textContent }));
   la = await lobbyArena(H);
   check('online.anfitrion_vuelve_misma_sala', hb.state === 'prep' && hb.code === code && !hb.match && hb.room === 'lobby' && hb.humans === 2, hb);
   check('online.proxima_arena_preseleccionada', la.sel === 'bosque' && /SIGUIENTE/.test(la.selText) && hb.roomArena === 'bosque' && /Ruinas Célticas/.test(la.title) && /Comenzar · Ruinas/.test(hb.start), { la, hb });
@@ -155,6 +162,10 @@ async function solo(browser) {
       note: (document.getElementById('vic-next-note') || {}).textContent || '' }; });
   check('solo.continuar_ofrece_siguiente_arena', !v.hidden && v.inView && /Continuar ▶ 02 — Fábrica Sin Fin/.test(v.next) && /Repetir/.test(v.again) && /Fábrica Sin Fin/.test(v.note), v);
   await tap(S, '#victory-next-btn');
+  // EL CAMPAMENTO (camp.js): entre la victoria y la Sala; "Seguir" en un toque
+  const camp = await ev(S, () => { const el = document.getElementById('camp'); return { open: !!el && !el.classList.contains('hidden'), state }; });
+  check('solo.campamento_antes_de_la_sala', camp.open && camp.state === 'victory', camp);
+  if (camp.open) await tap(S, '#camp .camp-go');
   la = await lobbyArena(S);
   const allies1 = await ev(S, () => ({ state, allies: (lobbyAllies || []).slice(), sel: selectedClass }));
   check('solo.sala_con_la_siguiente_elegida', allies1.state === 'prep' && la.sel === 'fortaleza' && /SIGUIENTE/.test(la.selText) && /Fábrica Sin Fin/.test(la.title), { la, allies1 });

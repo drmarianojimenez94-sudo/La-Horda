@@ -55,6 +55,7 @@ function storySay(who, text, o){
 // Cuántos OTROS textos hay en pantalla: el cartel grande (arenaTitleCard), la guía del jefe y el cartel del centro.
 function storyOtherTexts(){
   let n = 0;
+  if(document.body.classList.contains("chron-card-on")) n += 2; // se está leyendo una Crónica (camp.js): la voz espera
   if(typeof _arenaTitleUntil!=="undefined" && performance.now() < _arenaTitleUntil) n++;
   const bi = document.getElementById("boss-intro"); if(bi && !bi.classList.contains("hidden") && !bi.classList.contains("fade")) n++;
   const cb = document.getElementById("center-banner");
@@ -190,7 +191,9 @@ function storyCollect(p){
     if(typeof floatText==="function") floatText(player.x, player.y - 70, "✦ CRÓNICA", "crit");
     if(typeof vfxShock==="function") vfxShock(p.x, p.y, 8, 70, "255,214,140", 520, 2);
   });
-  storySay("chron", `Encontraste «${P.title}», de ${B.name}. Leela en el Códice, sección Crónicas.`, {wait:12000, ms:5200});
+  // la página se lee al levantarla: tarjeta de 3-4 s (solo, con pausa suave) y "Leer en el Códice" (camp.js)
+  if(!(typeof campChronCard==="function" && campChronCard(id)))
+    storySay("chron", `Encontraste «${P.title}», de ${B.name}. Leela en el Códice, sección Crónicas.`, {wait:12000, ms:5200});
   return id;
 }
 // Al completar una arena: la página que "se encuentra al completarla" (una vez, en la pantalla de victoria).
@@ -246,6 +249,7 @@ function storyVictoryHtml(vd){
   if(!vd || typeof ARENA_ORDER==="undefined" || !ARENA_ORDER.includes(vd.arena)) return "";
   if(!vd._story){
     vd._story = {page:storyGrantBoss(vd.arena)};
+    if(typeof campNoteVictory==="function") campNoteVictory(vd); // el campamento de esta victoria (camp.js)
     if(vd.arena==="infernal" && !save.storyEpilogueSeen) setTimeout(()=>{ if(state==="victory") storyPlayEpilogue(); }, 700);
   }
   const last = storyArenaLastWords(vd.arena), H = HERO_VOICES[vd.classKey], cls = CLASSES[vd.classKey];
@@ -259,6 +263,9 @@ function storyVictoryScarHtml(vd){
   if(!vd || typeof ARENA_ORDER==="undefined" || !ARENA_ORDER.includes(vd.arena)) return "";
   const S = (typeof CAMPAIGN_STORY!=="undefined" && CAMPAIGN_STORY[vd.arena]) || {}, act = storyActOf(vd.arena);
   let html = `<div class="sv-k">✦ ${act ? "ACTO " + act.n + " · " + act.name + " · " : ""}${vd.arena==="infernal" ? "EL FINAL" : "LA CICATRIZ"}</div>`;
+  // la arena que cierra un acto lo dice: cartel y su cierre (el campamento lo vuelve a abrir con él)
+  const closing = typeof storyActClosing==="function" ? storyActClosing(vd.arena) : null;
+  if(closing && closing.outro) html += `<div class="sv-act-end"><b>FIN DEL ACTO ${_stEsc(closing.n)} · ${_stEsc(closing.name)}</b>${_stEsc(closing.outro)}</div>`;
   if(vd.arena==="infernal"){
     html += `<div class="sv-scar">El Rey de la Horda cayó. Los cristales siguen necesitando portadores.</div>`;
     html += `<button class="btn secondary sv-epi" data-story-epilogue>▶ Ver el epílogo</button>`;

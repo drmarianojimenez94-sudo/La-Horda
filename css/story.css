@@ -56,6 +56,8 @@
 .story-vic .sv-say b{ font-family:'Press Start 2P',monospace; font-size:0.42rem; font-style:normal; color:#ffd98a; letter-spacing:1px; margin-right:5px; }
 .story-vic .sv-chron{ font-family:'VT323',monospace; font-size:1rem; color:#ffd98a; margin-top:6px; }
 .story-vic .sv-chron span{ color:#a8916a; }
+.story-vic .sv-act-end{ font-family:'VT323',monospace; font-size:1rem; line-height:1.05; color:#ffe9c8; margin:4px 0 6px; padding:4px 8px; border-left:3px solid #e0b060; background:rgba(224,176,96,0.08); }
+.story-vic .sv-act-end b{ display:block; font-family:'Press Start 2P',monospace; font-size:0.46rem; letter-spacing:2px; color:#ffdcb0; margin-bottom:3px; }
 .story-vic .sv-epi{ margin-top:8px; }
 .story-vic.scar{ border-color:rgba(140,100,190,0.5); }
 .story-def{ font-family:'VT323',monospace; font-size:1.1rem; color:#d8cbb4; font-style:italic; margin-bottom:6px; }

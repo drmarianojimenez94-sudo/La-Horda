@@ -45,4 +45,5 @@ function setState(s){
     if(screens[s]) screens[s].classList.remove("hidden");
   }
   if(typeof accountOnState==="function"){ try{ accountOnState(s); }catch(e){} } // CUENTAS: sincronizar al terminar la partida
+  if(typeof campOnState==="function"){ try{ campOnState(s); }catch(e){} } // CAMPAMENTO entre arenas (camp.js): cooperativo, al volver a la Sala
 }
