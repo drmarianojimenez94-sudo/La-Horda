@@ -96,7 +96,7 @@ function accountWarmup(){
   if(!accountAvailable()) return Promise.resolve(false);
   if(acct.warm && Date.now() - acct.warm.at < 60000) return acct.warm.p;
   const p = accountFetch("GET", "/api/health", undefined, { auth: false, timeout: 90000 })
-    .then(r => r.status === 200 && r.j && r.j.ok).catch(() => false);
+    .then(r => { acct.health = r.status === 200 ? r.j : null; return !!(acct.health && acct.health.ok); }).catch(() => false);
   acct.warm = { at: Date.now(), p };
   return p;
 }
@@ -424,7 +424,15 @@ function _acctRenderAuth(mode){
     body.querySelectorAll(".acc-form input, .acc-form button").forEach(x => { x.disabled = true; });
     _acctStatus("Las cuentas necesitan el servidor online (no configurado en esta versión). Jugá como invitado.", "warn");
   } else {
-    accountWarmup(); // se despierta mientras escribe
+    // se despierta mientras escribe; si el servidor no tiene base de datos, se avisa con honestidad
+    accountWarmup().then(() => {
+      const h = acct.health;
+      if(!h || h.persistent !== false || acct.view !== mode || !acct.el || acct.el.querySelector(".acc-warn-db")) return;
+      const n = document.createElement("div");
+      n.className = "acc-note acc-warn-db";
+      n.textContent = "⚠ Servidor de prueba sin base de datos: las cuentas pueden borrarse. Tu progreso igual queda en este dispositivo.";
+      const form = acct.el.querySelector(".acc-form"); if(form) form.after(n);
+    });
   }
   _acctShowBack();
 }

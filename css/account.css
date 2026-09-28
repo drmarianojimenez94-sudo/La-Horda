@@ -126,3 +126,4 @@
 @media (max-width: 420px) and (orientation: portrait){
   .acc-conflict{ flex-direction:column; }
 }
+.acc-warn-db{ color:var(--ember3); margin:4px 0 0; }

@@ -78,11 +78,13 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await off.boot(`${SITE}/index.html?account=1`, true); // servidor por defecto (Render), bloqueado
     // se mide DENTRO de la página: el cambio de pantalla es sincrónico (no espera a la red)
     const clickSync = sel => off.E(q => { const t = performance.now(); document.querySelector(q).click(); return { ms: Math.round(performance.now() - t), st: state }; }, sel);
+    // (el audio se inicializa antes: startMusic() ya tardaba lo suyo en el primer toque, sin cuentas)
+    await off.E(() => startMusic());
     const c1 = await clickSync('#title-continue-btn');
-    check('invitado_sin_red.pantalla_al_instante', c1.st === 'account' && c1.ms < 1000 && await off.vis('#acc-guest-btn'), c1);
+    check('invitado_sin_red.pantalla_al_instante', c1.st === 'account' && c1.ms < 300 && await off.vis('#acc-guest-btn'), c1);
     await off.shot('01_cuenta_sin_red');
     const c2 = await clickSync('#acc-guest-btn');
-    check('invitado_sin_red.entra_al_instante', ['starter', 'mainmenu'].includes(c2.st) && c2.ms < 1000, c2);
+    check('invitado_sin_red.entra_al_instante', ['starter', 'mainmenu'].includes(c2.st) && c2.ms < 300, c2);
     await off.E(() => { const k = Object.keys(save.champions)[0]; save.champions[k].unlocked = true; setState('title'); });
     await off.page.click('#title-continue-btn'); await sleep(200);
     check('invitado.recordado_en_la_pestania', (await off.state()) === 'mainmenu');
@@ -140,8 +142,9 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
   // y sin red también entra directo, sin esperar
   await A.offline(true);
   await A.boot(URL_ACC);
+  await A.E(() => startMusic());
   const cOff = await A.E(() => { const t = performance.now(); document.getElementById('title-continue-btn').click(); return { ms: Math.round(performance.now() - t), st: state }; });
-  check('sesion_recordada.sin_red_sin_demora', cOff.st === 'mainmenu' && cOff.ms < 1000, cOff);
+  check('sesion_recordada.sin_red_sin_demora', cOff.st === 'mainmenu' && cOff.ms < 300, cOff);
   // cola sin conexión: progreso offline queda pendiente y se sube al volver la red
   await A.progress(14000, 8);
   await sleep(800);

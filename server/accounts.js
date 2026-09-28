@@ -21,8 +21,10 @@
    - DATABASE_URL presente  -> Postgres (las tablas se crean solas al arrancar).
    - sin DATABASE_URL       -> archivos JSON en DATA_DIR (default server/data), escritos de forma
                                atómica (archivo temporal + rename). OJO: en el plan gratuito de
-                               Render el disco se BORRA en cada redeploy/reinicio: las cuentas se
-                               pierden. /health lo avisa. Ver docs/ACCOUNTS_DEPLOY.md.
+                               Render el disco se BORRA en cada redeploy, reinicio o cuando el
+                               servicio se duerme (15 min sin uso): las cuentas se pierden. Sirve
+                               para probar en la compu o con un Disco persistente de Render (pago)
+                               montado en DATA_DIR. /health lo avisa. Ver docs/ACCOUNTS_DEPLOY.md.
 
    Variables de entorno (todas opcionales):
      DATABASE_URL        postgres://usuario:clave@host:5432/base (Render Postgres, Neon, Supabase...)
@@ -305,7 +307,7 @@ function create(opts){
       status = "ready"; lastError = "";
       if(store.persistent) log("ACCOUNTS_READY", { store: store.kind });
       else log("ACCOUNTS_READY", { store: store.kind, dir: dataDir,
-        warning: "SIN BASE DE DATOS: las cuentas se guardan en el disco del servidor. En el plan gratuito de Render se BORRAN en cada redeploy o reinicio. Configurá DATABASE_URL (ver docs/ACCOUNTS_DEPLOY.md)." });
+        warning: "SIN BASE DE DATOS: las cuentas se guardan en el disco del servidor. En el plan gratuito de Render se BORRAN en cada redeploy, reinicio o cuando el servicio se duerme. Configurá DATABASE_URL (ver docs/ACCOUNTS_DEPLOY.md)." });
     }catch(e){
       status = "error"; lastError = String(e.message || e);
       log("ACCOUNTS_ERROR", { store: store.kind, err: lastError });
@@ -322,14 +324,14 @@ function create(opts){
   function info(){
     const s = { store: store ? store.kind : "none", persistent: !!(store && store.persistent), status };
     if(status === "error") s.error = lastError;
-    if(store && !store.persistent) s.warning = "Sin base de datos: las cuentas se pierden al redeployar o reiniciar en el plan gratuito. Ver docs/ACCOUNTS_DEPLOY.md";
+    if(store && !store.persistent) s.warning = "Sin base de datos: en el plan gratuito de Render las cuentas se pierden al redeployar, reiniciar o cuando el servidor se duerme. Ver docs/ACCOUNTS_DEPLOY.md";
     return s;
   }
   function healthLine(){
     const i = info();
     if(i.status === "error") return `cuentas: ERROR (${i.store}): ${i.error}`;
     if(i.persistent) return `cuentas: base de datos Postgres ${i.status === "ready" ? "OK" : "conectando…"}`;
-    return "cuentas: ARCHIVO EN DISCO (sin DATABASE_URL) · AVISO: en el plan gratuito de Render las cuentas se BORRAN en cada redeploy/reinicio · ver docs/ACCOUNTS_DEPLOY.md";
+    return "cuentas: ARCHIVO EN DISCO (sin DATABASE_URL) · AVISO: en el plan gratuito de Render las cuentas se BORRAN en cada redeploy/reinicio o cuando el servidor se duerme · ver docs/ACCOUNTS_DEPLOY.md";
   }
 
   function clientIp(req){
