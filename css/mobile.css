@@ -84,3 +84,10 @@
   /* casilla "Reducir movimiento" de la pausa: mínimo 40 px en el celular */
   .pause-motion input[type=checkbox]{ width:40px; height:40px; margin:0 0 0 6px; accent-color:var(--ember1); vertical-align:middle; }
 }
+/* Sala online: los botones de guardián y las frases rápidas del chat salían en la letra del sistema (Arial) */
+.net-champ, #net-chat .nc-chip, #net-chat .nc-notice, #net-chat input{ font-family:var(--font-retro); }
+@media (max-height:500px), (pointer:coarse) and (max-height:760px){
+  .net-champ, #net-chat .nc-chip{ font-size:1rem; }
+  /* "Comenzar" pegajoso deshabilitado (invitado esperando): era semitransparente y su texto se mezclaba con el chat */
+  #prep-start-btn:disabled{ opacity:1; filter:none; background:#1c120c; color:var(--text-dim); }
+}
