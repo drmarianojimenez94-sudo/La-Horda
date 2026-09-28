@@ -1,4 +1,10 @@
 /* css/base.css — Variables de color, fuentes, cuerpo de la página y canvas del juego. */
+/* Fuentes pixel locales (subconjunto latino de Google Fonts; las dos tienen licencia SIL Open Font License 1.1:
+   Press Start 2P © CodeMan38, VT323 © The VT323 Project Authors). */
+@font-face{ font-family:'Press Start 2P'; font-style:normal; font-weight:400; font-display:swap;
+  src:url(../assets/fonts/press-start-2p-latin.woff2) format('woff2'); }
+@font-face{ font-family:'VT323'; font-style:normal; font-weight:400; font-display:swap;
+  src:url(../assets/fonts/vt323-latin.woff2) format('woff2'); }
 :root{
   --bg:#0b0705;
   --ember1:#ff7a2e;

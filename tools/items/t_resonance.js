@@ -79,7 +79,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const r7 = await E(() => { __start('bosque'); __step(32, true); crystalAward('escarcha', player.x, player.y);
     const el = document.getElementById('arena-title-card');
     return { k: el.querySelector('.atc-kicker').textContent, t: el.querySelector('.atc-title').textContent, s: el.querySelector('.atc-sub').textContent, end: /Juicio/.test(CAMPAIGN_ENDING) }; });
-  check('RES.ultimas_palabras_del_guardian', r7.k === 'LAS ÚLTIMAS PALABRAS' && r7.t === 'MAGO GÉLIDO' && /eligió quedarse/.test(r7.s) && r7.end, r7);
+  // (los carteles en fuente pixel pierden la tilde de las mayúsculas: js/ui/pixel-font-fix.js)
+  const sinTilde = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  check('RES.ultimas_palabras_del_guardian', sinTilde(r7.k) === 'LAS ULTIMAS PALABRAS' && sinTilde(r7.t) === 'MAGO GELIDO' && /eligió quedarse/.test(r7.s) && r7.end, r7);
 
   const r6 = await E(() => { __start('bosque'); __step(32, true); render(); return { ok: true }; });
   check('RES.dibuja_sin_errores', r6.ok && errors.length === 0, errors.slice(0, 3));

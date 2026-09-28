@@ -836,7 +836,7 @@ function netGuestCast(idx, aim){
 }
 function netGuestShowBuffs(d){
   setState("buff");
-  document.getElementById("buff-title").textContent = (typeof endlessOn==="function" && endlessOn()) ? `Ronda ${EN.round} contenida — elegí tu refuerzo` : `Nivel ${d.level} superado — elige tu refuerzo`;
+  document.getElementById("buff-title").textContent = (typeof endlessOn==="function" && endlessOn()) ? `Ronda ${EN.round} contenida — elegí tu refuerzo` : `Nivel ${d.level} superado — elegí tu refuerzo`;
   if(typeof buffNoteRefresh==="function") buffNoteRefresh();
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff();
   const cards = document.getElementById("buff-cards");
