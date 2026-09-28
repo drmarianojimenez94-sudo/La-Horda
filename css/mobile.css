@@ -79,4 +79,6 @@
   #run-intro .ri-who{ font-size:0.7rem; letter-spacing:1px; }
   #run-intro .ri-k, #buff-story .bs-who{ font-size:0.7rem; letter-spacing:0; }
   #run-intro .ri-go{ font-size:0.9rem; }
+  /* historia (story.css): rótulos en pixel de 6-8 px, ilegibles en el teléfono */
+  #run-intro .ri-act, .story-vic .sv-k, .story-vic .sv-say b{ font-size:0.7rem; letter-spacing:1px; line-height:1.4; }
 }

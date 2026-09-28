@@ -452,3 +452,22 @@
 #go-title{ font-family:var(--font-pixel); font-size:clamp(1rem, 3.6vw, 1.7rem); line-height:1.4; margin-bottom:10px;
   text-shadow:3px 3px 0 #000, 0 0 16px rgba(198,40,40,0.55); }
 #gameover-screen #go-stats{ font-family:var(--font-retro); font-size:1.6rem; line-height:1.1; text-shadow:2px 2px 0 #000; margin-bottom:4px; }
+/* Pantallas de fin de partida en letra pixel (antes Georgia: la calificación, el equipo y el cofre eran lo único
+   con serifas del juego) */
+#victory-screen, #gameover-screen{ font-family:var(--font-retro); }
+.vic-sub{ font-size:1.1rem; }
+.vic-role-line{ font-size:1.25rem; }
+.perf-row{ font-size:1.15rem; line-height:1; }
+.vic-party-row{ font-size:1.1rem; }
+.vic-party-row .vp-score{ font-family:var(--font-pixel); font-size:0.8rem; font-weight:normal; }
+.vic-party-title{ font-size:1rem; }
+/* Victoria en el teléfono acostado: las últimas palabras del jefe (lo que más importa de la pantalla) quedaban debajo
+   del botón pegajoso "Continuar". Van arriba de la tabla, y la tabla pasa a dos columnas. */
+#victory-step-body:has(.story-vic){ display:flex; flex-direction:column; }
+#victory-step-body .vic-hero{ order:-2; }
+#victory-step-body .story-vic{ order:-1; margin:0 auto 8px; }
+@media (max-height:500px) and (min-aspect-ratio:4/3){
+  #victory-step-body:has(.res-rows){ max-width:min(720px, 94vw); }
+  #victory-step-body .res-rows{ display:grid; grid-template-columns:1fr 1fr; column-gap:22px; max-width:none; }
+  #victory-step-body .vic-hero{ font-size:1.4rem; margin-bottom:6px; }
+}

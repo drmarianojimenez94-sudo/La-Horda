@@ -404,3 +404,5 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 /* nombres largos (Segador Olvidado, "Mariano · Mago") en un renglón, con puntos suspensivos si no entran */
 #plevel{ white-space:normal; }
 .ally-name, .top-pill > span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+/* celular acostado: el cartel central en un renglón casi siempre (a 2rem "4 civiles escondidos en la ciudad" se partía) */
+@media (max-height:500px){ #center-banner{ font-size:1.55rem; max-width:min(560px, 70vw); } }
