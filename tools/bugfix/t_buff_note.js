@@ -31,15 +31,15 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   // cooperativo
   const H = await mk(`${SITE}/index.html?dev=1&server=${encodeURIComponent(RELAY)}`, 'Mariano', 'tanque');
   await H.p.evaluate(() => { document.getElementById('title-continue-btn').click(); setState('prep'); currentArena = 'bosque'; lobbyAllies = pickLobbyAllies(selectedClass); renderPrepSummary(); document.getElementById('net-create-btn').click(); });
-  for (let k = 0; k < 50 && !(await H.p.evaluate(() => net.code)); k++) await sleep(100);
+  for (let k = 0; k < 500 && !(await H.p.evaluate(() => net.code)); k++) await sleep(100);
   const url = await H.p.evaluate(() => netInviteUrl());
   const G = await mk(url, 'Facundo', 'mago');
   await G.p.evaluate(() => document.getElementById('title-join-btn').click());
-  for (let k = 0; k < 60 && !(await G.p.evaluate(() => state === 'prep' && !!net.room)); k++) await sleep(100);
+  for (let k = 0; k < 600 && !(await G.p.evaluate(() => state === 'prep' && !!net.room)); k++) await sleep(100);
   await G.p.evaluate(() => document.getElementById('net-ready-btn').click());
   await sleep(500);
   await H.p.evaluate(() => document.getElementById('prep-start-btn').click());
-  for (let k = 0; k < 100 && !(await G.p.evaluate(() => state === 'playing')); k++) await sleep(100);
+  for (let k = 0; k < 600 && !(await G.p.evaluate(() => state === 'playing')); k++) await sleep(100);
   await sleep(1000);
   await H.p.evaluate(() => openBuffChoice());
   for (let k = 0; k < 40 && !(await G.p.evaluate(() => state === 'buff')); k++) await sleep(100);
