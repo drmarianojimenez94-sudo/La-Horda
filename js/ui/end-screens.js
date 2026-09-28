@@ -181,7 +181,10 @@ const VICTORY_STEPS = [
     const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): algunas recompensas no se pudieron guardar.</div>` : "";
     if(!victoryData._revealed) return `${summary}${fullNote}<div class="chest-host"></div>`; // la ceremonia del cofre (js/ui/loot-ceremony.js)
     const cards = victoryData.rewards.slice().sort((a,b)=>TIER_ORDER[itemTier(a)]-TIER_ORDER[itemTier(b)]).map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
-    return `${summary}${gemNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
+    // lo que quedó tirado en el piso al ganar se juntó solo (ground-loot.js): se nombra acá, sin ceremonia
+    const fl = victoryData.floorLoot || [];
+    const floorNote = fl.length ? `<div class="vic-reward-note">Del piso juntaste lo que quedaba: ${fl.map(it=>`<b style="color:${itemColor(it)};">${it.name}</b>`).join(", ")}</div>` : "";
+    return `${summary}${gemNote}${floorNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
   },
   // 3. XP / RECURSOS
   function(){

@@ -184,6 +184,21 @@ async function boot(browser, initSave, vp){
     check('PICK.al_ganar_se_junta_lo_que_quedo', vic.got === 2 && vic.stash === 2 && vic.floor === 0, vic);
   }
 
+  // ---------- 4b) Horda Infinita: la ronda sube la calificación y lo levantado entra en los resultados ----------
+  {
+    const r = await E(() => {
+      const was = endlessActive, local = EN.local, round = EN.round;
+      endlessActive = true; EN.round = 20; EN.local = { loot: [] };
+      const el = { rank:'elite', eliteName:null }, sub = { rank:'subjefe' };
+      const s1 = _glSource(el), s2 = _glSource(sub);
+      groundLoot.length = 0; save.stash = []; const g = groundLootDrop(player.x, player.y, s2.grade, s2.hm, currentArena, s2.rk); __step(50);
+      const out = { eliteGrade: s1.grade, subGrade: s2.grade, eliteChance: s1.chance, inResults: EN.local.loot.length };
+      endlessActive = was; EN.local = local; EN.round = round;
+      return out; });
+    check('ENDLESS.la_ronda_mejora_el_botin_del_piso', r.eliteGrade === 'S' && r.subGrade === 'S' && r.eliteChance > 0.05, r);
+    check('ENDLESS.lo_levantado_entra_en_los_resultados', r.inResults === 1, r);
+  }
+
   // ---------- 5) Mística: re-tirar UN afijo por oro ----------
   {
     const r = await E(() => {
