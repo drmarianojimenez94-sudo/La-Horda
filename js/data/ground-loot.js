@@ -16,13 +16,13 @@
    ============================================================ */
 const GROUND_LOOT_CFG = {
   // Probabilidad de que un enemigo de ese rango le suelte un objeto a CADA jugador.
-  chance: {normal:0.0025, subelite:0.008, elite:0.07, named:0.45, subjefe:1, jefe:1},
+  chance: {normal:0.001, subelite:0.004, elite:0.05, named:0.25, subjefe:1, jefe:1},
   // Cuántos objetos [mín, máx] cuando cae (subjefe y jefe: siempre).
   count:  {normal:[1,1], subelite:[1,1], elite:[1,1], named:[1,1], subjefe:[1,1], jefe:[1,2]},
   // Calificación con la que se tira la rareza (misma escala que el cofre: C..S+).
   grade:  {normal:"C", subelite:"C", elite:"B", named:"A", subjefe:"A", jefe:"S"},
   // Multiplicador de Legendario/Mítico/Set/Único por fuente (la horda común no llueve legendarios).
-  highMult:{normal:0.15, subelite:0.25, elite:0.35, named:0.6, subjefe:0.6, jefe:0.8},
+  highMult:{normal:0.05, subelite:0.08, elite:0.15, named:0.2, subjefe:0.3, jefe:0.45},
   pickR: 52,          // radio para levantarlo al pasar por encima
   btnR: 120,          // radio del botón contextual "Levantar"
   nameR: 210,         // a esta distancia aparece el nombre flotante (Legendario o más: siempre en pantalla)

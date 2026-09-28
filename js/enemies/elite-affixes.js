@@ -28,7 +28,7 @@ const ELITE_MODS = {
 const ELITE_MOD_IDS = Object.keys(ELITE_MODS);
 // Probabilidad de que una élite nazca con nombre, según el nivel de la partida (y la ronda, en la Horda Infinita).
 function eliteNamedChance(){
-  let c = Math.min(0.5, 0.18 + 0.03*(runLevel||1));
+  let c = Math.min(0.4, 0.12 + 0.025*(runLevel||1));
   if(typeof endlessOn==="function" && endlessOn()) c = Math.min(0.75, c + 0.02*(EN.round||1));
   return c;
 }
