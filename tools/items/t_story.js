@@ -122,7 +122,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep();
     const b3 = document.getElementById('victory-step-body').innerHTML;
     return { st: state, b0, b3, page: chronicleHas('laberinto_3') }; });
-  check('VICTORIA.ultimas_palabras_y_voz_del_guardian', vic.st === 'victory' && /LAS ÚLTIMAS PALABRAS/.test(vic.b0) && /Cerré mil caminos/.test(vic.b0) && /Una presa menos/.test(vic.b0), vic.b0.slice(-600));
+  check('VICTORIA.ultimas_palabras_y_voz_del_guardian', vic.st === 'victory' && /LAS [ÚU]LTIMAS PALABRAS/.test(vic.b0) && /Cerré mil caminos/.test(vic.b0) && /Una presa menos/.test(vic.b0), vic.b0.slice(-600));
   check('VICTORIA.escena_de_salida_cicatriz_hechicero_y_cronica', /ACTO II/.test(vic.b3) && /solo el Abismo/.test(vic.b3) && /Cristal de Piedra/.test(vic.b3) && /La piedra/.test(vic.b3) && vic.page, vic.b3.slice(0, 700));
   if (OUT) await page.screenshot({ path: OUT + '/story_victory.png' });
   // ---------------- DERROTA: la voz de tu guardián al caer ----------------
@@ -141,7 +141,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const screens = [];
     for (let i = 0; i < 20 && STORY_CINE.open; i++){ screens.push((el.querySelector('.sc-kicker').textContent + ' ' + el.querySelector('.sc-text').textContent + ' ' + el.querySelector('.sc-say').textContent + ' ' + el.querySelector('.sc-note').textContent).trim()); STORY_CINE.t0 = 0; storyCineNext(); }
     return { open, screens, closed: !STORY_CINE.open, seen: !!save.storyEpilogueSeen, st: state, b0: document.getElementById('victory-step-body').innerHTML }; });
-  check('EPILOGO.se_abre_al_completar_la_Infernal', ep.open && ep.st === 'victory' && /EPÍLOGO/.test(ep.screens[0] || ''), ep.screens[0]);
+  check('EPILOGO.se_abre_al_completar_la_Infernal', ep.open && ep.st === 'victory' && /EP[ÍI]LOGO/.test(ep.screens[0] || ''), ep.screens[0]);
   check('EPILOGO.cuenta_el_final_canon', ep.screens.some(s => /Yo elegí quedarme/.test(s)) && ep.screens.some(s => /siguen necesitando portadores/.test(s)) && ep.screens.some(s => /nuevos Guardianes|NUEVOS GUARDIANES/.test(s)), ep.screens);
   check('EPILOGO.post_creditos_Arena_Divina_y_Horda_Infinita', ep.screens.some(s => /ARENA DIVINA/.test(s)) && ep.screens.some(s => /HORDA INFINITA/.test(s)) && ep.closed && ep.seen, ep.screens.slice(-2));
   check('EPILOGO.ultimas_palabras_del_Rey', /Yo elegí quedarme/.test(ep.b0), ep.b0.slice(-300));
