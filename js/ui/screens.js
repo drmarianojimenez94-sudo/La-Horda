@@ -26,6 +26,7 @@ const screens = {
   paused: document.getElementById("pause-screen")
 };
 function setState(s){
+  const prev = state;
   state = s;
   if(typeof musicOnState==="function") musicOnState(s); // clima musical de cada pantalla
   if(s==="title" && typeof startTitleScene==="function") requestAnimationFrame(startTitleScene);
@@ -44,5 +45,20 @@ function setState(s){
     if(muteBtn) muteBtn.classList.add("hidden");
     if(screens[s]) screens[s].classList.remove("hidden");
   }
+  if(s==="prep" && prev!=="prep" && typeof prepSecOnEnter==="function") prepSecOnEnter(prev); // pestaña de la Sala (prep-sections.js)
+  if(document.getElementById("toast-stack")) toastStackHost(); // la columna de avisos se acomoda a la pantalla nueva
   if(typeof accountOnState==="function"){ try{ accountOnState(s); }catch(e){} } // CUENTAS: sincronizar al terminar la partida
+}
+
+/* ---------------- AVISOS APILADOS (toasts) ----------------
+   Todos los avisos emergentes (showNetToast: js/net/net-lobby.js; logros, desafíos y pase: js/ui/quests-ui.js)
+   van en UNA columna arriba a la derecha, uno debajo del otro, sin pisarse. Antes el del pase caía en el
+   centro, encima del título de la victoria. En las pantallas de fin se corre abajo del resumen de
+   desafíos; en partida, abajo de la barra de arriba (css/onboarding.css). */
+function toastStackHost(){
+  let h = document.getElementById("toast-stack");
+  if(!h){ h = document.createElement("div"); h.id = "toast-stack"; h.setAttribute("aria-live", "polite"); (document.getElementById("stage") || document.body).appendChild(h); }
+  h.classList.toggle("play", state==="playing");
+  h.classList.toggle("end", state==="victory" || state==="gameover");
+  return h;
 }

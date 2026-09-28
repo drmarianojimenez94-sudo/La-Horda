@@ -6,7 +6,7 @@
 //   skin   → cambiar de skin (una que ya tenés)
 //   sala   → entrar a una sala con código (escribir el código cuenta como un toque)
 //   primera→ PERFIL NUEVO: del título a estar jugando la Arena 01 (elegir el guardián de regalo incluido;
-//            el prólogo y la ficha del Hechicero cuentan un toque por página)
+//            el prólogo y la ficha del Hechicero cuentan un toque por página; primera_salta: con "Saltar ▸▸")
 // Perfil de prueba: guardián Musashi (Nv. 5), Arena 01 superada, 20.000 de oro, un arma en el inventario
 // y las piezas del set de la skin "errante" sin equipar.
 //   node tools/audit/menu_taps.js [outdir=/tmp/menu_taps]     (FLOWS=before para el camino viejo; ONLY=regex)
@@ -49,6 +49,8 @@ const FLOWS = {
     sala: ['#title-continue-btn', '#mainmenu-jugar-btn', { fill: '#mode-join-code', text: 'QKL58J' }, '#mode-join-btn'],
     // primer arranque corto: título → guardián de regalo → directo a la Ciudad (sin hub ni Sala)
     primera: ['#title-continue-btn', '.starter-card[data-champ="mago"]', '#starter-yes-btn', RI],
+    // lo mismo salteando el prólogo con "Saltar ▸▸"
+    primera_salta: ['#title-continue-btn', '.starter-card[data-champ="mago"]', '#starter-yes-btn', '#run-intro .ri-skip', RI],
   },
 };
 const GOALS = {
@@ -57,6 +59,7 @@ const GOALS = {
   compra: () => !!save.champions.mago.unlocked,
   skin: () => typeof skinIsActiveOn === 'function' && skinIsActiveOn('errante', 'musashi'),
   primera: () => state === 'playing' && currentArena === 'ciudad',
+  primera_salta: () => state === 'playing' && currentArena === 'ciudad',
   sala: () => /caracteres|No existe|servidor|Conectando|conect|sala/i.test((document.getElementById('mode-join-status') || {}).textContent || '') || state === 'prep',
 };
 function setupProfile() {
@@ -79,7 +82,7 @@ async function runFlow(browser, vp, which, name, steps) {
   page.on('dialog', d => d.accept());
   await page.goto(BASE + '/index.html', { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toca/.test(b.textContent); })) break; await sleep(100); }
-  if (name !== 'primera') await page.evaluate(setupProfile); // "primera" arranca con el perfil vacío
+  if (!/^primera/.test(name)) await page.evaluate(setupProfile); // "primera" arranca con el perfil vacío
   await sleep(300);
   let taps = 0, n = 0, ok = false, fail = '';
   const shot = async (lbl) => page.screenshot({ path: path.join(OUT, `${which}_${vp.name}_${name}_${String(n++).padStart(2, '0')}_${lbl}.png`) });

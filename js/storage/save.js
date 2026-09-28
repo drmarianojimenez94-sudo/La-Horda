@@ -64,6 +64,7 @@ function defaultSave(){
     testStageV1:true,       // BUGFIX 01: reinicio de la etapa de prueba (nivel 1, bloqueados, solo la Arena 1, 10.000 de oro UNA vez)
     startGoldNotice:false,  // aviso del regalo inicial pendiente de mostrar (se muestra una vez y se apaga)
     starterChosen:false,    // todavía no eligió su guardián de regalo (pantalla "Tu primer guardián")
+    firstRun:null,          // PRIMER ARRANQUE CORTO (js/ui/hub.js): "jugando" en la primera partida, "hub" hasta tocar JUGAR
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0, unico:0}, // protección suave contra la mala suerte (oculta), ver js/data/loot.js

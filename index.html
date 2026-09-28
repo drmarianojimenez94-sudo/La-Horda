@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="css/quests.css">
 <link rel="stylesheet" href="css/account.css">
 <link rel="stylesheet" href="css/endless.css">
+<link rel="stylesheet" href="css/onboarding.css">
 </head>
 <body>
 
@@ -118,7 +119,7 @@
     <label class="hidden" id="title-join-name">Tu nombre <input maxlength="16" placeholder="Jugador"></label>
     <button class="btn wide hidden" id="title-join-btn">Unirse a la sala</button>
     <div class="title-join-status" id="title-join-status"></div>
-    <div class="build-tag">LA HORDA — B1 COOPERATIVE PLAYTEST</div>
+    <div class="build-tag">LA HORDA — ALFA COOPERATIVA</div>
   </div>
 
   <!-- MENÚ PRINCIPAL (HUB): JUGAR continúa la campaña; accesos a Guardianes, Tienda, Multijugador,
@@ -138,6 +139,7 @@
       <div class="hub-modes">
         <!-- MODO CAMPAÑA: la historia en orden (Arena 01 → 10); JUGAR sigue en la próxima arena -->
         <button class="hub-play" id="hub-play-btn">
+          <span class="ui-tag new hub-play-next hidden" id="hub-play-next">SIGUIENTE</span>
           <span class="hub-play-art"><canvas class="champ-anim hub-play-anim" width="132" height="132" data-class-key="mago" data-idle="1"></canvas></span>
           <span class="hub-play-txt">
             <span class="hub-play-kicker" id="hub-play-kicker">MODO CAMPAÑA</span>
@@ -316,19 +318,26 @@
       <div class="ui-topbar-spacer"></div>
     </div>
     <div class="lobby-sub" id="lobby-sub"></div>
-    <div id="lobby-arena" class="hidden"></div>
-    <div id="net-bar"></div>
-    <div id="net-chat" class="hidden"></div>
+    <!-- PESTAÑAS DE LA SALA (js/ui/prep-sections.js): Equipo · Arena · Sala online. Los 4 lugares se ven
+         siempre; lo online queda plegado salvo en una sala online (o si entraste por código o enlace). -->
+    <div class="prep-secs" id="prep-secs" role="tablist" aria-label="Sala">
+      <button class="prep-sec active" data-prep-sec="equipo" role="tab" aria-selected="true"><span class="prep-sec-ico">⚔</span> Equipo</button>
+      <button class="prep-sec" data-prep-sec="arena" role="tab" aria-selected="false"><span class="prep-sec-ico">⚑</span> <span class="prep-sec-lbl" id="prep-sec-arena">Arena</span></button>
+      <button class="prep-sec" data-prep-sec="online" role="tab" aria-selected="false"><span class="prep-sec-ico">🌐</span> <span class="prep-sec-lbl" id="prep-sec-online">Sala online</span></button>
+    </div>
+    <div id="lobby-arena" class="hidden" data-part="arena"></div>
+    <div id="net-bar" data-part="online"></div>
+    <div id="net-chat" class="hidden" data-part="online"></div>
     <div id="lobby-slots"></div>
-    <div id="prep-summary"></div>
-    <div class="hub-tabs" id="prep-tabs">
+    <div id="prep-summary" data-part="equipo"></div>
+    <div class="hub-tabs" id="prep-tabs" data-part="equipo">
       <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
       <button class="hub-tab" data-tab="talentos">Talentos</button>
       <button class="hub-tab" data-tab="habilidades">Habilidades</button>
     </div>
-    <div id="prep-inventory-panel"></div>
-    <div id="prep-talents-panel" class="hidden"></div>
-    <div id="prep-skills-panel" class="hidden"></div>
+    <div id="prep-inventory-panel" data-part="equipo"></div>
+    <div id="prep-talents-panel" class="hidden" data-part="equipo"></div>
+    <div id="prep-skills-panel" class="hidden" data-part="equipo"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>
   </div>
 
@@ -605,6 +614,7 @@
 <script src="js/ui/run-intro.js"></script>
 <script src="js/ui/menus.js"></script>
 <script src="js/ui/hub.js"></script>
+<script src="js/ui/prep-sections.js"></script>
 <script src="js/ui/champions-hub.js"></script>
 <script src="js/ui/item-icons.js"></script>
 <script src="js/ui/item-preview.js"></script>

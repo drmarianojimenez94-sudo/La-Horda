@@ -109,6 +109,20 @@ function runIntroFill(el, arena, B){
       pct=>{ if(!RUN_INTRO.prologue && go.disabled) go.textContent = "Preparando la arena… " + pct + "%"; });
   }
   const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá en cualquier lado para empezar";
+  // "Saltar ▸▸" (arriba a la izquierda, sobre el arte): con la historia en pantalla, un toque lleva directo a la
+  // ficha de la arena (primer arranque corto)
+  let skip = el.querySelector(".ri-skip");
+  if(!skip){
+    skip = document.createElement("button"); skip.type = "button"; skip.className = "btn secondary small ri-skip"; skip.textContent = "Saltar ▸▸";
+    skip.setAttribute("aria-label", "Saltar la historia");
+    skip.addEventListener("click", ev=>{
+      ev.stopPropagation(); if(!RUN_INTRO.open || !RUN_INTRO.prologue) return;
+      RUN_INTRO.pages = []; RUN_INTRO.prologue = false; RUN_INTRO.t0 = performance.now();
+      runIntroFill(el, RUN_INTRO.arena, ARENA_BRIEF[RUN_INTRO.arena]);
+    });
+    el.appendChild(skip);
+  }
+  skip.classList.toggle("hidden", !pro);
   const who = el.querySelector(".ri-who"), hero = runIntroHeroEl(el), actEl = el.querySelector(".ri-act");
   if(pro){
     const P = RUN_INTRO.pages[0];

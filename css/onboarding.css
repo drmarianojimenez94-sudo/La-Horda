@@ -1,0 +1,97 @@
+/* ============================================================
+   css/onboarding.css — PRIMERA HORA DE JUEGO Y SALA (se carga al final):
+   - JUGAR resaltado con "SIGUIENTE" después de la primera partida (js/ui/hub.js, firstRun)
+   - Pestañas de la Sala: Equipo · Arena · Sala online (js/ui/prep-sections.js)
+   - Una sola familia pixel en la Sala y en los textos de ayuda del menú: VT323 para el cuerpo (un poco más
+     grande que la Georgia que reemplaza: a igual px, VT323 se ve más chica) y Press Start 2P para títulos
+   - Pie del título, avisos apilados arriba a la derecha y ficha de cuenta de 40 px o más
+   ============================================================ */
+
+/* ---------- pie del título: en castellano y en la letra pixel del resto ---------- */
+.build-tag{ font-family:var(--font-retro); font-size:0.95rem; letter-spacing:0.18em; color:rgba(255,207,92,0.6); text-shadow:2px 2px 0 #000; }
+
+/* ---------- hub: JUGAR resaltado después de la primera partida ---------- */
+.hub-play.hub-next{ box-shadow:var(--ui-shadow), 0 0 0 2px var(--ui-gold), 0 0 26px rgba(255,200,90,0.45); animation:hubNextGlow 2.4s ease-in-out infinite; }
+@keyframes hubNextGlow{ 0%,100%{ box-shadow:var(--ui-shadow), 0 0 0 2px var(--ui-gold), 0 0 14px rgba(255,200,90,0.3); } 50%{ box-shadow:var(--ui-shadow), 0 0 0 2px var(--ui-gold), 0 0 30px rgba(255,200,90,0.6); } }
+.hub-play-next{ position:absolute; top:8px; right:8px; z-index:2; font-size:1rem; }
+body.reduce-motion .hub-play.hub-next{ animation:none; }
+@media (prefers-reduced-motion:reduce){ .hub-play.hub-next{ animation:none; } }
+
+/* ---------- Sala: pestañas Equipo · Arena · Sala online ---------- */
+.prep-secs{ display:flex; gap:6px; width:100%; max-width:760px; margin:0 0 8px; }
+.prep-sec{
+  flex:1 1 0; min-width:0; min-height:42px; padding:4px 8px; display:flex; align-items:center; justify-content:center; gap:6px;
+  font-family:var(--font-retro); font-size:1.15rem; line-height:1.05; color:var(--text-dim); cursor:pointer; white-space:nowrap;
+  background:linear-gradient(160deg, var(--panel), #0f0805); border:3px solid #000; box-shadow:inset 1px 1px 0 rgba(255,180,120,0.14), 2px 2px 0 #000;
+  transition:color var(--ui-t, 120ms), border-color var(--ui-t, 120ms), background-color var(--ui-t, 120ms);
+}
+.prep-sec-lbl{ overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.prep-sec-ico{ flex:none; }
+.prep-sec.active{ color:var(--ember3); border-color:var(--ember1); background:rgba(255,122,46,0.14); }
+.prep-sec:focus-visible{ outline:2px solid var(--ui-gold, #ffd76a); outline-offset:2px; }
+.prep-sec.live .prep-sec-ico{ color:#7dffa0; text-shadow:0 0 8px rgba(125,255,160,0.7); }
+.prep-sec.warn::after{ content:"⚠"; color:#ffb35c; margin-left:2px; }
+@media (hover:hover) and (pointer:fine){ .prep-sec:not(.active):hover{ color:var(--text); border-color:var(--ui-line-hi, #6a3e1e); } }
+/* cada parte de la Sala se ve solo con su pestaña (los 4 lugares, siempre) */
+#prep-screen[data-sec="equipo"] [data-part]:not([data-part="equipo"]),
+#prep-screen[data-sec="arena"] [data-part]:not([data-part="arena"]),
+#prep-screen[data-sec="online"] [data-part]:not([data-part="online"]){ display:none !important; }
+#prep-screen #lobby-arena, #prep-screen #net-bar{ width:100%; max-width:760px; }
+#prep-screen #lobby-arena{ margin-bottom:6px; }
+
+/* ---------- una sola familia pixel en la Sala y en la ayuda del menú (antes Georgia) ---------- */
+#prep-screen, #starter-screen, #modeselect-screen, #hub-options, #arenaselect-screen, #net-toast{ font-family:var(--font-retro); }
+#prep-screen .lobby-sub{ font-size:1.05rem; }
+#prep-screen .net-name{ font-size:1.05rem; }
+#prep-screen .net-hint, #prep-screen .net-off, #prep-screen .net-link, #prep-screen .lobby-note,
+#prep-screen .inv-capacity, #prep-screen .inv-empty, #prep-screen .inv-chip,
+#prep-screen .inv-slot, #prep-screen .inv-slot .slot-item-name, #prep-screen .inv-slot button,
+#prep-screen .tt-desc, #prep-screen .tt-eff, #prep-screen .tt-lock, #prep-screen .tt-cost, #prep-screen .tt-name, #prep-screen .talent-badge,
+#prep-screen .talent-lock-banner, #prep-screen .talent-points, #prep-screen .tp-note, #prep-screen .talent-lock-reason,
+#prep-screen .mastery-name, #prep-screen .mastery-stats, #prep-screen .mastery-use, #prep-screen .evo-lines .evo,
+#prep-screen .tt-root, #prep-screen .item-stat, #prep-screen .item-passives, #prep-screen .item-desc, #prep-screen .inv-card button{ font-size:0.98rem; line-height:1.15; }
+#prep-screen .inv-slot .slot-lv, #prep-screen .tt-rank{ font-size:0.85rem; }
+#prep-screen .net-name input, #modeselect-screen .net-name input, #prep-screen .net-code-input{ font-family:var(--font-retro); font-size:1.1rem; }
+#modeselect-screen .net-name{ font-size:1.05rem; }
+#starter-confirm-text{ font-size:1.25rem; }
+#hub-options .opt-note{ font-size:1rem; line-height:1.2; }
+#arenaselect-screen .arena-grid-sep{ font-family:var(--font-pixel); font-size:0.7rem; }
+#net-toast{ font-size:1.05rem; line-height:1.15; }
+
+/* ---------- avisos apilados arriba a la derecha (toastStackHost, js/ui/screens.js) ---------- */
+#toast-stack{
+  position:fixed; z-index:60; pointer-events:none; display:flex; flex-direction:column; align-items:stretch; gap:6px;
+  top:calc(8px + env(safe-area-inset-top, 0px)); right:calc(10px + env(safe-area-inset-right, 0px)); width:min(250px, 34vw);
+}
+#toast-stack.play{ top:calc(58px + env(safe-area-inset-top, 0px)); }
+/* fin de partida: debajo del resumen de desafíos (.qs-run-sum), fuera del título y del cofre */
+#toast-stack.end{ top:calc(96px + env(safe-area-inset-top, 0px)); width:min(200px, 27vw); }
+#toast-stack #net-toast{ position:static; transform:none; left:auto; top:auto; max-width:none; text-align:left; }
+#toast-stack #net-toast:not(.show){ display:none; }
+#toast-stack #qs-toasts{ position:static; transform:none; left:auto; top:auto; width:auto; display:flex; flex-direction:column; gap:6px; }
+#toast-stack #qs-toasts:empty{ display:none; }
+#toast-stack .qs-toast{ transform:translateX(12px); }
+#toast-stack .qs-toast.show{ transform:none; }
+#toast-stack .qs-toast.out{ transform:translateX(12px); }
+#toast-stack.end .qs-toast-ico{ width:28px; height:28px; }
+
+/* ---------- ficha de cuenta: 40 px o más de alto y "?" legible ---------- */
+.account-chip{ min-height:40px; font-size:1.15rem; }
+.acc-chip-av{ width:30px; height:30px; flex-basis:30px; font-size:0.8rem; }
+.hub-profile{ position:relative; }
+.hub-profile.guest::after{
+  content:"?"; position:absolute; left:30px; top:-7px; width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-pixel); font-size:0.75rem; line-height:1; color:#1a0f0a; background:var(--ui-gold, #ffd76a); border:2px solid #000; pointer-events:none;
+}
+@media (max-width:700px) and (max-height:520px){
+  /* en el teléfono chico se esconde el nivel; el invitado igual ve que puede entrar */
+  .hub-profile.guest .hub-profile-lvl{ display:block; font-size:0.9rem; }
+}
+
+/* ---------- ficha del Hechicero: "Saltar ▸▸" la historia (arriba a la izquierda, sobre el arte) ---------- */
+#run-intro .ri-skip{ position:absolute; top:calc(8px + env(safe-area-inset-top, 0px)); left:calc(10px + env(safe-area-inset-left, 0px)); z-index:3;
+  min-height:40px; min-width:40px; padding:4px 14px; font-family:var(--font-retro); font-size:1.1rem; letter-spacing:0.04em; }
+#run-intro .ri-skip.hidden{ display:none; }
+
+/* ---------- victoria: el "VICTORIA" entra agrandado (vicHeroIn) y durante 0,6 s asomaba scroll horizontal ---------- */
+#victory-screen{ overflow-x:hidden; }

@@ -253,6 +253,7 @@ function netRefreshLobby(){
   document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
   renderLobbyArena();
   netRenderLobbyBar();
+  if(typeof prepSecSync==="function") prepSecSync(); // pestañas de la Sala (js/ui/prep-sections.js)
   if(typeof netRenderChat==="function") netRenderChat(); // silenciados/estado del chat (incremental: no reconstruye)
   netRenderLobbySlots();
 }
@@ -329,7 +330,13 @@ netOn("error", (m)=>{
 });
 function showNetToast(text){
   let t = document.getElementById("net-toast");
-  if(!t){ t = document.createElement("div"); t.id = "net-toast"; document.body.appendChild(t); }
+  if(!t){
+    t = document.createElement("div"); t.id = "net-toast";
+    t.addEventListener("animationend", ()=> t.classList.remove("show")); // oculto no ocupa lugar en la columna
+  }
+  // en la columna de avisos de arriba a la derecha (toastStackHost, js/ui/screens.js), primero de todos
+  const host = typeof toastStackHost==="function" ? toastStackHost() : document.body;
+  if(t.parentNode!==host) host.insertBefore(t, host.firstChild);
   t.textContent = text; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show");
 }
 

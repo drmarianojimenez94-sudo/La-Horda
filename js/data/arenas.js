@@ -72,7 +72,7 @@ const ARENA_MODS = {
   // sin debuffs propios por ahora -esto se termina de calibrar cuando exista el combate de
   // verdad. NO va en ARENA_ORDER a propósito: no tiene que aparecer en la selección normal
   // de arenas de oleadas, se entra por su propia pantalla ("Modos de juego" -> Arena Divina).
-  divina:   { label:"Arena Divina", icon:"👁", desc:"Asedio 4 contra 4. Todavía en construcción.", hazardName:"Mirada Ascendida",
+  divina:   { label:"Arena Divina", icon:"👁", desc:"Asedio 4 contra 4: derribá las torres y el castillo del equipo divino.", hazardName:"Mirada Ascendida",
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:1.0, enemyRegenPct:0, hazard:null, hasWalls:false }
 };
