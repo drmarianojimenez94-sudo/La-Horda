@@ -215,7 +215,7 @@ function storyPagesDraw(){
     if(typeof glowSprite==="function"){ ctx.globalAlpha = 0.85*pulse; ctx.drawImage(glowSprite("255,210,130"), p.x - 42, cy - 42, 84, 84); }
     ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
     ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(p.x, p.y + 2, 14, 5, 0, 0, Math.PI*2); ctx.fill();
-    const s = 2, w = 11*s, h = 14*s, x0 = Math.round(p.x - w/2), y0 = Math.round(cy - h/2);
+    const s = 2.5, w = Math.round(11*s), h = Math.round(14*s), x0 = Math.round(p.x - w/2), y0 = Math.round(cy - h/2);
     ctx.fillStyle = "#2a170a"; ctx.fillRect(x0 - s, y0 - s, w + 2*s, h + 2*s);            // contorno
     ctx.fillStyle = "#ead6a4"; ctx.fillRect(x0, y0, w, h);                               // hoja
     ctx.fillStyle = "#cdb07a"; ctx.fillRect(x0, y0 + h - 2*s, w, 2*s); ctx.fillRect(x0 + w - 2*s, y0 + 3*s, 2*s, h - 3*s); // sombra de la hoja
