@@ -129,6 +129,10 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     return { st: state, visible: scr && !scr.classList.contains('hidden'), txt: scr ? scr.textContent : '', runs: S.runs - runs0, best: S.best.score, score: EN.score, g: (S.byGuardian.guerrero||{}).score, again: !!document.getElementById('en-again-btn'), saved: JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k => /save/i.test(k)) || '{}') || '{}').endless || null }; });
   check('END.pantalla_de_resultados', r10.st === 'endless' && r10.visible && /Ronda/.test(r10.txt) && /Botín juntado/.test(r10.txt) && /Arenas recorridas/.test(r10.txt), { st: r10.st, txt: r10.txt.slice(0, 300) });
   check('END.record_guardado', r10.runs === 1 && r10.best === r10.score && r10.g === r10.score && r10.score > 0, { runs: r10.runs, best: r10.best, score: r10.score, g: r10.g, saved: !!r10.saved });
+  // ranking semanal: sin cuenta el récord queda local, con el aviso para entrar al ranking (sin pedidos a la red)
+  const rLb = await E(() => { const line = document.getElementById('en-lb-line'); const acc = document.getElementById('en-lb-acc'), open = document.getElementById('en-lb-open');
+    return { vis: !!line && !line.classList.contains('hidden'), txt: line ? line.textContent : '', acc: !!acc, open: !!open, st: EN.local && EN.local.lb && EN.local.lb.st, pend: !!endlessSave().lbPending }; });
+  check('END.ranking_invitado_record_local_con_aviso', rLb.vis && rLb.acc && rLb.open && /Creá una cuenta para entrar al ranking/.test(rLb.txt) && rLb.st === 'guest' && !rLb.pend, rLb);
   const r11 = await E(() => { const id0 = EN.id; document.getElementById('en-again-btn').click(); return { st: state, active: endlessActive, round: EN.round, newRun: EN.id !== id0, score: EN.score, kills }; });
   check('END.una_mas_en_un_toque', r11.st === 'playing' && r11.active && r11.round === 1 && r11.newRun && r11.score === 0, r11);
 

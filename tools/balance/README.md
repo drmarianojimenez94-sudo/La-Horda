@@ -14,3 +14,10 @@ Servir el repo (`python3 -m http.server 8000`) y opcionalmente `GAME_URL=http://
 
 Tablas que se tocan: `js/data/loot.js` (botín), `js/systems/performance.js` (calificación),
 `js/data/sets.js` + `js/systems/set-effects.js` (sets).
+- `node campaign_runs.js [arenas|todas] [clase] > runs.jsonl` — una partida por arena de la campaña con el
+  piloto automático (jugador invulnerable, declarado) al nivel de entrada esperado: bajas por rango, élites
+  con nombre, XP de bajas, XP de victoria, oro peleando y botín del piso.
+- `RUNS=runs.jsonl node groundloot_econ.js x 3000` — Monte Carlo del botín del piso y del cofre con esas
+  bajas: objetos por partida, legendarios que cambian la build y venta / oro peleando (objetivo <= 15 %).
+- `RUNS=runs.jsonl node xp_curve.js` — curva de la campaña con la XP de victoria vieja y la nueva
+  (`victoryXpFor`, js/systems/progression.js): nivel al terminar cada arena y niveles que da la victoria.

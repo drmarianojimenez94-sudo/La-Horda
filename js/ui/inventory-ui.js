@@ -92,7 +92,7 @@ function renderChampInventory(panel, classKey, rerender){
   let html = renderEquipmentGridHTML(classKey, "prep-unequip");
   html += renderSetPanelHTML(classKey);
   const used = stashUsedSlots();
-  html += `<div class="inv-capacity">Inventario de la cuenta: ${used}/${INVENTORY_CAPACITY}${used>=INVENTORY_CAPACITY?" — lleno: vendé o descartá para recibir botín":""} · <a href="#" data-open-myinv>abrir Mi Inventario</a></div>`;
+  html += `<div class="inv-capacity">Inventario de la cuenta: ${used}/${INVENTORY_CAPACITY}${used>=INVENTORY_CAPACITY?" — lleno: los Comunes y Raros que levantes se reciclan solos en Gemas":""} · <a href="#" data-open-myinv>abrir Mi Inventario</a></div>`;
   html += renderFusionHTML(classKey, "prep-fuse");
   const chips = [["compatibles","Compatibles"],["recomendados","Recomendados"],["todos","Todos"]];
   html += `<div class="inv-filters">${chips.map(([k,l])=>`<button class="inv-chip ${champInvFilter===k?"on":""}" data-champ-filter="${k}">${l}</button>`).join("")}</div>`;
@@ -133,7 +133,7 @@ const myInvFilter = {rarity:"todas", type:"todos", champ:"todos"};
 function openMyInventory(tab){ myInvTab = tab || myInvTab; setState("inventory"); renderMyInventory(); }
 function renderMyInventory(){
   const used = stashUsedSlots();
-  document.getElementById("myinv-sub").textContent = `${used}/${INVENTORY_CAPACITY} espacios · ${stashItems().length} objetos en total (lo equipado no ocupa espacio) · compartido por todos tus guardianes`;
+  document.getElementById("myinv-sub").textContent = `${used}/${INVENTORY_CAPACITY} espacios · ${stashItems().length} objetos en total (lo equipado no ocupa espacio) · compartido por todos tus guardianes` + (used >= INVENTORY_CAPACITY ? " · LLENO: los Comunes y Raros que levantes se reciclan solos en Gemas" : "");
   setHubTabs("myinv-tabs", myInvTab);
   const panel = document.getElementById("myinv-panel");
   if(myInvTab==="recetas") renderRecipesPanel(panel);
@@ -201,6 +201,7 @@ function renderRecipesPanel(panel){
 function renderCollectionPanel(panel){
   const groups = [
     ["Legendarios con nombre", Object.keys(NAMED_LEGENDARIES), RARITY_META.legendario.color],
+    ["Legendarios que cambian la build", Object.keys(BUILD_LEGENDARIES), RARITY_META.legendario.color],
     ["Míticos", Object.keys(DESIGNED_ITEMS).filter(id=>DESIGNED_ITEMS[id].rarity==="mitico"), RARITY_META.mitico.color],
     ["Legendarios de guardián", Object.keys(DESIGNED_ITEMS).filter(id=>{ const d = DESIGNED_ITEMS[id]; return d.rarity==="legendario" && d.champion && !d.named && !d.set; }), RARITY_META.legendario.color],
     ["Piezas de set", Object.keys(DESIGNED_ITEMS).filter(id=>DESIGNED_ITEMS[id].set), SET_COLOR],
@@ -211,7 +212,7 @@ function renderCollectionPanel(panel){
     const n = ids.filter(collectionHas).length; total += ids.length; seen += n;
     const cells = ids.map(id=>{
       const d = DESIGNED_ITEMS[id], has = collectionHas(id);
-      const hint = d.unique ? "Único · "+CLASSES[d.champion].name : (d.set ? SET_DB[d.set].name : ITEM_TYPES[d.type].label);
+      const hint = d.unique ? "Único · "+CLASSES[d.champion].name : (d.set ? SET_DB[d.set].name : (d.buildPower ? BUILD_POWERS[d.buildPower].name : ITEM_TYPES[d.type].label));
       return `<div class="col-cell ${has?"have":""}" style="--cc:${col}" title="${has?d.name:"Sin descubrir"}">
         <span class="col-ico">${has ? ITEM_TYPES[d.type].icon : "?"}</span><span class="col-name">${has ? d.name : "???"}</span><span class="col-hint">${hint}</span></div>`;
     }).join("");

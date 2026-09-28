@@ -497,7 +497,7 @@ function endlessDrawWorld(){
     }
     // segundos que quedan
     if(!t.done){
-      ctx.globalAlpha = 1; ctx.fillStyle = urgent ? "#ff8a7a" : "#fff"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.globalAlpha = 1; ctx.fillStyle = urgent ? "#ff8a7a" : "#fff"; ctx.font = pxFont(12); ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(Math.ceil(t.t/1000) + "s", t.x, t.y + t.r*0.62 + 14);
     }
     ctx.restore();
@@ -585,6 +585,8 @@ function endlessEndRun(reason){
     if(typeof questsOnRunEnd==="function"){ try{ L.questSum = questsOnRunEnd(false, {abandon:EN.endReason==="quit", endless:true}) || L.questSum; }catch(e){ console.error(e); } }
     endlessStat("endless_score", EN.score);
     endlessStat("endless_end", round);
+    // ranking semanal (js/net/leaderboard.js): con cuenta se manda; sin cuenta queda local con aviso
+    if(typeof lbAfterRun==="function"){ try{ lbAfterRun(L); }catch(e){ console.error(e); } }
   }
   endlessRescues = [];
   endlessShowResults();
@@ -616,6 +618,7 @@ function endlessShowResults(){
     <div class="en-res-title">${EN.endReason==="quit" ? "Contención abandonada" : "La Horda siguió avanzando"}</div>
     <div class="en-res-big"><div><span>Ronda</span><b>${EN.round}</b></div><div><span>Puntaje</span><b>${_enFmt(EN.score)}</b></div></div>
     <div class="en-res-badges">${badge(L.newGlobal, "¡NUEVO RÉCORD GLOBAL!")}${badge(L.newGuardian && !L.newGlobal, `¡Récord de ${(CLASSES[cls]||{}).name||cls}!`)}${badge(L.newWeek && !L.newGlobal && !L.newGuardian, "¡Mejor de la semana!")}</div>
+    <div class="en-lb-line hidden" id="en-lb-line"></div>
     ${L.questSum ? `<div class="qs-run-sum"><b>🏆 DESAFÍOS</b><span>+${L.questSum.xp} XP de cuenta</span>${L.questSum.pass ? `<span>Pase Nv. ${L.questSum.pass.level}${L.questSum.passUp > 0 ? " ▲" : ""}</span>` : ""}${L.questSum.chal > 0 ? `<span>${L.questSum.chal} desafío${L.questSum.chal>1?"s":""} ✔</span>` : ""}${L.questSum.ach > 0 ? `<span>${L.questSum.ach} logro${L.questSum.ach>1?"s":""} ✔</span>` : ""}</div>` : ""}
     <div class="en-res-btns">
       ${guest ? "" : `<button class="btn en-again" id="en-again-btn">⟳ UNA MÁS</button>`}
@@ -639,6 +642,7 @@ function endlessShowResults(){
     </div>
     <div class="en-res-sub">Arenas recorridas</div><div class="en-res-arenas">${arenas}</div>
 </div>`;
+  if(typeof _lbRenderRunLine==="function") _lbRenderRunLine(); // "Puesto #N esta semana" (o el aviso para invitados)
   const again = document.getElementById("en-again-btn");
   if(again) again.addEventListener("click", endlessOneMore);
   document.getElementById("en-back-btn").addEventListener("click", ()=>{
@@ -726,8 +730,9 @@ function endlessDecoratePrep(){
   box.classList.remove("hidden");
   box.innerHTML = `<div class="la-head">HORDA INFINITA <span class="la-by">· ${guest ? "la arranca el anfitrión" : "la Cicatriz elige las arenas"}</span></div>
     <div class="la-desc">∞ Rondas sin fin: cada 5, un jefe o subjefe y la Cicatriz te lleva a otra arena. Semana ${wk.key.split("-W")[1]}: ${wk.ids.map(m=>`<b title="${ENDLESS_MUTATORS[m].desc}">${ENDLESS_MUTATORS[m].icon} ${ENDLESS_MUTATORS[m].name}</b>`).join(" · ")}.</div>
-    <div class="la-desc">Récord con ${(CLASSES[selectedClass]||{}).name||""}: <b>${_enFmt(G.score)}</b> (ronda ${G.round||0}) · Global: <b>${_enFmt(S.best.score)}</b> (ronda ${S.best.round||0})</div>`;
+    <div class="la-desc">Récord con ${(CLASSES[selectedClass]||{}).name||""}: <b>${_enFmt(G.score)}</b> (ronda ${G.round||0}) · Global: <b>${_enFmt(S.best.score)}</b> (ronda ${S.best.round||0})${typeof lbOpen==="function" ? ` <button type="button" class="btn secondary small lb-open-btn" id="en-prep-rank">🏆 Ranking</button>` : ""}</div>`;
   box._html = "endless";
+  const rk = document.getElementById("en-prep-rank"); if(rk) rk.addEventListener("click", ev=>{ ev.stopPropagation(); lbOpen({guardian:""}); });
 }
 function endlessStartFromPrep(){
   const online = typeof netInRoom==="function" && netInRoom();

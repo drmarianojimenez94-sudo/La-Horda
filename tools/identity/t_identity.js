@@ -1,7 +1,7 @@
 // Pruebas de las mecánicas de identidad de las arenas del camino de siempre (ARENA_EXT) y del
 // sistema de acción contextual (js/systems/context-actions.js). Sin dibujar salvo las capturas.
 //   (python3 -m http.server 8771 &) ; node tools/identity/t_identity.js [carpeta_capturas]
-//   variables: SE_BASE_URL (default http://127.0.0.1:8771), ONLY=bos,inf,hie,tut,acu,lab,env (secciones)
+//   variables: SE_BASE_URL (default http://127.0.0.1:8771), ONLY=bos,inf,hie,tut,acu,lab,env (secciones), LAY=1 (con el trazado al azar)
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
 const path = require('path');
@@ -17,6 +17,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::/.test(m.text())) errors.push('console: ' + m.text().slice(0, 300)); });
   await page.addInitScript(() => { window.__campaignMode = true; });
+  // LAY=1: todo con el trazado al azar puesto (pilares por semilla, js/arenas/arena-layouts.js), como en la
+  // Horda Infinita o en Pesadilla/Infierno: las mecánicas de cada arena tienen que seguir andando igual.
+  if (process.env.LAY === '1') await page.addInitScript(() => { window.__layForce = true; });
   await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   await page.evaluate(() => { loop = function(){}; });

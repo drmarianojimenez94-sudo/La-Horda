@@ -14,6 +14,7 @@ const SITE = process.env.SITE || 'http://127.0.0.1:8808';
 const RELAY = process.env.RELAY || 'ws://127.0.0.1:8818';
 const OUT = process.argv[2];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const AID_COLISEO = ['bosque', 'hielo', 'laberinto', 'acuatica', 'infernal']; // arenas con trazado al azar
 let fails = 0;
 const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 500) : '')); if (!ok) fails++; };
 const PHONE = { viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 };
@@ -95,7 +96,9 @@ async function waitFor(c, fn, a, ms) { for (let k = 0; k < (ms || 20000)/150; k+
     await sleep(250);
   }
   const rot = await waitFor(B, (a) => state === 'playing' && EN.round === 6 && currentArena !== a, arena5, 30000);
-  const s6 = { host: await ev(A, () => ({ r: EN.round, arena: currentArena, bk: EN.bossKills })), guest: await ev(B, () => ({ r: EN.round, arena: currentArena, st: state, loot: (EN.local && EN.local.loot || []).length, gems: save.gems||0, n: heroes.length })) };
+  const s6 = { host: await ev(A, () => ({ r: EN.round, arena: currentArena, bk: EN.bossKills, lay: JSON.stringify(aidSolids.filter(x => x.lay)) })), guest: await ev(B, () => ({ r: EN.round, arena: currentArena, st: state, loot: (EN.local && EN.local.loot || []).length, gems: save.gems||0, n: heroes.length, lay: JSON.stringify(aidSolids.filter(x => x.lay)), on: !!netMatch.lay })) };
+  // trazado al azar (js/arenas/arena-layouts.js): siempre en la Horda Infinita, idéntico en el invitado
+  check('red.trazado_al_azar_igual_en_los_dos', s6.guest.on && s6.guest.lay === s6.host.lay && (!AID_COLISEO.includes(s6.host.arena) || s6.host.lay.length > 10), { arena: s6.host.arena, host: s6.host.lay.length, guest: s6.guest.lay.length, on: s6.guest.on });
   check('red.cicatriz_cambia_la_arena_en_los_dos', rot && s6.guest.arena === s6.host.arena && s6.host.arena !== arena5 && s6.guest.n === 4, { arena5, s6 });
   check('red.cofre_del_subjefe_para_el_invitado', s6.host.bk >= 1 && (s6.guest.loot > loot0 || s6.guest.gems > gems0), { loot0, gems0, s6 });
   if (OUT) { await B.page.screenshot({ path: OUT + '/endless_invitado.png' }); await A.page.screenshot({ path: OUT + '/endless_anfitrion.png' }); }

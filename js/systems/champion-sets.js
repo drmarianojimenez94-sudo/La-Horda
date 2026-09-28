@@ -33,6 +33,29 @@ function setFuryMult(h){
 }
 function champSetTitanDurMult(h){ return setN(h, "legion") >= 4 ? 1.3 : 1; }
 
+/* ---------------- set de 2 piezas que transforma una habilidad ----------------
+   Datos en CHAMPION_SET_TRANSFORMS (js/data/champion-sets.js). Se presenta al motor de refuerzos
+   (boonsOnSkill) como un refuerzo más, así la habilidad dispara sus efectos al lanzarse. Cuenta
+   las piezas del equipo del PROPIO héroe (heroSetCounts): en el cooperativo el anfitrión tiene el
+   equipo del invitado en save.champions[su guardián] (loadout), y cada bot el suyo. */
+const _CHAMP_SET_TRANSFORM_BOON = {};
+function champSetTransformBoon(setId){
+  if(_CHAMP_SET_TRANSFORM_BOON[setId]) return _CHAMP_SET_TRANSFORM_BOON[setId];
+  const T = (typeof CHAMPION_SET_TRANSFORMS!=="undefined") ? CHAMPION_SET_TRANSFORMS[setId] : null, S = SET_DB[setId];
+  if(!T || !S) return null;
+  const txt = T.text.charAt(0).toUpperCase() + T.text.slice(1) + ".";
+  return (_CHAMP_SET_TRANSFORM_BOON[setId] = {id:"set:"+setId, champ:S.champion, skill:T.skill, name:T.name, look:T.look, fx:T.fx, setBonus:true, setId, desc:()=>txt});
+}
+function champSetTransformOnSkill(h, sk){
+  if(!h || !h.classKey || !sk) return null;
+  const setId = championSetOf(h.classKey);
+  if(!setId || setN(h, setId) < 2) return null;
+  const b = champSetTransformBoon(setId);
+  if(!b || b.champ!==h.classKey) return null;
+  const base = boonSkillOf(b); // por NOMBRE, como los refuerzos (Eren titán tiene otro kit)
+  return base && base.name===sk.name ? b : null;
+}
+
 /* ---------------- eventos ---------------- */
 function champSetsOnHit(h, e, dmg, crit, opts){
   const c = heroSetCounts(h); if(!c) return;

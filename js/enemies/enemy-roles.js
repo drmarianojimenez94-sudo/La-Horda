@@ -230,7 +230,7 @@ function drawEnemyRoleMarks(e){
   const by = e.y - R*2.3 - 18, s = 9;
   ctx.fillStyle = "rgba(10,6,4,0.85)"; ctx.beginPath(); ctx.moveTo(e.x, by-s); ctx.lineTo(e.x+s, by); ctx.lineTo(e.x, by+s); ctx.lineTo(e.x-s, by); ctx.closePath(); ctx.fill();
   ctx.strokeStyle = `rgb(${C.rgb})`; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = `rgb(${C.rgb})`; ctx.font = "bold 10px Georgia, serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillStyle = `rgb(${C.rgb})`; ctx.font = pxFont(10); ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText(C.ico, e.x, by+0.5);
   ctx.restore();
   if(e.role==="suicida" && e._fuse > 0){ ctx.save(); ctx.globalAlpha = 0.25 + 0.25*Math.sin(t/40); ctx.fillStyle = `rgb(${C.rgb})`; ctx.beginPath(); ctx.ellipse(e.x, e.y, C.r, C.r*0.62, 0, 0, Math.PI*2); ctx.fill(); ctx.restore(); }

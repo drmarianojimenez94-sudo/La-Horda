@@ -4,7 +4,7 @@
    pestañas, y las pantallas nuevas: hub del menú principal, barra superior, vitrina de la Tienda,
    Multijugador, Opciones y la pestaña Skins de GUARDIANES.
    Pixel art oscuro: bordes cuadrados de 2-3 px negros, sombra dura, brasa como acento, VT323 para
-   botones y títulos cortos, Press Start 2P para las marcas, serif para textos largos.
+   botones y títulos cortos, Press Start 2P para las marcas, VT323 Texto (VT323 agrandada) para textos largos.
    Se carga después de los otros estilos de menú y antes de mobile.css.
    ============================================================ */
 :root{
@@ -23,7 +23,7 @@
   --ui-shadow:4px 4px 0 #000; --ui-shadow-sm:2px 2px 0 #000;
   --ui-glow:0 0 18px rgba(255,110,40,0.35);
   /* tipografías y tiempos */
-  --ui-font:var(--font-retro); --ui-font-brand:var(--font-pixel); --ui-font-body:'Georgia','Iowan Old Style','Times New Roman',serif;
+  --ui-font:var(--font-retro); --ui-font-brand:var(--font-pixel); --ui-font-body:var(--font-body);
   --ui-t:120ms; --ui-ease:cubic-bezier(.2,.8,.2,1);
 }
 
@@ -330,3 +330,8 @@ body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.r
 .hub-grid.hub-grid-6 .hub-tile-title{ font-size:1.1rem; } .hub-grid.hub-grid-6 .hub-tile-ico{ width:34px; height:34px; font-size:1.1rem; } .hub-grid.hub-grid-6 .hub-tile{ padding:6px 8px; gap:6px; }
 .hub-grid.hub-grid-6 .hub-tile:not(#mainmenu-quests-btn){ flex-direction:column; align-items:flex-start; justify-content:center; gap:3px; }
 .hub-tile-title{ line-height:1.2; } @media (max-width:700px){ .hub-main{ grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); } .hub-tile-title{ letter-spacing:0; } }
+/* Vale de skin del regalo inicial (js/ui/shop-ui.js · js/systems/starter-gift.js) */
+.shop-vale-banner{ margin:0 auto 10px; padding:8px 12px; max-width:760px; text-align:center; font-size:0.8rem; line-height:1.3;
+  font-family:var(--font-retro); color:#fff3c4; background:rgba(60,34,8,0.9); border:2px solid #ffcf5c; box-shadow:0 0 16px rgba(255,190,80,0.35); }
+.shop-vale-banner .shop-btn{ margin:6px auto 0; min-height:40px; }
+.shop-vale-btn{ margin-top:4px; }

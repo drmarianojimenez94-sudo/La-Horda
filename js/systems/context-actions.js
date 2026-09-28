@@ -315,7 +315,7 @@ function ctxDraw(){
       ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(bx, by, 15, 0, Math.PI*2); ctx.stroke();
     }
-    ctx.fillStyle = "#fff"; ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff"; ctx.font = pxFont(14); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(k.icon, bx, by+1);
     ctx.restore();
   }
@@ -338,7 +338,7 @@ function ctxDrawScreen(){
     ctx.strokeStyle = k.color || "#ffcf5c"; ctx.lineWidth = 2; ctx.stroke();
     ctx.rotate(a); ctx.fillStyle = k.color || "#ffcf5c";
     ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(14, -6); ctx.lineTo(14, 6); ctx.closePath(); ctx.fill();
-    ctx.rotate(-a); ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.rotate(-a); ctx.fillStyle = "#fff"; ctx.font = pxFont(13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(t.kind==="lab_seal" ? LAB_NUM[t.n] : k.icon, 0, 1);
     ctx.restore();
   }

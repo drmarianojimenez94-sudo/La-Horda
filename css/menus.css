@@ -199,7 +199,7 @@
   .buff-card .ico{ font-size:1.1rem; margin-bottom:2px; }
   .buff-name{ font-size:0.78rem; }
   .buff-desc{ font-size:0.72rem; }
-  #vote-note{ margin-top:8px; font-size:0.72rem; }
+  #vote-note{ margin-top:8px; font-size:0.75rem; }
 }
 
 /* ---------- Tienda: catálogo de campeones ---------- */
@@ -351,6 +351,20 @@
 .starter-lore{ font-size:0.56rem; line-height:1.25; color:var(--text-dim); text-align:center; }
 .starter-confirm{ position:sticky; bottom:8px; margin:8px auto; padding:10px 14px; width:min(420px, 92vw); text-align:center;
   background:rgba(20,12,8,0.94); border:2px solid #ffcf5c; }
+/* Regalo inicial, paso 2: la skin de regalo (js/ui/starter-select.js) */
+.starter-step{ display:flex; flex-direction:column; align-items:center; width:100%; }
+.starter-step.hidden{ display:none; }
+#starter-skin-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; width:min(900px, 94vw); margin:10px auto; }
+.starter-skin-card{ position:relative; width:150px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 6px; }
+.starter-skin-card.sel{ outline:3px solid #ffcf5c; box-shadow:0 0 18px rgba(255,190,80,0.45); }
+.starter-skin-tag{ font-size:0.62rem; line-height:1.2; text-align:center; }
+.starter-skin-card .starter-lore{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.starter-skin-vale{ width:220px; cursor:default; }
+.starter-skin-own{ position:absolute; top:6px; left:50%; z-index:2; transform:translateX(-50%) rotate(-6deg); padding:3px 9px; white-space:nowrap;
+  font-size:0.8rem; color:#1a0f06; background:#ffcf5c; border:2px solid #fff3c4; box-shadow:0 0 14px rgba(255,200,90,0.7); animation:starterOwn 0.45s steps(4) both; }
+.starter-skin-card.owned{ outline:3px solid #ffcf5c; box-shadow:0 0 26px rgba(255,200,90,0.7); }
+@keyframes starterOwn{ from{ transform:translateX(-50%) rotate(-6deg) scale(1.8); opacity:0; } to{ transform:translateX(-50%) rotate(-6deg) scale(1); opacity:1; } }
+body.reduce-motion .starter-skin-own{ animation:none; }
 .champ-card.locked{ opacity:0.55; filter:grayscale(0.7); }
 /* Tienda de objetos del día */
 .shop-items-list{ max-height:none; width:100%; max-width:560px; }
@@ -408,7 +422,7 @@
 .shop-item-name{ font-weight:700; font-size:0.78rem; }
 .shop-item-sub{ font-size:0.62rem; color:var(--text-dim); margin:1px 0 2px; }
 .shop-eff{ font-size:0.58rem; color:#8fb8ff; line-height:1.3; }
-.shop-eff.item-proc{ color:#ffb020; } .shop-eff.item-mythic{ color:#ff6a6a; } .shop-eff.item-unique{ color:#e0b0ff; } .shop-eff.item-effect{ color:#ffe08a; }
+.shop-eff.item-proc{ color:#ffb020; } .shop-eff.item-mythic{ color:#ff6a6a; } .shop-eff.item-unique{ color:#e0b0ff; } .shop-eff.item-build{ color:#ffc24a; } .shop-eff.item-effect{ color:#ffe08a; }
 .shop-tiers{ display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; }
 .shop-tier{ font-size:0.56rem; padding:2px 5px; border-radius:5px; border:1px solid var(--tc); background:transparent; color:var(--tc); cursor:pointer; font-family:inherit; }
 .shop-tier.on{ background:var(--tc); color:#120b06; font-weight:700; }
@@ -481,3 +495,45 @@
 @media (max-height:600px), (pointer:coarse) and (max-height:760px){
   #shop-panel, .inv-list, .inv-list.tall, #gallery-grid, #shop-champ-grid, .chest-host .chest-items{ max-height:none !important; overflow:visible !important; }
 }
+
+/* ---------- SALAS ABIERTAS (Multijugador, js/net/net-rooms.js) + sala pública (Sala online) ---------- */
+.mode-rooms{ margin-top:10px; padding-top:8px; border-top:1px dashed rgba(255,160,90,0.35); text-align:left; }
+.mode-rooms-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.mode-rooms-title{ font-family:var(--font-retro); color:var(--ember3); font-size:1.05rem; letter-spacing:0.04em; }
+#mode-rooms-refresh{ min-width:40px; }
+.mode-rooms-list{ display:flex; flex-direction:column; gap:5px; margin-top:6px; max-height:260px; overflow-y:auto; }
+.mr-row{ display:flex; align-items:center; gap:8px; padding:5px 8px; background:#1c120c; border:2px solid #4a3424; box-shadow:2px 2px 0 #000; }
+.mr-ico{ font-size:1.3rem; flex:none; }
+.mr-main{ display:flex; flex-direction:column; min-width:0; flex:1; line-height:1.2; }
+.mr-arena{ color:var(--ember3); font-size:0.9rem; }
+.mr-diff{ font-size:0.72rem; }
+.mr-sub{ color:var(--text-dim); font-size:0.72rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mr-count{ flex:none; font-size:0.78rem; color:#e8d8b8; font-variant-numeric:tabular-nums; }
+.mr-join{ flex:none; min-width:84px; }
+.mode-rooms-status{ min-height:1em; margin-top:4px; }
+.hub-rooms-live{ color:#7dffa0; }
+.net-pub-chk{ display:inline-flex; align-items:center; gap:4px; font-size:0.72rem; color:var(--text-dim); cursor:pointer; }
+.net-pub-chk input{ width:auto; margin:0; }
+/* ---------- INTERCAMBIO en la Sala (js/net/net-trade.js) ---------- */
+#net-trade{ width:100%; max-width:560px; margin:0 0 10px; padding:6px 8px; text-align:left; border:1px solid #3a2c22; background:rgba(18,12,8,0.82); }
+#net-trade .tr-head{ font-family:var(--font-retro); color:var(--ember3); font-size:1rem; letter-spacing:0.04em; margin-bottom:4px; }
+#net-trade .tr-sub{ font-family:inherit; color:var(--text-dim); font-size:0.68rem; letter-spacing:0; }
+#net-trade .tr-line{ font-size:0.76rem; color:#e8d8b8; margin:3px 0; }
+.tr-card{ margin:4px 0; padding:4px 6px; border:2px solid var(--ic, #4a3424); background:#1c120c; box-shadow:2px 2px 0 #000; }
+.tr-item{ display:flex; align-items:center; gap:8px; min-width:0; text-align:left; }
+.tr-item .tr-ico{ width:36px; height:36px; flex:none; }
+.tr-item-txt{ display:flex; flex-direction:column; min-width:0; line-height:1.2; }
+.tr-item-name{ font-size:0.82rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tr-item-sub{ font-size:0.66rem; color:var(--text-dim); }
+.tr-targets{ flex-wrap:wrap; }
+.tr-to{ border-width:2px; border-style:solid; }
+.tr-pending{ font-size:0.7rem; color:#ffcf5c; margin-top:4px; line-height:1.25; }
+.tr-log{ font-size:0.7rem; color:#9fe0a8; margin-top:3px; }
+.tr-picker{ max-width:560px; }
+.tr-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:6px; margin:6px 0; }
+.tr-pick{ display:flex; flex-direction:column; align-items:stretch; gap:2px; padding:5px 6px; background:#1c120c; border:2px solid #4a3424; color:inherit; cursor:pointer; text-align:left; }
+.tr-pick:hover{ filter:brightness(1.15); }
+.tr-pick.off{ opacity:0.55; cursor:default; }
+.tr-why{ font-size:0.64rem; color:#ffb080; }
+.tr-bound-h{ margin-top:8px; }
+.prep-sec.trade-ask{ box-shadow:0 0 0 2px #7dffa0, 2px 2px 0 #000; }

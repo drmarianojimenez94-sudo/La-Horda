@@ -37,6 +37,7 @@ function renderSkillsPanel(panel, classKey, rerender){
           <div class="mastery-bar-track"><div class="mastery-bar-fill" style="width:${usePct}%"></div></div>
           <div class="mastery-stats"><b>${statNow}</b>${statNext}</div>
           <div class="mastery-use">Uso Nv. ${m.useLvl} · +${useBonusPct}% daño permanente por práctica</div>
+          ${(()=>{ const t = talentSynergySkillLine(classKey, idx); return t ? `<div class="mastery-syn">⇄ ${t}</div>` : ""; })()}
           ${skillEvoHTML(classKey, sk, idx, tLvl)}
           ${ultLock}
         </div>
@@ -95,12 +96,20 @@ function talentNodeHTML(classKey, node, rank, lockReason, isMastery){
   const next = maxed ? "" : `<div class="tt-eff next">${rank>0?"Siguiente":"Rango 1"}: ${node.rankDesc(rank+1)}</div>`;
   const cls = ["tt-node", node.type==="special"?"special":"common", maxed?"maxed":(rank>0?"owned":(avail?"avail":"locked"))];
   const reason = locked ? `<div class="tt-lock">🔒 ${lockReason}</div>` : "";
-  return `<div class="${cls.join(" ")}" data-node="${node.id}">
+  // Sinergias (estilo Diablo II): este nodo, como fuente, potencia otra habilidad por cada punto.
+  const syns = isMastery ? [] : talentSynergiesFromNode(classKey, node.id);
+  const synLines = syns.map(s=>{
+    const word = s.what || TALENT_SYNERGY_WORD[s.key] || "efecto";
+    return `Sinergia: cada punto da +${_synPct(s.per)}% ${word} a ${talentSynergySkillName(classKey, s)} (ahora +${_synPct(talentSynergyValue(classKey, s))}%)`;
+  });
+  const synHTML = synLines.map(t=>`<div class="tt-syn">⇄ ${t}</div>`).join("");
+  const tip = [node.name + " — " + node.desc].concat(synLines.length ? ["Sinergias:"].concat(synLines.map(t=>"· "+t.replace(/^Sinergia: /,""))) : []).join("\n");
+  return `<div class="${cls.join(" ")}" data-node="${node.id}" title="${tip.replace(/"/g,"&quot;")}">
     <div class="tt-ico">${maxed?"✔":talentGlyph(node)}<span class="tt-rank">${rank}/${node.maxRank}</span></div>
     <div class="tt-txt">
       <div class="tt-name">${node.name}${node.type==="special"?' <span class="talent-badge special">Especial</span>':""}${node.cost>1?` <span class="tt-cost">${node.cost} pts</span>`:""}</div>
       <div class="tt-desc">${node.desc}${targets.length?` <i>(${targets.join(", ")})</i>`:""}</div>
-      ${effect}${next}${reason}
+      ${effect}${next}${synHTML}${reason}
     </div>
     ${avail ? `<button class="tt-buy mastery-plus ready" data-node="${node.id}" data-mastery="${isMastery?"1":"0"}">+</button>` : ""}
   </div>`;
@@ -141,6 +150,21 @@ function renderTalentTree(panel, classKey, rerender){
     html += `<div class="talent-lock-banner">🔒 El primer punto de talento llega en el nivel ${TALENT_TREE_MIN_LEVEL} (te faltan ${TALENT_TREE_MIN_LEVEL-champ.level}). Ya podés ver todo el árbol y planear tu build.</div>`;
   } else {
     html += `<div class="talent-lock-banner tt-progress">1 punto de talento por nivel (+1 extra en cada nivel redondo). Escalones de cada rama: ${TALENT_TIER_LEVELS.map((lv,i)=>`<b class="${champ.level>=lv?"tt-tier-on":""}">${i+1}º Nv.${lv}</b>`).join(" · ")}${nextTier ? ` — el ${nextTier.tier}º se abre en el nivel ${nextTier.level}.` : " — todos abiertos."}</div>`;
+  }
+  // Sinergias del guardián (estilo Diablo II) con su valor actual, y el reinicio del árbol por oro.
+  const synList = talentSynergies(classKey);
+  if(synList.length){
+    html += `<div class="tt-synergies"><div class="tt-syn-title">⇄ Sinergias</div>${synList.map(s=>{
+      const on = talentSynergyValue(classKey, s) > 0;
+      return `<div class="tt-syn-row${on?" on":""}">${talentSynergyText(classKey, s)}</div>`;
+    }).join("")}</div>`;
+  }
+  {
+    const spent = treePointsSpent(classKey), cost = talentRespecCost(classKey), why = talentRespecLockReason(classKey);
+    const costTxt = cost > 0 ? `🪙 ${typeof fmtGold==="function" ? fmtGold(cost) : cost}` : "gratis (el primero)";
+    const ptsTxt = spent===1 ? "el punto invertido" : `los ${spent} puntos invertidos`;
+    html += `<div class="tt-respec"><span>Reiniciar el árbol te devuelve ${spent>0 ? ptsTxt : "lo invertido"} · ${costTxt}</span>
+      <button class="btn tt-respec-btn" ${why?`disabled title="${why.replace(/"/g,"&quot;")}"`:""}>↺ Reiniciar árbol</button></div>`;
   }
   html += `<div class="tt-cols">`;
   branches.forEach(branch=>{
@@ -188,6 +212,18 @@ function renderTalentTree(panel, classKey, rerender){
         return;
       }
       done(res);
+    });
+  });
+  panel.querySelectorAll(".tt-respec-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const res = talentRespec(classKey, false);
+      if(!res.needsConfirm){ if(res.reason) gameAlert(res.reason); return; }
+      const costTxt = res.cost > 0 ? `Cuesta 🪙 ${typeof fmtGold==="function" ? fmtGold(res.cost) : res.cost} de oro.` : "Este primer reinicio es gratis.";
+      gameConfirm(`Vas a reiniciar el árbol de talentos de ${cls.name}: ${res.refund===1 ? "se te devuelve el punto invertido para usarlo de nuevo" : `se te devuelven los ${res.refund} puntos invertidos para repartirlos de nuevo`} (la Maestría elegida se conserva). ${costTxt} ¿Continuar?`, {okText:"Reiniciar"}).then(ok=>{
+        if(!ok) return;
+        const r2 = talentRespec(classKey, true);
+        if(r2.ok) rerender(); else if(r2.reason) gameAlert(r2.reason);
+      });
     });
   });
   panel.querySelectorAll(".mastery-pick-btn").forEach(btn=>{

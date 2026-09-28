@@ -100,6 +100,18 @@ function _rollNamedLegendary(arena, owned){
     return a * (started.has(id) && !owned.has(id) ? RECIPE_MISSING_BIAS : 1);
   });
 }
+// Legendarios que cambian la build (legendaries.js, BUILD_LEGENDARIES): desde la arena 3 de la campaña
+// (y siempre en la Horda Infinita, en Pesadilla/Infierno y en la Arena Divina). Los que no tenés pesan más.
+function buildLegendAllowed(arena){
+  if(typeof BUILD_LEGENDARIES==="undefined") return false;
+  if(typeof endlessOn==="function" && endlessOn()) return true;
+  if(typeof diffCurrent==="function" && diffCurrent()!=="normal") return true;
+  const n = typeof campaignNumber==="function" ? campaignNumber(arena || currentArena) : 0;
+  return n===0 || n >= BUILD_LEGEND_MIN_ARENA;
+}
+function _rollBuildLegendary(arena, owned){
+  return _weightedPick(Object.keys(BUILD_LEGENDARIES), id=>((BUILD_LEGENDARIES[id].arenas||{})[arena] || 1) * (owned && owned.has(id) ? 0.3 : 1));
+}
 function _rollChampionDesigned(classKey, rarity){
   const pool = Object.values(DESIGNED_ITEMS).filter(d=>d.champion && d.rarity===rarity && !d.set && !d.named);
   const champs = [...new Set(pool.map(d=>d.champion))];
@@ -121,6 +133,7 @@ function _materializeLootBase(spec, classKey, arena){
   const type = spec.type || rollItemType(classKey);
   const owned = ownedDesignIds();
   if(spec.tier==="legendario"){
+    if(spec.build || (buildLegendAllowed(arena) && Math.random() < LEGEND_SOURCE_BUILD)){ const id = _rollBuildLegendary(arena, owned); if(id) return makeDesignedItem(id); }
     const r = Math.random();
     if(r < LEGEND_SOURCE.named){ const id = _rollNamedLegendary(arena, owned); if(id) return makeDesignedItem(id); }
     else if(r < LEGEND_SOURCE.named + LEGEND_SOURCE.champion){ const id = _rollChampionDesigned(classKey, "legendario"); if(id) return makeDesignedItem(id); }
@@ -155,8 +168,11 @@ function grantEndOfRunLoot(classKey, perf, victory){
   save.lootPity = res.pity;
   const items = []; let inventoryFull = false;
   for(const spec of res.items){
-    if(stashFull()){ inventoryFull = true; break; }
     const it = materializeLoot(spec, classKey, currentArena);
+    // inventario lleno: la regla del reciclaje (ground-loot.js) — un Común/Raro se recicla en polvo de Gema
+    const room = typeof stashMakeRoomFor==="function" ? stashMakeRoomFor(it) : {ok:!stashFull()};
+    if(!room.ok){ inventoryFull = true; break; }
+    if(room.self){ inventoryFull = true; continue; }
     it.lootTier = spec.tier;
     // Pesadilla/Infierno: el objeto cae con nivel (lo mismo que subirlo con Gemas)
     const lb = typeof diffItemLevelBonus==="function" ? diffItemLevelBonus() : 0;

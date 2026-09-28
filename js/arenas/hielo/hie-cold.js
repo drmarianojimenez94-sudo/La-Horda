@@ -233,7 +233,7 @@ function hieDrawTop(){
   ctx.fillStyle = "rgba(8,14,22,0.8)"; ctx.fillRect(x-1, y-1, w+2, 6);
   ctx.fillStyle = c > 75 ? (Math.sin(animNow/90) > 0 ? "#e8f6ff" : "#7fc4ff") : "#7fc4ff";
   ctx.fillRect(x, y, Math.round(w*Math.min(1, c/100)), 4);
-  ctx.fillStyle = "#dff2ff"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText("❄", x-3, y+2);
+  ctx.fillStyle = "#dff2ff"; ctx.font = pxFont(11); ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText("❄", x-3, y+2);
   ctx.restore();
 }
 function hieDrawScreen(){

@@ -12,6 +12,8 @@ y lleva unos 15 minutos.
 - **Jugar como invitado** anda siempre, aunque el servidor esté apagado o no haya internet: es el juego
   de siempre, con el progreso solo en ese dispositivo. Si después crea su cuenta, su progreso se sube.
 - El nombre de la cuenta se usa como nombre en la Sala multijugador.
+- **Ranking semanal de la Horda Infinita**: con cuenta, cada partida entra a la tabla de la semana
+  (top 50, también por guardián). Los invitados ven la tabla, pero su récord queda en el dispositivo.
 
 Las cuentas viven en **el mismo servidor del multijugador** (el servicio `la-horda-relay` de Render).
 No hay que crear otro servidor ni tocar el juego publicado en GitHub Pages: usa la misma dirección
@@ -139,6 +141,8 @@ Servidor: `server/accounts.js` (montado por `server/relay.js` en el mismo puerto
 | `PUT /api/save` `{data, baseVersion, force?}` | 200 `{version, updatedAt}` · 409 `CONFLICT` con la versión y el resumen de la nube · 413 |
 | `POST /api/save-beacon` (text/plain, `{token, data, baseVersion}`) | igual que PUT, nunca fuerza (cierre de pestaña con `navigator.sendBeacon`) |
 | `PUT /api/profile` `{name?, email?}` | nombre visible (16 letras) |
+| `GET /api/leaderboard?week=&guardian=&limit=` | top 50 de la semana ISO en UTC (la actual por defecto): el mejor de cada cuenta (o con ese guardián), `total`, `endsAt` y, con sesión, `me` (tu puesto) |
+| `POST /api/leaderboard/submit` `{score, round, guardian, week, durationMs}` | con sesión. 200 `{rank, total, improved, best}` · 422 `IMPLAUSIBLE` (duración por ronda, techo de puntaje por ronda y minuto, o la partida no entra en el tiempo desde tu envío anterior) · 409 `WEEK_CLOSED` (la semana anterior entra 6 h después del cambio) · 429 (8 s entre envíos, 10 cada 10 min) |
 
 Autorización: `Authorization: Bearer <token>`. Control de versión optimista: cada subida manda la
 versión de la nube que conocía; si no coincide, 409 y el cliente pregunta.
@@ -147,7 +151,8 @@ Variables de entorno: `DATABASE_URL`, `PGSSL` (`0`/`1`, por defecto automático:
 direcciones internas de Render), `DATA_DIR`, `SESSION_DAYS` (60), `AUTH_MAX_FAILS` (8 por usuario
 cada 15 min), `AUTH_MAX_FAILS_IP` (30), `REGISTER_MAX_IP` (10 por hora), `TRUST_PROXY` (automático en Render).
 
-Tablas (se crean solas): `horda_users`, `horda_sessions` (hash SHA-256 del token), `horda_saves`.
+Tablas (se crean solas): `horda_users`, `horda_sessions` (hash SHA-256 del token), `horda_saves`,
+`horda_leaderboard` (sin base de datos: `leaderboard.json` en `DATA_DIR`, últimas 12 semanas).
 
 Cliente: `js/net/account.js` y `css/account.css`. API para el menú: `window.accountOpen()`,
 `window.accountState()` → `{logged, name, user, syncing, pending, online, lastSync, conflict}` y el

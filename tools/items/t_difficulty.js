@@ -163,6 +163,64 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('SEMILLA.hielo_giros_libres_y_variados', sd.hielo.every(Boolean) && sd.hieloVariants >= 3, sd);
   check('SEMILLA.cooperativo_usa_la_del_anfitrion', sd.coop, sd.coop);
 
+  // ---------------- TRAZADO AL AZAR (js/arenas/arena-layouts.js) ----------------
+  const ly = await E(() => {
+    const ARENAS = ['bosque', 'hielo', 'laberinto', 'acuatica', 'infernal'];
+    const withSeed = (seed, a) => { const o = diffNewSoloSeed; diffNewSoloSeed = () => (_soloMapSeed = seed); try { __start(a, 1); } finally { diffNewSoloSeed = o; } };
+    // celdas libres del campo de flujo de los enemigos que NO se alcanzan desde el centro
+    const unreachable = () => { const N = AID_NAV; if (!N.on) return 0; const seen = new Uint8Array(N.W*N.H), q = [];
+      const c0 = aidNavCell(0, 0); if (!N.blocked[c0]) { seen[c0] = 1; q.push(c0); }
+      while (q.length) { const c = q.pop(), i = c % N.W, j = (c - i)/N.W; for (const k of [i>0?c-1:-1, i<N.W-1?c+1:-1, j>0?c-N.W:-1, j<N.H-1?c+N.W:-1]) if (k >= 0 && !N.blocked[k] && !seen[k]) { seen[k] = 1; q.push(k); } }
+      let n = 0; for (let c = 0; c < seen.length; c++) if (!N.blocked[c] && !seen[c]) n++; return n; };
+    const r = { normal: {}, arenas: {} };
+    __allNormal(); __allTier('pesadilla'); diffSetSelected('normal');
+    for (const a of ARENAS) { withSeed(99, a); r.normal[a] = { lay: aidSolids.filter(s => s.lay).length, un: unreachable(), info: aidLayoutInfo }; }
+    diffSetSelected('pesadilla');
+    for (const a of ARENAS) {
+      const R = r.arenas[a] = { minPlaced: 99, sigs: new Set(), unMax: 0, spawnOk: true, collide: true, enemy: true, why: {} };
+      for (let s = 1; s <= 24; s++) {
+        withSeed(s * 7919, a);
+        const lay = aidSolids.filter(x => x.lay), I = aidLayoutInfo || { placed: 0, rejected: [] };
+        R.minPlaced = Math.min(R.minPlaced, lay.length); R.sigs.add(I.pattern + (I.mirror ? 'm' : ''));
+        for (const x of I.rejected) R.why[x.why] = (R.why[x.why] || 0) + 1;
+        R.unMax = Math.max(R.unMax, unreachable() - r.normal[a].un);
+        for (const h of heroes) if (aidSolids.some(x => Math.hypot(x.x - h.x, x.y - h.y) < x.r + (h.radius || 18))) R.spawnOk = false;
+        if (a === 'hielo') for (const b of HIE.br) if (aidBlocked(b.x, b.y, 50)) R.spawnOk = false;
+        const p = lay[s % lay.length];
+        if (p) {
+          player.x = p.x + 1; player.y = p.y; for (let k = 0; k < 4; k++) resolveWallCollision(player);
+          if (Math.hypot(player.x - p.x, player.y - p.y) < (p.r + player.radius) * 0.85) R.collide = false;
+          const e = spawnEnemy(pickFromPool(spawnPoolFor(1)), false); e.x = p.x; e.y = p.y + 1; for (let k = 0; k < 4; k++) clampToArena(e);
+          if (Math.hypot(e.x - p.x, e.y - p.y) < p.r) R.enemy = false;
+          enemies.length = 0;
+        }
+      }
+      R.sigs = R.sigs.size;
+    }
+    // misma semilla, mismo trazado; en cooperativo el invitado arma lo del anfitrión (lay viaja en {k:"start"})
+    withSeed(4242, 'infernal'); const a1 = JSON.stringify(aidSolids); withSeed(4242, 'infernal'); r.estable = a1 === JSON.stringify(aidSolids);
+    currentArena = 'acuatica';
+    netMatch = { role: 'host', seed: 777, diff: 'pesadilla', slots: [] }; netWithSeed(777, () => buildArenaDecor()); const host = JSON.stringify(aidSolids); r.hostLay = mapLayoutOn();
+    netMatch = { role: 'guest', seed: 777, diff: 'pesadilla', lay: true }; netWithSeed(777, () => buildArenaDecor()); r.guestSame = JSON.stringify(aidSolids) === host && aidSolids.some(x => x.lay);
+    netMatch = { role: 'guest', seed: 777, diff: 'pesadilla', lay: false }; netWithSeed(777, () => buildArenaDecor()); r.guestNoLay = !aidSolids.some(x => x.lay);
+    netMatch = null;
+    // Horda Infinita: siempre (aunque la dificultad sea Normal)
+    diffSetSelected('normal'); endlessActive = true; r.endless = mapLayoutOn(); withSeed(31, 'bosque'); r.endlessLay = aidSolids.filter(x => x.lay).length; endlessActive = false;
+    r.normalNoLayAfter = (withSeed(31, 'bosque'), !aidSolids.some(x => x.lay));
+    return r;
+  });
+  check('TRAZADO.normal_sin_cambios', Object.values(ly.normal).every(n => n.lay === 0 && !n.info), ly.normal);
+  for (const a of Object.keys(ly.arenas)) {
+    const R = ly.arenas[a];
+    check('TRAZADO.' + a + '_pilares_y_patrones', R.minPlaced >= 4 && R.sigs >= 4, R);
+    check('TRAZADO.' + a + '_navegacion_sin_bolsillos_nuevos', R.unMax === 0, R);
+    check('TRAZADO.' + a + '_salida_y_mecanicas_libres', R.spawnOk, R);
+    check('TRAZADO.' + a + '_colision_heroe_y_enemigo', R.collide && R.enemy, R);
+  }
+  check('TRAZADO.misma_semilla_mismo_trazado', ly.estable);
+  check('TRAZADO.invitado_arma_lo_del_anfitrion', ly.hostLay && ly.guestSame && ly.guestNoLay, ly);
+  check('TRAZADO.horda_infinita_siempre', ly.endless && ly.endlessLay >= 4 && ly.normalNoLayAfter, ly);
+
   // ---------------- DERROTA SIN CASTIGO ----------------
   await boot(null);
   const dv = await E(() => {

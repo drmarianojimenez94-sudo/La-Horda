@@ -194,9 +194,8 @@ function cmBotDanger(x, y, pad){
   }
   const P = cmPresEntity && cmPresEntity();
   if(P && P.ov){ // ovación: ir detrás del pilar más cercano
-    let best = null, bd = Infinity;
-    for(const p of cmS.pillars){ if(p.t < 0) continue; const dx = p.x - P.x, dy = p.y - P.y, L = Math.hypot(dx, dy)||1, bx = p.x + dx/L*60, by = p.y + dy/L*60, d = Math.hypot(bx - x, by - y); if(d < bd){ bd = d; best = {x:bx, y:by}; } }
-    if(best && bd > 20) push(best.x - x, best.y - y, 2.4);
+    const best = cmCoverSpot(P, x, y);   // el mismo lugar que marca el piso (solo pilares que aguantan hasta el golpe)
+    if(best && best.d > 20) push(best.x - x, best.y - y, 2.4);
   }
   return hit ? {x:vx, y:vy} : null;
 }

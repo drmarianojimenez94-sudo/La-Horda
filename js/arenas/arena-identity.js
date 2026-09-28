@@ -45,7 +45,8 @@ function aidFreeSpot(rnd, rMin, rMax, clearance, tries){
 }
 // VARIANTES POR SEMILLA (reseña #13): el decorado SIN colisión (musgo, raíces, corales, algas, grietas,
 // escarcha, fisuras de lava pintadas) cambia de partida en partida. Lo sólido (menhires, columnas, muros,
-// tumbas, estatuas) queda fijo: la navegación y las colisiones no cambian. La semilla es la de la
+// tumbas, estatuas) queda fijo en Normal; en la Horda Infinita y en Pesadilla/Infierno se suman pilares
+// por semilla con navegación verificada (js/arenas/arena-layouts.js). La semilla es la de la
 // partida (difficulty-tiers.js: runMapSeed; en cooperativo la del anfitrión, igual para todos).
 function _aidSalt(){ return typeof mapVariantSalt==="function" ? mapVariantSalt() : 0; }
 function aidOnRing(rx, ry, a){ return {x:Math.cos(a)*rx*1.18, y:Math.sin(a)*ry*0.82}; }
@@ -60,6 +61,7 @@ function aidBuild(){
   else if(A==="laberinto") aidBuildLaberinto();
   else if(A==="acuatica") aidBuildAcuatica();
   else if(A==="divina") aidBuildDivina();
+  if(typeof aidLayoutBuild==="function") aidLayoutBuild(); // trazado al azar: pilares por semilla (Horda Infinita, Pesadilla, Infierno)
   aidNavBuild();
   aidAmbReset();
 }

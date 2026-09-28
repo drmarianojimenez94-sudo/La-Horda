@@ -5,6 +5,9 @@
 //       pantalla que no están dentro de un contenedor que scrollee
 //   (c) texto visible con font-size calculado < 11 px
 //   (d) botón principal (Comenzar, ¡A LA BATALLA!, Comprar, Aceptar…) fuera de la vista sin scrollear
+//   (e) tipografía: texto visible (con letras o números) cuya fuente calculada no empieza por
+//       Press Start 2P o VT323 (Georgia/serif/Arial que se colaron). Se mide también en el HUD de la
+//       partida, donde (c) no aplica. Va aparte en el resumen: "fonts=N".
 // Saca una captura por pantalla y por dispositivo, imprime un resumen JSON y "SUMMARY issues=N".
 //   node tools/audit/ui_layout.js [outdir=/tmp/ui_layout]     (ONLY=regex filtra pantallas; FONTS_DIR, ver abajo)
 // Cada problema se cuenta una vez por pantalla (misma firma = misma regla de CSS); report.json trae
@@ -41,10 +44,10 @@ async function ensureServer() {
 
 // ---------------------------------------------------------------- medición (corre en la página)
 function measure(opts) {
-  const { root: rootSel, primary, minTarget, minFont, interSel, skipText } = opts;
+  const { root: rootSel, primary, minTarget, minFont, interSel, skipText, skipFonts } = opts;
   const vw = innerWidth, vh = innerHeight;
   const root = rootSel ? document.querySelector(rootSel) : document.body;
-  if (!root || !root.getBoundingClientRect().width) return { small: [], overflow: [], tinyText: [], primaryHidden: [`pantalla ${rootSel} no se abrió`] };
+  if (!root || !root.getBoundingClientRect().width) return { small: [], overflow: [], tinyText: [], primaryHidden: [`pantalla ${rootSel} no se abrió`], fonts: [] };
   const vis = el => {
     if (!el || !el.getBoundingClientRect) return false;
     const r = el.getBoundingClientRect();
@@ -68,7 +71,7 @@ function measure(opts) {
   };
   // antes de medir: todo scrolleado al principio (lo que ve el jugador al entrar)
   for (const el of [root, ...root.querySelectorAll('*')]) { if (el.scrollTop) el.scrollTop = 0; if (el.scrollLeft) el.scrollLeft = 0; }
-  const res = { small: [], overflow: [], tinyText: [], primaryHidden: [] };
+  const res = { small: [], overflow: [], tinyText: [], primaryHidden: [], fonts: [] };
   const se = document.scrollingElement;
   if (se.scrollWidth > vw + 1) res.overflow.push(`page scrollWidth ${se.scrollWidth} > ${vw}`);
   // la pantalla activa no debe scrollear de costado
@@ -96,6 +99,21 @@ function measure(opts) {
     const fs = parseFloat(getComputedStyle(p).fontSize);
     if (fs < minFont) res.tinyText.push(`${fs.toFixed(1)}px ${desc(p)}`);
   }
+  // (e) tipografía: solo las dos fuentes pixel del juego (el primer nombre de la pila calculada). Texto
+  // que es solo símbolos o emojis (★ ▲ ✓) no cuenta: esos glifos salen de la fuente de reserva igual.
+  if (!skipFonts) {
+    const OKF = /^(press start 2p|vt323|vt323 texto)$/i, HASW = /[\p{L}\p{N}]/u;
+    const fam = el => (getComputedStyle(el).fontFamily.split(',')[0] || '').trim().replace(/^["']|["']$/g, '');
+    const seenF = new Set();
+    const tf = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => HASW.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+    const chk = p => {
+      if (!p || seenF.has(p)) return; seenF.add(p);
+      if (p.closest('svg, canvas, script, style, noscript') || ignored(p) || !vis(p)) return;
+      const f = fam(p); if (!OKF.test(f)) res.fonts.push(`${f} ${desc(p)}`);
+    };
+    for (let n; (n = tf.nextNode());) chk(n.parentElement);
+    for (const el of root.querySelectorAll('input:not([type=hidden]):not([type=range]):not([type=checkbox]):not([type=radio]), select, textarea')) chk(el);
+  }
   // (d) botones principales: al menos uno por selector debe verse entero sin scrollear
   for (const sel of primary || []) {
     let cands = [...document.querySelectorAll(sel.css)].filter(vis);
@@ -104,7 +122,7 @@ function measure(opts) {
     const ok = cands.some(e => { const r = e.getBoundingClientRect(); return r.top >= -1 && r.bottom <= vh + 1 && r.left >= -1 && r.right <= vw + 1; });
     if (!ok) res.primaryHidden.push('below fold: ' + desc(cands[0]));
   }
-  res.small = [...new Set(res.small)]; res.overflow = [...new Set(res.overflow)];
+  res.small = [...new Set(res.small)]; res.overflow = [...new Set(res.overflow)]; res.fonts = [...new Set(res.fonts)];
   return res;
 }
 
@@ -113,7 +131,7 @@ function measure(opts) {
 const sigOf = s => s.replace(/^cut: /, 'cut ').replace(/^below fold: /, '').replace(/ ".*$| \[.*$/, '');
 function uniq(r) {
   const o = {};
-  for (const k of ['small', 'overflow', 'tinyText', 'primaryHidden']) o[k] = new Set(r[k].map(sigOf)).size;
+  for (const k of ['small', 'overflow', 'tinyText', 'primaryHidden', 'fonts']) o[k] = new Set((r[k] || []).map(sigOf)).size;
   return o;
 }
 
@@ -142,11 +160,11 @@ async function runViewport(browser, vp, report) {
   const snap = async (page, label, opts = {}) => {
     if (ONLY && !ONLY.test(label)) return;
     await sleep(opts.wait || 450);
-    const r = await page.evaluate(measure, { root: opts.root || null, primary: opts.primary || [], interSel: opts.interSel || null, skipText: !!opts.skipText, minTarget: MIN_TARGET, minFont: MIN_FONT });
+    const r = await page.evaluate(measure, { root: opts.root || null, primary: opts.primary || [], interSel: opts.interSel || null, skipText: !!opts.skipText, skipFonts: !!opts.skipFonts, minTarget: MIN_TARGET, minFont: MIN_FONT });
     await page.screenshot({ path: path.join(OUT, `${vp.name}_${label}.png`) });
     out[label] = r;
     const u = uniq(r), n = u.small + u.overflow + u.tinyText + u.primaryHidden;
-    console.log(`  ${vp.name} ${label.padEnd(24)} small=${u.small} overflow=${u.overflow} tiny=${u.tinyText} primary=${u.primaryHidden}${n ? '' : '  ✓'}`);
+    console.log(`  ${vp.name} ${label.padEnd(24)} small=${u.small} overflow=${u.overflow} tiny=${u.tinyText} primary=${u.primaryHidden} fonts=${u.fonts}${n + u.fonts ? '' : '  ✓'}`);
   };
   const tapEl = async (page, el) => {
     await el.evaluate(e => e.scrollIntoView({ block: 'center', inline: 'center' }));
@@ -166,6 +184,11 @@ async function runViewport(browser, vp, report) {
     await tap(page, '.starter-card');
     await sleep(600);
     await snap(page, 'starter_confirm', { primary: [{ css: '#starter-yes-btn' }] });
+    // regalo inicial, paso 2: la skin de regalo del guardián elegido (camino nuevo: window.__starterGift)
+    await js(page, () => { window.__starterGift = true; });
+    await tap(page, '#starter-yes-btn');
+    await sleep(500);
+    await snap(page, 'starter_skin', { primary: [{ css: '#starter-skin-yes-btn' }] });
     await ctx.close();
   }
   // ---- perfil de desarrollo (todo desbloqueado)
@@ -208,6 +231,16 @@ async function runViewport(browser, vp, report) {
   await js(page, () => openMyInventory('objetos'));
   const closePreview = () => js(page, () => { const b = document.querySelector('#item-preview [data-ip-close]'); if (b) b.click(); });
   if (await tap(page, '#myinv-panel .inv-card .item-name')) { await snap(page, 'inventory_item_preview', { root: '#item-preview' }); await closePreview(); }
+  // ficha de un objeto CON afijos (la sección AFIJOS y el botón de la Mística) y el modal de la Mística
+  const afxUid = await js(page, () => { save.gold = Math.max(save.gold || 0, 1e6); let it = stashItems().find(x => itemAffixes(x).length) || stashItems()[0]; if (!it) return null; if (!itemAffixes(it).length) rollItemAffixes(it);
+    openItemPreview(it.uid, CHAMPION_CATALOG[0].id); return it.uid; });
+  if (afxUid) {
+    await snap(page, 'item_preview_affixes', { root: '#item-preview' });
+    await js(page, u => { const b = document.querySelector('#item-preview [data-ip-close]'); if (b) b.click(); openAffixReroll(u, 0, CHAMPION_CATALOG[0].id, null); }, afxUid);
+    await sleep(300);
+    await snap(page, 'mistica', { root: '#affix-reroll' });
+    await js(page, () => { const b = document.querySelector('#affix-reroll [data-afx-choose="-1"]'); if (b) b.click(); });
+  }
   // tienda
   for (const t of ['destacados', 'campeones', 'objetos', 'skins']) {
     await js(page, t => { if (typeof codexReturnTo !== 'undefined') codexReturnTo = null; shopTab = t; setState('shop'); renderShop(); }, t);
@@ -273,6 +306,11 @@ async function runViewport(browser, vp, report) {
   await sleep(1200);
   // el HUD no es un menú: solo se mide la entrada a la pausa (botones de arriba), sin texto
   await snap(page, 'hud_playing', { interSel: '#pause-btn, #mute-btn', skipText: true, primary: [{ css: '#pause-btn' }] });
+  // elección de refuerzo (cartas de refuerzos que transforman habilidades)
+  await js(page, () => { openBuffChoice(); });
+  await snap(page, 'buff_choice', { root: '#buffscreen' });
+  await js(page, () => { setState('playing'); });
+  await sleep(300);
   await tap(page, '#pause-btn');
   await snap(page, 'pause', { primary: [{ css: '#resume-btn' }] });
   await js(page, () => { showGameOverScreen(); });
@@ -285,6 +323,10 @@ async function runViewport(browser, vp, report) {
     await tap(page, '#victory-next-btn');
     await snap(page, 'victory_step' + (i + 2), { primary: [{ css: '#victory-screen .btn.wide:not(.hidden)' }] });
   }
+  // Campamento de los Portadores (después de una victoria de campaña) y la Crónica
+  await js(page, () => { campOpen({ arena: 'ciudad', classKey: CHAMPION_CATALOG[0].id, lost: 0, worn: null, crystals: 0, post: false, online: false }, null); });
+  await snap(page, 'camp', { root: '#camp', primary: [{ css: '#camp .camp-go' }] });
+  await js(page, () => campClose(true));
   await ctx.close();
   return errors;
 }
@@ -297,12 +339,12 @@ async function runViewport(browser, vp, report) {
     for (const vp of VIEWPORTS) { console.log(`== ${vp.name} ${vp.width}x${vp.height}`); errs[vp.name] = await runViewport(browser, vp, report); }
   } finally { await browser.close(); if (srv) srv.kill(); }
   const perVp = {};
-  let total = 0, raw = 0;
+  let total = 0, raw = 0, fontsT = 0;
   for (const [v, screens] of Object.entries(report)) {
-    const c = { small: 0, overflow: 0, tinyText: 0, primaryHidden: 0 };
+    const c = { small: 0, overflow: 0, tinyText: 0, primaryHidden: 0, fonts: 0 };
     let rv = 0;
-    for (const r of Object.values(screens)) { const u = uniq(r); for (const k in c) { c[k] += u[k]; rv += r[k].length; } }
-    c.total = c.small + c.overflow + c.tinyText + c.primaryHidden; c.rawElements = rv; total += c.total; raw += rv; perVp[v] = c;
+    for (const r of Object.values(screens)) { const u = uniq(r); for (const k in c) { c[k] += u[k]; if (k !== 'fonts') rv += r[k].length; } }
+    c.total = c.small + c.overflow + c.tinyText + c.primaryHidden; c.rawElements = rv; total += c.total; raw += rv; fontsT += c.fonts; perVp[v] = c;
   }
   fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify({ perViewport: perVp, screens: report, errors: errs }, null, 1));
   // resumen: solo las pantallas con problemas
@@ -312,5 +354,5 @@ async function runViewport(browser, vp, report) {
     if (Object.keys(keep).length) (slim[v] = slim[v] || {})[s] = keep;
   }
   console.log(JSON.stringify({ perViewport: perVp, issues: slim, pageErrors: errs }, null, 1));
-  console.log(`SUMMARY issues=${total} (elementos=${raw})`);
+  console.log(`SUMMARY issues=${total} (elementos=${raw}) fonts=${fontsT}`);
 })().catch(e => { console.error(e); process.exit(1); });

@@ -8,7 +8,7 @@ function updateAbilityButtons(){
   // el kit ACTIVO del héroe (Eren transformado muestra el del titán)
   const cls = (player && player.cls && player.classKey===selectedClass) ? player.cls : CLASSES[selectedClass];
   const map = [["btn-s1",cls.skills[0]], ["btn-s2",cls.skills[1]], ["btn-s3",cls.skills[2]], ["btn-ult",cls.ultimate]];
-  map.forEach(([id, sk])=>{
+  map.forEach(([id, sk], mi)=>{
     const el = document.getElementById(id);
     if(!el) return;
     const icoEl = el.querySelector(".ico");
@@ -21,6 +21,8 @@ function updateAbilityButtons(){
     }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
+    // Sinergias del árbol (estilo Diablo II) con su valor actual
+    { const syn = typeof talentSynergySkillLine==="function" ? talentSynergySkillLine(selectedClass, mi===3 ? "ult" : mi) : ""; if(syn) el.title += "\n" + syn; }
     if(typeof boonDecorateButton==="function") boonDecorateButton(el, sk); // refuerzos que la transforman: marca + texto en el tooltip
   });
 }
@@ -44,14 +46,12 @@ function hudStackLayout(){
 // Nombre del guardián en el HUD de partida: el corto si lo tiene ("Segador" por "Segador Olvidado"),
 // para que "Nombre · Nv. 30" entre en una línea en el teléfono. Menús, Códice y tienda: el completo.
 function hudClassName(c){ return c ? (c.hudName || c.name) : ""; }
-function showBanner(text){
+// Cartel central (arriba al centro). Pasa por la cola de js/ui/hud-text.js: si hay otro leyéndose o está el
+// cartel grande de la arena, espera su turno (prio 2 = urgente: se muestra ya). Ver la jerarquía allá.
+function showBanner(text, prio){
+  if(typeof hudBannerPush==="function"){ hudBannerPush(text, prio); return; }
   const b = document.getElementById("center-banner");
   b.textContent = text;
-  // si la guía del jefe está en pantalla, el cartel baja un poco para no pisarla
-  const intro = document.getElementById("boss-intro");
-  // …y lo mismo con el cartel de título de la arena (si no, los dos textos se pisan al entrar)
-  const card = typeof _arenaTitleUntil!=="undefined" && performance.now() < _arenaTitleUntil;
-  b.classList.toggle("low", !!(intro && !intro.classList.contains("hidden")) || card);
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
 }
 
@@ -64,6 +64,12 @@ function updateDownedOverlay(){
   // el cartel central ("NIVEL 7", "RUNA ACTIVA…") caía justo detrás de este y no se leía ninguno
   const cb = document.getElementById("center-banner"); if(cb) cb.classList.toggle("downed", show);
   if(!show) return;
+  // el texto de abajo ("te está reviviendo… N%") cambia el alto del cartel: si el central quedó con un top
+  // en línea (hud-text.js, debajo del cartel de arena), se corre para no quedar debajo de este
+  if(cb && cb.classList.contains("show")){
+    const ob = el.getBoundingClientRect().bottom, ct = cb.getBoundingClientRect().top;
+    if(ct < ob + 8) cb.style.top = Math.round(ob + 14 + (cb.offsetHeight||40)/2) + "px"; // top es el centro del cartel (translate -50%)
+  }
   const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
   const alive = heroes.filter(h=>h.alive).length;
   document.getElementById("downed-sub").textContent = prog>0 ? `${heroLabel(by)} te está reviviendo… ${Math.round(prog*100)}%`
@@ -75,6 +81,7 @@ function updateDownedOverlay(){
    ============================================================ */
 function updateHUD(){
   updateReviveBtn(); // antes nunca se llamaba: el botón quedaba inactivo para siempre
+  if(typeof hudTextTick==="function") hudTextTick(); // cola del cartel central (js/ui/hud-text.js)
   tutTick(); // la voz del Hechicero: cada concepto se enseña una vez, jugando (js/systems/tutorial.js)
   updateDownedOverlay();
   // Barra de vida con escudo: la capacidad total de referencia es vida máx + escudo máx

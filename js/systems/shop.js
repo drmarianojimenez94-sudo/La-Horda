@@ -88,7 +88,7 @@ let _shopCatalog = null;
 function shopCatalog(){
   if(_shopCatalog) return _shopCatalog;
   const designed = Object.keys(DESIGNED_ITEMS).map(id=>({key:"d:"+id, kind:"designed", id, cat:shopCategoryOf(DESIGNED_ITEMS[id])}))
-    .filter(e=>e.cat!=="mitico" && e.cat!=="unico" && !DESIGNED_ITEMS[e.id].mythic && DESIGNED_ITEMS[e.id].rarity!=="unico" && DESIGNED_ITEMS[e.id].rarity!=="mitico");
+    .filter(e=>e.cat!=="mitico" && e.cat!=="unico" && !DESIGNED_ITEMS[e.id].mythic && DESIGNED_ITEMS[e.id].rarity!=="unico" && DESIGNED_ITEMS[e.id].rarity!=="mitico" && !DESIGNED_ITEMS[e.id].buildPower); // los que cambian la build solo caen
   designed.forEach(e=>{ e.price = shopPriceOf(e); });
   const base = [];
   for(const type of EQUIP_SLOT_TYPES) for(const noun of (ITEM_NOUNS[type]||[])) base.push({key:"a:"+type+":"+noun, kind:"archetype", type, noun, cat:"base", price:SHOP_PRICES.base.raro});

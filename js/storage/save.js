@@ -47,7 +47,7 @@ function defaultSave(){
   return {
     champions,
     itemSchemaV: ITEM_SCHEMA_VERSION,
-    gold:TEST_START_GOLD, gems:0, // oro inicial: regalo único de la etapa de prueba (ver testStageReset) · GEMAS: recurso ganado jugando, SOLO para subir el nivel de objetos (js/systems/gems.js). No es moneda premium: una futura moneda premium va en otro campo.
+    gold:0, gems:0, // oro inicial: 0 (el regalo es un guardián + una skin, ver js/systems/starter-gift.js) · GEMAS: recurso ganado jugando, SOLO para subir el nivel de objetos (js/systems/gems.js). No es moneda premium: una futura moneda premium va en otro campo.
     divineArenaUnlocked:false, // se pone true de verdad al completar las 5 arenas normales
     arenasCleared:{bosque:false, acuatica:false, fortaleza:false, micelial:false, hielo:false, abismo:false, laberinto:false, infernal:false},
     fortalezaMigrated:true, // (ver loadSave: solo los guardados de antes de la Fortaleza conservan el Hielo abierto)
@@ -62,9 +62,14 @@ function defaultSave(){
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
     campaignResetV2:true,   // 2do reinicio (antes de la prueba con amigos): mismo mecanismo, versión nueva
     campaignResetV3:true,   // 3er reinicio (antes de la prueba real con un amigo): idem
-    testStageV1:true,       // BUGFIX 01: reinicio de la etapa de prueba (nivel 1, bloqueados, solo la Arena 1, 10.000 de oro UNA vez)
-    startGoldNotice:false,  // aviso del regalo inicial pendiente de mostrar (se muestra una vez y se apaga)
+    testStageV1:true,       // BUGFIX 01: reinicio de la etapa de prueba (nivel 1, bloqueados, solo la Arena 1) UNA vez
     starterChosen:false,    // todavía no eligió su guardián de regalo (pantalla "Tu primer guardián")
+    // REGALO INICIAL (js/systems/starter-gift.js): un guardián + UNA skin para ese guardián (nada de oro)
+    starterGiftV1:true,     // marca de la migración: los guardados de antes reciben un vale de skin (ver starterGiftMigrate)
+    starterSkinPending:false, // eligió el guardián de regalo y le falta elegir la skin de regalo
+    starterSkin:null,       // la skin de regalo que eligió (id de set o de croma; "vale" si se llevó el vale)
+    skinVoucher:0,          // vales de skin sin canjear: cada uno cubre UNA skin o croma de la Tienda
+    skinVoucherNotice:false, // aviso "Tenés una skin de regalo: elegila" pendiente de mostrar en el hub
     firstRun:null,          // PRIMER ARRANQUE CORTO (js/ui/hub.js): "jugando" en la primera partida, "hub" hasta tocar JUGAR
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
@@ -77,14 +82,16 @@ function defaultSave(){
     quests:null,            // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
     // DIFICULTADES (js/systems/difficulty-tiers.js): arenas superadas en Pesadilla / Infierno (Normal es
     // arenasCleared), la elegida en la Sala y las derrotas de la cuenta (las 3 primeras no se castigan)
-    diffCleared:{pesadilla:{}, infierno:{}}, diffSelected:"normal", defeatCount:0
+    diffCleared:{pesadilla:{}, infierno:{}}, diffSelected:"normal", defeatCount:0,
+    recycleDust:0           // RECICLAJE (js/systems/ground-loot.js): fracción de Gema juntada al reciclar Comunes/Raros con el inventario lleno
   };
 }
-// ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
-// guardianes, objetos y sets. Va en el guardado nuevo (defaultSave) o se da en el reinicio de la etapa
-// (testStageReset, marcado con testStageV1): recargar, reconectar, morir o cambiar de arena no lo repite
-// porque el oro se lee siempre del guardado persistido.
-const TEST_START_GOLD = 10000;
+// ORO INICIAL (alfa, pedido del dueño): el regalo de 10.000 de oro de la etapa de prueba se sacó. Con los
+// guardianes a 2.500 alcanzaba para comprar 4 el primer día y la economía no arrancaba (reseña del crítico,
+// §6.4 #9). Ahora un perfil nuevo arranca con 0 de oro (como después de los reinicios de campaña) y el
+// regalo es UN guardián + UNA skin para ese guardián (js/systems/starter-gift.js). El primer oro sale de la
+// Ciudad Maldita y va a la Mística, las cromas (1.500) y el segundo guardián (2.500). Quien ya recibió los
+// 10.000 los conserva: el oro se lee siempre del guardado persistido.
 let save = defaultSave();
 // MODO PRUEBA (pedido para seguir probando): todos los guardianes liberados y todas las arenas de la
 // campaña abiertas, en guardados nuevos y viejos. No toca niveles, oro, objetos ni talentos.
@@ -204,6 +211,10 @@ function _loadSaveInner(){
       // igual (acá, en defaultSave() y en campaignReset()).
       if(!parsed.campaignResetV3){ campaignReset(raw); }
       if(!parsed.testStageV1){ testStageReset(raw); }
+      // REGALO INICIAL: guardados de antes del guardián + skin de regalo (después de los reinicios: quien
+      // quedó sin guardián lo elige ahora con su skin; quien ya tenía uno recibe un vale de skin)
+      if(!parsed.starterGiftV1){ starterGiftMigrate(); }
+      delete save.startGoldNotice; // aviso del regalo de 10.000 de oro (ya no existe)
       if(!parsed.fortalezaMigrated){ save.fortalezaMigrated = true; if(save.arenasCleared.acuatica && !save.arenasCleared.fortaleza) save.legacyHieloOpen = true; }
       // El Reino Micelial llegó como 4ta arena (entre la Fortaleza y el Hielo): quien ya había superado
       // la Fortaleza tenía el Hielo abierto, y lo conserva (una sola vez).
@@ -229,6 +240,7 @@ function _loadSaveInner(){
       // en treeBonus para que nunca quede "debiendo").
       if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
+      save.recycleDust = Math.max(0, Math.min(0.99, +parsed.recycleDust || 0));
       // dificultades: guardados de antes no las tienen (todo en Normal); forma segura siempre
       const dc = (parsed.diffCleared && typeof parsed.diffCleared==="object") ? parsed.diffCleared : {};
       save.diffCleared = {pesadilla:Object.assign({}, dc.pesadilla||{}), infierno:Object.assign({}, dc.infierno||{})};
@@ -239,7 +251,7 @@ function _loadSaveInner(){
       // sesión que solo mira sin tocar nada perdería el arreglo al cerrar el navegador.
       if(needsRarityMigration) persist();
     } else {
-      save.startGoldNotice = true; persist(); // perfil nuevo: el regalo ya viene en defaultSave; queda guardado desde ya
+      persist(); // perfil nuevo: queda guardado desde ya (el regalo -guardián + skin- se elige al entrar)
     }
   }catch(e){ save = defaultSave(); }
 }
@@ -345,16 +357,29 @@ function campaignReset(raw){
 }
 // BUGFIX 01 — reinicio de la etapa de prueba (una sola vez por perfil, marcado con testStageV1):
 // guardianes a nivel 1 y bloqueados (se elige UNO de regalo, el resto se compra), solo la Arena 1
-// abierta, inventario y equipo vacíos y 10.000 de oro. El guardado anterior queda copiado en
-// localStorage (SAVE_KEY + "_antesDeEtapaPrueba").
+// abierta, inventario y equipo vacíos y 0 de oro (antes daba 10.000: ver ORO INICIAL). El guardado
+// anterior queda copiado en localStorage (SAVE_KEY + "_antesDeEtapaPrueba").
 function testStageReset(raw){
   try{ if(!localStorage.getItem(SAVE_KEY+"_antesDeEtapaPrueba")) localStorage.setItem(SAVE_KEY+"_antesDeEtapaPrueba", raw); }catch(e){}
   campaignReset(raw);
   for(const k in save.champions) save.champions[k].equipment = mkEquipment();
   save.stash = []; save.gems = 0; save.relics = defaultSave().relics;
   save.lootPity = defaultSave().lootPity; save.shop = null;
-  save.gold = TEST_START_GOLD;
-  save.testStageV1 = true; save.startGoldNotice = true;
+  save.gold = 0;
+  save.testStageV1 = true;
+  persist();
+}
+// REGALO INICIAL (una vez por guardado, marcado con starterGiftV1): quien ya tiene su guardián y nunca
+// eligió skin de regalo recibe un VALE de skin (se canjea en la Tienda por cualquier skin o croma) y el
+// aviso en el hub. Quien todavía no eligió guardián hace el camino nuevo (guardián → skin). No toca el oro.
+function starterGiftMigrate(){
+  save.starterGiftV1 = true;
+  if(!needsStarterChampion() && !save.starterSkin){
+    save.skinVoucher = (save.skinVoucher|0) + 1;
+    save.skinVoucherNotice = true;
+    save.starterSkin = "vale";
+  }
+  save.starterSkinPending = false;
   persist();
 }
 // ¿Tiene que elegir todavía su guardián de regalo? Solo mientras no tenga ningún guardián propio

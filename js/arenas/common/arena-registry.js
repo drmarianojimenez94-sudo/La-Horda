@@ -95,9 +95,11 @@ function arenaTitleCard(kicker, title, sub, ms){
   el.querySelector(".atc-kicker").textContent = kicker || "";
   el.querySelector(".atc-title").textContent = title || "";
   el.querySelector(".atc-sub").textContent = sub || "";
+  if(typeof hudTextYield==="function") hudTextYield(); // el cartel central no queda debajo (js/ui/hud-text.js)
   el.classList.remove("hidden", "show"); void el.offsetWidth; el.classList.add("show");
   clearTimeout(_arenaTitleT);
   _arenaTitleUntil = performance.now() + (ms || 4200);
+  if(typeof _hudBlockAt!=="undefined") _hudBlockAt = 0;
   _arenaTitleT = setTimeout(()=>{ el.classList.remove("show"); el.classList.add("hidden"); }, ms || 4200);
 }
 function arenaTitleCardHide(){

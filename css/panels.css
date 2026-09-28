@@ -298,6 +298,17 @@
 .tt-eff{ font-size:0.6rem; color:#ffcf5c; line-height:1.35; }
 .tt-eff.next{ color:#7dc98a; }
 .tt-lock{ font-size:0.58rem; color:#ff9a7a; line-height:1.3; }
+/* Sinergias del árbol (estilo Diablo II) y reinicio por oro */
+.tt-syn{ font-size:0.58rem; color:#9fd8ff; line-height:1.3; }
+.tt-synergies{ margin:0 0 10px; padding:7px 9px; border:1px solid #2e4a6a; border-radius:8px; background:rgba(95,176,255,0.06); }
+.tt-syn-title{ font-size:0.66rem; color:#9fd8ff; font-weight:700; margin-bottom:3px; letter-spacing:0.04em; }
+.tt-syn-row{ font-size:0.6rem; color:var(--text-dim); line-height:1.4; }
+.tt-syn-row.on{ color:#cfe9ff; }
+.tt-respec{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin:0 0 10px;
+  font-size:0.6rem; color:var(--text-dim); }
+.tt-respec-btn{ padding:4px 9px; font-size:0.66rem; }
+.tt-respec-btn:disabled{ opacity:0.5; }
+.mastery-syn{ font-size:0.56rem; color:#9fd8ff; margin-top:2px; line-height:1.3; }
 .tt-cost{ font-size:0.55rem; color:#ffd76a; font-weight:400; }
 .tt-buy{ flex:none; align-self:center; }
 .tt-fork{ position:relative; border:1px dashed #8a6a2e; border-radius:8px; padding:14px 6px 6px; display:flex; flex-direction:column; gap:6px; background:rgba(255,207,92,0.04); }
@@ -343,6 +354,7 @@
 .inv-card .item-epithet{ font-size:0.55rem; color:#e8c890; font-style:italic; }
 .inv-card .item-mythic{ color:#ff6a5a; font-weight:700; }
 .inv-card .item-unique{ color:#c68cff; font-weight:700; }
+.inv-card .item-build{ color:#ffc24a; font-weight:700; }
 .inv-card .item-recipe{ color:#e8c890; }
 .inv-owner{ color:#ffb0a0; font-weight:700; }
 .inv-by{ color:#8fd0ff; font-weight:700; }
@@ -445,7 +457,7 @@
 .ip-actions button.primary{ background:var(--ember1); color:#1a0e06; border-color:var(--ember1); }
 .ip-actions button:disabled{ opacity:0.45; cursor:default; }
 @media (max-width:420px){ #item-preview{ padding:8px; } #item-preview .ip-panel{ max-height:94vh; max-height:94dvh; padding:10px; } .ip-top .ip-art{ width:56px; height:56px; } }
-.ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }
+.ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-build{ color:#ffc24a; font-weight:700; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }
 
 /* Derrota: el golpe es el título (grande, en pixel) y el resultado va debajo en letra de cuerpo. Antes era al
    revés: "La Horda te ha consumido" chiquito y "Nivel 2 · 77 bajas · Calificación C" gigante en dos renglones. */

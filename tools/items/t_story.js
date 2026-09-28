@@ -86,7 +86,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('VOZ.el_demonio_gelido_se_presenta', v4.who === 'EL DEMONIO GÉLIDO' && /NADIE ADENTRO/.test(v4.text), v4);
   // regla: no más de 2 textos a la vez (cartel grande + cartel del centro ya en pantalla → la voz espera)
   const g = await E(() => { __read(); __step(16); STORY.q.length = 0;
-    arenaTitleCard('PRUEBA', 'TÍTULO', 'sub', 3000); showBanner('CARTEL');
+    arenaTitleCard('PRUEBA', 'TÍTULO', 'sub', 3000); showBanner('CARTEL', 2); // (urgente: con el cartel de arena arriba sale igual, debajo — hud-text.js)
     const n = storyOtherTexts(); storySay('hech', 'Línea de prueba que tiene que esperar su turno.'); STORY.gateT = 0; __step(32);
     const blocked = __tut().text !== 'Línea de prueba que tiene que esperar su turno.';
     _arenaTitleUntil = 0; STORY.gateT = 0; __step(32);

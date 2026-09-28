@@ -105,9 +105,57 @@ const CHAMPION_SETS = {
       {count:4, desc:"EL PORTADOR ETERNO: la forma titánica dura 30% más y cada baja transformado te cura 2% de la vida.", mods:()=>[]}
     ]}
 };
+/* SET DE 2 PIEZAS QUE CAMBIA UNA HABILIDAD (reseña del crítico §6.4 #4): con 2 piezas del set de
+   su guardián, una habilidad suya se TRANSFORMA. Usa el mismo motor que los refuerzos de habilidad
+   (js/systems/boons.js: fx ground/burst/echo/fan/shards/pull/ally/status...), así que corre en el
+   anfitrión para cada héroe con SU equipo (el invitado lo trae en su loadout) y nunca daña aliados.
+   skill: 0/1/2/"ult" del kit BASE. test: qué mide tools/items/t_synergies.js. */
+const CHAMPION_SET_TRANSFORMS = {
+  baluarte:     {skill:"ult", name:"Círculo del Desafío", look:"stone", test:"zone",
+    text:"el Grito Provocador deja un círculo de piedra 5 s que frena 35% y daña a los provocados",
+    fx:[{t:"ground", at:"caster", r:150, dur:5000, dps:0.4, slow:0.35}]},
+  nocturno:     {skill:"ult", name:"Niebla del Degollador", look:"poison", test:"zone",
+    text:"la Pestilencia Sombría deja una niebla venenosa 4 s donde desaparecés",
+    fx:[{t:"ground", at:"origin", r:110, dur:4000, dps:0.35, poison:true}]},
+  convergencia: {skill:2, name:"Esfera de Tormenta", look:"storm", test:"zone",
+    text:"la Cadena de Relámpago deja una esfera de tormenta 3 s que suelta rayos",
+    fx:[{t:"ground", at:"aim", r:100, dur:3000, dps:0.1, zap:{every:450, pct:0.6}}]},
+  custodio:     {skill:"ult", name:"Santuario del Custodio", look:"holy", test:"heal",
+    text:"la Bendición Suprema deja un santuario 5 s que cura 3% de vida por segundo a los aliados",
+    fx:[{t:"ground", at:"caster", r:150, dur:5000, heal:0.03}]},
+  marea:        {skill:"ult", name:"Ola Carmesí", look:"blood", test:"dmg",
+    text:"el Segador de Almas estalla en una ola de sangre alrededor que desangra",
+    fx:[{t:"burst", at:"caster", r:150, pct:0.9, status:{bleed:0.4}}]},
+  sistema:      {skill:1, name:"Fragmentos de Código", look:"void", test:"dmg",
+    text:"cada infectado por Sobrescribir suelta 4 fragmentos de código en redondo",
+    fx:[{t:"shards", at:"hits", n:4, pct:0.35}]},
+  profecia:     {skill:0, name:"Aura del Destino", look:"holy", test:"heal",
+    text:"Destino Restaurado deja un aura 4 s que cura 2,5% de vida por segundo a los aliados cercanos",
+    fx:[{t:"ground", at:"caster", r:140, dur:4000, heal:0.025}]},
+  errante:      {skill:0, name:"Corte Doble", look:"steel", test:"dmg",
+    text:"el Corte del Rōnin corta dos veces: un eco del corte cae 0,35 s después sobre el rival",
+    fx:[{t:"echo", at:"hits", delay:350, r:55, pct:1.0}]},
+  manada:       {skill:0, name:"Flecha Gemela", look:"nature", test:"dmg",
+    text:"la Flecha Perforante sale doble: una segunda flecha junto a la primera",
+    fx:[{t:"fan", n:1, spread:0.06, pct:0.9}]},
+  granadero:    {skill:1, name:"Estandarte del Regimiento", look:"holy", test:"heal",
+    text:"¡Granaderos, a la carga! planta un estandarte 6 s que cura 1,5% de vida por segundo a los aliados",
+    fx:[{t:"ground", at:"caster", r:170, dur:6000, heal:0.015}]},
+  requiem:      {skill:0, name:"Siega de Almas", look:"void", test:"pull",
+    text:"la Cosecha de Almas arrastra hacia vos a los enemigos del cono",
+    fx:[{t:"pull", at:"caster", r:210, px:60}]},
+  legion:       {skill:0, name:"Estela de Gas", look:"steam", test:"zone",
+    text:"el Equipo de Maniobras deja una estela de gas 3 s que frena 40% y quema donde despegás",
+    fx:[{t:"ground", at:"origin", r:95, dur:3000, dps:0.3, slow:0.4, burn:true}]}
+};
 (function registerChampionSets(){
   for(const id in CHAMPION_SETS){
     const S = CHAMPION_SETS[id];
+    const T = CHAMPION_SET_TRANSFORMS[id];
+    if(T){ // el texto del bono de 2 piezas lo cuenta (lo muestran la ficha del set, el Códice, la tienda y el inventario)
+      const th = S.thresholds.find(x=>x.count===2);
+      if(th){ th.desc = `${th.desc} · TRANSFORMA (${T.name}): ${T.text}`; th.transform = id; }
+    }
     SET_DB[id] = Object.assign({id, rarity:"legendario"}, S);
     Object.keys(S.pieces).forEach(type=>{
       const key = id+"_"+type;

@@ -32,9 +32,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   for (let k = 0; k < 600 && !(await G.p.evaluate(() => state === 'playing')); k++) await sleep(100);
   await sleep(1500);
   // cae el invitado (los demás siguen en pie) y aparece un cartel central
-  await H.p.evaluate(() => { spawnTimer = 1e12; const g = heroes[1]; damageHero(g, g.maxHp * 10); });
+  await H.p.evaluate(() => { spawnTimer = 1e12; window.__gDmg = []; const g = heroes[1]; for (let i = 0; i < 12 && !g.downed && g.hp > 0; i++) { g.invulnTimer = 0; damageHero(g, g.maxHp * 10); window.__gDmg.push(Math.round(g.hp)); } }); // una Profeta aliada (set) o Último Aliento pueden salvarlo una vez y dejarlo invulnerable un instante: se insiste hasta que caiga
   for (let k = 0; k < 100 && !(await G.p.evaluate(() => !document.getElementById('downed-overlay').classList.contains('hidden'))); k++) await sleep(100);
-  await H.p.evaluate(() => showBanner('RUNA ACTIVA (3/4): LA HORDA SE FORTALECE'));
+  await H.p.evaluate(() => showBanner('RUNA ACTIVA (3/4): LA HORDA SE FORTALECE', 2));
   await sleep(700);
   const r = await G.p.evaluate(() => {
     const a = document.getElementById('downed-overlay').getBoundingClientRect(), c = document.getElementById('center-banner').getBoundingClientRect();

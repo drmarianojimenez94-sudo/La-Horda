@@ -46,14 +46,14 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
 #prep-screen .net-hint, #prep-screen .net-off, #prep-screen .net-link, #prep-screen .lobby-note,
 #prep-screen .inv-capacity, #prep-screen .inv-empty, #prep-screen .inv-chip,
 #prep-screen .inv-slot, #prep-screen .inv-slot .slot-item-name, #prep-screen .inv-slot button,
-#prep-screen .tt-desc, #prep-screen .tt-eff, #prep-screen .tt-lock, #prep-screen .tt-cost, #prep-screen .tt-name, #prep-screen .talent-badge,
+#prep-screen .tt-desc, #prep-screen .tt-eff, #prep-screen .tt-lock, #prep-screen .tt-syn, #prep-screen .tt-syn-row, #prep-screen .tt-syn-title, #prep-screen .tt-respec, #prep-screen .tt-respec-btn, #prep-screen .mastery-syn, #prep-screen .tt-cost, #prep-screen .tt-name, #prep-screen .talent-badge,
 #prep-screen .talent-lock-banner, #prep-screen .talent-points, #prep-screen .tp-note, #prep-screen .talent-lock-reason,
 #prep-screen .mastery-name, #prep-screen .mastery-stats, #prep-screen .mastery-use, #prep-screen .evo-lines .evo,
 #prep-screen .tt-root, #prep-screen .item-stat, #prep-screen .item-passives, #prep-screen .item-desc, #prep-screen .inv-card button{ font-size:0.98rem; line-height:1.15; }
 #prep-screen .inv-slot .slot-lv, #prep-screen .tt-rank{ font-size:0.85rem; }
 #prep-screen .net-name input, #modeselect-screen .net-name input, #prep-screen .net-code-input{ font-family:var(--font-retro); font-size:1.1rem; }
 #modeselect-screen .net-name{ font-size:1.05rem; }
-#starter-confirm-text{ font-size:1.25rem; }
+#starter-confirm-text, #starter-skin-confirm-text{ font-size:1.25rem; }
 #hub-options .opt-note{ font-size:1rem; line-height:1.2; }
 #arenaselect-screen .arena-grid-sep{ font-family:var(--font-pixel); font-size:0.7rem; }
 #net-toast{ font-size:1.05rem; line-height:1.15; }
@@ -63,7 +63,10 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
   position:fixed; z-index:60; pointer-events:none; display:flex; flex-direction:column; align-items:stretch; gap:6px;
   top:calc(8px + env(safe-area-inset-top, 0px)); right:calc(10px + env(safe-area-inset-right, 0px)); width:min(250px, 34vw);
 }
-#toast-stack.play{ top:calc(80px + env(safe-area-inset-top, 0px)); width:min(220px, 30vw); } /* en partida: debajo de la Definitiva, sobre el minimapa (no en el centro de la pelea) */
+/* en partida: debajo de la Definitiva, sobre el minimapa (no en el centro de la pelea), sin bajar hasta los botones
+   de habilidad (lo que no entra se corta); el botín (ground-loot.js) va arriba de todo: es lo que cambia más seguido */
+#toast-stack.play{ top:calc(80px + env(safe-area-inset-top, 0px)); width:min(220px, 30vw); max-height:calc(100vh - 280px); overflow:hidden; }
+#toast-stack.play #loot-toasts{ order:-1; }
 /* fin de partida: debajo del resumen de desafíos (.qs-run-sum), fuera del título y del cofre */
 #toast-stack.end{ top:calc(96px + env(safe-area-inset-top, 0px)); width:min(200px, 27vw); }
 #toast-stack #net-toast{ position:static; transform:none; left:auto; top:auto; max-width:none; text-align:left; }

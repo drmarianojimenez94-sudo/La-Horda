@@ -24,6 +24,9 @@ const AIM_PROFILES = {
   piercing_shot:    {type:"line", w:16},
   projectile:       {type:"line", w:14},
   cone_slash:       {type:"cone"},
+  soul_harvest:     {type:"cone"},                       // Nigromante: cono que arranca almas (aimDir)
+  // Nigromante: con el gólem ya en pie, "¡Aplasta!" lo hace saltar a un punto; sin gólem se invoca al lado propio
+  summon_golem:     {type:"point", r:()=>110, range:()=>320, when:c=>!!(c && c.golem && !c.nigroDemonForm)},
   chain:            {type:"target", range:()=>340},
   overwrite_nova:   {type:"target", range:sk=>sk.range||300},
   bleed_hit:        {type:"target", range:(sk,cls)=>cls.basicRange+70},
@@ -34,9 +37,15 @@ const AIM_PROFILES = {
   sm_bayonet:       {type:"dash", w:30},
   sm_san_lorenzo:   {type:"dash", w:64},
   eren_hook:        {type:"dash", w:24},
-  titan_retumbar:   {type:"dash", w:120}
+  // Retumbar: 6 pasos de 0,52 s a 95 u/s, unas 300 u de recorrido (EREN_CFG.retumbar)
+  titan_retumbar:   {type:"dash", w:120, range:()=>{ const R = typeof EREN_CFG!=="undefined" && EREN_CFG.retumbar; return R ? R.steps*R.stepMs/1000*R.speed : 300; }}
 };
-function aimProfileOf(sk){ return sk ? AIM_PROFILES[sk.kind] || null : null; }
+// caster (opcional): algunas se apuntan solo en cierto estado (el gólem ya invocado); sin caster, el del jugador.
+function aimProfileOf(sk, caster){
+  const p = sk ? AIM_PROFILES[sk.kind] || null : null;
+  if(p && p.when){ const c = caster || (typeof player!=="undefined" ? player : null); if(!p.when(c)) return null; }
+  return p;
+}
 // Multiplicador de área/alcance real de la habilidad (maestría + talentos), el mismo que usa castAbility.
 function aimAreaMult(classKey, idx){
   const m = effectiveMasteryFor(classKey, idx);
@@ -44,7 +53,7 @@ function aimAreaMult(classKey, idx){
   return masteryAreaMult(m) * (1 + (t.areaMult||0));
 }
 function aimRangeOf(caster, sk, idx){
-  const prof = aimProfileOf(sk); if(!prof) return 0;
+  const prof = aimProfileOf(sk, caster); if(!prof) return 0;
   const area = aimAreaMult(caster.classKey, idx);
   if(prof.range) return prof.range(sk, caster.cls) * (prof.type==="target" ? 1 : area);
   return (sk.range||200) * area;

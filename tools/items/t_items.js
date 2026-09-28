@@ -68,7 +68,7 @@ async function boot(browser, initSave){
     const { E, errors, page } = await boot(browser, old);
     const r = await E(() => ({ gold: save.gold, lvl: save.champions.mago.level, open: ARENA_ORDER.filter(isArenaUnlocked), flag: save.testStageV1,
       backup: !!localStorage.getItem(SAVE_KEY + '_antesDeEtapaPrueba') }));
-    check('TEST.reinicio_unico_de_la_etapa_de_prueba', r.gold === 10000 && r.lvl === 1 && r.open.join() === 'ciudad' /* orden canónico: la primera jugable es la Ciudad Maldita (01) */ && r.flag === true, r);
+    check('TEST.reinicio_unico_de_la_etapa_de_prueba', r.gold === 0 /* sin el regalo de 10.000 (regalo inicial = guardián + skin) */ && r.lvl === 1 && r.open.join() === 'ciudad' /* orden canónico: la primera jugable es la Ciudad Maldita (01) */ && r.flag === true, r);
     check('TEST.respaldo_del_guardado_anterior', r.backup, r);
     // volver a cargar el guardado (como al reabrir el juego): el regalo no se repite
     check('TEST.el_regalo_no_se_repite_al_recargar', await E(() => { save.gold = 42; persist(); loadSave(); return save.gold; }) === 42, null);
@@ -82,7 +82,7 @@ async function boot(browser, initSave){
   check('ITEMS.objetos_procedurales_tienen_nombre', nm.every(n => n && !/cualquier|PLACEHOLDER|Común Casco/.test(n)) && /de /.test(nm[3]), nm);
   const lt = await E(() => { const c = { named:0, champ:0, proc:0, other:0, myth:0, uniq:0, total:0 };
     for (let i = 0; i < 600; i++){ const it = materializeLoot({ tier:'legendario' }, 'mago', 'hielo'); c.total++;
-      if (NAMED_LEGENDARIES[it.designId]) c.named++; else if (it.designed && it.champion) { c.champ++; if (it.champion !== 'mago') c.other++; } else c.proc++; }
+      if (NAMED_LEGENDARIES[it.designId] || (typeof BUILD_LEGENDARIES !== 'undefined' && BUILD_LEGENDARIES[it.designId])) c.named++; else if (it.designed && it.champion) { c.champ++; if (it.champion !== 'mago') c.other++; } else c.proc++; }
     for (let i = 0; i < 100; i++){ const it = materializeLoot({ tier:'mitico' }, 'mago', 'hielo'); if (it.rarity === 'mitico' && it.designed) c.myth++; }
     for (let i = 0; i < 60; i++){ const it = materializeLoot({ tier:'unico' }, 'mago', 'hielo'); if (it.rarity === 'unico' && it.unique) c.uniq++; }
     const hielo = {}; for (let i = 0; i < 800; i++){ const it = materializeLoot({ tier:'legendario' }, 'mago', 'hielo'); if (NAMED_LEGENDARIES[it.designId]) hielo[it.element] = (hielo[it.element]||0) + 1; }

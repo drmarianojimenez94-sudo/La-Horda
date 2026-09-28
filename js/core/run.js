@@ -65,6 +65,7 @@ function lobbyAlliesValid(mine){
 // partida (reintentar / volver a jugar desde la sala) para que nada de la anterior se filtre:
 // congelamiento de Axiom, cortes demorados y duelos de Musashi, efectos, pulsos del jefe.
 function resetRunTransients(){
+  if(typeof eliteNamedReset==="function") eliteNamedReset(); // tope de élites con nombre por partida (elite-affixes.js)
   axiomForceQuitFlash = 0; axiomFreezeTimer = 0; axiomFreezeCaster = null; axiomForceQuitPending = null;
   if(typeof canvas!=="undefined" && canvas && canvas.style) canvas.style.filter = "";
   musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];
@@ -245,7 +246,7 @@ function finishBossVictory(){
   const firstClear = !save.arenasCleared[currentArena];
   save.arenasCleared[currentArena] = true;
   const nextArena = ARENA_ORDER.find(k=>k!==currentArena && !wasOpen[k] && isArenaUnlocked(k));
-  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${campaignNumberLabel(nextArena)} — ${(ARENA_MODS[nextArena]||{}).label||nextArena}`), 2600); }
+  if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${campaignNumberLabel(nextArena)} — ${(ARENA_MODS[nextArena]||{}).label||nextArena}`, 2), 2600); }
   if(currentArena==="infernal" && !save.divineArenaUnlocked){
     save.divineArenaUnlocked = true;
     setTimeout(()=>showBanner("🔓 POSTGAME: ARENA DIVINA — LAS CINCO PRUEBAS"), firstClear ? 9000 : 2600);

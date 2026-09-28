@@ -151,7 +151,11 @@
           </span>
         </button>
         <!-- HORDA INFINITA (supervivencia): aparece sola cuando existe window.endlessOpen -->
-        <button class="hub-endless hidden" id="hub-endless-btn"><span class="hub-endless-ico">♾</span><span class="hub-endless-txt"><b>HORDA INFINITA</b><span class="hub-endless-sub" id="hub-endless-sub">Supervivencia sin fin</span></span><span class="ui-tag hidden" id="hub-endless-lock">🔒</span></button>
+        <div class="hub-endless-row">
+                <button class="hub-endless hidden" id="hub-endless-btn"><span class="hub-endless-ico">♾</span><span class="hub-endless-txt"><b>HORDA INFINITA</b><span class="hub-endless-sub" id="hub-endless-sub">Supervivencia sin fin</span></span><span class="ui-tag hidden" id="hub-endless-lock">🔒</span></button>
+        <!-- ranking semanal de la Horda Infinita (js/net/leaderboard.js) -->
+        <button class="hub-endless-rank hidden" id="hub-endless-rank-btn" aria-label="Ranking semanal de la Horda Infinita" title="Ranking semanal"><span class="hub-endless-rank-ico">🏆</span><span class="hub-endless-rank-txt">RANKING</span></button>
+        </div>
       </div>
       <div class="hub-grid" id="hub-grid">
         <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
@@ -181,13 +185,25 @@
   </div>
 
   <!-- MODO CAMPAÑA: el guardián de REGALO (se elige una sola vez; el resto se compra en la Tienda) -->
+  <!-- REGALO INICIAL (js/systems/starter-gift.js): 1) el guardián, 2) UNA skin para ese guardián (queda equipada) -->
   <div id="starter-screen" class="screen hidden">
-    <div class="arena-title">Tu primer guardián</div>
-    <div class="lobby-sub">Elegí uno: es tu regalo para empezar la campaña. Los demás se desbloquean en la Tienda por <b id="starter-price">2.500</b> de oro.</div>
-    <div id="starter-grid"></div>
-    <div class="starter-confirm hidden" id="starter-confirm">
-      <div id="starter-confirm-text"></div>
-      <div class="net-row" style="justify-content:center;"><button class="btn" id="starter-yes-btn">¡Lo quiero!</button><button class="btn secondary" id="starter-no-btn">Elegir otro</button></div>
+    <div id="starter-step-champ" class="starter-step">
+      <div class="arena-title">Tu primer guardián</div>
+      <div class="lobby-sub">Elegí uno: es tu regalo para empezar la campaña, y después le elegís una skin. Los demás se desbloquean en la Tienda por <b id="starter-price">2.500</b> de oro.</div>
+      <div id="starter-grid"></div>
+      <div class="starter-confirm hidden" id="starter-confirm">
+        <div id="starter-confirm-text"></div>
+        <div class="net-row" style="justify-content:center;"><button class="btn" id="starter-yes-btn">¡Lo quiero!</button><button class="btn secondary" id="starter-no-btn">Elegir otro</button></div>
+      </div>
+    </div>
+    <div id="starter-step-skin" class="starter-step hidden">
+      <div class="arena-title">Tu skin de regalo</div>
+      <div class="lobby-sub" id="starter-skin-sub"></div>
+      <div id="starter-skin-grid"></div>
+      <div class="starter-confirm" id="starter-skin-confirm">
+        <div id="starter-skin-confirm-text"></div>
+        <div class="net-row" style="justify-content:center;"><button class="btn" id="starter-skin-yes-btn">¡La quiero!</button><button class="btn secondary" id="starter-skin-later-btn">Elegir después</button></div>
+      </div>
     </div>
   </div>
 
@@ -264,6 +280,13 @@
         <span class="join-code-champ" id="mode-join-champ"></span></div>
       <div class="net-err join-status" id="mode-join-status"></div>
       <div class="mode-create-row"><span>¿Invitás vos?</span><button class="btn small" id="mode-create-btn">🌐 CREAR SALA</button></div>
+      <!-- SALAS ABIERTAS (js/net/net-rooms.js): las salas públicas del servidor, unirse con un toque -->
+      <div class="mode-rooms" id="mode-rooms">
+        <div class="mode-rooms-head"><span class="mode-rooms-title">🌍 SALAS ABIERTAS <span id="mode-rooms-n"></span></span>
+          <button class="btn small secondary" id="mode-rooms-refresh" aria-label="Actualizar la lista">↻</button></div>
+        <div class="mode-rooms-list" id="mode-rooms-list"></div>
+        <div class="net-hint mode-rooms-status" id="mode-rooms-status"></div>
+      </div>
     </div>
     <div class="mode-side">
       <button class="mode-card mode-campaign" id="mode-arena-btn">
@@ -329,6 +352,7 @@
     </div>
     <div id="lobby-arena" class="hidden" data-part="arena"></div>
     <div id="net-bar" data-part="online"></div>
+    <div id="net-trade" class="hidden" data-part="online"></div>
     <div id="net-chat" class="hidden" data-part="online"></div>
     <div id="lobby-slots"></div>
     <div id="prep-summary" data-part="equipo"></div>
@@ -484,6 +508,7 @@
 <script src="js/systems/items.js"></script>
 <script src="js/systems/item-procs.js"></script>
 <script src="js/systems/mythic-powers.js"></script>
+<script src="js/systems/build-powers.js"></script>
 <script src="js/systems/reactions.js"></script>
 <script src="js/systems/set-effects.js"></script>
 <script src="js/assets/set-skins-meta.js"></script>
@@ -499,6 +524,7 @@
 <script src="js/systems/gems.js"></script>
 <script src="js/systems/recipes.js"></script>
 <script src="js/systems/shop.js"></script>
+<script src="js/systems/starter-gift.js"></script>
 <script src="js/systems/rewards.js"></script>
 <script src="js/systems/hero-stats.js"></script>
 <script src="js/systems/difficulty.js"></script>
@@ -543,6 +569,7 @@
 <script src="js/enemies/bestias-ai.js"></script>
 <script src="js/arenas/arena-rules.js"></script>
 <script src="js/arenas/arena-identity.js"></script>
+<script src="js/arenas/arena-layouts.js"></script>
 <script src="js/arenas/divina.js"></script>
 <script src="js/arenas/acuatica.js"></script>
 <script src="js/arenas/collision.js"></script>
@@ -613,9 +640,11 @@
 <script src="js/ui/screens.js"></script>
 <script src="js/ui/panels-skills.js"></script>
 <script src="js/ui/panels-inventory.js"></script>
+<script src="js/ui/hud-text.js"></script>
 <script src="js/ui/hud.js"></script>
 <script src="js/ui/boss-hud.js"></script>
 <script src="js/ui/pixel-font-fix.js"></script>
+<script src="js/ui/pixel-icons.js"></script>
 <script src="js/ui/run-intro.js"></script>
 <script src="js/ui/menus.js"></script>
 <script src="js/ui/hub.js"></script>
@@ -648,6 +677,8 @@
 <script src="js/systems/camp.js"></script>
 <script src="js/net/net-lobby.js"></script>
 <script src="js/net/net-chat.js"></script>
+<script src="js/net/net-trade.js"></script>
+<script src="js/net/net-rooms.js"></script>
 <script src="js/net/net-debug.js"></script>
 <script src="js/net/account.js"></script>
 <script src="js/assets/skin-fx-meta.js"></script>
@@ -655,6 +686,7 @@
 <script src="js/systems/terrain-tags.js"></script>
 <script src="js/data/endless.js"></script>
 <script src="js/systems/endless.js"></script>
+<script src="js/net/leaderboard.js"></script>
 <!-- Botín de verdad: afijos al azar + Mística, botín en el piso con haz de luz, élites con nombre -->
 <script src="js/data/affixes.js"></script>
 <script src="js/systems/affixes.js"></script>

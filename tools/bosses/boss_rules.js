@@ -71,6 +71,21 @@ const want = a => !only.length || only.includes(a);
     let cmKite = false;
     for (let k = 0; k < 20 && !cmKite; k++) { await farFrom('cm_presentador', 1000); await sleep(450); cmKite = await E(() => !!cmPresEntity().gn || cmPresEntity().gnCd <= 0); }
     ok('cm_antikite', cmKite);
+    // OVACIÓN FINAL (Acto III): sin pilar saca el 40 % en Normal (62 % en Pesadilla/Infierno); detrás de un pilar, nada.
+    // El lugar a cubierto que marca el piso (cmCoverSpot) es de verdad a cubierto (cmCovered).
+    const ov = await E(() => {
+      const e = cmPresEntity(); e.gn = null; e.cast = null; e._expT = 0; e.stunTimer = 0; e.cmBusy = false; e.gnCd = 1e9;
+      cmS.pr.act = 3; e.bossPhase = 3; cmS.pillars.length = 0;
+      cmS.pillars.push({ x: Math.round(e.x + 250), y: Math.round(e.y), r: 34, t: 0, d: 12000, v: 0 });
+      const spot = cmCoverSpot(e, e.x + 100, e.y + 300), covSpot = spot && cmCovered(e, { x: spot.x, y: spot.y });
+      const h = player; h.invulnTimer = 0; h.shield = 0; h.itemShield = 0; h.x = e.x; h.y = e.y + 260; h.hp = h.maxHp;
+      const pct = cmOvationPct(), dc = window.diffCurrent;
+      let pctP; try { window.diffCurrent = () => 'pesadilla'; pctP = cmOvationPct(); } finally { window.diffCurrent = dc; }
+      return { pct, pctP, covSpot, exposed: !cmCovered(e, h) };
+    });
+    ok('cm_ovacion_40_en_normal', Math.abs(ov.pct - 0.40) < 1e-9 && Math.abs(ov.pctP - 0.62) < 1e-9);
+    ok('cm_ovacion_lugar_marcado_cubre', ov.covSpot && ov.exposed);
+    await god();
   }
 
   /* ================= 09 MINAS: Cerbero ================= */
