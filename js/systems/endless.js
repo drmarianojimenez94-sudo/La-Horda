@@ -68,6 +68,8 @@ function endlessUnlocked(){
   if(typeof PLAYTEST_UNLOCK_ALL!=="undefined" && PLAYTEST_UNLOCK_ALL) return true;
   return !!(save && save.arenasCleared && save.arenasCleared[ENDLESS_CFG.unlockArena]);
 }
+// para el hub (js/ui/hub.js): cómo se abre el modo mientras está con candado
+function endlessLockText(){ return "Completá la Arena 02 (Fábrica Sin Fin) para desbloquearla."; }
 function _enTotalXp(k){ const c = save.champions[k]; if(!c) return 0; let t = c.xp||0; for(let l=1;l<c.level;l++) t += xpToNext(l); return t; }
 function endlessRoundMinutes(){ return (runElapsedMs||0)/60000; }
 function endlessIsBossRound(r){ return ((r||EN.round) - 1) % ENDLESS_CFG.roundsPerArena === ENDLESS_CFG.roundsPerArena - 1; }

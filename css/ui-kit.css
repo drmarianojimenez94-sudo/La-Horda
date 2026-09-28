@@ -1,0 +1,332 @@
+/* ============================================================
+   css/ui-kit.css — SISTEMA VISUAL ÚNICO de los menús: tokens (colores, bordes, sombras, tipografías,
+   tiempos), estados comunes (hover / apretado / deshabilitado / foco) para TODOS los botones, paneles y
+   pestañas, y las pantallas nuevas: hub del menú principal, barra superior, vitrina de la Tienda,
+   Multijugador, Opciones y la pestaña Skins de GUARDIANES.
+   Pixel art oscuro: bordes cuadrados de 2-3 px negros, sombra dura, brasa como acento, VT323 para
+   botones y títulos cortos, Press Start 2P para las marcas, serif para textos largos.
+   Se carga después de los otros estilos de menú y antes de mobile.css.
+   ============================================================ */
+:root{
+  /* superficies */
+  --ui-bg-1:#1a0f0a; --ui-bg-2:#0f0805; --ui-inset:#0c0806;
+  --ui-line:#3a2415; --ui-line-hi:#6a3e1e; --ui-edge:#000;
+  /* tinta y acentos */
+  --ui-ink:var(--text); --ui-dim:var(--text-dim); --ui-accent:var(--ember1); --ui-accent-2:var(--ember3);
+  --ui-gold:#ffd76a; --ui-ok:#7dffa0; --ui-new:#6fd3ff; --ui-sale:#ff5a3c; --ui-epic:#d9a8ff;
+  /* botones */
+  --ui-btn:linear-gradient(180deg, #4a2210, #2a1208);
+  --ui-btn-hot:linear-gradient(180deg, #a2481a, #5c220a);
+  --ui-btn-sec:linear-gradient(180deg, #1d1411, #120c0a);
+  --ui-hi:inset 1px 1px 0 rgba(255,180,120,0.18);
+  --ui-bevel:inset 2px 2px 0 rgba(255,180,120,0.30), inset -2px -2px 0 rgba(0,0,0,0.5);
+  --ui-shadow:4px 4px 0 #000; --ui-shadow-sm:2px 2px 0 #000;
+  --ui-glow:0 0 18px rgba(255,110,40,0.35);
+  /* tipografías y tiempos */
+  --ui-font:var(--font-retro); --ui-font-brand:var(--font-pixel); --ui-font-body:'Georgia','Iowan Old Style','Times New Roman',serif;
+  --ui-t:120ms; --ui-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+/* ---------- estados comunes de todo lo que se toca ---------- */
+.btn, .shop-btn, .cx-btn, .cx-back, .ui-back, .ui-icon-btn, .mode-card, .hub-tile, .hub-play, .hub-profile,
+.shop-tab, .hub-tab, .cx-tab, .arena-card, .la-chip, .inv-chip, .gx-skin, .shop-deal, .champ-card, .cx-card{
+  transition:transform var(--ui-t) var(--ui-ease), box-shadow var(--ui-t) var(--ui-ease), filter var(--ui-t) var(--ui-ease), border-color var(--ui-t), background-color var(--ui-t), color var(--ui-t);
+}
+@media (hover:hover) and (pointer:fine){
+  .btn:not(:disabled):hover, .shop-btn:not(:disabled):hover, .cx-btn:not(:disabled):hover, .cx-back:hover, .ui-back:hover, .ui-icon-btn:hover,
+  .mode-card:not(.join-card):hover, .hub-tile:hover, .hub-profile:hover, .arena-card:not(.locked):hover, .gx-skin:hover, .shop-deal:hover, .champ-card:hover, .cx-card:hover{ filter:brightness(1.18); }
+  .shop-tab:not(.on):hover, .hub-tab:not(.active):hover, .cx-tab:not(.on):hover{ color:var(--ui-ink); border-color:var(--ui-line-hi); }
+  .hub-play:hover{ filter:brightness(1.1); box-shadow:var(--ui-shadow), 0 0 30px rgba(255,120,40,0.55); }
+}
+.btn:not(:disabled):active, .shop-btn:not(:disabled):active, .cx-btn:not(:disabled):active, .ui-back:active, .ui-icon-btn:active,
+.mode-card:not(.join-card):active, .hub-tile:active, .hub-play:active, .hub-profile:active, .gx-skin:active{ transform:translate(2px,2px); }
+.btn:disabled, .shop-btn:disabled, .cx-btn:disabled, .ui-icon-btn:disabled{ filter:grayscale(0.85) brightness(0.7); opacity:0.55; cursor:not-allowed; box-shadow:none; }
+.btn:focus-visible, .shop-btn:focus-visible, .cx-btn:focus-visible, .ui-back:focus-visible, .ui-icon-btn:focus-visible, .mode-card:focus-visible,
+.hub-tile:focus-visible, .hub-play:focus-visible, .hub-profile:focus-visible, .shop-tab:focus-visible, .hub-tab:focus-visible, .cx-tab:focus-visible{ outline:2px solid var(--ui-gold); outline-offset:2px; }
+
+/* ---------- componentes base ---------- */
+.ui-panel{ background:linear-gradient(160deg, var(--ui-bg-1), var(--ui-bg-2)); border:3px solid var(--ui-edge); box-shadow:var(--ui-hi), var(--ui-shadow); padding:12px 14px; }
+.ui-panel-title{ font-family:var(--ui-font); font-size:1.35rem; color:var(--ui-accent-2); letter-spacing:0.04em; margin-bottom:8px; text-shadow:2px 2px 0 #000; }
+.ui-back, .ui-icon-btn{ min-height:44px; font-family:var(--ui-font); font-size:1.2rem; color:var(--ui-ink); cursor:pointer; background:var(--ui-btn-sec);
+  border:2px solid var(--ui-line-hi); box-shadow:var(--ui-hi), var(--ui-shadow-sm); }
+.ui-back{ padding:4px 14px; min-width:92px; flex:none; }
+.ui-icon-btn{ width:44px; padding:0; font-size:1.3rem; line-height:1; flex:none; display:inline-flex; align-items:center; justify-content:center; }
+.ui-chip{ display:inline-flex; align-items:center; gap:4px; min-height:30px; padding:2px 10px; font-family:var(--ui-font); font-size:1.1rem; color:var(--ui-ink);
+  background:var(--ui-inset); border:2px solid var(--ui-line); white-space:nowrap; }
+.ui-chip.gold, .ui-chip.gold b{ color:var(--ui-gold); }
+.ui-tag{ display:inline-block; font-family:var(--ui-font); font-size:0.85rem; line-height:1.15; letter-spacing:0.05em; text-transform:uppercase; padding:1px 6px;
+  color:var(--ui-accent-2); background:rgba(255,122,46,0.14); border:1px solid var(--ui-accent); white-space:nowrap; }
+.ui-tag.new{ color:#dff6ff; background:rgba(60,160,220,0.28); border-color:var(--ui-new); animation:uiTagPulse 1.6s ease-in-out infinite; }
+.ui-tag.sale{ color:#fff0e8; background:rgba(210,50,30,0.55); border-color:var(--ui-sale); }
+.ui-tag.hot{ color:#1a0c05; background:var(--ui-gold); border-color:#000; }
+.ui-tag.ok{ color:var(--ui-ok); background:rgba(60,200,110,0.14); border-color:#2f6b45; }
+@keyframes uiTagPulse{ 0%,100%{ box-shadow:0 0 0 rgba(111,211,255,0); } 50%{ box-shadow:0 0 10px rgba(111,211,255,0.6); } }
+.ui-scroll-x{ overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y; scrollbar-width:thin; }
+/* barra superior de las pantallas de menú (Tienda, Multijugador): volver · título · billetera */
+.ui-topbar{ display:flex; align-items:center; gap:10px; width:100%; max-width:980px; margin:0 0 8px; flex:none; }
+.ui-topbar-title{ flex:1; min-width:0; text-align:center; font-family:var(--ui-font-brand); font-size:1rem; color:var(--ui-accent-2); text-shadow:3px 3px 0 #000; letter-spacing:0.04em; }
+.ui-topbar-spacer{ width:92px; flex:none; }
+.ui-wallet{ display:flex; gap:6px; flex:none; justify-content:flex-end; margin:0 !important; }
+
+/* los botones de la Tienda y del Códice, al mismo sistema que .btn (cuadrados, borde negro, sombra dura) */
+.shop-btn{ border-radius:0; border:2px solid #000; background:var(--ui-btn); color:#ffe8c8; font-family:var(--ui-font); font-weight:400; font-size:1.1rem; letter-spacing:0.02em;
+  padding:4px 14px; box-shadow:var(--ui-bevel), var(--ui-shadow-sm); }
+.shop-btn.hot{ background:var(--ui-btn-hot); color:#fff3e0; box-shadow:var(--ui-bevel), var(--ui-shadow-sm), var(--ui-glow); }
+.shop-btn.sec{ background:var(--ui-btn-sec); border-color:#000; color:var(--ui-dim); }
+.shop-tab{ border-radius:0; border:2px solid var(--ui-line); background:var(--ui-btn-sec); color:var(--ui-dim); font-family:var(--ui-font); font-weight:400; font-size:1.15rem; box-shadow:var(--ui-shadow-sm); }
+.shop-tab.on{ color:#fff1dc; border-color:var(--ui-accent); background:linear-gradient(180deg, #4a1d0c, #221008); }
+.shop-price{ font-family:var(--ui-font); font-weight:400; font-size:1.2rem; color:var(--ui-gold); white-space:nowrap; }
+.shop-price s{ color:var(--ui-dim); font-size:0.95rem; }
+.shop-champ-row, .shop-item, .shop-skin, .shop-set{ border-radius:0; border-width:2px; box-shadow:var(--ui-shadow-sm); }
+.shop-champ-name, .shop-item-name, .shop-skin-name, .shop-set-name{ font-family:var(--ui-font); font-weight:400; font-size:1.2rem; }
+.shop-skill, .shop-tier{ border-radius:0; }
+.shop-skin-img, .shop-skin-anim{ border-radius:0; border:2px solid #000; }
+
+/* ============================================================
+   HUB — menú principal
+   ============================================================ */
+#mainmenu-screen.hub-screen{ justify-content:flex-start; gap:10px;
+  background:
+    radial-gradient(circle at 18% 88%, rgba(255,110,30,0.22), transparent 45%),
+    radial-gradient(circle at 85% 10%, rgba(160,190,255,0.10), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 4px),
+    linear-gradient(180deg, #120a07 0%, #070403 100%); }
+.hub-top{ display:flex; align-items:center; gap:8px; width:100%; max-width:1000px; flex:none; }
+.hub-profile{ display:flex; align-items:center; gap:8px; min-height:48px; padding:3px 12px 3px 4px; max-width:46%; cursor:pointer; color:var(--ui-ink);
+  background:var(--ui-btn-sec); border:2px solid var(--ui-line-hi); box-shadow:var(--ui-hi), var(--ui-shadow-sm); text-align:left; }
+.hub-profile-anim{ width:40px; height:40px; flex:none; background:var(--ui-inset); border:2px solid #000; }
+.hub-profile-txt{ display:flex; flex-direction:column; min-width:0; line-height:1.05; font-family:var(--ui-font); }
+.hub-profile-name{ font-weight:400; font-size:1.15rem; color:var(--ui-ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.hub-profile-lvl{ font-size:0.95rem; color:var(--ui-dim); white-space:nowrap; }
+.hub-gold{ font-family:var(--ui-font); font-size:1.2rem; color:var(--ui-gold); white-space:nowrap; padding-left:10px; border-left:2px solid var(--ui-line); }
+.hub-brand{ flex:1; min-width:0; text-align:center; font-family:var(--ui-font-brand); font-size:1.05rem; color:var(--ui-accent-2); letter-spacing:0.06em;
+  text-shadow:3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; white-space:nowrap; }
+.hub-main{ flex:1 1 auto; min-height:0; width:100%; max-width:1000px; display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1fr); gap:10px; }
+/* JUGAR: la tarjeta grande (brasa encendida) */
+.hub-play{ position:relative; overflow:hidden; display:flex; align-items:center; gap:12px; padding:12px 16px; min-height:0; cursor:pointer; text-align:left; color:var(--ui-ink);
+  border:3px solid var(--ui-accent);
+  background:
+    radial-gradient(ellipse at 22% 70%, rgba(255,120,40,0.30), transparent 60%),
+    linear-gradient(160deg, #3a1608 0%, #1c0c06 55%, #0f0805 100%);
+  box-shadow:var(--ui-hi), var(--ui-shadow), var(--ui-glow); animation:hubEmber 3s ease-in-out infinite; }
+.hub-play::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(100deg, transparent 30%, rgba(255,220,160,0.10) 45%, transparent 60%); background-size:260% 100%; animation:hubSheen 5s linear infinite; }
+@keyframes hubEmber{ 0%,100%{ box-shadow:var(--ui-hi), var(--ui-shadow), 0 0 14px rgba(255,110,40,0.30); } 50%{ box-shadow:var(--ui-hi), var(--ui-shadow), 0 0 28px rgba(255,120,40,0.55); } }
+@keyframes hubSheen{ from{ background-position:130% 0; } to{ background-position:-130% 0; } }
+.hub-play-art{ flex:none; display:block; background:radial-gradient(circle at 50% 70%, rgba(255,150,60,0.25), transparent 65%); border-bottom:3px solid rgba(0,0,0,0.5); }
+.hub-play-anim{ display:block; width:min(36vh, 150px); height:min(36vh, 150px); }
+.hub-play-txt{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+.hub-play-kicker{ font-family:var(--ui-font); font-size:1rem; color:var(--ui-gold); letter-spacing:0.08em; }
+.hub-play-title{ font-family:var(--ui-font-brand); font-size:1.9rem; line-height:1.15; color:#fff1d6; text-shadow:3px 3px 0 #000, 0 0 16px rgba(255,140,60,0.6); }
+.hub-play-arena{ font-family:var(--ui-font); font-size:1.35rem; color:var(--ui-ink); line-height:1.1; }
+.hub-play-champ{ font-family:var(--ui-font); font-size:1.05rem; color:var(--ui-dim); }
+/* accesos */
+.hub-grid{ display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:minmax(0,1fr); gap:10px; min-height:0; }
+.hub-tile{ position:relative; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:3px; min-width:0; min-height:0; padding:8px 12px; cursor:pointer;
+  text-align:left; color:var(--ui-ink); background:linear-gradient(160deg, var(--ui-bg-1), var(--ui-bg-2)); border:3px solid #000; box-shadow:var(--ui-hi), var(--ui-shadow); }
+.hub-tile-ico{ width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.35rem; background:var(--ui-inset); border:2px solid var(--ui-line); margin-bottom:2px; }
+.hub-tile-title{ font-family:var(--ui-font); font-size:1.25rem; color:var(--ui-accent-2); letter-spacing:0.03em; line-height:1; white-space:nowrap; }
+.hub-tile-sub{ font-family:var(--ui-font); font-size:0.95rem; color:var(--ui-dim); line-height:1.05; }
+.hub-tile-badge{ position:absolute; top:6px; right:6px; }
+#mainmenu-quests-btn{ border-color:#5a3e8a; }
+#mainmenu-quests-btn .hub-tile-title{ color:var(--ui-epic); }
+/* con DESAFÍOS: 5 accesos, el último ocupa la fila entera y todos van en renglón (ícono + título) */
+.hub-grid.hub-grid-6 .hub-tile{ flex-direction:row; align-items:center; justify-content:flex-start; gap:8px; }
+.hub-tile{ overflow:hidden; }
+.hub-tile-title{ max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+.hub-grid.hub-grid-6 .hub-tile-sub{ display:none; }
+.hub-grid.hub-grid-6 .hub-tile-ico{ margin:0; }
+.hub-grid.hub-grid-6 #mainmenu-quests-btn{ grid-column:1 / -1; }
+@media (max-width:600px){ .hub-main{ grid-template-columns:1fr; } .hub-brand{ display:none; } }
+@media (min-height:521px){ .hub-play-title{ font-size:2.4rem; } .hub-tile-ico{ width:52px; height:52px; font-size:1.7rem; } }
+
+/* Opciones (modal) */
+.ui-modal{ position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:12px; }
+.ui-modal-back{ position:absolute; inset:0; background:rgba(0,0,0,0.72); }
+.ui-modal-panel{ position:relative; width:100%; max-width:440px; max-height:100%; overflow-y:auto; text-align:left; animation:uiPop var(--ui-t) var(--ui-ease); }
+@keyframes uiPop{ from{ transform:scale(0.96); opacity:0; } to{ transform:none; opacity:1; } }
+.opt-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:44px; font-family:var(--ui-font); font-size:1.2rem; color:var(--ui-ink); }
+.opt-row input[type=range]{ flex:1; max-width:220px; height:40px; accent-color:var(--ui-accent); }
+.opt-row input:not([type]){ width:180px; min-height:40px; padding:4px 8px; background:var(--ui-inset); color:var(--ui-ink); border:2px solid #000; font:inherit; }
+.opt-note{ font-size:0.8rem; color:var(--ui-dim); margin:6px 0 8px; line-height:1.35; }
+.opt-btns{ display:flex; gap:8px; margin-bottom:10px; }
+#opt-close-btn{ max-width:none; }
+
+/* ============================================================
+   TIENDA — vitrina
+   ============================================================ */
+/* un solo scroll (el de la pantalla, ver menus.css); las pestañas quedan pegadas arriba */
+#shop-screen{ justify-content:flex-start; }
+#shop-screen .shop-tabs{ max-width:980px; flex:none; position:sticky; top:-10px; z-index:5; padding:4px 0 6px; margin-bottom:4px;
+  background:linear-gradient(180deg, #0d0705 80%, rgba(13,7,5,0)); }
+#shop-screen #shop-panel{ max-width:980px; max-height:none; padding:2px 4px 10px 2px; }
+.shop-show-top{ display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,1fr); gap:10px; align-items:stretch; margin-bottom:6px; }
+.shop-show-top .shop-hero{ margin:0; }
+.shop-deals-box{ display:flex; flex-direction:column; min-width:0; }
+.shop-deals-box .shop-row-head{ margin:0 0 6px; }
+.shop-deals-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex:1; }
+.shop-deals-grid .shop-deal{ flex:none; min-width:0; padding:6px 8px; }
+.shop-deals-grid .shop-deal .item-icon-img{ width:36px; height:36px; }
+.shop-deal-buy .shop-btn{ min-height:40px; padding:2px 10px; }
+.shop-was{ font-family:var(--ui-font); font-size:0.95rem; color:var(--ui-dim); }
+@media (max-width:600px){ .shop-show-top{ grid-template-columns:1fr; } }
+.shop-hero{ position:relative; display:grid; grid-template-columns:auto minmax(0,1fr); gap:14px; align-items:stretch; margin:2px 0 12px; padding:0; overflow:hidden;
+  border:3px solid var(--hc, var(--ui-accent)); box-shadow:var(--ui-shadow), 0 0 22px color-mix(in srgb, var(--hc, #ff7a2e) 45%, transparent);
+  background:radial-gradient(ellipse at 20% 60%, color-mix(in srgb, var(--hc, #ff7a2e) 30%, transparent), transparent 65%), linear-gradient(160deg, #1f110b, #0b0605); }
+.shop-hero-art{ position:relative; width:210px; min-height:190px; overflow:hidden; border-right:3px solid #000; background:#07040a; }
+.shop-hero-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 20%; image-rendering:pixelated; animation:heroPan 14s ease-in-out infinite alternate; }
+.shop-hero-art::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(circle at 20% 110%, rgba(255,140,60,0.35), transparent 50%), linear-gradient(0deg, rgba(0,0,0,0.55), transparent 45%); animation:heroFlicker 2.4s ease-in-out infinite; }
+@keyframes heroPan{ from{ transform:scale(1.04) translateY(0); } to{ transform:scale(1.14) translateY(-6%); } }
+@keyframes heroFlicker{ 0%,100%{ opacity:0.8; } 50%{ opacity:1; } }
+.shop-hero-anim{ position:absolute; right:-6px; bottom:-4px; width:150px; height:150px; z-index:1; filter:drop-shadow(0 0 8px rgba(0,0,0,0.9)); }
+.shop-hero.champ .shop-hero-anim{ inset:auto 0 0 0; margin:auto; width:190px; height:190px; }
+.shop-hero-info{ display:flex; flex-direction:column; gap:4px; padding:10px 12px 10px 0; min-width:0; }
+.shop-hero-tags{ display:flex; flex-wrap:wrap; gap:5px; }
+.shop-hero-title{ font-family:var(--ui-font-brand); font-size:1.05rem; line-height:1.5; text-shadow:3px 3px 0 #000; }
+.shop-hero-sub{ font-family:var(--ui-font); font-size:1.1rem; color:var(--ui-ink); }
+.shop-hero-desc{ font-size:0.78rem; color:var(--ui-dim); line-height:1.35; font-style:italic; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.shop-hero-buy{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:auto; }
+.shop-hero-buy .shop-price{ font-size:1.5rem; }
+.shop-hero-buy .shop-btn{ min-height:44px; font-size:1.3rem; padding:4px 22px; }
+.shop-row-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:8px 0 6px; }
+.shop-row-title{ font-family:var(--ui-font); font-size:1.3rem; color:var(--ui-accent-2); letter-spacing:0.06em; text-shadow:2px 2px 0 #000; }
+.shop-renew{ font-family:var(--ui-font); font-size:1rem; color:var(--ui-dim); }
+.shop-strip{ display:flex; gap:10px; padding:2px 6px 8px 2px; }
+.shop-deal, .shop-bundle, .shop-mini-champ{ position:relative; flex:0 0 176px; display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:8px 10px;
+  background:linear-gradient(160deg, var(--ui-bg-1), var(--ui-bg-2)); border:2px solid #000; box-shadow:var(--ui-hi), var(--ui-shadow-sm); }
+.shop-deal{ border-top:3px solid var(--ic); cursor:pointer; }
+.shop-deal.sold, .shop-bundle.owned{ opacity:0.6; }
+.shop-deal-tags{ position:absolute; top:6px; right:6px; }
+.shop-deal .item-icon-img{ width:48px; height:48px; }
+.shop-deal-name, .shop-bundle-name{ font-family:var(--ui-font); font-size:1.15rem; line-height:1.05; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.shop-bundle-name{ color:var(--ui-gold); }
+.shop-deal .shop-item-sub, .shop-bundle .shop-item-sub{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.shop-deal-buy{ display:flex; align-items:center; justify-content:space-between; gap:6px; width:100%; margin-top:auto; flex-wrap:wrap; }
+.shop-bundle-art{ position:relative; width:100%; height:96px; overflow:hidden; border:2px solid #000; background:#07040a; }
+.shop-bundle-art img{ width:100%; height:100%; object-fit:cover; object-position:50% 18%; image-rendering:pixelated; }
+.shop-bundle-art .ui-tag{ position:absolute; top:4px; left:4px; }
+.shop-mini-champ{ flex-basis:150px; align-items:center; }
+.shop-mini-anim{ width:72px; height:72px; border:2px solid #000; }
+.shop-fair{ margin:10px 0 4px; padding:8px 12px; font-size:0.8rem; color:var(--ui-dim); line-height:1.4; border:2px dashed var(--ui-line); background:rgba(10,6,4,0.5); }
+
+/* ============================================================
+   MULTIJUGADOR
+   ============================================================ */
+#modeselect-screen{ justify-content:flex-start; }
+.mode-cols{ display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:12px; width:100%; max-width:980px; }
+.mode-cols .mode-card{ max-width:none; margin:0; }
+.mode-side{ display:flex; flex-direction:column; gap:12px; }
+.mode-side .mode-card{ flex:1; }
+#mode-join-card{ border-color:var(--ui-accent); text-align:left; }
+#mode-join-card .join-code-meta{ justify-content:flex-start; }
+@media (max-width:600px){ .mode-cols{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   GUARDIANES — pestaña Skins de la ficha
+   ============================================================ */
+.gx-skins{ display:grid; grid-template-columns:repeat(auto-fill, minmax(132px, 1fr)); gap:8px; margin-bottom:6px; }
+.gx-skin{ display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 6px; cursor:pointer; text-align:center;
+  background:linear-gradient(160deg, var(--ui-bg-1), var(--ui-bg-2)); border:2px solid #000; box-shadow:var(--ui-hi), var(--ui-shadow-sm); }
+.gx-skin.on{ border-color:var(--ui-gold); box-shadow:var(--ui-shadow-sm), 0 0 12px rgba(255,215,106,0.3); }
+.gx-skin.sel{ outline:2px solid var(--ui-accent); outline-offset:1px; }
+.gx-skin-anim{ width:84px; height:84px; background:var(--ui-inset); border:2px solid #000; }
+.gx-skin-name{ font-family:var(--ui-font); font-size:1.15rem; color:var(--ui-gold); line-height:1.05; }
+.gx-skin-sub, .gx-skin-st{ font-size:0.75rem; color:var(--ui-dim); }
+.gx-skin .cx-btn{ min-height:40px; padding:4px 12px; font-size:1.05rem; }
+
+/* Sala: cambiar de guardián sin salir */
+.lobby-equip-title{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.btn.small.prep-change-btn{ flex:none; width:auto; padding:4px 12px; font-size:0.95rem; text-transform:none; letter-spacing:0; }
+
+@media (prefers-reduced-motion:reduce){
+  .hub-play, .hub-play::after, .shop-hero-img, .shop-hero-art::after, .ui-tag.new{ animation:none; }
+}
+/* casilla "Reducir movimiento" de la pausa (body.reduce-motion) */
+body.reduce-motion .hub-play, body.reduce-motion .hub-play::after, body.reduce-motion .shop-hero-img,
+body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.reduce-motion .ui-modal-panel{ animation:none; }
+
+/* ---------- celular acostado (pantallas bajas) ---------- */
+@media (max-height:520px){
+  #mainmenu-screen.hub-screen{ gap:8px; }
+  .hub-brand{ font-size:0.85rem; }
+  .hub-play{ padding:8px 12px; gap:8px; }
+  .hub-play-title{ font-size:1.6rem; }
+  .hub-play-arena{ font-size:1.2rem; }
+  .hub-tile{ padding:6px 10px; }
+  .hub-tile-ico{ width:36px; height:36px; font-size:1.2rem; }
+  .ui-topbar{ margin-bottom:6px; }
+  .ui-topbar-title{ font-size:0.85rem; }
+  .shop-hero-art{ width:170px; min-height:170px; }
+  .shop-hero-anim{ width:120px; height:120px; }
+  .shop-hero.champ .shop-hero-anim{ width:160px; height:160px; }
+  .mode-cols{ gap:8px; }
+  .mode-side{ gap:8px; }
+}
+@media (max-width:700px) and (max-height:520px){
+  .hub-profile-lvl{ display:none; }
+  .hub-brand{ display:none; }
+  .ui-wallet .ui-chip:not(.gold){ display:none; }
+  .shop-hero-art{ width:140px; }
+}
+
+/* ---------- modos: Campaña (JUGAR) + Horda Infinita en la columna izquierda del hub ---------- */
+.hub-modes{ display:flex; flex-direction:column; gap:8px; min-height:0; min-width:0; }
+.hub-modes .hub-play{ flex:1 1 auto; }
+.hub-endless{ flex:none; display:flex; align-items:center; gap:10px; min-height:48px; padding:4px 12px; cursor:pointer; text-align:left; color:var(--ui-ink);
+  border:3px solid #6a3fae; background:linear-gradient(160deg, #22123a, #0e0716); box-shadow:var(--ui-hi), var(--ui-shadow);
+  transition:transform var(--ui-t) var(--ui-ease), filter var(--ui-t); }
+.hub-endless:active{ transform:translate(2px,2px); }
+.hub-endless-ico{ font-size:1.4rem; color:var(--ui-epic); width:36px; text-align:center; }
+.hub-endless-txt{ display:flex; flex-direction:column; min-width:0; flex:1; font-family:var(--ui-font); line-height:1.05; }
+.hub-endless-txt b{ font-weight:400; font-size:1.25rem; color:var(--ui-epic); letter-spacing:0.04em; }
+.hub-endless-sub{ font-size:0.95rem; color:var(--ui-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.hub-endless.locked, .mode-card.locked{ filter:grayscale(0.6) brightness(0.8); }
+@media (hover:hover) and (pointer:fine){ .hub-endless:hover{ filter:brightness(1.18); } }
+.mode-endless{ border-color:#6a3fae; }
+.mode-endless .mode-card-title{ color:var(--ui-epic); }
+.mode-campaign{ border-color:var(--ui-accent); }
+.mode-create-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; padding-top:8px; border-top:2px dashed var(--ui-line);
+  font-family:var(--ui-font); font-size:1.05rem; color:var(--ui-dim); }
+.mode-create-row .btn.small{ flex:none; padding:6px 16px; }
+/* los canvas del hub, la vitrina y las skins muestran el fondo de su tarjeta (no el del juego) */
+.hub-play-anim, .hub-profile-anim, .shop-hero-anim, .gx-skin-anim, .shop-mini-anim{ background:transparent; }
+.hub-profile-anim, .gx-skin-anim{ background:var(--ui-inset); }
+/* ficha del guardián: las 5 pestañas en una fila */
+.cx-tabs{ flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
+.cx-tabs::-webkit-scrollbar{ display:none; }
+.cx-tab{ flex:1 1 auto; padding:6px 5px; font-size:1rem; white-space:nowrap; }
+@media (max-width:700px){
+  .hub-main{ grid-template-columns:1fr 1fr; }
+  .hub-tile-title{ font-size:1.1rem; }
+  .hub-play-anim{ width:min(30vh, 118px); height:min(30vh, 118px); }
+}
+/* vitrina compacta: destacado a la izquierda, ofertas 2×2 a la derecha (todo a la vista en el celular acostado) */
+.shop-show-top .shop-hero-art{ width:42%; min-width:120px; max-width:230px; min-height:0; }
+.shop-show-top .shop-hero-anim{ width:62%; height:auto; aspect-ratio:1/1; }
+.shop-show-top .shop-hero.champ .shop-hero-anim{ width:100%; height:auto; }
+.shop-hero-sub{ overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.shop-show-top .shop-hero-buy .shop-price{ font-size:1.3rem; }
+.shop-show-top .shop-hero-buy .shop-btn{ font-size:1.15rem; padding:4px 14px; }
+@media (max-height:520px){ .shop-show-top .shop-hero-desc{ display:none; } .shop-hero-title{ font-size:0.9rem; } }
+.shop-deal-head{ display:flex; align-items:center; gap:8px; width:100%; min-width:0; }
+.shop-deal-meta{ min-width:0; flex:1; }
+.shop-deal-buy .shop-btn{ width:100%; }
+.shop-deal-buy .shop-btn .shop-was{ font-size:0.85rem; margin-left:4px; opacity:0.8; }
+.shop-hero-anim, .shop-hero.champ .shop-hero-anim, .shop-show-top .shop-hero-anim{ top:0; bottom:0; margin:auto 0; }
+.shop-hero.champ .shop-hero-anim, .shop-show-top .shop-hero.champ .shop-hero-anim{ left:0; right:0; margin:auto; }
+.shop-hero.skin .shop-hero-anim{ top:auto; bottom:0; }
+.shop-show-top .shop-hero.skin .shop-hero-img{ object-position:50% 15%; }
+.shop-deal-ico{ position:relative; flex:none; padding-bottom:8px; }
+.shop-deal-ico .ui-tag{ position:absolute; left:50%; bottom:-2px; transform:translateX(-50%); font-size:0.8rem; padding:0 4px; }
+.shop-deals-grid .shop-deal-name{ white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:1.05rem; }
+.ui-sub{ font-family:var(--ui-font); font-size:1.05rem; color:var(--ui-dim); margin:-2px 0 8px; letter-spacing:0.02em; }
+#prep-screen .ui-topbar-title{ color:var(--ui-accent); }
+@media (max-width:700px){ .cx-tabs{ gap:3px; } .cx-tab{ padding:6px 3px; font-size:0.92rem; } }
+@media (max-height:520px){ .ui-back, .ui-icon-btn{ min-height:40px; } .ui-topbar{ margin-bottom:4px; } #shop-screen .shop-tabs{ padding:2px 0 4px; margin-bottom:2px; } }
+/* DESAFÍOS: el botón del hub reemplaza al acceso mínimo de quests.css (que lo ponía flotando arriba) */
+#mainmenu-screen .hub-grid #mainmenu-quests-btn{ position:relative; top:auto; right:auto; margin:0; z-index:auto; min-height:0; }
+#mainmenu-screen #hub-badge-quests{ position:absolute; top:6px; right:6px; margin:0; min-width:0; line-height:1.15; font-size:0.85rem; }
+.hub-grid.hub-grid-6 .hub-tile-title{ font-size:1.1rem; } .hub-grid.hub-grid-6 .hub-tile-ico{ width:34px; height:34px; font-size:1.1rem; } .hub-grid.hub-grid-6 .hub-tile{ padding:6px 8px; gap:6px; }
+.hub-grid.hub-grid-6 .hub-tile:not(#mainmenu-quests-btn){ flex-direction:column; align-items:flex-start; justify-content:center; gap:3px; }
+.hub-tile-title{ line-height:1.2; } @media (max-width:700px){ .hub-main{ grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); } .hub-tile-title{ letter-spacing:0; } }

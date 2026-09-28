@@ -171,9 +171,19 @@ async function runViewport(browser, vp, report) {
   // ---- perfil de desarrollo (todo desbloqueado)
   const { ctx, page } = await mk(true);
   await tap(page, '#title-continue-btn');
-  await snap(page, 'mainmenu');
+  await snap(page, 'mainmenu', { primary: [{ css: '#hub-play-btn' }] });
+  // hub con todos los accesos (Horda Infinita bloqueada y Desafíos, como si ya existieran esos módulos)
+  // (si esos módulos ya están cargados se usan los reales; si no, un reemplazo mínimo que después se saca)
+  await js(page, () => { const st = window.__hubStubs = {}; if (typeof window.endlessOpen !== 'function') { st.endless = 1; window.endlessOpen = () => {}; window.endlessUnlocked = () => false; }
+    if (typeof window.questsOpen !== 'function') { st.quests = 1; window.questsOpen = () => {}; } renderMainMenu(); });
+  await snap(page, 'mainmenu_full', { primary: [{ css: '#hub-play-btn' }, { css: '#hub-endless-btn' }, { css: '#mainmenu-quests-btn' }] });
+  await js(page, () => { const st = window.__hubStubs || {}; if (st.endless) { delete window.endlessOpen; delete window.endlessUnlocked; } if (st.quests) delete window.questsOpen; renderMainMenu(); openHubOptions(); });
+  await snap(page, 'options', { root: '#hub-options', primary: [{ css: '#opt-close-btn' }] });
+  await js(page, () => closeHubOptions());
+  await js(page, () => { if (typeof window.endlessOpen !== 'function') { window.endlessOpen = () => {}; window.__hubStubs.endless2 = 1; } });
   await tap(page, '#mainmenu-jugar-btn');
-  await snap(page, 'modes');
+  await snap(page, 'modes', { primary: [{ css: '#mode-join-btn' }, { css: '#mode-arena-btn' }] });
+  await js(page, () => { if (window.__hubStubs.endless2) delete window.endlessOpen; });
   await tap(page, '#mode-arena-btn');
   await snap(page, 'arenaselect');
   await tap(page, '.arena-card:not(.locked)');
@@ -192,9 +202,9 @@ async function runViewport(browser, vp, report) {
   const closePreview = () => js(page, () => { const b = document.querySelector('#item-preview [data-ip-close]'); if (b) b.click(); });
   if (await tap(page, '#myinv-panel .inv-card .item-name')) { await snap(page, 'inventory_item_preview', { root: '#item-preview' }); await closePreview(); }
   // tienda
-  for (const t of ['campeones', 'objetos', 'skins']) {
+  for (const t of ['destacados', 'campeones', 'objetos', 'skins']) {
     await js(page, t => { if (typeof codexReturnTo !== 'undefined') codexReturnTo = null; shopTab = t; setState('shop'); renderShop(); }, t);
-    await snap(page, 'shop_' + t, { primary: t === 'objetos' ? [{ css: '#shop-panel button', text: 'Comprar|🪙' }] : [] });
+    await snap(page, 'shop_' + t, { primary: t === 'objetos' || t === 'destacados' ? [{ css: '#shop-panel button', text: 'Comprar|🪙|Desbloquear' }] : [] });
     if (t === 'objetos' && await tap(page, '#shop-panel .shop-item .shop-item-name')) {
       await snap(page, 'shop_item_preview', { root: '#item-preview', primary: [{ css: '#item-preview [data-ip-buy]' }] });
       await closePreview();
@@ -209,7 +219,10 @@ async function runViewport(browser, vp, report) {
     await js(page, s => { openCodex(); const x = CODEX_SECTIONS.find(q => q.id === s); codexGo('list', x.id, x.label); }, s);
     await snap(page, 'codex_' + s);
   }
-  for (const t of ['ficha', 'equipo', 'talentos', 'habilidades']) {
+  // GUARDIANES (hub): la ficha del guardián en uso, en la pestaña Equipo
+  await js(page, () => openGuardians());
+  await snap(page, 'guardianes');
+  for (const t of ['ficha', 'equipo', 'talentos', 'habilidades', 'skins']) {
     await js(page, t => { openCodex(); codexGo('list', 'campeones', 'GUARDIANES'); codexChampTab = t; const k = CHAMPION_CATALOG[0].id; codexGo('champ', k, CLASSES[k].name); }, t);
     await snap(page, 'codex_champ_' + t);
   }
