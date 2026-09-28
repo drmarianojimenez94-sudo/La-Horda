@@ -140,7 +140,11 @@ reviveBtn.addEventListener("pointerdown", (ev)=>{
   ev.stopPropagation();
   const target = nearestDownedAlly();
   // sin nadie para revivir, el mismo botón es la acción contextual (js/systems/context-actions.js)
-  if(!target){ const ct = player && player.alive && state==="playing" ? ctxNearest(player) : null; if(ct) ctxBtnStart(ct); return; }
+  if(!target){
+    const ct = player && player.alive && state==="playing" ? ctxNearest(player) : null; if(ct){ ctxBtnStart(ct); return; }
+    if(player && player.alive && state==="playing" && typeof groundLootPickNearest==="function") groundLootPickNearest(); // levantar botín (un toque)
+    return;
+  }
   reviveBtnTarget = target;
   reviveBtn.dataset.holding = "1";
   reviveBtn.classList.add("holding");
@@ -158,7 +162,9 @@ function updateReviveBtn(){
   const holding = btn.dataset.holding==="1";
   if(btn.dataset.ctx==="1"){ btn.classList.add("ready"); return; } // manteniendo una acción contextual (ctxBtnTick la corta)
   const hasRevive = holding ? reviveTargetValid(reviveBtnTarget) : !!nearestDownedAlly();
-  const ct = (!hasRevive && !holding && player && player.alive) ? ctxNearest(player) : null;
+  let ct = (!hasRevive && !holding && player && player.alive) ? ctxNearest(player) : null;
+  // botín en el piso al alcance: el mismo botón dice "Levantar" (js/systems/ground-loot.js)
+  if(!ct && !hasRevive && !holding && typeof groundLootNearest==="function" && groundLootNearest(player)) ct = GROUND_LOOT_CTX;
   ctxBtnSetLook(ct);
   btn.classList.toggle("ready", hasRevive || !!ct);
   if(!hasRevive && holding) stopReviveBtnHold();

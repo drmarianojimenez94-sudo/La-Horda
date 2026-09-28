@@ -88,6 +88,7 @@ const ROLE_LABEL = {tanque:"Tanque", soporte:"Soporte", asesino:"Asesino / daño
 function buildVictoryData(){
   const classKey = player.classKey;
   const perf = computePerformance(player);
+  const floorLoot = typeof groundLootCollectAll==="function" ? groundLootCollectAll() : []; // lo que quedó en el piso se junta solo
   const loot = grantEndOfRunLoot(classKey, perf, true);
   const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
@@ -96,7 +97,7 @@ function buildVictoryData(){
   const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100) * (typeof diffCurrent==="function" ? diffTier(diffCurrent()).xp : 1));
   grantXP(classKey, victoryXpBonus);
   return {
-    classKey, perf, score:perf.score, rewards:loot.items, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
+    classKey, perf, score:perf.score, rewards:loot.items, floorLoot, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
     kills, gold: save.gold, subjefes: subjefesDefeated,
     arenaRows: arenaHas("resultsHTML") ? (arenaHook("resultsHTML", true)||"") : "",   // p.ej. civiles rescatados (Ciudad Maldita)
     level: save.champions[classKey].level,
@@ -192,7 +193,10 @@ const VICTORY_STEPS = [
     const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): algunas recompensas no se pudieron guardar.</div>` : "";
     if(!victoryData._revealed) return `${summary}${fullNote}<div class="chest-host"></div>`; // la ceremonia del cofre (js/ui/loot-ceremony.js)
     const cards = victoryData.rewards.slice().sort((a,b)=>TIER_ORDER[itemTier(a)]-TIER_ORDER[itemTier(b)]).map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
-    return `${summary}${gemNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
+    // lo que quedó tirado en el piso al ganar se juntó solo (ground-loot.js): se nombra acá, sin ceremonia
+    const fl = victoryData.floorLoot || [];
+    const floorNote = fl.length ? `<div class="vic-reward-note">Del piso juntaste lo que quedaba: ${fl.map(it=>`<b style="color:${itemColor(it)};">${it.name}</b>`).join(", ")}</div>` : "";
+    return `${summary}${gemNote}${floorNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
   },
   // 3. XP / RECURSOS
   function(){

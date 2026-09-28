@@ -157,6 +157,23 @@ function itemIconURL(it){
     return (_ICON_CACHE[key] = c.toDataURL());
   }catch(err){ return ""; }
 }
+// La misma silueta pixel del ícono, sin fondo ni marco (32×32), para dibujarla en el mundo: el objeto
+// tirado en el piso (ground-loot.js). Se cachea por identidad igual que el ícono.
+const _ICON_CV = {};
+function itemIconCanvas(it){
+  if(!it || typeof document==="undefined") return null;
+  const key = itemIconKey(it);
+  if(_ICON_CV[key]!==undefined) return _ICON_CV[key];
+  try{
+    const P = _painter(), M = itemIconMaterial(it), v = _iconHash(key) & 255;
+    const gem = it.set ? "#9dffb0" : (it.unique ? "#e0b0ff" : (it.element==="fire" ? "#ffd06a" : ICON_GEM_COLORS[v % ICON_GEM_COLORS.length]));
+    (ICON_SHAPES[itemIconShape(it)] || ICON_SHAPES.sword)(P, M, v, gem);
+    _finish(P, "#0c0a0e");
+    const c = document.createElement("canvas"); c.width = c.height = 32;
+    c.getContext("2d").drawImage(P.c, 0, 0, 32, 32, 0, 0, 32, 32);
+    return (_ICON_CV[key] = c);
+  }catch(err){ return (_ICON_CV[key] = null); }
+}
 function itemIconHTML(it, cls){
   const url = itemIconURL(it);
   return url ? `<img class="item-icon-img ${cls||""}" src="${url}" alt="" draggable="false">` : `<span class="item-icon">${it && it.icon || "?"}</span>`;

@@ -11,6 +11,7 @@ function damageEnemy(e, amount, opts){
   if(_boonRec) boonRecHit(e, amount, src, opts); // refuerzos de habilidad: quién recibió ESTE lanzamiento
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
+  if(e._eliteArmor) dmg *= e._eliteArmor; // élite con nombre "Blindado" (elite-affixes.js)
   if(e._encMult || e._expT > 0) dmg *= bossEncounterDmgMult(e); // regla del jefe: blindaje/escudo propio o ventana EXPUESTO (boss-encounter.js)
   if(e._evoMarkT) dmg *= evoDmgTakenMult(e); // marca/marchitar de la Firma (skill-evolution.js)
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
@@ -165,6 +166,7 @@ function killEnemy(e){
   // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
   e._deathKind = goreDeathKind(e);
   if(e.role) roleOnDeath(e);
+  if(e.eliteMods) eliteOnDeath(e); // élite con nombre: el Encantado de Fuego estalla (elite-affixes.js)
   if(e._evoHitBy) skillEvoOnKill(e); // Ímpetu (Nv.5 de la habilidad que lo remató)
   { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl); }
   // Nigromante — Plaga de los Condenados: el contagio al morir un maldito tiene que dispararse
@@ -230,8 +232,10 @@ function killEnemy(e){
   if(e.dropsItem && Math.random()<0.42){
     const kinds = ["hp","dmg","def","vel"];
     grantRelic(kinds[Math.floor(Math.random()*kinds.length)]);
-    floatText(e.x, e.y-40, "¡Objeto!", "heal");
+    floatText(e.x, e.y-40, "+Reliquia", "heal"); // (+1,5% permanente; los OBJETOS reales caen al piso: ground-loot.js)
   }
+  // Botín en el piso: objetos reales con haz de luz, instanciados por jugador (js/systems/ground-loot.js)
+  if(typeof groundLootOnKill==="function") groundLootOnKill(e);
   // Pociones de vida
   let potionChance = 0.09;
   if(e.rank==="subelite") potionChance = 0.16;
@@ -319,6 +323,7 @@ function damageHero(h, amount, src){
     }
   }
   h.hp -= dmg;
+  if(src && src.eliteMods && dmg>0) eliteOnHitHero(src, h, dmg); // élite con nombre: vampírico / encantado de fuego
   if(h.classKey==="eren" && dmg>0) erenOnHurt(h, dmg);
   const absorbed = Math.max(0, dmgBeforeShields - dmg);
   if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }

@@ -122,6 +122,7 @@ function spawnEnemy(type, atBoss, champion){
   if(type==="dragon_hielo"){ e.alientoCd = 3000+Math.random()*1500; e.novaCd = 6000+Math.random()*1500; }
   if(type==="demonio_hielo_fuego"){ e.escarchaCd = 2500+Math.random()*2500; }
   if(typeof endlessOn==="function" && endlessOn()) endlessOnSpawn(e, atBoss, champion); // Horda Infinita: curva sin techo + economía del modo
+  if(e.rank==="elite" && !atBoss && typeof eliteMaybeName==="function") eliteMaybeName(e); // élite con nombre (elite-affixes.js)
   enemies.push(e);
   if(typeof codexNoteSeen==="function") codexNoteSeen(type); // Códice: criatura descubierta
   if(arenaHas("placeSpawn")) arenaHook("placeSpawn", e, atBoss, champion); // puertas/túneles propios de la arena

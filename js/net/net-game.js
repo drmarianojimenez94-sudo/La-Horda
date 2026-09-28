@@ -167,7 +167,8 @@ function netHookEvents(){
 // de nivel (una muerte + una XP por enemigo y por invitado) el invitado perdía parte de su XP y los
 // últimos enemigos desaparecían sin su muerte. Los cosméticos (números, chispas, sonidos) siguen con tope.
 const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHudShow","bossHudHide","bossHudPhase","bossHudHint",
-  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip"]);
+  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip",
+  "groundLootDrop","endlessGuestReward"]); // botín del piso de cada invitado (ground-loot.js) y recompensas de la Horda Infinita
 let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){
   if((name==="xp" || name==="gold") && to!==undefined && typeof args[0]==="number"){
@@ -810,6 +811,7 @@ function netGuestUpdate(dt){
   for(const h of heroes) netTickTimers(h, dt);
   for(const name in netMatch.colls){ for(const o of netMatch.colls[name].values()) netTickTimers(o, dt); }
   for(const p of potions){ p.phase = (p.phase||0) + dt/240; }
+  if(typeof groundLootTick==="function") groundLootTick(dt); // su propio botín del piso: lo levanta en su pantalla
   stepParticles(dt);
   for(const em of embers){ em.y += em.vy*dt/1000; em.phase += dt/1000; if(em.y < player.y-700) em.y = player.y+700; }
   updateAcuaAmbience && updateAcuaAmbience(dt);

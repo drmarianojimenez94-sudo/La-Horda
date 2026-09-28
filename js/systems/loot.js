@@ -108,7 +108,14 @@ function _rollChampionDesigned(classKey, rarity){
   return mine[(Math.random()*mine.length)|0].id;
 }
 // Convierte la especificación en un objeto real del juego (puede ser de otro guardián: botín cruzado).
+// Los objetos con nombre (legendarios, míticos, sets, Únicos) conservan su identidad fija y suman 1-2
+// afijos al azar (js/systems/affixes.js); los procedurales ya nacen con los suyos en makeItem.
 function materializeLoot(spec, classKey, arena){
+  const it = _materializeLootBase(spec, classKey, arena);
+  if(it && it.designed && !Array.isArray(it.affixes) && typeof rollItemAffixes==="function") rollItemAffixes(it);
+  return it;
+}
+function _materializeLootBase(spec, classKey, arena){
   arena = arena || currentArena;
   if(spec.tier==="set") return makeDesignedItem(spec.designId);
   const type = spec.type || rollItemType(classKey);
@@ -186,6 +193,7 @@ function reforgeSetDuplicates(classKey, setId){
   info.dupes.slice(0,2).forEach(it=>removeItemFromInventory(classKey, it.uid, false));
   const id = info.missing[(Math.random()*info.missing.length)|0];
   const it = makeDesignedItem(id); it.lootTier = "set";
+  if(typeof rollItemAffixes==="function") rollItemAffixes(it);
   addItemToInventory(classKey, it);
   persist();
   return {ok:true, item:it};
