@@ -132,7 +132,7 @@ const NET_GLOBALS = {
   levelTimer:[()=>levelTimer, v=>{ levelTimer = v; }], levelDuration:[()=>levelDuration, v=>{ levelDuration = v; }],
   kills:[()=>kills, v=>{ kills = v; }], bossActive:[()=>bossActive, v=>{ bossActive = v; }],
   boss:[()=>boss, v=>{ boss = v; }], activeChampion:[()=>activeChampion, v=>{ activeChampion = v; }],
-  subjefesDefeated:[()=>subjefesDefeated, v=>{ subjefesDefeated = v; }], screenShake:[()=>screenShake, v=>{ screenShake = v; }],
+  subjefesDefeated:[()=>subjefesDefeated, v=>{ subjefesDefeated = v; }], // (screenShake ya no viaja: cada pantalla tiembla con SUS eventos, ver juice.js)
   axiomForceQuitFlash:[()=>axiomForceQuitFlash, v=>{ axiomForceQuitFlash = v; }], axiomFreezeTimer:[()=>axiomFreezeTimer, v=>{ axiomFreezeTimer = v; }],
   runElapsedMs:[()=>runElapsedMs, v=>{ runElapsedMs = v; }], levelClearing:[()=>levelClearing, v=>{ levelClearing = v; }],
   arenaRuleBossStacks:[()=>arenaRuleBossStacks, v=>{ arenaRuleBossStacks = v; }], arenaRuleBossTimer:[()=>arenaRuleBossTimer, v=>{ arenaRuleBossTimer = v; }],
@@ -726,7 +726,7 @@ function netGuestOnMsg(from, d){
 function netGuestUpdate(dt){
   runElapsedMs += dt;
   vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
-  if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
+  screenShakeDecay(dt); // curva exponencial con tope (juice.js)
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si
   // algo externo lo movió (posAuth) o si el movimiento no fue posible.

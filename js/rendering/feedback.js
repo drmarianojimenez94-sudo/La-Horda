@@ -11,18 +11,29 @@
 let hitStopTimer = 0, slowMoTimer = 0, slowMoScale = 1, _hitStopLastAt = -1e9;
 // Congela casi del todo la simulación unos ms: se reserva para golpes que tienen que "pesar".
 // Tiene un enfriamiento propio para que una ráfaga de críticos no deje el juego a los saltos.
+// En partidas online NO toca la simulación: se vuelve un freeze-frame visual (juice.js), así el
+// anfitrión nunca frena el tiempo de todos ni desincroniza la predicción de los invitados.
+// "Reducir movimiento" (pausa) lo apaga del todo.
 function hitStop(ms, force){
+  if(JUICE.reduceMotion) return;
   const now = performance.now();
   if(!force && now - _hitStopLastAt < 160) return;
   _hitStopLastAt = now;
+  if(juiceNet()){ hitFreezeTimer = Math.max(hitFreezeTimer, Math.min(70, ms*0.8)); JUICE_STATS.freeze++; return; }
   hitStopTimer = Math.min(110, Math.max(hitStopTimer, ms));
+  JUICE_STATS.hitStop++;
 }
+// Cámara lenta: solo en partidas locales. En red la reemplaza un golpe de zoom corto (sin tocar el tiempo).
 function slowMo(scale, ms){
+  if(JUICE.reduceMotion) return;
+  if(juiceNet()){ camPunch(scale < 0.4 ? 0.06 : 0.035, Math.min(520, 200 + ms*0.25)); return; }
   slowMoScale = slowMoTimer>0 ? Math.min(slowMoScale, scale) : scale;
   slowMoTimer = Math.max(slowMoTimer, ms);
+  JUICE_STATS.slowMo++;
 }
 // Factor de tiempo del cuadro (lo aplica loop() sobre el dt real antes de llamar a update).
 function gameTimeScale(realDt){
+  if(juiceNet()){ hitStopTimer = 0; slowMoTimer = 0; slowMoScale = 1; return 1; } // red: el tiempo de simulación nunca cambia
   if(hitStopTimer>0){ hitStopTimer -= realDt; return 0.05; }
   if(slowMoTimer>0){ slowMoTimer -= realDt; if(slowMoTimer<=0) slowMoScale = 1; return slowMoScale; }
   return 1;
@@ -56,25 +67,34 @@ function impactFeedback(e, dmg, crit, opts, pow, src){
   const w = (src && src.classKey && (src.erenTitan ? 1.8 : IMPACT_WEIGHT[src.classKey])) || 1;
   // estrella de impacto (fx-contrast.js): habilidades y golpes fuertes de cualquier héroe
   if(pow >= 2 && src && src.classKey && !opts.fromProc) vfxHitFlash(e.x, e.y - (e.radius||20)*0.7, fxHeroRgb(src), pow);
-  if(mine){
+  // (netQuiet: el temblor/destello/sonido de TUS golpes es tuyo; antes viajaban y a los invitados les
+  //  temblaba la pantalla con los críticos del anfitrión)
+  if(mine) netQuiet(()=>{
+    // remate: el golpe que mata a un élite/subélite pesa un poco más (hit-stop + zoom corto)
+    const fin = e.hp <= 0 && (e.rank==="elite" || e.rank==="subelite");
     if(pow===4){
       if(!_ultImpactDone){ _ultImpactDone = true; hitStop(85, true); slowMo(0.55, 240); vfxShake(8); playSfx("heavy"); flashScreen(0.18); }
     } else if(pow===3){
-      hitStop((big ? 50 : 36)*Math.min(1.3, w));
+      hitStop((big ? 50 : 36)*Math.min(1.3, w)*(fin ? 1.25 : 1));
       vfxShake((big ? 4 : 2.5)*Math.min(1.4, w));
+      if(fin) camPunch(0.025, 220);
       if(!opts.fromBasic || crit) playSfx("heavy");
     } else if(pow===2 && _castCtx && !_castCtx.hitDone){
       _castCtx.hitDone = true; // una vez por lanzamiento
       hitStop(18*w); vfxShake(1.3*w); playSfx("skillHit");
-    } else if(pow===1 && w > 1.2 && !opts.fromProc){ vfxShake(0.8*w); } // básicos con masa (Tanque, Segador)
-  }
+    } else if(fin && !opts.fromProc){ hitStop(24*w); }
+    else if(pow===1 && w > 1.2 && !opts.fromProc){ vfxShake(0.8*w); } // básicos con masa (Tanque, Segador)
+  });
+  // un invitado siente SUS golpes pesados en su pantalla (freeze-frame visual, ver juiceHitLocal)
+  else if(src && src.isRemote && pow >= 3 && !opts.fromProc) netEmitTo(src._netSlot, "juiceHitLocal", [pow, big ? 1 : 0, +w.toFixed(2)]);
   // retroceso físico y tambaleo (nunca en jefes/subjefes; menos en élites)
+  e._kbVis = 0; // cuánto se movió de golpe: el dibujo lo desliza desde donde estaba (animfx.js), sin teletransporte
   if(e.rank==="jefe" || e.rank==="subjefe" || e.draggedBy) return;
   const elite = e.rank==="elite";
   if(!opts.knockback){
     const dx = e.x-src.x, dy = e.y-src.y, d = Math.hypot(dx,dy)||1;
     const k = IMPACT_KNOCK[pow] * (crit && pow===1 ? 2.2 : 1) * w * (elite ? 0.45 : 1);
-    e.x += dx/d*k; e.y += dy/d*k;
+    e.x += dx/d*k; e.y += dy/d*k; e._kbVis = k;
   }
   // tambaleo solo a comunes y sub-élites: a un élite no se le cancela su ataque telegrafiado con un crítico
   const st = elite ? 0 : IMPACT_STAGGER[pow] * (w>1.2 ? 1.3 : 1);
@@ -83,7 +103,10 @@ function impactFeedback(e, dmg, crit, opts, pow, src){
 
 // Bajas: una común apenas suena; una élite pega un tirón; un subjefe frena el tiempo.
 function killFeedback(e, byPlayer){
-  if(e.rank==="elite"){ if(byPlayer) hitStop(45); vfxShake(4); playSfx("eliteKill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null); }
+  if(e.rank==="elite"){
+    if(byPlayer) netQuiet(()=>{ hitStop(45); slowMo(0.5, 170); camPunch(0.03, 260); flashScreen(0.1, "255,236,170"); });
+    vfxShake(4); playSfx("eliteKill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null);
+  }
   else if(e.rank==="subjefe"){
     hitStop(90, true); slowMo(0.35, 450); vfxShake(9); flashScreen(0.28); playSfx("bigKill");
     const others = enemies.some(o=>o.alive && o!==e && o.rank==="subjefe");
@@ -102,7 +125,8 @@ const hurtDirs = []; // {ang, t, dur, heavy}
 function registerPlayerHurt(dmg, src){
   if(!player || dmg <= 0.5) return;
   const pct = dmg/Math.max(1, player.maxHp);
-  hurtFlash = Math.min(1, Math.max(hurtFlash, 0.22 + pct*4.5));
+  hurtFlash = Math.min(1, Math.max(hurtFlash, 0.5 + pct*4));
+  JUICE_STATS.vignette++;
   if(src && typeof src.x==="number" && (src.x!==player.x || src.y!==player.y)){
     const ang = Math.atan2(src.y-player.y, src.x-player.x);
     let merged = false;
@@ -114,15 +138,16 @@ function registerPlayerHurt(dmg, src){
 }
 function flashScreen(alpha, rgb){ screenFlash = Math.max(screenFlash, alpha); screenFlashRgb = rgb||"255,255,255"; }
 function updateFeedback(dt){
-  if(hurtFlash>0) hurtFlash = Math.max(0, hurtFlash - dt/420);
+  updateJuice(dt); // racha, golpe de zoom, adelanto de cámara (juice.js)
+  if(hurtFlash>0) hurtFlash = Math.max(0, hurtFlash - dt/380);
   if(screenFlash>0) screenFlash = Math.max(0, screenFlash - dt/260);
   for(let i=hurtDirs.length-1;i>=0;i--){ hurtDirs[i].t += dt; if(hurtDirs[i].t >= hurtDirs[i].dur) hurtDirs.splice(i,1); }
 }
-function resetFeedback(){ hurtFlash = 0; screenFlash = 0; hurtDirs.length = 0; hitStopTimer = 0; slowMoTimer = 0; slowMoScale = 1; _castCtx = null; }
+function resetFeedback(){ resetJuice(); hurtFlash = 0; screenFlash = 0; hurtDirs.length = 0; hitStopTimer = 0; slowMoTimer = 0; slowMoScale = 1; _castCtx = null; }
 
 /* ---------------- Dibujo en pantalla ---------------- */
 function _edgePoint(ang, margin){
-  const cx = VW/2, cy = VH/2 - CAM_Y_ANCHOR + CAM_LIFT*CAM_ZOOM;
+  const cx = VW/2 - CAM_LEAD_X*CAM_ZOOM, cy = VH/2 - CAM_Y_ANCHOR + (CAM_LIFT - CAM_LEAD_Y)*CAM_ZOOM; // (centro = el jugador en pantalla)
   const hw = VW/2 - margin, hh = VH/2 - margin;
   const c = Math.cos(ang), s = Math.sin(ang);
   const t = Math.min(Math.abs(hw/(c||1e-6)), Math.abs(hh/(s||1e-6)));
@@ -174,7 +199,7 @@ function drawScreenFeedback(){
   // 2) Dirección del daño recibido: arcos rojos alrededor del jugador (y flecha en el borde si
   //    el atacante está fuera de cámara).
   if(hurtDirs.length){
-    const cx = VW/2, cy = VH/2 - CAM_Y_ANCHOR + CAM_LIFT*CAM_ZOOM;
+    const cx = VW/2 - CAM_LEAD_X*CAM_ZOOM, cy = VH/2 - CAM_Y_ANCHOR + (CAM_LIFT - CAM_LEAD_Y)*CAM_ZOOM;
     ctx.save(); ctx.lineCap = "round";
     for(const d of hurtDirs){
       const a = 1 - d.t/d.dur;
@@ -186,17 +211,34 @@ function drawScreenFeedback(){
     }
     ctx.restore();
   }
-  // 3) Viñeta roja al recibir daño + latido suave con vida crítica.
+  // 3) Viñeta roja al recibir daño (golpe seco que se apaga en ~0,4 s) + latido con vida crítica
+  //    (doble pulso tipo corazón; quieto con "Reducir movimiento"). Sprite cacheado: sin gradiente por cuadro.
   const lowHp = player.alive && player.hp < player.maxHp*0.3;
-  let vig = hurtFlash*0.5;
-  if(lowHp){ const beat = Math.pow(Math.max(0, Math.sin(now/1000*Math.PI*1.3)), 6); vig = Math.max(vig, 0.16 + 0.22*beat); }
+  let vig = hurtFlash*hurtFlash*0.62;
+  if(lowHp){
+    const crit = player.hp < player.maxHp*0.15;
+    let beat = 0.5;
+    if(!JUICE.reduceMotion){ const ph = (now/1000*(crit ? 1.6 : 1.15))%1; beat = Math.max(Math.exp(-Math.pow((ph-0.08)/0.05, 2)), 0.7*Math.exp(-Math.pow((ph-0.26)/0.06, 2))); }
+    vig = Math.max(vig, (crit ? 0.24 : 0.14) + (crit ? 0.3 : 0.2)*beat);
+  }
   if(vig > 0.01){
-    const R = Math.hypot(VW, VH)*0.62;
-    const g = ctx.createRadialGradient(VW/2, VH/2, R*0.45, VW/2, VH/2, R);
-    g.addColorStop(0, "rgba(160,0,0,0)");
-    g.addColorStop(1, `rgba(170,10,0,${Math.min(0.75, vig)})`);
-    ctx.fillStyle = g; ctx.fillRect(0, 0, VW, VH);
+    ctx.globalAlpha = Math.min(0.8, vig);
+    ctx.drawImage(_vignetteSprite(), 0, 0, VW, VH);
+    ctx.globalAlpha = 1;
   }
   // 4) Destello de pantalla (muerte de jefe, cambio de fase, ulti).
   if(screenFlash > 0.01){ ctx.fillStyle = `rgba(${screenFlashRgb},${screenFlash*0.55})`; ctx.fillRect(0, 0, VW, VH); }
+  // 5) Racha de bajas (juice.js)
+  drawStreakHud();
+}
+// Viñeta roja de borde (canvas chico estirado a la pantalla: el degradé se arma una sola vez).
+let _vigSpr = null;
+function _vignetteSprite(){
+  if(_vigSpr) return _vigSpr;
+  const c = document.createElement("canvas"); c.width = 160; c.height = 90;
+  const g = c.getContext("2d"), R = Math.hypot(80, 45);
+  const gr = g.createRadialGradient(80, 45, R*0.5, 80, 45, R);
+  gr.addColorStop(0, "rgba(170,10,0,0)"); gr.addColorStop(0.55, "rgba(170,10,0,0.45)"); gr.addColorStop(1, "rgba(150,0,0,1)");
+  g.fillStyle = gr; g.fillRect(0, 0, 160, 90);
+  return (_vigSpr = c);
 }
