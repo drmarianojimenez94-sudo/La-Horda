@@ -25,6 +25,8 @@ let endlessActive = false;   // la partida en curso es de la Horda Infinita
 let endlessPending = false;  // se eligió el modo: la Sala arranca una partida infinita
 let endlessRescues = [];     // objetivos de rescate (acción contextual) — viajan por red
 function endlessOn(){ return endlessActive; }
+// Bandera global para otros sistemas (p.ej. la narrativa: sin Crónicas/actos de campaña en este modo).
+try{ Object.defineProperty(window, "endlessMode", {get:()=>endlessActive, configurable:true}); }catch(e){}
 
 // Estado de la partida (lo decide el anfitrión; lo que ve el invitado llega por la red).
 const EN = {
@@ -513,19 +515,20 @@ function endlessHudTick(){
 
 /* ---------------- red (mismo canal de snapshots) ---------------- */
 function endlessNetGet(){
+  // claves con prefijo "en": las arenas agregan nombres cortos a NET_SKIP_KEYS (p.ej. "sc" en la Ciudad)
   if(!endlessActive) return 0;
-  return {id:EN.id, r:EN.round, sc:EN.score, mu:EN.mutators.join(","), wk:EN.week, ar:EN.arenas.join(","), sk:EN.stintKind, bl:EN.baseLevel,
-    bk:EN.bossKills, rs:EN.rescues, rf:EN.rescueFails, sy:EN.synergies,
-    rq:endlessRescues.map(t=>({id:t.id, kind:t.kind, x:t.x, y:t.y, r:t.r, prog:Math.round(t.prog||0), dur:t.dur, t:Math.round(t.t), tmax:t.tmax, h:t.h, done:t.done?1:0, fade:Math.round(t.fade||0)}))};
+  return {enId:EN.id, enR:EN.round, enSc:EN.score, enMu:EN.mutators.join(","), enWk:EN.week, enAr:EN.arenas.join(","), enSk:EN.stintKind, enBl:EN.baseLevel,
+    enBk:EN.bossKills, enRs:EN.rescues, enRf:EN.rescueFails, enSy:EN.synergies,
+    enRq:endlessRescues.map(t=>({id:t.id, kind:t.kind, x:t.x, y:t.y, r:t.r, prog:Math.round(t.prog||0), dur:t.dur, t:Math.round(t.t), tmax:t.tmax, h:t.h, done:t.done?1:0, fade:Math.round(t.fade||0)}))};
 }
 function endlessNetSet(v){
   if(!v){ if(netIsGuest()) endlessActive = false; endlessRescues = []; return; }
-  const fresh = v.id !== EN.id;
+  const fresh = v.enId !== EN.id;
   endlessActive = true;
-  EN.id = v.id; EN.round = v.r|0; EN.score = v.sc|0; EN.mutators = v.mu ? String(v.mu).split(",") : []; EN.week = v.wk || "";
-  EN.arenas = v.ar ? String(v.ar).split(",") : []; EN.stintKind = v.sk || "sub"; EN.baseLevel = v.bl|0 || 1;
-  EN.bossKills = v.bk|0; EN.rescues = v.rs|0; EN.rescueFails = v.rf|0; EN.synergies = v.sy|0;
-  endlessRescues = (v.rq||[]).map(t=>Object.assign({}, t, {done:!!t.done}));
+  EN.id = v.enId; EN.round = v.enR|0; EN.score = v.enSc|0; EN.mutators = v.enMu ? String(v.enMu).split(",") : []; EN.week = v.enWk || "";
+  EN.arenas = v.enAr ? String(v.enAr).split(",") : []; EN.stintKind = v.enSk || "sub"; EN.baseLevel = v.enBl|0 || 1;
+  EN.bossKills = v.enBk|0; EN.rescues = v.enRs|0; EN.rescueFails = v.enRf|0; EN.synergies = v.enSy|0;
+  endlessRescues = (v.enRq||[]).map(t=>Object.assign({}, t, {done:!!t.done}));
   if(fresh){ EN.ended = false; if(netIsGuest()) endlessLocalReset(); }
 }
 if(typeof NET_GLOBALS!=="undefined") NET_GLOBALS.endless = [endlessNetGet, endlessNetSet];
@@ -539,7 +542,9 @@ function endlessEndRun(reason){
   // cofre final según la ronda alcanzada (cada jugador, en su guardado)
   if(!L.done){
     L.done = true;
-    if(round >= ENDLESS_CFG.endChestMinRound) L.endItem = endlessRollItem(grade, currentArena, true);
+    // cuanto más aguantaste, más trae el cofre final (1 objeto desde la ronda 8, 2 desde la 15, 3 desde la 25)
+    const nEnd = ENDLESS_CFG.endChestItems.filter(r=>round >= r).length;
+    for(let i=0;i<nEnd;i++) endlessRollItem(grade, currentArena, i===0);
     L.gemsEnd = round >= 10 ? runGemReward(currentArena, grade, true, runLevel) : (round >= ENDLESS_CFG.endChestMinRound ? 1 : 0);
     if(L.gemsEnd) save.gems = (save.gems||0) + L.gemsEnd;
     // récords
@@ -620,8 +625,8 @@ function endlessShowResults(){
   if(again) again.addEventListener("click", endlessOneMore);
   document.getElementById("en-back-btn").addEventListener("click", ()=>{
     endlessFinish();
-    if(typeof netBackToRoomIfAny==="function" && netBackToRoomIfAny()){ endlessPending = true; return; }
-    endlessPending = true;
+    endlessPending = true; // la Sala / la elección de guardián siguen en modo infinito
+    if(typeof netBackToRoomIfAny==="function" && netBackToRoomIfAny()) return;
     setState("menu"); if(typeof renderChampGrid==="function") renderChampGrid(); if(typeof renderSaveLine==="function") renderSaveLine();
   });
   const leave = document.getElementById("en-leave-btn");

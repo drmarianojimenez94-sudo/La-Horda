@@ -32,10 +32,11 @@ const ENDLESS_CFG = {
   // Élites (roles: Comandante, Cazador, Sanador...): probabilidad extra que crece por ronda
   eliteMax: 0.45, eliteTau: 15,
   // ECONOMÍA (medida con tools/items/t_endless_econ.js contra la campaña: ver el reporte)
-  goldMult: 0.55, xpMult: 0.75, lootGrowthPerRound: 0.015,
+  goldMult: 0.70, xpMult: 0.80, lootGrowthPerRound: 0.02,
   // Botín
   chestEveryBoss: true,              // cofre al cerrar cada ronda de jefe/subjefe (1 objeto)
-  endChestMinRound: 6,               // cofre final (1 objeto) si llegaste a esta ronda
+  endChestMinRound: 8,               // cofre final si llegaste a esta ronda...
+  endChestItems: [8, 15, 25],        // ...con un objeto más por cada umbral alcanzado
   // Rescates en la arena (Cofre de la Cicatriz / Cristal corrupto): mantener la acción contextual
   rescueChance: 0.55, rescueMs: 22000, rescueHoldMs: 2400, rescueR: 46,
   rescueDist: [360, 620],

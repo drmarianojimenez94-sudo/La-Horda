@@ -7,7 +7,7 @@
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright');
 const path = require('path'); const sleep = ms => new Promise(r => setTimeout(r, ms));
 const LVL = +(process.argv[2] || 8), N = +(process.argv[3] || 2), CAP = +(process.argv[4] || 14), CLS = process.argv[5] || 'guerrero';
-const ARENAS = (process.argv[6] || 'fortaleza,hielo').split(',');
+const ARENAS = (process.argv[6] || 'bosque,hielo').split(',').filter(a => a && a !== '-'); // '-' = solo la Horda Infinita
 (async () => {
   const browser = await chromium.launch({ args: ['--no-sandbox'] });
   const rows = [];
