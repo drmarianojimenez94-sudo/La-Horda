@@ -90,7 +90,7 @@ function buildVictoryData(){
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
   // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño. Es lo que
   // separa a quien juega bien (pocas derrotas) en la curva de la campaña (ver xpToNext).
-  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
+  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100) * (typeof diffCurrent==="function" ? diffTier(diffCurrent()).xp : 1));
   grantXP(classKey, victoryXpBonus);
   return {
     classKey, perf, score:perf.score, rewards:loot.items, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
@@ -150,6 +150,7 @@ const VICTORY_STEPS = [
         <div class="res-row"><span>Resultado</span><b style="color:#7dffa0;">VICTORIA</b></div>
         <div class="res-row"><span>Arena</span><b>${A.label||"—"}</b></div>
         <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
+        ${typeof diffResultRowHTML==="function" ? diffResultRowHTML(true) : ""}
         <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
         <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
         ${victoryData.arenaRows||""}

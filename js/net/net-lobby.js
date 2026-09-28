@@ -235,10 +235,11 @@ function netHostBroadcastCos(force){
   if(net.role!=="host" || !net.room) return;
   const m = {};
   net.room.slots.forEach((s,i)=>{ if(!s) return; m[i] = i===0 ? champSkinId(selectedClass) : ((netLobby.loadouts[i]||{}).skin || null); });
-  const sig = JSON.stringify([m, net.room.slots.map(s=>s ? !!s.connected : null)]);
+  const d = typeof diffEffective==="function" ? diffEffective(currentArena) : "normal"; // dificultad elegida por el anfitrión
+  const sig = JSON.stringify([m, net.room.slots.map(s=>s ? !!s.connected : null), d]);
   if(!force && sig === netLobby.cosSig) return;
   netLobby.cosSig = sig;
-  netBroadcast({k:"cos", m});
+  netBroadcast({k:"cos", m, d});
 }
 // Refresco liviano de la sala ante cambios de red: solo título, barra y lugares (no el equipo, los
 // talentos ni la tienda de skins, que no dependen de la sala). Si hay un dedo apoyado en la pantalla
@@ -270,7 +271,7 @@ function netRefreshLobby(){
 /* ---------------- eventos de red ---------------- */
 netOn("joined", (m)=>{
   netLobby.lastError = ""; netLobby.lastLoadoutSig = ""; netLobby.cosSig = ""; netLobby.barHTML = ""; netLobby.slotsHTML = "";
-  if(!m.reconnect) netLobby.cos = {};
+  if(!m.reconnect){ netLobby.cos = {}; netLobby.diff = null; } // la dificultad llega del anfitrión ({k:"cos"}, campo d)
   _netSetJoinStatus("");
   if(m.host){ netLobby.loadouts = {}; }
   else {

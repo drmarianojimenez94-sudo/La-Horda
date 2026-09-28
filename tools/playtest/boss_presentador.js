@@ -25,7 +25,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const r = await page.evaluate(([cls, lvl, seed, dk]) => {
       loop = function () {};
       for (const k in save.champions) { const c = save.champions[k]; c.unlocked = true; c.level = lvl; const al = Math.min(10, Math.floor(lvl / 3)); c.skillMastery.forEach(m => m.alloc = al); c.ultMastery.alloc = al; }
-      if (typeof diffSetSelected === 'function' && dk !== 'normal') { save.diffProgress = save.diffProgress || {}; for (const a of ARENA_ORDER) save.diffProgress[a] = { normal: true, pesadilla: true, infierno: false }; diffSetSelected(dk); }
+      // DIFF_TIER=pesadilla|infierno: se abre esa dificultad en todas las arenas (difficulty-tiers.js)
+      if (typeof diffSetSelected === 'function' && dk !== 'normal') { for (const a of ARENA_ORDER) { save.arenasCleared[a] = true; save.diffCleared.pesadilla[a] = true; if (dk === 'infierno') save.diffCleared.infierno[a] = true; } diffSetSelected(dk); }
       lobbyAllies = ['tanque', 'guerrero', 'soporte'].filter(k => k !== cls).slice(0, 3);
       const B = { hits: {}, taken: 0, minHp: 100, bossAt: null, deadAt: null, fell: false };
       const dh = window.damageHero;
@@ -46,7 +47,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       }
       return { lvl, hp: Math.round(player.maxHp), fightS: B.bossAt === null ? null : Math.round(((B.deadAt || t) - B.bossAt) / 1000), won: B.deadAt !== null,
         lostPct: Math.round(100 * B.taken / player.maxHp), minHp: B.minHp, fell: B.fell, state, bossHpLeft: boss && boss.alive ? Math.round(100 * boss.hp / boss.maxHp) : 0,
-        bossMax: boss ? Math.round(boss.maxHp) : null, bossDmg: boss ? boss.dmg : null, hits: B.hits, act: cmS.pr && cmS.pr.act };
+        bossMax: boss ? Math.round(boss.maxHp) : null, bossDmg: boss ? boss.dmg : null, hits: B.hits, act: cmS.pr && cmS.pr.act, tier: runDifficulty.tier || 'normal' };
     }, [CLS, LVL, i, DIFFK]);
     r.errs = errs.slice(0, 2);
     out.push(r); console.log(JSON.stringify(r));

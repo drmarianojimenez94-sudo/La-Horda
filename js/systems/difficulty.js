@@ -73,6 +73,8 @@ function setupRunDifficulty(){
     off: p.off, def: p.def,
     avgHp: heroes.length ? (player.maxHp + heroes.reduce((s,h)=>s+h.maxHp,0)/heroes.length)/2 : 150
   };
+  // Pesadilla / Infierno (difficulty-tiers.js): multiplican sobre esto
+  if(typeof diffApplyToRun==="function") diffApplyToRun(runDifficulty, avgLevel);
 }
 // Compatibilidad: el resto del juego (aparición de enemigos, Arena Divina) lo consulta por acá.
 function partyLevelScale(){ return runDifficulty; }

@@ -53,6 +53,8 @@ function enemyResist(e, kind){
   if(!e._resist){
     const a = ENEMY_ARENA_RESIST[typeof currentArena!=="undefined" ? currentArena : ""] || {}, t = ENEMY_TYPE_RESIST[e.type] || {};
     e._resist = Object.assign({}, a, t);
+    // Pesadilla/Infierno: resistencia a los elementos encima de la de la arena (con techo)
+    if(typeof diffResistBonus==="function") for(const k of DIFF_ELEM_KINDS){ const b = diffResistBonus(k); if(b) e._resist[k] = Math.min(0.75, (e._resist[k]||0) + b); }
     if(INNATE_WET[e.type]) e.innateWet = true;
   }
   return e._resist[kind] || 0;

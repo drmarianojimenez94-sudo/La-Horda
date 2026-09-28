@@ -27,6 +27,9 @@ const HIE_CFG = {
   resetTo: 45,          // al sumar una carga de escarcha el frío vuelve acá
   maxColdFrost: 2,      // el frío solo nunca congela: suma escarcha hasta 2 cargas (el resto lo ponen los enemigos)
   braziers: [0.35, 1.95, 3.5, 5.05], // ángulos (anillo interior)
+  // variante por semilla: el anillo de braseros gira. Giros revisados (tools/items/t_difficulty.js): ninguno
+  // cae sobre el arco de hielo ni sobre otro sólido, y todos quedan en el lago, lejos de los glaciares.
+  brazierTurns: [0, 0.39, 0.79, -0.39],
   ring: 330,
   warmR: 150,
   fuel: [48000, 64000], // ms encendido
@@ -37,8 +40,9 @@ const HIE_CFG = {
 const HIE = { br:[] };
 
 function hieResetRun(){
+  const turn = HIE_CFG.brazierTurns[typeof mapVariantPick==="function" ? mapVariantPick("hie_br", HIE_CFG.brazierTurns.length) : 0] || 0;
   HIE.br = HIE_CFG.braziers.map((a, i)=>{
-    const p = aidOnRing(HIE_CFG.ring, HIE_CFG.ring, a);
+    const p = aidOnRing(HIE_CFG.ring, HIE_CFG.ring, a + turn);
     return { id:"hb"+i, kind:"hie_brazier", x:Math.round(p.x), y:Math.round(p.y), r:58, h:78,
       lit:true, fuel:HIE_CFG.fuel[0] + i*3500, prog:0, dur:HIE_CFG.lightMs, done:false, by:-1 };
   });
