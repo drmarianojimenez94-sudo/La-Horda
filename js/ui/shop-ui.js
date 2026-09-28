@@ -187,6 +187,7 @@ function renderShopSkins(panel){
     if(skinEquipOn(id, k)) _skinEquippedFeedback(id, k); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas en el inventario.");
     renderShop();
   }));
+  if(typeof shopCromaMount==="function") shopCromaMount(panel); // cromas sueltas por oro (js/ui/shop-cromas.js)
   startChampAnimLoop();
 }
 // Compra las piezas que faltan de una skin (desde la Tienda o la Sala) y la autoequipa si corresponde.
