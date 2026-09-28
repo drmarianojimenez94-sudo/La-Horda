@@ -64,6 +64,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   const eqAfter = await ev(host, () => save.champions[selectedClass].equipment.arma);
   check('inventory.equip_in_lobby', eqAfter === invUid, { eqAfter, invUid });
   if (N > 1 || FIFTH) {
+    await host.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, '#net-create-btn'); // pestaña Sala online (js/ui/prep-sections.js)
     await host.page.click('#net-create-btn');
     for (let k = 0; k < 50 && !(await ev(host, () => net.code)); k++) await sleep(100);
   }

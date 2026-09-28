@@ -75,7 +75,7 @@ function setupProfile() {
 
 async function runFlow(browser, vp, which, name, steps) {
   const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, isMobile: true, hasTouch: true, deviceScaleFactor: vp.dpr });
-  await ctx.addInitScript(() => { window.__campaignMode = true; try { if (!sessionStorage.getItem('__mt')) { localStorage.clear(); sessionStorage.setItem('__mt', '1'); } } catch (e) {} });
+  await ctx.addInitScript(() => { window.__campaignMode = true; window.__firstRun = true; try { if (!sessionStorage.getItem('__mt')) { localStorage.clear(); sessionStorage.setItem('__mt', '1'); } } catch (e) {} });
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));

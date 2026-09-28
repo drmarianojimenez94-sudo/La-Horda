@@ -76,7 +76,16 @@ function renderHub(){
    derrota o abandono) se vuelve al HUB en vez de a elegir guardián, y queda "hub": JUGAR se resalta con
    "SIGUIENTE" hasta que se toca. Ahí recién aparece la Sala (equipo, arena, sala online). Las partidas
    online no pasan por acá. */
+// Pruebas automáticas viejas (webdriver) siguen el camino de antes (guardián → hub), como la pantalla de
+// cuenta (_acctAutoSkip, js/net/account.js). Las que miden el camino nuevo definen window.__firstRun (o ?primera=1).
+function firstRunEnabled(){
+  try{
+    if(window.__firstRun || /[?&]primera=1\b/.test(location.search)) return true;
+    return !navigator.webdriver;
+  }catch(e){ return true; }
+}
 function firstRunStart(){
+  if(!firstRunEnabled()){ setState("mainmenu"); renderMainMenu(); return; }
   save.firstRun = "jugando"; persist();
   currentArena = hubNextArena(); // la frontera de un perfil nuevo: la Ciudad Maldita
   updateMenuBrandSub();

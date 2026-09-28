@@ -23,6 +23,7 @@ async function waitFor(c, fn, arg, ms = 10000) { const t0 = Date.now(); while (D
 async function waitAll(cs, fn, ms = 10000) { const t0 = Date.now(); while (Date.now() - t0 < ms) { const r = await Promise.all(cs.map(c => ev(c, fn))); if (r.every(Boolean)) return true; await sleep(100); } return false; }
 // toque real de celular (el elemento se centra antes, como lo haría el dedo al scrollear)
 async function tap(c, sel) {
+  await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, sel).catch(() => {}); // pestaña de la Sala que lo contiene (js/ui/prep-sections.js)
   const el = await c.page.$(sel); if (!el) throw new Error('no existe ' + sel);
   await el.evaluate(e => e.scrollIntoView({ block: 'center', inline: 'center' })); await sleep(150);
   const b = await el.boundingBox(); if (!b) throw new Error('invisible ' + sel);
@@ -64,6 +65,7 @@ async function online(browser) {
   const H = await client(browser, 'Ana', 'tanque', ['ciudad']);
   await tap(H, '#title-continue-btn'); await tap(H, '#mainmenu-jugar-btn'); await tap(H, '#mode-arena-btn');
   await tap(H, '.arena-card[data-arena="fortaleza"]'); await tap(H, '#start-btn');
+  await tap(H, '[data-prep-sec="arena"]'); // Sala por pestañas (js/ui/prep-sections.js): la arena, en su pestaña
   let la = await lobbyArena(H);
   check('online.sala_muestra_arena_elegible', la.visible && la.sel === 'fortaleza' && la.chips.join() === 'ciudad,fortaleza,bosque:locked', la);
   await tap(H, '#net-create-btn');
