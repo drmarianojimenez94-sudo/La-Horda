@@ -82,7 +82,7 @@ async function boot(browser, initSave){
   check('ITEMS.objetos_procedurales_tienen_nombre', nm.every(n => n && !/cualquier|PLACEHOLDER|Común Casco/.test(n)) && /de /.test(nm[3]), nm);
   const lt = await E(() => { const c = { named:0, champ:0, proc:0, other:0, myth:0, uniq:0, total:0 };
     for (let i = 0; i < 600; i++){ const it = materializeLoot({ tier:'legendario' }, 'mago', 'hielo'); c.total++;
-      if (NAMED_LEGENDARIES[it.designId]) c.named++; else if (it.designed && it.champion) { c.champ++; if (it.champion !== 'mago') c.other++; } else c.proc++; }
+      if (NAMED_LEGENDARIES[it.designId] || (typeof BUILD_LEGENDARIES !== 'undefined' && BUILD_LEGENDARIES[it.designId])) c.named++; else if (it.designed && it.champion) { c.champ++; if (it.champion !== 'mago') c.other++; } else c.proc++; }
     for (let i = 0; i < 100; i++){ const it = materializeLoot({ tier:'mitico' }, 'mago', 'hielo'); if (it.rarity === 'mitico' && it.designed) c.myth++; }
     for (let i = 0; i < 60; i++){ const it = materializeLoot({ tier:'unico' }, 'mago', 'hielo'); if (it.rarity === 'unico' && it.unique) c.uniq++; }
     const hielo = {}; for (let i = 0; i < 800; i++){ const it = materializeLoot({ tier:'legendario' }, 'mago', 'hielo'); if (NAMED_LEGENDARIES[it.designId]) hielo[it.element] = (hielo[it.element]||0) + 1; }

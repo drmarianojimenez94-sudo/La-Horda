@@ -206,6 +206,63 @@ const UNIQUE_DESIGNS = {
     lore:"Solo se tensa cuando la luna sangra. La Cazadora aprendió a esperar esas noches."}
 };
 
+/* ---------------- LEGENDARIOS QUE CAMBIAN LA BUILD (el "Único" de Diablo II) ---------------- */
+// No suman +%: CAMBIAN cómo se juega (una habilidad se lanza dos veces, la definitiva carga el doble a
+// cambio de las habilidades, caminar carga una explosión...). Sirven a CUALQUIER guardián (usan el
+// básico, las habilidades, las bajas y los golpes recibidos: lo que tienen todos). Caen del piso desde la
+// ARENA 3 de la campaña (js/data/ground-loot.js, buildChance) y en el cofre como parte de los Legendarios
+// (LEGEND_SOURCE_BUILD). Nunca se fabrican ni se venden en la tienda. Lógica: js/systems/build-powers.js.
+// Cada uno tiene una prueba que mide su efecto (tools/items/t_build_uniques.js).
+const BUILD_POWERS = {
+  bp_twin_cast:  {name:"Eco Gemelo",          desc:"Tu habilidad 1 se lanza DOS veces: la segunda, al 60% de poder, un instante después. Su enfriamiento dura un 40% más."},
+  bp_basic_nova: {name:"Cataclismo",          desc:"Cada 5.º golpe básico estalla en una NOVA alrededor del objetivo: 150% de tu daño a todo lo que esté cerca."},
+  bp_crit_chain: {name:"Rayo Cautivo",        desc:"Tus críticos sueltan un rayo que salta a 4 enemigos (70% de tu daño en cada salto)."},
+  bp_comet:      {name:"Cometa",              desc:"Caminar te CARGA (hasta 100). Tu próxima habilidad descarga la carga en una explosión de fuego a tu alrededor: hasta 300% de tu daño."},
+  bp_thorns:     {name:"Espino Negro",        desc:"Quien te golpea recibe ESPINAS (120% de tu daño + 40% del golpe). Cada golpe que recibís te da +6% de daño por 4 s (hasta 5 veces)."},
+  bp_last_breath:{name:"Último Aliento",      desc:"Un golpe mortal te deja con 1 de vida e invulnerable 2 s; durante 5 s tus golpes te curan. Una vez cada 60 s."},
+  bp_cd_on_kill: {name:"Reloj del Condenado", desc:"Cada baja acorta 0,4 s el enfriamiento de tus habilidades; una élite o un subjefe, 3 s."},
+  bp_ult_battery:{name:"Última Palabra",      desc:"Tu definitiva se carga el DOBLE de rápido, pero tus habilidades 1-3 tardan un 25% más en volver."},
+  bp_magnet:     {name:"Imán Hambriento",     desc:"Cada 5 s atraés hacia vos a los enemigos cercanos (no a los jefes) y ganás un escudo de 3% de tu vida por cada uno (hasta 30%)."},
+  bp_prism:      {name:"Alquimia Loca",       desc:"Cada golpe aplica un elemento al azar: fuego (quema), hielo (ralentiza) o rayo (electrocuta). Las mezclas disparan reacciones."}
+};
+const BUILD_LEGENDARIES = {
+  bleg_eco_gemelo:{name:"Diadema del Eco Gemelo", epithet:"que dice todo dos veces", type:"casco", element:"arcane", power:"bp_twin_cast",
+    props:[{effect:"skilldmg_mult",value:0.08},{effect:"energy_mult",value:0.08}], arenas:{micelial:3, laberinto:2},
+    lore:"Dos hermanas la usaron a la vez, una noche cada una. Nunca supieron cuál de las dos hablaba."},
+  bleg_cataclismo:{name:"Puños del Cataclismo", epithet:"que parten la tierra", type:"guantes", element:"physical", power:"bp_basic_nova",
+    props:[{effect:"atkspeed_mult",value:0.08},{effect:"dmg_mult",value:0.05}], arenas:{fortaleza:3, hielo:2},
+    lore:"Un monje de la Fortaleza golpeó el mismo muro durante cuarenta años. El muro cayó el día que murió."},
+  bleg_rayo_cautivo:{name:"Hoja del Rayo Cautivo", epithet:"que guarda una tormenta", type:"arma", element:"lightning", power:"bp_crit_chain",
+    props:[{effect:"crit_chance_add",value:0.05},{effect:"dmg_mult",value:0.06}], arenas:{acuatica:3, laberinto:2},
+    lore:"Forjada bajo la lluvia, con el martillo en alto. El rayo entró y no quiso salir."},
+  bleg_cometa:{name:"Botas del Cometa", epithet:"que no llegan: caen", type:"botas", element:"fire", power:"bp_comet",
+    props:[{effect:"speed_mult",value:0.08},{effect:"skilldmg_mult",value:0.05}], arenas:{infernal:2, bosque:2, minas:2},
+    lore:"Las encontraron humeando en un cráter, sin nadie adentro."},
+  bleg_espino:{name:"Coraza del Espino Negro", epithet:"que duele tocar", type:"pechera", element:"bleed", power:"bp_thorns",
+    props:[{effect:"hp_mult",value:0.08},{effect:"def_add",value:0.04}], arenas:{bosque:3, micelial:2},
+    lore:"Creció alrededor de un caballero dormido en el Bosque. Cuando despertó, ya era parte de él."},
+  bleg_ultimo_aliento:{name:"Sello del Último Aliento", epithet:"que no firma tu muerte", type:"casco", element:"holy", power:"bp_last_breath",
+    props:[{effect:"hp_mult",value:0.08},{effect:"heal_mult",value:0.06}], arenas:{abismo:3, hielo:2},
+    lore:"La Muerte vino a buscar a su dueño tres veces. Las tres veces encontró el sello en la puerta."},
+  bleg_reloj:{name:"Cota del Reloj Condenado", epithet:"que cuenta cada baja", type:"pechera", element:"arcane", power:"bp_cd_on_kill",
+    props:[{effect:"cd_mult",value:0.05},{effect:"hp_mult",value:0.06}], arenas:{laberinto:3, minas:2},
+    lore:"Un relojero condenado a muerte ganó una hora por cada guardia que mató. Vivió once días."},
+  bleg_ultima_palabra:{name:"Égida de la Última Palabra", epithet:"que habla al final", type:"escudo", element:"holy", power:"bp_ult_battery",
+    props:[{effect:"def_add",value:0.05},{effect:"hp_mult",value:0.06}], arenas:{fortaleza:2, abismo:2, infernal:2},
+    lore:"El heraldo que la llevaba nunca dio una orden. Esperaba, y al final hablaba una sola vez."},
+  bleg_iman:{name:"Rodela del Imán Hambriento", epithet:"que llama a la horda", type:"escudo", element:"physical", power:"bp_magnet",
+    props:[{effect:"hp_mult",value:0.08},{effect:"def_add",value:0.04}], arenas:{minas:3, fortaleza:2},
+    lore:"Hecha con el hierro de una mina que atraía a los muertos. Los mineros la tiraron al pozo. Volvió."},
+  bleg_alquimia:{name:"Guantes del Alquimista Loco", epithet:"que mezclan sin medir", type:"guantes", element:"arcane", power:"bp_prism",
+    props:[{effect:"skilldmg_mult",value:0.06},{effect:"onhit_proc",value:0.06}], arenas:{micelial:2, acuatica:2, hielo:2},
+    lore:"Nadie sabe qué buscaba. Sabemos lo que encontró: todo, al mismo tiempo."}
+};
+// Desde qué arena de la campaña (CAMPAIGN_ORDER, 1-10) pueden caer. En la Horda Infinita y en
+// Pesadilla/Infierno, siempre.
+const BUILD_LEGEND_MIN_ARENA = 3;
+// En el cofre y en el piso, parte de los Legendarios son de estos (desde la arena mínima).
+const LEGEND_SOURCE_BUILD = 0.16;
+
 /* ---------------- registro en DESIGNED_ITEMS ---------------- */
 const MYTHIC_RECIPES = {}; // mythicDesignId -> [legendaryDesignId x3]
 (function registerNamedItems(){
@@ -219,6 +276,11 @@ const MYTHIC_RECIPES = {}; // mythicDesignId -> [legendaryDesignId x3]
     DESIGNED_ITEMS[id] = {id, champion:null, type:d.type, rarity:"mitico", named:true, element:d.element, mythic:d.mythic, recipe:d.recipe.slice(),
       name:d.name, lore:d.lore, legendProc:d.proc, arenas:d.arenas, effectMods:d.props, passiveNames:d.props.map(p=>PASSIVE_EFFECT_LABEL[p.effect]||"Propiedad")};
     MYTHIC_RECIPES[id] = d.recipe.slice();
+  }
+  for(const id in BUILD_LEGENDARIES){
+    const d = BUILD_LEGENDARIES[id];
+    DESIGNED_ITEMS[id] = {id, champion:null, type:d.type, rarity:"legendario", named:true, epithet:d.epithet, element:d.element, buildPower:d.power,
+      name:d.name, lore:d.lore, legendProc:null, arenas:d.arenas, effectMods:d.props, passiveNames:d.props.map(p=>PASSIVE_EFFECT_LABEL[p.effect]||"Propiedad")};
   }
   for(const id in UNIQUE_DESIGNS){
     const d = UNIQUE_DESIGNS[id];

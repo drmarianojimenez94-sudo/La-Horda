@@ -35,7 +35,7 @@ function _glSource(e){
     if(rk==="elite" || rk==="named" || rk==="subjefe" || rk==="jefe") grade = GRADE_ORDER_GL.indexOf(g) > GRADE_ORDER_GL.indexOf(grade) ? g : grade;
     if(rk==="elite" || rk==="named") chance = Math.min(0.9, chance * (1 + ENDLESS_CFG.lootGrowthPerRound*(EN.round-1)));
   }
-  return {rk, grade, chance, hm:C.highMult[rk], count:C.count[rk]};
+  return {rk, grade, chance, hm:C.highMult[rk], count:C.count[rk], build:(C.buildChance||{})[rk]||0};
 }
 const GRADE_ORDER_GL = ["C","B","A","S","S+"];
 // PURA (la usa también el simulador de economía): cuántos objetos le caen a un jugador por esta baja.
@@ -61,23 +61,25 @@ function groundLootOnKill(e){
     const local = h===player, remote = !!h.isRemote;
     if(!local && !remote) continue; // los bots no juntan botín (el inventario es de la cuenta del jugador)
     const n = groundLootRollCount(src);
-    for(let i=0;i<n;i++){
+    // el legendario que cambia la build se tira aparte (y no reemplaza a lo demás)
+    const build = src.build > 0 && buildLegendAllowed(arena) && Math.random() < src.build;
+    for(let i=0;i<n + (build ? 1 : 0);i++){
       const a = Math.random()*Math.PI*2, d = 14 + Math.random()*GROUND_LOOT_CFG.scatter;
       const p = {x:e.x + Math.cos(a)*d, y:e.y + Math.sin(a)*d*0.7, radius:14};
       try{ clampToArena(p); if(typeof resolveWallCollision==="function") resolveWallCollision(p); clampToArena(p); }catch(err){}
-      const x = Math.round(p.x), y = Math.round(p.y);
-      if(local) groundLootDrop(x, y, src.grade, src.hm, arena, src.rk);
-      else netEmitTo(h._netSlot, "groundLootDrop", [x, y, src.grade, src.hm, arena, src.rk]);
+      const x = Math.round(p.x), y = Math.round(p.y), b = build && i===n ? 1 : 0;
+      if(local) groundLootDrop(x, y, src.grade, src.hm, arena, src.rk, b);
+      else netEmitTo(h._netSlot, "groundLootDrop", [x, y, src.grade, src.hm, arena, src.rk, b]);
     }
   }
 }
 // Cliente del jugador (anfitrión: directo; invitado: por evento de red). Arma el objeto con SU guardado.
-function groundLootDrop(x, y, grade, hm, arena, rk){
+function groundLootDrop(x, y, grade, hm, arena, rk, build){
   if(!player || typeof state==="undefined" || (state!=="playing" && state!=="buff" && state!=="paused")) return null;
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, save.lootPity||{});
   const classKey = player.classKey || selectedClass;
-  let tier = groundLootRollTier(arena || currentArena, grade || "B", hm==null ? 1 : hm, save.lootPity);
-  let spec = {tier};
+  let tier = build ? "legendario" : groundLootRollTier(arena || currentArena, grade || "B", hm==null ? 1 : hm, save.lootPity);
+  let spec = build ? {tier, build:true} : {tier};
   if(tier==="set"){ const sp = _rollSetPiece(arena, ownedDesignIds(), Math.random, classKey); spec = sp ? {tier, setId:sp.setId, designId:sp.designId, type:sp.type} : {tier:"legendario"}; tier = spec.tier; }
   const it = materializeLoot(spec, classKey, arena || currentArena);
   if(!it) return null;
@@ -87,8 +89,10 @@ function groundLootDrop(x, y, grade, hm, arena, rk){
   if(lb > 0) it.level = Math.min(ITEM_MAX_LEVEL, itemLevel(it) + lb);
   if(LOOT_PITY[spec.tier]){ save.lootPity[spec.tier] = 0; if(typeof persist==="function") persist(); } // cayó: su protección vuelve a cero
   const shown = itemTier(it);
-  const g = {item:it, tier:shown, x, y, t0:(typeof animNow!=="undefined" && animNow) || performance.now(), id:++_glSeq, src:rk||""};
+  const g = {item:it, tier:shown, x, y, t0:(typeof animNow!=="undefined" && animNow) || performance.now(), id:++_glSeq, src:rk||"", build:!!itemBuildPower(it)};
   groundLoot.push(g);
+  // un legendario que cambia la build se anuncia (es el "Único" de Diablo II: un acontecimiento)
+  if(g.build && typeof netQuiet==="function") netQuiet(()=>{ floatText(x, y-60, "✹ ¡CAMBIA LA BUILD!", "crit"); if(typeof tutSay==="function") tutSay("build_legend", "✹ Cayó un LEGENDARIO QUE CAMBIA LA BUILD: no suma números, cambia cómo juega tu guardián. Levantalo y miralo en el inventario.", null, 6500); });
   if(groundLoot.length > GROUND_LOOT_CFG.maxOnFloor) _glOverflow();
   // se oye y se ve al caer (solo en la pantalla de su dueño: cada uno ve lo suyo)
   if(typeof netQuiet==="function") netQuiet(()=>{
@@ -104,14 +108,51 @@ function _glOverflow(){
   for(const g of groundLoot){ if(!worst || TIER_ORDER[g.tier] < TIER_ORDER[worst.tier]) worst = g; }
   if(worst && !groundLootPick(worst)){ groundLoot.splice(groundLoot.indexOf(worst), 1); }
 }
+/* ---------------- reciclaje con el inventario lleno (regla: js/data/ground-loot.js, RECYCLE_GEM) ---------------- */
+function recyclable(it){ return !!(it && !it.designed && RECYCLE_GEM[it.rarity] !== undefined && !itemEquippedBy(it.uid)); }
+// Suma el polvo de Gema del objeto; devuelve cuántas Gemas enteras se completaron.
+function recycleItemValue(it){
+  const v = RECYCLE_GEM[it && it.rarity] || 0;
+  let dust = (save.recycleDust||0) + v, gems = 0;
+  while(dust >= 0.999){ dust -= 1; gems++; }
+  save.recycleDust = Math.max(0, dust); if(gems) save.gems = (save.gems||0) + gems;
+  return gems;
+}
+// ¿Entra `it`? Si el inventario está lleno, aplica la regla: se recicla él mismo (Común/Raro) o el Común/Raro
+// guardado de menor nivel. Devuelve {ok, self, recycled, gems} (ok=false: no entra, queda en el piso).
+function stashMakeRoomFor(it){
+  if(!stashFull()) return {ok:true};
+  if(recyclable(it)) return {ok:true, self:true, gems:recycleItemValue(it)};
+  const rank = {comun:0, raro:1};
+  const cand = stashItems().filter(recyclable).sort((a,b)=> (rank[a.rarity]-rank[b.rarity]) || (itemLevel(a)-itemLevel(b)));
+  if(!cand.length) return {ok:false};
+  const old = cand[0];
+  removeItemFromInventory(player ? player.classKey : selectedClass, old.uid, false);
+  return {ok:true, recycled:old, gems:recycleItemValue(old)};
+}
+function _recycleToast(r, it){
+  const dust = Math.round((save.recycleDust||0)*4);
+  const tail = r.gems ? `+${r.gems} Gema${r.gems>1?"s":""}` : `polvo de Gema ${dust}/4`;
+  if(r.self) groundLootToast(null, `Inventario lleno: ${it.name} se recicló (${tail})`);
+  else groundLootToast(null, `Inventario lleno: se recicló ${r.recycled.name} para hacer lugar (${tail})`);
+}
 // Levantar: al inventario de la cuenta. Devuelve false si no entra (queda en el piso).
 function groundLootPick(g){
   if(!g || groundLoot.indexOf(g) < 0) return false;
-  if(stashFull()){
+  const room = stashMakeRoomFor(g.item);
+  if(!room.ok){
     const now = performance.now();
-    if(now - _glFullHintAt > 2500){ _glFullHintAt = now; if(typeof netQuiet==="function") netQuiet(()=>floatText(g.x, g.y-40, "Inventario lleno", null)); groundLootToast(null, "Inventario lleno: vendé o descartá para levantarlo"); }
+    if(now - _glFullHintAt > 2500){ _glFullHintAt = now; if(typeof netQuiet==="function") netQuiet(()=>floatText(g.x, g.y-40, "Inventario lleno", null)); groundLootToast(null, "Inventario lleno de objetos buenos: vendé o descartá para levantarlo"); }
     return false;
   }
+  if(room.self){
+    groundLoot.splice(groundLoot.indexOf(g), 1);
+    if(typeof netQuiet==="function") netQuiet(()=>{ if(typeof playSfx==="function") playSfx("crystal"); if(typeof vfxShock==="function") vfxShock(g.x, g.y, 6, 40, "176,106,255", 320, 1); });
+    _recycleToast(room, g.item);
+    if(typeof persist==="function") persist();
+    return true;
+  }
+  if(room.recycled) _recycleToast(room, g.item);
   groundLoot.splice(groundLoot.indexOf(g), 1);
   addItemToInventory(player ? player.classKey : selectedClass, g.item);
   if(typeof endlessOn==="function" && endlessOn() && EN.local && EN.local.loot) EN.local.loot.push(g.item);
@@ -146,8 +187,10 @@ function groundLootPickNearest(){ const g = groundLootNearest(player); return g 
 function groundLootCollectAll(){
   const got = [];
   for(const g of groundLoot.slice().sort((a,b)=>TIER_ORDER[b.tier]-TIER_ORDER[a.tier])){
-    if(stashFull()) break;
+    const room = stashMakeRoomFor(g.item);
+    if(!room.ok) continue;
     groundLoot.splice(groundLoot.indexOf(g), 1);
+    if(room.self) continue; // reciclado en polvo de Gema
     addItemToInventory(player ? player.classKey : selectedClass, g.item);
     if(typeof endlessOn==="function" && endlessOn() && EN.local && EN.local.loot) EN.local.loot.push(g.item);
     got.push(g.item);

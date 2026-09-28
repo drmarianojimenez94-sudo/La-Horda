@@ -213,8 +213,10 @@ const INVENTORY_CAPACITY = 30;
 // Valor de venta por rareza. Economía: un guardián cuesta 5.000 de oro (CHAMPION_PRICE_GOLD) y la
 // basura NO debe pagarlo. Común casi nada; Legendario vale, pero venderlo duele (un Legendario de
 // tienda cuesta ~5.000); un Mítico se vende por mucho menos de lo que vale; el Único no se vende.
-const SELL_VALUE = {comun:3, raro:10, muyraro:35, legendario:320, mitico:1100, unico:0};
-const SELL_VALUE_SET_PIECE = 260;
+// Con el botín más abundante del piso (reseña §6.4 #3) se recalibró para que VENDER todo lo de una partida
+// no pase del ~15% del oro ganado peleando (tools/balance/groundloot_econ.js con campaign_runs.js: 2-14% en las arenas medidas completas).
+const SELL_VALUE = {comun:2, raro:8, muyraro:25, legendario:220, mitico:1100, unico:0};
+const SELL_VALUE_SET_PIECE = 200;
 // Nombre legible de cada efecto de pasiva (UI y objetos con nombre propio).
 const PASSIVE_EFFECT_LABEL = {dmg_mult:"Daño", atkspeed_mult:"Velocidad de ataque", cd_mult:"Enfriamiento", lifesteal_add:"Robo de vida",
   heal_mult:"Curación", def_add:"Defensa", skilldmg_mult:"Daño de habilidades", onhit_proc:"Descarga al golpear", hp_mult:"Vida",

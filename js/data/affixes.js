@@ -4,7 +4,7 @@
    AFIJOS AL AZAR (prefijos y sufijos al estilo Diablo II): lo que hace que dos "Hachas" no sean
    iguales. La IDENTIDAD del objeto no cambia (su pasiva de pieza, su familia, su poder, su set o su
    Único siguen fijos, ver item-identity.js); los afijos son una capa de números encima:
-     Común      → 1 afijo            ("Hacha Ávida")
+     Común      → 2 afijos flojos    ("Hacha Ávida de la Presteza"; antes 1: los comunes aburrían, reseña §6.4 #3)
      Raro       → 2-3 afijos         ("Hacha Ávida de la Tormenta")
      Muy Raro   → 3-4 afijos         (su nombre de familia + el sufijo: "Hacha Escarchada de la Presteza")
      Legendario, Mítico, Set, Único → su identidad fija + 1-2 afijos (el nombre no cambia)
@@ -38,8 +38,9 @@ const AFFIX_DB = {
 };
 const AFFIX_IDS = Object.keys(AFFIX_DB);
 // Cuántos afijos nacen en cada rareza [mín, máx]. Set = su rareza base (legendario/mítico) con esta regla.
-const AFFIX_COUNT = {comun:[1,1], raro:[2,3], muyraro:[3,4], legendario:[1,2], mitico:[1,2], unico:[1,2]};
+const AFFIX_COUNT = {comun:[2,2], raro:[2,3], muyraro:[3,4], legendario:[1,2], mitico:[1,2], unico:[1,2]};
 // La rareza estira el rango (un afijo de Común es la mitad de fuerte que el de un Legendario).
+// El Común trae 2 afijos al 0,6: sigue muy por debajo del Raro (su valor base es la mitad), pero ya dice algo.
 const AFFIX_RARITY_SCALE = {comun:0.6, raro:0.8, muyraro:1, legendario:1.15, mitico:1.3, unico:1.3};
 // Rareza cuyo NOMBRE se arma con los afijos (los demás conservan el nombre de su identidad).
 const AFFIX_NAMED_RARITY = {comun:1, raro:1};

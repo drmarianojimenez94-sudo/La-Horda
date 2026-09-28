@@ -114,6 +114,7 @@ function heroMoveLocked(h){
 // Golpe letal: ¿la evita algo propio del guardián? (Soldado Cabral). true = no muere.
 function heroPreventDeath(h, src){
   if(h && h.classKey==="libertador" && libertadorPreventDeath(h, src)) return true;
+  if(typeof buildPreventDeath==="function" && buildPreventDeath(h)) return true; // Último Aliento (build-powers.js)
   return champSetPreventDeath(h); // set La Última Profecía
 }
 // Cada cuadro, para cada héroe (anfitrión o partida local).

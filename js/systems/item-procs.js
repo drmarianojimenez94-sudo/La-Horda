@@ -29,6 +29,7 @@ function itemProcsOnHit(h, e, dmg, crit, opts){
   if(!h.classKey) return;
   mythicOnHit(h, e, dmg, crit, opts);
   uniqueOnHit(h, e, dmg, crit, opts);
+  buildOnHit(h, e, dmg, crit, opts); // legendarios que cambian la build (build-powers.js)
   if(!e.alive) return;
   const fromBasic = !!opts.fromBasic;
   let p;
@@ -121,7 +122,7 @@ function itemDamageMult(h, e, opts){
   if(h.classKey!=="segador" && h.maxHp){ const b = passiveSum(h.classKey, "missinghp_dmg_bonus"); if(b) m *= 1 + b*Math.max(0, 1 - h.hp/h.maxHp); }
   if((p = _procPower(h, "burn_vs")) && e.burnTimer>0) m *= 1 + 0.25*p;
   if((p = _procPower(h, "execute_edge")) && e.rank!=="jefe" && e.rank!=="subjefe" && e.hp < e.maxHp*0.2) m *= 1 + 0.6*p;
-  return m * mythicDamageMult(h, e, opts);
+  return m * mythicDamageMult(h, e, opts) * buildDamageMult(h, e);
 }
 // Daño crítico extra de los poderes (Frío que Quiebra, Eclipse).
 function itemCritMultBonus(h, e){
@@ -176,10 +177,12 @@ function itemProcsOnKill(h, e){
     if(_procFx(h, "haste", 400)) vfxBurst(h.x, h.y-4, 3 + (h._hasteStacks>>2), "spirit", 50, 300, 2, _procPr(h), 0, 2); // estela de velocidad
   }
   mythicOnKill(h, e);
+  buildOnKill(h, e);
 }
 
 function itemProcsOnCast(h, sk, isUlt){
   mythicOnCast(h, sk, isUlt);
+  buildOnCast(h, sk, isUlt);
   const p = _procPower(h, "skill_nova");
   if(!p || !_procReady(h, "nova", 1500)) return;
   const R = 125, dmg = _procDmgBase(h)*(isUlt ? 2.2 : 1.1)*p;
@@ -201,6 +204,7 @@ function itemProcsOnHurt(h, dmg, src){
     vfxShock(src.x, src.y, 6, 34, "255,200,120", 240, h===player?1:0);
   }
   mythicOnHurt(h, dmg, src);
+  buildOnHurt(h, dmg, src);
   if(dmg < h.maxHp*0.07) return;
   const p = _procPower(h, "hit_shield");
   if(!p || !_procReady(h, "aegis", 8000)) return;
@@ -229,6 +233,7 @@ function updateItemProcTimers(h, dt){
   if(h.hp < h.maxHp*0.5 && passiveSum(h.classKey, "mythic_execute") > 0 && _procFx(h, "overload", 500))
     vfxBurst(h.x, h.y-24, 3, "blood", 40, 420, 2.5, 0, -40, 1);
   updateMythicPowers(h, dt);
+  updateBuildPowers(h, dt);
 }
 // Gracia Veloz: curar a un aliado les da velocidad a los dos (lo llama trackHeal).
 function itemProcsOnHeal(caster, target, restored){

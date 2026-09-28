@@ -65,6 +65,7 @@ function lobbyAlliesValid(mine){
 // partida (reintentar / volver a jugar desde la sala) para que nada de la anterior se filtre:
 // congelamiento de Axiom, cortes demorados y duelos de Musashi, efectos, pulsos del jefe.
 function resetRunTransients(){
+  if(typeof eliteNamedReset==="function") eliteNamedReset(); // tope de élites con nombre por partida (elite-affixes.js)
   axiomForceQuitFlash = 0; axiomFreezeTimer = 0; axiomFreezeCaster = null; axiomForceQuitPending = null;
   if(typeof canvas!=="undefined" && canvas && canvas.style) canvas.style.filter = "";
   musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];

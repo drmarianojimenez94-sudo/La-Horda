@@ -408,7 +408,7 @@
 .shop-item-name{ font-weight:700; font-size:0.78rem; }
 .shop-item-sub{ font-size:0.62rem; color:var(--text-dim); margin:1px 0 2px; }
 .shop-eff{ font-size:0.58rem; color:#8fb8ff; line-height:1.3; }
-.shop-eff.item-proc{ color:#ffb020; } .shop-eff.item-mythic{ color:#ff6a6a; } .shop-eff.item-unique{ color:#e0b0ff; } .shop-eff.item-effect{ color:#ffe08a; }
+.shop-eff.item-proc{ color:#ffb020; } .shop-eff.item-mythic{ color:#ff6a6a; } .shop-eff.item-unique{ color:#e0b0ff; } .shop-eff.item-build{ color:#ffc24a; } .shop-eff.item-effect{ color:#ffe08a; }
 .shop-tiers{ display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; }
 .shop-tier{ font-size:0.56rem; padding:2px 5px; border-radius:5px; border:1px solid var(--tc); background:transparent; color:var(--tc); cursor:pointer; font-family:inherit; }
 .shop-tier.on{ background:var(--tc); color:#120b06; font-weight:700; }

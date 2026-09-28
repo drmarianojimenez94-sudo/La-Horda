@@ -41,7 +41,7 @@ async function boot(browser, initSave, vp){
       eq: save.champions.guerrero.equipment.arma + ',' + save.champions.guerrero.equipment.casco, flag: JSON.parse(localStorage.getItem(SAVE_KEY)).affixV1 === true,
       persistedAff: (JSON.parse(localStorage.getItem(SAVE_KEY)).stash||[]).every(i=>Array.isArray(i.affixes)), rar: save.stash.map(i=>i.rarity).join() }));
     check('SAVE.objetos_viejos_quedan_validos', m.n === 4 && m.names[0] === 'Hacha Vieja o1' && m.names[3] === 'Escudo del Juggernaut' && m.lv.every(l=>l===3) && m.eq === 'o1,o2' && m.rar === 'raro,comun,muyraro,legendario', m);
-    check('SAVE.reciben_afijos_por_rareza', m.aff[0] >= 2 && m.aff[0] <= 3 && m.aff[1] === 1 && m.aff[2] >= 3 && m.aff[3] >= 1 && m.aff[3] <= 2, m);
+    check('SAVE.reciben_afijos_por_rareza', m.aff[0] >= 2 && m.aff[0] <= 3 && m.aff[1] === 2 && m.aff[2] >= 3 && m.aff[3] >= 1 && m.aff[3] <= 2, m);
     check('SAVE.migracion_guardada_una_vez', m.flag && m.persistedAff, m);
     // determinística: recargar no vuelve a tirar
     const again = await E(() => { const before = JSON.stringify(save.stash.map(i=>i.affixes)); loadSave(); return before === JSON.stringify(save.stash.map(i=>i.affixes)); });
@@ -65,7 +65,7 @@ async function boot(browser, initSave, vp){
       return { cnt, leg, sets, named, bad, txt };
     });
     const rng = (a, lo, hi) => a.every(n => n >= lo && n <= hi);
-    check('AFX.comun_1_raro_2a3_muyraro_3a4', rng(r.cnt.comun, 1, 1) && rng(r.cnt.raro, 2, 3) && rng(r.cnt.muyraro, 3, 4) && r.cnt.raro.includes(3) && r.cnt.muyraro.includes(4), r.cnt);
+    check('AFX.comun_2_raro_2a3_muyraro_3a4', rng(r.cnt.comun, 2, 2) && rng(r.cnt.raro, 2, 3) && rng(r.cnt.muyraro, 3, 4) && r.cnt.raro.includes(3) && r.cnt.muyraro.includes(4), r.cnt);
     check('AFX.legendarios_y_sets_suman_1a2_sin_perder_identidad', r.leg.every(l => l.n >= 1 && l.n <= 2) && r.sets.every(s => s.n >= 1 && s.n <= 2 && s.set) && r.leg.some(l=>l.designed), { leg: r.leg.slice(0, 4), sets: r.sets.slice(0, 2) });
     check('AFX.nombre_d2_prefijo_y_sufijo', r.named.some(n => / de(l| la) /.test(n) && n.split(' ').length >= 4), r.named.slice(0, 8));
     check('AFX.solo_en_su_ranura_y_sin_repetir_efecto', r.bad === 0, r.bad);
@@ -169,8 +169,8 @@ async function boot(browser, initSave, vp){
     check('PICK.se_levanta_al_pasar_por_encima', pick.picked, pick);
     check('PICK.toast_con_nombre_coloreado', !!pick.toast && pick.toast.length > 2 && !!pick.toastColor, pick);
     check('PICK.boton_contextual_levantar', pick.btnLabel === 'Levantar' && pick.btnPicked, pick);
-    const full = await E(() => { groundLoot.length = 0; save.stash = []; for (let i = 0; i < INVENTORY_CAPACITY; i++) stashItems().push(makeItem('arma','comun'));
-      const g = groundLootDrop(player.x, player.y, 'A', 1, 'infernal', 'elite'); __step(50); const stays = groundLoot.includes(g); save.stash = []; __step(50);
+    const full = await E(() => { groundLoot.length = 0; save.stash = []; for (let i = 0; i < INVENTORY_CAPACITY; i++) stashItems().push(makeItem('arma','muyraro')); // sin Comunes/Raros que reciclar (t_build_uniques: reciclaje)
+      const g = groundLootDrop(player.x, player.y, 'A', 1, 'infernal', 'elite', 1); __step(50); const stays = groundLoot.includes(g); save.stash = []; __step(50);
       return { stays, pickedLater: !groundLoot.includes(g) }; });
     check('PICK.inventario_lleno_queda_en_el_piso', full.stays && full.pickedLater, full);
     // pity: si cae un Legendario en el piso, su protección vuelve a cero

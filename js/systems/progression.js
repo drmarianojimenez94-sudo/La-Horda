@@ -33,6 +33,31 @@ function grantXP(champKey, amount){
 }
 
 /* ============================================================
+   XP DE VICTORIA (reseña §6.4 #12): antes era 40 × puntaje × (1 + puntaje/100), IGUAL en todas las
+   arenas: +5554 al ganar la Ciudad (Nv. 18 → 23 de golpe) y los talentos de los escalones 4-5 llegaban
+   en la arena 2. Ahora se mide en NIVELES al nivel ESPERADO de la arena (VICTORY_XP_REF: el nivel con el
+   que un jugador que va bien le gana al jefe): de 0,5 niveles (puntaje 0) a 1,4 (puntaje 100 o más).
+   Se paga al nivel esperado, no al tuyo: si venís atrasado te empuja un poco más; si volvés a una arena
+   fácil con un guardián alto, casi no sube. Pesadilla/Infierno multiplican (XP ×1,6 / ×2,3) con tope de
+   1,5 niveles. Calibrado con tools/balance/xp_curve.js (XP de bajas medida con campaign_runs.js) para
+   que la campaña siga terminando cerca del nivel 40.
+   ============================================================ */
+const VICTORY_XP_CFG = {
+  minLevels:0.5, maxLevels:1.4, capLevels:1.5,
+  // nivel esperado al vencer al jefe de cada arena (Normal; en Pesadilla/Infierno se suma su lvlOffset)
+  ref:{ciudad:9, fortaleza:14, bosque:18, micelial:22, hielo:25, acuatica:28, laberinto:31, abismo:33, minas:35, infernal:37, divina:34}
+};
+function victoryXpFor(arena, score, playerLevel, diffKey){
+  const C = VICTORY_XP_CFG;
+  let ref = C.ref[arena] || playerLevel || 1;
+  let mult = 1;
+  if(diffKey && diffKey!=="normal" && typeof diffTier==="function"){ const T = diffTier(diffKey); ref += T.lvlOffset||0; mult = T.xp||1; }
+  ref = Math.max(1, Math.min(98, ref));
+  const k = Math.max(0, Math.min(1, (score||0)/100));
+  const levels = Math.min(C.capLevels, (C.minLevels + (C.maxLevels - C.minLevels)*k) * mult);
+  return Math.round(xpToNext(ref) * levels);
+}
+/* ============================================================
    CASTIGO POR NO TERMINAR LA ARENA  (con perdón para las primeras derrotas: ver más abajo)
    Morir o abandonar antes del jefe final resta un porcentaje de la XP y del oro GANADOS EN
    ESA PARTIDA (no del total acumulado): perder duele, pero nunca te deja por debajo del nivel
