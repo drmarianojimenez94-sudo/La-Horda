@@ -604,7 +604,7 @@ function netGuestStartRun(msg){
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
   hazardZones = []; activeAxiomVfx = []; musashiAfterimages = [];
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
-  vfxResetRun(); resetFeedback(); bossHudHide(); boss = null; bossActive = false; activeChampion = null;
+  vfxResetRun(); resetFeedback(); bossHudHide(); if(typeof crystalReset==="function") crystalReset(); boss = null; bossActive = false; activeChampion = null;
   levelClearing = 0; levelTimer = 0; levelDuration = 1;
   // héroes en orden de slot; el propio es "player"
   heroes = msg.slots.map((s,i)=>{ const h = makeHero(s.champ, s.kind==="bot", 0, 0); h._netSlot = i; h.netName = s.name; return h; });
@@ -738,6 +738,9 @@ function netGuestOnMsg(from, d){
 function netGuestUpdate(dt){
   runElapsedMs += dt;
   vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
+  // ceremonia del cristal de un Guardián (llega como evento crystalAward/crystalSteal): sin su reloj
+  // el cristal quedaba congelado en el piso del jefe, sin volar al jugador ni cartel "◆ … n/3 ◆"
+  if(typeof crystalTick==="function") crystalTick(dt);
   if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si
