@@ -22,7 +22,7 @@
    modificadores. "unlockLevel: 0" = desbloqueada desde el arranque (demo).
    ============================================================ */
 const ARENA_MODS = {
-  bosque:   { label:"Ruinas Célticas / Élficas", icon:"🌲", desc:"Arena 03. Ruinas de un bosque sagrado. Acá espera el primero de los Cuatro Guardianes.", hazardName:"Niebla del Olvido",
+  bosque:   { label:"Ruinas Célticas / Élficas", icon:"🌲", desc:"Arena 03. Ruinas de un bosque sagrado. Acá espera el primer Guardián caído.", hazardName:"Niebla del Olvido",
               fireDmgMult:1.3, iceDmgMult:1.0, enemyDmgPerWave:0.14, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.90, enemyRegenPct:0.012, hazard:null, hasWalls:false },
   hielo:    { label:"Arena Gélida",      icon:"❄", desc:"Arena 05. El frío es el enemigo. Acá espera el segundo Guardián.", hazardName:"Furia del Vendaval Helado",

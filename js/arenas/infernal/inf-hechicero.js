@@ -415,7 +415,7 @@ function hechSpawnSubboss(){
   h.cine = "reveal"; h.cineT = 1800;
   activeChampion = h;
   vfxShock(h.x, h.y, 20, 220, "255,225,140", 800, 2); flashScreen(0.35, "255,235,180");
-  arenaTitleCard("SUBJEFE", "EL HECHICERO SUPREMO", "El cuarto Guardián. El que te guió hasta acá nunca estuvo de tu lado.", 4400);
+  arenaTitleCard("SUBJEFE", "EL HECHICERO SUPREMO", "El Primero de los Cuatro. El que te guió hasta acá nunca estuvo de tu lado.", 4400);
   // (lo que dice va en el cuadro de voz: el cartel grande + el cuadro ya son los dos textos de este momento)
   if(typeof tutSay==="function") tutSay("hech_betrayal", "¿Creíste que te guiaba para salvarte? Yo fui el primero de los Cuatro Guardianes, su líder. Me quedé en esta dimensión por decisión propia. Te guiaba hasta mí.", "Derrotá al Hechicero Supremo", 9000, true);
   return h;
