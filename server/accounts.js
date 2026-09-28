@@ -35,6 +35,17 @@
      AUTH_MAX_FAILS_IP   intentos fallidos por IP antes de frenar (default 30 cada 15 min)
      REGISTER_MAX_IP     cuentas nuevas por IP por hora (default 10)
      TRUST_PROXY         "1" para leer la IP real de los encabezados del proxy (en Render es automático)
+
+   RANKING SEMANAL DE LA HORDA INFINITA (mismo adaptador: Postgres o archivo leaderboard.json):
+   - GET  /api/leaderboard[?week=2026-W40&guardian=mago&limit=50]  top 50 de la semana (la actual por
+     defecto), el mejor puntaje de cada cuenta (o el mejor con ese guardián). Lo ve cualquiera; con
+     sesión, además devuelve "me" (tu puesto aunque estés fuera del top).
+   - POST /api/leaderboard/submit  (con sesión) {score, round, guardian, week, durationMs}. Solo se
+     guarda si mejora lo tuyo de esa semana con ese guardián. Validación de plausibilidad en el servidor
+     (lbCheck): la semana es la actual (o la anterior, unas horas después del cambio), la duración alcanza
+     para las rondas jugadas, el puntaje no supera un techo por ronda y por minuto, y la partida entra en
+     el tiempo que pasó desde tu envío anterior. Límite de envíos por cuenta.
+   - La semana es la ISO en UTC, la MISMA de los mutadores semanales (js/systems/endless.js).
    ============================================================ */
 const crypto = require("crypto");
 const fs = require("fs");
@@ -97,6 +108,58 @@ function summarize(save){
   return s;
 }
 
+/* ---------------- ranking semanal: semana, orden y plausibilidad ---------------- */
+const LB_TOP = 50;
+const LB_KEEP_WEEKS = 12;                         // archivo: semanas que se conservan
+const LB_GRACE_MS = 6 * 3600 * 1000;              // una partida que cruzó el cambio de semana todavía entra
+const LB_WINDOW_MS = 10 * 60 * 1000, LB_MAX_SUBMITS = 10, LB_MIN_GAP_MS = 8000;
+const LB_ROUND_MIN_MS = 10000;                    // una ronda dura 26 s (20,8 s con "Sin respiro"): 10 s es holgado
+const LB_MAX_ROUND = 400, LB_MAX_MS = 12 * 3600 * 1000;
+const WEEK_RE = /^\d{4}-W\d{2}$/;
+const GUARDIAN_RE = /^[a-z][a-z0-9_]{1,23}$/;
+// Semana ISO en UTC ("2026-W40"): la misma cuenta que endlessWeekKey del cliente.
+function lbWeekKey(date){
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day);
+  const y0 = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil(((d - y0) / 86400000 + 1) / 7);
+  return d.getUTCFullYear() + "-W" + String(wk).padStart(2, "0");
+}
+// Lunes 00:00 UTC de la semana de `now` (ms).
+function lbWeekStart(now){
+  const d = new Date(now), day = d.getUTCDay() || 7;
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - (day - 1));
+}
+// Techo de puntaje para una ronda y una duración. Generoso a propósito (x10-20 sobre lo que se ve
+// jugando): frena lo imposible, no al que juega muy bien. Espeja js/data/endless.js (score):
+//   bajas: hasta ~400 por minuto a ~70 pts de base (élite con rol) -> 28.000/min
+//   jefes y subjefes, rescates y cierre de ronda: hasta ~4.000 por ronda
+//   todo por (1 + 0,10 por ronda) y por el mutador más caro de dos (x1,5)
+function lbMaxScore(round, ms){
+  const min = Math.max(0, ms) / 60000, mult = 1.5 * (1 + 0.10 * (round - 1));
+  return Math.ceil(mult * (28000 * min + 4000 * round) + 1.5 * 150 * round * (round + 1) / 2);
+}
+// Devuelve null si el envío es creíble, o {error, msg}.
+function lbCheck(e, now){
+  if(!Number.isInteger(e.round) || e.round < 1 || e.round > LB_MAX_ROUND) return { error: "BAD_ROUND", msg: "Ronda inválida." };
+  if(!Number.isInteger(e.score) || e.score < 0 || e.score > 2e9) return { error: "BAD_SCORE", msg: "Puntaje inválido." };
+  if(!Number.isInteger(e.durationMs) || e.durationMs < 0 || e.durationMs > LB_MAX_MS) return { error: "BAD_DURATION", msg: "Duración inválida." };
+  if(!GUARDIAN_RE.test(e.guardian)) return { error: "BAD_GUARDIAN", msg: "Guardián inválido." };
+  const cur = lbWeekKey(new Date(now)), prev = lbWeekKey(new Date(now - 7 * 86400000));
+  if(e.week !== cur && !(e.week === prev && now - lbWeekStart(now) < LB_GRACE_MS)) return { error: "WEEK_CLOSED", msg: "Esa semana del ranking ya cerró." };
+  if(e.durationMs < (e.round - 1) * LB_ROUND_MIN_MS) return { error: "IMPLAUSIBLE", msg: "Demasiadas rondas para tan poco tiempo." };
+  if(e.score > lbMaxScore(e.round, e.durationMs)) return { error: "IMPLAUSIBLE", msg: "Ese puntaje no es posible para esa ronda y ese tiempo." };
+  return null;
+}
+// Orden de la tabla: puntaje, después ronda, después el más rápido, después el primero en llegar.
+function lbCmp(a, b){ return (b.score - a.score) || (b.round - a.round) || (a.durationMs - b.durationMs) || (a.at - b.at); }
+// El mejor de cada cuenta (filas de todas sus combinaciones cuenta+guardián), ordenado.
+function lbBestPerUser(rows){
+  const best = new Map();
+  for(const r of rows){ const o = best.get(r.userId); if(!o || lbCmp(r, o) < 0) best.set(r.userId, r); }
+  return [...best.values()].sort(lbCmp);
+}
+
 /* ---------------- límite de intentos (en memoria) ---------------- */
 class Limiter {
   constructor(){ this.m = new Map(); }
@@ -137,6 +200,26 @@ function fileStore(dir){
   }
   const saveFile = id => path.join(savesDir, String(id) + ".json");
   const saveChains = new Map();     // escrituras de un mismo guardado, en fila
+  // ranking: leaderboard.json = {weeks: {"2026-W40": {"<id>|<guardián>": {score, round, durationMs, at}}}}
+  const lbFile = path.join(dir, "leaderboard.json");
+  let lb = { weeks: {} }, lbWriting = null, lbAgain = false;
+  function lbFlush(){
+    if(lbWriting){ lbAgain = true; return lbWriting; }
+    lbWriting = (async () => {
+      do { lbAgain = false; await writeAtomic(lbFile, JSON.stringify(lb)); } while(lbAgain);
+    })().finally(() => { lbWriting = null; });
+    return lbWriting;
+  }
+  function lbRows(week, guardian){
+    const W = lb.weeks[week] || {}, out = [];
+    for(const k in W){
+      const i = k.indexOf("|"), userId = +k.slice(0, i), g = k.slice(i + 1);
+      if(guardian && g !== guardian) continue;
+      out.push(Object.assign({ userId, guardian: g }, W[k]));
+    }
+    return lbBestPerUser(out);
+  }
+  const lbName = id => { const u = db.users[id]; return u ? (u.name || u.user) : "?"; };
   async function loadMeta(id){
     if(saveMeta.has(id)) return saveMeta.get(id);
     let meta = null;
@@ -152,6 +235,9 @@ function fileStore(dir){
       catch(e){ if(e.code !== "ENOENT") throw new Error("accounts.json ilegible: " + e.message); }
       db.users = db.users || {}; db.sessions = db.sessions || {}; db.nextId = db.nextId || 1;
       for(const id in db.users) byKey.set(db.users[id].userKey, +id);
+      try{ lb = JSON.parse(await fsp.readFile(lbFile, "utf8")); }
+      catch(e){ if(e.code !== "ENOENT") throw new Error("leaderboard.json ilegible: " + e.message); }
+      if(!lb || typeof lb.weeks !== "object") lb = { weeks: {} };
       // restos de una escritura cortada a la mitad
       for(const d of [dir, savesDir]) for(const f of await fsp.readdir(d)) if(f.endsWith(".tmp")) fsp.unlink(path.join(d, f)).catch(() => {});
     },
@@ -192,7 +278,32 @@ function fileStore(dir){
       if(saveChains.get(id) === job) saveChains.delete(id);
       return { ok: true, version: next.version, updatedAt: next.updatedAt };
     },
-    async close(){ if(writing) await writing; }
+    // ranking: guarda solo si mejora lo de esa cuenta con ese guardián esa semana
+    async lbPut(week, userId, guardian, e){
+      const W = lb.weeks[week] || (lb.weeks[week] = {}), k = userId + "|" + guardian, prev = W[k];
+      const row = { score: e.score, round: e.round, durationMs: e.durationMs, at: e.at };
+      const improved = !prev || lbCmp(row, prev) < 0;
+      if(improved){
+        W[k] = row;
+        const weeks = Object.keys(lb.weeks).sort();
+        while(weeks.length > LB_KEEP_WEEKS) delete lb.weeks[weeks.shift()];
+        await lbFlush();
+      }
+      return { improved };
+    },
+    async lbTop(week, guardian, limit){
+      return lbRows(week, guardian).slice(0, limit).map(r => Object.assign({ name: lbName(r.userId) }, r));
+    },
+    async lbRank(week, guardian, userId){
+      const rows = lbRows(week, guardian), i = rows.findIndex(r => r.userId === userId);
+      return { total: rows.length, rank: i + 1, row: i >= 0 ? Object.assign({ name: lbName(userId) }, rows[i]) : null };
+    },
+    async lastSubmitAt(userId){
+      let t = 0;
+      for(const w in lb.weeks){ const W = lb.weeks[w]; for(const k in W) if(k.startsWith(userId + "|") && W[k].at > t) t = W[k].at; }
+      return t;
+    },
+    async close(){ if(writing) await writing; if(lbWriting) await lbWriting; }
   };
 }
 
@@ -234,6 +345,12 @@ function pgStore(url){
       await q(`CREATE TABLE IF NOT EXISTS horda_saves (
         user_id BIGINT PRIMARY KEY REFERENCES horda_users(id) ON DELETE CASCADE, data TEXT NOT NULL,
         summary TEXT, version INTEGER NOT NULL, updated_at BIGINT NOT NULL)`);
+      // ranking semanal de la Horda Infinita: una fila por cuenta + guardián + semana (la mejor)
+      await q(`CREATE TABLE IF NOT EXISTS horda_leaderboard (
+        week TEXT NOT NULL, user_id BIGINT NOT NULL REFERENCES horda_users(id) ON DELETE CASCADE, guardian TEXT NOT NULL,
+        score BIGINT NOT NULL, round INTEGER NOT NULL, duration_ms BIGINT NOT NULL, created_at BIGINT NOT NULL,
+        PRIMARY KEY (week, user_id, guardian))`);
+      await q(`CREATE INDEX IF NOT EXISTS horda_leaderboard_week_score ON horda_leaderboard (week, score DESC)`);
     },
     async createUser(u){
       try{
@@ -282,6 +399,49 @@ function pgStore(url){
       if(!r.rows.length) return { conflict: true, current: await this.getSaveMeta(id) };
       return { ok: true, version: r.rows[0].version | 0, updatedAt: Number(r.rows[0].updated_at) };
     },
+    // ranking: UPSERT condicional (mismo orden que lbCmp: puntaje, ronda, el más rápido)
+    async lbPut(week, userId, guardian, e){
+      const r = await q(`INSERT INTO horda_leaderboard (week, user_id, guardian, score, round, duration_ms, created_at)
+        VALUES ($1,$2,$3,$4,$5,$6,$7)
+        ON CONFLICT (week, user_id, guardian) DO UPDATE SET score=EXCLUDED.score, round=EXCLUDED.round,
+          duration_ms=EXCLUDED.duration_ms, created_at=EXCLUDED.created_at
+        WHERE EXCLUDED.score > horda_leaderboard.score
+           OR (EXCLUDED.score = horda_leaderboard.score AND EXCLUDED.round > horda_leaderboard.round)
+           OR (EXCLUDED.score = horda_leaderboard.score AND EXCLUDED.round = horda_leaderboard.round AND EXCLUDED.duration_ms < horda_leaderboard.duration_ms)
+        RETURNING week`, [week, userId, guardian, e.score, e.round, e.durationMs, e.at]);
+      return { improved: r.rows.length > 0 };
+    },
+    // el mejor de cada cuenta (DISTINCT ON) de esa semana, opcionalmente con un guardián
+    _lbBest(guardian){
+      return `SELECT DISTINCT ON (user_id) user_id, guardian, score, round, duration_ms, created_at FROM horda_leaderboard
+        WHERE week=$1 ${guardian ? "AND guardian=$2" : ""} ORDER BY user_id, score DESC, round DESC, duration_ms ASC, created_at ASC`;
+    },
+    _lbRow(r){ return r && { userId: Number(r.user_id), guardian: r.guardian, score: Number(r.score), round: r.round | 0,
+      durationMs: Number(r.duration_ms), at: Number(r.created_at), name: r.display_name || r.username || "?" }; },
+    async lbTop(week, guardian, limit){
+      const p = guardian ? [week, guardian, limit] : [week, limit];
+      const r = await q(`WITH best AS (${this._lbBest(guardian)})
+        SELECT b.*, u.display_name, u.username FROM best b JOIN horda_users u ON u.id=b.user_id
+        ORDER BY b.score DESC, b.round DESC, b.duration_ms ASC, b.created_at ASC LIMIT $${p.length}`, p);
+      return r.rows.map(x => this._lbRow(x));
+    },
+    async lbRank(week, guardian, userId){
+      const p = guardian ? [week, guardian] : [week];
+      const tot = await q(`WITH best AS (${this._lbBest(guardian)}) SELECT count(*)::int AS n FROM best`, p);
+      const me = await q(`WITH best AS (${this._lbBest(guardian)})
+        SELECT b.*, u.display_name, u.username FROM best b JOIN horda_users u ON u.id=b.user_id WHERE b.user_id=$${p.length + 1}`, p.concat([userId]));
+      const row = this._lbRow(me.rows[0]), total = tot.rows[0].n | 0;
+      if(!row) return { total, rank: 0, row: null };
+      const ahead = await q(`WITH best AS (${this._lbBest(guardian)}) SELECT count(*)::int AS n FROM best b
+        WHERE b.score > $${p.length + 1} OR (b.score = $${p.length + 1} AND (b.round > $${p.length + 2}
+          OR (b.round = $${p.length + 2} AND (b.duration_ms < $${p.length + 3} OR (b.duration_ms = $${p.length + 3} AND b.created_at < $${p.length + 4})))))`,
+        p.concat([row.score, row.round, row.durationMs, row.at]));
+      return { total, rank: (ahead.rows[0].n | 0) + 1, row };
+    },
+    async lastSubmitAt(userId){
+      const r = await q(`SELECT max(created_at) AS t FROM horda_leaderboard WHERE user_id=$1`, [userId]);
+      return Number(r.rows[0] && r.rows[0].t || 0);
+    },
     async close(){ await pool.end(); }
   };
 }
@@ -298,7 +458,9 @@ function create(opts){
   let store = null, status = "starting", lastError = "";
   try{ store = url ? pgStore(url) : fileStore(dataDir); }
   catch(e){ status = "error"; lastError = String(e.message || e); }
-  const fails = new Limiter(), registers = new Limiter(), apiHits = new Limiter();
+  const fails = new Limiter(), registers = new Limiter(), apiHits = new Limiter(), lbHits = new Limiter();
+  const lbLast = new Map();   // cuenta -> último envío al ranking (ms), para el "¿entra en el tiempo que pasó?"
+  const now0 = () => (opts.now ? opts.now() : Date.now()); // las pruebas mueven el reloj del ranking
 
   async function init(){
     if(!store) return;
@@ -316,7 +478,8 @@ function create(opts){
   }
   const ready = init();
   const sweeper = setInterval(() => {
-    fails.sweep(); registers.sweep(); apiHits.sweep();
+    fails.sweep(); registers.sweep(); apiHits.sweep(); lbHits.sweep();
+    const old = now0() - 24 * 3600 * 1000; for(const [k, t] of lbLast) if(t < old) lbLast.delete(k);
     if(status === "ready") store.sweepSessions(Date.now()).catch(() => {});
   }, 10 * 60 * 1000);
   if(sweeper.unref) sweeper.unref();
@@ -509,6 +672,50 @@ function create(opts){
       if(body.email !== undefined){ const e = cleanName(body.email, 170); if(e && !EMAIL_RE.test(e)) return err(req, res, 400, "BAD_EMAIL", "El correo no parece válido."); f.email = e || null; }
       const u = await store.updateUser(a.user.id, f);
       return send(req, res, 200, { user: publicUser(u) });
+    },
+
+    /* ---------- ranking semanal de la Horda Infinita ---------- */
+    // Público. Con sesión (opcional) agrega "me": tu puesto, aunque estés fuera del top.
+    "GET /api/leaderboard": async (req, res) => {
+      const qs = new URL(req.url, "http://x").searchParams, now = now0();
+      const current = lbWeekKey(new Date(now));
+      const week = qs.get("week") || current;
+      if(!WEEK_RE.test(week)) return err(req, res, 400, "BAD_WEEK", "Semana inválida.");
+      const guardian = qs.get("guardian") || "";
+      if(guardian && !GUARDIAN_RE.test(guardian)) return err(req, res, 400, "BAD_GUARDIAN", "Guardián inválido.");
+      const limit = Math.max(1, Math.min(LB_TOP, parseInt(qs.get("limit") || String(LB_TOP), 10) || LB_TOP));
+      const top = await store.lbTop(week, guardian || null, limit);
+      let me = null, total = null, uid = 0;
+      if(req.headers.authorization){ const a = await auth(req); if(a.user) uid = a.user.id; }
+      const rk = await store.lbRank(week, guardian || null, uid || -1);
+      total = rk.total;
+      if(uid) me = rk.row ? { rank: rk.rank, name: rk.row.name, guardian: rk.row.guardian, score: rk.row.score, round: rk.row.round, durationMs: rk.row.durationMs } : { rank: 0 };
+      const entries = top.map((r, i) => ({ rank: i + 1, name: r.name, guardian: r.guardian, score: r.score, round: r.round, durationMs: r.durationMs, at: r.at, me: !!uid && r.userId === uid }));
+      return send(req, res, 200, { week, current, guardian: guardian || null, total, entries, me, endsAt: lbWeekStart(now) + 7 * 86400000 });
+    },
+    // Con sesión: {score, round, guardian, week, durationMs}. Los invitados no entran (su récord queda local).
+    "POST /api/leaderboard/submit": async (req, res) => {
+      const a = await auth(req); if(!a.user) return authFail(req, res, a);
+      const body = await readBody(req, SMALL_BODY_BYTES), now = now0(), uid = a.user.id, kU = "u:" + uid;
+      if(lbHits.count(kU) >= LB_MAX_SUBMITS) return tooMany(req, res, lbHits.retryAfter(kU));
+      const last = Math.max(lbLast.get(uid) || 0, await store.lastSubmitAt(uid));
+      if(last && now - last < LB_MIN_GAP_MS) return tooMany(req, res, Math.ceil((LB_MIN_GAP_MS - (now - last)) / 1000));
+      lbHits.hit(kU, LB_WINDOW_MS);
+      const e = { score: body.score, round: body.round, durationMs: body.durationMs, guardian: typeof body.guardian === "string" ? body.guardian : "",
+        week: typeof body.week === "string" ? body.week : "", at: now };
+      let bad = lbCheck(e, now);
+      // la partida tiene que entrar en el tiempo que pasó desde tu envío anterior (con 2 min de margen)
+      if(!bad && last && e.durationMs > now - last + 120000) bad = { error: "IMPLAUSIBLE", msg: "Esa partida no entra en el tiempo desde tu envío anterior." };
+      if(bad){
+        log("LB_REJECT", { user: uid, why: bad.error, score: e.score, round: e.round, ms: e.durationMs });
+        return err(req, res, bad.error === "WEEK_CLOSED" ? 409 : bad.error === "IMPLAUSIBLE" ? 422 : 400, bad.error, bad.msg);
+      }
+      lbLast.set(uid, now);
+      const put = await store.lbPut(e.week, uid, e.guardian, e);
+      const all = await store.lbRank(e.week, null, uid), mine = await store.lbRank(e.week, e.guardian, uid);
+      log("LB_SUBMIT", { user: uid, week: e.week, score: e.score, round: e.round, improved: put.improved, rank: all.rank });
+      return send(req, res, 200, { ok: true, week: e.week, improved: put.improved, rank: all.rank, total: all.total,
+        guardianRank: mine.rank, guardianTotal: mine.total, best: all.row ? { score: all.row.score, round: all.row.round, guardian: all.row.guardian } : null });
     }
   };
 
@@ -540,4 +747,4 @@ function create(opts){
     async close(){ clearInterval(sweeper); if(store && store.close) await store.close(); } };
 }
 
-module.exports = { create, summarize, hashPassword, verifyPassword, SAVE_MAX_BYTES };
+module.exports = { create, summarize, hashPassword, verifyPassword, SAVE_MAX_BYTES, lbWeekKey, lbWeekStart, lbMaxScore, lbCheck };

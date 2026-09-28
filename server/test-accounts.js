@@ -148,6 +148,96 @@ const SAVE = (gold, lvl) => ({ gold, gems: 0, champions: { tanque: { unlocked: t
   check("relay.salas_siguen_andando", joined && /^[A-Z2-9]{6}$/.test(joined.room.code));
   ws.close();
 
+  // --- RANKING SEMANAL DE LA HORDA INFINITA ---
+  {
+  const A = require("./accounts.js");
+  check("lb.semana_iso_utc", A.lbWeekKey(new Date("2026-01-01T00:00:00Z")) === "2026-W01" && A.lbWeekKey(new Date("2026-09-28T10:00:00Z")) === "2026-W40"
+    && A.lbWeekKey(new Date("2026-10-04T23:59:00Z")) === "2026-W40" && A.lbWeekKey(new Date("2026-10-05T00:00:00Z")) === "2026-W41");
+  check("lb.techo_crece_con_ronda_y_tiempo", A.lbMaxScore(10, 8 * 60000) > A.lbMaxScore(10, 60000) && A.lbMaxScore(20, 60000) > A.lbMaxScore(10, 60000) && A.lbMaxScore(1, 30000) < 30000, [A.lbMaxScore(1, 30000), A.lbMaxScore(10, 480000)]);
+  // en el servidor real (el del relay): un invitado VE la tabla (vacía) y no puede enviar
+  const cur = A.lbWeekKey(new Date());
+  const lg0 = await api("GET", "/api/leaderboard");
+  check("lb.invitado_ve_la_tabla", lg0.status === 200 && lg0.j.week === cur && lg0.j.current === cur && Array.isArray(lg0.j.entries) && lg0.j.me === null && lg0.j.endsAt > Date.now(), lg0.j);
+  const s0 = await api("POST", "/api/leaderboard/submit", { score: 100, round: 1, guardian: "mago", week: cur, durationMs: 30000 });
+  check("lb.invitado_no_envia_401", s0.status === 401, s0.j);
+  // instancia aparte con un reloj que controla la prueba (envíos seguidos, cambio de semana)
+  let clock = Date.UTC(2026, 9, 1, 12, 0, 0); // jueves 1/10/2026 (semana 2026-W40)
+  const lbDir = PG ? null : fs.mkdtempSync(path.join(os.tmpdir(), "horda-lb-"));
+  const acc2 = A.create({ dataDir: lbDir, databaseUrl: PG ? process.env.DATABASE_URL : "", log: () => {}, now: () => clock });
+  await acc2.ready;
+  const srv2 = require("http").createServer((req, res) => { if(!acc2.handle(req, res)){ res.writeHead(404); res.end(); } });
+  await new Promise(ok => srv2.listen(0, "127.0.0.1", ok));
+  const B2 = "http://127.0.0.1:" + srv2.address().port;
+  const api2 = async (method, p, body, token) => {
+    const h = {}; if(body !== undefined) h["content-type"] = "application/json"; if(token) h.authorization = "Bearer " + token;
+    const r = await fetch(B2 + p, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) });
+    let j = null; try{ j = await r.json(); }catch(e){} return { status: r.status, j };
+  };
+  const W = "2026-W40";
+  const regs = {};
+  for(const n of ["Lucia", "Bruno", "Carla"]){ const r = await api2("POST", "/api/register", { user: n + "LB", pass: "ranking-123" }); regs[n] = r.j.token; check("lb.registro_" + n, r.status === 201, r.status); }
+  const sub = (who, e) => api2("POST", "/api/leaderboard/submit", Object.assign({ week: W, guardian: "mago" }, e), regs[who]);
+  const tick = s => { clock += s * 1000; };
+  const l1 = await sub("Lucia", { score: 12000, round: 8, durationMs: 6 * 60000 });
+  check("lb.envio_ok_puesto_1", l1.status === 200 && l1.j.improved && l1.j.rank === 1 && l1.j.total === 1 && l1.j.week === W, l1.j);
+  tick(2);
+  const lGap = await sub("Lucia", { score: 13000, round: 8, durationMs: 1000 * 70 });
+  check("lb.freno_entre_envios_429", lGap.status === 429 && lGap.j.error === "TOO_MANY", lGap.j);
+  tick(60);
+  const lWall = await sub("Lucia", { score: 15000, round: 9, durationMs: 10 * 60000 });
+  check("lb.partida_mas_larga_que_el_tiempo_desde_el_envio_anterior_422", lWall.status === 422 && lWall.j.error === "IMPLAUSIBLE", lWall.j);
+  tick(20 * 60);
+  const lLow = await sub("Lucia", { score: 9000, round: 7, durationMs: 5 * 60000 });
+  check("lb.peor_puntaje_no_pisa", lLow.status === 200 && !lLow.j.improved && lLow.j.best.score === 12000, lLow.j);
+  tick(20 * 60);
+  const b1 = await sub("Bruno", { score: 20000, round: 11, durationMs: 9 * 60000, guardian: "tanque" });
+  check("lb.otro_jugador_pasa_primero", b1.status === 200 && b1.j.rank === 1 && b1.j.total === 2, b1.j);
+  const cFast = await sub("Carla", { score: 5000, round: 12, durationMs: 60000 });
+  check("lb.demasiadas_rondas_para_el_tiempo_422", cFast.status === 422 && /rondas/.test(cFast.j.msg), cFast.j);
+  const cHuge = await sub("Carla", { score: 5e6, round: 3, durationMs: 3 * 60000 });
+  check("lb.puntaje_imposible_422", cHuge.status === 422 && cHuge.j.error === "IMPLAUSIBLE", cHuge.j);
+  const cBad = await sub("Carla", { score: 100, round: 1, durationMs: 30000, guardian: "<script>" });
+  check("lb.guardian_invalido_400", cBad.status === 400 && cBad.j.error === "BAD_GUARDIAN", cBad.j);
+  const cStr = await sub("Carla", { score: "100", round: 1, durationMs: 30000 });
+  check("lb.tipos_invalidos_400", cStr.status === 400, cStr.j);
+  const cOld = await sub("Carla", { score: 100, round: 1, durationMs: 30000, week: "2026-W38" });
+  check("lb.semana_cerrada_409", cOld.status === 409 && cOld.j.error === "WEEK_CLOSED", cOld.j);
+  // límite de envíos por cuenta (10 cada 10 min): Carla ya usó 5 (rechazados cuentan)
+  let lim = null, nOk = 0;
+  for(let i = 0; i < 8 && (!lim || lim.status !== 429); i++){ tick(9); lim = await sub("Carla", { score: 1000 + i, round: 1, durationMs: 9000 }); if(lim.status === 200) nOk++; }
+  check("lb.limite_de_envios_por_cuenta_429", lim.status === 429 && nOk === 5, { st: lim.status, nOk });
+  // tabla: el mejor de cada cuenta, en orden, con "me" para el que pregunta con sesión
+  const t1 = await api2("GET", "/api/leaderboard", undefined, regs.Lucia);
+  check("lb.tabla_ordenada_mejor_por_cuenta", t1.status === 200 && t1.j.week === W && t1.j.total === 3 && t1.j.entries.map(e => e.score).join() === "20000,12000,1004"
+    && t1.j.entries[0].name === "BrunoLB" && t1.j.entries[1].me && !t1.j.entries[0].me && t1.j.me.rank === 2, t1.j);
+  const tG = await api2("GET", "/api/leaderboard?guardian=tanque");
+  check("lb.tabla_por_guardian", tG.j.total === 1 && tG.j.entries[0].name === "BrunoLB" && tG.j.me === null && tG.j.guardian === "tanque", tG.j);
+  const tL = await api2("GET", "/api/leaderboard?limit=1");
+  check("lb.limite_de_filas", tL.j.entries.length === 1 && tL.j.total === 3);
+  check("lb.semana_mal_escrita_400", (await api2("GET", "/api/leaderboard?week=hola")).status === 400);
+  // cambio de semana: la anterior entra unas horas (partida que cruzó la medianoche del domingo) y después cierra
+  clock = Date.UTC(2026, 9, 5, 2, 0, 0); // lunes 5/10 02:00 UTC -> 2026-W41
+  const late = await sub("Bruno", { score: 26000, round: 12, durationMs: 11 * 60000, guardian: "tanque" });
+  check("lb.semana_anterior_con_gracia", late.status === 200 && late.j.week === W && late.j.improved, late.j);
+  const nw = await api2("GET", "/api/leaderboard");
+  check("lb.semana_nueva_arranca_vacia", nw.j.week === "2026-W41" && nw.j.total === 0 && nw.j.entries.length === 0, nw.j);
+  const pw = await api2("GET", "/api/leaderboard?week=" + W, undefined, regs.Bruno);
+  check("lb.semana_pasada_se_puede_consultar", pw.j.entries[0].score === 26000 && pw.j.me.rank === 1, pw.j.me);
+  clock = Date.UTC(2026, 9, 5, 9, 0, 0);
+  const late2 = await sub("Bruno", { score: 30000, round: 13, durationMs: 11 * 60000, guardian: "tanque" });
+  check("lb.semana_anterior_cierra_despues_de_la_gracia", late2.status === 409, late2.j);
+  if(!PG){
+    await acc2.close();
+    const acc3 = A.create({ dataDir: lbDir, databaseUrl: "", log: () => {}, now: () => clock });
+    await acc3.ready;
+    const top3 = await acc3.store.lbTop(W, null, 50);
+    check("lb.archivo_sobrevive_reinicio", top3.length === 3 && top3[0].score === 26000 && top3[0].name === "BrunoLB", top3.map(r => r.score));
+    await acc3.close();
+    try{ fs.rmSync(lbDir, { recursive: true, force: true }); }catch(e){}
+  } else await acc2.close();
+  srv2.close();
+  }
+
   // --- persistencia en disco: otra instancia sobre la misma carpeta ve todo (simula reiniciar)
   if(!PG){
     const files = fs.readdirSync(process.env.DATA_DIR);
