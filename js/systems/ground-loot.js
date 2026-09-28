@@ -82,6 +82,9 @@ function groundLootDrop(x, y, grade, hm, arena, rk){
   const it = materializeLoot(spec, classKey, arena || currentArena);
   if(!it) return null;
   it.lootTier = spec.tier;
+  // Pesadilla/Infierno: cae con nivel extra, igual que el cofre (loot.js)
+  const lb = typeof diffItemLevelBonus==="function" ? diffItemLevelBonus() : 0;
+  if(lb > 0) it.level = Math.min(ITEM_MAX_LEVEL, itemLevel(it) + lb);
   if(LOOT_PITY[spec.tier]){ save.lootPity[spec.tier] = 0; if(typeof persist==="function") persist(); } // cayó: su protección vuelve a cero
   const shown = itemTier(it);
   const g = {item:it, tier:shown, x, y, t0:(typeof animNow!=="undefined" && animNow) || performance.now(), id:++_glSeq, src:rk||""};
