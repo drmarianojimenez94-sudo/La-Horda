@@ -64,6 +64,12 @@ function updateDownedOverlay(){
   // el cartel central ("NIVEL 7", "RUNA ACTIVA…") caía justo detrás de este y no se leía ninguno
   const cb = document.getElementById("center-banner"); if(cb) cb.classList.toggle("downed", show);
   if(!show) return;
+  // el texto de abajo ("te está reviviendo… N%") cambia el alto del cartel: si el central quedó con un top
+  // en línea (hud-text.js, debajo del cartel de arena), se corre para no quedar debajo de este
+  if(cb && cb.classList.contains("show")){
+    const ob = el.getBoundingClientRect().bottom, ct = cb.getBoundingClientRect().top;
+    if(ct < ob + 8) cb.style.top = Math.round(ob + 14 + (cb.offsetHeight||40)/2) + "px"; // top es el centro del cartel (translate -50%)
+  }
   const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
   const alive = heroes.filter(h=>h.alive).length;
   document.getElementById("downed-sub").textContent = prog>0 ? `${heroLabel(by)} te está reviviendo… ${Math.round(prog*100)}%`

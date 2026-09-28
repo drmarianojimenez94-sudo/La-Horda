@@ -36,7 +36,7 @@ function _hudBannerNow(text){
   // central va debajo de los dos (antes el top en línea le ganaba a .downed y se pisaban)
   const dn = document.getElementById("downed-overlay"), dr = dn && !dn.classList.contains("hidden") ? dn.getBoundingClientRect() : null;
   const below = Math.max(cr && cr.height ? cr.bottom : 0, cr && cr.height && dr && dr.height ? dr.bottom : 0);
-  b.style.top = below ? Math.round(below + 20) + "px" : "";
+  b.style.top = below ? Math.round(below + 14 + (b.offsetHeight||40)/2) + "px" : ""; // (top es el centro: translate -50%)
   clearTimeout(HUDTXT.tmo); if(below) HUDTXT.tmo = setTimeout(()=>{ b.style.top = ""; }, 2300);
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
   HUDTXT.cur = String(text); HUDTXT.until = performance.now() + HUDTXT_READ_MS;
