@@ -162,8 +162,20 @@ function netHookEvents(){
     };
   }
 }
+// Eventos que no se pueden perder aunque el cuadro venga cargado (recompensas del invitado, muertes,
+// avisos del jefe/arena). Antes TODO se cortaba a los 260 eventos por snapshot: en el barrido de fin
+// de nivel (una muerte + una XP por enemigo y por invitado) el invitado perdía parte de su XP y los
+// últimos enemigos desaparecían sin su muerte. Los cosméticos (números, chispas, sonidos) siguen con tope.
+const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHudShow","bossHudHide","bossHudPhase","bossHudHint",
+  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip"]);
+let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){
-  if(_netEvents.length > 260) return;
+  if((name==="xp" || name==="gold") && to!==undefined && typeof args[0]==="number"){
+    const key = name + to, i = _netRewardIdx.get(key);
+    if(i!==undefined && _netEvents[i]){ _netEvents[i][1][0] += args[0]; return; }
+    _netRewardIdx.set(key, _netEvents.length); _netEvents.push([name, [args[0]], to]); return;
+  }
+  if(_netEvents.length > (NET_KEEP_EVENTS.has(name) ? 1200 : 260)) return;
   const inline = NET_INLINE_EVENTS.has(name);
   const a = args.map(x=>{
     if(inline && x && typeof x==="object" && x.type!==undefined){
@@ -328,7 +340,7 @@ function netHostStartGame(){
   return true;
 }
 function netStartMessage(){
-  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true)};
+  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
 }
 // Cada cuadro, en update(): héroes de los invitados.
 function netHostUpdateRemotes(dt){
@@ -341,7 +353,10 @@ function netHostUpdateRemotes(dt){
     if(Math.hypot(h.x-n.px, h.y-n.py) > 2) n.posAuth++;
     const canMove = h.alive && !(h.stunTimer>0) && !h.fused && !(axiomFreezeTimer>0 && axiomFreezeCaster!==h) && !h.duelActive && !heroMoveLocked(h);
     if(inp){
-      h.fx = inp.fx; h.fy = inp.fy;
+      // la mirada sale del joystick solo mientras camina (igual que el jugador local): quieto, mira a
+      // lo que ataca. Antes se pisaba cada cuadro con la del joystick y el guardián del invitado
+      // parpadeaba entre su objetivo y la última dirección en que caminó con cada golpe.
+      if(inp.mv){ h.fx = inp.fx; h.fy = inp.fy; }
       if(canMove && inp.pa===n.posAuth){
         const d = Math.hypot(inp.x-h.x, inp.y-h.y);
         const allowed = (h._spd||h.baseSpeed||200) * ((now-n.lastAt)/1000 + 0.35) + 40;
@@ -399,7 +414,15 @@ function netHostOnMsg(from, d){
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(useSkill(d.idx|0, d.aim||null)) netEmitTo(from, "useXp", [d.idx|0]); });
       return;
-    case "ult": if(state==="playing" && h.alive) netWithHero(h, ()=> useUltimate()); return;
+    case "ult":
+      if(state==="playing" && h.alive){
+        // la XP de uso de la ulti va al guardado del invitado (antes se sumaba solo a la copia de su
+        // guardián en el anfitrión, que se descarta al terminar: la ulti nunca subía de uso en cooperativo)
+        const u0 = h.ultCharge, c0 = h.ultCd||0;
+        netWithHero(h, ()=> useUltimate());
+        if(h.ultCharge < u0 || (h.ultCd||0) > c0) netEmitTo(from, "useXp", ["ult"]);
+      }
+      return;
     case "pact": if(state==="playing" && h.alive) nigroTogglePact(h); return; // Nigromante invitado
     case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
@@ -525,9 +548,13 @@ function _netDeltaOf(lastMap, obj, full){
   lastMap.__sent = 1;
   return any ? d : null;
 }
-function netBuildSnapshot(full){
+function netBuildSnapshot(full, forOne){ // forOne: estado para UN invitado (entra/vuelve): no se lleva los eventos ni las partículas de todos
   const M = netMatch;
   const snap = {k:"s", n:++M.snapN};
+  // el estado para UN invitado se arma con referencias propias: antes pisaba las del resto y el
+  // siguiente snapshot le llegaba a los demás como diferencia contra un estado que nunca vieron
+  // (enemigos nuevos sin tipo ni vida, bajas que no llegaban: fantasmas quietos hasta 10 s)
+  const saved = forOne ? [M.last, M.lastG, M.lastH] : null;
   if(full){ M.last = {}; M.lastG = {}; M.lastH = [{},{},{},{}]; snap.full = 1; }
   // ids para referencias: todos los enemigos vivos tienen id antes de serializar
   for(const e of enemies) netIdOf(e);
@@ -558,10 +585,11 @@ function netBuildSnapshot(full){
     if(u.length || r.length || full) snap.c[name] = {u, r};
   }
   // partículas nuevas (efímeras: se mandan una vez y cada invitado las anima)
+  if(forOne){ M.last = saved[0]; M.lastG = saved[1]; M.lastH = saved[2]; return snap; }
   const p = [];
   for(const pt of particles){ if(pt._s) continue; pt._s = 1; if(p.length < 90){ const s = netSer(pt, 1); if(s) p.push(s); } }
   if(p.length) snap.p = p;
-  if(_netEvents.length){ snap.v = _netEvents; _netEvents = []; }
+  if(_netEvents.length){ snap.v = _netEvents; _netEvents = []; _netRewardIdx = new Map(); }
   return snap;
 }
 function netHostTick(){
@@ -573,7 +601,7 @@ function netHostTick(){
   if(key) netMatch.lastKeyAt = now;
   const snap = netBuildSnapshot(key);
   const str = JSON.stringify({t:"msg", d:snap});
-  if(str.length > 240000){ snap.p = []; snap.v = []; }
+  if(str.length > 240000){ snap.p = []; snap.v = (snap.v||[]).filter(ev=>NET_KEEP_EVENTS.has(ev[0])); } // lo cosmético se descarta; recompensas y muertes, no
   netMatch.lastSnapBytes = str.length;
   netBroadcast(snap);
 }
@@ -598,7 +626,7 @@ function netGuestStartRun(msg){
   enemies = []; projectiles = []; particles = []; embers = []; potions = []; fireWalls = []; traps = []; chainFX = []; sparkFX = []; asesinoFx = []; axiomZones = []; sylvaRainZones = [];
   hazardZones = []; activeAxiomVfx = []; musashiAfterimages = [];
   acuaFish = []; acuaBubbles = []; acuaBubbleTimer = 0; acuaCurrent = {active:false, dx:0, dy:0, timer:0};
-  vfxResetRun(); resetFeedback(); bossHudHide(); boss = null; bossActive = false; activeChampion = null;
+  vfxResetRun(); resetFeedback(); bossHudHide(); if(typeof crystalReset==="function") crystalReset(); boss = null; bossActive = false; activeChampion = null;
   levelClearing = 0; levelTimer = 0; levelDuration = 1;
   // héroes en orden de slot; el propio es "player"
   heroes = msg.slots.map((s,i)=>{ const h = makeHero(s.champ, s.kind==="bot", 0, 0); h._netSlot = i; h.netName = s.name; return h; });
@@ -672,7 +700,9 @@ function netApplySnapshot(s){
     for(const k in d){
       if(own && k==="x"){ h._hx = d.x; continue; }
       if(own && k==="y"){ h._hy = d.y; continue; }
-      if(own && (k==="fx"||k==="fy"||k==="moving"||k==="animT"||k==="sylvaCharging")) continue;
+      // quieto, la mirada propia la decide el anfitrión (se da vuelta hacia lo que ataca, como en solitario)
+      if(own && (k==="fx"||k==="fy")){ if(!h.moving && typeof d[k]==="number") h[k] = d[k]; continue; }
+      if(own && (k==="moving"||k==="animT"||k==="sylvaCharging")) continue;
       if(!own && (k==="x"||k==="y")){ if(k==="x") h._tx = d.x; else h._ty = d.y; continue; }
       if(!own && k==="animT") continue;
       h[k] = netDecode(d[k]);
@@ -730,6 +760,9 @@ function netGuestOnMsg(from, d){
 function netGuestUpdate(dt){
   runElapsedMs += dt;
   vfxFrame(dt); vfxUpdate(dt); updateGore(dt); updateFloatTexts(dt);
+  // ceremonia del cristal de un Guardián (llega como evento crystalAward/crystalSteal): sin su reloj
+  // el cristal quedaba congelado en el piso del jefe, sin volar al jugador ni cartel "◆ … n/3 ◆"
+  if(typeof crystalTick==="function") crystalTick(dt);
   screenShakeDecay(dt); // curva exponencial con tope (juice.js)
   const me = player;
   // predicción del movimiento propio: responde al instante; el anfitrión solo lo corrige si
@@ -804,6 +837,7 @@ function netGuestCast(idx, aim){
 function netGuestShowBuffs(d){
   setState("buff");
   document.getElementById("buff-title").textContent = (typeof endlessOn==="function" && endlessOn()) ? `Ronda ${EN.round} contenida — elegí tu refuerzo` : `Nivel ${d.level} superado — elige tu refuerzo`;
+  if(typeof buffNoteRefresh==="function") buffNoteRefresh();
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff();
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";

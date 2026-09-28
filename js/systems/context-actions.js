@@ -29,7 +29,8 @@ const CTX_RATE = [0, 1, 1.6, 2, 2.3];
 
 function ctxTargets(){
   if(state!=="playing") return null;
-  const a = arenaHas("ctxTargets") ? (arenaHook("ctxTargets") || null) : null;
+  let a = arenaHas("ctxTargets") ? (arenaHook("ctxTargets") || null) : null;
+  if(a && a.indexOf(null)>=0) a = a.filter(Boolean); // (en el invitado, un objetivo que el snapshot no trajo)
   const x = typeof endlessCtxTargets==="function" ? endlessCtxTargets() : null; // Horda Infinita: rescates
   if(!x) return a;
   return (a && a.length) ? a.concat(x) : x;

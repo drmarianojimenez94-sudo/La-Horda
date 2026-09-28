@@ -30,6 +30,13 @@ function loop(t){
     // Antes: un error sin capturar acá frenaba requestAnimationFrame para siempre y la
     // pantalla quedaba congelada en negro sin ningún aviso. Ahora se atrapa, se muestra
     // un aviso arriba (para poder diagnosticarlo) y el loop sigue en el próximo frame.
+    // Un error a mitad del dibujo deja el ctx.save() de la cámara sin su restore: el zoom y el
+    // desplazamiento se acumulaban cuadro a cuadro y el mundo salía volando de la pantalla (quedaba
+    // solo el HUD). Se limpia la pila de estados del contexto y se vuelve a la escala base.
+    try{
+      if(typeof ctx.reset==="function"){ ctx.reset(); ctx.setTransform(canvas.width/VW, 0, 0, canvas.height/VH, 0, 0); ctx.imageSmoothingEnabled = false; }
+      else resize(true);
+    }catch(e){}
     if(String(err) !== lastLoopError){
       lastLoopError = String(err);
       console.error("Error en el loop del juego:", err);

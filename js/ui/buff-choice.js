@@ -7,9 +7,17 @@
 /* ============================================================
    BUFF CHOICE
    ============================================================ */
+// Nota al pie: el texto viejo ("se decide por voto del equipo") era falso en las dos modalidades. En
+// cooperativo cada humano elige SU refuerzo y se sigue cuando eligieron todos; solo, los bots no eligen.
+function buffNoteRefresh(){
+  const n = document.getElementById("vote-note"); if(!n) return;
+  const coop = typeof netMatch!=="undefined" && !!netMatch;
+  n.textContent = coop ? "Cada jugador elige su propio refuerzo; la partida sigue cuando eligieron todos." : "El refuerzo dura hasta el final de esta incursión.";
+}
 function openBuffChoice(){
   if(typeof endlessOn==="function" && endlessOn()){ endlessOpenBuffChoice(); return; } // Horda Infinita: refuerzos con sinergias (js/systems/endless.js)
   setState("buff");
+  buffNoteRefresh();
   document.getElementById("buff-title").textContent = `Nivel ${runLevel} superado — elige un refuerzo`;
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff(); // prólogo pendiente del cooperativo
   const cards = document.getElementById("buff-cards");

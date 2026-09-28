@@ -1,12 +1,12 @@
-// Cooperativo: los enemigos que mueren en el INVITADO caen y quedan tirados con su pose de muerte,
-// igual que en el anfitrión. Antes el invitado recibía el aviso de muerte con la copia del último
-// snapshot (alive:true) y dibujaba la caída y el cadáver DE PIE: parecían enemigos vivos quietos.
-//   (python3 -m http.server 8771 &) ; (cd server && PORT=8799 node relay.js &) ; node tools/bugfix/t_guest_corpses.js [carpeta_capturas]
+// Cooperativo: el guardián del INVITADO quieto mira a lo que ataca (como en solitario) y no parpadea.
+// Antes el anfitrión pisaba su mirada cada cuadro con la del joystick y el básico la volvía a girar
+// hacia el objetivo: en la pantalla del anfitrión el guardián del invitado se daba vuelta con cada
+// golpe, y en la del invitado quedaba mirando para el otro lado mientras le pegaba a lo de atrás.
+//   (python3 -m http.server 8771 &) ; (cd server && PORT=8799 node relay.js &) ; node tools/bugfix/t_guest_facing.js
 //   variables: SITE (default http://127.0.0.1:8771), RELAY (default ws://127.0.0.1:8799)
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
 const SITE = process.env.SITE || process.env.SE_BASE_URL || 'http://127.0.0.1:8771', RELAY = process.env.RELAY || 'ws://127.0.0.1:8799';
-const OUT = process.argv[2];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 400) : '')); if (!ok) fails++; };
 (async () => {
@@ -32,30 +32,36 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   await sleep(500);
   await H.p.evaluate(() => document.getElementById('prep-start-btn').click());
   for (let k = 0; k < 600 && !(await G.p.evaluate(() => state === 'playing')); k++) await sleep(100);
-  await sleep(1500);
-  // el anfitrión rodea al invitado con 8 duendes quietos (los demás enemigos afuera) y los mata juntos
+  await sleep(1200);
+  // el invitado camina un poco a la DERECHA y se queda quieto
+  await G.p.evaluate(async () => { joyVec = { x: 1, y: 0 }; await new Promise(r => setTimeout(r, 400)); joyVec = { x: 0, y: 0 }; });
+  await sleep(500);
+  // sin horda, los demás lejos; un duende quieto e inmortal a su IZQUIERDA
   await H.p.evaluate(() => { spawnTimer = 1e12; for (const e of enemies) e.alive = false; const g = heroes[1];
-    for (const h of heroes) if (h !== g) { h.x = g.x + 320; h.y = g.y + 220; h.stunTimer = 1e6; } // (quietos: los bots no los matan antes de tiempo)
-    window.__sp = []; for (let i = 0; i < 8; i++) { const e = spawnEnemy('duende_bosque', false, false); const a = i / 8 * Math.PI * 2; e.x = g.x + Math.cos(a) * 110; e.y = g.y + Math.sin(a) * 70; e.stunTimer = 1e6; __sp.push(e); } });
-  let seen = 0, hostN = 0;
-  for (let k = 0; k < 100; k++) { seen = await G.p.evaluate(() => enemies.filter(e => e.type === 'duende_bosque' && e.alive !== false).length); if (seen >= 6) break; await sleep(200); }
-  hostN = await H.p.evaluate(() => enemies.filter(e => e.type === 'duende_bosque' && e.alive).length);
-  check('GC.invitado_ve_a_los_duendes_vivos', seen >= 6, { seen, hostN });
-  await H.p.evaluate(() => { for (const e of __sp) { e.hp = 1; damageEnemy(e, 1e7, { src: player }); } });
-  // (el cadáver queda al terminar la animación de muerte, que corre con el reloj del juego: con la
-  // máquina cargada hay menos cuadros por segundo, así que se espera hasta que aparezcan)
-  for (let k = 0; k < 150; k++) { const n = await Promise.all([H, G].map(c => c.p.evaluate(() => corpseList.filter(c => c.e && c.e.type === 'duende_bosque').length))); if (n[0] >= 6 && n[1] >= 6) break; await sleep(200); }
-  const r = await Promise.all([H, G].map(c => c.p.evaluate(() => {
-    const cs = corpseList.filter(c => c.e && c.e.type === 'duende_bosque');
-    // qué cuadro de la hoja se elige para el cadáver: el de muerte (tirado), no uno de caminata
-    const d = PACK_ANIM.duende_bosque, P = ENEMY_ATLAS_PACK.duende_bosque;
-    return { n: cs.length, alive: cs.filter(c => c.e.alive).length, inEnemies: enemies.filter(e => e.type === 'duende_bosque' && e.alive !== false).length, hasSheet: !!(d || P) };
-  })));
-  check('GC.anfitrion_cadaveres_muertos', r[0].n >= 6 && r[0].alive === 0, r[0]);
-  check('GC.invitado_cadaveres_muertos', r[1].n >= 6 && r[1].alive === 0, r[1]);
-  check('GC.invitado_sin_enemigos_fantasma', r[1].inEnemies === 0, r[1]);
-  if (OUT) await Promise.all([H.p.screenshot({ path: OUT + '/gc_host.png' }), G.p.screenshot({ path: OUT + '/gc_guest.png' })]);
-  check('GC.sin_errores', H.errs.length + G.errs.length === 0, H.errs.concat(G.errs).slice(0, 4));
+    for (const h of heroes) if (h !== g) { h.x = g.x + 900; h.y = g.y + 500; h.stunTimer = 1e6; }
+    const e = spawnEnemy('duende_bosque', false, false); e.x = g.x - 130; e.y = g.y; e.stunTimer = 1e6; e.hp = e.maxHp = 1e9; window.__dummy = e; });
+  await sleep(600);
+  const before = await G.p.evaluate(() => Math.sign(player.fx));
+  check('GF.el_invitado_empieza_mirando_a_la_derecha', before === 1, before);
+  // el invitado mantiene el ataque básico sin moverse
+  await G.p.evaluate(() => { basicHeld = true; });
+  const hs = await H.p.evaluate(async () => {
+    const g = heroes[1], xs = []; const t0 = performance.now();
+    await new Promise(r => { const f = () => { xs.push(Math.sign(Math.round(g.fx * 10))); if (performance.now() - t0 < 2500) requestAnimationFrame(f); else r(); }; requestAnimationFrame(f); });
+    let flips = 0; for (let i = 1; i < xs.length; i++) if (xs[i] && xs[i - 1] && xs[i] !== xs[i - 1]) flips++;
+    return { flips, last: xs[xs.length - 1], n: xs.length, hit: Math.round(__dummy.maxHp - __dummy.hp) };
+  });
+  check('GF.el_invitado_pega', hs.hit > 0, hs);
+  check('GF.anfitrion_ve_al_invitado_sin_parpadear', hs.flips <= 1, hs);
+  check('GF.anfitrion_lo_ve_mirando_al_objetivo', hs.last === -1, hs);
+  const gs = await G.p.evaluate(() => Math.sign(Math.round(player.fx * 10)));
+  check('GF.invitado_se_ve_mirando_al_objetivo', gs === -1, gs);
+  // al volver a caminar, la mirada es la del joystick al instante
+  await G.p.evaluate(async () => { basicHeld = false; joyVec = { x: 1, y: 0.1 }; await new Promise(r => setTimeout(r, 300)); });
+  const mv = await G.p.evaluate(() => Math.sign(player.fx));
+  await G.p.evaluate(() => { joyVec = { x: 0, y: 0 }; });
+  check('GF.caminando_manda_el_joystick', mv === 1, mv);
+  check('GF.sin_errores', H.errs.length + G.errs.length === 0, H.errs.concat(G.errs).slice(0, 4));
   await b.close();
   console.log('SUMMARY ' + (fails ? 'FAIL' : 'OK') + ' fails=' + fails);
   process.exit(fails ? 1 : 0);
