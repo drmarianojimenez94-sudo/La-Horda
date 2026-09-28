@@ -15,19 +15,27 @@
 .loot-toast .lt-name{ font-size:1.15rem; text-shadow:1px 1px 0 #000; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .loot-toast .lt-tier{ font-size:0.85rem; color:#b9a88a; letter-spacing:1px; text-transform:uppercase; }
 .loot-toast.lt-warn{ --tc:#ff8a6a; color:#ffb49a; font-size:1.05rem; padding:4px 10px; }
+/* en la pila de avisos de arriba a la derecha (#toast-stack, ground-loot.js): ancho de la pila, más compactos */
+#toast-stack #loot-toasts{ position:static; transform:none; left:auto; bottom:auto; width:auto; max-width:none; align-items:stretch; gap:3px; }
+#toast-stack .loot-toast{ padding:2px 8px 2px 3px; gap:6px; }
+#toast-stack .loot-toast .lt-ico{ width:20px; height:20px; flex:none; }
+#toast-stack .loot-toast .lt-txt{ gap:5px; }
+#toast-stack .loot-toast .lt-name{ font-size:1.02rem; max-width:100%; }
+#toast-stack .loot-toast .lt-tier{ font-size:0.75rem; }
+#toast-stack .loot-toast.lt-warn{ font-size:0.95rem; }
 @keyframes ltIn{ from{ opacity:0; transform:translateY(8px) scale(0.96); } to{ opacity:1; transform:none; } }
 
 /* Afijos en la ficha del objeto */
 .ip-line.item-affix{ color:#d8e6ff; }
 .inv-card .item-passives .item-affix{ color:#d8e6ff; }
-.afx-range{ color:var(--text-dim, #9a8a70); font-size:0.9em; }
+.afx-range{ color:var(--text-dim, #9a8a70); font-size:max(0.9em, 11px); }
 .afx-cmp{ font-weight:700; }
 .afx-cmp.up, .afx-cmp.new{ color:#7dff9a; }
 .afx-cmp.down, .afx-lost .afx-cmp{ color:#ff7a6a; }
 .afx-cmp.eq{ color:var(--text-dim, #9a8a70); }
 .ip-line.afx-lost{ color:#ff9a8a; opacity:0.85; }
 .afx-reroll-btn{ margin-left:4px; padding:1px 6px; border-radius:5px; border:1px solid #c9a24a; background:rgba(201,162,74,0.12); color:#ffd98a;
-  font-family:inherit; font-size:0.54rem; font-weight:700; cursor:pointer; vertical-align:middle; min-height:22px; }
+  font-family:inherit; font-size:0.8rem; font-weight:normal; cursor:pointer; vertical-align:middle; min-height:22px; }
 
 /* Mística: elegir entre el afijo original y las opciones nuevas */
 #affix-reroll{ position:fixed; inset:0; z-index:125; display:flex; align-items:center; justify-content:center; padding:12px; }

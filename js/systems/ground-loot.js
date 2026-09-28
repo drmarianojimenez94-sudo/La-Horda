@@ -167,6 +167,10 @@ function groundLootToast(it, text){
   if(typeof document==="undefined") return;
   let box = document.getElementById("loot-toasts");
   if(!box){ box = document.createElement("div"); box.id = "loot-toasts"; document.body.appendChild(box); }
+  // en la pila de avisos de ARRIBA A LA DERECHA (con los de red y desafíos), no en el medio de la pelea:
+  // jerarquía de textos en js/ui/hud-text.js
+  const host = typeof toastStackHost==="function" ? toastStackHost() : null;
+  if(host && box.parentNode !== host) host.appendChild(box);
   const el = document.createElement("div");
   el.className = "loot-toast";
   if(it){
@@ -175,7 +179,7 @@ function groundLootToast(it, text){
     el.innerHTML = `${typeof itemIconHTML==="function" ? itemIconHTML(it, "lt-ico") : ""}<span class="lt-txt"><span class="lt-name" style="color:${col}">${it.name}</span><span class="lt-tier">${tl}</span></span>`;
   } else { el.classList.add("lt-warn"); el.textContent = text || ""; }
   box.appendChild(el);
-  while(box.children.length > 3) box.removeChild(box.firstChild);
+  while(box.children.length > (host ? 2 : 3)) box.removeChild(box.firstChild); // arriba a la derecha, 2 (no bajan hasta los botones)
   setTimeout(()=>{ el.classList.add("out"); }, 2300);
   setTimeout(()=>{ if(el.parentNode) el.parentNode.removeChild(el); }, 2800);
 }

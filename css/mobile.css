@@ -83,6 +83,9 @@
   #run-intro .ri-act, .story-vic .sv-k, .story-vic .sv-say b{ font-size:0.7rem; letter-spacing:1px; line-height:1.4; }
   /* casilla "Reducir movimiento" de la pausa: mínimo 40 px en el celular */
   .pause-motion input[type=checkbox]{ width:40px; height:40px; margin:0 0 0 6px; accent-color:var(--ember1); vertical-align:middle; }
+  /* Mística (botón dentro del renglón del afijo) y rótulo de quién habla en el Campamento */
+  #item-preview .afx-reroll-btn{ min-height:40px; font-size:0.85rem; padding:2px 8px; } /* (loot.css carga después: más específico) */
+  #camp .camp-box-who, #camp.act-card .camp-box-who{ font-size:0.6875rem; letter-spacing:1px; }
 }
 /* Sala online: los botones de guardián y las frases rápidas del chat salían en la letra del sistema (Arial) */
 .net-champ, #net-chat .nc-chip, #net-chat .nc-notice, #net-chat input{ font-family:var(--font-retro); }

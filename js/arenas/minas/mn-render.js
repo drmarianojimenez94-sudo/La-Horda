@@ -196,7 +196,7 @@ function _mnDrawShaft(E, t){
   // escalera que baja
   ctx.strokeStyle = "#6a4a2a"; ctx.lineWidth = 3;
   for(let k=0;k<5;k++){ const y = E.y - 26 + k*12; ctx.beginPath(); ctx.moveTo(E.x - 26 + k*2, y); ctx.lineTo(E.x + 26 - k*2, y); ctx.stroke(); }
-  ctx.fillStyle = "rgba(255,200,120,0.55)"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.fillText("▼ BAJADA", E.x, E.y - 54);
+  ctx.fillStyle = "rgba(255,200,120,0.55)"; ctx.font = pxFont(12); ctx.textAlign = "center"; ctx.fillText("▼ BAJADA", E.x, E.y - 54);
   ctx.restore();
 }
 function _mnDrawCage(E, t){
@@ -322,7 +322,7 @@ function _mnDrawLight(L, t){
   // el Devoraluz / un Consumidor van por esta luz: aro violeta que late
   const hunted = enemies.some(e=>e.alive && ((e.type==="mn_devoraluz" && e.dv && e.dv.L===L.i && e.dv.st!=="SELECT") || (e.type==="mn_consumidor" && e.mnDrain===L.i)));
   if(hunted && !off){ const q = 0.5 + 0.5*Math.sin(t*10); ctx.save(); ctx.strokeStyle = `rgba(200,90,255,${0.5 + 0.4*q})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(L.x, L.y, 46 + q*8, 18 + q*3, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore(); }
-  if(off && L.off > 0){ ctx.save(); ctx.fillStyle = "rgba(255,200,140,0.7)"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.fillText("…", L.x, L.y - 96); ctx.restore(); }
+  if(off && L.off > 0){ ctx.save(); ctx.fillStyle = "rgba(255,200,140,0.7)"; ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.fillText("…", L.x, L.y - 96); ctx.restore(); }
 }
 // PUERTA DEL UMBRAL con los paneles de la hoja (sellada -> grietas -> apertura -> portal activo -> idle). Se apoya
 // sobre la pared norte; el aro del portal late y echa brasas. Sin la hoja se usa el dibujo por código de abajo.
@@ -368,7 +368,7 @@ function _mnDrawGate(t){
   else { const q = Math.min(1, (mnS.portal.st==="opening" ? mnS.portal.t/MN_CFG.cerbero.portalMs : 1)); _mnPiece("puerta_mina_0", -150 - q*60, -600, 210*(1 - q*0.2), 1 - q*0.5, false, 1, "rgba(40,6,2,0.5)"); _mnPiece("puerta_mina_0", 150 + q*60, -600, 210*(1 - q*0.2), 1 - q*0.5, true, 1, "rgba(40,6,2,0.5)"); }
   // runas del arco
   const ra = hot ? 0.6 + 0.3*Math.sin(t*4) : 0.18;
-  ctx.fillStyle = `rgba(255,80,30,${ra})`; ctx.font = "bold 18px serif"; ctx.textAlign = "center";
+  ctx.fillStyle = `rgba(255,80,30,${ra})`; ctx.font = pxFont(18); ctx.textAlign = "center";
   const R = "ᚦᛟᚱᚾᛉᛞᚺᛊ"; for(let k=0;k<R.length;k++){ const a = Math.PI*(0.15 + 0.7*k/(R.length - 1)); ctx.fillText(R[k], Math.cos(a)*-230, -700 - Math.sin(a)*150); }
   ctx.restore();
 }
@@ -541,7 +541,7 @@ function _mnDrawDrop(D, t){
   } else {
     ctx.beginPath(); ctx.ellipse(D.x, D.y, D.r, D.r*0.72, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
     ctx.fillStyle = `rgba(${col},0.3)`; ctx.beginPath(); ctx.ellipse(D.x, D.y, D.r*q, D.r*0.72*q, 0, 0, Math.PI*2); ctx.fill();
-    if(D.k==="amb"){ ctx.fillStyle = Math.sin(t*16) > 0 ? "#ff40ff" : "#fff"; ctx.font = "bold 24px sans-serif"; ctx.textAlign = "center"; ctx.fillText("!", D.x, D.y - 70); }
+    if(D.k==="amb"){ ctx.fillStyle = Math.sin(t*16) > 0 ? "#ff40ff" : "#fff"; ctx.font = pxFont(24); ctx.textAlign = "center"; ctx.fillText("!", D.x, D.y - 70); }
     if(D.black){ ctx.strokeStyle = `rgba(255,220,140,${0.25 + 0.2*pulse})`; ctx.setLineDash([4, 8]); ctx.beginPath(); ctx.ellipse(D.x, D.y, D.black, D.black*0.72, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); }
   }
   ctx.restore();
@@ -561,13 +561,13 @@ function mnDrawScreen(){
   const lit = mnLitCount(), tot = mnS.lights.length, dark = mnHeroDark(player);
   const obj = mnS.portal.st==="open" ? "🜂 ATRAVIESA EL UMBRAL" : mnS.portal.st==="opening" ? "EL UMBRAL SE ABRE…" : "";
   const txt = `🔥 Luces ${lit}/${tot}  ·  ${dark ? "🌑 A OSCURAS (+daño recibido)" : "☀ En la luz"}` + (mnS.sec < 5 ? `  ·  −${mnSector().depth} m` : "");
-  ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+  ctx.font = pxFont(13); ctx.textAlign = "center";
   const bossUp = (bossActive && boss && boss.alive) || !!mnEnt("mn_titan");
   const tw = ctx.measureText(txt).width + 24, px = VW/2, py = Math.max(52, VH*0.085) + (bossUp ? 40 : 0);
   ctx.fillStyle = "rgba(8,4,10,0.72)"; ctx.fillRect(px - tw/2, py - 16, tw, 24);
   ctx.strokeStyle = dark ? `rgba(200,90,255,${0.5 + 0.4*Math.sin(t*6)})` : "rgba(255,200,120,0.4)"; ctx.lineWidth = 1.5; ctx.strokeRect(px - tw/2, py - 16, tw, 24);
   ctx.fillStyle = "#f2e6dc"; ctx.fillText(txt, px, py);
-  if(obj){ ctx.font = "bold 16px sans-serif"; const w2 = ctx.measureText(obj).width + 30; ctx.fillStyle = "rgba(40,4,2,0.8)"; ctx.fillRect(px - w2/2, py + 14, w2, 26);
+  if(obj){ ctx.font = pxFont(16); const w2 = ctx.measureText(obj).width + 30; ctx.fillStyle = "rgba(40,4,2,0.8)"; ctx.fillRect(px - w2/2, py + 14, w2, 26);
     ctx.strokeStyle = `rgba(255,90,40,${0.6 + 0.4*Math.sin(t*5)})`; ctx.strokeRect(px - w2/2, py + 14, w2, 26); ctx.fillStyle = "#ffd0b0"; ctx.fillText(obj, px, py + 33); }
   // alertas prioritarias con flecha hacia su lugar
   let ay = py + (obj ? 70 : 34);
@@ -575,7 +575,7 @@ function mnDrawScreen(){
     if(A.t > A.d || A.k==="portal") continue;
     const a = Math.min(1, (A.d - A.t)/400);
     const col = A.k==="dev" ? "230,120,255" : A.k==="drain" ? "255,200,110" : "255,150,90";
-    ctx.globalAlpha = a; ctx.font = "bold 12px sans-serif";
+    ctx.globalAlpha = a; ctx.font = pxFont(12);
     const w = ctx.measureText(A.txt).width + 34;
     ctx.fillStyle = "rgba(14,4,16,0.75)"; ctx.fillRect(px - w/2, ay - 13, w, 20);
     ctx.fillStyle = `rgb(${col})`; ctx.fillText(A.txt, px + 8, ay + 2);
@@ -588,7 +588,7 @@ function mnDrawScreen(){
   if(mnS.desc){
     const D = mnS.desc, T = MN_CFG.descentMs, x = D.t/T, a = x < 0.45 ? x/0.45 : Math.max(0, 1 - (x - 0.45)/0.55);
     ctx.fillStyle = `rgba(0,0,0,${Math.min(1, a*1.1)})`; ctx.fillRect(0, 0, VW, VH);
-    if(a > 0.4){ ctx.globalAlpha = Math.min(1, (a - 0.4)*2); ctx.fillStyle = "#e8c8a0"; ctx.font = "bold 20px sans-serif"; ctx.textAlign = "center"; ctx.fillText("DESCENDIENDO…", VW/2, VH/2 - 6); ctx.font = "14px sans-serif"; ctx.fillText(`−${MN_SECTORS[D.to].depth} m · ${MN_SECTORS[D.to].name}`, VW/2, VH/2 + 18); ctx.globalAlpha = 1; }
+    if(a > 0.4){ ctx.globalAlpha = Math.min(1, (a - 0.4)*2); ctx.fillStyle = "#e8c8a0"; ctx.font = pxFont(20); ctx.textAlign = "center"; ctx.fillText("DESCENDIENDO…", VW/2, VH/2 - 6); ctx.font = pxFont(14); ctx.fillText(`−${MN_SECTORS[D.to].depth} m · ${MN_SECTORS[D.to].name}`, VW/2, VH/2 + 18); ctx.globalAlpha = 1; }
   }
   ctx.restore();
   if(!player.duelActive && !mnS.desc) _mnMinimap();

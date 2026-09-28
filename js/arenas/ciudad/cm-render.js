@@ -127,7 +127,7 @@ function _cmDrawGroundMarks(t, V){
     ctx.save(); ctx.strokeStyle = dead ? "rgba(120,60,60,0.5)" : `rgba(120,255,150,${a + 0.2})`; ctx.lineWidth = 4; ctx.setLineDash([16, 10]); ctx.lineDashOffset = -t*20;
     ctx.beginPath(); ctx.ellipse(z.x, z.y, R, R*0.72, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     if(!dead){ ctx.fillStyle = `rgba(90,255,140,${a*0.35})`; ctx.fill(); _cmGlow(z.x, z.y, R, "90,255,140", a*0.5); }
-    ctx.fillStyle = dead ? "#a05050" : "#bfffcf"; ctx.font = "bold 22px sans-serif"; ctx.textAlign = "center"; ctx.fillText(dead ? "✖" : "🛡", z.x, z.y + 8);
+    ctx.fillStyle = dead ? "#a05050" : "#bfffcf"; ctx.font = pxFont(22); ctx.textAlign = "center"; ctx.fillText(dead ? "✖" : "🛡", z.x, z.y + 8);
     ctx.restore();
   }
   // campanas
@@ -368,19 +368,19 @@ function cmDrawTop(){
     if(c.st===CIV.HIDDEN && c.cue){
       const bob = Math.sin(t*4 + c.id)*3;
       ctx.save(); ctx.fillStyle = "rgba(20,30,20,0.7)"; ctx.beginPath(); ctx.arc(c.x, c.y - hh - 18 + bob, 13, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = "#bfffcf"; ctx.font = "bold 18px sans-serif"; ctx.textAlign = "center"; ctx.fillText("?", c.x, c.y - hh - 12 + bob);
+      ctx.fillStyle = "#bfffcf"; ctx.font = pxFont(18); ctx.textAlign = "center"; ctx.fillText("?", c.x, c.y - hh - 12 + bob);
       if(Math.random() < 0.01){ floatText(c.x, c.y - hh - 30, "*snif*", "heal"); playSfx("cmSob"); }
       ctx.restore();
     }
     if((c.warn||0) > 0 || c.st===CIV.KIDNAPPED){
       const x = c.st===CIV.KIDNAPPED ? c.x : c.x, y = c.st===CIV.KIDNAPPED ? c.y - 70 : c.y - hh - 16;
-      ctx.save(); ctx.fillStyle = Math.sin(t*16) > 0 ? "#ff3040" : "#ffd0d0"; ctx.font = "bold 22px sans-serif"; ctx.textAlign = "center"; ctx.fillText("!", x, y); ctx.restore();
+      ctx.save(); ctx.fillStyle = Math.sin(t*16) > 0 ? "#ff3040" : "#ffd0d0"; ctx.font = pxFont(22); ctx.textAlign = "center"; ctx.fillText("!", x, y); ctx.restore();
     }
     if(c.st===CIV.IDLE){
       const T = cmS.ctx.find(q=>q.cid===c.id), q = T ? (T.prog||0)/T.dur : 0;
       ctx.save(); ctx.strokeStyle = "rgba(160,255,180,0.85)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(c.x, c.y - hh - 12, 11, 0, Math.PI*2); ctx.stroke();
       if(q > 0){ ctx.strokeStyle = "#9dffb0"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(c.x, c.y - hh - 12, 11, -Math.PI/2, -Math.PI/2 + q*Math.PI*2); ctx.stroke(); }
-      ctx.fillStyle = "#9dffb0"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.fillText("🧍", c.x, c.y - hh - 8); ctx.restore();
+      ctx.fillStyle = "#9dffb0"; ctx.font = pxFont(12); ctx.textAlign = "center"; ctx.fillText("🧍", c.x, c.y - hh - 8); ctx.restore();
     }
     if(c.st===CIV.FOLLOW){ const h = heroes[c.lead]; if(h && h.alive){ ctx.save(); ctx.strokeStyle = "rgba(160,255,180,0.18)"; ctx.setLineDash([4, 8]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(c.x, c.y - 10); ctx.lineTo(h.x, h.y - 10); ctx.stroke(); ctx.restore(); } }
   }
@@ -391,7 +391,7 @@ function cmDrawTop(){
     if(!_cmVis(V, x - 80, y - 20, x + 80, y + 20)) return;
     const w = 110, f = S.hp/S.max, col = S.st===CM_ST.INTACT ? "#7dffa0" : S.st===CM_ST.DAMAGED ? "#ffd24a" : "#ff5a3a";
     ctx.save(); ctx.fillStyle = "rgba(0,0,0,0.65)"; ctx.fillRect(x - w/2 - 2, y - 2, w + 4, 10); ctx.fillStyle = col; ctx.fillRect(x - w/2, y, w*f, 6);
-    ctx.fillStyle = "#fff"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.fillText(`${s.name} · ${CM_ST_NAME[S.st]}`, x, y - 6); ctx.restore();
+    ctx.fillStyle = "#fff"; ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.fillText(`${s.name} · ${CM_ST_NAME[S.st]}`, x, y - 6); ctx.restore();
   });
 }
 
@@ -411,7 +411,7 @@ function cmDrawScreen(){
   const kid = cmS.civ.filter(c=>c.st===CIV.KIDNAPPED).length, danger = cmS.civ.filter(c=>cmCivFree(c) && (c.danger || c.st===CIV.RUN)).length + kid;
   const follow = cmS.civ.filter(c=>c.st===CIV.FOLLOW).length;
   const txt = `🧍 Rescatados ${cmS.saved}  ·  ✝ Perdidos ${cmS.lost}  ·  ⚠ En peligro ${danger}${follow ? `  ·  ↪ Te siguen ${follow}` : ""}`;
-  ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+  ctx.font = pxFont(13); ctx.textAlign = "center";
   const bossUp = (bossActive && boss && boss.alive) || (activeChampion && activeChampion.alive) || cmS.sub.st==="fight1";
   const tw = ctx.measureText(txt).width + 24, px = VW/2, py = Math.max(52, VH*0.085) + (bossUp ? 40 : 0);
   ctx.fillStyle = "rgba(10,4,8,0.72)"; ctx.fillRect(px - tw/2, py - 16, tw, 24);
@@ -419,7 +419,7 @@ function cmDrawScreen(){
   ctx.fillStyle = "#f2e6dc"; ctx.fillText(txt, px, py);
   // estructuras: fila de íconos con color por estado
   let sx = px - (CM_STRUCTS.length*26)/2 + 13;
-  CM_STRUCTS.forEach((s, i)=>{ const S = cmS.st[i], col = ["#7dffa0", "#ffd24a", "#ff5a3a", "#555"][S.st]; ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(sx - 11, py + 12, 22, 16); ctx.fillStyle = col; ctx.font = "12px sans-serif"; ctx.fillText(s.id==="puerta" ? "⛩" : s.id==="torre" ? "🗼" : s.id==="capilla" ? "⛪" : "🏠", sx, py + 25); if(S.hit > 0){ ctx.strokeStyle = "#ff5a3a"; ctx.strokeRect(sx - 11, py + 12, 22, 16); } sx += 26; });
+  CM_STRUCTS.forEach((s, i)=>{ const S = cmS.st[i], col = ["#7dffa0", "#ffd24a", "#ff5a3a", "#555"][S.st]; ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(sx - 11, py + 12, 22, 16); ctx.fillStyle = col; ctx.font = pxFont(12); ctx.fillText(s.id==="puerta" ? "⛩" : s.id==="torre" ? "🗼" : s.id==="capilla" ? "⛪" : "🏠", sx, py + 25); if(S.hit > 0){ ctx.strokeStyle = "#ff5a3a"; ctx.strokeRect(sx - 11, py + 12, 22, 16); } sx += 26; });
   // alertas prioritarias con flecha hacia su lugar
   // como mucho 2 a la vez (1 si el Hechicero está hablando), primero las urgentes (secuestro, muerte) y
   // después las más nuevas: a los 2-3 minutos se juntaban tutorial + 4 alertas + carteles en un teléfono chico
@@ -430,7 +430,7 @@ function cmDrawScreen(){
   for(const A of shown){
     const a = Math.min(1, (A.d - A.t)/400);
     const col = A.k==="lost" ? "255,110,90" : A.k==="bell" || A.k==="kid" || A.k==="grab" ? "255,170,60" : A.k==="run" ? "255,220,120" : "255,120,90";
-    ctx.globalAlpha = a; ctx.font = "bold 12px sans-serif";
+    ctx.globalAlpha = a; ctx.font = pxFont(12);
     const w = ctx.measureText(A.txt).width + 34;
     ctx.fillStyle = `rgba(20,6,6,0.75)`; ctx.fillRect(px - w/2, ay - 13, w, 20);
     ctx.fillStyle = `rgb(${col})`; ctx.fillText(A.txt, px + 8, ay + 2);
@@ -442,7 +442,7 @@ function cmDrawScreen(){
   // nivel 9: dos barras de vida (Maestro + Tramoyista juntos)
   if(cmS.sub.st==="fight1"){
     const L = ["cm_maestro", "cm_tramoyista"].map(k=>cmEnt(k)).filter(Boolean);
-    L.forEach((e, k)=>{ const w = Math.min(260, VW*0.38), x = VW/2 - w/2, y = 26 + k*24; ctx.fillStyle = "rgba(0,0,0,0.7)"; ctx.fillRect(x - 2, y - 2, w + 4, 14); ctx.fillStyle = k ? "#e0904a" : "#e04a6a"; ctx.fillRect(x, y, w*Math.max(0, e.hp/e.maxHp), 10); ctx.fillStyle = "#fff"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "left"; ctx.fillText(e.name + (e._rage ? " · FURIA" : ""), x, y - 4); });
+    L.forEach((e, k)=>{ const w = Math.min(260, VW*0.38), x = VW/2 - w/2, y = 26 + k*24; ctx.fillStyle = "rgba(0,0,0,0.7)"; ctx.fillRect(x - 2, y - 2, w + 4, 14); ctx.fillStyle = k ? "#e0904a" : "#e04a6a"; ctx.fillRect(x, y, w*Math.max(0, e.hp/e.maxHp), 10); ctx.fillStyle = "#fff"; ctx.font = pxFont(11); ctx.textAlign = "left"; ctx.fillText(e.name + (e._rage ? " · FURIA" : ""), x, y - 4); });
   }
   ctx.restore();
   if(!player.duelActive) _cmMinimap();

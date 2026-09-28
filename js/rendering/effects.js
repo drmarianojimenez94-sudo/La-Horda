@@ -10,6 +10,10 @@
 // eso eran cientos de nodos por segundo y trabas en el teléfono. Ahora siguen a la cámara y
 // no crean basura.
 const FT_MAX = 70;
+const FT_WORD_CAP = 3; // textos flotantes de palabras a la vez (los números van aparte, agrupados)
+// Letra del texto dibujado en el canvas: la misma fuente pixel que el HUD (antes era Georgia en negrita).
+// VT323 es un 20 % más chica que Georgia a igual tamaño: se agranda para que se lea igual (ver base.css).
+function pxFont(size){ return `${(size*1.22).toFixed(1)}px 'VT323', monospace`; }
 const floatTexts = [];
 for(let i=0;i<FT_MAX;i++) floatTexts.push({on:false, x:0, y:0, text:"", kind:0, t:0, dur:900, vx:0, val:0, dk:null, key:null, pop:0, sc:1});
 let _ftNext = 0, _ftAvg = 40;
@@ -66,6 +70,15 @@ function floatText(x,y,text,cls,dk,key){
     f.cls = cls;
     return;
   }
+  // textos de palabras ("¡se desdobla!", "Inventario lleno"): el mismo repetido no se apila, y a lo sumo
+  // FT_WORD_CAP a la vez (el más viejo deja su lugar). Jerarquía de textos: js/ui/hud-text.js
+  let words = 0, oldest = null;
+  for(let i=0;i<FT_MAX;i++){
+    const o = floatTexts[i]; if(!o.on || o.kind!==4) continue;
+    if(kind===4 && o.text===s && o.t < 600 && Math.abs(o.x - x) < 80){ o.t = 0; o.x = x; o.y = y; return; }
+    words++; if(!oldest || o.t > oldest.t) oldest = o;
+  }
+  if(kind===4 && words >= FT_WORD_CAP && oldest){ oldest.on = false; oldest.key = null; }
   const f = floatTexts[_ftNext]; _ftNext = (_ftNext+1)%FT_MAX;
   f.on = true; f.x = x; f.y = y; f.text = s; f.kind = kind; f.t = 0; f.val = 0; f.dk = null; f.key = null; f.pop = 0; f.sc = 1;
   f.dur = kind===4 ? 1300 : 820;
@@ -96,7 +109,7 @@ function _drawFloatText(f){
   // tamaño en pasos de 1 px de pantalla: pocas cadenas de fuente distintas (el cambio de fuente es lo caro)
   const size = Math.max(8, Math.round(st.size*(f.sc||1)*pop))/CAM_ZOOM;
   ctx.globalAlpha = a;
-  if(size !== _ftFontSize){ _ftFontSize = size; ctx.font = `bold ${size.toFixed(2)}px Georgia, serif`; }
+  if(size !== _ftFontSize){ _ftFontSize = size; ctx.font = pxFont(size); }
   const x = f.x + f.vx*q, y = f.y - rise/CAM_ZOOM*0.9;
   ctx.lineWidth = (f.kind===1 ? 4.5 : 3.5)/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
   ctx.fillStyle = (f.kind<=1 && f.dk && FT_DMG_COL[f.dk]) ? (f.kind===1 && f.dk==="physical" ? st.fill : FT_DMG_COL[f.dk]) : st.fill;

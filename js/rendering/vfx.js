@@ -275,7 +275,7 @@ function vfxDrawGround(){
       ctx.fillStyle = `rgba(${s.rgb},${0.18+0.12*pulseS})`; ctx.fill();
       ctx.lineWidth = 5; ctx.strokeStyle = `rgba(${s.rgb},${0.75+0.25*pulseS})`; ctx.stroke();
       ctx.beginPath(); ctx.arc(0, 0, s.r*(1-q)+4, 0, Math.PI*2); ctx.lineWidth = 2; ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.stroke();
-      ctx.font = "bold 18px Georgia, serif"; ctx.textAlign = "center"; ctx.fillStyle = "rgba(230,255,235,0.95)"; ctx.fillText("SEGURO", 0, 6);
+      ctx.font = pxFont(18); ctx.textAlign = "center"; ctx.fillStyle = "rgba(230,255,235,0.95)"; ctx.fillText("SEGURO", 0, 6);
       ctx.restore();
       continue;
     }

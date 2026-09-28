@@ -325,13 +325,23 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 #arena-title-card .atc-sub{font-family:'VT323',monospace; font-size:clamp(1rem, 3.4vw, 1.4rem); color:#e8c8a8; font-style:italic;}
 #arena-title-card::before, #arena-title-card::after{content:""; display:block; height:2px; margin:6px auto;
   width:70%; background:linear-gradient(90deg, rgba(176,128,64,0), rgba(224,176,96,0.9), rgba(176,128,64,0));}
+/* celular acostado: el cartel mide lo que su texto (no el 92 % de la pantalla) y no llega a la pila de avisos
+   de arriba a la derecha (#toast-stack, js/ui/hud-text.js) */
+@media (max-height:500px){
+  #arena-title-card{ width:max-content; max-width:calc(100vw - 2*(min(220px, 30vw) + 22px)); top:12%; }
+  #arena-title-card .atc-title{ font-size:clamp(0.9rem, 2.6vw, 1.3rem); line-height:1.35; }
+  #arena-title-card .atc-kicker{ font-size:0.6875rem; letter-spacing:2px; }
+  #arena-title-card .atc-sub{ font-size:1.1rem; }
+}
 @keyframes atcIn{ 0%{opacity:0; transform:translate(-50%,-12px) scale(1.06);} 10%{opacity:1; transform:translate(-50%,0) scale(1);}
   82%{opacity:1;} 100%{opacity:0;} }
 
 /* Tutorial jugable: la voz del Hechicero (js/systems/tutorial.js). No bloquea nada y va abajo al
    centro (entre el joystick y los botones) para no tapar al campeón. El retrato es
    PROVISORIO (capucha dibujada con CSS) hasta que exista el arte del Hechicero. */
-#tut-panel{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(8px + env(safe-area-inset-bottom,0px));
+/* ABAJO A LA IZQUIERDA, pegado al joystick (jerarquía de textos: js/ui/hud-text.js): el centro queda para
+   el guardián y los carteles de arena/fase. */
+#tut-panel{position:fixed; left:calc(126px + env(safe-area-inset-left,0px)); bottom:calc(8px + env(safe-area-inset-bottom,0px));
   width:max(250px, min(400px, calc(100vw - 440px))); display:flex; gap:10px; align-items:flex-start; z-index:16; pointer-events:none;
   background:linear-gradient(180deg, rgba(20,12,28,0.92), rgba(10,6,14,0.92)); border:2px solid #6a4a8a; border-radius:6px;
   padding:8px 10px; box-shadow:0 0 14px rgba(120,70,170,0.45); opacity:0; transition:opacity .35s;}
@@ -352,7 +362,7 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 @media (max-height: 500px){
   /* más bajo y angosto, pegado al borde (reseña #10): entre el joystick y los botones, debajo de los pies
      del guardián (la cámara lo ancla arriba de este cuadro, ver camFitAnchor en canvas.js) */
-  #tut-panel{ width:max(220px, min(300px, calc(100vw - 500px))); padding:3px 7px 4px; gap:6px;
+  #tut-panel{ width:max(200px, min(280px, calc(50vw - 136px))); padding:3px 7px 4px; gap:6px;
     bottom:calc(3px + env(safe-area-inset-bottom,0px)); background:linear-gradient(180deg, rgba(20,12,28,0.84), rgba(10,6,14,0.84)); border-width:1px; }
   #tut-panel .tut-face{ flex-basis:22px; height:22px; margin-top:1px; }
   #tut-panel .tut-who{ font-size:0.38rem; letter-spacing:2px; margin-bottom:1px; }
@@ -401,7 +411,8 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 .revive-btn{ font-size:0.86rem; font-weight:normal; }
 .float-text{ font-size:1.15rem; font-weight:normal; }
 .float-text.crit{ font-size:1.4rem; }
-#boss-name{ font-family:var(--font-pixel); font-size:0.78rem; font-weight:normal; letter-spacing:0.04em; }
+#boss-name{ font-family:var(--font-pixel); font-size:0.78rem; font-weight:normal; letter-spacing:0.04em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; } /* en un renglón: partido en dos pisaba la barra y la pausa */
 #boss-hud.sub #boss-name{ font-size:0.66rem; }
 #boss-epithet{ font-size:0.98rem; }
 #boss-status{ font-size:0.92rem; line-height:1; }

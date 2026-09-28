@@ -44,14 +44,12 @@ function hudStackLayout(){
 // Nombre del guardián en el HUD de partida: el corto si lo tiene ("Segador" por "Segador Olvidado"),
 // para que "Nombre · Nv. 30" entre en una línea en el teléfono. Menús, Códice y tienda: el completo.
 function hudClassName(c){ return c ? (c.hudName || c.name) : ""; }
-function showBanner(text){
+// Cartel central (arriba al centro). Pasa por la cola de js/ui/hud-text.js: si hay otro leyéndose o está el
+// cartel grande de la arena, espera su turno (prio 2 = urgente: se muestra ya). Ver la jerarquía allá.
+function showBanner(text, prio){
+  if(typeof hudBannerPush==="function"){ hudBannerPush(text, prio); return; }
   const b = document.getElementById("center-banner");
   b.textContent = text;
-  // si la guía del jefe está en pantalla, el cartel baja un poco para no pisarla
-  const intro = document.getElementById("boss-intro");
-  // …y lo mismo con el cartel de título de la arena (si no, los dos textos se pisan al entrar)
-  const card = typeof _arenaTitleUntil!=="undefined" && performance.now() < _arenaTitleUntil;
-  b.classList.toggle("low", !!(intro && !intro.classList.contains("hidden")) || card);
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
 }
 
@@ -75,6 +73,7 @@ function updateDownedOverlay(){
    ============================================================ */
 function updateHUD(){
   updateReviveBtn(); // antes nunca se llamaba: el botón quedaba inactivo para siempre
+  if(typeof hudTextTick==="function") hudTextTick(); // cola del cartel central (js/ui/hud-text.js)
   tutTick(); // la voz del Hechicero: cada concepto se enseña una vez, jugando (js/systems/tutorial.js)
   updateDownedOverlay();
   // Barra de vida con escudo: la capacidad total de referencia es vida máx + escudo máx

@@ -153,7 +153,7 @@ function labDrawGround(now){
     }
     // número romano
     ctx.fillStyle = s.lit ? "#fff0c0" : (next ? `rgba(255,207,92,${0.7 + 0.3*Math.sin(now*4)})` : "#c9a56a");
-    ctx.font = "bold 24px serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = pxFont(24); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.lineWidth = 4; ctx.strokeStyle = "rgba(10,6,2,0.85)"; ctx.strokeText(LAB_NUM[s.n], 0, 1);
     ctx.fillText(LAB_NUM[s.n], 0, 1);
     ctx.restore();
@@ -161,7 +161,7 @@ function labDrawGround(now){
   // cuenta regresiva de la ventana
   if(LAB.winT > 0 && LAB.seals.length && player){
     const secs = Math.ceil(LAB.winT/1000);
-    ctx.save(); ctx.fillStyle = secs <= 10 ? "#ff6a4a" : "#ffcf5c"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+    ctx.save(); ctx.fillStyle = secs <= 10 ? "#ff6a4a" : "#ffcf5c"; ctx.font = pxFont(13); ctx.textAlign = "center";
     ctx.fillText(`Sellos ${LAB.next-1}/3 · ${secs}s`, player.x, player.y + 44); ctx.restore();
   }
 }

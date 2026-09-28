@@ -379,7 +379,7 @@ function bosDrawGround(now){
     if(k > 0.55){ ctx.fillStyle = "#ffe066"; ctx.fillRect(-9, -14, 3, 2); ctx.fillRect(4, -14, 3, 2); }
     ctx.restore();
     // "!" encima
-    ctx.save(); ctx.fillStyle = k > 0.7 && Math.sin(now*20) > 0 ? "#ff4a3a" : "#ffcf5c"; ctx.font = "bold 22px sans-serif"; ctx.textAlign = "center";
+    ctx.save(); ctx.fillStyle = k > 0.7 && Math.sin(now*20) > 0 ? "#ff4a3a" : "#ffcf5c"; ctx.font = pxFont(22); ctx.textAlign = "center";
     ctx.fillText("!", a.x, a.y - 40 - k*6); ctx.restore();
   }
   // zona de influencia de cada runa encendida (roja) / despertándose (se llena)
@@ -422,7 +422,7 @@ function bosDrawTall(it, now){
     let txt = BOS_STATE_TXT[r.st] || "";
     if(r.prog > 0 && r.st!=="sealed" && r.st!=="finale") txt = "CONTENIENDO…";
     if(r.st==="sealed" && r.t > 0) txt += " " + Math.max(0, Math.ceil((BOS_CFG.sealMs - r.t)/1000)) + "s";
-    ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const w = ctx.measureText(txt).width + 10;
     ctx.fillStyle = "rgba(8,6,10,0.78)"; ctx.fillRect(Math.round(x - w/2), y - 34, Math.round(w), 15);
     ctx.fillStyle = r.st==="sealed" ? "#bfe8ff" : (r.st==="arming" ? "#ffb08a" : "#ff6a5a");
@@ -436,7 +436,7 @@ function bosDrawScreen(){
   const n = BOS.runes.length, w = 26, x0 = Math.round(VW/2 - n*w/2), y0 = 54;
   ctx.save();
   ctx.fillStyle = "rgba(8,6,10,0.62)"; ctx.fillRect(x0 - 50, y0 - 4, n*w + 58, 26);
-  ctx.font = "bold 11px sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillStyle = "#e8d8c0";
+  ctx.font = pxFont(11); ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillStyle = "#e8d8c0";
   ctx.fillText("Runas", x0 - 44, y0 + 9);
   BOS.runes.forEach((r, i)=>{
     const col = BOS_COL[r.st] || BOS_COL.ctrl, x = x0 + i*w + 4;
