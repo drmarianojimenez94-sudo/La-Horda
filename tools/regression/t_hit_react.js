@@ -139,11 +139,30 @@ async function boot(browser, opts) {
     }
     const dark = flash.filter(f => !(f.lit >= 25 && f.lit > f.base * 1.8 + 20 && f.usedOff && f.litOff > f.base * 1.8 + 20));
     check('HIT.destello_blanco_en_todos_los_cuerpos', flash.length >= 8 && dark.length === 0, { n: flash.length, dark, sample: flash.slice(0, 12) });
+    // 6) Madre Espora legible: versión "de juego" del mismo retrato (tamaño de píxel del juego, fondo
+    //    apagado, contorno de 1 px) y más chica; menos ruido a la escala del teléfono (844x390, zoom 0,6)
+    const mo = await E(async () => { __start('micelial', 'guerrero', 10);
+      for (let i = 0; i < 100 && !MIC_MP_OK.mp_full; i++) await new Promise(r => setTimeout(r, 100));
+      const leg = _micMotherLegible(), img = MIC_MP.mp_full; if (!leg) return { none: true };
+      const H = Math.round(MIC_MOTHER_H * 0.6), W = Math.round(H * img.width / img.height);
+      const noise = (src, h) => { const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.fillStyle = '#3a3020'; g.fillRect(0, 0, W, H); g.imageSmoothingEnabled = false; g.drawImage(src, 0, 0, W, H);
+        const d = g.getImageData(0, 0, W, H).data; let s = 0, n = 0; const L = i => d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11;
+        for (let y = 0; y < H; y++) for (let x = 1; x < W; x++) { const i = (y * W + x) * 4; s += Math.abs(L(i) - L(i - 4)); n++; } return s / n; };
+      const d = leg.getContext('2d').getImageData(0, 0, leg.width, leg.height).data; let outline = 0; for (let i = 0; i < d.length; i += 4) if (d[i] === 6 && d[i + 1] === 1 && d[i + 2] === 8) outline++;
+      const Hold = Math.round(500 * 0.6), Wold = Math.round(Hold * img.width / img.height);
+      const nOld = (() => { const c = document.createElement('canvas'); c.width = Wold; c.height = Hold; const g = c.getContext('2d'); g.fillStyle = '#3a3020'; g.fillRect(0, 0, Wold, Hold); g.imageSmoothingEnabled = false; g.drawImage(img, 0, 0, Wold, Hold);
+        const dd = g.getImageData(0, 0, Wold, Hold).data; let s = 0, n = 0; const L = i => dd[i] * 0.3 + dd[i + 1] * 0.59 + dd[i + 2] * 0.11; for (let y = 0; y < Hold; y++) for (let x = 1; x < Wold; x++) { const i = (y * Wold + x) * 4; s += Math.abs(L(i) - L(i - 4)); n++; } return s / n; })();
+      // figura contra fondo: diferencia de luminancia media entre lo que es figura y lo que es fondo pintado
+      const sep = (srcImg) => { const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.fillStyle = '#3a3020'; g.fillRect(0, 0, W, H); g.imageSmoothingEnabled = false; g.drawImage(srcImg, 0, 0, W, H); return g.getImageData(0, 0, W, H).data; };
+      const m = (() => { const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.drawImage(img, 0, 0, W, H); return g.getImageData(0, 0, W, H).data; })();
+      const sepOf = d => { let f = 0, nf = 0, b = 0, nb = 0; for (let i = 0; i < d.length; i += 4) { const L = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; if (_micMotherIsBg(m[i], m[i + 1], m[i + 2], m[i + 3])) { b += L; nb++; } else { f += L; nf++; } } return f / nf - b / nb; };
+      return { h: leg.height, drawH: MIC_MOTHER_H, noiseOld: +nOld.toFixed(1), noiseNew: +noise(leg).toFixed(1), outline, sepOld: +sepOf(sep(img)).toFixed(1), sepNew: +sepOf(sep(leg)).toFixed(1) }; });
+    check('HIT.madre_espora_legible_figura_despegada_del_fondo', !mo.none && mo.drawH < 500 && mo.h <= 240 && mo.outline > 200 && mo.noiseNew < mo.noiseOld * 0.9 && mo.sepNew > mo.sepOld * 1.3, mo);
     check('HIT.sin_errores_de_consola_combate', errors.length === 0, errors.slice(0, 3));
     await ctx.close();
   }
 
-  // 6) cámara, cartel central, voz del Hechicero y nombre corto, en tres pantallas
+  // 7) cámara, cartel central, voz del Hechicero y nombre corto, en tres pantallas
   const VPS = [{ name: 'iphone_844x390', w: 844, h: 390, dev: 'iPhone 13' }, { name: 'pixel_915x412', w: 915, h: 412, dev: 'Pixel 7' }, { name: 'escritorio_1440x810', w: 1440, h: 810 }];
   for (const v of VPS) {
     let opts;

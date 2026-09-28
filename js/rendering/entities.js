@@ -271,7 +271,7 @@ function drawEnemy(e){
     // por los primitivos de sprites (no pide silueta), se aprende y desde ahí se tiñe en un lienzo aparte
     // (juiceWhiteBody); si se acabó el tope del cuadro, la copia aditiva de siempre.
     ctx.globalCompositeOperation = "lighter";
-    if(!(prof.whiteOff && juiceWhiteBody(()=>drawEnemyBody(e), e.x, e.y, (e.radius||20)*(e.scale||1), P.flash))){
+    if(!(prof.whiteOff && P.flash > 0.5 && !prof.isBoss && juiceWhiteBody(()=>drawEnemyBody(e), e.x, e.y, (e.radius||20)*(e.scale||1), P.flash))){
       const m = ANIM_ALPHA_MUL; ANIM_ALPHA_MUL = P.flash; ctx.globalAlpha = P.flash;
       const n0 = _whiteTried;
       ANIM_WHITE = true;

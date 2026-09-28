@@ -173,7 +173,7 @@ let ANIM_WHITE = false;
 const _whiteCache = new Map();
 let _whitePx = 0, _whiteNew = 0, _whiteSeq = 0;
 const WHITE_PX_BUDGET = 3000000;            // ~12 MB como mucho entre todas las siluetas
-function whiteFrameBegin(){ _whiteNew = 0; _whiteOffLeft = JUICE_TOUCH ? 8 : 16; }
+function whiteFrameBegin(){ _whiteNew = 0; _whiteOffLeft = JUICE_TOUCH ? 2 : 4; }
 let _whiteTried = 0; // cuántas siluetas entregó un primitivo de sprites (para saber qué caminos la soportan)
 function whiteFrame(img, sx, sy, sw, sh){
   const c = _whiteFrame(img, sx, sy, sw, sh);
@@ -207,8 +207,10 @@ function _whiteFrame(img, sx, sy, sw, sh){
 // Abismo, sprites reales de la Acuática, cuerpos dibujados a mano en canvas...): para esos la silueta
 // blanca se arma dibujando el cuerpo en un lienzo chico con la MISMA transformación y tiñéndolo de
 // blanco (source-in). drawEnemy aprende por tipo qué camino sirve (animProfileOf(e).whiteOff).
-// Tope de siluetas por cuadro (las que pasan el tope usan la copia aditiva de siempre).
-let _whiteOffLeft = 16;
+// Es caro (unos ms por cuerpo con GPU emulada): solo en los primeros cuadros del golpe (el "parpadeo"
+// blanco), nunca en jefes (su destello es tenue) y con tope por cuadro; el resto usa la copia aditiva
+// de siempre. En la práctica casi todos los cuerpos pasan por los primitivos (t_hit_react: 14 de 14).
+let _whiteOffLeft = 4;
 const _whiteOff = {cv:null, g:null};
 const FLASH_STATS = {prim:0, off:0, fallback:0};
 function juiceWhiteBody(draw, x, y, R, alpha){
@@ -226,7 +228,7 @@ function juiceWhiteBody(draw, x, y, R, alpha){
   if(w <= 0 || h <= 0) return true;               // fuera de pantalla: nada que dibujar
   if(w*h > 700*700) return false;                 // demasiado grande: la copia aditiva alcanza
   _whiteOffLeft--;
-  if(!_whiteOff.cv){ _whiteOff.cv = document.createElement("canvas"); _whiteOff.g = _whiteOff.cv.getContext("2d"); }
+  if(!_whiteOff.cv){ _whiteOff.cv = document.createElement("canvas"); _whiteOff.g = _whiteOff.cv.getContext("2d", {willReadFrequently:true}); } // lienzo en CPU: sin sincronizar la GPU por cada silueta
   const cv = _whiteOff.cv, g = _whiteOff.g;
   if(cv.width < w || cv.height < h){ cv.width = Math.max(cv.width, w); cv.height = Math.max(cv.height, h); }
   g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "source-over"; g.globalAlpha = 1; g.filter = "none";

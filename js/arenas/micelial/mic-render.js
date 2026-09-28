@@ -415,7 +415,76 @@ function micDrawEnemyBody(e){
 }
 // La Madre: el retrato pintado entero, con partes que se animan encima (sombrero que late,
 // brazos que brillan al atacar, corazón expuesto en la fase 3).
-const MIC_MOTHER_H = 500, MIC_MOTHER_BASE = 205; // alto dibujado y línea de las raíces (y del mundo)
+// Legibilidad en partida (reseña #18, captura 13: "mancha de ruido" a 844x390): se dibuja un poco más
+// chica (500 -> 440) y desde una versión "de juego" del mismo retrato (_micMotherLegible).
+const MIC_MOTHER_H = 440, MIC_MOTHER_BASE = 205; // alto dibujado y línea de las raíces (y del mundo)
+// Versión legible del retrato, armada UNA vez desde el arte existente (nada nuevo):
+//  - separa la figura del fondo pintado: lo azul/cian/verde saturado y lo muy oscuro es el fondo (hongos
+//    que brillan detrás); se apaga y desatura hacia un violeta oscuro, y la figura (piel, brazos, cara,
+//    raíces) queda con sus colores. Antes todo competía con todo: "mancha de ruido";
+//  - se reduce al tamaño de píxel del resto del juego (~2 unidades por píxel; antes 1,1: detalle más
+//    chico que un píxel de pantalla, que en el teléfono era puro ruido), con paleta limitada (7 niveles
+//    por canal) y un poco menos de saturación;
+//  - contorno oscuro de 1 píxel alrededor de la figura.
+const MIC_MOTHER_SRC_H = 230;
+let _micMotherLeg = null, _micMotherLegTried = false;
+function _micMotherIsBg(r, g, b, a){
+  if(a < 150) return true;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+  if(mx < 50) return true;
+  const sat = mx ? (mx - mn)/mx : 0; if(sat <= 0.25) return false;
+  const d = mx - mn; let h;
+  if(mx===r) h = ((g - b)/d) % 6; else if(mx===g) h = (b - r)/d + 2; else h = (r - g)/d + 4;
+  h *= 60; if(h < 0) h += 360;
+  return h >= 140 && h <= 255;
+}
+function _micMotherLegible(){
+  if(_micMotherLeg || _micMotherLegTried || !MIC_MP_OK.mp_full) return _micMotherLeg;
+  _micMotherLegTried = true;
+  try{
+    const img = MIC_MP.mp_full, W0 = img.width, H0 = img.height, N = W0*H0;
+    const c0 = document.createElement("canvas"); c0.width = W0; c0.height = H0;
+    const g0 = c0.getContext("2d"); g0.drawImage(img, 0, 0);
+    const src = g0.getImageData(0, 0, W0, H0).data;
+    // máscara de la figura, suavizada (caja separable, dos pasadas) para cerrar huecos y borrar motas
+    let A = new Float32Array(N), B = new Float32Array(N);
+    for(let i=0;i<N;i++) A[i] = _micMotherIsBg(src[i*4], src[i*4+1], src[i*4+2], src[i*4+3]) ? 0 : 1;
+    const R = 2;
+    for(let pass=0; pass<2; pass++){
+      for(let y=0;y<H0;y++){ let acc = 0, n = 0; for(let x=-R;x<W0+R;x++){ if(x+R < W0){ acc += A[y*W0+x+R]; n++; } if(x-R-1 >= 0){ acc -= A[y*W0+x-R-1]; n--; } if(x>=0 && x<W0) B[y*W0+x] = acc/n; } }
+      for(let x=0;x<W0;x++){ let acc = 0, n = 0; for(let y=-R;y<H0+R;y++){ if(y+R < H0){ acc += B[(y+R)*W0+x]; n++; } if(y-R-1 >= 0){ acc -= B[(y-R-1)*W0+x]; n--; } if(y>=0 && y<H0) A[y*W0+x] = acc/n; } }
+    }
+    // reducción por promedio de área (premultiplicado) al tamaño de píxel del juego
+    const H1 = MIC_MOTHER_SRC_H, W1 = Math.round(W0*H1/H0), sx = W0/W1, sy = H0/H1;
+    const out = new Uint8ClampedArray(W1*H1*4), fig = new Uint8Array(W1*H1), LV = 6, SAT = 0.9, DIM = 0.4;
+    const q = v=>Math.round(Math.round(Math.max(0, Math.min(255, v))/255*LV)*255/LV);
+    for(let y=0;y<H1;y++) for(let x=0;x<W1;x++){
+      const x0 = Math.floor(x*sx), x1 = Math.max(x0+1, Math.floor((x+1)*sx)), y0 = Math.floor(y*sy), y1 = Math.max(y0+1, Math.floor((y+1)*sy));
+      let r = 0, g = 0, b = 0, a = 0, fs = 0, n = 0;
+      for(let yy=y0; yy<y1 && yy<H0; yy++) for(let xx=x0; xx<x1 && xx<W0; xx++){
+        const j = yy*W0+xx, k = j*4, al = src[k+3]/255, f = A[j] > 0.5;
+        let R0 = src[k], G0 = src[k+1], B0 = src[k+2];
+        if(!f){ const l = R0*0.3 + G0*0.59 + B0*0.11; R0 = (l + (R0-l)*0.55)*DIM + 16*(1-DIM); G0 = (l + (G0-l)*0.55)*DIM + 5*(1-DIM); B0 = (l + (B0-l)*0.55)*DIM + 22*(1-DIM); }
+        r += R0*al; g += G0*al; b += B0*al; a += al; fs += f ? 1 : 0; n++;
+      }
+      if(!n || a <= 0.02) continue;
+      r /= a; g /= a; b /= a;
+      const l = r*0.3 + g*0.59 + b*0.11; r = l + (r-l)*SAT; g = l + (g-l)*SAT; b = l + (b-l)*SAT;
+      const o = (y*W1+x)*4; out[o] = q(r); out[o+1] = q(g); out[o+2] = q(b); out[o+3] = Math.round(a/n*255);
+      fig[y*W1+x] = fs/n > 0.5 ? 1 : 0;
+    }
+    // contorno oscuro de 1 píxel alrededor de la figura
+    const edge = new Uint8ClampedArray(out);
+    for(let y=0;y<H1;y++) for(let x=0;x<W1;x++){
+      const i = y*W1+x; if(fig[i]) continue;
+      if((x>0 && fig[i-1]) || (x<W1-1 && fig[i+1]) || (y>0 && fig[i-W1]) || (y<H1-1 && fig[i+W1])){ const o = i*4; edge[o] = 6; edge[o+1] = 1; edge[o+2] = 8; edge[o+3] = Math.max(out[o+3], 200); }
+    }
+    const c1 = document.createElement("canvas"); c1.width = W1; c1.height = H1;
+    c1.getContext("2d").putImageData(new ImageData(edge, W1, H1), 0, 0);
+    _micMotherLeg = c1;
+  }catch(err){ _micMotherLeg = null; } // (si el navegador no deja leer píxeles, queda el retrato de siempre)
+  return _micMotherLeg;
+}
 function _micMotherRect(){ const img = MIC_MP.mp_full, h = MIC_MOTHER_H, w = h*(img && img.width ? img.width/img.height : 395/455); return {w, h, x:MIC_MOTHER_POS.x - w/2, y:MIC_MOTHER_BASE - h}; }
 function _micDrawMother(e, t){
   if(!MIC_MP_OK.mp_full) return;
@@ -435,14 +504,16 @@ function _micDrawMother(e, t){
   ctx.scale(breathe*(closed ? 0.93 : 1), (2 - breathe)*(closed ? 0.95 : 1));
   ctx.rotate(lean*(e.fx < 0 ? -1 : 1));
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(img, -R.w/2, -R.h, R.w, R.h);
-  // partes vivas (aditivas: no duplican la silueta, solo la encienden)
+  const body = _micMotherLegible() || img;
+  ctx.drawImage(body, -R.w/2, -R.h, R.w, R.h);
+  // partes vivas (aditivas: no duplican la silueta, solo la encienden; más tenues que antes para no
+  // volver a ensuciar la silueta)
   ctx.globalCompositeOperation = "lighter";
-  if(e.hitFlash > 0){ ctx.globalAlpha = Math.min(0.35, e.hitFlash/300); ctx.drawImage(img, -R.w/2, -R.h, R.w, R.h); }
+  if(e.hitFlash > 0){ ctx.globalAlpha = Math.min(0.35, e.hitFlash/300); ctx.drawImage(body, -R.w/2, -R.h, R.w, R.h); }
   const bloom = M.bloom && !micS.dead;
   const capRgb = bloom ? micHueRgb(t*0.7) : "255,120,220";
-  if(MIC_MP_OK.mp_cap){ ctx.globalAlpha = 0.12 + 0.1*Math.sin(t*2.2) + (bloom ? 0.18 : 0); ctx.drawImage(MIC_MP.mp_cap, -R.w/2 + 3*k, -R.h, MIC_MP.mp_cap.width*k, MIC_MP.mp_cap.height*k); }
-  ctx.globalAlpha = 0.4 + (bloom ? 0.25 : 0); ctx.drawImage(glowSprite(capRgb), -R.w*0.55, -R.h*1.08, R.w*1.1, R.h*0.45);
+  if(MIC_MP_OK.mp_cap){ ctx.globalAlpha = 0.07 + 0.06*Math.sin(t*2.2) + (bloom ? 0.14 : 0); ctx.drawImage(MIC_MP.mp_cap, -R.w/2 + 3*k, -R.h, MIC_MP.mp_cap.width*k, MIC_MP.mp_cap.height*k); }
+  ctx.globalAlpha = 0.2 + (bloom ? 0.2 : 0); ctx.drawImage(glowSprite(capRgb), -R.w*0.55, -R.h*1.08, R.w*1.1, R.h*0.45);
   const atk = (e.packSet==="atk" || e.packSet==="cast") && e.packTimer > 0;
   if(atk && MIC_MP_OK.mp_arm_l){
     const q = Math.sin((1 - e.packTimer/Math.max(1, e.packDur))*Math.PI);
@@ -461,6 +532,11 @@ function _micDrawMother(e, t){
     ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(cx, cy, r*1.2, r*1.45, 0, 0, Math.PI*2); ctx.fill();
     ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = (0.5 + 0.5*beat)*open;
     ctx.drawImage(glowSprite("255,60,110"), cx - r*4, cy - r*4, r*8, r*8);
+    // el punto débil tiene que leerse de un vistazo: aro claro con borde oscuro que late
+    ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = open;
+    const rr = r*(1.7 + 0.25*beat);
+    ctx.lineWidth = 7; ctx.strokeStyle = "rgba(10,2,8,0.85)"; ctx.beginPath(); ctx.ellipse(cx, cy, rr, rr*1.2, 0, 0, Math.PI*2); ctx.stroke();
+    ctx.lineWidth = 3; ctx.strokeStyle = "#ffd0e0"; ctx.beginPath(); ctx.ellipse(cx, cy, rr, rr*1.2, 0, 0, Math.PI*2); ctx.stroke();
   }
   ctx.restore();
 }
@@ -490,7 +566,7 @@ function _micDrawMotherDying(now){
   ctx.imageSmoothingEnabled = false;
   // se apaga: fundido hacia una copia oscura y desaturada del retrato (hecha una sola vez)
   const dark = Math.max(0, Math.min(1, (T - 1000)/2500)), dimg = _micMotherDarkCanvas();
-  ctx.drawImage(img, -R.w/2, -R.h, R.w, R.h);
+  ctx.drawImage(_micMotherLegible() || img, -R.w/2, -R.h, R.w, R.h);
   if(dimg && dark > 0){ ctx.globalAlpha *= dark; ctx.drawImage(dimg, -R.w/2, -R.h, R.w, R.h); }
   ctx.restore();
   if(T < 1000){ const beat = 1 - T/1000; _micGlow(MIC_MOTHER_POS.x, MIC_MOTHER_POS.y - 250, 90*beat, "255,60,110", 0.6*beat); }
@@ -571,8 +647,11 @@ function micDrawTop(){
   if(MIC_MOTES.length){
     ctx.save(); ctx.globalCompositeOperation = "lighter";
     const bloom = micS.mo.bloom;
+    const MR = (micS.mo.st==="fight" || micS.mo.st==="reveal") ? _micMotherRect() : null; // sobre la Madre, casi nada: se leía como ruido
     for(let i=0;i<MIC_MOTES.length;i++){
-      const m = MIC_MOTES[i], a = Math.min(1, m.t/600)*Math.min(1, (m.d - m.t)/800);
+      const m = MIC_MOTES[i];
+      let a = Math.min(1, m.t/600)*Math.min(1, (m.d - m.t)/800);
+      if(MR && m.x > MR.x && m.x < MR.x + MR.w && m.y > MR.y && m.y < MR.y + MR.h) a *= 0.25;
       ctx.fillStyle = bloom ? `rgba(${micHueRgb(t*0.4 + m.c)},${0.7*a})` : `rgba(${micStageRgb()},${0.55*a})`;
       ctx.fillRect(m.x, m.y, m.s, m.s);
     }
@@ -606,7 +685,9 @@ function micCamLift(){
   const R = _micMotherRect(), up = (VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM, down = (VH/2 + CAM_Y_ANCHOR)/CAM_ZOOM;
   if(Math.abs(player.x - MIC_MOTHER_POS.x) > 1000 || player.y > 900) return 0;
   const need = player.y - (R.y - 30) - up;
-  return Math.max(0, Math.min(need, down - 130));
+  // el guardián no baja hasta quedar debajo de la voz del Hechicero (abajo al centro)
+  const keep = Math.max(130, ((VH <= 500 ? CAM_HUD_BOTTOM_LOW : CAM_HUD_BOTTOM_TALL) + 44)/CAM_ZOOM);
+  return Math.max(0, Math.min(need, down - keep));
 }
 
 /* ---------------- pantalla ---------------- */
