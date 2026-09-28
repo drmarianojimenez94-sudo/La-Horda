@@ -77,6 +77,7 @@ const ROLE_LABEL = {tanque:"Tanque", soporte:"Soporte", asesino:"Asesino / daño
 function buildVictoryData(){
   const classKey = player.classKey;
   const perf = computePerformance(player);
+  const floorLoot = typeof groundLootCollectAll==="function" ? groundLootCollectAll() : []; // lo que quedó en el piso se junta solo
   const loot = grantEndOfRunLoot(classKey, perf, true);
   const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
@@ -85,7 +86,7 @@ function buildVictoryData(){
   const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
   grantXP(classKey, victoryXpBonus);
   return {
-    classKey, perf, score:perf.score, rewards:loot.items, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
+    classKey, perf, score:perf.score, rewards:loot.items, floorLoot, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
     kills, gold: save.gold, subjefes: subjefesDefeated,
     arenaRows: arenaHas("resultsHTML") ? (arenaHook("resultsHTML", true)||"") : "",   // p.ej. civiles rescatados (Ciudad Maldita)
     level: save.champions[classKey].level,

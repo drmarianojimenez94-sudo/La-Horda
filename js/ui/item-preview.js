@@ -28,13 +28,14 @@ function itemSetBlockHTML(it, classKey){
 function itemDetailHTML(it, classKey, opts){
   opts = opts || {};
   const col = itemColor(it), tier = itemTier(it), lv = itemLevel(it);
+  const onThis = classKey && itemEquippedBy(it.uid)===classKey;
   const [lo, hi] = itemStatRange(it);
   const owner = it.designed && it.champion ? `Solo ${CLASSES[it.champion].name}` : "Universal";
   const family = it.family && ITEM_FAMILIES[it.family] ? `<span class="ip-fam" style="color:${ITEM_FAMILIES[it.family].color}">Familia ${ITEM_FAMILIES[it.family].label}</span>` : "";
   // pasivas que NO se van a sumar porque ya hay otra igual equipada (regla de duplicados)
   const dupIds = new Set();
   if(classKey){ EQUIP_SLOT_TYPES.forEach(t=>{ const e = equippedItem(classKey, t); if(e && e.uid!==it.uid && e.type!==it.type){ (e.passives||[]).forEach(p=>{ if(_isCatalogPassive(p)) dupIds.add(p.id); }); if(e.mythicPassive) dupIds.add(e.mythicPassive.id); } }); }
-  const eff = itemEffectLines(it).map(l=>`<div class="ip-line ${l.cls}">${l.txt}${l.id && dupIds.has(l.id) ? ' <span class="ip-dup">(ya la tenés en otra pieza: no se suma, vale la más fuerte)</span>' : ""}</div>`).join("") || '<div class="ip-line ip-sub">Solo estadísticas.</div>';
+  const eff = itemEffectLines(it).filter(l=>!l.affix).map(l=>`<div class="ip-line ${l.cls}">${l.txt}${l.id && dupIds.has(l.id) ? ' <span class="ip-dup">(ya la tenés en otra pieza: no se suma, vale la más fuerte)</span>' : ""}</div>`).join("") || '<div class="ip-line ip-sub">Solo estadísticas.</div>';
   const cost = gemUpgradeCost(it);
   const upg = cost===null ? `<div class="ip-upg max">Nivel máximo</div>`
     : `<button class="ip-upg-btn ${(save.gems||0) >= cost ? "ready" : ""}" data-ip-upgrade="${it.uid}">Mejorar a Nv.${lv+1} · ◆ ${cost} gema${cost>1?"s":""}</button><span class="ip-sub"> (tenés ${save.gems||0} · al máximo: ◆ ${gemCostToMax(it)})</span>`;
@@ -48,6 +49,7 @@ function itemDetailHTML(it, classKey, opts){
       </div></div>
     <div class="ip-sec"><div class="ip-h">ESTADÍSTICAS</div>
       <div class="ip-line">+${_pct(itemStat(it))}% ${ITEM_TYPES[it.type].statLabel} <span class="ip-sub">(esta pieza: ${_pct(lo)}–${_pct(hi)}% en Nv.${lv})</span></div></div>
+    ${itemAffixes(it).length ? `<div class="ip-sec ip-affixes"><div class="ip-h">AFIJOS <span class="ip-sub">(al azar · rango entre corchetes${classKey && !onThis ? " · ▲▼ contra lo equipado" : ""})</span></div>${affixLinesHTML(it, onThis ? null : classKey, !opts.shop && !opts.noReroll && !!findStashItem(it.uid))}</div>` : ""}
     <div class="ip-sec"><div class="ip-h">EFECTO</div>${eff}</div>
     ${itemSetBlockHTML(it, classKey)}
     ${compare}
@@ -70,5 +72,8 @@ function openItemPreview(uid, classKey, rerender){
   const up = el.querySelector("[data-ip-upgrade]");
   if(up) up.addEventListener("click", ()=>{ const r = upgradeItemLevel(uid); if(!r.ok) gameAlert(r.reason); openItemPreview(uid, classKey, rerender); if(typeof renderSaveLine==="function") renderSaveLine(); });
   const eq = el.querySelector("[data-ip-equip]"); if(eq) eq.addEventListener("click", ()=>{ equipItem(classKey, uid); openItemPreview(uid, classKey, rerender); });
+  // Mística: re-tirar un afijo por oro (js/systems/affixes.js)
+  el.querySelectorAll("[data-afx-reroll]").forEach(b=>b.addEventListener("click", ev=>{ ev.stopPropagation();
+    openAffixReroll(uid, +b.getAttribute("data-afx-reroll"), classKey, ()=>openItemPreview(uid, classKey, rerender)); }));
   const un = el.querySelector("[data-ip-unequip]"); if(un) un.addEventListener("click", ()=>{ unequipItem(classKey, it.type); openItemPreview(uid, classKey, rerender); });
 }

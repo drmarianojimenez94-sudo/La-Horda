@@ -70,6 +70,7 @@ function resetRunTransients(){
   musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];
   activeAxiomVfx = []; bossDangerPulse = 0; champFx = [];
   boss = null; bossActive = false; activeChampion = null; midBossSpawned = false; levelClearing = 0;
+  if(typeof groundLootReset==="function") groundLootReset(); // botín del piso: se junta si la partida sigue (cambio de arena)
 }
 function startRun(fromLevel){
   runLevel = fromLevel || 1;
