@@ -46,7 +46,7 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
 #prep-screen .net-hint, #prep-screen .net-off, #prep-screen .net-link, #prep-screen .lobby-note,
 #prep-screen .inv-capacity, #prep-screen .inv-empty, #prep-screen .inv-chip,
 #prep-screen .inv-slot, #prep-screen .inv-slot .slot-item-name, #prep-screen .inv-slot button,
-#prep-screen .tt-desc, #prep-screen .tt-eff, #prep-screen .tt-lock, #prep-screen .tt-cost, #prep-screen .tt-name, #prep-screen .talent-badge,
+#prep-screen .tt-desc, #prep-screen .tt-eff, #prep-screen .tt-lock, #prep-screen .tt-syn, #prep-screen .tt-syn-row, #prep-screen .tt-syn-title, #prep-screen .tt-respec, #prep-screen .tt-respec-btn, #prep-screen .mastery-syn, #prep-screen .tt-cost, #prep-screen .tt-name, #prep-screen .talent-badge,
 #prep-screen .talent-lock-banner, #prep-screen .talent-points, #prep-screen .tp-note, #prep-screen .talent-lock-reason,
 #prep-screen .mastery-name, #prep-screen .mastery-stats, #prep-screen .mastery-use, #prep-screen .evo-lines .evo,
 #prep-screen .tt-root, #prep-screen .item-stat, #prep-screen .item-passives, #prep-screen .item-desc, #prep-screen .inv-card button{ font-size:0.98rem; line-height:1.15; }

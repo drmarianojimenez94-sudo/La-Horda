@@ -292,6 +292,12 @@ function computeTalentMods(classKey){
     try{ mods = node.mods ? (node.mods(rank)||[]) : []; }catch(e){ mods = []; }
     applyModsArray(mods, global, bySkill);
   }
+  // Sinergias (al estilo Diablo II): los puntos de los nodos "fuente" potencian OTRA habilidad.
+  // Mismo balde por habilidad que los nodos: ninguna fórmula de combate se entera.
+  for(const syn of talentSynergies(classKey)){
+    const v = talentSynergyValue(classKey, syn);
+    if(v && bySkill[syn.skill]) bySkill[syn.skill][syn.key] = (bySkill[syn.skill][syn.key]||0) + v;
+  }
   // Ítems legendarios/míticos diseñados a mano (sección 13): su campo `skillMods`, si lo
   // tienen, usa el MISMO formato que los nodos de talento -ninguna fórmula nueva-.
   EQUIP_SLOT_TYPES.forEach(type=>{
@@ -329,6 +335,94 @@ function talentPassives(classKey){ return talentMods(classKey).global; }
 function talentSkillMods(classKey, skillKey){
   const key = skillKey===undefined ? 0 : skillKey;
   return talentMods(classKey).bySkill[key] || {powerMult:0,areaMult:0,durationMult:0,cdMult:0,jumpBonus:0,flags:{}};
+}
+
+/* ---------------- SINERGIAS (datos en TALENT_SYNERGIES, js/data/talent-trees.js) ----------------
+   Cada punto en los nodos fuente suma un porcentaje a otra habilidad: el árbol deja de ser 3 ramas
+   sueltas y la build se arma cruzándolas ("+6% daño de Nova por punto en Voltaje"). Se leen del
+   estado de talentos del guardián (save.champions[k].talents): en el cooperativo el anfitrión ya
+   tiene ahí el loadout del invitado, así que cada héroe usa SUS puntos. */
+function talentSynergies(classKey){ return (typeof TALENT_SYNERGIES!=="undefined" && TALENT_SYNERGIES[classKey]) || []; }
+function talentSynergyPoints(classKey, syn){
+  const st = talentState(classKey);
+  return syn.from.reduce((s,id)=>s + ((st.nodes||{})[id]||0), 0);
+}
+function talentSynergyValue(classKey, syn){ return syn.per * talentSynergyPoints(classKey, syn); }
+const TALENT_SYNERGY_WORD = {powerMult:"daño", areaMult:"área", durationMult:"duración", cdMult:"enfriamiento"};
+function talentSynergySkillName(classKey, syn){
+  const cls = CLASSES[classKey]; if(!cls) return "?";
+  return syn.skill==="ult" ? cls.ultimate.name : (cls.skills[syn.skill] ? cls.skills[syn.skill].name : "?");
+}
+function talentSynergyFromNames(classKey, syn){
+  const names = syn.from.map(id=>{ const n = talentNodeById(classKey, id); return n ? n.name : id; });
+  return names.length > 1 ? names.slice(0, -1).join(", ") + " y " + names[names.length-1] : names[0];
+}
+function _synPct(v){ return Math.round(v*1000)/10; }
+// "+6% daño de Nova de Escarcha por punto en Voltaje y Conductividad (ahora +18%)"
+function talentSynergyText(classKey, syn, withNow){
+  const word = syn.what || TALENT_SYNERGY_WORD[syn.key] || "efecto";
+  const base = `+${_synPct(syn.per)}% ${word} de ${talentSynergySkillName(classKey, syn)} por punto en ${talentSynergyFromNames(classKey, syn)}`;
+  if(withNow===false) return base;
+  const now = talentSynergyValue(classKey, syn);
+  return base + ` (ahora +${_synPct(now)}%)`;
+}
+// Sinergias que potencian una habilidad (0/1/2/"ult") -> líneas de texto para su tooltip.
+function talentSynergiesForSkill(classKey, skillKey){
+  return talentSynergies(classKey).filter(s=>s.skill===skillKey);
+}
+// Sinergias en las que participa un nodo (como fuente) -> para el tooltip del nodo.
+function talentSynergiesFromNode(classKey, nodeId){
+  return talentSynergies(classKey).filter(s=>s.from.includes(nodeId));
+}
+// Texto corto "Sinergias: ..." para el botón de habilidad del HUD y el panel de Habilidades.
+function talentSynergySkillLine(classKey, skillKey){
+  const L = talentSynergiesForSkill(classKey, skillKey);
+  if(!L.length) return "";
+  return "Sinergias: " + L.map(s=>{
+    const word = s.what || TALENT_SYNERGY_WORD[s.key] || "efecto";
+    return `+${_synPct(s.per)}% ${word} por punto en ${talentSynergyFromNames(classKey, s)} (ahora +${_synPct(talentSynergyValue(classKey, s))}%)`;
+  }).join(" · ");
+}
+
+/* ---------------- RESPEC POR ORO ----------------
+   Reiniciar el árbol de un guardián: devuelve TODO lo gastado (árbol + mini-árbol de la Maestría)
+   a su bolsa -la bolsa se deriva de nivel + treeBonus - gastado, así que nunca se pierde un punto-.
+   El primero es gratis; después cuesta según el nivel del guardián y cada reinicio encarece el
+   siguiente. La Maestría elegida se conserva (es permanente por diseño). Solo fuera de partida. */
+const TALENT_RESPEC_BASE = 100, TALENT_RESPEC_PER_LEVEL = 40, TALENT_RESPEC_GROWTH = 0.25, TALENT_RESPEC_MAX_STEPS = 8;
+function talentRespecCount(classKey){ const c = save.champions[classKey]; return c ? (c.talentRespecs|0) : 0; }
+function talentRespecCost(classKey){
+  const c = save.champions[classKey]; if(!c) return 0;
+  const n = c.talentRespecs|0;
+  if(n <= 0) return 0; // el primero, gratis
+  const raw = (TALENT_RESPEC_BASE + TALENT_RESPEC_PER_LEVEL*(c.level|0)) * (1 + TALENT_RESPEC_GROWTH*Math.min(n-1, TALENT_RESPEC_MAX_STEPS));
+  return Math.round(raw/10)*10;
+}
+function talentRespecLockReason(classKey){
+  const c = save.champions[classKey];
+  if(!c) return "Guardián inexistente";
+  if((typeof state!=="undefined" && (state==="playing" || state==="paused" || state==="buff")) || (typeof netMatch!=="undefined" && netMatch)) return "No se puede reiniciar durante una partida";
+  if(treePointsSpent(classKey) <= 0) return "No hay puntos invertidos para reiniciar";
+  const cost = talentRespecCost(classKey);
+  if((save.gold||0) < cost) return `Oro insuficiente (cuesta ${cost}, tenés ${save.gold||0})`;
+  return null;
+}
+// confirmed: la UI pregunta antes (gameConfirm) y recién después llama con true.
+function talentRespec(classKey, confirmed){
+  const reason = talentRespecLockReason(classKey);
+  if(reason) return {ok:false, reason};
+  const cost = talentRespecCost(classKey);
+  if(!confirmed) return {ok:false, needsConfirm:true, cost, refund:treePointsSpent(classKey)};
+  const c = save.champions[classKey], st = talentState(classKey);
+  const before = treePointsAvailable(classKey) + treePointsSpent(classKey);
+  save.gold -= cost;
+  st.nodes = {}; st.picks = {}; st.masteryNodes = {};
+  c.talentRespecs = (c.talentRespecs|0) + 1;
+  delete TALENT_MODS_CACHE[classKey];
+  if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
+  persist();
+  if(typeof net!=="undefined" && net && net.role==="guest" && typeof netSendLoadout==="function") netSendLoadout(true);
+  return {ok:true, cost, points:treePointsAvailable(classKey), lost: before - treePointsAvailable(classKey)};
 }
 
 // Teletransporte de Axiom con cargas (sección 12/37): una carga bancada se gasta SIN tocar el

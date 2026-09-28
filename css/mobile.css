@@ -68,7 +68,7 @@
   .ip-epi, .ip-tags, .ip-sec, .ip-h, .ip-sub, .ip-dup, .ip-piece, .ip-bonus, .ip-upg-btn{ font-size:0.72rem; }
   /* habilidades y talentos */
   .mastery-stats, .mastery-use, .evo-lines .evo, .talent-badge, .talent-lock-reason, .mastery-choice-card .mc-desc,
-  .mastery-emblem, .tp-note, .tt-desc, .tt-eff, .tt-lock, .tt-cost, .tt-fork-label, .tt-fork-or, .hub-meta.dim{ font-size:0.72rem; }
+  .mastery-emblem, .tp-note, .tt-desc, .tt-eff, .tt-lock, .tt-syn, .tt-syn-row, .tt-respec, .mastery-syn, .tt-cost, .tt-fork-label, .tt-fork-or, .hub-meta.dim{ font-size:0.72rem; }
   .tt-rank{ font-size:0.7rem; line-height:13px; }
   /* pausa, victoria y cofre */
   .stat-block-title, .vic-party-title, .vic-item-actions button, .loot-card .loot-tier,

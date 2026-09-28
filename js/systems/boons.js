@@ -29,6 +29,8 @@ function boonsForChamp(k){ return BOONS.filter(b=>b.champ===k); }
 function boonsOnSkill(h, sk){
   const out = [], B = heroBoons(h);
   for(const id in B){ const b = BOON_BY_ID[id]; if(!b || b.minion || b.champ!==h.classKey) continue; const s = boonSkillOf(b); if(s && sk && s.name===sk.name) out.push({b, r:B[id]}); }
+  // Set de 2 piezas del guardián que transforma una habilidad (js/data/champion-sets.js): mismo motor.
+  if(typeof champSetTransformOnSkill==="function"){ const t = champSetTransformOnSkill(h, sk); if(t) out.push({b:t, r:1}); }
   return out;
 }
 
@@ -142,7 +144,7 @@ function boonSkillTitle(h, sk){
   const list = boonsOnSkill(h, sk);
   if(h && h.classKey==="nigromante" && sk && CLASSES.nigromante.skills[0].name===sk.name)
     for(const id in heroBoons(h)){ const b = BOON_BY_ID[id]; if(b && b.minion) list.push({b, r:heroBoons(h)[id]}); }
-  return list.map(({b,r})=>`\n✦ ${b.name} (${b.duo?"Dúo":boonRarityOf(r).name}): ${b.desc(r)}`).join("");
+  return list.map(({b,r})=>b.setBonus ? `\n◆ ${b.name} (set, 2 piezas): ${b.desc(r)}` : `\n✦ ${b.name} (${b.duo?"Dúo":boonRarityOf(r).name}): ${b.desc(r)}`).join("");
 }
 function boonDecorateButton(el, sk){
   if(!el || !player) return;
@@ -150,8 +152,8 @@ function boonDecorateButton(el, sk){
   let pip = el.querySelector(".boon-pip");
   if(!list.length){ if(pip) pip.remove(); return; }
   if(!pip){ pip = document.createElement("span"); pip.className = "boon-pip"; el.appendChild(pip); }
-  const top = list.reduce((a,x)=>Math.max(a, x.b.duo ? 3 : x.r), 0);
-  pip.style.background = top>=3 ? "#ffd76a" : boonRarityOf(top).color;
+  const own = list.filter(x=>!x.b.setBonus), top = own.reduce((a,x)=>Math.max(a, x.b.duo ? 3 : x.r), 0);
+  pip.style.background = !own.length ? SET_COLOR : top>=3 ? "#ffd76a" : boonRarityOf(top).color; // verde: solo la transforma el set
   pip.textContent = list.length>1 ? String(list.length) : "";
   el.title += boonSkillTitle(player, sk);
 }
@@ -166,7 +168,7 @@ function boonHudTick(){
 
 /* ---------------- lanzamiento ---------------- */
 function boonCastBegin(caster, sk){
-  if(!caster || !caster.boons || divinaMode) return null;
+  if(!caster || !caster.classKey || divinaMode) return null; // (también sin refuerzos: el set de 2 piezas puede transformar)
   const list = boonsOnSkill(caster, sk);
   if(!list.length) return null;
   const rec = {caster, sk, list, x0:caster.x, y0:caster.y, hits:[], amt:0, n:0, prev:_boonRec};

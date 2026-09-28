@@ -8,7 +8,7 @@ function updateAbilityButtons(){
   // el kit ACTIVO del héroe (Eren transformado muestra el del titán)
   const cls = (player && player.cls && player.classKey===selectedClass) ? player.cls : CLASSES[selectedClass];
   const map = [["btn-s1",cls.skills[0]], ["btn-s2",cls.skills[1]], ["btn-s3",cls.skills[2]], ["btn-ult",cls.ultimate]];
-  map.forEach(([id, sk])=>{
+  map.forEach(([id, sk], mi)=>{
     const el = document.getElementById(id);
     if(!el) return;
     const icoEl = el.querySelector(".ico");
@@ -21,6 +21,8 @@ function updateAbilityButtons(){
     }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
+    // Sinergias del árbol (estilo Diablo II) con su valor actual
+    { const syn = typeof talentSynergySkillLine==="function" ? talentSynergySkillLine(selectedClass, mi===3 ? "ult" : mi) : ""; if(syn) el.title += "\n" + syn; }
     if(typeof boonDecorateButton==="function") boonDecorateButton(el, sk); // refuerzos que la transforman: marca + texto en el tooltip
   });
 }

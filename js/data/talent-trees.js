@@ -1312,3 +1312,72 @@ TALENT_TREES.eren = {
       ]}
   }
 };
+
+/* ============================================================
+   SINERGIAS (al estilo Diablo II, reseña del crítico §6.4 #4)
+   "+6% daño de Nova de Escarcha por cada punto en Voltaje y Conductividad": cada punto invertido
+   en los nodos de `from` (de OTRA rama) suma `per` al modificador `key` de la habilidad `skill`
+   (0/1/2/"ult" del kit BASE). Entra en el MISMO balde por habilidad que los nodos
+   (talentSkillMods), así castAbility lo aplica sin saber que existe: daño y curación por
+   powerMult, duración por durationMult. `what` cambia la palabra del texto (curación, escudo).
+   `test` le dice a tools/items/t_synergies.js qué medir: dmg, heal, shield o dur.
+   ============================================================ */
+const TALENT_SYNERGIES = {
+  axiom: [
+    {skill:0,     key:"powerMult",    per:0.05, from:["ax_sob_c1","ax_sob_c2"], test:"dmg"},
+    {skill:1,     key:"powerMult",    per:0.05, from:["ax_sis_c1","ax_sis_c2"], test:"dmg"},
+    {skill:"ult", key:"powerMult",    per:0.04, from:["ax_lim_c1","ax_lim_c2"], test:"dmg"}
+  ],
+  segador: [
+    {skill:0,     key:"powerMult",    per:0.05, from:["sg_sed_c1","sg_sed_c2"], test:"dmg"},
+    {skill:1,     key:"durationMult", per:0.05, from:["sg_ira_c1","sg_ira_c2"], test:"dur"},
+    {skill:"ult", key:"durationMult", per:0.04, from:["sg_inq_c1","sg_inq_c2"], test:"dur"}
+  ],
+  mago: [
+    {skill:1,     key:"powerMult",    per:0.06, from:["mg_tem_c1","mg_tem_c2"], test:"dmg"},
+    {skill:2,     key:"powerMult",    per:0.05, from:["mg_inf_c1","mg_inf_c2"], test:"dmg"},
+    {skill:0,     key:"powerMult",    per:0.05, from:["mg_inv_c1","mg_inv_c2"], test:"dmg"},
+    {skill:"ult", key:"powerMult",    per:0.03, from:["mg_tem_c1","mg_inv_c1","mg_inf_c1"], test:"dmg"}
+  ],
+  guerrero: [
+    {skill:0,     key:"powerMult",    per:0.06, from:["gu_ver_c1","gu_ver_c2"], test:"dmg"},
+    {skill:2,     key:"powerMult",    per:0.05, from:["gu_som_c2","gu_som_c3"], test:"dmg"},
+    {skill:1,     key:"powerMult",    per:0.04, from:["gu_caz_c1","gu_caz_c2"], test:"dmg"}
+  ],
+  soporte: [
+    {skill:0,     key:"powerMult",    per:0.05, from:["sp_bas_c1","sp_bas_c2"], test:"heal", what:"curación"},
+    {skill:2,     key:"powerMult",    per:0.05, from:["sp_exa_c1","sp_exa_c2"], test:"shield", what:"escudo"},
+    {skill:1,     key:"durationMult", per:0.05, from:["sp_vit_c1","sp_vit_c2"], test:"dur"}
+  ],
+  profeta: [
+    {skill:2,     key:"powerMult",    per:0.05, from:["pr_sac_c1","pr_sac_c2"], test:"dmg"},
+    {skill:0,     key:"powerMult",    per:0.05, from:["pr_rev_c1","pr_rev_c2"], test:"heal", what:"curación"},
+    {skill:1,     key:"durationMult", per:0.06, from:["pr_rev_c3","pr_sac_c3"], test:"dur"}
+  ],
+  tanque: [
+    {skill:0,     key:"powerMult",    per:0.05, from:["tq_jug_c1","tq_jug_c2"], test:"dmg"},
+    {skill:1,     key:"powerMult",    per:0.06, from:["tq_bas_c1","tq_bas_c2"], test:"dmg"},
+    {skill:2,     key:"durationMult", per:0.05, from:["tq_pal_c1","tq_pal_c2"], test:"dur"}
+  ],
+  musashi: [
+    {skill:2,     key:"powerMult",    per:0.05, from:["ms_cor_c1","ms_cor_c2"], test:"dmg"},
+    {skill:0,     key:"powerMult",    per:0.05, from:["ms_pas_c1","ms_pas_c3"], test:"dmg"}
+  ],
+  cazadora: [
+    {skill:2,     key:"powerMult",    per:0.05, from:["sy_fle_c1","sy_fle_c2"], test:"dmg"},
+    {skill:0,     key:"powerMult",    per:0.05, from:["sy_tra_c1","sy_tra_c2"], test:"dmg"}
+  ],
+  nigromante: [
+    {skill:0,     key:"powerMult",    per:0.05, from:["ng_pla_c1","ng_pla_c2"], test:"dmg"},
+    {skill:2,     key:"powerMult",    per:0.05, from:["ng_ske_c1","ng_ske_c2"], test:"dmg"}
+  ],
+  libertador: [
+    {skill:2,     key:"powerMult",    per:0.05, from:["sm_bay_c1","sm_bay_c2"], test:"dmg"},
+    {skill:0,     key:"powerMult",    per:0.05, from:["sm_cab_c1","sm_cab_c2"], test:"dmg"},
+    {skill:1,     key:"durationMult", per:0.05, from:["sm_bay_c3","sm_cab_c3"], test:"dur"}
+  ],
+  eren: [
+    {skill:0,     key:"powerMult",    per:0.05, from:["er_ins_c1","er_ins_c2"], test:"dmg"},
+    {skill:2,     key:"durationMult", per:0.05, from:["er_man_c1","er_man_c2"], test:"dur"}
+  ]
+};
