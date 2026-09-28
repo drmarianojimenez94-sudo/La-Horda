@@ -29,10 +29,14 @@ const ARENA_LOOT = {
   hielo:     {comun:39, raro:38, muyraro:17,  legendario:4.0,  mitico:0.12, set:0.50, unico:0.005},
   abismo:    {comun:33, raro:38, muyraro:22,  legendario:5.0,  mitico:0.20, set:1.00, unico:0.012},
   laberinto: {comun:28, raro:37, muyraro:26,  legendario:6.0,  mitico:0.30, set:1.50, unico:0.020},
+  minas:     {comun:22, raro:36, muyraro:30,  legendario:7.5,  mitico:0.45, set:2.00, unico:0.028},
   infernal:  {comun:16, raro:34, muyraro:36,  legendario:10.0, mitico:0.80, set:3.00, unico:0.040}
 };
+// Ciudad Maldita (Arena 01) usa la tabla de entrada; las Minas (Arena 09) tenían que tener la suya:
+// sin fila caían a la del Bosque (la más pobre) justo antes del Infierno.
+ARENA_LOOT.ciudad = ARENA_LOOT.bosque;
 ARENA_LOOT.divina = ARENA_LOOT.laberinto;
-const ARENA_LOOT_LABEL = {bosque:"Introducción", acuatica:"Intermedia", fortaleza:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", abismo:"Media-alta", laberinto:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
+const ARENA_LOOT_LABEL = {ciudad:"Introducción", bosque:"Introducción", acuatica:"Intermedia", fortaleza:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", abismo:"Media-alta", laberinto:"Avanzada", minas:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
 // La calificación mejora las probabilidades de lo raro (más cuanto más rara la categoría),
 // sin garantizar nada: peso × factor^exponente, y "común" absorbe la diferencia.
 const GRADE_LOOT = {
@@ -70,6 +74,7 @@ const RECIPE_MISSING_BIAS = 1.8;
 // De qué sets tiene "sabor" cada arena (peso relativo; los que no figuran: 0, salvo Infernal
 // que tiene acceso a toda la tabla). Algunos jefes empujan su set temático.
 const SET_ARENA_WEIGHTS = {
+  ciudad:    {alba:3, guardian:2, cazador:2, sepulturero:1},
   bosque:    {alba:3, cazador:2, sepulturero:2, guardian:1},
   acuatica:  {tempestad:3, laberinto:2, glaciar:2, alba:1},
   fortaleza: {coloso:3, guardian:3, berserker:2, tempestad:1},
@@ -77,6 +82,7 @@ const SET_ARENA_WEIGHTS = {
   hielo:     {glaciar:4, coloso:2, arcano:2, guardian:1},
   abismo:    {arcano:3, laberinto:3, tempestad:2, guardian:2},
   laberinto: {laberinto:4, coloso:3, guardian:3, cazador:1, arcano:1},
+  minas:     {coloso:3, lucifer:2, berserker:2, guardian:2, alba:1},
   infernal:  {lucifer:4, berserker:3, glaciar:1, coloso:1, sepulturero:1, tempestad:1, guardian:1, alba:1, cazador:1, arcano:1, laberinto:1},
   divina:    {laberinto:2, coloso:2, guardian:2, cazador:2, arcano:2, tempestad:2}
 };

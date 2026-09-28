@@ -78,6 +78,18 @@ El plan de fusión fracasa y el Rey de la Horda cae. Pero los cristales no puede
 tampoco. **Los cristales siguen necesitando portadores:** los campeones empiezan a ocupar el lugar de
 los Guardianes (gancho para Arena Divina, Coliseo y temporadas).
 
+**Resonancia (mecánica, `js/systems/crystal-resonance.js`):** esto ya se juega. Antes de cada partida
+el jugador elige UNO de los cristales que juntó y su guardián entra con el don de ese Guardián:
+Ancestral = Raíz viva (regenera fuera de combate; raíces que inmovilizan al caer bajo 35%, cada 25 s),
+Escarcha = Aura gélida (frena a los cercanos; +6% de daño a frenados), Piedra = Piel de piedra (escudo
+del 15% cada 18 s), Juicio = +12% a jefes/subjefes (solo tras el final: quedó sin dueño). Los bots no
+llevan cristal. En la pelea final, cuando el Hechicero arranca los cristales, la resonancia se apaga.
+
+**Últimas palabras:** al caer, cada Guardián dice quién fue (cartel "LAS ÚLTIMAS PALABRAS"). Es lo que
+el Hechicero después desmiente ("deliraba"): el Ancestral pide no entregar el cristal "a nadie", el
+Mago Gélido cuenta que el cuarto "eligió quedarse del otro lado" y el del Laberinto dice que quien
+abrió los caminos "fue uno de nosotros".
+
 ## 8. Contradicciones entre el código y el canon (registradas, no ocultas)
 
 | # | Canon | Código actual | Cómo se adaptó |

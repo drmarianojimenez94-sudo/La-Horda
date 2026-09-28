@@ -1,0 +1,740 @@
+{
+ "stone": {
+  "front": [
+   {
+    "file": "front_0.png",
+    "w": 45,
+    "h": 61,
+    "box": [
+     239,
+     104,
+     284,
+     165
+    ],
+    "typ": "fig",
+    "foot": 60,
+    "cx": 22.2,
+    "bodyTop": 0
+   },
+   {
+    "file": "front_1.png",
+    "w": 47,
+    "h": 62,
+    "box": [
+     289,
+     103,
+     336,
+     165
+    ],
+    "typ": "fig",
+    "foot": 61,
+    "cx": 20.6,
+    "bodyTop": 0
+   }
+  ],
+  "side": [
+   {
+    "file": "side_0.png",
+    "w": 47,
+    "h": 57,
+    "box": [
+     346,
+     108,
+     393,
+     165
+    ],
+    "typ": "fig",
+    "foot": 56,
+    "cx": 19.4,
+    "bodyTop": 0
+   },
+   {
+    "file": "side_1.png",
+    "w": 45,
+    "h": 56,
+    "box": [
+     392,
+     109,
+     437,
+     165
+    ],
+    "typ": "fig",
+    "foot": 55,
+    "cx": 19.3,
+    "bodyTop": 0
+   },
+   {
+    "file": "side_2.png",
+    "w": 47,
+    "h": 57,
+    "box": [
+     438,
+     108,
+     485,
+     165
+    ],
+    "typ": "fig",
+    "foot": 56,
+    "cx": 18.9,
+    "bodyTop": 0
+   }
+  ],
+  "back": [
+   {
+    "file": "back_0.png",
+    "w": 46,
+    "h": 60,
+    "box": [
+     491,
+     105,
+     537,
+     165
+    ],
+    "typ": "fig",
+    "foot": 59,
+    "cx": 22.2,
+    "bodyTop": 0
+   },
+   {
+    "file": "back_1.png",
+    "w": 46,
+    "h": 59,
+    "box": [
+     542,
+     106,
+     588,
+     165
+    ],
+    "typ": "fig",
+    "foot": 58,
+    "cx": 21.7,
+    "bodyTop": 0
+   }
+  ],
+  "left": [
+   {
+    "file": "left_0.png",
+    "w": 60,
+    "h": 61,
+    "box": [
+     601,
+     104,
+     661,
+     165
+    ],
+    "typ": "fig",
+    "foot": 60,
+    "cx": 30.8,
+    "bodyTop": 0
+   },
+   {
+    "file": "left_1.png",
+    "w": 40,
+    "h": 58,
+    "box": [
+     662,
+     107,
+     702,
+     165
+    ],
+    "typ": "fig",
+    "foot": 57,
+    "cx": 18.7,
+    "bodyTop": 0
+   },
+   {
+    "file": "left_2.png",
+    "w": 38,
+    "h": 58,
+    "box": [
+     706,
+     107,
+     744,
+     165
+    ],
+    "typ": "fig",
+    "foot": 57,
+    "cx": 17.5,
+    "bodyTop": 0
+   },
+   {
+    "file": "left_3.png",
+    "w": 40,
+    "h": 57,
+    "box": [
+     747,
+     108,
+     787,
+     165
+    ],
+    "typ": "fig",
+    "foot": 56,
+    "cx": 18.0,
+    "bodyTop": 0
+   }
+  ],
+  "walk": [
+   {
+    "file": "walk_0.png",
+    "w": 49,
+    "h": 58,
+    "box": [
+     244,
+     208,
+     293,
+     266
+    ],
+    "typ": "fig",
+    "foot": 57,
+    "cx": 22.0,
+    "bodyTop": 0
+   },
+   {
+    "file": "walk_1.png",
+    "w": 49,
+    "h": 58,
+    "box": [
+     294,
+     208,
+     343,
+     266
+    ],
+    "typ": "fig",
+    "foot": 57,
+    "cx": 20.6,
+    "bodyTop": 0
+   },
+   {
+    "file": "walk_2.png",
+    "w": 49,
+    "h": 57,
+    "box": [
+     343,
+     209,
+     392,
+     266
+    ],
+    "typ": "fig",
+    "foot": 56,
+    "cx": 21.9,
+    "bodyTop": 0
+   },
+   {
+    "file": "walk_3.png",
+    "w": 49,
+    "h": 57,
+    "box": [
+     393,
+     209,
+     442,
+     266
+    ],
+    "typ": "fig",
+    "foot": 56,
+    "cx": 21.8,
+    "bodyTop": 0
+   },
+   {
+    "file": "walk_4.png",
+    "w": 56,
+    "h": 59,
+    "box": [
+     443,
+     207,
+     499,
+     266
+    ],
+    "typ": "fig",
+    "foot": 58,
+    "cx": 20.6,
+    "bodyTop": 0
+   }
+  ],
+  "atk": [
+   {
+    "file": "atk_0.png",
+    "w": 76,
+    "h": 68,
+    "box": [
+     501,
+     200,
+     577,
+     268
+    ],
+    "typ": "fig",
+    "foot": 67,
+    "cx": 39.2,
+    "bodyTop": 0
+   },
+   {
+    "file": "atk_1.png",
+    "w": 99,
+    "h": 65,
+    "box": [
+     585,
+     202,
+     684,
+     267
+    ],
+    "typ": "fig",
+    "foot": 64,
+    "cx": 42.9,
+    "bodyTop": 0
+   }
+  ]
+ },
+ "stone_fx": {
+  "golpe": [
+   {
+    "file": "golpe_0.png",
+    "w": 99,
+    "h": 64,
+    "box": [
+     688,
+     204,
+     787,
+     268
+    ],
+    "typ": "fx",
+    "foot": 63,
+    "cx": 44.0,
+    "bodyTop": 0
+   }
+  ],
+  "escombros": [
+   {
+    "file": "escombros_0.png",
+    "w": 82,
+    "h": 45,
+    "box": [
+     238,
+     301,
+     320,
+     346
+    ],
+    "typ": "fig",
+    "foot": 44,
+    "cx": 41.6,
+    "bodyTop": 0
+   },
+   {
+    "file": "escombros_1.png",
+    "w": 63,
+    "h": 50,
+    "box": [
+     328,
+     295,
+     391,
+     345
+    ],
+    "typ": "fig",
+    "foot": 49,
+    "cx": 35.7,
+    "bodyTop": 0
+   },
+   {
+    "file": "escombros_2.png",
+    "w": 91,
+    "h": 50,
+    "box": [
+     404,
+     296,
+     495,
+     346
+    ],
+    "typ": "fig",
+    "foot": 49,
+    "cx": 43.2,
+    "bodyTop": 0
+   }
+  ],
+  "impacto": [
+   {
+    "file": "impacto_0.png",
+    "w": 95,
+    "h": 57,
+    "box": [
+     508,
+     291,
+     603,
+     348
+    ],
+    "typ": "fx",
+    "foot": 56,
+    "cx": 48.3,
+    "bodyTop": 4
+   },
+   {
+    "file": "impacto_1.png",
+    "w": 101,
+    "h": 70,
+    "box": [
+     603,
+     278,
+     704,
+     348
+    ],
+    "typ": "fx",
+    "foot": 69,
+    "cx": 49.4,
+    "bodyTop": 0
+   },
+   {
+    "file": "impacto_2.png",
+    "w": 77,
+    "h": 67,
+    "box": [
+     708,
+     281,
+     785,
+     348
+    ],
+    "typ": "fx",
+    "foot": 65,
+    "cx": 36.4,
+    "bodyTop": 1
+   }
+  ]
+ },
+ "fire": {
+  "idle": [
+   {
+    "file": "idle_0.png",
+    "w": 44,
+    "h": 56,
+    "box": [
+     954,
+     765,
+     998,
+     821
+    ],
+    "typ": "fig",
+    "foot": 55,
+    "cx": 20.0,
+    "bodyTop": 0
+   },
+   {
+    "file": "idle_1.png",
+    "w": 49,
+    "h": 50,
+    "box": [
+     1003,
+     771,
+     1052,
+     821
+    ],
+    "typ": "fig",
+    "foot": 49,
+    "cx": 25.2,
+    "bodyTop": 0
+   },
+   {
+    "file": "idle_2.png",
+    "w": 39,
+    "h": 54,
+    "box": [
+     1063,
+     767,
+     1102,
+     821
+    ],
+    "typ": "fig",
+    "foot": 53,
+    "cx": 17.0,
+    "bodyTop": 0
+   },
+   {
+    "file": "idle_3.png",
+    "w": 38,
+    "h": 55,
+    "box": [
+     1112,
+     766,
+     1150,
+     821
+    ],
+    "typ": "fig",
+    "foot": 54,
+    "cx": 17.8,
+    "bodyTop": 0
+   }
+  ],
+  "atk": [
+   {
+    "file": "atk_0.png",
+    "w": 50,
+    "h": 59,
+    "box": [
+     962,
+     848,
+     1012,
+     907
+    ],
+    "typ": "fig",
+    "foot": 58,
+    "cx": 22.2,
+    "bodyTop": 0
+   }
+  ],
+  "death": [
+   {
+    "file": "death_0.png",
+    "w": 70,
+    "h": 73,
+    "box": [
+     825,
+     936,
+     895,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 72,
+    "cx": 32.4,
+    "bodyTop": 0
+   },
+   {
+    "file": "death_1.png",
+    "w": 79,
+    "h": 68,
+    "box": [
+     904,
+     941,
+     983,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 67,
+    "cx": 40.7,
+    "bodyTop": 0
+   },
+   {
+    "file": "death_2.png",
+    "w": 66,
+    "h": 68,
+    "box": [
+     983,
+     941,
+     1049,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 67,
+    "cx": 36.3,
+    "bodyTop": 2
+   },
+   {
+    "file": "death_3.png",
+    "w": 98,
+    "h": 72,
+    "box": [
+     1049,
+     937,
+     1147,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 71,
+    "cx": 47.5,
+    "bodyTop": 0
+   }
+  ]
+ },
+ "fire_fx": {
+  "chorro": [
+   {
+    "file": "chorro_0.png",
+    "w": 125,
+    "h": 54,
+    "box": [
+     1012,
+     854,
+     1137,
+     908
+    ],
+    "typ": "fx",
+    "foot": 52,
+    "cx": 56.0,
+    "bodyTop": 5
+   }
+  ]
+ },
+ "ice": {
+  "idle": [
+   {
+    "file": "idle_0.png",
+    "w": 51,
+    "h": 57,
+    "box": [
+     1309,
+     767,
+     1360,
+     824
+    ],
+    "typ": "fig",
+    "foot": 56,
+    "cx": 22.9,
+    "bodyTop": 0
+   },
+   {
+    "file": "idle_1.png",
+    "w": 50,
+    "h": 52,
+    "box": [
+     1369,
+     771,
+     1419,
+     823
+    ],
+    "typ": "fig",
+    "foot": 51,
+    "cx": 22.6,
+    "bodyTop": 0
+   },
+   {
+    "file": "idle_2.png",
+    "w": 43,
+    "h": 55,
+    "box": [
+     1430,
+     769,
+     1473,
+     824
+    ],
+    "typ": "fig",
+    "foot": 54,
+    "cx": 18.8,
+    "bodyTop": 0
+   },
+   {
+    "file": "idle_3.png",
+    "w": 38,
+    "h": 56,
+    "box": [
+     1485,
+     768,
+     1523,
+     824
+    ],
+    "typ": "fig",
+    "foot": 55,
+    "cx": 16.6,
+    "bodyTop": 0
+   }
+  ],
+  "atk": [
+   {
+    "file": "atk_0.png",
+    "w": 77,
+    "h": 58,
+    "box": [
+     1311,
+     849,
+     1388,
+     907
+    ],
+    "typ": "fig",
+    "foot": 57,
+    "cx": 31.3,
+    "bodyTop": 0
+   }
+  ],
+  "death": [
+   {
+    "file": "death_0.png",
+    "w": 73,
+    "h": 73,
+    "box": [
+     1173,
+     936,
+     1246,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 72,
+    "cx": 33.9,
+    "bodyTop": 0
+   },
+   {
+    "file": "death_1.png",
+    "w": 67,
+    "h": 71,
+    "box": [
+     1255,
+     938,
+     1322,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 70,
+    "cx": 32.7,
+    "bodyTop": 0
+   },
+   {
+    "file": "death_2.png",
+    "w": 64,
+    "h": 66,
+    "box": [
+     1330,
+     943,
+     1394,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 65,
+    "cx": 32.3,
+    "bodyTop": 0
+   },
+   {
+    "file": "death_3.png",
+    "w": 118,
+    "h": 71,
+    "box": [
+     1402,
+     938,
+     1520,
+     1009
+    ],
+    "typ": "figfx",
+    "foot": 70,
+    "cx": 63.0,
+    "bodyTop": 0
+   }
+  ]
+ },
+ "ice_fx": {
+  "rayo": [
+   {
+    "file": "rayo_0.png",
+    "w": 50,
+    "h": 35,
+    "box": [
+     1393,
+     866,
+     1443,
+     901
+    ],
+    "typ": "fx",
+    "foot": 33,
+    "cx": 16.6,
+    "bodyTop": 3
+   }
+  ],
+  "estallido": [
+   {
+    "file": "estallido_0.png",
+    "w": 78,
+    "h": 45,
+    "box": [
+     1443,
+     862,
+     1521,
+     907
+    ],
+    "typ": "fx",
+    "foot": 41,
+    "cx": 46.0,
+    "bodyTop": 3
+   }
+  ]
+ }
+}

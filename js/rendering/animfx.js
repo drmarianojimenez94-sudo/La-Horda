@@ -43,7 +43,7 @@ const ANIM_PROFILES = {
   eren:       {speed:1.4, weight:0.9, amp:0.8, recoil:0.8, lunge:14, cast:1.0, impact:1.3, particle:"blood",  basic:"melee",  tier:"static"},
   // ---- invocaciones ----
   nigro_skel: {speed:1.4, weight:0.6, amp:1.1, lunge:8,  impact:0.8, particle:"bone", material:"bone", tier:"static"},
-  nigro_golem:{speed:0.55,weight:2.4, amp:0.6, lunge:12, impact:2.0, particle:"rock", material:"rock", tier:"static"},
+  nigro_golem:{speed:0.55,weight:2.4, amp:0.6, lunge:12, impact:2.0, particle:"rock", material:"rock", tier:"full"}, // atlas con caminata y golpe reales
   // ---- enemigos (personalidad; el resto usa el default ajustado por rango/tamaño) ----
   esqueleto:          {speed:1.4, weight:0.6, amp:1.2, lunge:8,  impact:0.8, material:"bone",  death:"crumble"},
   esqueleto_h:        {speed:1.2, weight:0.9, amp:1.0, lunge:10, impact:1.0, material:"bone",  death:"frames"},
@@ -54,8 +54,9 @@ const ANIM_PROFILES = {
   golem:              {speed:0.55,weight:2.4, amp:0.6, lunge:14, impact:2.2, material:"rock",  death:"crumble"},
   lobo_artico:        {speed:1.5, weight:0.6, lunge:12, material:"flesh"},
   golem_hielo:        {speed:0.6, weight:2.0, amp:0.7, lunge:10, impact:1.8, material:"ice",   death:"frames"},
-  dragoncito_hielo:   {speed:1.3, weight:0.6, basic:"ranged", material:"ice"},
-  angel_hielo:        {speed:0.9, basic:"cast", cast:1.3, material:"ice", death:"dissolve"},
+  dragoncito_hielo:   {speed:1.3, weight:0.6, basic:"ranged", material:"ice", death:"frames", corpse:false},
+  hada_escarcha:      {speed:1.3, weight:0.3, amp:1.4, material:"ice", death:"frames", corpse:false},
+  angel_hielo:        {speed:0.9, basic:"cast", cast:1.3, material:"ice", death:"frames", corpse:false},
   demonio_hielo_fuego:{speed:1.0, weight:1.2, lunge:12, material:"ember", death:"frames"},
   dragon_hielo:       {speed:0.7, weight:2.0, amp:0.8, basic:"ranged", impact:1.8, material:"ice", death:"collapse"},
   golem_cristal:      {speed:0.6, weight:2.0, amp:0.7, lunge:10, impact:1.8, material:"ice",   death:"frames"},
@@ -64,9 +65,9 @@ const ANIM_PROFILES = {
   mago_hielo_cristal: {speed:0.9, basic:"cast", cast:1.6, material:"ice", death:"dissolve"},
   angel_caido_hielo:  {speed:0.8, weight:2.0, basic:"cast", cast:1.7, impact:2.0, material:"ice", death:"collapse"},
   duende_bosque:      {speed:1.5, weight:0.5, amp:1.3, lunge:8, material:"leaf", death:"frames"},
-  enjambre_hadas:     {speed:1.3, weight:0.3, amp:1.4, basic:"ranged", material:"spirit", death:"dissolve"},
+  enjambre_hadas:     {speed:1.3, weight:0.3, amp:1.4, basic:"ranged", material:"spirit", death:"frames", corpse:false},
   bestia_bosque:      {speed:1.3, weight:1.0, lunge:14, material:"flesh", death:"frames"},
-  cu_sith:            {speed:1.4, weight:0.9, lunge:16, material:"spirit"},
+  cu_sith:            {speed:1.4, weight:0.9, lunge:16, material:"spirit", death:"frames", corpse:false},
   ent:                {speed:0.5, weight:2.4, amp:0.6, lunge:12, impact:2.0, material:"wood", death:"frames"},
   dama_bosque:        {speed:0.9, basic:"cast", cast:1.4, material:"spirit", death:"dissolve"},
   doblador_guerrero:  {speed:1.1, lunge:14, material:"spirit", death:"dissolve"},
@@ -118,6 +119,13 @@ function animProfileOf(ent){
     if(ENEMY_ANIM_ATLASES[ent.type]) p.tier = "full";
     else if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[ent.type]) p.tier = "full"; // hojas de jefes: animación real completa
     else if(REAL_ANIM_ATLASES[ent.type]) p.tier = "walk";
+    // hojas por atlas / recortes sueltos (tools/art/enemy_coverage.js): con ciclo de caminar real van
+    // como el resto de los packs ("partial"); con un solo cuadro de caminar, el balanceo completo del
+    // preset tapa la falta de ciclo (walk de 1 cuadro -> bob). Antes, los tipos que además tenían un
+    // static.png viejo de respaldo (Gólem de Hielo, Ent, Dobladores...) caían en "static" y se sumaba el
+    // balanceo entero ENCIMA de su caminata real.
+    else if(_animPackWalkFrames(ent.type) > 1) p.tier = "partial";
+    else if(_animPackWalkFrames(ent.type) === 1) p.tier = "static";
     else if(ICE_REAL_IMG[ent.type]){ p.tier = "static"; p.hasBob = true; }
     else if(ACUA_ENEMY_TYPES[ent.type]) p.tier = "static";
     else p.tier = "partial";
@@ -127,6 +135,13 @@ function animProfileOf(ent){
   p.isBoss = ent.rank==="jefe" || ent.rank==="subjefe";
   ent._ap = p;
   return p;
+}
+// Cuadros DISTINTOS del ciclo de caminar de perfil que trae la hoja del tipo (-1 = no tiene hoja).
+function _animPackWalkFrames(type){
+  const P = typeof ENEMY_ATLAS_PACK!=="undefined" && ENEMY_ATLAS_PACK[type];
+  if(P && P.sets){ const w = P.sets.walk || P.sets.idle; return w ? new Set(w).size : 0; }
+  const d = typeof PACK_ANIM!=="undefined" && PACK_ANIM[type];
+  return d && d.walk ? new Set(d.walk).size : -1;
 }
 const ACUA_ENEMY_TYPES = {tiburon_joven:1, tiburon_blanco:1, cangrejo_acorazado:1, medusa_electrica:1, sirena_abisal:1, anguila_electrica:1, kraken_joven:1, leviatan:1};
 

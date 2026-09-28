@@ -81,10 +81,13 @@ function spawnNigroSkeleton(h, type, mods){
     moving:false, attackAnim:0, hitFlash:0, atkCd:0, retargetCd:0, target:null, alive:true
   });
   // Ráfaga de materialización real (antes sin usar): el esqueleto emerge de la niebla verde.
+  // (con el atlas nuevo esa imagen no se usa: sale de la tierra -ver drawSkeletonMinion- entre tierra removida y niebla)
   vfxSprite(type==="mage" ? "nigroSkeletonSpawnMage" : "nigroSkeletonSpawnWarrior", 0, sx, sy, 60, 340, null, 0.1, false, 0.92, 0);
+  vfxBurst(sx, sy - 4, 6, "necro", 70, 380, 2.5, 0, -40, 0);
 }
 function killNigroSkeleton(sk){
   sk.alive = false;
+  if(typeof nigroSkeletonDeathFx==="function") nigroSkeletonDeathFx(sk); // se desarma hundiéndose (solo dibujo)
   particles.push({x:sk.x,y:sk.y, life:280, ring:true, maxLife:280, maxR:26, color:"#7ad48a"});
   if(sk.type==="mage") return;
 }
@@ -93,6 +96,7 @@ function updateNigromanteSkeletons(h, dt){
   const mods = talentSkillMods(h.classKey, 0).flags;
   for(const sk of h.skeletons){
     if(!sk.alive) continue;
+    sk.age = (sk.age||0) + dt; // (solo para el dibujo: sale de la tierra al aparecer)
     if(sk.hitFlash>0) sk.hitFlash -= dt;
     if(sk.attackAnim>0) sk.attackAnim -= dt;
     if(sk.atkCd>0) sk.atkCd -= dt;
@@ -200,16 +204,21 @@ function spawnOrRenewGolem(h){
     hp:baseHp, maxHp:baseHp, skin, moving:false, attackAnim:0, hitFlash:0, atkCd:0, retargetCd:0, target:null
   };
   // Ráfaga de materialización real (antes sin usar): el Golem emerge de la niebla verde.
+  // (con el atlas nuevo se arma solo en su dibujo; acá queda el anillo del elemento y la niebla)
   vfxSprite("nigroGolemSpawn", 0, h.golem.x, h.golem.y, 100, 420, null, 0.1, false, 0.94, 0);
+  vfxShock(h.golem.x, h.golem.y, 10, 60, nigroEl(skin).rgb, 420, h===player?1:0);
+  vfxBurst(h.golem.x, h.golem.y - 10, 10, "necro", 110, 460, 3, h===player?1:0, -30, 0);
 }
 function killNigroGolem(h){
   if(!h.golem) return;
+  if(typeof nigroGolemDeathFx==="function") nigroGolemDeathFx(h.golem); // se deshace con sus cuadros de muerte (solo dibujo)
   particles.push({x:h.golem.x,y:h.golem.y, life:420, ring:true, maxLife:420, maxR:50, color:"#8fae7a"});
   h.golem = null;
 }
 function updateNigromanteGolem(h, dt){
   const g = h.golem;
   if(!g) return;
+  g.age = (g.age||0) + dt; // (solo para el dibujo: se arma de escombros / brasas / cristales al aparecer)
   if(g.furyT>0) g.furyT -= dt;
   if(g.hitFlash>0) g.hitFlash -= dt;
   if(g.attackAnim>0) g.attackAnim -= dt;
@@ -280,6 +289,10 @@ function nigromanteDemonMods(h){
 function enterAbyssForm(h, sk){
   h.nigroAbsorbedSkeletons = h.skeletons.filter(s=>s.alive).length;
   h.nigroAbsorbedGolem = !!h.golem;
+  if(typeof nigroGolemDeathFx==="function"){ // el ejército se deshace al ser absorbido (solo dibujo)
+    if(h.golem) nigroGolemDeathFx(h.golem);
+    for(const s of h.skeletons) if(s.alive) nigroSkeletonDeathFx(s);
+  }
   h.skeletons = [];
   h.golem = null;
   h.nigroDemonForm = true;
@@ -443,7 +456,7 @@ function nigroCastGolem(h, sk, dmg, AREA){
       damageEnemy(e, dmg*1.6, {src:h, heavy:true, burn: g.skin==="fire"?true:undefined, slow: g.skin==="ice"?0.6:undefined, slowDur:1600});
       if(e.rank!=="jefe" && e.rank!=="subjefe") e.stunTimer = Math.max(e.stunTimer||0, g.skin==="ice" ? 1200 : stun);
     }
-    g.attackAnim = 320;
+    g.attackAnim = 320; g.slamBig = true; // (el dibujo usa el impacto grande de la hoja)
     vfxShock(g.x, g.y, 12, R, g.skin==="fire"?"255,138,61":g.skin==="ice"?"159,227,255":"143,174,122", 440, h===player?2:1);
     vfxBurst(g.x, g.y, 14, "rock", 160, 380, 3.5, h===player?1:0, -20, 0);
     if(h===player){ vfxShake(4); playSfx("stomp"); floatText(g.x, g.y-60, "¡APLASTA!", "crit"); }

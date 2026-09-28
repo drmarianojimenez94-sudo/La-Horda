@@ -3,6 +3,16 @@
    La usa js/assets/preload.js para saber cuándo terminó de cargar todo. Si agregás una imagen
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
+  // >>> hoja de bestias (tools/art/hoja_bestias/build.py)
+  "assets/sprites/enemies/bosque/cu_sith/v3/atlas.png",
+  "assets/sprites/enemies/bosque/enjambre_hadas/v3/atlas.png",
+  "assets/sprites/enemies/hielo/hada_escarcha/atlas.png",
+  "assets/vfx/enemies/bosque/hbCuMordida_0.png",
+  "assets/vfx/enemies/bosque/hbDamaHechizo_0.png",
+  "assets/vfx/enemies/hielo/hbAngelPrisma_0.png",
+  "assets/vfx/enemies/hielo/hbDragAliento_0.png",
+  "assets/vfx/enemies/hielo/hbDragAliento_1.png",
+  // <<< hoja de bestias
   // >>> minas profundas (tools/art/minas/extract.py)
   "assets/sprites/arenas/minas/mn_esclavo/atlas.png",
   "assets/sprites/arenas/minas/mn_insecto/atlas.png",
@@ -558,6 +568,9 @@ const ASSET_MANIFEST = [
   "assets/vfx/bosses/bosque/gdTreeWall_1.png",
   "assets/vfx/bosses/bosque/gdTreeWall_2.png",
   "assets/vfx/bosses/bosque/gdTreeWall_3.png",
+  "assets/vfx/bosses/bosque/gdTreeWall_4.png",
+  "assets/vfx/bosses/bosque/gdTreeWall_5.png",
+  "assets/vfx/bosses/bosque/gdTreeWall_6.png",
   "assets/vfx/bosses/bosque/gdCorrupt_0.png",
   "assets/vfx/bosses/bosque/gdCorrupt_1.png",
   "assets/vfx/bosses/bosque/gdCorrupt_2.png",
@@ -578,8 +591,6 @@ const ASSET_MANIFEST = [
   "assets/sprites/bosses/laberinto/minotauro/v3/atlas.png",
   "assets/sprites/enemies/hielo/dragoncito_hielo/v2/atlas.png",
   "assets/sprites/enemies/hielo/angel_hielo/v2/atlas.png",
-  "assets/sprites/enemies/bosque/enjambre_hadas/v2/atlas.png",
-  "assets/sprites/enemies/bosque/cu_sith/v2/atlas.png",
   "assets/sprites/enemies/infernal/golem/v2/atlas.png",
   "assets/sprites/enemies/laberinto/golem_piedra/v2/atlas.png",
   "assets/vfx/bosses/laberinto/csMinoWave_0.png",
@@ -1277,10 +1288,9 @@ const ASSET_MANIFEST = [
   "assets/sprites/champions/nigromante/skeleton/walk2.png",
   "assets/sprites/champions/nigromante/skeleton/spawnWarrior.png",
   "assets/sprites/champions/nigromante/skeleton/spawnMage.png",
-  "assets/sprites/champions/nigromante/golem/stone.png",
-  "assets/sprites/champions/nigromante/golem/stoneAtk.png",
-  "assets/sprites/champions/nigromante/golem/fire.png",
-  "assets/sprites/champions/nigromante/golem/ice.png",
+  "assets/sprites/champions/nigromante/golems/stone/atlas.png",
+  "assets/sprites/champions/nigromante/golems/fire/atlas.png",
+  "assets/sprites/champions/nigromante/golems/ice/atlas.png",
   "assets/sprites/champions/nigromante/golem/spawn.png",
   "assets/sprites/champions/nigromante/demon/idle.png",
   "assets/sprites/champions/nigromante/demon/attack1.png",

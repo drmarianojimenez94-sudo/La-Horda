@@ -9,9 +9,12 @@
      - Hielo:    +vida, -daño. Ralentiza al golpear; aura de escarcha.
      - Tormenta: cada golpe salta en rayo a 2 enemigos cercanos (con Mojado, Conducción).
      - Plaga:    maldice al golpear (Plaga de los Condenados): sinergia con la rama de la plaga.
-   Fuego e Hielo tienen arte propio; Tormenta y Plaga usan el gólem de piedra recoloreado al
-   cargar (cuando llegue el arte de las especializaciones, NG-01 en
-   LA_HORDA_COMBAT_MISSING_ASSETS.md, se enchufa en NIGRO_GOLEM_IMG.storm / .plague).
+   Arte (un atlas por gólem, js/assets/nigro-golems-meta.js):
+     - Piedra: el subjefe del Laberinto (4 direcciones, caminata, golpe con impacto, se arma y se
+       deshace en escombros).
+     - Fuego / Hielo: sus variantes (idle-caminata, ataque con chorro de fuego / rayo de hielo, muerte).
+     - Tormenta / Plaga: el atlas de piedra recoloreado al cargar (cuando llegue su arte, NG-01 en
+       LA_HORDA_COMBAT_MISSING_ASSETS.md, se enchufa como NIGRO_GOLEM_ATLAS.storm / .plague).
    La forma demoníaca de la ultimate toma el color del elemento (aura y brasas).
    ============================================================ */
 const NIGRO_ELEMENTS = {
@@ -23,30 +26,37 @@ const NIGRO_ELEMENTS = {
 };
 function nigroEl(skin){ return NIGRO_ELEMENTS[skin] || NIGRO_ELEMENTS.stone; }
 
-// ---- arte provisorio de Tormenta y Plaga: el gólem de piedra recoloreado una vez ----
-const NIGRO_GOLEM_TINT = {};
+// ---- arte de Tormenta y Plaga: el atlas de piedra recoloreado una vez (mismos cuadros y anclas) ----
 function _nigroTint(key, fn){
-  const src = NIGRO_GOLEM_IMG.stone;
+  const base = NIGRO_GOLEM_ATLAS.stone;
+  if(!base || NIGRO_GOLEM_ATLAS[key]) return;
+  const A = { img:null, meta:base.meta, ready:false, failed:false, clips:null, tinted:true };
+  NIGRO_GOLEM_ATLAS[key] = A;
   const build = ()=>{
     try{
-      const c = document.createElement("canvas"); c.width = src.naturalWidth; c.height = src.naturalHeight;
+      const src = base.img, c = document.createElement("canvas"); c.width = src.naturalWidth; c.height = src.naturalHeight;
       const g = c.getContext("2d"); g.drawImage(src, 0, 0);
       const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
       for(let i=0;i<p.length;i+=4){ if(p[i+3]) fn(p, i, p[i]*0.3 + p[i+1]*0.59 + p[i+2]*0.11); }
-      g.putImageData(d, 0, 0); NIGRO_GOLEM_TINT[key] = c;
-    }catch(err){ NIGRO_GOLEM_TINT[key] = src; }
+      g.putImageData(d, 0, 0); A.img = c;
+    }catch(err){ A.img = base.img; }
+    A.ready = true;
   };
-  if(src.complete && src.naturalWidth) build(); else src.addEventListener("load", build);
+  if(base.img.complete && base.img.naturalWidth) build();
+  else { base.img.addEventListener("load", build); base.img.addEventListener("error", ()=>{ A.failed = true; }); }
 }
 // Tormenta: piedra azul pizarra con vetas violeta brillante (los tonos claros se vuelven "electricidad")
 _nigroTint("storm", (p, i, l)=>{ if(l > 140){ p[i] = 225; p[i+1] = 215; p[i+2] = 255; } else { p[i] = Math.min(255, l*0.8 + 20); p[i+1] = Math.min(255, l*0.85 + 22); p[i+2] = Math.min(255, l*1.2 + 50); } });
 // Plaga: carne enferma verde oliva con pústulas claras
-_nigroTint("plague", (p, i, l)=>{ if(l > 150){ p[i] = 205; p[i+1] = 255; p[i+2] = 140; } else { p[i] = l*0.62; p[i+1] = Math.min(255, l*0.95 + 18); p[i+2] = l*0.38; } });
-function nigroGolemImage(skin, attacking){
-  if(NIGRO_GOLEM_IMG[skin] && NIGRO_GOLEM_READY[skin]) return NIGRO_GOLEM_IMG[skin];      // arte real (fuego, hielo, o el que llegue)
-  if(NIGRO_GOLEM_TINT[skin]) return NIGRO_GOLEM_TINT[skin];                                // provisorio (tormenta, plaga)
-  if(attacking && NIGRO_GOLEM_READY.stoneAtk) return NIGRO_GOLEM_IMG.stoneAtk;
-  return NIGRO_GOLEM_READY.stone ? NIGRO_GOLEM_IMG.stone : null;
+// (umbral de pústula alto: la piedra nueva tiene muchos brillos y con 150 quedaba verde fosforescente)
+_nigroTint("plague", (p, i, l)=>{ if(l > 190){ p[i] = 190; p[i+1] = 235; p[i+2] = 120; } else { p[i] = l*0.58; p[i+1] = Math.min(255, l*0.88 + 12); p[i+2] = l*0.34; } });
+// Atlas listo para dibujar el gólem de este elemento (o null mientras baja: no se dibuja nada,
+// nunca un gólem de otro elemento que después cambia de golpe).
+function nigroGolemAtlas(skin){
+  const A = NIGRO_GOLEM_ATLAS[skin] || NIGRO_GOLEM_ATLAS.stone;
+  if(A && A.ready) return A;
+  if(A && A.failed && NIGRO_GOLEM_ATLAS.stone.ready) return NIGRO_GOLEM_ATLAS.stone; // respaldo solo si su arte falló
+  return null;
 }
 
 // ---- efecto elemental de cada golpe del gólem (anfitrión) ----

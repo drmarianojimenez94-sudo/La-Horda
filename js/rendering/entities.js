@@ -287,6 +287,8 @@ function drawEnemy(e){
 function drawEnemyBody(e){
   if(arenaHas("drawEnemyBody") && arenaHook("drawEnemyBody", e)){
     // cuerpo propio de la arena (El Reino Micelial: núcleos, raíces, la Madre por partes)
+  } else if((!e.alive || e._dyingP != null) && drawDeathPack(e)){ // (_dyingP: en el invitado la copia del enemigo puede seguir "viva")
+    // muerte de 4 cuadros de la hoja de bestias (Esfinge, Medusa, Druida de Arena)
   } else if(drawBossFxReplace(e)){
     // habilidad del Dragón de Hielo en curso: reemplaza al sprite normal, no dibujar nada más
   } else if(drawAcuaticaReal(e)){
@@ -464,10 +466,10 @@ function drawEnemyOverlays(e){
 
 const _entPool = [], _entList = [];
 let _entN = 0;
-function _entPush(y, e, h, w, p){
+function _entPush(y, e, h, w, p, s){
   let it = _entPool[_entN];
-  if(!it){ it = _entPool[_entN] = {y:0, e:null, h:null, w:null, p:null}; }
-  it.y = y; it.e = e; it.h = h; it.w = w||null; it.p = p||null; _entN++;
+  if(!it){ it = _entPool[_entN] = {y:0, e:null, h:null, w:null, p:null, s:null}; }
+  it.y = y; it.e = e; it.h = h; it.w = w||null; it.p = p||null; it.s = s||null; _entN++;
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){

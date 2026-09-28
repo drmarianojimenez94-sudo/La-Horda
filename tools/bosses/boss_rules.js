@@ -25,7 +25,8 @@ const want = a => !only.length || only.includes(a);
   const shot = n => page.screenshot({ path: path.join(outdir, n + '.png') });
   const god = () => E(() => { for (const h of heroes) { h.invulnTimer = 1e9; } });
   const start = async (arena, allies) => {
-    await E(([a, al]) => { selectedClass = 'guerrero'; currentArena = a; lobbyAllies = al; startRun(1); }, [arena, allies || ['tanque', 'mago', 'soporte']]);
+    // sin Resonancia de cristal: las reglas se miden con un guardián sin dones (crystal-resonance.js)
+    await E(([a, al]) => { save.crystalWorn = 'none'; selectedClass = 'guerrero'; currentArena = a; lobbyAllies = al; startRun(1); }, [arena, allies || ['tanque', 'mago', 'soporte']]);
     await sleep(1500); await god();
   };
   const toBoss = async () => { await E(() => { runLevel = LEVEL_COUNT; levelTimer = 0; beginLevel(); for (const e of enemies) e.alive = false; enemies = []; startBossFight(); }); await sleep(600); await god(); };

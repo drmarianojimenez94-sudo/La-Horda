@@ -346,7 +346,9 @@ function castAbility(caster, sk, isUlt, idx){
   caster._animCastKind = isUlt ? 2 : 1; // el sistema de animación lo lee como CAST (ulti = CAST fuerte)
   // animaciones del Pack 1 (Segador/Axiom): pose de cast mientras dura este attackAnim; el Tajo
   // del Segador es un golpe de guadaña, así que usa la pose de ataque
-  caster._packCastUntil = sk.kind==="cone_slash" ? 0 : animNow + caster.attackAnim;
+  // (en tiempo de la partida -runElapsedMs, que viaja en cada snapshot-: con animNow, el reloj de ESTA página,
+  // el invitado comparaba contra su propio reloj y veía los ataques básicos con la pose de cast o al revés)
+  caster._packCastUntil = sk.kind==="cone_slash" ? 0 : runElapsedMs + caster.attackAnim;
   const _prevCastCtx = _castCtx, _prevUlt = caster._castUlt;
   if(caster===player){ _castCtx = {ult:!!isUlt}; if(isUlt) _ultImpactDone = false; }
   caster._castUlt = !!isUlt; // impacto nivel 4 para los golpes de esta ulti (también bots/invitados)

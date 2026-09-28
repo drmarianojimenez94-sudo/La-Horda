@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>La Horda</title>
+<meta name="theme-color" content="#0b0705">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
@@ -242,6 +245,7 @@
   <div id="prep-screen" class="screen hidden">
     <div class="arena-title" id="lobby-title">Sala</div>
     <div class="lobby-sub" id="lobby-sub"></div>
+    <div id="lobby-arena" class="hidden"></div>
     <div id="net-bar"></div>
     <div id="net-chat" class="hidden"></div>
     <div id="lobby-slots"></div>
@@ -355,8 +359,10 @@
 <script src="js/ui/game-dialog.js"></script>
 <script src="js/core/canvas.js"></script>
 <script src="js/core/anti-zoom.js"></script>
+<script src="js/core/fullscreen.js"></script>
 <script src="js/core/state.js"></script>
 <script src="js/assets/ui-icons.js"></script>
+<script src="js/assets/nigro-golems-meta.js"></script>
 <script src="js/assets/champion-sprites.js"></script>
 <script src="js/assets/vfx-sprites.js"></script>
 <script src="js/assets/enemy-sprites.js"></script>
@@ -377,6 +383,7 @@
 <script src="js/rendering/vfx.js"></script>
 <script src="js/assets/boss-sheets-meta.js"></script>
 <script src="js/assets/canon-sheets-meta.js"></script>
+<script src="js/assets/bestias-meta.js"></script>
 <script src="js/assets/guardian-sheet-meta.js"></script>
 <script src="js/assets/boss-sheets.js"></script>
 <script src="js/rendering/fx-contrast.js"></script>
@@ -416,6 +423,7 @@
 <script src="js/systems/breakables.js"></script>
 <script src="js/systems/tutorial.js"></script>
 <script src="js/systems/crystals.js"></script>
+<script src="js/systems/crystal-resonance.js"></script>
 <script src="js/systems/campaign-story.js"></script>
 <script src="js/champions/hero-factory.js"></script>
 <script src="js/champions/segador.js"></script>
@@ -439,6 +447,7 @@
 <script src="js/enemies/spawning.js"></script>
 <script src="js/enemies/enemy-roles.js"></script>
 <script src="js/enemies/ranged-styles.js"></script>
+<script src="js/enemies/bestias-ai.js"></script>
 <script src="js/arenas/arena-rules.js"></script>
 <script src="js/arenas/arena-identity.js"></script>
 <script src="js/arenas/divina.js"></script>

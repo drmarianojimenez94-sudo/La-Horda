@@ -309,7 +309,26 @@
 .net-champ{ padding:3px 7px; font-size:0.68rem; background:#1c120c; color:var(--text); border:2px solid #000; cursor:pointer; }
 .net-champ.sel{ border-color:var(--ember3); color:var(--ember3); }
 .net-champ:disabled{ opacity:0.35; cursor:default; }
-.net-arena select{ padding:4px; background:#140c08; color:var(--text); border:2px solid #000; font:inherit; }
+/* Arena de la Sala: se elige ahí mismo (solo o anfitrión) sin salir; los invitados ven cuál eligió el anfitrión */
+#lobby-arena{ width:100%; max-width:560px; margin:-4px 0 8px; text-align:left; font-family:var(--font-retro); }
+#lobby-arena.hidden{ display:none; }
+.la-head{ color:var(--ember3); font-size:0.85rem; letter-spacing:0.06em; }
+.la-by{ color:var(--text-dim); letter-spacing:0; font-size:0.8rem; }
+.la-strip{ display:flex; gap:6px; overflow-x:auto; overscroll-behavior-x:contain; padding:3px 1px 5px; scrollbar-width:thin; -webkit-overflow-scrolling:touch; }
+.la-chip{ flex:none; display:flex; align-items:center; gap:5px; min-height:40px; padding:4px 10px; white-space:nowrap; cursor:pointer;
+  background:#1c120c; color:var(--text); border:2px solid #000; font:inherit; font-size:0.85rem; box-shadow:2px 2px 0 #000; }
+.la-chip.sel{ border-color:var(--ember3); color:var(--ember3); background:#2a180c; box-shadow:0 0 0 1px var(--ember1), 2px 2px 0 #000; }
+.la-chip:disabled{ opacity:0.4; cursor:default; }
+.la-tag{ font-size:0.72rem; padding:0 4px; border:1px solid #7dffa0; color:#7dffa0; }
+.la-tag.next{ border-color:var(--ember3); color:#1a0c05; background:var(--ember3); }
+.la-done{ color:#7dffa0; font-size:0.8rem; }
+.la-desc{ display:block; color:var(--text-dim); font-size:0.78rem; line-height:1.2; }
+.la-card{ display:flex; gap:8px; align-items:center; padding:5px 8px; margin-top:3px; background:#1c120c; border:2px solid var(--ember3); box-shadow:2px 2px 0 #000; }
+.la-ico{ font-size:1.4rem; flex:none; }
+.la-txt{ display:flex; flex-direction:column; min-width:0; }
+.la-name{ color:var(--ember3); font-size:0.95rem; font-weight:normal; }
+.la-warn{ color:#ffcf5c; font-size:0.78rem; margin-top:4px; line-height:1.25; }
+.vic-next-note{ margin-top:10px; padding:6px 8px; border:1px dashed rgba(255,207,92,0.45); color:var(--text); font-size:0.8rem; line-height:1.3; text-align:left; }
 .lobby-tag.p0{ background:#ff7a2e; } .lobby-tag.p1{ background:#3fa7ff; } .lobby-tag.p2{ background:#4fd16a; } .lobby-tag.p3{ background:#c77dff; }
 .lobby-slot.pc0{ border-color:#ff7a2e; } .lobby-slot.pc1{ border-color:#3fa7ff; } .lobby-slot.pc2{ border-color:#4fd16a; } .lobby-slot.pc3{ border-color:#c77dff; }
 .net-wait-host{ color:#ffcf5c; font-size:0.7rem; margin-top:4px; }

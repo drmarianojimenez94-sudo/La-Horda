@@ -83,14 +83,14 @@ function impactFeedback(e, dmg, crit, opts, pow, src){
 
 // Bajas: una común apenas suena; una élite pega un tirón; un subjefe frena el tiempo.
 function killFeedback(e, byPlayer){
-  if(e.rank==="elite"){ if(byPlayer) hitStop(45); vfxShake(4); playSfx("eliteKill"); }
+  if(e.rank==="elite"){ if(byPlayer) hitStop(45); vfxShake(4); playSfx("eliteKill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null); }
   else if(e.rank==="subjefe"){
     hitStop(90, true); slowMo(0.35, 450); vfxShake(9); flashScreen(0.28); playSfx("bigKill");
     const others = enemies.some(o=>o.alive && o!==e && o.rank==="subjefe");
     if(!others) showBanner("¡"+String(e.name).toUpperCase()+" DERROTADO!");
     else floatText(e.x, e.y-(e.radius||30)*2, "¡Derrotado!", "crit");
   }
-  else if(e.rank!=="jefe" && byPlayer) playSfx("kill");
+  else if(e.rank!=="jefe" && byPlayer) playSfx("kill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null);
 }
 // Cambio de fase del jefe (renace / se transforma / se enfurece) y muerte definitiva.
 function bossPhaseFeedback(){ hitStop(110, true); slowMo(0.4, 650); vfxShake(10); flashScreen(0.35, "255,230,180"); playSfx("bossRoar"); }

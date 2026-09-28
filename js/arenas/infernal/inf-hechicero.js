@@ -38,7 +38,10 @@ const HECH_TYPES = {hechicero_supremo:1, golem_cuerpos:1, angel_corrompido:1};
 
 /* ---------------- arte ---------------- */
 enemyAtlasPackLoad("hechicero_supremo", HECH_DIR+"atlas.png", {"w":102,"h":113,"cols":8,"refH":112,"anchor":0.9823,
-  "sets":{"idle":[0,1,2,3],"walk":[0,1,2,3],"cast":[16,17,18,19,20,21,22,23],"atk":[24,25,26,27],"hit":[28,29,30,31],"death":[33,34,35,36,37,38],"kneel":[36]}});
+  // caminar: las celdas 4-15 del atlas son los 12 cuadros de caminata de la hoja (tools/art/hechicero/
+  // build.py), que no se usaban (caminaba con el idle). Mezclan vistas: 4-6 de frente, 8/10/11 de perfil
+  // mirando a la derecha; se toman por vista para que no gire sobre sí mismo al caminar.
+  "sets":{"idle":[0,1,2,3],"walk":[8,10,11,10],"walk_down":[4,5,6,5],"cast":[16,17,18,19,20,21,22,23],"atk":[24,25,26,27],"hit":[28,29,30,31,32],"death":[33,34,35,36,37,38],"kneel":[36]}});
 ENEMY_ATLAS_PACK.hechicero_supremo.hMul = 4.2; // más grande que un héroe: se lee como subjefe
 enemyAtlasPackLoad("golem_cuerpos", HECH_DIR+"golem/atlas.png", {"w":327,"h":274,"cols":3,"refH":274,"anchor":0.9927,
   "sets":{"idle":[1],"walk":[1],"atk":[2],"slam":[2],"hit":[1],"tf":[3,4,5],"pre":[6],"death":[2,5,4,3]}});
@@ -161,7 +164,7 @@ BOSS_DESIGNS.hechicero_supremo = {
 };
 
 /* ---------------- ataques del Ángel Corrompido: los poderes de los Cuatro Guardianes ---------------- */
-function _acEl(e, k){ e.acEl = k; e.acElT = animNow; }
+function _acEl(e, k){ e.acEl = k; e.acElT = runElapsedMs; } // reloj de la partida: viaja igual al invitado
 function _acHitIn(x, y, r, dmg, o){ for(const h of heroes){ if(h.alive && Math.hypot(h.x-x, h.y-y) <= r + (h.radius||18)*0.5) bossHitHero(h, dmg, o); } }
 Object.assign(BOSS_ATTACKS, {
   // NIEBLA DEL OLVIDO (Guardián Ancestral, 1er Guardián): nubes que quedan 4 s en el piso; adentro, daño y lentitud
@@ -299,7 +302,7 @@ function hechDrawAngelBack(e, pose){
 function hechDrawAngelFront(e){
   if(typeof crystalDrawGem!=="function") return;
   const H = _hAngelH(e), cx = e.x, cy = e.y - H*0.55, t = animNow/1000, keys = ["ancestral","escarcha","piedra","juicio"];
-  const hot = e.acElT && animNow - e.acElT < 1600 ? e.acEl : null;
+  const hot = e.acElT && runElapsedMs - e.acElT >= 0 && runElapsedMs - e.acElT < 1600 ? e.acEl : null;
   ctx.save();
   for(let i=0;i<4;i++){
     const k = keys[i], D = k==="juicio" ? CRYSTAL_JUICIO : CRYSTAL_DEFS[k], an = t*1.3 + i*Math.PI/2;
@@ -374,6 +377,7 @@ function hechEnemyTick(e, dt, tgt, dist){
       if(e.cineT <= 2900 && !e._stole){
         e._stole = true;
         if(typeof crystalSteal==="function") crystalSteal(player.x, player.y, e.x, e.y);
+        if(typeof resonanceSteal==="function") resonanceSteal(); // la resonancia se apaga: se los llevó
         _hSay(e, crystalsOwned().length >= 3 ? "«Los tres cristales. Gracias, guardián.»" : "«Los que no me trajiste… se los arranqué yo.»");
       }
       if(e.cineT <= 1100 && !e._wings){

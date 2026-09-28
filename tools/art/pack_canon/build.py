@@ -34,12 +34,8 @@ ATLAS = {
         'idle': R('front', 4), 'walk': R('fly', 4), 'walk_down': R('front', 4), 'walk_up': R('back', 4),
         'atk': R('atk', 2), 'cast': R('cast', 3), 'hit': R('hurt', 2), 'death': R('death', 4),
     }, 3.0),
-    'enjambre_hadas': ('hadas', 'assets/sprites/enemies/bosque/enjambre_hadas/v2', {
-        'idle': R('idle', 4), 'walk': R('idle', 4), 'atk': R('atk', 2), 'hit': R('dirs', 1), 'death': R('death', 4),
-    }, 2.8),
-    'cu_sith': ('cusith', 'assets/sprites/enemies/bosque/cu_sith/v2', {
-        'idle': R('run', 2), 'walk': R('run', 4), 'atk': R('bite', 2), 'hit': R('hurt', 1), 'death': R('death', 4),
-    }, 2.3),
+    # Enjambre de Hadas y Cù-Sìth pasaron a la hoja de bestias (tools/art/hoja_bestias/build.py ->
+    # js/assets/bestias-meta.js: hadas del Bosque en verde/rosa/oro, Cù-Sìth recortado de nuevo).
     'golem': ('golem_fuego', 'assets/sprites/enemies/infernal/golem/v2', {
         'idle': R('walk', 4), 'walk': R('walk', 4), 'atk': R('atk', 1), 'hit': R('walk', 1), 'death': R('death', 4),
     }, 2.6),

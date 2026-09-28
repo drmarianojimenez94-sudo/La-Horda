@@ -33,6 +33,7 @@ function damageEnemy(e, amount, opts){
   // Sin overrides, el comportamiento de siempre queda idéntico.
   dmg *= heroDmgOutMult(src) * enemyVulnMult(e); // Granaderos/¡Avancen!/forma montada/titán y defensa rota (San Lorenzo, Andes)
   dmg *= setDamageMult(src, e, opts); // bonus de sets (Glaciar, Cazador, Frenesí, Resonancia, Impulso…)
+  if(src && src._res) dmg *= resonanceDmgMult(src, e); // don del cristal que lleva (crystal-resonance.js)
   dmg *= itemDamageMult(src, e, opts); // poderes de legendarios/míticos (Avivar las Llamas, Verdugo, Cosecha Roja…)
   // tipo de daño -> resistencia/debilidad de la horda de esta arena (js/systems/reactions.js)
   const dmgKind = dmgKindOf(opts);
@@ -77,7 +78,7 @@ function damageEnemy(e, amount, opts){
   else if(src===player) netQuiet(()=>floatText(e.x, e.y-20-(e.radius||20)*0.6, Math.round(dmg), crit?"crit":null));
   if(src===player && !src.isRemote && (!player._hitSfxAt || performance.now()-player._hitSfxAt>90)){
     player._hitSfxAt = performance.now();
-    playSfx(crit ? "crit" : "hit");
+    playSfx(crit ? "crit" : "hit", typeof sfxMatTag==="function" ? sfxMatTag(e) : null); // el material del enemigo cambia el golpe (audio.js)
   }
   vfxHit(e, src, opts, crit);
   if(!opts.fromProc || pow>=3) impactFeedback(e, dmg, crit, opts, pow, src);
@@ -315,6 +316,7 @@ function damageHero(h, amount, src){
   const absorbed = Math.max(0, dmgBeforeShields - dmg);
   if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }
   if(dmg>0) itemProcsOnHurt(h, dmg, src);
+  if(h._res) resonanceOnHurt(h, dmg); // Raíz viva del Cristal Ancestral (crystal-resonance.js)
   setsOnHurt(h, Math.max(0,dmg), mitigated, absorbed);
   if(h.isRemote && dmg>0.5) netEmitTo(h._netSlot, "hurt", [dmg, src && src.x, src && src.y]);
   else if(h===player && dmg>0.5) registerPlayerHurt(dmg, src);

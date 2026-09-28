@@ -194,6 +194,10 @@ function _skinFxPlay(key, x, y, st, o){
 function skinFxRun(caster, steps, setId, snap, pre){
   if(!steps) return;
   const ang = Math.atan2(caster.fy || 0, caster.fx || 1);
+  // mirando a la izquierda el guardián se dibuja ESPEJADO (champPackDrawFrame): el efecto también se
+  // espeja en vez de girar 180° (un tajo girado quedaría patas arriba) y lo que va sobre él lo sigue.
+  const left = caster._pleft !== undefined ? !!caster._pleft : (caster.fx || 0) < -0.12;
+  const frontRot = left ? ang - Math.PI : ang;
   for(const st of steps){
     const key = "sk_" + setId + "_" + st.c; if(!VFX_SPR_EXTRA[key]) continue;
     switch(st.m){
@@ -205,12 +209,12 @@ function skinFxRun(caster, steps, setId, snap, pre){
         break;
       case "front": {
         const d = st.dist || 34;
-        _skinFxPlay(key, caster.x + Math.cos(ang)*d, caster.y + Math.sin(ang)*d - 14, st, {rot:ang, grow:0.15, anchorY:0.5});
+        _skinFxPlay(key, caster.x + Math.cos(ang)*d, caster.y + Math.sin(ang)*d - 14, st, {rot:frontRot, flip:left, grow:0.15, anchorY:0.5});
         break; }
-      case "self": _skinFxPlay(key, caster.x, caster.y + 6, st, {follow:caster}); break;
-      case "feet": _skinFxPlay(key, caster.x, caster.y + 4, st, {follow:caster, anchorY:0.5}); break;
-      case "origin": _skinFxPlay(key, pre.x, pre.y + 6, st, {}); break;
-      case "dest": _skinFxPlay(key, caster.x, caster.y + 6, st, {}); break;
+      case "self": _skinFxPlay(key, caster.x, caster.y + 6, st, {follow:caster, flip:left}); break;
+      case "feet": _skinFxPlay(key, caster.x, caster.y + 4, st, {follow:caster, anchorY:0.5, flip:left}); break;
+      case "origin": _skinFxPlay(key, pre.x, pre.y + 6, st, {flip:left}); break;
+      case "dest": _skinFxPlay(key, caster.x, caster.y + 6, st, {flip:left}); break;
       case "aim": {
         const pts = _skinFxAimPoints(caster, snap);
         const n = st.n || 1;
@@ -280,6 +284,18 @@ function _skinFxRecolor(snap, caster, tint){
   window.startRun = function(){
     const r = start.apply(this, arguments);
     try{ for(const h of (typeof heroes !== "undefined" ? heroes : [player])){ const s = skinFxOf(h); if(s) skinFxLoadSet(s.setId); } }catch(e){}
+    return r;
+  };
+})();
+// En línea: el invitado no pasa por startRun y los efectos de una skin se bajaban recién cuando llegaba el
+// primero, que se perdía (vfxSprite no dibuja lo que no está cargado). Se bajan apenas se conocen las skins
+// de la sala ({k:"cos"} / loadout del invitado, net-game.js) y otra vez al entrar a la partida.
+function skinFxPreloadIds(ids){ for(const id of ids||[]){ if(id && SKIN_FX_PLAN[id]) skinFxLoadSet(id); } }
+(function(){
+  const gs = window.netGuestStartRun; if(typeof gs !== "function") return;
+  window.netGuestStartRun = function(){
+    const r = gs.apply(this, arguments);
+    try{ skinFxPreloadIds(heroes.map(h=>h.skinSet)); }catch(e){}
     return r;
   };
 })();

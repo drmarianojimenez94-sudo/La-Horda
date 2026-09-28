@@ -23,6 +23,7 @@ function update(dt){
   updateMusashiFx(dt);
   updateBossSkillWorld(dt);
   crystalTick(dt); // ceremonia del cristal de un Guardián (crystals.js)
+  resonanceTick(dt); // don del cristal que lleva cada guardián (crystal-resonance.js)
   hechWorldTick(dt); // efectos diferidos del Hechicero Supremo (inf-hechicero.js)
   for(const h of heroes){ updateSylvaMomentum(h, dt); updateSylvaWolf(h, dt); }
   for(const h of heroes){ updateNigromanteSkeletons(h, dt); updateNigromanteGolem(h, dt); updateNigromanteDemonForm(h, dt); updateNigromantePassive(h, dt); }
@@ -222,6 +223,9 @@ function update(dt){
     // Piezas quietas de un encuentro de jefe (focos de hielo, etc.: boss-encounter.js): no caminan ni atacan.
     if(e.encStatic){ if(e._ax!==undefined){ e.x = e._ax; e.y = e._ay; } e.atkCd = 1e6; continue; }
     if(BOSS_SKILL_TYPES[e.type] && updateBossSkills(e, dt, tgt, dist)) continue;
+
+    // ---- Conductas de la hoja de bestias (Dragoncito, Ángel, Hadas de Escarcha, Cù-Sìth): js/enemies/bestias-ai.js ----
+    if(BESTIA_AI[e.type] && BESTIA_AI[e.type](e, dt, tgt, dist)) continue;
 
     // ---- IA propia de la arena (ARENA_DEFS[arena].enemyAI[tipo]): true = ya actuó este cuadro ----
     { const aai = arenaEnemyAI(e.type); if(aai && aai(e, dt, tgt, dist)) continue; }

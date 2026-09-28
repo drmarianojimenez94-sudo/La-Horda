@@ -173,7 +173,8 @@ const VFX_SPR_EXTRA = {
   // Materialización real al invocar esqueletos/Golem (antes sin usar).
   nigroSkeletonSpawnWarrior: { imgs:[NIGRO_SKEL_IMG.spawnWarrior], ready:()=>NIGRO_SKEL_READY.spawnWarrior && !(CHAMP_PACK.nigro_skel && CHAMP_PACK.nigro_skel.ready), ground:false },
   nigroSkeletonSpawnMage: { imgs:[NIGRO_SKEL_IMG.spawnMage], ready:()=>NIGRO_SKEL_READY.spawnMage && !(CHAMP_PACK.nigro_skel && CHAMP_PACK.nigro_skel.ready), ground:false },
-  nigroGolemSpawn: { imgs:[NIGRO_GOLEM_IMG.spawn], ready:()=>NIGRO_GOLEM_READY.spawn, ground:false },
+  // (dibuja al gólem viejo: con el atlas nuevo el gólem se arma solo -escombros / brasas / cristales-)
+  nigroGolemSpawn: { imgs:[NIGRO_GOLEM_IMG.spawn], ready:()=>NIGRO_GOLEM_READY.spawn && !(NIGRO_GOLEM_ATLAS.stone && NIGRO_GOLEM_ATLAS.stone.ready), ground:false },
   // Pack de VFX propio (dibujado a mano vía formas vectoriales, no arte de guardián): cristal/runa
   // de hielo del Mago, tajo del Segador y su ulti, sanación/escudo del Soporte, salpicadura de agua.
   fxIceCrystal:      { imgs:NEWFX_IMG.iceCrystal,      ready:()=>newfxReady('iceCrystal'),      ground:false },
@@ -323,6 +324,10 @@ let vfxDyingN = 0;
 for(let i=0;i<VFX_DYING_MAX;i++) vfxDying.push({e:null, t:0, dur:0, dx:0, dy:0, style:"fall", boss:false, side:1});
 function vfxOnDeath(e){
   if(!ENEMY_BASE[e.type] || e.vanishOnDeath) return false;   // vanishOnDeath: se va sin morir en escena (p.ej. el Dragón huye)
+  // En el anfitrión ya llega muerto; en el INVITADO llega la copia del último snapshot, que todavía
+  // dice alive:true (los muertos no se mandan): sin esto la caída y el cadáver se dibujaban con el
+  // cuerpo de pie (caminando), como si fueran enemigos vivos quietos alrededor del jugador.
+  e.alive = false;
   const prof = animProfileOf(e);
   const boss = e.rank==="jefe";
   const big = boss || e.rank==="subjefe";
@@ -343,7 +348,7 @@ function vfxOnDeath(e){
   slot.style = boss && prof.death!=="frames" ? "boss" : prof.death;
   slot.kind = e._deathKind || "normal";
   // el cuerpo queda en el suelo (gore.js): la animación de caída no se desvanece
-  slot.corpse = !boss && e.rank!=="subjefe" && !(GORE_MAT[goreMatOf(e)]||{}).noCorpse && slot.style!=="dissolve" && slot.style!=="sink" && (e.radius||20) <= 60;
+  slot.corpse = !boss && e.rank!=="subjefe" && prof.corpse!==false && !(GORE_MAT[goreMatOf(e)]||{}).noCorpse && slot.style!=="dissolve" && slot.style!=="sink" && (e.radius||20) <= 60;
   slot.dur = boss ? 2300 : (e.rank==="subjefe" ? 1300 : (prof.death==="frames" ? 900 : (vfxLoad<0.6 ? 380 : 560)));
   e.attackAnim = 0; e.fxAnim = null; e.skillAnim = null; e.hitFlash = 0;
   e._dyingP = 0;

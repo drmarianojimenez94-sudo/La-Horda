@@ -45,7 +45,7 @@ const CAMPAIGN_PROLOGUE = "La Horda volvió a la ciudad donde estaban los guardi
   "La ciudad ya no es la misma: desde ese día la llaman la Ciudad Maldita.";
 const CAMPAIGN_ENDING = "El Rey de la Horda cayó y su plan de fundir los cristales fracasó. Pero los cristales no pueden destruirse, " +
   "y la Horda tampoco: es la maldad que existe en el mundo. Los cristales siguen necesitando portadores… Los nuevos guardianes " +
-  "empiezan a ocupar el lugar de los Guardianes.";
+  "empiezan a ocupar el lugar de los Guardianes. El Cristal del Juicio quedó sin dueño: desde ahora podés llevarlo antes de cada partida.";
 
 // Cartel de título al entrar a una arena (nivel 1). Las arenas con cartel propio lo muestran ellas.
 const CAMPAIGN_OWN_TITLE = {fortaleza:1, micelial:1, abismo:1, ciudad:1, minas:1};

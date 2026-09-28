@@ -224,10 +224,12 @@ four small crystals orbiting him (violet, ice-blue, amber, white-gold), 3/4 top-
 ```
 
 ### NG-01 — Gólems elementales del Nigromante (Tormenta y Plaga + animaciones de los 4)
-Hoy: Fuego e Hielo tienen arte real (una pose). Tormenta y Plaga usan el gólem de piedra recoloreado en código
-con aura y detalle propio (arcos eléctricos / goteo de plaga). Mencionaste que mandabas "los gólem y todas sus
-especializaciones": no llegaron. Si las mandás, se enchufan en `NIGRO_GOLEM_IMG.storm` / `.plague` sin tocar
-la lógica.
+Hoy: Piedra, Fuego e Hielo tienen atlas animado propio de la hoja "IMG 1 Laberinto / IMG 3 Bosque y elementales"
+(piedra: 4 direcciones, caminata, golpe con impacto, se arma y se deshace en escombros; fuego e hielo: idle-caminata,
+ataque con su efecto y muerte de 4 cuadros; ver tools/art/nigromante_golems). Tormenta y Plaga usan el atlas de
+piedra recoloreado en código con aura y detalle propio (arcos eléctricos / goteo de plaga). Si llega su arte, se
+enchufa como `NIGRO_GOLEM_ATLAS.storm` / `.plague` (mismo formato que js/assets/nigro-golems-meta.js) sin tocar la
+lógica.
 ```
 [prefijo] + necromancer's summoned golem, 4 elemental variants on one sheet, same silhouette: FIRE (molten rock,
 lava cracks), ICE (blue crystal ice), STORM (dark slate stone with violet lightning veins, crackling arcs),
