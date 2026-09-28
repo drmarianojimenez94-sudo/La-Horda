@@ -54,7 +54,7 @@ function setState(s){
    Todos los avisos emergentes (showNetToast: js/net/net-lobby.js; logros, desafíos y pase: js/ui/quests-ui.js)
    van en UNA columna arriba a la derecha, uno debajo del otro, sin pisarse. Antes el del pase caía en el
    centro, encima del título de la victoria. En las pantallas de fin se corre abajo del resumen de
-   desafíos; en partida, abajo de la barra de arriba (css/onboarding.css). */
+   desafíos; en partida, debajo de la Definitiva, sobre el minimapa (css/onboarding.css). */
 function toastStackHost(){
   let h = document.getElementById("toast-stack");
   if(!h){ h = document.createElement("div"); h.id = "toast-stack"; h.setAttribute("aria-live", "polite"); (document.getElementById("stage") || document.body).appendChild(h); }
