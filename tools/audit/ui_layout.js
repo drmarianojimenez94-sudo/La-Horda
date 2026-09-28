@@ -195,6 +195,13 @@ async function runViewport(browser, vp, report) {
   await tap(page, '#prep-tabs [data-tab=habilidades]');
   await snap(page, 'prep_habilidades', { primary: [{ css: '#prep-start-btn' }] });
   await tap(page, '#prep-tabs [data-tab=equipo]');
+  // pestañas de la Sala (js/ui/prep-sections.js): Arena y Sala online
+  await js(page, () => { document.getElementById('prep-screen').scrollTop = 0; });
+  await tap(page, '[data-prep-sec=arena]');
+  await snap(page, 'prep_arena', { primary: [{ css: '#prep-start-btn' }] });
+  await tap(page, '[data-prep-sec=online]');
+  await snap(page, 'prep_online', { primary: [{ css: '#prep-start-btn' }] });
+  await tap(page, '[data-prep-sec=equipo]');
   // inventario de la cuenta
   for (const t of ['objetos', 'recetas', 'coleccion']) { await js(page, t => openMyInventory(t), t); await snap(page, 'inventory_' + t); }
   // ficha de un objeto (tocar una tarjeta del inventario)

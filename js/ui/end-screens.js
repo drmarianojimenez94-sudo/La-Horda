@@ -55,8 +55,19 @@ function showGameOverScreen(divinaOutcome){
   document.getElementById("go-progress").innerHTML = (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
     Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
-    <b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${penalty.lostPct}% de lo ganado en esta partida (${penalty.xpLost} de XP${penalty.afterLevel<penalty.beforeLevel?`, volviste a Nv. ${penalty.afterLevel}`:""} y ${penalty.goldLost} de oro).</b>${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
+    ${defeatPenaltyLineHTML(penalty)}${typeof diffResultRowHTML==="function" ? diffResultRowHTML(false) : ""}${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
   if(typeof questsOnRunEnd==="function") questsOnRunEnd(false); // después del castigo: lo que dan los desafíos no se descuenta
+}
+// Renglón del castigo de la derrota: lo que se perdió o, en las primeras derrotas, el perdón
+// (progression.js: arenaFailureForgiveReason).
+function defeatPenaltyLineHTML(p){
+  if(p && p.forgiven){
+    const why = p.forgiven==="arena" ? "En la primera arena se aprende sin castigo."
+      : (p.forgivenLeft > 0 ? `Te ${p.forgivenLeft===1?"queda":"quedan"} ${p.forgivenLeft} derrota${p.forgivenLeft===1?"":"s"} sin castigo; después se pierde la mitad de lo ganado en la partida.`
+        : "Fue la última sin castigo: desde ahora perder cuesta la mitad de lo ganado en la partida.");
+    return `<b class="go-forgiven" style="color:#9fe8a8;">Esta vez la Horda te perdona: no perdiste XP ni oro.</b><br><span style="color:#cfc6b0;">${why}</span>`;
+  }
+  return `<b style="color:#ff8a6a;">No terminaste la arena: perdiste el ${p.lostPct}% de lo ganado en esta partida (${p.xpLost} de XP${p.afterLevel<p.beforeLevel?`, volviste a Nv. ${p.afterLevel}`:""} y ${p.goldLost} de oro).</b>`;
 }
 /* ============================================================
    FASE 3 — PANTALLA DE VICTORIA COMPLETA
@@ -77,15 +88,16 @@ const ROLE_LABEL = {tanque:"Tanque", soporte:"Soporte", asesino:"Asesino / daño
 function buildVictoryData(){
   const classKey = player.classKey;
   const perf = computePerformance(player);
+  const floorLoot = typeof groundLootCollectAll==="function" ? groundLootCollectAll() : []; // lo que quedó en el piso se junta solo
   const loot = grantEndOfRunLoot(classKey, perf, true);
   const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
   // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño. Es lo que
   // separa a quien juega bien (pocas derrotas) en la curva de la campaña (ver xpToNext).
-  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100));
+  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100) * (typeof diffCurrent==="function" ? diffTier(diffCurrent()).xp : 1));
   grantXP(classKey, victoryXpBonus);
   return {
-    classKey, perf, score:perf.score, rewards:loot.items, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
+    classKey, perf, score:perf.score, rewards:loot.items, floorLoot, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
     kills, gold: save.gold, subjefes: subjefesDefeated,
     arenaRows: arenaHas("resultsHTML") ? (arenaHook("resultsHTML", true)||"") : "",   // p.ej. civiles rescatados (Ciudad Maldita)
     level: save.champions[classKey].level,
@@ -142,6 +154,7 @@ const VICTORY_STEPS = [
       <div class="res-rows">
         <div class="res-row"><span>Arena</span><b>${A.label||"—"}</b></div>
         <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
+        ${typeof diffResultRowHTML==="function" ? diffResultRowHTML(true) : ""}
         <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
         <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
         ${victoryData.arenaRows||""}
@@ -180,7 +193,10 @@ const VICTORY_STEPS = [
     const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): algunas recompensas no se pudieron guardar.</div>` : "";
     if(!victoryData._revealed) return `${summary}${fullNote}<div class="chest-host"></div>`; // la ceremonia del cofre (js/ui/loot-ceremony.js)
     const cards = victoryData.rewards.slice().sort((a,b)=>TIER_ORDER[itemTier(a)]-TIER_ORDER[itemTier(b)]).map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
-    return `${summary}${gemNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
+    // lo que quedó tirado en el piso al ganar se juntó solo (ground-loot.js): se nombra acá, sin ceremonia
+    const fl = victoryData.floorLoot || [];
+    const floorNote = fl.length ? `<div class="vic-reward-note">Del piso juntaste lo que quedaba: ${fl.map(it=>`<b style="color:${itemColor(it)};">${it.name}</b>`).join(", ")}</div>` : "";
+    return `${summary}${gemNote}${floorNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
   },
   // 3. XP / RECURSOS
   function(){
@@ -210,7 +226,8 @@ function victoryNextNoteHTML(){
   const next = victoryNextArena();
   const name = next ? _lobbyArenaName(next) : "";
   let txt;
-  if(!victoryIsOnline()) txt = next ? `Próxima arena: <b>${name}</b>. Con <b>Continuar</b> volvés a la Sala con ella elegida (la podés cambiar ahí).` : `Completaste la última arena de la campaña. Con <b>Continuar</b> volvés a la Sala para elegir otra.`;
+  if(!victoryIsOnline() && save.firstRun==="jugando") txt = `Con <b>Continuar</b> vas al menú: <b>JUGAR</b> te lleva a la Sala, donde preparás el equipo${next ? ` y entrás a <b>${name}</b>` : ""}.`;
+  else if(!victoryIsOnline()) txt = next ? `Próxima arena: <b>${name}</b>. Con <b>Continuar</b> volvés a la Sala con ella elegida (la podés cambiar ahí).` : `Completaste la última arena de la campaña. Con <b>Continuar</b> volvés a la Sala para elegir otra.`;
   else if(net.role==="host") txt = next ? `Al volver al lobby, la sala queda con la próxima arena elegida: <b>${name}</b>. La podés cambiar antes de comenzar.` : `Al volver al lobby elegís en la Sala la próxima arena.`;
   else txt = `Al volver al lobby, el anfitrión elige la próxima arena${next ? ` (la siguiente es <b>${name}</b>)` : ""}.`;
   return `<div class="vic-next-note" id="vic-next-note">▶ ${txt}</div>`;
@@ -248,13 +265,14 @@ function renderVictoryStep(){
   // último paso, jugando solo en una arena de la campaña: "Continuar" sigue a la próxima arena (Sala)
   const soloNext = isLast && !victoryIsOnline() && ARENA_ORDER.indexOf(victoryData.arena) >= 0;
   const nx = soloNext ? victoryNextArena() : null;
-  nextBtn.textContent = !soloNext ? "Continuar" : (nx ? `Continuar ▶ ${_lobbyArenaName(nx)}` : "Continuar a la Sala");
+  const first = soloNext && typeof save!=="undefined" && save.firstRun==="jugando"; // primera partida: sigue en el hub
+  nextBtn.textContent = !soloNext ? "Continuar" : (first ? "Continuar al menú" : (nx ? `Continuar ▶ ${_lobbyArenaName(nx)}` : "Continuar a la Sala"));
   nextBtn.classList.toggle("hidden", false);
   document.getElementById("again-btn").textContent = victoryIsOnline() ? "VOLVER AL LOBBY" : (soloNext ? "Repetir esta arena" : "Volver a entrar");
   netEndLabels();
   document.getElementById("again-btn").classList.toggle("hidden", !isLast);
   document.getElementById("again-btn").classList.toggle("secondary", soloNext);
-  document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast);
+  document.getElementById("menu-btn-2").classList.toggle("hidden", !isLast || first); // primera vez: "Continuar al menú" ya lo hace
   if(isLast && !soloNext) nextBtn.classList.add("hidden");
 
   if(victoryStep!==2 || !body.querySelector(".chest-host")) bindLootButtons(body);
@@ -272,5 +290,11 @@ function showVictoryScreen(){
 }
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
   if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); return; }
-  if(state==="victory" && !victoryIsOnline()) victoryGoNextArena(); // último paso (solo): a la Sala, con la próxima arena
+  if(state==="victory" && !victoryIsOnline()){
+    // último paso (solo): el Campamento de los Portadores (camp.js) y, con "Seguir", a la Sala con la próxima
+    // arena; la primera victoria del perfil nuevo va al hub, con JUGAR resaltado (hub.js: firstRunToHub)
+    const go = ()=>{ if(typeof firstRunToHub==="function" && firstRunToHub()) return; victoryGoNextArena(); };
+    if(typeof campOpenFromVictory==="function" && campOpenFromVictory(go)) return;
+    go();
+  }
 });

@@ -43,6 +43,11 @@ function aidFreeSpot(rnd, rMin, rMax, clearance, tries){
   }
   return null;
 }
+// VARIANTES POR SEMILLA (reseña #13): el decorado SIN colisión (musgo, raíces, corales, algas, grietas,
+// escarcha, fisuras de lava pintadas) cambia de partida en partida. Lo sólido (menhires, columnas, muros,
+// tumbas, estatuas) queda fijo: la navegación y las colisiones no cambian. La semilla es la de la
+// partida (difficulty-tiers.js: runMapSeed; en cooperativo la del anfitrión, igual para todos).
+function _aidSalt(){ return typeof mapVariantSalt==="function" ? mapVariantSalt() : 0; }
 function aidOnRing(rx, ry, a){ return {x:Math.cos(a)*rx*1.18, y:Math.sin(a)*ry*0.82}; }
 
 // ---------------- Armado por arena ----------------
@@ -59,7 +64,7 @@ function aidBuild(){
   aidAmbReset();
 }
 function aidBuildInfernal(){
-  const rnd = aidRng(666);
+  const rnd = aidRng(666 ^ _aidSalt());
   aidDecal(aidArtInfPentagram(), 0, 0, {scale:1.9});
   aidProp(aidArtInfAltar(), 0, -175, {solid:40, solidDy:-12, light:{r:150, rgb:"255,90,30", a:0.55, flick:0.25, dy:-40}});
   // columnas demoníacas quebradas: anillo irregular alrededor del altar (lectura de "coliseo caído")
@@ -77,7 +82,7 @@ function aidBuildInfernal(){
   for(let i=0;i<16;i++){ const s = aidFreeSpot(rnd, 180, 880, 20); if(s) aidDecal(aidArtScorch(i%5), s.x, s.y, {alpha:0.9}); }
 }
 function aidBuildHielo(){
-  const rnd = aidRng(777);
+  const rnd = aidRng(777 ^ _aidSalt());
   aidDecal(aidArtFrozenLake(), 0, 0, {scale:1.9});
   // ruina atrapada en el hielo (hito al norte): los dos pilares del arco son sólidos
   aidProp(aidArtIceArch(), 0, -330, {light:{r:140, rgb:"150,210,255", a:0.35, dy:-60}});
@@ -98,7 +103,7 @@ function aidBuildHielo(){
   for(let i=0;i<12;i++){ const s = aidFreeSpot(rnd, 200, 880, 10); if(s) aidDecal(aidArtIceCrack(i%4), s.x, s.y, {flip:rnd()<0.5}); }
 }
 function aidBuildBosque(){
-  const rnd = aidRng(333);
+  const rnd = aidRng(333 ^ _aidSalt());
   aidDecal(aidArtRitualCircle(), 0, 0, {scale:1.9});
   // círculo de menhires alrededor del círculo ritual: el hito del bosque
   for(let i=0;i<8;i++){ const a = i/8*6.283 + Math.PI/8; const p = aidOnRing(300, 300, a);
@@ -115,7 +120,7 @@ function aidBuildBosque(){
   for(let i=0;i<10;i++){ const s = aidFreeSpot(rnd, 380, 900, 20); if(s) aidDecal(aidArtRoots(i%4), s.x, s.y, {flip:rnd()<0.5}); }
 }
 function aidBuildLaberinto(){
-  const rnd = aidRng(222);
+  const rnd = aidRng(222 ^ _aidSalt());
   aidDecal(aidArtMinotaurChamber(), 0, 0, {scale:1.7});
   // obeliscos en las cuatro esquinas de la cámara del Minotauro
   [[-240,-160],[240,-160],[-240,160],[240,160]].forEach(([x,y])=>aidProp(aidArtObelisk(), x, y, {solid:14, light:{r:90, rgb:"255,200,110", a:0.3, dy:-150}}));
@@ -127,7 +132,7 @@ function aidBuildLaberinto(){
   }
 }
 function aidBuildAcuatica(){
-  const rnd = aidRng(444);
+  const rnd = aidRng(444 ^ _aidSalt());
   aidDecal(aidArtSunkTemple(), 0, 0, {scale:1.8});
   // columnas hundidas alrededor del templo
   for(let i=0;i<7;i++){ if(i===3) continue; const a = i/7*6.283 - 0.3; const p = aidOnRing(390, 390, a); aidProp(aidArtSunkColumn(i%4), p.x, p.y, {solid:16}); }

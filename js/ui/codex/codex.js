@@ -143,6 +143,7 @@ function codexLinkLabel(view, id){
   if(view==="boss"){ const b = codexBossDef(id); return b && codexKnown(codexBossState(b)) ? codexBossName(b) : "???"; }
   if(view==="arena") return codexArenaTag(id);
   if(view==="set") return (SET_DB[id]||{}).name || id;
+  if(view==="chron" && id==="__camp") return "Voces del Campamento";
   if(view==="chron"){ const P = typeof chroniclePage==="function" ? chroniclePage(id) : null; return P && chronicleHas(id) ? P.title : "???"; }
   return id;
 }
@@ -368,7 +369,7 @@ function codexChampHtml(key){
       : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < cat.priceGold ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(cat.priceGold)}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
       <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle">${_cxEsc(cls.role)}</div>
-      ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b></div>` : ""}
+      ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b> · Talentos: <b>${treePointsAvailable(key)}</b></div>` : ""}
       <div class="cx-tabs cx-scroll-x">${tabs.map(([t,l])=>`<button class="cx-tab ${codexChampTab===t?"on":""} ${!own && t!=="ficha"?"dim":""}" data-ctab="${t}">${l}</button>`).join("")}</div></div>`;
   let panel = head;
   if(codexChampTab === "ficha" || !own){
@@ -782,9 +783,27 @@ function codexChronListHtml(){
   }).join("");
   const epi = save.storyEpilogueSeen ? `<button class="cx-btn cx-chron-head-epi" data-story-epilogue>▶ Ver el epílogo</button>` : "";
   return `<div class="cx-list-head"><div class="cx-list-title">CRÓNICAS · ${chronicleCount()} / ${CHRONICLE_PAGES.length} páginas</div>${epi}</div>
-    <div class="cx-chron-books">${books}</div>`;
+    <div class="cx-chron-books">${books}${codexCampBookHtml()}</div>`;
+}
+// VOCES DEL CAMPAMENTO (camp.js): lo que dijeron junto al fuego el Hechicero, Anselmo y Veda entre arena y arena.
+function codexCampBookHtml(){
+  if(typeof campAllIds!=="function") return "";
+  const n = campHeardCount(), all = campAllIds().length;
+  return `<div class="cx-sec cx-chron-book cx-camp-book"><h3>Voces del Campamento</h3>
+    <div class="cx-dim">${n ? "Lo que se dijo junto al fuego, entre arena y arena." : "Todavía no acampaste: ganá una arena de la campaña."} · ${n}/${all} diálogos</div>
+    ${n ? `<div class="cx-chron-pages"><button class="cx-chron-page" data-go="chron:__camp"><span class="cxp-n">✦</span>Diálogos escuchados</button></div>` : ""}</div>`;
+}
+function codexCampHtml(){
+  const H = save.campHeard || {}, ids = campAllIds().filter(id=>H[id]);
+  const order = ARENA_ORDER.filter(a=>ids.some(id=>H[id].a===a));
+  const body = order.map(a=>`<h3 class="cxp-camp-arena">${_cxEsc(codexArenaTag(a))}</h3>` + ids.filter(id=>H[id].a===a).map(id=>{
+    const W = CAMP_WHO[H[id].w] || {name:"", role:""};
+    return `<p class="cxp-camp-line"><b>${_cxEsc(W.name)}</b> <i>${_cxEsc(W.role)}</i><br>«${_cxEsc(H[id].t)}»</p>`; }).join("")).join("");
+  return `<article class="cx-parchment cx-camp"><div class="cxp-book">VOCES DEL CAMPAMENTO · ${ids.length} / ${campAllIds().length}</div>
+    <h2>Junto al fuego</h2>${body || "<p>Todavía no escuchaste a nadie en el campamento.</p>"}<div class="cxp-sign">— anotado por quien se quedó despierto</div><span class="cxp-seal" aria-hidden="true"></span></article>`;
 }
 function codexChronHtml(id){
+  if(id==="__camp") return typeof codexCampHtml==="function" ? codexCampHtml() : "";
   const P = chroniclePage(id); if(!P) return "";
   if(!chronicleHas(id)) return `<div class="cx-parchment"><h2>???</h2><p>Esta página todavía no la encontraste.</p></div>`;
   const B = chronicleBook(P.book);

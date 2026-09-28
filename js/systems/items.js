@@ -168,7 +168,7 @@ function makeItem(type, rarity, champKey, opts){
   else if(ITEM_QUALITY[rarity]) name = noun + " " + _genderize(_pickFrom(ITEM_QUALITY[rarity]), noun);
   else { const proper = _pickFrom(LEGEND_PROPER_NAMES); name = legendProc && LEGEND_PROC_EPITHET[legendProc] ? `${noun} de ${proper}, ${LEGEND_PROC_EPITHET[legendProc]}` : `${noun} de ${proper}`; }
   const mythicPassive = rarity==="mitico" ? instancePassive(PASSIVE_DB_MYTHIC[family==="bastion" ? 1 : 0]) : null;
-  return {
+  const it = {
     uid: "it_"+(ITEM_UID_SEQ++)+"_"+Date.now().toString(36),
     level:1, roll:_itemRoll(), noun, family,
     type, rarity, name,
@@ -181,6 +181,9 @@ function makeItem(type, rarity, champKey, opts){
     placeholder: false,
     desc: `+${Math.round(value*100)}% ${ITEM_TYPES[type].statLabel}${passives.length?` · ${passives.map(p=>p.name).join(" · ")}`:""}${legendProc?` · ${LEGEND_PROCS[legendProc].name}`:""}.`
   };
+  // Afijos al azar (prefijo/sufijo D2, js/systems/affixes.js): opts.noAffixes para pruebas que miden la base.
+  if(!opts.noAffixes && typeof rollItemAffixes==="function") rollItemAffixes(it);
+  return it;
 }
 /* ---------------- nivel, roll y valor real ---------------- */
 function itemLevel(it){ return Math.max(1, Math.min(ITEM_MAX_LEVEL, (it && it.level)|0 || 1)); }
@@ -214,6 +217,8 @@ function equippedPassives(champKey){
       else list.push(q);
     });
     if(it.mythicPassive){ const m = it.mythicPassive; if(!best[m.id] || best[m.id].value < m.value) best[m.id] = m; }
+    // afijos al azar: son STATS (se suman entre objetos, como el % garantizado), no pasivas de catálogo
+    if(it.affixes && it.affixes.length && typeof affixPassives==="function") affixPassives(it).forEach(p=>list.push(p));
     const guaranteedEffect = SLOT_GUARANTEED_EFFECT[type];
     if(guaranteedEffect) list.push({id:"slot_"+type, name:ITEM_TYPES[type].label, effect:guaranteedEffect, value:itemStat(it)});
   });
@@ -294,6 +299,7 @@ const PASSIVE_PCT_EFFECTS = {dmg_mult:1, atkspeed_mult:1, cd_mult:1, lifesteal_a
 function itemEffectLines(it){
   const out = [];
   if(it.effectText) out.push({cls:"item-effect", txt:"✦ "+it.effectText});
+  if(typeof affixText==="function") itemAffixes(it).forEach(a=>{ if(AFFIX_DB[a.id]) out.push({cls:"item-affix", txt:"◇ "+affixText(it, a), affix:true}); });
   (it.passives||[]).forEach(p=>{
     const v = itemPassiveValue(it, p), lab = PASSIVE_EFFECT_LABEL[p.effect] || p.name;
     const isCat = _isCatalogPassive(p);

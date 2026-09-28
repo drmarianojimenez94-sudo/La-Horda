@@ -140,7 +140,11 @@ reviveBtn.addEventListener("pointerdown", (ev)=>{
   ev.stopPropagation();
   const target = nearestDownedAlly();
   // sin nadie para revivir, el mismo botón es la acción contextual (js/systems/context-actions.js)
-  if(!target){ const ct = player && player.alive && state==="playing" ? ctxNearest(player) : null; if(ct) ctxBtnStart(ct); return; }
+  if(!target){
+    const ct = player && player.alive && state==="playing" ? ctxNearest(player) : null; if(ct){ ctxBtnStart(ct); return; }
+    if(player && player.alive && state==="playing" && typeof groundLootPickNearest==="function") groundLootPickNearest(); // levantar botín (un toque)
+    return;
+  }
   reviveBtnTarget = target;
   reviveBtn.dataset.holding = "1";
   reviveBtn.classList.add("holding");
@@ -158,7 +162,9 @@ function updateReviveBtn(){
   const holding = btn.dataset.holding==="1";
   if(btn.dataset.ctx==="1"){ btn.classList.add("ready"); return; } // manteniendo una acción contextual (ctxBtnTick la corta)
   const hasRevive = holding ? reviveTargetValid(reviveBtnTarget) : !!nearestDownedAlly();
-  const ct = (!hasRevive && !holding && player && player.alive) ? ctxNearest(player) : null;
+  let ct = (!hasRevive && !holding && player && player.alive) ? ctxNearest(player) : null;
+  // botín en el piso al alcance: el mismo botón dice "Levantar" (js/systems/ground-loot.js)
+  if(!ct && !hasRevive && !holding && typeof groundLootNearest==="function" && groundLootNearest(player)) ct = GROUND_LOOT_CTX;
   ctxBtnSetLook(ct);
   btn.classList.toggle("ready", hasRevive || !!ct);
   if(!hasRevive && holding) stopReviveBtnHold();
@@ -192,13 +198,17 @@ document.getElementById("quit-btn").addEventListener("click", ()=>{
   const st0 = state;
   const stillHere = ()=> state===st0 && !!player;
   const abandon = ()=>{
-    gameConfirm("¿Abandonar la arena? Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras."+lootMsg, {okText:"Abandonar", cancelText:"Seguir jugando", danger:true}).then(ok=>{
+    const forgive = typeof arenaFailureForgiveReason==="function" && arenaFailureForgiveReason();
+    const costMsg = forgive ? "Cuenta como una derrota, pero esta vez la Horda te perdona: no perdés XP ni oro."
+      : "Vas a perder el "+Math.round(ARENA_FAIL_PENALTY_PCT*100)+"% de la XP y del oro que ganaste en esta partida, igual que si perdieras.";
+    gameConfirm("¿Abandonar la arena? "+costMsg+lootMsg, {okText:"Abandonar", cancelText:"Seguir jugando", danger:true}).then(ok=>{
       if(!ok || !stillHere()) return;
       applyArenaFailurePenalty(player.classKey);
       if(runLevel >= DEFEAT_LOOT.minLevel) grantEndOfRunLoot(player.classKey, computePerformance(player), false);
       if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true});
       document.getElementById("pause-screen").classList.add("hidden");
       if(netMatch) netQuitMatch(); // B1: invitado -> lo reemplaza un bot; anfitrión -> se cierra la sala
+      if(typeof firstRunToHub==="function" && firstRunToHub()) return; // primera partida: al hub (js/ui/hub.js)
       setState("menu"); renderChampGrid(); renderSaveLine();
     });
   };

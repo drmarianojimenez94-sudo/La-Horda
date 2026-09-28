@@ -22,7 +22,7 @@
    modificadores. "unlockLevel: 0" = desbloqueada desde el arranque (demo).
    ============================================================ */
 const ARENA_MODS = {
-  bosque:   { label:"Ruinas Célticas / Élficas", icon:"🌲", desc:"Arena 03. Ruinas de un bosque sagrado. Acá espera el primero de los Cuatro Guardianes.", hazardName:"Niebla del Olvido",
+  bosque:   { label:"Ruinas Célticas / Élficas", icon:"🌲", desc:"Arena 03. Ruinas de un bosque sagrado. Acá espera el primer Guardián caído.", hazardName:"Niebla del Olvido",
               fireDmgMult:1.3, iceDmgMult:1.0, enemyDmgPerWave:0.14, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:0.90, enemyRegenPct:0.012, hazard:null, hasWalls:false },
   hielo:    { label:"Arena Gélida",      icon:"❄", desc:"Arena 05. El frío es el enemigo. Acá espera el segundo Guardián.", hazardName:"Furia del Vendaval Helado",
@@ -72,7 +72,7 @@ const ARENA_MODS = {
   // sin debuffs propios por ahora -esto se termina de calibrar cuando exista el combate de
   // verdad. NO va en ARENA_ORDER a propósito: no tiene que aparecer en la selección normal
   // de arenas de oleadas, se entra por su propia pantalla ("Modos de juego" -> Arena Divina).
-  divina:   { label:"Arena Divina", icon:"👁", desc:"Asedio 4 contra 4. Todavía en construcción.", hazardName:"Mirada Ascendida",
+  divina:   { label:"Arena Divina", icon:"👁", desc:"Asedio 4 contra 4: derribá las torres y el castillo del equipo divino.", hazardName:"Mirada Ascendida",
               fireDmgMult:1.0,  iceDmgMult:1.0, enemyDmgPerWave:0, unlockLevel:0,
               heroSpeedMult:1.0,  heroCdMult:1.0,  heroEnergyRegenMult:1.0,  abilityDmgMult:1.0, heroDmgMult:1.0, enemyRegenPct:0, hazard:null, hasWalls:false }
 };

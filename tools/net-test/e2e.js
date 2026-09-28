@@ -64,6 +64,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   const eqAfter = await ev(host, () => save.champions[selectedClass].equipment.arma);
   check('inventory.equip_in_lobby', eqAfter === invUid, { eqAfter, invUid });
   if (N > 1 || FIFTH) {
+    await host.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, '#net-create-btn'); // pestaña Sala online (js/ui/prep-sections.js)
     await host.page.click('#net-create-btn');
     for (let k = 0; k < 50 && !(await ev(host, () => net.code)); k++) await sleep(100);
   }
@@ -329,6 +330,7 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     check('lobby.duplicate_champion_blocks_start', blocked.dup.length === 1 && blocked.disabled, blocked);
     await ev(guests[0], () => { selectedClass = 'mago'; renderPrepSummary(); netSendLoadout(true); });
     await sleep(600);
+    await Promise.all(all.map(c => ev(c, () => { if (typeof campClose === 'function') campClose(true); if (typeof prepSecReveal === 'function') prepSecReveal('#prep-start-btn'); }))); // el campamento (camp.js) se abre al volver a la Sala
     await host.page.click('#prep-start-btn');
     for (let k = 0; k < 60; k++) { const ok = await Promise.all(all.map(c => ev(c, () => state === 'playing'))); if (ok.every(Boolean)) break; await sleep(100); }
     const re = await Promise.all(all.map(c => ev(c, () => ({ state, lvl: runLevel, match: netMatch && netMatch.role, ended: netMatch && netMatch.ended }))));

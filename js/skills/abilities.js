@@ -352,6 +352,9 @@ function castAbility(caster, sk, isUlt, idx){
   const _prevCastCtx = _castCtx, _prevUlt = caster._castUlt;
   if(caster===player){ _castCtx = {ult:!!isUlt}; if(isUlt) _ultImpactDone = false; }
   caster._castUlt = !!isUlt; // impacto nivel 4 para los golpes de esta ulti (también bots/invitados)
+  // Refuerzos de habilidad (js/systems/boons.js): anota a quién golpea ESTE lanzamiento y, al
+  // terminar, dispara lo que transforma la habilidad (zonas, rebotes, estados, ecos...).
+  const _boonR = boonCastBegin(caster, sk);
   try{
   switch(sk.kind){
 
@@ -1479,5 +1482,5 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
   }
-  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; }
+  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; if(_boonR) boonCastEnd(_boonR, POWER, AREA); }
 }

@@ -4,11 +4,11 @@
    LOS CRISTALES DE LOS GUARDIANES (canon: docs/lore/LA_HORDA_LORE_BIBLE.md).
    Los Primeros Cuatro contenían a la Horda; la Horda los corrompió. Cada uno guarda un cristal con
    su parte del sello. Al vencer a un Guardián corrompido, su cristal queda libre y va al jugador.
-   El Hechicero Supremo es el cuarto Guardián (su líder): te guía porque necesita que juntes los
+   El Hechicero Supremo es el Guardián IV de la campaña y, en la historia, "el Primero" (su líder): te guía porque necesita que juntes los
    otros tres, y en el final te los quita para fundirlos con el suyo (inf-hechicero.js).
      - Cristal Ancestral   → Guardián 1: el Guardián Ancestral / Élfico (Ruinas Célticas / Élficas, arena 03)
      - Cristal de Escarcha → Guardián 2: el Mago Gélido (Arena Gélida, arena 05)
-     - Cristal de Piedra   → Guardián 3: el Guardián del Laberinto, que se volvió el Minotauro (Laberinto, arena 08)
+     - Cristal de Piedra   → Guardián 3: el Guardián del Laberinto, que se volvió el Minotauro (Laberinto, arena 07)
      - Cristal del Juicio  → Guardián 4: el del propio Hechicero (no se junta: es el que los quiere a todos)
    La Madre Espora, el Kraken y el Dragón de la Fábrica NO son Guardianes.
    El cristal se entrega al completar la arena del Guardián (al caer su jefe final).
@@ -20,7 +20,7 @@ const CRYSTAL_DEFS = {
   escarcha: {name:"Cristal de Escarcha", guardian:"el Mago Gélido",          arena:"hielo",     rgb:"150,225,255", dark:"#2a5f86", mid:"#6fc3ef", light:"#e4f7ff"},
   piedra:   {name:"Cristal de Piedra",   guardian:"el Guardián del Laberinto", arena:"laberinto", rgb:"255,196,110", dark:"#7a4d1c", mid:"#d99a48", light:"#ffe7bf"}
 };
-const CRYSTAL_ORDER = ["ancestral","escarcha","piedra"]; // orden de la campaña (arenas 03, 05 y 08)
+const CRYSTAL_ORDER = ["ancestral","escarcha","piedra"]; // orden de la campaña (arenas 03, 05 y 07)
 for(const k in CRYSTAL_DEFS){ const D = CRYSTAL_DEFS[k]; VFX_PAL["cr_"+k] = [D.mid, D.light, "#ffffff", D.rgb]; }
 const CRYSTAL_JUICIO = {name:"Cristal del Juicio", rgb:"255,236,170", dark:"#8a6a1c", mid:"#f0c84a", light:"#fff6d6"};
 const CRYSTAL_BY_ARENA = {bosque:"ancestral", hielo:"escarcha", laberinto:"piedra"};
@@ -30,9 +30,9 @@ function crystalHas(k){ return !!(save.crystals && save.crystals[k]); }
 
 // Lo que dice el Hechicero al recibir cada cristal (con la sospecha sembrada: "yo te lo cuido").
 // El primero revela que los monstruos que custodian los cristales alguna vez fueron héroes; desde
-// el segundo, su historia empieza a no cerrar (sin revelar todavía que él es el cuarto).
+// el segundo, su historia empieza a no cerrar (sin revelar todavía que él es el Primero).
 const CRYSTAL_LINES = {
-  ancestral: "El Cristal Ancestral. Esa bestia… era el Guardián Ancestral, uno de los Primeros Cuatro. Los monstruos que custodian los cristales alguna vez fueron héroes.",
+  ancestral: "El Cristal Ancestral. Esa bestia… era el Guardián Ancestral, uno de los Cuatro. Los monstruos que custodian los cristales alguna vez fueron héroes.",
   escarcha: "El Cristal de Escarcha. El Mago Gélido también fue Guardián, antes de que la Horda le congelara el alma. No preguntes cómo sé tanto de ellos. Todavía no.",
   piedra: "El Cristal de Piedra. El Guardián del Laberinto cerraba los caminos de la Horda… hasta volverse el Minotauro. Lo que te haya dicho al caer, olvidalo: deliraba."
 };
@@ -42,7 +42,7 @@ const CRYSTAL_COUNT_LINES = ["", " Es el primero de tres. Guardalo bien: cuando 
 // Es lo que fueron antes de la Horda: héroes que cuidaban el sello, no bestias.
 const GUARDIAN_LAST_WORDS = {
   ancestral: "«Gracias… Hacía siglos que la Horda no me dejaba dormir. Llevá mi cristal encima: todavía te puede cuidar. Y no se lo des a nadie. A nadie.»",
-  escarcha: "«El frío se va… Éramos cuatro, ¿sabés? Tres caímos peleando. El cuarto no cayó: eligió quedarse del otro lado.»",
+  escarcha: "«El frío se va… Éramos cuatro, ¿sabés? Tres caímos peleando. El Primero no cayó: eligió quedarse del otro lado.»",
   piedra: "«Cerré mil caminos para que la Horda no pasara… y el que los abrió fue uno de nosotros. Preguntale a tu guía por qué te guía.»"
 };
 function crystalLine(key){

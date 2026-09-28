@@ -59,7 +59,10 @@ function questsToast(t){
 }
 function _qToastHost(){
   let h = document.getElementById("qs-toasts");
-  if(!h){ h = document.createElement("div"); h.id = "qs-toasts"; h.setAttribute("aria-live", "polite"); (document.getElementById("stage") || document.body).appendChild(h); }
+  if(!h){ h = document.createElement("div"); h.id = "qs-toasts"; h.setAttribute("aria-live", "polite"); }
+  // columna única de avisos arriba a la derecha (toastStackHost, js/ui/screens.js): no se pisa con los demás
+  const stack = typeof toastStackHost==="function" ? toastStackHost() : (document.getElementById("stage") || document.body);
+  if(h.parentNode!==stack) stack.appendChild(h);
   return h;
 }
 function _qPumpToasts(){

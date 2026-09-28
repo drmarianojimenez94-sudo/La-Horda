@@ -35,6 +35,26 @@
   .buff-card{ padding:12px 10px; }
 }
 
+/* Refuerzos que TRANSFORMAN una habilidad (js/systems/boons.js): marco del color de la rareza,
+   ícono pixel de la habilidad con el halo del efecto, rótulo de rareza/mejora y línea de dúo. */
+.buff-card.boon{position:relative;}
+.buff-card.boon.rar-comun{border-color:#6a5e48;}
+.buff-card.boon.rar-raro{border-color:#2f6aa8; box-shadow:inset 0 0 0 1px rgba(95,176,255,0.18), 4px 4px 0 #000;}
+.buff-card.boon.rar-epico{border-color:#7a3fb0; box-shadow:inset 0 0 0 1px rgba(199,125,255,0.22), 4px 4px 0 #000;}
+.buff-card.boon.duo{border-color:#b08a2e; box-shadow:inset 0 0 0 1px rgba(255,215,106,0.3), 0 0 10px rgba(255,200,80,0.25), 4px 4px 0 #000;}
+.buff-card .boon-ico{width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+  background:var(--boon-c); box-shadow:0 0 0 2px #000, 0 0 0 3px var(--boon-g); margin:0 auto 6px; image-rendering:pixelated;}
+.buff-card .boon-ico-img{width:32px; height:32px; object-fit:contain; image-rendering:pixelated;}
+.boon-tag{font-family:var(--font-retro); font-size:0.95rem; letter-spacing:0.06em; text-transform:uppercase; line-height:1;}
+.boon-skill{font-family:var(--font-retro); font-size:0.95rem; color:#b8a890; line-height:1.05; margin-bottom:3px;}
+.boon-skill b{color:#e8d8b8; font-weight:400;}
+.boon-duo{font-family:var(--font-retro); font-size:0.9rem; color:#d8b860; margin-top:4px; line-height:1.05;}
+#boon-owned{font-family:var(--font-retro); font-size:0.95rem; color:var(--text-dim); margin-top:10px; max-width:min(760px, 94vw); text-align:center; line-height:1.15;}
+@media (max-height:500px) and (min-aspect-ratio:4/3){
+  .buff-card .boon-ico{width:28px; height:28px;} .buff-card .boon-ico-img{width:24px; height:24px;}
+  .boon-duo, .boon-skill{font-size:0.85rem;} #boon-owned{margin-top:6px; font-size:0.85rem;}
+}
+
 /* ---------- misc ---------- */
 #vote-note{font-size:0.68rem; color:var(--text-dim); margin-top:16px; max-width:340px;}
 

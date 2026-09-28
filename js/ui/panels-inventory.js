@@ -26,7 +26,13 @@ function snapshotChampStats(classKey){
     healMult: Math.round(passiveSum(classKey,"heal_mult")*1000)/10,
     critChance: Math.round((0.04+passiveSum(classKey,"crit_chance_add"))*1000)/10,
     critMult: Math.round((1.8+passiveSum(classKey,"crit_mult_add"))*100)/100,
-    energy: Math.round(cls.energyMax*(1+passiveSum(classKey,"energy_mult")))
+    energy: Math.round(cls.energyMax*(1+passiveSum(classKey,"energy_mult"))),
+    // afijos (js/systems/affixes.js): daño de habilidades y resistencias también entran en la comparación
+    skillDmg: Math.round(passiveSum(classKey,"skilldmg_mult")*1000)/10,
+    resFire: Math.round(passiveSum(classKey,"res_fire")*1000)/10,
+    resIce: Math.round(passiveSum(classKey,"res_ice")*1000)/10,
+    resLtg: Math.round(passiveSum(classKey,"res_lightning")*1000)/10,
+    resPhys: Math.round(passiveSum(classKey,"res_physical")*1000)/10
   };
 }
 const STAT_ROWS = [
@@ -41,7 +47,12 @@ const STAT_ROWS = [
   {key:"healMult",  label:"Curación realizada",   fmt:v=>(v>=0?"+":"")+v+"%"},
   {key:"critChance",label:"Prob. crítico",        fmt:v=>v+"%"},
   {key:"critMult",  label:"Daño crítico",         fmt:v=>"x"+v},
-  {key:"energy",    label:"Recurso máximo",       fmt:v=>Math.round(v)}
+  {key:"energy",    label:"Recurso máximo",       fmt:v=>Math.round(v)},
+  {key:"skillDmg",  label:"Daño de habilidades",  fmt:v=>"+"+v+"%"},
+  {key:"resFire",   label:"Resistencia al fuego", fmt:v=>v+"%"},
+  {key:"resIce",    label:"Resistencia al hielo", fmt:v=>v+"%"},
+  {key:"resLtg",    label:"Resistencia eléctrica",fmt:v=>v+"%"},
+  {key:"resPhys",   label:"Resistencia física",   fmt:v=>v+"%"}
 ];
 // Compara "lo que hay ahora" contra "lo que pasaría si equipo `candidate`": equipa
 // hipotéticamente (sin persistir), toma la foto, y desequipa -mismo criterio que ya usa
@@ -199,8 +210,10 @@ function renderStatsPanel(){
       <div class="stat-block-title">Otros</div>
       <div class="stat-row"><span>Defensa</span><b>${Math.round(full.def*100)}%</b></div>
       <div class="stat-row"><span>Velocidad</span><b>${Math.round(full.speed)}</b></div>
-      <div class="stat-row"><span>Puntos de talento disponibles</span><b>${champ.talentPoints}</b></div>
+      <div class="stat-row"><span>Puntos de habilidad disponibles</span><b>${champ.talentPoints}</b></div>
+      <div class="stat-row"><span>Puntos de talento (árbol)</span><b>${treePointsAvailable(classKey)}</b></div>
     </div>
+    ${typeof boonStatsBlockHTML==="function" ? boonStatsBlockHTML(player) : ""}
     ${classKey==="musashi" ? renderMusashiRoninStatsBlock(player) : ""}`;
 }
 // Bloque propio de Musashi en Estadísticas (sección 26): progresión INTRAPARTIDA, se reinicia

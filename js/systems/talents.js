@@ -23,12 +23,21 @@ function talentSkillCdMult(classKey, skillKey){
    sabe nada de ningún guardián en particular -agregar/balancear un talento es tocar solo su
    entrada de datos, nunca esta sección-.
 
-   Moneda: reutiliza exactamente save.champions[classKey].talentPoints, la MISMA que ya reparte
-   grantXP() (1 por nivel de guardián) y que investTalentPoint() ya gasta en subir de 0 a
-   TALENT_MAX(10) cada una de las 4 ranuras del kit (3 habilidades + ulti, hasta 40 puntos en
-   total). El árbol de talentos y la Maestría compiten por ESA MISMA bolsa de puntos -no crean
-   una moneda nueva-, simplemente se vuelven comprables recién a partir de cierto nivel de
-   personaje (ver minLevel de cada nodo/Maestría).
+   Moneda (TALENTOS TEMPRANOS, reseña del crítico #3): el árbol tiene SU PROPIA bolsa, separada de
+   save.champions[classKey].talentPoints (esa sigue siendo la de las 4 ranuras del kit, que se suben
+   con el "+" del HUD). Antes los dos compartían bolsa y el árbol recién se abría en el nivel 40, o
+   sea al terminar la campaña: el jugador casual nunca veía una build. Ahora:
+     - Puntos de árbol GANADOS = f(nivel) (treePointsEarned): el primero en el nivel 5, uno por nivel
+       desde ahí y uno extra en cada nivel redondo (10, 20, 30...). Nivel 40 = 40 puntos.
+     - Puntos GASTADOS = suma de costo×rango de lo comprado (árbol + mini-árbol de la Maestría).
+     - Disponibles = ganados + treeBonus (migración) - gastados. Se DERIVA, no se guarda: perder
+       nivel por la derrota y volver a subirlo nunca regala puntos dos veces.
+     - Cada escalón de una rama se abre por nivel según su profundidad (TALENT_TIER_LEVELS): la
+       build crece durante toda la campaña (con la curva de progression.js: ~nivel 19 al ganar la
+       1ra arena, ~30 a mitad de campaña, ~40 al final).
+   Migración (save.js, talentTreeV2): lo que un guardado viejo había gastado en el árbol se DEVUELVE
+   a la bolsa del kit, los nodos comprados se conservan y, si gastó más de lo que hoy daría su nivel,
+   la diferencia queda en treeBonus (nunca queda "debiendo").
 
    Nodo: {id, branch, type:"common"|"special", maxRank, cost, requires:id|null,
           exclusiveWith:id|null, minLevel, name, desc, rankDesc(rank), mods(rank)}
@@ -45,7 +54,56 @@ function talentSkillCdMult(classKey, skillKey){
    mismo formato de nodo para miniTree, con minLevel:90 implícito.
    ============================================================ */
 const TALENT_MASTERY_MIN_LEVEL = 90;
-const TALENT_TREE_MIN_LEVEL = 40;
+const TALENT_TREE_MIN_LEVEL = 5;   // primer punto y primer escalón del árbol (antes 40)
+// Nivel que abre cada escalón de una rama, según su profundidad (0 = nodo raíz de la rama).
+const TALENT_TIER_LEVELS = [5, 8, 12, 18, 26];
+// Puntos de árbol ganados a un nivel dado (el primero en el nivel 5; +1 extra en cada nivel redondo).
+function treePointsEarned(level){
+  level = level|0;
+  if(level < TALENT_TREE_MIN_LEVEL) return 0;
+  return (level - TALENT_TREE_MIN_LEVEL + 1) + Math.floor(level/10);
+}
+// Lo gastado en el árbol y en el mini-árbol de la Maestría (costo × rango).
+function treePointsSpent(classKey){
+  const tree = talentTreeFor(classKey);
+  const c = save.champions[classKey];
+  if(!tree || !c || !c.talents) return 0;
+  const st = c.talents;
+  let n = 0;
+  for(const node of tree.nodes){ const r = (st.nodes||{})[node.id]||0; if(r>0) n += r*(node.cost||1); }
+  if(tree.masteries){
+    for(const m of Object.values(tree.masteries)){
+      for(const node of (m.miniTree||[])){ const r = (st.masteryNodes||{})[node.id]||0; if(r>0) n += r*(node.cost||1); }
+    }
+  }
+  return n;
+}
+function treePointsAvailable(classKey){
+  const c = save.champions[classKey];
+  if(!c) return 0;
+  return Math.max(0, treePointsEarned(c.level) + (c.treeBonus||0) - treePointsSpent(classKey));
+}
+// Profundidad de un nodo en su rama (cadena de requires) -> nivel que lo abre. Un nodo con
+// minLevel explícito en los datos lo respeta (ninguno lo trae hoy: lo decide el escalón).
+const _TALENT_DEPTH = {};
+function talentNodeDepth(classKey, node){
+  const key = classKey+"|"+node.id;
+  if(_TALENT_DEPTH[key]!==undefined) return _TALENT_DEPTH[key];
+  let d = 0, cur = node, guard = 0;
+  while(cur && cur.requires && guard++ < 12){ cur = talentNodeById(classKey, cur.requires); if(cur) d++; }
+  return (_TALENT_DEPTH[key] = d);
+}
+function talentNodeMinLevel(classKey, node){
+  if(node.minLevel) return node.minLevel;
+  const d = talentNodeDepth(classKey, node);
+  return TALENT_TIER_LEVELS[Math.min(d, TALENT_TIER_LEVELS.length-1)];
+}
+// Próximo escalón que se abre para este guardián (para la UI): {level, tier} o null.
+function talentNextTierUnlock(classKey){
+  const c = save.champions[classKey]; if(!c) return null;
+  for(let i=0;i<TALENT_TIER_LEVELS.length;i++) if(c.level < TALENT_TIER_LEVELS[i]) return {level:TALENT_TIER_LEVELS[i], tier:i+1};
+  return null;
+}
 const TELEPORT_MIN_CD_MS = 1500; // piso duro: ni maestría ni talentos bajan Teletransporte de acá
 const TELEPORT_CHARGE_RECHARGE_MS = 9000;
 
@@ -73,7 +131,7 @@ function talentNodeLockReason(classKey, node){
   const st = talentState(classKey);
   const rank = st.nodes[node.id] || 0;
   if(rank >= node.maxRank) return "MÁX";
-  if(champ.level < (node.minLevel||TALENT_TREE_MIN_LEVEL)) return `Requiere nivel ${node.minLevel||TALENT_TREE_MIN_LEVEL}`;
+  { const need = talentNodeMinLevel(classKey, node); if(champ.level < need) return `Requiere nivel ${need}`; }
   { const taken = [].concat(node.exclusiveWith||[]).find(x=>(st.nodes[x]||0) > 0); // exclusiveWith: id o lista de ids
     if(taken){ const other = talentNodeById(classKey, taken); return `Bloqueado: ya elegiste "${other?other.name:taken}"`; } }
   if(node.requires){
@@ -81,7 +139,7 @@ function talentNodeLockReason(classKey, node){
     const reqRank = st.nodes[node.requires] || 0;
     if(!req || reqRank < req.maxRank) return `Requiere "${req?req.name:node.requires}" al máximo`;
   }
-  if(champ.talentPoints < (node.cost||1)) return `Sin puntos suficientes (necesita ${node.cost||1}, tenés ${champ.talentPoints})`;
+  { const have = treePointsAvailable(classKey); if(have < (node.cost||1)) return `Sin puntos de talento (necesita ${node.cost||1}, tenés ${have})`; }
   return null;
 }
 // needsConfirm: true si esta compra es una decisión irreversible que debe confirmarse antes
@@ -94,10 +152,8 @@ function buyTalentNode(classKey, id, confirmed){
   if(reason) return {ok:false, reason};
   const isFirstPickOfExclusive = node.type==="special" && node.exclusiveWith && (talentState(classKey).nodes[id]||0)===0;
   if(isFirstPickOfExclusive && !confirmed) return {ok:false, needsConfirm:true};
-  const champ = save.champions[classKey];
   const st = talentState(classKey);
-  champ.talentPoints = Math.max(0, champ.talentPoints - (node.cost||1)); // nunca negativo (defensa extra, ver sección 34/38)
-  st.nodes[id] = (st.nodes[id]||0) + 1;
+  st.nodes[id] = (st.nodes[id]||0) + 1; // el costo sale de la bolsa del árbol (derivada: treePointsAvailable)
   persist();
   return {ok:true};
 }
@@ -156,7 +212,7 @@ function masteryMiniLockReason(classKey, node){
     const reqRank = st.masteryNodes[node.requires] || 0;
     if(!req || reqRank < req.maxRank) return `Requiere "${req?req.name:node.requires}" al máximo`;
   }
-  if(champ.talentPoints < (node.cost||1)) return `Sin puntos suficientes (necesita ${node.cost||1}, tenés ${champ.talentPoints})`;
+  { const have = treePointsAvailable(classKey); if(have < (node.cost||1)) return `Sin puntos de talento (necesita ${node.cost||1}, tenés ${have})`; }
   return null;
 }
 function buyMasteryNode(classKey, id, confirmed){
@@ -165,10 +221,8 @@ function buyMasteryNode(classKey, id, confirmed){
   const reason = masteryMiniLockReason(classKey, node);
   if(reason) return {ok:false, reason};
   if(!confirmed) return {ok:false, needsConfirm:true}; // toda compra de Maestría se confirma (sección 8)
-  const champ = save.champions[classKey];
   const st = talentState(classKey);
-  champ.talentPoints = Math.max(0, champ.talentPoints - (node.cost||1)); // nunca negativo (defensa extra, ver sección 34/38)
-  st.masteryNodes[id] = (st.masteryNodes[id]||0) + 1;
+  st.masteryNodes[id] = (st.masteryNodes[id]||0) + 1; // idem: bolsa del árbol
   persist();
   return {ok:true};
 }

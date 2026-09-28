@@ -21,6 +21,7 @@ function updateAbilityButtons(){
     }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
+    if(typeof boonDecorateButton==="function") boonDecorateButton(el, sk); // refuerzos que la transforman: marca + texto en el tooltip
   });
 }
 
@@ -40,6 +41,9 @@ function hudStackLayout(){
   party.style.transform = d ? `translateY(${d}px)` : "";
   party.style.maxHeight = d ? Math.max(80, 140 - d) + "px" : "";
 }
+// Nombre del guardián en el HUD de partida: el corto si lo tiene ("Segador" por "Segador Olvidado"),
+// para que "Nombre · Nv. 30" entre en una línea en el teléfono. Menús, Códice y tienda: el completo.
+function hudClassName(c){ return c ? (c.hudName || c.name) : ""; }
 function showBanner(text){
   const b = document.getElementById("center-banner");
   b.textContent = text;
@@ -91,7 +95,7 @@ function updateHUD(){
   // Emblema de Maestría junto al nivel (sección 18): reconocible por fuera, pero no expone el
   // árbol de talentos completo -solo el nombre de la Maestría elegida, nada más-.
   const emblemHtml = (champMastery && tree && tree.masteries[champMastery]) ? ` <span class="mastery-emblem" title="Maestría: ${tree.masteries[champMastery].name}">★</span>` : "";
-  plevelEl.innerHTML = `${CLASSES[player.classKey].name} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`;
+  plevelEl.innerHTML = `${hudClassName(CLASSES[player.classKey])} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`;
   document.getElementById("hud-level").textContent = Math.min(runLevel,10);
   if(typeof endlessHudTick==="function") endlessHudTick(); // Horda Infinita: ronda, puntaje y mutadores
   document.getElementById("hud-kills").textContent = kills;
@@ -102,6 +106,7 @@ function updateHUD(){
   // El Libertador / Eren: indicadores propios (Disparo de Oficial, Cabral, montura / Furia,
   // Seguir Adelante, transformación, regeneración, El Retumbar, agotado). Solo se toca el DOM si cambió.
   if(player.cls !== _hudLastCls){ _hudLastCls = player.cls; updateAbilityButtons(); }
+  if(typeof boonHudTick==="function") boonHudTick(); // refuerzos de habilidad nuevos (también los del invitado, que llegan por snapshot)
   const seHudEl = document.getElementById("se-hud");
   if(seHudEl){
     const html = player.classKey==="libertador" ? libertadorHudHtml(player) : player.classKey==="eren" ? erenHudHtml(player) : "";
@@ -270,7 +275,7 @@ function renderParty(){
       row.innerHTML = `
         <div class="ally-badge" style="color:${a.cls.color};background:${a.cls.color}22;">${a.cls.icon}</div>
         <div class="ally-meta">
-          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+a.cls.name : a.cls.name}</div>
+          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+hudClassName(a.cls) : hudClassName(a.cls)}</div>
           <div class="ally-hp-track"><div class="ally-hp-fill shield-seg" id="ally-shieldbar-${i}"></div><div class="ally-hp-fill" id="ally-hp-${i}"></div></div>
         </div>
         <span class="status-badge atk hidden" id="ally-atk-${i}">⚔</span>

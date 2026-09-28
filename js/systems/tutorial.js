@@ -16,7 +16,13 @@
    angelical; en la Arena Infernal se revela como el enemigo final (inf-hechicero.js).
    Retrato: el arte real del Hechicero Supremo (css/hud.css, .tut-face).
    ============================================================ */
-const TUT = { key:null, until:0, goal:null, basicsStep:0, moved:0, lx:null, ly:null, k0:0, r0:0, reviveAt:0 };
+const TUT = { key:null, until:0, goal:null, basicsStep:0, moved:0, lx:null, ly:null, k0:0, r0:0, reviveAt:0,
+  ducked:false, duckUntil:0, duckSpent:0, lastTick:0, rect:null };
+// El cuadro se AGACHA (se hace invisible) mientras te pegan o si el guardián le queda encima, y vuelve
+// solo después, con el mismo texto y el tiempo que le quedaba (reseña #10: en el teléfono tapaba la
+// pelea). Tope por línea: pasado TUT_DUCK_MAX_MS escondido se muestra igual, para no perderla nunca.
+const TUT_DUCK_MS = 2200, TUT_DUCK_MAX_MS = 6000;
+const TUT_NO_DUCK = {hurt:1, revive:1}; // consejos que hablan justo de eso: se ven aunque te estén pegando
 function tutFlags(){ if(!save.tut) save.tut = {}; return save.tut; }
 // Las claves que empiezan con "~" son líneas de una sola vez en ESTA partida (voces de la historia,
 // js/systems/story.js): nunca se guardan como vistas.
@@ -35,9 +41,34 @@ function tutSay(key, text, goal, ms, urgent, who){
   const wh = el.querySelector(".tut-who"); if(wh) wh.textContent = who && who.name ? who.name : "EL HECHICERO";
   el.dataset.face = who && who.face ? who.face : "hech";
   const g = el.querySelector(".tut-goal"); g.textContent = goal ? "▶ " + goal : ""; g.classList.remove("done");
-  el.classList.remove("hidden", "show"); void el.offsetWidth; el.classList.add("show");
+  el.classList.remove("hidden", "show", "duck"); void el.offsetWidth; el.classList.add("show");
   TUT.key = key; TUT.goal = goal || null; TUT.until = performance.now() + (ms || 9000);
+  TUT.ducked = false; TUT.duckSpent = 0; TUT.rect = _tutRect(el);
   return true;
+}
+function _tutRect(el){ try{ const r = el.getBoundingClientRect(); return r.width ? {l:r.left, t:r.top, r:r.right, b:r.bottom} : null; }catch(e){ return null; } }
+// Lo llama registerPlayerHurt (feedback.js), en el anfitrión y en el invitado.
+function tutDuck(){
+  if(!TUT.key || TUT_NO_DUCK[TUT.key] || TUT.duckSpent >= TUT_DUCK_MAX_MS) return;
+  TUT.duckUntil = performance.now() + TUT_DUCK_MS;
+  if(!TUT.ducked){ TUT.ducked = true; const el = document.getElementById("tut-panel"); if(el) el.classList.add("duck"); }
+}
+// ¿El guardián (en pantalla) queda debajo del cuadro? (p.ej. con la cámara levantada por la Madre Espora)
+function _tutOverHero(){
+  const R = TUT.rect; if(!R || !player || typeof worldToScreen!=="function") return false;
+  const cr = canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : {left:0, top:0};
+  const s = worldToScreen(player.x, player.y), hx = s.x + cr.left, hy = s.y + cr.top, head = 70*CAM_ZOOM;
+  return hx > R.l - 24 && hx < R.r + 24 && hy + 8 > R.t && hy - head < R.b;
+}
+function _tutDuckTick(now){
+  const dt = TUT.lastTick ? Math.min(250, now - TUT.lastTick) : 0; TUT.lastTick = now;
+  if(!TUT.key) return;
+  if(!TUT.ducked && TUT.duckSpent < TUT_DUCK_MAX_MS && !TUT_NO_DUCK[TUT.key] && _tutOverHero()){ TUT.duckUntil = now + 400; TUT.ducked = true; const el = document.getElementById("tut-panel"); if(el) el.classList.add("duck"); }
+  if(!TUT.ducked) return;
+  TUT.until += dt; TUT.duckSpent += dt; // escondido no corre su tiempo
+  if(TUT.duckSpent >= TUT_DUCK_MAX_MS || (now > TUT.duckUntil && !_tutOverHero())){
+    TUT.ducked = false; const el = document.getElementById("tut-panel"); if(el) el.classList.remove("duck");
+  }
 }
 // El jugador hizo lo que se pedía: tilde, se guarda y se va.
 function tutDone(key){
@@ -49,7 +80,8 @@ function tutDone(key){
 }
 function tutHide(){
   const el = document.getElementById("tut-panel");
-  if(el){ el.classList.remove("show"); el.classList.add("hidden"); }
+  if(el){ el.classList.remove("show", "duck"); el.classList.add("hidden"); }
+  TUT.ducked = false; TUT.rect = null;
   if(TUT.key && !TUT.goal) tutMark(TUT.key); // los consejos sin objetivo se dan por vistos al mostrarse
   TUT.key = null; TUT.goal = null;
 }
@@ -59,6 +91,7 @@ function tutTick(){
   if(state!=="playing" || !player){ if(TUT.key) tutHide(); return; }
   if(TUT.run !== runStats){ TUT.run = runStats; tutReset(); } // partida nueva
   const now = performance.now();
+  _tutDuckTick(now);
   if(TUT.key && now > TUT.until){
     // un objetivo básico que nadie cumplió queda pendiente (vuelve a aparecer), el resto se da por visto
     if(!TUT.key.startsWith("b_")) tutMark(TUT.key);
@@ -101,3 +134,5 @@ function tutTick(){
   if(TUT.key==="revive" && (st.revives||0) > 0) tutDone("revive");
   if(typeof storyTick==="function") storyTick(); // voces de la historia y Crónicas (js/systems/story.js)
 }
+// al rotar o cambiar el tamaño, el cuadro cambia de lugar: se vuelve a medir para saber si tapa al guardián
+window.addEventListener("resize", ()=>{ setTimeout(()=>{ if(TUT.key){ const el = document.getElementById("tut-panel"); if(el) TUT.rect = _tutRect(el); } }, 60); });

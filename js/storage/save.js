@@ -56,6 +56,7 @@ function defaultSave(){
     codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
     ciudadV1:true,          // la Ciudad Maldita (Arena 01) pasó a ser jugable (ver loadSave: nadie pierde la arena que ya tenía abierta)
+    talentTreeV2:true,      // el árbol de talentos tiene su propia bolsa desde el nivel 5 (ver talentTreeV2Migrate)
     minasV1:true,           // las Minas Profundas (Arena 09) pasaron a ser jugables y la campaña se reordenó (ver minasV1Migrate)
     legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
@@ -64,15 +65,19 @@ function defaultSave(){
     testStageV1:true,       // BUGFIX 01: reinicio de la etapa de prueba (nivel 1, bloqueados, solo la Arena 1, 10.000 de oro UNA vez)
     startGoldNotice:false,  // aviso del regalo inicial pendiente de mostrar (se muestra una vez y se apaga)
     starterChosen:false,    // todavía no eligió su guardián de regalo (pantalla "Tu primer guardián")
+    firstRun:null,          // PRIMER ARRANQUE CORTO (js/ui/hub.js): "jugando" en la primera partida, "hub" hasta tocar JUGAR
     playtestV1Bonus:true,   // el bono de 2.000 de oro del playtest anterior ya no se da en la campaña
     relics:{hp:0,dmg:0,def:0,vel:0}, // permanent small stat items found from élite+ enemies
     lootPity:{legendario:0, set:0, mitico:0, unico:0}, // protección suave contra la mala suerte (oculta), ver js/data/loot.js
-    stash:[], stashV1:true, // inventario de la CUENTA (30 espacios, compartido por los guardianes): ver js/systems/items.js
+    stash:[], stashV1:true, affixV1:true, // inventario de la CUENTA (30 espacios, compartido por los guardianes): ver js/systems/items.js
     crystals:{ancestral:false, escarcha:false, piedra:false}, // cristales de los Guardianes (js/systems/crystals.js)
     collection:{},          // objetos con nombre propio / sets / míticos / únicos descubiertos alguna vez (catálogo)
     cromas:{},              // cromas compradas (cosméticas, oro del juego): {id:true}; la equipada va en champions[k].croma (js/systems/cromas.js)
     shop:null,              // ofertas de objetos del día (js/systems/shop.js)
-    quests:null             // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
+    quests:null,            // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
+    // DIFICULTADES (js/systems/difficulty-tiers.js): arenas superadas en Pesadilla / Infierno (Normal es
+    // arenasCleared), la elegida en la Sala y las derrotas de la cuenta (las 3 primeras no se castigan)
+    diffCleared:{pesadilla:{}, infierno:{}}, diffSelected:"normal", defeatCount:0
   };
 }
 // ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
@@ -217,7 +222,18 @@ function _loadSaveInner(){
       // Las Minas Profundas se volvieron jugables como Arena 09 (Laberinto 07 · Abismo 08 · Minas 09 · Infernal 10):
       // quien ya tenía abierta una arena la conserva (en particular la Infernal para quien ya superó el Abismo).
       if(!parsed.minasV1){ minasV1Migrate(); persist(); }
+      // TALENTOS TEMPRANOS (talentTreeV2): el árbol pasó a tener su propia bolsa de puntos (desde el
+      // nivel 5, ver treePointsEarned en talents.js). Nadie pierde nada: lo que se había gastado en el
+      // árbol vuelve a la bolsa del kit, los nodos comprados quedan y los puntos del árbol se dan
+      // retroactivos según el nivel (si gastó más de lo que hoy daría su nivel, la diferencia queda
+      // en treeBonus para que nunca quede "debiendo").
+      if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
+      // dificultades: guardados de antes no las tienen (todo en Normal); forma segura siempre
+      const dc = (parsed.diffCleared && typeof parsed.diffCleared==="object") ? parsed.diffCleared : {};
+      save.diffCleared = {pesadilla:Object.assign({}, dc.pesadilla||{}), infierno:Object.assign({}, dc.infierno||{})};
+      if(!["normal","pesadilla","infierno"].includes(save.diffSelected)) save.diffSelected = "normal";
+      save.defeatCount = Math.max(0, parsed.defeatCount|0);
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
       // sesión que solo mira sin tocar nada perdería el arreglo al cerrar el navegador.
@@ -226,6 +242,17 @@ function _loadSaveInner(){
       save.startGoldNotice = true; persist(); // perfil nuevo: el regalo ya viene en defaultSave; queda guardado desde ya
     }
   }catch(e){ save = defaultSave(); }
+}
+function talentTreeV2Migrate(){
+  save.talentTreeV2 = true;
+  if(typeof treePointsSpent!=="function") return;
+  for(const k in save.champions){
+    const c = save.champions[k];
+    const spent = treePointsSpent(k);
+    if(spent <= 0) continue;
+    c.talentPoints = (c.talentPoints||0) + spent;
+    c.treeBonus = Math.max(0, spent - treePointsEarned(c.level||1));
+  }
 }
 // Inventario de la cuenta (stashV1): antes cada guardián tenía su propio inventario. Se juntan todos
 // en save.stash sin perder nada (aunque pase los 30 espacios: solo se frena el botín nuevo hasta
@@ -256,6 +283,9 @@ function migrateToAccountStash(parsed){
   save.collection = Object.assign({}, parsed.collection||{});
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, parsed.lootPity||{});
   if(!parsed.stashV1){ save.stashV1 = true; for(const it of stash) if(typeof collectionRegister==="function") collectionRegister(it, true); persist(); }
+  // Afijos al azar (js/systems/affixes.js): los objetos de antes quedan válidos (mismo uid, nombre, nivel
+  // y equipo) y reciben sus afijos según su rareza, siempre los mismos para el mismo objeto.
+  if(!parsed.affixV1 && typeof migrateAffixesV1==="function"){ migrateAffixesV1(stash); save.affixV1 = true; persist(); }
 }
 function campaignV2Migrate(parsed){
   const cleared = save.arenasCleared || {}, old = LEGACY_ARENA_ORDER_V1;
@@ -296,10 +326,11 @@ function campaignReset(raw){
     const c = save.champions[k];
     c.level = 1; c.xp = 0; c.talentPoints = 0; c.unlocked = false;
     c.skillMastery = [mkMastery(), mkMastery(), mkMastery()]; c.ultMastery = mkMastery();
-    c.talents = mkTalentState();
+    c.talents = mkTalentState(); c.treeBonus = 0;
   }
   save.gold = 0;
   save.arenasCleared = defaultSave().arenasCleared;
+  save.diffCleared = {pesadilla:{}, infierno:{}}; save.diffSelected = "normal";
   save.crystals = defaultSave().crystals;
   save.legacyHieloOpen = false; save.legacyLabOpen = false; save.fortalezaMigrated = true; save.micelialMigrated = true; save.abismoMigrated = true;
   save.campaignV2 = true; save.legacyOpenArenas = []; save.ciudadV1 = true; save.minasV1 = true;

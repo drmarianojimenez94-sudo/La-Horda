@@ -50,7 +50,7 @@ function netSlotName(i){ const s = netMatch && netMatch.slots[i]; return s ? s.n
 /* ---------------- serialización con referencias ---------------- */
 const NET_SKIP_KEYS = new Set(["cls","_ap","_net","_tx","_ty","_s","hitSet","onHit","fn","_spdAt","_hx","_hy","_tk",
   // internos de la IA/navegación del anfitrión: el invitado no los usa
-  "_navT","_nmx","_nmy","_navBlocked","_tgt","_tgtT","_dangerT","atkCd","recentDamage","_hitSfxAt","_hurtSfxAt","_setFrame","path",
+  "_navT","_nmx","_nmy","_navBlocked","_kbRx","_kbRy","_tgt","_tgtT","_dangerT","atkCd","recentDamage","_hitSfxAt","_hurtSfxAt","_setFrame","path",
   // estado de animación que calcula el propio renderizador de cada cliente
   "_an",
   // atlas de guardianes (champion-sprites.js): vista/espejo, duración del ataque y relojes de render locales
@@ -167,7 +167,8 @@ function netHookEvents(){
 // de nivel (una muerte + una XP por enemigo y por invitado) el invitado perdía parte de su XP y los
 // últimos enemigos desaparecían sin su muerte. Los cosméticos (números, chispas, sonidos) siguen con tope.
 const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHudShow","bossHudHide","bossHudPhase","bossHudHint",
-  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip"]);
+  "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip",
+  "groundLootDrop","endlessGuestReward"]); // botín del piso de cada invitado (ground-loot.js) y recompensas de la Horda Infinita
 let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){
   if((name==="xp" || name==="gold") && to!==undefined && typeof args[0]==="number"){
@@ -314,6 +315,7 @@ function netHostStartGame(){
   });
   const seed = (Math.random()*0x7fffffff)|0 || 7;
   netMatch = {role:"host", mySlot:0, seed, slots, arena:currentArena, loadouts:(netLobby.loadouts||{}),
+    diff: typeof diffEffective==="function" ? diffEffective(currentArena) : "normal", // la dificultad la elige el anfitrión
     backups:null, recording:false, lastSnapAt:0, lastKeyAt:0, snapN:0, last:{}, lastG:{}, lastH:[{},{},{},{}], ents:new Map(),
     buffPicks:null, ended:false, startedAt:performance.now()};
   netSend({t:"start"});
@@ -340,7 +342,7 @@ function netHostStartGame(){
   return true;
 }
 function netStartMessage(){
-  return {k:"start", arena:currentArena, seed:netMatch.seed, slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
+  return {k:"start", arena:currentArena, seed:netMatch.seed, diff:netMatch.diff || "normal", slots:netMatch.slots, snap:netBuildSnapshot(true, true)};
 }
 // Cada cuadro, en update(): héroes de los invitados.
 function netHostUpdateRemotes(dt){
@@ -478,7 +480,9 @@ function netHostOpenBuffs(){
     if(s.kind!=="human" || s.slot===0) continue;
     const h = heroes[s.slot];
     if(!h || !h._net || !h._net.connected){ netMatch.buffPicks[s.slot] = "skip"; continue; }
-    const opts = [...((typeof endlessOn==="function" && endlessOn()) ? endlessBuffPool() : BUFF_POOL)].sort(()=>Math.random()-0.5).slice(0,3).map(b=>b.id);
+    // cartas armadas con SU guardián (h): 1-2 refuerzos que transforman sus habilidades + genéricos
+    const endless = typeof endlessOn==="function" && endlessOn();
+    const opts = boonBuildOffers(h, endless ? endlessBuffPool() : BUFF_POOL, endless);
     netMatch.buffPicks[s.slot] = null;
     netMatch["buffOpts"+s.slot] = opts;
     netSendTo(s.slot, {k:"buffs", opts, level:runLevel});
@@ -487,10 +491,11 @@ function netHostOpenBuffs(){
 function netHostBuffPicked(slot, id){
   if(!netMatch.buffPicks || netMatch.buffPicks[slot]!==null) return;
   const opts = netMatch["buffOpts"+slot] || [];
-  const b = BUFF_POOL.find(x=>x.id===id && opts.includes(x.id)) || BUFF_POOL.find(x=>x.id===opts[0]);
+  const pick = opts.includes(id) ? id : opts[0]; // solo una de SUS cartas; sin elección (tiempo): la primera
   const h = heroes[slot];
-  if(b && h) netWithHero(h, ()=>{ b.apply(runStats); refreshEquippedStats(); if(typeof endlessOn==="function" && endlessOn()) endlessOnBuffPicked(h, b.id); });
-  netMatch.buffPicks[slot] = b ? b.id : "skip";
+  const ok = !!pick && !!h && (!!boonParseOpt(pick) || !!BUFF_POOL.find(x=>x.id===pick));
+  if(ok) netWithHero(h, ()=>{ buffApplyOpt(h, pick); if(!boonParseOpt(pick) && typeof endlessOn==="function" && endlessOn()) endlessOnBuffPicked(h, pick); });
+  netMatch.buffPicks[slot] = ok ? pick : "skip";
   netHostTryResume();
 }
 function netHostPickedLocal(){ if(netMatch.buffPicks) netMatch.buffPicks[0] = "done"; netHostTryResume(); }
@@ -612,7 +617,7 @@ function netHostTick(){
 function netGuestStartRun(msg){
   // reconexión = misma sala y la partida anterior NO había terminado (si terminó, es una nueva)
   const reconnecting = !!(netMatch && netMatch.role==="guest" && netMatch.code===net.code && !netMatch.ended);
-  netMatch = {role:"guest", mySlot:net.slot, seed:msg.seed, slots:msg.slots, arena:msg.arena, code:net.code,
+  netMatch = {role:"guest", mySlot:net.slot, seed:msg.seed, slots:msg.slots, arena:msg.arena, code:net.code, diff:msg.diff || "normal",
     ents:new Map(), colls:{}, lastInAt:0, posAuth:-1, pendingFull:false, started:true, ended:false,
     runStartMarked: reconnecting ? true : false};
   currentArena = msg.arena;
@@ -644,6 +649,7 @@ function netGuestStartRun(msg){
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
   const hudArenaEl = document.getElementById("hud-arena");
   if(hudArenaEl) hudArenaEl.textContent = (ARENA_MODS[currentArena]||{}).label || "";
+  if(typeof diffHudMark==="function") diffHudMark();
   netApplySnapshot(msg.snap);
   if(typeof setMusicMode==="function") setMusicMode("wave", runLevel);
   setState("playing");
@@ -744,7 +750,7 @@ function netApplySnapshot(s){
 function netGuestOnMsg(from, d){
   if(!d) return;
   switch(d.k){
-    case "cos": netLobby.cos = d.m || {}; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
+    case "cos": netLobby.cos = d.m || {}; if(d.d) netLobby.diff = d.d; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
     case "start":
       if(typeof assetsAllReady==="function" && !assetsAllReady()){ netGuestHoldStart(d); return; }
       netGuestStartRun(d); return;
@@ -805,6 +811,7 @@ function netGuestUpdate(dt){
   for(const h of heroes) netTickTimers(h, dt);
   for(const name in netMatch.colls){ for(const o of netMatch.colls[name].values()) netTickTimers(o, dt); }
   for(const p of potions){ p.phase = (p.phase||0) + dt/240; }
+  if(typeof groundLootTick==="function") groundLootTick(dt); // su propio botín del piso: lo levanta en su pantalla
   stepParticles(dt);
   for(const em of embers){ em.y += em.vy*dt/1000; em.phase += dt/1000; if(em.y < player.y-700) em.y = player.y+700; }
   updateAcuaAmbience && updateAcuaAmbience(dt);
@@ -842,16 +849,19 @@ function netGuestShowBuffs(d){
   const cards = document.getElementById("buff-cards");
   cards.innerHTML = "";
   (d.opts||[]).forEach(id=>{
-    const b = BUFF_POOL.find(x=>x.id===id); if(!b) return;
+    const pb = boonParseOpt(id), b = pb ? null : BUFF_POOL.find(x=>x.id===id);
+    if(!pb && !b) return;
     const el = document.createElement("div");
-    el.className = "buff-card";
-    el.innerHTML = `<div class="ico">${b.ico}</div><div class="buff-name">${b.name}</div><div class="buff-desc">${b.desc}</div>${(typeof endlessOn==="function" && endlessOn()) ? endlessBuffHint(b) : ""}`;
+    el.className = buffOptClass(id);
+    // su héroe (player) trae sus refuerzos por el snapshot: mejoras y dúos se ven igual que en el anfitrión
+    el.innerHTML = buffOptHTML(id, player, (b && typeof endlessOn==="function" && endlessOn()) ? endlessBuffHint(b) : "");
     el.addEventListener("click", ()=>{
       netSendToHost({k:"buff", id});
-      cards.innerHTML = `<div class="net-wait">Elegiste <b>${b.name}</b>. Esperando al resto del equipo…</div>`;
+      cards.innerHTML = `<div class="net-wait">Elegiste <b>${buffOptName(id)}</b>. Esperando al resto del equipo…</div>`;
     });
     cards.appendChild(el);
   });
+  if(typeof buffOwnedRefresh==="function") buffOwnedRefresh(player);
 }
 function netGuestEnd(d){
   if(!netMatch || netMatch.ended) return;
@@ -864,7 +874,9 @@ function netGuestEnd(d){
       save.arenasCleared = save.arenasCleared || {};
       save.arenasCleared[currentArena] = true;
     }
-    grantGold(80);
+    // Pesadilla/Infierno: igual, solo si ya la tenía abierta en esta arena (difficulty-tiers.js)
+    if(typeof diffMarkCleared==="function") diffMarkCleared(currentArena, netMatch.diff, diffArenaUnlocked(currentArena, netMatch.diff));
+    grantGold(Math.round(80*(typeof diffGoldMult==="function" ? diffGoldMult() : 1)));
     persist();
     showVictoryScreen();
   } else {

@@ -235,10 +235,11 @@ function netHostBroadcastCos(force){
   if(net.role!=="host" || !net.room) return;
   const m = {};
   net.room.slots.forEach((s,i)=>{ if(!s) return; m[i] = i===0 ? champSkinId(selectedClass) : ((netLobby.loadouts[i]||{}).skin || null); });
-  const sig = JSON.stringify([m, net.room.slots.map(s=>s ? !!s.connected : null)]);
+  const d = typeof diffEffective==="function" ? diffEffective(currentArena) : "normal"; // dificultad elegida por el anfitrión
+  const sig = JSON.stringify([m, net.room.slots.map(s=>s ? !!s.connected : null), d]);
   if(!force && sig === netLobby.cosSig) return;
   netLobby.cosSig = sig;
-  netBroadcast({k:"cos", m});
+  netBroadcast({k:"cos", m, d});
 }
 // Refresco liviano de la sala ante cambios de red: solo título, barra y lugares (no el equipo, los
 // talentos ni la tienda de skins, que no dependen de la sala). Si hay un dedo apoyado en la pantalla
@@ -253,6 +254,7 @@ function netRefreshLobby(){
   document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
   renderLobbyArena();
   netRenderLobbyBar();
+  if(typeof prepSecSync==="function") prepSecSync(); // pestañas de la Sala (js/ui/prep-sections.js)
   if(typeof netRenderChat==="function") netRenderChat(); // silenciados/estado del chat (incremental: no reconstruye)
   netRenderLobbySlots();
 }
@@ -270,7 +272,7 @@ function netRefreshLobby(){
 /* ---------------- eventos de red ---------------- */
 netOn("joined", (m)=>{
   netLobby.lastError = ""; netLobby.lastLoadoutSig = ""; netLobby.cosSig = ""; netLobby.barHTML = ""; netLobby.slotsHTML = "";
-  if(!m.reconnect) netLobby.cos = {};
+  if(!m.reconnect){ netLobby.cos = {}; netLobby.diff = null; } // la dificultad llega del anfitrión ({k:"cos"}, campo d)
   _netSetJoinStatus("");
   if(m.host){ netLobby.loadouts = {}; }
   else {
@@ -329,7 +331,13 @@ netOn("error", (m)=>{
 });
 function showNetToast(text){
   let t = document.getElementById("net-toast");
-  if(!t){ t = document.createElement("div"); t.id = "net-toast"; document.body.appendChild(t); }
+  if(!t){
+    t = document.createElement("div"); t.id = "net-toast";
+    t.addEventListener("animationend", ()=> t.classList.remove("show")); // oculto no ocupa lugar en la columna
+  }
+  // en la columna de avisos de arriba a la derecha (toastStackHost, js/ui/screens.js), primero de todos
+  const host = typeof toastStackHost==="function" ? toastStackHost() : document.body;
+  if(t.parentNode!==host) host.insertBefore(t, host.firstChild);
   t.textContent = text; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show");
 }
 

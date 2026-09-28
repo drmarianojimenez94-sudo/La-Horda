@@ -35,7 +35,9 @@ async function client(browser, name, champ) {
   return { ctx, page, errors, name };
 }
 const ev = (c, fn, a) => c.page.evaluate(fn, a);
-async function press(c, sel) { await c.page.tap(sel); await sleep(450); }
+async function press(c, sel) {
+  await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, sel).catch(() => {}); // pestaña de la Sala que lo contiene (js/ui/prep-sections.js)
+  await c.page.tap(sel); await sleep(450); }
 const slotSkins = (c) => ev(c, () => [...document.querySelectorAll('#lobby-slots canvas.lobby-anim')].map(cv => ({ k: cv.dataset.classKey, skin: cv.dataset.skin })));
 
 (async () => {

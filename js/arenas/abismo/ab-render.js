@@ -221,7 +221,7 @@ function abRenderTick(dt){
 }
 
 /* ---------------- utilidades de dibujo ---------------- */
-function _abView(){ const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM, cy = player.y - CAM_LIFT; return {x0:player.x - hw - 60, x1:player.x + hw + 60, y0:cy - hh - CAM_Y_ANCHOR/CAM_ZOOM - 60, y1:cy + hh + 80}; }
+function _abView(){ const hw = VW/2/CAM_ZOOM, hh = VH/2/CAM_ZOOM, cy = camCenterY(); return {x0:player.x - hw - 60, x1:player.x + hw + 60, y0:cy - hh - 60, y1:cy + hh + 80}; }
 function _abGlow(x, y, r, rgb, a){ if(a <= 0.01) return; ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, a); ctx.drawImage(glowSprite(rgb), x - r, y - r, r*2, r*2); ctx.restore(); }
 function _abSpr(key, x, y, h, flip, alpha, anchorY, rot){
   const img = AB_IMG[key]; if(!img || !AB_OK[key]) return false;

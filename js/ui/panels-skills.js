@@ -14,7 +14,7 @@ function renderSkillsPanel(panel, classKey, rerender){
   const champ = save.champions[classKey];
   const items = cls.skills.map((sk,i)=>({sk, idx:i, m:champ.skillMastery[i]}))
     .concat([{sk:cls.ultimate, idx:"ult", m:champ.ultMastery}]);
-  let html = `<div class="talent-points">Puntos disponibles: <b>${champ.talentPoints}</b> <span class="tp-note">(1 por nivel de guardián; se comparten con los talentos)</span></div><div class="mastery-list">`;
+  let html = `<div class="talent-points">Puntos disponibles: <b>${champ.talentPoints}</b> <span class="tp-note">(1 por nivel de guardián; el árbol de talentos tiene sus propios puntos)</span></div><div class="mastery-list">`;
   items.forEach(({sk,idx,m})=>{
     const tLvl = allocLevel(m);
     const tMaxed = tLvl>=TALENT_MAX;
@@ -133,9 +133,14 @@ function renderTalentTree(panel, classKey, rerender){
   const branches = [...new Set(tree.nodes.map(n=>n.branch))];
   let html = `<div class="tt-wrap">
     <div class="tt-root" style="border-color:${cls.color};"><span class="tt-root-ico" style="color:${cls.color};">${cls.icon}</span>
-      <span><b>${cls.name}</b> · Nv. ${champ.level} · Puntos: <b>${champ.talentPoints}</b></span></div>`;
+      <span><b>${cls.name}</b> · Nv. ${champ.level} · Puntos de talento: <b>${treePointsAvailable(classKey)}</b></span></div>`;
+  // Talentos tempranos: el árbol se abre en el nivel 5 y cada escalón de rama se abre con el nivel
+  // (TALENT_TIER_LEVELS). La franja dice qué falta para el próximo, así se ve la build crecer.
+  const nextTier = talentNextTierUnlock(classKey);
   if(champ.level < TALENT_TREE_MIN_LEVEL){
-    html += `<div class="talent-lock-banner">🔒 Los talentos se compran desde el nivel ${TALENT_TREE_MIN_LEVEL} (te faltan ${TALENT_TREE_MIN_LEVEL-champ.level}). Ya podés ver todo el árbol y planear tu build.</div>`;
+    html += `<div class="talent-lock-banner">🔒 El primer punto de talento llega en el nivel ${TALENT_TREE_MIN_LEVEL} (te faltan ${TALENT_TREE_MIN_LEVEL-champ.level}). Ya podés ver todo el árbol y planear tu build.</div>`;
+  } else {
+    html += `<div class="talent-lock-banner tt-progress">1 punto de talento por nivel (+1 extra en cada nivel redondo). Escalones de cada rama: ${TALENT_TIER_LEVELS.map((lv,i)=>`<b class="${champ.level>=lv?"tt-tier-on":""}">${i+1}º Nv.${lv}</b>`).join(" · ")}${nextTier ? ` — el ${nextTier.tier}º se abre en el nivel ${nextTier.level}.` : " — todos abiertos."}</div>`;
   }
   html += `<div class="tt-cols">`;
   branches.forEach(branch=>{

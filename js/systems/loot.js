@@ -20,9 +20,10 @@ function _pick(weights, rng){
 function lootTierWeights(arena, grade, pity, defeat){
   const base = ARENA_LOOT[arena] || ARENA_LOOT.bosque;
   const g = GRADE_LOOT[grade] || GRADE_LOOT.A;
+  const df = typeof diffLootFactor==="function" ? diffLootFactor() : 1; // Pesadilla/Infierno: mejor rareza
   const w = {};
   for(const t of LOOT_TIERS){
-    let v = base[t] * Math.pow(g.factor, TIER_EXP[t]);
+    let v = base[t] * Math.pow(g.factor * df, TIER_EXP[t]);
     if(pity && LOOT_PITY[t]) v *= 1 + Math.min(LOOT_PITY[t].cap, LOOT_PITY[t].step*(pity[t]||0));
     if(defeat && (t==="legendario" || t==="set" || t==="mitico" || t==="unico")) v *= DEFEAT_LOOT.highTierMult;
     w[t] = v;
@@ -107,7 +108,14 @@ function _rollChampionDesigned(classKey, rarity){
   return mine[(Math.random()*mine.length)|0].id;
 }
 // Convierte la especificación en un objeto real del juego (puede ser de otro guardián: botín cruzado).
+// Los objetos con nombre (legendarios, míticos, sets, Únicos) conservan su identidad fija y suman 1-2
+// afijos al azar (js/systems/affixes.js); los procedurales ya nacen con los suyos en makeItem.
 function materializeLoot(spec, classKey, arena){
+  const it = _materializeLootBase(spec, classKey, arena);
+  if(it && it.designed && !Array.isArray(it.affixes) && typeof rollItemAffixes==="function") rollItemAffixes(it);
+  return it;
+}
+function _materializeLootBase(spec, classKey, arena){
   arena = arena || currentArena;
   if(spec.tier==="set") return makeDesignedItem(spec.designId);
   const type = spec.type || rollItemType(classKey);
@@ -150,6 +158,9 @@ function grantEndOfRunLoot(classKey, perf, victory){
     if(stashFull()){ inventoryFull = true; break; }
     const it = materializeLoot(spec, classKey, currentArena);
     it.lootTier = spec.tier;
+    // Pesadilla/Infierno: el objeto cae con nivel (lo mismo que subirlo con Gemas)
+    const lb = typeof diffItemLevelBonus==="function" ? diffItemLevelBonus() : 0;
+    if(lb > 0) it.level = Math.min(ITEM_MAX_LEVEL, itemLevel(it) + lb);
     addItemToInventory(classKey, it);
     items.push(it);
   }
@@ -182,6 +193,7 @@ function reforgeSetDuplicates(classKey, setId){
   info.dupes.slice(0,2).forEach(it=>removeItemFromInventory(classKey, it.uid, false));
   const id = info.missing[(Math.random()*info.missing.length)|0];
   const it = makeDesignedItem(id); it.lootTier = "set";
+  if(typeof rollItemAffixes==="function") rollItemAffixes(it);
   addItemToInventory(classKey, it);
   persist();
   return {ok:true, item:it};

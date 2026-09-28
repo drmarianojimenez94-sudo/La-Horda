@@ -41,6 +41,14 @@ conserva **Las Cinco Pruebas Divinas**. Es el puente hacia **COLISEO — PRÓXIM
 - **GUARDIÁN 3:** Laberinto — **Guardián del Laberinto → Minotauro**. Cristal de Piedra (ámbar).
 - **GUARDIÁN 4:** Arena Infernal — **Hechicero Supremo → Rey / Demonio de la Horda**. Cristal del Juicio (oro blanco).
 
+**Numeración y títulos (para que no se contradigan):** "GUARDIÁN 1-4" (I-IV en el Códice) es el **orden en
+que los portadores los encuentran**, un rótulo de la campaña. Dentro de la historia, los Cuatro se nombran
+por **rango**: **el Primero** (el líder, el que juzgaba: el Hechicero Supremo), el Segundo (el Mago Gélido), el
+Tercero (el del Laberinto) y el Guardián de la Niebla (el Ancestral, el más viejo, que no lleva número). Por
+eso ningún texto llama "el primero de los Cuatro" al Guardián Ancestral (es "el primer Guardián caído" o "el
+Guardián de la Niebla") ni "el cuarto" al Hechicero dentro de un diálogo: el Mago Gélido dice «El Primero no
+cayó», y el cartel de la revelación, «El Primero de los Cuatro».
+
 **NO son Guardianes:** **Cerbero** (se llama "Guardián del Umbral", pero es un perro de la Horda que custodia una puerta, no uno de los Cuatro), el **Titán de Piedra**, el **Devoraluz**, el **Presentador**, el **Leviatán** (el "Kraken" del canon) ni el Kraken Joven, la **Madre Espora**, el **Caballero de la Armadura Oxidada** ni el **Dragón de la Forja** (el "Dragón Steampunk" del canon). Son criaturas de la
 Horda (o corrompidas por ella) que los campeones cruzan en el camino. Ningún texto, cristal ni UI debe
 presentarlos como Guardianes.
@@ -98,7 +106,7 @@ llevan cristal. En la pelea final, cuando el Hechicero arranca los cristales, la
 
 **Últimas palabras:** al caer, cada Guardián dice quién fue (cartel "LAS ÚLTIMAS PALABRAS"). Es lo que
 el Hechicero después desmiente ("deliraba"): el Ancestral pide no entregar el cristal "a nadie", el
-Mago Gélido cuenta que el cuarto "eligió quedarse del otro lado" y el del Laberinto dice que quien
+Mago Gélido cuenta que el Primero "eligió quedarse del otro lado" y el del Laberinto dice que quien
 abrió los caminos "fue uno de nosotros".
 
 **Epílogo (§13):** el Rey cae de rodillas y vuelve a ser el Primero; las cadenas del Forjador se aflojan;
@@ -160,8 +168,8 @@ de la partida (y, rara vez, un élite) o se encuentran al completar la arena. Se
 No dan oro, XP ni poder. Canon nuevo que establecen:
 - **Crónica de la Noche del Regreso** (Ismena, escriba): las campanas sonaron solas; la figura del humo nunca tocó el suelo y sabía los nombres de todos.
 - **Bitácora del Último Maquinista**: el Primero pagó la Fábrica para forjar cadenas; la última, «para un solo prisionero», fue la del Forjador. El Caballero juró que nada saldría de la prisión.
-- **Cantos del Primer Guardián**: un hombre de luz dorada (uno de los Cuatro) visitó al Guardián Ancestral; después nació la Niebla del Olvido, para esconder el cristal «de la Horda, y de los que la entienden demasiado».
-- **Ecos del Micelio**: las esporas repiten a los Cuatro; el cuarto dijo «váyanse, yo me quedo» y la voz de madera lo llamó «traidor».
+- **Cantos del Guardián de la Niebla**: un hombre de luz dorada (uno de los Cuatro) visitó al Guardián Ancestral; después nació la Niebla del Olvido, para esconder el cristal «de la Horda, y de los que la entienden demasiado».
+- **Ecos del Micelio**: las esporas repiten a los Cuatro; la cuarta voz dijo «váyanse, yo me quedo» y la voz de madera lo llamó «traidor».
 - **Cartas del Mago Gélido**: le escribía al Primero, que nunca contestó; un ángel de cristal le habló con la voz del Primero; la última carta pide llevar el cristal encima y no entregarlo.
 - **Bitácora del Faro de Maren**: el mar de la Arena Acuática apareció cuando alguien se llevó el segundo cristal; lo que nada debajo (el Leviatán) sigue el brillo de los cristales.
 - **Diario del Guardián del Laberinto**: las llaves de Guardián eran cuatro; «siempre me sobra una».
@@ -172,8 +180,10 @@ No dan oro, XP ni poder. Canon nuevo que establecen:
 ## 13. Epílogo y post-créditos
 Al completar la Arena Infernal por primera vez (y cuando quieras desde el Códice): pantallas de texto sobre
 el arte de las arenas — el Rey vuelve a ser el Primero («Yo elegí quedarme»), el Forjador se niega a
-fundir y a romper («los cristales siguen necesitando portadores»), la Ciudad Maldita vuelve a tocar sus
-campanas, **los nuevos Guardianes**, «Fin del Libro Primero». **Post-créditos:** unas gradas de oro y una
+fundir y a romper («los cristales siguen necesitando portadores»), **los que cayeron** (los tres Guardianes
+duermen; debajo de los seis nombres de Aldren alguien graba el tuyo, «el primero de esa pared que no termina
+en una cuenta de días»), la Ciudad Maldita vuelve a tocar sus campanas (Veda: «Esta vez no lloro antes.
+Lloro porque volvieron»), **los nuevos Guardianes**, «Fin del Libro Primero». **Post-créditos:** unas gradas de oro y una
 voz («Portadores. Veamos si merecen serlo») → **Arena Divina**; y en el fondo del Abismo, la Horda sin rey
 empieza a crecer → **Horda Infinita**.
 
@@ -186,3 +196,24 @@ empieza a crecer → **Horda Infinita**.
 - Cristales: `js/systems/crystals.js`. Final: `js/arenas/infernal/inf-hechicero.js`.
 - Fichas previas a cada arena: `js/ui/run-intro.js`.
 - Textos de actos, voces, Crónicas y epílogo: `js/data/story-text.js`. Lógica (cola de voces, páginas, pantallas de fin, epílogo): `js/systems/story.js`. Estilos: `css/story.css`. Prueba: `tools/items/t_story.js`.
+- Campamento y Crónica legible: textos `js/data/camp-text.js`, lógica `js/systems/camp.js`, estilos `css/camp.css`. Prueba: `tools/items/t_camp.js`.
+
+## 15. El Campamento de los Portadores (entre arena y arena)
+El "pueblo" de La Horda: una sola pantalla, junto a una fogata, después de cada victoria de la campaña
+(nunca en la Divina ni en la Horda Infinita). Hablan tres, cada uno con su voz:
+- **El Hechicero**, como en el prólogo: una proyección dorada en el humo que nunca toca el suelo (§5). Su arco
+  sigue los actos: cálido y protector en el I («Si alguna vez no me ves, no me busques: yo te encuentro»),
+  cada vez más atento a los cristales en el II («Traé ese cristal. Traémelo»), sin disimulo en el III («Traé
+  los cristales. Los tres. Esta vez no te lo pido»). Tras el final ya no está: el humo repite lo que dijo.
+- **Anselmo, el herrero de la puerta norte**: forjó las bisagras que aguantaron tres noches; su abuelo bajó a
+  las Minas y volvió sin nombre (oía «golpear un yunque, encadenado»: el Forjador). Habla de fierro y de botín:
+  sus pistas nombran sets que de verdad caen en la arena siguiente. Tras el final cuelga un eslabón de la
+  cadena del Forjador sobre la puerta norte.
+- **Veda, la vidente**: plañidera de la Ciudad que no se volvió de la Horda. «Lloraba a los muertos por
+  oficio; desde la noche de las campanas, los lloro antes». Profetiza el tramo siguiente y cuenta a los
+  Guardianes que ya duermen («Del que falta no veo tumba: veo un trono»).
+Cada uno tiene una línea por arena y una que reacciona a la partida: el cristal que llevás (Hechicero), tu
+guardián (herrero), los civiles que se perdieron en la Ciudad o los Guardianes que ya duermen (vidente). Al
+cerrar un acto, el campamento abre con el cartel **FIN DEL ACTO** y su cierre (`STORY_ACTS[].outro`), que
+también se lee en la escena de salida de la victoria. Todo lo escuchado queda en el Códice › CRÓNICAS ›
+**Voces del Campamento**.

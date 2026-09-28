@@ -122,14 +122,15 @@
 .float-text.crit{color:#fff; font-size:1.05rem;}
 @keyframes floatUp{ from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(-46px);} }
 
+/* arriba de la cabeza del guardián, no encima (--cam-hero-y: dónde quedan sus pies, canvas.js) */
 #center-banner{
-  position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
+  position:absolute; top:calc(var(--cam-hero-y, 58vh) - 60px - 9vh); left:50%; transform:translate(-50%,-50%);
   font-family:var(--font-retro); font-size:2rem; line-height:1; color:var(--ember3); max-width:min(640px, 80vw);
   text-shadow:2px 2px 0 #1a0a04, -1px -1px 0 #1a0a04, 1px -1px 0 #1a0a04, -1px 1px 0 #1a0a04, 0 0 16px rgba(255,122,46,0.7);
   opacity:0; pointer-events:none; text-align:center; letter-spacing:0.05em;
 }
 #center-banner.show{animation:bannerPop 2.1s ease-out forwards;}
-#center-banner.low{top:47%;}
+#center-banner.low{top:calc(var(--cam-hero-y, 58vh) + 30px + 3vh);} /* con otro cartel arriba: debajo de los pies */
 #center-banner.downed{top:66%;} /* con el cartel de "CAÍSTE" (cooperativo) en pantalla, va debajo */
 @keyframes bannerPop{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.85);} 12%{opacity:1; transform:translate(-50%,-50%) scale(1);} 78%{opacity:1;} 100%{opacity:0;} }
 
@@ -336,6 +337,8 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
   padding:8px 10px; box-shadow:0 0 14px rgba(120,70,170,0.45); opacity:0; transition:opacity .35s;}
 #tut-panel.show{opacity:1;}
 #tut-panel.hidden{display:none;}
+/* agachado (tutorial.js, tutDuck): mientras te pegan o si el guardián le queda debajo; el texto sigue ahí */
+#tut-panel.show.duck{opacity:0; transition:opacity .12s;}
 /* retrato real del Hechicero Supremo (el guía) */
 #tut-panel .tut-face{flex:0 0 38px; height:38px; border-radius:4px; image-rendering:pixelated;
   background:url(../assets/sprites/bosses/infernal/hechicero/portrait.png) center 14%/165% no-repeat, radial-gradient(circle at 50% 35%, #6a4a1e, #1a1008);
@@ -347,11 +350,14 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 #tut-panel .tut-goal:empty{display:none;}
 /* celulares apaisados (poca altura): el cuadro del Hechicero más compacto para no tapar la horda */
 @media (max-height: 500px){
-  #tut-panel{ width:max(240px, min(340px, calc(100vw - 460px))); padding:5px 8px; gap:7px; }
-  #tut-panel .tut-face{ flex-basis:28px; height:28px; }
-  #tut-panel .tut-who{ font-size:0.42rem; margin-bottom:2px; }
-  #tut-panel .tut-text{ font-size:0.9rem; }
-  #tut-panel .tut-goal{ font-size:0.92rem; margin-top:2px; }
+  /* más bajo y angosto, pegado al borde (reseña #10): entre el joystick y los botones, debajo de los pies
+     del guardián (la cámara lo ancla arriba de este cuadro, ver camFitAnchor en canvas.js) */
+  #tut-panel{ width:max(220px, min(300px, calc(100vw - 500px))); padding:3px 7px 4px; gap:6px;
+    bottom:calc(3px + env(safe-area-inset-bottom,0px)); background:linear-gradient(180deg, rgba(20,12,28,0.84), rgba(10,6,14,0.84)); border-width:1px; }
+  #tut-panel .tut-face{ flex-basis:22px; height:22px; margin-top:1px; }
+  #tut-panel .tut-who{ font-size:0.38rem; letter-spacing:2px; margin-bottom:1px; }
+  #tut-panel .tut-text{ font-size:0.84rem; line-height:0.95; }
+  #tut-panel .tut-goal{ font-size:0.86rem; margin-top:1px; }
   /* Guía del jefe: arriba tapaba al jefe (que casi siempre entra por arriba) y a la barra de estado de la
      arena (civiles, luces, runas). En el teléfono va abajo al centro, en el lugar del Hechicero, que se
      esconde mientras se ve la guía (sin :has, en navegadores viejos, quedan los dos como antes). */
@@ -407,3 +413,6 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 .ally-name, .top-pill > span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
 /* celular acostado: el cartel central en un renglón casi siempre (a 2rem "4 civiles escondidos en la ciudad" se partía) */
 @media (max-height:500px){ #center-banner{ font-size:1.55rem; max-width:min(560px, 70vw); } }
+/* Marca de refuerzo de habilidad en el botón (color de la rareza; dorado = dúo; número = cuántos) */
+.boon-pip{position:absolute; top:5px; left:7px; min-width:9px; height:9px; padding:0 1px; box-shadow:0 0 0 1px #000;
+  font:8px/9px monospace; color:#000; text-align:center; pointer-events:none; z-index:2;}

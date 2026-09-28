@@ -82,6 +82,7 @@ function update(dt){
   for(const e of enemies){
     if(!e.alive) continue;
     if(axiomFreezeTimer>0){ continue; } // Force Quit: nadie salvo Axiom actúa mientras dura
+    if(e._kbRx || e._kbRy) updateHitKnock(e, dt); // retroceso por peso en curso (feedback.js)
     if(e.frozenTimer>0) e.frozenTimer -= dt; // congelado (Invierno Sin Fin, reacciones de hielo)
     if(e.shockedTimer>0) e.shockedTimer -= dt;
     if(e.wetTimer>0) e.wetTimer -= dt;
@@ -134,6 +135,7 @@ function update(dt){
       if(e.bossWind.t >= e.bossWind.dur){ const w = e.bossWind; e.bossWind = null; w.fn(); }
     }
     // Roles enemigos (js/enemies/enemy-roles.js): sanador, suicida, artillero... true = ya actuó.
+    if(e.eliteMods) eliteTick(e, dt); // élite con nombre: aura, ritmo, espejo (elite-affixes.js)
     if(e.role){ roleAnnounce(e); if(updateEnemyRole(e, dt, tgt, dist)) continue; }
 
     // ---- Jefes finales: director de fases y rotación de ataques (js/skills/boss-patterns.js).
@@ -504,6 +506,7 @@ function update(dt){
   if(typeof endlessOn==="function" && endlessOn()) endlessUpdate(dt); // Horda Infinita: rescates y su reloj
   ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);
+  if(typeof groundLootTick==="function") groundLootTick(dt); // levantar el botín del piso al pasar por encima
   updateEmergency(dt); // curación de emergencia: la parte que entra de a poco
   updateBreakables(dt); // urnas, barriles, ánforas... (breakables.js)
   updateFireWalls(dt);

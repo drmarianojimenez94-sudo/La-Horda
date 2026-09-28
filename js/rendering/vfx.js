@@ -252,7 +252,7 @@ function vfxUpdate(dt){
     if(s.follow){ if(s.follow.alive===false){ s.on = false; continue; } s.x = s.follow.x; s.y = s.follow.y; }
     if(s.t>=s.dur) s.on = false;
   }
-  for(let i=0;i<vfxDyingN;i++){ vfxDying[i].t += dt; }
+  for(let i=0;i<vfxDyingN;i++){ vfxDying[i].t += dt; if(vfxDying[i].fly) deathFlyUpdate(vfxDying[i], dt); }
   let w = 0;
   for(let i=0;i<vfxDyingN;i++){ const d = vfxDying[i]; if(d.t < d.dur){ if(w!==i){ const tmp = vfxDying[w]; vfxDying[w] = d; vfxDying[i] = tmp; } w++; } else { if(d.corpse && d.e) addCorpse(d.e, d.style, d.side, d.kind); d.e = null; } }
   vfxDyingN = w;
@@ -342,8 +342,11 @@ function vfxDrawSprites(ground){
 const VFX_DYING_MAX = 40, vfxDying = [];
 let vfxDyingN = 0;
 for(let i=0;i<VFX_DYING_MAX;i++) vfxDying.push({e:null, t:0, dur:0, dx:0, dy:0, style:"fall", boss:false, side:1});
-function vfxOnDeath(e){
-  if(!ENEMY_BASE[e.type] || e.vanishOnDeath) return false;   // vanishOnDeath: se va sin morir en escena (p.ej. el Dragón huye)
+// die = [dx, dy, poder] del remate fuerte (cadáver despedido). Va como argumento aparte porque en el
+// invitado `e` llega como SU copia del enemigo (la de la última instantánea), sin los datos de la muerte.
+function vfxOnDeath(e, die){
+  if(!ENEMY_BASE[e.type] || e.vanishOnDeath) return false;
+  if(die && die.length === 3){ e._dieDx = +die[0]||0; e._dieDy = +die[1]||0; e._dieFly = +die[2]||0; }   // vanishOnDeath: se va sin morir en escena (p.ej. el Dragón huye)
   // En el anfitrión ya llega muerto; en el INVITADO llega la copia del último snapshot, que todavía
   // dice alive:true (los muertos no se mandan): sin esto la caída y el cadáver se dibujaban con el
   // cuerpo de pie (caminando), como si fueran enemigos vivos quietos alrededor del jugador.
@@ -363,8 +366,10 @@ function vfxOnDeath(e){
   if(!slot) return false;
   const src = e.lastHitBy;
   let dx = 0, dy = -1;
-  if(src){ const ddx = e.x-src.x, ddy = e.y-src.y, dl = Math.hypot(ddx,ddy)||1; dx = ddx/dl; dy = ddy/dl; }
+  if(e._dieDx!==undefined){ dx = e._dieDx; dy = e._dieDy; }
+  else if(src){ const ddx = e.x-src.x, ddy = e.y-src.y, dl = Math.hypot(ddx,ddy)||1; dx = ddx/dl; dy = ddy/dl; }
   slot.e = e; slot.t = 0; slot.boss = boss; slot.dx = dx; slot.dy = dy; slot.side = dx<0 ? -1 : 1;
+  slot.fly = big ? null : deathFlyStart(e, dx, dy);
   slot.style = boss && prof.death!=="frames" ? "boss" : prof.death;
   slot.kind = e._deathKind || "normal";
   // el cuerpo queda en el suelo (gore.js): la animación de caída no se desvanece
@@ -374,6 +379,45 @@ function vfxOnDeath(e){
   e._dyingP = 0;
   if(boss) vfxShake(12);
   return true;
+}
+/* ---- cadáveres despedidos por el golpe fuerte (reseña #7) ----
+   El remate pesado (crítico, golpe fuerte, ulti) lanza el cuerpo en la dirección del golpe: más lejos
+   cuanto más liviano, con un arco corto y un giro, y aterriza donde queda el cadáver (gore.js). Choca
+   contra muros y obstáculos como un enemigo; en el Abismo, si sale del piso, cae al vacío (sin cadáver).
+   No es una explosión de cadáveres: no hace daño ni afecta a nadie. Sin arco ni giro con "Reducir
+   movimiento" (el cuerpo igual se desliza un poco). Determinista (sin azar): anfitrión e invitado
+   dejan el cadáver en el mismo lugar. */
+const DEATH_FLY_STATS = {launched:0, voided:0, blocked:0};
+function deathFlyStart(e, dx, dy){
+  const pow = e._dieFly||0; if(pow < 3) return null;
+  const m = typeof kbMass==="function" ? kbMass(e) : 1; if(!m) return null;
+  const calm = typeof JUICE!=="undefined" && JUICE.reduceMotion;
+  const dist = Math.max(22, Math.min(120, (pow >= 4 ? 95 : 70)/m)) * (calm ? 0.45 : 1);
+  DEATH_FLY_STATS.launched++;
+  return {rx:dx*dist, ry:dy*dist*0.8, z:0, vz:calm ? 0 : Math.min(320, 230/Math.sqrt(m)), rot:0, spin:calm ? 0 : (dx<0 ? -1 : 1)*Math.min(9, 6/m), air:!calm, void:false, voidT:0};
+}
+function deathFlyUpdate(d, dt){
+  const F = d.fly, e = d.e; if(!e) return;
+  if(F.void){ F.voidT += dt; return; }
+  const k = Math.min(64, dt)/1000;
+  if(F.air){
+    F.z += F.vz*k; F.vz -= 1500*k; F.rot += F.spin*k;
+    if(F.z <= 0){ F.z = 0; F.air = false; if(F.vz < -120 && inView(e.x, e.y, 60)){ const mat = GORE_MAT[goreMatOf(e)]; vfxBurst(e.x, e.y, 5, "rock", 60, 360, 2.5, 0, -20, 0); if(mat.blood) addDecal(e.x, e.y+3, mat.blood, mat.dark, "drip", 0.8); } }
+  } else F.rot *= Math.max(0, 1 - k*6);
+  if(!F.rx && !F.ry) return;
+  const f = 1 - Math.exp(-Math.min(64, dt)/(F.air ? 170 : 70));
+  const mx = F.rx*f, my = F.ry*f; F.rx -= mx; F.ry -= my;
+  const n = Math.max(1, Math.ceil(Math.hypot(mx, my)/7)), sx = mx/n, sy = my/n, s2 = sx*sx + sy*sy;
+  const ab = currentArena==="abismo" && typeof abWalkable==="function" && typeof abS!=="undefined" && abS;
+  for(let i=0;i<n;i++){
+    const ox = e.x, oy = e.y;
+    e.x += sx; e.y += sy;
+    if(ab){ if(!F.air && !abWalkable(e.x, e.y, 0)){ F.void = true; d.corpse = false; DEATH_FLY_STATS.voided++; return; } continue; }
+    const r0 = e.rank; e.rank = e.rank || "normal"; // (el recorte de obstáculos del escenario mira el rango)
+    clampToArena(e); resolveWallCollision(e); e.rank = r0;
+    if(((e.x-ox)*sx + (e.y-oy)*sy) < s2*0.5){ F.rx = F.ry = 0; F.spin *= -0.4; DEATH_FLY_STATS.blocked++; break; }
+  }
+  if(Math.abs(F.rx) + Math.abs(F.ry) < 0.3){ F.rx = F.ry = 0; if(ab && !abWalkable(e.x, e.y, 0)){ F.void = true; d.corpse = false; DEATH_FLY_STATS.voided++; } }
 }
 let _burnFilterLeft = 0;
 function vfxDrawDying(){
@@ -410,6 +454,10 @@ function vfxDrawDying(){
       alpha = d.corpse ? 1 : (d.style==="frames" ? (a<0.6 ? 1 : 1-(a-0.6)/0.4) : (a<0.35 ? 1 : 1-(a-0.35)/0.65));
       if(d.style==="dissolve" && Math.random()<0.3*vfxLoad){ const prof = animProfileOf(e); vfxBurst(e.x+(Math.random()-0.5)*R, e.y-Math.random()*R*1.5, 1, prof.material, 20, 500, 3, 0, -40, 1); }
       if(d.style==="sink" && Math.random()<0.25*vfxLoad){ vfxBurst(e.x+(Math.random()-0.5)*R, e.y-R*0.3, 1, "water", 12, 600, 2, 0, -50, 1); }
+    }
+    if(d.fly){ // despedido por el golpe: arco, giro y, si cayó al vacío del Abismo, se achica y se va
+      const F = d.fly; oy -= F.z; rot += F.rot;
+      if(F.void){ const q = Math.min(1, F.voidT/420); sx *= 1-0.7*q; sy *= 1-0.7*q; oy += 30*q; alpha *= 1-q; }
     }
     if(alpha<=0.01) continue;
     ctx.save();

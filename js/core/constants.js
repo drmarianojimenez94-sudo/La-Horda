@@ -19,8 +19,10 @@ const REVIVE_RANGE = 110; // qué tan cerca debe estar el jugador de un aliado c
 const VIEW_WORLD_SHORT = 650, VIEW_WORLD_LONG_MAX = 1500;
 // Píxeles CSS por unidad de mundo. NO es fijo: lo calcula resize() a partir del viewport.
 let CAM_ZOOM = 0.60;
-// Desplaza el punto de anclaje del jugador hacia arriba en la pantalla (en píxeles de pantalla),
-// dejando algo de espacio libre abajo -donde está el joystick- para revivir aliados sin tocarlo,
-// pero sin subir tanto como para que el personaje quede tapado por el botón de pausa (arriba).
-const CAM_Y_ANCHOR = 34;
+// Cuánto queda el jugador (sus pies) ARRIBA del centro de la pantalla, en píxeles de pantalla
+// (negativo = abajo del centro). Ya no es fijo: lo calcula camFitAnchor() (canvas.js) según el alto
+// disponible descontando el HUD de arriba (barra de estado de la arena, jefe) y el de abajo (voz del
+// Hechicero). Antes valía 34 siempre y en 844×390 el guardián quedaba en el tercio de arriba, pegado a
+// la barra de la arena, con media pantalla vacía abajo (reseña #9).
+let CAM_Y_ANCHOR = 34;
 const LEVEL_COUNT = 10;

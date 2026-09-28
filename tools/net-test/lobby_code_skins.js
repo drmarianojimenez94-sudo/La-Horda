@@ -44,7 +44,9 @@ async function client(browser, mobile, name, champ, url) {
 }
 const ev = (c, fn, a) => c.page.evaluate(fn, a);
 // toque "humano": en celular, touch real; en escritorio, click
-async function press(c, sel) { if (c.mobile) await c.page.tap(sel); else await c.page.click(sel); await sleep(450); }
+async function press(c, sel) {
+  await c.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, sel).catch(() => {}); // pestaña de la Sala que lo contiene (js/ui/prep-sections.js)
+  if (c.mobile) await c.page.tap(sel); else await c.page.click(sel); await sleep(450); }
 // swipe vertical con eventos táctiles reales (dedo hacia arriba = contenido hacia abajo)
 async function swipe(c, x, y, dy) {
   await c.cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });

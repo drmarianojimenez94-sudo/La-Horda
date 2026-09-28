@@ -25,7 +25,8 @@ const DIFF = {
   subbossHp: 1.6,   // subjefes
   // Ajuste por jefe para que las peleas duren parecido: el Leviatán tiene 3 vidas y el Jinete 2
   // (cada vida vuelve a llenar la barra); el Mago se transforma en el Ángel.
-  bossHpType: {leviatan:0.45, jinete_sin_cabeza:0.8, guardian_ancestral:0.9, mago_hielo_cristal:1.0, angel_caido_hielo:1.2, minotauro:1.3, demonio_mayor:1.5, caballero:0.95, madre_espora:0.9},
+  bossHpType: {leviatan:0.45, jinete_sin_cabeza:0.8, guardian_ancestral:0.9, mago_hielo_cristal:1.0, angel_caido_hielo:1.2, minotauro:1.3, demonio_mayor:1.5, caballero:0.95, madre_espora:0.9,
+    cm_presentador:1.2}, // el Presentador: pelea de 60-90 s con el guardián del nivel esperado (tools/playtest/boss_presentador.js)
   // El daño de jefes y subjefes se ancla a la vida de referencia del equipo (mitad la del jugador,
   // mitad el promedio de los 4: el que pierde la partida es el jugador, y un tanque no debería
   // volver letales los golpes para una maga). Un ataque x1.0 del jefe quita este % de esa vida:
@@ -72,6 +73,8 @@ function setupRunDifficulty(){
     off: p.off, def: p.def,
     avgHp: heroes.length ? (player.maxHp + heroes.reduce((s,h)=>s+h.maxHp,0)/heroes.length)/2 : 150
   };
+  // Pesadilla / Infierno (difficulty-tiers.js): multiplican sobre esto
+  if(typeof diffApplyToRun==="function") diffApplyToRun(runDifficulty, avgLevel);
 }
 // Compatibilidad: el resto del juego (aparición de enemigos, Arena Divina) lo consulta por acá.
 function partyLevelScale(){ return runDifficulty; }

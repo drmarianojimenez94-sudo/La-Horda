@@ -8,8 +8,10 @@ function damageEnemy(e, amount, opts){
   opts = opts || {};
   if(e.cineT > 0) return; // cinemática de un jefe (inf-hechicero.js): intocable mientras habla o se transforma
   const src = opts.src || player;
+  if(_boonRec) boonRecHit(e, amount, src, opts); // refuerzos de habilidad: quién recibió ESTE lanzamiento
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
+  if(e._eliteArmor) dmg *= e._eliteArmor; // élite con nombre "Blindado" (elite-affixes.js)
   if(e._encMult || e._expT > 0) dmg *= bossEncounterDmgMult(e); // regla del jefe: blindaje/escudo propio o ventana EXPUESTO (boss-encounter.js)
   if(e._evoMarkT) dmg *= evoDmgTakenMult(e); // marca/marchitar de la Firma (skill-evolution.js)
   // Cangrejo Acorazado (Arena Acuática): defensa frontal alta, muy vulnerable por detrás -e.fx/
@@ -100,15 +102,21 @@ function damageEnemy(e, amount, opts){
   if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; e.bleedSrc = src; }
   if(opts.slow){ e.slowTimer = opts.slowDur||2000; e.slowAmt = opts.slow; e.slowBy = src; }
   if(opts.stun){ e.stunTimer = opts.stun; }
-  if(opts.knockback){
+  // empujón/tirón de habilidad: en el Abismo, como siempre (de golpe: puede tirarlo al vacío); en el
+  // resto se desliza con colisión (hitKnock), así no atraviesa muros. Jefes y estructuras no se mueven.
+  const _abKnock = currentArena==="abismo";
+  if(opts.knockback && (_abKnock ? !(e.rank==="jefe" || e.structure) : true)){
     const ang = Math.atan2(e.y-src.y, e.x-src.x);
-    e.x += Math.cos(ang)*46; e.y += Math.sin(ang)*46;
-    e._kbVis = (e._kbVis||0) + 46; // se dibuja deslizándose (animfx.js)
+    if(_abKnock){
+      e.x += Math.cos(ang)*46; e.y += Math.sin(ang)*46;
+      e._kbVis = (e._kbVis||0) + 46; // se dibuja deslizándose (animfx.js)
+    } else hitKnock(e, Math.cos(ang), Math.sin(ang), 46*Math.min(1.3, Math.max(0.6, Math.sqrt(kbMass(e)||1))), 3, src);
     e._kbAt = runElapsedMs; e._kbBy = src; // Abismo: un empujón de habilidad puede tirarlo al vacío
   }
-  if(opts.pull){
+  if(opts.pull && (_abKnock ? !(e.rank==="jefe" || e.structure) : true)){
     const ang = Math.atan2(src.y-e.y, src.x-e.x);
-    e.x += Math.cos(ang)*36; e.y += Math.sin(ang)*36;
+    if(_abKnock){ e.x += Math.cos(ang)*36; e.y += Math.sin(ang)*36; }
+    else hitKnock(e, Math.cos(ang), Math.sin(ang), 36*Math.min(1.3, Math.max(0.6, Math.sqrt(kbMass(e)||1))), 3, src);
     e._kbAt = runElapsedMs; e._kbBy = src;
   }
   if(runStats.lifesteal>0 && opts.fromBasic){
@@ -164,8 +172,12 @@ function killEnemy(e){
   // Muerte según el tipo de daño (gore.js): quemado, hecho añicos, electrocutado, desmembrado...
   e._deathKind = goreDeathKind(e);
   if(e.role) roleOnDeath(e);
+  if(e.eliteMods) eliteOnDeath(e); // élite con nombre: el Encantado de Fuego estalla (elite-affixes.js)
   if(e._evoHitBy) skillEvoOnKill(e); // Ímpetu (Nv.5 de la habilidad que lo remató)
-  { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl); }
+  { const s = e.lastHitBy, ddx = s ? e.x-s.x : 0, ddy = s ? e.y-s.y : -1, dl = Math.hypot(ddx,ddy)||1; goreOnDeath(e, e._deathKind, ddx/dl, ddy/dl);
+    // golpe fuerte/crítico/ulti que remata: el cuerpo sale despedido en la dirección del golpe (vfx.js,
+    // vfxOnDeath). Viaja con el evento de muerte, así el invitado lo ve igual.
+    e._dieDx = Math.round(ddx/dl*100)/100; e._dieDy = Math.round(ddy/dl*100)/100; e._dieFly = (e._lastHitPow||0) >= 3 ? e._lastHitPow : 0; }
   // Nigromante — Plaga de los Condenados: el contagio al morir un maldito tiene que dispararse
   // sin importar QUÉ lo mató (antes solo se llamaba desde el tick de daño de la propia maldición,
   // así que un maldito rematado por un golpe normal -el caso más común en la práctica- nunca
@@ -229,8 +241,10 @@ function killEnemy(e){
   if(e.dropsItem && Math.random()<0.42){
     const kinds = ["hp","dmg","def","vel"];
     grantRelic(kinds[Math.floor(Math.random()*kinds.length)]);
-    floatText(e.x, e.y-40, "¡Objeto!", "heal");
+    floatText(e.x, e.y-40, "+Reliquia", "heal"); // (+1,5% permanente; los OBJETOS reales caen al piso: ground-loot.js)
   }
+  // Botín en el piso: objetos reales con haz de luz, instanciados por jugador (js/systems/ground-loot.js)
+  if(typeof groundLootOnKill==="function") groundLootOnKill(e);
   // Pociones de vida
   let potionChance = 0.09;
   if(e.rank==="subelite") potionChance = 0.16;
@@ -262,7 +276,7 @@ function killEnemy(e){
   }
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
-  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e)){
+  if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e, e._dieFly ? [e._dieDx, e._dieDy, e._dieFly] : 0)){ // (2º arg: el cadáver despedido, para el invitado)
     // sin animación de muerte (fuera de cámara o sin lugar en el pool): el cadáver igual queda en el
     // suelo -es la materia prima del Nigromante, no puede depender de la cámara del anfitrión-
     if(!addCorpse(e, animProfileOf(e).death, e.fx<-0.12 ? -1 : 1, e._deathKind) && inView(e.x, e.y, 100))
@@ -280,7 +294,7 @@ function damageHero(h, amount, src){
   if(!modeRules().friendlyFire && src && src!==h){ const atk = allyAttackerOf(src); if(atk && atk!==h) return; }
   if(!h.isDivineFoe){
     const cap = src && src.rank && DIFF.hitCap[src.rank];
-    if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap);
+    if(cap && h.maxHp) amount = Math.min(amount, h.maxHp*cap*(typeof diffHitCapMult==="function" ? diffHitCapMult() : 1)); // Pesadilla/Infierno suben el tope
     amount *= arenaRuleDmgTakenMult() * setDmgTakenMult(h) * itemDmgTakenMult(h) * heroResistMult(h, src) * (arenaHook("heroDmgTakenMult", h)||1); // (Minas: +daño a oscuras)
   }
   if(h.stats){
@@ -318,6 +332,7 @@ function damageHero(h, amount, src){
     }
   }
   h.hp -= dmg;
+  if(src && src.eliteMods && dmg>0) eliteOnHitHero(src, h, dmg); // élite con nombre: vampírico / encantado de fuego
   if(h.classKey==="eren" && dmg>0) erenOnHurt(h, dmg);
   const absorbed = Math.max(0, dmgBeforeShields - dmg);
   if(h.stats){ h.stats.mitigated = (h.stats.mitigated||0) + mitigated; h.stats.shieldAbsorbed = (h.stats.shieldAbsorbed||0) + absorbed; }

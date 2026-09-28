@@ -69,6 +69,7 @@ function render(){
     drawShadow(p.x, p.y, 9);
     drawPotion(p);
   }
+  if(typeof groundLootDrawGround==="function") groundLootDrawGround(); // botín en el piso con su haz de luz (ground-loot.js)
 
   // muros de fuego del Mago
   for(const fw of fireWalls){
@@ -264,6 +265,8 @@ function render(){
   ctx.restore();
   if(arenaHas("drawScreen")) arenaHook("drawScreen"); // minimapa de las arenas grandes
   ctxDrawScreen(); // flechas hacia objetivos contextuales importantes fuera de cámara
+  if(typeof eliteDrawScreenNames==="function") eliteDrawScreenNames(); // nombre dorado de las élites con nombre (en píxeles de pantalla: legible en el teléfono)
+  if(typeof groundLootDrawNames==="function") groundLootDrawNames(); // nombre del objeto del piso al acercarse
   drawChampFxScreen();       // Cruce de los Andes (Cordillera + nieve) y siluetas de El Retumbar
   drawScreenFeedback();      // viñeta de daño, dirección del golpe, flechas en el borde, destellos
 }
