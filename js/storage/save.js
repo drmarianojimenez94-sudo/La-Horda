@@ -77,7 +77,8 @@ function defaultSave(){
     quests:null,            // logros, desafíos, pase de temporada y perfil (js/systems/quests.js: questsNormalize completa los campos)
     // DIFICULTADES (js/systems/difficulty-tiers.js): arenas superadas en Pesadilla / Infierno (Normal es
     // arenasCleared), la elegida en la Sala y las derrotas de la cuenta (las 3 primeras no se castigan)
-    diffCleared:{pesadilla:{}, infierno:{}}, diffSelected:"normal", defeatCount:0
+    diffCleared:{pesadilla:{}, infierno:{}}, diffSelected:"normal", defeatCount:0,
+    recycleDust:0           // RECICLAJE (js/systems/ground-loot.js): fracción de Gema juntada al reciclar Comunes/Raros con el inventario lleno
   };
 }
 // ETAPA DE PRUEBA (BUGFIX 01): cada perfil empieza con 10.000 de oro UNA sola vez para probar tienda,
@@ -229,6 +230,7 @@ function _loadSaveInner(){
       // en treeBonus para que nunca quede "debiendo").
       if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
+      save.recycleDust = Math.max(0, Math.min(0.99, +parsed.recycleDust || 0));
       // dificultades: guardados de antes no las tienen (todo en Normal); forma segura siempre
       const dc = (parsed.diffCleared && typeof parsed.diffCleared==="object") ? parsed.diffCleared : {};
       save.diffCleared = {pesadilla:Object.assign({}, dc.pesadilla||{}), infierno:Object.assign({}, dc.infierno||{})};

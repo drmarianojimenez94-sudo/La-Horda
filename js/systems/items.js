@@ -92,7 +92,7 @@ function makeDesignedItem(designId){
   const value = RARITY_VALUES[d.type][d.rarity];
   const mythicPassive = (d.rarity==="mitico" && !d.mythic) ? instancePassive(rollFrom(PASSIVE_DB_MYTHIC,1)[0]) : null;
   const passives = (d.effectMods||[]).map((m,i)=>({id:d.id+"_eff"+i, name:d.passiveNames[i]||"Pasiva", desc:"", condition:"siempre", effect:m.effect, value:m.value}));
-  const extra = d.set ? ` · Set: ${SET_DB[d.set].name}` : (d.mythic ? ` · ${MYTHIC_POWERS[d.mythic].name}` : (d.unique ? ` · ${UNIQUE_POWERS[d.unique].name}` : ""));
+  const extra = d.set ? ` · Set: ${SET_DB[d.set].name}` : (d.mythic ? ` · ${MYTHIC_POWERS[d.mythic].name}` : (d.unique ? ` · ${UNIQUE_POWERS[d.unique].name}` : (d.buildPower && typeof BUILD_POWERS!=="undefined" ? ` · ${BUILD_POWERS[d.buildPower].name}` : "")));
   return {
     uid: "it_"+(ITEM_UID_SEQ++)+"_"+Date.now().toString(36),
     level:1, roll:_itemRoll(),
@@ -101,7 +101,7 @@ function makeDesignedItem(designId){
     name:d.name, epithet:d.epithet||null, icon:ITEM_TYPES[d.type].icon, statKey:d.type, value,
     passives, mythicPassive,
     champion:d.champion, set:d.set||null, element:d.element||null,
-    legendProc:d.legendProc||undefined, mythic:d.mythic||null, unique:d.unique||null,
+    legendProc:d.legendProc||undefined, mythic:d.mythic||null, unique:d.unique||null, buildPower:d.buildPower||null,
     skillMods: d.skillMods||null, skillOvercap: d.skillOvercap||null,
     placeholder:false,
     desc: `${d.lore} · +${Math.round(value*100)}% ${ITEM_TYPES[d.type].statLabel}${extra}${(d.skillMods||d.skillOvercap)?" · Modifica una habilidad":""}`
@@ -253,6 +253,7 @@ function passiveSum(champKey, effect){
 // determinístico según su uid para objetos anteriores a este sistema.
 function legendProcOf(it){
   if(!it || it.set || !LEGEND_PROC_POWER[it.rarity]) return null; // las piezas de set valen por el set
+  if(typeof itemBuildPower==="function" && itemBuildPower(it)) return null; // su poder es el de build (build-powers.js)
   if(it.rarity==="muyraro") return it.legendProc && LEGEND_PROCS[it.legendProc] ? it.legendProc : null; // Muy Raro: solo si nació con su mecánica
   if(it.legendProc && LEGEND_PROCS[it.legendProc]) return it.legendProc;
   let h = 0; const s = String(it.uid||it.name||"");
@@ -310,6 +311,8 @@ function itemEffectLines(it){
   if(proc) out.push({cls:"item-proc", txt:`✦ ${LEGEND_PROCS[proc].name}${it.rarity==="muyraro"?" (versión menor, 50%)":""}: ${LEGEND_PROCS[proc].desc}`, proc});
   if(it.mythic && MYTHIC_POWERS[it.mythic]) out.push({cls:"item-mythic", txt:`★ ${MYTHIC_POWERS[it.mythic].name}: ${MYTHIC_POWERS[it.mythic].desc}`});
   if(it.unique && UNIQUE_POWERS[it.unique]) out.push({cls:"item-unique", txt:`◆ ${UNIQUE_POWERS[it.unique].name}: ${UNIQUE_POWERS[it.unique].desc}`});
+  const bpw = typeof itemBuildPower==="function" ? itemBuildPower(it) : null;
+  if(bpw) out.push({cls:"item-build", txt:`✹ CAMBIA TU BUILD — ${BUILD_POWERS[bpw].name}: ${BUILD_POWERS[bpw].desc}`});
   if(it.designed && it.rarity==="legendario" && typeof recipesUsing==="function"){
     const r = recipesUsing(it.designId);
     if(r.length) out.push({cls:"item-recipe", txt:`⚗ Parte de la receta de ${DESIGNED_ITEMS[r[0]].name}`});

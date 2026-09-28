@@ -14,7 +14,9 @@
      BLINDADO           recibe menos daño
      ESPEJO             al bajar de la mitad de vida se desdobla en un reflejo más débil
      EXTRA FUERTE       pega más fuerte
-   >>> Balance: ELITE_MODS, ELITE_NAMED_CHANCE.
+   TOPE POR PARTIDA (reseña §6.4 #6: salían 30-42 por partida y eran ruido): 4-8 según la arena y la
+   dificultad (eliteNamedCap), repartidas a lo largo de los niveles; cada una es más dura y paga más.
+   >>> Balance: ELITE_MODS, eliteNamedChance, ELITE_NAMED_CAP.
    ============================================================ */
 const ELITE_MODS = {
   rapido:     {name:"Rápido",             rgb:"255,236,140", speed:1.45, atk:0.7},
@@ -26,6 +28,32 @@ const ELITE_MODS = {
   extrafuerte:{name:"Extra Fuerte",       rgb:"255,90,60",   dmg:1.35}
 };
 const ELITE_MOD_IDS = Object.keys(ELITE_MODS);
+// Tope de élites con nombre por partida: base por tramo de la campaña (arenas 1-3: 4 · 4-6: 5 · 7-9: 6 ·
+// 10: 7) + dificultad (Pesadilla +1, Infierno +2), nunca más de `max`. En la Horda Infinita, por tramo de arena.
+const ELITE_NAMED_CAP = {base:4, perArenas:3, diff:{normal:0, pesadilla:1, infierno:2}, max:8, endlessBase:3, endlessMax:6,
+  hpMult:2.0, rewardMult:3.5}; // cada una: vida ×2 (antes ×1,6), XP y oro ×3,5 (antes ×2,5)
+let _eliteNamedCount = 0, _eliteNamedStint = -1;
+function eliteNamedReset(){ _eliteNamedCount = 0; _eliteNamedStint = -1; }
+function eliteNamedCap(){
+  const C = ELITE_NAMED_CAP;
+  const dk = typeof diffCurrent==="function" ? diffCurrent() : "normal";
+  if(typeof endlessOn==="function" && endlessOn()){
+    const st = Math.floor(((EN.round||1) - 1) / ((typeof ENDLESS_CFG!=="undefined" && ENDLESS_CFG.roundsPerArena) || 5));
+    return Math.min(C.endlessMax, C.endlessBase + st + (C.diff[dk]||0));
+  }
+  const n = typeof campaignNumber==="function" ? (campaignNumber(currentArena) || 10) : 5;
+  return Math.min(C.max, C.base + Math.floor((n - 1)/C.perArenas) + (C.diff[dk]||0));
+}
+// ¿Queda cupo? Se reparten a lo largo de la partida: en el nivel L (de 9 antes del jefe) hay cupo para L/9 del tope.
+function eliteNamedRoom(){
+  if(typeof endlessOn==="function" && endlessOn()){
+    const st = Math.floor(((EN.round||1) - 1) / ((typeof ENDLESS_CFG!=="undefined" && ENDLESS_CFG.roundsPerArena) || 5));
+    if(st !== _eliteNamedStint){ _eliteNamedStint = st; _eliteNamedCount = 0; }
+    return _eliteNamedCount < eliteNamedCap();
+  }
+  const quota = Math.ceil(eliteNamedCap() * Math.min(1, (runLevel||1)/9));
+  return _eliteNamedCount < quota;
+}
 // Probabilidad de que una élite nazca con nombre, según el nivel de la partida (y la ronda, en la Horda Infinita).
 function eliteNamedChance(){
   let c = Math.min(0.4, 0.12 + 0.025*(runLevel||1));
@@ -56,7 +84,8 @@ function eliteMaybeName(e, force){
   if(!e || e.rank!=="elite" || e.eliteName || e._eliteMirror || e.encStatic || e.summonedByRole) return false;
   if(typeof divinaMode!=="undefined" && divinaMode) return false;
   if(!force && (typeof bossActive!=="undefined" && bossActive)) return false; // las élites que invoca un jefe no se farmean
-  if(!force && Math.random() >= eliteNamedChance()) return false;
+  if(!force && (!eliteNamedRoom() || Math.random() >= eliteNamedChance())) return false;
+  if(!force) _eliteNamedCount++;
   const ids = ELITE_MOD_IDS.slice(), mods = [];
   const want = Array.isArray(force) ? force : null;
   if(want) for(const m of want){ if(ELITE_MODS[m] && mods.indexOf(m) < 0) mods.push(m); }
@@ -67,9 +96,9 @@ function eliteMaybeName(e, force){
 function applyEliteMods(e, mods){
   e.eliteName = eliteMakeName(e);
   e.eliteMods = mods.slice();
-  // un campeón: más vida, más recompensa (el botín va aparte, ground-loot.js)
-  e.hp = e.maxHp = Math.round(e.maxHp * 1.6);
-  e.xp = Math.round((e.xp||1) * 2.5); e.gold = Math.round((e.gold||1) * 2.5);
+  // un campeón: más vida, más recompensa (el botín va aparte, ground-loot.js). Son pocos: tienen que pesar.
+  e.hp = e.maxHp = Math.round(e.maxHp * ELITE_NAMED_CAP.hpMult);
+  e.xp = Math.round((e.xp||1) * ELITE_NAMED_CAP.rewardMult); e.gold = Math.round((e.gold||1) * ELITE_NAMED_CAP.rewardMult);
   e.scale = (e.scale||3) * 1.08; e.radius = (e.radius||20) * 1.05;
   if(mods.indexOf("rapido") >= 0) e.speed *= ELITE_MODS.rapido.speed;
   if(mods.indexOf("extrafuerte") >= 0) e.dmg = Math.round(e.dmg * ELITE_MODS.extrafuerte.dmg);
@@ -90,8 +119,10 @@ function eliteTick(e, dt){
   }
   if(eliteHas(e, "espejo") && !e._mirrored && e.hp < e.maxHp*ELITE_MODS.espejo.at) eliteMirror(e);
   if(!e._eliteSeen && typeof inView==="function" && inView(e.x, e.y, -30)){
-    e._eliteSeen = true;
-    floatText(e.x, e.y - (e.radius||20)*2 - 40, `★ ${e.eliteName}`, "crit");
+    // al verla por primera vez: su placa se agranda un instante (UNA sola placa: antes además salía un
+    // texto flotante con el mismo nombre y se leían dos "★ Gruthul el Ciego" encimados)
+    e._eliteSeen = true; e._eliteIntro = (typeof animNow!=="undefined" && animNow) || performance.now();
+    if(typeof vfxShock==="function") vfxShock(e.x, e.y, 10, (e.radius||20)*2.6, "255,205,80", 520, 1);
     if(typeof playSfx==="function") playSfx("threat");
     if(typeof tutSay==="function") tutSay("elite_named", "ÉLITE CON NOMBRE (en dorado): tiene modificadores, pega distinto y suelta mejor botín. Leé qué es antes de meterte.", null, 6500);
   }
@@ -140,23 +171,58 @@ function drawEliteMarks(e){
   ctx.beginPath(); ctx.ellipse(e.x, e.y + 3, R*1.35 + 2, R*0.55 + 2, 0, 0, Math.PI*2); ctx.stroke();
   ctx.restore();
 }
-// Nombre dorado y modificadores, en píxeles de PANTALLA (legibles con el zoom del teléfono).
+// Rectángulos del HUD (DOM) en píxeles de la pantalla del juego (los de worldToScreen). Se miden cada
+// medio segundo: una placa que cae debajo del panel de estado, de aliados, de la arena o de la
+// definitiva se oculta en vez de dibujarse tapada (reseña §6.4 #6, captura re2).
+const HUD_OCCLUDERS = ["#player-status", "#party", "#hud > .top", "#ult-meter", "#boss-hud", "#pause-btn", "#mute-btn", "#tut-panel"];
+let _hudRects = [], _hudRectsAt = -1e9;
+function hudRects(){
+  const now = performance.now();
+  if(now - _hudRectsAt < 500) return _hudRects;
+  _hudRectsAt = now; _hudRects = [];
+  if(typeof document==="undefined" || typeof canvas==="undefined" || !canvas || !canvas.getBoundingClientRect) return _hudRects;
+  const cr = canvas.getBoundingClientRect(); if(!cr.width || !cr.height) return _hudRects;
+  const kx = (typeof VW!=="undefined" && VW ? VW : cr.width)/cr.width, ky = (typeof VH!=="undefined" && VH ? VH : cr.height)/cr.height;
+  for(const sel of HUD_OCCLUDERS){
+    const el = document.querySelector(sel);
+    if(!el || el.classList.contains("hidden") || el.offsetParent===null) continue;
+    const r = el.getBoundingClientRect(); if(r.width < 2 || r.height < 2) continue;
+    _hudRects.push({x0:(r.left-cr.left)*kx, y0:(r.top-cr.top)*ky, x1:(r.right-cr.left)*kx, y1:(r.bottom-cr.top)*ky, sel});
+  }
+  return _hudRects;
+}
+function screenRectUnderHud(x0, y0, x1, y1){
+  for(const r of hudRects()) if(x0 < r.x1 && x1 > r.x0 && y0 < r.y1 && y1 > r.y0) return r.sel;
+  return null;
+}
+// Nombre dorado y modificadores, en píxeles de PANTALLA (legibles con el zoom del teléfono): UNA placa por
+// élite, arriba del enemigo; si queda debajo del HUD, no se dibuja (el anillo dorado en el piso sigue).
+let eliteNameplatesDrawn = 0, eliteNameplatesHidden = 0; // (las pruebas lo leen)
 function eliteDrawScreenNames(){
+  eliteNameplatesDrawn = 0; eliteNameplatesHidden = 0;
   if(typeof ctx==="undefined" || typeof worldToScreen!=="function" || !player) return;
   let any = false;
+  const now = (typeof animNow!=="undefined" && animNow) || performance.now();
   for(const e of enemies){
     if(!e.alive || !e.eliteName || (typeof inView==="function" && !inView(e.x, e.y, 0))) continue;
-    if(!any){ ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle"; any = true; }
     const R = e.radius||20, s = worldToScreen(e.x, e.y - R*2.3 - (e.role ? 34 : 14));
+    const intro = e._eliteIntro ? Math.max(0, 1 - (now - e._eliteIntro)/1400) : 0; // se agranda al verla por primera vez
+    const f1 = Math.round(18 + 6*intro), f2 = 14;
     const x = Math.round(s.x), y = Math.round(s.y) - 14;
-    ctx.font = "18px 'VT323', monospace";
-    const w = Math.ceil(ctx.measureText(e.eliteName).width) + 10;
-    ctx.fillStyle = "rgba(10,6,4,0.8)"; ctx.fillRect(x - Math.round(w/2), y - 9, w, 18);
-    ctx.fillStyle = "#000"; ctx.fillText(e.eliteName, x + 1, y + 2);
-    ctx.fillStyle = "#ffcf40"; ctx.fillText(e.eliteName, x, y + 1);
-    ctx.font = "14px 'VT323', monospace";
+    if(!any){ ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle"; any = true; }
+    ctx.font = f1 + "px 'VT323', monospace";
+    const nm = "★ " + e.eliteName, w = Math.ceil(ctx.measureText(nm).width) + 10;
     const mods = (e.eliteMods||[]).map(m=>ELITE_MODS[m] ? ELITE_MODS[m].name : m).join(" · ");
-    const w2 = Math.ceil(ctx.measureText(mods).width) + 8;
+    ctx.font = f2 + "px 'VT323', monospace";
+    const w2 = Math.ceil(ctx.measureText(mods).width) + 8, ww = Math.max(w, w2);
+    if(screenRectUnderHud(x - ww/2, y - f1/2 - 1, x + ww/2, y + 9 + f2)){ eliteNameplatesHidden++; continue; }
+    eliteNameplatesDrawn++;
+    ctx.font = f1 + "px 'VT323', monospace";
+    ctx.fillStyle = `rgba(10,6,4,${0.8 + 0.15*intro})`; ctx.fillRect(x - Math.round(w/2), y - Math.round(f1/2), w, f1);
+    if(intro > 0){ ctx.fillStyle = `rgba(255,205,80,${0.8*intro})`; ctx.fillRect(x - Math.round(w/2), y + Math.round(f1/2) - 1, w, 1); }
+    ctx.fillStyle = "#000"; ctx.fillText(nm, x + 1, y + 2);
+    ctx.fillStyle = "#ffcf40"; ctx.fillText(nm, x, y + 1);
+    ctx.font = f2 + "px 'VT323', monospace";
     ctx.fillStyle = "rgba(10,6,4,0.72)"; ctx.fillRect(x - Math.round(w2/2), y + 9, w2, 14);
     ctx.fillStyle = "#e8d6a8"; ctx.fillText(mods, x, y + 16);
   }

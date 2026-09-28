@@ -16,9 +16,14 @@
    ============================================================ */
 const GROUND_LOOT_CFG = {
   // Probabilidad de que un enemigo de ese rango le suelte un objeto a CADA jugador.
-  chance: {normal:0.001, subelite:0.004, elite:0.05, named:0.25, subjefe:1, jefe:1},
+  // (reseña §6.4 #3: antes caían 0-5 objetos por partida en las arenas 1-4; la horda común ×5, las
+  // élites ×2 y las élites con nombre, ahora 4-8 por partida -elite-affixes.js-, sueltan casi siempre)
+  chance: {normal:0.005, subelite:0.012, elite:0.10, named:0.75, subjefe:1, jefe:1},
   // Cuántos objetos [mín, máx] cuando cae (subjefe y jefe: siempre).
-  count:  {normal:[1,1], subelite:[1,1], elite:[1,1], named:[1,1], subjefe:[1,1], jefe:[1,2]},
+  count:  {normal:[1,1], subelite:[1,1], elite:[1,1], named:[1,2], subjefe:[1,2], jefe:[2,3]},
+  // LEGENDARIO QUE CAMBIA LA BUILD (js/data/legendaries.js, BUILD_LEGENDARIES): tirada APARTE, desde la
+  // arena BUILD_LEGEND_MIN_ARENA de la campaña. ~1 cada 3 partidas (tools/balance/groundloot_econ.js).
+  buildChance: {named:0.03, subjefe:0.04, jefe:0.10},
   // Calificación con la que se tira la rareza (misma escala que el cofre: C..S+).
   grade:  {normal:"C", subelite:"C", elite:"B", named:"A", subjefe:"A", jefe:"S"},
   // Multiplicador de Legendario/Mítico/Set/Único por fuente (la horda común no llueve legendarios).
@@ -36,3 +41,10 @@ const GROUND_BEAM = {comun:"170,170,182", raro:"79,168,240", muyraro:"255,225,74
 const GROUND_BEAM_H = {comun:0, raro:90, muyraro:140, legendario:240, mitico:260, set:250, unico:300};
 // Sonido al caer (motor de audio existente: los mismos del cofre).
 const GROUND_SFX = {comun:"lootCommon", raro:"lootRare", muyraro:"lootVeryRare", legendario:"lootLegend", mitico:"lootMythic", set:"lootSet", unico:"lootUnique"};
+// INVENTARIO LLENO (30 espacios): con más botín en el piso, el inventario se llenaba en una partida.
+// Regla única (se avisa en pantalla al levantar y en el inventario): con el inventario lleno, un Común o
+// un Raro que levantás se RECICLA solo en polvo de Gema; si lo que levantás es mejor, se recicla el Común
+// (después el Raro) de menor nivel que tengas guardado sin equipar, para hacerle lugar. Lo diseñado
+// (con nombre, sets, míticos, únicos), lo equipado y lo Muy Raro o mejor nunca se reciclan solos.
+// Valor en Gemas (se acumula en save.recycleDust hasta completar una Gema entera).
+const RECYCLE_GEM = {comun:0.25, raro:0.5};

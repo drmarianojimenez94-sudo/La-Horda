@@ -343,6 +343,7 @@
 .inv-card .item-epithet{ font-size:0.55rem; color:#e8c890; font-style:italic; }
 .inv-card .item-mythic{ color:#ff6a5a; font-weight:700; }
 .inv-card .item-unique{ color:#c68cff; font-weight:700; }
+.inv-card .item-build{ color:#ffc24a; font-weight:700; }
 .inv-card .item-recipe{ color:#e8c890; }
 .inv-owner{ color:#ffb0a0; font-weight:700; }
 .inv-by{ color:#8fd0ff; font-weight:700; }
@@ -445,7 +446,7 @@
 .ip-actions button.primary{ background:var(--ember1); color:#1a0e06; border-color:var(--ember1); }
 .ip-actions button:disabled{ opacity:0.45; cursor:default; }
 @media (max-width:420px){ #item-preview{ padding:8px; } #item-preview .ip-panel{ max-height:94vh; max-height:94dvh; padding:10px; } .ip-top .ip-art{ width:56px; height:56px; } }
-.ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }
+.ip-line.item-effect{ color:#ffe08a; } .ip-line.item-mythic{ color:#ff6a6a; } .ip-line.item-unique{ color:#e0b0ff; } .ip-line.item-build{ color:#ffc24a; font-weight:700; } .ip-line.item-recipe{ color:#b9d6ff; } .ip-line.item-passive{ color:#8fb8ff; }
 
 /* Derrota: el golpe es el título (grande, en pixel) y el resultado va debajo en letra de cuerpo. Antes era al
    revés: "La Horda te ha consumido" chiquito y "Nivel 2 · 77 bajas · Calificación C" gigante en dos renglones. */

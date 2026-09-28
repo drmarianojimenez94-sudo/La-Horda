@@ -92,9 +92,9 @@ function buildVictoryData(){
   const loot = grantEndOfRunLoot(classKey, perf, true);
   const partyScores = heroes.map(h=>{ const p = computePerformance(h); return {classKey:h.classKey, name:CLASSES[h.classKey].name, icon:CLASSES[h.classKey].icon,
     color:CLASSES[h.classKey].color, score:p.score, grade:p.grade, gradeColor:p.color, isPlayer: h===player}; });
-  // Bonus de XP por completar la arena: crece más rápido cuanto mejor el desempeño. Es lo que
-  // separa a quien juega bien (pocas derrotas) en la curva de la campaña (ver xpToNext).
-  const victoryXpBonus = Math.round(40 * perf.score * (1 + perf.score/100) * (typeof diffCurrent==="function" ? diffTier(diffCurrent()).xp : 1));
+  // Bonus de XP por completar la arena: 0,5-1,4 niveles al nivel ESPERADO de la arena según el puntaje
+  // (progression.js, victoryXpFor): ya no salta 5 niveles de golpe en la Ciudad.
+  const victoryXpBonus = victoryXpFor(currentArena, perf.score, save.champions[classKey].level, typeof diffCurrent==="function" ? diffCurrent() : "normal");
   grantXP(classKey, victoryXpBonus);
   return {
     classKey, perf, score:perf.score, rewards:loot.items, floorLoot, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
@@ -190,7 +190,7 @@ const VICTORY_STEPS = [
         <span style="color:${bonusPct>=0?"#ffcf5c":"#b8a898"};">${bonusPct>=0?"+":""}${bonusPct}% rarezas altas${victoryData.subjefes?` · +${victoryData.subjefes*10}% objeto extra`:""}</span>
         <div class="loot-summary-note">La calificación mejora las probabilidades, nunca garantiza.</div></div>`;
     const gemNote = victoryData.gems ? `<div class="vic-reward-note gem-note">◆ +${victoryData.gems} Gema${victoryData.gems>1?"s":""} (total ${save.gems}) — sirven para subir el nivel de tus objetos</div>` : "";
-    const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): algunas recompensas no se pudieron guardar.</div>` : "";
+    const fullNote = victoryData.inventoryFull ? `<div class="vic-reward-note" style="color:#ff9a7a;">Tu inventario llegó al máximo (${INVENTORY_CAPACITY} espacios): los Comunes y Raros se reciclaron en Gemas y lo que no entró quedó afuera.</div>` : "";
     if(!victoryData._revealed) return `${summary}${fullNote}<div class="chest-host"></div>`; // la ceremonia del cofre (js/ui/loot-ceremony.js)
     const cards = victoryData.rewards.slice().sort((a,b)=>TIER_ORDER[itemTier(a)]-TIER_ORDER[itemTier(b)]).map((item, i)=>lootCardHTML(item, victoryData.classKey, i)).join("");
     // lo que quedó tirado en el piso al ganar se juntó solo (ground-loot.js): se nombra acá, sin ceremonia

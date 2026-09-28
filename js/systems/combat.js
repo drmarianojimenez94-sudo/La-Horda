@@ -96,7 +96,7 @@ function damageEnemy(e, amount, opts){
   // barra. Ahora se normaliza contra el daño BASE del propio héroe: siempre hacen falta más o
   // menos la misma cantidad de golpes para cargar la ulti, sin importar cuánto haya escalado.
   if(!(src.classKey==="eren" && src.erenPhase==="rumble")) // El Retumbar no recarga la Furia que lo disparó (termina en 0)
-    if(!(src._ultLockUntil > runElapsedMs)) src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
+    if(!(src._ultLockUntil > runElapsedMs)) src.ultCharge = Math.min(src.ultMax, (src.ultCharge||0) + (dmg/Math.max(1,src.baseDmg))*2.6*(runStats.ultChargeMult||1)*buildUltChargeMult(src)*(src.classKey==="eren" ? erenFuryGainMult(src) : 1));
   if(src.classKey==="eren") erenCheckRumbling(src);
   if(opts.burn){ e.burnTimer = Math.max(e.burnTimer||0, 2600*uniqueBurnMult(src)); e.burnDmg = Math.max(e.burnDmg||0, amount*0.12); e.burnSrc = src; if(heroUniqueKey(src)==="uniq_archimago") e.voidFire = true; }
   if(opts.bleed){ e.bleedTimer = opts.bleedDur||3000; e.bleedDmg = amount*0.16; e.bleedSrc = src; }
