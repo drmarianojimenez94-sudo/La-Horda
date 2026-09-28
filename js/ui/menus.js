@@ -244,7 +244,7 @@ function renderArenaGrid(){
       if(key==="divina"){ setState("divina"); return; }
       currentArena = key;
       updateMenuBrandSub();
-      prepReturnTo = null; champSelectFromPrep = false;
+      prepReturnTo = null; champSelectFromPrep = false; _menuBackLabel();
       setState("menu"); renderChampGrid(); renderSaveLine();
     });
   });
@@ -252,11 +252,12 @@ function renderArenaGrid(){
 function updateMenuBrandSub(){
   ensurePlayableArena();
   const el = document.getElementById("menu-brand-sub");
-  if(el) el.textContent = `SUPERVIVENCIA A LA HORDA · ${(ARENA_MODS[currentArena]||{}).label||""}`.toUpperCase();
+  const n = campaignNumberLabel(currentArena);
+  if(el) el.textContent = `${n ? "Arena " + n + " · " : ""}${(ARENA_MODS[currentArena]||{}).label||""} — elegí con quién entrar`;
 }
 document.getElementById("start-btn").addEventListener("click", ()=>{
   if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ if(typeof showNetToast==="function") showNetToast("Ese guardián está bloqueado: desbloquealo en la Tienda."); return; }
-  champSelectFromPrep = false;
+  champSelectFromPrep = false; _menuBackLabel();
   // B1: dentro de una sala online la elección de guardián vuelve a la misma sala
   if(netInRoom()){
     setState("prep"); renderPrepSummary();
@@ -273,8 +274,9 @@ document.getElementById("menu-back-btn").addEventListener("click", ()=>{
   if(champSelectFromPrep){ champSelectFromPrep = false; setState("prep"); renderPrepSummary(); return; }
   setState("arenaselect"); renderArenaGrid();
 });
+function _menuBackLabel(){ const b = document.getElementById("menu-back-btn"); if(b) b.textContent = champSelectFromPrep ? "‹ Sala" : "‹ Arenas"; }
 function openChampSelectFromPrep(){
-  champSelectFromPrep = true;
+  champSelectFromPrep = true; _menuBackLabel();
   setState("menu"); renderChampGrid(); renderSaveLine();
 }
 document.getElementById("prep-back-btn").addEventListener("click", ()=>{
@@ -404,7 +406,7 @@ function renderPrepSummary(){
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
   const back = document.getElementById("prep-back-btn");
-  if(back) back.textContent = (typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu" && !netInRoom()) ? "‹ Volver al menú" : "Volver a elegir guardián";
+  if(back) back.textContent = netInRoom() ? "‹ Salir" : ((typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu") ? "‹ Menú" : "‹ Guardián");
   renderLobbyArena();
   netRenderLobbyBar();
   netRenderChat(); // chat de la sala (js/net/net-chat.js); se oculta solo fuera de una sala online

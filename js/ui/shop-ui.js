@@ -75,7 +75,7 @@ function renderShopShowcase(panel){
         <canvas class="champ-anim shop-hero-anim" width="176" height="176" data-class-key="${champ}" data-skin="${isSkin ? f.id : ""}"></canvas>
       </div>
       <div class="shop-hero-info">
-        <div class="shop-hero-tags"><span class="ui-tag hot">★ DESTACADO DEL DÍA</span>${!f.owned && f.off ? `<span class="ui-tag sale">OFERTA −${f.off}%</span>` : ""}${_shopTagNew(key)}</div>
+        <div class="shop-hero-tags"><span class="ui-tag hot">★ DEL DÍA</span>${!f.owned && f.off ? `<span class="ui-tag sale">OFERTA −${f.off}%</span>` : ""}${_shopTagNew(key)}</div>
         <div class="shop-hero-title" style="color:${cls.color || "var(--ember3)"}">${title}</div>
         <div class="shop-hero-sub">${sub}</div>
         <div class="shop-hero-desc">${desc}</div>
@@ -87,11 +87,9 @@ function renderShopShowcase(panel){
     const entry = shopCatalog().find(e=>e.key===d.key); if(!entry) return "";
     const it = shopPreviewItem(entry, d.tier), col = itemColor(it), sold = shopDealBought(d.id);
     return `<div class="shop-deal ${sold ? "sold" : ""}" data-deal="${d.id}" style="--ic:${col}">
-      <div class="shop-deal-tags"><span class="ui-tag sale">−${d.off}%</span></div>
-      ${itemIconHTML(it)}
-      <div class="shop-deal-name" style="color:${col}">${it.name}</div>
-      <div class="shop-item-sub">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label}${it.designed && it.champion ? ` · ${CLASSES[it.champion].name}` : ""}</div>
-      <div class="shop-deal-buy">${sold ? '<span class="shop-st own">✔ Comprado hoy</span>' : `${_shopPriceHTML(d.price, d.base)}<button class="shop-btn" data-deal-buy="${d.id}" ${save.gold < d.price ? "disabled" : ""}>Comprar</button>`}</div>
+      <div class="shop-deal-head"><div class="shop-deal-ico">${itemIconHTML(it)}<span class="ui-tag sale">−${d.off}%</span></div><div class="shop-deal-meta"><div class="shop-deal-name" style="color:${col}">${it.name}</div>
+        <div class="shop-item-sub">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label}${it.designed && it.champion ? ` · ${CLASSES[it.champion].name}` : ""}</div></div></div>
+      <div class="shop-deal-buy">${sold ? '<span class="shop-st own">✔ Comprado hoy</span>' : `<button class="shop-btn" data-deal-buy="${d.id}" ${save.gold < d.price ? "disabled" : ""}>🪙 ${fmtGold(d.price)} <s class="shop-was">${fmtGold(d.base)}</s></button>`}</div>
     </div>`;
   }).join("");
   // paquetes de skins (set completo = skin)
@@ -104,7 +102,7 @@ function renderShopShowcase(panel){
       <div class="shop-bundle-art"><img src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
       <div class="shop-bundle-name">${sk.name || S.name}</div>
       <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · ${n} piezas + skin</div>
-      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `${_shopPriceHTML(miss.length*SHOP_TEST_PRICE)}<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar</button>`}</div>
+      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}</div>
     </div>`;
   }).join("");
   // guardianes por desbloquear
@@ -114,12 +112,12 @@ function renderShopShowcase(panel){
     return `<div class="shop-mini-champ" data-champ="${c.id}">
       <canvas class="champ-anim shop-mini-anim" width="72" height="72" data-class-key="${c.id}" data-idle="1" data-skin="" style="background:${cls.color}1c;"></canvas>
       <div class="shop-bundle-name" style="color:${cls.color}">${cls.name}</div>
-      <div class="shop-deal-buy">${_shopPriceHTML(c.priceGold)}<button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < c.priceGold ? "disabled" : ""}>Comprar</button></div>
+      <div class="shop-deal-buy"><button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < c.priceGold ? "disabled" : ""}>🪙 ${fmtGold(c.priceGold)}</button></div>
     </div>`;
   }).join("");
-  panel.innerHTML = `${hero}
-    <div class="shop-row-head"><span class="shop-row-title">OFERTAS DEL DÍA</span><span class="shop-renew" id="shop-renew">⟳ se renuevan en ${_shopRenewTxt()}</span></div>
-    <div class="shop-strip ui-scroll-x">${deals}</div>
+  panel.innerHTML = `<div class="shop-show-top">${hero}
+      <div class="shop-deals-box"><div class="shop-row-head"><span class="shop-row-title">OFERTAS DEL DÍA</span><span class="shop-renew" id="shop-renew" title="Las ofertas se renuevan a la medianoche">⟳ ${_shopRenewTxt()}</span></div>
+      <div class="shop-deals-grid">${deals}</div></div></div>
     ${bundles ? `<div class="shop-row-head"><span class="shop-row-title">PAQUETES DE SKINS</span><span class="shop-renew">el set completo de piezas + su skin</span></div><div class="shop-strip ui-scroll-x">${bundles}</div>` : ""}
     ${champs ? `<div class="shop-row-head"><span class="shop-row-title">GUARDIANES</span><span class="shop-renew">${locked.length} por desbloquear</span></div><div class="shop-strip ui-scroll-x">${champs}</div>` : ""}
     <div class="shop-fair">⚖ Todo se consigue jugando: se paga con el oro que ganás en las arenas. No hay compras con dinero real. Míticos y Únicos no se venden: se fabrican o se ganan peleando.</div>`;
@@ -155,7 +153,7 @@ function renderShopShowcase(panel){
   startChampAnimLoop();
 }
 // el contador "se renuevan en…" se actualiza solo mientras la vitrina está abierta
-setInterval(()=>{ if(typeof state!=="undefined" && state==="shop"){ const el = document.getElementById("shop-renew"); if(el) el.textContent = "⟳ se renuevan en " + _shopRenewTxt(); } }, 30000);
+setInterval(()=>{ if(typeof state!=="undefined" && state==="shop"){ const el = document.getElementById("shop-renew"); if(el) el.textContent = "⟳ " + _shopRenewTxt(); } }, 30000);
 function _bindSkinBuy(panel){
   panel.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-skin-buy");

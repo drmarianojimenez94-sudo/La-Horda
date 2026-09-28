@@ -148,7 +148,7 @@
         <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span></button>
         <button class="hub-tile" id="mainmenu-jugar-btn"><span class="hub-tile-ico">🌐</span><span class="hub-tile-title">MULTIJUGADOR</span><span class="hub-tile-sub">Sala con código · modos</span></button>
         <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>
-        <button class="hub-tile hidden" id="mainmenu-quests-btn"><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-quests"></span></button>
+        <button class="hub-tile hidden" id="mainmenu-quests-btn" data-quests-open><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag new hub-tile-badge qs-badge hidden" id="hub-badge-quests"></span></button>
       </div>
     </div>
     <div class="save-line hidden" id="mainmenu-gold-line"></div>
@@ -191,7 +191,12 @@
   </div>
   <!-- MI INVENTARIO: objetos de la cuenta (compartidos por todos los guardianes), recetas de Míticos y colección -->
   <div id="inventory-screen" class="screen hidden">
-    <div class="arena-title">Mi Inventario</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="myinv-back-btn">‹ Volver</button>
+      <div class="ui-topbar-title">MI INVENTARIO</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+
     <div class="lobby-sub" id="myinv-sub"></div>
     <div class="hub-tabs" id="myinv-tabs">
       <button class="hub-tab active" data-tab="objetos">Objetos</button>
@@ -199,12 +204,15 @@
       <button class="hub-tab" data-tab="coleccion">Colección</button>
     </div>
     <div id="myinv-panel"></div>
-    <button class="btn secondary" id="myinv-back-btn">Volver al Códice</button>
   </div>
   <!-- FICHA INDIVIDUAL DE GUARDIÁN -->
   <div id="champdetail-screen" class="screen hidden">
+    <div class="ui-topbar">
+      <button class="ui-back" id="champdetail-back-btn">‹ Volver</button>
+      <div class="ui-topbar-title">FICHA DEL GUARDIÁN</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
     <div id="champdetail-body"></div>
-    <button class="btn secondary" id="champdetail-back-btn">Volver a la tienda</button>
   </div>
 
   <!-- TIENDA (vitrina): destacado del día, ofertas diarias, paquetes de skins y catálogo completo.
@@ -218,7 +226,7 @@
     <div class="shop-tabs" id="shop-tabs">
       <button class="shop-tab on" data-shop-tab="destacados">★ Destacados</button>
       <button class="shop-tab" data-shop-tab="campeones">Guardianes</button>
-      <button class="shop-tab" data-shop-tab="objetos">Objetos y sets</button>
+      <button class="shop-tab" data-shop-tab="objetos">Objetos</button>
       <button class="shop-tab" data-shop-tab="skins">Skins</button>
     </div>
     <div id="shop-panel"></div>
@@ -263,7 +271,12 @@
   <!-- ARENA DIVINA: asedio 4v4 real contra un equipo rival de guardianes divinos, con torres,
        castillo, muerte definitiva y oleadas de refuerzos para ambos bandos. -->
   <div id="divina-screen" class="screen hidden">
-    <div class="arena-title" style="color:#d9a8ff;">Arena Divina</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="divina-back-btn">‹ Arenas</button>
+      <div class="ui-topbar-title">ARENA DIVINA</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+
     <div class="shop-soon-box" style="border-color:#7a4fae;">
       <div style="font-size:2rem; margin-bottom:10px;">👁</div>
       <div style="font-weight:700; margin-bottom:8px; color:#d9a8ff;">Asedio 4 contra 4</div>
@@ -275,20 +288,27 @@
       </div>
     </div>
     <button class="btn wide" id="divina-explore-btn" style="margin-top:16px;">Entrar al asedio</button>
-    <button class="btn secondary" id="divina-back-btn" style="margin-top:10px;">Volver</button>
   </div>
 
   <!-- SELECCIÓN DE ARENA -->
   <div id="arenaselect-screen" class="screen hidden">
-    <div class="arena-title">Modo Campaña · elegí la arena</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="arenaselect-back-btn">‹ Modos</button>
+      <div class="ui-topbar-title">MODO CAMPAÑA</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+    <div class="ui-sub">La historia en orden: elegí la arena (Arena 01 → 10)</div>
     <div id="arena-grid"></div>
-    <button class="btn secondary" id="arenaselect-back-btn">Volver</button>
   </div>
 
   <!-- SALA / LOBBY (previa a entrar a la arena): 4 lugares -pensados para multijugador; por ahora
        los otros 3 los ocupan bots- y el equipamiento del guardián elegido. -->
   <div id="prep-screen" class="screen hidden">
-    <div class="arena-title" id="lobby-title">Sala</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="prep-back-btn">‹ Menú</button>
+      <div class="ui-topbar-title" id="lobby-title">Sala</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
     <div class="lobby-sub" id="lobby-sub"></div>
     <div id="lobby-arena" class="hidden"></div>
     <div id="net-bar"></div>
@@ -304,16 +324,18 @@
     <div id="prep-talents-panel" class="hidden"></div>
     <div id="prep-skills-panel" class="hidden"></div>
     <button class="btn wide" id="prep-start-btn">Comenzar</button>
-    <button class="btn secondary" id="prep-back-btn">Volver a elegir guardián</button>
   </div>
 
   <!-- MENU -->
   <div id="menu-screen" class="screen hidden">
-    <div class="brand">LA HORDA</div>
-    <div class="brand-sub" id="menu-brand-sub">SUPERVIVENCIA A LA HORDA</div>
+    <div class="ui-topbar">
+      <button class="ui-back" id="menu-back-btn">‹ Volver</button>
+      <div class="ui-topbar-title">ELEGÍ TU GUARDIÁN</div>
+      <div class="ui-topbar-spacer"></div>
+    </div>
+    <div class="ui-sub" id="menu-brand-sub">SUPERVIVENCIA A LA HORDA</div>
     <div class="champ-grid" id="champ-grid"></div>
     <button class="btn wide" id="start-btn">Entrar a la Arena</button>
-    <button class="btn secondary" id="menu-back-btn">Volver</button>
     <div class="save-line" id="save-line"></div>
     <div class="save-code-row">
       <button class="btn secondary small" id="export-save-btn">Copiar código de guardado</button>

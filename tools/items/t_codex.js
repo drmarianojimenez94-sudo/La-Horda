@@ -1,4 +1,4 @@
-// EL CÓDICE (js/ui/codex/): menú MODOS DE JUEGO · CÓDICE · TIENDA, las 4 secciones, todas las fichas,
+// EL CÓDICE (js/ui/codex/): acceso desde el hub del menú principal, las 4 secciones, todas las fichas,
 // previews con arte real, navegación cruzada + migas + atrás, descubrimiento (DESCONOCIDO → DESCUBIERTO →
 // DERROTADO) sin spoilers, migración de la gestión de campeones (elegir, equipo, talentos, maestría,
 // skins), rendimiento y maquetación en celular horizontal (sin desbordes ni botones fuera de pantalla).
@@ -41,11 +41,12 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   // (el regalo de campeón: si aparece la pantalla de elegir, se elige el primero)
   if (await vis('#starter-screen')) { await E(() => { const c = document.querySelector('#starter-grid [data-champ], #starter-grid .starter-card'); if (c) c.click(); }); await sleep(200); if (await vis('#starter-yes-btn')) await page.click('#starter-yes-btn'); await sleep(300); }
   if (!(await vis('#mainmenu-screen'))) await E(() => { setState('mainmenu'); renderMainMenu(); });
-  const menu = await E(() => [...document.querySelectorAll('#mainmenu-screen .mode-card-title')].map(e => e.textContent.trim()));
-  check('MENU.tres_pilares', JSON.stringify(menu) === '["MODOS DE JUEGO","CÓDICE","TIENDA"]', menu);
+  // menú principal tipo hub (js/ui/hub.js): JUGAR (Modo Campaña) + accesos; el Códice sigue siendo uno de ellos
+  const menu = await E(() => [...document.querySelectorAll('#mainmenu-screen .hub-tile:not(.hidden) .hub-tile-title')].map(e => e.textContent.trim()));
+  check('MENU.hub_accesos', JSON.stringify(menu) === '["GUARDIANES","TIENDA","MULTIJUGADOR","CÓDICE"]', menu);
   check('MENU.sin_pestana_campeones', !(await E(() => !!document.getElementById('mainmenu-campeones-btn'))));
-  const pillars = await E(() => [...document.querySelectorAll('.mainmenu-pillars .mode-card')].map(b => { const r = b.getBoundingClientRect(); return [Math.round(r.top), Math.round(r.bottom)]; }));
-  check('MENU.en_fila_y_a_la_vista', pillars.length === 3 && pillars.every(p => p[0] === pillars[0][0] && p[1] <= 390), pillars);
+  const pillars = await E(() => [...document.querySelectorAll('#hub-play-btn, #mainmenu-screen .hub-tile:not(.hidden)')].map(b => { const r = b.getBoundingClientRect(); return [Math.round(r.top), Math.round(r.bottom)]; }));
+  check('MENU.todo_a_la_vista', pillars.length === 5 && pillars.every(p => p[0] >= 0 && p[1] <= 390), pillars);
   await page.click('#mainmenu-codex-btn'); await sleep(400);
   check('HOME.abre', await vis('#codex-screen'));
   const home = await E(() => [...document.querySelectorAll('#codex-body .cx-home-title')].map(e => e.textContent.replace(/[^A-ZÁÉÍÓÚ]/g, '')));

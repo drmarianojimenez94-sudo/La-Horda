@@ -118,7 +118,8 @@ document.getElementById("mainmenu-jugar-btn").addEventListener("click", ()=> set
 
 document.getElementById("hub-play-btn").addEventListener("click", hubPlay);
 document.getElementById("mainmenu-guardianes-btn").addEventListener("click", ()=> openGuardians());
-document.getElementById("mainmenu-quests-btn").addEventListener("click", ()=>{ if(typeof window.questsOpen==="function") window.questsOpen(); });
+// DESAFÍOS: el botón lleva [data-quests-open]; el sistema de desafíos (quests-ui.js) atiende ese toque
+// (delegado en document) y le pone el contador en .qs-badge. Acá no se engancha otro click.
 document.getElementById("hub-profile-btn").addEventListener("click", ()=>{
   if(typeof window.accountOpen==="function") window.accountOpen(); else openHubOptions();
 });

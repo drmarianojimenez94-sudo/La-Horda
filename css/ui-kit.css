@@ -155,9 +155,21 @@
 /* ============================================================
    TIENDA — vitrina
    ============================================================ */
-#shop-screen{ justify-content:flex-start; overflow:hidden; }
-#shop-screen .shop-tabs{ max-width:980px; flex:none; }
-#shop-screen #shop-panel{ max-width:980px; max-height:none; flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:2px 4px 10px 2px; }
+/* un solo scroll (el de la pantalla, ver menus.css); las pestañas quedan pegadas arriba */
+#shop-screen{ justify-content:flex-start; }
+#shop-screen .shop-tabs{ max-width:980px; flex:none; position:sticky; top:-10px; z-index:5; padding:4px 0 6px; margin-bottom:4px;
+  background:linear-gradient(180deg, #0d0705 80%, rgba(13,7,5,0)); }
+#shop-screen #shop-panel{ max-width:980px; max-height:none; padding:2px 4px 10px 2px; }
+.shop-show-top{ display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,1fr); gap:10px; align-items:stretch; margin-bottom:6px; }
+.shop-show-top .shop-hero{ margin:0; }
+.shop-deals-box{ display:flex; flex-direction:column; min-width:0; }
+.shop-deals-box .shop-row-head{ margin:0 0 6px; }
+.shop-deals-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex:1; }
+.shop-deals-grid .shop-deal{ flex:none; min-width:0; padding:6px 8px; }
+.shop-deals-grid .shop-deal .item-icon-img{ width:36px; height:36px; }
+.shop-deal-buy .shop-btn{ min-height:40px; padding:2px 10px; }
+.shop-was{ font-family:var(--ui-font); font-size:0.95rem; color:var(--ui-dim); }
+@media (max-width:600px){ .shop-show-top{ grid-template-columns:1fr; } }
 .shop-hero{ position:relative; display:grid; grid-template-columns:auto minmax(0,1fr); gap:14px; align-items:stretch; margin:2px 0 12px; padding:0; overflow:hidden;
   border:3px solid var(--hc, var(--ui-accent)); box-shadow:var(--ui-shadow), 0 0 22px color-mix(in srgb, var(--hc, #ff7a2e) 45%, transparent);
   background:radial-gradient(ellipse at 20% 60%, color-mix(in srgb, var(--hc, #ff7a2e) 30%, transparent), transparent 65%), linear-gradient(160deg, #1f110b, #0b0605); }
@@ -173,7 +185,7 @@
 .shop-hero-tags{ display:flex; flex-wrap:wrap; gap:5px; }
 .shop-hero-title{ font-family:var(--ui-font-brand); font-size:1.05rem; line-height:1.5; text-shadow:3px 3px 0 #000; }
 .shop-hero-sub{ font-family:var(--ui-font); font-size:1.1rem; color:var(--ui-ink); }
-.shop-hero-desc{ font-size:0.8rem; color:var(--ui-dim); line-height:1.35; font-style:italic; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.shop-hero-desc{ font-size:0.78rem; color:var(--ui-dim); line-height:1.35; font-style:italic; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .shop-hero-buy{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:auto; }
 .shop-hero-buy .shop-price{ font-size:1.5rem; }
 .shop-hero-buy .shop-btn{ min-height:44px; font-size:1.3rem; padding:4px 22px; }
@@ -286,3 +298,25 @@
   .hub-tile-title{ font-size:1.1rem; }
   .hub-play-anim{ width:min(30vh, 118px); height:min(30vh, 118px); }
 }
+/* vitrina compacta: destacado a la izquierda, ofertas 2×2 a la derecha (todo a la vista en el celular acostado) */
+.shop-show-top .shop-hero-art{ width:42%; min-width:120px; max-width:230px; min-height:0; }
+.shop-show-top .shop-hero-anim{ width:62%; height:auto; aspect-ratio:1/1; }
+.shop-show-top .shop-hero.champ .shop-hero-anim{ width:100%; height:auto; }
+.shop-hero-sub{ overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.shop-show-top .shop-hero-buy .shop-price{ font-size:1.3rem; }
+.shop-show-top .shop-hero-buy .shop-btn{ font-size:1.15rem; padding:4px 14px; }
+@media (max-height:520px){ .shop-show-top .shop-hero-desc{ display:none; } .shop-hero-title{ font-size:0.9rem; } }
+.shop-deal-head{ display:flex; align-items:center; gap:8px; width:100%; min-width:0; }
+.shop-deal-meta{ min-width:0; flex:1; }
+.shop-deal-buy .shop-btn{ width:100%; }
+.shop-deal-buy .shop-btn .shop-was{ font-size:0.85rem; margin-left:4px; opacity:0.8; }
+.shop-hero-anim, .shop-hero.champ .shop-hero-anim, .shop-show-top .shop-hero-anim{ top:0; bottom:0; margin:auto 0; }
+.shop-hero.champ .shop-hero-anim, .shop-show-top .shop-hero.champ .shop-hero-anim{ left:0; right:0; margin:auto; }
+.shop-hero.skin .shop-hero-anim{ top:auto; bottom:0; }
+.shop-show-top .shop-hero.skin .shop-hero-img{ object-position:50% 15%; }
+.shop-deal-ico{ position:relative; flex:none; padding-bottom:8px; }
+.shop-deal-ico .ui-tag{ position:absolute; left:50%; bottom:-2px; transform:translateX(-50%); font-size:0.8rem; padding:0 4px; }
+.shop-deals-grid .shop-deal-name{ white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:1.05rem; }
+.ui-sub{ font-family:var(--ui-font); font-size:1.05rem; color:var(--ui-dim); margin:-2px 0 8px; letter-spacing:0.02em; }
+#prep-screen .ui-topbar-title{ color:var(--ui-accent); }
+@media (max-width:700px){ .cx-tabs{ gap:3px; } .cx-tab{ padding:6px 3px; font-size:0.92rem; } }
