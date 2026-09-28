@@ -22,7 +22,7 @@ const GROUND_LOOT_CFG = {
   // Cuántos objetos [mín, máx] cuando cae (subjefe y jefe: siempre).
   count:  {normal:[1,1], subelite:[1,1], elite:[1,1], named:[1,2], subjefe:[1,2], jefe:[2,3]},
   // LEGENDARIO QUE CAMBIA LA BUILD (js/data/legendaries.js, BUILD_LEGENDARIES): tirada APARTE, desde la
-  // arena BUILD_LEGEND_MIN_ARENA de la campaña. ~1 cada 3 partidas (tools/balance/groundloot_econ.js).
+  // arena BUILD_LEGEND_MIN_ARENA de la campaña: 0,2-0,6 por partida en el piso (tools/balance/groundloot_econ.js).
   buildChance: {named:0.03, subjefe:0.04, jefe:0.10},
   // Calificación con la que se tira la rareza (misma escala que el cofre: C..S+).
   grade:  {normal:"C", subelite:"C", elite:"B", named:"A", subjefe:"A", jefe:"S"},

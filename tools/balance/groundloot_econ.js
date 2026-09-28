@@ -10,8 +10,12 @@ const path = require('path'); const sleep = ms => new Promise(r => setTimeout(r,
   const LVL = { ciudad: 6, bosque: 10, acuatica: 18, fortaleza: 22, micelial: 26, hielo: 30, abismo: 36, laberinto: 40, minas: 44, infernal: 50 };
   const browser = await chromium.launch({ args: ['--no-sandbox'] });
   // KILLS='{"infernal":{"normal":700,...}}' salta las partidas y usa esas bajas (para iterar el balance rápido)
-  const measured = process.env.KILLS ? Object.fromEntries(Object.entries(JSON.parse(process.env.KILLS)).map(([a, k]) => [a, { kills: k, gold: 0 }])) : {};
-  for (const arena of (process.env.KILLS ? [] : arenas)) {
+  // RUNS=runs.jsonl (tools/balance/campaign_runs.js) usa esas partidas: bajas, élites con nombre que APARECIERON y oro peleando
+  let measured = process.env.KILLS ? Object.fromEntries(Object.entries(JSON.parse(process.env.KILLS)).map(([a, k]) => [a, { kills: k, gold: 0 }])) : {};
+  if (process.env.RUNS) for (const l of require('fs').readFileSync(process.env.RUNS, 'utf8').split('\n')) { try { const r = JSON.parse(l.trim()); const k = Object.assign({}, r.kills);
+    if (r.named) { k.elite = (k.elite || 0) + (k.named || 0); k.named = r.named; k.elite = Math.max(0, k.elite - r.named); } measured[r.arena] = { kills: k, gold: r.goldFight, state: r.state }; } catch (e) {} }
+  const skipRuns = !!(process.env.KILLS || process.env.RUNS);
+  for (const arena of (skipRuns ? [] : arenas)) {
     const page = await (await browser.newContext({ viewport: { width: 844, height: 390 } })).newPage();
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto((process.env.GAME_URL || 'http://127.0.0.1:8821/index.html'), { waitUntil: 'load' });
@@ -42,13 +46,15 @@ const path = require('path'); const sleep = ms => new Promise(r => setTimeout(r,
     const HIGH = { legendario: 1, mitico: 1, set: 1, unico: 1 };
     const out = {};
     for (const arena in measured) {
-      const K = measured[arena].kills; let pity = {}, fl = 0, fHigh = 0, fSell = 0, ch = 0, cHigh = 0, cSell = 0;
+      const K = measured[arena].kills; let pity = {}, fl = 0, fHigh = 0, fSell = 0, ch = 0, cHigh = 0, cSell = 0, build = 0;
+      const buildOk = buildLegendAllowed(arena);
       const tiers = {};
       for (let run = 0; run < N; run++) {
         for (const rk in K) {
           const e = { rank: rk === 'named' ? 'elite' : rk, eliteName: rk === 'named' ? 'x' : null };
           const src = _glSource(e); if (!src) continue;
           for (let i = 0; i < K[rk]; i++) {
+            if (buildOk && src.build && rng() < src.build) { build++; fl++; fHigh++; fSell += SELL_VALUE.legendario; }
             const n = groundLootRollCount(src, rng);
             for (let j = 0; j < n; j++) {
               const t = groundLootRollTier(arena, src.grade, src.hm, pity, rng); fl++; tiers[t] = (tiers[t] || 0) + 1;
@@ -61,7 +67,8 @@ const path = require('path'); const sleep = ms => new Promise(r => setTimeout(r,
         for (const it of r.items) { ch++; if (HIGH[it.tier]) cHigh++; cSell += it.tier === 'set' ? SELL_VALUE_SET_PIECE : (SELL_VALUE[it.tier] || 0); }
       }
       const f = x => Math.round(x / N * 100) / 100;
-      out[arena] = { pisoObjetos: f(fl), pisoLegendariosMas: f(fHigh), pisoOroVenta: f(fSell), cofreObjetos: f(ch), cofreLegendariosMas: f(cHigh), cofreOroVenta: f(cSell),
+      const sell = f(fSell) + f(cSell), gold = measured[arena].gold || 0;
+      out[arena] = { ventaSobreOroPeleando: gold ? Math.round(sell / gold * 1000) / 10 + '%' : '?', legendariosBuild: f(build), pisoObjetos: f(fl), pisoLegendariosMas: f(fHigh), pisoOroVenta: f(fSell), cofreObjetos: f(ch), cofreLegendariosMas: f(cHigh), cofreOroVenta: f(cSell),
         tiersPiso: Object.fromEntries(Object.entries(tiers).map(([k, v]) => [k, Math.round(v / fl * 1000) / 10 + '%'])), oroPeleandoMedido: measured[arena].gold };
     }
     return out;
