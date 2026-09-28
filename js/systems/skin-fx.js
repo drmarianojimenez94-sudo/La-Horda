@@ -283,3 +283,15 @@ function _skinFxRecolor(snap, caster, tint){
     return r;
   };
 })();
+// En línea: el invitado no pasa por startRun y los efectos de una skin se bajaban recién cuando llegaba el
+// primero, que se perdía (vfxSprite no dibuja lo que no está cargado). Se bajan apenas se conocen las skins
+// de la sala ({k:"cos"} / loadout del invitado, net-game.js) y otra vez al entrar a la partida.
+function skinFxPreloadIds(ids){ for(const id of ids||[]){ if(id && SKIN_FX_PLAN[id]) skinFxLoadSet(id); } }
+(function(){
+  const gs = window.netGuestStartRun; if(typeof gs !== "function") return;
+  window.netGuestStartRun = function(){
+    const r = gs.apply(this, arguments);
+    try{ skinFxPreloadIds(heroes.map(h=>h.skinSet)); }catch(e){}
+    return r;
+  };
+})();

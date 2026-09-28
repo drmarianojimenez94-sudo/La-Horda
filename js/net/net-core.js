@@ -183,6 +183,8 @@ function _netHandle(m){
 }
 function _netReset(){
   net.role = null; net.slot = -1; net.room = null; net.code = null; net.wantReconnect = false;
+  // si estaba esperando el arte para entrar a la partida (net-game.js: netGuestHoldStart), se cancela
+  if(typeof netLobby!=="undefined" && netLobby.heldStart){ netLobby.heldStart = null; if(typeof netGuestLoadingUI==="function") netGuestLoadingUI(null); }
 }
 // Por qué se cortó la conexión antes de tener sala: texto claro para el cartel.
 function netCloseExplanation(){
