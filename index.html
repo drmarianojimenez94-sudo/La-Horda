@@ -264,6 +264,13 @@
         <span class="join-code-champ" id="mode-join-champ"></span></div>
       <div class="net-err join-status" id="mode-join-status"></div>
       <div class="mode-create-row"><span>¿Invitás vos?</span><button class="btn small" id="mode-create-btn">🌐 CREAR SALA</button></div>
+      <!-- SALAS ABIERTAS (js/net/net-rooms.js): las salas públicas del servidor, unirse con un toque -->
+      <div class="mode-rooms" id="mode-rooms">
+        <div class="mode-rooms-head"><span class="mode-rooms-title">🌍 SALAS ABIERTAS <span id="mode-rooms-n"></span></span>
+          <button class="btn small secondary" id="mode-rooms-refresh" aria-label="Actualizar la lista">↻</button></div>
+        <div class="mode-rooms-list" id="mode-rooms-list"></div>
+        <div class="net-hint mode-rooms-status" id="mode-rooms-status"></div>
+      </div>
     </div>
     <div class="mode-side">
       <button class="mode-card mode-campaign" id="mode-arena-btn">
@@ -329,6 +336,7 @@
     </div>
     <div id="lobby-arena" class="hidden" data-part="arena"></div>
     <div id="net-bar" data-part="online"></div>
+    <div id="net-trade" class="hidden" data-part="online"></div>
     <div id="net-chat" class="hidden" data-part="online"></div>
     <div id="lobby-slots"></div>
     <div id="prep-summary" data-part="equipo"></div>
@@ -648,6 +656,8 @@
 <script src="js/systems/camp.js"></script>
 <script src="js/net/net-lobby.js"></script>
 <script src="js/net/net-chat.js"></script>
+<script src="js/net/net-trade.js"></script>
+<script src="js/net/net-rooms.js"></script>
 <script src="js/net/net-debug.js"></script>
 <script src="js/net/account.js"></script>
 <script src="js/assets/skin-fx-meta.js"></script>
