@@ -29,7 +29,8 @@ const CTX_RATE = [0, 1, 1.6, 2, 2.3];
 
 function ctxTargets(){
   if(state!=="playing" || !arenaHas("ctxTargets")) return null;
-  return arenaHook("ctxTargets") || null;
+  const ts = arenaHook("ctxTargets") || null;
+  return ts && ts.indexOf(null)>=0 ? ts.filter(Boolean) : ts; // (en el invitado, un objetivo que el snapshot no trajo)
 }
 function ctxFind(id){
   const ts = ctxTargets(); if(!ts || id==null) return null;
