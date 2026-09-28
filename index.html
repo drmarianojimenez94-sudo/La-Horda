@@ -7,8 +7,10 @@
 <meta name="theme-color" content="#0b0705">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<!-- fuentes pixel servidas desde el juego (antes Google Fonts: sin red o con el CDN bloqueado, todo caía a
+     Georgia/monoespaciada con otro ancho y el HUD se desarmaba). Ver css/base.css -->
+<link rel="preload" href="assets/fonts/vt323-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/press-start-2p-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/menus.css">
 <link rel="stylesheet" href="css/hud.css">
@@ -63,7 +65,7 @@
     </div>
     <div id="ult-meter">
       <div id="ult-ring"><div id="ult-ring-inner">★</div></div>
-      <div id="ult-label">Ultimate</div>
+      <div id="ult-label">Definitiva</div>
     </div>
     <div id="boss-hud" class="hidden">
       <div id="boss-name-row"><span id="boss-name"></span><span id="boss-epithet"></span></div>

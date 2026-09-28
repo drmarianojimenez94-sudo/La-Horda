@@ -374,14 +374,16 @@
    de los carteles y del Hechicero: tres familias en la misma pantalla. Todo lo chico pasa a VT323 (con el
    tamaño corregido: a igual px, VT323 es más chica que Georgia) y el nombre del jefe a la fuente de títulos. */
 #hud, #controls, #floaters{ font-family:var(--font-retro); }
-.top-pill{ font-size:0.98rem; line-height:1; letter-spacing:0.03em; gap:1px; }
+.top-pill{ font-size:0.95rem; line-height:1; letter-spacing:0.01em; gap:1px; }
+#hud .top{ width:auto; min-width:150px; max-width:210px; }
+.top-pill > span{ white-space:nowrap; } /* "Nivel 6/10 · Bajas 120" en un renglón (antes el número caía abajo) */
 #arena-rule-chip{ font-size:0.92rem; }
-#plevel{ font-size:1rem; line-height:1; }
+#plevel{ font-size:0.95rem; line-height:1; }
 .ally-name{ font-size:0.86rem; }
 .bar-label{ font-size:0.9rem; }
 #se-hud, #musashi-hud, #sylva-hud, #nigromante-hud{ font-size:0.9rem; line-height:1.05; }
 #ult-label{ font-size:0.9rem; line-height:1; }
-.ability-btn{ font-size:0.92rem; font-weight:normal; letter-spacing:0.02em; }
+.ability-btn{ font-size:0.84rem; font-weight:normal; letter-spacing:0; }
 .ability-btn.sec{ font-size:0.78rem; }
 .revive-btn{ font-size:0.86rem; font-weight:normal; }
 .float-text{ font-size:1.15rem; font-weight:normal; }
@@ -393,3 +395,6 @@
 #boss-hint{ font-size:1.05rem; }
 #boss-intro .bi-name{ font-family:var(--font-pixel); font-size:0.5rem; font-weight:normal; letter-spacing:2px; margin-bottom:4px; }
 #boss-intro .bi-tips{ font-size:1rem; line-height:1.05; }
+/* nombres largos (Segador Olvidado, "Mariano · Mago") en un renglón, con puntos suspensivos si no entran */
+#plevel{ white-space:normal; }
+.ally-name, .top-pill > span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
