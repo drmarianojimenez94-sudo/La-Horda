@@ -15,9 +15,9 @@ function updateCamLift(){
 function inView(x, y, pad){
   pad = pad || 140;
   const hw = VW/2/CAM_ZOOM + pad, hh = VH/2/CAM_ZOOM + pad;
-  return Math.abs(x-player.x) < hw && Math.abs(y-(player.y - CAM_LIFT)) < hh;
+  return Math.abs(x-(player.x + CAM_LEAD_X)) < hw && Math.abs(y-(player.y - CAM_LIFT + CAM_LEAD_Y)) < hh;
 }
-
+// (CAM_LEAD_X/Y: adelanto suave de la cámara hacia donde se apunta, ver juice.js; 0 con "Reducir movimiento")
 function worldToScreen(x,y){
-  return { x: VW/2 + (x-player.x)*CAM_ZOOM, y: (VH/2 - CAM_Y_ANCHOR) + (y-(player.y - CAM_LIFT))*CAM_ZOOM };
+  return { x: VW/2 + (x-(player.x + CAM_LEAD_X))*CAM_ZOOM, y: (VH/2 - CAM_Y_ANCHOR) + (y-(player.y - CAM_LIFT + CAM_LEAD_Y))*CAM_ZOOM };
 }

@@ -27,7 +27,8 @@ function drawHero(h){
   if(P.flash>0.02 && !stealthed){
     ctx.globalCompositeOperation = "lighter";
     const m = ANIM_ALPHA_MUL; ANIM_ALPHA_MUL = P.flash; ctx.globalAlpha = P.flash;
-    drawHeroBody(h, drawScale, spinning, false);
+    ANIM_WHITE = true; // silueta blanca (juice.js)
+    try{ drawHeroBody(h, drawScale, spinning, false); } finally { ANIM_WHITE = false; }
     ANIM_ALPHA_MUL = m;
   }
   ctx.restore();
@@ -266,9 +267,12 @@ function drawEnemy(e){
   animApply(e.x, e.y, P);
   drawEnemyBody(e);
   if(P.flash>0.02 && (prof.isBoss || animFlashBudget-- > 0)){
+    // destello de golpe: silueta blanca del cuadro actual (juice.js); los caminos de dibujo que no
+    // pasan por los primitivos de sprites caen a la copia aditiva de siempre
     ctx.globalCompositeOperation = "lighter";
     const m = ANIM_ALPHA_MUL; ANIM_ALPHA_MUL = P.flash; ctx.globalAlpha = P.flash;
-    drawEnemyBody(e);
+    ANIM_WHITE = true;
+    try{ drawEnemyBody(e); } finally { ANIM_WHITE = false; }
     ANIM_ALPHA_MUL = m;
   }
   ctx.restore();

@@ -310,6 +310,7 @@
     <div class="pause-audio">
       <label>🎵 Música <input type="range" id="vol-music" min="0" max="100" step="5"></label>
       <label>💥 Efectos <input type="range" id="vol-sfx" min="0" max="100" step="5"></label>
+      <label class="pause-motion" title="Apaga sacudidas de cámara, congelados de golpe, cámara lenta y pulsos de pantalla">🌀 Reducir movimiento <input type="checkbox" id="opt-reduce-motion"></label>
     </div>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
@@ -379,6 +380,7 @@
 <script src="js/rendering/camera.js"></script>
 <script src="js/rendering/effects.js"></script>
 <script src="js/rendering/feedback.js"></script>
+<script src="js/rendering/juice.js"></script>
 <script src="js/rendering/animfx.js"></script>
 <script src="js/rendering/vfx.js"></script>
 <script src="js/assets/boss-sheets-meta.js"></script>

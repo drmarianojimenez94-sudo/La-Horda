@@ -63,7 +63,7 @@ function update(dt){
       axiomFreezeCaster = null;
     }
   }
-  if(screenShake>0) screenShake = Math.max(0, screenShake - dt*0.03);
+  screenShakeDecay(dt); // curva exponencial con tope (juice.js)
   if(divinaMode){
     updateDivinaEnemies(dt);
     updateDivinaMinions(dt);

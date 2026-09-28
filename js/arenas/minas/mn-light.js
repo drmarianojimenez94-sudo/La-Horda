@@ -200,7 +200,7 @@ function mnDarkLevel(){
 }
 function mnViewRect(){
   const W = VW/CAM_ZOOM, H = VH/CAM_ZOOM;
-  return {x:player.x - W/2, y:(player.y - CAM_LIFT) - (VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM, w:W, h:H};
+  return {x:player.x + CAM_LEAD_X - W/2, y:(player.y - CAM_LIFT + CAM_LEAD_Y) - (VH/2 - CAM_Y_ANCHOR)/CAM_ZOOM, w:W, h:H}; // (adelanto de cámara: juice.js)
 }
 function mnDrawDarkness(){
   const base = mnDarkLevel(); if(base <= 0.02) return;

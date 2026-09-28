@@ -14,14 +14,17 @@ function loop(t){
   let dt = t-lastTime; lastTime = t;
   dt = Math.min(dt, 48); // clamp for tab-switch lag
   try{
-    // hit-stop / cámara lenta (ver js/rendering/feedback.js): solo frenan la simulación; la
-    // animación de dibujo y los avisos en pantalla siguen con el reloj real.
+    // hit-stop / cámara lenta (ver js/rendering/feedback.js): solo frenan la simulación en partidas
+    // locales; la animación de dibujo y los avisos en pantalla siguen con el reloj real. En red el
+    // tiempo de simulación nunca cambia (gameTimeScale devuelve 1).
     ensureCanvasSize(); // iOS a veces no avisa el cambio de tamaño: se verifica la caja real
     const k = state==="playing" ? gameTimeScale(dt) : 1;
     update(dt*k);
     if(typeof netTick==="function") netTick(dt); // B1: estado compartido / derrota del equipo
     updateFeedback(dt);
-    render();
+    // freeze-frame de las partidas online (juice.js): se sostiene el último cuadro unos ms; la
+    // simulación y la red siguen a tiempo real
+    if(!(state==="playing" && juiceFrameHold(dt))) render();
     resAdapt(dt, state==="playing"); // resolución adaptable (js/core/canvas.js)
   }catch(err){
     // Antes: un error sin capturar acá frenaba requestAnimationFrame para siempre y la

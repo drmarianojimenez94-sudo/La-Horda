@@ -55,7 +55,9 @@ function drawAnimFrame(atlas, clip, n, x, y, drawScale, flip, alpha){
   ctx.imageSmoothingEnabled = false;
   ctx.translate(x, y);
   ctx.scale(flip ? -1 : 1, 1);
-  ctx.drawImage(atlas.img, f.x, f.y, f.w, f.h, -pivotX*s, -pivotY*s, f.w*s, f.h*s);
+  const wc = ANIM_WHITE ? whiteFrame(atlas.img, f.x, f.y, f.w, f.h) : null; // destello de golpe (juice.js)
+  if(wc) ctx.drawImage(wc, 0, 0, wc.width, wc.height, -pivotX*s, -pivotY*s, f.w*s, f.h*s);
+  else ctx.drawImage(atlas.img, f.x, f.y, f.w, f.h, -pivotX*s, -pivotY*s, f.w*s, f.h*s);
   ctx.restore();
 }
 // API de alto nivel: reproduce `clipName` para `entity` (necesita x,y,fx,animT) y lo dibuja.
@@ -100,7 +102,11 @@ function drawAnimFrameSized(img, clip, n, x, y, w, h, anchorXRatio, anchorYRatio
     ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
     ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = a0*FX_GLOW.add;
     ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
-  } else ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
+  } else {
+    const wc = ANIM_WHITE ? whiteFrame(img, f.x, f.y, f.w, f.h) : null; // destello de golpe (juice.js)
+    if(wc) ctx.drawImage(wc, 0, 0, wc.width, wc.height, -w*anchorXRatio, -h*anchorYRatio, w, h);
+    else ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
+  }
   ctx.restore();
 }
 // Adaptador: arma clips a partir de una grilla uniforme (cols x celda de frameW x frameH)

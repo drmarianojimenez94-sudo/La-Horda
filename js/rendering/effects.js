@@ -11,49 +11,102 @@
 // no crean basura.
 const FT_MAX = 70;
 const floatTexts = [];
-for(let i=0;i<FT_MAX;i++) floatTexts.push({on:false, x:0, y:0, text:"", kind:0, t:0, dur:900, vx:0});
-let _ftNext = 0;
+for(let i=0;i<FT_MAX;i++) floatTexts.push({on:false, x:0, y:0, text:"", kind:0, t:0, dur:900, vx:0, val:0, dk:null, key:null, pop:0, sc:1});
+let _ftNext = 0, _ftAvg = 40;
+// Colores por tipo de daño (los números de TUS golpes): se lee qué elemento está pegando sin mirar el ícono.
+const FT_DMG_COL = {physical:"#fff1d6", fire:"#ff9a3c", ice:"#8fdcff", lightning:"#ffe84a", bleed:"#ff6a7e", poison:"#9be35a", arcane:"#c9a0ff", holy:"#ffe9a0"};
+// Tope de números chicos a la vez (en el teléfono tapaban la acción): los críticos siempre entran.
+const FT_NUM_CAP = (function(){ try{ return window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? 14 : 22; }catch(e){ return 22; } })();
 // kind: 0 daño, 1 crítico, 2 curación, 3 daño recibido, 4 aviso/etiqueta
-function floatText(x,y,text,cls){
+// dk (opcional): tipo de daño -> color. key (opcional): el enemigo golpeado -> golpes seguidos al mismo
+// objetivo se AGRUPAN en un solo número que crece (sin key se agrupan por cercanía: invitados).
+function floatText(x,y,text,cls,dk,key){
   let kind = 0;
   const s = String(text);
   if(cls==="crit") kind = /^[0-9]+$/.test(s) ? 1 : 4;
   else if(cls==="heal") kind = 2;
   else if(s.charAt(0)==="-") kind = 3;
   else if(!/^[0-9]+$/.test(s)) kind = 4;
+  if(kind<=1){
+    const n = +s;
+    _ftAvg = _ftAvg*0.96 + n*0.04;
+    dk = dk || null; key = (key && typeof key==="object") ? key : null;
+    // agrupar: mismo objetivo (o muy cerca), mismo tipo, número todavía "fresco"
+    let best = null, nNum = 0;
+    for(let i=0;i<FT_MAX;i++){
+      const f = floatTexts[i];
+      if(!f.on || f.kind>1) continue;
+      nNum++;
+      if(best || f.t > 300 || f.dk !== dk) continue;
+      if(key ? f.key===key : (Math.abs(f.x - x) < 30 && Math.abs(f.y - y) < 28)) best = f;
+    }
+    if(best){
+      best.val += n; best.kind = Math.max(best.kind, kind);
+      best.text = String(Math.round(best.val)) + (best.kind===1 ? "!" : "");
+      best.t = Math.min(best.t, 80); best.pop = 1; best.dur = best.kind===1 ? 1000 : 760;
+      best.sc = _ftScale(best.val, best.kind);
+      return;
+    }
+    if(kind===0 && nNum >= FT_NUM_CAP && n < _ftAvg*1.5) return; // pantalla llena: el número chico no suma nada
+    const f = floatTexts[_ftNext]; _ftNext = (_ftNext+1)%FT_MAX;
+    f.on = true; f.kind = kind; f.t = 0; f.val = n; f.dk = dk; f.key = key; f.pop = kind===1 ? 1 : 0.5;
+    f.text = s + (kind===1 ? "!" : ""); f.sc = _ftScale(n, kind);
+    f.x = x + (Math.random()-0.5)*14; f.y = y;
+    f.vx = (Math.random()-0.5)*20;
+    // no taparle la cabeza al jugador: el número se abre hacia el costado contrario
+    if(player && Math.abs(x - player.x) < 60 && Math.abs(y - (player.y - 40)) < 60){ const side = x >= player.x ? 1 : -1; f.x += side*14; f.vx = side*(22 + Math.random()*14); }
+    // apilado: si ya hay un número fresco justo ahí (otro enemigo pegado), este sale un renglón más arriba
+    for(let pass=0; pass<3; pass++){
+      let hit = false;
+      for(let i=0;i<FT_MAX;i++){ const o = floatTexts[i]; if(o!==f && o.on && o.kind<=1 && o.t < 260 && Math.abs(o.x - f.x) < 34 && Math.abs(o.y - f.y) < 13){ hit = true; break; } }
+      if(!hit) break;
+      f.y -= 15;
+    }
+    f.dur = kind===1 ? 1000 : 760;
+    f.cls = cls;
+    return;
+  }
   const f = floatTexts[_ftNext]; _ftNext = (_ftNext+1)%FT_MAX;
-  f.on = true; f.x = x + (kind<=1 ? (Math.random()-0.5)*18 : 0); f.y = y; f.text = s; f.kind = kind; f.t = 0;
-  f.dur = kind===4 ? 1300 : (kind===1 ? 1000 : 820);
-  f.vx = kind<=1 ? (Math.random()-0.5)*20 : 0;
+  f.on = true; f.x = x; f.y = y; f.text = s; f.kind = kind; f.t = 0; f.val = 0; f.dk = null; f.key = null; f.pop = 0; f.sc = 1;
+  f.dur = kind===4 ? 1300 : 820;
+  f.vx = 0;
   f.cls = cls;
 }
+// tamaño según el peso del golpe respecto de lo que venís pegando (los golpes grandes se leen grandes)
+function _ftScale(n, kind){
+  const r = Math.log2(Math.max(0.25, n/Math.max(1, _ftAvg)));
+  return Math.max(0.85, Math.min(kind===1 ? 1.6 : 1.4, 1 + 0.18*r));
+}
 const FT_STYLE = [
-  {size:15, fill:"#ffcf5c", stroke:"rgba(0,0,0,0.85)"},
-  {size:22, fill:"#ffffff", stroke:"rgba(160,20,0,0.95)"},
+  {size:14, fill:"#fff1d6", stroke:"rgba(0,0,0,0.85)"},
+  {size:21, fill:"#fff4c8", stroke:"rgba(150,14,0,0.95)"},
   {size:16, fill:"#6fdc8c", stroke:"rgba(0,40,10,0.9)"},
   {size:17, fill:"#ff5a4a", stroke:"rgba(40,0,0,0.95)"},
   {size:15, fill:"#ffe7a8", stroke:"rgba(0,0,0,0.9)"}
 ];
 function updateFloatTexts(dt){
-  for(const f of floatTexts){ if(!f.on) continue; f.t += dt; if(f.t >= f.dur) f.on = false; }
+  for(const f of floatTexts){ if(!f.on) continue; f.t += dt; if(f.pop>0) f.pop = Math.max(0, f.pop - dt/160); if(f.t >= f.dur){ f.on = false; f.key = null; } }
+}
+function _drawFloatText(f){
+  const q = f.t/f.dur, st = FT_STYLE[f.kind];
+  // subida con desaceleración + "pop" al aparecer o al sumar otro golpe
+  const rise = (f.kind===4 ? 30 : (f.kind===1 ? 40 : 34)) * (1-(1-q)*(1-q));
+  const pop = f.kind===1 ? 1 + 0.6*f.pop*f.pop : 1 + 0.3*f.pop*f.pop;
+  const a = q < 0.65 ? 1 : (1-q)/0.35;
+  const size = st.size*(f.sc||1)*pop/CAM_ZOOM;
+  ctx.globalAlpha = a;
+  ctx.font = `bold ${size.toFixed(1)}px Georgia, serif`;
+  const x = f.x + f.vx*q, y = f.y - rise/CAM_ZOOM*0.9;
+  ctx.lineWidth = (f.kind===1 ? 4.5 : 3.5)/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
+  ctx.fillStyle = (f.kind<=1 && f.dk && FT_DMG_COL[f.dk]) ? (f.kind===1 && f.dk==="physical" ? st.fill : FT_DMG_COL[f.dk]) : st.fill;
+  ctx.fillText(f.text, x, y);
 }
 function drawFloatTexts(){
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
-  for(const f of floatTexts){
-    if(!f.on || !inView(f.x, f.y, 120)) continue;
-    const q = f.t/f.dur, st = FT_STYLE[f.kind];
-    // subida con desaceleración + "pop" inicial de los críticos
-    const rise = (f.kind===4 ? 30 : 46) * (1-(1-q)*(1-q));
-    const pop = f.kind===1 ? 1 + 0.5*Math.max(0, 1-q*6) : 1;
-    const a = q < 0.7 ? 1 : (1-q)/0.3;
-    const size = st.size*pop/CAM_ZOOM;
-    ctx.globalAlpha = a;
-    ctx.font = `bold ${size.toFixed(1)}px Georgia, serif`;
-    const x = f.x + f.vx*q, y = f.y - rise/CAM_ZOOM*0.9;
-    ctx.lineWidth = 3.5/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
-    ctx.fillStyle = st.fill; ctx.fillText(f.text, x, y);
-  }
+  // dos pasadas: los críticos siempre arriba de los números chicos
+  for(const f of floatTexts){ if(f.on && f.kind!==1 && inView(f.x, f.y, 120)) _drawFloatText(f); }
+  for(const f of floatTexts){ if(f.on && f.kind===1 && inView(f.x, f.y, 120)) _drawFloatText(f); }
   ctx.restore();
 }
 

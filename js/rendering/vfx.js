@@ -45,6 +45,25 @@ function vfxBurst(x, y, n, pal, spd, life, size, prio, upBias, kind){
     vKind[j] = kind||0; vPrio[j] = prio; vCol[j] = cols[(Math.random()*3)|0];
   }
 }
+// Chorro direccional (astillas/sangre/hielo que salen para el lado del golpe): cono de ±0,7 rad.
+function vfxSpray(x, y, n, pal, dx, dy, spd, life, size, prio){
+  if(prio<2){
+    if(!inView(x, y, 80)) return;
+    n = Math.round(n*(prio===1 ? Math.max(0.5,vfxLoad) : vfxLoad));
+    if(n<=0) return;
+  }
+  const cols = VFX_PAL[pal] || VFX_PAL.spark;
+  const cap = prio>=2 ? VFX_MAX : Math.floor(VFX_MAX*0.82*(prio===1?1:vfxLoad));
+  const base = Math.atan2(dy, dx);
+  for(let i=0;i<n;i++){
+    if(vCount >= cap) return;
+    const j = vCount++;
+    const a = base + (Math.random()-0.5)*1.4, s = spd*(0.45+Math.random()*0.75);
+    vX[j] = x; vY[j] = y; vVX[j] = Math.cos(a)*s; vVY[j] = Math.sin(a)*s*0.7 - 40;
+    vLife[j] = vMax[j] = life*(0.7+Math.random()*0.5); vSize[j] = size*(0.7+Math.random()*0.6); vGrav[j] = 260;
+    vKind[j] = 0; vPrio[j] = prio; vCol[j] = cols[(Math.random()*3)|0];
+  }
+}
 // Partículas que convergen hacia un punto (acumulación de energía de un cast)
 function vfxConverge(x, y, pal, r, prio){
   if(prio<2 && !inView(x,y,60)) return;
@@ -201,9 +220,10 @@ function vfxSprite(key, frame, x, y, h, dur, follow, grow, flip, anchorY, fps, v
 let vfxLastShakeAt = 0;
 // Screen shake controlado: solo para golpes realmente importantes, con tope y enfriamiento.
 function vfxShake(amount){
+  if(JUICE.reduceMotion) return; // "Reducir movimiento" (pausa): sin sacudidas
   if(animNow - vfxLastShakeAt < 280 && amount < 10) return;
   if(amount < screenShake*0.8) return;
-  vfxLastShakeAt = animNow;
+  vfxLastShakeAt = animNow; JUICE_STATS.shake++;
   screenShake = Math.min(16, Math.max(screenShake, amount));
 }
 function vfxImpactHeavy(ent, prof, strength){
@@ -429,7 +449,12 @@ function vfxHit(e, src, opts, crit){
   const x = e.x, y = e.y-16;
   const n = crit ? 6 : 3;
   vfxBurst(x, y, Math.ceil(n*0.6), pal, crit?130:95, 200, crit?3.5:2.5, prio, -30, 0);
-  vfxBurst(x, y, Math.max(1, Math.floor(n*0.5)), prof.material, 80, 220, 2.5, prio===2?1:0, -20, 0);
+  // material del enemigo (hueso, piedra, hielo, carne, brasa...): sale PARA EL LADO del golpe, con
+  // gravedad, y más cuanto más pesado (se lee de qué está hecho y de dónde vino el golpe)
+  const pw = e._lastHitPow || 1, mat = prof.material;
+  let mdx = 0, mdy = -1;
+  if(src && src!==e){ const ddx = e.x-src.x, ddy = e.y-src.y, dl = Math.hypot(ddx, ddy); if(dl > 1){ mdx = ddx/dl; mdy = ddy/dl; } }
+  vfxSpray(x, y, [0, 2, 3, 5, 7][pw] || 2, mat, mdx, mdy, 110 + pw*30, 300 + pw*40, mat==="rock"||mat==="stone"||mat==="ice" ? 3 : 2.5, prio===2?1:0);
   if(crit) vfxBurst(x, y, 2, pal, 40, 180, 3, prio, 0, 1);
   if(crit && prio===2) vfxShock(e.x, e.y, 6, 26+(e.radius||20), "255,255,255", 220, 1);
   // Salpicadura real de agua en golpes a enemigos acuáticos (además de las partículas genéricas).
