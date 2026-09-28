@@ -413,12 +413,20 @@ function codexSkillNumbers(s, ult){
   if(s.healPct) out.push(`Cura ${Math.round(s.healPct*100)}%`);
   return out.join(" · ");
 }
-function codexChampSkins(key){ return Object.keys(typeof SET_SKINS!=="undefined" ? SET_SKINS : {}).filter(id=>SET_SKINS[id].champ===key); }
+function codexChampSkins(key){ return Object.keys(typeof SET_SKINS!=="undefined" ? SET_SKINS : {}).filter(id=>SET_SKINS[id].champ===key).concat(typeof cromaIdsFor==="function" ? cromaIdsFor(key) : []); }
+// Chip de una CROMA (js/systems/cromas.js): cosmético suelto por oro, se usa/quita acá mismo.
+function _cxCromaChip(key, id){
+  const d = CROMA_SKINS[id], C = CROMA_CRYSTALS[d.crystal] || {label:d.crystal};
+  const st = cromaIsEquipped(id) ? "✔ EQUIPADA" : (cromaOwned(id) ? "Comprada: usala" : `🪙 ${fmtGold(cromaPrice(id))}`);
+  return `<button class="cx-skin" data-skin="${id}"><img src="${_cxEsc(d.preview)}" alt="" loading="lazy">
+      <span class="cx-skin-name">${_cxEsc(d.name)}</span><span class="cx-skin-rar">Croma · ${_cxEsc(C.label)}</span><span class="cx-skin-st">${st}</span></button>`;
+}
 function codexChampSkinsHtml(key){
   const ids = codexChampSkins(key);
   const base = `<button class="cx-skin on" data-skin=""><span class="cx-skin-name">Apariencia base</span><span class="cx-skin-st">✔ Siempre disponible</span></button>`;
   if(!ids.length) return `<div class="cx-skins cx-scroll-x">${base}</div><div class="cx-dim">Sin skins todavía (arte pendiente: docs/assets_faltantes/skins_sets/).</div>`;
   return `<div class="cx-skins cx-scroll-x">${base}${ids.map(id=>{
+    if(typeof isCromaId==="function" && isCromaId(id)) return _cxCromaChip(key, id);
     const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = typeof shopSetMissing==="function" ? shopSetMissing(id) : [];
     const full = typeof setFullCount==="function" ? setFullCount(id) : 4, eq = typeof equippedSetCount==="function" ? equippedSetCount(key, id) : 0;
     const stTxt = eq >= full ? "✔ EQUIPADA (set completo)" : (!miss.length ? "Tenés el set: equipalo" : `${full - miss.length}/${full} piezas`);
@@ -465,6 +473,7 @@ function codexBindChamp(body, key){
 function codexSkinDetail(body, key, id){
   const el = body.querySelector("#cx-skin-detail"); if(!el) return;
   if(!id){ el.innerHTML = ""; return; }
+  if(typeof isCromaId==="function" && isCromaId(id)){ _cxCromaDetail(el, key, id); return; }
   const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = typeof shopSetMissing==="function" ? shopSetMissing(id) : [];
   const full = typeof setFullCount==="function" ? setFullCount(id) : 4, eq = typeof equippedSetCount==="function" ? equippedSetCount(key, id) : 0;
   let act;
@@ -479,6 +488,28 @@ function codexSkinDetail(body, key, id){
   if(eqb) eqb.addEventListener("click", ()=>{ codexEquipSet(key, id); codexRender(); });
   const shop = el.querySelector("#cx-skin-shop");
   if(shop) shop.addEventListener("click", ()=>{ codexReturnTo = "codex"; if(typeof shopTab!=="undefined") shopTab = "skins"; setState("shop"); renderShop(); }); // la Tienda REAL (no hay compra duplicada)
+}
+function _cxCromaDetail(el, key, id){
+  const d = CROMA_SKINS[id], C = CROMA_CRYSTALS[d.crystal] || {label:d.crystal}, own = save.champions[key] && save.champions[key].unlocked;
+  let act;
+  if(cromaIsEquipped(id)) act = `<div class="cx-active">✔ Equipada${cromaHiddenBySet(key) ? " (la tapa la skin de set completo mientras lo lleves)" : ""}</div><button class="cx-btn" id="cx-croma-off">Quitar · volver a los colores de siempre</button>`;
+  else if(cromaOwned(id)) act = own ? `<button class="cx-btn primary" id="cx-croma-on">USAR</button>` : `<div class="cx-dim">Conseguí a ${_cxEsc(CLASSES[key].name)} para usarla.</div>`;
+  else act = `<button class="cx-btn primary" id="cx-croma-buy" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>`;
+  el.innerHTML = `<div class="cx-skin-box"><b>${_cxEsc(d.name)}</b><div class="cx-dim">${_cxEsc(d.lore)}</div>
+    <div class="cx-dim">Croma del ${_cxEsc(C.label)}: la misma armadura con otra paleta. Cosmético puro (no da poder), se compra con oro del juego.</div>${act}</div>`;
+  const on = el.querySelector("#cx-croma-on"), off = el.querySelector("#cx-croma-off"), buy = el.querySelector("#cx-croma-buy");
+  if(on) on.addEventListener("click", ()=>{ if(cromaEquip(key, id) && typeof showNetToast==="function") showNetToast(`🎨 CROMA EQUIPADA · ${d.name}`); codexRender(); });
+  if(off) off.addEventListener("click", ()=>{ cromaEquip(key, null); codexRender(); });
+  if(buy) buy.addEventListener("click", ()=>{
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return; const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+      if(own) cromaEquip(key, id);
+      if(typeof playSfx==="function") playSfx("levelup");
+      if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name}${own ? " · equipada" : " · comprada"}`);
+      if(typeof renderSaveLine==="function") renderSaveLine();
+      codexRender();
+    });
+  });
 }
 // USAR una skin = equipar las piezas del set que ya tenés (sistema real de equipo: equipItem).
 function codexEquipSet(key, setId){
