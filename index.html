@@ -151,7 +151,11 @@
           </span>
         </button>
         <!-- HORDA INFINITA (supervivencia): aparece sola cuando existe window.endlessOpen -->
-        <button class="hub-endless hidden" id="hub-endless-btn"><span class="hub-endless-ico">♾</span><span class="hub-endless-txt"><b>HORDA INFINITA</b><span class="hub-endless-sub" id="hub-endless-sub">Supervivencia sin fin</span></span><span class="ui-tag hidden" id="hub-endless-lock">🔒</span></button>
+        <div class="hub-endless-row">
+                <button class="hub-endless hidden" id="hub-endless-btn"><span class="hub-endless-ico">♾</span><span class="hub-endless-txt"><b>HORDA INFINITA</b><span class="hub-endless-sub" id="hub-endless-sub">Supervivencia sin fin</span></span><span class="ui-tag hidden" id="hub-endless-lock">🔒</span></button>
+        <!-- ranking semanal de la Horda Infinita (js/net/leaderboard.js) -->
+        <button class="hub-endless-rank hidden" id="hub-endless-rank-btn" aria-label="Ranking semanal de la Horda Infinita" title="Ranking semanal"><span class="hub-endless-rank-ico">🏆</span><span class="hub-endless-rank-txt">RANKING</span></button>
+        </div>
       </div>
       <div class="hub-grid" id="hub-grid">
         <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
@@ -655,6 +659,7 @@
 <script src="js/systems/terrain-tags.js"></script>
 <script src="js/data/endless.js"></script>
 <script src="js/systems/endless.js"></script>
+<script src="js/net/leaderboard.js"></script>
 <!-- Botín de verdad: afijos al azar + Mística, botín en el piso con haz de luz, élites con nombre -->
 <script src="js/data/affixes.js"></script>
 <script src="js/systems/affixes.js"></script>

@@ -132,7 +132,11 @@ const QUEST_TITLES = {
   t1_rompe:      {name:"Rompehordas"},
   t1_voz:        {name:"Voz de la Resistencia"},
   t1_heraldo:    {name:"Heraldo de la Temporada"},
-  t1_legend:     {name:"Nuevo Guardián Legendario"}
+  t1_legend:     {name:"Nuevo Guardián Legendario"},
+  // Ranking semanal de la Horda Infinita (js/net/leaderboard.js): se entregan al cerrar la semana
+  lb_contenedor: {name:"Contenedor de la Semana"},      // top 50
+  lb_elite:      {name:"Élite de la Cicatriz"},          // top 10
+  lb_campeon:    {name:"Campeón de la Horda Infinita"}   // puesto #1
 };
 // MARCOS del perfil: colores del borde pixelado (claro, medio, oscuro) y brillo opcional.
 const QUEST_FRAMES = {
@@ -145,7 +149,8 @@ const QUEST_FRAMES = {
   hermandad:{name:"Hermandad",        c:["#c8ffd8","#3ddc71","#124a24"], glow:"61,220,113"},
   oro:      {name:"Oro",              c:["#fff6d6","#f0c84a","#8a6a1c"], glow:"255,210,90"},
   infierno: {name:"Infierno",         c:["#ffb070","#b83a2a","#3a0a06"], glow:"255,90,60"},
-  temporada1:{name:"Los Nuevos Guardianes", c:["#fff6d6","#ffcf5c","#b83a2a"], glow:"255,200,90", anim:true}
+  temporada1:{name:"Los Nuevos Guardianes", c:["#fff6d6","#ffcf5c","#b83a2a"], glow:"255,200,90", anim:true},
+  cicatriz:  {name:"La Cicatriz",      c:["#ffd2ec","#ff7ac8","#3a0f2a"], glow:"255,90,170", anim:true} // top 10 del ranking semanal
 };
 // EMBLEMAS del perfil (el retrato): "guardian" = tu guardián favorito animado; el resto, glifos.
 const QUEST_EMBLEMS = {

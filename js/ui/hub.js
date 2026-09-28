@@ -152,6 +152,10 @@ function renderEndlessCards(){
     const l = document.getElementById(lock); if(l) l.classList.toggle("hidden", info.unlocked);
     const t = document.getElementById(txt); if(t) t.textContent = info.unlocked ? open : info.hint;
   }
+  // ranking semanal: se ve aunque el modo esté con candado (la tabla es de todos)
+  const rk = document.getElementById("hub-endless-rank-btn");
+  if(rk) rk.classList.toggle("hidden", !info || typeof window.lbOpen!=="function");
+  const row = rk && rk.parentElement; if(row && row.classList.contains("hub-endless-row")) row.classList.toggle("hidden", !info);
 }
 function openEndless(){
   const info = endlessInfo(); if(!info) return;
