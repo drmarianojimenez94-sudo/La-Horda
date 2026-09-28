@@ -460,7 +460,7 @@ function fortGuestUpdate(dt){
 function fortNetState(){
   if(!fortS) return null;
   const s = Object.assign({}, fortS); delete s._navSig;
-  if(fortS.duo && fortS.duo.valves) s._valves = fortS.duo.valves;
+  if(fortS.duo && fortS.duo.valves){ s._valves = fortS.duo.valves; s.duo = Object.assign({}, fortS.duo); delete s.duo.valves; }
   return s;
 }
 function fortApplyNetState(v){
