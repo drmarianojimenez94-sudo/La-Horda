@@ -338,7 +338,10 @@ function netHostUpdateRemotes(dt){
     if(Math.hypot(h.x-n.px, h.y-n.py) > 2) n.posAuth++;
     const canMove = h.alive && !(h.stunTimer>0) && !h.fused && !(axiomFreezeTimer>0 && axiomFreezeCaster!==h) && !h.duelActive && !heroMoveLocked(h);
     if(inp){
-      h.fx = inp.fx; h.fy = inp.fy;
+      // la mirada sale del joystick solo mientras camina (igual que el jugador local): quieto, mira a
+      // lo que ataca. Antes se pisaba cada cuadro con la del joystick y el guardián del invitado
+      // parpadeaba entre su objetivo y la última dirección en que caminó con cada golpe.
+      if(inp.mv){ h.fx = inp.fx; h.fy = inp.fy; }
       if(canMove && inp.pa===n.posAuth){
         const d = Math.hypot(inp.x-h.x, inp.y-h.y);
         const allowed = (h._spd||h.baseSpeed||200) * ((now-n.lastAt)/1000 + 0.35) + 40;
@@ -667,7 +670,9 @@ function netApplySnapshot(s){
     for(const k in d){
       if(own && k==="x"){ h._hx = d.x; continue; }
       if(own && k==="y"){ h._hy = d.y; continue; }
-      if(own && (k==="fx"||k==="fy"||k==="moving"||k==="animT"||k==="sylvaCharging")) continue;
+      // quieto, la mirada propia la decide el anfitrión (se da vuelta hacia lo que ataca, como en solitario)
+      if(own && (k==="fx"||k==="fy")){ if(!h.moving && typeof d[k]==="number") h[k] = d[k]; continue; }
+      if(own && (k==="moving"||k==="animT"||k==="sylvaCharging")) continue;
       if(!own && (k==="x"||k==="y")){ if(k==="x") h._tx = d.x; else h._ty = d.y; continue; }
       if(!own && k==="animT") continue;
       h[k] = netDecode(d[k]);
