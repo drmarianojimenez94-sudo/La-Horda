@@ -1,0 +1,47 @@
+/* ============================================================
+   css/endless.css — LA HORDA INFINITA (js/systems/endless.js)
+   Tarjeta del selector de modos, chip del HUD, sinergias en los refuerzos y pantalla de resultados.
+   Mismo lenguaje que el resto: paneles oscuros, borde brasa, VT323 para el texto.
+   ============================================================ */
+#mode-endless-btn .mode-card-icon{ font-family:var(--font-pixel); font-size:1.2rem; color:#ff7ac8; text-shadow:0 0 8px rgba(255,90,170,0.55); }
+#mode-endless-btn .mode-card-title{ color:#ffb0dc; }
+#mode-endless-btn.locked{ opacity:0.55; filter:grayscale(0.6); }
+.en-card-week{ color:var(--ember3); font-size:0.9rem; }
+
+/* HUD */
+#hud-endless{ white-space:nowrap; }
+#hud-endless .en-inf{ color:#ff7ac8; font-family:var(--font-pixel); font-size:0.62rem; }
+#hud-endless .en-boss{ color:#ff5a4a; }
+#hud-endless .en-muts{ letter-spacing:1px; }
+
+/* sinergias en las cartas de refuerzo */
+.en-syn-hint{ margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; justify-content:center; }
+.en-syn-chip{ font-family:var(--font-retro); font-size:0.85rem; padding:1px 6px; border:1px solid rgba(255,122,200,0.35); color:#e8b8d4; background:rgba(40,10,28,0.55); }
+.en-syn-chip.hot{ border-color:#ff7ac8; color:#fff; box-shadow:0 0 6px rgba(255,90,170,0.45); }
+
+/* resultados */
+.en-res{ width:100%; max-width:520px; display:flex; flex-direction:column; align-items:center; gap:6px; font-family:var(--font-retro); }
+.en-res-kicker{ font-family:var(--font-pixel); font-size:0.55rem; letter-spacing:0.18em; color:#ff7ac8; }
+.en-res-title{ font-family:var(--font-pixel); font-size:0.95rem; color:#e0503a; text-shadow:2px 2px 0 #000; line-height:1.5; }
+.en-res-big{ display:flex; gap:12px; justify-content:center; width:100%; }
+.en-res-big > div{ flex:1; max-width:200px; background:rgba(20,10,8,0.8); border:1px solid var(--panel-b); box-shadow:inset 0 0 0 1px rgba(255,160,90,0.08), 3px 3px 0 #000; padding:6px 8px; }
+.en-res-big span{ display:block; color:var(--text-dim); font-size:1rem; }
+.en-res-big b{ display:block; font-family:var(--font-pixel); font-size:1.25rem; color:var(--ember3); margin-top:4px; }
+.en-res-badges{ min-height:4px; }
+.en-new{ display:inline-block; font-family:var(--font-pixel); font-size:0.55rem; color:#111; background:linear-gradient(90deg,#ffd76a,#ff9a3a); padding:5px 8px; box-shadow:2px 2px 0 #000; animation:enPulse 1.1s ease-in-out infinite; }
+@keyframes enPulse{ 50%{ transform:scale(1.06); } }
+.en-res-muts, .en-res-arenas{ display:flex; flex-wrap:wrap; gap:4px; justify-content:center; }
+.en-mut-chip, .en-arena-chip{ font-size:0.95rem; padding:1px 7px; border:1px solid var(--panel-b); background:rgba(26,15,10,0.8); color:var(--text); }
+.en-mut-chip{ border-color:rgba(255,122,200,0.45); color:#ffc6e4; }
+.en-res-rows{ margin:2px auto 4px; }
+.en-res-rows small{ color:var(--text-dim); }
+.en-res-sub{ font-family:var(--font-pixel); font-size:0.5rem; letter-spacing:0.12em; color:var(--text-dim); margin-top:6px; }
+.en-res-loot{ display:flex; flex-direction:column; gap:4px; width:100%; max-width:420px; }
+.en-loot-item{ display:flex; align-items:center; gap:8px; padding:3px 6px; background:rgba(20,10,8,0.78); border:1px solid var(--tc); box-shadow:inset 0 0 8px color-mix(in srgb, var(--tc) 25%, transparent); text-align:left; }
+.en-loot-item .item-icon, .en-loot-item canvas, .en-loot-item img{ flex:0 0 auto; }
+.en-loot-name{ flex:1; font-size:1.05rem; }
+.en-loot-tier{ font-size:0.85rem; color:var(--text-dim); }
+.en-loot-empty{ color:var(--text-dim); font-size:1rem; }
+.en-res-btns{ display:flex; flex-direction:column; gap:6px; align-items:center; margin-top:8px; width:100%; }
+.btn.en-again{ min-width:240px; font-size:1.05rem; background:linear-gradient(180deg,#7a2456,#4a1234); border-color:#ff7ac8; color:#fff; }
+@media (max-width:560px){ .en-res-big b{ font-size:1rem; } }

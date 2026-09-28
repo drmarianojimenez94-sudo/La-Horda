@@ -44,13 +44,14 @@ const ROLE_CHANCE_BY_LEVEL = [0, 0, 0, 0.05, 0.06, 0.08, 0.09, 0.10, 0.11, 0.12,
 const ROLE_MAX_SAME = {suicida:3};
 // Roles que se señalan con flecha en el borde de la pantalla cuando están fuera de cámara.
 const ROLE_OFFSCREEN = {sanador:1, resucitador:1, invocador:1, comandante:1};
-function roleMaxConcurrent(){ return Math.min(5, 1 + Math.floor((runLevel||1)/2.5)); }
+function roleMaxConcurrent(){ return Math.min(5, 1 + Math.floor((runLevel||1)/2.5)) + ((typeof endlessOn==="function" && endlessOn()) ? endlessRoleMaxBonus() : 0); }
 
 // Al aparecer: tira si este enemigo nace con un rol.
 function maybeAssignRole(e){
   if(divinaMode || !e || e.rank==="jefe" || e.rank==="subjefe" || e.rank==="elite" || e.summonedByRole) return;
   const pool = ROLE_POOL_BY_ARENA[currentArena]; if(!pool) return;
-  const ch = ROLE_CHANCE_BY_LEVEL[Math.min(10, runLevel||1)] || 0;
+  const ch0 = ROLE_CHANCE_BY_LEVEL[Math.min(10, runLevel||1)] || 0;
+  const ch = (typeof endlessOn==="function" && endlessOn()) ? endlessRoleChance(ch0) : ch0; // Horda Infinita: más élites por ronda
   if(Math.random() >= ch) return;
   let n = 0; const per = {};
   for(const o of enemies){ if(o.alive && o.role){ n++; per[o.role] = (per[o.role]||0) + 1; } }

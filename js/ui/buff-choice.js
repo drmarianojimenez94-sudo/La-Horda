@@ -8,6 +8,7 @@
    BUFF CHOICE
    ============================================================ */
 function openBuffChoice(){
+  if(typeof endlessOn==="function" && endlessOn()){ endlessOpenBuffChoice(); return; } // Horda Infinita: refuerzos con sinergias (js/systems/endless.js)
   setState("buff");
   document.getElementById("buff-title").textContent = `Nivel ${runLevel} superado — elige un refuerzo`;
   if(typeof campaignStoryOnBuff==="function") campaignStoryOnBuff(); // prólogo pendiente del cooperativo
