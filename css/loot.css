@@ -4,14 +4,14 @@
    ============================================================ */
 /* Aviso corto al levantar: abajo al centro, entre el joystick y los botones (no tapa la pelea ni los
    carteles de arriba). Se apilan hasta 3. */
-#loot-toasts{ position:fixed; left:50%; bottom:calc(22% + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:40;
+#loot-toasts{ position:fixed; left:50%; bottom:calc(25% + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:40;
   display:flex; flex-direction:column; align-items:center; gap:4px; pointer-events:none; width:max-content; max-width:min(92vw, 380px); }
 .loot-toast{ display:flex; align-items:center; gap:7px; padding:3px 10px 3px 4px; background:rgba(10,7,5,0.86);
   border:2px solid var(--tc, #888); box-shadow:0 0 0 1px #000, 0 0 12px color-mix(in srgb, var(--tc, #888) 45%, transparent);
   font-family:var(--font-retro); animation:ltIn .18s ease-out; transition:opacity .45s, transform .45s; max-width:100%; }
 .loot-toast.out{ opacity:0; transform:translateY(-8px); }
-.loot-toast .lt-ico{ width:26px; height:26px; border-radius:3px; }
-.loot-toast .lt-txt{ display:flex; flex-direction:column; line-height:0.95; min-width:0; }
+.loot-toast .lt-ico{ width:22px; height:22px; border-radius:3px; }
+.loot-toast .lt-txt{ display:flex; align-items:baseline; gap:8px; line-height:1; min-width:0; }
 .loot-toast .lt-name{ font-size:1.15rem; text-shadow:1px 1px 0 #000; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .loot-toast .lt-tier{ font-size:0.85rem; color:#b9a88a; letter-spacing:1px; text-transform:uppercase; }
 .loot-toast.lt-warn{ --tc:#ff8a6a; color:#ffb49a; font-size:1.05rem; padding:4px 10px; }

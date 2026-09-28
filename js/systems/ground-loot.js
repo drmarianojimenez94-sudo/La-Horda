@@ -117,6 +117,7 @@ function groundLootPick(g){
     if(typeof vfxShock==="function") vfxShock(g.x, g.y, 6, 44, GROUND_BEAM[g.tier], 360, 1);
   });
   groundLootToast(g.item);
+  if(TIER_ORDER[g.tier] >= 3 && typeof persistNow==="function") persistNow(); // lo valioso se guarda ya (no espera la tanda de 1,5 s)
   try{ window.dispatchEvent(new CustomEvent("horda-stat", {detail:{k:"ground_pick", v:TIER_ORDER[g.tier]||0}})); }catch(err){}
   return true;
 }
@@ -190,14 +191,22 @@ function groundLootDrawGround(){
     // haz vertical (luz aditiva): más alto y más intenso cuanto más raro; nace de golpe al caer
     if(H > 0){
       const grow = Math.min(1, Math.max(0, age*3));
-      const hh = H*grow, w = TIER_ORDER[g.tier] >= 3 ? 12 : 8;
+      const hh = Math.round(H*grow), big = TIER_ORDER[g.tier] >= 3, w = big ? 18 : 12;
       ctx.globalCompositeOperation = "lighter";
-      const gr = ctx.createLinearGradient(0, g.y - hh, 0, g.y);
-      gr.addColorStop(0, `rgba(${rgb},0)`); gr.addColorStop(0.7, `rgba(${rgb},${0.22*pulse})`); gr.addColorStop(1, `rgba(${rgb},${0.5*pulse})`);
-      ctx.fillStyle = gr; ctx.fillRect(Math.round(g.x - w/2), Math.round(g.y - hh), w, hh);
-      ctx.fillStyle = `rgba(255,255,255,${0.35*pulse})`; ctx.fillRect(Math.round(g.x - 1), Math.round(g.y - hh*0.85), 2, Math.round(hh*0.85));
-      if(typeof glowSprite==="function"){ ctx.globalAlpha = 0.7*pulse; const R = TIER_ORDER[g.tier] >= 3 ? 44 : 30; ctx.drawImage(glowSprite(rgb), g.x - R, g.y - R*0.6, R*2, R*1.2); ctx.globalAlpha = 1; }
+      // columna escalonada (tres anchos, como el pixel art): afuera tenue, adentro intensa
+      for(const [k, a] of [[1, 0.28], [0.55, 0.42], [0.22, 0.6]]){
+        const ww = Math.max(2, Math.round(w*k));
+        const gr = ctx.createLinearGradient(0, g.y - hh, 0, g.y);
+        gr.addColorStop(0, `rgba(${rgb},0)`); gr.addColorStop(0.55, `rgba(${rgb},${a*0.55*pulse})`); gr.addColorStop(1, `rgba(${rgb},${a*pulse})`);
+        ctx.fillStyle = gr; ctx.fillRect(Math.round(g.x - ww/2), g.y - hh, ww, hh);
+      }
+      // halo en el piso del color de la rareza
+      ctx.fillStyle = `rgba(${rgb},${(big ? 0.34 : 0.24)*pulse})`;
+      ctx.beginPath(); ctx.ellipse(g.x, g.y + 2, big ? 30 : 22, big ? 11 : 8, 0, 0, Math.PI*2); ctx.fill();
+      if(typeof glowSprite==="function"){ ctx.globalAlpha = 0.8*pulse; const R = big ? 52 : 34; ctx.drawImage(glowSprite(rgb), g.x - R, g.y - R*0.6, R*2, R*1.2); ctx.globalAlpha = 1; }
       ctx.globalCompositeOperation = "source-over";
+    } else {
+      ctx.fillStyle = `rgba(${rgb},0.18)`; ctx.beginPath(); ctx.ellipse(g.x, g.y + 2, 18, 6, 0, 0, Math.PI*2); ctx.fill();
     }
     // sombra + objeto
     ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.beginPath(); ctx.ellipse(g.x, g.y + 3, 13, 5, 0, 0, Math.PI*2); ctx.fill();

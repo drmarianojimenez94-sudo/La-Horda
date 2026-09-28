@@ -174,10 +174,10 @@ async function boot(browser, initSave, vp){
       return { stays, pickedLater: !groundLoot.includes(g) }; });
     check('PICK.inventario_lleno_queda_en_el_piso', full.stays && full.pickedLater, full);
     // pity: si cae un Legendario en el piso, su protección vuelve a cero
-    const pity = await E(() => { save.lootPity = {legendario:9, set:3, mitico:2, unico:1}; let got = null;
-      for (let i = 0; i < 400 && !got; i++){ const g = groundLootDrop(player.x+500, player.y, 'S', 1, 'infernal', 'jefe'); if (g && g.item.lootTier === 'legendario') got = g; }
-      groundLoot.length = 0; return { got: !!got, pity: save.lootPity }; });
-    check('PITY.legendario_del_piso_reinicia_su_proteccion', pity.got && pity.pity.legendario === 0 && pity.pity.set >= 3, pity);
+    const pity = await E(() => { save.lootPity = {legendario:9, set:3, mitico:2, unico:1}; let got = null, setDrop = false;
+      for (let i = 0; i < 400 && !got; i++){ const g = groundLootDrop(player.x+500, player.y, 'S', 1, 'infernal', 'jefe'); if (g && g.item.lootTier === 'legendario') got = g; if (g && g.item.lootTier === 'set') setDrop = true; }
+      groundLoot.length = 0; return { got: !!got, setDrop, pity: save.lootPity }; });
+    check('PITY.legendario_del_piso_reinicia_su_proteccion', pity.got && pity.pity.legendario === 0 && (pity.setDrop ? pity.pity.set === 0 : pity.pity.set === 3), pity);
     // victoria: lo que quedó en el piso se junta solo
     const vic = await E(() => { groundLoot.length = 0; save.stash = []; groundLootDrop(player.x+600, player.y, 'A', 1, 'infernal', 'elite'); groundLootDrop(player.x+650, player.y, 'A', 1, 'infernal', 'elite');
       const got = groundLootCollectAll(); return { got: got.length, stash: stashItems().length, floor: groundLoot.length }; });
@@ -260,8 +260,10 @@ async function boot(browser, initSave, vp){
 
   // ---------- 7) capturas en el teléfono apaisado ----------
   if (process.env.SHOTS) {
-    await E(() => { groundLoot.length = 0; save.stash = []; __start('infernal', 4, 'mago'); for (const h of heroes) if (h !== player) { h.x = player.x - 200; h.y = player.y + 120; }
-      document.querySelectorAll('#center-banner,#tut-box,.tut-box,#achv-toast,.quest-toast').forEach(x=>x.style.display='none');
+    await E(() => { const ip = document.getElementById('item-preview'); if (ip) { ip.classList.add('hidden'); ip.innerHTML = ''; }
+      const lt = document.getElementById('loot-toasts'); if (lt) lt.innerHTML = '';
+      groundLoot.length = 0; save.stash = []; __start('infernal', 4, 'mago'); for (const h of heroes) if (h !== player) { h.x = player.x - 200; h.y = player.y + 120; }
+      document.querySelectorAll('#center-banner,#tut-box,.tut-box,#tut-panel,#qs-toasts').forEach(x=>x.style.display='none');
       const tiers = ['comun','raro','muyraro','legendario','set'];
       const specs = { comun:{tier:'comun'}, raro:{tier:'raro'}, muyraro:{tier:'muyraro'}, legendario:{tier:'legendario'}, set:{tier:'set', designId: Object.keys(DESIGNED_ITEMS).find(k=>DESIGNED_ITEMS[k].set)} };
       tiers.forEach((t, i) => { const it = materializeLoot(specs[t], 'mago', 'infernal'); groundLoot.push({item:it, tier:itemTier(it), x:player.x - 260 + i*130, y:player.y + 90 + (i%2)*40, t0:animNow - 5000, id:i+1}); });
@@ -269,6 +271,9 @@ async function boot(browser, initSave, vp){
       player.x += 10; render(); });
     await sleep(600); await E(() => render());
     await page.screenshot({ path: SHOT_DIR + '/u1_ground_loot_844x390.png' });
+    await E(() => { const g = groundLoot.find(x=>x.tier==='legendario') || groundLoot[0]; player.x = g.x; player.y = g.y; __step(32); render(); });
+    await sleep(300);
+    await page.screenshot({ path: SHOT_DIR + '/u1_pickup_toast_844x390.png' });
     await E(() => { save.stash = []; save.gold = 5000; const a = makeItem('guantes','raro'); stashItems().push(a); equipItem('mago', a.uid); const b = makeItem('guantes','muyraro'); stashItems().push(b); setState('menu'); openItemPreview(b.uid, 'mago'); });
     await sleep(500);
     await page.screenshot({ path: SHOT_DIR + '/u1_item_affixes_844x390.png' });
