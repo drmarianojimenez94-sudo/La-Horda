@@ -19,7 +19,22 @@ function updateAbilityButtons(){
   });
 }
 
-let _hudLastCls = null, _hudLastSe = null;
+let _hudLastCls = null, _hudLastSe = null, _hudStackH = -1;
+// El bloque de estado del guardián crece con sus indicadores propios (Nigromante con gólem y
+// Abismo: 4 filas más; El Libertador / Eren con su línea): en celular apaisado pisaba la pastilla
+// de Arena/Nivel/Bajas, que tiene posición fija. Se corren hacia abajo la pastilla y los aliados
+// lo que haga falta (y los aliados pierden ese alto de su tope, para no invadir los botones).
+function hudStackLayout(){
+  const st = document.getElementById("player-status"), top = document.querySelector("#hud .top"), party = document.getElementById("party");
+  if(!st || !top || !party) return;
+  const h = st.offsetHeight;
+  if(h === _hudStackH) return;
+  _hudStackH = h;
+  const d = h ? Math.max(0, st.offsetTop + h + 6 - top.offsetTop) : 0;
+  top.style.transform = d ? `translateY(${d}px)` : "";
+  party.style.transform = d ? `translateY(${d}px)` : "";
+  party.style.maxHeight = d ? Math.max(80, 140 - d) + "px" : "";
+}
 function showBanner(text){
   const b = document.getElementById("center-banner");
   b.textContent = text;
@@ -137,6 +152,7 @@ function updateHUD(){
     nigroHudEl.classList.add("hidden");
     document.getElementById("btn-pact").classList.add("hidden");
   }
+  hudStackLayout();
   // curación de emergencia: lista (verde), urgente (<35% vida, late) o gastada hasta el próximo nivel
   const eb = document.getElementById("btn-emerg");
   if(eb){
