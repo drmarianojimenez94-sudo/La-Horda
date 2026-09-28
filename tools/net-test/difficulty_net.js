@@ -89,6 +89,20 @@ async function client(browser, name, champ, cleared, url) {
   const rn = await Promise.all([H, G].map(c => ev(c, () => ({ seed: runMapSeed(), runes: BOS.runes.map(r => r.id + '@' + r.x + ',' + r.y).join(' '), diff: netMatch.diff, hud: !!document.getElementById('hud-diff') }))));
   check('partida2.runas_iguales_en_los_dos', p2 && rn[0].runes === rn[1].runes && rn[0].seed === rn[1].seed, rn);
   check('partida2.normal_sin_etiqueta', rn.every(r => r.diff === 'normal' && !r.hud), rn);
+  // tercera partida: la Gélida (el anillo de braseros gira según la semilla): mismos braseros en los dos
+  await ev(H, () => { enemies.length = 0; finishBossVictory(); });
+  await waitAll([H, G], () => state === 'victory', 20000);
+  await ev(H, () => { victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep(); });
+  await tap(H, '#again-btn');
+  await waitFor(H, () => state === 'prep', null, 15000);
+  if (await ev(G, () => state === 'victory')) { await ev(G, () => { victoryStep = VICTORY_STEPS.length - 1; renderVictoryStep(); }); await tap(G, '#again-btn'); }
+  await waitAll([H, G], () => state === 'prep', 15000);
+  await ev(H, () => { pickLobbyArena('hielo'); renderPrepSummary(); });
+  await waitFor(G, () => currentArena === 'hielo', null, 8000);
+  await tap(H, '#prep-start-btn');
+  const p3 = await waitAll([H, G], () => state === 'playing' && currentArena === 'hielo' && HIE.br && HIE.br.length === 4, 30000);
+  const br = await Promise.all([H, G].map(c => ev(c, () => ({ seed: runMapSeed(), br: HIE.br.map(b => b.x + ',' + b.y).join(' ') }))));
+  check('partida3.braseros_iguales_en_los_dos', p3 && br[0].br === br[1].br && br[0].seed === br[1].seed, br);
   check('sin_errores', H.errors.length === 0 && G.errors.length === 0, [H.errors.slice(0, 3), G.errors.slice(0, 3)]);
   await browser.close();
   console.log(fails ? `FALLAS: ${fails}` : 'OK');
