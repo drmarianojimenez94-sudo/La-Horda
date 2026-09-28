@@ -16,7 +16,7 @@
 
 const QUESTS_V = 1;
 function _qStatsDefault(){
-  return {runs:0, wins:0, losses:0, kills:0, subjefes:0, civ:0, fis:0, revives:0, timeMs:0,
+  return {runs:0, wins:0, losses:0, bosses:0, kills:0, subjefes:0, civ:0, fis:0, revives:0, timeMs:0,
     coopRuns:0, coopWins:0, full4:false, deathless:0, gradeA:0, gradeS:0, gradeSP:0,
     resoWins:0, resoBy:{}, divinaWins:0, divinaBest:0, maxRunKills:0, fastWinMs:0,
     night:false, closeWin:false, perfectRescue:false, duel5:false,
@@ -164,8 +164,10 @@ function questsRoll(kind, key, V, exclude){
   return out;
 }
 function questsEnsureRotation(){
-  const q = questsState(), V = questsView();
+  const q = questsState();
   const dk = questsDayKey(), wk = questsWeekKey();
+  if(q.daily.key === dk && q.weekly.key === wk) return false;
+  const V = questsView();
   let changed = false;
   if(q.daily.key !== dk){ q.daily = {key:dk, list:questsRoll("daily", dk, V), bonus:false, rerolls:0}; changed = true; }
   if(q.weekly.key !== wk){ q.weekly = {key:wk, list:questsRoll("weekly", wk, V), bonus:false}; changed = true; }
@@ -340,6 +342,7 @@ function questsOnRunEnd(victory, opts){
     if(victory) st.divinaWins++;
     if(typeof divinaLevel !== "undefined") st.divinaBest = Math.max(st.divinaBest, divinaLevel|0);
   } else {
+    if(victory) st.bosses++;   // arena ganada = su jefe final cayó
     const a = currentArena, ba = st.byArena[a] = Object.assign({runs:0, wins:0, best:0, grade:"", bestLevel:0}, st.byArena[a]||{});
     ba.runs++; if(victory) ba.wins++;
     ba.bestLevel = Math.max(ba.bestLevel, typeof runLevel !== "undefined" ? runLevel|0 : 0);
@@ -468,7 +471,7 @@ function _qRetro(q){
   q.retro = false;
   const st = q.stats, done = ARENA_ORDER.filter(a=>save.arenasCleared && save.arenasCleared[a]);
   for(const a of done){ const b = st.byArena[a] = Object.assign({runs:0, wins:0, best:0, grade:"", bestLevel:0}, st.byArena[a]||{}); b.wins = Math.max(1, b.wins); b.runs = Math.max(b.runs, b.wins); b.bestLevel = Math.max(b.bestLevel, LEVEL_COUNT); }
-  st.wins = Math.max(st.wins, done.length); st.runs = Math.max(st.runs, st.wins);
+  st.wins = Math.max(st.wins, done.length); st.runs = Math.max(st.runs, st.wins); st.bosses = Math.max(st.bosses, done.length);
   questsEnsureRotation();
   const got = questsEvaluate(true);
   for(const a of got) q.seen[a.id] = 1;

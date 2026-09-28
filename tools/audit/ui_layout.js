@@ -221,6 +221,16 @@ async function runViewport(browser, vp, report) {
   await snap(page, 'codex_arena');
   await js(page, () => setState('divina'));
   await snap(page, 'divina');
+  // DESAFÍOS (logros, diarios/semanales, pase, perfil) y el cofre de desafío
+  for (const t of ['desafios', 'logros', 'pase', 'perfil']) {
+    await js(page, t => { setState('mainmenu'); questsOpen(t); }, t);
+    await snap(page, 'quests_' + t, { primary: [{ css: '#quests-back-btn' }] });
+  }
+  await js(page, () => { save.quests.chests = [3]; questsOpen('desafios'); });
+  await snap(page, 'quests_chestbar', { primary: [{ css: '#quests-body [data-qchest]' }] });
+  await tap(page, '#quests-body [data-qchest]'); await sleep(1500);
+  await snap(page, 'quests_chest_open', { root: '.qs-chest-ov', primary: [{ css: '.qs-chest-close' }] });
+  await js(page, () => { const b = document.querySelector('.qs-chest-close'); if (b) b.click(); setState('mainmenu'); });
   // diálogos propios
   await js(page, () => { window.__autoConfirm = false; setState('prep'); renderPrepSummary(); gameConfirm('¿Salir? La sala se cierra para tus amigos.', { okText: 'Salir', danger: true }); });
   await snap(page, 'dialog_confirm', { root: '#game-dialog', primary: [{ css: '#game-dialog .gd-ok' }] });

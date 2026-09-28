@@ -115,7 +115,7 @@
 .qs-chest-ov{ position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.78); padding:12px; }
 .qs-chest-box{ width:100%; max-width:420px; max-height:100%; overflow-y:auto; text-align:center; padding:10px 14px; border:3px solid #000; background:linear-gradient(160deg, var(--panel), #0f0805); box-shadow:4px 4px 0 #000; }
 .qs-chest-box .qs-h{ justify-content:center; }
-.qs-chest-cv{ width:204px; height:150px; image-rendering:pixelated; max-height:34vh; }
+.qs-chest-cv{ display:block; margin:0 auto; height:min(150px, 34vh); width:auto; aspect-ratio:204 / 150; image-rendering:pixelated; }
 .qs-chest-items{ text-align:left; min-height:20px; }
 .qs-loot{ display:flex; align-items:center; gap:10px; padding:4px 6px; margin:4px 0; border-left:4px solid var(--tc, #3a1c10); background:#140c08; animation:qsIn 0.35s ease-out both; }
 .qs-chest-close{ margin-top:8px; }
@@ -147,7 +147,8 @@
 @keyframes qsIn{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:none; } }
 
 /* ---------- botón del menú ---------- */
-#mainmenu-quests-btn{ margin-top:12px; position:relative; }
+/* acceso mínimo (hasta que el menú traiga su propio botón [data-quests-open]): arriba a la derecha, sin mover nada */
+#mainmenu-quests-btn{ position:absolute; top:calc(10px + env(safe-area-inset-top, 0px)); right:calc(12px + env(safe-area-inset-right, 0px)); margin:0; min-height:40px; z-index:2; }
 .qs-badge{ display:inline-block; min-width:20px; padding:0 4px; margin-left:4px; background:var(--ember2); color:#fff; font-size:0.9rem; line-height:18px; border:2px solid #000; }
 
 /* ---------- teléfono acostado / pantallas angostas ---------- */

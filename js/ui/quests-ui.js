@@ -262,7 +262,7 @@ function _qProfileHTML(){
     </div>
     <div class="qs-stats">
       ${stat("Partidas", st.runs)}${stat("Victorias", st.wins)}${stat("Bajas", (typeof fmtGold==="function" ? fmtGold(st.kills) : st.kills))}
-      ${stat("Jefes vencidos", st.wins)}${stat("Subjefes", st.subjefes)}${stat("Horas", hours < 10 ? hours.toFixed(1).replace(".", ",") : Math.round(hours))}
+      ${stat("Jefes vencidos", st.bosses)}${stat("Subjefes", st.subjefes)}${stat("Horas", hours < 10 ? hours.toFixed(1).replace(".", ",") : Math.round(hours))}
       ${stat("Civiles rescatados", st.civ)}${stat("Fisuras cerradas", st.fis)}${stat("Cooperativo", st.coopRuns)}
       <div class="qs-stat wide"><span>Guardián favorito</span><b>${favTxt}</b></div>
     </div>

@@ -890,6 +890,7 @@ function netOnMatchClosed(reason, role){
   document.getElementById("go-title").textContent = reason==="host_left" ? "El anfitrión se desconectó" : "Se perdió la conexión";
   document.getElementById("go-stats").textContent = "La partida terminó";
   document.getElementById("go-progress").innerHTML = "La XP y el oro que ganaste hasta ahora ya quedaron guardados (sin castigo).";
+  if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true}); // lo jugado cuenta para sus estadísticas
   document.getElementById("retry-btn").classList.add("hidden");
 }
 
