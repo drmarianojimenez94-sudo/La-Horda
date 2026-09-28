@@ -365,7 +365,7 @@ A("")
 A("| # | Personaje (arena) | Problema hoy | Cuerpo prestado mientras tanto | Nombre en el juego |")
 A("|---|---|---|---|---|")
 for c in C:
-    nm = {"tiburon_joven": "Ahogado de las Ruinas", "tiburon_blanco": "Tritón de las Fosas", "cangrejo_acorazado": "Cangrejo Araña"}.get(c["key"], c["name"])
+    nm = {"tiburon_joven": "Ahogado de las Ruinas", "tiburon_blanco": "Tritón de las Fosas", "cangrejo_acorazado": "Cangrejo Araña", "ab_jinete": "Jinete Sin Cabeza"}.get(c["key"], c["name"])
     A(f"| {c['id']} | **{c['name']}** ({c['arena']}) | {c['hoy']} | {c['temp']} | {nm} |")
 A("")
 A("**Se mantienen sin reemplazo** (tienen animación, solo les falta calidad o algún estado; reemplazarlos rompería algo central):")
