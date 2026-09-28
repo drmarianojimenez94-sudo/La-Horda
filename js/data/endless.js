@@ -34,13 +34,15 @@ const ENDLESS_CFG = {
   // ECONOMÍA (medida con tools/items/t_endless_econ.js contra la campaña: ver el reporte)
   goldMult: 0.70, xpMult: 0.80, lootGrowthPerRound: 0.02,
   // Botín
-  chestEveryBoss: true,              // cofre al cerrar cada ronda de jefe/subjefe (1 objeto)
-  endChestMinRound: 8,               // cofre final si llegaste a esta ronda...
-  endChestItems: [8, 15, 25],        // ...con un objeto más por cada umbral alcanzado
+  chestEveryBoss: true,              // cofre al cerrar cada ronda de jefe/subjefe: jefe = 1 objeto seguro;
+  subChestItemChance: 0.5,           //   subjefe = objeto con esta probabilidad, si no "cofre menor" (oro + gema)
+  minorChestGold: 40, minorChestGoldPerRound: 8,
+  endChestMinRound: 8,               // cofre final (gemas) si llegaste a esta ronda...
+  endChestItems: [10, 20, 30],       // ...y un objeto por cada umbral alcanzado
   // Rescates en la arena (Cofre de la Cicatriz / Cristal corrupto): mantener la acción contextual
   rescueChance: 0.55, rescueMs: 22000, rescueHoldMs: 2400, rescueR: 46,
   rescueDist: [360, 620],
-  rescueItemChance: 0.30, rescueItemPerRound: 0.015,
+  rescueItemChance: 0.10, rescueItemPerRound: 0.008,
   rescueGold: 30, rescueGoldPerRound: 6,
   rescueXp: 30, rescueXpPerRound: 5,
   rescueGemChance: 0.20,

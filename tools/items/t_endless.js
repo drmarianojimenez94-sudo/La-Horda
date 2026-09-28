@@ -62,19 +62,19 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('END.hay_horda_y_puntaje', r3.n > 0 && r3.anyGoldInt, r3);
 
   // 4) las rondas avanzan con el refuerzo; ronda 5 = subjefe; al cerrarla la Cicatriz cambia de arena
-  const r4 = await E(() => { const log = []; for (let i = 0; i < 4; i++) log.push(__finishRound());
+  const r4 = await E(() => { const gems0 = save.gems||0, gold0 = save.gold; const log = []; for (let i = 0; i < 4; i++) log.push(__finishRound());
     const boss5 = endlessIsBossRound(); const lvl5 = runLevel, arena5 = currentArena;
     // ronda 5: el subjefe tiene que aparecer (director propio de la arena o el estándar)
     let seenSub = false, t = 0; levelTimer = 0;
     while (t < 120000 && EN.round === 5) { if (enemies.some(e => e.alive && e.rank === 'subjefe') || bossActive) { seenSub = true; break; } for (const h of heroes){ h.hp = h.maxHp; h.alive = true; } update(16); t += 16; if (levelTimer < levelDuration*0.5) levelTimer += 48; }
     const held = (()=>{ if (!seenSub) return null; levelTimer = levelDuration + 10; update(16); return EN.round === 5 && levelClearing === 0; })();
     const fin = __finishRound();
-    return { log, boss5, lvl5, arena5, seenSub, held, fin, arenaNow: currentArena, round: EN.round, bossKills: EN.bossKills, loot: (EN.local.loot||[]).length, arenas: EN.arenas }; });
+    return { log, boss5, lvl5, arena5, seenSub, held, fin, arenaNow: currentArena, round: EN.round, bossKills: EN.bossKills, loot: (EN.local.loot||[]).length, gems: (save.gems||0) - gems0, arenas: EN.arenas }; });
   check('END.rondas_avanzan', r4.log.every((x, i) => x.r === i + 2), r4.log);
   check('END.ronda_5_con_subjefe', r4.boss5 && r4.seenSub, r4);
   check('END.ronda_de_subjefe_no_termina_con_el_subjefe_vivo', r4.held === true, r4);
   check('END.la_cicatriz_cambia_de_arena', r4.round === 6 && r4.arenaNow !== r4.arena5 && r4.arenas.length === 2, r4);
-  check('END.cofre_del_subjefe', r4.bossKills === 1 && r4.loot >= 1, r4);
+  check('END.cofre_del_subjefe_objeto_o_cofre_menor', r4.bossKills === 1 && (r4.loot >= 1 || r4.gems >= 1), r4);
 
   // 5) mutador aplicado (se fuerzan los siete y se mide cada uno)
   const r5 = await E(() => { const out = {}; const keep = EN.mutators.slice();

@@ -83,7 +83,7 @@ async function waitFor(c, fn, a, ms) { for (let k = 0; k < (ms || 20000)/150; k+
   check('red.invitado_rescata_con_autoridad_del_anfitrion', seen && rescued && gold1 > gold0, { seen, rescued, gold0, gold1 });
 
   // hasta la ronda 5: subjefe -> cofre del invitado -> la Cicatriz cambia de arena en los dos
-  const loot0 = await ev(B, () => (EN.local && EN.local.loot || []).length);
+  const loot0 = await ev(B, () => (EN.local && EN.local.loot || []).length), gems0 = await ev(B, () => save.gems||0);
   const arena5 = await ev(A, () => currentArena);
   for (let step = 0; step < 400; step++) {
     const st = await ev(A, () => ({ r: EN.round, st: state }));
@@ -93,9 +93,9 @@ async function waitFor(c, fn, a, ms) { for (let k = 0; k < (ms || 20000)/150; k+
     await sleep(250);
   }
   const rot = await waitFor(B, (a) => state === 'playing' && EN.round === 6 && currentArena !== a, arena5, 30000);
-  const s6 = { host: await ev(A, () => ({ r: EN.round, arena: currentArena, bk: EN.bossKills })), guest: await ev(B, () => ({ r: EN.round, arena: currentArena, st: state, loot: (EN.local && EN.local.loot || []).length, n: heroes.length })) };
+  const s6 = { host: await ev(A, () => ({ r: EN.round, arena: currentArena, bk: EN.bossKills })), guest: await ev(B, () => ({ r: EN.round, arena: currentArena, st: state, loot: (EN.local && EN.local.loot || []).length, gems: save.gems||0, n: heroes.length })) };
   check('red.cicatriz_cambia_la_arena_en_los_dos', rot && s6.guest.arena === s6.host.arena && s6.host.arena !== arena5 && s6.guest.n === 4, { arena5, s6 });
-  check('red.cofre_del_subjefe_para_el_invitado', s6.host.bk >= 1 && s6.guest.loot > loot0, { loot0, s6 });
+  check('red.cofre_del_subjefe_para_el_invitado', s6.host.bk >= 1 && (s6.guest.loot > loot0 || s6.guest.gems > gems0), { loot0, gems0, s6 });
   if (OUT) { await B.page.screenshot({ path: OUT + '/endless_invitado.png' }); await A.page.screenshot({ path: OUT + '/endless_anfitrion.png' }); }
 
   // team wipe -> resultados en los dos, récord guardado

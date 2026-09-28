@@ -152,7 +152,7 @@ function endlessOnRoundClear(){
   if(endlessIsBossRound()){
     EN.bossKills++;
     endlessStat("endless_boss", EN.round);
-    if(ENDLESS_CFG.chestEveryBoss) runLater(900, ()=> endlessAwardChest("boss"));
+    if(ENDLESS_CFG.chestEveryBoss){ const kind = EN.stintKind==="boss" ? "boss" : "sub"; runLater(900, ()=> endlessAwardChest(kind)); }
   }
   endlessRescues = [];
 }
@@ -352,9 +352,18 @@ function endlessRollItem(grade, arena, usePity){
 }
 // Cofre de jefe/subjefe o de final: para ESTE jugador y (anfitrión) para cada invitado.
 function endlessAwardChest(kind){
-  const grade = endlessGradeForRound(EN.round), arena = currentArena;
+  const C = ENDLESS_CFG, grade = endlessGradeForRound(EN.round), arena = currentArena;
+  // subjefe: a veces es un "cofre menor" (oro + gema) en vez de un objeto; el del jefe trae objeto seguro
+  if(kind==="sub" && Math.random() >= C.subChestItemChance){
+    const g = Math.round(C.minorChestGold + C.minorChestGoldPerRound*EN.round);
+    heroes.forEach(h=>{ if(h===player) grantGold(g); else if(h.isRemote) netEmitTo(h._netSlot, "gold", [g]); });
+    save.gems = (save.gems||0) + 1; persist();
+    if(netIsHost()) netRecord("endlessGuestReward", [{k:"gem"}]);
+    showBanner(`COFRE MENOR DE LA CICATRIZ: +${g} de oro y +1 gema`);
+    return;
+  }
   const it = endlessRollItem(grade, arena, true);
-  if(kind==="boss") showBanner(it ? `COFRE DE LA CICATRIZ: ${it.name}` : "COFRE DE LA CICATRIZ (inventario lleno)");
+  showBanner(it ? `COFRE DE LA CICATRIZ: ${it.name}` : "COFRE DE LA CICATRIZ (inventario lleno)");
   if(netIsHost()) netRecord("endlessGuestReward", [{k:"item", grade, arena, pity:1, why:kind}]);
 }
 // Invitado: recompensa decidida por el anfitrión, cobrada en SU guardado.
@@ -542,7 +551,7 @@ function endlessEndRun(reason){
   // cofre final según la ronda alcanzada (cada jugador, en su guardado)
   if(!L.done){
     L.done = true;
-    // cuanto más aguantaste, más trae el cofre final (1 objeto desde la ronda 8, 2 desde la 15, 3 desde la 25)
+    // cuanto más aguantaste, más trae el cofre final (gemas desde la ronda 8; un objeto desde la 10, otro desde la 20 y otro desde la 30)
     const nEnd = ENDLESS_CFG.endChestItems.filter(r=>round >= r).length;
     for(let i=0;i<nEnd;i++) endlessRollItem(grade, currentArena, i===0);
     L.gemsEnd = round >= 10 ? runGemReward(currentArena, grade, true, runLevel) : (round >= ENDLESS_CFG.endChestMinRound ? 1 : 0);
@@ -600,6 +609,13 @@ function endlessShowResults(){
     <div class="en-res-title">${EN.endReason==="quit" ? "Contención abandonada" : "La Horda siguió avanzando"}</div>
     <div class="en-res-big"><div><span>Ronda</span><b>${EN.round}</b></div><div><span>Puntaje</span><b>${_enFmt(EN.score)}</b></div></div>
     <div class="en-res-badges">${badge(L.newGlobal, "¡NUEVO RÉCORD GLOBAL!")}${badge(L.newGuardian && !L.newGlobal, `¡Récord de ${(CLASSES[cls]||{}).name||cls}!`)}${badge(L.newWeek && !L.newGlobal && !L.newGuardian, "¡Mejor de la semana!")}</div>
+    <div class="en-res-btns">
+      ${guest ? "" : `<button class="btn en-again" id="en-again-btn">⟳ UNA MÁS</button>`}
+      <button class="btn secondary" id="en-back-btn">${online ? (guest ? "VOLVER A LA SALA" : "Volver a la sala") : "Volver al menú"}</button>
+      ${online ? `<button class="btn secondary" id="en-leave-btn">${guest ? "Salir de la sala" : "Cerrar la sala y salir"}</button>` : ""}
+    </div>
+    <div class="en-res-sub">Botín juntado</div>
+    <div class="en-res-loot">${loot || `<div class="en-loot-empty">${EN.round < 5 ? "Sin cofres todavía: el primero llega al vencer al subjefe de la ronda 5; desde la ronda 10, también el cofre final." : "El inventario estaba lleno o la suerte no acompañó."}</div>`}${L.full ? `<div class="en-loot-empty" style="color:#ff9a7a;">Tu inventario llegó al máximo: algunas recompensas no se pudieron guardar.</div>` : ""}</div>
     <div class="en-res-muts">${muts}</div>
     <div class="res-rows en-res-rows">
       <div class="res-row"><span>Tiempo</span><b>${Math.floor(secs/60)}:${String(secs%60).padStart(2,"0")}</b></div>
@@ -614,13 +630,7 @@ function endlessShowResults(){
       <div class="res-row"><span>Récord global</span><b>${_enFmt(S.best.score)} · ronda ${S.best.round||0}</b></div>
     </div>
     <div class="en-res-sub">Arenas recorridas</div><div class="en-res-arenas">${arenas}</div>
-    <div class="en-res-sub">Botín juntado</div>
-    <div class="en-res-loot">${loot || `<div class="en-loot-empty">${EN.round < 5 ? "Sin cofres: el primero llega al vencer al subjefe de la ronda 5." : "El inventario estaba lleno o la suerte no acompañó."}</div>`}${L.full ? `<div class="en-loot-empty" style="color:#ff9a7a;">Tu inventario llegó al máximo: algunas recompensas no se pudieron guardar.</div>` : ""}</div>
-    <div class="en-res-btns">
-      ${guest ? "" : `<button class="btn en-again" id="en-again-btn">⟳ UNA MÁS</button>`}
-      <button class="btn secondary" id="en-back-btn">${online ? (guest ? "VOLVER A LA SALA" : "Volver a la sala") : "Volver al menú"}</button>
-      ${online ? `<button class="btn secondary" id="en-leave-btn">${guest ? "Salir de la sala" : "Cerrar la sala y salir"}</button>` : ""}
-    </div></div>`;
+</div>`;
   const again = document.getElementById("en-again-btn");
   if(again) again.addEventListener("click", endlessOneMore);
   document.getElementById("en-back-btn").addEventListener("click", ()=>{
