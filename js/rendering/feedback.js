@@ -186,7 +186,7 @@ function registerPlayerHurt(dmg, src){
     for(const d of hurtDirs){ let da = Math.abs(d.ang-ang); if(da>Math.PI) da = Math.PI*2-da; if(da < 0.4){ d.ang = ang; d.t = 0; d.heavy = d.heavy || pct>0.08; merged = true; break; } }
     if(!merged){ if(hurtDirs.length >= 6) hurtDirs.shift(); hurtDirs.push({ang, t:0, dur:900, heavy:pct>0.08, off:!inView(src.x, src.y, -40)}); }
   }
-  if(pct > 0.12){ hitStop(55, true); vfxShake(6); playSfx("hurtHeavy"); }
+  if(pct > 0.12){ hitStop(55, true); vfxShake(6); playSfx("hurtHeavy"); if(typeof hapticPulse==="function") hapticPulse(45); } // vibración (Opciones, js/core/prefs.js)
   else if(pct > 0.05) vfxShake(2.5);
 }
 function flashScreen(alpha, rgb){ screenFlash = Math.max(screenFlash, alpha); screenFlashRgb = rgb||"255,255,255"; }

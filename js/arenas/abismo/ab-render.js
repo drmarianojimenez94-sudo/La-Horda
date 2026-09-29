@@ -631,7 +631,7 @@ function abDrawScreen(){
 }
 function _abMinimap(){
   const W = Math.min(150, VW*0.26), k = W/2200, Hh = 1560*k;
-  const X = VW - W - 12, Y = Math.max(70, VH*0.16), cx = X + W/2, cy = Y + Hh/2;
+  const X = hudMirrorX(VW - W - 12, W) /* modo zurdo: del otro lado (prefs.js) */, Y = Math.max(70, VH*0.16), cx = X + W/2, cy = Y + Hh/2;
   const tx = x=>cx + x*k, ty = y=>cy + y*k;
   ctx.save(); ctx.globalAlpha = 0.85;
   ctx.fillStyle = "rgba(6,2,12,0.72)"; ctx.beginPath(); ctx.ellipse(cx, cy, W/2 + 4, Hh/2 + 4, 0, 0, Math.PI*2); ctx.fill();

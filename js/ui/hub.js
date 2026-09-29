@@ -197,14 +197,24 @@ function openHubOptions(){
   for(const [id, kind] of [["opt-vol-music","music"],["opt-vol-sfx","sfx"]]){
     const el = document.getElementById(id); if(el) el.value = Math.round((typeof audioVol!=="undefined" ? audioVol[kind] : 1)*100);
   }
+  if(typeof optionsSync==="function") optionsSync(); // controles y accesibilidad (js/core/prefs.js)
   box.classList.remove("hidden");
+  // teclado: el foco entra al panel y, al cerrar, vuelve al botón que lo abrió (no se pierde)
+  _optReturnFocus = document.activeElement && document.activeElement!==document.body ? document.activeElement : null;
+  // (solo con teclado/mando: en el celular enfocar abriría el teclado en pantalla)
+  const kbd = typeof DESK!=="undefined" && (DESK.device==="kb" || DESK.device==="pad");
+  const first = kbd ? box.querySelector(".ui-modal-panel button") : null; if(first) try{ first.focus({preventScroll:true}); }catch(e){}
 }
+let _optReturnFocus = null;
 function closeHubOptions(){
   const box = document.getElementById("hub-options"); if(!box || box.classList.contains("hidden")) return;
   const nm = document.getElementById("opt-name");
   if(nm && typeof netSetPlayerName==="function" && nm.value.trim()) netSetPlayerName(nm.value);
   box.classList.add("hidden");
   if(state==="mainmenu") renderHub();
+  const r = _optReturnFocus; _optReturnFocus = null;
+  if(r && r.isConnected && r.offsetParent!==null){ try{ r.focus({preventScroll:true}); }catch(e){} }
+  else if(document.activeElement && box.contains(document.activeElement)){ try{ document.activeElement.blur(); }catch(e){} }
 }
 (function(){
   const box = document.getElementById("hub-options"); if(!box) return;

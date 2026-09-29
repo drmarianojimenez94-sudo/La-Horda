@@ -439,6 +439,7 @@ function netHostOnMsg(from, d){
     case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
       if(state!=="playing" || !h.alive) return;
+      if(d.cancel){ h.sylvaCharging = false; h.sylvaChargeTimer = 0; return; } // el invitado canceló el apuntado: no dispara
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(netAimSafe(d.aim)); });
       return;
     case "revive": // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)

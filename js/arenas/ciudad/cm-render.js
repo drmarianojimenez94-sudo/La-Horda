@@ -521,7 +521,7 @@ function _cmDrawCoverHint(t){
 }
 function _cmMinimap(){
   const B = CM_BOUNDS, W = Math.min(150, VW*0.26), k = W/(B.x1 - B.x0), Hh = (B.y1 - B.y0)*k;
-  const X = VW - W - 12, Y = Math.max(70, VH*0.16), tx = x=>X + (x - B.x0)*k, ty = y=>Y + (y - B.y0)*k;
+  const X = hudMirrorX(VW - W - 12, W) /* modo zurdo: del otro lado (prefs.js) */, Y = Math.max(70, VH*0.16), tx = x=>X + (x - B.x0)*k, ty = y=>Y + (y - B.y0)*k;
   const tower = cmS.st[cmStructIdx("torre")].st!==CM_ST.DESTROYED, blink = Math.sin(animNow/110) > 0;
   ctx.save(); ctx.globalAlpha = 0.88;
   ctx.fillStyle = "rgba(10,4,8,0.75)"; ctx.fillRect(X - 3, Y - 3, W + 6, Hh + 6); ctx.strokeStyle = "rgba(200,120,110,0.5)"; ctx.strokeRect(X - 3, Y - 3, W + 6, Hh + 6);

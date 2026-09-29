@@ -257,6 +257,23 @@ function vfxUpdate(dt){
   for(let i=0;i<vfxDyingN;i++){ const d = vfxDying[i]; if(d.t < d.dur){ if(w!==i){ const tmp = vfxDying[w]; vfxDying[w] = d; vfxDying[i] = tmp; } w++; } else { if(d.corpse && d.e) addCorpse(d.e, d.style, d.side, d.kind); d.e = null; } }
   vfxDyingN = w;
 }
+// Opciones > "Avisos de alto contraste" (js/core/prefs.js): las zonas de peligro se reconocen por la FORMA
+// (contorno negro, filo blanco punteado que corre y rayado diagonal), no solo por el color: sirve con
+// daltonismo y sobre pisos del mismo tono que el aviso. La zona SEGURA queda lisa con doble borde blanco.
+function VFX_HICON(){ return typeof PREFS!=="undefined" && !!PREFS.contrast; }
+function vfxHiConMarks(s){
+  // se llama con el camino del aviso armado y el contexto ya trasladado (y rotado en las líneas)
+  ctx.setLineDash([16, 10]); ctx.lineDashOffset = -(animNow/30)%26;
+  ctx.lineWidth = 3; ctx.strokeStyle = "rgba(255,255,255,0.95)"; ctx.stroke();
+  ctx.setLineDash([]); ctx.lineDashOffset = 0;
+  ctx.save(); ctx.clip();
+  const B = Math.max(s.r, s.len||0) + s.r;
+  ctx.beginPath();
+  for(let k=-2*B; k<=2*B; k+=22){ ctx.moveTo(k-B, -B); ctx.lineTo(k+B, B); }
+  ctx.lineWidth = 6; ctx.strokeStyle = "rgba(0,0,0,0.38)"; ctx.stroke();
+  ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.stroke();
+  ctx.restore();
+}
 function vfxDrawGround(){
   for(let i=0;i<VFX_TELE_MAX;i++){
     const s = vfxTeles[i]; if(!s.on) continue;
@@ -273,6 +290,7 @@ function vfxDrawGround(){
       const pulseS = 0.5+0.5*Math.sin(animNow/110);
       ctx.beginPath(); ctx.arc(0, 0, s.r, 0, Math.PI*2);
       ctx.fillStyle = `rgba(${s.rgb},${0.18+0.12*pulseS})`; ctx.fill();
+      if(VFX_HICON()){ ctx.lineWidth = 12; ctx.strokeStyle = "rgba(0,0,0,0.85)"; ctx.stroke(); ctx.lineWidth = 8; ctx.strokeStyle = "rgba(255,255,255,0.95)"; ctx.stroke(); }
       ctx.lineWidth = 5; ctx.strokeStyle = `rgba(${s.rgb},${0.75+0.25*pulseS})`; ctx.stroke();
       ctx.beginPath(); ctx.arc(0, 0, s.r*(1-q)+4, 0, Math.PI*2); ctx.lineWidth = 2; ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.stroke();
       ctx.font = pxFont(18); ctx.textAlign = "center"; ctx.fillStyle = "rgba(230,255,235,0.95)"; ctx.fillText("SEGURO", 0, 6);
@@ -296,9 +314,12 @@ function vfxDrawGround(){
     // borde engrosa, late más rápido y aparece un filo blanco.
     const hot = q>0.72 ? (q-0.72)/0.28 : 0;
     const pulse2 = hot>0 ? 0.5+0.5*Math.sin(animNow/(70-40*hot)) : pulse;
+    const hc = VFX_HICON();
+    if(hc){ ctx.lineWidth = 11+3*hot; ctx.strokeStyle = "rgba(0,0,0,0.85)"; ctx.stroke(); } // alto contraste: contorno negro
     ctx.fillStyle = `rgba(${s.rgb},${0.10+0.12*q+0.10*hot})`; ctx.fill();
     ctx.lineWidth = 4+3*hot; ctx.strokeStyle = `rgba(${s.rgb},${0.55+0.35*pulse2})`; ctx.stroke();
     if(hot>0){ ctx.lineWidth = 2; ctx.strokeStyle = `rgba(255,255,255,${0.3+0.55*hot*pulse2})`; ctx.stroke(); }
+    if(hc) vfxHiConMarks(s);
     // relleno que avanza: cuánto falta para el golpe
     ctx.beginPath();
     if(s.shape===3){ const rr = s.r2 + (s.r-s.r2)*q; ctx.arc(0, 0, rr, 0, Math.PI*2); ctx.moveTo(s.r2, 0); ctx.arc(0, 0, s.r2, 0, Math.PI*2, true); }
