@@ -47,7 +47,15 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
       save.crystalWorn = 'none'; selectedClass = 'guerrero'; currentArena = arena; lobbyAllies = ['tanque', 'mago', 'soporte']; startRun(lv);
     };
     window.__st = (ms) => { let t = 0; while (t < ms) { if (state === 'buff') { const c = document.querySelector('#buff-cards > *'); if (c) c.click(); continue; } if (typeof RUN_INTRO !== 'undefined' && RUN_INTRO.open) { try { runIntroClose(); } catch (e) { RUN_INTRO.open = false; } } if (state !== 'playing') break; for (const h of heroes) h.hp = Math.max(h.hp, h.maxHp * 0.6); update(16); t += 16; } };
-    window.__boss = () => { runLevel = LEVEL_COUNT; levelTimer = 0; beginLevel(); for (const e of enemies) e.alive = false; enemies = []; try { startBossFight(); } catch (e) {} };
+    // jefe de la arena por su camino real (ganchos de arena del nivel 10); si no llega solo, startBossFight
+    window.__isBoss = (e) => e.alive && (e.rank === 'jefe' || e.isBoss);
+    window.__boss = () => {
+      runLevel = LEVEL_COUNT; levelTimer = 0; beginLevel(); for (const e of enemies) e.alive = false; enemies = [];
+      for (let t = 0; t < 14000 && !enemies.some(__isBoss); t += 500) __st(500);
+      if (!enemies.some(__isBoss) && levelDuration < 1e8) { levelTimer = levelDuration; __st(600); }
+      for (let t = 0; t < 8000 && !enemies.some(__isBoss); t += 500) __st(500);
+      if (!enemies.some(__isBoss) && !bossActive) { try { startBossFight(); } catch (e) {} }
+    };
     // --- instrumentación ---
     const Q = window.__Q6M = { on: false, rec: [], cat: [] };
     const NONPIX = new WeakSet(), LABEL = new WeakMap();
@@ -65,6 +73,7 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
       if (!img) return '?';
       if (LABEL.has(img)) return LABEL.get(img);
       if (img.src) return decodeURIComponent(img.src.split('?')[0].split('/').slice(-2).join('/'));
+      if (img._srcImg && img._srcImg !== img) return lab(img._srcImg) + ' (derivado)';
       if (img.width !== undefined) return 'canvas ' + img.width + 'x' + img.height;
       return '?';
     };
@@ -114,7 +123,7 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
     }, arena) });
     scenes.push({ arena, esc: 'jefe', setup: () => page.evaluate((a) => {
       __go(a, 3); __st(1500); __boss(); __st(3500);
-      const b = enemies.find(e => e.alive && (e.rank === 'jefe' || e.isBoss));
+      const b = enemies.find(__isBoss);
       if (b) { player.x = b.x; player.y = b.y + 170; clampToArena && clampToArena(player); for (const h of heroes) if (h !== player) { h.x = player.x + (Math.random() - 0.5) * 80; h.y = player.y + 30; } __st(200); }
     }, arena) });
   }
