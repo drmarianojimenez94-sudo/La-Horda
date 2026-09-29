@@ -187,7 +187,12 @@ function makeItem(type, rarity, champKey, opts){
 }
 /* ---------------- nivel, roll y valor real ---------------- */
 function itemLevel(it){ return Math.max(1, Math.min(ITEM_MAX_LEVEL, (it && it.level)|0 || 1)); }
-function itemLevelMult(it){ return 1 + ITEM_LEVEL_STEP*(itemLevel(it)-1); }
+// Nivel de OBJETO (arena donde cayó, item-identity.js ITEM_ILVL_*): eje aparte del nivel de Gemas. Sin campo
+// (objetos viejos, tienda, regalo) = 1. Se recorta al leer: un objeto que llega de otro jugador no lo puede inflar.
+function itemIlvl(it){ return Math.max(1, Math.min(ITEM_ILVL_MAX, (it && it.ilvl)|0 || 1)); }
+function itemIlvlMult(it){ return 1 + ITEM_ILVL_STEP*(itemIlvl(it)-1); }
+// Multiplicador de TODOS los números del objeto: nivel de Gemas × nivel de objeto.
+function itemLevelMult(it){ return (1 + ITEM_LEVEL_STEP*(itemLevel(it)-1)) * itemIlvlMult(it); }
 // Stat garantizado REAL del objeto: base de la rareza × roll de esta copia × nivel.
 function itemStat(it){ return it ? it.value * (it.roll||1) * itemLevelMult(it) : 0; }
 // Rango posible del stat de ESTE objeto en su nivel actual (para el tooltip: "+19% (17–21%)").
@@ -400,6 +405,7 @@ function fuseItems(classKey, uids){
   uids.forEach(u=>removeItemFromInventory(classKey, u, false));
   const fused = makeItem(check.type, check.nextRarity, classKey);
   fused.level = keepLevel;
+  const keepIlvl = Math.max(...items.map(itemIlvl)); if(keepIlvl > 1) fused.ilvl = keepIlvl; // ni el nivel de objeto (arena donde cayó)
   addItemToInventory(classKey, fused);
   return {ok:true, item:fused};
 }

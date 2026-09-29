@@ -63,11 +63,15 @@ function shopBuy(offerId){
    MÍTICOS (se fabrican con receta) y los ÚNICOS (solo botín) ya no se venden: siguen siendo metas.
    ============================================================ */
 const SHOP_TEST_MODE = true;
+// Economía alfa (Q4, docs/alfa/q4_economia.md): el catálogo sigue COMPLETO (guardianes, todos los objetos,
+// sets y skins: pedido del dueño), pero lo que la tienda vende nace con NIVEL DE OBJETO 1 (item-identity.js,
+// ITEM_ILVL_*): el mismo objeto caído en una arena alta vale hasta ×1,45. Subieron los legendarios y los
+// Muy Raros/Legendarios básicos; la pieza de set (= precio de las skins) quedó igual a propósito.
 const SHOP_PRICES = {
-  base: { comun:150, raro:400, muyraro:900, legendario:2500 }, // arquetipos, por rareza
-  campeon: 1500,      // objetos propios de un guardián
-  legendario: 3000,   // legendarios con nombre
-  set: 1200           // cada pieza de set (una skin = su set completo)
+  base: { comun:150, raro:400, muyraro:1100, legendario:3200 }, // arquetipos, por rareza (antes 900 / 2.500)
+  campeon: 1800,      // objetos propios de un guardián (antes 1.500)
+  legendario: 4000,   // legendarios con nombre (antes 3.000; son también ingredientes de los Míticos)
+  set: 1200           // cada pieza de set (una skin = su set completo) — sin cambios
 };
 const SHOP_TEST_PRICE = SHOP_PRICES.set; // precio por pieza de set (lo usan "comprar lo que falta" y las skins)
 const SHOP_ARCHETYPE_TIERS = ["comun", "raro", "muyraro", "legendario"];
@@ -164,7 +168,7 @@ function skinEquipOn(setId, k){
     if(!it || it.set!==setId || !canEquipItem(k, it)) continue;
     const cur = bySlot[it.type];
     // si hay piezas repetidas, la de mejor nivel (y la que ya lleva puesta este guardián)
-    const score = x => (itemEquippedBy(x.uid)===k ? 1e6 : 0) + (x.level||0);
+    const score = x => (itemEquippedBy(x.uid)===k ? 1e6 : 0) + itemLevelMult(x); // Gemas × nivel de objeto
     if(!cur || score(it) > score(cur)) bySlot[it.type] = it;
   }
   for(const type in bySlot) equipItem(k, bySlot[type].uid);

@@ -54,7 +54,7 @@ function itemCardHTML(it, o){
     <div class="item-meta">
       <div class="item-name" style="color:${col};">${elem}${it.name}${it.set?' <span class="set-badge">SET</span>':""}</div>
       ${epithet}
-      <div class="item-stat">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label} · Nv.${itemLevel(it)} · +${Math.round(itemStat(it)*100)}% ${ITEM_TYPES[it.type].statLabel} ${owner} ${byTxt}</div>
+      <div class="item-stat">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label} · Nv.${itemLevel(it)}${itemIlvl(it)>1 ? ` · Arena ${itemIlvl(it)}` : ""} · +${Math.round(itemStat(it)*100)}% ${ITEM_TYPES[it.type].statLabel} ${owner} ${byTxt}</div>
       ${passives ? `<div class="item-passives">${passives}</div>` : ""}
       ${(o.compare && o.classKey && compat && !onMe) ? compareItemsHTML(o.classKey, it) : ""}
       ${actions}

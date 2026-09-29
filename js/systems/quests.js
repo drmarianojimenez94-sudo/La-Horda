@@ -198,6 +198,7 @@ function questsGrant(r, silent){
     // en plena partida el oro de un logro no entra en el castigo por perder (solo cuenta lo ganado peleando)
     if(typeof state !== "undefined" && state === "playing" && typeof runStartGold !== "undefined") runStartGold += r.gold;
   }
+  if(r.gems) save.gems = (save.gems||0) + r.gems; // Gemas: solo mejoran objetos (gems.js), nunca se compran
   if(r.title && !q.titles.includes(r.title)) q.titles.push(r.title);
   if(r.frame && !q.frames.includes(r.frame)) q.frames.push(r.frame);
   if(r.emblem && !q.emblems.includes(r.emblem)) q.emblems.push(r.emblem);
@@ -208,6 +209,7 @@ function questsRewardText(r){
   if(!r) return "";
   const out = [];
   if(r.gold) out.push(`🪙 ${typeof fmtGold === "function" ? fmtGold(r.gold) : r.gold}`);
+  if(r.gems) out.push(`◆ ${r.gems} Gema${r.gems>1?"s":""}`);
   if(r.chest) out.push(`📦 ${CHEST_NAMES[r.chest]}`);
   if(r.title) out.push(`Título «${QUEST_TITLES[r.title].name}»`);
   if(r.frame) out.push(`Marco ${QUEST_FRAMES[r.frame].name}`);
@@ -404,19 +406,21 @@ function _qChestChamp(){
   return Object.keys(save.champions).find(own) || CHAMPION_CATALOG[0].id;
 }
 // Abre el primer cofre pendiente: botín con las tablas normales (sin tocar la protección contra la mala
-// suerte). Con el inventario lleno, cada objeto que no entra se paga en oro.
+// suerte). Con el inventario lleno, cada objeto que no entra se paga en oro a su precio de VENTA (antes 150
+// fijos: un Raro se vende a 8 y convenía abrir los cofres con el inventario lleno, reseña de economía B3).
 function questsOpenChest(){
   const q = questsState();
   if(!q.chests.length) return null;
   const variant = q.chests.shift(), cfg = QUEST_CHESTS[variant];
   const arena = _qChestArena(), classKey = _qChestChamp();
-  const items = []; let gold = 0, guard = 0;
-  while(items.length + gold/150 < cfg.items && guard++ < 6){
+  const items = []; let gold = 0, guard = 0, given = 0;
+  while(given < cfg.items && guard++ < 6){
     const res = rollLoot({arena, grade:cfg.grade, victory:true, runLevel:LEVEL_COUNT, subjefes:0, owned:ownedDesignIds(), pity:{}, classKey});
     for(const spec of res.items){
-      if(items.length + gold/150 >= cfg.items) break;
-      if(stashFull()){ gold += 150; continue; }
+      if(given >= cfg.items) break;
       const it = materializeLoot(spec, classKey, arena); if(!it) continue;
+      given++;
+      if(stashFull()){ gold += Math.max(1, sellValueOf(it)); continue; }
       it.lootTier = spec.tier;
       addItemToInventory(classKey, it);
       items.push(it);
