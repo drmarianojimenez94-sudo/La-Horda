@@ -301,7 +301,7 @@ function ctxDraw(){
       // radio de uso: anillo punteado que late
       ctx.globalAlpha = 0.45 + 0.25*Math.sin(now*5);
       ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.setLineDash([7, 6]);
-      ctx.beginPath(); ctx.ellipse(t.x, t.y, t.r, t.r*0.62, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI*2); ctx.stroke();
       ctx.setLineDash([]);
     }
     const bx = t.x, by = t.y - (t.h || 46);

@@ -125,7 +125,7 @@ function _cmDrawGroundMarks(t, V){
     if(!_cmVis(V, z.x - 140, z.y - 140, z.x + 140, z.y + 140)) continue;
     const R = CM_CFG.civ.safeR, a = dead ? 0.15 : 0.35 + 0.15*Math.sin(t*3);
     ctx.save(); ctx.strokeStyle = dead ? "rgba(120,60,60,0.5)" : `rgba(120,255,150,${a + 0.2})`; ctx.lineWidth = 4; ctx.setLineDash([16, 10]); ctx.lineDashOffset = -t*20;
-    ctx.beginPath(); ctx.ellipse(z.x, z.y, R, R*0.72, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(z.x, z.y, R, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     if(!dead){ ctx.fillStyle = `rgba(90,255,140,${a*0.35})`; ctx.fill(); _cmGlow(z.x, z.y, R, "90,255,140", a*0.5); }
     ctx.fillStyle = dead ? "#a05050" : "#bfffcf"; ctx.font = pxFont(22); ctx.textAlign = "center"; ctx.fillText(dead ? "✖" : "🛡", z.x, z.y + 8);
     ctx.restore();
@@ -148,7 +148,7 @@ function _cmDrawGroundMarks(t, V){
     const q = Math.min(1, Z.t/Math.max(1, Z.arm||1)), fade = Math.min(1, (Z.d - Z.t)/400);
     const rgb = Z.k==="dark" ? "150,60,255" : "255,50,90";
     ctx.save(); ctx.globalAlpha = fade;
-    ctx.fillStyle = `rgba(${rgb},${0.12 + 0.12*q})`; ctx.beginPath(); ctx.ellipse(Z.x, Z.y, Z.r, Z.r*0.75, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = `rgba(${rgb},${0.12 + 0.12*q})`; ctx.beginPath(); ctx.arc(Z.x, Z.y, Z.r, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = `rgba(${rgb},0.7)`; ctx.lineWidth = 3; ctx.stroke();
     _cmFx(Z.k==="dark" ? "cmDarkZone" : "cmMaeZone", ((Z.t/140)|0) % 4, Z.x, Z.y, Z.r*1.5, 0.8*fade, 0.6);
     ctx.restore();
@@ -156,8 +156,8 @@ function _cmDrawGroundMarks(t, V){
   // impactos con aviso: círculo que se llena
   for(const D of cmS.drops){
     const q = Math.min(1, D.t/D.d), rgb = D.k==="scenery" ? "255,150,60" : D.k==="mae" || D.k==="mark" ? "255,40,90" : D.k==="curtain" ? "255,40,40" : "255,90,90";
-    ctx.save(); ctx.strokeStyle = `rgba(${rgb},0.85)`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(D.x, D.y, D.r, D.r*0.72, 0, 0, Math.PI*2); ctx.stroke();
-    ctx.fillStyle = `rgba(${rgb},${0.1 + 0.3*q})`; ctx.beginPath(); ctx.ellipse(D.x, D.y, D.r*q, D.r*0.72*q, 0, 0, Math.PI*2); ctx.fill();
+    ctx.save(); ctx.strokeStyle = `rgba(${rgb},0.85)`; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(D.x, D.y, D.r, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = `rgba(${rgb},${0.1 + 0.3*q})`; ctx.beginPath(); ctx.arc(D.x, D.y, D.r*q, 0, Math.PI*2); ctx.fill();
     if(D.k==="mark" || D.k==="mae"){ _cmFx("cmShowMark", ((D.t/120)|0) % 6, D.x, D.y, D.r*1.5, 0.7, 0.5); }
     ctx.restore();
   }

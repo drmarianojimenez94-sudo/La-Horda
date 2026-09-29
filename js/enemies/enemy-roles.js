@@ -233,5 +233,5 @@ function drawEnemyRoleMarks(e){
   ctx.fillStyle = `rgb(${C.rgb})`; ctx.font = pxFont(10); ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText(C.ico, e.x, by+0.5);
   ctx.restore();
-  if(e.role==="suicida" && e._fuse > 0){ ctx.save(); ctx.globalAlpha = 0.25 + 0.25*Math.sin(t/40); ctx.fillStyle = `rgb(${C.rgb})`; ctx.beginPath(); ctx.ellipse(e.x, e.y, C.r, C.r*0.62, 0, 0, Math.PI*2); ctx.fill(); ctx.restore(); }
+  if(e.role==="suicida" && e._fuse > 0){ ctx.save(); ctx.globalAlpha = 0.25 + 0.25*Math.sin(t/40); ctx.fillStyle = `rgb(${C.rgb})`; ctx.beginPath(); ctx.arc(e.x, e.y, C.r, 0, Math.PI*2); ctx.fill(); ctx.restore(); }
 }

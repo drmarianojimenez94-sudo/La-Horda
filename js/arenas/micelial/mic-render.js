@@ -214,7 +214,7 @@ function micDrawWorld(now){
     ctx.save(); ctx.globalAlpha = 0.35*q;
     const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
     g.addColorStop(0, c.k==="big" ? "rgba(200,90,255,0.7)" : "rgba(150,255,110,0.6)"); g.addColorStop(1, "rgba(80,40,120,0)");
-    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(c.x, c.y, c.r, c.r*0.62, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, Math.PI*2); ctx.fill(); ctx.restore();
   }
   // Acechador enterrado: tierra removida + brillo tenue (nunca invisible sin aviso)
   for(const e of enemies){
@@ -256,7 +256,7 @@ function _micDrawInfection(x, y, r, st, t, a){
   ctx.save();
   const g = ctx.createRadialGradient(x, y, r*0.1, x, y, r);
   g.addColorStop(0, `rgba(70,20,80,${0.55*a})`); g.addColorStop(0.7, `rgba(120,40,140,${0.32*a})`); g.addColorStop(1, "rgba(120,40,140,0)");
-  ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, r, r*0.66, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
   // venas de micelio (misma forma en todos los clientes: sale de la posición)
   const n = 7 + st*2, seed = _micHash(x, y);
   ctx.lineCap = "round";
@@ -267,7 +267,7 @@ function _micDrawInfection(x, y, r, st, t, a){
     ctx.strokeStyle = `rgba(30,8,28,${0.7*a})`; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(mx, my, bx, by); ctx.stroke();
     ctx.strokeStyle = `rgba(220,110,255,${(0.35 + 0.25*Math.sin(t*3 + i))*a})`; ctx.lineWidth = 1.5; ctx.stroke();
   }
-  if(st >= 2){ ctx.strokeStyle = `rgba(210,120,255,${(0.35 + 0.2*Math.sin(t*5))*a})`; ctx.lineWidth = 2; ctx.setLineDash([8, 10]); ctx.lineDashOffset = -t*20; ctx.beginPath(); ctx.ellipse(x, y, r, r*0.66, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); }
+  if(st >= 2){ ctx.strokeStyle = `rgba(210,120,255,${(0.35 + 0.2*Math.sin(t*5))*a})`; ctx.lineWidth = 2; ctx.setLineDash([8, 10]); ctx.lineDashOffset = -t*20; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); }
   ctx.restore();
 }
 function _micDrawGiantRoot(r, t){
@@ -593,7 +593,7 @@ function micDrawTop(){
     const R = MIC_CFG.chaman.auraR;
     ctx.save();
     ctx.strokeStyle = `rgba(180,110,255,${0.35 + 0.15*Math.sin(t*4)})`; ctx.lineWidth = 2; ctx.setLineDash([6, 8]); ctx.lineDashOffset = -t*25;
-    ctx.beginPath(); ctx.ellipse(e.x, e.y + 4, R, R*0.55, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(e.x, e.y + 4, R, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = 0.45; ctx.drawImage(glowSprite("190,110,255"), e.x - 40, e.y - 150, 80, 80);
     const ch = e.micChan;
     if(ch && ch.k==="regen"){

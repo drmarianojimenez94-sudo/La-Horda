@@ -163,7 +163,7 @@ function drawEliteMarks(e){
   ctx.save();
   if(eliteHas(e, "escarcha")){
     ctx.strokeStyle = `rgba(150,220,255,${0.18 + 0.14*pulse})`; ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
-    ctx.beginPath(); ctx.ellipse(e.x, e.y + 3, ELITE_MODS.escarcha.r, ELITE_MODS.escarcha.r*0.62, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(e.x, e.y + 3, ELITE_MODS.escarcha.r, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
   ctx.strokeStyle = `rgba(255,205,80,${0.55 + 0.35*pulse})`; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.ellipse(e.x, e.y + 3, R*1.35, R*0.55, 0, 0, Math.PI*2); ctx.stroke();

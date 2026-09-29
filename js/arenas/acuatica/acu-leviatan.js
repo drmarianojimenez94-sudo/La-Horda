@@ -187,7 +187,7 @@ function acuLevDrawTop(){
     ctx.save();
     if(a.levRole==="corriente"){
       ctx.strokeStyle = "rgba(140,220,240,0.35)"; ctx.lineWidth = 3; ctx.setLineDash([18, 16]); ctx.lineDashOffset = -t*70;
-      ctx.beginPath(); ctx.ellipse(a.x, a.y, LEV_T.pushR, LEV_T.pushR*0.62, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(a.x, a.y, LEV_T.pushR, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     }
     const h = a.levGrabIdx >= 0 ? heroes[a.levGrabIdx] : null;
     if(h && h.alive){
