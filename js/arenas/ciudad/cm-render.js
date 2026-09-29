@@ -118,6 +118,8 @@ function cmDrawWorld(now){
   _cmDrawGroundMarks(t, V);
 }
 function _cmHash(i, k){ let h = (i*374761393 + k*668265263) ^ 0x5bd1e995; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0)/4294967296; }
+// rótulos cortos de las estructuras para la fila del panel de rescate (entran en 844 px de ancho)
+const CM_STRUCT_SHORT = {refNorte:"REF. NORTE", refEste:"REF. ESTE", capilla:"CAPILLA", puerta:"PUERTA", torre:"TORRE"};
 function _cmDrawGroundMarks(t, V){
   // zonas seguras: escudo verde que late (se apaga si la estructura cayó)
   for(const z of CM_SAFE){
@@ -127,7 +129,7 @@ function _cmDrawGroundMarks(t, V){
     ctx.save(); ctx.strokeStyle = dead ? "rgba(120,60,60,0.5)" : `rgba(120,255,150,${a + 0.2})`; ctx.lineWidth = 4; ctx.setLineDash([16, 10]); ctx.lineDashOffset = -t*20;
     ctx.beginPath(); ctx.ellipse(z.x, z.y, R, R*0.72, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     if(!dead){ ctx.fillStyle = `rgba(90,255,140,${a*0.35})`; ctx.fill(); _cmGlow(z.x, z.y, R, "90,255,140", a*0.5); }
-    ctx.fillStyle = dead ? "#a05050" : "#bfffcf"; ctx.font = pxFont(22); ctx.textAlign = "center"; ctx.fillText(dead ? "✖" : "🛡", z.x, z.y + 8);
+    ctx.fillStyle = dead ? "#a05050" : "#bfffcf"; ctx.font = pxFont(16); ctx.textAlign = "center"; ctx.fillText(dead ? "REFUGIO CAÍDO" : "REFUGIO", z.x, z.y + 6);
     ctx.restore();
   }
   // campanas
@@ -426,7 +428,7 @@ function cmDrawTop(){
       const T = cmS.ctx.find(q=>q.cid===c.id), q = T ? (T.prog||0)/T.dur : 0;
       ctx.save(); ctx.strokeStyle = "rgba(160,255,180,0.85)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(c.x, c.y - hh - 12, 11, 0, Math.PI*2); ctx.stroke();
       if(q > 0){ ctx.strokeStyle = "#9dffb0"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(c.x, c.y - hh - 12, 11, -Math.PI/2, -Math.PI/2 + q*Math.PI*2); ctx.stroke(); }
-      ctx.fillStyle = "#9dffb0"; ctx.font = pxFont(12); ctx.textAlign = "center"; ctx.fillText("🧍", c.x, c.y - hh - 8); ctx.restore();
+      drawCanvasIcon(ctx, "🧍", c.x, c.y - hh - 12, 13, "#9dffb0"); ctx.restore();
     }
     if(c.st===CIV.FOLLOW){ const h = heroes[c.lead]; if(h && h.alive){ ctx.save(); ctx.strokeStyle = "rgba(160,255,180,0.18)"; ctx.setLineDash([4, 8]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(c.x, c.y - 10); ctx.lineTo(h.x, h.y - 10); ctx.stroke(); ctx.restore(); } }
   }
@@ -456,16 +458,24 @@ function cmDrawScreen(){
   // panel de rescate (arriba al centro)
   const kid = cmS.civ.filter(c=>c.st===CIV.KIDNAPPED).length, danger = cmS.civ.filter(c=>cmCivFree(c) && (c.danger || c.st===CIV.RUN)).length + kid;
   const follow = cmS.civ.filter(c=>c.st===CIV.FOLLOW).length;
-  const txt = `🧍 Rescatados ${cmS.saved}  ·  ✝ Perdidos ${cmS.lost}  ·  ⚠ En peligro ${danger}${follow ? `  ·  ↪ Te siguen ${follow}` : ""}`;
+  // en la letra pixel y sin emojis: cada dato con su color (verde a salvo, rojo perdidos, naranja en peligro)
+  const segs = [[`Rescatados ${cmS.saved}`, "#9dffb0"], [`Perdidos ${cmS.lost}`, "#ff8a7a"], [`En peligro ${danger}`, danger ? "#ffc060" : "#d8c8b8"]];
+  if(follow) segs.push([`Te siguen ${follow}`, "#bfe8ff"]);
+  const sep = "  ·  ";
+  const txt = segs.map(s=>s[0]).join(sep);
   ctx.font = pxFont(13); ctx.textAlign = "center";
   const bossUp = (bossActive && boss && boss.alive) || (activeChampion && activeChampion.alive) || cmS.sub.st==="fight1";
   const tw = ctx.measureText(txt).width + 24, px = VW/2, py = Math.max(52, VH*0.085) + (bossUp ? 40 : 0);
   ctx.fillStyle = "rgba(10,4,8,0.72)"; ctx.fillRect(px - tw/2, py - 16, tw, 24);
   ctx.strokeStyle = danger ? `rgba(255,90,70,${0.5 + 0.4*Math.sin(t*6)})` : "rgba(150,255,170,0.35)"; ctx.lineWidth = 1.5; ctx.strokeRect(px - tw/2, py - 16, tw, 24);
-  ctx.fillStyle = "#f2e6dc"; ctx.fillText(txt, px, py);
-  // estructuras: fila de íconos con color por estado
-  let sx = px - (CM_STRUCTS.length*26)/2 + 13;
-  CM_STRUCTS.forEach((s, i)=>{ const S = cmS.st[i], col = ["#7dffa0", "#ffd24a", "#ff5a3a", "#555"][S.st]; ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(sx - 11, py + 12, 22, 16); ctx.fillStyle = col; ctx.font = pxFont(12); ctx.fillText(s.id==="puerta" ? "⛩" : s.id==="torre" ? "🗼" : s.id==="capilla" ? "⛪" : "🏠", sx, py + 25); if(S.hit > 0){ ctx.strokeStyle = "#ff5a3a"; ctx.strokeRect(sx - 11, py + 12, 22, 16); } sx += 26; });
+  { ctx.textAlign = "left"; let x0 = px - (tw - 24)/2; const wSep = ctx.measureText(sep).width;
+    segs.forEach((s, i)=>{ if(i){ ctx.fillStyle = "#8a7a6a"; ctx.fillText(sep, x0, py); x0 += wSep; } ctx.fillStyle = s[1]; ctx.fillText(s[0], x0, py); x0 += ctx.measureText(s[0]).width; });
+    ctx.textAlign = "center"; }
+  // estructuras: fila de rótulos cortos con color por estado (intacta, dañada, crítica, destruida)
+  ctx.font = pxFont(11);
+  const sLab = CM_STRUCTS.map(s=>CM_STRUCT_SHORT[s.id] || s.name), sW = sLab.map(l=>Math.ceil(ctx.measureText(l).width) + 10);
+  let sx = px - (sW.reduce((a, b)=>a + b, 0) + 4*(sW.length - 1))/2;
+  CM_STRUCTS.forEach((s, i)=>{ const S = cmS.st[i], col = ["#7dffa0", "#ffd24a", "#ff5a3a", "#777"][S.st], w = sW[i]; ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(sx, py + 12, w, 16); ctx.fillStyle = col; ctx.fillText(sLab[i], sx + w/2, py + 24); if(S.hit > 0){ ctx.strokeStyle = "#ff5a3a"; ctx.strokeRect(sx, py + 12, w, 16); } sx += w + 4; });
   // alertas prioritarias con flecha hacia su lugar
   // como mucho 2 a la vez (1 si el Hechicero está hablando), primero las urgentes (secuestro, muerte) y
   // después las más nuevas: a los 2-3 minutos se juntaban tutorial + 4 alertas + carteles en un teléfono chico

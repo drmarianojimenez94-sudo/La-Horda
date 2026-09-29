@@ -603,7 +603,7 @@ function abDrawTop(){
     ctx.fillStyle = "rgba(10,4,16,0.8)"; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = urgent ? `rgba(255,70,90,${0.7 + 0.3*Math.sin(t*14)})` : "#e8c8ff"; ctx.lineWidth = 4;
     ctx.beginPath(); ctx.arc(cx, cy, 12, -Math.PI/2, -Math.PI/2 + q*Math.PI*2); ctx.stroke();
-    ctx.fillStyle = "#fff"; ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.fillText("🤝", cx, cy + 4);
+    drawCanvasIcon(ctx, "🤝", cx, cy, 14, "#fff");
     ctx.restore();
   }
 }

@@ -315,8 +315,7 @@ function ctxDraw(){
       ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(bx, by, 15, 0, Math.PI*2); ctx.stroke();
     }
-    ctx.fillStyle = "#fff"; ctx.font = pxFont(14); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(k.icon, bx, by+1);
+    ctx.fillStyle = "#fff"; drawCanvasIcon(ctx, k.icon, bx, by+1, 18, "#fff");
     ctx.restore();
   }
 }
@@ -338,8 +337,9 @@ function ctxDrawScreen(){
     ctx.strokeStyle = k.color || "#ffcf5c"; ctx.lineWidth = 2; ctx.stroke();
     ctx.rotate(a); ctx.fillStyle = k.color || "#ffcf5c";
     ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(14, -6); ctx.lineTo(14, 6); ctx.closePath(); ctx.fill();
-    ctx.rotate(-a); ctx.fillStyle = "#fff"; ctx.font = pxFont(13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(t.kind==="lab_seal" ? LAB_NUM[t.n] : k.icon, 0, 1);
+    ctx.rotate(-a); ctx.fillStyle = "#fff";
+    if(t.kind==="lab_seal"){ ctx.font = pxFont(13); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(LAB_NUM[t.n], 0, 1); }
+    else drawCanvasIcon(ctx, k.icon, 0, 1, 16, "#fff");
     ctx.restore();
   }
 }
