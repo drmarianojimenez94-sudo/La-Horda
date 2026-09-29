@@ -167,7 +167,7 @@ function updateEnemyRole(e, dt, tgt, dist){
         }
         return true; // se planta mientras parpadea
       }
-      if(dist < C.trigger){ e._fuse = C.fuse; vfxTelegraph({follow:e, r:C.r, dur:C.fuse, rgb:C.rgb}); if(inView(e.x, e.y, 0)) playSfx("threat"); return true; }
+      if(dist < C.trigger){ e._fuse = C.fuse; vfxTelegraph({follow:e, r:C.r, dur:C.fuse, rgb:C.rgb}); if(inView(e.x, e.y, 0)) playSfx("threat", null, e.x); return true; }
       return false;
     case "comandante":
       if(e.roleT <= 0){ e.roleT = 500; for(const o of enemies){ if(!o.alive || o===e || Math.hypot(o.x-e.x, o.y-e.y) > C.r) continue; o._cmdT = runElapsedMs + 700; } }
@@ -201,7 +201,7 @@ function roleAnnounce(e){
   if(_roleSeenLvl[k]) return; _roleSeenLvl[k] = true;
   const C = ROLE_CFG[e.role];
   floatText(e.x, e.y-(e.radius||20)*2-24, `${C.ico} ${C.name}`, "crit");
-  playSfx("threat");
+  playSfx("threat", null, e.x);
   if(typeof tutSay==="function") tutSay("role_"+e.role, ROLE_TIPS[e.role], null, 6500);
 }
 const ROLE_TIPS = {

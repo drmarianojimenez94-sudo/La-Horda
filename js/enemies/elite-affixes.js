@@ -123,7 +123,7 @@ function eliteTick(e, dt){
     // texto flotante con el mismo nombre y se leían dos "★ Gruthul el Ciego" encimados)
     e._eliteSeen = true; e._eliteIntro = (typeof animNow!=="undefined" && animNow) || performance.now();
     if(typeof vfxShock==="function") vfxShock(e.x, e.y, 10, (e.radius||20)*2.6, "255,205,80", 520, 1);
-    if(typeof playSfx==="function") playSfx("threat");
+    if(typeof playSfx==="function") playSfx("threat", null, e.x);
     if(typeof tutSay==="function") tutSay("elite_named", "ÉLITE CON NOMBRE (en dorado): tiene modificadores, pega distinto y suelta mejor botín. Leé qué es antes de meterte.", null, 6500);
   }
 }
