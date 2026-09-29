@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/assets/preload.js
-   Pantalla de título: "Toca para continuar" queda deshabilitado (mostrando el % de carga) hasta
+   Pantalla de título: "Tocá para continuar" queda deshabilitado (mostrando el % de carga) hasta
    que terminó la PRIMERA TANDA de imágenes (título, menús, Sala, guardianes). Después se suelta la
    segunda tanda (arte de las arenas: ver lazy-images.js) y se sigue cargando en segundo plano.
    assetsAllReady() / whenAssetsReady(cb, onProgress) dicen si ya está TODO; la partida espera a
@@ -21,7 +21,7 @@ function whenAssetsReady(cb, onProgress){
   const core = [], rest = [];
   for(const src of ASSET_MANIFEST) ((lazy && LAZY_IMG.isDeferred(src)) ? rest : core).push(src);
   ASSET_LOAD.core.total = core.length; ASSET_LOAD.rest.total = rest.length;
-  const label = "Toca para continuar"; // el HTML arranca en "Cargando…" y deshabilitado (no se puede tocar antes de tiempo)
+  const label = "Tocá para continuar"; // voseo, como el resto del juego // el HTML arranca en "Cargando…" y deshabilitado (no se puede tocar antes de tiempo)
   function load(list, bucket, onStep){
     for(const src of list){
       const im = new Image();
