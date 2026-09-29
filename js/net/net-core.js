@@ -19,6 +19,7 @@ const net = {
   slot:-1, room:null,             // room: estado público de la sala (slots, arena, estado)
   code:null, ping:0, lastPongAt:0,
   reconnectAttempts:0, wantReconnect:false,
+  joinSeq:0,                      // cuántos "joined" llegaron (crear/unirse/reconectar esperan uno NUEVO)
   logs:[], errors:[],
   handlers:{}                     // room / msg / closed / error / joined
 };
@@ -142,6 +143,7 @@ function _netHandle(m){
   switch(m.t){
     case "pong": net.ping = Math.round(performance.now() - m.c); net.lastPongAt = performance.now(); if(typeof netDebugRefresh==="function") netDebugRefresh(); return;
     case "joined":
+      net.joinSeq++;
       net.slot = m.slot; net.role = m.host ? "host" : "guest"; net.room = m.room; net.code = m.room.code;
       net.reconnectAttempts = 0;
       if(typeof netChatReset==="function") netChatReset(m.chat); // historial corto del chat de la sala
@@ -179,8 +181,14 @@ function _netHandle(m){
     case "error":
       if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
       if(m.trade || /^(TRADE_|ROOMS_)/.test(m.code||"")){ _netEmit("tradeError", m); return; } // intercambio / lista de salas: no es un error de la sala
-      if(!net.room) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
+      // respuesta a un mensaje de partida mandado sin sala (p. ej. el movimiento del invitado justo al
+      // reconectarse, antes del "joined"): no es un motivo para el jugador ni la respuesta al "join"
+      if(m.code==="NO_ROOM"){ netLog("NETWORK_ERROR", {code:m.code}); return; }
+      if(!net.room || net._awaitingJoin) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
       if(m.code==="ROOM_FULL") netLog("ROOM_FULL"); else netLog("NETWORK_ERROR", {code:m.code});
+      // reconectando solo (netTryReconnect): el motivo lo resuelve la reconexión, sin el cartel de
+      // "no existe ninguna sala con ese código… revisá que esté bien escrito" (el jugador no escribió nada)
+      if(net.wantReconnect && net._awaitingJoin) return;
       _netEmit("error", m);
       return;
   }
@@ -201,17 +209,22 @@ function netCloseExplanation(){
 // Crear/unirse no termina al mandar el pedido: espera la respuesta REAL del servidor (la sala, un
 // error con motivo o que corte). Antes, si el servidor cortaba (p. ej. página no autorizada), el
 // botón quedaba en "Conectando…" y no aparecía ningún cartel.
+// Se espera un "joined" NUEVO (joinSeq): al reconectar, net.room todavía tiene la sala vieja y antes
+// esto "terminaba" al instante aunque el servidor contestara que la sala ya no existe (se reinició):
+// el invitado quedaba en una sala fantasma, con la pantalla congelada.
 function _netAwaitJoin(ms){
+  const seq0 = net.joinSeq;
+  net._awaitingJoin = true;
   return new Promise((resolve, reject)=>{
     const t0 = performance.now();
     const iv = setInterval(()=>{
-      if(net.room && net.role){ clearInterval(iv); resolve(); return; }
+      if(net.joinSeq !== seq0 && net.room && net.role){ clearInterval(iv); resolve(); return; }
       if(net._joinError){ const m = net._joinError; net._joinError = null; clearInterval(iv);
         const e = new Error((typeof NET_ERRORS!=="undefined" && NET_ERRORS[m.code]) || m.msg || m.code); e.handled = true; e.code = m.code; reject(e); return; }
       if(!net.ws || net.ws.readyState > 1){ clearInterval(iv); reject(new Error(netCloseExplanation())); return; }
       if(performance.now() - t0 > ms){ clearInterval(iv); reject(new Error("el servidor no respondió al pedido de sala")); }
     }, 100);
-  });
+  }).finally(()=>{ net._awaitingJoin = false; });
 }
 async function netCreateRoom(arena, champ, level, onTick){
   await netConnect(onTick);
@@ -263,14 +276,30 @@ netOn("socketClosed", ()=>{
     _netEmit("closed", "connection_lost", role);
   }
 });
+const NET_RECONNECT_TRIES = 8;
+// La sala ya no está en el servidor (se reinició —Render plan gratis: se duerme o se redeploya y pierde la
+// memoria— o el anfitrión la cerró mientras estabas desconectado): no tiene sentido seguir reintentando.
+const NET_ROOM_GONE = ["NOT_FOUND","STARTED","ROOM_FULL","BUILD","VERSION","HOST_RECONNECT"];
+function _netGiveUp(reason){
+  const code = net.code;
+  _netReset();
+  try{ if(net.ws){ net.ws.onclose = null; net.ws.onmessage = null; net.ws.close(); } }catch(e){}
+  net.ws = null; net.status = "off";
+  netLog("NETWORK_ERROR", {reconnect:reason, code});
+  _netEmit("closed", reason, "guest");
+}
 function netTryReconnect(){
   if(!net.wantReconnect || !net.code) return;
-  if(net.reconnectAttempts >= 8){ const code = net.code; _netReset(); _netEmit("closed", "connection_lost", "guest"); netLog("NETWORK_ERROR", {reconnect:"gave_up", code}); return; }
+  if(net.reconnectAttempts >= NET_RECONNECT_TRIES){ _netGiveUp("connection_lost"); return; }
   net.reconnectAttempts++;
   netLog("RECONNECT", {attempt:net.reconnectAttempts});
   const delay = Math.min(8000, 800 * net.reconnectAttempts);
   setTimeout(()=>{
     if(!net.wantReconnect) return;
-    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1, null, 12000).catch(()=> netTryReconnect());
+    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1, null, 12000).catch((e)=>{
+      if(!net.wantReconnect) return;
+      if(e && NET_ROOM_GONE.includes(e.code)){ _netGiveUp("room_gone"); return; }
+      netTryReconnect();
+    });
   }, delay);
 }

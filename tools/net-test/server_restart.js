@@ -170,8 +170,12 @@ const snap = (c) => ev(c, () => ({ state, role: net.role, code: net.code, room: 
   check('partida_reinicio.invitado_ve_reconectando', sawReconnect, await snap(B));
   const hostOk = await waitFor(A, () => state === 'playing' && netMatch && netMatch.role === 'host-offline', null, 10000);
   check('partida_reinicio.anfitrion_sigue_jugando', hostOk, await snap(A));
+  const tEnd = Date.now();
   const guestEnd = await waitFor(B, () => state === 'gameover' && !netMatch, null, 90000);
+  await sleep(700);
   const eB = await snap(B);
+  check('partida_reinicio.invitado_se_entera_rapido', Date.now() - tEnd < 25000, Math.round((Date.now() - tEnd) / 1000) + ' s');
+  check('partida_reinicio.sin_error_crudo', !/NO_ROOM|Error:/.test(eB.toast + eB.err), eB);
   check('partida_reinicio.invitado_cartel_claro', guestEnd && /servidor/i.test(eB.go), eB);
   check('partida_reinicio.invitado_sin_overlay_colgado', !eB.connShown, eB);
   await tap(B, '#menu-btn-1');
@@ -179,7 +183,7 @@ const snap = (c) => ev(c, () => ({ state, role: net.role, code: net.code, room: 
   const bMenu = await ev(B, () => state);
   check('partida_reinicio.invitado_vuelve_al_menu', bMenu === 'menu' || bMenu === 'mainmenu', bMenu);
   // el anfitrión termina la partida (sin servidor) y queda en un lugar jugable
-  await ev(A, () => { for (const h of heroes) { h.hp = 0; h.alive = false; } });
+  await ev(A, () => { if (state === 'buff') setState('playing'); for (const h of heroes) { h.hp = 0; h.alive = false; } if (typeof onPlayerDeath === 'function') onPlayerDeath(); });
   const aEnd = await waitFor(A, () => state === 'gameover' || state === 'victory', null, 30000);
   check('partida_reinicio.anfitrion_ve_resultados', aEnd, await snap(A));
   const retryTxt = await ev(A, () => (document.getElementById('retry-btn') || {}).textContent || '');
@@ -193,6 +197,8 @@ const snap = (c) => ev(c, () => ({ state, role: net.role, code: net.code, room: 
   const C = await client(browser, 'Caro', 'soporte');
   await toPrep(C);
   await ev(C, () => document.getElementById('prep-start-btn').click());
+  await sleep(600);
+  for (let k = 0; k < 12 && (await ev(C, () => state)) !== 'playing'; k++) { await ev(C, () => { if (typeof RUN_INTRO !== 'undefined' && RUN_INTRO.open) runIntroGo(); }); await sleep(500); } // prólogo + ficha de la arena
   const soloOk = await waitFor(C, () => state === 'playing' && !netMatch, null, 20000);
   await sleep(3000);
   check('solo.sin_servidor_se_juega', soloOk && (await ev(C, () => state)) === 'playing', await snap(C));

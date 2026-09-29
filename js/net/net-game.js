@@ -766,6 +766,7 @@ function netGuestOnMsg(from, d){
       netGuestStartRun(d); return;
     case "s":
       if(!netMatch || netMatch.role!=="guest"){ if(!netMatch && !netLobby.heldStart) netSendToHost({k:"needFull"}); return; }
+      netMatch.lastRxAt = performance.now();
       netApplySnapshot(d); return;
     case "buffs": netGuestShowBuffs(d); return;
     case "resume": if(netIsGuest() && state==="buff") setState("playing"); return;
@@ -947,8 +948,9 @@ function netOnMatchClosed(reason, role){
   netMatch = null;
   clearRunTimers();
   setState("gameover");
-  document.getElementById("go-title").textContent = reason==="host_left" ? "El anfitrión se desconectó" : "Se perdió la conexión";
-  document.getElementById("go-stats").textContent = "La partida terminó";
+  document.getElementById("go-title").textContent = reason==="host_left" ? "El anfitrión se desconectó"
+    : (reason==="room_gone" ? "El servidor se reinició" : "Se perdió la conexión con el servidor");
+  document.getElementById("go-stats").textContent = reason==="room_gone" ? "La partida terminó: la sala ya no existe. El anfitrión puede crear una nueva." : "La partida terminó";
   document.getElementById("go-progress").innerHTML = "La XP y el oro que ganaste hasta ahora ya quedaron guardados (sin castigo).";
   if(typeof questsOnRunEnd==="function") questsOnRunEnd(false, {abandon:true}); // lo jugado cuenta para sus estadísticas
   document.getElementById("retry-btn").classList.add("hidden");
@@ -960,3 +962,26 @@ function netTick(dt){
   if(netMatch.role==="host"){ netHostTick(); if(state==="playing") netHostCheckDefeat(); }
 }
 netHookEvents();
+
+/* =====================================================================
+   AVISO DE CONEXIÓN (invitado): antes, si se cortaba el servidor o el anfitrión bloqueaba el celular, la
+   pantalla del invitado quedaba congelada sin ninguna explicación durante hasta 2 minutos.
+   ===================================================================== */
+function netConnText(){
+  if(net.wantReconnect && net.code){
+    const n = Math.max(1, net.reconnectAttempts|0);
+    return `📡 Reconectando con ${netIsGuest() ? "la partida" : "la sala"}… (intento ${n} de ${typeof NET_RECONNECT_TRIES!=="undefined" ? NET_RECONNECT_TRIES : 8})`;
+  }
+  if(netIsGuest() && (state==="playing" || state==="buff") && netMatch.lastRxAt && performance.now() - netMatch.lastRxAt > 3500)
+    return "⏳ Esperando al anfitrión… (su conexión está lenta o bloqueó el celular)";
+  return "";
+}
+function netConnRefresh(){
+  const txt = netConnText();
+  let el = document.getElementById("net-conn");
+  if(!txt){ if(el && !el.classList.contains("hidden")) el.classList.add("hidden"); return; }
+  if(!el){ el = document.createElement("div"); el.id = "net-conn"; el.setAttribute("role", "status"); el.setAttribute("aria-live", "polite"); document.body.appendChild(el); }
+  if(el.textContent !== txt) el.textContent = txt;
+  el.classList.remove("hidden");
+}
+setInterval(()=>{ try{ netConnRefresh(); }catch(e){} }, 500);

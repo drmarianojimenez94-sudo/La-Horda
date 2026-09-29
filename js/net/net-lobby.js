@@ -330,10 +330,10 @@ netOn("closed", (reason, role)=>{
   if(state==="gameover" || state==="victory"){
     // estaba viendo los resultados: la sala ya no existe -> el botón lleva al menú
     netLobby.roomGone = true; netEndLabels();
-    showNetToast(reason==="host_left" ? "El anfitrión cerró la sala." : "Se perdió la conexión con la sala.");
+    showNetToast(netClosedText(reason, role));
     return;
   }
-  netLobby.lastError = reason==="host_left" ? "El anfitrión cerró la sala." : (reason==="kicked" ? "Te sacaron de la sala." : "Se perdió la conexión con la sala.");
+  netLobby.lastError = netClosedText(reason, role);
   if(state==="prep" || state==="menu"){
     if(role==="guest"){ setState("mainmenu"); renderMainMenu(); showNetToast(netLobby.lastError); }
     else renderPrepSummary();
@@ -349,6 +349,16 @@ netOn("error", (m)=>{
   if(tj) tj.textContent = netLobby.lastError;
   showNetToast(netLobby.lastError);
 });
+// Por qué ya no estás en la sala, en palabras de jugador (Render plan gratis: el servidor se duerme o se
+// reinicia y pierde las salas; el anfitrión nunca se entera por otro lado).
+function netClosedText(reason, role){
+  if(reason==="host_left") return "El anfitrión cerró la sala.";
+  if(reason==="kicked") return "Te sacaron de la sala.";
+  if(reason==="room_gone") return "La sala ya no existe: el servidor se reinició o el anfitrión la cerró. Pedile al anfitrión el código nuevo.";
+  if(reason==="idle") return "La sala se cerró por inactividad.";
+  if(role==="host") return "Se cortó la conexión con el servidor (se reinició o se cayó Internet). Tocá «Crear sala online» para armar otra: tus amigos entran con el código nuevo.";
+  return "Se perdió la conexión con el servidor y no se pudo volver a la sala. Probá unirte de nuevo con el código.";
+}
 function showNetToast(text){
   let t = document.getElementById("net-toast");
   if(!t){
