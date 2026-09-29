@@ -242,6 +242,7 @@ async function accountPull(reason){
     const r = await accountFetch("GET", "/api/save", undefined, { timeout: reason === "login" ? 90000 : 30000 });
     if(r.status === 401){ _acctSessionLost(); return; }
     if(r.status !== 200){ _acctRetryLater(); return; }
+    acct.lastPull = Date.now();
     const cloud = { version: r.j.version | 0, updatedAt: r.j.updatedAt || 0, summary: r.j.summary || null, data: r.j.data || null };
     if(!_acctCanApplyNow() && reason !== "login"){ acct.pendingApply = cloud; return; }
     await _acctReconcile(cloud);
@@ -627,6 +628,13 @@ function accountOpen(){
   if(acct.conflict){ _acctShowConflict(); return; }
   if(acct.session) _acctRenderProfile(); else _acctRenderAuth("login");
 }
+const ACCOUNT_STALE_MS = 20000;
+function _acctPullIfStale(reason){
+  const s = acct.session, y = acct.sync;
+  if(!s || !y || y.user !== _acctKey(s.user) || y.dirty || acct.uploading || acct.pulling || acct.conflict) return;
+  if(Date.now() - Math.max(y.lastOk || 0, acct.lastPull || 0) < ACCOUNT_STALE_MS) return;
+  accountPull(reason);
+}
 async function accountSyncNow(){
   if(!acct.session) return;
   if(acct.sync && acct.sync.dirty && acct.sync.user === _acctKey(acct.session.user)){ const ok = await accountUpload("manual"); if(ok || acct.conflict) return; }
@@ -695,7 +703,11 @@ function _acctRenderChip(){
   });
   document.addEventListener("visibilitychange", () => {
     if(document.visibilityState === "hidden" && acct.session && acct.sync && acct.sync.dirty && !acct.uploading) accountUpload("oculta");
+    // al volver a la pestaña (o al juego en el celular): si otro dispositivo subió algo mientras tanto,
+    // se baja ANTES de que un cambio de acá choque con esa versión (antes: conflicto falso o beacon rechazado)
+    else if(document.visibilityState === "visible") _acctPullIfStale("vuelve");
   });
+  window.addEventListener("focus", () => _acctPullIfStale("foco"));
   window.addEventListener("online", () => { if(acct.session && acct.sync && acct.sync.dirty){ acct.retryMs = 0; _acctSchedule(1000); } });
   // sesión recordada: se entra directo y la nube se baja en segundo plano (nunca frena el arranque)
   setTimeout(() => { _acctRenderChip(); if(acct.session) accountPull("inicio"); }, 0);

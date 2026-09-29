@@ -262,7 +262,11 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
 
   // ---------- 8) cerrar la pestaña sube lo pendiente (beacon) y al volver no hay conflicto falso ----------
   {
+    // mientras tanto D entró a esta cuenta (y al cargar ganó un logro): la nube va una versión adelante.
+    // Al volver a la pestaña, A la baja antes de tocar nada (antes: el beacon chocaba y al volver había conflicto)
     const vBefore = (await cloudSave(tokA)).version;
+    await A.E(() => { __account.sync.lastOk = 0; __account.lastPull = 0; document.dispatchEvent(new Event('visibilitychange')); });
+    check('vuelve.baja_lo_de_otro_dispositivo', await A.waitFor(v => __account.sync.version === v && !__account.pulling, 10000, vBefore), await A.E(() => __account.sync.version));
     await A.E(() => { save.gold = 88888; persist(); });
     await A.page.close();
     let v = null;
