@@ -255,6 +255,8 @@ function drawEnemy(e){
   // Cuerpo con la pose del sistema de animación (solo transformación visual: la hitbox no se mueve).
   ctx.save();
   animApply(e.x, e.y, P);
+  const _cap = artScaleCap(e); // tope de escala de píxel (art-direction.js): solo el dibujo, desde los pies
+  if(_cap !== 1){ ctx.translate(e.x, e.y); ctx.scale(_cap, _cap); ctx.translate(-e.x, -e.y); }
   drawEnemyBody(e);
   if(P.flash>0.02 && (prof.isBoss || animFlashBudget-- > 0)){
     // destello de golpe: silueta blanca del cuadro actual (juice.js). Si el cuerpo de este tipo no pasa

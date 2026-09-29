@@ -60,7 +60,7 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
     const Q = window.__Q6M = { on: false, rec: [], cat: [] };
     const NONPIX = new WeakSet(), LABEL = new WeakMap();
     const wrapRet = (name) => { const f = window[name]; if (typeof f !== 'function') return; window[name] = function () { const r = f.apply(this, arguments); if (r && typeof r === 'object') NONPIX.add(r); return r; }; };
-    ['glowSprite', 'fxGlowSprite', 'softGlow', 'radialSprite'].forEach(wrapRet);
+    ['glowSprite', 'fxGlowSprite', 'softGlow', 'radialSprite', 'fxDarkSprite', '_shadowSprite'].forEach(wrapRet);
     const wrapCat = (name, fn) => { const f = window[name]; if (typeof f !== 'function') return; window[name] = function () { Q.cat.push(fn.apply(null, arguments)); try { return f.apply(this, arguments); } finally { Q.cat.pop(); } }; };
     wrapCat('drawHero', h => ({ g: 'guardian', k: h.classKey }));
     wrapCat('drawFallenHero', h => ({ g: 'guardian', k: h.classKey }));

@@ -187,11 +187,13 @@ function campMarks(){
 }
 
 /* ---------------- arte (todo existente: recortado, espejado, recoloreado) ---------------- */
+// Píxeles CSS por píxel del arte de los personajes del campamento: el herrero a 1,75 y Veda (arte de 29×61) a 2,2
+// para que quede de la altura del guardián; antes 3,4 (bloques de casi 7 píxeles de pantalla: una mancha).
 const CAMP_ART = {
   fire:"assets/vfx/ciudad/fogata_0.png",
   hech:"assets/sprites/bosses/infernal/hechicero/portrait.png",
-  smith:{src:"assets/sprites/arenas/minas/mn_minero/atlas.png", w:84, h:85, cols:8, frames:[0,1,2,3], feet:0.94},
-  seer:{src:"assets/sprites/arenas/ciudad/cm_planidera/atlas.png", w:29, h:61, cols:8, frames:[1,4], feet:0.9}
+  smith:{src:"assets/sprites/arenas/minas/mn_minero/atlas.png", w:84, h:85, cols:8, frames:[0,1,2,3], feet:0.94, px:1.75},
+  seer:{src:"assets/sprites/arenas/ciudad/cm_planidera/atlas.png", w:29, h:61, cols:8, frames:[1,4], feet:0.9, px:2.2}
 };
 function campImg(src){
   let im = CAMP.img[src];
@@ -217,16 +219,31 @@ function campFrames(key){
         // la plañidera de la Ciudad sin la sangre: rojos → ceniza violeta; blancos → gris frío
         if(r > g + 24 && r > b + 16){ const l = (r + g + b)/3; r = l*0.7 + 30; g = l*0.6 + 22; b = l*1.05 + r*0.2 + 40; }
         else { const l = (r + g + b)/3; r = r*0.82 + l*0.1; g = g*0.84 + l*0.1; b = b*0.9 + l*0.22; }
+        // más luz y contraste: sobre el fondo oscuro del campamento la túnica se perdía (Q6)
+        r = (r - 60)*1.3 + 78; g = (g - 60)*1.3 + 74; b = (b - 60)*1.25 + 86;
       } else if(key==="smith"){
         // el minero sin la brasa de la corrupción: los naranjas más quemados vuelven a cuero y hollín
         if(r > 180 && g < 150 && b < 90){ r = r*0.72; g = g*0.66; b = b*0.7 + 10; }
       }
-      d[i] = Math.min(255, r); d[i+1] = Math.min(255, g); d[i+2] = Math.min(255, b);
+      d[i] = Math.max(0, Math.min(255, r)); d[i+1] = Math.max(0, Math.min(255, g)); d[i+2] = Math.max(0, Math.min(255, b));
     }
     x.putImageData(px, 0, 0);
     return c;
   });
   return (CAMP.spr[key] = out);
+}
+// Borde de luz de la fogata: la silueta de cada cuadro en color fuego. Se dibuja corrida un píxel del arte
+// hacia el fuego, debajo del cuerpo: el lado que mira a la llama brilla y la figura se despega del fondo
+// oscuro (antes Veda era una mancha violeta sobre negro).
+function campRim(key){
+  const k = key + "_rim"; if(CAMP.spr[k]) return CAMP.spr[k];
+  const fr = campFrames(key); if(!fr) return null;
+  return (CAMP.spr[k] = fr.map(f=>{
+    const c = document.createElement("canvas"); c.width = f.width; c.height = f.height;
+    const x = c.getContext("2d"); x.drawImage(f, 0, 0); x.globalCompositeOperation = "source-in";
+    x.fillStyle = "rgb(255,176,96)"; x.fillRect(0, 0, c.width, c.height);
+    return c;
+  }));
 }
 // La llama de la fogata de la Ciudad sin el resplandor pintado alrededor (ese fondo es opaco en el
 // sprite): se vuelven transparentes los pardos oscuros y queda la llama sola.
@@ -262,7 +279,7 @@ function campLayout(W, H){
 }
 function campPlace(){
   const el = campEl(), W = el.clientWidth || innerWidth, H = el.clientHeight || innerHeight, P = campLayout(W, H);
-  const size = {seer:[64, 92], hech:[92, 150], smith:[80, 118]};
+  const size = {seer:[64, 78], hech:[92, 150], smith:[80, 118]}; // (Veda más chica desde Q6: el rótulo queda sobre ella)
   for(const w of CAMP_ORDER){
     const b = el.querySelector(`[data-camp-who="${w}"]`), p = P[w], sz = size[w];
     b.style.left = Math.round(p.x - sz[0]*P.s/2) + "px"; b.style.top = Math.round(p.y - sz[1]*P.s) + "px";
@@ -315,9 +332,12 @@ function campDraw(cv){
   }
   // la vidente, arrodillada del lado de la sombra
   const seer = campFrames("seer");
-  if(seer){ const D = CAMP_ART.seer, f = seer[Math.floor(t*1.6) % seer.length], k = 3.4*s;
+  // (misma grilla que el herrero: 1,75 px CSS por píxel del arte; antes 3,4 = bloques de casi 7 píxeles de pantalla)
+  if(seer){ const D = CAMP_ART.seer, fi = Math.floor(t*1.6) % seer.length, f = seer[fi], k = D.px*s, rim = campRim("seer");
     campShadow(c, P.seer.x, P.seer.y, 18*s);
-    c.drawImage(f, Math.round(P.seer.x - D.w*k/2), Math.round(P.seer.y - D.h*D.feet*k), Math.round(D.w*k), Math.round(D.h*k)); }
+    const x0 = Math.round(P.seer.x - D.w*k/2), y0 = Math.round(P.seer.y - D.h*D.feet*k), w0 = Math.round(D.w*k), h0 = Math.round(D.h*k);
+    if(rim){ c.globalAlpha = 0.7*flick; c.drawImage(rim[fi], x0 + Math.max(1, Math.round(k)), y0, w0, h0); c.globalAlpha = 1; }
+    c.drawImage(f, x0, y0, w0, h0); }
   // tu guardián, quieto frente al fuego
   if(C.classKey && typeof drawChampFigure==="function"){
     campShadow(c, P.hero.x, P.hero.y, 16*s);
@@ -327,9 +347,12 @@ function campDraw(cv){
   }
   // el herrero, mirando al fuego (espejado)
   const smith = campFrames("smith");
-  if(smith){ const D = CAMP_ART.smith, f = smith[Math.floor(t*4) % smith.length], k = 1.75*s, w = D.w*k, h = D.h*k;
+  if(smith){ const D = CAMP_ART.smith, fi = Math.floor(t*4) % smith.length, f = smith[fi], k = D.px*s, w = D.w*k, h = D.h*k, rim = campRim("smith");
     campShadow(c, P.smith.x, P.smith.y, 26*s);
-    c.save(); c.translate(Math.round(P.smith.x), 0); c.scale(-1, 1); c.drawImage(f, Math.round(-w/2), Math.round(P.smith.y - h*D.feet), Math.round(w), Math.round(h)); c.restore(); }
+    c.save(); c.translate(Math.round(P.smith.x), 0); c.scale(-1, 1);
+    // espejado: +x local es hacia la izquierda de la pantalla, donde está el fuego
+    if(rim){ c.globalAlpha = 0.6*flick; c.drawImage(rim[fi], Math.round(-w/2) + Math.max(1, Math.round(k)), Math.round(P.smith.y - h*D.feet), Math.round(w), Math.round(h)); c.globalAlpha = 1; }
+    c.drawImage(f, Math.round(-w/2), Math.round(P.smith.y - h*D.feet), Math.round(w), Math.round(h)); c.restore(); }
   // la fogata (el sprite de la Ciudad, con el latido de la llama)
   campFirePit(c, P.fire.x, P.fire.y, s);
   const fire = campFlame();
