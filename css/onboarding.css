@@ -119,3 +119,12 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
   .starter-skin-tag{ font-size:0.78rem; }
   .starter-skin-card{ width:184px; }
 }
+
+/* ---------- fin de partida en el teléfono apaisado: los avisos van abajo a la derecha ----------
+   Arriba a la derecha (debajo del resumen de desafíos) tapaban el título de "Las últimas palabras" y los
+   valores de la columna derecha (Dificultad, Guardián) justo cuando uno los lee. Abajo, a los costados de
+   "Continuar", hay lugar libre: el botín recién levantado (hasta 2) a la izquierda y el resto a la derecha. */
+@media (max-height:520px){
+  #toast-stack.end{ top:auto; bottom:calc(6px + env(safe-area-inset-bottom, 0px)); width:min(210px, 25vw); max-height:92px; overflow:hidden; flex-direction:column-reverse; justify-content:flex-start; }
+  #toast-stack.end #loot-toasts{ position:fixed; left:calc(10px + env(safe-area-inset-left, 0px)); right:auto; bottom:calc(6px + env(safe-area-inset-bottom, 0px)); width:min(230px, 27vw); display:flex; flex-direction:column; }
+}
