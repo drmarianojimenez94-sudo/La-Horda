@@ -74,7 +74,7 @@ function erenRumblingCondition(h){
 function erenCheckRumbling(h){
   if(h.erenTitan && !h.erenRumblingReady && h.ultCharge >= h.ultMax && h.erenPhase!=="rumble" && erenRumblingCondition(h)){
     h.erenRumblingReady = true;
-    if(h===player || h.isRemote) showBanner("☠ EL RETUMBAR — Ultimate II disponible");
+    if(h===player || h.isRemote) showBanner("☠ EL RETUMBAR — Definitiva II disponible");
     vfxShock(h.x, h.y, 10, 120, "255,60,40", 600, 2);
   }
 }
