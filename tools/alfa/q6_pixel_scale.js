@@ -68,6 +68,7 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
     wrapCat('drawSkeletonMinion', () => ({ g: 'invocacion', k: 'esqueleto_nigro' }));
     wrapCat('drawEnemy', e => ({ g: (e.rank === 'jefe' || e.rank === 'subjefe' || e.isBoss) ? 'jefe' : 'enemigo', k: e.type }));
     for (const n of ['drawArena', 'aidDrawTall', 'aidAmbDraw', 'drawAcuaAmbience', 'drawCorpses', 'drawGoreDecals']) wrapCat(n, () => ({ g: 'decorado', k: n }));
+    for (const n of ['drawShadow', 'drawArenaLight', 'drawScreenFeedback', 'mnDrawDarkness', 'aidGrade']) wrapCat(n, () => ({ g: '_capa', k: n })); // sombras, luz y viñetas: no son pixel art
     for (const n of ['vfxDrawSprites', 'vfxDrawGround', 'vfxDrawParticles', 'drawChainFX', 'drawChampFxTop', 'drawChampFxGround', 'drawProjectileFx', 'vfxDrawDying', 'drawFxContrastTop']) wrapCat(n, () => ({ g: 'efectos', k: n }));
     const lab = (img) => {
       if (!img) return '?';
@@ -92,7 +93,7 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
           const s = Math.abs(dw / (sw || 1)) * k;
           let c = Q.cat[Q.cat.length - 1];
           if (!c) { const st = (new Error().stack || '').split('\n')[2] || ''; const m2 = st.match(/at (\S+)/); c = { g: 'otro', k: m2 ? m2[1] : '' }; }
-          if (isFinite(s) && s > 0 && Math.abs(dw * k) >= 6) Q.rec.push({ g: c.g, k: c.k, img: lab(img), s: +s.toFixed(3), px: Math.round(Math.abs(dw) * k) });
+          if (c.g[0] !== '_' && isFinite(s) && s > 0 && Math.abs(dw * k) >= 6) Q.rec.push({ g: c.g, k: c.k, img: lab(img), s: +s.toFixed(3), px: Math.round(Math.abs(dw) * k) });
         }
       } catch (e) {}
       return orig.apply(this, arguments);

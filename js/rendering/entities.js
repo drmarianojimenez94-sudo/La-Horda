@@ -224,17 +224,7 @@ function drawEnemy(e){
   const prof = animProfileOf(e);
   const P = animPose(e, prof, false);
   const lift = P.oy<0 ? Math.min(0.35, -P.oy/60) : 0;
-  drawShadow(e.x, e.y, e.radius*0.8*(1-lift));
-  if(SHINE_KEYS[e.type]){
-    // Sombra de contacto extra, más ajustada y oscura, para anclar mejor al suelo
-    // a los enemigos que aparecen desde el principio del juego.
-    ctx.save();
-    ctx.fillStyle = "rgba(0,0,0,0.30)";
-    ctx.beginPath();
-    ctx.ellipse(e.x, e.y+3, e.radius*0.55, e.radius*0.2, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
-  }
+  drawShadow(e.x, e.y, e.radius*0.8*(1-lift)); // sombra común con núcleo de contacto (art-direction.js): la misma para todos
   if(e.rank!=="normal"){
     // Jerarquía legible dentro de la horda: subélite = aro tenue; élite = aro dorado grueso que
     // gira (se encuentra de un vistazo entre 40 enemigos); subjefe = doble aro naranja; jefe =

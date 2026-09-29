@@ -39,6 +39,7 @@ function render(){
     ctx.fillRect(em.x, em.y, 2, 2);
   }
   drawAcuaAmbience();
+  drawArenaLight(); // penumbra del piso con luz alrededor de los guardianes (art-direction.js): debajo de avisos, lava y actores
   drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   if(arenaHas("drawGround")) arenaHook("drawGround", animNow/1000); // marcas propias en el piso (ARENA_EXT)
   drawGoreDecals(); // sangre, quemaduras, escarcha y astillas en el piso (debajo de los avisos: el peligro se lee primero)
