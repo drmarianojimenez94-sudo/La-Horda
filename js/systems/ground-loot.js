@@ -276,7 +276,7 @@ function groundLootDrawNames(){
   if(!groundLoot.length || !player || typeof ctx==="undefined" || typeof worldToScreen!=="function") return;
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.font = "17px 'VT323', monospace";
+  ctx.font = pxFont(14);
   const shown = [];
   const list = groundLoot.slice().sort((a,b)=>Math.hypot(player.x-a.x, player.y-a.y) - Math.hypot(player.x-b.x, player.y-b.y));
   for(const g of list){

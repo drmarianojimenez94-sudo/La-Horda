@@ -500,7 +500,7 @@ function _cmDrawCoverHint(t){
   const e = cmPresEntity(); if(!e || !e.ov || !player || !player.alive) return;
   const left = Math.max(0, CM_CFG.presentador.ovationWind - e.ov.t)/1000, ok = cmCovered(e, player);
   const hp = worldToScreen(player.x, player.y + 34);   // debajo de los pies: arriba están el cartel y la barra del jefe
-  ctx.save(); ctx.textAlign = "center"; ctx.font = "21px VT323, monospace";
+  ctx.save(); ctx.textAlign = "center"; ctx.font = pxFont(17);
   const txt = ok ? `A CUBIERTO · ${left.toFixed(1)} s` : `¡CUBRITE! · ${left.toFixed(1)} s`, w = ctx.measureText(txt).width + 16;
   ctx.fillStyle = "rgba(10,4,8,0.78)"; ctx.fillRect(hp.x - w/2, hp.y - 15, w, 21);
   ctx.fillStyle = ok ? "#9dffb0" : (Math.sin(t*14) > 0 ? "#ff5a6a" : "#ffd0d0"); ctx.fillText(txt, hp.x, hp.y + 1);
@@ -514,7 +514,7 @@ function _cmDrawCoverHint(t){
       ctx.translate(ax, ay); ctx.rotate(ang);
       ctx.fillStyle = `rgba(120,255,150,${pl})`; ctx.strokeStyle = "rgba(0,0,0,0.75)"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(-10, -14); ctx.lineTo(-4, 0); ctx.lineTo(-10, 14); ctx.closePath(); ctx.fill(); ctx.stroke();
-      ctx.rotate(-ang); ctx.fillStyle = "#bfffcf"; ctx.font = "17px VT323, monospace"; ctx.fillText("PILAR", 0, dy > 0.5 ? -18 : 30);
+      ctx.rotate(-ang); ctx.fillStyle = "#bfffcf"; ctx.font = pxFont(14); ctx.fillText("PILAR", 0, dy > 0.5 ? -18 : 30);
     }
   }
   ctx.restore();

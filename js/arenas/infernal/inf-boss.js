@@ -280,7 +280,7 @@ function infBossDrawTop(){
   for(const f of INF.fis){
     if(!f.hordaCap || f.done || !inView(f.x, f.y, 120)) continue;
     const C = INF_CAPS[f.hordaCap];
-    ctx.save(); ctx.font = "bold 13px monospace"; ctx.textAlign = "center"; ctx.lineWidth = 4; ctx.strokeStyle = "rgba(10,4,2,0.9)";
+    ctx.save(); ctx.font = pxFont(14); ctx.textAlign = "center"; ctx.lineWidth = 4; ctx.strokeStyle = "rgba(10,4,2,0.9)";
     ctx.fillStyle = `rgb(${C.rgb})`; ctx.strokeText(`${C.name} · ${C.txt}`, f.x, f.y - 70); ctx.fillText(`${C.name} · ${C.txt}`, f.x, f.y - 70); ctx.restore();
   }
 }

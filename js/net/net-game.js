@@ -194,7 +194,7 @@ function netQuiet(fn){ _netRecDepth++; try{ return fn(); } finally { _netRecDept
 function netDrawNameTags(){
   if(!netMatch || !heroes) return;
   ctx.save();
-  ctx.font = "bold 13px monospace"; ctx.textAlign = "center";
+  ctx.font = pxFont(14); ctx.textAlign = "center";
   heroes.forEach((h,i)=>{
     const s = netMatch.slots && netMatch.slots[i];
     if(!s || s.kind!=="human" || h===player) return;
