@@ -47,6 +47,7 @@ function drawHeroBody(h, drawScale, spinning, stealthed){
   // SKIN DE SET COMPLETO (única transformación visual completa por equipo). Solo si el arte existe
   // (SET_SKINS en set-effects.js); sin arte, el set completo se ve con su aura completa.
   if(typeof drawSetSkin==="function" && drawSetSkin(h, drawScale, stealthed?0.32:1)) return;
+  if(PORTADORES[h.classKey] && drawPortador(h, drawScale, stealthed?0.32:1)) return;
   // El Mago usa su propio atlas de sprites (arte provisto por el usuario) en vez del sprite
   // procedural; el resto de las clases sigue exactamente igual que antes.
   if(h.classKey==="mago" && drawMagoAtlas(h, drawScale, stealthed?0.32:1)){

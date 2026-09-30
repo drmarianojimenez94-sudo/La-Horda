@@ -8,6 +8,7 @@ function damageEnemy(e, amount, opts){
   opts = opts || {};
   if(e.cineT > 0) return; // cinemática de un jefe (inf-hechicero.js): intocable mientras habla o se transforma
   const src = opts.src || player;
+  amount = portadorBasicPower(src, amount, opts);
   if(_boonRec) boonRecHit(e, amount, src, opts); // refuerzos de habilidad: quién recibió ESTE lanzamiento
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
@@ -285,7 +286,7 @@ function killEnemy(e){
 }
 
 let _avoidableHit = false; // lo prende bossHitHero: el golpe venía con aviso en el suelo
-function damageHero(h, amount, src){
+function damageHero(h, amount, src, portTransferred){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
   { const tk = heroDmgTakenMult(h); if(tk<=0) return; amount *= tk; } // montado / Instinto / titán / cinemáticas
@@ -306,6 +307,8 @@ function damageHero(h, amount, src){
   const defBonus = (h===player) ? runStats.defBonus : 0;
   const passiveDef = h.classKey ? Math.min(0.5, passiveSum(h.classKey,"def_add")) : 0; // "Piel de Brasa"
   let dmg = amount * (1 - h.def) * (1 - defBonus) * (1-(h.buffDefMult?(1-h.buffDefMult):0)) * (1-passiveDef);
+  dmg *= portadorTakenMult(h, src);
+  if(!portTransferred) dmg = portadorShareDamage(h, dmg, src);
   const mitigated = Math.max(0, amount - dmg), dmgBeforeShields = dmg;
   if(h.shield>0){
     const absorbed = Math.min(h.shield, dmg);

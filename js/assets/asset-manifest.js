@@ -3,6 +3,28 @@
    La usa js/assets/preload.js para saber cuándo terminó de cargar todo. Si agregás una imagen
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
+  // Five new Portadores, base animations and set palettes.
+  "assets/sprites/champions/brasa/atlas.png",
+  "assets/sprites/champions/brasa/preview.png",
+  "assets/sprites/champions/brasa/set.png",
+  "assets/sprites/champions/brasa/set-preview.png",
+  "assets/sprites/champions/eslabon/atlas.png",
+  "assets/sprites/champions/eslabon/preview.png",
+  "assets/sprites/champions/eslabon/set.png",
+  "assets/sprites/champions/eslabon/set-preview.png",
+  "assets/sprites/champions/morwen/atlas.png",
+  "assets/sprites/champions/morwen/preview.png",
+  "assets/sprites/champions/morwen/set.png",
+  "assets/sprites/champions/morwen/set-preview.png",
+  "assets/sprites/champions/farolero/atlas.png",
+  "assets/sprites/champions/farolero/preview.png",
+  "assets/sprites/champions/farolero/set.png",
+  "assets/sprites/champions/farolero/set-preview.png",
+  "assets/sprites/champions/iria/atlas.png",
+  "assets/sprites/champions/iria/preview.png",
+  "assets/sprites/champions/iria/set.png",
+  "assets/sprites/champions/iria/set-preview.png",
+
   // >>> hoja de bestias (tools/art/hoja_bestias/build.py)
   "assets/sprites/enemies/bosque/cu_sith/v3/atlas.png",
   "assets/sprites/enemies/bosque/enjambre_hadas/v3/atlas.png",

@@ -63,6 +63,7 @@ function drawChampFigure(pctx, key, x, y, scale, fx, animT, moving, extra){
     if(fake._codexSkin && typeof drawSetSkin==="function" && drawSetSkin(fake, scale, 1)){
       // skin de set de un guardián de atlas viejo (Mago, Asesino, Sanadora, Tanque): preview del Códice
     }
+    else if(PORTADORES[key]) drawPortador(fake, scale, 1);
     else if(key==="mago") drawMagoAtlas(fake, scale, 1);
     else if(key==="soporte") drawSoporteAtlas(fake, scale, 1);
     else if(key==="segador") drawSegadorReal(fake, scale, 1);

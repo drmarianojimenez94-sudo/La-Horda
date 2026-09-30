@@ -69,7 +69,7 @@ function resetRunTransients(){
   axiomForceQuitFlash = 0; axiomFreezeTimer = 0; axiomFreezeCaster = null; axiomForceQuitPending = null;
   if(typeof canvas!=="undefined" && canvas && canvas.style) canvas.style.filter = "";
   musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];
-  activeAxiomVfx = []; bossDangerPulse = 0; champFx = [];
+  activeAxiomVfx = []; bossDangerPulse = 0; champFx = []; portadorReset();
   boss = null; bossActive = false; activeChampion = null; midBossSpawned = false; levelClearing = 0;
   if(typeof groundLootReset==="function") groundLootReset(); // botín del piso: se junta si la partida sigue (cambio de arena)
 }

@@ -358,6 +358,13 @@ function castAbility(caster, sk, isUlt, idx){
   try{
   switch(sk.kind){
 
+    case "br_turret": case "br_purge": case "br_dismantle": case "br_overclock":
+    case "es_hook": case "es_line": case "es_guard": case "es_ring":
+    case "mo_resin": case "mo_salt": case "mo_distill": case "mo_alembic":
+    case "fa_lantern": case "fa_flash": case "fa_path": case "fa_vigil":
+    case "ir_anchor": case "ir_tension": case "ir_cut": case "ir_triangle":
+      portadorCast(caster, sk, isUlt, dmg, AREA, DUR, POWER); break;
+
     // El Libertador (js/champions/libertador.js) y Eren (js/champions/eren.js)
     case "sm_bayonet": case "sm_granaderos": case "sm_san_lorenzo": case "sm_andes_ult":
       libertadorCast(caster, sk, isUlt, dmg, AREA, DUR); break;

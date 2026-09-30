@@ -302,7 +302,7 @@ function drawChampPack(key, h, drawScale, alpha){
   h._aPrev = a;
   let st, prog = null;
   if(h.hurtTimer>0){ st = "hit"; prog = 1 - h.hurtTimer/160; }
-  else if(a>0){ st = champPackCasting(h) ? "cast" : "attack"; prog = 1 - a/(h._aDur||a); }
+  else if(a>0){ st = champPackCasting(h) ? ((h.portCastState==="ultimate" && P.sets.ultimate_down)?"ultimate":"cast") : "attack"; prog = 1 - a/(h._aDur||a); }
   else if(h.sylvaCharging && P.sets.aim) st = "aim";
   else st = h.moving ? "walk" : "idle";
   const pick = champPackSet(P, st, dir, h) || (st==="cast" && champPackSet(P, "attack", dir, h)) || champPackSet(P, "idle", dir, h);

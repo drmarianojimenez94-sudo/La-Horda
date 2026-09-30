@@ -1,0 +1,109 @@
+{
+  "checks": [
+    {
+      "host": "brasa",
+      "guest": "iria",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "brasa",
+          "iria",
+          "eslabon",
+          "libertador"
+        ],
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "chain",
+            "owner": 2
+          }
+        ]
+      },
+      "rg": {
+        "k": "iria",
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "chain",
+            "owner": 2
+          }
+        ],
+        "ready": true,
+        "skin": "skin_hilo_umbral"
+      }
+    },
+    {
+      "host": "eslabon",
+      "guest": "morwen",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "eslabon",
+          "morwen",
+          "musashi",
+          "profeta"
+        ],
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "chain",
+            "owner": 0
+          }
+        ]
+      },
+      "rg": {
+        "k": "morwen",
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "chain",
+            "owner": 0
+          }
+        ],
+        "ready": true,
+        "skin": "skin_vidrio_negro"
+      }
+    },
+    {
+      "host": "farolero",
+      "guest": "brasa",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "farolero",
+          "brasa",
+          "tanque",
+          "guerrero"
+        ],
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "lantern",
+            "owner": 0
+          }
+        ]
+      },
+      "rg": {
+        "k": "brasa",
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "lantern",
+            "owner": 0
+          }
+        ],
+        "ready": true,
+        "skin": "skin_ultimo_turno"
+      }
+    }
+  ],
+  "errors": []
+}
