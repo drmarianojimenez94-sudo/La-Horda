@@ -93,17 +93,26 @@ function defaultSave(){
 // Ciudad Maldita y va a la Mística, las cromas (1.500) y el segundo guardián (2.500). Quien ya recibió los
 // 10.000 los conserva: el oro se lee siempre del guardado persistido.
 let save = defaultSave();
-// MODO PRUEBA (pedido para seguir probando): todos los guardianes liberados y todas las arenas de la
-// campaña abiertas, en guardados nuevos y viejos. No toca niveles, oro, objetos ni talentos.
-// Para volver al modo campaña normal, poner esto en false. (Las pruebas automáticas de la campaña
-// lo apagan definiendo window.__campaignMode antes de cargar la página.)
-// BUGFIX 01: apagado. La campaña es secuencial (solo la Arena 1 abierta) y los guardianes se compran.
-const PLAYTEST_UNLOCK_ALL = false;
+// Alfa de prueba: todos los guardianes y mapas disponibles, sin parámetros en la URL.
+// __campaignMode mantiene las pruebas de progresión secuencial aisladas de este regalo.
+const PLAYTEST_UNLOCK_ALL = typeof window!=="undefined" && !window.__campaignMode;
 function applyPlaytestUnlock(){
   if(!PLAYTEST_UNLOCK_ALL) return;
-  let changed = !save.starterChosen;
-  for(const k in save.champions){ if(!save.champions[k].unlocked){ save.champions[k].unlocked = true; changed = true; } }
+  let changed = !save.starterChosen || !save.divineArenaUnlocked;
+  for(const k in save.champions){
+    const c = save.champions[k];
+    if(!c.unlocked){ c.unlocked = true; changed = true; }
+    // Una vez por guardián: fija nivel 40 y luego permite seguir ganando XP normalmente.
+    if(!c.playtestLevel40V1){
+      c.talentPoints = Math.max(0, (c.talentPoints||0) + 40 - (c.level||1));
+      c.level = 40; c.xp = 0; c.playtestLevel40V1 = true; changed = true;
+    }
+  }
   save.starterChosen = true;
+  save.divineArenaUnlocked = true;
+  const opened = new Set(save.legacyOpenArenas||[]);
+  for(const k of ARENA_ORDER) if(!opened.has(k)){ opened.add(k); changed = true; }
+  save.legacyOpenArenas = Array.from(opened);
   if(changed) persist();
 }
 // MODO DESARROLLADOR (auditoría pre-alfa): los regalos de prueba de abajo (nivel 90, todas las arenas,
@@ -158,7 +167,7 @@ function applyTestSkins(){
   persist();
 }
 function loadSave(){
-  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); applyTestSkins();
+  try{ _loadSaveInner(); }finally{ applyTestUnlock90(); applyTestSkins(); applyPlaytestUnlock();
     // logros/desafíos/pase: completa los campos que falten (guardados viejos) y rota los desafíos del día
     if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
