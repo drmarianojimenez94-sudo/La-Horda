@@ -1,0 +1,30 @@
+name: Champion entry balance
+on:
+  pull_request:
+    paths: ['js/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+  push:
+    branches: [main, 'chatgpt/**']
+    paths: ['js/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  entry-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/balance/check-entry-reference.js
+      - run: npm install --prefix /tmp/horda-balance --no-audit --no-fund playwright@1.61.1
+      - run: /tmp/horda-balance/node_modules/.bin/playwright install --with-deps chromium
+      - run: node tools/balance/entry-gate.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: champion-entry-balance-results
+          path: docs/balance/entry-gate-results.json

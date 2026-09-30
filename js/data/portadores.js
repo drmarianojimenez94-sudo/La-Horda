@@ -2,6 +2,14 @@
 // Cinco portadores originales. Se registra antes de loadSave: los perfiles antiguos
 // reciben entradas nuevas a nivel 1 sin cambiar oro, equipo ni progreso existente.
 const PORTADORES = {
+  myla: {name:"Myla", title:"La Maga del Yogur", role:"Maga de control: yogur, torres y ondas de llanto.", roleCategory:"mago", color:"#e99abb", glow:"#fff1e1", hp:100, dmg:8, def:0.08, speed:162, range:320, basic:560, ranged:true, weapon:"Cuchara Encantada", set:"merienda_magica", branches:["Yogurtería","Torres","Berrinche"],
+    origin:"La Ciudad de los Primeros Pasos", history:"Myla descubrió que su merienda podía convertirse en magia. Con una cuchara encantada y una sonrisa desafiante, levanta torres de yogur y cubre de crema los caminos de la Horda. Donde otros ven oscuridad, ella ve una aventura por compartir.",
+    skills:[
+      {name:"Torre de Yogur", ico:"♜", kind:"my_tower", cost:32, cd:9000, range:200, radius:40, duration:12000, dmgMult:0.50, desc:"Invoca una torre de yogur que dispara y ralentiza. Máximo dos; la tercera reemplaza la más antigua."},
+      {name:"Yogurazo", ico:"●", kind:"my_splash", cost:28, cd:6200, range:280, radius:95, duration:3600, dmgMult:1.0, desc:"Lanza yogur al punto elegido: salpica y deja un charco pegajoso que daña y ralentiza."},
+      {name:"Burbuja Cremosa", ico:"◉", kind:"my_bubble", cost:26, cd:10000, duration:4500, desc:"Se envuelve en yogur protector: obtiene un escudo y limpia su ralentización."}],
+    ultimate:{name:"BERRINCHE", ico:"★", kind:"my_tantrum", cd:34000, range:240, radius:180, duration:6500, dmgMult:0.55, desc:"En pañales y más grande, llora durante 6,5 segundos: cada onda de llanto daña y salpica yogur a su alrededor. Puede moverse; los jefes resisten parte de la ralentización."},
+    voices:["¡Yogur para todos!","¿Otra cucharadita?","Necesito… una merienda…"]},
   brasa: {name:"Brasa", title:"La Última Maquinista", role:"Ingeniera de posición: torretas, presión y vapor.", roleCategory:"mago", color:"#c58543", glow:"#ffd28a", hp:108, dmg:10, def:0.09, speed:156, range:310, basic:580, ranged:true, weapon:"Remachadora", set:"ultimo_turno", branches:["Artillería","Vapor","Mantenimiento"],
     origin:"Fábrica Sin Fin", history:"Mantenía las máquinas de la Fábrica. Descubrió que una de sus cadenas no era para un monstruo, sino para alguien que se negó a obedecer. Escapó con los planos: todavía no sabe quién estaba al otro extremo.",
     skills:[
@@ -77,6 +85,7 @@ for(const k in PORTADORES){
 }
 
 const PORTADOR_SET_DATA = {
+  merienda_magica:{name:"Merienda Mágica",two:"+8% daño de habilidades",effect:"skilldmg_mult",value:0.08,three:"Burbuja Cremosa concede un escudo mayor",four:"BERRINCHE salpica con un 15% más de daño"},
   ultimo_turno:{name:"Último Turno",two:"+12% vida máxima",effect:"hp_mult",value:0.12,three:"Desmontaje deja una purga de vapor",four:"La sobrecarga conecta dos torretas con fuego coordinado"},
   juramento_roto:{name:"Juramento Roto",two:"+12% vida máxima",effect:"hp_mult",value:0.12,three:"Custodia concede escudo al terminar",four:"Proteger suficiente daño prepara una cadena doble contra comunes"},
   vidrio_negro:{name:"Vidrio Negro",two:"+8% daño de habilidades",effect:"skilldmg_mult",value:0.08,three:"Una reacción recupera energía (con enfriamiento)",four:"Destilación prepara un segundo impacto reducido del próximo frasco"},

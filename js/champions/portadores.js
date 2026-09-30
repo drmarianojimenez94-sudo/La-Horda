@@ -85,6 +85,11 @@ function portadorCast(h,sk,isUlt,dmg,area,dur,power){
   if(h.classKey==="brasa") h.portPressure=Math.min(3,(h.portPressure||0)+1);
   const p=()=>portadorPoint(h,range,r);
   switch(sk.kind){
+    case "my_tower": {portadorTurret(h,p(),life,dmg);break;}
+    case "my_splash": {const q=p();portadorArea(h,q,r,dmg);portadorLimit(h,"yogurt",3);portadorAdd(h,"yogurt",q,life,{r,dmg:dmg*0.2});portadorCue(h,q,r);break;}
+    case "my_bubble": {portadorShield(h,(portadorSet(h,3)?0.24:0.18)*power,life,h);h.slowTimer=0;portadorCue(h,h,45);break;}
+    case "my_tantrum": {portadorLimit(h,"tantrum",1);portadorAdd(h,"tantrum",h,life,{r,dmg:dmg*(portadorSet(h,4)?1.15:1)});portadorCue(h,h,r);break;}
+
     case "br_turret": { const q=p(); portadorTurret(h,q,life,dmg); portadorCue(h,q,40); break; }
     case "br_purge": {
       const pressure=h.portPressure||0;h.portPressure=0;
@@ -232,6 +237,7 @@ function updatePortadorObjects(dt){
   for(const o of portadorObjects){
     o.life-=dt;const h=o.owner;if(!h || !h.alive || !heroes.includes(h)){o.life=0;continue;}if(o.life<=0)continue;
     if(currentArena==="abismo" && abS && !abWalkable(o.x,o.y)){o.life=0;continue;}
+    if(o.kind==="tantrum"){o.x=h.x;o.y=h.y;}
     o.tick-=dt;
     portadorWith(h,()=>{
       if(o.kind==="turret"){
@@ -239,10 +245,12 @@ function updatePortadorObjects(dt){
         if(o.hitTimer<=0){const threats=portadorEnemies(h).filter(e=>distance(e,o)<65);if(threats.length){o.hp-=Math.min(o.maxHp*0.3,threats.reduce((s,e)=>s+(e.dmg||5)*0.35,0));o.hitTimer=850;}}
         if(o.hp<=0){o.life=0;portadorCue(h,o,45);return;}
         if(h.portCooldownTimer>0)return;
-        if(o.attackTimer<=0){const e=portadorEnemies(h).filter(e=>distance(e,o)<o.range && (!arenaHas("heroReachable") || arenaHook("heroReachable",o,e))).sort((a,b)=>distance(a,o)-distance(b,o))[0];if(e){const boosted=h.portOverclockTimer>0;portadorHit(h,e,o.dmg*(boosted?1+Math.min(1.5,0.5*(h.portOverclockPower||1)):1));o.attackTimer=boosted?460:850;portadorAdd(h,"shot",o,160,{bx:e.x,by:e.y});}else o.attackTimer=150;}
+        if(o.attackTimer<=0){const e=portadorEnemies(h).filter(e=>distance(e,o)<o.range && (!arenaHas("heroReachable") || arenaHook("heroReachable",o,e))).sort((a,b)=>distance(a,o)-distance(b,o))[0];if(e){const boosted=h.portOverclockTimer>0;if(h.classKey==="myla")portadorSlow(h,e,0.25,1000);portadorHit(h,e,o.dmg*(boosted?1+Math.min(1.5,0.5*(h.portOverclockPower||1)):1));o.attackTimer=boosted?460:850;portadorAdd(h,"shot",o,160,{bx:e.x,by:e.y});}else o.attackTimer=150;}
         if(portadorSet(h,4) && h.portOverclockTimer>0 && o.tick<=0){o.tick=900;const pair=portadorOwned(h,"turret");if(pair.length===2 && pair[0]===o)for(const e of portadorEnemies(h))if(seSegDist(e.x,e.y,pair[0].x,pair[0].y,pair[1].x,pair[1].y)<22)portadorHit(h,e,o.dmg*0.4,true);}
       }else if(o.tick<=0){o.tick=600;
         if(o.kind==="chain")for(const e of portadorEnemies(h))if(seSegDist(e.x,e.y,o.ax,o.ay,o.bx,o.by)<o.r+(e.radius||0)){portadorHit(h,e,o.dmg);portadorSlow(h,e,0.45,850);}
+        if(o.kind==="tantrum"){for(const e of portadorEnemies(h))if(distance(o,e)<o.r+(e.radius||0)){portadorHit(h,e,o.dmg);portadorSlow(h,e,0.35,850);}portadorCue(h,o,o.r);}
+        if(o.kind==="yogurt")for(const e of portadorEnemies(h))if(distance(o,e)<o.r){portadorHit(h,e,o.dmg);portadorSlow(h,e,0.4,850);}
         if(o.kind==="steam")for(const e of portadorEnemies(h))if(distance(o,e)<o.r){portadorHit(h,e,o.dmg);portadorSlow(h,e,0.3,850);}
         if(o.kind==="alembic")for(const e of portadorEnemies(h))if(distance(o,e)<o.r){portadorHit(h,e,o.dmg);const m=e._portMarks && e._portMarks[heroes.indexOf(h)];if(m)for(const key of ["resin","salt"])if(m[key]>runElapsedMs)m[key]=Math.max(m[key],runElapsedMs+1500);}
         if(o.kind==="triangle")for(const e of portadorEnemies(h))if(portadorInside(e,o)){portadorHit(h,e,o.dmg);portadorSlow(h,e,0.35,800);}
@@ -258,6 +266,7 @@ function botPortador(h,cdMult){
   const target=foes.sort((a,b)=>(isBossRank(b)?1000:0)-(isBossRank(a)?1000:0) || distance(a,h)-distance(b,h))[0];
   h.aim={x:target.x,y:target.y};
   let order=[0,1,2];
+  if(h.classKey==="myla")order=portadorOwned(h,"turret").length<2?[0,1,2]:h.hp/h.maxHp<0.5?[2,1]:[1];
   if(h.classKey==="brasa"){const t=portadorOwned(h,"turret");order=t.length<2?[0,1]:h.hp/h.maxHp<0.4?[2,1]:[1];if(order[0]===0)h.aim={x:h.x+(target.x-h.x)*0.3,y:h.y+(target.y-h.y)*0.3};}
   if(h.classKey==="eslabon")order=heroes.some(a=>a!==h && a.alive && a.hp/a.maxHp<0.65)?[2,0,1]:[0,1];
   if(h.classKey==="morwen")order=h.hp/h.maxHp<0.55?[2,0,1]:foes.some(e=>{const m=e._portMarks && e._portMarks[heroes.indexOf(h)];return m && m.resin>runElapsedMs;})?[1,0]:[0,1];

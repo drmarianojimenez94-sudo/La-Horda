@@ -96,3 +96,9 @@ objetos de prueba de la Sala; `?debug=1` abre solo el panel de red.
 
 Prototipo en desarrollo activo. Mejoras técnicas pendientes (no urgentes) en
 [MODULARIZATION_FOLLOWUPS.md](MODULARIZATION_FOLLOWUPS.md).
+
+## Myla y referencia de balance
+
+Myla, la Maga del Yogur, incorpora Torre de Yogur, Yogurazo, Burbuja Cremosa y **BERRINCHE**: transformación en pañales, ondas de llanto y yogur en área. Incluye sprites direccionales, talentos, set Merienda Mágica y sincronización cooperativa. Las skins de los nuevos portadores tienen paletas propias, aura y efectos cosméticos.
+
+Estadísticas, resultados de 57 simulaciones, ajustes y comandos de verificación: [BALANCE_CAMPEONES.md](BALANCE_CAMPEONES.md).
