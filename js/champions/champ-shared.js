@@ -72,6 +72,7 @@ function heroSpeedMult(h){
   if(h.classKey==="eren") m *= erenSpeedMult(h);
   if(h.advAllyTimer>0) m *= 1 + EREN_CFG.advance.speedPct*EREN_CFG.advance.allyShare;
   m *= itemSpeedMult(h); // Paso del Cazador / Gracia Veloz (objetos)
+  m *= portadorSpeedMult(h);
   return m;
 }
 function heroAtkSpeedMult(h){

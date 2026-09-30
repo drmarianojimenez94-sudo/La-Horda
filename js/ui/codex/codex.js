@@ -375,6 +375,7 @@ function codexChampHtml(key){
   if(codexChampTab === "ficha" || !own){
     const sk = [...cls.skills, cls.ultimate];
     panel += _sec("¿Quién es?", `<blockquote class="cx-quote">«${_cxEsc(cat.lore)}»</blockquote>${L.origin ? `<div class="cx-origin">Origen: <b>${_cxEsc(L.origin)}</b></div>` : ""}${_p(L.history)}`, "lore");
+    if(cls.passive) panel += _sec("Pasiva · "+cls.passive.ico+" "+cls.passive.name,_p(cls.passive.desc),"combat");
     const HV = typeof HERO_VOICES!=="undefined" ? HERO_VOICES[key] : null;
     if(HV) panel += _sec("Su voz", `<div class="cx-voice"><i>Al elegirlo</i>«${_cxEsc(HV.pick)}»</div><div class="cx-voice"><i>Al ganar</i>«${_cxEsc(HV.win)}»</div><div class="cx-voice"><i>Al caer</i>«${_cxEsc(HV.fall)}»</div>`, "lore");
     panel += _sec("Habilidades · tocá una para verla", `<div class="cx-skills">${sk.map((s, i)=>`<button class="cx-skill" data-skill="${i}">

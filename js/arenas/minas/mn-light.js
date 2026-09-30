@@ -24,7 +24,7 @@ function mnInZone(x, y){ if(!mnS) return false; for(const Z of mnS.zones){ if(Z.
 // Nivel de luz del TERRITORIO en un punto (0 = oscuridad, 1 = pleno): solo fuentes, no antorchas.
 function mnLightAt(x, y){
   if(!mnS) return 1;
-  let best = 0;
+  let best = portadorLightAt(x, y);
   for(const L of mnS.lights){ if(L.st===0) continue; const d = Math.hypot(x - L.x, y - L.y); if(d < L.r){ const v = (1 - d/L.r)*(L.st===2 ? 1 : 0.6); if(v > best) best = v; } }
   if(mnS.portal && mnS.portal.st!=="none" && mnS.portal.st!=="used" && mnS.sec===5){ // el Portal Infernal abierto también alumbra
     const G = MN_SECTORS[5].portal, d = Math.hypot(x - G.x, y - G.y); if(d < 360) best = Math.max(best, 1 - d/360);

@@ -10,6 +10,7 @@
 function botTryAbilities(h){
   botMaybeEmergency(h); // curación de emergencia por debajo del 30% (pacing.js)
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(h.classKey,"cd_mult"));
+  if(PORTADORES[h.classKey] && !divinaMode){ botPortador(h, passiveCdMult); return; }
   // El Libertador / Eren: IA propia (js/champions/libertador.js, eren.js)
   if(h.classKey==="libertador" && !divinaMode){ botLibertador(h, passiveCdMult); return; }
   if(h.classKey==="eren" && !divinaMode){ botEren(h, passiveCdMult); return; }

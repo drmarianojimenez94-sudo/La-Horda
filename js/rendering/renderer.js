@@ -87,6 +87,7 @@ function render(){
   drawSylvaRainZones();
   fxGlowBegin(); drawAxiomVfxActive(); fxGlowEnd();
   drawChampFxGround(); // El Libertador / Eren: escarcha, grietas, avisos de pisada
+  drawPortadorGround();
 
   // héroes caídos (se dibujan bajo los vivos); en la Arena Divina también los guardianes rivales,
   // que antes desaparecían en el acto al morir
@@ -161,6 +162,7 @@ function render(){
   if(typeof endlessDrawWorld==="function") endlessDrawWorld(); // Horda Infinita: cofres y cristales para rescatar
   ctxDraw(); // aviso + progreso de las acciones contextuales
   fxGlowBegin(); drawChampFxTop(); fxGlowEnd(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
+  drawPortadorTop();
 
   // proyectiles: núcleo + glow cacheado + estela (sin shadowBlur, que es caro en mobile)
   for(const p of projectiles){
