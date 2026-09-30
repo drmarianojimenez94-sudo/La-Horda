@@ -101,7 +101,7 @@ function renderShopShowcase(panel){
       : `<button class="shop-btn hot" id="shop-feat-buy" ${save.gold < f.price ? "disabled" : ""}>${isSkin ? "Comprar paquete" : "Desbloquear"}</button>`;
     hero = `<div class="shop-hero ${isSkin ? "skin" : "champ"}" data-feat="${f.kind}:${f.id}" style="--hc:${cls.color || "#ff7a2e"}">
       <div class="shop-hero-art">
-        ${isSkin ? `<img class="shop-hero-img" src="${sk.preview || sk.src}" alt="">` : ""}
+        ${isSkin ? `<img class="shop-hero-img" data-portador-skin="${f.id}" src="${sk.preview || sk.src}" alt="">` : ""}
         <canvas class="champ-anim shop-hero-anim" width="176" height="176" data-class-key="${champ}" data-skin="${isSkin ? f.id : ""}"></canvas>
       </div>
       <div class="shop-hero-info">
@@ -129,7 +129,7 @@ function renderShopShowcase(panel){
     const key = "skin:" + id; seenNow.push(key);
     const own = !miss.length;
     return `<div class="shop-bundle ${own ? "owned" : ""}" data-bundle="${id}">
-      <div class="shop-bundle-art"><img src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
+      <div class="shop-bundle-art"><img data-portador-skin="${id}" src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
       <div class="shop-bundle-name">${sk.name || S.name}</div>
       <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · ${n} piezas + skin</div>
       <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}${_shopVoucherBtn(id)}</div>
@@ -350,7 +350,7 @@ function renderShopSkins(panel){
       action = rest.length ? `<div class="shop-skin-equip">${activeOn.length ? "" : '<span class="shop-item-sub">Desbloqueada · </span>'}${rest.map(k=>`<button class="shop-btn" data-skin-equip="${id}" data-skin-champ="${k}">${comp.length>1 ? "Equipar en " + CLASSES[k].name : "EQUIPAR"}</button>`).join("")}</div>` : "";
     }
     return `<div class="shop-skin ${active?"active":""}" data-skin-card="${id}">
-      <img class="shop-skin-img" src="${sk.preview || sk.src}" alt="">
+      <img class="shop-skin-img" data-portador-skin="${id}" src="${sk.preview || sk.src}" alt="">
       ${previewKey ? `<canvas class="champ-anim shop-skin-anim" width="84" height="84" data-class-key="${previewKey}" data-skin="${id}" data-idle="1"></canvas>` : ""}
       <div class="shop-skin-info">
         <div class="shop-skin-name">${sk.name || "Skin de " + S.name}</div>

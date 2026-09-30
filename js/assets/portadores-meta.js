@@ -15,3 +15,11 @@ SET_SKINS["lumbre_persistente"]={champ:"farolero",name:"Lumbre Persistente",src:
 champPackLoadAtlas("iria","assets/sprites/champions/iria/atlas.png",{"w": 96, "h": 96, "cols": 6, "refH": 72, "anchor": 0.9375, "fix": {"left": "mirror"}, "sets": {"idle_down": [0, 1], "walk_down": [2, 3, 4, 5], "attack_down": [6, 7, 8], "cast_down": [9, 10, 11], "hit_down": [12], "death_down": [13, 14, 15], "ultimate_down": [16, 17], "idle_side": [18, 19], "walk_side": [20, 21, 22, 23], "attack_side": [24, 25, 26], "cast_side": [27, 28, 29], "hit_side": [30], "death_side": [31, 32, 33], "ultimate_side": [34, 35], "idle_up": [36, 37], "walk_up": [38, 39, 40, 41], "attack_up": [42, 43, 44], "cast_up": [45, 46, 47], "hit_up": [48], "death_up": [49, 50, 51], "ultimate_up": [52, 53]}});
 champPackCloneAtlas("skin_hilo_umbral","iria","assets/sprites/champions/iria/set.png");
 SET_SKINS["hilo_umbral"]={champ:"iria",name:"Hilo Umbral",src:"assets/sprites/champions/iria/set-preview.png",preview:"assets/sprites/champions/iria/set-preview.png",packs:{iria:"skin_hilo_umbral"}};
+champPackLoadAtlas("myla","assets/sprites/champions/myla/atlas.png",{w:96,h:96,cols:4,refH:82,anchor:0.9375,fix:{left:"mirror"},sets:{idle_down:[0],walk_down:[1,0,2,0],attack_down:[0,3,3],cast_down:[0,3,3],ultimate_down:[3],idle_side:[4],walk_side:[5,4,6,4],attack_side:[4,7,7],cast_side:[4,7,7],idle_up:[8],walk_up:[9,8,10,8],attack_up:[8,11,11],cast_up:[8,11,11]}});
+champPackCloneAtlas("skin_merienda_magica","myla","assets/sprites/champions/myla/atlas.png");
+SET_SKINS.merienda_magica={champ:"myla",name:"Merienda Mágica",src:"assets/sprites/champions/myla/atlas.png",packs:{myla:"skin_merienda_magica"}};
+
+champPackLoadAtlas("myla_berrinche","assets/sprites/champions/myla/berrinche.png",{w:96,h:96,cols:4,refH:82,anchor:0.9375,fix:{left:"mirror"},sets:{idle_down:[0,1,2,3],walk_down:[0,1,2,3],cast_down:[0,1,2,3],attack_down:[0,1,2,3],idle_side:[4,5,6,7],walk_side:[4,5,6,7],cast_side:[4,5,6,7],attack_side:[4,5,6,7],idle_up:[8,9,10,11],walk_up:[8,9,10,11],cast_up:[8,9,10,11],attack_up:[8,9,10,11]}});
+
+champPackCloneAtlas("skin_merienda_magica_berrinche","myla_berrinche","assets/sprites/champions/myla/berrinche.png");
+SET_SKINS.merienda_magica.packs.myla_berrinche="skin_merienda_magica_berrinche";

@@ -1,14 +1,18 @@
 "use strict";
 // Sprite states share host attackAnim, so guests animate the same casts locally.
-function drawPortador(h,scale,alpha){return drawChampPack(h.classKey,h,scale,alpha);}
+function drawPortador(h,scale,alpha){
+ if(typeof portadorCosmeticAura==="function")portadorCosmeticAura(h,scale);
+ if(h.classKey==="myla" && portadorOwned(h,"tantrum").length)return drawChampPack("myla_berrinche",h,scale*1.35,alpha);
+ return drawChampPack(h.classKey,h,scale,alpha);
+}
 function portadorDrawLine(ax,ay,bx,by,color,width){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();}
 function portadorDrawRing(x,y,r,color,fill){ctx.beginPath();ctx.ellipse(x,y,r,r,0,0,Math.PI*2);if(fill){ctx.fillStyle=color;ctx.fill();}else{ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();}}
 function drawPortadorGround(){
  ctx.save();
- for(const o of portadorObjects){if(o.life<=0 || !o.owner)continue;const color=o.owner.cls.glow;
+ for(const o of portadorObjects){if(o.life<=0 || !o.owner)continue;const color=(typeof portadorCosmetic==="function" && portadorCosmetic(o.owner)?.tint)||o.owner.cls.glow;
   if(o.kind==="chain")portadorDrawLine(o.ax,o.ay,o.bx,o.by,"#dbd6bc",4);
   if(o.kind==="path"){ctx.globalAlpha=.18;portadorDrawLine(o.x,o.y,o.bx,o.by,color,o.r*2);ctx.globalAlpha=.8;portadorDrawLine(o.x,o.y,o.bx,o.by,color,2);}
-  if(["lantern","alembic","steam"].includes(o.kind)){ctx.globalAlpha=.09;portadorDrawRing(o.x,o.y,o.r,color,true);ctx.globalAlpha=.6;portadorDrawRing(o.x,o.y,o.r,color,false);}
+  if(["lantern","alembic","steam","yogurt","tantrum"].includes(o.kind)){ctx.globalAlpha=.09;portadorDrawRing(o.x,o.y,o.r,color,true);ctx.globalAlpha=.6;portadorDrawRing(o.x,o.y,o.r,color,false);}
   if(o.kind==="triangle"){ctx.globalAlpha=.13;ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(o.ax,o.ay);ctx.lineTo(o.bx,o.by);ctx.lineTo(o.cx,o.cy);ctx.closePath();ctx.fill();ctx.globalAlpha=.85;ctx.strokeStyle=color;ctx.lineWidth=3;ctx.stroke();}
   ctx.globalAlpha=1;
  }
@@ -21,9 +25,21 @@ function drawPortadorGround(){
 }
 function drawPortadorTop(){
  ctx.save();ctx.imageSmoothingEnabled=false;
- for(const o of portadorObjects){if(o.life<=0 || !o.owner)continue;const c=o.owner.cls.glow;
+ for(const o of portadorObjects){if(o.life<=0 || !o.owner)continue;const c=(typeof portadorCosmetic==="function" && portadorCosmetic(o.owner)?.tint)||o.owner.cls.glow;
+  if(o.kind==="tantrum"){
+   const age=(o.maxLife-o.life)/1000;
+   if(state==="playing" && typeof playMylaCry==="function" && (!o._cryAt || animNow-o._cryAt>850)){o._cryAt=animNow;playMylaCry();}
+   for(let i=0;i<12;i++){const angle=i*Math.PI/6+age*2,r=20+((age*130+i*17)%o.r);ctx.fillStyle=i%2?"#fff1e1":"#e99abb";ctx.fillRect(o.x+Math.cos(angle)*r-3,o.y+Math.sin(angle)*r-14,6,6);}
+  }
   if(o.kind==="shot" || o.kind==="hook"){ctx.globalAlpha=Math.min(1,o.life/160);portadorDrawLine(o.x,o.y-14,o.bx,o.by-14,c,o.kind==="shot"?2:4);ctx.globalAlpha=1;}
-  if(o.kind==="turret"){
+  if(o.kind==="turret" && o.owner.classKey==="myla"){
+   ctx.fillStyle="#372535";ctx.fillRect(o.x-17,o.y-44,34,44);
+   ctx.fillStyle="#e99abb";ctx.fillRect(o.x-14,o.y-39,28,37);
+   ctx.fillStyle="#fff1e1";ctx.fillRect(o.x-12,o.y-44,24,10);ctx.fillRect(o.x-16,o.y-31,32,7);ctx.fillRect(o.x-16,o.y-17,32,7);
+   ctx.fillStyle="#b7628b";ctx.fillRect(o.x-4,o.y-7,8,7);
+   ctx.fillStyle="#372535";ctx.fillRect(o.x-15,o.y-50,30,3);ctx.fillStyle="#e99abb";ctx.fillRect(o.x-15,o.y-50,30*Math.max(0,o.hp/o.maxHp),3);
+  }
+  if(o.kind==="turret" && o.owner.classKey!=="myla"){
    ctx.fillStyle="#201a22";ctx.fillRect(o.x-14,o.y-12,28,14);ctx.fillRect(o.x-12,o.y-5,5,10);ctx.fillRect(o.x+7,o.y-5,5,10);
    ctx.fillStyle="#ae7850";ctx.fillRect(o.x-10,o.y-22,20,17);ctx.fillStyle="#e5bd75";ctx.fillRect(o.x-14,o.y-25,29,7);ctx.fillStyle=c;ctx.fillRect(o.x+7,o.y-22,13,5);
    ctx.fillStyle="#261d25";ctx.fillRect(o.x-15,o.y-31,30,3);ctx.fillStyle=o.owner.portOverclockTimer>0?"#ff9355":"#85b587";ctx.fillRect(o.x-15,o.y-31,30*Math.max(0,o.hp/o.maxHp),3);

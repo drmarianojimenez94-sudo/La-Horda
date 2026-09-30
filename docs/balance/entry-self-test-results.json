@@ -1,0 +1,143 @@
+{
+  "entries": [
+    {
+      "key": "tanque",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "guerrero",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "mago",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "soporte",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "segador",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "axiom",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "profeta",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "musashi",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "cazadora",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "nigromante",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "libertador",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "eren",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "myla",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "brasa",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "eslabon",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "morwen",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "farolero",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "iria",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "__entry_fixture",
+      "role": "mago",
+      "referenceVersion": 1,
+      "changes": {
+        "baseHP": {
+          "from": 98.428571,
+          "to": 98.42
+        },
+        "baseDmg": {
+          "from": 8.865138715999999,
+          "to": 8.865
+        }
+      },
+      "budgetBefore": 0.9322023381229737,
+      "budgetAfter": 0.9321615475784831,
+      "needsGameplaySimulation": true
+    }
+  ],
+  "runs": [
+    {
+      "key": "__entry_fixture",
+      "seed": 117,
+      "damage": 17118.006968233964,
+      "alive": true,
+      "hp": 206,
+      "casts": 57,
+      "error": null
+    },
+    {
+      "key": "__entry_fixture",
+      "seed": 431,
+      "damage": 9891.448037359665,
+      "alive": false,
+      "hp": 0,
+      "casts": 38,
+      "error": null
+    },
+    {
+      "key": "__entry_fixture",
+      "seed": 991,
+      "damage": 8806.810506669317,
+      "alive": false,
+      "hp": 0,
+      "casts": 40,
+      "error": null
+    }
+  ],
+  "violations": [],
+  "errors": []
+}
