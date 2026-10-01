@@ -55,7 +55,7 @@ function spawnPoolForHielo(level){
   if(level >= 2) pool.push({t:"golem_hielo", w:6});
   if(level >= 2) pool.push({t:"hada_escarcha", w:3});     // esbirros: cada una llega con 2 más (bestias-ai.js)
   if(level >= 3) pool.push({t:"dragoncito_hielo", w:2});  // élite (Aliento de Escarcha): menos peso que cuando era subélite
-  if(level >= 5) pool.push({t:"angel_hielo", w:4});
+  if(level >= 5) pool.push({t:"angel_hielo", w:typeof diffCurrent==="function" && diffCurrent()==="normal" ? 2 : 4});
   if(level >= 6) pool.push({t:"demonio_hielo_fuego", w:3});
   if(level >= 8){ pool[0].w = 5; }
   if(level >= 9){ pool[0].w = 3; }

@@ -269,6 +269,7 @@ function netRefreshLobby(){
   if(state!=="prep") return;
   if(netLobby.touching){ netLobby.pendingRefresh = true; return; }
   netLobby.pendingRefresh = false;
+  renderDuoPicker();
   if(!netInRoom()){ renderPrepSummary(); return; }
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");

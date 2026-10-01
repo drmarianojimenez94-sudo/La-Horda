@@ -198,7 +198,7 @@ function endlessEnterArena(key){
   heroes.forEach((h, i)=>{
     const ang = (i/heroes.length)*Math.PI*2 + Math.PI/4, d = i===0 ? 0 : 70;
     h.x = Math.cos(ang)*d; h.y = Math.sin(ang)*d;
-    if(!h.alive){ h.alive = true; h.hp = Math.round(h.maxHp*0.5); h._reviveT = 0; h._reviveBy = null; }
+    if(!h.alive && !duoEnabled()){ h.alive = true; h.hp = Math.round(h.maxHp*0.5); h._reviveT = 0; h._reviveBy = null; }
     h.slowAmt = 0; h.slowTimer = 0; h.stunTimer = 0; h.burnTimer = 0; h.fused = false; h.abHang = null; h._ctxHold = null; h._ctxGoal = null;
   });
   setupRunDifficulty();

@@ -82,7 +82,7 @@ function diffSetSelected(k){
 function diffApplyToRun(rd, avgLevel){
   const T = diffTier(diffCurrent());
   rd.tier = diffCurrent();
-  if(T===DIFF_TIERS.normal){ rd.hp*=T.hp; rd.dmg*=T.dmg; rd.avgHp*=T.bossDmg; rd.spawnRate*=T.spawn; return rd; }
+  if(T===DIFF_TIERS.normal){ rd.hp*=T.hp; rd.dmg*=T.dmg; rd.avgHp*=T.bossDmg; rd.spawnRate*=T.spawn; if(["bosque","hielo"].includes(currentArena)){rd.hp*=0.85;rd.dmg*=0.8;rd.spawnRate*=1.12;} return rd; }
   // nivel esperado corrido: el seguimiento parcial de REJUGAR mide la brecha contra ese nivel
   const exp = ((typeof currentArena!=="undefined" && DIFF.arenaLevel[currentArena]) || 1) + T.lvlOffset;
   const gap = Math.max(0, avgLevel - exp), rf = Math.min(DIFF.replayFollowMax, gap*DIFF.replayFollowPerLvl), rf0 = rd.replayFollow||0;

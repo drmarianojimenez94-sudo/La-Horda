@@ -126,7 +126,7 @@ function renderChampDetail(champId){
         <div class="cd-role">${cls.role}</div>
       </div>
     </div>
-    <div class="cd-section"><div class="cd-section-title">Historia</div>${catEntry.lore}</div>`;
+    ${championGuideHTML(champId)}<div class="cd-section"><div class="cd-section-title">Historia</div>${catEntry.lore}</div>`;
   if(locked){
     const canAfford = save.gold >= catEntry.priceGold;
     html += `
@@ -155,7 +155,7 @@ function renderChampDetail(champId){
       </div>
       <div class="cd-section">
         <div class="cd-section-title">Habilidades</div>
-        ${championGuideHTML(champId)}
+
         <div class="cd-stat-row"><span>${cls.ultimate.ico} ${cls.ultimate.name} <i>(definitiva)</i></span></div>
       </div>
       <div class="cd-section">

@@ -1,0 +1,873 @@
+{
+  "checks": [
+    {
+      "name": "Intro ends in menu",
+      "ok": true
+    },
+    {
+      "name": "First-run path ends in menu",
+      "ok": true
+    },
+    {
+      "name": "Handoff tanque",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move tanque",
+      "ok": true
+    },
+    {
+      "name": "No revive tanque",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card tanque",
+      "ok": true
+    },
+    {
+      "name": "Handoff guerrero",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move guerrero",
+      "ok": true
+    },
+    {
+      "name": "No revive guerrero",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card guerrero",
+      "ok": true
+    },
+    {
+      "name": "Handoff mago",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move mago",
+      "ok": true
+    },
+    {
+      "name": "No revive mago",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card mago",
+      "ok": true
+    },
+    {
+      "name": "Handoff soporte",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move soporte",
+      "ok": true
+    },
+    {
+      "name": "No revive soporte",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card soporte",
+      "ok": true
+    },
+    {
+      "name": "Handoff segador",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move segador",
+      "ok": true
+    },
+    {
+      "name": "No revive segador",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card segador",
+      "ok": true
+    },
+    {
+      "name": "Handoff axiom",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move axiom",
+      "ok": true
+    },
+    {
+      "name": "No revive axiom",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card axiom",
+      "ok": true
+    },
+    {
+      "name": "Handoff profeta",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move profeta",
+      "ok": true
+    },
+    {
+      "name": "No revive profeta",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card profeta",
+      "ok": true
+    },
+    {
+      "name": "Handoff musashi",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move musashi",
+      "ok": true
+    },
+    {
+      "name": "No revive musashi",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card musashi",
+      "ok": true
+    },
+    {
+      "name": "Handoff cazadora",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move cazadora",
+      "ok": true
+    },
+    {
+      "name": "No revive cazadora",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card cazadora",
+      "ok": true
+    },
+    {
+      "name": "Handoff nigromante",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move nigromante",
+      "ok": true
+    },
+    {
+      "name": "No revive nigromante",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card nigromante",
+      "ok": true
+    },
+    {
+      "name": "Handoff libertador",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move libertador",
+      "ok": true
+    },
+    {
+      "name": "No revive libertador",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card libertador",
+      "ok": true
+    },
+    {
+      "name": "Handoff eren",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move eren",
+      "ok": true
+    },
+    {
+      "name": "No revive eren",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card eren",
+      "ok": true
+    },
+    {
+      "name": "Handoff ynara",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move ynara",
+      "ok": true
+    },
+    {
+      "name": "No revive ynara",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card ynara",
+      "ok": true
+    },
+    {
+      "name": "Handoff myla",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move myla",
+      "ok": true
+    },
+    {
+      "name": "No revive myla",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card myla",
+      "ok": true
+    },
+    {
+      "name": "Handoff brasa",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move brasa",
+      "ok": true
+    },
+    {
+      "name": "No revive brasa",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card brasa",
+      "ok": true
+    },
+    {
+      "name": "Handoff eslabon",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move eslabon",
+      "ok": true
+    },
+    {
+      "name": "No revive eslabon",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card eslabon",
+      "ok": true
+    },
+    {
+      "name": "Handoff morwen",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move morwen",
+      "ok": true
+    },
+    {
+      "name": "No revive morwen",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card morwen",
+      "ok": true
+    },
+    {
+      "name": "Handoff farolero",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move farolero",
+      "ok": true
+    },
+    {
+      "name": "No revive farolero",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card farolero",
+      "ok": true
+    },
+    {
+      "name": "Handoff iria",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move iria",
+      "ok": true
+    },
+    {
+      "name": "No revive iria",
+      "ok": true
+    },
+    {
+      "name": "Return restores first card iria",
+      "ok": true
+    },
+    {
+      "name": "Old delayed cast canceled",
+      "ok": true
+    },
+    {
+      "name": "Second death ends solo run",
+      "ok": true
+    },
+    {
+      "name": "Retry restores original pair",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "One free reserve avoids shop gate",
+      "ok": true
+    },
+    {
+      "name": "Reserve gift cannot be claimed twice",
+      "ok": true
+    },
+    {
+      "name": "Complete guide tanque",
+      "ok": true
+    },
+    {
+      "name": "Complete guide guerrero",
+      "ok": true
+    },
+    {
+      "name": "Complete guide mago",
+      "ok": true
+    },
+    {
+      "name": "Complete guide soporte",
+      "ok": true
+    },
+    {
+      "name": "Complete guide segador",
+      "ok": true
+    },
+    {
+      "name": "Complete guide axiom",
+      "ok": true
+    },
+    {
+      "name": "Complete guide profeta",
+      "ok": true
+    },
+    {
+      "name": "Complete guide musashi",
+      "ok": true
+    },
+    {
+      "name": "Complete guide cazadora",
+      "ok": true
+    },
+    {
+      "name": "Complete guide nigromante",
+      "ok": true
+    },
+    {
+      "name": "Complete guide libertador",
+      "ok": true
+    },
+    {
+      "name": "Complete guide eren",
+      "ok": true
+    },
+    {
+      "name": "Complete guide ynara",
+      "ok": true
+    },
+    {
+      "name": "Complete guide myla",
+      "ok": true
+    },
+    {
+      "name": "Complete guide brasa",
+      "ok": true
+    },
+    {
+      "name": "Complete guide eslabon",
+      "ok": true
+    },
+    {
+      "name": "Complete guide morwen",
+      "ok": true
+    },
+    {
+      "name": "Complete guide farolero",
+      "ok": true
+    },
+    {
+      "name": "Complete guide iria",
+      "ok": true
+    },
+    {
+      "name": "Guardian set supports reserve instead of obsolete revive",
+      "ok": true
+    },
+    {
+      "name": "Reserve quest counter advances",
+      "ok": true
+    },
+    {
+      "name": "Infinito transition does not resurrect exhausted cards",
+      "ok": true
+    },
+    {
+      "name": "Reserve has own full loadout",
+      "ok": true
+    },
+    {
+      "name": "Selectors clear of footer 844",
+      "ok": true
+    },
+    {
+      "name": "Layout 844",
+      "ok": true
+    },
+    {
+      "name": "Selectors clear of footer 667",
+      "ok": true
+    },
+    {
+      "name": "Layout 667",
+      "ok": true
+    },
+    {
+      "name": "Layout 390",
+      "ok": true
+    },
+    {
+      "name": "Layout 1280",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

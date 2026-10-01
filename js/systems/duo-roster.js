@@ -26,6 +26,7 @@ function duoRestoreLead(){
 function duoHandoff(h){
   const key=h._duoReserve; if(!duoPending(h)) return false;
   const old=h.classKey;
+  const reserveShield=setN(h,"guardian")>=3?0.15:0;
   if(h.duelActive) exitLastDuel(h,"lose");
   for(const a of heroes){ if(a.ascensionFusedWith===h){ a.ascensionFusedWith=null; a.ascensionTimer=0; } if(h.ascensionFusedWith===a) a.fused=false; }
   if(axiomFreezeCaster===h){ axiomFreezeTimer=0; axiomFreezeCaster=null; }
@@ -39,7 +40,7 @@ function duoHandoff(h){
   const fresh=h.isRemote?netWithHero(h,create):create();
   for(const k of Object.keys(h)) delete h[k];
   Object.assign(h,fresh,kept,{_duoUsed:true,invulnTimer:2500});
-  resetSetRunState(h); clampToArena(h); resolveWallCollision(h);
+  resetSetRunState(h); if(reserveShield){h.shield=h.maxHp*reserveShield;h.shieldTimer=8000;} h.stats.duoEntries=(h.stats.duoEntries||0)+1; clampToArena(h); resolveWallCollision(h);
   const rs=h.isRemote?h._net.runStats:runStats;
   if(h===player || h.isRemote){
   rs.critChance+=passiveSum(key,"crit_chance_add")-passiveSum(old,"crit_chance_add");
@@ -51,7 +52,12 @@ function duoHandoff(h){
   return true;
 }
 function duoUpdate(){ if(!duoEnabled()) return; for(const h of heroes) if(!h.alive&&duoPending(h)) duoHandoff(h); }
+function duoTaken(){
+  if(!netInRoom()) return [];
+  return net.room.slots.flatMap((s,i)=>!s?.connected || i===net.slot ? [] : [s.champ,net.role==="host"?netLobby.loadouts[i]?.reserve?.champ:netLobby.duos?.[i]]).filter(Boolean);
+}
 function duoChoose(index,key){
+  if(duoTaken().includes(key)){showNetToast("Ese héroe ya está en las cartas de otro jugador. Elegí otro.");return;}
   if(!CLASSES[key] || !save.champions[key]) return;
   if(!save.champions[key].unlocked){ if(index!==1||save.duoGiftClaimed) return; save.champions[key].unlocked=true; save.duoGiftClaimed=true; }
   if(index===0){ const old=selectedClass; selectedClass=key; if(save.duoReserve===key) save.duoReserve=old; netRememberChamp(key); if(netInRoom()) netSend({t:"update",champ:key}); }
@@ -63,7 +69,7 @@ function duoChoose(index,key){
 function renderDuoPicker(){
   const box=document.getElementById("duo-picker"); if(!box) return;
   const keys=duoKeys();
-  box.innerHTML=`<h3>Tus dos héroes</h3><p>Al caer el primero entra el segundo automáticamente. Dos caídas y quedás fuera.</p><div class="duo-cards">${keys.map((key,i)=>`<article class="duo-card"><b>${i?"2 · Reserva":"1 · Inicial"}</b>${CLASSES[key]?`<canvas class="champ-anim" width="104" height="104" data-class-key="${key}" data-idle="1"></canvas><strong>${guideEsc(CLASSES[key].name)}</strong><small>${guideEsc(CLASSES[key].role)}</small><details><summary>Ver habilidades</summary>${championGuideHTML(key)}</details>`:'<strong>Elegí tu reserva</strong>'}<label>${i?"Cambiar reserva":"Cambiar inicial"}<select data-duo="${i}"><option value="">Elegir héroe…</option>${Object.keys(CLASSES).filter(k=>(save.champions[k].unlocked || (i===1&&!save.duoGiftClaimed))&&k!==keys[1-i]).map(k=>`<option value="${k}">${guideEsc(CLASSES[k].name)}${save.champions[k].unlocked?"":" · regalo"}</option>`).join("")}</select></label></article>`).join("")}</div>${duoValid()?"":"<p>Elegí dos héroes distintos para empezar. Tu primera reserva bloqueada es gratis.</p>"}`;
+  box.innerHTML=`<h3>Tus dos héroes</h3><p>Al caer el primero entra el segundo automáticamente. Dos caídas y quedás fuera.</p><div class="duo-cards">${keys.map((key,i)=>`<article class="duo-card"><b>${i?"2 · Reserva":"1 · Inicial"}</b>${CLASSES[key]?`<canvas class="champ-anim" width="104" height="104" data-class-key="${key}" data-idle="1"></canvas><strong>${guideEsc(CLASSES[key].name)}</strong><small>${guideEsc(key==="eren"?"Guerrero / Berserker":({tanque:"Tanque",mago:"Mago",soporte:"Soporte",asesino:"Asesino"})[CLASSES[key].roleCategory]||CLASSES[key].roleCategory)} · Nv. ${save.champions[key].level}</small><details><summary>Ver habilidades</summary>${championGuideHTML(key)}</details>`:'<strong>Elegí tu reserva</strong>'}<label>${i?"Cambiar reserva":"Cambiar inicial"}<select data-duo="${i}"><option value="">Elegir héroe…</option>${Object.keys(CLASSES).filter(k=>(save.champions[k].unlocked || (i===1&&!save.duoGiftClaimed))&&k!==keys[1-i]).map(k=>`<option value="${k}" ${duoTaken().includes(k)?"disabled":""}>${guideEsc(CLASSES[k].name)}${save.champions[k].unlocked?"":" · regalo"}</option>`).join("")}</select></label></article>`).join("")}</div>${duoValid()?"":"<p>Elegí dos héroes distintos para empezar. Tu primera reserva bloqueada es gratis.</p>"}`;
   box.querySelectorAll("[data-duo]").forEach(el=>el.onchange=()=>duoChoose(+el.dataset.duo,el.value)); startChampAnimLoop();
 }
 function duoHud(){

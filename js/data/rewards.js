@@ -31,13 +31,13 @@ const SCORE_CONFIG = {
   soporte: [
     {stat:"healEffective", ref:9800, weight:0.45},
     {stat:"alliesSaved",   ref:16,   weight:0.20},
-    {stat:"revives",       ref:8,    weight:0.20},
+    {stat:"enemiesControlled",ref:45,    weight:0.20},
     {stat:"buffsGranted",  ref:29,   weight:0.15}
   ],
   profeta: [
     {stat:"healEffective", ref:9200, weight:0.40},
     {stat:"alliesSaved",   ref:14,   weight:0.25},
-    {stat:"revives",       ref:7,    weight:0.20},
+    {stat:"shieldAbsorbed",ref:4500,    weight:0.20},
     {stat:"dmgDealt",      ref:9000, weight:0.15}
   ]
 };

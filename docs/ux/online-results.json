@@ -1,0 +1,49 @@
+{
+  "checks": [
+    {
+      "name": "Four distinct full pairs",
+      "ok": true
+    },
+    {
+      "name": "Host rejects a reserve already taken by another human",
+      "ok": true
+    },
+    {
+      "name": "Host rejects missing reserve loadout",
+      "ok": true
+    },
+    {
+      "name": "Guest handoff replicated and controls refreshed",
+      "ok": true
+    },
+    {
+      "name": "Guest can move after handoff",
+      "ok": true
+    },
+    {
+      "name": "Host card handoff reaches guests",
+      "ok": true
+    },
+    {
+      "name": "Dead guest input cannot move authoritative hero",
+      "ok": true
+    },
+    {
+      "name": "Exhausted guest observes surviving team",
+      "ok": true
+    },
+    {
+      "name": "Pending reserves prevent early wipe",
+      "ok": true
+    },
+    {
+      "name": "Eight deaths end all four clients",
+      "ok": true
+    },
+    {
+      "name": "Returning to lobby restores original pairs",
+      "ok": true
+    }
+  ],
+  "errors": []
+}
