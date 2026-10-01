@@ -79,7 +79,7 @@ function updateDownedOverlay(){
   const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
   const alive = heroes.filter(h=>h.alive).length;
   document.getElementById("downed-sub").textContent = prog>0 ? `${heroLabel(by)} te está reviviendo… ${Math.round(prog*100)}%`
-    : (alive ? "Tus aliados pueden revivirte: que se acerquen y mantengan ✚" : "Todo el equipo cayó");
+    : (alive ? "Tus dos héroes cayeron. Observás al equipo hasta que termine la arena." : "Todo el equipo cayó");
   document.getElementById("downed-bar").style.width = Math.round(prog*100)+"%";
 }
 /* ============================================================
@@ -390,3 +390,5 @@ function updateSkillLevelUI(){
 function resetSkillLevelUI(){ _skillLvlKey = ""; _skillPlusHintShown = false; }
 window.addEventListener("resize", ()=>{ _skillLvlKey = ""; });
 window.addEventListener("orientationchange", ()=>{ _skillLvlKey = ""; });
+
+setInterval(()=>{ if(typeof duoHud==="function") duoHud(); },200);

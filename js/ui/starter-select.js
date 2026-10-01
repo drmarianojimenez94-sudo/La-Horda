@@ -47,7 +47,7 @@ function renderStarterSelect(){
       _starterPick = card.getAttribute("data-champ");
       grid.querySelectorAll(".starter-card").forEach(c2=>c2.classList.toggle("sel", c2===card));
       const box = document.getElementById("starter-confirm");
-      document.getElementById("starter-confirm-text").innerHTML = `¿Empezar la campaña con <b>${CLASSES[_starterPick].name}</b>?`;
+      document.getElementById("starter-confirm-text").innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? ${championGuideHTML(_starterPick)}`;
       box.classList.remove("hidden");
       box.scrollIntoView({block:"nearest", behavior:"smooth"});
     });

@@ -230,7 +230,7 @@ function killEnemy(e){
   if(killer){
     const xpAmt = Math.round(e.xp*(krs.xpMult||1));
     const leveledUp = grantXP(killer.classKey, xpAmt);
-    if(killer.isRemote) netEmitTo(killer._netSlot, "xp", [xpAmt]);
+    if(killer.isRemote) netEmitTo(killer._netSlot, "xp", [xpAmt,killer.classKey]);
     else if(leveledUp && killer!==player && !killer._net) autoInvestTalentPoints(killer.classKey);
   } else {
     grantXP(player.classKey, Math.round(e.xp*(runStats.xpMult||1)));

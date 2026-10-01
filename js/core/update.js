@@ -9,6 +9,7 @@ function update(dt){
   if(state!=="playing") return;
   // B1 cooperativo: el invitado no simula la partida, la reconstruye con lo que manda el anfitrión
   if(netMatch && netMatch.role==="guest"){ netGuestUpdate(dt); return; }
+  duoUpdate();
   runElapsedMs += dt;
   invalidatePassiveCache();
   updateRunTimers(dt);
@@ -597,6 +598,7 @@ function update(dt){
 // Controles, temporizadores y efectos por tiempo del héroe que maneja una persona (`player`).
 // En multijugador el anfitrión la usa también para cada invitado (netWithHero presta `player`).
 function updateControlledHero(dt){
+  if(!player || !player.alive){ if(player) player.moving=false; return; }
   // player movement
   player.moving = false;
   if(Math.hypot(joyVec.x,joyVec.y) > 0.08){

@@ -22,11 +22,6 @@ document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   titleContinue();
 });
 function titleContinue(){
-  // PRIMER ARRANQUE CORTO: perfil nuevo → guardián de regalo → directo a la Ciudad jugando (sin hub, Modos,
-  // Arenas ni Sala). El hub y la Sala aparecen después de la primera partida (firstRunStart, js/ui/hub.js).
-  // REGALO INICIAL: guardián + skin (js/systems/starter-gift.js). Si cerró el juego después de elegir el
-  // guardián y antes de la skin, vuelve directo a la skin y sigue el mismo camino.
-  if(needsStarterChampion() || (typeof needsStarterSkin==="function" && needsStarterSkin())){ openStarterSelect(typeof firstRunStart==="function" ? firstRunStart : ()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
   if(save.firstRun==="jugando"){ save.firstRun = "hub"; persist(); } // cerró el juego en plena primera partida
   setState("mainmenu");
   renderMainMenu();
@@ -160,7 +155,7 @@ function renderChampDetail(champId){
       </div>
       <div class="cd-section">
         <div class="cd-section-title">Habilidades</div>
-        ${cls.skills.map(s=>`<div class="cd-stat-row"><span>${s.ico} ${s.name}</span></div>`).join("")}
+        ${championGuideHTML(champId)}
         <div class="cd-stat-row"><span>${cls.ultimate.ico} ${cls.ultimate.name} <i>(definitiva)</i></span></div>
       </div>
       <div class="cd-section">
@@ -301,6 +296,7 @@ function _prepStartFailed(err){
   gameAlert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
 }
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
+  if(!duoValid()){ showNetToast("Elegí dos héroes distintos antes de comenzar."); return; }
   lobbyNextArena = null; // la marca "SIGUIENTE" de la Sala dura hasta la próxima partida
   try{
     if(netInRoom()){
@@ -412,6 +408,7 @@ function renderPrepSummary(){
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
   const back = document.getElementById("prep-back-btn");
   if(back) back.textContent = netInRoom() ? "‹ Salir" : ((typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu") ? "‹ Menú" : "‹ Guardián");
+  renderDuoPicker();
   renderLobbyArena();
   netRenderLobbyBar();
   if(typeof prepSecSync==="function") prepSecSync(); // pestañas Equipo · Arena · Sala online

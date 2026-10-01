@@ -27,6 +27,7 @@ const screens = {
 };
 function setState(s){
   const prev = state;
+  if(["mainmenu","prep","title","modeselect"].includes(s) && ["playing","paused","gameover","victory"].includes(prev)) duoRestoreLead();
   state = s;
   if(typeof musicOnState==="function") musicOnState(s); // clima musical de cada pantalla
   if(s==="title" && typeof startTitleScene==="function") requestAnimationFrame(startTitleScene);
