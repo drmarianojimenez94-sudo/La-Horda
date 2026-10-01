@@ -21,6 +21,7 @@ function updateAbilityButtons(){
     }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
+    el.setAttribute('aria-label', sk.name);
     // Sinergias del árbol (estilo Diablo II) con su valor actual
     { const syn = typeof talentSynergySkillLine==="function" ? talentSynergySkillLine(selectedClass, mi===3 ? "ult" : mi) : ""; if(syn) el.title += "\n" + syn; }
     if(typeof boonDecorateButton==="function") boonDecorateButton(el, sk); // refuerzos que la transforman: marca + texto en el tooltip
@@ -35,13 +36,18 @@ let _hudLastCls = null, _hudLastSe = null, _hudStackH = -1;
 function hudStackLayout(){
   const st = document.getElementById("player-status"), top = document.querySelector("#hud .top"), party = document.getElementById("party");
   if(!st || !top || !party) return;
-  const h = st.offsetHeight;
-  if(h === _hudStackH) return;
-  _hudStackH = h;
-  const d = h ? Math.max(0, st.offsetTop + h + 6 - top.offsetTop) : 0;
-  top.style.transform = d ? `translateY(${d}px)` : "";
-  party.style.transform = d ? `translateY(${d}px)` : "";
-  party.style.maxHeight = d ? Math.max(80, 140 - d) + "px" : "";
+  const h=st.offsetHeight, signature=[h,top.offsetHeight,innerHeight,innerWidth,allies.length].join('|');
+  if(signature===_hudStackH) return;
+  _hudStackH=signature;
+  // Actual panel heights, including class resources; no fixed 210px overlap.
+  top.style.transform='';party.style.transform='';
+  const topY=st.offsetTop+h+6;
+  top.style.top=topY+'px';
+  const partyY=topY+top.offsetHeight+6;
+  party.style.top=partyY+'px';
+  const available=Math.max(0,innerHeight-118-partyY);
+  party.classList.toggle('compact',available<allies.length*31+6);
+  party.style.maxHeight=available+'px';
 }
 // Nombre del guardián en el HUD de partida: el corto si lo tiene ("Segador" por "Segador Olvidado"),
 // para que "Nombre · Nv. 30" entre en una línea en el teléfono. Menús, Códice y tienda: el completo.
@@ -249,7 +255,8 @@ function _setBtnState(id, el, st, cdFrac, cdSec){
     }
     ui.st = st;
   }
-  if(st==="cd"){
+  el.dataset.state=st;
+  if(st==="cd" || st==="active"){
     el.style.setProperty("--cdp", cdFrac.toFixed(3));
     if(ui.sec !== cdSec){ ui.ov.textContent = cdSec; ui.sec = cdSec; }
   }

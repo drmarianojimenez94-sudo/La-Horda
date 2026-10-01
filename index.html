@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/endless.css">
 <link rel="stylesheet" href="css/loot.css">
 <link rel="stylesheet" href="css/onboarding.css">
+<link rel="stylesheet" href="css/combat-readability.css">
 </head>
 <body>
 
@@ -89,8 +90,8 @@
     <div id="downed-overlay" class="hidden"><div class="dw-title">CAÍSTE</div><div class="dw-sub" id="downed-sub">Tus aliados pueden revivirte</div><div class="dw-bar"><i id="downed-bar"></i></div></div>
   </div>
 
-  <button id="pause-btn" class="hidden">❚❚</button>
-  <button id="mute-btn" class="hidden">🔊</button>
+  <button id="pause-btn" class="hidden" aria-label="Pausar partida" title="Pausar">❚❚</button>
+  <button id="mute-btn" class="hidden" aria-label="Silenciar sonido" title="Sonido">SON</button>
 
   <div id="controls" class="hidden">
     <div id="joyzone" class="zone">
@@ -564,6 +565,7 @@
 <script src="js/rendering/portadores.js"></script>
 <script src="js/skills/aim-targeting.js"></script>
 <script src="js/skills/abilities.js"></script>
+<script src="js/skills/champion-signatures.js"></script>
 <script src="js/skills/ability-vfx.js"></script>
 <script src="js/skills/boss-skills.js"></script>
 <script src="js/skills/boss-patterns.js"></script>

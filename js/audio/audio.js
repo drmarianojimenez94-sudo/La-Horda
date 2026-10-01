@@ -218,10 +218,15 @@ function setAudioEnabled(on){
   if(audioCtx && audioCtx.state==="suspended") audioCtx.resume().catch(()=>{});
   if(masterGain) masterGain.gain.setTargetAtTime(on?AUDIO_MASTER:0, audioCtx.currentTime, 0.05);
   const btn = document.getElementById("mute-btn");
-  if(btn) btn.textContent = on ? "🔊" : "🔇";
+  if(btn){
+    btn.textContent=on?'SON':'MUTE';
+    btn.dataset.audio=on?'on':'off';
+    btn.setAttribute('aria-pressed',String(on));
+    btn.setAttribute('aria-label',on?'Silenciar sonido':'Activar sonido');
+  }
 }
 // el ícono arranca como quedó guardado
-(()=>{ const btn = document.getElementById("mute-btn"); if(btn && !audioEnabled) btn.textContent = "🔇"; })();
+(()=>{const btn=document.getElementById('mute-btn');if(btn){btn.textContent=audioEnabled?'SON':'MUTE';btn.dataset.audio=audioEnabled?'on':'off';btn.setAttribute('aria-pressed',String(audioEnabled));btn.setAttribute('aria-label',audioEnabled?'Silenciar sonido':'Activar sonido');}})();
 
 /* ---------------- bloques de síntesis ---------------- */
 const _mf = m => 440*Math.pow(2, (m-69)/12);
