@@ -2,6 +2,14 @@
 // Cinco portadores originales. Se registra antes de loadSave: los perfiles antiguos
 // reciben entradas nuevas a nivel 1 sin cambiar oro, equipo ni progreso existente.
 const PORTADORES = {
+  ynara: {name:"Ynara", title:"El Ángel del Silencio", role:"Sanadora de área: estrogonof, agua y santa paciencia.", roleCategory:"soporte", color:"#ed8db5", glow:"#fff0f7", hp:110, dmg:6.3, def:0.12, speed:165, range:300, basic:600, ranged:true, weapon:"Halo Nacarado", set:"santa_paciencia", branches:["Mirada","Recetario","Serenidad"],
+    origin:"Los refugios de la Ciudad Maldita", history:"Médica silenciosa y cuidadosa, Ynara sostiene los refugios con luz, agua limpia y estrogonof de pollo. Bajo su halo blanco guarda una paciencia finita y una bondad obstinada. Cura incluso a quien la hizo enojar. Nunca pide perdón: escucha, se queda callada y sigue cuidando.",
+    skills:[
+      {name:"Mirada fulminante",ico:"✧",kind:"yn_gaze",cost:24,cd:6500,range:190,radius:100,dmgMult:0.65,desc:"Un abanico de luz daña y ralentiza 30% durante 1,5 s. Empuja comunes cercanos; jefes resisten el empuje y limitan el freno al 12%."},
+      {name:"Estrogonof reparador",ico:"♨",kind:"yn_stroganoff",cost:32,cd:12000,range:180,radius:115,duration:4800,dmgMult:0.06,desc:"Sirve estrogonof de pollo: cada 600 ms cura 1% de vida y su vapor daña. Dentro reduce daño 8%. Máximo una fuente por Ynara."},
+      {name:"No quiero seguir esta conversación",ico:"➜",kind:"yn_leave",cost:26,cd:10000,range:130,radius:32,duration:2400,dmgMult:0.06,desc:"Se desliza por terreno seguro y limpia ralentización. Deja una cortina de agua que daña y frena. No cruza muros ni vacíos."}],
+    ultimate:{name:"Santa Paciencia",ico:"★",kind:"yn_patience",cd:36000,radius:170,duration:6000,dmgMult:0.07,desc:"Despliega alas y un santuario móvil. Cura 0,8% por pulso y daña cada 600 ms. Cada golpe recibido por aliados dentro suma paciencia agotada (máximo 8, uno cada 400 ms). Al terminar libera una onda final."},
+    voices:["Estoy acá.","Ya está. Comé algo.","…"]},
   myla: {name:"Myla", title:"La Maga del Yogur", role:"Maga de control: yogur, torres y ondas de llanto.", roleCategory:"mago", color:"#e99abb", glow:"#fff1e1", hp:100, dmg:8, def:0.08, speed:162, range:320, basic:560, ranged:true, weapon:"Cuchara Encantada", set:"merienda_magica", branches:["Yogurtería","Torres","Berrinche"],
     origin:"La Ciudad de los Primeros Pasos", history:"Myla descubrió que su merienda podía convertirse en magia. Con una cuchara encantada y una sonrisa desafiante, levanta torres de yogur y cubre de crema los caminos de la Horda. Donde otros ven oscuridad, ella ve una aventura por compartir.",
     skills:[
@@ -85,6 +93,7 @@ for(const k in PORTADORES){
 }
 
 const PORTADOR_SET_DATA = {
+  santa_paciencia:{name:"Santa Paciencia",two:"+8% vida máxima",effect:"hp_mult",value:0.08,three:"Estrogonof cura un 10% más",four:"La onda final de Santa Paciencia inflige un 10% más de daño"},
   merienda_magica:{name:"Merienda Mágica",two:"+8% daño de habilidades",effect:"skilldmg_mult",value:0.08,three:"Burbuja Cremosa concede un escudo mayor",four:"BERRINCHE salpica con un 15% más de daño"},
   ultimo_turno:{name:"Último Turno",two:"+12% vida máxima",effect:"hp_mult",value:0.12,three:"Desmontaje deja una purga de vapor",four:"La sobrecarga conecta dos torretas con fuego coordinado"},
   juramento_roto:{name:"Juramento Roto",two:"+12% vida máxima",effect:"hp_mult",value:0.12,three:"Custodia concede escudo al terminar",four:"Proteger suficiente daño prepara una cadena doble contra comunes"},

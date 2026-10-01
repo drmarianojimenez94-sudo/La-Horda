@@ -1,0 +1,153 @@
+{
+  "checks": [
+    {
+      "name": "cone damages multiple targets",
+      "ok": true
+    },
+    {
+      "name": "boss is not displaced",
+      "ok": true
+    },
+    {
+      "name": "boss slow capped",
+      "ok": true
+    },
+    {
+      "name": "one dish per owner",
+      "ok": true
+    },
+    {
+      "name": "dish resistance",
+      "ok": true
+    },
+    {
+      "name": "dish heals self and ally",
+      "ok": true
+    },
+    {
+      "name": "dish steam damages",
+      "ok": true
+    },
+    {
+      "name": "healing capped at maximum",
+      "ok": true
+    },
+    {
+      "name": "dish expires",
+      "ok": true
+    },
+    {
+      "name": "dash finite and bounded",
+      "ok": true
+    },
+    {
+      "name": "dash cleans slow",
+      "ok": true
+    },
+    {
+      "name": "dash leaves curtain",
+      "ok": true
+    },
+    {
+      "name": "curtain expires",
+      "ok": true
+    },
+    {
+      "name": "passive shield capped",
+      "ok": true
+    },
+    {
+      "name": "shield break retaliation",
+      "ok": true
+    },
+    {
+      "name": "no immediate shield rearm",
+      "ok": true
+    },
+    {
+      "name": "ultimate charge cap",
+      "ok": true
+    },
+    {
+      "name": "sanctuary follows owner",
+      "ok": true
+    },
+    {
+      "name": "sanctuary heals",
+      "ok": true
+    },
+    {
+      "name": "final wave and expiry",
+      "ok": true
+    },
+    {
+      "name": "death cancels all effects without explosion",
+      "ok": true
+    },
+    {
+      "name": "snapshot preserves owner slots",
+      "ok": true
+    },
+    {
+      "name": "reset clears effects",
+      "ok": true
+    },
+    {
+      "name": "four piece set and cosmetic",
+      "ok": true
+    },
+    {
+      "name": "set healing bonus",
+      "ok": true
+    },
+    {
+      "name": "talent increases dish healing",
+      "ok": true
+    },
+    {
+      "name": "all casts in bosque",
+      "ok": true
+    },
+    {
+      "name": "all casts in hielo",
+      "ok": true
+    },
+    {
+      "name": "all casts in laberinto",
+      "ok": true
+    },
+    {
+      "name": "all casts in acuatica",
+      "ok": true
+    },
+    {
+      "name": "all casts in fortaleza",
+      "ok": true
+    },
+    {
+      "name": "all casts in micelial",
+      "ok": true
+    },
+    {
+      "name": "all casts in ciudad",
+      "ok": true
+    },
+    {
+      "name": "all casts in abismo",
+      "ok": true
+    },
+    {
+      "name": "all casts in minas",
+      "ok": true
+    },
+    {
+      "name": "all casts in infernal",
+      "ok": true
+    },
+    {
+      "name": "atlas directions ready",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

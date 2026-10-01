@@ -334,6 +334,7 @@ function damageHero(h, amount, src, portTransferred){
       vfxShock(h.x, h.y-10, 10, 60, "255,90,90", 420, h===player?2:1); // se ve que fue el objeto mítico
     }
   }
+  ynaraOnHit(h, dmgBeforeShields);
   h.hp -= dmg;
   if(src && src.eliteMods && dmg>0) eliteOnHitHero(src, h, dmg); // élite con nombre: vampírico / encantado de fuego
   if(h.classKey==="eren" && dmg>0) erenOnHurt(h, dmg);

@@ -23,8 +23,18 @@ jobs:
       - run: node tools/balance/entry-gate.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/portadores/test-ynara.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: npm ci --prefix server --no-audit --no-fund
+      - run: node tools/portadores/online-ynara.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: champion-entry-balance-results
-          path: docs/balance/entry-gate-results.json
+          path: |
+            docs/balance/entry-gate-results.json
+            docs/ynara/
+            docs/portadores/ynara-*

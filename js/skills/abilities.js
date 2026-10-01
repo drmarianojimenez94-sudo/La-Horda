@@ -358,6 +358,7 @@ function castAbility(caster, sk, isUlt, idx){
   try{
   switch(sk.kind){
 
+    case "yn_gaze": case "yn_stroganoff": case "yn_leave": case "yn_patience":
     case "my_tower": case "my_splash": case "my_bubble": case "my_tantrum":
     case "br_turret": case "br_purge": case "br_dismantle": case "br_overclock":
     case "es_hook": case "es_line": case "es_guard": case "es_ring":

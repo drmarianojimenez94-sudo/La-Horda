@@ -10,6 +10,7 @@ for(const k in PORTADORES){
   CHAMP_IDENTITY[k]={sig:k==="eslabon"?"stagger":k==="morwen"?"wither":"mark",proj:k==="brasa"?"bullet":k==="iria"?"rune":"glyph"};
 }
 Object.assign(AIM_PROFILES,{
+  yn_gaze:{type:"cone"},yn_stroganoff:{type:"point",r:sk=>sk.radius},yn_leave:{type:"line",w:32},
   my_tower:{type:"point",r:()=>40},my_splash:{type:"point",r:sk=>sk.radius},
   br_turret:{type:"point",r:()=>40},br_purge:{type:"cone"},es_hook:{type:"target"},es_line:{type:"point",r:()=>80},es_guard:{type:"point",r:()=>30},
   mo_resin:{type:"point",r:sk=>sk.radius},mo_salt:{type:"cone"},mo_alembic:{type:"point",r:sk=>sk.radius},
@@ -18,6 +19,7 @@ Object.assign(AIM_PROFILES,{
 });
 
 const PORTADOR_PASSIVES={
+ ynara:{name:"Impecable",ico:"◉",desc:"Tras 8 s sin recibir golpes obtiene un escudo del 8% de vida. Al romperse por daño libera luz en un radio de 90. No se acumula; vuelve a prepararse tras perderlo."},
  myla:{name:"Yogur Pegajoso",ico:"●",desc:"Los disparos de sus torres ralentizan brevemente. Los jefes reciben una ralentización reducida."},
  brasa:{name:"Presión",ico:"♨",desc:"Las habilidades acumulan hasta tres cargas. El siguiente básico con tres cargas descarga un cono pequeño y consume la presión."},
  eslabon:{name:"Contrapeso",ico:"⛓",desc:"Controlar a un enemigo concede 12% de resistencia durante 1,6 s, con 2,2 s de recarga interna. No acumula resistencia."},
