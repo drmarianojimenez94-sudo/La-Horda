@@ -140,6 +140,18 @@ function drawChainFX(){
     const f = chainFX[i];
     const age = now-f.start;
     if(age>f.duration){ chainFX.splice(i,1); continue; }
+    // Deterministic lightning backbone stays readable even if its atlas is still loading.
+    const dx=f.x2-f.x1,dy=f.y2-f.y1,len=Math.hypot(dx,dy)||1;
+    ctx.save();ctx.globalAlpha=Math.max(0,1-age/f.duration);
+    ctx.beginPath();ctx.moveTo(f.x1,f.y1);
+    for(let j=1;j<8;j++){
+      const t=j/8,off=(j%2?1:-1)*Math.min(12,len*.1);
+      ctx.lineTo(f.x1+dx*t-dy/len*off,f.y1+dy*t+dx/len*off);
+    }
+    ctx.lineTo(f.x2,f.y2);
+    ctx.strokeStyle='#101b35';ctx.lineWidth=9;ctx.stroke();
+    ctx.strokeStyle='#71cfff';ctx.lineWidth=5;ctx.stroke();
+    ctx.strokeStyle='#fff5c0';ctx.lineWidth=2;ctx.stroke();ctx.restore();
     CadenaRelampagos.drawLink(ctx, age/1000, {x:f.x1,y:f.y1}, {x:f.x2,y:f.y2}, f.thickness);
   }
   for(let i=sparkFX.length-1;i>=0;i--){

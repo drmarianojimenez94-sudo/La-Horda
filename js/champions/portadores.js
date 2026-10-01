@@ -46,7 +46,7 @@ function portadorHit(h,e,dmg,proc){
   else damageEnemy(e,dmg,{src:h,fromProc:!!proc});
 }
 function portadorArea(h,p,r,dmg){ for(const e of portadorEnemies(h)) if(distance(e,p)<=r+(e.radius||0)) portadorHit(h,e,dmg); }
-function portadorCone(h,range,arc,fn){ const d=aimDir(h,range); for(const e of portadorEnemies(h)){ const x=e.x-h.x,y=e.y-h.y,l=Math.hypot(x,y)||1; if(l<=range+(e.radius||0) && (x*d.x+y*d.y)/l>=Math.cos(arc)) fn(e,d); } }
+function portadorCone(h,range,arc,fn){ const d=aimDir(h,range); vfxSkillCone(h.x,h.y,range,Math.atan2(d.y,d.x),arc,h.cls.glow); for(const e of portadorEnemies(h)){ const x=e.x-h.x,y=e.y-h.y,l=Math.hypot(x,y)||1; if(l<=range+(e.radius||0) && (x*d.x+y*d.y)/l>=Math.cos(arc)) fn(e,d); } }
 function portadorShield(h,pct,ms,src){
   if(!h.alive || h.fused) return;
   const before=h.shield||0,cap=h.maxHp*0.3;

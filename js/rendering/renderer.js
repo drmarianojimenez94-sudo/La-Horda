@@ -256,6 +256,7 @@ function render(){
     }
   }
 
+  drawChampionSignatures();
   vfxDrawParticles(); // partículas del pool central (impactos, muertes, casts, estelas)
 
   fxGlowBegin(); drawChainFX(); fxGlowEnd(); // sprites reales de Cadena de Relámpagos (rayos + impactos), dentro de la cámara

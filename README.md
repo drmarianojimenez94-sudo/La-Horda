@@ -102,3 +102,9 @@ Prototipo en desarrollo activo. Mejoras técnicas pendientes (no urgentes) en
 Myla, la Maga del Yogur, incorpora Torre de Yogur, Yogurazo, Burbuja Cremosa y **BERRINCHE**: transformación en pañales, ondas de llanto y yogur en área. Incluye sprites direccionales, talentos, set Merienda Mágica y sincronización cooperativa. Las skins de los nuevos portadores tienen paletas propias, aura y efectos cosméticos.
 
 Estadísticas, resultados de 57 simulaciones, ajustes y comandos de verificación: [BALANCE_CAMPEONES.md](BALANCE_CAMPEONES.md).
+
+## Revisión de legibilidad de combate y HUD
+
+La revisión de los 18 campeones conserva sus roles y movilidad, refuerza efectos desde
+talento inicial y separa visualmente todos los controles del escenario. Detalles, límites de
+balance y pruebas: [auditoría de combate y HUD](docs/vfx/AUDITORIA_COMBATE_HUD.md).
