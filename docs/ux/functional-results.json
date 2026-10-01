@@ -837,6 +837,10 @@
       "ok": true
     },
     {
+      "name": "Dead host does not freeze team equipment timers",
+      "ok": true
+    },
+    {
       "name": "Infinito transition does not resurrect exhausted cards",
       "ok": true
     },

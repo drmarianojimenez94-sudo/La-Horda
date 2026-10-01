@@ -31,7 +31,7 @@ function duoHandoff(h){
   for(const a of heroes){ if(a.ascensionFusedWith===h){ a.ascensionFusedWith=null; a.ascensionTimer=0; } if(h.ascensionFusedWith===a) a.fused=false; }
   if(axiomFreezeCaster===h){ axiomFreezeTimer=0; axiomFreezeCaster=null; }
   // Turrets, delayed cuts and spell zones must not keep acting with the new kit.
-  for(const arr of [portadorObjects,champFx,projectiles,fireWalls,traps,axiomZones,sylvaRainZones,musashiSecondCuts]){
+  for(const arr of [portadorObjects,champFx,projectiles,fireWalls,traps,axiomZones,sylvaRainZones,musashiSecondCuts,mythGrounds,uniqueFissures]){
     for(let i=arr.length-1;i>=0;i--) if(arr[i].owner===h||arr[i].src===h||arr[i].caster===h) arr.splice(i,1);
   }
   const anchor=heroes.find(a=>a!==h&&a.alive)||h._duoSpawn;

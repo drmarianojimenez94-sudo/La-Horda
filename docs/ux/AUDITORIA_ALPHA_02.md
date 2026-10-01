@@ -44,7 +44,7 @@ Los perfiles aprendiz, ocasional y habitual usan probabilidades de reacción 0,4
 
 Pruebas reproducibles incluidas:
 
-- `tools/ux/functional.js`: 217 comprobaciones, sin fallos ni excepciones. Incluye los 19 relevos, inmovilidad, exclusión de revivir, reinicio de pareja, cancelación de efectos antiguos, 105 efectos de carta aislados, guías, set Juramento, contador de reserva e Horda Infinita. Capturas de Chromium a 844×390, 667×375 y 1280×800. En 390×844 se conserva el aviso de girar el dispositivo.
+- `tools/ux/functional.js`: 218 comprobaciones, sin fallos ni excepciones. Incluye los 19 relevos, inmovilidad, exclusión de revivir, reinicio de pareja, cancelación de efectos antiguos, 105 efectos de carta aislados, guías, set Juramento, contador de reserva e Horda Infinita. Capturas de Chromium a 844×390, 667×375 y 1280×800. En 390×844 se conserva el aviso de girar el dispositivo.
 - `tools/ux/online.js`: cuatro contextos independientes con relay real; verifica fichas, conflictos, ausencia de reserva, relevo del anfitrión/invitado, movimiento, espectador, agotamiento y retorno al lobby.
 - `server/test-admin.js`: 15 verificaciones de sesión, permisos, campos mínimos, versiones, niveles inválidos y conservación de inventario/oro.
 - Gate de entrada: 19 registrados y tres simulaciones de Ynara, PASS. Su prueba específica: 37 comprobaciones, PASS. Pruebas del relay, cuentas e intercambios: PASS.
