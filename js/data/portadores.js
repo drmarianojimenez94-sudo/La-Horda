@@ -70,7 +70,7 @@ for(const k in PORTADORES){
     basicRange:p.range, basicCd:p.basic, basicArc:!p.ranged, ranged:!!p.ranged, skills:p.skills, ultimate:p.ultimate, noDivinaFoe:true};
   CLASS_WEAPON_LABEL[k] = p.weapon;
   SCORE_CONFIG[k] = p.roleCategory==="tanque" ? SCORE_CONFIG.tanque : p.roleCategory==="soporte" ? [
-    {stat:"shieldAbsorbed",ref:4500,weight:0.35}, {stat:"buffsGranted",ref:45,weight:0.25}, {stat:"revives",ref:8,weight:0.2}, {stat:"enemiesControlled",ref:35,weight:0.2}
+    {stat:"shieldAbsorbed",ref:4500,weight:0.35}, {stat:"buffsGranted",ref:45,weight:0.25}, {stat:"alliesSaved",ref:8,weight:0.2}, {stat:"enemiesControlled",ref:35,weight:0.2}
   ] : SCORE_CONFIG.mago;
   CHAMP_ITEM_AFFINITY[k] = Object.assign({}, CHAMP_ITEM_AFFINITY[p.roleCategory==="tanque"?"tanque":p.roleCategory==="soporte"?"soporte":"mago"]);
   const tree = {masteryRequirement:8,nodes:[],masteries:{}};

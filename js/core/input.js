@@ -88,6 +88,7 @@ function sylvaChargeRelease(aim){
 const REVIVE_BTN_HOLD_MS = 1300; // demo: 1.3s en vez de 2s
 let reviveBtnHoldRaf = null, reviveBtnTarget = null;
 function reviveTargetValid(a){
+  if(duoEnabled()) return false;
   return !!(a && !a.alive && a!==player && player && player.alive && !(player.stunTimer>0) && state==="playing" && !runEnding && !divinaMode
     && distance(player, a) < REVIVE_RANGE && !reviveBusyFor(a, player));
 }

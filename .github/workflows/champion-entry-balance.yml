@@ -1,10 +1,10 @@
 name: Champion entry balance
 on:
   pull_request:
-    paths: ['js/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   push:
     branches: [main, 'chatgpt/**']
-    paths: ['js/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,6 +30,14 @@ jobs:
       - run: node tools/portadores/online-ynara.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/functional.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/online.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node test-admin.js
+        working-directory: server
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -37,4 +45,5 @@ jobs:
           path: |
             docs/balance/entry-gate-results.json
             docs/ynara/
+            docs/ux/
             docs/portadores/ynara-*

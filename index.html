@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="css/loot.css">
 <link rel="stylesheet" href="css/onboarding.css">
 <link rel="stylesheet" href="css/combat-readability.css">
+<link rel="stylesheet" href="css/duo-ux.css">
 </head>
 <body>
 
@@ -162,8 +163,7 @@
         <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
         <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span></button>
         <button class="hub-tile" id="mainmenu-jugar-btn"><span class="hub-tile-ico">🌐</span><span class="hub-tile-title">MULTIJUGADOR</span><span class="hub-tile-sub">Sala con código · modos</span></button>
-        <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>
-        <button class="hub-tile hidden" id="mainmenu-quests-btn" data-quests-open><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag new hub-tile-badge qs-badge hidden" id="hub-badge-quests"></span></button>
+<details class="hub-more"><summary>Explorar · Códice y desafíos</summary><div class="hub-actions">        <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>        <button class="hub-tile hidden" id="mainmenu-quests-btn" data-quests-open><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag new hub-tile-badge qs-badge hidden" id="hub-badge-quests"></span></button></div></details>
       </div>
     </div>
     <div class="save-line hidden" id="mainmenu-gold-line"></div>
@@ -343,7 +343,7 @@
       <div class="ui-topbar-title" id="lobby-title">Sala</div>
       <div class="ui-topbar-spacer"></div>
     </div>
-    <div class="lobby-sub" id="lobby-sub"></div>
+    
     <!-- PESTAÑAS DE LA SALA (js/ui/prep-sections.js): Equipo · Arena · Sala online. Los 4 lugares se ven
          siempre; lo online queda plegado salvo en una sala online (o si entraste por código o enlace). -->
     <div class="prep-secs" id="prep-secs" role="tablist" aria-label="Sala">
@@ -355,9 +355,10 @@
     <div id="net-bar" data-part="online"></div>
     <div id="net-trade" class="hidden" data-part="online"></div>
     <div id="net-chat" class="hidden" data-part="online"></div>
-    <div id="lobby-slots"></div>
-    <div id="prep-summary" data-part="equipo"></div>
-    <div class="hub-tabs" id="prep-tabs" data-part="equipo">
+    
+    <div id="duo-picker" data-part="equipo"></div>
+    
+    <details class="prep-advanced" data-part="equipo"><summary>Equipo, talentos y progresión</summary><div id="prep-summary" data-part="equipo"></div><div class="hub-tabs" id="prep-tabs" data-part="equipo">
       <button class="hub-tab active" data-tab="equipo">Equipamiento</button>
       <button class="hub-tab" data-tab="talentos">Talentos</button>
       <button class="hub-tab" data-tab="habilidades">Habilidades</button>
@@ -365,7 +366,8 @@
     <div id="prep-inventory-panel" data-part="equipo"></div>
     <div id="prep-talents-panel" class="hidden" data-part="equipo"></div>
     <div id="prep-skills-panel" class="hidden" data-part="equipo"></div>
-    <button class="btn wide" id="prep-start-btn">Comenzar</button>
+    </details>
+    <details class="prep-advanced"><summary>Equipo aliado</summary><div class="lobby-sub" id="lobby-sub"></div><div id="lobby-slots"></div></details><button class="btn wide" id="prep-start-btn">Comenzar</button>
   </div>
 
   <!-- MENU -->
@@ -642,6 +644,7 @@
 <script src="js/audio/music-score.js"></script>
 <script src="js/audio/audio.js"></script>
 <script src="js/storage/save-code.js"></script>
+<script src="js/ui/champion-guide.js"></script>
 <script src="js/ui/champion-select.js"></script>
 <script src="js/ui/title-scene.js"></script>
 <script src="js/core/input.js"></script>
@@ -706,6 +709,8 @@
 <script src="js/enemies/elite-affixes.js"></script>
 <script src="js/data/champion-balance-reference.js"></script>
 <script src="js/systems/champion-entry-balance.js"></script>
+<script src="js/systems/duo-roster.js"></script>
+<script src="js/ui/admin.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

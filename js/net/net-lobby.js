@@ -36,11 +36,12 @@ function netTogglePublic(){
 function netNotReady(){ return net.room ? net.room.slots.filter((s,i)=> i>0 && s && s.connected && !s.ready) : []; }
 function netInRoom(){ return !!(net.room && net.role); }
 function netHumanCount(){ return net.room ? net.room.slots.filter(s=>s && s.connected).length : 1; }
+function netDuoLoadoutValid(i){ const L=netLobby.loadouts[i], s=net.room.slots[i]; return !!(L&&s&&L.champ===s.champ&&CLASSES[L.reserve?.champ]&&L.reserve.champ!==L.champ); }
 function netDuplicateChamps(){
-  if(!net.room) return [];
-  const seen = {}, dup = [];
-  net.room.slots.forEach((s,i)=>{ if(!s || !s.connected) return; const k = i===net.slot ? selectedClass : s.champ; if(seen[k]) dup.push(k); seen[k] = 1; });
-  return dup;
+ if(!net.room) return [];
+ const seen=new Set(), dup=[];
+ net.room.slots.forEach((s,i)=>{ if(!s?.connected)return; const keys=i===net.slot?duoKeys():[s.champ,net.role==="host"?netLobby.loadouts[i]?.reserve?.champ:netLobby.duos?.[i]]; for(const k of keys){if(!k)continue;if(seen.has(k))dup.push(k);seen.add(k);} });
+ return dup;
 }
 
 /* ---------------- barra online de la pre-sala ---------------- */
@@ -253,12 +254,13 @@ function netHostBroadcastCos(force){
   const m = {};
   net.room.slots.forEach((s,i)=>{ if(!s) return; m[i] = i===0 ? champSkinId(selectedClass) : ((netLobby.loadouts[i]||{}).skin || null); });
   const d = typeof diffEffective==="function" ? diffEffective(currentArena) : "normal"; // dificultad elegida por el anfitrión
-  const sig = JSON.stringify([m, net.room.slots.map(s=>s ? !!s.connected : null), d]);
+  const duos={}; net.room.slots.forEach((s,i)=>{ if(s) duos[i]=i===0?save.duoReserve:netLobby.loadouts[i]?.reserve?.champ; });
+  const sig = JSON.stringify([m, duos, net.room.slots.map(s=>s ? !!s.connected : null), d]);
   if(!force && sig === netLobby.cosSig) return;
   netLobby.cosSig = sig;
   // la dificultad también la ve el relay, para la lista de salas públicas
   if(d !== netLobby.sentDiff){ netLobby.sentDiff = d; netSend({t:"update", diff:d}); }
-  netBroadcast({k:"cos", m, d});
+  netBroadcast({k:"cos", m, d, duos});
 }
 // Refresco liviano de la sala ante cambios de red: solo título, barra y lugares (no el equipo, los
 // talentos ni la tienda de skins, que no dependen de la sala). Si hay un dedo apoyado en la pantalla
@@ -267,6 +269,7 @@ function netRefreshLobby(){
   if(state!=="prep") return;
   if(netLobby.touching){ netLobby.pendingRefresh = true; return; }
   netLobby.pendingRefresh = false;
+  renderDuoPicker();
   if(!netInRoom()){ renderPrepSummary(); return; }
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");

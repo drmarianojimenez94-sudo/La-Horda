@@ -143,7 +143,7 @@ function botMove(h, dt){
     }
   } else h._dangerT = 0;
   // 2) revivir a otro bot caído (si no hay un jefe encima)
-  const down = botDownedNear(h, 520);
+  const down = duoEnabled() ? null : botDownedNear(h, 520);
   if(down){
     const d = distance(h, down);
     // se acerca a 46 para empezar; si ya lo está reviviendo, un empujón no lo corta (hasta 70)
@@ -199,6 +199,7 @@ function botMove(h, dt){
 // Cruz verde pulsante sobre el caído, anillo con el alcance de revivir cuando el jugador está
 // cerca, y anillo de progreso cuando alguien lo está reviviendo.
 function drawDownedMarkers(){
+  if(duoEnabled()) return;
   if(divinaMode) return;
   for(const a of heroes){
     if(a===player) continue;

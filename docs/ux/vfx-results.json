@@ -1,0 +1,2905 @@
+{
+  "checks": [
+    {
+      "name": "tanque: Torbellino finite",
+      "ok": true
+    },
+    {
+      "name": "tanque: Torbellino signature",
+      "ok": true
+    },
+    {
+      "name": "tanque: Embestida finite",
+      "ok": true
+    },
+    {
+      "name": "tanque: Embestida signature",
+      "ok": true
+    },
+    {
+      "name": "tanque: Grito de Guerra finite",
+      "ok": true
+    },
+    {
+      "name": "tanque: Grito de Guerra signature",
+      "ok": true
+    },
+    {
+      "name": "tanque: Grito Provocador finite",
+      "ok": true
+    },
+    {
+      "name": "tanque: Grito Provocador signature",
+      "ok": true
+    },
+    {
+      "name": "tanque: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "tanque: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "tanque: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "tanque: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "tanque: expiration",
+      "ok": true
+    },
+    {
+      "name": "tanque: reset",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Corte Sangrante finite",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Corte Sangrante signature",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Triple Golpe finite",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Triple Golpe signature",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Trampa de Área finite",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Trampa de Área signature",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Pestilencia Sombría finite",
+      "ok": true
+    },
+    {
+      "name": "guerrero: Pestilencia Sombría signature",
+      "ok": true
+    },
+    {
+      "name": "guerrero: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "guerrero: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "guerrero: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "guerrero: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "guerrero: expiration",
+      "ok": true
+    },
+    {
+      "name": "guerrero: reset",
+      "ok": true
+    },
+    {
+      "name": "mago: Muro de Fuego finite",
+      "ok": true
+    },
+    {
+      "name": "mago: Muro de Fuego signature",
+      "ok": true
+    },
+    {
+      "name": "mago: Nova de Escarcha finite",
+      "ok": true
+    },
+    {
+      "name": "mago: Nova de Escarcha signature",
+      "ok": true
+    },
+    {
+      "name": "mago: Cadena de Relámpago finite",
+      "ok": true
+    },
+    {
+      "name": "mago: Cadena de Relámpago signature",
+      "ok": true
+    },
+    {
+      "name": "mago: Cataclismo Elemental finite",
+      "ok": true
+    },
+    {
+      "name": "mago: Cataclismo Elemental signature",
+      "ok": true
+    },
+    {
+      "name": "mago: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "mago: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "mago: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "mago: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "mago: expiration",
+      "ok": true
+    },
+    {
+      "name": "mago: reset",
+      "ok": true
+    },
+    {
+      "name": "soporte: Curación de Área finite",
+      "ok": true
+    },
+    {
+      "name": "soporte: Curación de Área signature",
+      "ok": true
+    },
+    {
+      "name": "soporte: Bendición de Guerra finite",
+      "ok": true
+    },
+    {
+      "name": "soporte: Bendición de Guerra signature",
+      "ok": true
+    },
+    {
+      "name": "soporte: Escudo Sagrado finite",
+      "ok": true
+    },
+    {
+      "name": "soporte: Escudo Sagrado signature",
+      "ok": true
+    },
+    {
+      "name": "soporte: Bendición Suprema finite",
+      "ok": true
+    },
+    {
+      "name": "soporte: Bendición Suprema signature",
+      "ok": true
+    },
+    {
+      "name": "soporte: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "soporte: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "soporte: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "soporte: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "soporte: expiration",
+      "ok": true
+    },
+    {
+      "name": "soporte: reset",
+      "ok": true
+    },
+    {
+      "name": "segador: Tajo del Segador finite",
+      "ok": true
+    },
+    {
+      "name": "segador: Tajo del Segador signature",
+      "ok": true
+    },
+    {
+      "name": "segador: Armadura de la Furia finite",
+      "ok": true
+    },
+    {
+      "name": "segador: Armadura de la Furia signature",
+      "ok": true
+    },
+    {
+      "name": "segador: Último Aliento finite",
+      "ok": true
+    },
+    {
+      "name": "segador: Último Aliento signature",
+      "ok": true
+    },
+    {
+      "name": "segador: Segador de Almas finite",
+      "ok": true
+    },
+    {
+      "name": "segador: Segador de Almas signature",
+      "ok": true
+    },
+    {
+      "name": "segador: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "segador: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "segador: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "segador: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "segador: expiration",
+      "ok": true
+    },
+    {
+      "name": "segador: reset",
+      "ok": true
+    },
+    {
+      "name": "axiom: Error 404 finite",
+      "ok": true
+    },
+    {
+      "name": "axiom: Error 404 signature",
+      "ok": true
+    },
+    {
+      "name": "axiom: Sobrescribir finite",
+      "ok": true
+    },
+    {
+      "name": "axiom: Sobrescribir signature",
+      "ok": true
+    },
+    {
+      "name": "axiom: Teletransporte finite",
+      "ok": true
+    },
+    {
+      "name": "axiom: Teletransporte signature",
+      "ok": true
+    },
+    {
+      "name": "axiom: Force Quit finite",
+      "ok": true
+    },
+    {
+      "name": "axiom: Force Quit signature",
+      "ok": true
+    },
+    {
+      "name": "axiom: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "axiom: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "axiom: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "axiom: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "axiom: expiration",
+      "ok": true
+    },
+    {
+      "name": "axiom: reset",
+      "ok": true
+    },
+    {
+      "name": "profeta: Destino Restaurado finite",
+      "ok": true
+    },
+    {
+      "name": "profeta: Destino Restaurado signature",
+      "ok": true
+    },
+    {
+      "name": "profeta: Visión del Inmortal finite",
+      "ok": true
+    },
+    {
+      "name": "profeta: Visión del Inmortal signature",
+      "ok": true
+    },
+    {
+      "name": "profeta: Danza del Augurio finite",
+      "ok": true
+    },
+    {
+      "name": "profeta: Danza del Augurio signature",
+      "ok": true
+    },
+    {
+      "name": "profeta: Ascensión del Elegido finite",
+      "ok": true
+    },
+    {
+      "name": "profeta: Ascensión del Elegido signature",
+      "ok": true
+    },
+    {
+      "name": "profeta: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "profeta: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "profeta: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "profeta: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "profeta: expiration",
+      "ok": true
+    },
+    {
+      "name": "profeta: reset",
+      "ok": true
+    },
+    {
+      "name": "musashi: Corte del Rōnin finite",
+      "ok": true
+    },
+    {
+      "name": "musashi: Corte del Rōnin signature",
+      "ok": true
+    },
+    {
+      "name": "musashi: Paso Fantasma finite",
+      "ok": true
+    },
+    {
+      "name": "musashi: Paso Fantasma signature",
+      "ok": true
+    },
+    {
+      "name": "musashi: Mil Cortes finite",
+      "ok": true
+    },
+    {
+      "name": "musashi: Mil Cortes signature",
+      "ok": true
+    },
+    {
+      "name": "musashi: Último Duelo finite",
+      "ok": true
+    },
+    {
+      "name": "musashi: Último Duelo signature",
+      "ok": true
+    },
+    {
+      "name": "musashi: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "musashi: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "musashi: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "musashi: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "musashi: expiration",
+      "ok": true
+    },
+    {
+      "name": "musashi: reset",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Flecha Perforante finite",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Flecha Perforante signature",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Trampa del Bosque finite",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Trampa del Bosque signature",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Lluvia de la Cazadora finite",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Lluvia de la Cazadora signature",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Cacería Salvaje finite",
+      "ok": true
+    },
+    {
+      "name": "cazadora: Cacería Salvaje signature",
+      "ok": true
+    },
+    {
+      "name": "cazadora: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "cazadora: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "cazadora: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "cazadora: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "cazadora: expiration",
+      "ok": true
+    },
+    {
+      "name": "cazadora: reset",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Cosecha de Almas finite",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Cosecha de Almas signature",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Gólem de Carne finite",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Gólem de Carne signature",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Plaga de los Condenados finite",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Plaga de los Condenados signature",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Encarnación del Abismo finite",
+      "ok": true
+    },
+    {
+      "name": "nigromante: Encarnación del Abismo signature",
+      "ok": true
+    },
+    {
+      "name": "nigromante: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "nigromante: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "nigromante: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "nigromante: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "nigromante: expiration",
+      "ok": true
+    },
+    {
+      "name": "nigromante: reset",
+      "ok": true
+    },
+    {
+      "name": "libertador: Bayoneta finite",
+      "ok": true
+    },
+    {
+      "name": "libertador: Bayoneta signature",
+      "ok": true
+    },
+    {
+      "name": "libertador: ¡Granaderos, a la carga! finite",
+      "ok": true
+    },
+    {
+      "name": "libertador: ¡Granaderos, a la carga! signature",
+      "ok": true
+    },
+    {
+      "name": "libertador: Carga de San Lorenzo finite",
+      "ok": true
+    },
+    {
+      "name": "libertador: Carga de San Lorenzo signature",
+      "ok": true
+    },
+    {
+      "name": "libertador: Cruce de los Andes finite",
+      "ok": true
+    },
+    {
+      "name": "libertador: Cruce de los Andes signature",
+      "ok": true
+    },
+    {
+      "name": "libertador: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "libertador: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "libertador: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "libertador: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "libertador: expiration",
+      "ok": true
+    },
+    {
+      "name": "libertador: reset",
+      "ok": true
+    },
+    {
+      "name": "eren: Equipo de Maniobras finite",
+      "ok": true
+    },
+    {
+      "name": "eren: Equipo de Maniobras signature",
+      "ok": true
+    },
+    {
+      "name": "eren: Instinto de Supervivencia finite",
+      "ok": true
+    },
+    {
+      "name": "eren: Instinto de Supervivencia signature",
+      "ok": true
+    },
+    {
+      "name": "eren: ¡Avancen! finite",
+      "ok": true
+    },
+    {
+      "name": "eren: ¡Avancen! signature",
+      "ok": true
+    },
+    {
+      "name": "eren: El Portador finite",
+      "ok": true
+    },
+    {
+      "name": "eren: El Portador signature",
+      "ok": true
+    },
+    {
+      "name": "eren: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "eren: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "eren: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "eren: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "eren: expiration",
+      "ok": true
+    },
+    {
+      "name": "eren: reset",
+      "ok": true
+    },
+    {
+      "name": "ynara: Mirada fulminante finite",
+      "ok": true
+    },
+    {
+      "name": "ynara: Mirada fulminante signature",
+      "ok": true
+    },
+    {
+      "name": "ynara: Estrogonof reparador finite",
+      "ok": true
+    },
+    {
+      "name": "ynara: Estrogonof reparador signature",
+      "ok": true
+    },
+    {
+      "name": "ynara: No quiero seguir esta conversación finite",
+      "ok": true
+    },
+    {
+      "name": "ynara: No quiero seguir esta conversación signature",
+      "ok": true
+    },
+    {
+      "name": "ynara: Santa Paciencia finite",
+      "ok": true
+    },
+    {
+      "name": "ynara: Santa Paciencia signature",
+      "ok": true
+    },
+    {
+      "name": "ynara: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "ynara: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "ynara: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "ynara: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "ynara: expiration",
+      "ok": true
+    },
+    {
+      "name": "ynara: reset",
+      "ok": true
+    },
+    {
+      "name": "myla: Torre de Yogur finite",
+      "ok": true
+    },
+    {
+      "name": "myla: Torre de Yogur signature",
+      "ok": true
+    },
+    {
+      "name": "myla: Yogurazo finite",
+      "ok": true
+    },
+    {
+      "name": "myla: Yogurazo signature",
+      "ok": true
+    },
+    {
+      "name": "myla: Burbuja Cremosa finite",
+      "ok": true
+    },
+    {
+      "name": "myla: Burbuja Cremosa signature",
+      "ok": true
+    },
+    {
+      "name": "myla: BERRINCHE finite",
+      "ok": true
+    },
+    {
+      "name": "myla: BERRINCHE signature",
+      "ok": true
+    },
+    {
+      "name": "myla: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "myla: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "myla: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "myla: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "myla: expiration",
+      "ok": true
+    },
+    {
+      "name": "myla: reset",
+      "ok": true
+    },
+    {
+      "name": "brasa: Centinela de Latón finite",
+      "ok": true
+    },
+    {
+      "name": "brasa: Centinela de Latón signature",
+      "ok": true
+    },
+    {
+      "name": "brasa: Purga de Vapor finite",
+      "ok": true
+    },
+    {
+      "name": "brasa: Purga de Vapor signature",
+      "ok": true
+    },
+    {
+      "name": "brasa: Desmontaje Rápido finite",
+      "ok": true
+    },
+    {
+      "name": "brasa: Desmontaje Rápido signature",
+      "ok": true
+    },
+    {
+      "name": "brasa: Turno de Emergencia finite",
+      "ok": true
+    },
+    {
+      "name": "brasa: Turno de Emergencia signature",
+      "ok": true
+    },
+    {
+      "name": "brasa: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "brasa: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "brasa: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "brasa: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "brasa: expiration",
+      "ok": true
+    },
+    {
+      "name": "brasa: reset",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Cadena de Retorno finite",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Cadena de Retorno signature",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Línea Infranqueable finite",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Línea Infranqueable signature",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Custodia finite",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Custodia signature",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Nadie Queda Atrás finite",
+      "ok": true
+    },
+    {
+      "name": "eslabon: Nadie Queda Atrás signature",
+      "ok": true
+    },
+    {
+      "name": "eslabon: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "eslabon: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "eslabon: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "eslabon: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "eslabon: expiration",
+      "ok": true
+    },
+    {
+      "name": "eslabon: reset",
+      "ok": true
+    },
+    {
+      "name": "morwen: Resina Amarga finite",
+      "ok": true
+    },
+    {
+      "name": "morwen: Resina Amarga signature",
+      "ok": true
+    },
+    {
+      "name": "morwen: Sal de Ruptura finite",
+      "ok": true
+    },
+    {
+      "name": "morwen: Sal de Ruptura signature",
+      "ok": true
+    },
+    {
+      "name": "morwen: Destilación finite",
+      "ok": true
+    },
+    {
+      "name": "morwen: Destilación signature",
+      "ok": true
+    },
+    {
+      "name": "morwen: Alambique del Silencio finite",
+      "ok": true
+    },
+    {
+      "name": "morwen: Alambique del Silencio signature",
+      "ok": true
+    },
+    {
+      "name": "morwen: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "morwen: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "morwen: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "morwen: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "morwen: expiration",
+      "ok": true
+    },
+    {
+      "name": "morwen: reset",
+      "ok": true
+    },
+    {
+      "name": "farolero: Farol de Guardia finite",
+      "ok": true
+    },
+    {
+      "name": "farolero: Farol de Guardia signature",
+      "ok": true
+    },
+    {
+      "name": "farolero: Destello finite",
+      "ok": true
+    },
+    {
+      "name": "farolero: Destello signature",
+      "ok": true
+    },
+    {
+      "name": "farolero: Paso Seguro finite",
+      "ok": true
+    },
+    {
+      "name": "farolero: Paso Seguro signature",
+      "ok": true
+    },
+    {
+      "name": "farolero: Vigilia finite",
+      "ok": true
+    },
+    {
+      "name": "farolero: Vigilia signature",
+      "ok": true
+    },
+    {
+      "name": "farolero: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "farolero: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "farolero: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "farolero: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "farolero: expiration",
+      "ok": true
+    },
+    {
+      "name": "farolero: reset",
+      "ok": true
+    },
+    {
+      "name": "iria: Ancla finite",
+      "ok": true
+    },
+    {
+      "name": "iria: Ancla signature",
+      "ok": true
+    },
+    {
+      "name": "iria: Tensión finite",
+      "ok": true
+    },
+    {
+      "name": "iria: Tensión signature",
+      "ok": true
+    },
+    {
+      "name": "iria: Corte de Hilo finite",
+      "ok": true
+    },
+    {
+      "name": "iria: Corte de Hilo signature",
+      "ok": true
+    },
+    {
+      "name": "iria: Sello de los Tres Caminos finite",
+      "ok": true
+    },
+    {
+      "name": "iria: Sello de los Tres Caminos signature",
+      "ok": true
+    },
+    {
+      "name": "iria: network numeric replay",
+      "ok": true
+    },
+    {
+      "name": "iria: cast retained under network cosmetic saturation",
+      "ok": true
+    },
+    {
+      "name": "iria: bounded pool",
+      "ok": true
+    },
+    {
+      "name": "iria: ultimate gets priority",
+      "ok": true
+    },
+    {
+      "name": "iria: expiration",
+      "ok": true
+    },
+    {
+      "name": "iria: reset",
+      "ok": true
+    },
+    {
+      "name": "mago 844: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "mago 844: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "mago 844: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "nigromante 844: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "nigromante 844: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "nigromante 844: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "eren 844: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "eren 844: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "eren 844: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "mago 667: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "mago 667: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "mago 667: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "nigromante 667: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "nigromante 667: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "nigromante 667: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "eren 667: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "eren 667: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "eren 667: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "mago 1280: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "mago 1280: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "mago 1280: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "nigromante 1280: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "nigromante 1280: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "nigromante 1280: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "eren 1280: required HUD visible",
+      "ok": true
+    },
+    {
+      "name": "eren 1280: controls in viewport",
+      "ok": true
+    },
+    {
+      "name": "eren 1280: party unclipped",
+      "ok": true
+    },
+    {
+      "name": "pause remains usable",
+      "ok": true
+    },
+    {
+      "name": "resume remains usable",
+      "ok": true
+    },
+    {
+      "name": "sound toggle preserves state and accessible label",
+      "ok": true
+    }
+  ],
+  "skills": [
+    {
+      "champion": "tanque",
+      "slot": 0,
+      "name": "Torbellino",
+      "kind": "spin_channel",
+      "signature": true
+    },
+    {
+      "champion": "tanque",
+      "slot": 1,
+      "name": "Embestida",
+      "kind": "charge_drag",
+      "signature": true
+    },
+    {
+      "champion": "tanque",
+      "slot": 2,
+      "name": "Grito de Guerra",
+      "kind": "war_cry",
+      "signature": true
+    },
+    {
+      "champion": "tanque",
+      "slot": "ult",
+      "name": "Grito Provocador",
+      "kind": "taunt_provoke",
+      "signature": true
+    },
+    {
+      "champion": "guerrero",
+      "slot": 0,
+      "name": "Corte Sangrante",
+      "kind": "bleed_hit",
+      "signature": true
+    },
+    {
+      "champion": "guerrero",
+      "slot": 1,
+      "name": "Triple Golpe",
+      "kind": "triple_hit",
+      "signature": true
+    },
+    {
+      "champion": "guerrero",
+      "slot": 2,
+      "name": "Trampa de Área",
+      "kind": "area_trap",
+      "signature": true
+    },
+    {
+      "champion": "guerrero",
+      "slot": "ult",
+      "name": "Pestilencia Sombría",
+      "kind": "shadow_stealth",
+      "signature": true
+    },
+    {
+      "champion": "mago",
+      "slot": 0,
+      "name": "Muro de Fuego",
+      "kind": "fire_wall",
+      "signature": true
+    },
+    {
+      "champion": "mago",
+      "slot": 1,
+      "name": "Nova de Escarcha",
+      "kind": "frost_nova",
+      "signature": true
+    },
+    {
+      "champion": "mago",
+      "slot": 2,
+      "name": "Cadena de Relámpago",
+      "kind": "chain",
+      "signature": true
+    },
+    {
+      "champion": "mago",
+      "slot": "ult",
+      "name": "Cataclismo Elemental",
+      "kind": "elemental_storm",
+      "signature": true
+    },
+    {
+      "champion": "soporte",
+      "slot": 0,
+      "name": "Curación de Área",
+      "kind": "team_heal_aoe",
+      "signature": true
+    },
+    {
+      "champion": "soporte",
+      "slot": 1,
+      "name": "Bendición de Guerra",
+      "kind": "team_atk_buff",
+      "signature": true
+    },
+    {
+      "champion": "soporte",
+      "slot": 2,
+      "name": "Escudo Sagrado",
+      "kind": "team_shield_buff",
+      "signature": true
+    },
+    {
+      "champion": "soporte",
+      "slot": "ult",
+      "name": "Bendición Suprema",
+      "kind": "team_grand_buff",
+      "signature": true
+    },
+    {
+      "champion": "segador",
+      "slot": 0,
+      "name": "Tajo del Segador",
+      "kind": "cone_slash",
+      "signature": true
+    },
+    {
+      "champion": "segador",
+      "slot": 1,
+      "name": "Armadura de la Furia",
+      "kind": "fury_armor",
+      "signature": true
+    },
+    {
+      "champion": "segador",
+      "slot": 2,
+      "name": "Último Aliento",
+      "kind": "last_stand_burst",
+      "signature": true
+    },
+    {
+      "champion": "segador",
+      "slot": "ult",
+      "name": "Segador de Almas",
+      "kind": "berserker_ult",
+      "signature": true
+    },
+    {
+      "champion": "axiom",
+      "slot": 0,
+      "name": "Error 404",
+      "kind": "glitch_delay_nova",
+      "signature": true
+    },
+    {
+      "champion": "axiom",
+      "slot": 1,
+      "name": "Sobrescribir",
+      "kind": "overwrite_nova",
+      "signature": true
+    },
+    {
+      "champion": "axiom",
+      "slot": 2,
+      "name": "Teletransporte",
+      "kind": "teleport_blink",
+      "signature": true
+    },
+    {
+      "champion": "axiom",
+      "slot": "ult",
+      "name": "Force Quit",
+      "kind": "force_quit_ult",
+      "signature": true
+    },
+    {
+      "champion": "profeta",
+      "slot": 0,
+      "name": "Destino Restaurado",
+      "kind": "retro_heal",
+      "signature": true
+    },
+    {
+      "champion": "profeta",
+      "slot": 1,
+      "name": "Visión del Inmortal",
+      "kind": "brief_immunity",
+      "signature": true
+    },
+    {
+      "champion": "profeta",
+      "slot": 2,
+      "name": "Danza del Augurio",
+      "kind": "self_spin_stun",
+      "signature": true
+    },
+    {
+      "champion": "profeta",
+      "slot": "ult",
+      "name": "Ascensión del Elegido",
+      "kind": "ascension_fusion",
+      "signature": true
+    },
+    {
+      "champion": "musashi",
+      "slot": 0,
+      "name": "Corte del Rōnin",
+      "kind": "ronin_slash",
+      "signature": true
+    },
+    {
+      "champion": "musashi",
+      "slot": 1,
+      "name": "Paso Fantasma",
+      "kind": "ghost_step",
+      "signature": true
+    },
+    {
+      "champion": "musashi",
+      "slot": 2,
+      "name": "Mil Cortes",
+      "kind": "thousand_cuts",
+      "signature": true
+    },
+    {
+      "champion": "musashi",
+      "slot": "ult",
+      "name": "Último Duelo",
+      "kind": "last_duel_ult",
+      "signature": true
+    },
+    {
+      "champion": "cazadora",
+      "slot": 0,
+      "name": "Flecha Perforante",
+      "kind": "piercing_shot",
+      "signature": true
+    },
+    {
+      "champion": "cazadora",
+      "slot": 1,
+      "name": "Trampa del Bosque",
+      "kind": "forest_trap",
+      "signature": true
+    },
+    {
+      "champion": "cazadora",
+      "slot": 2,
+      "name": "Lluvia de la Cazadora",
+      "kind": "hunter_rain",
+      "signature": true
+    },
+    {
+      "champion": "cazadora",
+      "slot": "ult",
+      "name": "Cacería Salvaje",
+      "kind": "wild_hunt_ult",
+      "signature": true
+    },
+    {
+      "champion": "nigromante",
+      "slot": 0,
+      "name": "Cosecha de Almas",
+      "kind": "soul_harvest",
+      "signature": true
+    },
+    {
+      "champion": "nigromante",
+      "slot": 1,
+      "name": "Gólem de Carne",
+      "kind": "summon_golem",
+      "signature": true
+    },
+    {
+      "champion": "nigromante",
+      "slot": 2,
+      "name": "Plaga de los Condenados",
+      "kind": "condemned_plague",
+      "signature": true
+    },
+    {
+      "champion": "nigromante",
+      "slot": "ult",
+      "name": "Encarnación del Abismo",
+      "kind": "abyss_incarnation_ult",
+      "signature": true
+    },
+    {
+      "champion": "libertador",
+      "slot": 0,
+      "name": "Bayoneta",
+      "kind": "sm_bayonet",
+      "signature": true
+    },
+    {
+      "champion": "libertador",
+      "slot": 1,
+      "name": "¡Granaderos, a la carga!",
+      "kind": "sm_granaderos",
+      "signature": true
+    },
+    {
+      "champion": "libertador",
+      "slot": 2,
+      "name": "Carga de San Lorenzo",
+      "kind": "sm_san_lorenzo",
+      "signature": true
+    },
+    {
+      "champion": "libertador",
+      "slot": "ult",
+      "name": "Cruce de los Andes",
+      "kind": "sm_andes_ult",
+      "signature": true
+    },
+    {
+      "champion": "eren",
+      "slot": 0,
+      "name": "Equipo de Maniobras",
+      "kind": "eren_hook",
+      "signature": true
+    },
+    {
+      "champion": "eren",
+      "slot": 1,
+      "name": "Instinto de Supervivencia",
+      "kind": "eren_instinct",
+      "signature": true
+    },
+    {
+      "champion": "eren",
+      "slot": 2,
+      "name": "¡Avancen!",
+      "kind": "eren_advance",
+      "signature": true
+    },
+    {
+      "champion": "eren",
+      "slot": "ult",
+      "name": "El Portador",
+      "kind": "eren_titan_ult",
+      "signature": true
+    },
+    {
+      "champion": "ynara",
+      "slot": 0,
+      "name": "Mirada fulminante",
+      "kind": "yn_gaze",
+      "signature": true
+    },
+    {
+      "champion": "ynara",
+      "slot": 1,
+      "name": "Estrogonof reparador",
+      "kind": "yn_stroganoff",
+      "signature": true
+    },
+    {
+      "champion": "ynara",
+      "slot": 2,
+      "name": "No quiero seguir esta conversación",
+      "kind": "yn_leave",
+      "signature": true
+    },
+    {
+      "champion": "ynara",
+      "slot": "ult",
+      "name": "Santa Paciencia",
+      "kind": "yn_patience",
+      "signature": true
+    },
+    {
+      "champion": "myla",
+      "slot": 0,
+      "name": "Torre de Yogur",
+      "kind": "my_tower",
+      "signature": true
+    },
+    {
+      "champion": "myla",
+      "slot": 1,
+      "name": "Yogurazo",
+      "kind": "my_splash",
+      "signature": true
+    },
+    {
+      "champion": "myla",
+      "slot": 2,
+      "name": "Burbuja Cremosa",
+      "kind": "my_bubble",
+      "signature": true
+    },
+    {
+      "champion": "myla",
+      "slot": "ult",
+      "name": "BERRINCHE",
+      "kind": "my_tantrum",
+      "signature": true
+    },
+    {
+      "champion": "brasa",
+      "slot": 0,
+      "name": "Centinela de Latón",
+      "kind": "br_turret",
+      "signature": true
+    },
+    {
+      "champion": "brasa",
+      "slot": 1,
+      "name": "Purga de Vapor",
+      "kind": "br_purge",
+      "signature": true
+    },
+    {
+      "champion": "brasa",
+      "slot": 2,
+      "name": "Desmontaje Rápido",
+      "kind": "br_dismantle",
+      "signature": true
+    },
+    {
+      "champion": "brasa",
+      "slot": "ult",
+      "name": "Turno de Emergencia",
+      "kind": "br_overclock",
+      "signature": true
+    },
+    {
+      "champion": "eslabon",
+      "slot": 0,
+      "name": "Cadena de Retorno",
+      "kind": "es_hook",
+      "signature": true
+    },
+    {
+      "champion": "eslabon",
+      "slot": 1,
+      "name": "Línea Infranqueable",
+      "kind": "es_line",
+      "signature": true
+    },
+    {
+      "champion": "eslabon",
+      "slot": 2,
+      "name": "Custodia",
+      "kind": "es_guard",
+      "signature": true
+    },
+    {
+      "champion": "eslabon",
+      "slot": "ult",
+      "name": "Nadie Queda Atrás",
+      "kind": "es_ring",
+      "signature": true
+    },
+    {
+      "champion": "morwen",
+      "slot": 0,
+      "name": "Resina Amarga",
+      "kind": "mo_resin",
+      "signature": true
+    },
+    {
+      "champion": "morwen",
+      "slot": 1,
+      "name": "Sal de Ruptura",
+      "kind": "mo_salt",
+      "signature": true
+    },
+    {
+      "champion": "morwen",
+      "slot": 2,
+      "name": "Destilación",
+      "kind": "mo_distill",
+      "signature": true
+    },
+    {
+      "champion": "morwen",
+      "slot": "ult",
+      "name": "Alambique del Silencio",
+      "kind": "mo_alembic",
+      "signature": true
+    },
+    {
+      "champion": "farolero",
+      "slot": 0,
+      "name": "Farol de Guardia",
+      "kind": "fa_lantern",
+      "signature": true
+    },
+    {
+      "champion": "farolero",
+      "slot": 1,
+      "name": "Destello",
+      "kind": "fa_flash",
+      "signature": true
+    },
+    {
+      "champion": "farolero",
+      "slot": 2,
+      "name": "Paso Seguro",
+      "kind": "fa_path",
+      "signature": true
+    },
+    {
+      "champion": "farolero",
+      "slot": "ult",
+      "name": "Vigilia",
+      "kind": "fa_vigil",
+      "signature": true
+    },
+    {
+      "champion": "iria",
+      "slot": 0,
+      "name": "Ancla",
+      "kind": "ir_anchor",
+      "signature": true
+    },
+    {
+      "champion": "iria",
+      "slot": 1,
+      "name": "Tensión",
+      "kind": "ir_tension",
+      "signature": true
+    },
+    {
+      "champion": "iria",
+      "slot": 2,
+      "name": "Corte de Hilo",
+      "kind": "ir_cut",
+      "signature": true
+    },
+    {
+      "champion": "iria",
+      "slot": "ult",
+      "name": "Sello de los Tres Caminos",
+      "kind": "ir_triangle",
+      "signature": true
+    }
+  ],
+  "layouts": [
+    {
+      "champion": "mago",
+      "width": 844,
+      "height": 390,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 66.71875,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 154,
+          "w": 164,
+          "h": 87.84375,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 740,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 790,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 756,
+          "y": 304,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 694,
+          "y": 320,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 652,
+          "y": 266,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 694,
+          "y": 212,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 768,
+          "y": 198,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 644,
+          "y": 336,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 768,
+          "y": 137.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 83,
+        "w": 164,
+        "h": 65.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "nigromante",
+      "width": 844,
+      "height": 390,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 100.28125,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 187,
+          "w": 164,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 740,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 790,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 756,
+          "y": 304,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 694,
+          "y": 320,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 652,
+          "y": 266,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 694,
+          "y": 212,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 768,
+          "y": 198,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 644,
+          "y": 336,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 644,
+          "y": 218,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 768,
+          "y": 137.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 116,
+        "w": 164,
+        "h": 65.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "eren",
+      "width": 844,
+      "height": 390,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 83.5,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 171,
+          "w": 164,
+          "h": 87.84375,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 740,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 790,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 756,
+          "y": 304,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 694,
+          "y": 320,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 652,
+          "y": 266,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 694,
+          "y": 212,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 768,
+          "y": 198,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 644,
+          "y": 336,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 768,
+          "y": 137.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 100,
+        "w": 164,
+        "h": 65.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "mago",
+      "width": 667,
+      "height": 375,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 66.71875,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 154,
+          "w": 164,
+          "h": 87.84375,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 563,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 613,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 579,
+          "y": 289,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 517,
+          "y": 305,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 475,
+          "y": 251,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 517,
+          "y": 197,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 591,
+          "y": 183,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 467,
+          "y": 321,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 591,
+          "y": 122.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 83,
+        "w": 164,
+        "h": 65.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "nigromante",
+      "width": 667,
+      "height": 375,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 100.28125,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 187,
+          "w": 164,
+          "h": 70,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 563,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 613,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 579,
+          "y": 289,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 517,
+          "y": 305,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 475,
+          "y": 251,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 517,
+          "y": 197,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 591,
+          "y": 183,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 467,
+          "y": 321,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 467,
+          "y": 203,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 591,
+          "y": 122.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 116,
+        "w": 164,
+        "h": 65.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "eren",
+      "width": 667,
+      "height": 375,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 83.5,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 171,
+          "w": 164,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 563,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 613,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 579,
+          "y": 289,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 517,
+          "y": 305,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 475,
+          "y": 251,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 517,
+          "y": 197,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 591,
+          "y": 183,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 467,
+          "y": 321,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 591,
+          "y": 122.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 100,
+        "w": 164,
+        "h": 65.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "mago",
+      "width": 1280,
+      "height": 800,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 70.71875,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 160,
+          "w": 164,
+          "h": 93.84375,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 1176,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 1226,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 1192,
+          "y": 714,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 1130,
+          "y": 730,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 1088,
+          "y": 676,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 1130,
+          "y": 622,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 1204,
+          "y": 608,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 1080,
+          "y": 746,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 1204,
+          "y": 541.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 87,
+        "w": 164,
+        "h": 67.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "nigromante",
+      "width": 1280,
+      "height": 800,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 104.28125,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 193,
+          "w": 164,
+          "h": 93.84375,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 1176,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 1226,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 1192,
+          "y": 714,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 1130,
+          "y": 730,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 1088,
+          "y": 676,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 1130,
+          "y": 622,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 1204,
+          "y": 608,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 1080,
+          "y": 746,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 1080,
+          "y": 628,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 1204,
+          "y": 541.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 120,
+        "w": 164,
+        "h": 67.40625
+      },
+      "partyClipped": false
+    },
+    {
+      "champion": "eren",
+      "width": 1280,
+      "height": 800,
+      "rects": [
+        {
+          "id": "player-status",
+          "x": 10,
+          "y": 10,
+          "w": 164,
+          "h": 87.5,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        },
+        {
+          "id": "party",
+          "x": 10,
+          "y": 177,
+          "w": 164,
+          "h": 93.84375,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "boss-hud",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(12, 20, 33, 0.92)"
+        },
+        {
+          "id": "pause-btn",
+          "x": 1176,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "mute-btn",
+          "x": 1226,
+          "y": 8,
+          "w": 44,
+          "h": 44,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-basic",
+          "x": 1192,
+          "y": 714,
+          "w": 72,
+          "h": 72,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s1",
+          "x": 1130,
+          "y": 730,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s2",
+          "x": 1088,
+          "y": 676,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-s3",
+          "x": 1130,
+          "y": 622,
+          "w": 54,
+          "h": 54,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-ult",
+          "x": 1204,
+          "y": 608,
+          "w": 60,
+          "h": 60,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-emerg",
+          "x": 1080,
+          "y": 746,
+          "w": 42,
+          "h": 42,
+          "visible": true,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "btn-pact",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "visible": false,
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "id": "ult-meter",
+          "x": 1204,
+          "y": 541.515625,
+          "w": 64,
+          "h": 51.484375,
+          "visible": true,
+          "background": "rgba(12, 20, 33, 0.94)"
+        }
+      ],
+      "top": {
+        "x": 10,
+        "y": 104,
+        "w": 164,
+        "h": 67.40625
+      },
+      "partyClipped": false
+    }
+  ],
+  "runs": [],
+  "errors": []
+}

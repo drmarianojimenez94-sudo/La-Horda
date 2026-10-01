@@ -108,3 +108,9 @@ Estadísticas, resultados de 57 simulaciones, ajustes y comandos de verificació
 La revisión de los 18 campeones conserva sus roles y movilidad, refuerza efectos desde
 talento inicial y separa visualmente todos los controles del escenario. Detalles, límites de
 balance y pruebas: [auditoría de combate y HUD](docs/vfx/AUDITORIA_COMBATE_HUD.md).
+
+### Dos héroes e interfaz de preparación
+
+La intro llega al menú. En campaña y Horda Infinita cada jugador elige dos héroes: al caer el primero entra la reserva automáticamente; al agotarlos queda fuera. Las cartas muestran las habilidades y el nivel; equipo, talentos y aliados se despliegan bajo opciones avanzadas. Los siete héroes recientes tienen refuerzos propios, y Normal reduce los picos de Bosque y Hielo.
+
+El panel de niveles se habilita en Opciones para las cuentas incluidas en `ADMIN_USERS` del servidor. [Auditoría, pruebas, evaluación y configuración](docs/ux/AUDITORIA_ALPHA_02.md).

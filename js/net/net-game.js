@@ -174,9 +174,9 @@ const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHu
 let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){
   if((name==="xp" || name==="gold") && to!==undefined && typeof args[0]==="number"){
-    const key = name + to, i = _netRewardIdx.get(key);
+    const key = name + to + (args[1]||""), i = _netRewardIdx.get(key);
     if(i!==undefined && _netEvents[i]){ _netEvents[i][1][0] += args[0]; return; }
-    _netRewardIdx.set(key, _netEvents.length); _netEvents.push([name, [args[0]], to]); return;
+    _netRewardIdx.set(key, _netEvents.length); _netEvents.push([name, args.slice(), to]); return;
   }
   if(_netEvents.length > (NET_KEEP_EVENTS.has(name) ? 1200 : 260)) return;
   const inline = NET_INLINE_EVENTS.has(name);
@@ -217,10 +217,10 @@ function netPlayEvent(ev){
   const args = rawArgs.map(a=>netDecode(a, true));
   try{
     switch(name){
-      case "xp": { const lv = grantXP(selectedClass, args[0]); if(lv) netLog("LEVEL_UP", {level:save.champions[selectedClass].level}); return; }
+      case "xp": { const lv = grantXP(args[1] || selectedClass, args[0]); if(lv) netLog("LEVEL_UP", {level:save.champions[selectedClass].level}); return; }
       case "gold": grantGold(args[0]); return;
       case "hurt": registerPlayerHurt(args[0], {x:args[1], y:args[2]}); return;
-      case "useXp": gainSkillUseXp(selectedClass, args[0]); return;
+      case "useXp": gainSkillUseXp(args[1] || selectedClass, args[0]); return;
       case "vfxOnDeath":
         if(typeof codexNoteKill==="function" && args[0] && args[0].type && (!divinaMode || (ENEMY_BASE[args[0].type]||{}).rank==="jefe")) codexNoteKill(args[0].type); // Códice (invitado)
         // el anfitrión no manda a los muertos (sale de la lista): acá seguía "vivo" y la animación de muerte
@@ -257,11 +257,11 @@ function netPickBots(humanChamps, n){
 }
 // Datos de guardián que manda cada invitado (solo lo que el anfitrión necesita para simularlo:
 // nivel, habilidades, talentos y los objetos EQUIPADOS; nunca el resto del inventario).
-function netBuildLoadout(){
-  const k = selectedClass, c = save.champions[k];
+function netBuildLoadout(key,nested){
+  const k = key || selectedClass, c = save.champions[k];
   const eq = Object.assign(mkEquipment(), c.equipment||{});
   const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
-  return {champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
+  return {reserve:!nested && duoValid() ? netBuildLoadout(save.duoReserve,true) : null, champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
     skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
     croma:(typeof cromaEquippedId==="function" ? cromaEquippedId(k) : null), // cosmético: su croma (js/systems/cromas.js)
@@ -291,6 +291,7 @@ function netApplyGuestLoadouts(){
     netMatch.backups[s.champ] = save.champions[s.champ];
     const rec = L && L.champ===s.champ ? netLoadoutRecord(L) : netLoadoutRecord({level:s.level||1});
     save.champions[s.champ] = rec;
+    if(L && L.reserve && L.reserve.champ===s.reserve){ netMatch.backups[s.reserve]=save.champions[s.reserve]; save.champions[s.reserve]=netLoadoutRecord(L.reserve); }
   }
 }
 function netRestoreBackups(){
@@ -308,11 +309,12 @@ function netPersistView(s){
 function netHostStartGame(){
   const room = net.room; if(!room) return false;
   const humans = room.slots.map((s,i)=>s && s.connected ? Object.assign({slot:i}, s) : null);
-  const humanChamps = humans.filter(Boolean).map(s=> s.slot===0 ? selectedClass : s.champ);
-  const bots = netPickBots(humanChamps, 4 - humanChamps.length);
+  if(!duoValid() || netDuplicateChamps().length || humans.some(s=>s&&s.slot>0&&!netDuoLoadoutValid(s.slot))){ showNetToast("Cada jugador debe elegir dos héroes distintos, sin repetir entre jugadores."); return false; }
+  const humanChamps = humans.filter(Boolean).flatMap(s=>[s.slot===0 ? selectedClass : s.champ, s.slot===0 ? save.duoReserve : netLobby.loadouts[s.slot].reserve.champ]);
+  const bots = netPickBots(humanChamps, 4 - humans.filter(Boolean).length);
   const slots = [0,1,2,3].map(i=>{
     const s = humans[i];
-    if(s) return {slot:i, kind:"human", champ: i===0 ? selectedClass : s.champ, name:s.name, level:s.level};
+    if(s) return {slot:i, kind:"human", reserve:i===0?save.duoReserve:netLobby.loadouts[i].reserve.champ, champ: i===0 ? selectedClass : s.champ, name:s.name, level:s.level};
     return {slot:i, kind:"bot", champ:bots.shift(), name:"BOT"};
   });
   const seed = (Math.random()*0x7fffffff)|0 || 7;
@@ -386,7 +388,7 @@ function netTeamWiped(){
   heroes.forEach((h,i)=>{
     const s = netMatch.slots[i]; if(!s || s.kind!=="human") return;
     const active = i===0 || !!(h._net && h._net.connected);
-    if(active && h.alive) aliveHumans++;
+    if(active && (h.alive || duoPending(h))) aliveHumans++;
     if(!h.alive && h._reviveBy && h._reviveBy.alive && h._reviveT>0) reviving = true;
   });
   return aliveHumans===0 && !reviving;
@@ -426,7 +428,7 @@ function netHostOnMsg(from, d){
     case "in": n.in = d; n.basic = !!d.b; return;
     case "cast":
       if(state!=="playing" || !h.alive) return;
-      netWithHero(h, ()=>{ if(useSkill(d.idx|0, netAimSafe(d.aim))) netEmitTo(from, "useXp", [d.idx|0]); });
+      netWithHero(h, ()=>{ if(useSkill(d.idx|0, netAimSafe(d.aim))) netEmitTo(from, "useXp", [d.idx|0,h.classKey]); });
       return;
     case "ult":
       if(state==="playing" && h.alive){
@@ -434,7 +436,7 @@ function netHostOnMsg(from, d){
         // guardián en el anfitrión, que se descarta al terminar: la ulti nunca subía de uso en cooperativo)
         const u0 = h.ultCharge, c0 = h.ultCd||0;
         netWithHero(h, ()=> useUltimate());
-        if(h.ultCharge < u0 || (h.ultCd||0) > c0) netEmitTo(from, "useXp", ["ult"]);
+        if(h.ultCharge < u0 || (h.ultCd||0) > c0) netEmitTo(from, "useXp", ["ult",h.classKey]);
       }
       return;
     case "pact": if(state==="playing" && h.alive) nigroTogglePact(h); return; // Nigromante invitado
@@ -443,7 +445,7 @@ function netHostOnMsg(from, d){
       if(state!=="playing" || !h.alive) return;
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(netAimSafe(d.aim)); });
       return;
-    case "revive": // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)
+    case "revive": if(duoEnabled()) return; // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)
       if(!d.on){ h._revHold = -1; cancelRevivesBy(h); return; }
       if(heroes[d.slot|0] && heroes[d.slot|0]!==h) h._revHold = d.slot|0;
       return;
@@ -648,6 +650,7 @@ function netGuestStartRun(msg){
   // héroes en orden de slot; el propio es "player"
   heroes = msg.slots.map((s,i)=>{ const h = makeHero(s.champ, s.kind==="bot", 0, 0); h._netSlot = i; h.netName = s.name; return h; });
   player = heroes[net.slot];
+  duoInitRun();
   allies = heroes.filter(h=>h!==player);
   _netHeroIdx = new Map(); heroes.forEach((h,i)=>_netHeroIdx.set(h, i));
   for(const h of heroes) resetSetRunState(h);
@@ -715,6 +718,7 @@ function netApplySnapshot(s){
     if(!d) return;
     const h = heroes[i]; if(!h) return;
     const own = h===player;
+    if(d.classKey && d.classKey!==h.classKey){ const keep={_duoStart:h._duoStart,_duoReserve:h._duoReserve,_duoSpawn:h._duoSpawn,_netSlot:h._netSlot,netName:h.netName}; const fresh=makeHero(d.classKey,h.isBot,d.x||h.x,d.y||h.y); for(const k of Object.keys(h)) delete h[k]; Object.assign(h,fresh,keep); if(own){ selectedClass=d.classKey; runStartXp=duoProgress[selectedClass]??totalXpForChamp(selectedClass); updateAbilityButtons(); resetSkillLevelUI(); } }
     for(const k in d){
       if(own && k==="x"){ h._hx = d.x; continue; }
       if(own && k==="y"){ h._hy = d.y; continue; }
@@ -762,7 +766,7 @@ function netApplySnapshot(s){
 function netGuestOnMsg(from, d){
   if(!d) return;
   switch(d.k){
-    case "cos": netLobby.cos = d.m || {}; if(d.d) netLobby.diff = d.d; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
+    case "cos": netLobby.duos=d.duos||{}; netLobby.cos = d.m || {}; if(d.d) netLobby.diff = d.d; if(typeof skinFxPreloadIds==="function") skinFxPreloadIds(Object.values(netLobby.cos)); if(typeof netRefreshLobby==="function") netRefreshLobby(); return; // skins de la sala
     case "start":
       if(typeof assetsAllReady==="function" && !assetsAllReady()){ netGuestHoldStart(d); return; }
       netGuestStartRun(d); return;
@@ -912,6 +916,7 @@ function netHostAnnounceEnd(victory){
 function netFinishMatch(){
   if(!netMatch) return;
   const wasHost = netIsHost();
+  duoRestoreLead();
   netRestoreBackups();
   netMatch = null;
   persistNow();
@@ -930,6 +935,7 @@ function netQuitMatch(){
   if(!netMatch) return;
   if(netIsGuest()){ netSendToHost({k:"quit"}); }
   const wasHost = netIsHost();
+  duoRestoreLead();
   netRestoreBackups();
   netMatch = null;
   if(wasHost){ netLeaveRoom(); } // el anfitrión se va: la sala se cierra para todos

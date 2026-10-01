@@ -167,7 +167,7 @@ function reviveBusyFor(a, r){
   if(netIsGuest()) return a._reviveT > 0; // el invitado solo ve lo que manda el anfitrión
   return a._reviveBy.alive && runElapsedMs - (a._revTouchAt||0) <= REVIVE_GRACE_MS;
 }
-function reviverCanAct(r){ return !!(r && r.alive && !(r.stunTimer>0) && !r.fused); }
+function reviverCanAct(r){ if(duoEnabled()) return false; return !!(r && r.alive && !(r.stunTimer>0) && !r.fused); }
 function cancelRevivesBy(r){ if(!r || !heroes) return; for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
 // Un cuadro de progreso de r sobre a. Devuelve true si lo terminó de revivir.
 function reviveStep(a, r, dur, dt){
@@ -178,6 +178,7 @@ function reviveStep(a, r, dur, dt){
   return false;
 }
 function updateRevives(dt){
+  if(duoEnabled()) return;
   for(const r of heroes){
     if(r._revHold===undefined || r._revHold<0) continue;
     const a = heroes[r._revHold];
@@ -194,6 +195,7 @@ function updateRevives(dt){
 }
 // Revive al instante (lo usan las pruebas y herramientas); el botón usa el progreso de arriba.
 function tryReviveAlly(a){
+  if(duoEnabled()) return false;
   if(state!=="playing" || !a || a.alive) return;
   if(distance(player, a) >= REVIVE_RANGE) return;
   if(netIsGuest()) return;
@@ -202,6 +204,7 @@ function tryReviveAlly(a){
 function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : h.cls.name) : ""; }
 // Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
 function reviveHero(a, by){
+  if(duoEnabled()) return;
   if(state!=="playing" || !a || a.alive) return;
   if(by && by.stats) by.stats.revives++;
   a._reviveT = 0; a._reviveBy = null;

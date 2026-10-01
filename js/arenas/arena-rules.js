@@ -6,7 +6,15 @@
    45 segundos -para que ninguna pelea se estire sin presión-).
    ============================================================ */
 
-function arenaMods(){ return ARENA_MODS[currentArena] || ARENA_MODS.bosque; }
+const NORMAL_ARENA_OVERRIDES={
+  bosque:{enemyDmgPerWave:0.075,enemyRegenPct:0.006,heroDmgMult:1},
+  hielo:{enemyDmgPerWave:0.08,heroSpeedMult:0.96,heroCdMult:1,heroEnergyRegenMult:0.95,heroDmgMult:0.95}
+};
+function arenaMods(){
+  const base=ARENA_MODS[currentArena] || ARENA_MODS.bosque;
+  if(!divinaMode && typeof diffCurrent==="function" && diffCurrent()==="normal" && NORMAL_ARENA_OVERRIDES[currentArena]) return Object.assign({},base,NORMAL_ARENA_OVERRIDES[currentArena]);
+  return base;
+}
 // Campaña (ORDEN CANÓNICO, ver CAMPAIGN_ORDER en js/data/arenas.js): la primera arena jugable está
 // abierta desde el comienzo y cada una de las siguientes se abre al superar la anterior. La FRONTERA
 // es la primera arena jugable sin completar: solo esa (y las ya completadas) están abiertas, así que

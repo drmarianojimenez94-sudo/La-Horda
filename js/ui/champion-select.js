@@ -20,10 +20,11 @@ function renderChampGrid(){
     card.innerHTML = `
       <canvas class="champ-preview" width="104" height="104" style="background:${cls.color}22;" data-class-key="${key}"></canvas>
       <div class="champ-name">${cls.name}</div>
-      <div class="champ-role">${cls.role}</div>
+      <div class="champ-role">${cls.role}</div><details class="champ-guide"><summary>Habilidades y estilo</summary>${championGuideHTML(key)}</details>
       <div class="champ-lvl">${typeof HUB_ROLE_LABEL!=="undefined" && HUB_ROLE_LABEL[cls.roleCategory] ? HUB_ROLE_LABEL[cls.roleCategory] + " · " : ""}${owned ? `Nv. ${champ.level}` : `🔒 Tienda · 🪙 ${typeof fmtGold==="function" ? fmtGold(CHAMPION_PRICE_GOLD) : CHAMPION_PRICE_GOLD}`}</div>
     `;
-    card.addEventListener("click", ()=>{
+    card.addEventListener("click", (ev)=>{
+      if(ev.target.closest("details")) return;
       // modo campaña: los guardianes que no tenés se compran en la Tienda
       if(!owned){ if(typeof showNetToast==="function") showNetToast(`${cls.name} está bloqueado: se desbloquea en la Tienda por ${CHAMPION_PRICE_GOLD} de oro.`); return; }
       selectedClass = key; if(typeof netRememberChamp==="function") netRememberChamp(key); renderChampGrid();

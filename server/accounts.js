@@ -48,6 +48,7 @@
    - La semana es la ISO en UTC, la MISMA de los mutadores semanales (js/systems/endless.js).
    ============================================================ */
 const crypto = require("crypto");
+const adminLevels=require("./admin-levels");
 const fs = require("fs");
 const fsp = fs.promises;
 const path = require("path");
@@ -593,7 +594,25 @@ function create(opts){
     return send(req, res, 200, { ok: true, version: r.version, updatedAt: r.updatedAt, summary });
   }
 
+  async function adminAuth(req,res){
+    const a=await auth(req); if(!a.user){authFail(req,res,a);return null;}
+    if(!adminLevels.allowed(a.user)){err(req,res,403,"FORBIDDEN","Acceso exclusivo de administración.");return null;} return a.user;
+  }
+  async function adminTarget(body){ const u=await store.getUserByKey(userKey(body.user)); if(!u)return null;const s=await store.getSave(u.id);if(!s)return null;return {u,s,data:JSON.parse(s.data)}; }
+  function adminProfile(t,version){return {user:t.u.user,version:version??t.s.version,champions:Object.entries(t.data.champions||{}).map(([key,c])=>({key,level:c.level,unlocked:!!c.unlocked}))};}
   const routes = {
+    "GET /api/admin/status":async(req,res)=>{const a=await auth(req);if(!a.user)return authFail(req,res,a);return send(req,res,200,{admin:adminLevels.allowed(a.user)});},
+    "POST /api/admin/profile":async(req,res)=>{if(!await adminAuth(req,res))return;const body=await readBody(req,SMALL_BODY_BYTES),t=await adminTarget(body);if(!t)return err(req,res,404,"NOT_FOUND","No hay perfil guardado de ese usuario.");return send(req,res,200,adminProfile(t));},
+    "POST /api/admin/level":async(req,res)=>{
+      const admin=await adminAuth(req,res);if(!admin)return;
+      const body=await readBody(req,SMALL_BODY_BYTES),t=await adminTarget(body);if(!t)return err(req,res,404,"NOT_FOUND","No hay perfil guardado de ese usuario.");
+      if(!Number.isInteger(body.baseVersion)||body.baseVersion!==t.s.version)return err(req,res,409,"CONFLICT","El perfil cambió. Consultalo de nuevo.");
+      const old=t.data.champions?.[body.champion]?.level;
+      try{t.data=adminLevels.editLevel(t.data,body.champion,body.level);}catch(e){return err(req,res,400,"BAD_LEVEL","Elegí un campeón desbloqueado y un nivel entero de 1 a 99.");}
+      const put=await store.putSave(t.u.id,JSON.stringify(t.data),summarize(t.data),body.baseVersion,false);
+      if(!put.ok)return err(req,res,409,"CONFLICT","El perfil cambió. Consultalo de nuevo.");
+      log("ADMIN_LEVEL",{admin:admin.id,user:t.u.id,champion:body.champion,from:old,to:body.level,version:put.version});return send(req,res,200,adminProfile(t,put.version));
+    },
     "GET /api/health": async (req, res) => send(req, res, 200, Object.assign({ ok: status === "ready" }, info())),
     "POST /api/register": async (req, res, ip) => {
       const body = await readBody(req, SMALL_BODY_BYTES);

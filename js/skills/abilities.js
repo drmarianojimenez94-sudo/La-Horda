@@ -356,6 +356,7 @@ function castAbility(caster, sk, isUlt, idx){
   // Refuerzos de habilidad (js/systems/boons.js): anota a quién golpea ESTE lanzamiento y, al
   // terminar, dispara lo que transforma la habilidad (zonas, rebotes, estados, ecos...).
   const _boonR = boonCastBegin(caster, sk);
+  const priorOwner=runCastOwner; runCastOwner=caster;
   try{
   switch(sk.kind){
 
@@ -1492,5 +1493,5 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
   }
-  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; if(_boonR) boonCastEnd(_boonR, POWER, AREA); }
+  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; if(_boonR) boonCastEnd(_boonR, POWER, AREA); runCastOwner=priorOwner; }
 }
