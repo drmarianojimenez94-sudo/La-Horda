@@ -1,6 +1,7 @@
 "use strict";
 // Cosmetic-only palettes. Recolor once on load; gameplay and alpha masks are unchanged.
 const PORTADOR_COSMETICS={
+ santa_paciencia:{name:"Ynara — Guardia Celeste",colors:["#273d72","#5884bc","#a0d9ed","#f4fcff"],tint:"#b8eaff"},
  ultimo_turno:{name:"Brasa — Aurora de Cobre",colors:["#442078","#863bca","#e067ff","#ffe3ff"],tint:"#dc64ff"},
  juramento_roto:{name:"Eslabón — Cadenas Esmeralda",colors:["#084857","#078b86","#36e4bd","#c7fff2"],tint:"#36e4bd"},
  vidrio_negro:{name:"Morwen — Destilación Carmesí",colors:["#561543","#a52874","#fa529e","#ffd6ed"],tint:"#fa529e"},

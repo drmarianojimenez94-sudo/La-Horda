@@ -84,6 +84,7 @@ function portadorCast(h,sk,isUlt,dmg,area,dur,power){
   h.portCastUntil=runElapsedMs+(isUlt?650:420); h.attackAnim=Math.max(h.attackAnim,isUlt?650:420);
   if(h.classKey==="brasa") h.portPressure=Math.min(3,(h.portPressure||0)+1);
   const p=()=>portadorPoint(h,range,r);
+  if(sk.kind.startsWith("yn_")){ynaraCast(h,sk,dmg,area,dur,power);return;}
   switch(sk.kind){
     case "my_tower": {portadorTurret(h,p(),life,dmg);break;}
     case "my_splash": {const q=p();portadorArea(h,q,r,dmg);portadorLimit(h,"yogurt",3);portadorAdd(h,"yogurt",q,life,{r,dmg:dmg*0.2});portadorCue(h,q,r);break;}
@@ -193,7 +194,8 @@ function portadorShareDamage(h,dmg,src){
   return dmg;
 }
 function portadorTakenMult(h,src){
-  let m=1;if(h.portCounterTimer>0)m*=0.88;
+  let m=1;if(portadorObjects.some(o=>o.kind==="stroganoff"&&o.life>0&&o.owner.alive&&distance(h,o)<o.r))m*=.92;
+  if(h.portCounterTimer>0)m*=0.88;
   for(const g of heroes)if(g.alive && g.classKey==="eslabon" && g.portRingTimer>0 && distance(g,h)<g.portRingR){m*=0.85;break;}
   const lantern=portadorObjects.some(o=>o.kind==="lantern" && o.life>0 && o.owner.alive && distance(h,o)<o.r);
   if(lantern)m*=0.92;
@@ -222,6 +224,7 @@ function portadorLightAt(x,y){
 function updatePortadorHero(h,dt){
   h.portMoveDX=h._portPrevX===undefined?0:h.x-h._portPrevX;h.portMoveDY=h._portPrevY===undefined?0:h.y-h._portPrevY;h._portPrevX=h.x;h._portPrevY=h.y;
   if(!PORTADORES[h.classKey])return;
+  ynaraUpdateHero(h,dt);
   h.portMasteryBranch=[0,1,2].findIndex(b=>portadorMaster(h,b));
   const wasGuard=h.portGuardTimer>0,wasClock=h.portOverclockTimer>0;
   for(const key of ["portSpeedTimer","portCounterTimer","portGuardTimer","portRingTimer","portVigilTimer","portTensionTimer","portTriangleTimer","portOverclockTimer","portCooldownTimer"])if(h[key]>0)h[key]=Math.max(0,h[key]-dt);
@@ -235,6 +238,8 @@ function updatePortadorHero(h,dt){
 }
 function updatePortadorObjects(dt){
   for(const o of portadorObjects){
+    const owner=o.owner;
+    if(owner&&owner.alive&&heroes.includes(owner)&&o.life>0&&ynaraUpdateObject(o,dt))continue;
     o.life-=dt;const h=o.owner;if(!h || !h.alive || !heroes.includes(h)){o.life=0;continue;}if(o.life<=0)continue;
     if(currentArena==="abismo" && abS && !abWalkable(o.x,o.y)){o.life=0;continue;}
     if(o.kind==="tantrum"){o.x=h.x;o.y=h.y;}
@@ -266,6 +271,7 @@ function botPortador(h,cdMult){
   const target=foes.sort((a,b)=>(isBossRank(b)?1000:0)-(isBossRank(a)?1000:0) || distance(a,h)-distance(b,h))[0];
   h.aim={x:target.x,y:target.y};
   let order=[0,1,2];
+  if(h.classKey==="ynara"){order=h.hp/h.maxHp<.45?[1,2,0]:[0,1];if(order[0]===1)h.aim={x:h.x,y:h.y};}
   if(h.classKey==="myla")order=portadorOwned(h,"turret").length<2?[0,1,2]:h.hp/h.maxHp<0.5?[2,1]:[1];
   if(h.classKey==="brasa"){const t=portadorOwned(h,"turret");order=t.length<2?[0,1]:h.hp/h.maxHp<0.4?[2,1]:[1];if(order[0]===0)h.aim={x:h.x+(target.x-h.x)*0.3,y:h.y+(target.y-h.y)*0.3};}
   if(h.classKey==="eslabon")order=heroes.some(a=>a!==h && a.alive && a.hp/a.maxHp<0.65)?[2,0,1]:[0,1];

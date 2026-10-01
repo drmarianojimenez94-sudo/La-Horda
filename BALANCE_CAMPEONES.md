@@ -166,3 +166,9 @@ node tools/balance/entry-gate.js
 ```
 
 Validación del marco: los cuatro candidatos artificiales extremos respetaron el presupuesto. Un candidato nuevo de prueba, basado en el kit del Mago, fue detectado, normalizado y simulado con tres semillas: PASS. Evidencia: [entry-self-test-results.json](docs/balance/entry-self-test-results.json). El fixture solo existe durante `node tools/balance/entry-gate.js --self-test`; no se incorpora al roster del juego.
+
+### Ynara — entrada de soporte (2026-10-01)
+
+Ynara entra antes del normalizador, conservando `knownChampions` y las medias de referencia. Base propuesta: 110 HP, 6,3 daño, 12% defensa, 165 velocidad y básico cada 600 ms. El kit limita fuentes y cortinas a una por propietaria, curación por pulso, escudo sin acumulación y cargas de Santa Paciencia a ocho. El desplazamiento respeta geometría; los jefes no reciben empuje y su ralentización queda limitada al 12%.
+
+Gate PASS después de integrar los cambios recientes de HUD y VFX de main, con daño de 6580,25 / 8898,14 / 6788,43 en tres semillas de 150 s: media 7422,27 frente al techo de soporte 8803,53. Tres supervivencias, sin errores. Pruebas funcionales: 37 comprobaciones PASS; cooperativo real y visual gate documentados en [la ficha de Ynara](docs/ynara/README.md). Evidencia: [entry-gate-results.json](docs/balance/entry-gate-results.json). La entrada no modifica el roster usado como referencia ni garantiza equilibrio fuera de estos escenarios.
