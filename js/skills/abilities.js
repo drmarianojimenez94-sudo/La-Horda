@@ -340,6 +340,7 @@ function castAbility(caster, sk, isUlt, idx){
     if(isUlt){ showBanner("★ "+sk.name); flashScreen(0.22, hexToRgb(caster.cls.glow)); }
     playSfx(isUlt?"ult":"cast");
   }
+  if(caster.alive) vfxChampionSignature(caster.x,caster.y,caster.classKey,idx||0,isUlt,Math.atan2(caster.fy,caster.fx));
   if(caster.alive) vfxShock(caster.x, caster.y, 8, isUlt ? 70 : 44, hexToRgb(caster.cls.glow||"#ffffff"), isUlt ? 420 : 260, caster===player ? 1 : 0);
   if(caster.classKey && caster.alive){ itemProcsOnCast(caster, sk, isUlt); setsOnCast(caster, sk, isUlt); if(caster.stats) caster.stats.skillCasts = (caster.stats.skillCasts||0) + 1; }
   caster.attackAnim = isUlt ? 320 : 240;

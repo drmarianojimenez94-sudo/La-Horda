@@ -145,7 +145,7 @@ const NET_GLOBALS = {
 /* ---------------- eventos visuales/sonoros (se graban en el anfitrión, se repiten en los invitados) ---------------- */
 const NET_EVENT_FNS = ["floatText","showBanner","playSfx","vfxBurst","vfxConverge","vfxShock","vfxTelegraph","vfxSprite","vfxShake",
   "vfxOnDeath","flashScreen","pushChainBolt","pushSpark","pushAsesinoFx","bossHudShow","bossHudHide","bossHudHint","bossHudPhase",
-  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard","addDecal","goreChunks","vfxCastFlash","crystalAward","crystalSteal"];
+  "setMusicMode","updateArenaRuleChip","drawAxiomVfxBurst","arenaTitleCard","addDecal","goreChunks","vfxCastFlash","vfxChampionSignature","vfxFrostCrown","vfxSkillCone","crystalAward","crystalSteal"];
 const NET_INLINE_EVENTS = new Set(["vfxOnDeath","bossHudShow"]); // su entidad puede no haber llegado nunca al invitado
 const NET_ORIG = {};
 let _netRecDepth = 0, _netEvents = [];
@@ -169,6 +169,7 @@ function netHookEvents(){
 // últimos enemigos desaparecían sin su muerte. Los cosméticos (números, chispas, sonidos) siguen con tope.
 const NET_KEEP_EVENTS = new Set(["xp","gold","useXp","hurt","vfxOnDeath","bossHudShow","bossHudHide","bossHudPhase","bossHudHint",
   "showBanner","arenaTitleCard","crystalAward","crystalSteal","setMusicMode","updateArenaRuleChip",
+  "vfxChampionSignature","vfxFrostCrown","vfxSkillCone",
   "groundLootDrop","endlessGuestReward"]); // botín del piso de cada invitado (ground-loot.js) y recompensas de la Horda Infinita
 let _netRewardIdx = new Map(); // XP/oro del mismo invitado en el mismo snapshot: un solo evento con la suma
 function netRecord(name, args, to){

@@ -15,7 +15,7 @@ Set **Santa Paciencia**: dos piezas +8% vida, tres +10% curación del estrogonof
 ## Validación
 
 - `tools/balance/check-entry-reference.js`: PASS; referencia y lista de campeones conocidos sin cambios.
-- `tools/balance/entry-gate.js`: PASS; semillas 117, 431 y 991, 150 segundos cada una, nivel 20 sin equipo. Daño 6713,66 / 5661,32 / 7850,80; media 6741,92, por debajo del techo de soporte 8803,53. Dos supervivencias, una derrota; no se interpreta el gate como garantía de victoria ni de equilibrio competitivo.
+- `tools/balance/entry-gate.js`: PASS después de integrar los cambios recientes de HUD y VFX de main; semillas 117, 431 y 991, 150 segundos cada una, nivel 20 sin equipo. Daño 6580,25 / 8898,14 / 6788,43; media 7422,27, por debajo del techo de soporte 8803,53. Tres supervivencias; no se interpreta el gate como garantía de victoria ni de equilibrio competitivo.
 - `tools/portadores/test-ynara.js`: 37 comprobaciones, cero fallos ni errores de página. Incluye límites, jefes, curación, talentos, set, muerte, reinicio, serialización y diez arenas.
 - `tools/portadores/online-ynara.js`: dos clientes independientes contra el relay real, con Ynara como anfitriona y como invitada; construcciones, propietarias, habilidades, definitiva y skin replicadas.
 - **Visual gate: PASS** tras inspección visual de `visual-gate.png` con Tanque, Soporte y Myla a la misma escala. Contorno oscuro, lectura chibi, pies alineados y alpha binaria. Juego: `gameplay.png`.

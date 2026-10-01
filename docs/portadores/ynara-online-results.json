@@ -23,7 +23,7 @@
           "brasa",
           "ynara",
           "tanque",
-          "libertador"
+          "eren"
         ],
         "casts": 4,
         "objects": [
@@ -34,10 +34,6 @@
           {
             "kind": "patience",
             "owner": 1
-          },
-          {
-            "kind": "shot",
-            "owner": 0
           }
         ]
       },
@@ -70,8 +66,8 @@
         "classes": [
           "ynara",
           "iria",
-          "eslabon",
-          "cazadora"
+          "tanque",
+          "libertador"
         ],
         "casts": 4,
         "objects": [
