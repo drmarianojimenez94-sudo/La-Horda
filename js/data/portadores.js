@@ -63,7 +63,7 @@ const PORTADORES = {
 for(const k in PORTADORES){
   const p = PORTADORES[k];
   // Alpha release gift: these five can be tested immediately, without resetting progression.
-  CHAMPION_CATALOG.push({id:k, priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:true, lore:p.history});
+  CHAMPION_CATALOG.push({id:k, priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:p.history});
   CLASSES[k] = {name:p.name, hudName:k==="eslabon"?"Eslabón":k==="farolero"?"Farolero":p.name, icon:p.skills[0].ico, color:p.color, glow:p.glow,
     role:p.role, roleCategory:p.roleCategory, baseHP:p.hp, baseDmg:p.dmg, baseDef:p.def, baseSpeed:p.speed, energyMax:110, energyRegen:10,
     hpGrowthMult:p.roleCategory==="tanque"?1.4:p.roleCategory==="soporte"?1.15:0.8, dmgGrowthMult:p.roleCategory==="mago"?1.1:0.8,

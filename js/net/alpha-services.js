@@ -9,7 +9,7 @@ const AlphaServices = (() => {
   let started = 0, inRun = false, terminal = false, lastState = "", worldPending = false;
   let eventGeneration=0, eventRuns=[], pendingClaims=[], rewardPending=false, claimScope=null, runBossDefeats=new Set();
   const EVENT_BOSS_ARENAS=Object.freeze({guardian_ancestral:"bosque",mago_hielo_cristal:"hielo",minotauro:"laberinto",leviatan:"acuatica",caballero:"fortaleza",madre_espora:"micelial",cm_presentador:"ciudad",ab_morador:"abismo",mn_cerbero:"minas"});
-  const knownEvents = new Set(["start","login","menu","tutorial_started","tutorial_completed","tutorial_step","tutorial_step_complete","tutorial_abandoned","run_started","death","abandon","victory","defeat","next_arena","codex","skin","croma","set","drop","pickup","skill","talent","equipment","multiplayer","error","heartbeat"]);
+  const knownEvents = new Set(["start","login","menu","tutorial_started","tutorial_completed","tutorial_step","tutorial_step_complete","tutorial_abandoned","tutorial_skipped","run_started","death","abandon","victory","defeat","next_arena","codex","skin","croma","set","drop","pickup","skill","talent","equipment","multiplayer","error","heartbeat"]);
   // Automated QA must never contaminate live product metrics or fetch live tuning.
   function productEnabled(){return typeof navigator==="undefined"||!navigator.webdriver||window.__alphaServicesTest===true;}
   function enabled(){try{return productEnabled()&&localStorage.getItem("horda_telemetry")!=="off";}catch{return false;}}

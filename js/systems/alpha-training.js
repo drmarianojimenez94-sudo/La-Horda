@@ -15,8 +15,32 @@ const ALPHA_GUIDE = Object.freeze([
   {level:10, title:"Maestría y siguiente objetivo", text:"Consultá los requisitos de maestría del campeón: aprender el sistema no elimina sus requisitos. Elegí un Set, una arena o una habilidad para practicar. Volvé a esta Guía cuando lo necesites."}
 ]);
 const ALPHA_TRAINING = {active:false, step:0, elapsed:0, phaseTime:0, doneAt:0, snapshot:null, metrics:{}};
+function alphaFirstRunContinue(){
+  if(typeof acct!=='undefined'&&(acct.applying||acct.pulling||acct.conflict)){
+    showNetToast('Esperá a que termine la sincronización de tu cuenta.');return;
+  }
+  if(needsStarterChampion() || needsStarterSkin()){
+    openStarterSelect(alphaFirstRunContinue);return;
+  }
+  setState('mainmenu');renderMainMenu();
+  if(!HordaOnboarding.ready(save)){alphaTrainingStart();return;}
+  alphaOnboardingDestination();
+}
+function alphaOnboardingDestination(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('next')!=='crystal-wars'||!HordaOnboarding.ready(save))return;
+  const target=new URL('crystal-wars.html',location.href);
+  for(const key of ['room','server'])if(q.has(key))target.searchParams.set(key,q.get(key));
+  location.replace(target.href);
+}
+function alphaTrainingSkip(){
+  if(!ALPHA_TRAINING.active)return;
+  alphaTrainingRestore(false,true);
+  save.tut=save.tut||{};save.tut.trainingSkipped=1;persistNow();
+  setState('mainmenu');renderMainMenu();alphaOnboardingDestination();
+}
 const ALPHA_TRAINING_STEPS = Object.freeze([
-  {id:"move", title:"1 · Movimiento", text:"Soy el Hechicero. Usá el joystick de abajo a la izquierda y recorré un pequeño tramo.", target:"Movete por la arena"},
+  {id:"move", title:"1 · Movimiento", text:"Practicamos con Thalen; después volvés a tu campeón. Usá el joystick de abajo a la izquierda para moverte.", target:"Movete por la arena"},
   {id:"attack", title:"2 · Ataque básico", text:"Mantené el botón Ataque de la derecha. Tu mago dispara al enemigo cercano. Derrotá al esqueleto.", target:"Derrotá al enemigo con Ataque"},
   {id:"skill", title:"3 · Habilidades", text:"Tocá una habilidad. Podés mantenerla y arrastrar para apuntar antes de soltar.", target:"Lanzá una habilidad"},
   {id:"cooldown", title:"4 · Recarga", text:"El número del botón indica cuánto falta. Esperá y usá otra vez la misma habilidad.", target:"Volvé a usar la habilidad cuando recargue"},
@@ -38,8 +62,8 @@ function alphaGuideOpen(){
 function alphaTrainingPanel(){
   let el=document.getElementById('alpha-training-panel'); if(el) return el;
   el=document.createElement('aside');el.id='alpha-training-panel';el.className='alpha-training-panel hidden';
-  el.innerHTML='<div><strong></strong><span class="alpha-training-clock"></span><button type="button" aria-label="Salir del entrenamiento">Salir</button></div><p></p><b class="alpha-training-goal" aria-live="polite"></b>';
-  el.querySelector('button').onclick=()=>alphaTrainingExit(false);document.body.appendChild(el);return el;
+  el.innerHTML='<div><strong></strong><span class="alpha-training-clock"></span><button type="button" aria-label="Saltar tutorial">Saltar tutorial</button></div><p></p><b class="alpha-training-goal" aria-live="polite"></b>';
+  el.querySelector('button').onclick=alphaTrainingSkip;document.body.appendChild(el);return el;
 }
 function alphaTrainingSpawn(n){
   for(let i=0;i<n;i++){const e=spawnEnemy('esqueleto',false,false);e.x=player.x+100+i*40;e.y=player.y+(i-1)*35;e.hp=e.maxHp=30;e.dmg=1;e.speed=14;e.xp=ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id==='xp'?150:0;}
@@ -73,12 +97,12 @@ function alphaTrainingSatisfied(id,m,h){
 function alphaTrainingTick(dt){
   const t=ALPHA_TRAINING;if(!t.active||state!=='playing')return;
   t.elapsed+=dt;t.phaseTime+=dt;
-  if(t.elapsed>=300000){alphaTrainingExit(false,'La práctica llegó a 5 minutos. Podés repetirla desde el menú.');return;}
+  // Learning has no time limit. Only completion or an explicit skip unlocks modes.
   const s=ALPHA_TRAINING_STEPS[t.step],m=t.metrics;
   m.distance+=Math.hypot(player.x-m.x,player.y-m.y);m.x=player.x;m.y=player.y;
   m.newLevel=save.champions.mago.level;
   m.potionPicked=!!t.potion&&t.potion.life<=0&&player.hp>player.maxHp*.5;
-  const el=alphaTrainingPanel();el.querySelector('.alpha-training-clock').textContent=Math.ceil((300000-t.elapsed)/1000)+' s';
+  const el=alphaTrainingPanel();el.querySelector('.alpha-training-clock').textContent='Sin límite';
   if(!t.doneAt&&alphaTrainingSatisfied(s.id,m,player)){t.doneAt=t.phaseTime;el.querySelector('.alpha-training-goal').textContent='✓ Completado';alphaTrainingEmit('tutorial_step_complete',{step:s.id});}
   if(t.doneAt&&t.phaseTime-t.doneAt>1300){t.step++;if(t.step===ALPHA_TRAINING_STEPS.length)alphaTrainingExit(true);else alphaTrainingEnterStep();}
 }
@@ -92,7 +116,7 @@ function alphaTrainingStart(){
   try{startRun(1);allies=[];heroes=[player];enemies=[];bossActive=true;midBossSpawned=true;levelDuration=1e9;levelTimer=0;tutHide();alphaTrainingEnterStep();alphaTrainingEmit('tutorial_started');return true;}
   catch(err){alphaTrainingExit(false);throw err;}
 }
-function alphaTrainingRestore(completed){
+function alphaTrainingRestore(completed,skipped=false){
   const t=ALPHA_TRAINING;if(!t.active)return;
   const snap=t.snapshot;
   clearRunTimers();resetRunTransients();basicHeld=false;
@@ -100,11 +124,12 @@ function alphaTrainingRestore(completed){
   t.active=false;t.snapshot=null;enemies=[];allies=[];heroes=[];player=null;bossActive=false;runEnding=false;
   alphaTrainingPanel().classList.add('hidden');document.querySelectorAll('.alpha-training-target').forEach(el=>el.classList.remove('alpha-training-target'));
   if(completed){save.tut=save.tut||{};save.tut.training=1;save.tut.basics=1;save.tut.b_move=save.tut.b_attack=save.tut.b_skill=1;persistNow();}
-  alphaTrainingEmit(completed?'tutorial_completed':'tutorial_abandoned',{step:t.step,duration:Math.round(t.elapsed/1000)});
+  alphaTrainingEmit(completed?'tutorial_completed':skipped?'tutorial_skipped':'tutorial_abandoned',{step:t.step,duration:Math.round(t.elapsed/1000)});
 }
 function alphaTrainingExit(completed,message){
   if(!ALPHA_TRAINING.active)return;alphaTrainingRestore(completed);setState('mainmenu');renderMainMenu();
   if(typeof showNetToast==='function')showNetToast(message||(completed?'Entrenamiento completado. Tu próxima aventura: Arena 1.':'Entrenamiento cerrado. Tu progreso se conserva.'));
+  if(completed)alphaOnboardingDestination();
 }
 function alphaOnboardingLesson(level,seen){
   const available=ALPHA_GUIDE.filter(g=>g.level<=Math.max(1,Math.min(10,level||1)));

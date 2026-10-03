@@ -22,4 +22,7 @@
 #alpha-onboarding summary::before{content:'▸'}
 #alpha-onboarding details[open] summary::before{content:'▾'}
 #alpha-onboarding details[open]{max-height:150px;overflow:auto}
-.alpha-training-panel button{min-height:32px;min-width:40px}
+.alpha-training-panel button{min-height:44px;min-width:44px}
+.alpha-training-panel{font-family:var(--font-retro,"VT323",monospace);font-size:18px;line-height:1.1}
+.alpha-training-clock{font-size:14px}
+@media(max-height:410px){.alpha-training-panel{font-size:16px}}

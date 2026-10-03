@@ -47,7 +47,7 @@ function renderStarterSelect(){
       _starterPick = card.getAttribute("data-champ");
       grid.querySelectorAll(".starter-card").forEach(c2=>c2.classList.toggle("sel", c2===card));
       const box = document.getElementById("starter-confirm");
-      document.getElementById("starter-confirm-text").innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? ${championGuideHTML(_starterPick)}`;
+      document.getElementById("starter-confirm-text").innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? <details><summary>Ver habilidades</summary>${championGuideHTML(_starterPick)}</details>`;
       box.classList.remove("hidden");
       box.scrollIntoView({block:"nearest", behavior:"smooth"});
     });
