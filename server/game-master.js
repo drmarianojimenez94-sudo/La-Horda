@@ -90,7 +90,7 @@ function routes(ctx){
    const value=await fn({req,user,body,ip});send(req,res,200,value);
   }catch(e){if(e.status)return err(req,res,e.status,e.message,e.message);throw e;}
  };}
- route('GET','/api/gm/status','user',async({user})=>({owner:isOwner(user),role:isOwner(user)?'OWNER':null}));
+ route('GET','/api/gm/status','user',async({user})=>typeof ctx.ownerAccess==='function'?ctx.ownerAccess(user):({owner:isOwner(user),role:isOwner(user)?'OWNER':null}));
  route('GET','/api/world',null,async()=>{const s=await read(),t=now();return {version:s.version,normalConfig:s.config,config:{...s.config},events:s.events.filter(e=>active(e,t)),messages:s.messages.filter(e=>active(e,t)),serverTime:t};});
  route('GET','/api/gm/config','owner',async()=>{const s=await read();return {version:s.version,config:s.config,defaults:DEFAULTS};});
  for(const [method,url,defaults] of [['PUT','/api/gm/config',false],['POST','/api/gm/config/defaults',true]])route(method,url,'owner',async({user,body})=>{
