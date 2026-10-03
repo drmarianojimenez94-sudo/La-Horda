@@ -118,3 +118,9 @@ El panel de niveles se habilita en Opciones para las cuentas incluidas en `ADMIN
 ## Alpha: producción y Game Master
 
 La entrega de la fábrica de producción, Códice/colección, entrenamiento y operaciones está documentada en [LA_HORDA_ALPHA_AUTONOMOUS_AUDIT.md](LA_HORDA_ALPHA_AUTONOMOUS_AUDIT.md), con gates ejecutados y pendientes explícitos. Estándares: [Production Bibles](docs/production/PRODUCTION_BIBLES.md). Incorporación de campeones: [Factory](tools/factory/README.md). Configuración del owner, contratos y respaldos: [Game Master](docs/production/operations.md). No hay pagos activos.
+
+## Guerra de Cristales (Alpha)
+
+Nuevo modo de Coliseo 2 contra 2, accesible desde Modos: defensa de cristales, oleadas simétricas, fragmentos compartidos y envío de amenazas. Entrenamiento con bots o salas privadas sobre el relay existente. Cuatro kits adaptados al modo, sin afectar la progresión de campaña.
+
+[Reglas, controles, arquitectura y validación](docs/modes/CRYSTAL_WARS.md).

@@ -1,10 +1,10 @@
 name: Champion entry balance
 on:
   pull_request:
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   push:
     branches: [main, 'chatgpt/**']
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,6 +25,7 @@ jobs:
       - run: node tools/alpha/event-receipts-test.js
       - run: node tools/collection/check-collection.js
       - run: node tools/quality/test-vfx-pools.js
+      - run: node tools/crystal-wars/test-simulation.js
       - run: node tools/balance/check-entry-reference.js
       - run: npm install --prefix /tmp/horda-balance --no-audit --no-fund playwright@1.61.1
       - run: /tmp/horda-balance/node_modules/.bin/playwright install --with-deps chromium
@@ -38,6 +39,9 @@ jobs:
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: npm ci --prefix server --no-audit --no-fund
+      - run: node tools/crystal-wars/browser-test.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/portadores/online-ynara.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

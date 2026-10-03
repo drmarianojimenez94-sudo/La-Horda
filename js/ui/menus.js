@@ -550,3 +550,12 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{
     el.addEventListener("input", ()=>{ if(typeof setAudioVolume==="function") setAudioVolume(kind, el.value/100); if(kind==="sfx" && typeof playSfx==="function") playSfx("ready"); /* muestra del volumen de efectos */ });
   }
 })();
+
+// Crystal Wars has isolated match state and shares the configured room relay.
+document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
+  if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al Coliseo."); return; }
+  const url=new URL("crystal-wars.html",location.href);
+  const server=new URLSearchParams(location.search).get("server");
+  if(server)url.searchParams.set("server",server);
+  location.href=url.href;
+});
