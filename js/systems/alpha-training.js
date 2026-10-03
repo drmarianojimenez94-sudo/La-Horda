@@ -42,13 +42,17 @@ function alphaTrainingSkip(){
 const ALPHA_TRAINING_STEPS = Object.freeze([
   {id:"move", title:"1 · Movimiento", text:"Practicamos con Thalen; después volvés a tu campeón. Usá el joystick de abajo a la izquierda para moverte.", target:"Movete por la arena"},
   {id:"attack", title:"2 · Ataque básico", text:"Mantené el botón Ataque de la derecha. Tu mago dispara al enemigo cercano. Derrotá al esqueleto.", target:"Derrotá al enemigo con Ataque"},
-  {id:"skill", title:"3 · Habilidades", text:"Tocá una habilidad. Podés mantenerla y arrastrar para apuntar antes de soltar.", target:"Lanzá una habilidad"},
-  {id:"cooldown", title:"4 · Recarga", text:"El número del botón indica cuánto falta. Esperá y usá otra vez la misma habilidad.", target:"Volvé a usar la habilidad cuando recargue"},
-  {id:"ultimate", title:"5 · Definitiva", text:"La definitiva necesita carga y estar disponible en la arena. Te la cargué para practicar: tocá el botón grande de definitiva.", target:"Lanzá tu definitiva"},
-  {id:"potion", title:"6 · Vida y pickups", text:"La barra roja es tu vida. La reduje para practicar: caminá sobre la poción roja a tu derecha. Las azules recuperan energía.", target:"Recogé la poción roja"},
-  {id:"xp", title:"7 · XP y nivel", text:"Derrotar enemigos concede XP permanente. Te falta muy poco para subir: derrotá otro esqueleto y mirá el nivel del campeón.", target:"Derrotá al esqueleto y subí de nivel"},
-  {id:"loot", title:"8 · Botín", text:"Los enemigos pueden dejar equipo. Acercate al objeto luminoso para recogerlo. Después podrás equiparlo fuera de la arena.", target:"Recogé el objeto"},
-  {id:"objective", title:"9 · Objetivo", text:"Última prueba: derrotá a estos tres enemigos. En campaña, consultá el objetivo de cada arena; no todas se superan de la misma manera.", target:"Derrotá a los tres enemigos"}
+  {id:"skill", title:"3 · Habilidades", text:"Las habilidades pegan mucho más que el ataque. Tocá una. Si la mantenés y arrastrás, elegís dónde cae.", target:"Lanzá una habilidad"},
+  {id:"inspect", title:"4 · Consultar una habilidad", text:"¿Qué hace cada botón? MANTENÉ apretada una habilidad sin arrastrar: aparece su ficha y NO se lanza. Soltá para cerrarla.", target:"Mantené una habilidad para leer su ficha"},
+  {id:"cooldown", title:"5 · Recarga", text:"El barrido del botón y el número indican cuánto falta. Esperá y usá otra vez la misma habilidad.", target:"Volvé a usar la habilidad cuando recargue"},
+  {id:"ultimate", title:"6 · Definitiva", text:"La definitiva (botón ★) se carga peleando y se habilita avanzada la arena. Te la cargué: usala contra el grupo.", target:"Lanzá tu definitiva"},
+  {id:"danger", title:"7 · Peligro", text:"Una marca roja en el piso avisa un golpe: cuando se llena, pega. Salí de la marca antes de que se llene.", target:"Esquivá el golpe marcado"},
+  {id:"potion", title:"8 · Vida y pickups", text:"La barra roja es tu vida. La reduje para practicar: caminá sobre la poción roja a tu derecha. Las azules recuperan energía.", target:"Recogé la poción roja"},
+  {id:"xp", title:"9 · XP y nivel", text:"Derrotar enemigos da XP. Te falta muy poco: derrotá otro esqueleto y mirá subir el nivel del campeón (es permanente; el nivel de la arena es solo de esta partida).", target:"Derrotá al esqueleto y subí de nivel"},
+  {id:"loot", title:"10 · Botín", text:"Los enemigos pueden dejar equipo. Acercate al objeto luminoso para recogerlo. Después podrás equiparlo fuera de la arena.", target:"Recogé el objeto"},
+  {id:"tactical", title:"11 · Panel táctico", text:"Tocá ❚❚ arriba a la derecha: el Panel táctico muestra tu kit, recargas, estados y equipo. Sola pausa; en multijugador la partida SIGUE. Cerralo con Continuar.", target:"Abrí el Panel táctico y volvé"},
+  {id:"revive", title:"12 · Reanimar", text:"Elyra cayó. Parate a su lado y MANTENÉ ✚ (unos 5 s). Un golpe no te corta; soltar o alejarte, sí.", target:"Mantené ✚ junto a Elyra hasta revivirla"},
+  {id:"objective", title:"13 · Objetivo", text:"Última prueba: derrotá a estos tres enemigos. En campaña, cada arena tiene su propio objetivo: leelo en la ficha antes de entrar.", target:"Derrotá a los tres enemigos"}
 ]);
 function alphaTrainingActive(){return ALPHA_TRAINING.active;}
 function alphaTrainingEmit(event, extra){ window.dispatchEvent(new CustomEvent("horda-alpha",{detail:Object.assign({event,mode:"training"},extra||{})})); }
@@ -66,21 +70,36 @@ function alphaTrainingPanel(){
   el.querySelector('button').onclick=alphaTrainingSkip;document.body.appendChild(el);return el;
 }
 function alphaTrainingSpawn(n){
-  for(let i=0;i<n;i++){const e=spawnEnemy('esqueleto',false,false);e.x=player.x+100+i*40;e.y=player.y+(i-1)*35;e.hp=e.maxHp=30;e.dmg=1;e.speed=14;e.xp=ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id==='xp'?150:0;}
+  ALPHA_TRAINING.foes=[];
+  for(let i=0;i<n;i++){const e=spawnEnemy('esqueleto',false,false);ALPHA_TRAINING.foes.push(e);e.x=player.x+100+i*40;e.y=player.y+(i-1)*35;e.hp=e.maxHp=30;e.dmg=1;e.speed=14;e.xp=ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id==='xp'?150:0;}
 }
 function alphaTrainingEnterStep(){
   const t=ALPHA_TRAINING,s=ALPHA_TRAINING_STEPS[t.step];t.phaseTime=0;t.doneAt=0;t.metrics={x:player.x,y:player.y,distance:0,kills:player.stats.kills||0,casts:player.stats.skillCasts||0,ult:player.ultCd||0,level:save.champions.mago.level,loot:0};
   enemies=[];projectiles=[];potions=[];groundLootReset();
   document.querySelectorAll('.alpha-training-target').forEach(el=>el.classList.remove('alpha-training-target'));
-  const ids={move:'joy-base',attack:'btn-basic',skill:'btn-s1',cooldown:'btn-s'+((t.lastSkill||0)+1),ultimate:'btn-ult',potion:'joy-base',xp:'btn-basic',loot:'joy-base',objective:'btn-basic'},target=document.getElementById(ids[s.id]);if(target)target.classList.add('alpha-training-target');
+  const ids={move:'joy-base',attack:'btn-basic',skill:'btn-s1',inspect:'btn-s2',cooldown:'btn-s'+((t.lastSkill||0)+1),ultimate:'btn-ult',danger:'joy-base',potion:'joy-base',xp:'btn-basic',loot:'joy-base',tactical:'pause-btn',revive:'btn-revive',objective:'btn-basic'},target=document.getElementById(ids[s.id]);if(target)target.classList.add('alpha-training-target');
   if(['attack','skill','cooldown','xp','objective'].includes(s.id)) alphaTrainingSpawn(s.id==='objective'?3:1);
   if(s.id==='ultimate'){runLevel=Math.max(runLevel,ULT_MIN_ARENA_LEVEL);player.ultCharge=player.ultMax;player.ultCd=0;alphaTrainingSpawn(3);}
   if(s.id==='potion'){player.hp=player.maxHp*.45;dropPotion(player.x+110,player.y,'heal');t.potion=potions[potions.length-1];t.potion.life=300000;}
   if(s.id==='xp')save.champions.mago.xp=xpToNext(save.champions.mago.level)-1;
   if(s.id==='loot')t.loot=groundLootDrop(player.x+100,player.y,'B',1,'ciudad','training',false);
+  if(s.id==='danger')alphaTrainingDanger();
+  if(s.id==='revive')alphaTrainingDowned();
   const arenaLabel=document.getElementById('hud-arena');if(arenaLabel)arenaLabel.textContent='Entrenamiento';
   const el=alphaTrainingPanel();el.classList.remove('hidden');el.querySelector('strong').textContent=s.title;el.querySelector('p').textContent=s.text;el.querySelector('.alpha-training-goal').textContent='▶ '+s.target;
   alphaTrainingEmit('tutorial_step',{step:s.id});
+}
+// Peligro: un golpe marcado en el piso (vfxTelegraph real) sobre el jugador; si al llenarse ya salió, aprendió.
+function alphaTrainingDanger(){
+  const t=ALPHA_TRAINING,r=95,delay=1900;
+  t.danger={x:player.x,y:player.y,r,at:t.phaseTime+delay};
+  bossStrike(player.x,player.y,r,delay,Math.round(player.maxHp*0.06),'slam');
+}
+// Reanimar: una aliada caída de verdad (héroe del motor) y un esqueleto que pega poco mientras revivís.
+function alphaTrainingDowned(){
+  const t=ALPHA_TRAINING,a=makeHero('soporte',true,player.x+130,player.y+10);
+  a.alive=false;a.hp=0;allies.push(a);heroes.push(a);t.ally=a;
+  const e=spawnEnemy('esqueleto',false,false);e.x=a.x+60;e.y=a.y;e.hp=e.maxHp=9999;e.dmg=1;e.speed=40;e.xp=0;
 }
 function alphaTrainingSatisfied(id,m,h){
   if(id==='move') return m.distance>=200;
@@ -91,7 +110,11 @@ function alphaTrainingSatisfied(id,m,h){
   if(id==='potion') return m.potionPicked===true;
   if(id==='xp') return m.newLevel>m.level;
   if(id==='loot') return m.loot>0;
-  if(id==='objective') return (h.stats.kills||0)-m.kills>=3;
+  if(id==='objective') return !!ALPHA_TRAINING.foes&&ALPHA_TRAINING.foes.length>=3&&ALPHA_TRAINING.foes.every(e=>!e.alive); // el equipo cuenta: Elyra también pelea
+  if(id==='inspect') return m.inspected===true;
+  if(id==='danger') return m.dodged===true;
+  if(id==='tactical') return m.tactical===true;
+  if(id==='revive') return !!(ALPHA_TRAINING.ally&&ALPHA_TRAINING.ally.alive);
   return false;
 }
 function alphaTrainingTick(dt){
@@ -102,6 +125,7 @@ function alphaTrainingTick(dt){
   m.distance+=Math.hypot(player.x-m.x,player.y-m.y);m.x=player.x;m.y=player.y;
   m.newLevel=save.champions.mago.level;
   m.potionPicked=!!t.potion&&t.potion.life<=0&&player.hp>player.maxHp*.5;
+  if(s.id==='danger'&&t.danger&&t.phaseTime>=t.danger.at){const out=Math.hypot(player.x-t.danger.x,player.y-t.danger.y)>t.danger.r+(player.radius||18)*0.5;t.danger=null;if(out)m.dodged=true;else{showNetToast&&showNetToast('¡Te alcanzó! Salí de la marca antes de que se llene.');alphaTrainingDanger();}}
   const el=alphaTrainingPanel();el.querySelector('.alpha-training-clock').textContent='Sin límite';
   if(!t.doneAt&&alphaTrainingSatisfied(s.id,m,player)){t.doneAt=t.phaseTime;el.querySelector('.alpha-training-goal').textContent='✓ Completado';alphaTrainingEmit('tutorial_step_complete',{step:s.id});}
   if(t.doneAt&&t.phaseTime-t.doneAt>1300){t.step++;if(t.step===ALPHA_TRAINING_STEPS.length)alphaTrainingExit(true);else alphaTrainingEnterStep();}
@@ -167,10 +191,13 @@ function alphaOnboardingMenu(){
   setState=function(s){if(ALPHA_TRAINING.active&&!['playing','paused'].includes(s))alphaTrainingRestore(false);const r=stateBase.apply(this,arguments);if(s==='mainmenu')alphaOnboardingMenu();return r;};
   tutTick=function(){if(!ALPHA_TRAINING.active)return tutBase.apply(this,arguments);};
   const skillBase=useSkill,ultimateBase=useUltimate;
-  useSkill=function(){if(ALPHA_TRAINING.active&&ALPHA_TRAINING.step<2)return false;return skillBase.apply(this,arguments);};
-  useUltimate=function(){if(ALPHA_TRAINING.active&&ALPHA_TRAINING.step<4)return;return ultimateBase.apply(this,arguments);};
+  const stepIdx=id=>ALPHA_TRAINING_STEPS.findIndex(x=>x.id===id);
+  useSkill=function(){if(ALPHA_TRAINING.active&&ALPHA_TRAINING.step<stepIdx('skill'))return false;return skillBase.apply(this,arguments);};
+  useUltimate=function(){if(ALPHA_TRAINING.active&&ALPHA_TRAINING.step<stepIdx('ultimate'))return;return ultimateBase.apply(this,arguments);};
   const castBase=castAbility;castAbility=function(h,sk,isUlt,idx){const before=h&&h.stats?h.stats.skillCasts||0:0;const r=castBase.apply(this,arguments);if(ALPHA_TRAINING.active&&h===player&&!isUlt&&(h.stats.skillCasts||0)>before){const t=ALPHA_TRAINING;if(ALPHA_TRAINING_STEPS[t.step].id==='skill')t.lastSkill=idx===undefined?0:idx;if(ALPHA_TRAINING_STEPS[t.step].id==='cooldown'&&(idx===undefined?0:idx)===t.lastSkill)t.metrics.recast=true;}return r;};
   const lootBase=groundLootPick;groundLootPick=function(g){const r=lootBase.apply(this,arguments);if(r&&ALPHA_TRAINING.active)ALPHA_TRAINING.metrics.loot++;return r;};
+  if(typeof abilityInspectorOpen==='function'){const ib=abilityInspectorOpen;abilityInspectorOpen=function(){const r=ib.apply(this,arguments);if(r&&ALPHA_TRAINING.active)ALPHA_TRAINING.metrics.inspected=true;return r;};}
+  if(typeof tacticalPanelOpen==='function'){const tb=tacticalPanelOpen;tacticalPanelOpen=function(){const r=tb.apply(this,arguments);if(ALPHA_TRAINING.active)ALPHA_TRAINING.metrics.tactical=true;return r;};}
   window.alphaGuideOpen=alphaGuideOpen;window.alphaGuideHTML=alphaGuideHTML;window.alphaTrainingStart=alphaTrainingStart;
   alphaOnboardingMenu();
 })();

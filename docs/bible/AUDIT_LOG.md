@@ -95,3 +95,21 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   solo nombres que su servidor ya acepta). No agrega servicios ni datos personales.
 - **Validación**: `tools/ux/test-arena-briefing-tutorial.js` (10 arenas con 4 fichas, aviso visible, set con
   piezas; lección fúngica no avanza sola, avanza al hacerla, se guarda, no se repite, saltar guarda).
+
+### A10. Tutorial general: long press, peligro, panel táctico y reanimar
+- **Problema**: el entrenamiento (9 pasos) no enseñaba a consultar habilidades, a leer avisos de peligro, el
+  panel táctico ni la reanimación (que en cooperativo es clave).
+- **Implementación**: 4 pasos jugables nuevos con mecánicas reales (inspector, `bossStrike` con su telegraph,
+  `tacticalPanelOpen`, una aliada caída de verdad + `updateRevives`). Los bloqueos por paso ahora se buscan
+  por id (no por índice).
+- **Validación**: `training-test.js` y `training-player.js` (13/13 con entrada táctil real).
+
+### A11. Validador de jefes y referencia autogenerada
+- **Implementación**: `tools/bible/boss-validator.js` (pelea real de nivel 10 por arena) y
+  `tools/bible/build-reference.js` (CHAMPION_REFERENCE / ARENA_REFERENCE desde datos).
+- **Resultado**: 10/10 jefes PASS automático (aparecen, 5–158 avisos en 42 s, 3–16 patrones, dañables, no
+  triviales). Ninguno es "solo una barra de vida" según la evidencia automática; el juicio de diversión y
+  dificultad sigue siendo humano.
+- **Hallazgo (tutorial)**: en el paso final del entrenamiento, Elyra reanimada mataba a los esqueletos y el
+  objetivo contaba solo las bajas del jugador → el novato quedaba trabado (1 de 2 corridas en 667×375). Ahora
+  cuenta los enemigos derrotados por el equipo.

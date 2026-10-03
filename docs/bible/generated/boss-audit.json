@@ -1,0 +1,528 @@
+{
+ "schemaVersion": 1,
+ "generatedBy": "tools/bible/boss-validator.js",
+ "scope": "~42 s real boss fight per arena with an invulnerable bot team. Automated evidence, not a design approval.",
+ "bosses": [
+  {
+   "key": "ciudad",
+   "arena": "Ciudad Maldita",
+   "boss": "El Presentador",
+   "type": "demonio_mayor",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "El Presentador"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "demonio_mayor"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "5 avisos, 0 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "3 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 87.1%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 87.1%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets de entrada (Alba, Guardián) y oro por rescate"
+    }
+   ],
+   "tele": 5,
+   "strikes": 0,
+   "kinds": 3,
+   "status": "PASS"
+  },
+  {
+   "key": "fortaleza",
+   "arena": "Fábrica Sin Fin",
+   "boss": "El Caballero de la Armadura Oxidada",
+   "type": "demonio_mayor",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "El Caballero de la Armadura Oxidada"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "demonio_mayor"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "61 avisos, 50 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "5 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 75.2%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 75.2%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets de Coloso y Guardián"
+    }
+   ],
+   "tele": 61,
+   "strikes": 50,
+   "kinds": 5,
+   "status": "PASS"
+  },
+  {
+   "key": "bosque",
+   "arena": "Ruinas Célticas / Élficas",
+   "boss": "Guardián Ancestral",
+   "type": "guardian_ancestral",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "Guardián Ancestral"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "guardian_ancestral"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "93 avisos, 85 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "9 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 36.2%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 36.2%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets de Alba y Cazador"
+    }
+   ],
+   "tele": 93,
+   "strikes": 85,
+   "kinds": 9,
+   "status": "PASS"
+  },
+  {
+   "key": "micelial",
+   "arena": "Reino Fúngico",
+   "boss": "La Madre Espora",
+   "type": "demonio_mayor",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "La Madre Espora"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "demonio_mayor"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "33 avisos, 24 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "9 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 87.3%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 87.3%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets Sepulturero y Arcano; set de Morwen/Tibor (campeones del Reino)"
+    }
+   ],
+   "tele": 33,
+   "strikes": 24,
+   "kinds": 9,
+   "status": "PASS"
+  },
+  {
+   "key": "hielo",
+   "arena": "Arena Gélida",
+   "boss": "Mago de Hielo y Cristal → Ángel Caído",
+   "type": "mago_hielo_cristal",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "Mago de Hielo y Cristal → Ángel Caído"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "mago_hielo_cristal"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "54 avisos, 35 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "6 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 33.0%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 33.0%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "set Glaciar"
+    }
+   ],
+   "tele": 54,
+   "strikes": 35,
+   "kinds": 6,
+   "status": "PASS"
+  },
+  {
+   "key": "acuatica",
+   "arena": "Arena Acuática",
+   "boss": "Leviatán",
+   "type": "leviatan",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "Leviatán"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "leviatan"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "41 avisos, 5 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "7 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 89.0%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 89.0%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets Tempestad y Glaciar"
+    }
+   ],
+   "tele": 41,
+   "strikes": 5,
+   "kinds": 7,
+   "status": "PASS"
+  },
+  {
+   "key": "laberinto",
+   "arena": "Laberinto",
+   "boss": "Minotauro",
+   "type": "minotauro",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "Minotauro"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "minotauro"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "84 avisos, 68 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "6 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 65.2%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 65.2%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets Laberinto y Coloso"
+    }
+   ],
+   "tele": 84,
+   "strikes": 68,
+   "kinds": 6,
+   "status": "PASS"
+  },
+  {
+   "key": "abismo",
+   "arena": "Abismo",
+   "boss": "El Que Mora Debajo",
+   "type": "demonio_mayor",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "El Que Mora Debajo"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "demonio_mayor"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "17 avisos, 6 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "7 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 87.4%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 87.4%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets Arcano y Laberinto"
+    }
+   ],
+   "tele": 17,
+   "strikes": 6,
+   "kinds": 7,
+   "status": "PASS"
+  },
+  {
+   "key": "minas",
+   "arena": "Minas Profundas",
+   "boss": "Cerbero, Guardián del Umbral",
+   "type": "demonio_mayor",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "Cerbero, Guardián del Umbral"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "demonio_mayor"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "7 avisos, 6 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "3 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 95.2%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 95.2%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "sets Coloso y Lucifer"
+    }
+   ],
+   "tele": 7,
+   "strikes": 6,
+   "kinds": 3,
+   "status": "PASS"
+  },
+  {
+   "key": "infernal",
+   "arena": "Arena Infernal",
+   "boss": "El Hechicero → Gólem de Cuerpos → Demonio Mayor",
+   "type": "angel_corrompido",
+   "checks": [
+    {
+     "name": "ficha: identidad y relación con la arena",
+     "level": "PASS",
+     "detail": "El Hechicero → Gólem de Cuerpos → Demonio Mayor"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2600 cuadros"
+    },
+    {
+     "name": "el jefe aparece",
+     "level": "PASS",
+     "detail": "angel_corrompido"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "158 avisos, 71 golpes diferidos"
+    },
+    {
+     "name": "patrones distintos (decisiones tácticas)",
+     "level": "PASS",
+     "detail": "16 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 61.0%"
+    },
+    {
+     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "level": "PASS",
+     "detail": "queda 61.0%"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": "Lucifer y Berserker; acceso a toda la tabla de sets"
+    }
+   ],
+   "tele": 158,
+   "strikes": 71,
+   "kinds": 16,
+   "status": "PASS"
+  }
+ ],
+ "pageErrors": []
+}

@@ -63,3 +63,18 @@ lenguaje "objetivo" (anillo cian ◎ + flecha al borde). Guardado en `save.tut.a
 saltar (`arenaTutSkip`) y volver a ver (`arenaTutorialReplay`). Reino Fúngico: núcleo de práctica (los
 bots no lo rompen por vos) → ver la colonia → sentir la lentitud del territorio → romper el núcleo → ver
 cómo se retira la infección.
+
+## Tutorial general — Arena de entrenamiento (`js/systems/alpha-training.js`)
+
+13 pasos jugables, sin límite de tiempo, con "Saltar" siempre visible; cada uno señala su botón
+(`.alpha-training-target`), pide hacerlo y confirma ✓ antes de seguir (progressive disclosure: lo
+permanente —talentos, sets, fusión— se enseña después en la Guía del Hechicero por nivel):
+
+1 movimiento · 2 ataque básico · 3 habilidades (tocar / mantener y arrastrar) · 4 **long press** (leer sin
+lanzar) · 5 recarga · 6 definitiva · 7 **peligro** (marca roja real que se llena: salir a tiempo; si te
+alcanza, se repite) · 8 vida y pociones · 9 XP y nivel (permanente vs. nivel de arena) · 10 botín ·
+11 **panel táctico** (sola pausa; en multijugador la partida sigue) · 12 **reanimar** (aliada caída real,
+mantener ✚ ~5 s, un golpe no corta) · 13 objetivo de arena.
+Guardado: `save.tut.training`; partida de práctica aislada (nunca escribe el guardado real).
+Validación: `tools/alpha/training-test.js` (13 pasos con el motor real) y `tools/alpha/training-player.js`
+(novato que solo usa controles táctiles: ~47 s automatizado en 844×390 y 667×375).
