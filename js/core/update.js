@@ -89,13 +89,15 @@ function update(dt){
     if(e.frozenTimer>0) e.frozenTimer -= dt; // congelado (Invierno Sin Fin, reacciones de hielo)
     if(e.shockedTimer>0) e.shockedTimer -= dt;
     if(e.wetTimer>0) e.wetTimer -= dt;
+    // DoT ANTES del aturdimiento: un enemigo aturdido sigue quemándose/sangrando (antes el `continue`
+    // del aturdimiento congelaba también sus DoT). Cada tick suma a un número agrupado (ftDotTick).
+    if(e.burnTimer>0){ e.burnTimer-=dt; const d = e.burnDmg*dt/1000; e.hp -= d; ftDotTick(e, d, "fire", dt); if(e.hp<=0){ killEnemy(e); continue; } }
+    if(e.bleedTimer>0){ e.bleedTimer-=dt; const d = e.bleedDmg*dt/1000; e.hp -= d; ftDotTick(e, d, "bleed", dt); if(e.hp<=0){ killEnemy(e); continue; } }
+    if(e.poisonTimer>0){ e.poisonTimer-=dt; const d = e.poisonDmg*dt/1000; e.hp -= d; ftDotTick(e, d, "poison", dt); if(e.hp<=0){ killEnemy(e); continue; } }
     if(e.stunTimer>0){ e.stunTimer-=dt; e.channel = null; e.bossCharge = null; continue; } // aturdir interrumpe canalizaciones/embestidas
     if(e.slowTimer>0) e.slowTimer-=dt; else e.slowAmt=0;
-    if(e.burnTimer>0){ e.burnTimer-=dt; e.hp -= e.burnDmg*dt/1000; if(e.hp<=0){ killEnemy(e); continue; } }
-    if(e.bleedTimer>0){ e.bleedTimer-=dt; e.hp -= e.bleedDmg*dt/1000; if(e.hp<=0){ killEnemy(e); continue; } }
-    if(e.poisonTimer>0){ e.poisonTimer-=dt; e.hp -= e.poisonDmg*dt/1000; if(e.hp<=0){ killEnemy(e); continue; } }
     if(e.curseTimer>0){
-      e.curseTimer -= dt; e.hp -= (e.curseDmg||0)*dt/1000;
+      e.curseTimer -= dt; e.hp -= (e.curseDmg||0)*dt/1000; ftDotTick(e, (e.curseDmg||0)*dt/1000, "arcane", dt);
       if(e.curseTimer<=0){ e.curseTimer=0; e.cursed=false; e.curseDefTakenMult=1; }
       if(e.hp<=0){ killEnemy(e); continue; } // el contagio ya se dispara adentro de killEnemy
     }

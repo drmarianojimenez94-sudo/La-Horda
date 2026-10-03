@@ -112,6 +112,8 @@ function reactionMult(e, dmg, opts, src, pow, kind){
     _reactLabel(e, "hemorrhage", src, by);
     if(extra > 0) runLater(0, ()=>{ if(e.alive) damageEnemy(e, extra, {src, fromProc:true, fromReaction:true, dmgKind:"bleed"}); });
   }
+  // Thalen — Maestro Elemental (CLASSIC_PASSIVES.mago): el bonus de las reacciones que provoca crece
+  if(m > 1 && src.classKey==="mago") m = 1 + (m - 1)*CLASSIC_PASSIVES.mago.reactionBonusMult;
   return m;
 }
 // Aviso de resistencia/debilidad a los golpes del jugador (con tope, para que no sea ruido).
