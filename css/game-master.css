@@ -8,3 +8,4 @@
 @media(orientation:portrait){.gm-shell,.gm-denied{visibility:hidden}}
 .gm-selection{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;max-height:260px;overflow:auto;padding:8px;border:1px solid #39404f}.gm-selection:empty{display:none}.gm-selection .gm-field{flex-direction:row-reverse;justify-content:flex-end;align-items:center}.gm-player-picker[hidden]{display:none}.gm-shell select[multiple]{min-height:105px}.gm-record>.btn{margin:4px 8px 4px 0}.gm-danger>.gm-form{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
 .gm-field[hidden]{display:none}
+.gm-shell .btn.gm-back{background:#5c3a12;border-color:#e5c982;font-weight:bold}

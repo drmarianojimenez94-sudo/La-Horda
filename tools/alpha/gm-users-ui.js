@@ -32,7 +32,7 @@ const TYPES={'.html':'text/html','.js':'text/javascript','.css':'text/css','.png
   await page.evaluate(()=>{location.hash='game-master';});await page.getByRole('heading',{name:'Alpha en vivo'}).waitFor();checks++;
   for(const t of ['Usuarios','Registro','Test Lab','Jugadores','Reinicios'])assert.equal(await page.getByRole('button',{name:t,exact:true}).count(),1,t),checks++;
   await page.getByRole('button',{name:'Usuarios',exact:true}).click();await page.getByRole('button',{name:'Buscar usuarios',exact:true}).click();
-  await page.getByRole('button',{name:'Ver ficha de jugador1'}).click();await page.getByRole('heading',{name:/jugador1 · jugador1/}).waitFor();checks++;
+  await page.getByRole('button',{name:'Ver ficha de jugador1'}).click();await page.getByRole('heading',{name:'jugador1 · jugador1',exact:true}).waitFor();checks++;
   assert.equal(await page.getByRole('button',{name:/Conceder Nano GM/}).count(),0,'founder never grantable from UI');assert.equal(await page.getByRole('button',{name:/Conceder Facu GM/}).count(),0);checks+=2;
   await page.getByRole('button',{name:'Conceder Myla',exact:true}).click();await page.getByRole('alertdialog').getByText('Valor nuevo:').waitFor();await page.getByRole('button',{name:'Confirmar',exact:true}).click();
   await page.getByText('Myla concedido.').waitFor();assert.equal((await request('GET','/api/save',undefined,player)).data.champions.myla.unlocked,true);checks++;
@@ -55,6 +55,11 @@ const TYPES={'.html':'text/html','.js':'text/javascript','.css':'text/css','.png
   await page.evaluate(()=>{setState('mainmenu');});assert.equal(await page.evaluate(()=>testLabActive()),false);assert.equal(await page.locator('#testlab-badge').count(),0);
   assert.equal(await page.evaluate(()=>save.gold),JSON.parse(before).gold,'real progress restored');assert.equal(await page.evaluate(()=>!!save.champions.facu_gm&&save.champions.facu_gm.unlocked),false);checks+=4;
   const audit=await request('GET','/api/gm/audit?action=testlab',undefined,owner);assert.ok(audit.entries.some(e=>e.content==='facu_gm'));checks++;
+  // Volver a la campaña: desde Opciones -> panel -> botón, termina en el hub con JUGAR visible.
+  await page.evaluate(()=>{if(typeof openHubOptions==='function')openHubOptions();location.hash='game-master';});await page.locator('#game-master').waitFor();
+  await page.getByRole('button',{name:'⟵ Volver a la campaña',exact:true}).click();
+  await page.waitForFunction(()=>state==='mainmenu'&&!document.getElementById('game-master')&&document.getElementById('hub-options').classList.contains('hidden')&&location.hash==='');
+  assert.equal(await page.locator('#hub-play-btn').isVisible(),true);checks++;
   assert.deepEqual(errors,[]);
   // ---- normal player: no panel, server denies ----
   const p2=await open(player,'jugador1');await p2.page.evaluate(()=>{location.hash='game-master';});await p2.page.locator('.gm-denied').waitFor();assert.equal(await p2.page.locator('#game-master').count(),0);checks++;
