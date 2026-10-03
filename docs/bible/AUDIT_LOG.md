@@ -182,3 +182,12 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   a 844×390 y 667×375 midiendo los rectángulos reales del texto contra su caja y su marco.
 - **Hallazgo**: en 667×375 los títulos del Códice "GUARDIANES" (+29 px) y "BESTIARIO" (+9 px) se salían de su tarjeta
   ("GUARDIANE"). **Arreglo**: tamaño `clamp()` según el ancho. Sin el arreglo la prueba falla; con él, PASS.
+
+### A21. Micro-tutoriales para 3 arenas (la factory no es de una sola arena)
+- Drivers nuevos: **Gélida** (lección de frío/movimiento + brasero apagado cercano que hay que encender) e
+  **Infernal** (fisura de práctica que hay que cerrar). Reemplazan sus consejos sueltos (`cold`, `brazier`, `fissure`)
+  para no repetir. Pasos y textos siguen en la ficha.
+- Las pruebas cooperativas (`t_identity_net`, `t_micelial_net`) marcan las lecciones como vistas para aislarse
+  (la lección de la Infernal abría una fisura extra y la prueba espera exactamente `inf1`).
+- **Validación**: `test-arena-briefing-tutorial.js` (3 arenas: no avanza sin hacerlo, avanza haciéndolo, guarda),
+  `t_identity` 84/84, cooperativo Infernal 9/9, Gélida 8/8, Micelial 14/14.

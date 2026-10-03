@@ -60,7 +60,8 @@ vez…". En pantallas angostas la grilla pasa a 1 columna y el botón queda fijo
 Voz del Hechicero (mismo cuadro que el tutorial general), ENSEÑAR → HACER → CONFIRMAR → CONTINUAR. Cada
 paso espera a que el jugador lo haga (tope 30 s: nunca traba). Objetivo marcado en el mundo con el
 lenguaje "objetivo" (anillo cian ◎ + flecha al borde). Guardado en `save.tut.arena[clave]`; se puede
-saltar (`arenaTutSkip`) y volver a ver (`arenaTutorialReplay`). Reino Fúngico: núcleo de práctica (los
+saltar (`arenaTutSkip`) y volver a ver (`arenaTutorialReplay`). Drivers jugables: **Gélida** (moverse baja el
+frío → encender un brasero apagado a propósito), **Infernal** (fisura de práctica → cerrarla) y Reino Fúngico: núcleo de práctica (los
 bots no lo rompen por vos) → ver la colonia → sentir la lentitud del territorio → romper el núcleo → ver
 cómo se retira la infección.
 

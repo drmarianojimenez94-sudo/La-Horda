@@ -21,7 +21,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     p.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|WebSocket/.test(m.text())) errs.push('console: ' + m.text().slice(0, 200)); });
     await p.goto(url);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const x = document.getElementById('title-continue-btn'); return x && !x.disabled; })) break; await sleep(100); }
-    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } save.arenasCleared = { ciudad: true, bosque: true, acuatica: true, fortaleza: true, micelial: false, hielo: false, laberinto: false, infernal: false }; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, {training: 1, basics: 1}); selectedClass = c; }, [CH[i]]);
+    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } save.arenasCleared = { ciudad: true, bosque: true, acuatica: true, fortaleza: true, micelial: false, hielo: false, laberinto: false, infernal: false }; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, {training: 1, basics: 1, arena: Object.fromEntries(ARENA_ORDER.map(a => [a, 1]))}); /* las lecciones de arena tienen su propia prueba */ selectedClass = c; }, [CH[i]]);
     return { p, errs, i };
   };
   const H = await mk(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, 0);

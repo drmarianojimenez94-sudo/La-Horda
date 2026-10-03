@@ -10,8 +10,9 @@
    o simplemente jugar: cada paso tiene un tope de tiempo y nunca bloquea la partida.
    Multijugador: el anfitrión (o la partida sola) prepara la situación (p.ej. el núcleo de práctica); cada
    cliente sigue sus pasos con su propio héroe (los invitados ven el núcleo por la red).
-   Arenas sin driver propio: sus conceptos ya los enseñan sus mecánicas con tutSay al aparecer
-   (runas, emboscadas, frío, braseros, fisuras, sellos...); se marcan vistas al terminar la primera partida.
+   Drivers: Reino Fúngico, Arena Gélida, Arena Infernal. Arenas sin driver propio: sus conceptos ya los enseñan
+   sus mecánicas con tutSay al aparecer (runas, emboscadas, sellos, corrientes...); se marcan vistas al terminar la
+   primera partida.
    ============================================================ */
 const ARENA_TUT = {arena:null, step:-1, t:0, stepT:0, data:null, run:null};
 const ARENA_TUT_STEP_MAX_MS = 30000; // nadie queda atascado en un paso
@@ -31,6 +32,45 @@ function _arenaTutEnd(){
   ARENA_TUT.arena = null; ARENA_TUT.step = -1; ARENA_TUT.data = null;
 }
 const ARENA_TUT_DRIVERS = {
+  // Arena Gélida: moverse baja el frío; un brasero apagado cerca se enciende (acción o fuego).
+  hielo:{
+    start(){
+      const host = !(typeof netIsGuest==="function" && netIsGuest());
+      const d = {moved:0, lx:player.x, ly:player.y, br:null};
+      tutMark("cold"); tutMark("brazier"); // esta lección reemplaza los consejos sueltos (no repetir)
+      if(typeof HIE!=="undefined" && HIE.br && HIE.br.length){
+        d.br = HIE.br.reduce((a,b)=>Math.hypot(a.x-player.x,a.y-player.y) < Math.hypot(b.x-player.x,b.y-player.y) ? a : b);
+        if(host){ d.br.lit = false; d.br.fuel = 0; d.br.prog = 0; d.br.done = false; }
+      }
+      return d;
+    },
+    check(id, d, dt){
+      if(id==="cold"){ d.moved += Math.hypot(player.x-d.lx, player.y-d.ly); d.lx = player.x; d.ly = player.y; return d.moved > 320; }
+      if(id==="brazier") return !d.br || d.br.lit;
+      return true;
+    },
+    target(id, d){ return id==="brazier" && d.br && !d.br.lit ? {x:d.br.x, y:d.br.y, alive:true} : null; }
+  },
+  // Arena Infernal: una fisura de práctica cerca; la lección termina cuando se cierra.
+  infernal:{
+    start(){
+      const host = !(typeof netIsGuest==="function" && netIsGuest());
+      const d = {f:null};
+      tutMark("fissure");
+      if(host && typeof infMakeFissure==="function"){
+        for(let t=0; t<30 && !d.f; t++){
+          const a = Math.random()*Math.PI*2, r = 260 + Math.random()*120, x = player.x + Math.cos(a)*r, y = player.y + Math.sin(a)*r*0.8;
+          if(!aidInside(x, y, 110) || aidBlocked(x, y, 60)) continue;
+          d.f = infMakeFissure(x, y); d.f._tut = 1;
+          vfxTelegraph({shape:0, r:INF_CFG.radius[1], x, y, follow:null, dur:INF_CFG.openWarn, rgb:"255,110,30"});
+        }
+      }
+      return d;
+    },
+    fissure(d){ if(d.f && !d.f.done) return d.f; return (typeof INF!=="undefined" ? INF.fis.find(f=>!f.done && f.warn<=0) : null) || null; },
+    check(id, d){ if(id==="fissure"){ const f = this.fissure(d); return !f || (d.f ? d.f.done : false); } return true; },
+    target(id, d){ const f = this.fissure(d); return f ? {x:f.x, y:f.y, alive:true} : null; }
+  },
   micelial:{
     // Un núcleo de práctica cerca (etapa 2: ya tiene territorio que frena) y una pausa corta de la horda.
     start(){

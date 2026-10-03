@@ -54,7 +54,24 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert.deepEqual(L.done,[null,true],'completed and persisted');
   assert.deepEqual(L.again,[false,null],'not repeated');
   assert.deepEqual(L.skip,[true,true,null],'skip persists');
+  // 3) Gélida e Infernal: lecciones jugables propias (la factory no es de una sola arena)
+  const r2=await page.evaluate(()=>{
+   const step=n=>{for(let i=0;i<n;i++){update(16);tutTick();}};const cur=a=>ARENA_TUT.arena===a?ARENA_BLUEPRINTS[a].tutorial.steps[ARENA_TUT.step]?.id:null;
+   const begin=a=>{if(save.tut.arena)delete save.tut.arena[a];selectedClass='mago';currentArena=a;lobbyAllies=['tanque','soporte','guerrero'];startRun(1);setState('playing');enemies=[];spawnTimer=1e9;for(const h of heroes)h.hp=h.maxHp=1e7;step(140);};
+   const out={};
+   begin('hielo');const br=ARENA_TUT.data&&ARENA_TUT.data.br;out.h0=[cur('hielo'),br&&br.lit];
+   step(60);out.h1=cur('hielo'); // sin moverse no avanza
+   for(let i=0;i<60;i++){player.x+=8;clampToArena(player);update(16);tutTick();}out.h2=cur('hielo');
+   hieLight(br,'fire');step(30);out.h3=[ARENA_TUT.arena,arenaTutorialSeen('hielo')];
+   begin('infernal');const f=ARENA_TUT.data&&ARENA_TUT.data.f;out.i0=[cur('infernal'),!!f];
+   step(60);out.i1=cur('infernal');f.done=true;step(30);out.i2=[ARENA_TUT.arena,arenaTutorialSeen('infernal')];
+   state='menu';return out;});
+  assert.deepEqual(r2.h0,['cold',false],'Gélida: lesson starts with an extinguished brazier');
+  assert.equal(r2.h1,'cold','Gélida: standing still does not advance');assert.equal(r2.h2,'brazier','Gélida: moving advances');
+  assert.deepEqual(r2.h3,[null,true],'Gélida: lighting the brazier completes and persists');
+  assert.deepEqual(r2.i0,['fissure',true],'Infernal: practice fissure opened');assert.equal(r2.i1,'fissure','Infernal: waits for the player');
+  assert.deepEqual(r2.i2,[null,true],'Infernal: closing completes and persists');
   assert.deepEqual(errors,[]);
-  console.log('PASS arena briefing (10 arenas: mechanic, hazard+telegraph, boss, featured set) + fungal micro-tutorial (teach→do→confirm, persisted, skip)');
+  console.log('PASS arena briefing (10 arenas: mechanic, hazard+telegraph, boss, featured set) + micro-tutorials fúngico/gélida/infernal (teach→do→confirm, persisted, skip)');
  }finally{await browser.close();server.kill();}
 })().catch(e=>{console.error(e);server.kill();process.exitCode=1;});
