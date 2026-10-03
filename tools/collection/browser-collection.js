@@ -50,7 +50,7 @@ const assert = require('node:assert/strict');
    return {ok,active,transported:record.cosmeticSkin,rejected:rejected.cosmeticSkin||null,unknown:unknown.cosmeticSkin||null,pure,original:activeSetSkinId({classKey:'tanque'})};
  });
  const art = await page.evaluate(()=>({myla:cosmeticMetadata('merienda_magica').artPending,ynara:cosmeticMetadata('santa_paciencia').artPending,tanque:cosmeticMetadata('baluarte').artPending}));
- assert.deepEqual(art,{myla:true,ynara:true,tanque:false});
+ assert.deepEqual(art,{myla:false,ynara:false,tanque:false});
  const shopGift = await page.evaluate(()=>{
    shopTab='skins'; setState('shop'); renderShop();
    const card=document.querySelector('[data-skin-card="baluarte"]');

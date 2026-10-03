@@ -67,10 +67,10 @@ function _shopAfterBuy(msg, sfx){
 // Comprar un guardián (con confirmación: son 2.500 de oro). featured: la oferta del día (con descuento).
 function shopConfirmChampion(id, featured, after){
   const cat = CHAMPION_CATALOG.find(c=>c.id===id); if(!cat) return;
-  const p = featured ? featured.price : cat.priceGold;
+  const p = featured ? featured.price : shopChampionPrice(id);
   gameConfirm(`¿Desbloquear a ${CLASSES[id].name} por ${fmtGold(p)} de oro?`, {okText:"Desbloquear"}).then(ok=>{
     if(!ok) return;
-    const r = featured ? shopBuyFeatured() : shopBuyChampion(id);
+    const r = featured ? shopBuyFeatured(featured) : shopBuyChampion(id, null, p);
     if(!r.ok){ gameAlert(r.reason); return; }
     selectedClass = id; save.lastChamp = id; if(typeof netRememberChamp==="function") netRememberChamp(id);
     _shopAfterBuy(`🔓 ${CLASSES[id].name} desbloqueado: ya es tu guardián para jugar`, "levelup");
@@ -119,7 +119,7 @@ function renderShopShowcase(panel){
     return `<div class="shop-deal ${sold ? "sold" : ""}" data-deal="${d.id}" style="--ic:${col}">
       <div class="shop-deal-head"><div class="shop-deal-ico">${itemIconHTML(it)}<span class="ui-tag sale">−${d.off}%</span></div><div class="shop-deal-meta"><div class="shop-deal-name" style="color:${col}">${it.name}</div>
         <div class="shop-item-sub">${itemTierLabel(it)} · ${ITEM_TYPES[it.type].label}${it.designed && it.champion ? ` · ${CLASSES[it.champion].name}` : ""}</div></div></div>
-      <div class="shop-deal-buy">${sold ? '<span class="shop-st own">✔ Comprado hoy</span>' : `<button class="shop-btn" data-deal-buy="${d.id}" ${save.gold < d.price ? "disabled" : ""}>🪙 ${fmtGold(d.price)} <s class="shop-was">${fmtGold(d.base)}</s></button>`}</div>
+      <div class="shop-deal-buy">${sold ? '<span class="shop-st own">✔ Comprado hoy</span>' : `<button class="shop-btn" data-deal-buy="${d.id}" data-gold-price="${d.price}" ${save.gold < d.price ? "disabled" : ""}>🪙 ${fmtGold(d.price)} <s class="shop-was">${fmtGold(d.base)}</s></button>`}</div>
     </div>`;
   }).join("");
   // paquetes de skins (set completo = skin)
@@ -132,7 +132,7 @@ function renderShopShowcase(panel){
       <div class="shop-bundle-art"><img data-portador-skin="${id}" src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
       <div class="shop-bundle-name">${sk.name || S.name}</div>
       <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · ${n} piezas + skin</div>
-      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`}${_shopVoucherBtn(id)}</div>
+      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>🪙 ${fmtGold(shopSkinPrice(id))}</button>`}${_shopVoucherBtn(id)}</div>
     </div>`;
   }).join("");
   // cromas: cosméticas sueltas (js/ui/shop-cromas.js da los productos); las que no tenés primero
@@ -156,7 +156,7 @@ function renderShopShowcase(panel){
     return `<div class="shop-mini-champ" data-champ="${c.id}">
       <canvas class="champ-anim shop-mini-anim" width="72" height="72" data-class-key="${c.id}" data-idle="1" data-skin="" style="background:${cls.color}1c;"></canvas>
       <div class="shop-bundle-name" style="color:${cls.color}">${cls.name}</div>
-      <div class="shop-deal-buy"><button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < c.priceGold ? "disabled" : ""}>🪙 ${fmtGold(c.priceGold)}</button></div>
+      <div class="shop-deal-buy"><button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < shopChampionPrice(c.id) ? "disabled" : ""}>🪙 ${fmtGold(shopChampionPrice(c.id))}</button></div>
     </div>`;
   }).join("");
   panel.innerHTML = `<div class="shop-show-top">${hero}
@@ -172,13 +172,13 @@ function renderShopShowcase(panel){
     const nm = SET_SKINS[f.id].name || SET_DB[f.id].name;
     gameConfirm(`¿Comprar el paquete ${nm} (set ${SET_DB[f.id].name} completo) por ${fmtGold(f.price)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      const r = shopBuyFeatured(); if(!r.ok){ gameAlert(r.reason); return; }
+      const r = shopBuyFeatured(f); if(!r.ok){ gameAlert(r.reason); return; }
       _shopAfterSkinBuy(f.id, r.n);
     });
   });
   panel.querySelectorAll("[data-deal-buy]").forEach(b=> b.addEventListener("click", ev=>{
     ev.stopPropagation();
-    const id = b.getAttribute("data-deal-buy"), r = shopBuyDeal(id);
+    const id = b.getAttribute("data-deal-buy"), r = shopBuyDeal(id, Number(b.dataset.goldPrice));
     if(!r.ok){ gameAlert(r.reason); return; }
     _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (oferta del día)`, "lootLegend");
     _shopFlash(document.querySelector(`.shop-deal[data-deal="${id}"]`));
@@ -192,9 +192,10 @@ function renderShopShowcase(panel){
   panel.querySelectorAll("[data-champ-buy]").forEach(b=> b.addEventListener("click", ()=> shopConfirmChampion(b.getAttribute("data-champ-buy"))));
   panel.querySelectorAll("[data-croma-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-croma-buy"), d = CROMA_SKINS[id], ch = save.champions[d.champ];
-    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
+    const quotedPrice = cromaPrice(id);
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+      const r = cromaBuy(id, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
       if(ch && ch.unlocked) cromaEquip(d.champ, id); // recién comprada: se pone en su guardián
       _shopAfterBuy(`🎨 CROMA ${d.name}${ch && ch.unlocked ? " · equipada" : " · comprada"}`, "levelup");
     });
@@ -215,9 +216,10 @@ setInterval(()=>{ if(typeof state!=="undefined" && state==="shop"){ const el = d
 function _bindSkinBuy(panel){
   panel.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-skin-buy");
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`, {okText:"Comprar"}).then(ok=>{
+    const quotedPrice = shopSkinPrice(id);
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name}) por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      shopBuySkin(id);
+      shopBuySkin(id, quotedPrice);
     });
   }));
 }
@@ -237,9 +239,9 @@ function renderShopChampions(panel){
         <div class="shop-skills">${skills}</div>
       </div>
       <div class="shop-champ-buy">
-        <div class="shop-price">🪙 ${fmtGold(c.priceGold)}</div>
+        <div class="shop-price">🪙 ${fmtGold(shopChampionPrice(c.id))}</div>
         ${owned ? `<button class="shop-btn sec" data-champ-detail="${c.id}">Ver ficha</button>`
-                : `<button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < c.priceGold ? "disabled" : ""}>Comprar</button>`}
+                : `<button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < shopChampionPrice(c.id) ? "disabled" : ""}>Comprar</button>`}
       </div>
     </div>`;
   }).join("") + '</div>';
@@ -266,7 +268,7 @@ function _shopItemCard(entry, tier){
     <div class="shop-item-buy">
       <div class="shop-price">🪙 ${fmtGold(shopPriceOf(entry, tier))}</div>
       ${n ? `<div class="shop-st own">Tenés ${n}</div>` : '<div class="shop-st">No comprado</div>'}
-      <button class="shop-btn" data-buy-item="${entry.key}" ${save.gold < shopPriceOf(entry, tier) ? "disabled" : ""}>Comprar</button>
+      <button class="shop-btn" data-buy-item="${entry.key}" data-gold-price="${shopPriceOf(entry, tier)}" ${save.gold < shopPriceOf(entry, tier) ? "disabled" : ""}>Comprar</button>
     </div>
   </div>`;
 }
@@ -283,7 +285,7 @@ function _shopSetBlock(setId){
       <span class="shop-set-count">${have}/${ids.length} piezas · ${eq} equipadas</span></div>
     <div class="shop-set-bonus">${bon}</div>
     <div class="shop-set-pieces">${entries.map(e=>_shopItemCard(e)).join("")}</div>
-    ${missing.length ? `<button class="shop-btn sec shop-set-buyall" data-buy-set="${setId}" ${save.gold < missing.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar las ${missing.length} que faltan · 🪙 ${fmtGold(missing.length*SHOP_TEST_PRICE)}</button>` : '<div class="shop-st own">✔ Tenés el set completo</div>'}
+    ${missing.length ? `<button class="shop-btn sec shop-set-buyall" data-buy-set="${setId}" ${save.gold < shopSetPrice(setId) ? "disabled" : ""}>Comprar las ${missing.length} que faltan · 🪙 ${fmtGold(shopSetPrice(setId))}</button>` : '<div class="shop-st own">✔ Tenés el set completo</div>'}
   </div>`;
 }
 function renderShopObjects(panel){
@@ -296,17 +298,18 @@ function renderShopObjects(panel){
   panel.querySelectorAll("[data-tier-for]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); shopTier[b.getAttribute("data-tier-for")] = b.getAttribute("data-tier"); renderShop(); }));
   panel.querySelectorAll("[data-buy-item]").forEach(b=> b.addEventListener("click", ev=>{
     ev.stopPropagation();
-    const key = b.getAttribute("data-buy-item"), r = shopBuyCatalog(key, shopTier[key]||"raro");
+    const key = b.getAttribute("data-buy-item"), r = shopBuyCatalog(key, shopTier[key]||"raro", null, Number(b.dataset.goldPrice));
     if(!r.ok){ gameAlert(r.reason); return; }
-    _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−${fmtGold(shopPriceOf(shopCatalog().find(e=>e.key===key), shopTier[key]||"raro"))} de oro)`, r.item.set || r.item.rarity==="legendario" ? "lootLegend" : "ready");
+    _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−${fmtGold(r.price)} de oro)`, r.item.set || r.item.rarity==="legendario" ? "lootLegend" : "ready");
     _shopFlash(document.querySelector(`.shop-item[data-item="${CSS.escape(key)}"]`));
   }));
   panel.querySelectorAll("[data-buy-set]").forEach(b=> b.addEventListener("click", ()=>{
-    const setId = b.getAttribute("data-buy-set"), miss = shopSetMissing(setId);
-    gameConfirm(`¿Comprar las ${miss.length} piezas que te faltan de ${SET_DB[setId].name} por ${fmtGold(miss.length*SHOP_TEST_PRICE)} de oro?`, {okText:"Comprar"}).then(ok=>{
+    const setId = b.getAttribute("data-buy-set"), miss = shopSetMissing(setId), quotedPrice=shopSetPrice(setId);
+    gameConfirm(`¿Comprar las ${miss.length} piezas que te faltan de ${SET_DB[setId].name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      let n = 0; for(const id of miss){ const r = shopBuyCatalog("d:"+id); if(!r.ok){ gameAlert(r.reason); break; } n++; }
-      if(!n) return;
+      const result = shopBuySetBundle(setId, false, null, quotedPrice);
+      if(!result.ok){ gameAlert(result.reason); return; }
+      const n = result.n;
       if(typeof SET_SKINS!=="undefined" && SET_SKINS[setId]) _shopAfterSkinBuy(setId, n); // completar el set = comprar su skin
       else _shopAfterBuy(`🛒 ${n} pieza${n>1?"s":""} de ${SET_DB[setId].name} en tu inventario`, "lootLegend");
     });
@@ -319,6 +322,7 @@ function renderShopObjects(panel){
 }
 // Ficha completa de un objeto de la tienda (mismo detalle que el inventario, sin mejorar/comparar)
 function openShopItemPreview(entry, tier){
+  const quotedPrice = shopPriceOf(entry, tier);
   const it = shopPreviewItem(entry, entry.kind==="archetype" ? tier : undefined);
   let el = document.getElementById("item-preview");
   if(!el){ el = document.createElement("div"); el.id = "item-preview"; document.body.appendChild(el); }
@@ -328,8 +332,8 @@ function openShopItemPreview(entry, tier){
   const close = ()=>{ el.classList.add("hidden"); el.innerHTML = ""; };
   el.querySelectorAll("[data-ip-close]").forEach(b=>b.addEventListener("click", close));
   el.querySelector("[data-ip-buy]").addEventListener("click", ()=>{
-    const r = shopBuyCatalog(entry.key, tier); if(!r.ok){ gameAlert(r.reason); return; }
-    close(); _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−${fmtGold(shopPriceOf(entry, tier))} de oro)`, "lootLegend");
+    const r = shopBuyCatalog(entry.key, tier, null, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
+    close(); _shopAfterBuy(`🛒 ${r.item.name} va a tu inventario (−${fmtGold(r.price)} de oro)`, "lootLegend");
   });
 }
 
@@ -343,7 +347,7 @@ function renderShopSkins(panel){
     const eq = champ ? equippedSetCount(champ, id) : 0, active = activeOn.length > 0;
     const previewKey = champ || comp[0];
     let action;
-    if(!skinOwnedFull(id)) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>${_shopVoucherBtn(id)}`;
+    if(!skinOwnedFull(id)) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(shopSkinPrice(id))}</button>${_shopVoucherBtn(id)}`;
     else if(!comp.length) action = `<div class="shop-item-sub">Skin desbloqueada: conseguí a <b>${champ ? CLASSES[champ].name : "un guardián"}</b> en la pestaña Guardianes para usarla.</div>`;
     else {
       const rest = comp.filter(k=>!activeOn.includes(k));
@@ -374,11 +378,11 @@ function renderShopSkins(panel){
 }
 // Compra las piezas que faltan de una skin (desde la Tienda o la Sala) y la autoequipa si corresponde.
 // Devuelve true si compró algo.
-function shopBuySkin(id){
-  const miss = shopSetMissing(id);
-  let n = 0; for(const p of miss){ const r = shopBuyCatalog("d:"+p); if(!r.ok){ gameAlert(r.reason); break; } n++; }
-  if(n) _shopAfterSkinBuy(id, n);
-  return n > 0;
+function shopBuySkin(id, expectedPrice){
+  const result = shopBuySetBundle(id, true, null, expectedPrice);
+  if(!result.ok){ gameAlert(result.reason); return false; }
+  _shopAfterSkinBuy(id, result.n);
+  return true;
 }
 function _skinEquippedFeedback(id, k){
   const sk = SET_SKINS[id];

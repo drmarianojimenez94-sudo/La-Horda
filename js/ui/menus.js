@@ -128,19 +128,19 @@ function renderChampDetail(champId){
     </div>
     ${championGuideHTML(champId)}<div class="cd-section"><div class="cd-section-title">Historia</div>${catEntry.lore}</div>`;
   if(locked){
-    const canAfford = save.gold >= catEntry.priceGold;
+    const canAfford = save.gold >= shopChampionPrice(champId);
     html += `
       <div class="cd-section cd-unlock-box">
         <div>🔒 Guardián bloqueado</div>
-        <div class="cd-unlock-price">${fmtGold(catEntry.priceGold)} 🪙</div>
+        <div class="cd-unlock-price">${fmtGold(shopChampionPrice(champId))} 🪙</div>
         ${canAfford
           ? `<button class="btn wide" id="cd-unlock-btn">Desbloquear</button>`
-          : `<div style="font-size:0.72rem; color:var(--text-dim);">Tenés ${save.gold} oro — te faltan ${catEntry.priceGold-save.gold}.</div>`}
+          : `<div style="font-size:0.72rem; color:var(--text-dim);">Tenés ${save.gold} oro — te faltan ${shopChampionPrice(champId)-save.gold}.</div>`}
       </div>`;
   } else {
     const need = xpToNext(champ.level);
     html += `
-      <div class="cd-section cd-owned-line">✔ Ya es tuyo &nbsp;·&nbsp; Precio en tienda: <b>${fmtGold(catEntry.priceGold)} 🪙</b></div>`;
+      <div class="cd-section cd-owned-line">✔ Ya es tuyo &nbsp;·&nbsp; Precio en tienda: <b>${fmtGold(shopChampionPrice(champId))} 🪙</b></div>`;
     html += `
       <div class="cd-section">
         <div class="cd-section-title">Progreso</div>
@@ -169,10 +169,8 @@ function renderChampDetail(champId){
   const unlockBtn = document.getElementById("cd-unlock-btn");
   if(unlockBtn){
     unlockBtn.addEventListener("click", ()=>{
-      if(save.gold < catEntry.priceGold) return;
-      save.gold -= catEntry.priceGold;
-      champ.unlocked = true;
-      persist();
+      const result = shopBuyChampion(champId);
+      if(!result.ok){ if(typeof gameAlert==="function") gameAlert(result.reason); return; }
       renderChampDetail(champId);
     });
   }
@@ -463,7 +461,7 @@ function prepSkinsHTML(){
     const sk = SET_SKINS[id], on = skinIsActiveOn(id, k), full = skinOwnedFull(id), miss = shopSetMissing(id).length;
     const btn = on ? `<span class="prep-skin-on">✔ EQUIPADA</span>`
       : full ? `<button class="btn small" data-prep-skin-use="${id}">USAR</button>`
-      : `<button class="btn small secondary" data-prep-skin-buy="${id}" ${save.gold < miss*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(miss*SHOP_TEST_PRICE)}</button>`;
+      : `<button class="btn small secondary" data-prep-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(shopSkinPrice(id))}</button>`;
     return `<div class="prep-skin ${on?"on":""}"><canvas class="champ-anim prep-skin-anim" width="56" height="56" data-class-key="${k}" data-skin="${id}" data-idle="1"></canvas>
       <div class="prep-skin-info"><div class="prep-skin-name">${sk.name || SET_DB[id].name}${typeof cosmeticArtPending==="function" && cosmeticArtPending(sk) ? " · croma de set" : ""}</div><div class="prep-skin-sub">Set ${SET_DB[id].name}${full||on ? "" : ` · faltan ${miss} pieza${miss>1?"s":""}`}</div>${btn}</div></div>`;
   }).join("");
@@ -479,9 +477,10 @@ function bindPrepSkins(box){
   }));
   box.querySelectorAll("[data-prep-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-prep-skin-buy");
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`, {okText:"Comprar"}).then(ok=>{
+    const quotedPrice = shopSkinPrice(id);
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name}) por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      shopBuySkin(id);
+      shopBuySkin(id, quotedPrice);
       renderPrepSummary();
     });
   }));

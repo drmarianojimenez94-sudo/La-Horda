@@ -21,6 +21,8 @@
    ============================================================ */
 const CROMA_SKINS = {};
 const CROMA_CRYSTALS = {
+  arandanos:{label:"Yogur de Arándanos",short:"Arándanos",color:"#c19aff"},
+  celeste:{label:"Guardia Celeste",short:"Celeste",color:"#b8eaff"},
   ancestral:{label:"Cristal Ancestral", short:"Ancestral", color:"#6fd08c"},
   escarcha: {label:"Cristal de Escarcha", short:"Escarcha", color:"#9fdcff"},
   piedra:   {label:"Cristal de Piedra", short:"Piedra", color:"#e3a64c"},
@@ -64,8 +66,11 @@ function cromaImage(h, key){
 
 /* ---------------- guardado ---------------- */
 function cromaIdsFor(k){ return Object.keys(CROMA_SKINS).filter(id=>CROMA_SKINS[id].champ===k); }
-function cromaOwned(id){ return !!(save.cromas && save.cromas[id]); }
-function cromaPrice(id){ const d = CROMA_SKINS[id]; return d ? (d.price|0) : 0; }
+function cromaOwned(id){
+  const d=CROMA_SKINS[id];
+  return !!(save.cromas && save.cromas[id]) || !!(d && d.legacySet && typeof skinOwnedFull==="function" && skinOwnedFull(d.legacySet));
+}
+function cromaPrice(id){ const d = CROMA_SKINS[id]; return d ? (typeof shopConfiguredPrice==="function" ? shopConfiguredPrice("cosmetic",id,d.price) : d.price|0) : 0; }
 // Croma equipada en el guardián `k` (del guardado activo: el propio, o el loadout de un invitado
 // mientras el anfitrión simula la partida). Solo ids válidos y del guardián correcto.
 function cromaEquippedId(k){
@@ -74,12 +79,13 @@ function cromaEquippedId(k){
   return d && d.champ === k ? c.croma : null;
 }
 function cromaIsEquipped(id){ const d = CROMA_SKINS[id]; return !!(d && cromaEquippedId(d.champ) === id); }
-function cromaBuy(id){
+function cromaBuy(id, expectedPrice){
   const d = CROMA_SKINS[id];
   if(!d) return {ok:false, reason:"Esa croma no existe"};
   if(typeof state!=="undefined" && state==="playing") return {ok:false, reason:"La tienda se usa fuera de la partida"};
   if(cromaOwned(id)) return {ok:false, reason:"Ya es tuya"};
   const price = cromaPrice(id);
+  if(expectedPrice!=null && expectedPrice!==price) return {ok:false,reason:"El precio cambió. Revisá el nuevo valor y volvé a confirmar."};
   if((save.gold||0) < price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${price})`};
   save.gold -= price;
   save.cromas = Object.assign({}, save.cromas, {[id]:true});
