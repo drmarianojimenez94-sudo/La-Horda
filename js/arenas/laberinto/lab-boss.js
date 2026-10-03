@@ -54,6 +54,7 @@ function labBossCrash(e){
   if(i >= 0 && LAB.cw.includes(i)){
     labBossBreak(i, false);
     bossExpose(e, LAB_BOSS.exposeMs, LAB_BOSS.exposeMult, "💥 ¡DERRIBÓ LA PARED AGRIETADA! El Minotauro queda EXPUESTO");
+    if(typeof bossArenaEvent==="function") bossArenaEvent("minotauro.muro", e);
     vfxBurst(e.x, e.y - e.radius*0.6, 30, "rock", 220, 700, 4, 2, -60, 0);
     return true;
   }
@@ -76,6 +77,7 @@ function labBossRule(dt){
   // FASE FINAL: el laberinto central se derrumba
   if(!LAB.open && e.hp <= e.maxHp*LAB_BOSS.openAt){
     LAB.open = 1;
+    if(typeof bossArenaEvent==="function") bossArenaEvent("minotauro.colapso", e);
     const doomed = [];
     LAB.w0.forEach((w, i)=>{ if(!LAB.bw.includes(i) && Math.hypot(w.x, w.y) < LAB_BOSS.openR) doomed.push(i); });
     for(const i of doomed){ const b = aidWallAABB(LAB.w0[i]); vfxTelegraph({shape:0, r:Math.max(b.x1 - b.x0, b.y1 - b.y0)*0.55, x:LAB.w0[i].x, y:LAB.w0[i].y, dur:LAB_BOSS.openWarn, rgb:"220,170,110"}); }

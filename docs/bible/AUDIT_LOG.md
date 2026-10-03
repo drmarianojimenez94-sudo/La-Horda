@@ -191,3 +191,50 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   (la lección de la Infernal abría una fisura extra y la prueba espera exactamente `inf1`).
 - **Validación**: `test-arena-briefing-tutorial.js` (3 arenas: no avanza sin hacerlo, avanza haciéndolo, guarda),
   `t_identity` 84/84, cooperativo Infernal 9/9, Gélida 8/8, Micelial 14/14.
+
+---
+
+## Auditoría de jefes y enemigos + Boss Factory (octubre 2026)
+
+### A22. Inventario visual de los 104 tipos de enemigo/jefe
+- **Herramientas**: `tools/art/enemy_coverage.js` (qué dibuja cada estado: arte real / espejo / clon / vacío) y nueva
+  `tools/art/arena_lineup.js` (escala real, mismo zoom, junto al Caballero; densidad de píxel).
+- **Hallazgo**: el arte de enemigos y jefes es pixel art coherente con los héroes en casi todo el roster (no se
+  rehace lo que está bien: ART_BIBLE §8, regla de preservación). Outliers medidos contra la mediana del roster de
+  campeones (0,95 u/px): **Cerbero ×5,4** y **Titán de Piedra ×5,0** (arte de ~50×65 px dibujado a 150–180 u: se ven en
+  bloques). Vigilar (×2,5–4): Leviatán, Gólem de Cuerpos, Minotauro, Dragón de la Forja, Kraken, Micelio y varios
+  comunes de la Ciudad y las Minas.
+- **Decisión**: REDRAW por densidad (encargo R-01 nuevo para el Titán, F-01 de Cerbero sube de prioridad). La fábrica de
+  arte del repo recorta hojas encargadas; no genera arte. Se conserva el arte actual hasta que llegue el nuevo.
+- **FIX aplicado**: alfa 0/255 en los atlas del Hechicero (5,7 % de píxeles semitransparentes) y su Gólem: mismos píxeles
+  opacos, bordes nítidos.
+- Bug colateral: `_micDrawNode` dibujaba elipses de radio negativo cuando el reloj de animación retrocedía (excepción
+  en el loop). Arreglado (clamp).
+
+### A23. Boss Factory: ficha + ganchos medibles con la arena
+- `BOSS_BLUEPRINTS` (23 fichas), `bossArenaEvent` en 58 puntos reales del código, `boss-validator.js` reescrito:
+  simula también los subjefes en su nivel y **exige los ganchos "auto"**. Primera corrida: encontró ids mal escritos
+  (un FAIL real), un jefe que no aparecía en la ventana (el Caballero despierta a los 45 s: ventana ampliada), avisos de
+  las Minas que no se contaban (usan su propio sistema) y un hueco de diseño real (A25).
+
+### A24. Jefes genéricos → identidad de arena
+- **Kraken Joven** (pesca con el agua), **Guardián del Laberinto** (Laberinto de Piedra + derrumbe propio),
+  **Hechicero Supremo** (Grieta Conjurada sobre fisuras reales), **Doppelgängers** (ecos de las runas), **Caballero**
+  (sus trampas lo alcanzan), **Leviatán** (marea + tentáculo conductor). Detalle en `BOSS_BIBLE.md` §4.
+- **Validación**: boss-validator 23 fichas, 0 FAIL; `t_boss_arena_hooks.js` 24/24 (con canario: sin el arreglo de
+  Cerbero la prueba falla).
+
+### A25. Cerbero encadenado: anillo seguro
+- **Hallazgo** (validador): en el acto 1 Cerbero está atado a la puerta (cadena 420) y el anti-kite solo castigaba más
+  allá de 640: entre su alcance y ese radio nadie le pegaba y él no podía hacer nada.
+- **Arreglo**: en el acto 1, "lejos" es fuera del alcance de su lanzallamas. Prueba con canario.
+
+### A26. Bugs de presentación de jefes
+- HUD del Rey de la Horda con el epíteto y los consejos del Demonio Mayor suelto (`BOSS_DESIGNS[e.type]` en vez de la
+  forma actual): ahora `designKey` y se refresca al cambiar de forma.
+- El Titán de Piedra nunca mostraba su barra grande ni sus consejos (`bossHudFocus`).
+- La capa de fase de la música no escalaba con el Minotauro, el Guardián y otros (`bossPhase` quedaba en 1).
+- La embestida del Leviatán apuntaba siempre al jugador LOCAL (en cooperativo, al anfitrión).
+- Las poses de mordida/embestida del Leviatán nunca se mostraban (flags que nadie ponía).
+- El Jinete prometía "Vida 1/2" fuera de las Ruinas, donde no revive.
+- Carteles grandes para los jefes y subjefes que entraban solo con un banner.

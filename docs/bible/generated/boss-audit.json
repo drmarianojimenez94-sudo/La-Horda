@@ -1,527 +1,1699 @@
 {
- "schemaVersion": 1,
+ "schemaVersion": 2,
  "generatedBy": "tools/bible/boss-validator.js",
- "scope": "~42 s real boss fight per arena with an invulnerable bot team. Automated evidence, not a design approval.",
+ "scope": "Pelea real por jefe/subjefe (~42–45 s, bots invulnerables, azar con semilla). Evidencia automática, no aprobación de diseño.",
  "bosses": [
   {
-   "key": "ciudad",
-   "arena": "Ciudad Maldita",
-   "boss": "El Presentador",
-   "type": "demonio_mayor",
+   "type": "cm_presentador",
+   "arena": "ciudad",
+   "arenaName": "Ciudad Maldita",
+   "rank": "jefe",
+   "level": 10,
+   "name": "El Presentador",
+   "rule": "La función se corta: interrumpí el GRAN NÚMERO o devolvele el cometa, y cubrite tras los pilares en la OVACIÓN.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "su arte propio es de 32 px dibujado a 4–5×: se ve en bloques; hoy usa el cuerpo del Mago de Hielo recoloreado",
+   "brief": "P0-01",
+   "hooks": [
+    {
+     "id": "cm_presentador.estructura",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "cm_presentador.publico",
+     "mode": "phase",
+     "n": 0
+    },
+    {
+     "id": "cm_presentador.ovacion",
+     "mode": "phase",
+     "n": 0
+    },
+    {
+     "id": "cm_presentador.corte",
+     "mode": "player",
+     "n": 0
+    },
+    {
+     "id": "cm_presentador.reflejo",
+     "mode": "player",
+     "n": 2
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "El Presentador"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "demonio_mayor"
+     "detail": "65 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "5 avisos, 0 golpes diferidos"
+     "detail": "9 avisos, 0 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
-     "level": "PASS",
-     "detail": "3 tipos de aviso/golpe"
+     "name": "patrones distintos",
+     "level": "WARNING",
+     "detail": "2 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 87.1%"
+     "detail": "vida mínima 54.2%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 87.1%"
+     "detail": "queda 54.2%"
+    },
+    {
+     "name": "gancho de arena: cm_presentador.estructura",
+     "level": "PASS",
+     "detail": "2 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets de entrada (Alba, Guardián) y oro por rescate"
+     "detail": ""
     }
    ],
-   "tele": 5,
+   "status": "PASS*",
+   "tele": 9,
    "strikes": 0,
-   "kinds": 3,
-   "status": "PASS"
+   "kinds": 2
   },
   {
-   "key": "fortaleza",
-   "arena": "Fábrica Sin Fin",
-   "boss": "El Caballero de la Armadura Oxidada",
-   "type": "demonio_mayor",
+   "type": "cm_tramoyista",
+   "arena": "ciudad",
+   "arenaName": "Ciudad Maldita",
+   "rank": "subjefe",
+   "level": 9,
+   "name": "El Tramoyista",
+   "rule": "Sus golpes y decorados rompen las estructuras: pelealo lejos de lo que tenés que proteger.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "arte de 32×46 px dibujado a ~5×",
+   "brief": "P0-04",
+   "hooks": [
+    {
+     "id": "cm_tramoyista.estructura",
+     "mode": "auto",
+     "n": 5
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
      "level": "PASS",
-     "detail": "El Caballero de la Armadura Oxidada"
+     "detail": ""
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "2800 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "demonio_mayor"
+     "detail": "42 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "61 avisos, 50 golpes diferidos"
+     "detail": "30 avisos, 0 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
      "detail": "5 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 75.2%"
+     "detail": "vida mínima 67.3%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 75.2%"
+     "detail": "queda 67.3%"
+    },
+    {
+     "name": "gancho de arena: cm_tramoyista.estructura",
+     "level": "PASS",
+     "detail": "5 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 30,
+   "strikes": 0,
+   "kinds": 5
+  },
+  {
+   "type": "cm_dama",
+   "arena": "ciudad",
+   "arenaName": "Ciudad Maldita",
+   "rank": "subjefe",
+   "level": 9,
+   "name": "La Dama del Telón",
+   "rule": "Su línea de telón rompe estructuras; los espejismos tienen 1 de vida: limpiá rápido.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "arte de 27 px dibujado a ~5×",
+   "brief": "P0-02",
+   "hooks": [
+    {
+     "id": "cm_dama.estructura",
+     "mode": "auto",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "WARNING",
+     "detail": "forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)"
+    }
+   ],
+   "status": "PASS*",
+   "tele": 30,
+   "strikes": 0,
+   "kinds": 5
+  },
+  {
+   "type": "dragon_forja",
+   "arena": "fortaleza",
+   "arenaName": "Fábrica Sin Fin",
+   "rank": "subjefe",
+   "level": 6,
+   "name": "Dragón de la Forja",
+   "rule": "Rodealo: su aliento barre el frente y bombardea a quien se aleja.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "arte propio completo; densidad de píxel ×3 la del campeón (límite)",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "dragon_forja.horno",
+     "mode": "auto",
+     "n": 1
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "42 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "65 avisos, 22 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "12 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 85.7%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 85.7%"
+    },
+    {
+     "name": "gancho de arena: dragon_forja.horno",
+     "level": "PASS",
+     "detail": "1 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 65,
+   "strikes": 22,
+   "kinds": 12
+  },
+  {
+   "type": "caballero",
+   "arena": "fortaleza",
+   "arenaName": "Fábrica Sin Fin",
+   "rank": "jefe",
+   "level": 10,
+   "name": "El Caballero de la Armadura Oxidada",
+   "rule": "No le pegues cuando brilla azul; calentalo con el Dragón y enfrialo con las válvulas (SHOCK TÉRMICO); atraelo a sus propias trampas.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "hoja propia con 13 estados; densidad ×2,1",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "caballero.camara",
+     "mode": "auto",
+     "n": 1
+    },
+    {
+     "id": "caballero.valvula",
+     "mode": "player",
+     "n": 0
+    },
+    {
+     "id": "caballero.trampa",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
+     "level": "PASS",
+     "detail": "El Caballero de la Armadura Oxidada"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "4400 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "70 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "25 avisos, 6 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "9 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 96.7%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 96.7%"
+    },
+    {
+     "name": "gancho de arena: caballero.camara",
+     "level": "PASS",
+     "detail": "1 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets de Coloso y Guardián"
+     "detail": ""
     }
    ],
-   "tele": 61,
-   "strikes": 50,
-   "kinds": 5,
-   "status": "PASS"
+   "status": "PASS",
+   "tele": 25,
+   "strikes": 6,
+   "kinds": 9
   },
   {
-   "key": "bosque",
-   "arena": "Ruinas Célticas / Élficas",
-   "boss": "Guardián Ancestral",
-   "type": "guardian_ancestral",
+   "type": "doblador_guerrero",
+   "arena": "bosque",
+   "arenaName": "Ruinas Célticas / Élficas",
+   "rank": "subjefe",
+   "level": 9,
+   "name": "Doppelgängers",
+   "rule": "Separalos: el Clérigo cura a los demás.",
+   "design": "FIX",
+   "art": "PASS",
+   "artWhy": "hojas propias; sin fila de golpe recibido",
+   "brief": null,
+   "hooks": [],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "WARNING",
+     "detail": "ningún gancho con su arena (BOSS + ARENA = ENCUENTRO)"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "21 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "61 avisos, 27 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "10 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 9.4%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 9.4%"
+    },
+    {
+     "name": "usa su arena",
+     "level": "WARNING",
+     "detail": "ningún gancho declarado"
+    }
+   ],
+   "status": "PASS*",
+   "tele": 61,
+   "strikes": 27,
+   "kinds": 10
+  },
+  {
+   "type": "guardian_ancestral",
+   "arena": "bosque",
+   "arenaName": "Ruinas Célticas / Élficas",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Guardián Ancestral Corrompido",
+   "rule": "Las runas encendidas lo blindan: PURIFICALAS (acción contextual) para dejarlo expuesto; sus propios golpes las rompen.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "hoja propia con transformación; densidad ×2,4",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "guardian_ancestral.rearma",
+     "mode": "auto",
+     "n": 5
+    },
+    {
+     "id": "guardian_ancestral.runa_rota",
+     "mode": "auto",
+     "n": 3
+    },
+    {
+     "id": "guardian_ancestral.purifica",
+     "mode": "player",
+     "n": 4
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "Guardián Ancestral"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "guardian_ancestral"
+     "detail": "66 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "93 avisos, 85 golpes diferidos"
+     "detail": "199 avisos, 184 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
      "detail": "9 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 36.2%"
+     "detail": "vida mínima 5.2%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 36.2%"
+     "detail": "queda 5.2%"
+    },
+    {
+     "name": "gancho de arena: guardian_ancestral.rearma",
+     "level": "PASS",
+     "detail": "5 vez/veces"
+    },
+    {
+     "name": "gancho de arena: guardian_ancestral.runa_rota",
+     "level": "PASS",
+     "detail": "3 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets de Alba y Cazador"
+     "detail": ""
     }
    ],
-   "tele": 93,
-   "strikes": 85,
-   "kinds": 9,
-   "status": "PASS"
+   "status": "PASS",
+   "tele": 199,
+   "strikes": 184,
+   "kinds": 9
   },
   {
-   "key": "micelial",
-   "arena": "Reino Fúngico",
-   "boss": "La Madre Espora",
-   "type": "demonio_mayor",
+   "type": "micelio",
+   "arena": "micelial",
+   "arenaName": "Reino Fúngico",
+   "rank": "subjefe",
+   "level": 6,
+   "name": "Micelio Primigenio",
+   "rule": "Cortá sus raíces de absorción o se cura; no dejes que germine núcleos.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "densidad ×2,6 (límite)",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "micelio.cadaveres",
+     "mode": "auto",
+     "n": 1
+    },
+    {
+     "id": "micelio.germina",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "micelio.raices",
+     "mode": "player",
+     "n": 1
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "45 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "38 avisos, 18 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "5 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 49.0%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 49.0%"
+    },
+    {
+     "name": "gancho de arena: micelio.cadaveres",
+     "level": "PASS",
+     "detail": "1 vez/veces"
+    },
+    {
+     "name": "gancho de arena: micelio.germina",
+     "level": "PASS",
+     "detail": "2 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 38,
+   "strikes": 18,
+   "kinds": 5
+  },
+  {
+   "type": "madre_espora",
+   "arena": "micelial",
+   "arenaName": "Reino Fúngico",
+   "rank": "jefe",
+   "level": 10,
+   "name": "La Madre Espora",
+   "rule": "Su RED de núcleos la blinda: cortalos todos y el corazón queda abierto.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "retrato estructural de 440 px por partes; es el escenario, no un sprite de unidad",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "madre_espora.floracion",
+     "mode": "phase",
+     "n": 0
+    },
+    {
+     "id": "madre_espora.infeccion",
+     "mode": "phase",
+     "n": 0
+    },
+    {
+     "id": "madre_espora.nucleos",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "WARNING",
+     "detail": "ningún gancho 'auto': la arena sólo importa si el jugador la busca"
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "La Madre Espora"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "demonio_mayor"
+     "detail": "53 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "33 avisos, 24 golpes diferidos"
+     "detail": "44 avisos, 18 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
-     "detail": "9 tipos de aviso/golpe"
+     "detail": "8 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 87.3%"
+     "detail": "vida mínima 97.0%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 87.3%"
+     "detail": "queda 97.0%"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets Sepulturero y Arcano; set de Morwen/Tibor (campeones del Reino)"
+     "detail": ""
     }
    ],
-   "tele": 33,
-   "strikes": 24,
-   "kinds": 9,
-   "status": "PASS"
+   "status": "PASS*",
+   "tele": 44,
+   "strikes": 18,
+   "kinds": 8
   },
   {
-   "key": "hielo",
-   "arena": "Arena Gélida",
-   "boss": "Mago de Hielo y Cristal → Ángel Caído",
    "type": "mago_hielo_cristal",
+   "arena": "hielo",
+   "arenaName": "Arena Gélida",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Mago de Hielo y Cristal",
+   "rule": "GRAN HELADA: refugiate junto a un brasero o rompé los 3 focos para cortarla y exponerlo.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "hoja propia de 10 estados; densidad ×1,3",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "mago_hielo_cristal.brasero",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "mago_hielo_cristal.focos",
+     "mode": "player",
+     "n": 0
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "Mago de Hielo y Cristal → Ángel Caído"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "mago_hielo_cristal"
+     "detail": "70 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "54 avisos, 35 golpes diferidos"
+     "detail": "91 avisos, 56 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "7 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 9.6%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 9.6%"
+    },
+    {
+     "name": "gancho de arena: mago_hielo_cristal.brasero",
+     "level": "PASS",
+     "detail": "2 vez/veces"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": ""
+    }
+   ],
+   "status": "PASS",
+   "tele": 91,
+   "strikes": 56,
+   "kinds": 7
+  },
+  {
+   "type": "angel_caido_hielo",
+   "arena": "hielo",
+   "arenaName": "Arena Gélida",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Demonio Gélido — Ángel Caído",
+   "rule": "Su coraza se derrite junto a un brasero encendido: pelealo al lado del fuego antes de que lo apague.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "hoja propia; densidad ×1,8",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "angel_caido_hielo.fuego",
+     "mode": "player",
+     "n": 0
+    },
+    {
+     "id": "angel_caido_hielo.apaga",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "WARNING",
+     "detail": "ningún gancho 'auto': la arena sólo importa si el jugador la busca"
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
+     "level": "PASS",
+     "detail": "Mago de Hielo y Cristal → Ángel Caído"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "4400 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "WARNING",
+     "detail": "forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": ""
+    }
+   ],
+   "status": "PASS*",
+   "tele": 91,
+   "strikes": 56,
+   "kinds": 7
+  },
+  {
+   "type": "kraken_joven",
+   "arena": "acuatica",
+   "arenaName": "Arena Acuática",
+   "rank": "subjefe",
+   "level": 6,
+   "name": "Kraken Joven",
+   "rule": "Atraelo a un CHARCO cargado justo antes de la descarga: queda EXPUESTO.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "densidad ×2,8; sin pose de ataque del cuerpo",
+   "brief": "F-08",
+   "hooks": [
+    {
+     "id": "kraken_joven.corriente",
+     "mode": "auto",
+     "n": 3
+    },
+    {
+     "id": "kraken_joven.charco",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "45 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "39 avisos, 0 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
      "level": "PASS",
      "detail": "6 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 33.0%"
+     "detail": "vida mínima 0.2%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 33.0%"
+     "detail": "queda 0.2%"
     },
     {
-     "name": "botín relacionado",
+     "name": "gancho de arena: kraken_joven.corriente",
      "level": "PASS",
-     "detail": "set Glaciar"
+     "detail": "3 vez/veces"
     }
    ],
-   "tele": 54,
-   "strikes": 35,
-   "kinds": 6,
-   "status": "PASS"
+   "status": "PASS",
+   "tele": 39,
+   "strikes": 0,
+   "kinds": 6
   },
   {
-   "key": "acuatica",
-   "arena": "Arena Acuática",
-   "boss": "Leviatán",
    "type": "leviatan",
+   "arena": "acuatica",
+   "arenaName": "Arena Acuática",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Leviatán",
+   "rule": "Neutralizá sus tentáculos para exponer el núcleo; en cada MAREA el agua se da vuelta y los charcos castigan a los tentáculos.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "densidad ×3,9; tentáculos con la hoja del Kraken",
+   "brief": "F-08",
+   "hooks": [
+    {
+     "id": "leviatan.charco",
+     "mode": "auto",
+     "n": 1
+    },
+    {
+     "id": "leviatan.marea",
+     "mode": "phase",
+     "n": 0
+    },
+    {
+     "id": "leviatan.tentaculos",
+     "mode": "player",
+     "n": 1
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "Leviatán"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "leviatan"
+     "detail": "70 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "41 avisos, 5 golpes diferidos"
+     "detail": "68 avisos, 4 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
-     "detail": "7 tipos de aviso/golpe"
+     "detail": "8 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 89.0%"
+     "detail": "vida mínima 76.4%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 89.0%"
+     "detail": "queda 76.4%"
+    },
+    {
+     "name": "gancho de arena: leviatan.charco",
+     "level": "PASS",
+     "detail": "1 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets Tempestad y Glaciar"
+     "detail": ""
     }
    ],
-   "tele": 41,
-   "strikes": 5,
-   "kinds": 7,
-   "status": "PASS"
+   "status": "PASS",
+   "tele": 68,
+   "strikes": 4,
+   "kinds": 8
   },
   {
-   "key": "laberinto",
-   "arena": "Laberinto",
-   "boss": "Minotauro",
-   "type": "minotauro",
+   "type": "guardian_laberinto",
+   "arena": "laberinto",
+   "arenaName": "Laberinto",
+   "rank": "subjefe",
+   "level": 6,
+   "name": "Guardián del Laberinto",
+   "rule": "Te encierra en un LABERINTO DE PIEDRA; si su Pisotón cae junto a los pilares, los derriba y queda EXPUESTO.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "cuadros propios; densidad ×2,3",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "guardian_laberinto.muro",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "guardian_laberinto.derrumbe",
+     "mode": "player",
+     "n": 1
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "24 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "81 avisos, 22 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "5 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 1.8%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 1.8%"
+    },
+    {
+     "name": "gancho de arena: guardian_laberinto.muro",
+     "level": "PASS",
+     "detail": "2 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 81,
+   "strikes": 22,
+   "kinds": 5
+  },
+  {
+   "type": "minotauro",
+   "arena": "laberinto",
+   "arenaName": "Laberinto",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Minotauro",
+   "rule": "Hacelo chocar contra las paredes AGRIETADAS: las derriba y queda EXPUESTO.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "densidad ×3; el escáner marca halo claro en el atlas v3",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "minotauro.muro",
+     "mode": "player",
+     "n": 0
+    },
+    {
+     "id": "minotauro.colapso",
+     "mode": "phase",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "WARNING",
+     "detail": "ningún gancho 'auto': la arena sólo importa si el jugador la busca"
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "Minotauro"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "minotauro"
+     "detail": "70 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "84 avisos, 68 golpes diferidos"
+     "detail": "224 avisos, 196 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
      "detail": "6 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 65.2%"
+     "detail": "vida mínima 44.1%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 65.2%"
+     "detail": "queda 44.1%"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets Laberinto y Coloso"
+     "detail": ""
     }
    ],
-   "tele": 84,
-   "strikes": 68,
-   "kinds": 6,
-   "status": "PASS"
+   "status": "PASS*",
+   "tele": 224,
+   "strikes": 196,
+   "kinds": 6
   },
   {
-   "key": "abismo",
-   "arena": "Abismo",
-   "boss": "El Que Mora Debajo",
-   "type": "demonio_mayor",
+   "type": "ab_carcelero",
+   "arena": "abismo",
+   "arenaName": "Abismo",
+   "rank": "subjefe",
+   "level": 9,
+   "name": "El Carcelero del Vacío",
+   "rule": "Si te engancha te arrastra al borde: soltate con una habilidad; sus cadenas rompen plataformas.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "arte propio de 37 px dibujado a ~5,6×; hoy usa un común de la Fábrica recoloreado",
+   "brief": "P0-11",
+   "hooks": [
+    {
+     "id": "ab_carcelero.gancho",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "ab_carcelero.plataformas",
+     "mode": "auto",
+     "n": 3
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "45 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "22 avisos, 0 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "4 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 64.7%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 64.7%"
+    },
+    {
+     "name": "gancho de arena: ab_carcelero.gancho",
+     "level": "PASS",
+     "detail": "2 vez/veces"
+    },
+    {
+     "name": "gancho de arena: ab_carcelero.plataformas",
+     "level": "PASS",
+     "detail": "3 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 22,
+   "strikes": 0,
+   "kinds": 4
+  },
+  {
+   "type": "ab_morador",
+   "arena": "abismo",
+   "arenaName": "Abismo",
+   "rank": "jefe",
+   "level": 10,
+   "name": "El Que Mora Debajo",
+   "rule": "Rompé sus tentáculos para abrirle el ojo; conservá piso.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "cuerpo propio armado por partes (ojo animado)",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "ab_morador.plataformas",
+     "mode": "auto",
+     "n": 12
+    },
+    {
+     "id": "ab_morador.jinete",
+     "mode": "phase",
+     "n": 0
+    },
+    {
+     "id": "ab_morador.tentaculo",
+     "mode": "player",
+     "n": 6
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "El Que Mora Debajo"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "demonio_mayor"
+     "detail": "61 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "17 avisos, 6 golpes diferidos"
+     "detail": "42 avisos, 6 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
-     "detail": "7 tipos de aviso/golpe"
+     "detail": "9 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 87.4%"
+     "detail": "vida mínima 55.8%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 87.4%"
+     "detail": "queda 55.8%"
+    },
+    {
+     "name": "gancho de arena: ab_morador.plataformas",
+     "level": "PASS",
+     "detail": "12 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets Arcano y Laberinto"
+     "detail": ""
     }
    ],
-   "tele": 17,
+   "status": "PASS",
+   "tele": 42,
    "strikes": 6,
-   "kinds": 7,
-   "status": "PASS"
+   "kinds": 9
   },
   {
-   "key": "minas",
-   "arena": "Minas Profundas",
-   "boss": "Cerbero, Guardián del Umbral",
-   "type": "demonio_mayor",
+   "type": "mn_titan",
+   "arena": "minas",
+   "arenaName": "Minas Profundas",
+   "rank": "subjefe",
+   "level": 8,
+   "name": "Titán de Piedra",
+   "rule": "Su PISOTÓN apaga las luces: esquivá y volvé a encender.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "densidad ×5,3: arte de 47×63 px dibujado a 153 u; en pantalla se ve en bloques al lado de los campeones",
+   "brief": "R-01",
+   "hooks": [
+    {
+     "id": "mn_titan.luces",
+     "mode": "auto",
+     "n": 4
+    },
+    {
+     "id": "mn_titan.derrumbe",
+     "mode": "phase",
+     "n": 0
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "39 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "0 avisos, 138 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "10 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 97.6%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 97.6%"
+    },
+    {
+     "name": "gancho de arena: mn_titan.luces",
+     "level": "PASS",
+     "detail": "4 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 0,
+   "strikes": 138,
+   "kinds": 10
+  },
+  {
+   "type": "mn_cerbero",
+   "arena": "minas",
+   "arenaName": "Minas Profundas",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Cerbero, Guardián del Umbral",
+   "rule": "Iluminado por varias luces a la vez, sus sombras se separan y queda EXPUESTO; a oscuras es más rápido.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "densidad ×5,7: arte de 54×67 px dibujado a 181 u (el outlier más grande del juego)",
+   "brief": "F-01",
+   "hooks": [
+    {
+     "id": "mn_cerbero.oscuridad",
+     "mode": "auto",
+     "n": 5
+    },
+    {
+     "id": "mn_cerbero.luz",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "Cerbero, Guardián del Umbral"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "demonio_mayor"
+     "detail": "62 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "7 avisos, 6 golpes diferidos"
+     "detail": "0 avisos, 49 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
-     "detail": "3 tipos de aviso/golpe"
+     "detail": "4 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 95.2%"
+     "detail": "vida mínima 98.9%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 95.2%"
+     "detail": "queda 98.9%"
+    },
+    {
+     "name": "gancho de arena: mn_cerbero.oscuridad",
+     "level": "PASS",
+     "detail": "5 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "sets Coloso y Lucifer"
+     "detail": ""
     }
    ],
-   "tele": 7,
-   "strikes": 6,
-   "kinds": 3,
-   "status": "PASS"
+   "status": "PASS",
+   "tele": 0,
+   "strikes": 49,
+   "kinds": 4
   },
   {
-   "key": "infernal",
-   "arena": "Arena Infernal",
-   "boss": "El Hechicero → Gólem de Cuerpos → Demonio Mayor",
-   "type": "angel_corrompido",
+   "type": "hechicero_supremo",
+   "arena": "infernal",
+   "arenaName": "Arena Infernal",
+   "rank": "subjefe",
+   "level": 9,
+   "name": "El Hechicero Supremo",
+   "rule": "Sus GRIETAS lo alimentan (recibe menos daño): cerralas con la acción de la arena y queda EXPUESTO.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "14,7 % de píxeles semitransparentes (ART_BIBLE §6: alfa 0/255)",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "hechicero_supremo.fisura",
+     "mode": "auto",
+     "n": 4
+    },
+    {
+     "id": "hechicero_supremo.sello",
+     "mode": "player",
+     "n": 3
+    }
+   ],
    "checks": [
     {
-     "name": "ficha: identidad y relación con la arena",
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "45 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "74 avisos, 41 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "7 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 69.8%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 69.8%"
+    },
+    {
+     "name": "gancho de arena: hechicero_supremo.fisura",
+     "level": "PASS",
+     "detail": "4 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 74,
+   "strikes": 41,
+   "kinds": 7
+  },
+  {
+   "type": "angel_corrompido",
+   "arena": "infernal",
+   "arenaName": "Arena Infernal",
+   "rank": "jefe",
+   "level": 10,
+   "name": "El Ángel Corrompido (forma 1)",
+   "rule": "CONVERGENCIA: rompé los 4 focos antes de que termine el ritual.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "es el Hechicero recoloreado con alas procedurales: no tiene cuerpo propio",
+   "brief": "F-02",
+   "hooks": [
+    {
+     "id": "angel_corrompido.convergencia",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "angel_corrompido.focos",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
      "level": "PASS",
      "detail": "El Hechicero → Gólem de Cuerpos → Demonio Mayor"
     },
     {
      "name": "sin errores en la pelea",
      "level": "PASS",
-     "detail": "2600 cuadros"
+     "detail": "4400 cuadros"
     },
     {
-     "name": "el jefe aparece",
+     "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "angel_corrompido"
+     "detail": "70 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "158 avisos, 71 golpes diferidos"
+     "detail": "280 avisos, 132 golpes diferidos en la pelea"
     },
     {
-     "name": "patrones distintos (decisiones tácticas)",
+     "name": "patrones distintos",
      "level": "PASS",
-     "detail": "16 tipos de aviso/golpe"
+     "detail": "18 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 61.0%"
+     "detail": "vida mínima 34.6%"
     },
     {
-     "name": "no es trivial (no cae en 42 s ante 4 bots)",
+     "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 61.0%"
+     "detail": "queda 34.6%"
+    },
+    {
+     "name": "gancho de arena: angel_corrompido.convergencia",
+     "level": "PASS",
+     "detail": "2 vez/veces"
     },
     {
      "name": "botín relacionado",
      "level": "PASS",
-     "detail": "Lucifer y Berserker; acceso a toda la tabla de sets"
+     "detail": ""
     }
    ],
-   "tele": 158,
-   "strikes": 71,
-   "kinds": 16,
-   "status": "PASS"
+   "status": "PASS",
+   "tele": 280,
+   "strikes": 132,
+   "kinds": 18
+  },
+  {
+   "type": "golem_cuerpos",
+   "arena": "infernal",
+   "arenaName": "Arena Infernal",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Gólem de Cuerpos (forma 2)",
+   "rule": "EL EXAMEN: cortá el Número, hacelo chocar contra las barricadas o rompé la Red.",
+   "design": "PASS",
+   "art": "REDRAW",
+   "artWhy": "su hoja propia es de 1 cuadro por estado",
+   "brief": "P0-12",
+   "hooks": [
+    {
+     "id": "golem_cuerpos.barricada",
+     "mode": "player",
+     "n": 0
+    },
+    {
+     "id": "golem_cuerpos.numero",
+     "mode": "player",
+     "n": 0
+    },
+    {
+     "id": "golem_cuerpos.red",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "WARNING",
+     "detail": "ningún gancho 'auto': la arena sólo importa si el jugador la busca"
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
+     "level": "PASS",
+     "detail": "El Hechicero → Gólem de Cuerpos → Demonio Mayor"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "4400 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "WARNING",
+     "detail": "forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": ""
+    }
+   ],
+   "status": "PASS*",
+   "tele": 280,
+   "strikes": 132,
+   "kinds": 18
+  },
+  {
+   "type": "demonio_mayor",
+   "arena": "infernal",
+   "arenaName": "Arena Infernal",
+   "rank": "jefe",
+   "level": 10,
+   "name": "Rey de la Horda (forma final)",
+   "rule": "Las 3 fisuras le dan HORDA, VIDA y PIEL: cerralas todas y queda EXPUESTO.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "sin poses de golpe ni de lanzar; densidad ×2,4",
+   "brief": "F-03",
+   "hooks": [
+    {
+     "id": "demonio_mayor.fisuras_poder",
+     "mode": "auto",
+     "n": 0
+    },
+    {
+     "id": "demonio_mayor.fisuras",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "relación jefe-arena en ARENA_BLUEPRINTS",
+     "level": "PASS",
+     "detail": "El Hechicero → Gólem de Cuerpos → Demonio Mayor"
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "4400 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "WARNING",
+     "detail": "forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)"
+    },
+    {
+     "name": "botín relacionado",
+     "level": "PASS",
+     "detail": ""
+    }
+   ],
+   "status": "PASS*",
+   "tele": 280,
+   "strikes": 132,
+   "kinds": 18
   }
  ],
  "pageErrors": []

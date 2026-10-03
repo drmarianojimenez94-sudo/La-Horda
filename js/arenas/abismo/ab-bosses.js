@@ -17,6 +17,8 @@
    PRESENCIA (niveles 1-9): ojo lejano, sombra bajo una plataforma, tentáculo en el vacío, temblor.
    ============================================================ */
 function _abBossPack(e, set, ms){ e.packSet = set; e.packTimer = ms; e.packDur = ms; }
+function _abPlatHp(){ let n = 0; if(abS && abS.p) for(const S of abS.p) n += S.hp; return n; }
+function _abPlatEv(id, e, h0){ if(_abPlatHp() < h0 && typeof bossArenaEvent==="function") bossArenaEvent(id, e); }
 const AB_ANCHORS = ["h0", "h4", "h5", "h7"];   // hubs donde están enganchadas las cadenas del Carcelero
 
 /* ---------------- presencia de lo que vive debajo ---------------- */
@@ -158,7 +160,7 @@ function abCarceleroRelease(e, A){
     playSfx("abChain"); vfxShake(5);
   } else if(A.k==="slam"){
     abHeroesNear(A.x1, A.y1, C.slamR, h=>bossHitHero(h, e.dmg, {from:e, slow:0.3, slowDur:900}));
-    abDamageArea(A.x1, A.y1, C.slamR, C.slamStruct);
+    const h0 = _abPlatHp(); abDamageArea(A.x1, A.y1, C.slamR, C.slamStruct); _abPlatEv("ab_carcelero.plataformas", e, h0);
     if(typeof ABISMO_FX!=="undefined") bossSheetFx("abChainTerrain", A.x1, A.y1, 110, 600, {anchorY:0.5});
     vfxShock(A.x1, A.y1, 10, C.slamR, "230,70,120", 420, 2); playSfx("abStomp"); vfxShake(5);
   } else if(A.k==="hook"){
@@ -169,6 +171,7 @@ function abCarceleroRelease(e, A){
       bossHitHero(best, e.dmg*0.6, {from:e});
       best.abHook = {t:0, dur:C.hookMs, by:e, hp0:e.hp, dir:abEdgeDir(best)};
       floatText(best.x, best.y - 60, "¡ENGANCHADO!", "crit"); playSfx("abChain");
+      if(typeof bossArenaEvent==="function") bossArenaEvent("ab_carcelero.gancho", e);
     }
   }
 }
@@ -204,7 +207,9 @@ function abCarceleroBreakChain(e, n){
   showBanner(n===0 ? "¡El Carcelero rompe una cadena: las ruinas se sueltan!" : "¡Otra cadena cede! Parte del Abismo se reacomoda");
   // lo que sostenía esa cadena se suelta (con la regla de seguridad) y otra parte se reconstruye
   const id = AB_ANCHORS[n], k = +id.slice(1);
+  const h0 = _abPlatHp();
   for(const pid of ["o"+k, "o"+((k+7)%8), "s"+((k+4)%8)]){ const i = AB_PLATS.findIndex(p=>p.id===pid); if(i >= 0) abDamagePlat(i, 999); }
+  _abPlatEv("ab_carcelero.plataformas", e, h0);
   for(let i=0;i<AB_PLATS.length;i++){ if(abS.p[i].st===AB_ST.GONE && Math.random() < 0.5) abRebuildOne(i); }
 }
 function abCarceleroKilled(e){
@@ -320,7 +325,9 @@ function abAIMorador(e, dt, tgt, dist){
     M.pat = key; M.patT = C.rebuildAfter + C.patWarn;
     bossSkillLabel(e, {centro:"EL CENTRO SE HUNDE", laterales:"LOS COSTADOS SE DESPRENDEN", cruz:"SE PARTE EN CRUZ", anillo:"EL ANILLO SE ROMPE"}[key]);
     playSfx("abRumble"); vfxShake(6);
+    const h0 = _abPlatHp();
     for(const id of AB_PATTERNS[key]){ const i = AB_PLATS.findIndex(p=>p.id===id); if(i >= 0) abDamagePlat(i, 999, {warn:C.patWarn}); }   // la regla de seguridad deja siempre piso conectado
+    _abPlatEv("ab_morador.plataformas", e, h0);
     return true;
   }
   if(ph >= 1 && e.pullCd <= 0){
@@ -336,7 +343,7 @@ function abAIMorador(e, dt, tgt, dist){
       const h = abPick(heroes.filter(o=>o.alive && !o.abHang)) || tgt;
       const x = h.x + (Math.random()-0.5)*260, y = h.y + (Math.random()-0.5)*190;
       bossStrike(x, y, C.shardR, C.shardDelay + i*120, e.dmg*C.shardMult, "rock", null);
-      runLater(C.shardDelay + i*120, ()=>{ if(typeof ABISMO_FX!=="undefined") bossSheetFx("abMorShards", x, y, 80, 520, {anchorY:0.8}); abDamageArea(x, y, C.shardR*0.8, 4); });
+      runLater(C.shardDelay + i*120, ()=>{ if(typeof ABISMO_FX!=="undefined") bossSheetFx("abMorShards", x, y, 80, 520, {anchorY:0.8}); const h0 = _abPlatHp(); abDamageArea(x, y, C.shardR*0.8, 4); _abPlatEv("ab_morador.plataformas", e, h0); });
     }
     bossSkillLabel(e, "LLUVIA DE FRAGMENTOS");
     return true;
@@ -384,7 +391,7 @@ function abAITentaculo(e, dt, tgt, dist){
     if(e.abWind <= 0){
       e.abWind = 0; const x = e._tx, y = e._ty;
       abHeroesNear(x, y, C.slamR, h=>bossHitHero(h, boss.dmg*C.slamMult, {from:e, slow:0.35, slowDur:900}));   // aplasta y agrieta; no empuja (el peligro es el piso)
-      abDamageArea(x, y, C.slamR, C.slamStruct);
+      const h0 = _abPlatHp(); abDamageArea(x, y, C.slamR, C.slamStruct); _abPlatEv("ab_morador.plataformas", boss, h0);
       if(typeof ABISMO_FX!=="undefined") bossSheetFx("abMorSlam", x, y, 120, 620, {anchorY:0.75});
       vfxShock(x, y, 10, C.slamR, "200,90,255", 420, 2); playSfx("abStomp"); vfxShake(4);
     }

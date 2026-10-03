@@ -84,6 +84,7 @@ function startRun(fromLevel){
   crystalReset();
   kills = 0;
   runElapsedMs = 0;
+  if(typeof bossArenaReset==="function") bossArenaReset();
   subjefesDefeated = 0; // Fase 3.1: un objeto por cada subjefe derrotado en esta partida
   arenaHazardTimer = 6000; // primer peligro ambiental recién a los 6s, para no golpear apenas arranca
   screenShake = 0;
@@ -204,6 +205,7 @@ function onBossDefeated(){
   if(currentArena==="acuatica" && boss && boss.type==="leviatan" && (boss.acuaticaPhase||1) < 3){
     boss.alive = true;
     boss.acuaticaPhase = (boss.acuaticaPhase||1) + 1;
+    boss.bossPhase = boss.acuaticaPhase; // la música (capa de fase, audio.js) y el HUD siguen la vida actual
     boss.hp = boss.maxHp;
     boss.dmg = Math.round(boss.dmg*1.22);
     boss.speed = Math.round(boss.speed*1.15);

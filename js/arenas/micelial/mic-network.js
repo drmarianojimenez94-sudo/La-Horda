@@ -53,6 +53,7 @@ function micNetRule(dt){
     if(!n){
       N.st = "open"; N.t = 0; e._encMult = 1;
       bossExpose(e, C.openMs, C.openMult, "💗 ¡EL CORAZÓN MICELIAL SE ABRE! ¡Todo el daño ahora!");
+      if(typeof bossArenaEvent==="function") bossArenaEvent("madre_espora.nucleos", e);
       M.bt = runElapsedMs; playSfx("micOpen"); flashScreen(0.25, "255,120,180");
     }
   } else if(N.st==="open"){
