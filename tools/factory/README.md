@@ -25,3 +25,11 @@ FACTORY_BASE_URL=http://127.0.0.1:8750 node tools/factory/audit-roster.js docs/p
 ```
 
 Lee registros inicializados, incluidos módulos tardíos, y detecta kits incompletos, descripciones/cooldowns ausentes, lore, talentos y Sets faltantes. La detección de AoE por radio/cadenas es solamente un indicio: requiere simulación de gameplay. El informe no convierte registros heredados en paquetes aprobados.
+
+Prueba de eventos sobre motor real (API y reloj simulados, no reemplaza tests server):
+
+```sh
+FACTORY_BASE_URL=http://127.0.0.1:8805 node tools/factory/event-runtime.js
+```
+
+Los eventos con jefe seleccionan el encuentro nativo de su arena (nueve directores aprobados, nivel 10), no trasplantan controladores contextuales a mapas incompatibles. Hielo exige derrotar la forma final. El Set configurado dirige tiradas de Set y garantiza una pieza al derrotar al jefe durante el evento. La recompensa cosmética requiere ticket de cuenta, victoria final y validación temporal/objetivo del servidor; tiene retry en Resultados y propiedad idempotente. Esto no es anticheat autoritativo: la simulación Alpha sigue en el cliente/host. El servidor valida permisos, catálogo, cuenta, ticket y repetición. Los multiplicadores temporales expiran sin sobrescribir configuración normal.

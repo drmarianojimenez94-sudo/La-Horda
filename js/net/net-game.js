@@ -901,6 +901,7 @@ function netGuestEnd(d){
     if(typeof diffMarkCleared==="function") diffMarkCleared(currentArena, netMatch.diff, diffArenaUnlocked(currentArena, netMatch.diff));
     grantGold(Math.round(80*(typeof diffGoldMult==="function" ? diffGoldMult() : 1)));
     persist();
+    if(typeof AlphaServices!=="undefined")AlphaServices.acceptHostEventVictory(d.eventBossDefeated);
     showVictoryScreen();
   } else {
     showGameOverScreen();
@@ -915,7 +916,7 @@ function netHostAnnounceEnd(victory){
   if(!netIsHost() || netMatch.ended) return;
   netMatch.ended = true;
   const snap = netBuildSnapshot(true);
-  netBroadcast({k:"end", victory:!!victory, snap});
+  netBroadcast({k:"end", victory:!!victory, snap, eventBossDefeated:victory&&typeof AlphaServices!=="undefined"?AlphaServices.confirmedBosses():[]});
   netLog(victory ? "GAME_VICTORY" : "GAME_DEFEAT");
 }
 // Después de cerrar las pantallas de fin: se restauran los datos del anfitrión y la sala vuelve

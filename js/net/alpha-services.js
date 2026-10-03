@@ -7,6 +7,8 @@ const AlphaServices = (() => {
   const session = Array.from(bytes, n => n.toString(16).padStart(2,"0")).join("");
   let world = null, offset = 0, queue = [], sending = false, panel = null, poll = null;
   let started = 0, inRun = false, terminal = false, lastState = "", worldPending = false;
+  let eventGeneration=0, eventRuns=[], pendingClaims=[], rewardPending=false, runBossDefeats=new Set();
+  const EVENT_BOSS_ARENAS=Object.freeze({guardian_ancestral:"bosque",mago_hielo_cristal:"hielo",minotauro:"laberinto",leviatan:"acuatica",caballero:"fortaleza",madre_espora:"micelial",cm_presentador:"ciudad",ab_morador:"abismo",mn_cerbero:"minas"});
   const knownEvents = new Set(["start","login","menu","tutorial_started","tutorial_completed","tutorial_step","tutorial_step_complete","tutorial_abandoned","run_started","death","abandon","victory","defeat","next_arena","codex","skin","croma","set","drop","pickup","skill","talent","equipment","multiplayer","error","heartbeat"]);
   // Automated QA must never contaminate live product metrics or fetch live tuning.
   function productEnabled(){return typeof navigator==="undefined"||!navigator.webdriver||window.__alphaServicesTest===true;}
@@ -46,6 +48,104 @@ const AlphaServices = (() => {
     }
     return result;
   }
+  function goldPrice(kind,id,fallback){
+    const key={item:"itemPrices",cosmetic:"cosmeticPrices",champion:"championPrices"}[kind];
+    const value=key&&world?.normalConfig?.[key]?.[id];
+    return Number.isInteger(value)&&value>=0&&value<=10000000 ? value : fallback;
+  }
+  function matchesArena(e,arena=currentArena,level=runLevel){
+    return (!e.arenas?.length||e.arenas.includes(arena))&&level>=(e.wave||1);
+  }
+  // Directors retain their native map/state/phase controllers. Events cannot transplant
+  // the Mother, Cerberus or other contextual bosses into an incompatible arena.
+  function bossEvent(type,arena=currentArena){
+    return activeEvents().find(e=>e.boss&&EVENT_BOSS_ARENAS[e.boss]===arena&&e.wave===10&&matchesArena(e,arena,10)&&(e.boss===type||(e.boss==="mago_hielo_cristal"&&type==="angel_caido_hielo")))||null;
+  }
+  function eventSet(arena=currentArena,level=runLevel){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return null;
+    const event=activeEvents().filter(e=>e.set&&matchesArena(e,arena,level)).sort((a,b)=>String(a.id).localeCompare(String(b.id)))[0];
+    return event&&typeof SET_DB!=="undefined"&&SET_DB[event.set]?event.set:null;
+  }
+  function bossDropSet(e){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return null;
+    if(!e||e.rank!=="jefe"||e.type==="mago_hielo_cristal")return null;
+    const event=activeEvents().filter(row=>row.set&&matchesArena(row)&&(!row.boss||row.boss===e.type||row.boss==="mago_hielo_cristal"&&e.type==="angel_caido_hielo")).sort((a,b)=>String(a.id).localeCompare(String(b.id)))[0];
+    return event&&typeof SET_DB!=="undefined"&&SET_DB[event.set]?event.set:null;
+  }
+  function announceBoss(e){
+    const event=bossEvent(e.type);if(!event)return;
+    if(e.alphaEventId===event.id)return;
+    e.alphaEventId=event.id;
+    if(typeof showBanner==="function")showBanner("EVENTO · "+event.name+" — "+e.name);
+  }
+  function enemyDefeated(e){
+    if(!e||e.alive||e.hp>0)return;
+    const canonical=e.type==="angel_caido_hielo"?"mago_hielo_cristal":e.type;
+    if(EVENT_BOSS_ARENAS[canonical]===currentArena&&e.type!=="mago_hielo_cristal")runBossDefeats.add(e.type);
+    for(const entry of eventRuns){
+      const expected=entry.event.boss;
+      if(expected&&(e.type===expected||expected==="mago_hielo_cristal"&&e.type==="angel_caido_hielo")){
+        // Ice phase 1 is not completion: wait for the transformed boss.
+        if(expected==="mago_hielo_cristal"&&e.type!=="angel_caido_hielo")continue;
+        entry.bossDefeated=e.type;
+      }
+    }
+  }
+  function confirmedBosses(){return [...runBossDefeats];}
+  function acceptHostEventVictory(types){
+    if(typeof netIsGuest!=="function"||!netIsGuest()||!Array.isArray(types))return;
+    for(const type of types.slice(0,10)){
+      const canonical=type==="angel_caido_hielo"?"mago_hielo_cristal":type;
+      if(EVENT_BOSS_ARENAS[canonical]===currentArena)enemyDefeated({type,alive:false,hp:0});
+    }
+  }
+  async function startEvents(){
+    const generation=++eventGeneration;eventRuns=[];runBossDefeats=new Set();
+    if(!productEnabled()||!acct.session||!accountAvailable())return;
+    const sessionAtStart=acct.session,arena=currentArena;
+    const candidates=activeEvents().filter(e=>(!e.arenas?.length||e.arenas.includes(arena))&&(e.cosmetic||e.boss||e.set));
+    await Promise.all(candidates.map(async event=>{
+      try{
+        const r=await accountFetch("POST","/api/events/start",{eventId:event.id,arena},{timeout:6000});
+        if(generation!==eventGeneration||sessionAtStart!==acct.session||r.status!==200||!r.j.ticket)return;
+        eventRuns.push({ticket:r.j.ticket,event:r.j.event||event,bossDefeated:null,done:false,readyAt:Date.now()+(r.j.minDurationMs||0)});
+        if(terminal&&lastState==="victory"){queueRunRewards();completeEvents();}
+      }catch{/* An event reward cannot interrupt offline combat. */}
+    }));
+  }
+  function queueRunRewards(){
+    if(typeof netIsGuest==="function"&&netIsGuest()&&typeof boss!=="undefined"&&boss&&!boss.alive)enemyDefeated(boss);
+    for(const entry of eventRuns){
+      if(!entry.event.cosmetic||runLevel<(entry.event.wave||1)||entry.event.boss&&!entry.bossDefeated)continue;
+      if(!pendingClaims.includes(entry)){entry.wave=runLevel;entry.session=acct.session;pendingClaims.push(entry);}
+    }
+    pendingClaims=pendingClaims.filter(e=>!e.done&&e.session===acct.session).slice(-20);
+    const host=document.getElementById("victory-screen");
+    if(host&&!document.getElementById("alpha-event-claim")){
+      const button=document.createElement("button");button.id="alpha-event-claim";button.className="btn";button.textContent="Reintentar recompensa de evento";button.onclick=()=>completeEvents();host.append(button);
+    }
+    const button=document.getElementById("alpha-event-claim");if(button)button.hidden=!pendingClaims.length;
+  }
+  async function completeEvents(){
+    if(rewardPending||!acct.session||!pendingClaims.length)return;
+    rewardPending=true;const sessionAtStart=acct.session,apiAtStart=accountApiBase();
+    try{
+      // Persist the finished run before the server changes entitlements/save version.
+      if(typeof accountUpload==="function"&&acct.sync?.dirty){if(!await accountUpload("event-result"))return;}
+      for(const entry of pendingClaims){
+        if(entry.done||entry.session!==sessionAtStart)continue;
+        if(Date.now()<entry.readyAt)continue;
+        const r=await accountFetch("POST","/api/events/complete",{ticket:entry.ticket,wave:entry.wave,outcome:"victory",bossDefeated:entry.bossDefeated},{timeout:6000});
+        if(sessionAtStart!==acct.session||apiAtStart!==accountApiBase())return;
+        if(r.status===200&&r.j.ok){
+          entry.done=true;
+          if(typeof accountApplyEventReward==="function")accountApplyEventReward(r.j);
+          if(r.j.granted&&typeof showNetToast==="function")showNetToast("Recompensa de evento obtenida: "+(entry.event.name||entry.event.id));
+        }
+      }
+    }catch{if(typeof showNetToast==="function")showNetToast("Recompensa pendiente: reconectá y volvé a intentar desde Resultados.");}
+    finally{rewardPending=false;pendingClaims=pendingClaims.filter(e=>!e.done);const button=document.getElementById("alpha-event-claim");if(button)button.hidden=!pendingClaims.length;}
+  }
   async function refreshWorld(){
     if(!productEnabled()||worldPending||!accountAvailable())return;worldPending=true;
     try{const r=await accountFetch("GET","/api/world",undefined,{auth:false,timeout:6000});if(r.status===200){world=r.j;offset=(world.serverTime||Date.now())-Date.now();renderNews();}}
@@ -66,8 +166,8 @@ const AlphaServices = (() => {
     if(next===lastState)return;lastState=next;
     if(next==="mainmenu")emit("menu");
     if(next==="codex")emit("codex",context());
-    if(next==="playing"&&!inRun){inRun=true;terminal=false;started=performance.now();emit("run_started",context());}
-    if(inRun&&!terminal&&["victory","gameover"].includes(next)){terminal=true;emit(next==="victory"?"victory":"defeat",{...context(),durationMs:Math.round(performance.now()-started)});}
+    if(next==="playing"&&!inRun){inRun=true;terminal=false;started=performance.now();emit("run_started",context());startEvents();}
+    if(inRun&&!terminal&&["victory","gameover"].includes(next)){terminal=true;emit(next==="victory"?"victory":"defeat",{...context(),durationMs:Math.round(performance.now()-started)});if(next==="victory"){queueRunRewards();completeEvents();}}
     if(inRun&&["title","mainmenu","prep","modeselect"].includes(next)){
       if(!terminal)emit("abandon",{...context(),durationMs:Math.round(performance.now()-started)});
       inRun=false;flush();
@@ -100,9 +200,9 @@ const AlphaServices = (() => {
     input.focus();await load();
   }
   function mount(){
-    const options=document.getElementById("hub-options");if(options&&!document.getElementById("alpha-chat-open")){
-      const button=document.createElement("button");button.id="alpha-chat-open";button.className="btn";button.textContent="Chat global";button.onclick=openChat;options.append(button);
-      const label=document.createElement("label");label.className="alpha-privacy";const check=document.createElement("input");check.type="checkbox";check.checked=enabled();check.onchange=()=>{try{localStorage.setItem("horda_telemetry",check.checked?"on":"off");}catch{}if(!check.checked)queue=[];};label.append(check,document.createTextNode(" Compartir métricas anónimas de juego (sin nombre, correo ni mensajes)"));options.append(label);
+    const options=document.querySelector("#hub-options > .ui-modal-panel");if(options&&!document.getElementById("alpha-chat-open")){
+      const button=document.createElement("button");button.id="alpha-chat-open";button.className="btn wide";button.textContent="Chat global";button.onclick=openChat;options.insertBefore(button,document.getElementById("opt-close-btn"));
+      const label=document.createElement("label");label.className="alpha-privacy";const check=document.createElement("input");check.type="checkbox";check.checked=enabled();check.onchange=()=>{try{localStorage.setItem("horda_telemetry",check.checked?"on":"off");}catch{}if(!check.checked)queue=[];};label.append(check,document.createTextNode(" Compartir métricas anónimas de juego (sin nombre, correo ni mensajes)"));options.insertBefore(label,document.getElementById("opt-close-btn"));
     }
     const menu=document.getElementById("mainmenu-screen");if(menu&&!document.getElementById("alpha-news")){const host=document.createElement("aside");host.id="alpha-news";host.hidden=true;host.setAttribute("aria-label","Noticias de la Alpha");menu.append(host);}
   }
@@ -111,11 +211,11 @@ const AlphaServices = (() => {
   window.addEventListener("unhandledrejection",()=>emit("error"));
   window.addEventListener("horda-alpha",e=>{if(e.detail?.event?.startsWith("tutorial_"))emit(e.detail.event,{step:String(e.detail.step??"start"),durationMs:Number(e.detail.duration||0)*1000});});
   window.addEventListener("horda-stat",e=>{const map={ground_drop:"drop",ground_pick:"pickup"};if(map[e.detail?.k])emit(map[e.detail.k],{...context(),value:e.detail.v});});
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)flush();else refreshWorld();});
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)flush();else{refreshWorld();if(terminal&&lastState==="victory"){queueRunRewards();completeEvents();}}});
   window.addEventListener("pagehide",()=>{if(inRun&&!terminal)emit("abandon",{...context(),durationMs:Math.round(performance.now()-started)});flush();});
   mount();emit("start");refreshWorld();
-  setInterval(()=>{if(!document.hidden){emit("heartbeat");flush();}},30000);
+  setInterval(()=>{if(!document.hidden){emit("heartbeat");flush();if(pendingClaims.length)completeEvents();}},30000);
   setInterval(()=>{if(!document.hidden)refreshWorld();},60000);
-  return {emit,flush,multiplier,spawnPool,onState,refreshWorld,activeEvents,openChat,closeChat,build:BUILD};
+  return {emit,flush,multiplier,goldPrice,spawnPool,onState,refreshWorld,activeEvents,eventSet,bossDropSet,bossEvent,announceBoss,enemyDefeated,confirmedBosses,acceptHostEventVictory,completeEvents,openChat,closeChat,build:BUILD};
 })();
 function alphaWorldMultiplier(key){return AlphaServices.multiplier(key);}
