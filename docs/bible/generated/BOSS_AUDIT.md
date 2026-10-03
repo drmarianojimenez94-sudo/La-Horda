@@ -9,7 +9,7 @@
 | Ciudad Maldita | 9 | La Dama del Telón | **PASS*** | PASS | REDRAW (P0-02) | · `estructura`(a) | 30/0 | WARNING: aparece en la simulación (forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)) |
 | Fábrica Sin Fin | 6 | Dragón de la Forja | **PASS** | PASS | FIX | ✓ `horno`(a) | 65/22 | — |
 | Fábrica Sin Fin | 10 | El Caballero de la Armadura Oxidada | **PASS** | PASS | PASS | ✓ `camara`(a) · `valvula`(p) · `trampa`(p) | 25/6 | — |
-| Ruinas Célticas / Élficas | 9 | Doppelgängers | **PASS*** | FIX | PASS | — | 61/27 | WARNING: ficha (BOSS_BLUEPRINTS) (ningún gancho con su arena (BOSS + ARENA = ENCUENTRO)); WARNING: usa su arena (ningún gancho declarado) |
+| Ruinas Célticas / Élficas | 9 | Doppelgängers | **PASS** | PASS | PASS | ✓ `runas`(a) ✓ `contencion`(p) | 61/27 | — |
 | Ruinas Célticas / Élficas | 10 | Guardián Ancestral Corrompido | **PASS** | PASS | PASS | ✓ `rearma`(a) ✓ `runa_rota`(a) ✓ `purifica`(p) | 199/184 | — |
 | Reino Fúngico | 6 | Micelio Primigenio | **PASS** | PASS | FIX | ✓ `cadaveres`(a) ✓ `germina`(a) ✓ `raices`(p) | 38/18 | — |
 | Reino Fúngico | 10 | La Madre Espora | **PASS*** | PASS | PASS | · `floracion`(p) · `infeccion`(p) · `nucleos`(p) | 44/18 | WARNING: ficha (BOSS_BLUEPRINTS) (ningún gancho 'auto': la arena sólo importa si el jugador la busca) |
@@ -23,7 +23,7 @@
 | Abismo | 10 | El Que Mora Debajo | **PASS** | PASS | PASS | ✓ `plataformas`(a) · `jinete`(p) ✓ `tentaculo`(p) | 42/6 | — |
 | Minas Profundas | 8 | Titán de Piedra | **PASS** | PASS | REDRAW (R-01) | ✓ `luces`(a) · `derrumbe`(p) | 0/138 | — |
 | Minas Profundas | 10 | Cerbero, Guardián del Umbral | **PASS** | PASS | REDRAW (F-01) | ✓ `oscuridad`(a) · `luz`(p) | 0/49 | — |
-| Arena Infernal | 9 | El Hechicero Supremo | **PASS** | PASS | FIX | ✓ `fisura`(a) ✓ `sello`(p) | 74/41 | — |
+| Arena Infernal | 9 | El Hechicero Supremo | **PASS** | PASS | PASS | ✓ `fisura`(a) ✓ `sello`(p) | 74/41 | — |
 | Arena Infernal | 10 | El Ángel Corrompido (forma 1) | **PASS** | PASS | REDRAW (F-02) | ✓ `convergencia`(a) · `focos`(p) | 280/132 | — |
 | Arena Infernal | 10 | Gólem de Cuerpos (forma 2) | **PASS*** | PASS | REDRAW (P0-12) | · `barricada`(p) · `numero`(p) · `red`(p) | 280/132 | WARNING: ficha (BOSS_BLUEPRINTS) (ningún gancho 'auto': la arena sólo importa si el jugador la busca); WARNING: aparece en la simulación (forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)) |
 | Arena Infernal | 10 | Rey de la Horda (forma final) | **PASS*** | PASS | FIX (F-03) | · `fisuras_poder`(a) · `fisuras`(p) | 280/132 | WARNING: aparece en la simulación (forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)) |

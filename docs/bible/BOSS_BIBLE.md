@@ -81,6 +81,10 @@ Ver `generated/BOSS_AUDIT.md` (se regenera). Resumen de esta auditoría (octubre
 
 ## 6. Cómo fabricar un jefe nuevo
 
+`node tools/factory/boss-cli.js new <tipo> <arena> <jefe|subjefe> <nivel>` escribe `docs/production/bosses/<tipo>.md`
+(esqueleto de ficha con la arena que lo define, Definition of Done y plantilla de encargo de arte; nunca sobrescribe ni
+registra nada en el juego). `list` muestra el estado de todas las fichas y `check` las valida sin navegador (en el CI).
+
 1. Ficha en `BOSS_BLUEPRINTS` (todos los campos, ganchos con su modo) + relación general en `ARENA_BLUEPRINTS[arena].boss`.
 2. Mecánica firma en un archivo de la arena (`js/arenas/<arena>/<arena>-<jefe>.js`): escudo + llave, telegraphs,
    `bossArenaEvent` en cada interacción real.

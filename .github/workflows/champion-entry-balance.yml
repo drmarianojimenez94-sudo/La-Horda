@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 22
       - run: node --test tools/factory/test.js
+      - run: node tools/factory/boss-cli.js check
       - run: node tools/alpha/public-defaults.js
       - run: node tools/alpha/account-environments.js
       - run: node tools/alpha/rooms-unit.js

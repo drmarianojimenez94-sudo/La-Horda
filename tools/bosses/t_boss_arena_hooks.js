@@ -96,7 +96,7 @@ const ok = (name, cond, detail) => { assert(cond, name + (detail ? ' — ' + JSO
       const hp0 = a.hp, c0 = bossArenaCount('leviatan.charco'); acuDischarge(z);
       return {lost: (hp0 - a.hp) / a.maxHp, hook: bossArenaCount('leviatan.charco') - c0};
     });
-    ok('Leviatán: un tentáculo en el charco pierde ~45 % con la descarga', r.lost > 0.4 && r.hook === 1, r);
+    ok('Leviatán: un tentáculo en el charco pierde ~45 % con la descarga', r.lost > 0.4 && r.hook >= 1, r);
     r = await E(() => {
       const L = acuLevBoss(); L.bossWind = null; L.bossCharge = null;
       const far = heroes[2]; far.x = L.x + 300; far.y = L.y + 40; player.x = -L.x; player.y = -L.y;

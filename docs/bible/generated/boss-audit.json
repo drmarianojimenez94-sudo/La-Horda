@@ -365,17 +365,28 @@
    "rank": "subjefe",
    "level": 9,
    "name": "Doppelgängers",
-   "rule": "Separalos: el Clérigo cura a los demás.",
-   "design": "FIX",
+   "rule": "Cada sombra está ATADA a una runa que la protege: contené su runa para exponerla (el Clérigo cura a los demás).",
+   "design": "PASS",
    "art": "PASS",
    "artWhy": "hojas propias; sin fila de golpe recibido",
    "brief": null,
-   "hooks": [],
+   "hooks": [
+    {
+     "id": "doblador_guerrero.runas",
+     "mode": "auto",
+     "n": 1
+    },
+    {
+     "id": "doblador_guerrero.contencion",
+     "mode": "player",
+     "n": 4
+    }
+   ],
    "checks": [
     {
      "name": "ficha (BOSS_BLUEPRINTS)",
-     "level": "WARNING",
-     "detail": "ningún gancho con su arena (BOSS + ARENA = ENCUENTRO)"
+     "level": "PASS",
+     "detail": ""
     },
     {
      "name": "sin errores en la pelea",
@@ -385,7 +396,7 @@
     {
      "name": "aparece en la simulación",
      "level": "PASS",
-     "detail": "21 s en pelea"
+     "detail": "31 s en pelea"
     },
     {
      "name": "telegraphs (avisos antes del golpe)",
@@ -400,20 +411,20 @@
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 9.4%"
+     "detail": "vida mínima 4.6%"
     },
     {
      "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 9.4%"
+     "detail": "queda 4.6%"
     },
     {
-     "name": "usa su arena",
-     "level": "WARNING",
-     "detail": "ningún gancho declarado"
+     "name": "gancho de arena: doblador_guerrero.runas",
+     "level": "PASS",
+     "detail": "1 vez/veces"
     }
    ],
-   "status": "PASS*",
+   "status": "PASS",
    "tele": 61,
    "strikes": 27,
    "kinds": 10
@@ -1284,7 +1295,7 @@
    "rule": "Su PISOTÓN apaga las luces: esquivá y volvé a encender.",
    "design": "PASS",
    "art": "REDRAW",
-   "artWhy": "densidad ×5,3: arte de 47×63 px dibujado a 153 u; en pantalla se ve en bloques al lado de los campeones",
+   "artWhy": "densidad ×5,0 la del roster: arte de 47×63 px dibujado a 153 u; en pantalla se ve en bloques al lado de los campeones",
    "brief": "R-01",
    "hooks": [
     {
@@ -1355,7 +1366,7 @@
    "rule": "Iluminado por varias luces a la vez, sus sombras se separan y queda EXPUESTO; a oscuras es más rápido.",
    "design": "PASS",
    "art": "REDRAW",
-   "artWhy": "densidad ×5,7: arte de 54×67 px dibujado a 181 u (el outlier más grande del juego)",
+   "artWhy": "densidad ×5,4 la del roster: arte de 54×67 px dibujado a 181 u (el outlier más grande del juego)",
    "brief": "F-01",
    "hooks": [
     {
@@ -1435,8 +1446,8 @@
    "name": "El Hechicero Supremo",
    "rule": "Sus GRIETAS lo alimentan (recibe menos daño): cerralas con la acción de la arena y queda EXPUESTO.",
    "design": "PASS",
-   "art": "FIX",
-   "artWhy": "14,7 % de píxeles semitransparentes (ART_BIBLE §6: alfa 0/255)",
+   "art": "PASS",
+   "artWhy": "hoja propia; alfa corregido a 0/255 (tenía 5,7 % de píxeles semitransparentes, ART_BIBLE §6)",
    "brief": null,
    "hooks": [
     {
