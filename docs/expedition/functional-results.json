@@ -1,0 +1,937 @@
+{
+  "checks": [
+    {
+      "name": "vesper level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "vesper bounded entities",
+      "ok": true
+    },
+    {
+      "name": "vesper finite resources",
+      "ok": true
+    },
+    {
+      "name": "vesper death cleanup",
+      "ok": true
+    },
+    {
+      "name": "vesper boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "vesper timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "vesper real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "vesper cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "vesper max talent stability",
+      "ok": true
+    },
+    {
+      "name": "vesper reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "nahir level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "nahir bounded entities",
+      "ok": true
+    },
+    {
+      "name": "nahir finite resources",
+      "ok": true
+    },
+    {
+      "name": "nahir death cleanup",
+      "ok": true
+    },
+    {
+      "name": "nahir boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "nahir timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "nahir real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "nahir cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "nahir max talent stability",
+      "ok": true
+    },
+    {
+      "name": "nahir reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "baltra level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "baltra bounded entities",
+      "ok": true
+    },
+    {
+      "name": "baltra finite resources",
+      "ok": true
+    },
+    {
+      "name": "baltra death cleanup",
+      "ok": true
+    },
+    {
+      "name": "baltra boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "baltra timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "baltra real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "baltra cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "baltra max talent stability",
+      "ok": true
+    },
+    {
+      "name": "baltra reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "maura level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "maura bounded entities",
+      "ok": true
+    },
+    {
+      "name": "maura finite resources",
+      "ok": true
+    },
+    {
+      "name": "maura death cleanup",
+      "ok": true
+    },
+    {
+      "name": "maura boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "maura timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "maura real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "maura cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "maura max talent stability",
+      "ok": true
+    },
+    {
+      "name": "maura reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "dariel level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "dariel bounded entities",
+      "ok": true
+    },
+    {
+      "name": "dariel finite resources",
+      "ok": true
+    },
+    {
+      "name": "dariel death cleanup",
+      "ok": true
+    },
+    {
+      "name": "dariel boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "dariel timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "dariel real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "dariel cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "dariel max talent stability",
+      "ok": true
+    },
+    {
+      "name": "dariel reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "orsa level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "orsa bounded entities",
+      "ok": true
+    },
+    {
+      "name": "orsa finite resources",
+      "ok": true
+    },
+    {
+      "name": "orsa death cleanup",
+      "ok": true
+    },
+    {
+      "name": "orsa boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "orsa timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "orsa real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "orsa cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "orsa max talent stability",
+      "ok": true
+    },
+    {
+      "name": "orsa reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "tibor level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "tibor bounded entities",
+      "ok": true
+    },
+    {
+      "name": "tibor finite resources",
+      "ok": true
+    },
+    {
+      "name": "tibor death cleanup",
+      "ok": true
+    },
+    {
+      "name": "tibor boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "tibor timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "tibor real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "tibor cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "tibor max talent stability",
+      "ok": true
+    },
+    {
+      "name": "tibor reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "zahra level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "zahra bounded entities",
+      "ok": true
+    },
+    {
+      "name": "zahra finite resources",
+      "ok": true
+    },
+    {
+      "name": "zahra death cleanup",
+      "ok": true
+    },
+    {
+      "name": "zahra boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "zahra timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "zahra real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "zahra cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "zahra max talent stability",
+      "ok": true
+    },
+    {
+      "name": "zahra reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "renko level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "renko bounded entities",
+      "ok": true
+    },
+    {
+      "name": "renko finite resources",
+      "ok": true
+    },
+    {
+      "name": "renko death cleanup",
+      "ok": true
+    },
+    {
+      "name": "renko boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "renko timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "renko real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "renko cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "renko max talent stability",
+      "ok": true
+    },
+    {
+      "name": "renko reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "sira level 1 horde damage",
+      "ok": true
+    },
+    {
+      "name": "sira bounded entities",
+      "ok": true
+    },
+    {
+      "name": "sira finite resources",
+      "ok": true
+    },
+    {
+      "name": "sira death cleanup",
+      "ok": true
+    },
+    {
+      "name": "sira boss resists displacement/control",
+      "ok": true
+    },
+    {
+      "name": "sira timed objects expire",
+      "ok": true
+    },
+    {
+      "name": "sira real set bonuses",
+      "ok": true
+    },
+    {
+      "name": "sira cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "sira max talent stability",
+      "ok": true
+    },
+    {
+      "name": "sira reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "Vesper marks cap",
+      "ok": true
+    },
+    {
+      "name": "Vesper consumes marks",
+      "ok": true
+    },
+    {
+      "name": "marks expire",
+      "ok": true
+    },
+    {
+      "name": "marks separated by owner",
+      "ok": true
+    },
+    {
+      "name": "melee basic max 12 victims",
+      "ok": true
+    },
+    {
+      "name": "Nahir three reflections",
+      "ok": true
+    },
+    {
+      "name": "Nahir reflections expire",
+      "ok": true
+    },
+    {
+      "name": "Baltra vibration cap",
+      "ok": true
+    },
+    {
+      "name": "Baltra consumes vibration",
+      "ok": true
+    },
+    {
+      "name": "Maura seed cap",
+      "ok": true
+    },
+    {
+      "name": "Maura heal capped",
+      "ok": true
+    },
+    {
+      "name": "bark bursts once",
+      "ok": true
+    },
+    {
+      "name": "Dariel repeat grants no note",
+      "ok": true
+    },
+    {
+      "name": "Dariel three notes",
+      "ok": true
+    },
+    {
+      "name": "Dariel spends notes",
+      "ok": true
+    },
+    {
+      "name": "shield does not stack",
+      "ok": true
+    },
+    {
+      "name": "Orsa shots limited",
+      "ok": true
+    },
+    {
+      "name": "Orsa consumes charges",
+      "ok": true
+    },
+    {
+      "name": "Tibor single cloud",
+      "ok": true
+    },
+    {
+      "name": "Tibor spends colony",
+      "ok": true
+    },
+    {
+      "name": "Tibor restores colony capped",
+      "ok": true
+    },
+    {
+      "name": "Zahra overheats",
+      "ok": true
+    },
+    {
+      "name": "Zahra recovery blocks spend",
+      "ok": true
+    },
+    {
+      "name": "Zahra quench resets heat",
+      "ok": true
+    },
+    {
+      "name": "Renko soil cap",
+      "ok": true
+    },
+    {
+      "name": "Renko consumes soil",
+      "ok": true
+    },
+    {
+      "name": "Sira route max 12",
+      "ok": true
+    },
+    {
+      "name": "Sira retrace bounded",
+      "ok": true
+    },
+    {
+      "name": "Sira teleport breaks route",
+      "ok": true
+    },
+    {
+      "name": "Sira erase clears",
+      "ok": true
+    },
+    {
+      "name": "dash stops at thin wall",
+      "ok": true
+    },
+    {
+      "name": "vesper arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "vesper arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "vesper arena bosque",
+      "ok": true
+    },
+    {
+      "name": "vesper arena micelial",
+      "ok": true
+    },
+    {
+      "name": "vesper arena hielo",
+      "ok": true
+    },
+    {
+      "name": "vesper arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "vesper arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "vesper arena abismo",
+      "ok": true
+    },
+    {
+      "name": "vesper arena minas",
+      "ok": true
+    },
+    {
+      "name": "vesper arena infernal",
+      "ok": true
+    },
+    {
+      "name": "nahir arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "nahir arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "nahir arena bosque",
+      "ok": true
+    },
+    {
+      "name": "nahir arena micelial",
+      "ok": true
+    },
+    {
+      "name": "nahir arena hielo",
+      "ok": true
+    },
+    {
+      "name": "nahir arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "nahir arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "nahir arena abismo",
+      "ok": true
+    },
+    {
+      "name": "nahir arena minas",
+      "ok": true
+    },
+    {
+      "name": "nahir arena infernal",
+      "ok": true
+    },
+    {
+      "name": "baltra arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "baltra arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "baltra arena bosque",
+      "ok": true
+    },
+    {
+      "name": "baltra arena micelial",
+      "ok": true
+    },
+    {
+      "name": "baltra arena hielo",
+      "ok": true
+    },
+    {
+      "name": "baltra arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "baltra arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "baltra arena abismo",
+      "ok": true
+    },
+    {
+      "name": "baltra arena minas",
+      "ok": true
+    },
+    {
+      "name": "baltra arena infernal",
+      "ok": true
+    },
+    {
+      "name": "maura arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "maura arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "maura arena bosque",
+      "ok": true
+    },
+    {
+      "name": "maura arena micelial",
+      "ok": true
+    },
+    {
+      "name": "maura arena hielo",
+      "ok": true
+    },
+    {
+      "name": "maura arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "maura arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "maura arena abismo",
+      "ok": true
+    },
+    {
+      "name": "maura arena minas",
+      "ok": true
+    },
+    {
+      "name": "maura arena infernal",
+      "ok": true
+    },
+    {
+      "name": "dariel arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "dariel arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "dariel arena bosque",
+      "ok": true
+    },
+    {
+      "name": "dariel arena micelial",
+      "ok": true
+    },
+    {
+      "name": "dariel arena hielo",
+      "ok": true
+    },
+    {
+      "name": "dariel arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "dariel arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "dariel arena abismo",
+      "ok": true
+    },
+    {
+      "name": "dariel arena minas",
+      "ok": true
+    },
+    {
+      "name": "dariel arena infernal",
+      "ok": true
+    },
+    {
+      "name": "orsa arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "orsa arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "orsa arena bosque",
+      "ok": true
+    },
+    {
+      "name": "orsa arena micelial",
+      "ok": true
+    },
+    {
+      "name": "orsa arena hielo",
+      "ok": true
+    },
+    {
+      "name": "orsa arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "orsa arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "orsa arena abismo",
+      "ok": true
+    },
+    {
+      "name": "orsa arena minas",
+      "ok": true
+    },
+    {
+      "name": "orsa arena infernal",
+      "ok": true
+    },
+    {
+      "name": "tibor arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "tibor arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "tibor arena bosque",
+      "ok": true
+    },
+    {
+      "name": "tibor arena micelial",
+      "ok": true
+    },
+    {
+      "name": "tibor arena hielo",
+      "ok": true
+    },
+    {
+      "name": "tibor arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "tibor arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "tibor arena abismo",
+      "ok": true
+    },
+    {
+      "name": "tibor arena minas",
+      "ok": true
+    },
+    {
+      "name": "tibor arena infernal",
+      "ok": true
+    },
+    {
+      "name": "zahra arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "zahra arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "zahra arena bosque",
+      "ok": true
+    },
+    {
+      "name": "zahra arena micelial",
+      "ok": true
+    },
+    {
+      "name": "zahra arena hielo",
+      "ok": true
+    },
+    {
+      "name": "zahra arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "zahra arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "zahra arena abismo",
+      "ok": true
+    },
+    {
+      "name": "zahra arena minas",
+      "ok": true
+    },
+    {
+      "name": "zahra arena infernal",
+      "ok": true
+    },
+    {
+      "name": "renko arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "renko arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "renko arena bosque",
+      "ok": true
+    },
+    {
+      "name": "renko arena micelial",
+      "ok": true
+    },
+    {
+      "name": "renko arena hielo",
+      "ok": true
+    },
+    {
+      "name": "renko arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "renko arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "renko arena abismo",
+      "ok": true
+    },
+    {
+      "name": "renko arena minas",
+      "ok": true
+    },
+    {
+      "name": "renko arena infernal",
+      "ok": true
+    },
+    {
+      "name": "sira arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "sira arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "sira arena bosque",
+      "ok": true
+    },
+    {
+      "name": "sira arena micelial",
+      "ok": true
+    },
+    {
+      "name": "sira arena hielo",
+      "ok": true
+    },
+    {
+      "name": "sira arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "sira arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "sira arena abismo",
+      "ok": true
+    },
+    {
+      "name": "sira arena minas",
+      "ok": true
+    },
+    {
+      "name": "sira arena infernal",
+      "ok": true
+    },
+    {
+      "name": "snapshot preserves construct owner",
+      "ok": true
+    },
+    {
+      "name": "bounded serializable snapshot",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

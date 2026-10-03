@@ -1,7 +1,7 @@
 const {chromium}=require('playwright'),{spawn}=require('child_process'),fs=require('fs');
-const server=spawn('python3',['-m','http.server','8796'],{stdio:'ignore'});
+const server=process.env.ENTRY_BASE_URL?null:spawn('python3',['-m','http.server','8796'],{stdio:'ignore'});
 (async()=>{let browser;try{
- browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8796');await page.waitForFunction(()=>typeof CHAMPION_ENTRY_BALANCE!=='undefined');
+ browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.ENTRY_BASE_URL||'http://127.0.0.1:8796');await page.waitForFunction(()=>typeof CHAMPION_ENTRY_BALANCE!=='undefined');
  if(process.argv.includes('--self-test'))await page.evaluate(()=>{
   const key='__entry_fixture',R=CHAMPION_BALANCE_REFERENCE.roles.mago;
   CLASSES[key]={...CLASSES.mago,name:'Entry test fixture',baseHP:R.hp.mean,baseDmg:R.basicDPS.mean*.85*CLASSES.mago.basicCd/1000,baseDef:R.defense.mean,baseSpeed:R.speed.mean,hpGrowthMult:R.hpGrowth.mean,dmgGrowthMult:R.damageGrowth.mean};
@@ -27,4 +27,4 @@ const server=spawn('python3',['-m','http.server','8796'],{stdio:'ignore'});
  }
  fs.mkdirSync('docs/balance',{recursive:true});fs.writeFileSync(process.argv.includes('--self-test')?'docs/balance/entry-self-test-results.json':'docs/balance/entry-gate-results.json',JSON.stringify({entries,runs,violations,errors},null,2));
  if(errors.length||violations.length)throw Error(JSON.stringify({errors,violations}));console.log(JSON.stringify({registered:entries.length,newChampions:entries.filter(e=>!e.existing).length,simulations:runs.length,status:'PASS'}));
- }finally{if(browser)await browser.close();server.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});
+ }finally{if(browser)await browser.close();if(server)server.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});
