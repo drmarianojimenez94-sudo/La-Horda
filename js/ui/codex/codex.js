@@ -439,7 +439,7 @@ function _cxCromaChip(key, id){
   const d = CROMA_SKINS[id], C = CROMA_CRYSTALS[d.crystal] || {label:d.crystal};
   const st = cromaIsEquipped(id) ? "✔ EQUIPADA" : (cromaOwned(id) ? "Comprada: usala" : `🪙 ${fmtGold(cromaPrice(id))}`);
   return `<button class="cx-skin" data-skin="${id}"><img src="${_cxEsc(d.preview)}" alt="" loading="lazy">
-      <span class="cx-skin-name">${_cxEsc(d.name)}</span><span class="cx-skin-rar">Croma · ${_cxEsc(C.label)}</span><span class="cx-skin-st">${st}</span></button>`;
+      <span class="cx-skin-name">${_cxEsc(d.name)}</span><span class="cx-skin-rar">${cosmeticAppearanceLabel(id)} · ${_cxEsc(C.label)}</span><span class="cx-skin-st">${st}</span></button>`;
 }
 function codexChampSkinsHtml(key){
   const ids = codexChampSkins(key);
@@ -523,7 +523,7 @@ function codexSkinIds(key){
 function codexSkinsTabHtml(key){
   const ids = codexSkinIds(key), cromas = typeof cromaIdsFor==="function" ? cromaIdsFor(key) : [];
   const activeAny = ids.some(id=>skinIsActiveOn(id, key)) || cromas.some(id=>cromaIsEquipped(id));
-  const card = (id, name, sub, st, act, on)=>`<div class="gx-skin ${on?"on":""}" data-skin-pv="${id}" data-appearance-kind="${!id ? "original" : (typeof isCromaId==="function" && isCromaId(id) ? "croma" : (typeof cosmeticIsSetCroma==="function" && cosmeticIsSetCroma(SET_SKINS[id]) ? "set-croma" : "set"))}">
+  const card = (id, name, sub, st, act, on)=>`<div class="gx-skin ${on?"on":""}" data-skin-pv="${id}" data-appearance-kind="${cosmeticAppearanceKind(id)}">
       <canvas class="champ-anim gx-skin-anim" width="84" height="84" data-class-key="${key}" data-skin="${id}" data-idle="1"></canvas>
       <div class="gx-skin-name">${_cxEsc(name)}</div><div class="gx-skin-sub">${sub}</div><div class="gx-skin-st">${st}</div><button class="cx-btn" data-appearance-preview="${id}">PROBAR APARIENCIA</button>${act}</div>`;
   let html = card("", "Apariencia base", "Siempre disponible", activeAny ? "" : "✔ EN USO", `<button class="cx-btn" data-appearance-original>USAR ORIGINAL</button>`, !activeAny);
@@ -543,17 +543,17 @@ function codexSkinsTabHtml(key){
       : cromaOwned(id) ? `<button class="cx-btn primary" data-croma-use="${id}">USAR</button>`
       : `<button class="cx-btn" data-croma-buy="${id}" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>`;
     const st = on ? (cromaHiddenBySet(key) ? "✔ EQUIPADA · la tapa el set completo" : "✔ EQUIPADA") : (cromaOwned(id) ? "Comprada" : "Cosmética: no da poder");
-    html += card(id, d.name, `Croma · ${_cxEsc(C.label)}`, st, act, on);
+    html += card(id, d.name, `${cosmeticAppearanceLabel(id)} · ${_cxEsc(C.label)}`, st, act, on);
   }
   const none = ids.length || cromas.length ? "" : `<div class="cx-dim">${_cxEsc(CLASSES[key].name)} todavía no tiene skins: por ahora luce su apariencia base.</div>`;
   return _sec("Apariencias · disponibles para pruebas", `<div class="cx-anim-chips cx-scroll-x" aria-label="Tipo de apariencia">${[["all","TODAS"],["original","ORIGINAL"],["skin","SKINS"],["croma","CROMAS"],["set","SET"]].map(([id,label])=>`<button class="cx-chip ${codexAppearanceFilter===id?"on":""}" data-appearance-filter="${id}" aria-pressed="${codexAppearanceFilter===id}">${label}</button>`).join("")}</div><p class="cx-dim">Probá cualquier apariencia en la vista animada, sin gastar oro ni modificar tu equipo.</p><div class="gx-skins">${html}</div><p class="cx-dim" id="cx-appearance-empty" hidden>No hay apariencias de este tipo para este guardián.</p><div class="cx-skin-detail" id="cx-skin-detail"></div>${none}
-    <div class="cx-dim">Reuní el set para usar su apariencia. USAR cambia solo el aspecto y conserva tu equipamiento. Las cromas cambian la paleta.</div>`, "skins");
+    <div class="cx-dim">Reuní el set para usar su apariencia. USAR cambia solo el aspecto y conserva tu equipamiento. Las skins independientes tienen vestuario propio y se compran con oro.</div>`, "skins");
 }
 function codexApplyAppearanceFilter(body){
   let count = 0;
   body.querySelectorAll("[data-appearance-kind]").forEach(card=>{
     const kind = card.dataset.appearanceKind;
-    card.hidden = !(codexAppearanceFilter === "all" || kind === codexAppearanceFilter || (kind === "set-croma" && ["set","croma"].includes(codexAppearanceFilter)));
+    card.hidden = !(codexAppearanceFilter === "all" || kind === codexAppearanceFilter || (codexAppearanceFilter === "skin" && kind === "set") || (kind === "set-croma" && ["set","croma"].includes(codexAppearanceFilter)));
     card.style.display = card.hidden ? "none" : "";
     if(!card.hidden) count++;
   });
@@ -590,18 +590,18 @@ function codexBindSkinsTab(body, key, cv){
   }));
   body.querySelectorAll("[data-croma-use]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.dataset.cromaUse;
-    if(cromaEquip(key, id)){ if(typeof playSfx==="function") playSfx("levelup"); if(typeof showNetToast==="function") showNetToast(`🎨 CROMA EQUIPADA · ${CROMA_SKINS[id].name}`); }
+    if(cromaEquip(key, id)){ if(typeof playSfx==="function") playSfx("levelup"); if(typeof showNetToast==="function") showNetToast(`🎨 ${cosmeticAppearanceLabel(id).toUpperCase()} EQUIPADA · ${CROMA_SKINS[id].name}`); }
     codexRender();
   }));
   body.querySelectorAll("[data-croma-off]").forEach(b=> b.addEventListener("click", ()=>{ cromaEquip(key, null); codexRender(); }));
   body.querySelectorAll("[data-croma-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.dataset.cromaBuy, d = CROMA_SKINS[id];
     const quotedPrice = cromaPrice(id);
-    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
+    gameConfirm(`¿Comprar la ${cosmeticAppearanceLabel(id).toLowerCase()} ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return; const r = cromaBuy(id, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
       if(save.champions[key] && save.champions[key].unlocked) cromaEquip(key, id);
       if(typeof playSfx==="function") playSfx("levelup");
-      if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name} · equipada`);
+      if(typeof showNetToast==="function") showNetToast(`🎨 ${cosmeticAppearanceLabel(id).toUpperCase()} ${d.name} · equipada`);
       if(typeof renderSaveLine==="function") renderSaveLine();
       codexRender();
     });
@@ -619,21 +619,21 @@ function codexBindSkinsTab(body, key, cv){
 function _cxCromaDetail(el, key, id){
   const d = CROMA_SKINS[id], C = CROMA_CRYSTALS[d.crystal] || {label:d.crystal}, own = save.champions[key] && save.champions[key].unlocked;
   let act;
-  if(cromaIsEquipped(id)) act = `<div class="cx-active">✔ Equipada${cromaHiddenBySet(key) ? " (la tapa la skin de set completo mientras lo lleves)" : ""}</div><button class="cx-btn" id="cx-croma-off">Quitar · volver a los colores de siempre</button>`;
+  if(cromaIsEquipped(id)) act = `<div class="cx-active">✔ Equipada${cromaHiddenBySet(key) ? " (la tapa la skin de set completo mientras lo lleves)" : ""}</div><button class="cx-btn" id="cx-croma-off">Quitar · volver a la apariencia original</button>`;
   else if(cromaOwned(id)) act = own ? `<button class="cx-btn primary" id="cx-croma-on">USAR</button>` : `<div class="cx-dim">Conseguí a ${_cxEsc(CLASSES[key].name)} para usarla.</div>`;
   else act = `<button class="cx-btn primary" id="cx-croma-buy" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>`;
   el.innerHTML = `<div class="cx-skin-box"><b>${_cxEsc(d.name)}</b><div class="cx-dim">${_cxEsc(d.lore)}</div>
-    <div class="cx-dim">Croma del ${_cxEsc(C.label)}: la misma armadura con otra paleta. Cosmético puro (no da poder), se compra con oro del juego.</div>${act}</div>`;
+    <div class="cx-dim">${cosmeticAppearanceLabel(id)} · ${_cxEsc(d.visualTheme || C.label)}. Cosmético puro (no da poder), se compra con oro del juego.</div>${act}</div>`;
   const on = el.querySelector("#cx-croma-on"), off = el.querySelector("#cx-croma-off"), buy = el.querySelector("#cx-croma-buy");
-  if(on) on.addEventListener("click", ()=>{ if(cromaEquip(key, id) && typeof showNetToast==="function") showNetToast(`🎨 CROMA EQUIPADA · ${d.name}`); codexRender(); });
+  if(on) on.addEventListener("click", ()=>{ if(cromaEquip(key, id) && typeof showNetToast==="function") showNetToast(`🎨 ${cosmeticAppearanceLabel(id).toUpperCase()} EQUIPADA · ${d.name}`); codexRender(); });
   if(off) off.addEventListener("click", ()=>{ cromaEquip(key, null); codexRender(); });
   if(buy) buy.addEventListener("click", ()=>{
     const quotedPrice = cromaPrice(id);
-    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
+    gameConfirm(`¿Comprar la ${cosmeticAppearanceLabel(id).toLowerCase()} ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return; const r = cromaBuy(id, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
       if(own) cromaEquip(key, id);
       if(typeof playSfx==="function") playSfx("levelup");
-      if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name}${own ? " · equipada" : " · comprada"}`);
+      if(typeof showNetToast==="function") showNetToast(`🎨 ${cosmeticAppearanceLabel(id).toUpperCase()} ${d.name}${own ? " · equipada" : " · comprada"}`);
       if(typeof renderSaveLine==="function") renderSaveLine();
       codexRender();
     });
