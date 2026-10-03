@@ -322,7 +322,10 @@ function leave(ws, why){
   broadcastRoom(room);
 }
 
-const accounts = require("./accounts.js").create({ log, originAllowed });
+// FOUNDERS_JSON (opcional): {"nano":{"account":"NanoGM"},"facu":{"accountId":123}} reemplaza la sección
+// "founders" de operator-config.json, igual que ADMIN_USERS para el owner (pruebas o despliegue).
+let foundersOverride; try{ if(process.env.FOUNDERS_JSON) foundersOverride = JSON.parse(process.env.FOUNDERS_JSON); }catch(e){ log("FOUNDER_POLICY", { error: "FOUNDERS_JSON inválido" }); }
+const accounts = require("./accounts.js").create({ log, originAllowed, founders: foundersOverride });
 const presence = require("./presence.js").create({
   resolve: token => accounts.presence(token),
   requiresGrant: champ => require("./entitlements.js").isChampion(champ) && require("./entitlements.js").taxonomy().requiresGrant(champ),
