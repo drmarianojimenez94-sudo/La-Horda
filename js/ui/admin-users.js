@@ -69,7 +69,7 @@ window.GMExt = (function(){
   for(const c of s.champions){
    const row = node("div", undefined, "gm-record");
    const name = (typeof CLASSES !== "undefined" && CLASSES[c.id] ? CLASSES[c.id].name : c.id);
-   row.append(node("strong", name), node("p", `${CAT_LABEL(c.category)} · ${c.releaseState} · ${c.unlocked ? "POSEE · Nv. " + c.level : "no posee"}${c.grant ? " · " + c.grant.origin : ""}`));
+   row.append(node("strong", name), node("p", `${CAT_LABEL(c.category)} · ${c.releaseState} · ${c.unlocked ? "POSEE · Nv. " + c.level + " · " + Math.round(c.xp) + " XP" : "no posee"}${c.grant ? " · " + c.grant.origin : ""}`));
    if(c.category === "FOUNDER") row.append(node("p", "Concesión exclusiva del sistema", "gm-muted"));
    else if(!c.unlocked && c.grantable && can("GRANT_CONTENT")) action(row, "Conceder " + name, async()=>{
     if(!await confirmDialog(ctx, {title:"Conceder campeón", user:a.user, action:"Conceder " + name, before:"no posee", after:"posee (ADMIN_GRANT)"})) return;
