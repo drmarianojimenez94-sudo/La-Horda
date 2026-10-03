@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const rbac = require('./rbac');
 const BOSS_ARENAS=Object.freeze({guardian_ancestral:'bosque',mago_hielo_cristal:'hielo',minotauro:'laberinto',leviatan:'acuatica',caballero:'fortaleza',madre_espora:'micelial',cm_presentador:'ciudad',ab_morador:'abismo',mn_cerbero:'minas'});
 const PRICE_KEYS=['itemPrices','cosmeticPrices','championPrices'];
 let SHOP_CATALOG;
@@ -19,7 +20,8 @@ function id(s){return typeof s==='string'&&!['__proto__','constructor','prototyp
 function ids(v){if(v===undefined)return [];if(!Array.isArray(v)||v.length>20||v.some(x=>!id(x)))fail('BAD_IDS');return [...new Set(v)];}
 function initial(){return {version:0,config:{...DEFAULTS},events:[],messages:[],chat:[],pinned:null,audit:[],snapshots:[],previews:[],metrics:{total:{},days:{},dimensions:{}}};}
 function stateOf(s){s=s||initial();s.eventRuns=s.eventRuns||{};s.eventClaims=s.eventClaims||{};s.eventParticipants=s.eventParticipants||{};s.resetBatches=s.resetBatches||{};return s;}
-function audit(s,owner,action,details,now){s.audit.push({at:now,owner:owner.id,action,...details});s.audit=s.audit.slice(-2000);}
+// owner = acting account id (field name kept for existing log rows); actor = its login handle.
+function audit(s,owner,action,details,now){s.audit.push({at:now,owner:owner.id,actor:owner.user,action,...details});s.audit=s.audit.slice(-5000);}
 function multipliers(v,partial=false){
  if(!v||typeof v!=='object'||Array.isArray(v))fail('BAD_CONFIG');
  const out=partial?{}:{...DEFAULTS};
@@ -85,20 +87,27 @@ function routes(ctx){
  const result={};
  function route(method,url,role,fn){result[method+' '+url]=async(req,res,ip)=>{
   try{
-   let user=null;if(role){const a=await auth(req);if(!a.user)fail('NO_SESSION',401);user=a.user;if(role==='owner'&&!isOwner(user))fail('FORBIDDEN',403);}
+   let user=null;if(role){const a=await auth(req);if(!a.user)fail('NO_SESSION',401);user=a.user;
+    // Permission names come from server/rbac.js; checked on every request against server state.
+    if(role==='owner'&&!isOwner(user))fail('FORBIDDEN',403);
+    if(rbac.PERMISSIONS.includes(role)&&!rbac.can(user,await read(),isOwner,role))fail('FORBIDDEN',403);}
    const body=method==='GET'?{}:await readBody(req,32768);
    const value=await fn({req,user,body,ip});send(req,res,200,value);
   }catch(e){if(e.status)return err(req,res,e.status,e.message,e.message);throw e;}
  };}
- route('GET','/api/gm/status','user',async({user})=>typeof ctx.ownerAccess==='function'?ctx.ownerAccess(user):({owner:isOwner(user),role:isOwner(user)?'OWNER':null}));
+ route('GET','/api/gm/status','user',async({user})=>{
+  const base=typeof ctx.ownerAccess==='function'?ctx.ownerAccess(user):({owner:isOwner(user),role:isOwner(user)?'OWNER':null});
+  const roles=rbac.rolesOf(user,await read(),isOwner),founder=ctx.founderOf?ctx.founderOf(user):null;
+  return {...base,role:base.role||roles[0]||null,roles,permissions:rbac.permissionsOf(roles),founder};
+ });
  route('GET','/api/world',null,async()=>{const s=await read(),t=now();return {version:s.version,normalConfig:s.config,config:{...s.config},events:s.events.filter(e=>active(e,t)),messages:s.messages.filter(e=>active(e,t)),serverTime:t};});
- route('GET','/api/gm/config','owner',async()=>{const s=await read();return {version:s.version,config:s.config,defaults:DEFAULTS};});
- for(const [method,url,defaults] of [['PUT','/api/gm/config',false],['POST','/api/gm/config/defaults',true]])route(method,url,'owner',async({user,body})=>{
+ route('GET','/api/gm/config','MANAGE_CONFIG',async()=>{const s=await read();return {version:s.version,config:s.config,defaults:DEFAULTS};});
+ for(const [method,url,defaults] of [['PUT','/api/gm/config',false],['POST','/api/gm/config/defaults',true]])route(method,url,'MANAGE_CONFIG',async({user,body})=>{
   const config=defaults?{...DEFAULTS}:multipliers(body.config);
   return mutate(s=>{if(body.version!==s.version)fail('CONFLICT',409);s.config=config;s.version++;audit(s,user,defaults?'config.defaults':'config.update',{},now());return {version:s.version,config:s.config};});
  });
- route('GET','/api/gm/events','owner',async()=>({events:(await read()).events}));
- route('POST','/api/gm/events','owner',async({user,body:b})=>{
+ route('GET','/api/gm/events','MANAGE_EVENTS',async()=>({events:(await read()).events}));
+ route('POST','/api/gm/events','MANAGE_EVENTS',async({user,body:b})=>{
   if(!text(b.name,80))fail('BAD_NAME');
   if(b.enabled!==undefined&&typeof b.enabled!=='boolean')fail('BAD_ENABLED');
   const entry={id:b.id?id(b.id):crypto.randomUUID(),name:text(b.name,80),description:text(b.description,1000),...schedule(b,now()),enabled:b.enabled!==false,
@@ -112,8 +121,8 @@ function routes(ctx){
   for(const field of ['boss','set','cosmetic'])if(b[field]&&!id(b[field]))fail('BAD_EVENT');
   return mutate(s=>{const old=s.events.findIndex(e=>e.id===entry.id);if(old<0&&s.events.length>=100)fail('EVENT_LIMIT');if(old>=0)s.events[old]=entry;else s.events.push(entry);s.version++;audit(s,user,'event.save',{id:entry.id},now());return {event:entry,version:s.version};});
  });
- route('GET','/api/gm/messages','owner',async()=>({messages:(await read()).messages}));
- route('POST','/api/gm/messages','owner',async({user,body:b})=>{
+ route('GET','/api/gm/messages','MANAGE_EVENTS',async()=>({messages:(await read()).messages}));
+ route('POST','/api/gm/messages','MANAGE_EVENTS',async({user,body:b})=>{
   if(!['news','banner','global'].includes(b.type)||!text(b.text,1000))fail('BAD_MESSAGE');
   if(b.enabled!==undefined&&typeof b.enabled!=='boolean')fail('BAD_ENABLED');
   const entry={id:b.id?id(b.id):crypto.randomUUID(),type:b.type,text:text(b.text,1000),image:image(b.image),...schedule(b,now()),enabled:b.enabled!==false};if(!entry.id)fail('BAD_ID');
@@ -125,7 +134,7 @@ function routes(ctx){
   const message={id:crypto.randomUUID(),name:text(user.name||user.user,32),text:text(body.text,400),owner:isOwner(user),at:now()};
   return mutate(s=>{s.chat.push(message);s.chat=s.chat.slice(-200);return {message};});
  });
- route('POST','/api/gm/chat/pin','owner',async({user,body})=>mutate(s=>{if(body.id!==null&&!s.chat.some(m=>m.id===body.id))fail('NOT_FOUND',404);s.pinned=body.id;audit(s,user,'chat.pin',{id:body.id},now());return {ok:true};}));
+ route('POST','/api/gm/chat/pin','MANAGE_EVENTS',async({user,body})=>mutate(s=>{if(body.id!==null&&!s.chat.some(m=>m.id===body.id))fail('NOT_FOUND',404);s.pinned=body.id;audit(s,user,'chat.pin',{id:body.id},now());return {ok:true};}));
  route('POST','/api/telemetry',null,async({body:b,ip})=>{
   throttle('telemetry:'+ip,60);
   if(!Array.isArray(b.events)||b.events.length>30||!b.events.length)fail('BAD_EVENTS');
@@ -149,7 +158,7 @@ function routes(ctx){
    const days=Object.keys(s.metrics.days).sort();while(days.length>400)delete s.metrics.days[days.shift()];return null;
   });return {ok:true,accepted:rows.length};
  });
- route('GET','/api/gm/dashboard','owner',async()=>{
+ route('GET','/api/gm/dashboard','VIEW_USERS',async()=>{
   const s=await read(),users=await getStore().listUsers(),t=now();for(const [k,v]of online)if(t-v.at>120000)online.delete(k);
   const total=s.metrics.total,utcDay=Date.UTC(new Date(t).getUTCFullYear(),new Date(t).getUTCMonth(),new Date(t).getUTCDate());
   return {accounts:users.length,online:online.size,activeMatchesEstimate:[...online.values()].filter(x=>x.playing).length,
@@ -157,10 +166,10 @@ function routes(ctx){
    matches:total.arena_started||0,victories:total.victory||0,defeats:total.death||0,abandons:total.abandon||0,averageDurationMs:total.durationSamples?Math.round(total.durationMs/total.durationSamples):0,
    tutorialStarted:total.tutorial_started||0,tutorialCompleted:total.tutorial_completed||0,metrics:s.metrics,audit:s.audit.slice(-100),notes:['Online: sesiones con actividad en 120 segundos; partidas activas estimadas, no salas únicas.','Telemetría declarada por cliente: análisis de producto, no autoridad competitiva.','Usuarios: cuentas con último login reciente; no visitantes anónimos únicos.']};
  });
- route('GET','/api/gm/catalog','owner',async()=>gameplay());
- route('GET','/api/gm/cosmetics','owner',async()=>({cosmetics:Object.values(cosmetics())}));
- route('GET','/api/gm/players','owner',async({req})=>{const q=text(new URL(req.url,'http://x').searchParams.get('q'),40).toLowerCase();const users=await getStore().listUsers();return {players:users.filter(u=>!q||u.user.toLowerCase().includes(q)).slice(0,100).map(u=>({user:u.user,name:u.name,createdAt:u.createdAt,lastLogin:u.lastLogin}))};});
- route('POST','/api/gm/gift','owner',async({user,body})=>{
+ route('GET','/api/gm/catalog','VIEW_USERS',async()=>gameplay());
+ route('GET','/api/gm/cosmetics','VIEW_USERS',async()=>({cosmetics:Object.values(cosmetics())}));
+ route('GET','/api/gm/players','VIEW_USERS',async({req})=>{const q=text(new URL(req.url,'http://x').searchParams.get('q'),40).toLowerCase();const users=await getStore().listUsers();return {players:users.filter(u=>!q||u.user.toLowerCase().includes(q)).slice(0,100).map(u=>({user:u.user,name:u.name,createdAt:u.createdAt,lastLogin:u.lastLogin}))};});
+ route('POST','/api/gm/gift','GRANT_CONTENT',async({user,body})=>{
   const cosmetic=Object.hasOwn(cosmetics(),body.cosmetic)?cosmetics()[body.cosmetic]:null;if(!cosmetic)fail('BAD_COSMETIC');
   const users=await selectTargets(body);if(!users.length)fail('NOT_FOUND',404);
   await mutate(s=>{audit(s,user,'gift.start',{cosmetic:cosmetic.id,count:users.length},now());return null;});
@@ -182,7 +191,7 @@ function routes(ctx){
   const unique=[...new Set(names.map(n=>n.normalize('NFC').toLowerCase()))],out=[];
   for(const name of unique){const target=await getStore().getUserByKey(name);if(!target)fail('NOT_FOUND',404);out.push(target);}return out;
  }
- route('POST','/api/gm/reset/preview','owner',async({user,body})=>{
+ route('POST','/api/gm/reset/preview','EDIT_USER_PROGRESS',async({user,body})=>{
   if(!Array.isArray(body.fields)||!body.fields.length||body.fields.some(f=>!RESET_FIELDS.includes(f)))fail('BAD_FIELDS');
   const targets=await selectTargets(body);if(targets.length>100)fail('BATCH_LIMIT',413);
   const players=[];let missingSave=0;
@@ -194,7 +203,7 @@ function routes(ctx){
   await mutate(s=>{s.previews=s.previews.filter(p=>p.expires>now()).slice(-99);s.previews.push(preview);return null;});
   return {token,confirmation,fields:preview.fields,accounts:players.length,missingSave,players:players.map(p=>({user:p.user,version:p.version})),version:single?players[0].version:undefined,expires:preview.expires,warnings:[...(preview.fields.includes('cosmetics')?['Los Sets completos conservados en inventario o historial de colección permiten volver a obtener su skin. Este reset no borra piezas ni colección.']:[]),...(!single?['Cada cuenta usa CAS y snapshot. Si una escritura falla, se informa resultado parcial por cuenta; no se reintenta a ciegas.']:[])]};
  });
- route('POST','/api/gm/reset/confirm','owner',async({user,body})=>{
+ route('POST','/api/gm/reset/confirm','EDIT_USER_PROGRESS',async({user,body})=>{
   const prepared=await mutate(async (s,writeSnapshot)=>{
    const idx=s.previews.findIndex(p=>p.token===body.token&&p.owner===user.id);if(idx<0)fail('BAD_PREVIEW');const preview=s.previews[idx];
    if(preview.expires<=now()||body.confirmation!==preview.confirmation)fail('BAD_CONFIRMATION');
@@ -219,7 +228,7 @@ function routes(ctx){
   if(prepared.single&&results[0].status==='conflict')fail('CONFLICT',409);
   return {ok:completed===results.length,batchId:prepared.batchId,completed,conflicts,results:results.map(({target,...r})=>r),...(prepared.single?{version:results[0].version,snapshot:results[0].snapshot}:{})};
  });
- route('GET','/api/gm/reset/batches','owner',async({user})=>({batches:Object.values((await read()).resetBatches).filter(b=>b.owner===user.id).slice(-50).map(b=>({...b,results:b.results.map(({target,...r})=>r)}))}));
+ route('GET','/api/gm/reset/batches','EDIT_USER_PROGRESS',async({user})=>({batches:Object.values((await read()).resetBatches).filter(b=>b.owner===user.id).slice(-50).map(b=>({...b,results:b.results.map(({target,...r})=>r)}))}));
  route('POST','/api/events/start','user',async({user,body})=>{
   throttle('event-start:'+user.id,12);
   if(!id(body.eventId)||!gameplay().arenas.includes(body.arena))fail('BAD_EVENT');
@@ -260,6 +269,7 @@ function routes(ctx){
    return {ok:true,granted:!!cosmeticId,alreadyGranted:false,cosmetic:cosmeticId,cosmeticType,saveVersion,baseVersion};
   });
  });
+ require('./admin-users').routes({route,mutate,read,audit,fail,text,getStore,summarize,now,isOwner,founders:ctx.founders||(()=>({})),cosmetics,gameplay,shopCatalog});
  return result;
 }
-module.exports={routes,DEFAULTS,EVENTS,RESET_FIELDS,multipliers,resetData,catalog,gameplayCatalog};
+module.exports={routes,DEFAULTS,EVENTS,RESET_FIELDS,multipliers,resetData,catalog,gameplayCatalog,stateOf,audit};

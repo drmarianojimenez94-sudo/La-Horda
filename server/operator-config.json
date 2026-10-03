@@ -1,3 +1,7 @@
 {
-  "ownerAccount": "NanoGM"
+  "ownerAccount": "NanoGM",
+  "founders": {
+    "nano": { "account": "NanoGM", "accountId": null },
+    "facu": { "account": null, "accountId": null }
+  }
 }
