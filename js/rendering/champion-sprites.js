@@ -83,6 +83,7 @@ function soporteResolveClip(h){
 }
 // Dibuja al Sanador usando su atlas real, anclado por los pies
 function drawSoporteAtlas(h, drawScale, alpha){
+  if(drawChampPack("soporte", h, drawScale, alpha)) return true;
   return drawAnimAtlas(SOPORTE_ANIM_ATLAS, soporteResolveClip(h), h, drawScale, alpha);
 }
 

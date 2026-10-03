@@ -160,7 +160,7 @@ const HERO_VOICES = {
   mago:      {pick:"Fuego y hielo son el mismo idioma. Y los libros que él prohibió dicen lo mismo que yo.",
               win:"La historia oficial tiene huecos. Cada victoria cierra uno.",
               fall:"Me faltaba… una página…"},
-  soporte:   {pick:"Mientras yo respire, nadie de este grupo cae para siempre.",
+  soporte:   {pick:"Mi luz los protege. A la Horda, la purifica.",
               win:"Todos respiran. El juramento sigue en pie.",
               fall:"Perdón… no llegué a todos…"},
   segador:   {pick:"No sé cómo me llamo. Sé dónde está la Horda.",

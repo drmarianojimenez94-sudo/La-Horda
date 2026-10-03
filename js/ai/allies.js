@@ -136,7 +136,8 @@ function botTryAbilities(h){
     const R = sk.radius || 9999;
     const teamHurt = heroes.some(o=>o.alive && o.hp/o.maxHp<0.62 && distance(h,o) <= R);
     const bossThreat = sk.kind==="team_shield_buff" && boss && boss.alive && boss.bossWind && heroes.some(o=>o.alive && distance(h,o)<=R && distance(boss,o) < 360);
-    if(isSupport && !teamHurt && !bossThreat) continue;
+    const offensivePulse = sk.kind==="team_heal_aoe" && sk.dmgMult>0 && sk.damageRadius>0 && nearestEnemyTo(h, sk.damageRadius);
+    if(isSupport && !teamHurt && !bossThreat && !offensivePulse) continue;
     if(!isSupport && !(divinaMode ? divinaHostiles("player", h.x, h.y, 300) : nearestEnemyTo(h, 300))) continue;
     h.energy -= sk.cost;
     h.cds[idx] = sk.cd * 1.1 * cdMultFor(sk, masteryOf(h.classKey, idx)) * passiveCdMult * arenaMods().heroCdMult*arenaRuleCdMult() * talentSkillCdMult(h.classKey, idx);

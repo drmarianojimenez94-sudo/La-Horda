@@ -426,7 +426,8 @@ function codexSkillNumbers(s, ult){
   if(!ult && s.cost) out.push(`⚡ ${s.cost}`);
   if(s.cd) out.push(`⟳ ${(s.cd/1000).toFixed(s.cd%1000?1:0)} s`);
   if(s.dmgMult) out.push(`Daño ×${s.dmgMult}`);
-  if(s.radius) out.push(`Área ${s.radius} u`);
+  if(s.radius) out.push(`${s.damageRadius ? "Curación" : "Área"} ${s.radius} u`);
+  if(s.damageRadius) out.push(`Daño en área ${s.damageRadius} u`);
   if(s.range) out.push(`Alcance ${s.range} u`);
   if(s.duration) out.push(`Dura ${(s.duration/1000).toFixed(1).replace(".0","")} s`);
   if(s.healPct) out.push(`Cura ${Math.round(s.healPct*100)}%`);

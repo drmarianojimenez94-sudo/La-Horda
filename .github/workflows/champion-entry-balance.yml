@@ -31,6 +31,9 @@ jobs:
       - run: node tools/balance/entry-gate.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/portadores/test-elyra.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/portadores/test-ynara.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
@@ -76,6 +79,7 @@ jobs:
           path: |
             docs/balance/entry-gate-results.json
             docs/ynara/
+            docs/elyra/
             docs/ux/
             docs/portadores/ynara-*
 
