@@ -193,15 +193,15 @@ async function runViewport(browser, vp, report) {
     await sleep(600);
     await snap(page, 'starter_confirm', { primary: [{ css: '#starter-yes-btn' }] });
     // regalo inicial, paso 2: la skin de regalo del guardián elegido (camino nuevo: window.__starterGift)
-    await js(page, () => { window.__starterGift = true; });
     await tap(page, '#starter-yes-btn');
     await sleep(500);
-    await snap(page, 'starter_skin', { primary: [{ css: '#starter-skin-yes-btn' }] });
+    await snap(page, 'automatic_tutorial', { primary: [{ css: '#alpha-training-panel button' }] });
     } else { await snap(page, 'first_menu', {primary:[{css:'#hub-play-btn'}]}); }
     await ctx.close();
   }
   // ---- perfil de desarrollo (todo desbloqueado)
   const { ctx, page } = await mk(true);
+  await js(page,()=>{save.tut=save.tut||{};save.tut.training=1;persistNow();});
   await tap(page, '#title-continue-btn');
   await snap(page, 'mainmenu', { primary: [{ css: '#hub-play-btn' }] });
   // hub con todos los accesos (Horda Infinita bloqueada y Desafíos, como si ya existieran esos módulos)

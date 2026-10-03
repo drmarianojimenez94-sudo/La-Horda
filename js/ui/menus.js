@@ -22,6 +22,7 @@ document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   titleContinue();
 });
 function titleContinue(){
+  if(typeof alphaFirstRunContinue==="function"){ alphaFirstRunContinue(); return; }
   if(save.firstRun==="jugando"){ save.firstRun = "hub"; persist(); } // cerró el juego en plena primera partida
   setState("mainmenu");
   renderMainMenu();
@@ -554,6 +555,7 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{
 // Crystal Wars has isolated match state and shares the configured room relay.
 document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
   if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al Coliseo."); return; }
+  if(!HordaOnboarding.ready(save)){ alphaFirstRunContinue(); return; }
   const url=new URL("crystal-wars.html",location.href);
   const server=new URLSearchParams(location.search).get("server");
   if(server)url.searchParams.set("server",server);
