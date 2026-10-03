@@ -1,10 +1,10 @@
 {
   "environment": "Chromium Linux, desktop host, mobile viewport 844×390. Not physical iPhone certification.",
   "durationSeconds": 12,
-  "frames": 714,
-  "median": 16.69999999999891,
-  "p95": 16.700000000000728,
-  "over33Pct": 0.1400560224089636,
+  "frames": 713,
+  "median": 16.699999999999818,
+  "p95": 16.799999999999272,
+  "over33Pct": 0.1402524544179523,
   "maxPortadorObjects": 8,
   "maxLiveEnemies": 85,
   "errors": []

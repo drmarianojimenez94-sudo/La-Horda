@@ -506,6 +506,7 @@ function update(dt){
 
   updateAllies(dt);
   updateRevives(dt);
+  if(!netMatch && !divinaMode && !player.alive && !runEnding && !heroes.some(h=>h.alive)) onPlayerDeath();
   if(typeof endlessOn==="function" && endlessOn()) endlessUpdate(dt); // Horda Infinita: rescates y su reloj
   ctxUpdate(dt); // acciones contextuales (fisuras, braseros, runas...): js/systems/context-actions.js
   updatePotions(dt);

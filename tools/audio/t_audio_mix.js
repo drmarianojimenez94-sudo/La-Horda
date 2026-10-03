@@ -414,6 +414,16 @@ function pageHarness() {
     check('SFX.materiales_suenan_distinto', mMin > 1.5, { minD: +mMin.toFixed(2), par: mPair });
     check('SFX.variacion_por_disparo', mats.varDiff > 0.1, { dif_dB: mats.varDiff, picos: mats.varPk });
 
+    // Champion accents use the same offline mixer and bounded source envelopes.
+    const expedition = await E(async () => {
+      const out={};if(typeof EX_AUDIO==='undefined')return out;
+      for(const k of Object.keys(EX_AUDIO)){
+        const r=await __AH.render(1.2,[[.05,()=>playSfx('ex_'+k+'_cast')],[.4,()=>playSfx('ex_'+k+'_ult')]],{});
+        out[k]={peak:r.peak_dBFS,clip:r.clip,nan:r.nan,never:r.never_stopped,errors:r.errs};
+      }return out;
+    });
+    for(const [k,r] of Object.entries(expedition))check('EXPEDITION.'+k,Number.isFinite(r.peak)&&r.peak<-1&&r.peak>-100&&!r.nan&&!r.errors.length&&r.never<=4,r);
+
     // ---------------- 4) mute y volúmenes ----------------
     const vol = await E(async () => {
       const ev = [[0, () => setMusicMode('wave', 3)]]; for (let t = 0.3; t < 3; t += 0.2) ev.push([t, () => playSfx('heavy')]);

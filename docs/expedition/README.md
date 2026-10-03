@@ -1,30 +1,20 @@
 # La Horda — Expedición de los Diez
 
-Propuesta completa y taller de prototipos · 3 de octubre de 2026.
+Diez campeones integrados para la Alpha, con 30 habilidades, 10 definitivas, pasivas, historias, talentos, maestrías, 10 sets, 20 skins de vestuario y 10 cromas.
 
-Base revisada: main 965a4504fb44ca81438fe8e31b63ca445c7bb008. Guías aplicadas: AGENTS, Balance de Campeones, referencia por rol, Art Bible, Lore Bible y Production Bibles.
+Base: main bcebd0f. Referencias de balance y knownChampions conservadas. Registro anterior al normalizador. Los campeones nuevos empiezan bloqueados a nivel 1 y se compran con oro mediante la tienda existente; no se reinicia el progreso de cuentas.
 
-## Estado real
+## Reglas y límites
 
-Diez historias originales; diez pasivas; diez básicos; treinta habilidades y diez definitivas implementadas en un taller aislado; tres ramas de talentos por candidato; diez sets de cuatro piezas; veinte diseños de skins con historia propia y diez cromas. Las apariencias son especificaciones de producción: **no hay atlas nuevos aprobados**. El taller usa siluetas prestadas claramente rotuladas, y no se registra en el index de producción.
+La Horda corrompe y no puede destruirse. No se agregan Guardianes antiguos ni cristales. Las historias conservan el orden de campaña. Máximo 12 blancos por evento, 8 objetos por dueño, pulsos finitos, marcas por jugador, caducidad y limpieza al morir. Desplazamientos prueban la geometría en pasos de 6 unidades. Los jefes resisten desplazamiento/aturdimiento y su freno no supera 12%. Los cosméticos no alteran daño, estadísticas, hitbox ni recargas.
 
-El taller no equivale a diez campeones terminados para la Alpha. Falta producir y revisar sprites/animaciones/previews, VFX y SFX de identidad, y la entrega persistente de cosméticos de Set. No se inventan archivos ni aprobaciones para hacer pasar el contrato.
-
-## Reglas conservadas
-
-La Horda corrompe y no puede destruirse. No se agregan Guardianes antiguos, cristales ni cambios al orden de campaña. Las nuevas biografías son propuestas compatibles; no reescriben el canon. La sombra de Vesper no prueba una cura; el reflejo de Nahir no predice realmente el futuro. Baltra conoce el mar después de que aparece en la campaña.
-
-Cada campeón tiene una herramienta multiblanco. Máximo 12 afectados por evento directo, ocho objetos propios y 48 objetos del sistema compartido. Las zonas caducan; los pulsos de definitivas tienen cantidad fija aun al ampliar duración. Las marcas pertenecen a cada jugador, expiran y no viajan como referencias inválidas. Desplazamientos comprobados por pasos contra geometría. Jefes sin empuje/aturdimiento, freno máximo 12%. Escudos no acumulables del mismo efecto; curación acotada; efectos cancelados al morir, fusionarse o reiniciar.
-
-Los valores de entrada pasan por el normalizador antes de jugar. knownChampions y las medias aprobadas no se modifican. Pasar el techo de admisión no demuestra equivalencia de utilidad, supervivencia, curación o daño en todas las builds.
-
-## Validación de esta reconstrucción
+## Evidencia
 
 - Funcional: 234 comprobaciones; 0 fallos; 0 errores. Incluye 100 cruces campeón/arena, niveles iniciales, límites, talentos máximos, sets, control, muerte/reset y serialización. [JSON](functional-results.json).
 - Gate: 33 simulaciones de 150 s; 0 infracciones y 0 errores. [JSON](entry-gate-results.json).
 - Cooperativo: 10 combinaciones entre host e invitado; 0 fallos y 0 errores. Relay real local; cada candidato envía 3 habilidades + definitiva y replica entidades con dueño correcto. [JSON](online-results.json). No mide Internet público ni cuatro teléfonos físicos.
-- Audio: suite del motor existente (no diez identidades sonoras nuevas); ver [registro](audio-results.txt). La escucha humana y firmas propias siguen pendientes.
-- Performance de escritorio: 714 cuadros; p95 16.70 ms; 0.14% por encima de 33,4 ms. Viewport móvil en Chromium/Linux, no iPhone físico. [JSON](performance-results.json).
+- Audio: suite de mezcla del motor y acentos sintetizados propios en audio.js; ver [registro](audio-results.txt). La medición offline no sustituye una escucha humana de fatiga.
+- Performance de escritorio: 713 cuadros; p95 16.80 ms; 0.14% por encima de 33,4 ms. Viewport móvil en Chromium/Linux, no iPhone físico. [JSON](performance-results.json).
 
 ## Comparación de entrada
 
@@ -32,16 +22,16 @@ Daño registrado por jugador en Bosque, nivel 20, tres semillas oficiales, 150 s
 
 | Campeón | Rol | HP / daño / defensa | Velocidad / básico ms | Daño medio | % de referencia | Con vida |
 |---|---|---|---|---:|---:|---:|
-| Vesper | asesino | 104 / 11 / 7.000000000000001% | 179 / 430 | 8862 | 69% | 3/3 |
-| Nahir | asesino | 101 / 11 / 6% | 181 / 450 | 8462 | 66% | 3/3 |
-| Baltra | tanque | 166 / 9 / 20% | 137 / 620 | 7066 | 67% | 3/3 |
-| Maura | tanque | 152 / 9 / 18% | 150 / 590 | 6441 | 61% | 3/3 |
-| Dáriel | soporte | 112 / 6.5 / 12% | 165 / 600 | 5540 | 85% | 3/3 |
-| Orsa | asesino | 101 / 11 / 7.000000000000001% | 168 / 580 | 7405 | 58% | 3/3 |
-| Tibor | mago | 99 / 9 / 7.000000000000001% | 155 / 560 | 10033 | 67% | 3/3 |
-| Zahra | mago | 99 / 9 / 7.000000000000001% | 158 / 550 | 8028 | 54% | 3/3 |
-| Renko | tanque | 160 / 9 / 19% | 140 / 640 | 5299 | 50% | 3/3 |
-| Sira | mago | 96 / 9 / 6% | 164 / 570 | 7731 | 52% | 3/3 |
+| Vesper | asesino | 104 / 11 / 7.000000000000001% | 179 / 430 | 8108 | 63% | 3/3 |
+| Nahir | asesino | 101 / 11 / 6% | 181 / 450 | 8543 | 66% | 3/3 |
+| Baltra | tanque | 166 / 9 / 20% | 137 / 620 | 6195 | 59% | 3/3 |
+| Maura | tanque | 152 / 9 / 18% | 150 / 590 | 6149 | 59% | 3/3 |
+| Dáriel | soporte | 112 / 6.5 / 12% | 165 / 600 | 5120 | 79% | 3/3 |
+| Orsa | asesino | 101 / 11 / 7.000000000000001% | 168 / 580 | 7661 | 59% | 3/3 |
+| Tibor | mago | 99 / 9 / 7.000000000000001% | 155 / 560 | 10986 | 73% | 3/3 |
+| Zahra | mago | 99 / 9 / 7.000000000000001% | 158 / 550 | 8243 | 55% | 3/3 |
+| Renko | tanque | 160 / 9 / 19% | 140 / 640 | 7641 | 73% | 3/3 |
+| Sira | mago | 96 / 9 / 6% | 164 / 570 | 8315 | 55% | 3/3 |
 
 Estadísticas de la tabla: propuesta previa al normalizador; los valores finales y ajustes figuran en entries del JSON del gate. Daño bajo también requiere revisión: este gate solo bloquea excesos, errores y falta de lanzamientos.
 
@@ -70,9 +60,9 @@ Vesper remendaba los trajes del teatro de la Ciudad. La noche del regreso encont
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Hilo del Recuerdo:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: ciudad. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Hilo del Recuerdo:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: ciudad. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -107,9 +97,9 @@ Antes de entrar al Laberinto, Nahir restauraba espejos: devolvía a otros un ros
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Galería Quebrada:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: laberinto. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Galería Quebrada:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: laberinto. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -144,9 +134,9 @@ Baltra cuidaba una campana de aviso en un poblado de la costa nueva. Cuando el a
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Última Advertencia:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: acuatica. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Última Advertencia:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: acuatica. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -181,9 +171,9 @@ Maura guiaba rebaños por senderos que ya no figuran en los mapas. Al regresar a
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Sendero de Zarzas:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: bosque. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Sendero de Zarzas:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: bosque. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -218,9 +208,9 @@ Dáriel dirigía la música entre escenas. Cuando el Presentador dejó de permit
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Función Inconclusa:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: ciudad. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Función Inconclusa:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: ciudad. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -255,9 +245,9 @@ Orsa inspeccionaba los cables que llevaban señales entre los niveles de las Min
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Circuito de Rescate:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: minas. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Circuito de Rescate:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: minas. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -292,9 +282,9 @@ A Tibor lo llamaban rey porque era incapaz de dar una orden a sus abejas. Les ab
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Reina Errante:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: micelial. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Reina Errante:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: micelial. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -329,9 +319,9 @@ Zahra abría las compuertas de los hornos al final de cada turno. Una noche los 
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Compuerta Abierta:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: fortaleza. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Compuerta Abierta:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: fortaleza. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -366,9 +356,9 @@ Renko anotaba nombres para quienes ya no podían hacerlo. Cuando el cementerio e
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Nombres Conservados:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: ciudad. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Nombres Conservados:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: ciudad. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -403,9 +393,9 @@ El padre de Sira volvió del Laberinto con un mapa en blanco. Durante semanas se
 
 Daño × multiplica el daño de habilidad calculado por el motor; en efectos por pulsos es **por pulso**, no daño total. El radio/alcance efectivo respeta techos del runtime aun con talentos.
 
-**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Son árboles de prototipo, pendientes de especializaciones artísticas/UI.
+**Talentos y maestría:** tres ramas, una por habilidad: +5% al efecto por rango, +5% área (duración para postura) y −3% CD, tres rangos cada una. Los poderes sin daño aumentan duración (reflejo/postura/montículo) o distancia (retroceso). Maestría de rama añade 10% al efecto correspondiente; miniárbol dos rangos de +5% al efecto y +5% poder de definitiva. Árboles registrados en la UI de talentos existente.
 
-**Set — Ruta Imborrable:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Fuente propuesta: laberinto. Completar la colección otorgaría la segunda skin; falta integrar el grant persistente, no se simula como obtenido.
+**Set — Ruta Imborrable:** arma, casco, pechera, botas. 2 piezas +5% vida; 3 +4% daño de habilidades; 4 −4% recargas. Arena con peso doble de drop: laberinto. Completar la colección desbloquea permanentemente la segunda skin, sin poder adicional.
 
 **Apariencias:**
 
@@ -417,31 +407,23 @@ Daño × multiplica el daño de habilidad calculado por el motor; en efectos por
 
 **Contrato:** [sira.json](manifests/sira.json).
 
-## Cierre de producción pendiente
+## Arte y revisión
 
-1. Producir 10 atlas originales y 20 variantes de vestuario, animaciones y previews. Aplicar el visual gate con referencia Tanque; conservar INCOMPLETE hasta PASS. Los prompts completos están en cada contrato.
-2. Crear anticipaciones, impactos y firmas visuales/sonoras propias; comprobar lectura con partículas mínimas y audio apagado. Escucha humana, control de mezcla y revisión táctil de 667×375.
-3. Conectar drops a las arenas propuestas y grant de skin de Set por colección persistente, idempotente y sin bonus cosmético.
-4. Balance ampliado: diez semillas/rol, Bosque/Minas/Infernal, solo y cuatro jugadores, nivel inicial/20/40, builds completas y curación/daño recibido/tiempo caído. No ajustar por DPS solamente.
-5. Medir iPhone real antes de aprobar el piso móvil. Solo después registrar módulos antes del normalizador en index y pasar gates sobre el candidato final.
+30 atlas originales con cuatro direcciones (izquierda por espejo), ataques direccionales, cast, hit, muerte y definitiva. Reutilización explícita de poses coherentes: idle/hit y cast frontal en otras direcciones; Vesper Corte reutiliza cast en ultimate. Los metadatos enumeran los índices reales. Cromas calculadas por el renderizador de paletas existente. Ver [revisión visual](visual-review.json), [roster](visual-roster.png) y [pruebas cosméticas](cosmetics-results.json).
 
-## Repetir el taller
+Las pruebas de performance usan Chromium/Linux con viewport móvil; no certifican un iPhone físico. El gate de entrada limita excesos de daño y errores, no demuestra balance competitivo para todas las builds. La escucha humana de fatiga y pruebas públicas de red son validaciones posteriores de Alpha, no resultados inventados.
 
-No utiliza la web publicada. Requiere Node, Python, Playwright y Chromium; relay usa el lockfile de server. El puerto propio separa localStorage de la web de producción. Usar perfiles de prueba; no iniciar cuentas reales.
+## Repetir
 
 ```sh
 node tools/expedition/server.js
-# En otra terminal, desde la raíz; CHROMIUM_PATH es opcional si Playwright tiene browser instalado:
-node tools/balance/check-entry-reference.js > docs/expedition/reference-results.txt
+# Otra terminal con Playwright/Chromium instalados
+node tools/balance/check-entry-reference.js
 node tools/expedition/functional.js
 ENTRY_BASE_URL=http://127.0.0.1:8806 node tools/balance/entry-gate.js
-cp docs/balance/entry-gate-results.json docs/expedition/entry-gate-results.json
-# Restaurar el informe del roster de producción, no sustituirlo con el taller:
-git restore docs/balance/entry-gate-results.json
-npm --prefix server ci --ignore-scripts
+node tools/expedition/cosmetics-test.js
 node tools/expedition/online.js
 node tools/expedition/performance.js
+node tools/audio/t_audio_mix.js
 node tools/expedition/production.js
 ```
-
-`production.js` conserva los manifiestos INCOMPLETE por falta de assets/evidencia visual. No rebaja el contrato ni registra automáticamente campeones.

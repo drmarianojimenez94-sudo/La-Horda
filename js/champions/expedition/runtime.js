@@ -1,5 +1,5 @@
 'use strict';
-// Host-authoritative prototype; use existing combat, entity lifecycle and network serializer.
+// Host-authoritative champion kits; use existing combat, entity lifecycle and network serializer.
 const exCandidate=h=>!!(h&&EXPEDITION[h.classKey]);
 function exState(h){return h.exState||(h.exState={notes:0,seeds:0,vibration:0,heat:0,colony:100,route:[]});}
 function exTargets(h,test){return portadorEnemies(h).filter(e=>!(e.cineT>0)&&test(e)).sort((a,b)=>distance(h,a)-distance(h,b)).slice(0,12);}
@@ -23,6 +23,8 @@ function expeditionCast(h,sk,isUlt,dmg,area,dur,power){
  const s=exState(h),idx=h.cls.skills.indexOf(sk),master=idx>=0&&portadorMaster(h,idx);
  if(master){if(['reflect','brace','mound'].includes(sk.action))dur*=1.1;else if(sk.action==='retrace')area*=1.1;else {dmg*=1.1;power*=1.1;}}
  const r=Math.min(230,(sk.radius||100)*area),range=Math.min(400,(sk.range||200)*area),life=Math.min(9000,(sk.duration||2400)*dur),dir=aimDir(h,range),point=()=>portadorPoint(h,range,r),end={x:h.x+dir.x*range,y:h.y+dir.y*range},origin={x:h.x,y:h.y};
+ h.exCue={action:sk.action,x:h.x,y:h.y,bx:end.x,by:end.y,r,range,angle:Math.atan2(dir.y,dir.x),until:runElapsedMs+(isUlt?650:350),ult:!!isUlt};
+ if(typeof playSfx==='function')playSfx('ex_'+h.classKey+(isUlt?'_ult':'_cast'));
  h.portCastState=isUlt?'ultimate':'cast';h.portCastUntil=runElapsedMs+(isUlt?650:420);
  if(isUlt)h._ultLockUntil=Math.max(h._ultLockUntil||0,runElapsedMs+life);
  if(h.classKey==='zahra'&&s.heat>=60)dmg*=1.15;

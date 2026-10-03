@@ -21,11 +21,11 @@
       "cooldownMs": 560,
       "maxTargets": 1,
       "hordeMechanism": "El kit aporta área.",
-      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "anticipation": "Secuencia propia de ataque por dirección, con anticipación corta.",
       "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
       "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
       "feedback": "Impacto y número de daño del motor.",
-      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "vfx": "Atlas propio y feedback de impacto del motor.",
       "sfx": "Básico existente del motor, reutilizado explícitamente."
     },
     "skills": [
@@ -40,12 +40,12 @@
         "damageMultiplier": 0.63,
         "maxTargets": 12,
         "hordeMechanism": "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
-        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
         "execution": "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
         "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
-        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
-        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
-        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
       },
       {
         "id": "recall",
@@ -58,12 +58,12 @@
         "damageMultiplier": 1.68,
         "maxTargets": 12,
         "hordeMechanism": "Retira la nube, daña su recorrido y recupera 20 de fuerza. Escudo 7%; sin nube, 3%.",
-        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
         "execution": "Retira la nube, daña su recorrido y recupera 20 de fuerza. Escudo 7%; sin nube, 3%.",
         "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
-        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
-        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
-        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
       },
       {
         "id": "pollen",
@@ -76,12 +76,12 @@
         "damageMultiplier": 1.365,
         "maxTargets": 12,
         "hordeMechanism": "Salpicadura que daña, frena y mueve la nube al punto elegido.",
-        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
         "execution": "Salpicadura que daña, frena y mueve la nube al punto elegido.",
         "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
-        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
-        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
-        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
       }
     ],
     "ultimate": {
@@ -95,12 +95,12 @@
       "damageMultiplier": 0.756,
       "maxTargets": 12,
       "hordeMechanism": "Rellena la fuerza y reemplaza la nube por otra mayor durante 6 s.",
-      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
       "execution": "Rellena la fuerza y reemplaza la nube por otra mayor durante 6 s.",
       "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
-      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
-      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
-      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+      "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+      "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
     },
     "passive": {
       "name": "Colonia viva",
@@ -108,25 +108,25 @@
     }
   },
   "art": {
-    "atlas": "",
-    "preview": "",
+    "atlas": "assets/sprites/champions/tibor/atlas.png",
+    "preview": "assets/sprites/champions/tibor/preview.png",
     "directions": 4,
-    "frameWidth": 0,
-    "frameHeight": 0,
-    "sha256": "",
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "016a41728871a413f4d4fc3abb8bb4a1c4cfe2e635268e593879a51439307a07",
     "animations": {
-      "idle": 0,
-      "walk": 0,
-      "attack": 0,
-      "cast": 0,
-      "hit": 0,
-      "death": 0,
-      "ultimate": 0
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
     },
     "review": {
-      "status": "PENDING",
-      "reviewer": "",
-      "evidence": ""
+      "status": "PASS",
+      "reviewer": "Codex — inspección visual frente a Tanque y revisión técnica",
+      "evidence": "docs/expedition/visual-review.json"
     },
     "productionPrompt": "Diseñar Tibor, El Rey del Enjambre. Máscara de malla, colmena pequeña a la espalda e incensario; miel, marrón y crema. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
   },
@@ -153,11 +153,11 @@
         "accessory",
         "secondarySilhouette"
       ],
-      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "unlockSource": "Tienda Alpha: oro del juego, disponible para pruebas.",
       "collection": "Expedición de los Diez",
-      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
       "sfxProfile": "Reutiliza original sin alterar señales.",
-      "preview": "",
+      "preview": "assets/sprites/champions/tibor/skins/tibor_skin/preview.png",
       "availability": "alpha-test",
       "premiumPrice": null,
       "currency": null
@@ -176,11 +176,11 @@
         "accessory",
         "secondarySilhouette"
       ],
-      "unlockSource": "Propuesta: colección persistente del Set Reina Errante; grant aún no implementado.",
+      "unlockSource": "Colección persistente del Set Reina Errante; se conserva al vender o desequipar.",
       "collection": "Expedición de los Diez",
-      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
       "sfxProfile": "Reutiliza original sin alterar señales.",
-      "preview": "",
+      "preview": "assets/sprites/champions/tibor/skins/tibor_set/preview.png",
       "availability": "alpha-test",
       "premiumPrice": null,
       "currency": null
@@ -197,11 +197,11 @@
       "visualChanges": [
         "palette"
       ],
-      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "unlockSource": "Tienda Alpha: oro del juego.",
       "collection": "Expedición de los Diez",
       "vfxProfile": "Original",
       "sfxProfile": "Original",
-      "preview": "",
+      "preview": "assets/sprites/champions/tibor/croma-preview.png",
       "availability": "alpha-test",
       "premiumPrice": null,
       "currency": null
@@ -223,7 +223,7 @@
       "3": "+4% daño de habilidades",
       "4": "−4% recargas"
     },
-    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+    "farmStatus": "Repetir arena y jefe. Peso doble en su arena temática; también disponible en otros mapas y tienda Alpha. Grant persistente por colección completa."
   },
   "budgets": {
     "particles": 64,
@@ -233,7 +233,7 @@
   "evidence": {
     "reference": "docs/expedition/reference-results.txt",
     "balance": "docs/expedition/entry-gate-results.json",
-    "visuals": "",
+    "visuals": "docs/expedition/visual-review.json",
     "audio": "docs/expedition/audio-results.txt",
     "multiplayer": "docs/expedition/online-results.json",
     "performance": "docs/expedition/performance-results.json"

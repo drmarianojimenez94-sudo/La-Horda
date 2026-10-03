@@ -487,6 +487,12 @@ function create(opts){
   let ownerId = null;
   const isOwner = user => !!user && (adminOverride ? adminNames.includes(userKey(user.user)) : ownerId !== null && user.id === ownerId);
 
+  function ownerAccess(user){
+    const owner = isOwner(user);
+    const candidate = !!user && userKey(user.user) === configuredOwner;
+    return {owner, role:owner ? "OWNER" : null, reason:owner ? "OWNER" : !candidate ? "PLAYER" : adminOverride ? "OWNER_EXCLUDED" : ownerId === null ? "OWNER_NOT_BOUND" : "OWNER_ID_MISMATCH"};
+  }
+
   let store = null, status = "starting", lastError = "";
   try{ store = url ? pgStore(url) : fileStore(dataDir); }
   catch(e){ status = "error"; lastError = String(e.message || e); }
@@ -772,7 +778,7 @@ function create(opts){
     }
   };
 
-  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner}));
+  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,ownerAccess}));
 
   // Devuelve true si atendió el pedido (todo lo que empieza con /api/).
   function handle(req, res){

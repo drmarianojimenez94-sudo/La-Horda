@@ -8,3 +8,5 @@
 .hub-more{width:100%;}.hub-more .hub-actions{display:flex;flex-wrap:wrap}.admin-modal{position:fixed;inset:5%;overflow:auto;padding:20px;background:#24170f;border:2px solid #ffce74;border-radius:0;z-index:999;color:white;font-family:var(--font-retro,monospace)}.admin-modal label{display:block;margin:12px 0}.admin-modal input,.admin-modal select,.admin-modal button{padding:10px;min-height:44px;max-width:100%;box-sizing:border-box}
 @media(max-width:480px){.duo-cards{gap:6px}.duo-card{padding:8px}.duo-card select{font-size:12px}#duo-picker{padding:8px}}
 @media(orientation:landscape) and (max-height:500px){#duo-picker{margin:4px auto;padding:8px}#duo-picker h3{font-size:16px}#duo-picker>p{font-size:12px;margin:4px 0}.duo-card{display:grid;grid-template-columns:64px 1fr;text-align:left;gap:3px;padding:7px}.duo-card>b,.duo-card>label{grid-column:1/-1}.duo-card>canvas{width:64px;height:64px;grid-row:2/5}.duo-card>strong,.duo-card>small,.duo-card>details{grid-column:2}.duo-card>label{font-size:12px}.duo-card select{min-height:40px}#prep-start-btn{min-height:42px;bottom:8px}}
+
+.duo-cards.single-champion{grid-template-columns:minmax(0,1fr);max-width:420px;margin:auto}

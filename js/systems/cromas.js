@@ -1,7 +1,10 @@
 "use strict";
 /* ============================================================
    js/systems/cromas.js
-   CROMAS: variantes de color de un guardián, derivadas por RECOLOREO de paleta de su atlas
+   APARIENCIAS INDEPENDIENTES: CROMA_SKINS conserva los IDs y compras históricos.
+   js/assets/unique-skins-meta.js sustituye los 13 recolores publicados por diseños propios.
+   authoredPacks usa metadata independiente; files sigue admitiendo cromas futuras.
+   Generador histórico de cromas:
    (tools/art/cromas/build.py -> js/assets/croma-skins-meta.js). No son skins de set: se compran
    sueltas con ORO DEL JUEGO en la Tienda y se equipan por guardián. Cosmético puro: no dan poder
    (nunca plata real, sin pay-to-win). Paletas ligadas a los cristales de los Guardianes:
@@ -37,12 +40,28 @@ function skinDefOf(id){
   return d ? cromaEnsureLoaded(id) : null;
 }
 function isCromaId(id){ return !!(id && CROMA_SKINS[id]); }
+// Storage/purchase IDs remain compatible; presentation follows the actual art.
+function cosmeticAppearanceKind(id){
+  if(!id) return "original";
+  const d = CROMA_SKINS[id];
+  if(d) return d.appearanceType === "skin" ? "skin" : "croma";
+  return cosmeticIsSetCroma(SET_SKINS[id]) ? "set-croma" : "set";
+}
+function cosmeticAppearanceLabel(id){ return cosmeticAppearanceKind(id)==="skin" ? "Skin" : "Croma"; }
 // Arma la croma: por cada archivo, si hay un atlas base con esa clave (CHAMP_PACK) se clona su meta
 // con la imagen recoloreada; si no, es una imagen suelta de un guardián de atlas viejo.
 function cromaEnsureLoaded(id){
   const d = CROMA_SKINS[id]; if(!d) return null;
   if(d._built) return d;
   d._built = true; d.croma = true; d.id = id; d.packs = {}; d.imgs = {};
+  if(d.authoredPacks){
+    for(const [base, asset] of Object.entries(d.authoredPacks)){
+      const key = "croma_" + id + (base === d.champ ? "" : "_" + base);
+      champPackLoadAtlas(key, asset.src, asset.meta);
+      d.packs[base] = key;
+    }
+    return d;
+  }
   for(const k in (d.files||{})){
     const src = d.files[k];
     if(typeof CHAMP_PACK!=="undefined" && CHAMP_PACK[k] && typeof champPackCloneAtlas==="function"){
@@ -164,7 +183,7 @@ function cosmeticMetadata(id){
     ? Object.keys(SET_ARENA_WEIGHTS).filter(a=>(SET_ARENA_WEIGHTS[a][id]||0)>0) : [];
   const fx = !croma && typeof SKIN_FX_SRC!=="undefined" && Object.keys(SKIN_FX_SRC).some(k=>k.startsWith("sk_"+id+"_"));
   return {
-    id, champion, name:d.name || id, type:croma ? "CROMA" : cosmeticIsSetCroma(d) ? "CROMA DE SET" : "SKIN DE SET",
+    id, champion, name:d.name || id, type:croma ? (d.appearanceType==="skin" ? "SKIN" : "CROMA") : cosmeticIsSetCroma(d) ? "CROMA DE SET" : "SKIN DE SET",
     rarity:d.rarity || (croma ? "Común" : "Set"), tagline:d.tagline || (croma ? "Otra paleta, el mismo guardián" : "La memoria de una colección"),
     lore:d.lore || COSMETIC_SET_STORIES[id] || "Historia de esta apariencia pendiente de completar.",
     artPending:!croma && cosmeticArtPending(d),

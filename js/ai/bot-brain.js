@@ -10,7 +10,7 @@
    se meten en las zonas seguras, reviven a otros bots caídos (con anillo de progreso) y se
    reagrupan con el jugador si se alejan.
    ============================================================ */
-const BOT_REVIVE_MS = 2400;
+const BOT_REVIVE_MS = REVIVE_DURATION_MS;
 function botRole(h){ return (h.cls && h.cls.roleCategory) || "asesino"; }
 
 // Vector para salir de un peligro telegrafiado (null si está a salvo).
@@ -96,7 +96,7 @@ function botWard(h){
 function botDownedNear(h, range){
   if(divinaMode) return null;
   let best = null, bd = range;
-  for(const a of (netMatch ? heroes : allies)){ if(a.alive || a===h || reviveBusyFor(a, h)) continue; if(arenaHas("heroReachable") && !arenaHook("heroReachable", h, a)) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
+  for(const a of heroes){ if(a.alive || a===h || reviveBusyFor(a, h)) continue; if(arenaHas("heroReachable") && !arenaHook("heroReachable", h, a)) continue; const d = distance(h, a); if(d < bd){ bd = d; best = a; } } // B1: en cooperativo también al anfitrión
   return best;
 }
 // A distancia salvo El Libertador montado (sable corvo: caballería que carga cuerpo a cuerpo).

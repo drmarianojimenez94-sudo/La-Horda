@@ -1,0 +1,26 @@
+PASS REGISTRO.datos_completos_y_cargadas  []
+PASS REGISTRO.grilla_segun_contrato_propio_o_croma  []
+PASS REGISTRO.cada_guardian_sin_skin_tiene_croma  []
+PASS TIENDA.sinOro
+PASS TIENDA.noEquipaSinComprar
+PASS TIENDA.compra
+PASS TIENDA.noDosVeces
+PASS TIENDA.otroGuardianNo
+PASS TIENDA.equipa
+PASS TIENDA.quita
+PASS TIENDA.noEnPartida
+PASS REGLA.skin_de_set_completo_tapa_la_croma  {"k":"cazadora","cid":"cazadora_escarcha","set":"manada","conCroma":"cazadora_escarcha","conSet":"manada","sinSet":"cazadora_escarcha","ok":true}
+PASS DIBUJO.otra_paleta_se_ve  {"tanque_ancestral":{"solidA":2018,"diffPct":81.5,"silueta":95.74,"authored":true,"skin":"tanque_ancestral","mismasStats":true},"tanque_juicio":{"solidA":2018,"diffPct":82.2,"silueta":96.05,"authored":true,"skin":"tanque_juicio","mismasStats":true},"nigromante_escarcha":{"solidA":2662,"diffPct":58,"silueta":92.17,"authored":true,"skin":"nigromante_escarcha","mismasStats":true},"nigromante_piedra":{"solidA":2662,"diffPct":67.2,"silueta":94.18,"authored":true,"skin":"nigromante_piedra","mismasStat
+PASS DIBUJO.silueta_propia_en_skins_y_preservada_en_cromas  [["tanque_ancestral",95.74],["tanque_juicio",96.05],["nigromante_escarcha",92.17],["nigromante_piedra",94.18],["libertador_escarcha",95.5],["libertador_ancestral",95.15],["segador_escarcha",91.07],["musashi_ancestral",96.69],["profeta_ancestral",91.4],["cazadora_escarcha",94.81],["axiom_piedra",90.2],["myla_arandanos",95.21],["ynara_celeste",95.71]]
+PASS DIBUJO.skin_activa_es_la_croma
+PASS PODER.croma_no_cambia_estadisticas
+PASS DIBUJO.tanque_torbellino_con_croma_y_restaurado  {"cambio":true,"restaurada":true}
+PASS RED.croma_en_el_loadout  {"enLoadout":true,"registro":true,"ajenaNo":true,"inexistenteNo":true,"skinDelHeroe":"libertador_escarcha"}
+PASS RED.croma_ajena_o_inexistente_se_descarta  {"enLoadout":true,"registro":true,"ajenaNo":true,"inexistenteNo":true,"skinDelHeroe":"libertador_escarcha"}
+PASS GUARDADO.cromas_compradas_y_equipada_sobreviven
+PASS UI.tarjetas_de_cromas_en_la_tienda  {"cards":13,"total":13,"hayBoton":true,"precio":"Comprar · 🪙 1.500"}
+PASS UI.comprar_desde_la_tienda_equipa  {"owned":true,"eq":"tanque_juicio","gold":18500,"card":true}
+PASS CODICE.chips_y_ficha_de_croma  {"chips":2,"esperadas":2,"buyBtn":true,"usar":true,"eq":"nigromante_piedra"}
+PASS sin_errores_de_pagina  []
+
+TODO OK

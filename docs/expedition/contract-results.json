@@ -1,202 +1,52 @@
 [
   {
     "id": "vesper",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "vesper_skin: preview must exist",
-      "vesper_set: preview must exist",
-      "vesper_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "nahir",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "nahir_skin: preview must exist",
-      "nahir_set: preview must exist",
-      "nahir_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "baltra",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "baltra_skin: preview must exist",
-      "baltra_set: preview must exist",
-      "baltra_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "maura",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "maura_skin: preview must exist",
-      "maura_set: preview must exist",
-      "maura_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "dariel",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "dariel_skin: preview must exist",
-      "dariel_set: preview must exist",
-      "dariel_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "orsa",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "orsa_skin: preview must exist",
-      "orsa_set: preview must exist",
-      "orsa_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "tibor",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "tibor_skin: preview must exist",
-      "tibor_set: preview must exist",
-      "tibor_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "zahra",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "zahra_skin: preview must exist",
-      "zahra_set: preview must exist",
-      "zahra_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "renko",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "renko_skin: preview must exist",
-      "renko_set: preview must exist",
-      "renko_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   },
   {
     "id": "sira",
-    "status": "INCOMPLETE",
-    "errors": [
-      "atlas and preview must exist",
-      "positive integer frame dimensions required",
-      "art.animations.idle frame count required",
-      "art.animations.walk frame count required",
-      "art.animations.attack frame count required",
-      "art.animations.cast frame count required",
-      "art.animations.hit frame count required",
-      "art.animations.death frame count required",
-      "art.animations.ultimate frame count required",
-      "visual review requires reviewer and evidence; structural checks cannot approve style",
-      "sira_skin: preview must exist",
-      "sira_set: preview must exist",
-      "sira_croma: preview must exist",
-      "visuals evidence required (file presence does not prove gate passed)"
-    ]
+    "status": "STRUCTURAL_PASS",
+    "errors": []
   }
 ]

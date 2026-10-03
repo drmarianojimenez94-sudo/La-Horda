@@ -54,13 +54,13 @@ function pickLobbyAllies(mine){
   const myRole = CLASSES[mine].roleCategory;
   const others = [];
   ROLE_ORDER.filter(r=>r!==myRole).forEach(role=>{
-    const pool = Object.keys(CLASSES).filter(k=>k!==mine && k!==save.duoReserve && CLASSES[k].roleCategory===role);
+    const pool = Object.keys(CLASSES).filter(k=>k!==mine && CLASSES[k].roleCategory===role);
     if(pool.length) others.push(pool[(Math.random()*pool.length)|0]);
   });
   return others;
 }
 function lobbyAlliesValid(mine){
-  return Array.isArray(lobbyAllies) && lobbyAllies.length>0 && lobbyAllies.every(k=>CLASSES[k] && k!==mine && (netMatch || k!==save.duoReserve));
+  return Array.isArray(lobbyAllies) && lobbyAllies.length>0 && lobbyAllies.every(k=>CLASSES[k] && k!==mine);
 }
 // Estado TEMPORAL de una partida que no vivía en los arrays de arriba: se limpia al empezar cada
 // partida (reintentar / volver a jugar desde la sala) para que nada de la anterior se filtre:
@@ -285,6 +285,7 @@ function onPlayerDeath(){
   // B1: en cooperativo caer no termina la partida mientras quede algún humano en pie (te
   // pueden revivir); la derrota la decide netHostCheckDefeat.
   if(netIsHost()){ showBanner(`${player.netName||player.cls.name} ha caído`); return; }
+  if(!divinaMode && heroes.some(h=>h.alive)){ showBanner("Has caído · un aliado puede revivirte"); return; }
   if(runEnding) return; // la victoria ya estaba en camino: no se pisa con una derrota
   runEnding = true;
   runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });

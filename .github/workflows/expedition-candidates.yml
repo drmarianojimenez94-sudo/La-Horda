@@ -1,9 +1,11 @@
-name: Expedition candidates workshop
+name: Expedition champions
 on:
   workflow_dispatch:
   pull_request:
     paths:
       - 'js/champions/expedition/**'
+      - 'assets/sprites/champions/**'
+      - 'index.html'
       - 'tools/expedition/**'
       - 'tools/balance/**'
       - 'js/skills/abilities.js'
@@ -28,7 +30,7 @@ jobs:
         run: |
           node tools/balance/check-entry-reference.js
           node --test tools/factory/test.js
-      - name: Start isolated workshop
+      - name: Serve production build
         run: |
           node tools/expedition/server.js > /tmp/expedition-server.log 2>&1 &
           node -e "const http=require('http');let n=0;function probe(){http.get('http://127.0.0.1:8806',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>{if(++n>20)process.exit(1);setTimeout(probe,250)});}probe();"
@@ -37,13 +39,16 @@ jobs:
           ENTRY_BASE_URL: http://127.0.0.1:8806
         run: |
           node tools/expedition/functional.js
+          node tools/expedition/cosmetics-test.js
           node tools/balance/entry-gate.js
           cp docs/balance/entry-gate-results.json docs/expedition/entry-gate-results.json
       - name: Multiplayer and desktop performance
         run: |
           node tools/expedition/online.js
           node tools/expedition/performance.js
-      - name: Upload workshop evidence
+          node tools/expedition/production.js
+          node -e "const r=require('./docs/expedition/contract-results.json');if(r.some(x=>x.errors.length))process.exit(1)"
+      - name: Upload champion evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:

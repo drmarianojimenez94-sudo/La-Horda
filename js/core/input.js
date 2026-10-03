@@ -85,11 +85,11 @@ function sylvaChargeRelease(aim){
    Mantenerlo apretado = "estoy reviviendo a X". El progreso y el resultado los decide la
    simulación (updateRevives en allies.js; en cooperativo, el anfitrión): el botón solo muestra
    el progreso real y se suelta solo si el revivir deja de ser válido. */
-const REVIVE_BTN_HOLD_MS = 1300; // demo: 1.3s en vez de 2s
+const REVIVE_BTN_HOLD_MS = REVIVE_DURATION_MS;
 let reviveBtnHoldRaf = null, reviveBtnTarget = null;
 function reviveTargetValid(a){
   if(duoEnabled()) return false;
-  return !!(a && !a.alive && a!==player && player && player.alive && !(player.stunTimer>0) && state==="playing" && !runEnding && !divinaMode
+  return !!(a && !a.alive && a!==player && player && player.alive && state==="playing" && !runEnding && !divinaMode
     && distance(player, a) < REVIVE_RANGE && !reviveBusyFor(a, player));
 }
 function nearestDownedAlly(){

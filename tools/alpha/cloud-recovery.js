@@ -46,7 +46,27 @@ const server=spawn('python3',['-m','http.server','8796'],{stdio:'ignore'});proce
   const originalSet=Storage.prototype.setItem;
   Storage.prototype.setItem=function(k,v){if(k.startsWith(SAVE_KEY+'_antesDeReinicio_'))throw new DOMException('full','QuotaExceededError');return originalSet.call(this,k,v);};
   try{check('backup failure refuses cloud deletion',!await accountStartFresh()&&puts===2);}finally{Storage.prototype.setItem=originalSet;}
-  check('reset uploads attempted',puts===2);return checks;
+  check('reset uploads attempted',puts===2);
+  const fixtureFetch=accountFetch;let permission='down';
+  accountFetch=async(...args)=>args[1]==='/api/gm/status' ? permission==='down' ? {status:503,j:{}} : permission==='excluded' ? {status:200,j:{owner:false,reason:'OWNER_EXCLUDED'}} : permission==='player' ? {status:200,j:{owner:false,reason:'PLAYER'}} : fixtureFetch(...args) : fixtureFetch(...args);
+  accountLogin=async()=>{_acctSetSession({token:'b'.repeat(64),user:{user:'NanoGM',name:'NanoGM'}});return {ok:true};};
+  let continued=0;acct.after=()=>continued++;acct.conflict=null;_acctRenderAuth('login');
+  document.getElementById('acc-user').value='NanoGM';document.getElementById('acc-pass').value='fixture-password';
+  await _acctSubmit(false);await new Promise(r=>setTimeout(r,40));
+  check('NanoGM login offers admin and player instead of auto continuing',acct.view==='profile'&&continued===0&&[...document.querySelectorAll('.acc-body button')].some(b=>b.textContent==='Continuar como jugador'));
+  const adminButton=[...document.querySelectorAll('.acc-body button')].find(b=>b.textContent==='Entrar al panel de administración');
+  check('NanoGM button survives server startup failure',adminButton&&!adminButton.hidden);
+  check('startup error is explained in profile',document.querySelector('.acc-body').textContent.includes('está arrancando'));
+  adminButton.click();await new Promise(r=>setTimeout(r,40));
+  check('server outage cannot open privileged UI',!document.getElementById('game-master')&&document.querySelector('.gm-denied').textContent.includes('está arrancando'));
+  permission='excluded';gameMasterOpen();await new Promise(r=>setTimeout(r,40));
+  check('missing OWNER reports server configuration',!document.getElementById('game-master')&&document.querySelectorAll('.gm-denied').length===1&&document.querySelector('.gm-denied').textContent.includes('ADMIN_USERS'));
+  permission='owner';gameMasterOpen();await new Promise(r=>setTimeout(r,60));
+  check('retry opens panel after server confirms OWNER',!!document.getElementById('game-master'));
+  location.hash='';await new Promise(r=>setTimeout(r,30));
+  permission='player';acct.session={user:'ordinary',name:'ordinary',token:'c'.repeat(64)};_acctRenderProfile();await new Promise(r=>setTimeout(r,30));
+  check('ordinary player has no admin shortcut',[...document.querySelectorAll('.acc-body button')].filter(b=>b.textContent==='Entrar al panel de administración').every(b=>b.hidden));
+  return checks;
  });
  console.log(JSON.stringify(result));assert(result.every(r=>r.ok));assert.deepEqual(errors,[]);
  console.log('PASS cloud recovery: actual game load, explicit backed-up reset, CAS, owner shortcut, account isolation');
