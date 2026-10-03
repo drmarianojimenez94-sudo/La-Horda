@@ -92,6 +92,7 @@ function infConvergencia(e, S, dt){
     if(V.cd <= 0 && !e.bossWind){
       V.st = "ritual"; V.t = 0; V._spd = e.speed; e.speed = 0;
       infSpawnFoci(e, INF_CV_EL);
+      if(typeof bossArenaEvent==="function") bossArenaEvent("angel_corrompido.convergencia", e);
       bossAnnounce(e, "CONVERGENCIA", "rompé los 4 FOCOS antes de que funda los cristales");
       showBanner("✦ CONVERGENCIA ✦ ¡Rompé los cuatro focos de cristal!");
       if(typeof tutSay==="function" && !tutSeen("inf_cv")) tutSay("inf_cv", "Está fundiendo los cuatro cristales en uno. Cada FOCO es un cristal: rompelos todos y el ritual se corta. Si termina, se vuelve más inestable… y más fuerte.", null, 10000, true);
@@ -106,6 +107,7 @@ function infConvergencia(e, S, dt){
     V.st = "idle"; V.t = 0; V.cd = C.cd[0] + Math.random()*(C.cd[1] - C.cd[0]); e.speed = V._spd || e.speed; e._encMult = 1;
     infInstability(e, S, -1);
     bossExpose(e, C.exposeMs, C.exposeMult, "✦ ¡RITUAL INTERRUMPIDO! El Hechicero queda EXPUESTO");
+    if(typeof bossArenaEvent==="function") bossArenaEvent("angel_corrompido.focos", e);
     return;
   }
   if(V.t >= C.ms){
@@ -155,7 +157,7 @@ function infExamen(e, S, dt){
   const done = (ms)=>{ X.st = "idle"; X.t = 0; X.cd = ms || (C.cd[0] + Math.random()*(C.cd[1] - C.cd[0])); if(X._spd){ e.speed = X._spd; X._spd = 0; } e._encMult = 1; };
   if(X.st==="numero"){
     e._encTag = `«EL GRAN NÚMERO» · ${Math.round(Math.max(0, (X.hp0 - e.hp)/e.maxHp)/C.numBreak*100)}%`;
-    if(X.hp0 - e.hp >= e.maxHp*C.numBreak){ done(); bossExpose(e, C.exposeMs, C.exposeMult, "¡NÚMERO INTERRUMPIDO! El Golem queda EXPUESTO"); return; }
+    if(X.hp0 - e.hp >= e.maxHp*C.numBreak){ done(); bossExpose(e, C.exposeMs, C.exposeMult, "¡NÚMERO INTERRUMPIDO! El Golem queda EXPUESTO"); if(typeof bossArenaEvent==="function") bossArenaEvent("golem_cuerpos.numero", e); return; }
     if(X.t >= C.numMs){
       done();
       for(const h of heroes){ if(h.alive) bossStrike(h.x, h.y, 120, 1000, e.dmg*1.1, "fire", {knock:60}); }
@@ -163,12 +165,12 @@ function infExamen(e, S, dt){
     }
   } else if(X.st==="embestida"){
     e._encTag = "«LA EMBESTIDA»";
-    if(e.crashVuln && e.stunTimer > 0 && !X.hit){ X.hit = 1; bossExpose(e, C.exposeMs, C.exposeMult, "¡SE ESTRELLÓ! El Golem queda EXPUESTO"); }
+    if(e.crashVuln && e.stunTimer > 0 && !X.hit){ X.hit = 1; bossExpose(e, C.exposeMs, C.exposeMult, "¡SE ESTRELLÓ! El Golem queda EXPUESTO"); if(typeof bossArenaEvent==="function") bossArenaEvent("golem_cuerpos.barricada", e); }
     if(X.t > 2600 && !e.bossCharge && !e.bossWind){ X.hit = 0; e.minoCharge = false; done(); }
   } else {
     const n = infFoci().length;
     e._encMult = n ? 0.5 : 1; e._encTag = n ? `LA RED · ${n} FOCO${n===1 ? "" : "S"} (−50%)` : null;
-    if(!n){ done(); bossExpose(e, C.exposeMs, C.exposeMult, "¡RED ROTA! El Golem queda EXPUESTO"); return; }
+    if(!n){ done(); bossExpose(e, C.exposeMs, C.exposeMult, "¡RED ROTA! El Golem queda EXPUESTO"); if(typeof bossArenaEvent==="function") bossArenaEvent("golem_cuerpos.red", e); return; }
     if(X.t >= C.netMs){
       for(const f of infFoci()){ const h = bossNearestHero(f.x, f.y); if(h) bossStrike(h.x, h.y, 110, 900, e.dmg*0.7, "holy", {slow:0.3}); }
       infKillFoci(); done();
@@ -214,6 +216,7 @@ function infFisurasHorda(e, S, dt){
   }
   // abiertas: cada una da un poder
   const o = open(), has = k=>o.some(f=>f.hordaCap===k && f.warn <= 0);
+  for(const f of o){ if(f.warn <= 0 && !f._powEv){ f._powEv = 1; if(typeof bossArenaEvent==="function") bossArenaEvent("demonio_mayor.fisuras_poder", e); } }
   e._encMult = has("piel") ? C.skin : 1;
   e._encTag = o.length ? "FISURAS: " + o.map(f=>INF_CAPS[f.hordaCap].name).join(" · ") : null;
   if(has("vida") && e.hp < e.maxHp) e.hp = Math.min(e.maxHp, e.hp + e.maxHp*C.regen*dt/1000);
@@ -231,6 +234,7 @@ function infFisurasHorda(e, S, dt){
   if(!o.length){
     F.st = "core"; F.t = 0;
     bossExpose(e, C.exposeMs, C.exposeMult, "🜂 ¡LAS TRES FISURAS CERRADAS! El NÚCLEO DE LA HORDA queda EXPUESTO");
+    if(typeof bossArenaEvent==="function") bossArenaEvent("demonio_mayor.fisuras", e);
     flashScreen(0.35, "255,160,90");
   }
 }

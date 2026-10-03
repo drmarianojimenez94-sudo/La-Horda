@@ -365,38 +365,50 @@ function update(dt){
     }
 
     if(e.type==="kraken_joven"){
+      // KRAKEN JOVEN — identidad de la Arena Acuática (docs/bible/BOSS_BIBLE.md, BOSS_BLUEPRINTS.kraken_joven):
+      // pesca con el agua. Todo golpe tiene aviso en el SUELO (punto fijo: se esquiva moviéndose, no solo
+      // alejándose), sus refuerzos llegan nadando por una CORRIENTE real y un CHARCO CARGADO que descarga con
+      // él adentro lo deja EXPUESTO (acuDischarge, acu-currents.js): atraerlo al charco es la jugada.
       const targets = [player,...allies].filter(h=>h.alive);
       e.tentacleCd -= dt;
       if(e.tentacleTelegraph>0){
         e.tentacleTelegraph -= dt;
         if(e.tentacleTelegraph<=0){
           e.attackAnim = 350;
-          if(e.tentacleTarget && e.tentacleTarget.alive && distance(e,e.tentacleTarget)<=300) damageHero(e.tentacleTarget, e.dmg, e);
-          particles.push({x:e.x,y:e.y, life:260, ring:true, maxLife:260, maxR:40, color:"#c98fe0"});
-          if(e.tentacleTarget){
-            const tt = e.tentacleTarget;
-            vfxSprite("krTent", 0, tt.x, tt.y+4, 112, 460, null, 0.12, tt.x<e.x, 0.95);
-            vfxBurst(tt.x, tt.y, 10, "water", 140, 360, 3, 2, -60, 0);
+          const P = e.tentaclePt || e.tentacleTarget;
+          if(P) for(const h of targets){ if(Math.hypot(h.x-P.x, h.y-P.y) <= 52 + (h.radius||18)*0.6) damageHero(h, e.dmg, e); }
+          if(P){
+            vfxSprite("krTent", 0, P.x, P.y+4, 112, 460, null, 0.12, P.x<e.x, 0.95);
+            vfxBurst(P.x, P.y, 10, "water", 140, 360, 3, 2, -60, 0);
           }
-          e.tentacleCd = 2600;
+          e.tentaclePt = null; e.tentacleCd = 2600;
         }
       } else if(e.tentacleCd<=0 && dist<300){
-        e.tentacleTelegraph = 500; e.tentacleTarget = tgt;
-        particles.push({x:tgt.x,y:tgt.y, life:500, ring:true, maxLife:500, maxR:36, color:"#8a5aa8"});
-        // el tentáculo asoma bajo el objetivo (lo sigue: el golpe es a esa persona, no a un punto)
-        vfxTelegraph({shape:0, r:40, follow:tgt, dur:500, rgb:"200,140,230"});
-        vfxSprite("krTent", 5, tgt.x, tgt.y+4, 46, 500, tgt, 0.6, false, 0.95);
+        // el tentáculo asoma DONDE ESTÁ el objetivo ahora y golpea ese punto (no lo persigue)
+        e.tentacleTelegraph = 650; e.tentacleTarget = tgt; e.tentaclePt = {x:tgt.x, y:tgt.y};
+        vfxTelegraph({shape:0, r:52, x:tgt.x, y:tgt.y, dur:650, rgb:"200,140,230"});
+        vfxSprite("krTent", 5, tgt.x, tgt.y+4, 46, 650, null, 0.6, false, 0.95);
         animTrigger(e, "bossCast", 800, 0.62);
       }
+      // AGARRE: anillo de aviso (0,75 s) en el lugar del objetivo; atrapa solo si sigue adentro
       e.grabCd -= dt;
-      if(e.grabCd<=0 && dist<320 && !e.grabbedHero){
-        e.grabCd = 9000;
-        e.grabbedHero = tgt;
-        tgt.stunTimer = Math.max(tgt.stunTimer||0, 2000);
-        vfxBurst(tgt.x, tgt.y, 12, "water", 150, 420, 3, 2, -60, 0);
-        animTrigger(e, "bossHeavyAttack", 700, 0.3);
-        showBanner("¡El Kraken atrapó a "+tgt.cls.name+"!");
-        particles.push({x:tgt.x,y:tgt.y, life:2000, ring:true, maxLife:2000, maxR:30, color:"#6a3a6e"});
+      if(e.grabWarn>0){
+        e.grabWarn -= dt;
+        if(e.grabWarn<=0){
+          const P = e.grabPt, h = e.grabTarget; e.grabPt = null; e.grabTarget = null;
+          if(P && h && h.alive && !(h.invulnTimer>0) && Math.hypot(h.x-P.x, h.y-P.y) <= 70 + (h.radius||18)*0.5){
+            e.grabbedHero = h;
+            h.stunTimer = Math.max(h.stunTimer||0, 2000);
+            vfxBurst(h.x, h.y, 12, "water", 150, 420, 3, 2, -60, 0);
+            animTrigger(e, "bossHeavyAttack", 700, 0.3);
+            showBanner("¡El Kraken atrapó a "+(h.cls ? h.cls.name : heroLabel(h))+"! Pegale al Kraken para soltarlo");
+            particles.push({x:h.x,y:h.y, life:2000, ring:true, maxLife:2000, maxR:30, color:"#6a3a6e"});
+          } else if(P) vfxBurst(P.x, P.y, 8, "water", 110, 320, 3, 1, -40, 0);   // agarró agua
+        }
+      } else if(e.grabCd<=0 && dist<320 && !e.grabbedHero){
+        e.grabCd = 9000; e.grabWarn = 750; e.grabTarget = tgt; e.grabPt = {x:tgt.x, y:tgt.y};
+        vfxTelegraph({shape:0, r:70, x:tgt.x, y:tgt.y, dur:750, rgb:"150,80,170"});
+        animTrigger(e, "bossCast", 750, 0.5);
       }
       if(e.grabbedHero){
         if(!e.grabbedHero.alive || e.grabbedHero.stunTimer<=0){ e.grabbedHero = null; }
@@ -424,14 +436,28 @@ function update(dt){
         animTrigger(e, "bossGroundSlam", 1150, 0.7);
         showBanner("¡Barrido del Kraken!");
       }
+      // REFUERZOS POR LA CORRIENTE: aviso de 0,9 s donde van a salir (la corriente más cercana a él)
       e.summonCd -= dt;
-      if(e.summonCd<=0){
-        e.summonCd = 14000;
-        spawnEnemy("tiburon_joven", false, false);
-        spawnEnemy("cangrejo_acorazado", false, false);
+      if(e.summonWarn>0){
+        e.summonWarn -= dt;
+        if(e.summonWarn<=0 && e.summonPt){
+          const P = e.summonPt; e.summonPt = null;
+          for(const t of ["tiburon_joven", "cangrejo_acorazado"]){
+            const m = spawnEnemy(t, false, false);
+            m.x = P.x + (Math.random()-0.5)*60; m.y = P.y + (Math.random()-0.5)*40; clampToArena(m);
+          }
+          vfxBurst(P.x, P.y, 14, "water", 160, 480, 3, 2, -60, 0);
+          if(P.cur && typeof bossArenaEvent==="function") bossArenaEvent("kraken_joven.corriente", e);
+        }
+      } else if(e.summonCd<=0){
+        e.summonCd = 14000; e.summonWarn = 900;
+        const z = typeof acuKrakenCurrentSpot==="function" ? acuKrakenCurrentSpot(e) : null;
+        e.summonPt = z || {x:e.x + (Math.random()-0.5)*160, y:e.y + 120};
+        clampToArena(e.summonPt);
+        vfxTelegraph({shape:0, r:70, x:e.summonPt.x, y:e.summonPt.y, dur:900, rgb:"120,210,230"});
+        vfxSprite("fxWhirl", 0, e.summonPt.x, e.summonPt.y+10, 120, 900, null, 0.25, false, 0.9);
         animTrigger(e, "bossCast", 900, 0.5);
-        vfxSprite("fxWhirl", 0, e.x, e.y+10, 120, 900, e, 0.25, false, 0.9);
-        showBanner("¡El Kraken invoca refuerzos!");
+        showBanner(z ? "¡El Kraken llama refuerzos por la CORRIENTE!" : "¡El Kraken invoca refuerzos!");
       }
     }
 
@@ -552,16 +578,19 @@ function update(dt){
       if(currentArena==="bosque"){
         // Los 4 Dobladores aparecen JUNTOS, ya con sus propias estadísticas de subjefe
         // (no se les aplica el multiplicador de "campeón" — ver ENEMY_BASE, ya vienen fuertes).
-        ["doblador_guerrero","doblador_arquera","doblador_picaro","doblador_clerigo"].forEach(t=>{
+        const dops = ["doblador_guerrero","doblador_arquera","doblador_picaro","doblador_clerigo"].map(t=>{
           const d = spawnEnemy(t, false, false);
           activeChampion = d; // se limpia solo cuando este referente muere (ver killEnemy)
+          return d;
         });
-        showBanner("¡LOS DOBLADORES DESPIERTAN!");
+        if(typeof bosDoppelBind==="function") bosDoppelBind(dops); // ecos de las runas (bos-doppels.js)
+        if(typeof arenaTitleCard==="function") arenaTitleCard("SUBJEFES", "LOS DOPPELGÄNGERS", "Ecos de las runas con la forma de los primeros campeones", 4200);
+        else showBanner("¡LOS DOBLADORES DESPIERTAN!");
       } else if(currentArena==="laberinto"){
         // El Guardián del Laberinto ya viene con sus propias estadísticas de subjefe
         const g = spawnEnemy("guardian_laberinto", false, false);
         activeChampion = g;
-        showBanner("¡EL GUARDIÁN DEL LABERINTO DESPIERTA!");
+        if(!(typeof bossTitleCard==="function" && bossTitleCard(g))) showBanner("¡EL GUARDIÁN DEL LABERINTO DESPIERTA!");
       } else if(currentArena==="acuatica"){
         // El Kraken Joven ya viene con sus propias estadísticas de subjefe -aparece cerca del
         // borde del escenario, y sus tentáculos (ver el bloque de habilidades en el loop de
@@ -571,7 +600,7 @@ function update(dt){
         k.x = player.x + Math.cos(spawnAng)*520; k.y = player.y + Math.sin(spawnAng)*520;
         k.tentacleCd = 2600; k.grabCd = 7000; k.sweepCd = 11000; k.summonCd = 9000; k.grabbedHero = null;
         activeChampion = k;
-        showBanner("¡EL KRAKEN JOVEN EMERGE!");
+        if(!(typeof bossTitleCard==="function" && bossTitleCard(k))) showBanner("¡EL KRAKEN JOVEN EMERGE!");
       } else if(currentArena==="infernal" && runLevel===9){
         hechSpawnSubboss(); // el Hechicero Supremo se revela (inf-hechicero.js)
       } else {

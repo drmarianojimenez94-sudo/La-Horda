@@ -25,6 +25,7 @@ function mnRubbleAt(x, y){
   if(mnS.rubble.filter(r=>r.t >= 0).length >= C.maxRubble) return;
   if(!mnInside(x, y, 130) || heroes.some(h=>h.alive && Math.hypot(h.x - x, h.y - y) < 80)) return;
   mnS.rubble.push({x:Math.round(x), y:Math.round(y), r:44, t:0, d:C.rubbleMs, v:(Math.random()*3)|0});
+  if(typeof bossArenaEvent==="function") bossArenaEvent("mn_titan.derrumbe", mnEnt("mn_titan"));
 }
 
 /* ============================================================
@@ -51,6 +52,7 @@ function mnTitanDirector(dt){
       const p = mnNearestFree(0, -420, 60), e = mnSpawnAt("mn_titan", p.x, p.y);
       e.bossPhase = 1; e.fx = 0; e.fy = 1; e.slamCd = 2200; e.quakeCd = 5000; e.throwCd = 3500; e.rainCd = 8000; e.stompCd = 7000; e.collapseCd = 9e9;
       activeChampion = null;
+      if(typeof bossHudFocus!=="undefined") bossHudFocus = e; // barra grande y consejos (ARENA_BOSS_TIPS.mn_titan)
       if(typeof MINAS_FX!=="undefined") bossSheetFx("mnCollapse", e.x, e.y, 260, 900, {anchorY:0.9});
       vfxShake(14); flashScreen(0.3, "255,160,90"); playSfx("bossRoar");
       if(typeof setMusicMode==="function") setMusicMode("boss");
@@ -189,7 +191,9 @@ function mnCerbLightScore(e){
 function mnCerbRule(e, dt){
   const C = MN_CFG.cerbero, P = mnS.cb, act = P.act||1;
   const L = mnCerbLightScore(e);
+  const darkWas = e._mnDarkPow;
   e._mnDarkPow = L.sources===0;
+  if(e._mnDarkPow && !darkWas) if(typeof bossArenaEvent==="function") bossArenaEvent("mn_cerbero.oscuridad", e);
   if(e._mnExpCd > 0) e._mnExpCd -= dt;
   if(!(e._expT > 0) && !(e._mnExpCd > 0)){
     if(L.score >= C.exposeNeed) e._mnExp = (e._mnExp||0) + dt*(1 + 0.4*(L.score - C.exposeNeed));
@@ -197,6 +201,7 @@ function mnCerbRule(e, dt){
     if(e._mnExp >= C.exposeMs){
       e._mnExp = 0; e._mnExpCd = C.exposeCd; e.mnFlame = null; e.cast = null; e.mnBusy = false;
       bossExpose(e, C.exposeWin, 1.75, "¡LA LUZ SEPARA SUS SOMBRAS! CERBERO ESTÁ EXPUESTO");
+      if(typeof bossArenaEvent==="function") bossArenaEvent("mn_cerbero.luz", e);
       P.shadowT = 1400; playSfx("mnTripleRoar");
       if(!tutSeen("mn_cexp")) mnTutSay("mn_cexp", "¡Eso! Iluminado por varias fuentes a la vez, sus sombras se separan y queda EXPUESTO: pegale con todo. Mantené los braseros encendidos y llevalo a la luz.", 9000, true);
     }
@@ -204,7 +209,11 @@ function mnCerbRule(e, dt){
   e._mnExpPct = Math.min(1, (e._mnExp||0)/C.exposeMs);
   e._encTag = e._expT > 0 ? null : e._mnDarkPow ? "EN LA OSCURIDAD: MÁS FEROZ" : L.score >= C.exposeNeed ? "ILUMINADO: SUS SOMBRAS SE SEPARAN" : null;
   // ANTI-KITE: lejos de todos por un rato -> lluvia de brasas (encadenado) o embestida al más lejano
-  if(bossHeroesFarMs(e, C.kiteR, dt) > C.kiteMs && !e.cast && !e.mnFlame){
+  // (encadenado en el acto 1 no puede acercarse: "lejos" es fuera del alcance de su lanzallamas. Antes quedaba
+  // un anillo entre ese alcance y kiteR donde nadie le pegaba y él no podía hacer nada: se encontró con
+  // tools/bible/boss-validator.js)
+  const kiteR = act===1 ? Math.min(C.kiteR, C.flameR*0.95) : C.kiteR;
+  if(bossHeroesFarMs(e, kiteR, dt) > C.kiteMs && !e.cast && !e.mnFlame){
     e._kiteMs = 0; const far = bossFarthestHero(e.x, e.y);
     if(far){
       if(act===1){ for(const h of heroes){ if(!h.alive) continue; for(let k=0;k<3;k++) mnDrop("meteor", h.x + mnRand(-70, 70), h.y + mnRand(-60, 60), 70, 1100 + k*180, e.dmg*0.7, {fire:48}); } showBanner("LLUVIA DE BRASAS: el Umbral castiga a los que huyen"); }
@@ -257,8 +266,9 @@ function mnAICerbero(e, dt, tgt, dist){
   if(e.howlCd <= 0){
     e.howlCd = mnRand(C.howlCd[0], C.howlCd[1])*sp;
     cast("summon", C.howlWind, ()=>{
-      for(const L of mnS.lights){ if(L.st===2){ L.e = Math.min(L.e, 0.45); mnLightSt(L); } }
-      const c = mnPartyCenter(); mnLightsBlackout(c.x, c.y, 2400, MN_CFG.light.tempOffMs, act===1 ? 1 : 2);
+      let dim = 0; for(const L of mnS.lights){ if(L.st===2){ L.e = Math.min(L.e, 0.45); mnLightSt(L); dim++; } }
+      const c = mnPartyCenter(), off = mnLightsBlackout(c.x, c.y, 2400, MN_CFG.light.tempOffMs, act===1 ? 1 : 2);
+      if(dim || off) if(typeof bossArenaEvent==="function") bossArenaEvent("mn_cerbero.oscuridad", e);
       if(act >= 2){ const S = mnSector(); for(let k=0;k<2;k++){ const p = mnPick(S.tunnels), f = mnNearestFree(p.x, p.y, 24); mnSpawnAt("mn_esclavo", f.x, f.y); } }
       vfxShake(8); showBanner("¡AULLIDO INFERNAL! Las luces tiemblan");
       if(typeof MINAS_FX!=="undefined") bossSheetFx("mnHowl", e.x, e.y, 240, 800, {anchorY:0.9});

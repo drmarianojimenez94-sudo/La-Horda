@@ -8,6 +8,7 @@ esta carpeta, el mismo commit actualiza el documento.
 |---|---|---|
 | [CHAMPION_BIBLE.md](CHAMPION_BIBLE.md) | Nombres, títulos, lore, roles, kit, contrato de habilidades, Definition of Done | `js/data/champion-identity.js`, `js/skills/ability-registry.js`, `CLASSES` |
 | [ARENA_BIBLE.md](ARENA_BIBLE.md) | Ficha obligatoria de arena, Arena Factory, geometría, hazards, objetivos, briefing, micro-tutorial | `js/arenas/common/arena-blueprints.js`, `ARENA_DEFS` / `ARENA_EXT` |
+| [BOSS_BIBLE.md](BOSS_BIBLE.md) | Jefe + arena = encuentro: ficha de jefe, ganchos medibles con la arena, Boss Factory, arte de jefes | `js/arenas/common/boss-blueprints.js`, `js/systems/boss-arena-hooks.js` |
 | [VISUAL_COMBAT_BIBLE.md](VISUAL_COMBAT_BIBLE.md) | Lenguaje de combate: color + forma + movimiento; números flotantes; telegraphs | `js/data/combat-language.js` |
 | [UX_BIBLE.md](UX_BIBLE.md) | HUD, long press, panel táctico, briefing, tutorial, touch targets | `js/ui/ability-inspector.js`, `js/ui/tactical-panel.js` |
 | [QA.md](QA.md) | Validadores, simulaciones, cómo correrlos y qué significan PASS/WARNING/FAIL | `tools/bible/*` |
@@ -23,7 +24,8 @@ Documentos de diseño previos que siguen vigentes y esta Bible referencia en vez
 
 - `docs/bible/*.md` = decisiones de diseño (las escribe una persona/agente).
 - `docs/bible/generated/*` = salida de herramientas (`node tools/bible/champion-validator.js`,
-  `node tools/bible/arena-validator.js`, `node tools/bible/build-reference.js`). Se regeneran; nunca se editan.
+  `node tools/bible/arena-validator.js`, `node tools/bible/boss-validator.js`, `node tools/bible/build-reference.js`,
+  `node tools/art/arena_lineup.js --report`). Se regeneran; nunca se editan.
 
 ## Reglas de oro
 

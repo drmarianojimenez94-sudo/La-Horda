@@ -345,6 +345,7 @@ function fortKnightUpdate(dt){
       }
       for(const h of heroes){ if(!h.alive && !inside(h)){ h.x = (Math.random()-0.5)*200; h.y = plat.cy + plat.hh - 100; } }
       fortCloseGate("g_knight"); K.state = "closing"; K.t = 0;
+      if(typeof bossArenaEvent==="function") bossArenaEvent("caballero.camara", knight);
       playSfx("fortDoorSlam"); vfxShake(10);
       if(typeof setMusicMode==="function") setMusicMode("prelude");
     }

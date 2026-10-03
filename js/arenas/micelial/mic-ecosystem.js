@@ -68,10 +68,11 @@ function micEcoUpdate(dt){
   const bloom = micS.mo.bloom && micS.mo.st==="fight";
   let alive = 0; for(const v of arr) if(v <= FN.SPORE) alive++;
   const want = Math.round(MIC_CFG.eco.alive[micS.stage]*arr.length);
+  let bloomed = 0;
   for(let i=0;i<arr.length;i++){
     let v = arr[i];
     _micNodeT[i] -= step;
-    if(bloom && v >= FN.SPROUT && v <= FN.GROWN){ arr[i] = FN.MATURE; continue; } // Floración: todo lo vivo florece
+    if(bloom && v >= FN.SPROUT && v <= FN.GROWN){ arr[i] = FN.MATURE; bloomed++; continue; } // Floración: todo lo vivo florece
     if(_micNodeT[i] > 0) continue;
     if(v===FN.SEED) v = FN.SPROUT;
     else if(v===FN.SPROUT) v = FN.GROWN;
@@ -90,6 +91,7 @@ function micEcoUpdate(dt){
     arr[i] = v;
     _micNodeT[i] = _micNodeTime(v);
   }
+  if(bloomed && typeof bossArenaEvent==="function") bossArenaEvent("madre_espora.floracion", typeof micMotherEntity==="function" ? micMotherEntity() : null);
   _micSetNodes(arr);
 }
 // Brota/madura a la fuerza los nodos cerca de un punto (Chamán, Micelio absorbido, hongo gigante).
