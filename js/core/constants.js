@@ -12,6 +12,7 @@ const ARENA_RADIUS = 1050;
 // bastante adentro del límite jugable (ver clampToArena) para que acercarse de verdad acerque
 // -antes orbitaba siempre pegado al jugador y la distancia real nunca cambiaba-.
 const LEVIATAN_ORBIT_R = ARENA_RADIUS*0.62;
+const REVIVE_DURATION_MS = 5000; // Same duration for players and bots.
 const REVIVE_RANGE = 110; // qué tan cerca debe estar el jugador de un aliado caído para revivirlo
 // Viewport del juego en UNIDADES DE MUNDO (ver js/core/canvas.js): el lado corto de la pantalla
 // siempre muestra VIEW_WORLD_SHORT unidades (650 = lo que se veía en iPhone horizontal con el

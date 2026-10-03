@@ -82,7 +82,7 @@ const ACHIEVEMENTS = [
   {id:"co_win",   cat:"coop", icon:"duo",   name:"Hermanos de armas", desc:"Ganá una arena en cooperativo.", goal:1, prog:V=>V.coopWins, reward:{gold:250, frame:"hermandad"}},
   {id:"co_win10", cat:"coop", icon:"duo",   name:"Escuadra", desc:"Ganá 10 arenas en cooperativo.", goal:10, prog:V=>V.coopWins, reward:{gold:500, title:"escuadra"}},
   {id:"co_full",  cat:"coop", icon:"duo",   name:"Sala llena", desc:"Jugá una partida con 4 jugadores.", goal:1, prog:V=>V.full4?1:0, reward:{gold:300}},
-  {id:"co_rev10", cat:"coop", icon:"heart", name:"Nadie se queda atrás", desc:"Activá tu héroe de reserva en 10 partidas.", goal:10, prog:V=>V.duoEntries, reward:{gold:300}},
+  {id:"co_rev10", cat:"coop", icon:"heart", name:"Nadie se queda atrás", desc:"Reviví a 10 aliados.", goal:10, prog:V=>V.revives, reward:{gold:300}},
   {id:"co_runs25",cat:"coop", icon:"duo",   name:"Compañeros de ruta", desc:"Jugá 25 partidas en cooperativo.", goal:25, prog:V=>V.coopRuns, reward:{gold:400}},
   // ---------------- MAESTRÍA ----------------
   {id:"m_gradeA",   cat:"maestria", icon:"star",   name:"Buen trabajo", desc:"Ganá una arena con calificación A o mejor.", goal:1, prog:V=>V.gradeA, reward:{gold:120}},
@@ -231,7 +231,7 @@ const CHALLENGE_TEMPLATES = [
   {id:"subjefes",icon:"sword",  stat:"subjefes", n:[2, 10],     gold:[200, 1000], name:"Rompefilas",          desc:n=>`Tu equipo derrota ${n} subjefes.`},
   {id:"gradeA",  icon:"star",   stat:"gradeA",   n:[1, null],   gold:[220, 0],    name:"Buena nota",          desc:()=>"Ganá una arena con calificación A o mejor."},
   {id:"gradeS",  icon:"star",   stat:"gradeS",   n:[null, 3],   gold:[0, 1300],   name:"Sobresaliente",       desc:n=>`Ganá ${n} arenas con calificación S o S+.`},
-  {id:"revives", icon:"heart",  stat:"duoEntries", n:[1, 6],      gold:[200, 1000], name:"Nadie se queda atrás",desc:n=>n>1 ? `Activá tu héroe de reserva en ${n} partidas.` : "Activá tu héroe de reserva."},
+  {id:"revives", icon:"heart",  stat:"revives", n:[1, 6],      gold:[200, 1000], name:"Nadie se queda atrás",desc:n=>n>1 ? `Reviví a ${n} aliados.` : "Reviví a un aliado."},
   {id:"minutes", icon:"hourglass",stat:"minutes",n:[20, 120],   gold:[180, 900],  name:"Tiempo en la arena",  desc:n=>`Jugá ${n} minutos en las arenas.`},
   {id:"arenas",  icon:"map",    stat:"distinctArenas", n:[null, 3], gold:[0, 1200], name:"Recorrido",         desc:n=>`Ganá en ${n} arenas distintas.`},
   {id:"champs",  icon:"duo",    stat:"distinctChamps", n:[null, 3], gold:[0, 1100], name:"Rotación",          desc:n=>`Ganá con ${n} guardianes distintos.`, avail:V=>Object.keys(V.champs).filter(k=>V.champs[k].unlocked).length >= 3}
