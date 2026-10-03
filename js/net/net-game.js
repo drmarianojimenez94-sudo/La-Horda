@@ -337,7 +337,7 @@ function netHostStartGame(){
   // héroes: índice = slot
   _netHeroIdx = new Map(); heroes.forEach((h,i)=>_netHeroIdx.set(h, i));
   heroes.forEach((h,i)=>{
-    const s = slots[i]; h._netSlot = i; h.netName = s.name;
+    const s = slots[i]; h._netSlot = i; h.netName = s.name; h.netFounder = (net.room && net.room.slots[i] && net.room.slots[i].founder) || null; // verificado por el relay
     if(s.kind==="human" && i!==0){
       const rs = freshRunStats();
       rs.critChance += passiveSum(h.classKey, "crit_chance_add");
@@ -646,7 +646,7 @@ function netGuestStartRun(msg){
   vfxResetRun(); resetFeedback(); bossHudHide(); if(typeof crystalReset==="function") crystalReset(); boss = null; bossActive = false; activeChampion = null;
   levelClearing = 0; levelTimer = 0; levelDuration = 1;
   // héroes en orden de slot; el propio es "player"
-  heroes = msg.slots.map((s,i)=>{ const h = makeHero(s.champ, s.kind==="bot", 0, 0); h._netSlot = i; h.netName = s.name; return h; });
+  heroes = msg.slots.map((s,i)=>{ const h = makeHero(s.champ, s.kind==="bot", 0, 0); h._netSlot = i; h.netName = s.name; h.netFounder = (net.room && net.room.slots[i] && net.room.slots[i].founder) || null; return h; });
   player = heroes[net.slot];
   duoInitRun();
   allies = heroes.filter(h=>h!==player);

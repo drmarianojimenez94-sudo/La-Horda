@@ -142,6 +142,8 @@ function startRun(fromLevel){
   beginLevel();
   if(typeof questsOnRunStart==="function") questsOnRunStart(); // logros y desafíos: empieza a contar esta partida
   setState("playing");
+  if(typeof founderPresenceOnRunStart==="function" && (fromLevel||1)===1) founderPresenceOnRunStart(); // Regente Fundador: banner de ARENA (online lo manda el relay)
+  if(typeof founderArenaInteraction==="function") founderArenaInteraction(); // Nano + Facu juntos: reacción cosmética 1–2 s
 }
 
 function spawnEmber(){

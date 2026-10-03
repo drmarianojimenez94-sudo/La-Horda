@@ -131,7 +131,7 @@ function routes(ctx){
  route('GET','/api/chat','user',async()=>{const s=await read();return {messages:s.chat.slice(-80),pinned:s.chat.find(m=>m.id===s.pinned)||null};});
  route('POST','/api/chat','user',async({user,body})=>{
   throttle('chat:'+user.id,8,10000);if(typeof body.text!=='string'||body.text.length>500||!text(body.text,400))fail('BAD_MESSAGE');
-  const message={id:crypto.randomUUID(),name:text(user.name||user.user,32),text:text(body.text,400),owner:isOwner(user),at:now()};
+  const message={id:crypto.randomUUID(),name:text(user.name||user.user,32),text:text(body.text,400),owner:isOwner(user),founder:ctx.founderOf?(ctx.founderOf(user)||{}).key||null:null,at:now()};
   return mutate(s=>{s.chat.push(message);s.chat=s.chat.slice(-200);return {message};});
  });
  route('POST','/api/gm/chat/pin','MANAGE_EVENTS',async({user,body})=>mutate(s=>{if(body.id!==null&&!s.chat.some(m=>m.id===body.id))fail('NOT_FOUND',404);s.pinned=body.id;audit(s,user,'chat.pin',{id:body.id},now());return {ok:true};}));

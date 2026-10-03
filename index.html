@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="css/duo-ux.css">
 <link rel="stylesheet" href="css/alpha-services.css">
 <link rel="stylesheet" href="css/game-master.css">
+<link rel="stylesheet" href="css/founders.css">
 <link rel="stylesheet" href="css/alpha-training.css">
 </head>
 <body>
@@ -429,6 +430,7 @@
       <label>🎵 Música <input type="range" id="vol-music" min="0" max="100" step="5"></label>
       <label>💥 Efectos <input type="range" id="vol-sfx" min="0" max="100" step="5"></label>
       <label class="pause-motion" title="Apaga sacudidas de cámara, congelados de golpe, cámara lenta y pulsos de pantalla">🌀 Reducir movimiento <input type="checkbox" id="opt-reduce-motion"></label>
+      <label class="pause-motion" title="Menos partículas y sin destellos en definitivas, banners y efectos especiales. No cambia el daño ni los avisos de peligro">✨ Reducir efectos intensos <input type="checkbox" id="opt-reduce-fx"></label>
     </div>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
@@ -694,6 +696,7 @@
 <script src="js/core/loop.js"></script>
 <script src="js/net/net-config.js"></script>
 <script src="js/net/net-core.js"></script>
+<script src="js/ui/founder-presence.js"></script>
 <script src="js/net/net-game.js"></script>
 <script src="js/systems/story.js"></script>
 <script src="js/data/camp-text.js"></script>

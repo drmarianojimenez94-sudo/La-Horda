@@ -121,7 +121,7 @@ function publicRoom(room){
   return {
     code: room.code, arena: room.arena, state: room.state, hostSlot: 0, protocol: PROTOCOL, pub: !!room.pub, diff: room.diff || "",
     slots: room.slots.map((m, i) => m ? { slot: i, name: m.name, champ: m.champ, level: m.level, ready: !!m.ready,
-      connected: !!m.ws, host: i === 0, muted: !!m.muted } : null)
+      connected: !!m.ws, host: i === 0, muted: !!m.muted, founder: m.founder || null } : null)
   };
 }
 // Solo para pruebas: SIM_LATENCY_MS demora todo lo que sale del servidor (simula Internet).
@@ -169,12 +169,14 @@ function handle(ws, msg){
       const r = { code, arena: clean(msg.arena, 24), build: clean(msg.build, 40), state: "lobby",
         slots: [null, null, null, null], touched: Date.now(), created: Date.now(), chat: [],
         pub: msg.public === true, diff: clean(msg.diff, 12) };
+      const hostChamp = clean(msg.champ, 24);
       r.slots[0] = { ws, clientId: clean(msg.clientId, 64), name: clean(msg.name, 24) || "Anfitrión",
-        champ: clean(msg.champ, 24), level: msg.level|0, ready: true, lostAt: 0 };
+        champ: presence.champAllowed(ws, hostChamp) ? hostChamp : "", level: msg.level|0, ready: true, lostAt: 0, founder: presence.memberFounder(ws) };
       rooms.set(code, r);
       ws._room = code; ws._slot = 0;
       log("ROOM_CREATED", { code, arena: r.arena, pub: r.pub });
       send(ws, { t: "joined", slot: 0, host: true, room: publicRoom(r) });
+      presence.joined(r, r.slots[0]);
       return;
     }
     case "join": {
@@ -192,7 +194,8 @@ function handle(ws, msg){
         const m = r.slots[slot];
         if(m.ws && m.ws !== ws){ send(m.ws, { t: "closed", reason: "replaced" }); m.ws._room = null; }
         m.ws = ws; m.lostAt = 0;
-        if(msg.champ) m.champ = clean(msg.champ, 24);
+        if(msg.champ && presence.champAllowed(ws, clean(msg.champ, 24))) m.champ = clean(msg.champ, 24);
+        m.founder = presence.memberFounder(ws); // reconnect: identity refreshed, banner NOT repeated
         ws._room = code; ws._slot = slot;
         r.touched = Date.now();
         log("RECONNECT", { code, slot });
@@ -203,13 +206,15 @@ function handle(ws, msg){
       if(r.state !== "lobby") return send(ws, { t: "error", code: "STARTED", msg: "La partida ya comenzó" });
       slot = r.slots.findIndex((m, i) => i > 0 && !m);
       if(slot < 0 || humanCount(r) >= MAX_HUMANS){ log("ROOM_FULL", { code }); return send(ws, { t: "error", code: "ROOM_FULL", msg: "SALA COMPLETA" }); }
+      const joinChamp = clean(msg.champ, 24);
       r.slots[slot] = { ws, clientId: cid, name: clean(msg.name, 24) || ("Jugador " + (slot + 1)),
-        champ: clean(msg.champ, 24), level: msg.level|0, ready: false, lostAt: 0 };
+        champ: presence.champAllowed(ws, joinChamp) ? joinChamp : "", level: msg.level|0, ready: false, lostAt: 0, founder: presence.memberFounder(ws) };
       ws._room = code; ws._slot = slot;
       r.touched = Date.now();
       log("ROOM_JOINED", { code, slot });
       send(ws, { t: "joined", slot, host: false, room: publicRoom(r), chat: r.chat.slice(-CHAT_HISTORY) });
       broadcastRoom(r);
+      presence.joined(r, r.slots[slot]);
       return;
     }
   }
@@ -218,7 +223,7 @@ function handle(ws, msg){
   switch(msg.t){
     case "update": {
       if(room.state === "lobby"){
-        if(msg.champ !== undefined) me.champ = clean(msg.champ, 24);
+        if(msg.champ !== undefined){ const c = clean(msg.champ, 24); if(presence.champAllowed(ws, c)) me.champ = c; else send(ws, { t: "error", code: "CHAMP_NOT_OWNED" }); }
         if(msg.level !== undefined) me.level = msg.level|0;
         if(msg.name !== undefined) me.name = clean(msg.name, 24) || me.name;
         // el anfitrión puede cambiar la arena desde la sala (entre partidas); en partida no se toca
@@ -232,7 +237,7 @@ function handle(ws, msg){
         if(ws._slot === 0 && msg.diff !== undefined) room.diff = clean(msg.diff, 12);
       } else if(msg.champ !== undefined && ws._slot > 0){
         // un invitado que ya volvió a la sala mientras el anfitrión mira los resultados
-        me.champ = clean(msg.champ, 24);
+        if(presence.champAllowed(ws, clean(msg.champ, 24))) me.champ = clean(msg.champ, 24);
         if(msg.level !== undefined) me.level = msg.level|0;
       }
       if(msg.ready !== undefined) me.ready = room.state === "lobby" ? !!msg.ready : false; // LISTO solo cuenta en la sala
@@ -248,6 +253,7 @@ function handle(ws, msg){
       trades.roomEvent(room.code); // en partida no se intercambia: las ofertas abiertas se anulan
       log("GAME_START", { code: room.code, humans: humanCount(room) });
       broadcastRoom(room);
+      presence.started(room);
       return;
     }
     case "lobby": { // el anfitrión vuelve la sala al estado de espera (fin de partida)
@@ -279,7 +285,7 @@ function handle(ws, msg){
       if(me.chatLastText === raw.toLowerCase() && now - me.chatLast < CHAT_DUP_MS) return send(ws, { t: "error", code: "CHAT_DUP" });
       me.chatLast = now; me.chatLastText = raw.toLowerCase(); me.chatTimes.push(now);
       const f = chatFilter(raw);
-      const entry = { from: ws._slot, name: me.name, text: f.text, at: now };
+      const entry = { from: ws._slot, name: me.name, text: f.text, at: now, founder: me.founder || null };
       room.chat.push(entry); if(room.chat.length > CHAT_HISTORY) room.chat.shift();
       const str = JSON.stringify({ t: "chat", m: entry });
       for(const m of room.slots) if(m && m.ws) sendRaw(m.ws, str);
@@ -317,6 +323,11 @@ function leave(ws, why){
 }
 
 const accounts = require("./accounts.js").create({ log, originAllowed });
+const presence = require("./presence.js").create({
+  resolve: token => accounts.presence(token),
+  requiresGrant: champ => require("./entitlements.js").isChampion(champ) && require("./entitlements.js").taxonomy().requiresGrant(champ),
+  broadcast: (room, obj) => { const str = JSON.stringify(obj); for(const m of room.slots) if(m && m.ws) sendRaw(m.ws, str); }
+});
 const trades = require("./trades.js").create({ log, send, dataDir: process.env.DATA_DIR || path.join(__dirname, "data") });
 function roomsHttp(req, res){
   const origin = req.headers.origin || "";
@@ -352,10 +363,22 @@ wss.on("connection", (ws, req) => {
   }
   ws._alive = true;
   ws.on("pong", () => { ws._alive = true; });
+  // Messages are processed in order; "identify" (account session -> public founder identity) is async,
+  // so later messages wait for it. Identity is optional: guests keep playing exactly as before.
+  ws._queue = Promise.resolve();
   ws.on("message", (buf) => {
     let msg; try{ msg = JSON.parse(buf.toString()); }catch(e){ return; }
     if(!msg || typeof msg.t !== "string") return;
-    try{ handle(ws, msg); }catch(e){ log("NETWORK_ERROR", { err: String(e && e.message || e) }); }
+    ws._queue = ws._queue.then(async () => {
+      if(msg.t === "identify"){
+        const id = await presence.identify(ws, msg.token);
+        send(ws, { t: "identified", founder: id ? id.founder : null });
+        const room = ws._room ? rooms.get(ws._room) : null, me = room ? room.slots[ws._slot] : null;
+        if(me && me.ws === ws){ const had = me.founder; me.founder = presence.memberFounder(ws); if(!presence.champAllowed(ws, me.champ)) me.champ = ""; broadcastRoom(room); if(me.founder && !had && room.state === "lobby") presence.joined(room, me); }
+        return;
+      }
+      handle(ws, msg);
+    }).catch(e => log("NETWORK_ERROR", { err: String(e && e.message || e) }));
   });
   ws.on("close", () => leave(ws, "closed"));
   ws.on("error", () => {});

@@ -1,0 +1,60 @@
+/* ============================================================
+   css/founders.css — Presencia de Fundadores (Los Regentes), insignia FOUNDER/GM,
+   tienda de Fundadores y filtros por categoría. Usa los tokens de ui-kit.css.
+   ============================================================ */
+:root{ --fd-gold:#e8c56a; --fd-light:#fff4d6; --fd-dark:#1b1124; --fd-sea:#2fd3c6; --fd-foam:#7ff3ff; --fd-abyss:#06243a; }
+
+/* ---------- insignia ---------- */
+.founder-badge{ display:inline-flex; align-items:center; gap:3px; font-family:var(--font-pixel); font-size:8px; line-height:1;
+  padding:3px 5px; border:2px solid #000; box-shadow:1px 1px 0 #000; color:#120a04; background:var(--fd-gold); vertical-align:middle; letter-spacing:.5px; white-space:nowrap; }
+.founder-badge i{ font-style:normal; font-size:10px; }
+.founder-badge.founder-nano{ background:linear-gradient(90deg, var(--fd-light) 0 50%, var(--fd-dark) 50% 100%); color:var(--fd-gold); text-shadow:1px 1px 0 #000; }
+.founder-badge.founder-facu{ background:linear-gradient(180deg, var(--fd-foam), var(--fd-abyss)); color:#fff; text-shadow:1px 1px 0 #000; }
+.founder-badge.fb-md{ font-size:9px; padding:4px 7px; }
+.founder-badge.fb-lg{ font-size:11px; padding:6px 10px; }
+.category-badge{ display:inline-block; font-family:var(--font-pixel); font-size:7px; padding:2px 4px; border:2px solid #000; background:#2a1a10; color:var(--ui-gold); margin-left:4px; vertical-align:middle; }
+.category-badge.cat-FAMILY{ background:#3b1530; color:#ffb3df; }
+.category-badge.cat-FOUNDER{ background:var(--fd-gold); color:#120a04; }
+.category-badge.cat-EVENT{ background:#14324a; color:#9fe0ff; }
+.lobby-slot.is-founder{ box-shadow:inset 0 0 0 2px var(--fd-gold), 0 0 12px rgba(232,197,106,.35); }
+
+/* ---------- banner cinematográfico ---------- */
+.founder-presence{ position:fixed; left:50%; top:12%; transform:translateX(-50%); width:min(92vw, 760px); z-index:9000; pointer-events:none;
+  animation:fp-life var(--fp-dur, 3400ms) cubic-bezier(.2,.8,.2,1) forwards; }
+.founder-presence .fp-fx{ background:transparent !important; border:0 !important; box-shadow:none !important; position:absolute; inset:-30px -20px; width:calc(100% + 40px); height:calc(100% + 60px); }
+.fp-plate{ position:relative; text-align:center; padding:14px 18px 12px; border:3px solid #000; box-shadow:4px 4px 0 #000, 0 0 40px rgba(0,0,0,.6);
+  background:linear-gradient(160deg, rgba(20,12,24,.94), rgba(8,6,12,.94)); overflow:hidden; }
+.fp-plate::before{ content:""; position:absolute; inset:0; pointer-events:none; opacity:.55;
+  animation:fp-sweep calc(var(--fp-dur, 3400ms) * .6) ease-out forwards; }
+.fp-nano .fp-plate::before{ background:linear-gradient(100deg, transparent 20%, rgba(255,244,214,.45) 45%, rgba(27,17,36,.7) 55%, transparent 80%); }
+.fp-facu .fp-plate::before{ background:linear-gradient(100deg, transparent 20%, rgba(127,243,255,.35) 45%, rgba(6,36,58,.7) 60%, transparent 85%); }
+.fp-both .fp-plate::before{ background:linear-gradient(100deg, rgba(255,244,214,.35), transparent 45%, transparent 55%, rgba(127,243,255,.35)); }
+.fp-head{ font-family:var(--font-pixel); font-size:clamp(10px, 2.4vw, 16px); color:var(--fd-gold); letter-spacing:1px; text-shadow:2px 2px 0 #000; }
+.fp-names{ display:flex; justify-content:center; align-items:center; gap:14px; margin-top:10px; flex-wrap:wrap; }
+.fp-name{ display:flex; align-items:center; gap:8px; text-align:left; }
+.fp-name b{ display:block; font-family:var(--font-pixel); font-size:clamp(9px, 2vw, 13px); color:#fff; text-shadow:2px 2px 0 #000; }
+.fp-name small{ display:block; font-family:var(--font-retro); font-size:18px; color:#cbb8a0; }
+.fp-n-nano b{ color:var(--fd-light); } .fp-n-facu b{ color:var(--fd-foam); }
+.fp-sigil{ width:48px; height:48px; image-rendering:pixelated; background:transparent; }
+.fp-join{ color:var(--fd-gold); font-size:18px; }
+.fp-line{ margin-top:8px; font-family:var(--font-retro); font-size:20px; color:#e8dccb; }
+.fp-arena .fp-head{ font-size:clamp(10px, 2.6vw, 18px); }
+@keyframes fp-life{ 0%{ opacity:0; transform:translateX(-50%) translateY(-14px) scale(.96); } 10%{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
+  82%{ opacity:1; } 100%{ opacity:0; transform:translateX(-50%) translateY(-8px); } }
+@keyframes fp-sweep{ from{ transform:translateX(-60%); } to{ transform:translateX(60%); } }
+.founder-presence.fp-reduced{ animation-name:fp-life-reduced; }
+.founder-presence.fp-reduced .fp-plate::before{ animation:none; opacity:.25; transform:none; }
+@keyframes fp-life-reduced{ 0%{ opacity:0; } 12%{ opacity:1; } 85%{ opacity:1; } 100%{ opacity:0; } }
+@media (max-height:420px){ .founder-presence{ top:4%; width:min(86vw, 560px); } .fp-line{ display:none; } .fp-sigil{ width:32px; height:32px; } .fp-plate{ padding:8px 10px; } }
+
+/* ---------- tienda / colección: Fundadores y filtros ---------- */
+.shop-catfilters{ display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 8px; }
+.shop-catfilters button{ font-family:var(--font-pixel); font-size:8px; padding:6px 8px; min-height:32px; border:2px solid #000; background:var(--ui-btn-sec); color:var(--ui-dim); cursor:pointer; }
+.shop-catfilters button.on{ color:var(--ui-gold); background:var(--ui-btn); }
+.shop-founder-card{ position:relative; border:3px solid #000; padding:10px; background:linear-gradient(160deg, #20141a, #0c0810); box-shadow:inset 0 0 0 2px var(--fd-gold), 4px 4px 0 #000; }
+.shop-founder-card .sf-price{ font-family:var(--font-pixel); font-size:11px; color:var(--fd-gold); text-decoration:none; }
+.shop-founder-card .sf-tags{ display:flex; gap:4px; flex-wrap:wrap; margin:4px 0; }
+.shop-founder-card .sf-tags span{ font-family:var(--font-pixel); font-size:7px; padding:2px 4px; border:2px solid #000; background:#000; color:var(--fd-gold); }
+.shop-founder-card .sf-granted{ display:block; width:100%; margin-top:6px; font-family:var(--font-pixel); font-size:8px; padding:8px; min-height:44px;
+  border:2px solid #000; background:repeating-linear-gradient(45deg, #2a1d10 0 6px, #1d140b 6px 12px); color:var(--fd-gold); cursor:not-allowed; opacity:1; }
+.shop-founder-card .sf-inspect{ font-family:var(--font-retro); font-size:17px; color:#cbb8a0; margin-top:4px; }

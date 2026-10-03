@@ -192,10 +192,11 @@ function netRenderLobbySlots(){
     const lv = you ? save.champions[selectedClass].level : s.level;
     const tag = `P${i+1} · ` + (i===0 ? "HOST" : (you ? "VOS" : "AMIGO"));
     const st = !s.connected ? `<div class="lobby-ready off">⚠ Sin conexión</div>` : (i===0 ? `<div class="lobby-ready">● Conectado</div>` : (s.ready ? `<div class="lobby-ready">✔ Listo</div>` : `<div class="lobby-ready wait">● Conectado</div>`));
-    return `<div class="lobby-slot pc${i} ${you?"you":""}">
+    const fb = s.founder && typeof founderBadgeHTML==="function" ? founderBadgeHTML(s.founder, "md") : "";
+    return `<div class="lobby-slot pc${i} ${you?"you":""} ${fb?"is-founder":""}">
       <div class="lobby-tag p${i}">${tag}</div>
       <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-skin="${skin}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
-      <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>
+      <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>${fb ? `<div class="lobby-founder">${fb}</div>` : ""}
       ${skin && (typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]) ? `<div class="lobby-skin">🎨 ${(typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]).name}</div>` : ""}
       <div class="lobby-meta">${cls.name} · ${NET_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv||1}</div>

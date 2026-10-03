@@ -108,7 +108,11 @@ function _netConnectOnce(url, maxMs){
     try{ ws = new WebSocket(url); }catch(e){ net.status = "error"; reject(e); return; }
     net.ws = ws;
     const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.onclose = null; ws.close(); }catch(e){} net.status = "closed"; if(net.ws===ws) net.ws = null; reject(new Error("tiempo agotado")); } }, maxMs);
-    ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url}); resolve();
+    ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url});
+      // Identidad de cuenta (Fundador): el relay la verifica con el servidor de cuentas; opcional.
+      const tok = typeof accountPresenceToken==="function" ? accountPresenceToken(url) : null;
+      if(tok){ try{ ws.send(JSON.stringify({t:"identify", token:tok})); }catch(e){} }
+      resolve();
       _netEmit("open"); }; // p.ej. terminar un intercambio que quedó a mitad (js/net/net-trade.js)
     ws.onerror = ()=>{ netLog("NETWORK_ERROR", {where:"socket"}); };
     ws.onclose = (ev)=>{
@@ -188,6 +192,8 @@ function _netHandle(m){
     case "chat": _netEmit("chat", m.m); return;
     case "trade": _netEmit("trade", m); return;   // intercambio en la sala (js/net/net-trade.js)
     case "rooms": _netEmit("rooms", m.list); return; // salas públicas (js/net/net-rooms.js)
+    case "identified": net.identity = { founder: m.founder || null }; _netEmit("identified", m); return;
+    case "presence": if(typeof founderPresenceShow==="function") founderPresenceShow(m.scope, m.founders, net.code); _netEmit("presence", m); return;
     case "closed":
       netLog(m.reason==="host_left" ? "HOST_LEFT" : "ROOM_CLOSED", {reason:m.reason});
       const role = net.role;
@@ -195,6 +201,8 @@ function _netHandle(m){
       _netEmit("closed", m.reason, role);
       return;
     case "error":
+      if(m.code==="NO_ROOM" && !net.room) return; // un relay viejo no conoce "identify": no es un error de sala
+      if(m.code==="CHAMP_NOT_OWNED"){ _netEmit("chatError", m.code); return; }
       if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
       if(m.trade || /^(TRADE_|ROOMS_)/.test(m.code||"")){ _netEmit("tradeError", m); return; } // intercambio / lista de salas: no es un error de la sala
       if(!net.room) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
