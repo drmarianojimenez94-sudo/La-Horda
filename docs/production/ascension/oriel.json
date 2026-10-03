@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "id": "oriel",
+  "name": "Oriel",
+  "title": "La Portera de las Cicatrices",
+  "role": "soporte",
+  "fantasy": "Soporte de reposicionamiento: abre pares de portales a través de las Cicatrices de la Horda y convierte el mapa en un atajo para su equipo.",
+  "lore": "Las Cicatrices de la Horda unen arenas que no deberían tocarse. Oriel trabajaba en la Fábrica marcando las grietas para que nadie cayera. Un día una se abrió bajo sus pies y salió del otro lado del Fúngico, viva. Desde entonces sabe dónde se puede pasar. No cierra las Cicatrices: las usa para llevar a los suyos lejos de la Horda antes de que la Horda llegue.",
+  "personality": "Hay otro camino. Siempre lo hay. / Los traje a todos de vuelta. / La puerta… se cierra…",
+  "silhouette": "Portera de capa larga con capucha recortada, una llave ceremonial más alta que ella y dos aros de fractura flotando a los costados.",
+  "stats": {
+    "hp": 102,
+    "damage": 10,
+    "speed": 170
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico a distancia",
+      "cooldownMs": 500,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "portal",
+        "description": "Abre un portal donde está y otro en el punto elegido. Aliados que entran salen por el otro; enemigos son rechazados.",
+        "cooldownMs": 7000,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Abrir Cicatriz",
+        "impact": "Abre un portal donde está y otro en el punto elegido. Aliados que entran salen por el otro; enemigos son rechazados.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_oriel_cast"
+      },
+      {
+        "id": "rift_echo",
+        "description": "Cada portal abierto pulsa: daña enemigos y cura un poco a los aliados cercanos.",
+        "cooldownMs": 6800,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Eco de la Cicatriz",
+        "impact": "Cada portal abierto pulsa: daña enemigos y cura un poco a los aliados cercanos.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_oriel_cast"
+      },
+      {
+        "id": "rift_step",
+        "description": "Oriel aparece en su otro portal (o en el punto elegido) y deja una grieta que daña.",
+        "cooldownMs": 6200,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Paso entre Mundos",
+        "impact": "Oriel aparece en su otro portal (o en el punto elegido) y deja una grieta que daña.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_oriel_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "great_rift",
+      "description": "Abre una Cicatriz gigante: enemigos dentro se frenan y reciben daño; ecos de campeones caídos salen a golpear y los aliados dentro reciben −20% de daño.",
+      "cooldownMs": 40000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de La Gran Cicatriz",
+      "impact": "Abre una Cicatriz gigante: enemigos dentro se frenan y reciben daño; ecos de campeones caídos salen a golpear y los aliados dentro reciben −20% de daño.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_oriel_ult"
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "oriel_alt1",
+      "type": "skin",
+      "champion": "oriel",
+      "name": "Llavera del Alba",
+      "rarity": "Épica",
+      "tagline": "Capa crema con bordes dorados, llave de cristal y aros de luz cálida.",
+      "lore": "En el primer amanecer después del regreso, Oriel abrió una Cicatriz hacia un campo de trigo. Nadie supo nunca dónde quedaba.",
+      "visualTheme": "Capa crema con bordes dorados, llave de cristal y aros de luz cálida.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "oriel_alt2",
+      "type": "skin",
+      "champion": "oriel",
+      "name": "Guardiana del Ojo Rojo",
+      "rarity": "Épica",
+      "tagline": "Capa granate con capucha cerrada, llave de hierro negro y aros que sangran luz roja.",
+      "lore": "Hay Cicatrices que miran. Oriel aprendió a devolverles la mirada.",
+      "visualTheme": "Capa granate con capucha cerrada, llave de hierro negro y aros que sangran luz roja.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "micelial",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 2,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "",
+    "audio": "",
+    "multiplayer": "",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

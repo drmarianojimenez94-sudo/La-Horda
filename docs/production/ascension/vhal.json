@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "id": "vhal",
+  "name": "Vhal",
+  "title": "El Astrónomo Caído",
+  "role": "mago",
+  "fantasy": "Mago gravitatorio: acumula Masa sobre la horda hasta que los enemigos se atraen entre sí y colapsan.",
+  "lore": "Vhal medía estrellas desde la torre más alta de la Gélida. La noche del regreso vio una caer hacia la arena y corrió a buscarla. La encontró viva. Desde entonces una parte de su cuerpo es cielo: se le ven las constelaciones debajo de la piel. Calcula órbitas para que la Horda se estrelle contra sí misma.",
+  "personality": "Todo cae. La pregunta es hacia dónde. / Órbita cerrada. / Mi estrella… se apaga…",
+  "silhouette": "Astrónomo de túnica larga cuyo torso y brazos se abren a un cielo estrellado; astrolabio roto orbitando su mano.",
+  "stats": {
+    "hp": 96,
+    "damage": 12,
+    "speed": 162
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico a distancia",
+      "cooldownMs": 560,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "star_bolt",
+        "description": "Proyectil estelar en línea: daña y añade 1 de Masa.",
+        "cooldownMs": 4400,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Estrella Errante",
+        "impact": "Proyectil estelar en línea: daña y añade 1 de Masa.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_vhal_cast"
+      },
+      {
+        "id": "well",
+        "description": "Pozo en el punto elegido: atrae comunes al centro y daña; la Masa aumenta la atracción.",
+        "cooldownMs": 9000,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Pozo Gravitatorio",
+        "impact": "Pozo en el punto elegido: atrae comunes al centro y daña; la Masa aumenta la atracción.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_vhal_cast"
+      },
+      {
+        "id": "orbit",
+        "description": "Se desplaza en arco alrededor del punto elegido dejando una estela que añade Masa.",
+        "cooldownMs": 7800,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Órbita",
+        "impact": "Se desplaza en arco alrededor del punto elegido dejando una estela que añade Masa.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_vhal_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "collapse",
+      "description": "Una estrella crece, se vuelve singularidad y colapsa: el estallido final escala con la Masa consumida.",
+      "cooldownMs": 42000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de Colapso",
+      "impact": "Una estrella crece, se vuelve singularidad y colapsa: el estallido final escala con la Masa consumida.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_vhal_ult"
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "vhal_alt1",
+      "type": "skin",
+      "champion": "vhal",
+      "name": "Eclipse Anular",
+      "rarity": "Épica",
+      "tagline": "Túnica negra con un anillo de fuego alrededor del pecho y astrolabio de oro.",
+      "lore": "En el eclipse más largo, Vhal vio la luz desde el borde. Desde entonces viste de sombra.",
+      "visualTheme": "Túnica negra con un anillo de fuego alrededor del pecho y astrolabio de oro.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "vhal_alt2",
+      "type": "skin",
+      "champion": "vhal",
+      "name": "Nebulosa Carmesí",
+      "rarity": "Épica",
+      "tagline": "Cuerpo de nebulosa roja y rosa, túnica de seda estelar y astrolabio de cristal.",
+      "lore": "Cuando una estrella muere, deja un jardín. Vhal camina con uno puesto.",
+      "visualTheme": "Cuerpo de nebulosa roja y rosa, túnica de seda estelar y astrolabio de cristal.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "hielo",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 0,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "",
+    "audio": "",
+    "multiplayer": "",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

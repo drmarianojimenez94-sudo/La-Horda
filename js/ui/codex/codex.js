@@ -379,7 +379,7 @@ function codexChampHtml(key){
       <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div></div>
     ${_animChips(codexChampAnimList(key))}
     <div class="cx-stage-actions">${own
-      ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`)
+      ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`) + (typeof ASCENSION_SKINS!=="undefined" && ASCENSION_SKINS[key] && ASCENSION_SKINS[key].length ? `<button class="cx-btn" data-asc-skin="${key}">Apariencia: ${_cxEsc((ch.ascSkin|0) ? ASCENSION_SKINS[key][(ch.ascSkin|0)-1].name : "Original")}</button>` : "")
       : !championMeta(key).purchasable ? `<div class="cx-active">${championMeta(key).category==="FOUNDER" ? `${typeof founderBadgeHTML==="function" ? founderBadgeHTML(championMeta(key).founderKey,"md") : ""} 🪙 ${fmtGold(shopChampionPrice(key))} · ${championMeta(key).storeNotice}<br><small>${championMeta(key).inspectNotice}</small>` : "No disponible"}</div>`
       : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>

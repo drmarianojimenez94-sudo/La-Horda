@@ -192,3 +192,7 @@ const ascOriginalTop=drawPortadorTop;drawPortadorTop=function(){ascOriginalTop()
   if(u>.55){const v=(u-.55)/.45;ascRing(cx,cy,10+v*60,'#e8c56a',3,1-v);ascRing(cx,cy,6+v*44,'#7ff3ff',2,1-v);}
   ctx.restore();}
 };
+
+// Apariencia alternativa (Fundadores: solo su propietario, porque solo él lo posee). Cosmética: no toca stats.
+document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('[data-asc-skin]');if(!b)return;const k=b.getAttribute('data-asc-skin'),c=save.champions[k];
+ if(!c||!c.unlocked||!ASCENSION_SKINS[k])return;c.ascSkin=((c.ascSkin|0)+1)%(ASCENSION_SKINS[k].length+1);persist();if(typeof codexRender==='function')codexRender();});

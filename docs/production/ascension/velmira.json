@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "id": "velmira",
+  "name": "Velmira",
+  "title": "La Reina de las Máscaras",
+  "role": "soporte",
+  "fantasy": "Soporte de control: cada máscara es un estado mágico, y cambiar de rostro reescribe la próxima habilidad.",
+  "lore": "El teatro de la Ciudad cerró la noche del regreso, pero Velmira siguió dando funciones para los que se refugiaron en el escenario. Cuando el miedo era demasiado, les prestaba una máscara: quien se ponía la de la Valentía dejaba de temblar. Las máscaras aprendieron. Ahora flotan a su alrededor y cada una guarda la emoción de alguien que sobrevivió esa noche.",
+  "personality": "¿Qué rostro querés que te muestre? / El telón baja. Ustedes quedan. / Sin máscara… solo queda… mi cara…",
+  "silhouette": "Reina de vestido de telón con cuello alto; cuatro máscaras flotan en semicírculo detrás de su cabeza.",
+  "stats": {
+    "hp": 104,
+    "damage": 9,
+    "speed": 166
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico a distancia",
+      "cooldownMs": 520,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "mask_throw",
+        "description": "Lanza la máscara activa en línea: daña y aplica su efecto a enemigos y aliados que toca.",
+        "cooldownMs": 4800,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Máscara Arrojada",
+        "impact": "Lanza la máscara activa en línea: daña y aplica su efecto a enemigos y aliados que toca.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_velmira_cast"
+      },
+      {
+        "id": "chorus",
+        "description": "Las máscaras giran a su alrededor: aliados reciben el beneficio y enemigos el castigo de la máscara activa.",
+        "cooldownMs": 8600,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Coro de Rostros",
+        "impact": "Las máscaras giran a su alrededor: aliados reciben el beneficio y enemigos el castigo de la máscara activa.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_velmira_cast"
+      },
+      {
+        "id": "face_swap",
+        "description": "Cambia a la siguiente máscara con un pequeño salto: la próxima habilidad se potencia un 30%.",
+        "cooldownMs": 5200,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Cambio de Rostro",
+        "impact": "Cambia a la siguiente máscara con un pequeño salto: la próxima habilidad se potencia un 30%.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_velmira_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "theatre",
+      "description": "Cuatro máscaras espectrales gigantes actúan en secuencia: Inspiración, Terror, Silencio y Protección.",
+      "cooldownMs": 40000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de El Gran Teatro",
+      "impact": "Cuatro máscaras espectrales gigantes actúan en secuencia: Inspiración, Terror, Silencio y Protección.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_velmira_ult"
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "velmira_alt1",
+      "type": "skin",
+      "champion": "velmira",
+      "name": "Mascarada Veneciana",
+      "rarity": "Épica",
+      "tagline": "Vestido de terciopelo vino, máscaras doradas con plumas y cetro de cristal de Murano.",
+      "lore": "Una compañía itinerante le regaló el vestuario de su última obra, que nunca llegó a estrenarse.",
+      "visualTheme": "Vestido de terciopelo vino, máscaras doradas con plumas y cetro de cristal de Murano.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "velmira_alt2",
+      "type": "skin",
+      "champion": "velmira",
+      "name": "Reina del Réquiem Blanco",
+      "rarity": "Épica",
+      "tagline": "Vestido de luto blanco, máscaras de porcelana agrietada y cetro de hueso.",
+      "lore": "Para la función de los ausentes, todas las máscaras se vuelven blancas.",
+      "visualTheme": "Vestido de luto blanco, máscaras de porcelana agrietada y cetro de hueso.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "ciudad",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 0,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "",
+    "audio": "",
+    "multiplayer": "",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

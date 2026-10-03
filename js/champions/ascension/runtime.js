@@ -218,6 +218,8 @@ const ascOriginalObject=ynaraUpdateObject;ynaraUpdateObject=function(o,dt){retur
 
 /* ---------------- héroe: pasivas, desplazamientos, limpieza ---------------- */
 const ascOriginalHero=updatePortadorHero;updatePortadorHero=function(h,dt){ascOriginalHero(h,dt);if(!ascCandidate(h))return;const s=ascState(h),t=ascNow();
+ // apariencia del propio jugador en el héroe (el anfitrión la replica a los invitados en el snapshot)
+ if(h===player&&save.champions[h.classKey])h.ascSkin=save.champions[h.classKey].ascSkin|0;
  if(!h.alive||h.fused){for(const o of portadorObjects)if(o.owner===h&&o.asc)o.life=0;for(const e of enemies){if(e._ascMass&&h.classKey==='vhal')delete e._ascMass;}s.rideLeft=0;s.regentUntil=0;s.eclipseUntil=0;s.citadelUntil=0;s.highTideUntil=0;return;}
  // Cabalgar la Ola: desplazamiento fluido en ~0,5 s, validado paso a paso.
  if(s.rideLeft>0){const step=Math.min(s.rideLeft,dt*.62);let moved=0;

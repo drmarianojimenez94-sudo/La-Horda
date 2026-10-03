@@ -1,0 +1,356 @@
+{
+  "generatedAt": "2026-10-03T22:50:16.128Z",
+  "method": "score = 0.35·Jaccard(vocabulario) + 0.45·Jaccard(etiquetas de mecánica) + 0.2·mismo rol; DUPLICATE ≥ 0.45, REVIEW ≥ 0.32",
+  "rosterSize": 37,
+  "roleDistribution": {
+    "tanque": 7,
+    "asesino": 9,
+    "mago": 12,
+    "soporte": 7
+  },
+  "report": [
+    {
+      "id": "nano_gm",
+      "role": "mago",
+      "category": "FOUNDER",
+      "tags": [
+        "lightdark",
+        "heal",
+        "shield",
+        "dash",
+        "execute",
+        "mark"
+      ],
+      "verdict": "REVIEW",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "aurelia",
+          "score": 0.423,
+          "text": 0.086,
+          "tags": 0.429,
+          "sharedTags": [
+            "lightdark",
+            "heal",
+            "dash"
+          ]
+        },
+        {
+          "other": "zahra",
+          "score": 0.345,
+          "text": 0.048,
+          "tags": 0.286,
+          "sharedTags": [
+            "shield",
+            "dash"
+          ]
+        },
+        {
+          "other": "axiom",
+          "score": 0.339,
+          "text": 0.029,
+          "tags": 0.286,
+          "sharedTags": [
+            "dash",
+            "mark"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "facu_gm",
+      "role": "asesino",
+      "category": "FOUNDER",
+      "tags": [
+        "gravity",
+        "water",
+        "fortify",
+        "shield",
+        "dash"
+      ],
+      "verdict": "REVIEW",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "bront",
+          "score": 0.381,
+          "text": 0.061,
+          "tags": 0.8,
+          "sharedTags": [
+            "gravity",
+            "fortify",
+            "shield",
+            "dash"
+          ]
+        },
+        {
+          "other": "khepri",
+          "score": 0.304,
+          "text": 0.083,
+          "tags": 0.167,
+          "sharedTags": [
+            "shield"
+          ]
+        },
+        {
+          "other": "libertador",
+          "score": 0.299,
+          "text": 0.067,
+          "tags": 0.167,
+          "sharedTags": [
+            "dash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aurelia",
+      "role": "mago",
+      "category": "STANDARD",
+      "tags": [
+        "geometry",
+        "lightdark",
+        "heal",
+        "dash"
+      ],
+      "verdict": "REVIEW",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "nano_gm",
+          "score": 0.423,
+          "text": 0.086,
+          "tags": 0.429,
+          "sharedTags": [
+            "lightdark",
+            "heal",
+            "dash"
+          ]
+        },
+        {
+          "other": "iria",
+          "score": 0.384,
+          "text": 0.098,
+          "tags": 0.333,
+          "sharedTags": [
+            "geometry",
+            "dash"
+          ]
+        },
+        {
+          "other": "sira",
+          "score": 0.319,
+          "text": 0.083,
+          "tags": 0.2,
+          "sharedTags": [
+            "dash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "khepri",
+      "role": "asesino",
+      "category": "STANDARD",
+      "tags": [
+        "swarm",
+        "shield"
+      ],
+      "verdict": "DISTINCT",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "facu_gm",
+          "score": 0.304,
+          "text": 0.083,
+          "tags": 0.167,
+          "sharedTags": [
+            "shield"
+          ]
+        },
+        {
+          "other": "tibor",
+          "score": 0.24,
+          "text": 0.043,
+          "tags": 0.5,
+          "sharedTags": [
+            "shield"
+          ]
+        },
+        {
+          "other": "cazadora",
+          "score": 0.22,
+          "text": 0.057,
+          "tags": 0,
+          "sharedTags": []
+        }
+      ]
+    },
+    {
+      "id": "velmira",
+      "role": "soporte",
+      "category": "STANDARD",
+      "tags": [
+        "mask"
+      ],
+      "verdict": "DISTINCT",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "oriel",
+          "score": 0.218,
+          "text": 0.052,
+          "tags": 0,
+          "sharedTags": []
+        },
+        {
+          "other": "soporte",
+          "score": 0.213,
+          "text": 0.036,
+          "tags": 0,
+          "sharedTags": []
+        },
+        {
+          "other": "ynara",
+          "score": 0.208,
+          "text": 0.024,
+          "tags": 0,
+          "sharedTags": []
+        }
+      ]
+    },
+    {
+      "id": "vhal",
+      "role": "mago",
+      "category": "STANDARD",
+      "tags": [
+        "gravity",
+        "dash"
+      ],
+      "verdict": "REVIEW",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "sira",
+          "score": 0.356,
+          "text": 0.018,
+          "tags": 0.333,
+          "sharedTags": [
+            "dash"
+          ]
+        },
+        {
+          "other": "axiom",
+          "score": 0.329,
+          "text": 0.048,
+          "tags": 0.25,
+          "sharedTags": [
+            "dash"
+          ]
+        },
+        {
+          "other": "nigromante",
+          "score": 0.329,
+          "text": 0.047,
+          "tags": 0.25,
+          "sharedTags": [
+            "dash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bront",
+      "role": "tanque",
+      "category": "STANDARD",
+      "tags": [
+        "gravity",
+        "fortify",
+        "shield",
+        "dash"
+      ],
+      "verdict": "REVIEW",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "eslabon",
+          "score": 0.407,
+          "text": 0.078,
+          "tags": 0.4,
+          "sharedTags": [
+            "shield",
+            "dash"
+          ]
+        },
+        {
+          "other": "baltra",
+          "score": 0.405,
+          "text": 0.07,
+          "tags": 0.4,
+          "sharedTags": [
+            "shield",
+            "dash"
+          ]
+        },
+        {
+          "other": "facu_gm",
+          "score": 0.381,
+          "text": 0.061,
+          "tags": 0.8,
+          "sharedTags": [
+            "gravity",
+            "fortify",
+            "shield",
+            "dash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oriel",
+      "role": "soporte",
+      "category": "STANDARD",
+      "tags": [
+        "summon",
+        "portal",
+        "heal",
+        "shield",
+        "dash"
+      ],
+      "verdict": "REVIEW",
+      "forbidden": null,
+      "nearest": [
+        {
+          "other": "soporte",
+          "score": 0.381,
+          "text": 0.09,
+          "tags": 0.333,
+          "sharedTags": [
+            "heal",
+            "shield"
+          ]
+        },
+        {
+          "other": "dariel",
+          "score": 0.37,
+          "text": 0.058,
+          "tags": 0.333,
+          "sharedTags": [
+            "heal",
+            "shield"
+          ]
+        },
+        {
+          "other": "profeta",
+          "score": 0.366,
+          "text": 0.047,
+          "tags": 0.333,
+          "sharedTags": [
+            "heal",
+            "shield"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "id": "khepri",
+  "name": "Khepri",
+  "title": "El Portador del Enjambre",
+  "role": "asesino",
+  "fantasy": "Asesino que comanda un enjambre visible: lo lanza, lo recoge y lo convierte en armadura.",
+  "lore": "En el Abismo, los escarabajos son lo único que la Horda no logró corromper: se comen lo que ella deja. Khepri fue sacerdote de un culto que los alimentaba para mantener limpias las tumbas. Cuando la Horda llegó, el enjambre lo eligió a él. No lo obedece por miedo: lo sigue porque Khepri siempre sabe dónde hay carroña.",
+  "personality": "Ellos ya huelen la cosecha. / Nada se desperdicia. / Mis escarabajos… se dispersan…",
+  "silhouette": "Armadura ceremonial de escarabajo con élitros abiertos a la espalda, dos hoces curvas y un tocado con disco solar opaco.",
+  "stats": {
+    "hp": 106,
+    "damage": 11,
+    "speed": 182
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico cuerpo a cuerpo",
+      "cooldownMs": 440,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "swarm_send",
+        "description": "Envía el enjambre al punto elegido: atraviesa el campo, envuelve a los enemigos y vuelve.",
+        "cooldownMs": 6000,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Enjambre",
+        "impact": "Envía el enjambre al punto elegido: atraviesa el campo, envuelve a los enemigos y vuelve.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_khepri_cast"
+      },
+      {
+        "id": "carapace",
+        "description": "Los escarabajos forman una armadura: escudo según el enjambre (consume 15).",
+        "cooldownMs": 9000,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Caparazón Vivo",
+        "impact": "Los escarabajos forman una armadura: escudo según el enjambre (consume 15).",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_khepri_cast"
+      },
+      {
+        "id": "elytra",
+        "description": "Salto rasante: los escarabajos muerden todo lo que cruza.",
+        "cooldownMs": 7200,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Vuelo de Élitros",
+        "impact": "Salto rasante: los escarabajos muerden todo lo que cruza.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_khepri_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "eclipse",
+      "description": "Khepri se descompone en enjambre y cubre una región: daño continuo y −60% de daño recibido mientras dura.",
+      "cooldownMs": 38000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de Eclipse de Escarabajos",
+      "impact": "Khepri se descompone en enjambre y cubre una región: daño continuo y −60% de daño recibido mientras dura.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_khepri_ult"
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "khepri_alt1",
+      "type": "skin",
+      "champion": "khepri",
+      "name": "Escarabajo de Lapislázuli",
+      "rarity": "Épica",
+      "tagline": "Armadura de lapislázuli y oro, élitros de esmalte azul y enjambre de escarabajos dorados.",
+      "lore": "Los orfebres del Abismo forjaron su armadura con las joyas que la Horda no supo valorar.",
+      "visualTheme": "Armadura de lapislázuli y oro, élitros de esmalte azul y enjambre de escarabajos dorados.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "khepri_alt2",
+      "type": "skin",
+      "champion": "khepri",
+      "name": "Plaga de Ceniza",
+      "rarity": "Épica",
+      "tagline": "Caparazón gris ceniza agrietado, hoces de hueso y enjambre de polillas tiznadas.",
+      "lore": "Cuando el Infernal quemó su templo, el enjambre cambió de forma para sobrevivir.",
+      "visualTheme": "Caparazón gris ceniza agrietado, hoces de hueso y enjambre de polillas tiznadas.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "abismo",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 1,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "",
+    "audio": "",
+    "multiplayer": "",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}
