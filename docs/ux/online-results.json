@@ -1,27 +1,19 @@
 {
   "checks": [
     {
-      "name": "Four distinct full pairs",
+      "name": "Four distinct champions",
       "ok": true
     },
     {
-      "name": "Host rejects a reserve already taken by another human",
+      "name": "Host rejects duplicate champion",
       "ok": true
     },
     {
-      "name": "Host rejects missing reserve loadout",
+      "name": "Host rejects missing player loadout",
       "ok": true
     },
     {
-      "name": "Guest handoff replicated and controls refreshed",
-      "ok": true
-    },
-    {
-      "name": "Guest can move after handoff",
-      "ok": true
-    },
-    {
-      "name": "Host card handoff reaches guests",
+      "name": "Death preserves original champion",
       "ok": true
     },
     {
@@ -29,19 +21,23 @@
       "ok": true
     },
     {
-      "name": "Exhausted guest observes surviving team",
+      "name": "Remote revive does not complete before five seconds",
       "ok": true
     },
     {
-      "name": "Pending reserves prevent early wipe",
+      "name": "Five-second revive survives hit and reaches guest",
       "ok": true
     },
     {
-      "name": "Eight deaths end all four clients",
+      "name": "Revived guest controls same hero",
       "ok": true
     },
     {
-      "name": "Returning to lobby restores original pairs",
+      "name": "Four deaths end four clients without reserves",
+      "ok": true
+    },
+    {
+      "name": "Returning to lobby preserves one original champion",
       "ok": true
     }
   ],

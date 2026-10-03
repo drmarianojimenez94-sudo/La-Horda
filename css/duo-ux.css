@@ -10,3 +10,8 @@
 @media(orientation:landscape) and (max-height:500px){#duo-picker{margin:4px auto;padding:8px}#duo-picker h3{font-size:16px}#duo-picker>p{font-size:12px;margin:4px 0}.duo-card{display:grid;grid-template-columns:64px 1fr;text-align:left;gap:3px;padding:7px}.duo-card>b,.duo-card>label{grid-column:1/-1}.duo-card>canvas{width:64px;height:64px;grid-row:2/5}.duo-card>strong,.duo-card>small,.duo-card>details{grid-column:2}.duo-card>label{font-size:12px}.duo-card select{min-height:40px}#prep-start-btn{min-height:42px;bottom:8px}}
 
 .duo-cards.single-champion{grid-template-columns:minmax(0,1fr);max-width:420px;margin:auto}
+/* A single card keeps its selector beside the portrait, clear of the fixed mobile footer. */
+@media(orientation:landscape) and (max-height:500px){
+ .single-champion .duo-card>canvas{grid-row:1/5;align-self:center}
+ .single-champion .duo-card>label{grid-column:2;grid-row:4}
+}

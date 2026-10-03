@@ -14,8 +14,9 @@ const OUT=process.env.SKIN_AUDIT_OUT || '/tmp/horda-skins/check';
   await page.waitForFunction(()=>Object.values(CROMA_SKINS).every(d=>d._built&&Object.values(d.packs).every(k=>CHAMP_PACK[k]?.ready)));
   const result=await page.evaluate(()=>{
    const checks=[],check=(name,ok)=>checks.push({name,ok:!!ok});
-   check('32 catalog entries',cosmeticCatalog().length===32);
-   check('13 independent authored designs',Object.values(CROMA_SKINS).filter(d=>d.appearanceType==='skin').length===13);
+   const exp=typeof EXPEDITION==='undefined'?{}:EXPEDITION;const added=Object.keys(exp).length;
+   check('legacy plus expedition catalog entries',cosmeticCatalog().length===32+added*3);
+   check('legacy plus expedition authored designs',Object.values(CROMA_SKINS).filter(d=>d.appearanceType==='skin').length===13+added);
    check('all set skins retain source art',Object.values(SET_SKINS).every(d=>Object.values(d.packs).every(k=>!CHAMP_PACK[k].cosmeticApplied)));
    selectedClass='tanque';currentArena='bosque';startRun(1);state='paused';
    const cv=document.createElement('canvas');cv.width=1050;cv.height=Object.keys(CROMA_SKINS).length*140;const g=cv.getContext('2d');g.fillStyle='#242732';g.fillRect(0,0,cv.width,cv.height);
@@ -23,10 +24,10 @@ const OUT=process.env.SKIN_AUDIT_OUT || '/tmp/horda-skins/check';
    const audit=[];let row=0;
    for(const [id,d] of Object.entries(CROMA_SKINS)){
     const h=makeHero(d.champ,true,0,0);h._codexSkin=id;
-    check(id+' classified as skin',cosmeticMetadata(id).type==='SKIN'&&cosmeticAppearanceKind(id)==='skin');
+    const isSkin=d.appearanceType==='skin';check(id+' correct appearance type',cosmeticMetadata(id).type===(isSkin?'SKIN':'CROMA')&&cosmeticAppearanceKind(id)===(isSkin?'skin':'croma'));
     check(id+' uses authored body',setSkinPackKey(h,d.champ)===d.packs[d.champ]);
     for(const [base,key] of Object.entries(d.packs)){
-     const P=CHAMP_PACK[key];check(key+' independent metadata',!P.cromaOf&&P.ready&&P.atlas.src.includes('/skins/'));
+     const P=CHAMP_PACK[key];check(key+' real appearance atlas',P.ready&&(isSkin?(!P.cromaOf&&P.atlas.src.includes('/skins/')):(P.cosmeticChangedPixels>0&&P.refH===CHAMP_PACK[base].refH)));
      const p=document.createElement('canvas');p.width=P.atlas.naturalWidth;p.height=P.atlas.naturalHeight;const q=p.getContext('2d',{willReadFrequently:true});q.drawImage(P.atlas,0,0);
      const pixels=q.getImageData(0,0,p.width,p.height).data;check(key+' binary alpha',pixels.every((v,i)=>i%4!==3||v===0||v===255));
      for(const [name,arr] of Object.entries(P.sets))for(const raw of arr){
