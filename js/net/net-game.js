@@ -261,7 +261,7 @@ function netBuildLoadout(key,nested){
   const k = key || selectedClass, c = save.champions[k];
   const eq = Object.assign(mkEquipment(), c.equipment||{});
   const items = itemPoolFor(k).filter(it=>Object.values(eq).includes(it.uid));
-  return {reserve:!nested && duoValid() ? netBuildLoadout(save.duoReserve,true) : null, champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
+  return {reserve:null, champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
     skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
     cosmeticSkin:(typeof cosmeticSkinEquippedId==="function" ? (cosmeticSkinEquippedId(k) || (c.cosmeticSkin==="" ? "" : null)) : null),
@@ -316,12 +316,12 @@ function netPersistView(s){
 function netHostStartGame(){
   const room = net.room; if(!room) return false;
   const humans = room.slots.map((s,i)=>s && s.connected ? Object.assign({slot:i}, s) : null);
-  if(!duoValid() || netDuplicateChamps().length || humans.some(s=>s&&s.slot>0&&!netDuoLoadoutValid(s.slot))){ showNetToast("Cada jugador debe elegir dos héroes distintos, sin repetir entre jugadores."); return false; }
-  const humanChamps = humans.filter(Boolean).flatMap(s=>[s.slot===0 ? selectedClass : s.champ, s.slot===0 ? save.duoReserve : netLobby.loadouts[s.slot].reserve.champ]);
+  if(!duoValid() || netDuplicateChamps().length || humans.some(s=>s&&s.slot>0&&!netDuoLoadoutValid(s.slot))){ showNetToast("Cada jugador debe elegir un campeón, sin repetir entre jugadores."); return false; }
+  const humanChamps = humans.filter(Boolean).map(s=>s.slot===0 ? selectedClass : s.champ);
   const bots = netPickBots(humanChamps, 4 - humans.filter(Boolean).length);
   const slots = [0,1,2,3].map(i=>{
     const s = humans[i];
-    if(s) return {slot:i, kind:"human", reserve:i===0?save.duoReserve:netLobby.loadouts[i].reserve.champ, champ: i===0 ? selectedClass : s.champ, name:s.name, level:s.level};
+    if(s) return {slot:i, kind:"human", champ: i===0 ? selectedClass : s.champ, name:s.name, level:s.level};
     return {slot:i, kind:"bot", champ:bots.shift(), name:"BOT"};
   });
   const seed = (Math.random()*0x7fffffff)|0 || 7;
@@ -387,18 +387,9 @@ function netHostUpdateRemotes(dt){
   }
   if(player) player._spd = player.baseSpeed * runStats.speedMult * arenaRuleSpeedMult() * setSpeedMult(player) * (1-Math.min(0.8,player.slowAmt||0)) * heroSpeedMult(player);
 }
-// TEAM WIPE (derrota compartida): todos los humanos ACTIVOS (conectados) están caídos y no hay
-// ningún revivir de un humano en curso. Mientras quede un humano activo en pie, la partida sigue.
-// (Un invitado desconectado no cuenta: su héroe lo maneja un bot hasta que vuelva.)
+// Defeat only when the whole team is down: living bots can revive humans.
 function netTeamWiped(){
-  let aliveHumans = 0, reviving = false;
-  heroes.forEach((h,i)=>{
-    const s = netMatch.slots[i]; if(!s || s.kind!=="human") return;
-    const active = i===0 || !!(h._net && h._net.connected);
-    if(active && (h.alive || duoPending(h))) aliveHumans++;
-    if(!h.alive && h._reviveBy && h._reviveBy.alive && h._reviveT>0) reviving = true;
-  });
-  return aliveHumans===0 && !reviving;
+  return !heroes.some(h=>h.alive);
 }
 function netHostCheckDefeat(){
   if(!netIsHost() || runEnding) return;

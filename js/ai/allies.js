@@ -152,15 +152,15 @@ function botTryAbilities(h){
    Lo decide SIEMPRE la simulación (la partida local o el anfitrión en cooperativo), nunca la
    pantalla de quien revive:
    - Un caído tiene a lo sumo UN reanimador a la vez (candado): a._reviveBy / a._reviveT (ms
-     acumulados) / a._reviveDur (humano 1,3 s con el botón, bot 2,4 s). Todos lo ven igual.
-   - El progreso vuelve a 0 al instante si el reanimador suelta el botón, se aleja, cae, queda
-     aturdido, se desconecta, el caído deja de ser válido o la partida termina; y si un bot deja
+     acumulados) / a._reviveDur (5 s para humanos y bots). Todos lo ven igual.
+   - El progreso vuelve a 0 al instante si el reanimador suelta el botón, se aleja, cae,
+     se desconecta, el caído deja de ser válido o la partida termina; y si un bot deja
      de revivirlo más de REVIVE_GRACE_MS. Nunca queda un "reviviendo" fantasma.
-   - Recibir daño NO interrumpe (el aturdimiento sí).
+   - Recibir daño o aturdimiento NO interrumpe.
    - Los humanos mantienen el botón: h._revHold = índice (en heroes) del caído; el invitado lo
      pide con {k:"revive", slot, on}. Los bots avanzan desde botMove (bot-brain.js). */
 // Un bot que esquiva un aviso un instante no pierde lo avanzado; si deja de revivir más de esto,
-// vuelve a 0. Las interrupciones de un humano (soltar, alejarse, caer, aturdido, desconexión) son
+// vuelve a 0. Las interrupciones de un humano (soltar, alejarse, caer, desconexión) son
 // inmediatas (cancelRevivesBy).
 const REVIVE_GRACE_MS = 350;
 function reviveBusyFor(a, r){
@@ -168,7 +168,7 @@ function reviveBusyFor(a, r){
   if(netIsGuest()) return a._reviveT > 0; // el invitado solo ve lo que manda el anfitrión
   return a._reviveBy.alive && runElapsedMs - (a._revTouchAt||0) <= REVIVE_GRACE_MS;
 }
-function reviverCanAct(r){ if(duoEnabled()) return false; return !!(r && r.alive && !(r.stunTimer>0) && !r.fused); }
+function reviverCanAct(r){ if(duoEnabled()) return false; return !!(r && r.alive && !r.fused); }
 function cancelRevivesBy(r){ if(!r || !heroes) return; for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
 // Un cuadro de progreso de r sobre a. Devuelve true si lo terminó de revivir.
 function reviveStep(a, r, dur, dt){
@@ -232,6 +232,11 @@ function updateAllies(dt){
     if(!h.alive) continue;
     if(h.isRemote) continue; // B1: lo maneja su dueño (netHostUpdateRemotes), no la IA
     if(axiomFreezeTimer>0 && h!==axiomFreezeCaster) continue; // Force Quit: nadie mas actua
+    const reviving = heroes.find(a=>!a.alive && a._reviveBy===h && a._reviveT>0 && distance(h,a)<REVIVE_RANGE);
+    if(reviving && !runEnding && !divinaMode && reviverCanAct(h)){
+      h.stunTimer=Math.max(0,(h.stunTimer||0)-dt);
+      reviveStep(reviving,h,REVIVE_DURATION_MS,dt); h.moving=false; continue;
+    }
     if(h.stunTimer>0){ h.stunTimer-=dt; continue; } // congelado (p.ej. Nova de Escarcha): no actúa
     h.basicCd = Math.max(0, h.basicCd-dt);
     for(let i=0;i<3;i++) h.cds[i] = Math.max(0, h.cds[i]-dt);

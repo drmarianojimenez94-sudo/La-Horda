@@ -294,7 +294,7 @@ function _prepStartFailed(err){
   gameAlert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
 }
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
-  if(!duoValid()){ showNetToast("Elegí dos héroes distintos antes de comenzar."); return; }
+  if(!duoValid()){ showNetToast("Elegí un campeón desbloqueado antes de comenzar."); return; }
   lobbyNextArena = null; // la marca "SIGUIENTE" de la Sala dura hasta la próxima partida
   try{
     if(netInRoom()){

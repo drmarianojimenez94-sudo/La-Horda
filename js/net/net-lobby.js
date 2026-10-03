@@ -36,11 +36,11 @@ function netTogglePublic(){
 function netNotReady(){ return net.room ? net.room.slots.filter((s,i)=> i>0 && s && s.connected && !s.ready) : []; }
 function netInRoom(){ return !!(net.room && net.role); }
 function netHumanCount(){ return net.room ? net.room.slots.filter(s=>s && s.connected).length : 1; }
-function netDuoLoadoutValid(i){ const L=netLobby.loadouts[i], s=net.room.slots[i]; return !!(L&&s&&L.champ===s.champ&&CLASSES[L.reserve?.champ]&&L.reserve.champ!==L.champ); }
+function netDuoLoadoutValid(i){ const L=netLobby.loadouts[i], s=net.room.slots[i]; return !!(L&&s&&L.champ===s.champ&&CLASSES[L.champ]); }
 function netDuplicateChamps(){
  if(!net.room) return [];
  const seen=new Set(), dup=[];
- net.room.slots.forEach((s,i)=>{ if(!s?.connected)return; const keys=i===net.slot?duoKeys():[s.champ,net.role==="host"?netLobby.loadouts[i]?.reserve?.champ:netLobby.duos?.[i]]; for(const k of keys){if(!k)continue;if(seen.has(k))dup.push(k);seen.add(k);} });
+ net.room.slots.forEach((s,i)=>{ if(!s?.connected)return; const keys=i===net.slot?duoKeys():[s.champ]; for(const k of keys){if(!k)continue;if(seen.has(k))dup.push(k);seen.add(k);} });
  return dup;
 }
 
@@ -255,7 +255,7 @@ function netHostBroadcastCos(force){
   const m = {};
   net.room.slots.forEach((s,i)=>{ if(!s) return; m[i] = i===0 ? champSkinId(selectedClass) : ((netLobby.loadouts[i]||{}).skin || null); });
   const d = typeof diffEffective==="function" ? diffEffective(currentArena) : "normal"; // dificultad elegida por el anfitrión
-  const duos={}; net.room.slots.forEach((s,i)=>{ if(s) duos[i]=i===0?save.duoReserve:netLobby.loadouts[i]?.reserve?.champ; });
+  const duos={}; net.room.slots.forEach((s,i)=>{ if(s) duos[i]=null; });
   const sig = JSON.stringify([m, duos, net.room.slots.map(s=>s ? !!s.connected : null), d]);
   if(!force && sig === netLobby.cosSig) return;
   netLobby.cosSig = sig;
