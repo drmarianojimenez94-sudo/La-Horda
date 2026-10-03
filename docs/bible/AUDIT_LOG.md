@@ -170,3 +170,9 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   `aidVisualSolids()` (props grandes del coliseo) y `cmVisualSolids()` (paredes de la Ciudad) declarados en las fichas;
   arcos con abertura marcados `passThrough` (las patas siguen chocando); Fábrica/Abismo/Minas `derived`.
 - **Validación**: arena-validator 8 PASS + 2 WARNING por diseño, 0 FAIL; `t_identity` 84/84.
+
+### A19. Panel táctico y long press en multijugador real
+- `tools/ux/online-tactical.js` (relay + anfitrión + invitado): el panel del invitado no lo pausa ni pausa al
+  anfitrión (la simulación avanza > 1 s con el panel abierto), muestra el kit del invitado y su enfriamiento baja con la
+  simulación del anfitrión; el long press del invitado abre la ficha, no lanza y no manda intención de lanzamiento;
+  el panel del anfitrión tampoco pausa la partida. PASS.
