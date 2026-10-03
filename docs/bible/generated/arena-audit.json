@@ -1,0 +1,874 @@
+{
+ "schemaVersion": 1,
+ "generatedBy": "tools/bible/arena-validator.js",
+ "scope": "Automated geometry/spawn/exploration checks on the real engine + blueprint completeness. PASS is not a design approval.",
+ "arenas": [
+  {
+   "key": "ciudad",
+   "name": "Ciudad Maldita",
+   "number": 1,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "9585 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 125,
+    "H": 99,
+    "cell": 24,
+    "walkCells": 9585,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "identidad, objetivo y jefe propios; rejugabilidad por recompensas de rescate"
+   },
+   "img": "arenas/ciudad.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 6
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "fortaleza",
+   "name": "Fábrica Sin Fin",
+   "number": 2,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "WARNING",
+     "detail": "12822 celdas; 7 bolsillos inalcanzables: 1770@(-8,-3888) 1038@(8,-2920) 1992@(-9,-1958) 2294@(4,-1068) 280@(4,-336) 1170@(4,383) (geometría con compuertas)"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 112,
+    "H": 284,
+    "cell": 24,
+    "walkCells": 12822,
+    "pockets": 7
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "navegación y hazards propios, jefe con regla legible"
+   },
+   "img": "arenas/fortaleza.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 2,
+    "seconds": 5
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "bosque",
+   "name": "Ruinas Célticas / Élficas",
+   "number": 3,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "4326 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 112,
+    "H": 79,
+    "cell": 24,
+    "walkCells": 4326,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "identidad jugable propia; jefe usa las runas"
+   },
+   "img": "arenas/bosque.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 3
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "micelial",
+   "name": "Reino Fúngico",
+   "number": 4,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "2567 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "PASS",
+     "detail": "17 sólidos pintados con colisión"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 99,
+    "H": 70,
+    "cell": 24,
+    "walkCells": 2567,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "Gold Standard: geometría pintada = jugable (2026-10), micro-tutorial, briefing con botín"
+   },
+   "img": "arenas/micelial.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 0,
+    "seconds": 3
+   },
+   "status": "PASS"
+  },
+  {
+   "key": "hielo",
+   "name": "Arena Gélida",
+   "number": 5,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "4337 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 112,
+    "H": 79,
+    "cell": 24,
+    "walkCells": 4337,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "FIX",
+    "why": "curva de dificultad: sigue siendo la pared de la campaña (LA_HORDA_PLAYTEST_REPORT.md)"
+   },
+   "img": "arenas/hielo.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 2
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "acuatica",
+   "name": "Arena Acuática",
+   "number": 6,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "4319 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 112,
+    "H": 79,
+    "cell": 24,
+    "walkCells": 4319,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "movilidad propia y reacción con el rayo"
+   },
+   "img": "arenas/acuatica.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 2
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "laberinto",
+   "name": "Laberinto",
+   "number": 7,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "3838 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 112,
+    "H": 79,
+    "cell": 24,
+    "walkCells": 3838,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "resolver + jefe que usa los muros"
+   },
+   "img": "arenas/laberinto.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 2
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "abismo",
+   "name": "Abismo",
+   "number": 8,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "1838 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "WARNING",
+     "detail": "116 cuadros-héroe dentro de colisión [[\"tanque\",324,616,597,\"\"],[\"tanque\",325,623,598,\"\"],[\"tanque\",325,629,599,\"\"],[\"tanque\",321,637,600,\"abHang\"],[\"tanque\",321,637,601,\"abHang\"]] (arena con caídas: colgado del borde)"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 89,
+    "H": 70,
+    "cell": 24,
+    "walkCells": 1838,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 116,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": [
+     [
+      "tanque",
+      324,
+      616,
+      597,
+      ""
+     ],
+     [
+      "tanque",
+      325,
+      623,
+      598,
+      ""
+     ],
+     [
+      "tanque",
+      325,
+      629,
+      599,
+      ""
+     ],
+     [
+      "tanque",
+      321,
+      637,
+      600,
+      "abHang"
+     ],
+     [
+      "tanque",
+      321,
+      637,
+      601,
+      "abHang"
+     ]
+    ]
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "terreno como recurso, rescate cooperativo"
+   },
+   "img": "arenas/abismo.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 2,
+    "seconds": 2
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "minas",
+   "name": "Minas Profundas",
+   "number": 9,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "4543 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 92,
+    "H": 64,
+    "cell": 24,
+    "walkCells": 4543,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "territorio de luz + jefe que lo usa"
+   },
+   "img": "arenas/minas.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 2
+   },
+   "status": "WARNING"
+  },
+  {
+   "key": "infernal",
+   "name": "Arena Infernal",
+   "number": 10,
+   "checks": [
+    {
+     "area": "blueprint",
+     "name": "ficha completa",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "geometry",
+     "name": "área caminable conexa",
+     "level": "PASS",
+     "detail": "4280 celdas; 0 bolsillos inalcanzables"
+    },
+    {
+     "area": "geometry",
+     "name": "si se ve sólido, es sólido",
+     "level": "WARNING",
+     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+    },
+    {
+     "area": "spawn",
+     "name": "apariciones válidas",
+     "level": "PASS",
+     "detail": "120/120 válidas; 0 dentro de colisión, 0 inalcanzables"
+    },
+    {
+     "area": "explore",
+     "name": "sin NaN",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "nadie fuera del mapa",
+     "level": "PASS",
+     "detail": "0"
+    },
+    {
+     "area": "explore",
+     "name": "héroes siempre en zona caminable",
+     "level": "PASS",
+     "detail": "0 cuadros-héroe dentro de colisión"
+    },
+    {
+     "area": "explore",
+     "name": "nunca atrapado",
+     "level": "PASS",
+     "detail": "1800 cuadros de exploración"
+    }
+   ],
+   "grid": {
+    "W": 112,
+    "H": 79,
+    "cell": 24,
+    "walkCells": 4280,
+    "pockets": 0
+   },
+   "explore": {
+    "frames": 1800,
+    "nan": 0,
+    "outside": 0,
+    "oob": 0,
+    "trapped": 0,
+    "trappedAt": [],
+    "oobAt": [],
+    "outsideAt": []
+   },
+   "design": {
+    "grade": "PASS",
+    "why": "decisión propia; jefe narrativo en 3 formas"
+   },
+   "img": "arenas/infernal.webp",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "seconds": 2
+   },
+   "status": "WARNING"
+  }
+ ],
+ "pageErrors": []
+}

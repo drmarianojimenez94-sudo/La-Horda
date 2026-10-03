@@ -38,6 +38,9 @@ jobs:
       - run: node tools/bible/champion-validator.js --strict
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/arena-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/ux/test-ability-inspector.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

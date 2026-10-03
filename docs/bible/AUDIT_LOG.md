@@ -61,3 +61,26 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   Reutiliza `abilityCardHTML` (una sola ficha para long press, panel y futuro Códice).
 - **Validación**: `tools/ux/test-tactical-panel.js` (844×390, 667×375; Musashi y Vesper; solo pausa,
   multijugador no pausa y la simulación avanza, enfriamiento en vivo, cierre tocando el fondo).
+
+### A7. Arena Factory + validador de arenas
+- **Problema**: la identidad de cada arena estaba repartida entre `ARENA_MODS`, `ARENA_BRIEF`, ganchos y fichas
+  en Markdown (algunas desactualizadas: `bosque.md` nombra al Jinete Sin Cabeza como jefe; el motor usa al
+  Guardián Ancestral). Nada verificaba geometría, apariciones ni que el arte "sólido" choque.
+- **Implementación**: `js/arenas/common/arena-blueprints.js` (ArenaDefinition de las 11 arenas, con `decision`
+  propia, hazard con telegraph, jefe-arena, botín, micro-tutorial, geometría, estado de diseño) y
+  `tools/bible/arena-validator.js` (grilla con la colisión real, bolsillos, sólidos pintados, 120 apariciones,
+  exploración agresiva de ~29 s con bots que buscan romper el mapa, canario, láminas `.webp`).
+- **Hallazgo crítico**: `clampToArena` usaba `%` de JS con ángulos negativos: en más de la mitad del coliseo el
+  límite real quedaba hasta 41 % más afuera que las paredes dibujadas (Ruinas, Gélida, Acuática, Laberinto,
+  Infernal). Los bots exploradores salieron del mapa en la Infernal. Corregido con módulo positivo.
+
+### A8. Reino Fúngico — geometría pintada = jugable (Gold Standard, parte 1)
+- **Problema** (reportado): montículos de tocones, racimos de hongos, pilares, el estanque y el trono de raíces
+  del fondo pintado se veían sólidos pero se atravesaban (solo chocaban el capullo y algunos hongos del ecosistema).
+- **Implementación**: 17 polígonos trazados sobre el arte (`MIC_BG_SOLIDS`, en píxeles del fondo) que chocan,
+  bloquean la navegación y las apariciones; bocas de túnel corridas a zona libre (`micTunnelMouth`); salida al
+  punto libre más cercano (`micNearestFree`); los nodos del ecosistema no nacen pegados a un montículo.
+- **Validación**: arena-validator PASS (0 bolsillos, 120/120 apariciones, 17/17 sólidos con colisión,
+  exploración sin fallas); `tools/micelial/t_micelial.js` con las mismas 2 fallas preexistentes que `main`
+  (MADRE fase 3, SAVE viejo) — comparado contra un worktree limpio de HEAD en 3 corridas; la prueba del Acechador
+  ahora lo hace aparecer en un punto libre (antes en un montículo que ahora es sólido).

@@ -29,6 +29,7 @@ function micBuildNodes(){
     const k = micEdgeK(a), x = E.cx + Math.cos(a)*E.rx*k*n, y = E.cy + Math.sin(a)*E.ry*k*n;
     if(Math.hypot(x - MIC_MAP.pod.x, y - MIC_MAP.pod.y) < 270) continue;
     if(Math.hypot(x - MIC_MAP.start.x, y - MIC_MAP.start.y) < 130) continue;
+    if(micInBgSolid(x, y, 44)) continue; // ni adentro ni pegado a un montículo pintado: no cierra pasos
     let ok = true; for(const o of out){ if(Math.hypot(o.x-x, o.y-y) < 92){ ok = false; break; } }
     if(!ok) continue;
     let r = R()*tot, kind = "sprig"; for(const kk of kinds){ r -= kk[1]; if(r <= 0){ kind = kk[0]; break; } }
