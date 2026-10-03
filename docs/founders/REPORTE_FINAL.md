@@ -39,7 +39,7 @@ Rama: `claude/founders-gm-expansion`. Auditoría inicial: `docs/founders/AUDITOR
 | Presencia en relay real, 3 navegadores (15) | PASS |
 | Admin usuarios/Test Lab e2e (35) | PASS |
 | Factory (26), duplicidad (sin DUPLICATE, REVIEW justificados) | PASS |
-| Suite CI completa existente (46 comprobaciones) | PASS |
+| Suite CI completa, re-corrida tras el arte y la normalización (44 suites, 0 fallos) | PASS |
 
 **Fallos encontrados y corregidos en el camino:** colisión de nombre global en la Tienda
 (`shopCategoryOf`), filas de campeones internos descartadas al recargar, techo de jefes de Aurelia apilado

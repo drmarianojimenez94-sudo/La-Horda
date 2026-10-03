@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T23:11:12.043Z",
+  "generatedAt": "2026-10-03T23:39:48.474Z",
   "method": "score = 0.35·Jaccard(vocabulario) + 0.45·Jaccard(etiquetas de mecánica) + 0.2·mismo rol; DUPLICATE ≥ 0.45, REVIEW ≥ 0.32",
   "rosterSize": 37,
   "roleDistribution": {
@@ -73,8 +73,8 @@
       "nearest": [
         {
           "other": "bront",
-          "score": 0.381,
-          "text": 0.061,
+          "score": 0.382,
+          "text": 0.063,
           "tags": 0.8,
           "sharedTags": [
             "gravity",
@@ -85,8 +85,8 @@
         },
         {
           "other": "khepri",
-          "score": 0.304,
-          "text": 0.083,
+          "score": 0.3,
+          "text": 0.072,
           "tags": 0.167,
           "sharedTags": [
             "shield"
@@ -94,8 +94,8 @@
         },
         {
           "other": "libertador",
-          "score": 0.299,
-          "text": 0.067,
+          "score": 0.297,
+          "text": 0.063,
           "tags": 0.167,
           "sharedTags": [
             "dash"
@@ -161,8 +161,8 @@
       "nearest": [
         {
           "other": "facu_gm",
-          "score": 0.304,
-          "text": 0.083,
+          "score": 0.3,
+          "text": 0.072,
           "tags": 0.167,
           "sharedTags": [
             "shield"
@@ -211,9 +211,9 @@
           "sharedTags": []
         },
         {
-          "other": "ynara",
-          "score": 0.208,
-          "text": 0.024,
+          "other": "profeta",
+          "score": 0.213,
+          "text": 0.036,
           "tags": 0,
           "sharedTags": []
         }
@@ -294,8 +294,8 @@
         },
         {
           "other": "facu_gm",
-          "score": 0.381,
-          "text": 0.061,
+          "score": 0.382,
+          "text": 0.063,
           "tags": 0.8,
           "sharedTags": [
             "gravity",
@@ -342,8 +342,8 @@
         },
         {
           "other": "profeta",
-          "score": 0.366,
-          "text": 0.047,
+          "score": 0.367,
+          "text": 0.05,
           "tags": 0.333,
           "sharedTags": [
             "heal",
