@@ -166,7 +166,7 @@ function netTakenChamps(){
 }
 function netChampStripHTML(){
   const taken = netTakenChamps();
-  const btns = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false).map(k=>{
+  const btns = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false && championPlayable(k)).map(k=>{
     const c = CLASSES[k], lv = save.champions[k].level;
     return `<button class="net-champ ${k===selectedClass?"sel":""}" data-net-champ="${k}" ${taken.has(k)&&k!==selectedClass?"disabled":""} title="${c.name}">${c.icon||""} ${c.name} · ${lv}</button>`;
   }).join("");

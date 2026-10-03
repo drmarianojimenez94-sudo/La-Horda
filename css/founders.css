@@ -58,3 +58,13 @@
 .shop-founder-card .sf-granted{ display:block; width:100%; margin-top:6px; font-family:var(--font-pixel); font-size:8px; padding:8px; min-height:44px;
   border:2px solid #000; background:repeating-linear-gradient(45deg, #2a1d10 0 6px, #1d140b 6px 12px); color:var(--fd-gold); cursor:not-allowed; opacity:1; }
 .shop-founder-card .sf-inspect{ font-family:var(--font-retro); font-size:17px; color:#cbb8a0; margin-top:4px; }
+
+/* ---------- panel GM: usuarios, confirmación, test lab ---------- */
+.gm-confirm{ position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.7); padding:16px; }
+.gm-confirm .gm-card{ max-width:520px; width:100%; }
+.gm-champ-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; }
+.gm-user-list{ display:grid; gap:8px; }
+.gm-pre{ max-height:320px; overflow:auto; font-size:11px; background:#0c0806; padding:8px; white-space:pre-wrap; word-break:break-all; }
+.gm-muted{ opacity:.7; }
+.testlab-badge{ position:fixed; top:max(6px, env(safe-area-inset-top)); left:50%; transform:translateX(-50%); z-index:8500; pointer-events:none;
+  font-family:var(--font-pixel); font-size:8px; padding:5px 8px; border:2px solid #000; background:repeating-linear-gradient(45deg, #5c3a00 0 8px, #2a1a00 8px 16px); color:#ffd76a; box-shadow:2px 2px 0 #000; }

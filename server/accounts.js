@@ -786,11 +786,13 @@ function create(opts){
       const e = { score: body.score, round: body.round, durationMs: body.durationMs, guardian: typeof body.guardian === "string" ? body.guardian : "",
         week: typeof body.week === "string" ? body.week : "", at: now };
       let bad = lbCheck(e, now);
+      // Rankings competitivos: Fundadores y campeones sin publicar no compiten (taxonomía compartida).
+      if(!bad && entitlements.isChampion(e.guardian)){ const m = entitlements.taxonomy().meta(e.guardian); if(!m.competitiveAllowed || m.releaseState !== "RELEASED") bad = { error: "NOT_COMPETITIVE", msg: "Ese campeón no participa del ranking." }; }
       // la partida tiene que entrar en el tiempo que pasó desde tu envío anterior (con 2 min de margen)
       if(!bad && last && e.durationMs > now - last + 120000) bad = { error: "IMPLAUSIBLE", msg: "Esa partida no entra en el tiempo desde tu envío anterior." };
       if(bad){
         log("LB_REJECT", { user: uid, why: bad.error, score: e.score, round: e.round, ms: e.durationMs });
-        return err(req, res, bad.error === "WEEK_CLOSED" ? 409 : bad.error === "IMPLAUSIBLE" ? 422 : 400, bad.error, bad.msg);
+        return err(req, res, bad.error === "WEEK_CLOSED" ? 409 : bad.error === "IMPLAUSIBLE" ? 422 : bad.error === "NOT_COMPETITIVE" ? 403 : 400, bad.error, bad.msg);
       }
       lbLast.set(uid, now);
       const put = await store.lbPut(e.week, uid, e.guardian, e);

@@ -245,11 +245,11 @@ function netPickBots(humanChamps, n){
   for(const role of NET_ROLE_ORDER){
     if(out.length>=n) break;
     if(roles.has(role)) continue;
-    const pool = Object.keys(CLASSES).filter(k=>free(k) && CLASSES[k].roleCategory===role);
+    const pool = Object.keys(CLASSES).filter(k=>free(k) && CLASSES[k].roleCategory===role && championBotEligible(k));
     if(pool.length) out.push(pool[(Math.random()*pool.length)|0]);
   }
   while(out.length<n){
-    const pool = Object.keys(CLASSES).filter(free);
+    const pool = Object.keys(CLASSES).filter(k=>free(k) && championBotEligible(k));
     if(!pool.length) break;
     out.push(pool[(Math.random()*pool.length)|0]);
   }

@@ -101,7 +101,7 @@ function codexCounts(){
   const cs = cre.map(codexCreatureState), bs = CODEX_BOSSES.map(codexBossState);
   const arenas = CAMPAIGN_ORDER.filter(a=>!ARENA_MODS[a].comingSoon);
   return {
-    champs:[CHAMPION_CATALOG.filter(c=>save.champions[c.id] && save.champions[c.id].unlocked).length, CHAMPION_CATALOG.length],
+    champs:[CHAMPION_CATALOG.filter(c=>championInProgression(c.id) && save.champions[c.id] && save.champions[c.id].unlocked).length, CHAMPION_CATALOG.filter(c=>championInProgression(c.id)).length],
     creatures:[cs.filter(codexKnown).length, cre.length, cs.filter(codexFullyKnown).length],
     bosses:[bs.filter(codexKnown).length, CODEX_BOSSES.length, bs.filter(codexFullyKnown).length],
     arenas:[arenas.filter(codexArenaCleared).length, arenas.length]
@@ -263,12 +263,13 @@ function codexListHtml(sec){
   return "";
 }
 function codexChampListHtml(){
-  const cards = CHAMPION_CATALOG.map(c=>{
-    const cls = CLASSES[c.id], ch = save.champions[c.id], own = ch && ch.unlocked, sel = own && selectedClass===c.id;
+  const cards = CHAMPION_CATALOG.filter(c=>typeof shopChampionVisible!=="function" || shopChampionVisible(c.id)).map(c=>{
+    const cls = CLASSES[c.id], ch = save.champions[c.id], own = ch && ch.unlocked, sel = own && selectedClass===c.id, meta = championMeta(c.id);
     return `<button class="cx-card cx-champ-card ${own?"":"locked"} ${sel?"sel":""}" data-go="champ:${c.id}">
       ${_pv({kind:"champ", key:c.id, anim:"idle", bg:"none", fps:15}, "cx-pv cx-card-pv")}
       <div class="cx-card-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div>
-      <div class="cx-card-sub">${HUB_ROLE_LABEL[cls.roleCategory]||""} · ${own ? "Nv. " + ch.level : "🔒 Tienda"}</div>
+      <div class="cx-card-sub">${HUB_ROLE_LABEL[cls.roleCategory]||""} · ${own ? "Nv. " + ch.level : meta.purchasable ? "🔒 Tienda" : meta.category==="FOUNDER" ? "Se concede" : "🔒"}</div>
+      ${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? founderBadgeHTML(meta.founderKey,"sm") : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
       ${sel ? '<span class="cx-card-flag">EN JUEGO</span>' : ""}
     </button>`;
   }).join("");
@@ -379,6 +380,7 @@ function codexChampHtml(key){
     ${_animChips(codexChampAnimList(key))}
     <div class="cx-stage-actions">${own
       ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`)
+      : !championMeta(key).purchasable ? `<div class="cx-active">${championMeta(key).category==="FOUNDER" ? `${typeof founderBadgeHTML==="function" ? founderBadgeHTML(championMeta(key).founderKey,"md") : ""} 🪙 ${fmtGold(shopChampionPrice(key))} · ${championMeta(key).storeNotice}<br><small>${championMeta(key).inspectNotice}</small>` : "No disponible"}</div>`
       : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
       <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle">${_cxEsc(cls.role)}</div>

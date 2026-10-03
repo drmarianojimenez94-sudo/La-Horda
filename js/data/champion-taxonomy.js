@@ -73,6 +73,8 @@ function championEventWindow(id, now){
 function championAvailability(id, now){
   var m = championMeta(id), released = m.releaseState === "RELEASED";
   var visible = released && m.visibleInStore, purchasable = released && m.purchasable;
+  // Fundadores: vitrina pública desde TESTING (se muestran con su sello, no con un sprite sin aprobar).
+  if(m.category === "FOUNDER") visible = m.visibleInStore && (released || m.releaseState === "TESTING");
   if(m.category === "EVENT"){
     var w = championEventWindow(id, now == null ? Date.now() : now);
     visible = released && !!(w && w.config.visible !== false && (w.active || w.config.visible === "always"));
@@ -85,6 +87,12 @@ function championPlayable(id){ var s = championMeta(id).releaseState; return s =
 // Ownership must come from the server ledger, never from a client purchase.
 // DISABLED keeps existing ownership untouched (disabling must never wipe progress).
 function championRequiresServerGrant(id){ var m = championMeta(id); return !m.purchasable || m.category === "EVENT" || ["DRAFT","INTERNAL","TESTING"].indexOf(m.releaseState) >= 0; }
+// Bots, rivales y rellenos automáticos: solo campeones publicados y comunes (nunca Fundadores ni internos).
+function championBotEligible(id){ var m = championMeta(id); return m.releaseState === "RELEASED" && (m.category === "STANDARD" || m.category === "FAMILY"); }
+// Rankings y modos competitivos.
+function championCompetitive(id){ var m = championMeta(id); return !!m.competitiveAllowed && m.releaseState === "RELEASED"; }
+// Progresión normal (logros de colección, contadores del Códice, desafíos): sin Fundadores ni sin publicar.
+function championInProgression(id){ var m = championMeta(id); return m.category !== "FOUNDER" && m.category !== "DEV" && m.releaseState === "RELEASED"; }
 function championsByCategory(ids){
   var out = {}; for(var i = 0; i < ids.length; i++){ var c = championMeta(ids[i]).category; (out[c] || (out[c] = [])).push(ids[i]); }
   return out;
