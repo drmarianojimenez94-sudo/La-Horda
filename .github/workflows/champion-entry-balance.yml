@@ -23,6 +23,7 @@ jobs:
       - run: node tools/alpha/rooms-unit.js
       - run: node tools/quality/test-single-champion-revive.js
       - run: node tools/quality/test-floating-text.js
+      - run: node tools/quality/test-combat-language.js
       - run: node tools/alpha/services-test.js
       - run: node tools/alpha/event-receipts-test.js
       - run: node tools/collection/check-collection.js

@@ -32,3 +32,13 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   nada** → ahora elige sola al rival más digno a 320 u, y si no hay nadie devuelve la carga y el
   enfriamiento. (2) El chequeo de sprite por `CHAMP_PACK` daba falsos FAIL (Aldric/Kael/Thalen dibujan
   por otro camino) → se reemplazó por dibujo real en un canvas aparte.
+
+### A4. Daño en el tiempo invisible y congelado por aturdimiento
+- **Problema**: quemadura/sangrado/veneno/maldición restaban vida cuadro a cuadro sin ningún número; y el
+  `continue` del aturdimiento pausaba también los DoT del enemigo aturdido.
+- **Implementación**: DoT antes del aturdimiento (`js/core/update.js`); `ftDotTick` agrupa por enemigo cada
+  ~0,65 s en un número chico del color del elemento (tipo 6). Escudo ganado = tipo 5 `◈N`. El daño recibido
+  ahora cae en vez de subir. Lenguaje en `js/data/combat-language.js`.
+- **Validación**: `tools/quality/test-combat-language.js`, `tools/quality/test-floating-text.js`.
+- **Limitación**: los números de DoT se generan en el anfitrión (los invitados ven los de escudo, que se
+  calculan localmente, pero no los de DoT).
