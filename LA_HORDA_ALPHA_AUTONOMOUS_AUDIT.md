@@ -54,7 +54,7 @@ Configuración normal versionada y restauración de defaults. Nueve multiplicado
 
 **Jefe arbitrario, Set específico y recompensa automática de evento están deshabilitados explícitamente** y el servidor rechaza esos campos con 422. Requieren integrar controladores y concesión idempotente de recompensas. No se simula su funcionamiento guardando formularios sin efecto.
 
-Chat global autenticado con límites, texto seguro, marca OWNER y mensaje fijado. Noticias, banners y mensajes destacados programados. Polling acotado fuera del combate; las ventanas se limpian al cerrar. La administración puede regalar cosméticos existentes individualmente o a todas las cuentas con progreso, con reporte de conflictos y faltantes.
+Chat global autenticado con límites, texto seguro, marca OWNER y mensaje fijado. El CI detectó una pérdida de foco al enviar que impedía cerrar con Escape: se corrigió con captura de teclado activa sólo mientras el diálogo está abierto y restauración de foco. Noticias, banners y mensajes destacados programados. Polling acotado fuera del combate; las ventanas se limpian al cerrar. La administración puede regalar cosméticos existentes individualmente o a todas las cuentas con progreso, con reporte de conflictos y faltantes.
 
 Reset de una cuenta por campos: progreso de campeones, arenas, oro, inventario, cosméticos y Códice. Vista previa, frase exacta, token de un uso con caducidad, respaldo durable previo y CAS. No hay botón de reset global. Inventarios heredados y maestría real se limpian; no se reviven desbloqueos por migraciones. Si se conserva el equipo/colección de un Set, su recompensa puede recuperarse: la vista previa lo advierte.
 

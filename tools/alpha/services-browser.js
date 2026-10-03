@@ -22,7 +22,9 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   assert.equal(await page.locator('.alpha-chat [data-messages] p b').count(),1);assert.equal(await page.locator('.alpha-chat .alpha-owner').count(),1);
   const box=await page.locator('.alpha-chat').boundingBox();assert.ok(box.x>=0&&box.y>=0&&box.x+box.width<=width+1&&box.y+box.height<=height+1);assert.equal(await page.locator('.alpha-chat').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
   if(width===667){fs.mkdirSync('/tmp/horda-alpha-services',{recursive:true});await page.screenshot({path:'/tmp/horda-alpha-services/chat-667.png'});}
-  await page.keyboard.press('Escape');assert.equal(await page.locator('.alpha-chat').count(),0);await page.evaluate(()=>{_chat=[];});
+  // Deliberately move focus out of the dialog, as disabling Submit can do.
+  await page.evaluate(()=>document.activeElement?.blur());
+  await page.keyboard.press('Escape');await page.waitForSelector('.alpha-chat',{state:'detached'});assert.equal(await page.locator('.alpha-chat').count(),0);await page.evaluate(()=>{_chat=[];});
  }
  await page.evaluate(()=>{currentArena='ciudad';runLevel=1;});assert.equal(await page.evaluate(()=>alphaWorldMultiplier('xp')),4);
  await page.evaluate(()=>{currentArena='hielo';});assert.equal(await page.evaluate(()=>alphaWorldMultiplier('xp')),2);

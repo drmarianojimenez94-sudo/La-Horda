@@ -75,6 +75,9 @@ const AlphaServices = (() => {
     if(next!=="playing")renderNews();
     if(panel&&next==="playing")closeChat();
   }
+  // Submission can move focus away from a disabled button; Escape remains global
+  // while the dialog is open, before gameplay keyboard handlers receive it.
+  document.addEventListener("keydown",e=>{if(panel&&e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();closeChat();}},true);
   function closeChat(){if(poll)clearTimeout(poll);poll=null;if(panel){panel.remove();panel=null;}document.getElementById("alpha-chat-open")?.focus();}
   async function openChat(){
     if(panel)return;if(!acct.session){accountOpen();return;}
@@ -93,7 +96,7 @@ const AlphaServices = (() => {
       status.textContent="Todos los jugadores de la Alpha. No compartas datos privados.";
     }catch(e){if(panel===local)status.textContent=e.message;}finally{if(panel===local)poll=setTimeout(load,5000);}}
     local.querySelector('form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('button'),text=input.value.trim();if(!text)return;button.disabled=true;
-      try{const r=await accountFetch("POST","/api/chat",{text},{timeout:6000});if(r.status!==200&&r.status!==201)throw Error(r.j.msg||"No se pudo enviar");input.value="";if(poll)clearTimeout(poll);await load();}catch(err){status.textContent=err.message;}finally{button.disabled=false;}};
+      try{const r=await accountFetch("POST","/api/chat",{text},{timeout:6000});if(r.status!==200&&r.status!==201)throw Error(r.j.msg||"No se pudo enviar");input.value="";if(poll)clearTimeout(poll);await load();}catch(err){status.textContent=err.message;}finally{button.disabled=false;if(panel===local)input.focus();}};
     input.focus();await load();
   }
   function mount(){
