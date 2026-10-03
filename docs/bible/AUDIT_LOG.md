@@ -42,3 +42,14 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
 - **Validación**: `tools/quality/test-combat-language.js`, `tools/quality/test-floating-text.js`.
 - **Limitación**: los números de DoT se generan en el anfitrión (los invitados ven los de escudo, que se
   calculan localmente, pero no los de DoT).
+
+### A5. Long press para consultar habilidades
+- **Problema**: mantener un botón ya significaba "apuntar"; no había forma de leer una habilidad en
+  partida (y en multijugador no hay pausa). Tocar una habilidad en enfriamiento solo daba un "deny".
+- **Decisión**: 480 ms de mantener sin arrastrar abre una ficha; soltar sin arrastrar no lanza; arrastrar
+  vuelve al apuntado. Las habilidades sin apuntado pasan a lanzarse al soltar (antes al apretar) para
+  poder distinguir el toque del long press. Sylva (cargar) queda como excepción documentada.
+- **Implementación**: `js/ui/ability-inspector.js` (`abilityCardHTML` reutilizable), `js/core/aim.js`,
+  definitiva movida de `input.js` al inspector, estilos en `css/hud.css`.
+- **Validación**: `tools/ux/test-ability-inspector.js` (844×390 y 667×375: toque, mantener sin lanzar,
+  arrastrar tras la ficha, consulta en enfriamiento, definitiva, ficha dentro de la pantalla).

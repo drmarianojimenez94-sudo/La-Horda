@@ -46,7 +46,7 @@ function bindAbilityButton(el, handler){
 bindAbilityButton(document.getElementById("btn-basic"), ()=> triggerBasic(player));
 // Las 3 habilidades (btn-s1/s2/s3) se manejan en js/core/aim.js: tocar = lanzar al mejor
 // objetivo; mantener y arrastrar = apuntar con previsualización del área.
-bindAbilityButton(document.getElementById("btn-ult"), ()=> useUltimate());
+// La definitiva (btn-ult) se maneja en js/ui/ability-inspector.js: tocar = lanzar al soltar, mantener = inspeccionar.
 // Nigromante: Pacto (gasta 5 almas -> la próxima habilidad sale potenciada)
 // Curación de emergencia (1 por nivel). Tecla Q en escritorio.
 function emergPress(){ if(netIsGuest()) netSendToHost({k:"emerg"}); else emergUse(player); }
