@@ -323,6 +323,64 @@ async function _acctReconcile(cloud){
   // en el título no se interrumpe: se pregunta al tocar "Toca para continuar" (accountGate)
   if(_acctCanApplyNow() && !(typeof state !== "undefined" && state === "title")) _acctShowConflict();
 }
+// Reinicio explícito del jugador: respalda ambas copias antes de reemplazar la nube.
+// La cuenta, contraseña y permisos no cambian. CAS evita borrar cambios de otro celular.
+async function accountStartFresh(){
+  if(!acct.session || acct.uploading || acct.pulling) return false;
+  acct.lastError = "";
+  try{
+    const r = await accountFetch("GET", "/api/save");
+    if(r.status !== 200){ if(r.status === 401) _acctSessionLost(); return false; }
+    const cloud = r.j;
+    const stamp = Date.now();
+    localStorage.setItem(SAVE_KEY+"_antesDeReinicio_"+stamp, _acctLocalRaw() || "{}");
+    localStorage.setItem(SAVE_KEY+"_nubeAntesDeReinicio_"+stamp, JSON.stringify(cloud));
+    const data = defaultSave();
+    for(const c of Object.values(data.champions)) c.unlocked = false;
+    const put = await accountFetch("PUT", "/api/save", {data, baseVersion:cloud.version|0});
+    if(put.status !== 200){
+      acct.lastError = put.status === 409 ? "Otro dispositivo cambió la nube. Revisá las copias y volvé a intentar el reinicio." : (put.j.msg || "No se pudo reiniciar la nube.");
+      if(put.status === 409) await accountPull("conflicto");
+      if(put.status === 401) _acctSessionLost();
+      return false;
+    }
+    localStorage.removeItem("laHordaDev");
+    if(new URLSearchParams(location.search).has("dev")){
+      const url = new URL(location.href); url.searchParams.delete("dev"); history.replaceState(null, "", url.href);
+    }
+    acct.conflict = null; acct.pendingApply = null;
+    acct.sync = acct.sync || {};
+    acct.sync.user = _acctKey(acct.session.user);
+    accountApplyCloud({data, version:put.j.version, updatedAt:put.j.updatedAt});
+    return true;
+  }catch(e){
+    acct.lastError = e.name === "QuotaExceededError" ? "No hay espacio para respaldar las partidas. No se borró el progreso." : "No se pudo confirmar el reinicio. Sincronizá antes de volver a intentar.";
+    return false;
+  }
+}
+function _acctAddRecovery(body){
+  const reset = document.createElement("button");
+  reset.type = "button"; reset.className = "btn secondary acc-danger";
+  reset.textContent = "Borrar progreso de prueba y empezar de cero";
+  reset.onclick = async () => {
+    if(acct.busy) return;
+    const ok = typeof gameConfirm === "function" && await gameConfirm("Se reiniciará el progreso de ESTA cuenta en la nube y en este dispositivo: campeones a nivel 1, nueva elección de guardián y campaña desde el inicio. También se borrarán oro, objetos y logros. Las dos partidas anteriores quedarán respaldadas en este dispositivo. Tu cuenta y permisos se conservan.\n\n¿Empezar de cero?", {okText:"Reiniciar mi progreso",cancelText:"Cancelar"});
+    if(!ok) return;
+    acct.busy = true; reset.disabled = true; _acctStatus("Respaldando y reiniciando…");
+    const done = await accountStartFresh();
+    acct.busy = false; reset.disabled = false;
+    if(done) _acctFinish("Progreso reiniciado en la nube y en este dispositivo.");
+    else _acctStatus(acct.lastError || "No se pudo reiniciar. Probá de nuevo.", "err");
+  };
+  body.append(reset);
+  const gm = document.createElement("button");
+  gm.type = "button"; gm.className = "btn secondary"; gm.textContent = "Entrar al panel de administración"; gm.hidden = true;
+  gm.onclick = () => { location.hash = "game-master"; };
+  body.append(gm);
+  accountFetch("GET", "/api/gm/status").then(r => {
+    if(body.isConnected && acct.session && r.status === 200 && (r.j.owner || r.j.role === "OWNER")) gm.hidden = false;
+  }).catch(()=>{});
+}
 // El jugador eligió en el aviso de conflicto.
 async function accountResolveConflict(choice){
   const c = acct.conflict; if(!c || !acct.session) return;
@@ -593,6 +651,7 @@ function _acctRenderProfile(){
     if(typeof showNetToast === "function") showNetToast("Sesión cerrada. Seguís como invitado en este dispositivo.");
     _acctRenderAuth("login");
   });
+  _acctAddRecovery(body);
   _acctRenderProfileStatus();
   _acctShowBack();
 }
@@ -621,6 +680,8 @@ function _acctShowConflict(){
   el.querySelector(".acc-title").textContent = "¿Qué progreso usamos?";
   const localSum = accountSummarize(c.local);
   body.innerHTML = `
+    ${accountEnvironmentHTML()}
+    <div class="acc-note">Sesión iniciada: ${_acctEsc(acct.session.user)}. La elección de progreso no cambia tus permisos.</div>
     <div class="acc-note acc-conflict-note">Tu cuenta tiene progreso guardado en la nube y este dispositivo tiene otro distinto. Elegí con cuál seguir: el otro queda respaldado en este dispositivo.</div>
     <div class="acc-conflict">
       <button type="button" class="acc-choice" id="acc-use-cloud">
@@ -653,6 +714,11 @@ function _acctShowConflict(){
   };
   body.querySelector("#acc-use-cloud").addEventListener("click", () => pick("cloud"));
   body.querySelector("#acc-use-local").addEventListener("click", () => pick("local"));
+  _acctAddRecovery(body);
+  const logout = document.createElement("button");
+  logout.type = "button"; logout.className = "btn secondary"; logout.textContent = "Cambiar de cuenta";
+  logout.onclick = async () => { if(acct.busy) return; acct.busy = true; await accountLogout(); acct.busy = false; _acctRenderAuth("login"); };
+  body.append(logout);
 }
 
 /* ---------------- API pública ---------------- */

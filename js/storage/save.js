@@ -93,28 +93,8 @@ function defaultSave(){
 // Ciudad Maldita y va a la Mística, las cromas (1.500) y el segundo guardián (2.500). Quien ya recibió los
 // 10.000 los conserva: el oro se lee siempre del guardado persistido.
 let save = defaultSave();
-// Alfa de prueba: todos los guardianes y mapas disponibles, sin parámetros en la URL.
-// __campaignMode mantiene las pruebas de progresión secuencial aisladas de este regalo.
-const PLAYTEST_UNLOCK_ALL = typeof window!=="undefined" && !window.__campaignMode;
-function applyPlaytestUnlock(){
-  if(!PLAYTEST_UNLOCK_ALL) return;
-  let changed = !save.starterChosen || !save.divineArenaUnlocked;
-  for(const k in save.champions){
-    const c = save.champions[k];
-    if(!c.unlocked){ c.unlocked = true; changed = true; }
-    // Una vez por guardián: fija nivel 40 y luego permite seguir ganando XP normalmente.
-    if(!c.playtestLevel40V1){
-      c.talentPoints = Math.max(0, (c.talentPoints||0) + 40 - (c.level||1));
-      c.level = 40; c.xp = 0; c.playtestLevel40V1 = true; changed = true;
-    }
-  }
-  save.starterChosen = true;
-  save.divineArenaUnlocked = true;
-  const opened = new Set(save.legacyOpenArenas||[]);
-  for(const k of ARENA_ORDER) if(!opened.has(k)){ opened.add(k); changed = true; }
-  save.legacyOpenArenas = Array.from(opened);
-  if(changed) persist();
-}
+// La campaña normal nunca concede niveles ni desbloqueos de prueba al cargar.
+// Los perfiles antiguos se conservan hasta que su dueño elija reiniciarlos en Cuenta.
 // MODO DESARROLLADOR (auditoría pre-alfa): los regalos de prueba de abajo (nivel 90, todas las arenas,
 // todas las skins) ya NO se dan a cualquier perfil nuevo: un jugador que recibe el enlace por primera vez
 // juega la campaña real (guardián de regalo, Arena 01, nivel 1). Los perfiles que ya los recibieron los
@@ -167,7 +147,7 @@ function applyTestSkins(){
   persist();
 }
 function loadSave(){
-  try{ _loadSaveInner(); }finally{ applyTestUnlock90(); applyTestSkins(); applyPlaytestUnlock();
+  try{ _loadSaveInner(); }finally{ applyTestUnlock90(); applyTestSkins();
     // logros/desafíos/pase: completa los campos que falten (guardados viejos) y rota los desafíos del día
     if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
