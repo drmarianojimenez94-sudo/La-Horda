@@ -178,3 +178,9 @@ Gate PASS después de integrar los cambios recientes de HUD y VFX de main, con d
 `soporte` conserva estadísticas, guardados y equipo. Alba Purificadora mantiene cura 24%, radio 260, coste 40, CD 7 s y añade daño ×1,2 en radio 160; un solo impacto, escalado común de maestrías/talentos, sin desplazar jefes. Bots la usan contra enemigos aun con el equipo sano. Las otras habilidades no cambian.
 
 31 comprobaciones PASS sobre main actualizado: cura, límites, múltiples objetivos, jefes, bots, maestría, diez arenas, nombres, direcciones de atlas, partículas replicables y aparición en primer plano del título. Tres simulaciones de 150 segundos: daño 4233,69 / 4061,99 / 4724,29, media 4339,99, bajo techo orientativo 8803,53; tres supervivencias sin errores. Gate de referencia y de entrada PASS; no se altera el roster conocido ni las medias de referencia. Evidencia: [docs/elyra/README.md](docs/elyra/README.md).
+
+## Expedición de los Diez — 3 octubre 2026
+
+Vesper, Nahir, Baltra, Maura, Dariel, Orsa, Tibor, Zahra, Renko y Sira se registran antes del normalizador. No cambia knownChampions ni las medias por rol. Gate: 29 clases, 11 candidatas (incluye Ynara), 33 simulaciones de 150 segundos, PASS. Resultados y coeficientes en `docs/expedition/entry-gate-results.json`; 234 comprobaciones de habilidades sin fallos. Cosméticos: 100 pruebas de compra/equipamiento/colección/persistencia sin cambios de poder. Cooperativo: diez combinaciones host/invitado con cuatro lanzamientos y skin replicada.
+
+Los techos del gate no certifican igualdad de utilidad de todas las builds. Ver `docs/expedition/README.md` para fichas, límites y evidencia.
