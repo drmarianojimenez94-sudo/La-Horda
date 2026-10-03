@@ -47,6 +47,9 @@ jobs:
       - run: node tools/ux/test-tactical-panel.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-arena-briefing-tutorial.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/portadores/test-elyra.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

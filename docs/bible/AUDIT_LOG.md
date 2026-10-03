@@ -84,3 +84,14 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   exploración sin fallas); `tools/micelial/t_micelial.js` con las mismas 2 fallas preexistentes que `main`
   (MADRE fase 3, SAVE viejo) — comparado contra un worktree limpio de HEAD en 3 corridas; la prueba del Acechador
   ahora lo hace aparecer en un punto libre (antes en un montículo que ahora es sólido).
+
+### A9. Briefing con botín + micro-tutorial fúngico + telemetría preparada
+- **Briefing**: la ficha previa ya existía (lore/peligros/objetivo). Se agregó imagen, mecánica, peligro con su
+  aviso, jefe y botín destacado (set con piezas ✓/? y dónde más cae) leyendo la Arena Factory.
+- **Micro-tutorial (Reino Fúngico)**: driver de datos en `js/systems/arena-tutorials.js`. Hallazgo durante la
+  prueba: los bots aliados rompían el núcleo de práctica antes de que el jugador aprendiera → ahora es inmune a
+  los bots mientras dura la lección. Arenas sin driver: ya enseñan sus conceptos con `tutSay` al aparecer.
+- **Telemetría**: `js/systems/telemetry.js` (anillo local + evento `horda-telemetry`; reenvía a AlphaServices
+  solo nombres que su servidor ya acepta). No agrega servicios ni datos personales.
+- **Validación**: `tools/ux/test-arena-briefing-tutorial.js` (10 arenas con 4 fichas, aviso visible, set con
+  piezas; lección fúngica no avanza sola, avanza al hacerla, se guarda, no se repite, saltar guarda).

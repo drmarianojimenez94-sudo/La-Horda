@@ -161,6 +161,7 @@ function render(){
   if(arenaHas("drawTop")) arenaHook("drawTop");
   if(typeof endlessDrawWorld==="function") endlessDrawWorld(); // Horda Infinita: cofres y cristales para rescatar
   ctxDraw(); // aviso + progreso de las acciones contextuales
+  if(typeof drawArenaTutTarget==="function") drawArenaTutTarget(); // objetivo del micro-tutorial de la arena (arena-tutorials.js)
   fxGlowBegin(); drawChampFxTop(); fxGlowEnd(); // jinetes espectrales, pies gigantes, rayo, vapor, cables, íconos de buff
   drawPortadorTop();
 

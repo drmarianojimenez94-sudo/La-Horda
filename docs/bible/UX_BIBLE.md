@@ -46,3 +46,20 @@ ficha del long press y enfriamientos en vivo (se refresca cada 0,4 s), talentos 
 equipo y progreso de cada set (umbrales ✔/·). Debajo siguen audio, movimiento reducido y estadísticas.
 No da ventaja: no muestra información del enemigo ni detiene la simulación en línea; el héroe propio
 queda quieto mientras se consulta.
+
+## Briefing pre-arena — `js/ui/run-intro.js` + `js/ui/arena-briefing.js`
+
+Tarjeta del Hechicero (lore, lo que te mata / ayuda, objetivo, cristales) + imagen de la arena + grilla de
+4 fichas cortas desde la Arena Factory: **✦ Mecánica** (nombre + regla corta), **⚠ Peligro** (nombre +
+"Aviso: …"), **♛ Jefe** (nombre + qué usa del escenario), **◆ Botín destacado** (set de afinidad que te
+falta, `n/total`, piezas `✓`/`?`, dónde más cae). Si la arena tiene micro-tutorial pendiente: "▶ Primera
+vez…". En pantallas angostas la grilla pasa a 1 columna y el botón queda fijo abajo.
+
+## Micro-tutoriales de arena — `js/systems/arena-tutorials.js`
+
+Voz del Hechicero (mismo cuadro que el tutorial general), ENSEÑAR → HACER → CONFIRMAR → CONTINUAR. Cada
+paso espera a que el jugador lo haga (tope 30 s: nunca traba). Objetivo marcado en el mundo con el
+lenguaje "objetivo" (anillo cian ◎ + flecha al borde). Guardado en `save.tut.arena[clave]`; se puede
+saltar (`arenaTutSkip`) y volver a ver (`arenaTutorialReplay`). Reino Fúngico: núcleo de práctica (los
+bots no lo rompen por vos) → ver la colonia → sentir la lentitud del territorio → romper el núcleo → ver
+cómo se retira la infección.
