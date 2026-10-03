@@ -10,7 +10,7 @@ const PRICE_KEYS=['itemPrices','cosmeticPrices','championPrices'];
 let SHOP_CATALOG;
 function shopCatalog(){return SHOP_CATALOG||(SHOP_CATALOG=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/production/shop-catalog.json'),'utf8')));}
 const DEFAULTS = Object.freeze({itemPrices:Object.freeze({}),cosmeticPrices:Object.freeze({}),championPrices:Object.freeze({}),xp:1,gold:1,drop:1,difficulty:1,enemyHp:1,enemyDamage:1,bossHp:1,eliteRate:1,spawnRate:1});
-const EVENTS = new Set(['start','login','menu','tutorial_started','tutorial_completed','arena_started','death','abandon','victory','next_arena','ability','talent','equipment','set','drop','codex','skin','croma','multiplayer','error','heartbeat','level_up','pickup','tutorial_step','tutorial_step_complete','tutorial_abandoned']);
+const EVENTS = new Set(['start','login','menu','tutorial_started','tutorial_completed','arena_started','death','abandon','victory','next_arena','ability','talent','equipment','set','drop','codex','skin','croma','multiplayer','error','heartbeat','level_up','pickup','tutorial_step','tutorial_step_complete','tutorial_abandoned','tutorial_skipped']);
 const RESET_FIELDS = ['championProgress','arenas','gold','inventory','cosmetics','codex'];
 const clone = x=>JSON.parse(JSON.stringify(x));
 function fail(code, status=400){const e=new Error(code);e.status=status;throw e;}

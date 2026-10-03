@@ -103,6 +103,9 @@ let save = defaultSave();
 function laHordaDevMode(){
   if(typeof window==="undefined" || window.__campaignMode) return false;
   try{
+    // Public URLs must never grant the old level-90/test inventory shortcut.
+    // Local debug mode is only a developer convenience, not an anti-cheat boundary.
+    if(!["localhost","127.0.0.1","[::1]"].includes(location.hostname)) return false;
     const q = new URLSearchParams(location.search).get("dev");
     if(q==="1") localStorage.setItem("laHordaDev", "1"); else if(q==="0") localStorage.removeItem("laHordaDev");
     return localStorage.getItem("laHordaDev")==="1";

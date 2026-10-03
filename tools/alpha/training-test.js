@@ -40,7 +40,8 @@ const {chromium}=require('playwright');
    await page.evaluate(()=>{setState('playing');save.gold=987654;persistNow();alphaTrainingExit(false);});
    assert.notEqual(await page.evaluate(()=>save.gold),987654);
    await page.evaluate(()=>{alphaTrainingStart();ALPHA_TRAINING.elapsed=299999;alphaTrainingTick(2);});
-   assert.equal(await page.evaluate(()=>ALPHA_TRAINING.active),false);
+   assert.equal(await page.evaluate(()=>ALPHA_TRAINING.active),true,'learning must not time out');
+   await page.evaluate(()=>alphaTrainingExit(false));
    await page.evaluate(()=>alphaGuideOpen());
    assert.equal(await page.locator('#alpha-guide section').count(),10);
    const box=await page.locator('#alpha-guide').boundingBox();assert(box.x>=0&&box.y>=0&&box.x+box.width<=size.width&&box.y+box.height<=size.height);
@@ -57,7 +58,7 @@ const {chromium}=require('playwright');
    });
    assert.deepEqual(sequence,[1,2,3,4,5,6,7,8,9,10]);
    assert.deepEqual(errors,[]);
-   console.log('PASS training '+size.width+'x'+size.height+' real engine/actions, all 9 steps, save isolation, pause/exit/timeout, guide bounds');
+   console.log('PASS training '+size.width+'x'+size.height+' real engine/actions, all 9 steps, save isolation, pause/exit/no time limit, guide bounds');
    await page.close();
   }
  }finally{await browser.close();}

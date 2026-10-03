@@ -10,7 +10,7 @@ async function until(url){for(let i=0;i<50;i++){try{if((await fetch(url)).ok)ret
  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});const pages=[];
  for(let i=0;i<4;i++){
   const context=await browser.newContext({viewport:i===0?{width:1280,height:1000}:{width:390,height:844},hasTouch:i>0,isMobile:i>0});const p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));
-  await p.addInitScript(()=>{const Native=window.WebSocket;window.__cwMessages=[];window.WebSocket=class extends Native{constructor(...args){super(...args);this.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.d?.k==='cw-state'){window.__cwSnapshot=m.d;window.__cwMessages.push(m.d.id);}});window.__cwSocket=this;}};});
+  await p.addInitScript(()=>{localStorage.setItem('laHordaSave_v1',JSON.stringify({tut:{training:1}}));const Native=window.WebSocket;window.__cwMessages=[];window.WebSocket=class extends Native{constructor(...args){super(...args);this.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.d?.k==='cw-state'){window.__cwSnapshot=m.d;window.__cwMessages.push(m.d.id);}});window.__cwSocket=this;}};});
   await p.goto('http://127.0.0.1:'+port+'/crystal-wars.html?server=ws://127.0.0.1:'+relayPort);await p.locator('#name').fill('Tester '+i);await p.locator('#champ').selectOption(['tanque','mago','guerrero','soporte'][i]);pages.push(p);
  }
  const host=pages[0];await host.locator('#create').click();await host.waitForFunction(()=>document.querySelector('#room-code').textContent.length===6);const code=await host.locator('#room-code').textContent();

@@ -2,6 +2,13 @@
 (function(){
 'use strict';
 const C=CrystalWars,$=id=>document.getElementById(id),q=new URLSearchParams(location.search);
+// Direct invitations also go through the first-run tutorial. Preserve the room
+// and relay across the round trip; never accept an arbitrary redirect URL.
+if(!HordaOnboarding.storedReady()){
+ const start=new URL('index.html',location.href);start.searchParams.set('next','crystal-wars');
+ for(const key of ['room','server'])if(q.has(key))start.searchParams.set(key,q.get(key));
+ location.replace(start.href);return;
+}
 const skeletons=[1,2,3,4].map(i=>{const img=new Image();img.src='assets/sprites/enemies/infernal/esqueleto_h/walk'+i+'.png';return img;});
 const golem=new Image();golem.src='assets/sprites/enemies/laberinto/golem_piedra/walk-strip.png';
 const images={};for(const k of Object.keys(C.ROLES)){const img=new Image();img.src='assets/sprites/champions/'+k+'/atlas.png';images[k]=img;const o=document.createElement('option');o.value=k;o.textContent=C.ROLES[k].name;$('champ').appendChild(o);}

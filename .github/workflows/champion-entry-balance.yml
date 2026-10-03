@@ -18,10 +18,11 @@ jobs:
         with:
           node-version: 22
       - run: node --test tools/factory/test.js
+      - run: node tools/alpha/public-defaults.js
       - run: node tools/alpha/account-environments.js
       - run: node tools/alpha/rooms-unit.js
-      - run: node tools/quality/test-floating-text.js
       - run: node tools/quality/test-single-champion-revive.js
+      - run: node tools/quality/test-floating-text.js
       - run: node tools/alpha/services-test.js
       - run: node tools/alpha/event-receipts-test.js
       - run: node tools/collection/check-collection.js
@@ -70,6 +71,7 @@ jobs:
           node tools/alpha/training-test.js
           node tools/alpha/training-player.js
           node tools/alpha/main-flow.js
+          node tools/alpha/public-onboarding.js
           node tools/collection/shop-pricing-browser.js
           node tools/factory/event-runtime.js
           node tools/factory/options-layout.js

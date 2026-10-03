@@ -12,3 +12,5 @@ Se actualizan esas expectativas al comportamiento vigente, sin restaurar reserva
 - La comprobación de layout reveló que el selector de la tarjeta única quedaba bajo el footer en 667×375. Se coloca junto al retrato en landscape; el test de separación del footer permanece y pasa.
 
 No se modifican umbrales, referencias ni gameplay para satisfacer estas pruebas.
+
+Se integró después main 6197f28 (PR #51). Sus versiones actualizadas de main-flow y pruebas de campeón único se conservan, junto con tutorial obligatorio/salto explícito y progresión pública. Los resultados de 290 pruebas y reanimación remota anteriores documentan la integración previa; los workflows vuelven a ejecutarse sobre el árbol combinado.
