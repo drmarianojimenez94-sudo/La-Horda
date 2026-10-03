@@ -196,3 +196,19 @@ Validation: `node server/test-owner-recovery.js` and
 session revocation, no automatic level grants, backups, CAS rejection, explicit reset,
 and the owner shortcut during a sync conflict. Production credentials and data are not
 modified by these tests.
+
+### Visible operator entry and diagnostics
+
+After a successful NanoGM login, the account view offers **Entrar al panel de
+administración** and **Continuar como jugador** before completing the player flow.
+The operator entry remains visible even if the capability request fails; the view
+explains startup/unavailability (503), expired authentication (401), an older relay
+without the GM route (404), or a missing owner binding. The GM route rechecks the
+capability and never renders protected panels without server-confirmed OWNER.
+Showing the entry based on the reserved username grants no authorization.
+
+Authenticated `/api/gm/status` now includes `reason`: `OWNER`, `PLAYER`,
+`OWNER_EXCLUDED`, `OWNER_NOT_BOUND`, or `OWNER_ID_MISMATCH`. This diagnostic exposes
+no credentials or administrator list. Explicit `ADMIN_USERS` and immutable ID
+checks retain their existing behavior. A retry can recover from a failed capability
+request without logging out or duplicating denial dialogs.

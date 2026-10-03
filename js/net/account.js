@@ -358,6 +358,24 @@ async function accountStartFresh(){
     return false;
   }
 }
+function accountOwnerCandidate(){
+  return !!acct.session && _acctKey(acct.session.user) === "nanogm";
+}
+async function accountAdminAccess(){
+  try{
+    const r = await accountFetch("GET", "/api/gm/status", undefined, {timeout:15000});
+    if(r.status === 200){
+      const owner = !!(r.j.owner || r.j.role === "OWNER");
+      const messages = {
+        OWNER_EXCLUDED:"NanoGM inició sesión, pero la configuración ADMIN_USERS del servidor no le concede OWNER. Hay que corregirla en el relay principal.",
+        OWNER_NOT_BOUND:"NanoGM inició sesión, pero el servidor no vinculó esa cuenta como OWNER. Hay que reiniciar el relay principal y revisar su configuración.",
+        OWNER_ID_MISMATCH:"La cuenta no coincide con el ID OWNER vinculado en este servidor. El operador debe revisar la configuración."
+      };
+      return {owner, message:owner ? "Permiso OWNER confirmado por el servidor." : messages[r.j.reason] || "La sesión funciona, pero este servidor no reconoce esta cuenta como OWNER. El operador debe revisar el permiso de NanoGM en el relay principal."};
+    }
+    return {owner:false,message:r.status===503 ? "El servidor principal está arrancando o no está disponible. Reintentá el acceso al panel en unos segundos." : r.status===401 ? "Tu sesión no es válida en este servidor. Cerrá sesión y volvé a entrar." : r.status===404 ? "El servidor todavía no tiene la API de administración. Hace falta desplegar el relay actualizado." : "No se pudo comprobar el permiso de administración. Reintentá el acceso al panel."};
+  }catch(e){return {owner:false,message:"No se pudo conectar con el servidor para comprobar OWNER. Reintentá el acceso al panel."};}
+}
 function _acctAddRecovery(body){
   const reset = document.createElement("button");
   reset.type = "button"; reset.className = "btn secondary acc-danger";
@@ -374,12 +392,17 @@ function _acctAddRecovery(body){
   };
   body.append(reset);
   const gm = document.createElement("button");
-  gm.type = "button"; gm.className = "btn secondary"; gm.textContent = "Entrar al panel de administración"; gm.hidden = true;
-  gm.onclick = () => { location.hash = "game-master"; };
-  body.append(gm);
-  accountFetch("GET", "/api/gm/status").then(r => {
-    if(body.isConnected && acct.session && r.status === 200 && (r.j.owner || r.j.role === "OWNER")) gm.hidden = false;
-  }).catch(()=>{});
+  gm.type = "button"; gm.className = "btn secondary"; gm.textContent = "Entrar al panel de administración"; gm.hidden = !accountOwnerCandidate();
+  gm.onclick = () => { if(typeof window.gameMasterOpen === "function") window.gameMasterOpen(); else location.hash = "game-master"; };
+  const access = document.createElement("p"); access.className = "acc-note"; access.setAttribute("role", "status");
+  access.hidden = gm.hidden; access.textContent = "Comprobando permiso de administración…";
+  body.append(gm, access);
+  const session = acct.session;
+  accountAdminAccess().then(result => {
+    if(!body.isConnected || acct.session !== session) return;
+    gm.hidden = !(result.owner || accountOwnerCandidate());
+    access.hidden = gm.hidden; access.textContent = result.message;
+  });
 }
 // El jugador eligió en el aviso de conflicto.
 async function accountResolveConflict(choice){
@@ -579,6 +602,12 @@ async function _acctSubmit(reg){
     return;
   }
   if(acct.conflict){ _acctShowConflict(); return; }
+  if(!reg && accountOwnerCandidate()){
+    _acctRenderProfile();
+    const next = document.createElement("button"); next.type = "button"; next.className = "btn"; next.textContent = "Continuar como jugador";
+    next.onclick = () => _acctFinish(null); acct.el.querySelector(".acc-body").append(next);
+    return;
+  }
   _acctFinish(reg ? `¡Cuenta creada! Bienvenido, ${acct.session.name}.` : `Hola, ${acct.session.name}. Progreso sincronizado.`);
 }
 function _acctGuest(){

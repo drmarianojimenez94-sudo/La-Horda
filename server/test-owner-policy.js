@@ -32,6 +32,14 @@ async function run(){
   await b.api('GET','/api/gm/dashboard',undefined,guest,403);
   const explicit=await start(empty,{adminUsers:'ordinary'});assert.equal((await explicit.api('GET','/api/gm/status',undefined,guest)).owner,true);
   const disabled=await start(empty,{adminUsers:''});assert.equal((await disabled.api('GET','/api/gm/status',undefined,guest)).owner,false);
+  const excluded=await start(dir,{adminUsers:''});
+  const excludedToken=(await excluded.api('POST','/api/login',{user:'NanoGM',pass:'fixture-password'})).token;
+  assert.equal((await excluded.api('GET','/api/gm/status',undefined,excludedToken)).reason,'OWNER_EXCLUDED');
+  await excluded.api('GET','/api/gm/dashboard',undefined,excludedToken,403);
+  await b.app.store.createUser({user:'NanoGM',userKey:'nanogm',name:'NanoGM',createdAt:Date.now(),passHash:await hashPassword('fixture-password')});
+  const lateToken=(await b.api('POST','/api/login',{user:'NanoGM',pass:'fixture-password'})).token;
+  assert.equal((await b.api('GET','/api/gm/status',undefined,lateToken)).reason,'OWNER_NOT_BOUND');
+  await b.api('GET','/api/gm/dashboard',undefined,lateToken,403);
   console.log('PASS owner policy: '+checks+' HTTP checks + immutable ID / fail-closed / health assertions');
  }finally{
   if(original===undefined)delete process.env.ADMIN_USERS;else process.env.ADMIN_USERS=original;
