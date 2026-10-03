@@ -184,3 +184,22 @@ Gate PASS después de integrar los cambios recientes de HUD y VFX de main, con d
 Vesper, Nahir, Baltra, Maura, Dariel, Orsa, Tibor, Zahra, Renko y Sira se registran antes del normalizador. No cambia knownChampions ni las medias por rol. Gate: 29 clases, 11 candidatas (incluye Ynara), 33 simulaciones de 150 segundos, PASS. Resultados y coeficientes en `docs/expedition/entry-gate-results.json`; 234 comprobaciones de habilidades sin fallos. Cosméticos: 100 pruebas de compra/equipamiento/colección/persistencia sin cambios de poder. Cooperativo: diez combinaciones host/invitado con cuatro lanzamientos y skin replicada.
 
 Los techos del gate no certifican igualdad de utilidad de todas las builds. Ver `docs/expedition/README.md` para fichas, límites y evidencia.
+
+## Ascensión — Fundadores y seis STANDARD (3 octubre 2026)
+
+Nano GM, Facu GM (FOUNDER) y Aurelia, Khepri, Velmira, Vhal, Bront y Oriel (STANDARD, INTERNAL) se
+registran antes del normalizador sin tocar `knownChampions` ni las medias por rol. La referencia pasa a
+**versión 2** solo para agregar un perfil explícito `profiles.founder` (estadísticas ×1,35, techo compuesto
+1,6, techo de simulación 2,6× la media del rol): los Fundadores se normalizan y simulan igual que todos,
+contra un techo propio y acotado. `check-entry-reference.js` prueba los cuatro roles con ese perfil.
+
+Gate final: 37 clases, 19 candidatas, 57 simulaciones, **PASS**, sin violaciones. Medias de daño a 150 s
+(fracción de la media del rol): Nano GM 0,74 · Facu GM 0,85 · Aurelia 0,68 · Khepri 0,78 · Velmira 1,11 ·
+Vhal 0,77 · Bront 0,63 · Oriel ≈1,2 (bajo su techo de 1,35 tras reducir Eco de la Cicatriz).
+**Limitación medida:** en la oleada del gate el daño total se satura con la vida enemiga disponible: subir
+1,75× los multiplicadores de los Fundadores no movió la media. Su superioridad se expresa en velocidad de
+limpieza y golpes por lanzamiento, que este gate no mide; no se ajustó contra una métrica que no lo ve.
+
+Seguridad de definitivas: ejecución solo de comunes `normal` (nunca élites, jefes, estructuras ni
+objetivos), techo de daño por lanzamiento contra jefes (6–8% de vida máxima) y desplazamientos validados
+contra bordes y zonas inalcanzables. Evidencia: `tools/ascension/functional.js` (195 comprobaciones).
