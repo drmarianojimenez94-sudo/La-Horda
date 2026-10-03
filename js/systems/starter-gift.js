@@ -37,7 +37,7 @@ function starterSkinOptions(k){
     for(const id of cromaIdsFor(k)){
       if(cromaOwned(id)) continue;
       const d = CROMA_SKINS[id], C = (typeof CROMA_CRYSTALS !== "undefined" && CROMA_CRYSTALS[d.crystal]) || {};
-      out.push({id, kind:"croma", name:d.name, lore:d.lore || "", preview:d.preview, color:C.color || "#ccc", tag:`Croma · ${C.short || d.crystal} · solo cosmética`, pieces:0});
+      out.push({id, kind:"croma", name:d.name, lore:d.lore || "", preview:d.preview, color:C.color || "#ccc", tag:`${cosmeticAppearanceLabel(id)} · ${C.short || d.crystal} · solo cosmética`, pieces:0});
     }
   }
   if(typeof SET_SKINS !== "undefined" && typeof SET_DB !== "undefined"){

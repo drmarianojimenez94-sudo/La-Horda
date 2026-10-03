@@ -51,7 +51,7 @@ for b in briefs:
         meta['sets'].update(aim=[18,19],fire=[24,25,26],reload=[27,28,29],bayo_pre=[18,24],bayo_emb=[24,25,26],bayo_imp=[25,26],bayo_rem=[26,18],command=[27,28,29],cabral=[30,27,28],ult_cast=[34,35])
     pack = 'skin_'+sid
     js.append(f'champPackLoadAtlas({json.dumps(pack)},"{rel}/atlas.png",{json.dumps(meta)});')
-    definition = dict(champ=key,name=b['name'].split(' — ')[-1],src=rel+'/preview.png',preview=rel+'/preview.png',packs={key:pack})
+    definition = dict(champ=key,name=b['name'].split(' — ')[-1],src=rel+'/preview.png',preview=rel+'/preview.png',packs={key:pack},preserveAuthoredArt=True)
     js.append(f'SET_SKINS[{json.dumps(sid)}]={json.dumps(definition,ensure_ascii=False)};')
     assets.extend([rel+'/atlas.png',rel+'/preview.png'])
 

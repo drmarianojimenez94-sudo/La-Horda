@@ -69,6 +69,7 @@ jobs:
           node tools/factory/event-runtime.js
           node tools/factory/options-layout.js
           node tools/art/alpha_set_skins/browser.js
+          node tools/art/unique_skins/check.js
           node tools/collection/browser-collection.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
