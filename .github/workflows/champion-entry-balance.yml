@@ -19,8 +19,10 @@ jobs:
           node-version: 22
       - run: node --test tools/factory/test.js
       - run: node tools/alpha/account-environments.js
+      - run: node tools/alpha/rooms-unit.js
       - run: node tools/quality/test-floating-text.js
       - run: node tools/alpha/services-test.js
+      - run: node tools/alpha/event-receipts-test.js
       - run: node tools/collection/check-collection.js
       - run: node tools/quality/test-vfx-pools.js
       - run: node tools/balance/check-entry-reference.js

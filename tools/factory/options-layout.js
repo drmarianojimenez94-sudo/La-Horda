@@ -6,7 +6,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   const results=[];
   for(const [width,height] of [[667,375],[844,390]]){
    const page=await browser.newPage({viewport:{width,height}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-   await page.goto((process.env.FACTORY_BASE_URL||'http://127.0.0.1:8805')+'/index.html?dev=1');await page.waitForFunction(()=>typeof openHubOptions==='function');
+   await page.goto((process.env.FACTORY_BASE_URL||process.env.SITE||'http://127.0.0.1:8805')+'/index.html?dev=1');await page.waitForFunction(()=>typeof openHubOptions==='function');
    await page.evaluate(()=>{setState('mainmenu');openHubOptions();});
    await page.waitForTimeout(250);
    const close=await page.locator('#opt-close-btn').boundingBox();assert.ok(close.y>=0&&close.y+close.height<=height,'Listo is visible on opening without scroll');

@@ -90,6 +90,7 @@ function accountApplyEventReward(response){
   if(!known) return false;
   save.cosmeticUnlocks=save.cosmeticUnlocks||{};
   save.cosmeticUnlocks[response.cosmetic]=true;
+  if(response.cosmeticType==="croma"){save.cromas=save.cromas||{};save.cromas[response.cosmetic]=true;}
   const y=acct.sync;
   // Advance CAS only when the exact pre-grant version is still our version.
   if(Number.isInteger(response.baseVersion) && response.baseVersion===y.version && Number.isInteger(response.saveVersion)) y.version=response.saveVersion;

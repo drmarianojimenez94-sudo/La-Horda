@@ -101,7 +101,7 @@ async function run(){
  await api('POST','/api/events/complete',{ticket:ticket.ticket,wave:10,outcome:'victory',bossDefeated:'leviatan'},player,422);
  const payload={ticket:ticket.ticket,wave:10,outcome:'victory',bossDefeated:'minotauro'};
  const rewards=await Promise.all([api('POST','/api/events/complete',payload,player),api('POST','/api/events/complete',payload,player)]);
- assert.equal(rewards.filter(r=>r.granted).length,1);assert.equal(rewards.filter(r=>r.alreadyGranted).length,1);assert.equal(rewards[0].cosmetic,'tanque_juicio');
+ assert.equal(rewards.filter(r=>r.granted).length,1);assert.equal(rewards.filter(r=>r.alreadyGranted).length,1);assert.equal(rewards[0].cosmetic,'tanque_juicio');assert.equal(rewards[0].baseVersion,rewards[1].baseVersion);assert.equal(rewards[0].saveVersion,rewards[1].saveVersion);
  current=await api('GET','/api/save',undefined,player);assert.equal(current.data.cosmeticUnlocks.tanque_juicio,true);assert.equal(current.data.cosmeticUnlocks.manada,undefined);
  const gift=await api('POST','/api/gm/gift',{cohort:{eventId:rewardEvent.id},cosmetic:'manada'},owner);assert.equal(gift.granted,1);
  await api('POST','/api/gm/gift',{cohort:{eventId:'fake'},cosmetic:'manada'},owner,404);

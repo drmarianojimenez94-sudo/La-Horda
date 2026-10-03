@@ -243,7 +243,7 @@ function routes(ctx){
   return mutate(async s=>{
    const run=s.eventRuns[body.ticket];if(!run||run.userId!==user.id)fail('BAD_TICKET',404);
    const claimKey=run.event.id+':'+user.id,previous=s.eventClaims[claimKey];
-   if(previous?.completed)return {ok:true,alreadyGranted:true,granted:false,cosmetic:previous.cosmetic,cosmeticType:cosmetics()[previous.cosmetic]?.type||null};
+   if(previous?.completed)return {ok:true,alreadyGranted:true,granted:false,cosmetic:previous.cosmetic,cosmeticType:cosmetics()[previous.cosmetic]?.type||null,baseVersion:previous.baseVersion??null,saveVersion:previous.saveVersion??null};
    if(run.expires<now()||now()-run.started<run.minDurationMs)fail('INVALID_RUN_DURATION',409);
    if(body.outcome!=='victory'||!Number.isInteger(body.wave)||body.wave<run.event.wave||body.wave>10)fail('OBJECTIVE_INCOMPLETE',422);
    const bossMatches=body.bossDefeated===run.event.boss||(run.event.boss==='mago_hielo_cristal'&&body.bossDefeated==='angel_caido_hielo');
@@ -256,7 +256,7 @@ function routes(ctx){
     const put=await getStore().putSave(user.id,JSON.stringify(data),summarize(data),saved.version,false);if(!put.ok)fail('CONFLICT',409);saveVersion=put.version;
    }
    // Boolean ownership is itself idempotent if process failure occurs between save and receipt.
-   s.eventClaims[claimKey]={userId:user.id,eventId:run.event.id,cosmetic:cosmeticId,completed:true,completedAt:now()};run.completed=true;
+   s.eventClaims[claimKey]={userId:user.id,eventId:run.event.id,cosmetic:cosmeticId,baseVersion,saveVersion,completed:true,completedAt:now()};run.completed=true;
    return {ok:true,granted:!!cosmeticId,alreadyGranted:false,cosmetic:cosmeticId,cosmeticType,saveVersion,baseVersion};
   });
  });

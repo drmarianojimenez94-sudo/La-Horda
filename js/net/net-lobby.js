@@ -561,6 +561,7 @@ async function netJoinWithCode(raw, btn, label){
       // Keep accounts bound to their original API. A pasted invite only changes matchmaking.
       if(net.ws || net.room) netLeaveRoom();
       net.serverOverride=target;
+      if(typeof netRooms!=="undefined"){netRooms.list=null;netRooms.err="";netRooms.at=-1e9;netRooms.hubAt=-1e9;}
     }
   }
   if(!netAvailable()){ _netSetJoinStatus("El modo online no está configurado en esta versión.", true); return false; }

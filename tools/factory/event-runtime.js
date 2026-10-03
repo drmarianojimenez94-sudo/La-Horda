@@ -12,14 +12,14 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
    accountAvailable=()=>true;accountUpload=async()=>true;
    let stamp=Date.now();const realDateNow=Date.now;Date.now=()=>stamp;
    const setId=Object.keys(SET_DB)[0],calls=[],rewards=[];
-   acct.session={user:{id:'event-test',name:'Fixture'}};acct.sync={dirty:false};
+   acct.session={user:'event-test',name:'Fixture'};acct.sync={dirty:false};
    accountApplyEventReward=r=>rewards.push(r);
    const event={id:'factory-event',name:'Invasión QA',enabled:true,start:stamp-1,end:stamp+3600000,arenas:['laberinto'],wave:10,boss:'minotauro',set:setId,cosmetic:'fixture-skin',multipliers:{xp:2}};
    let events=[event];
    accountFetch=async(method,url,body)=>{
     calls.push({method,url,body});
     if(url==='/api/world')return{status:200,j:{normalConfig:{xp:1,championPrices:{tanque:17},itemPrices:{test:0},cosmeticPrices:{test:23}},events,messages:[],serverTime:stamp}};
-    if(url==='/api/events/start')return{status:200,j:{ticket:'a'.repeat(48),event,minDurationMs:50000}};
+    if(url==='/api/events/start')return{status:200,j:{ticket:'a'.repeat(48),event,minDurationMs:50000,expires:stamp+6*3600000}};
     if(url==='/api/events/complete')return{status:200,j:{ok:true,granted:true,cosmetic:'fixture-skin',cosmeticType:'skin',saveVersion:8}};
     return{status:200,j:{}};
    };
