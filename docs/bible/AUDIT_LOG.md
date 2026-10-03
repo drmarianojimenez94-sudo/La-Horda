@@ -53,3 +53,11 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   definitiva movida de `input.js` al inspector, estilos en `css/hud.css`.
 - **Validación**: `tools/ux/test-ability-inspector.js` (844×390 y 667×375: toque, mantener sin lanzar,
   arrastrar tras la ficha, consulta en enfriamiento, definitiva, ficha dentro de la pantalla).
+
+### A6. Panel táctico
+- **Problema**: en multijugador el botón de pausa abría una pantalla de "Pausa" que no pausaba y solo
+  mostraba daño/vida base: no se podía consultar el kit, los estados ni los sets en partida.
+- **Implementación**: `js/ui/tactical-panel.js` + `css/panels.css`, enganchado en `js/core/input.js`.
+  Reutiliza `abilityCardHTML` (una sola ficha para long press, panel y futuro Códice).
+- **Validación**: `tools/ux/test-tactical-panel.js` (844×390, 667×375; Musashi y Vesper; solo pausa,
+  multijugador no pausa y la simulación avanza, enfriamiento en vivo, cierre tocando el fondo).

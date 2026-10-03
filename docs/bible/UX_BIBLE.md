@@ -32,3 +32,17 @@ Es UI local: no pausa, no viaja por red.
 
 Mínimo 44×44 px de área, separación ≥ 6 px, nada debajo del notch (`env(safe-area-inset-*)`).
 Multi-touch: joystick y botones capturan su propio puntero (`setPointerCapture`).
+
+## Panel táctico (botón ❚❚) — `js/ui/tactical-panel.js`
+
+| Modo | Comportamiento |
+|---|---|
+| Partida sola | Pausa (como siempre) + panel. |
+| Multijugador | **No pausa a nadie.** El panel se abre semitransparente sobre la partida (título "Panel táctico", aviso "La partida sigue"); el anfitrión sigue simulando. Tocar el fondo o "Continuar" lo cierra. |
+
+Contenido: nombre y rol, vida/energía/nivel/nivel de arena, **estados activos** (chips del lenguaje de
+combate con tiempo restante), **kit completo** (básico, pasiva, 3 habilidades, definitiva) con la misma
+ficha del long press y enfriamientos en vivo (se refresca cada 0,4 s), talentos elegidos (y maestría),
+equipo y progreso de cada set (umbrales ✔/·). Debajo siguen audio, movimiento reducido y estadísticas.
+No da ventaja: no muestra información del enemigo ni detiene la simulación en línea; el héroe propio
+queda quieto mientras se consulta.

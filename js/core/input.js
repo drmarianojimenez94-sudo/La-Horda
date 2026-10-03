@@ -173,14 +173,19 @@ function updateReviveBtn(){
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{
   // B1: en una partida online no hay pausa: el menú se abre encima y la partida sigue
-  if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); return; }
-  if(state==="playing"){ setState("paused"); renderStatsPanel(); }
+  // Multijugador: PANEL TÁCTICO encima de la partida, que sigue (js/ui/tactical-panel.js)
+  if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); tacticalPanelOpen(); return; }
+  if(state==="playing"){ setState("paused"); renderStatsPanel(); tacticalPanelOpen(); }
 });
 // Celular: una llamada, una notificación o cambiar de app en plena partida SOLO. Antes el juego
 // quedaba congelado y al volver seguía de golpe, con la horda encima y sin aviso. Ahora vuelve en
 // pausa (en cooperativo no hay pausa: la partida es de todos y la sigue el anfitrión).
 document.addEventListener("visibilitychange", ()=>{
-  if(document.visibilityState==="hidden" && state==="playing" && !netMatch && typeof renderStatsPanel==="function"){ setState("paused"); renderStatsPanel(); }
+  if(document.visibilityState==="hidden" && state==="playing" && !netMatch && typeof renderStatsPanel==="function"){ setState("paused"); renderStatsPanel(); if(typeof tacticalPanelOpen==="function") tacticalPanelOpen(); }
+});
+// Multijugador: tocar el fondo del panel táctico lo cierra (la partida nunca se detuvo).
+document.getElementById("pause-screen").addEventListener("click", (ev)=>{
+  if(netMatch && state==="playing" && ev.target===ev.currentTarget) ev.currentTarget.classList.add("hidden");
 });
 document.getElementById("resume-btn").addEventListener("click", ()=>{
   if(netMatch){ document.getElementById("pause-screen").classList.add("hidden"); return; }
