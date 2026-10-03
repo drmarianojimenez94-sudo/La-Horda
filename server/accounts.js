@@ -49,6 +49,7 @@
    ============================================================ */
 const crypto = require("crypto");
 const adminLevels=require("./admin-levels");
+const gameMaster = require("./game-master");
 const fs = require("fs");
 const fsp = fs.promises;
 const path = require("path");
@@ -191,6 +192,7 @@ function fileStore(dir){
   let db = { nextId: 1, users: {}, sessions: {} };
   const byKey = new Map();          // usuario en minúsculas -> id
   const saveMeta = new Map();       // id -> {version, updatedAt, summary} (en memoria, para el control de versión)
+  let gmChain = Promise.resolve();
   let writing = null, again = false;
   function flush(){
     if(writing){ again = true; return writing; }
@@ -230,6 +232,12 @@ function fileStore(dir){
   }
   return {
     kind: "file", persistent: false,
+    async listUsers(){ return Object.values(db.users).map(u=>({...u})); },
+    async gmRead(){ try{return JSON.parse(await fsp.readFile(path.join(dir,"operations.json"),"utf8"));}catch(e){if(e.code!=="ENOENT")throw e;return null;} },
+    async gmUpdate(fn){
+      const job=gmChain.catch(()=>{}).then(async()=>{const state=await this.gmRead();const result=await fn(state, snapshot=>writeAtomic(path.join(dir,"operation-snapshot-"+snapshot.id+".json"),JSON.stringify(snapshot)));await writeAtomic(path.join(dir,"operations.json"),JSON.stringify(result.state));return result.value;});
+      gmChain=job;return job;
+    },
     async init(){
       await fsp.mkdir(savesDir, { recursive: true });
       try{ db = JSON.parse(await fsp.readFile(file, "utf8")); }
@@ -335,7 +343,17 @@ function pgStore(url){
   const rowMeta = r => r && { version: r.version | 0, updatedAt: Number(r.updated_at), summary: r.summary ? JSON.parse(r.summary) : null };
   return {
     kind: "postgres", persistent: true,
+    async listUsers(){return (await q("SELECT * FROM horda_users ORDER BY id")).rows.map(rowUser);},
+    async gmRead(){const r=await q("SELECT data FROM horda_operations WHERE id=1");return r.rows[0]?.data||null;},
+    async gmUpdate(fn){const c=await pool.connect();try{
+      await c.query("BEGIN");await c.query("INSERT INTO horda_operations(id,data) VALUES(1,'null'::jsonb) ON CONFLICT DO NOTHING");
+      const r=await c.query("SELECT data FROM horda_operations WHERE id=1 FOR UPDATE");
+      const result=await fn(r.rows[0].data, snapshot=>c.query("INSERT INTO horda_operation_snapshots(id,data) VALUES($1,$2::jsonb)",[snapshot.id,JSON.stringify(snapshot)]));await c.query("UPDATE horda_operations SET data=$1::jsonb WHERE id=1",[JSON.stringify(result.state)]);
+      await c.query("COMMIT");return result.value;
+    }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}},
     async init(){
+      await q(`CREATE TABLE IF NOT EXISTS horda_operations (id INTEGER PRIMARY KEY CHECK(id=1), data JSONB NOT NULL)`);
+      await q(`CREATE TABLE IF NOT EXISTS horda_operation_snapshots (id TEXT PRIMARY KEY, data JSONB NOT NULL)`);
       await q(`CREATE TABLE IF NOT EXISTS horda_users (
         id BIGSERIAL PRIMARY KEY, user_key TEXT UNIQUE NOT NULL, username TEXT NOT NULL, display_name TEXT,
         email TEXT, pass_hash TEXT NOT NULL, created_at BIGINT NOT NULL, last_login BIGINT)`);
@@ -737,6 +755,8 @@ function create(opts){
         guardianRank: mine.rank, guardianTotal: mine.total, best: all.row ? { score: all.row.score, round: all.row.round, guardian: all.row.guardian } : null });
     }
   };
+
+  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0}));
 
   // Devuelve true si atendió el pedido (todo lo que empieza con /api/).
   function handle(req, res){
