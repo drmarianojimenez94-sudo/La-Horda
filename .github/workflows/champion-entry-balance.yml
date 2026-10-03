@@ -1,10 +1,10 @@
 name: Champion entry balance
 on:
   pull_request:
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   push:
     branches: [main, 'chatgpt/**']
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -17,6 +17,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --test tools/factory/test.js
+      - run: node tools/alpha/services-test.js
+      - run: node tools/collection/check-collection.js
+      - run: node tools/quality/test-vfx-pools.js
       - run: node tools/balance/check-entry-reference.js
       - run: npm install --prefix /tmp/horda-balance --no-audit --no-fund playwright@1.61.1
       - run: /tmp/horda-balance/node_modules/.bin/playwright install --with-deps chromium
@@ -36,6 +40,22 @@ jobs:
       - run: node tools/ux/online.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node server/test-game-master.js
+      - run: node tools/alpha/gm-ui.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: |
+          python3 -m http.server 8813 > /tmp/alpha-http.log 2>&1 &
+          trap 'kill $!' EXIT
+          curl --retry 10 --retry-connrefused --retry-delay 1 --silent --fail http://127.0.0.1:8813/ > /dev/null
+          node tools/alpha/services-browser.js
+          node tools/alpha/navigation-profiles.js
+          node tools/alpha/training-test.js
+          node tools/collection/browser-collection.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+          SITE: http://127.0.0.1:8813
+          SE_BASE_URL: http://127.0.0.1:8813
       - run: node test-admin.js
         working-directory: server
       - uses: actions/upload-artifact@v4
