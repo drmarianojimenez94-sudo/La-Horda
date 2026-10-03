@@ -11,6 +11,7 @@ Resistencia, protección y control de área.
 | Ranura | Habilidad | Forma | Enfriamiento | Estados | Resumen |
 |---|---|---|---|---|---|
 | Básico | Golpe de Escudo | △ cone | 0,6 s | — | Golpe corto en arco |
+| Pasiva | Bastión | ∞ passive | — | — | Los aliados a menos de 200 u de Aldric reciben 8% menos daño |
 | H1 | Torbellino | ◎ self_aoe | 9,5 s | · Daño en el tiempo | Gira sin parar dañando a su alrededor |
 | H2 | Embestida | ↝ dash | 6,5 s | ✶ Aturdido | Carga, arrastra y golpea a un enemigo |
 | H3 | Grito de Guerra | ◉ self | 8,5 s | ▲ Mejora | Grito que aumenta armadura, vida máxima y su tamaño |
@@ -25,6 +26,7 @@ Daño físico cuerpo a cuerpo contra objetivos y jefes.
 | Ranura | Habilidad | Forma | Enfriamiento | Estados | Resumen |
 |---|---|---|---|---|---|
 | Básico | Puñalada | ⌖ target | 0,4 s | — | Corte rápido a un solo objetivo |
+| Pasiva | Depredador | ∞ passive | — | — | Sus ataques básicos hacen 15% más de daño a enemigos que sangran o están envenenados |
 | H1 | Corte Sangrante | ⌖ target | 5,0 s | ◆ Sangrado, · Daño en el tiempo | Aplica un sangrado profundo |
 | H2 | Triple Golpe | ⌖ target | 6,8 s | — | Tres golpes veloces |
 | H3 | Trampa de Área | ○ point | 9,5 s | — | Coloca una trampa que explota y encadena daño |
@@ -39,6 +41,7 @@ Daño mágico, área y control elemental.
 | Ranura | Habilidad | Forma | Enfriamiento | Estados | Resumen |
 |---|---|---|---|---|---|
 | Básico | Proyectil Arcano | → line | 0,6 s | — | Disparo mágico a distancia contra el enemigo más cercano |
+| Pasiva | Maestro Elemental | ∞ passive | — | — | Las reacciones que provoca (Vapor, Quiebre, Conducción) pegan más |
 | H1 | Muro de Fuego | ○ point | 9,0 s | ♨ Quemado, · Daño en el tiempo | Crea un anillo de fuego que quema al pisarlo |
 | H2 | Nova de Escarcha | ◎ self_aoe | 8,2 s | ❄ Congelado | Congela a los enemigos cercanos |
 | H3 | Cadena de Relámpago | ⌖ target | 5,8 s | — | Salta entre enemigos |
@@ -53,6 +56,7 @@ Sanadora a distancia: restaura a sus aliados y purifica las oleadas con luz en �
 | Ranura | Habilidad | Forma | Enfriamiento | Estados | Resumen |
 |---|---|---|---|---|---|
 | Básico | Rayo de Alba | → line | 0,6 s | — | Disparo de luz a distancia |
+| Pasiva | Gracia del Alba | ∞ passive | — | — | Sus curaciones a aliados con menos de 35% de vida curan 25% más |
 | H1 | Alba Purificadora | ◎ self_aoe | 7,0 s | + Curación | Un pulso de luz cura a los aliados en 260 u y daña a todos los enemigos en 160 u por el… |
 | H2 | Bendición de Guerra | ◎ self_aoe | 8,2 s | ▲ Mejora | Aumenta el daño de los aliados cercanos |
 | H3 | Escudo Sagrado | ◎ self_aoe | 8,6 s | ◈ Escudo, ▲ Mejora | Aumenta la defensa de los aliados cercanos |
@@ -82,6 +86,7 @@ Manipula directamente las reglas de la realidad. Daño de área y control.
 | Ranura | Habilidad | Forma | Enfriamiento | Estados | Resumen |
 |---|---|---|---|---|---|
 | Básico | Paquete Corrupto | → line | 0,5 s | — | Disparo a distancia contra el enemigo más cercano |
+| Pasiva | Recompilar | ∞ passive | — | — | Cada enemigo que muere por sus habilidades le devuelve 3 de energía (hasta 15 por segundo) |
 | H1 | Error 404 | ○ point | 8,5 s | ▼ Ralentizado | Marca una zona |
 | H2 | Sobrescribir | ⌖ target | 9,2 s | ◆ Sangrado, · Daño en el tiempo | Infecta al enemigo más cercano con código corrupto |
 | H3 | Teletransporte | ↝ dash | 2,5 s | ◯ Invulnerable | Axiom se desplaza al instante en la dirección en la que mira |

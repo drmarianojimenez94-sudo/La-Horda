@@ -56,6 +56,9 @@ jobs:
       - run: node tools/ux/test-touch-targets.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/quality/test-classic-passives.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/portadores/test-elyra.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

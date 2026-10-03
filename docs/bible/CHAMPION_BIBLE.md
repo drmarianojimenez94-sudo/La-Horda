@@ -44,8 +44,21 @@ Criptas**; El Libertador → **San Martín, el Libertador**; El Eslabón → **G
 ## 4. Kit
 
 Básico + pasiva + 3 habilidades + definitiva. Cada pieza tiene un **verbo distinto** (no dos "daño en
-área alrededor"). La pasiva solo se documenta si existe en el código: los campeones sin pasiva quedan
-marcados WARNING en la auditoría hasta que se diseñe una (no se inventa texto sin mecánica).
+área alrededor"). La pasiva solo se documenta si existe en el código (nunca texto sin mecánica).
+
+Pasivas de los clásicos (2026-10, `CLASSIC_PASSIVES` en `js/data/champion-tuning.js`): de identidad,
+condicionales y chicas —refuerzan el verbo del campeón, no suben DPS plano:
+
+| Campeón | Pasiva | Efecto | Feedback |
+|---|---|---|---|
+| Aldric | Bastión | Aliados a < 200 u reciben 8 % menos daño | anillo punteado bajo Aldric mientras protege a alguien; chip ▲ en el panel táctico |
+| Kael | Depredador | Básicos +15 % contra enemigos que sangran o están envenenados | números de su básico más grandes sobre objetivos con ◆/☣ |
+| Thalen | Maestro Elemental | El bonus de las reacciones que provoca (Vapor, Quiebre, Conducción) ×1,5 | etiqueta de reacción existente |
+| Elyra | Gracia del Alba | Curar a un aliado bajo 35 % de vida cura 25 % más | número de curación + |
+| Axiom | Recompilar | Cada baja por habilidad devuelve 3 de energía (tope 15/s) | barra de energía |
+
+Medición: `tools/balance/known-champion-sim.js` antes/después (`docs/balance/classic-passives-results.json`):
+todos muy debajo del techo por rol, supervivencia igual; diferencias de daño dentro del ruido (±10 %).
 
 ### Contrato `AbilityDefinition` (derivado, no duplicado)
 

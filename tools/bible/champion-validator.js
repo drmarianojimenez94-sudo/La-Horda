@@ -169,8 +169,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const report = {schemaVersion: 1, generatedBy: 'tools/bible/champion-validator.js',
       scope: 'Automated runtime checks. PASS = no automated failures; it is NOT human design, balance or art approval. PASS* = passes with warnings.',
       champions: results, pageErrors};
-    fs.writeFileSync(path.join(OUT, 'champion-audit.json'), JSON.stringify(report, null, 1) + '\n');
-    fs.writeFileSync(path.join(OUT, 'CHAMPION_AUDIT.md'), renderMd(report));
+    if (!process.env.ONLY) { // con filtro no se pisa la auditoría completa
+      fs.writeFileSync(path.join(OUT, 'champion-audit.json'), JSON.stringify(report, null, 1) + '\n');
+      fs.writeFileSync(path.join(OUT, 'CHAMPION_AUDIT.md'), renderMd(report));
+    }
     console.log(`\n${results.length} campeones · page errors: ${pageErrors.length}`);
     if (pageErrors.length) console.log(pageErrors.slice(0, 5).join('\n'));
     if (process.argv.includes('--strict') && (pageErrors.length || results.some(r => r.summary.fail))) process.exitCode = 1;

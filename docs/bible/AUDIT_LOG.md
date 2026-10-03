@@ -136,3 +136,12 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
 - El validador de campeones espera a que baje el arte (carga diferida) antes de medir el sprite (evita falsos FAIL).
 - Auditoría completa: 24 PASS, 5 PASS* (Aldric, Kael, Thalen, Elyra y Axiom sin pasiva propia: deuda de diseño
   documentada, no inventada), 0 FAIL.
+
+### A15. Pasivas para Aldric, Kael, Thalen, Elyra y Axiom
+- **Problema**: 5 de los 29 campeones no tenían rasgo permanente (los únicos PASS* de la auditoría).
+- **Decisión**: pasivas de identidad, condicionales y chicas (Champion Bible §4), sin tocar estadísticas base ni
+  `knownChampions`. Números centralizados en `CLASSIC_PASSIVES`.
+- **Validación**: `tools/quality/test-classic-passives.js` (cada efecto exacto: 0,92 en el aura y 1 fuera / para sí;
+  ×1,15; bonus ×1,5; ×1,25; 3 por baja con tope 15/s y 0 por básicos). Balance antes/después con el piloto
+  automático: todos debajo del techo por rol, 3/3 supervivencia, diferencias dentro del ruido de ±10 % (la propia
+  corrida muestra ±10 % en campeones cuya pasiva no puede bajar su daño: no hay señal fuerte en ningún sentido).

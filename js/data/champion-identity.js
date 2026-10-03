@@ -13,7 +13,7 @@
      lore     historia del Códice: 3-4 frases, 260-480 caracteres. Herida -> don -> motivo.
      basic    {name, desc} ataque básico.
      passive  {name, ico, desc} rasgo permanente. Solo se escribe una pasiva que EXISTE en el
-              código; si el campeón no la tiene, queda null y el validador lo marca (no se inventa).
+              código (las de los clásicos viven en CLASSIC_PASSIVES, js/data/champion-tuning.js).
 
    Se aplica una vez al cargar, después de registrar a todos los campeones (portadores y
    expedición) y antes del normalizador de entrada (js/systems/champion-entry-balance.js).
@@ -24,22 +24,22 @@ const CHAMPION_IDENTITY = {
     tagline:"Sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino.",
     lore:"Aldric era capitán de la guardia cuando la Horda volvió a la Ciudad Maldita. Sostuvo la puerta norte tres noches seguidas, hasta que el escudo le quedó soldado al brazo. Nadie sabe cómo sigue en pie. Desde entonces camina delante de todos: dice que ya tiene la costumbre de recibir los golpes y que prefiere que sean suyos.",
     basic:{name:"Golpe de Escudo", desc:"Golpe corto en arco: alcanza a todos los enemigos frente a él."},
-    passive:null },
+    passive:{name:"Bastión", ico:"🛡", desc:"Los aliados a menos de 200 u de Aldric reciben 8% menos daño."} },
   guerrero:{ name:"Kael", title:"la Daga Carmesí", origin:"Los callejones de la Ciudad Maldita",
     tagline:"Encadena cortes y sangrados, y prepara trampas que castigan a toda una oleada.",
     lore:"Kael cobraba por desaparecer a la gente equivocada. Cuando la ciudad cayó descubrió que los monstruos también sangran, y que él sabe exactamente dónde cortar. No pelea por los Guardianes ni por la gloria: pelea porque nadie le paga mejor que la venganza, y porque la Horda se llevó lo único que no estaba en venta.",
     basic:{name:"Puñalada", desc:"Corte rápido a un solo objetivo."},
-    passive:null },
+    passive:{name:"Depredador", ico:"🩸", desc:"Sus ataques básicos hacen 15% más de daño a enemigos que sangran o están envenenados."} },
   mago:{ name:"Thalen", title:"el Tejedor Elemental", origin:"La Torre de las Dos Llamas",
     tagline:"Combina fuego, escarcha y relámpagos para controlar y devastar grupos de enemigos.",
     lore:"Thalen estudió el fuego y el hielo como opuestos hasta entender que son el mismo idioma. Leyó sobre los Cuatro Guardianes en libros que el Hechicero Supremo había prohibido, y es de los pocos que sospecha que la historia oficial está incompleta. Cada hechizo que lanza es también una pregunta que todavía nadie le responde.",
     basic:{name:"Proyectil Arcano", desc:"Disparo mágico a distancia contra el enemigo más cercano."},
-    passive:null },
+    passive:{name:"Maestro Elemental", ico:"✶", desc:"Las reacciones que provoca (Vapor, Quiebre, Conducción) pegan más: su bonus de daño crece 50%."} },
   soporte:{ name:"Elyra", title:"la Guardiana del Alba", origin:"El Santuario del Alba",
     tagline:"Cura y protege a sus compañeros; la misma luz que los salva purifica a la Horda.",
     lore:"Elyra era la sanadora del último santuario que resistió en la ciudad. Aprendió que una bendición a tiempo salva más vidas que cualquier espada, y que la luz que cierra heridas también quema a lo que la Horda corrompió. Su juramento es sencillo y obstinado: que ninguna vida se pierda sin que alguien haya luchado por ella.",
     basic:{name:"Rayo de Alba", desc:"Disparo de luz a distancia."},
-    passive:null },
+    passive:{name:"Gracia del Alba", ico:"✚", desc:"Sus curaciones a aliados con menos de 35% de vida curan 25% más."} },
   segador:{ name:"Segador", title:"el Olvidado", origin:"Un campo de batalla que nadie recuerda",
     tagline:"Cuanto más cerca de la muerte, más peligroso se vuelve.",
     lore:"Nadie sabe su nombre, ni siquiera él. Despertó entre los muertos de una guerra olvidada con una guadaña en las manos y una furia que no se apaga. La Horda lo reconoce como algo propio y lo teme por eso mismo. Cuanto más cerca está de volver a morir, más se parece a lo que los monstruos sueñan cuando sueñan con un cazador.",
@@ -49,7 +49,7 @@ const CHAMPION_IDENTITY = {
     tagline:"Descubrió que la realidad está construida con reglas. No lanza hechizos: reescribe las reglas.",
     lore:"Axiom descubrió que el mundo está construido con reglas, y que las reglas se pueden reescribir. Para él la Horda es un error en el sistema: una línea de código que alguien dejó abierta a propósito. Cada vez que corrige una zona del mapa encuentra otra firma del mismo autor. Quiere encontrar a quien la escribió antes de que termine el programa.",
     basic:{name:"Paquete Corrupto", desc:"Disparo a distancia contra el enemigo más cercano."},
-    passive:null },
+    passive:{name:"Recompilar", ico:"↻", desc:"Cada enemigo que muere por sus habilidades le devuelve 3 de energía (hasta 15 por segundo)."} },
   profeta:{ name:"Ismara", title:"la Profeta Ciega", origin:"El Oráculo sin ojos",
     tagline:"Ve el destino de sus aliados antes de que ocurra. A veces, eso alcanza para cambiarlo.",
     lore:"Ismara entregó los ojos al Oráculo a cambio de ver unos segundos más adelante. A veces le alcanza para cambiar el destino de un aliado, y a veces solo para verlo venir. Pelea cuerpo a cuerpo porque nadie más está tan cerca del golpe que va a llegar. Sus visiones sobre los cristales la despiertan de noche: siempre terminan en el mismo lugar, en llamas.",

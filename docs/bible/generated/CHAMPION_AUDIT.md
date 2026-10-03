@@ -5,12 +5,12 @@
 
 | Campeón | Rol | Estado | FAIL | WARN | Básico/Pasiva | Hab. 1 | Hab. 2 | Hab. 3 | Definitiva |
 |---|---|---|---|---|---|---|---|---|---|
-| Aldric, el Último Bastión (`tanque`) | tanque | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Kael, la Daga Carmesí (`guerrero`) | asesino | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Thalen, el Tejedor Elemental (`mago`) | mago | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Elyra, la Guardiana del Alba (`soporte`) | soporte | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Aldric, el Último Bastión (`tanque`) | tanque | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Kael, la Daga Carmesí (`guerrero`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Thalen, el Tejedor Elemental (`mago`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Elyra, la Guardiana del Alba (`soporte`) | soporte | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Segador, el Olvidado (`segador`) | tanque | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Axiom, el Reescritor (`axiom`) | mago | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Axiom, el Reescritor (`axiom`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Ismara, la Profeta Ciega (`profeta`) | soporte | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Musashi, el Rōnin del Bokken (`musashi`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Sylva, la Cazadora del Bosque (`cazadora`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
@@ -36,19 +36,4 @@
 | Sira, la Cartógrafa del Regreso (`sira`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 
 ## Detalle de FAIL / WARNING
-
-### Aldric, el Último Bastión — PASS*
-- **WARNING** [kit] pasiva — sin pasiva propia (no se inventa: pendiente de diseño)
-
-### Kael, la Daga Carmesí — PASS*
-- **WARNING** [kit] pasiva — sin pasiva propia (no se inventa: pendiente de diseño)
-
-### Thalen, el Tejedor Elemental — PASS*
-- **WARNING** [kit] pasiva — sin pasiva propia (no se inventa: pendiente de diseño)
-
-### Elyra, la Guardiana del Alba — PASS*
-- **WARNING** [kit] pasiva — sin pasiva propia (no se inventa: pendiente de diseño)
-
-### Axiom, el Reescritor — PASS*
-- **WARNING** [kit] pasiva — sin pasiva propia (no se inventa: pendiente de diseño)
 

@@ -30,6 +30,7 @@ function tacticalStatusList(h){
   if((h.shield||0) + (h.itemShield||0) >= 1) add("shield", "Escudo " + Math.round((h.shield||0)+(h.itemShield||0)), h.shieldTimer||0);
   if(h.buffTimer > 0 && (h.buffDmgMult||1) > 1) add("buff", "+" + Math.round(((h.buffDmgMult||1)-1)*100) + "% daño", h.buffTimer);
   if(h.buffTimer > 0 && (h.buffDefMult||1) > 1) add("buff", "+" + Math.round(((h.buffDefMult||1)-1)*100) + "% defensa", h.buffTimer);
+  if(typeof classicBastionMult==="function" && classicBastionMult(h) < 1) add("buff", "Bastión de Aldric −" + Math.round((1 - classicBastionMult(h))*100) + "% daño", 0);
   if(h.stunTimer > 0) add("stun", "Aturdido", h.stunTimer);
   if(h.slowTimer > 0 && (h.slowAmt||0) > 0) add("slow", "Ralentizado " + Math.round(h.slowAmt*100) + "%", h.slowTimer);
   if(h.burnTimer > 0) add("burn", "Quemado", h.burnTimer);

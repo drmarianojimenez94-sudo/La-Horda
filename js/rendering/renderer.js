@@ -41,6 +41,7 @@ function render(){
   drawAcuaAmbience();
   drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   if(arenaHas("drawGround")) arenaHook("drawGround", animNow/1000); // marcas propias en el piso (ARENA_EXT)
+  drawClassicPassiveGround(animNow/1000); // Bastión de Aldric (lenguaje "mejora": dorado/celeste, ▲)
   drawGoreDecals(); // sangre, quemaduras, escarcha y astillas en el piso (debajo de los avisos: el peligro se lee primero)
   vfxDrawGround(); // telegraphs de zonas peligrosas + ondas de choque
   drawSetAuras(); // aura discreta de los sets completos (color del set, más intensa con su carga)
