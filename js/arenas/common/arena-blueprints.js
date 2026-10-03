@@ -45,7 +45,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"cm_presentador", name:"El Presentador", phases:"espectáculo por actos", arena:"usa el escenario y el público: la ciudad es su teatro", teaches:"leer avisos de escena y mantener la escolta"},
     loot:{focus:"sets de entrada (Alba, Guardián) y oro por rescate"},
     tutorial:{steps:[{id:"rescue", say:"Hay civiles escondidos: acercate y MANTENÉ RESCATAR.", done:"rescue"},{id:"shelter", say:"Llevalos al escudo verde: el refugio.", done:"shelter"}]},
-    geometry:{notes:"edificios sólidos con interiores (cm-map.js)"},
+    geometry:{solids:"cmVisualSolids", derived:true, notes:"edificios sólidos con interiores (cm-map.js); el dibujo sale de los mismos datos"},
     multiplayer:"civiles, estructuras y jefes en el estado de la arena (cm-arena.js)",
     code:"js/arenas/ciudad/", status:{grade:"PASS", why:"identidad, objetivo y jefe propios; rejugabilidad por recompensas de rescate"}
   },
@@ -63,7 +63,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"caballero", name:"El Caballero de la Armadura Oxidada", phases:"contraataque azul", arena:"pelea en su cámara entre mecanismos", teaches:"no pegar cuando brilla azul (contraataque)"},
     loot:{focus:"sets de Coloso y Guardián"},
     tutorial:{steps:[{id:"trap", say:"Mirá el piso: las marcas encienden antes de cada trampa.", done:"trap"}]},
-    geometry:{gated:true, notes:"plataformas, puentes y puertas con colisión propia (fort-map.js); los sectores se abren al avanzar"},
+    geometry:{gated:true, derived:true, notes:"plataformas, puentes y puertas con colisión propia (fort-map.js); los sectores se abren al avanzar; el dibujo sale de la misma geometría (sin fondo pintado)"},
     multiplayer:"sectores, puentes y trampas en el estado de la arena (fort-arena.js)",
     code:"js/arenas/fortaleza/", status:{grade:"PASS", why:"navegación y hazards propios, jefe con regla legible"}
   },
@@ -82,7 +82,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"guardian_ancestral", name:"Guardián Ancestral", phases:"se corrompe en la Bestia del Bosque", arena:"las runas se desbordan y explotan al empezar", teaches:"usar las runas a favor"},
     loot:{focus:"sets de Alba y Cazador"},
     tutorial:{steps:[{id:"rune", say:"Esa runa brilla: mantené ✚ junto a ella.", done:"rune"},{id:"ambush", say:"¡La maleza tiembla! Alejate o quemala.", done:"ambush"}]},
-    geometry:{notes:"menhires y columnas sólidas (aidResolveCircles)"},
+    geometry:{solids:"aidVisualSolids", notes:"menhires, árboles y arcos sólidos (aidResolveCircles)"},
     multiplayer:"cargas de runas y emboscadas en bosNetState()",
     code:"js/arenas/bosque/bos-ruins.js (ARENA_EXT)", status:{grade:"PASS", why:"identidad jugable propia; jefe usa las runas"}
   },
@@ -124,7 +124,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"mago_hielo_cristal", name:"Mago de Hielo y Cristal → Ángel Caído", phases:"2 formas", arena:"muro de hielo y novas que empujan fuera de los braseros", teaches:"moverse entre braseros"},
     loot:{focus:"set Glaciar"},
     tutorial:{steps:[{id:"cold", say:"Si te quedás quieto, el frío sube. ¡Movete!", done:"cold"},{id:"brazier", say:"Un BRASERO: mantené 🔥 o prendelo con fuego.", done:"brazier"}]},
-    geometry:{notes:"octágono abierto + decorado sólido (aidBuildHielo)"},
+    geometry:{solids:"aidVisualSolids", notes:"octágono abierto + decorado sólido (aidBuildHielo); el monolito de hielo choca desde 2026-10"},
     multiplayer:"braseros y frío de cada héroe en hieNetState()",
     code:"js/arenas/hielo/hie-cold.js (ARENA_EXT)", status:{grade:"FIX", why:"curva de dificultad: sigue siendo la pared de la campaña (LA_HORDA_PLAYTEST_REPORT.md)"}
   },
@@ -143,7 +143,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"leviatan", name:"Leviatán", phases:"3 vidas", arena:"ronda el borde y ataca desde el agua", teaches:"leer el borde y las corrientes"},
     loot:{focus:"sets Tempestad y Glaciar"},
     tutorial:{steps:[{id:"current", say:"Esa corriente te lleva: usala para moverte rápido.", done:"current"},{id:"puddle", say:"El charco brilla antes de descargar: salí.", done:"puddle"}]},
-    geometry:{notes:"octágono + ruinas sólidas"},
+    geometry:{solids:"aidVisualSolids", notes:"octágono + ruinas sólidas"},
     multiplayer:"corrientes (predicción en el invitado) y charcos en el estado de la arena",
     code:"js/arenas/acuatica.js + js/arenas/acuatica/ (ARENA_EXT)", status:{grade:"PASS", why:"movilidad propia y reacción con el rayo"}
   },
@@ -162,7 +162,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"minotauro", name:"Minotauro", phases:"cargas", arena:"se aturde al chocar contra un muro", teaches:"usar los muros como arma"},
     loot:{focus:"sets Laberinto y Coloso"},
     tutorial:{steps:[{id:"seal", say:"Sello I: mantené ◈ encima. Después II y III.", done:"seal"}]},
-    geometry:{notes:"muros rectangulares rotados (collision.js) con navegación"},
+    geometry:{solids:"aidVisualSolids", notes:"muros rectangulares rotados (collision.js) con navegación"},
     multiplayer:"sellos en el estado de la arena (lab-seals.js)",
     code:"js/arenas/laberinto/lab-seals.js (ARENA_EXT)", status:{grade:"PASS", why:"resolver + jefe que usa los muros"}
   },
@@ -180,7 +180,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"ab_morador", name:"El Que Mora Debajo", phases:"por partes", arena:"destruye plataformas con patrones legibles", teaches:"leer grietas y conservar piso"},
     loot:{focus:"sets Arcano y Laberinto"},
     tutorial:{steps:[{id:"crack", say:"Esa plataforma tiembla: salí antes de que caiga.", done:"crack"}]},
-    geometry:{fallable:true, notes:"plataformas con estado; el vacío no es caminable; caer = colgado del borde hasta el rescate (ab-map.js)"},
+    geometry:{fallable:true, derived:true, notes:"plataformas con estado; el vacío no es caminable; caer = colgado del borde hasta el rescate (ab-map.js); dibujo derivado de las plataformas"},
     multiplayer:"estados de plataformas, colgados y rescates en el estado de la arena",
     code:"js/arenas/abismo/", status:{grade:"PASS", why:"terreno como recurso, rescate cooperativo"}
   },
@@ -198,7 +198,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"mn_cerbero", name:"Cerbero, Guardián del Umbral", phases:"3 actos", arena:"se expone a la luz y se enfurece en la oscuridad", teaches:"controlar la luz"},
     loot:{focus:"sets Coloso y Lucifer"},
     tutorial:{steps:[{id:"light", say:"Se apagó una luz: acercate y MANTENÉ ENCENDER.", done:"light"}]},
-    geometry:{notes:"sectores con paredes de roca (mn-map.js)"},
+    geometry:{derived:true, notes:"sectores con paredes de roca (mn-map.js); el dibujo sale de la misma geometría (sin fondo pintado)"},
     multiplayer:"luces y sectores en el estado de la arena (mn-arena.js)",
     code:"js/arenas/minas/", status:{grade:"PASS", why:"territorio de luz + jefe que lo usa"}
   },
@@ -217,7 +217,7 @@ const ARENA_BLUEPRINTS = {
     boss:{type:"demonio_mayor", name:"El Hechicero → Gólem de Cuerpos → Demonio Mayor", phases:"3 formas", arena:"la revelación del guía en su propia dimensión", teaches:"todo lo aprendido"},
     loot:{focus:"Lucifer y Berserker; acceso a toda la tabla de sets"},
     tutorial:{steps:[{id:"fissure", say:"Una FISURA: mantené ✖ junto a ella para cerrarla.", done:"fissure"}]},
-    geometry:{notes:"octágono + pozos de lava (hazards.js)"},
+    geometry:{solids:"aidVisualSolids", notes:"octágono + pozos de lava (hazards.js)"},
     multiplayer:"fisuras en infNetState()",
     code:"js/arenas/infernal/ (ARENA_EXT)", status:{grade:"PASS", why:"decisión propia; jefe narrativo en 3 formas"}
   },

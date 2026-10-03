@@ -82,6 +82,12 @@ SOLO la regla de la arena (lo general ya lo enseñó el tutorial inicial) y se g
 | 10 | Infernal | ¿mato o cierro? | PASS | fisuras-portal; jefe narrativo en 3 formas |
 | — | Arena Divina | asedio | FIX | Fase 1: escenario sin combate completo |
 
-Cambios de geometría de esta auditoría: Reino Fúngico (montículos, racimos, pilares, estanque y trono
+Estado del validador (2026-10-03): 8 PASS (Ciudad, Ruinas, Fúngico, Gélida, Acuática, Laberinto, Minas, Infernal) y
+2 WARNING por diseño (Fábrica: sectores con compuertas; Abismo: colgado del borde). Arenas con decorado del coliseo
+declaran `aidVisualSolids` (props grandes; los arcos con abertura se marcan `passThrough`); la Ciudad declara
+`cmVisualSolids`; Fábrica, Abismo y Minas no tienen fondo pintado (`derived`: el dibujo sale de la geometría).
+
+Cambios de geometría de esta auditoría: Gélida (el monolito de hielo del norte ahora choca); motor
+(`aidResolveCircles` no empujaba a una entidad exactamente en el centro de un sólido); Reino Fúngico (montículos, racimos, pilares, estanque y trono
 pintados ahora chocan; bocas de túnel corridas a zona libre) y coliseo octogonal (Ruinas, Gélida, Acuática,
 Laberinto, Infernal: el límite real ya no excede las paredes dibujadas).

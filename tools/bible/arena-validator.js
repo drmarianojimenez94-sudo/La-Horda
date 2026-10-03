@@ -91,7 +91,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
           }
           const leaky = visual.filter(v => v.leaks);
           add('geometry', 'si se ve sólido, es sólido', leaky.length ? 'FAIL' : 'PASS', leaky.length ? 'sin colisión: ' + leaky.map(v => v.id).join(', ') : visual.length + ' sólidos pintados con colisión');
-        } else add('geometry', 'si se ve sólido, es sólido', 'WARNING', 'la arena no declara sólidos visuales (geometry.solids): revisión manual');
+        } else if (B && B.geometry && B.geometry.derived) add('geometry', 'si se ve sólido, es sólido', 'PASS', 'sin fondo pintado: el dibujo sale de la misma geometría que la colisión (' + (B.code || '') + ')');
+        else add('geometry', 'si se ve sólido, es sólido', 'WARNING', 'la arena no declara sólidos visuales (geometry.solids): revisión manual');
         // CANARIO: un "sólido" falso sobre el inicio (siempre caminable) DEBE detectarse como fuga.
         { const q = [[start.x - 30, start.y - 30], [start.x + 30, start.y - 30], [start.x + 30, start.y + 30], [start.x - 30, start.y + 30]];
           const leaks = [[start.x, start.y], ...q.map(([x, y]) => [start.x + (x - start.x) * 0.55, start.y + (y - start.y) * 0.55])].filter(([x, y]) => walk(x, y, 4)).length;

@@ -162,3 +162,11 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   Laberinto, Infernal). En cooperativo la semilla es la del anfitrión (`netMatch.seed`).
 - El chequeo de exploración tolera ≤ 4 u de penetración (márgenes de borde y empujes entre héroes); más que eso
   sigue siendo FAIL.
+
+### A18. "Si se ve sólido, es sólido" en todas las arenas
+- **Hallazgos**: (1) el monolito de hielo de la Arena Gélida (220×160, centro-norte) no tenía colisión; (2)
+  `aidResolveCircles` no movía a una entidad ubicada exactamente en el centro de un sólido (dirección 0/0).
+- **Implementación**: colisión en la base del monolito; empuje con dirección fija en el caso degenerado;
+  `aidVisualSolids()` (props grandes del coliseo) y `cmVisualSolids()` (paredes de la Ciudad) declarados en las fichas;
+  arcos con abertura marcados `passThrough` (las patas siguen chocando); Fábrica/Abismo/Minas `derived`.
+- **Validación**: arena-validator 8 PASS + 2 WARNING por diseño, 0 FAIL; `t_identity` 84/84.

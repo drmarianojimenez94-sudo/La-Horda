@@ -23,8 +23,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "80 sólidos pintados con colisión"
     },
     {
      "area": "spawn",
@@ -81,10 +81,10 @@
    "img": "arenas/ciudad.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "seconds": 4
    },
-   "status": "WARNING"
+   "status": "PASS"
   },
   {
    "key": "fortaleza",
@@ -106,8 +106,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "sin fondo pintado: el dibujo sale de la misma geometría que la colisión (js/arenas/fortaleza/)"
     },
     {
      "area": "spawn",
@@ -164,8 +164,8 @@
    "img": "arenas/fortaleza.webp",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "seconds": 3
+    "warning": 1,
+    "seconds": 4
    },
    "status": "WARNING"
   },
@@ -184,13 +184,13 @@
      "area": "geometry",
      "name": "área caminable conexa",
      "level": "PASS",
-     "detail": "4326 celdas; 0 bolsillos inalcanzables"
+     "detail": "4335 celdas; 0 bolsillos inalcanzables"
     },
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "10 sólidos pintados con colisión"
     },
     {
      "area": "variants",
@@ -233,7 +233,7 @@
     "W": 112,
     "H": 79,
     "cell": 24,
-    "walkCells": 4326,
+    "walkCells": 4335,
     "pockets": 0
    },
    "explore": {
@@ -253,10 +253,10 @@
    "img": "arenas/bosque.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "seconds": 2
    },
-   "status": "WARNING"
+   "status": "PASS"
   },
   {
    "key": "micelial",
@@ -356,13 +356,13 @@
      "area": "geometry",
      "name": "área caminable conexa",
      "level": "PASS",
-     "detail": "4337 celdas; 0 bolsillos inalcanzables"
+     "detail": "4308 celdas; 0 bolsillos inalcanzables"
     },
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "17 sólidos pintados con colisión"
     },
     {
      "area": "variants",
@@ -405,7 +405,7 @@
     "W": 112,
     "H": 79,
     "cell": 24,
-    "walkCells": 4337,
+    "walkCells": 4308,
     "pockets": 0
    },
    "explore": {
@@ -425,10 +425,10 @@
    "img": "arenas/hielo.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "seconds": 2
    },
-   "status": "WARNING"
+   "status": "PASS"
   },
   {
    "key": "acuatica",
@@ -450,8 +450,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "7 sólidos pintados con colisión"
     },
     {
      "area": "variants",
@@ -514,10 +514,10 @@
    "img": "arenas/acuatica.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "seconds": 2
    },
-   "status": "WARNING"
+   "status": "PASS"
   },
   {
    "key": "laberinto",
@@ -539,8 +539,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "4 sólidos pintados con colisión"
     },
     {
      "area": "variants",
@@ -603,10 +603,10 @@
    "img": "arenas/laberinto.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "seconds": 2
    },
-   "status": "WARNING"
+   "status": "PASS"
   },
   {
    "key": "abismo",
@@ -628,8 +628,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "sin fondo pintado: el dibujo sale de la misma geometría que la colisión (js/arenas/abismo/)"
     },
     {
      "area": "spawn",
@@ -722,7 +722,7 @@
    "img": "arenas/abismo.webp",
    "summary": {
     "fail": 0,
-    "warning": 2,
+    "warning": 1,
     "seconds": 2
    },
    "status": "WARNING"
@@ -747,8 +747,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "sin fondo pintado: el dibujo sale de la misma geometría que la colisión (js/arenas/minas/)"
     },
     {
      "area": "spawn",
@@ -805,10 +805,10 @@
    "img": "arenas/minas.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
-    "seconds": 1
+    "warning": 0,
+    "seconds": 2
    },
-   "status": "WARNING"
+   "status": "PASS"
   },
   {
    "key": "infernal",
@@ -830,8 +830,8 @@
     {
      "area": "geometry",
      "name": "si se ve sólido, es sólido",
-     "level": "WARNING",
-     "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
+     "level": "PASS",
+     "detail": "11 sólidos pintados con colisión"
     },
     {
      "area": "variants",
@@ -894,10 +894,10 @@
    "img": "arenas/infernal.webp",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "seconds": 2
    },
-   "status": "WARNING"
+   "status": "PASS"
   }
  ],
  "pageErrors": []
