@@ -13,3 +13,13 @@
 .alpha-training-panel{background:var(--ui-bg-2,#0f0805);border-color:var(--ui-gold,#ffd76a);border-radius:2px;box-shadow:var(--ui-shadow-sm,2px 2px #000)}
 #alpha-onboarding button,.alpha-guide button,.alpha-training-panel button{background:var(--ui-btn,linear-gradient(#4a2210,#2a1208));border-color:var(--ui-line-hi,#6a3e1e);border-radius:2px}
 @media(orientation:portrait){.alpha-training-panel,.alpha-guide,.alpha-guide::backdrop{visibility:hidden}}
+
+.alpha-onboarding-actions{display:flex;gap:8px;flex-wrap:wrap}
+/* Touch targets remain usable on the compact landscape layouts. */
+#alpha-onboarding{flex:0 0 auto;font-size:11px}
+#alpha-onboarding button,.alpha-guide button{min-height:40px;min-width:40px}
+#alpha-onboarding summary{min-height:32px;display:flex;align-items:center;justify-content:center;gap:5px}
+#alpha-onboarding summary::before{content:'▸'}
+#alpha-onboarding details[open] summary::before{content:'▾'}
+#alpha-onboarding details[open]{max-height:150px;overflow:auto}
+.alpha-training-panel button{min-height:32px;min-width:40px}
