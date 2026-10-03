@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T22:50:16.128Z",
+  "generatedAt": "2026-10-03T23:11:12.043Z",
   "method": "score = 0.35·Jaccard(vocabulario) + 0.45·Jaccard(etiquetas de mecánica) + 0.2·mismo rol; DUPLICATE ≥ 0.45, REVIEW ≥ 0.32",
   "rosterSize": 37,
   "roleDistribution": {
