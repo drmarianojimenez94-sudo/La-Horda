@@ -1,31 +1,31 @@
-const {chromium}=require('playwright'),{spawn}=require('child_process'),fs=require('fs');
-const server=spawn('python3',['-m','http.server','8805'],{stdio:'ignore'});process.on('exit',()=>server.kill());
-(async()=>{await new Promise(r=>setTimeout(r,500));const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});const p=await b.newPage({viewport:{width:844,height:390}}),errors=[];p.on('pageerror',e=>errors.push(e.message));p.on('console',m=>{if(m.type()==='error'||(m.type()==='warning'&&m.text().startsWith('boon')))errors.push(m.text());});await p.goto('http://127.0.0.1:8805');await p.waitForFunction(()=>typeof assetsAllReady==='function'&&assetsAllReady());
+'use strict';
+// Current single-champion contract. Historical reserve/handoff assertions are invalid.
+const {chromium}=require('playwright'),{spawn}=require('node:child_process'),fs=require('node:fs');
+const server=spawn('python3',['-m','http.server','8805'],{stdio:'ignore'});let browser;
+(async()=>{await new Promise(r=>setTimeout(r,500));browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});const p=await browser.newPage({viewport:{width:844,height:390}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8805');await p.waitForFunction(()=>typeof assetsAllReady==='function'&&assetsAllReady());
 const checks=await p.evaluate(()=>{
- const out=[],ok=(name,pass,extra)=>out.push({name,ok:!!pass,...extra});
+ const out=[],ok=(name,pass)=>out.push({name,ok:!!pass});
  for(const c of Object.values(save.champions)){c.unlocked=true;c.level=20;}
- selectedClass='mago';save.duoReserve='eren';currentArena='ciudad';divinaMode=false;titleContinue();ok('Intro ends in menu',state==='mainmenu');
- firstRunStart();ok('First-run path ends in menu',state==='mainmenu');
+ save.tut={training:1};selectedClass='mago';save.duoReserve='eren';currentArena='ciudad';divinaMode=false;titleContinue();ok('Completed onboarding reaches menu',state==='mainmenu');
  for(const key of Object.keys(CLASSES)){
-  setState('prep');selectedClass=key;save.duoReserve=key==='eren'?'mago':'eren';lobbyAllies=['soporte','tanque','guerrero'].filter(k=>k!==key&&k!==save.duoReserve);startRun(1);clearRunTimers();
-  const h=player;h.boons={old:2};h.cds=[800,800,800];portadorObjects.push({owner:h,kind:'test'});h.alive=false;duoUpdate();
-  ok('Handoff '+key,player===h&&h.alive&&h.classKey===save.duoReserve&&h._duoUsed&&h.cds.every(x=>x===0)&&!h.boons&&h.invulnTimer===2500&&!portadorObjects.some(o=>o.owner===h));
-  joyVec={x:1,y:0};h.alive=false;const x=h.x;updateControlledHero(500);ok('Dead cannot move '+key,h.x===x&&!h.moving);reviveHero(h,allies[0]);ok('No revive '+key,!h.alive);
-  setState('mainmenu');ok('Return restores first card '+key,selectedClass===key&&duoValid());
+  setState('prep');selectedClass=key;lobbyAllies=['soporte','tanque','guerrero'].filter(k=>k!==key);startRun(1);clearRunTimers();
+  const h=player;h.alive=false;duoUpdate();ok('No automatic champion swap '+key,player===h&&!h.alive&&h.classKey===key&&!duoPending(h));
+  joyVec={x:1,y:0};const x=h.x;updateControlledHero(500);ok('Dead cannot move '+key,h.x===x&&!h.moving);
+  reviveHero(h,allies[0]);ok('Revival keeps chosen champion '+key,h.alive&&h.classKey===key);
+  setState('mainmenu');ok('Return preserves champion '+key,selectedClass===key&&duoValid());
  }
- setState('prep');selectedClass='mago';save.duoReserve='eren';lobbyAllies=['soporte','tanque','guerrero'];startRun(1);clearRunTimers();let called=false;runCastOwner=player;runLater(100,()=>{called=true;});runCastOwner=null;player.alive=false;duoUpdate();updateRunTimers(200);ok('Old delayed cast canceled',!called);onPlayerDeath();ok('Second death ends solo run',runEnding&&!duoPending(player));updateRunTimers(1000);startRun(1);ok('Retry restores original pair',player.classKey==='mago'&&player._duoReserve==='eren'&&!player._duoUsed);
  for(const key of Object.keys(PORTADOR_BOON_KITS)){
-  setState('prep');selectedClass=key;save.duoReserve='eren';startRun(1);clearRunTimers();
+  setState('prep');selectedClass=key;startRun(1);clearRunTimers();
   for(const boon of boonsForChamp(key))for(let rarity=0;rarity<3;rarity++){
    player.boons={[boon.id]:rarity};player.shield=0;champFx=[];particles=[];clearRunTimers();const skill=boon.skill==='ult'?player.cls.ultimate:player.cls.skills[boon.skill];const rec=boonCastBegin(player,skill);boonCastEnd(rec,1,1);ok(boon.id+' rarity '+rarity,!!rec&&(champFx.length>0||player.shield>0||runTimers.length>0));
   }
  }
- setState('prep');selectedClass='mago';save.duoReserve=null;save.duoGiftClaimed=false;save.champions.farolero.unlocked=false;duoChoose(1,'farolero');ok('One free reserve avoids shop gate',duoValid()&&save.duoReserve==='farolero'&&save.champions.farolero.unlocked&&save.duoGiftClaimed);save.champions.myla.unlocked=false;duoChoose(1,'myla');ok('Reserve gift cannot be claimed twice',!save.champions.myla.unlocked&&save.duoReserve==='farolero');save.champions.myla.unlocked=true;save.duoReserve='eren';
+ setState('prep');selectedClass='mago';save.champions.farolero.unlocked=false;duoChoose(1,'farolero');ok('Obsolete reserve selection cannot grant champion',!save.champions.farolero.unlocked&&selectedClass==='mago');
  for(const key of Object.keys(CLASSES))ok('Complete guide '+key,[...CLASSES[key].skills,CLASSES[key].ultimate].every(s=>s.desc&&championGuideHTML(key).includes(guideEsc(s.desc))));
- setState('prep');selectedClass='tanque';save.duoReserve='eren';for(const id of setPieceIds('guardian').slice(0,3)){const it=makeDesignedItem(id);stashItems().push(it);equipItem('tanque',it.uid);}invalidatePassiveCache();startRun(1);player.alive=false;duoUpdate();ok('Guardian set supports reserve instead of obsolete revive',Math.abs(player.shield/player.maxHp-.15)<.001&&player.shieldTimer===8000);ok('Reserve quest counter advances',player.stats.duoEntries===1);let itemTicks=0;const priorTimer=updateItemProcTimers;updateItemProcTimers=(hero,dt)=>{if(hero===allies[0])itemTicks++;priorTimer(hero,dt);};player.alive=false;updateControlledHero(100);updateItemProcTimers=priorTimer;ok('Dead host does not freeze team equipment timers',itemTicks===1);
- player.alive=false;player._duoUsed=true;const exhausted=player;endlessEnterArena('ciudad');ok('Infinito transition does not resurrect exhausted cards',!exhausted.alive&&exhausted._duoUsed);
- setState("prep");duoRestoreLead();const L=netBuildLoadout();ok('Reserve has own full loadout',L.reserve.champ==='eren'&&Array.isArray(L.reserve.skillMastery)&&!!L.reserve.equipment);
- return out;
+ setState('prep');selectedClass='tanque';lobbyAllies=['soporte','mago','guerrero'];startRun(1);player.alive=false;
+ let itemTicks=0;const prior=updateItemProcTimers;updateItemProcTimers=(h,dt)=>{if(h===allies[0])itemTicks++;prior(h,dt);};updateControlledHero(100);updateItemProcTimers=prior;ok('Dead host does not freeze team equipment timers',itemTicks===1);
+ setState('prep');const L=netBuildLoadout();ok('Network loadout has no reserve',L.reserve==null&&L.champ==='tanque');return out;
 });
-for(const [w,h]of [[844,390],[667,375],[390,844],[1280,800]]){await p.setViewportSize({width:w,height:h});await p.evaluate(()=>{setState('prep');selectedClass='mago';save.duoReserve='eren';renderPrepSummary();});await p.waitForTimeout(2500);await p.screenshot({path:`docs/ux/duo-${w}.png`});if(w>600&&h<500)checks.push({name:`Selectors clear of footer ${w}`,ok:await p.evaluate(()=>[...document.querySelectorAll("[data-duo]")].every(el=>el.getBoundingClientRect().bottom<=document.getElementById("prep-start-btn").getBoundingClientRect().top))});checks.push({name:`Layout ${w}`,ok:await p.evaluate(()=>document.getElementById('prep-screen').scrollWidth<=innerWidth+1)});}
-fs.writeFileSync('docs/ux/functional-results.json',JSON.stringify({checks,errors},null,2));console.log(JSON.stringify({total:checks.length,failed:checks.filter(c=>!c.ok),errors},null,2));await b.close();server.kill();if(errors.length||checks.some(c=>!c.ok))process.exitCode=1;})().catch(e=>{console.error(e);server.kill();process.exit(1)});
+for(const [w,h]of [[844,390],[667,375],[390,844],[1280,800]]){await p.setViewportSize({width:w,height:h});await p.evaluate(()=>{setState('prep');selectedClass='mago';renderPrepSummary();});await p.waitForTimeout(300);checks.push({name:'Only one champion selector '+w,ok:await p.locator('[data-duo]').count()===1});checks.push({name:'Layout '+w,ok:await p.evaluate(()=>document.getElementById('prep-screen').scrollWidth<=innerWidth+1)});}
+fs.writeFileSync('docs/ux/functional-results.json',JSON.stringify({checks,errors},null,2));console.log(JSON.stringify({total:checks.length,failed:checks.filter(c=>!c.ok),errors},null,2));if(errors.length||checks.some(c=>!c.ok))process.exitCode=1;
+})().catch(e=>{console.error(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.kill()});

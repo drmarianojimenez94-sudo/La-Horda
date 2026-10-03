@@ -1,6 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),{chromium}=require('playwright');
 const base=process.env.SITE||'http://127.0.0.1:8813';
+require('node:fs').mkdirSync('docs/public-alpha',{recursive:true});
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});
  try{
