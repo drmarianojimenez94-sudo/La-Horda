@@ -91,9 +91,11 @@ function cromaEquip(k, id){
   const c = save.champions[k]; if(!c) return false;
   if(id){ const d = CROMA_SKINS[id]; if(!d || d.champ !== k || !cromaOwned(id)) return false; cromaEnsureLoaded(id); }
   c.croma = id || null;
+  if(c.cosmeticSkin !== undefined) c.cosmeticSkin = "";
   if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
   persist();
   cromaAfterEquip(k);
+  if(typeof AlphaServices!=="undefined") AlphaServices.emit("croma", {champion:k, cosmetic:id || "original"});
   return true;
 }
 // En la Sala online: que los demás la vean ya (el loadout lleva la skin/croma).
@@ -108,4 +110,67 @@ function cromaHiddenBySet(k){
   if(typeof activeSetSkinId!=="function") return false;
   const id = activeSetSkinId({classKey:k});
   return !!(id && !isCromaId(id));
+}
+
+// Presentation-only catalog. It never loads atlases or mutates equipment/stats.
+// Commercial fields remain inactive throughout Alpha.
+const COSMETIC_SET_STORIES = {
+  merienda_magica:"Myla reunió las cucharas perdidas de su primera aventura y organizó una merienda para los guardianes. La colección guarda el recuerdo de esa mesa compartida.",
+  santa_paciencia:"Ynara conservó las insignias de cada refugio que sostuvo abierto durante el asedio. Unidas, recuerdan las noches en que cocinar también fue una forma de resistir.",
+  manada:"En un bosque que aprendió a arder sin morir, Sylva recogió una pluma de fuego. Ahora sus flechas señalan el camino de regreso entre las cenizas.",
+  errante:"Musashi dejó su antigua armadura bajo un cerezo sin flores. Esta vestimenta pertenece al viaje que comenzó después de su último duelo.",
+  legion:"Al otro lado del muro, Eren encontró una posibilidad distinta de su transformación. La piel de la bestia conserva las marcas de aquella primera noche.",
+  sistema:"Axiom recompiló su propio cuerpo para cruzar una fractura imposible. Las líneas de esta apariencia son las costuras que le permiten regresar.",
+  profecia:"La Profeta vistió los colores de un futuro que consiguió impedir. Cada hilo recuerda una vida que ya no tendrá que perderse.",
+  convergencia:"En la noche en que las dos torres ardieron, el mago unió sus insignias. Esta vestidura celebra la tregua entre la llama y el invierno.",
+  marea:"El Segador regresó de una costa donde los muertos no tenían nombre. La sal oscura de su armadura recuerda a quienes decidió dejar descansar.",
+  nocturno:"El asesino abandonó sus viejas insignias al entrar en la ciudad sitiada. Su nueva máscara pertenece a quienes nunca pudieron huir.",
+  custodio:"La sanadora recogió los estandartes del santuario y los convirtió en un manto. Bajo sus costuras todavía se reconocen las promesas de sus antiguos guardianes.",
+  baluarte:"El Último Juramento fue forjado con las placas recuperadas de la puerta norte. El tanque lleva sus abolladuras para recordar a quienes permanecieron a su lado.",
+  requiem:"El Rey Sin Tumba rechazó la corona de los sepulcros y levantó su propia corte. Sus vestiduras guardan el polvo de un reino que solo existe al anochecer.",
+  granadero:"El Granadero del Alba atravesó la cordillera antes del primer sol. El blanco de su uniforme conserva la memoria de aquella nieve y de quienes abrieron el paso.",
+  ultimo_turno:"Brasa encendió la última caldera cuando todos habían abandonado la fábrica. El uniforme de maquinista conserva las chispas de ese turno que se negó a terminar.",
+  juramento_roto:"El Eslabón abrió las puertas que había jurado custodiar. Lleva las llaves sobre la armadura para que nadie vuelva a cerrar esas celdas.",
+  vidrio_negro:"Morwen destiló el silencio de una ciudad vacía y lo selló en vidrio negro. Sus nuevas ropas protegen los frascos que jamás deben romperse.",
+  lumbre_persistente:"El Farolero acompañó la última expedición más allá de las señales conocidas. Su abrigo lleva remiendos de cada viajero que consiguió traer de vuelta.",
+  hilo_umbral:"Iria tejió tres caminos sobre una misma capa para no olvidar las rutas que había cerrado. Sus puntadas brillan cuando un sendero vuelve a abrirse."
+};
+function cosmeticIsSetCroma(d){
+  if(!d || !d.packs || typeof CHAMP_PACK==="undefined") return false;
+  const pairs = Object.entries(d.packs);
+  return pairs.length > 0 && pairs.every(([base,skin])=>CHAMP_PACK[skin] && CHAMP_PACK[skin].cromaOf === base);
+}
+function cosmeticArtPending(d){
+  if(!d || !d.packs || typeof CHAMP_PACK==="undefined") return false;
+  if(cosmeticIsSetCroma(d)) return true;
+  const pairs = Object.entries(d.packs);
+  return pairs.length > 0 && pairs.every(([base,skin])=>{
+    const a = CHAMP_PACK[base], b = CHAMP_PACK[skin];
+    return a && b && a.atlas && b.atlas && a.atlas.src && a.atlas.src === b.atlas.src;
+  });
+}
+function cosmeticMetadata(id){
+  const croma = Object.prototype.hasOwnProperty.call(CROMA_SKINS,id) && CROMA_SKINS[id], skin = typeof SET_SKINS!=="undefined" && Object.prototype.hasOwnProperty.call(SET_SKINS,id) && SET_SKINS[id];
+  const d = croma || skin; if(!d) return null;
+  const set = !croma && typeof SET_DB!=="undefined" ? SET_DB[id] : null;
+  const champion = d.champ || (set && set.champion) || null;
+  const sources = !croma && typeof SET_ARENA_WEIGHTS!=="undefined"
+    ? Object.keys(SET_ARENA_WEIGHTS).filter(a=>(SET_ARENA_WEIGHTS[a][id]||0)>0) : [];
+  const fx = !croma && typeof SKIN_FX_SRC!=="undefined" && Object.keys(SKIN_FX_SRC).some(k=>k.startsWith("sk_"+id+"_"));
+  return {
+    id, champion, name:d.name || id, type:croma ? "CROMA" : cosmeticIsSetCroma(d) ? "CROMA DE SET" : "SKIN DE SET",
+    rarity:d.rarity || (croma ? "Común" : "Set"), tagline:d.tagline || (croma ? "Otra paleta, el mismo guardián" : "La memoria de una colección"),
+    lore:d.lore || COSMETIC_SET_STORIES[id] || "Historia de esta apariencia pendiente de completar.",
+    artPending:!croma && cosmeticArtPending(d),
+    lorePending:!d.lore && !COSMETIC_SET_STORIES[id], visualTheme:d.visualTheme || (croma ? d.crystal : set && set.theme) || d.name,
+    unlockSource:croma ? "Galería · oro obtenido jugando" : "Reunir " + (set ? set.name : id),
+    sourceArenas:sources, collection:d.collection || (croma ? "Cristales de los Guardianes" : set ? set.name : id),
+    vfxProfile:fx ? "Variantes visuales del set" : "Original", sfxProfile:d.sfxProfile || "Original",
+    preview:d.preview || d.src || null, premiumPrice:null, currency:null, availability:"alpha-preview",
+    featured:false, creator:d.creator || null, limited:false,
+    owned:croma ? cromaOwned(id) : (typeof skinOwnedFull==="function" ? skinOwnedFull(id) : typeof shopSetMissing==="function" && !shopSetMissing(id).length)
+  };
+}
+function cosmeticCatalog(){
+  return [...new Set([...Object.keys(typeof SET_SKINS!=="undefined" ? SET_SKINS : {}), ...Object.keys(CROMA_SKINS)])].map(cosmeticMetadata);
 }

@@ -343,30 +343,30 @@ function renderShopSkins(panel){
     const eq = champ ? equippedSetCount(champ, id) : 0, active = activeOn.length > 0;
     const previewKey = champ || comp[0];
     let action;
-    if(miss.length) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>${_shopVoucherBtn(id)}`;
+    if(!skinOwnedFull(id)) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>${_shopVoucherBtn(id)}`;
     else if(!comp.length) action = `<div class="shop-item-sub">Skin desbloqueada: conseguí a <b>${champ ? CLASSES[champ].name : "un guardián"}</b> en la pestaña Guardianes para usarla.</div>`;
     else {
       const rest = comp.filter(k=>!activeOn.includes(k));
       action = rest.length ? `<div class="shop-skin-equip">${activeOn.length ? "" : '<span class="shop-item-sub">Desbloqueada · </span>'}${rest.map(k=>`<button class="shop-btn" data-skin-equip="${id}" data-skin-champ="${k}">${comp.length>1 ? "Equipar en " + CLASSES[k].name : "EQUIPAR"}</button>`).join("")}</div>` : "";
     }
     return `<div class="shop-skin ${active?"active":""}" data-skin-card="${id}">
-      <img class="shop-skin-img" data-portador-skin="${id}" src="${sk.preview || sk.src}" alt="">
+      ${sk.preview ? `<img class="shop-skin-img" data-portador-skin="${id}" src="${sk.preview}" alt="" loading="lazy">` : ""}
       ${previewKey ? `<canvas class="champ-anim shop-skin-anim" width="84" height="84" data-class-key="${previewKey}" data-skin="${id}" data-idle="1"></canvas>` : ""}
       <div class="shop-skin-info">
-        <div class="shop-skin-name">${sk.name || "Skin de " + S.name}</div>
-        <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · se activa con el set completo <b>${S.name}</b></div>
-        <div class="shop-st ${active?"own":""}">${active ? "✔ EQUIPADA en " + activeOn.map(k=>CLASSES[k].name).join(", ") : (miss.length ? `${have}/${ids.length} piezas · ${eq} equipadas` : "🔓 Desbloqueada")}</div>
+        <div class="shop-skin-name">${sk.name || "Skin de " + S.name}${typeof cosmeticArtPending==="function" && cosmeticArtPending(sk) ? " · croma de set" : ""}</div>
+        <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · colección <b>${S.name}</b> · apariencia sin cambios de poder</div>
+        <div class="shop-st ${active?"own":""}">${active ? "✔ EQUIPADA en " + activeOn.map(k=>CLASSES[k].name).join(", ") : (!skinOwnedFull(id) ? `${have}/${ids.length} piezas · ${eq} equipadas` : "🔓 Desbloqueada")}</div>
         ${action}
       </div></div>`;
   }).join("");
   const pending = Object.keys(SET_DB).filter(id=>!withSkin.includes(id)).map(id=>SET_DB[id].name);
-  panel.innerHTML = `<div class="lobby-note">Una skin de set nunca se vende suelta: aparece cuando equipás el set COMPLETO en su guardián.</div>
+  panel.innerHTML = `<div class="lobby-note">Reunir un set o recibir un regalo desbloquea su apariencia. Usarla no cambia tus objetos ni estadísticas.</div>
     <div class="shop-skin-list">${cards || '<div class="inv-empty">Todavía no hay skins.</div>'}</div>
     <div class="shop-soon-box shop-soon-small">Sets sin skin todavía (arte pendiente, ver docs/assets_faltantes/skins_sets/): ${pending.join(" · ")}. Con el set completo se ve su aura plena.</div>`;
   _bindSkinBuy(panel);
   panel.querySelectorAll("[data-skin-equip]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-skin-equip"), k = b.getAttribute("data-skin-champ");
-    if(skinEquipOn(id, k)) _skinEquippedFeedback(id, k); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas en el inventario.");
+    if(skinEquipOn(id, k)) _skinEquippedFeedback(id, k); else gameAlert("No se pudo usar: revisá que hayas desbloqueado esta apariencia para el guardián.");
     renderShop();
   }));
   if(typeof shopCromaMount==="function") shopCromaMount(panel); // cromas sueltas por oro (js/ui/shop-cromas.js)

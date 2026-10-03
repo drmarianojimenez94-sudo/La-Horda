@@ -138,12 +138,11 @@ function shopBuyChampion(id, priceOverride){
 // Piezas de un set que el jugador todavía no tiene (para "comprar lo que falta")
 function shopSetMissing(setId){ const owned = ownedDesignIds(); return setPieceIds(setId).filter(id=>!owned.has(id)); }
 
-/* ---------------- Skins de set: equipar / autoequipar ----------------
-   Una skin de set se ve cuando su set está COMPLETO en su guardián (regla canónica: nunca se vende
-   suelta). "Equipar la skin" = ponerle a ese guardián todas las piezas del set que ya tenés.
-   Al comprarla se autoequipa si el destino no es ambiguo: el guardián seleccionado (si es compatible)
-   o el ÚNICO guardián compatible que tenés. Si hay varios posibles (sets universales), no se decide
-   por el jugador: queda desbloqueada y la tarjeta ofrece "Equipar en: …". */
+/* ---------------- Apariencias de colección ----------------
+   Reunir el set o recibir un regalo desbloquea su apariencia. Elegirla cambia
+   exclusivamente el aspecto: las piezas y bonificaciones se gestionan en Equipo.
+   Los perfiles antiguos conservan la apariencia automática del set equipado
+   hasta que el jugador elige una apariencia explícita. */
 function skinSetChamp(setId){
   const sk = typeof SET_SKINS!=="undefined" && SET_SKINS[setId]; if(!sk) return null;
   return sk.champ || setPieceIds(setId).map(p=>(DESIGNED_ITEMS[p]||{}).champion).find(Boolean) || null;
@@ -153,24 +152,14 @@ function skinCompatibleChamps(setId){
   const c = skinSetChamp(setId);
   return Object.keys(save.champions).filter(k=>save.champions[k].unlocked!==false && CLASSES[k] && (!c || c===k));
 }
-function skinOwnedFull(setId){ return shopSetMissing(setId).length === 0; }
+function skinOwnedFull(setId){ return !!(save.cosmeticUnlocks && save.cosmeticUnlocks[setId]) || (typeof cosmeticSetCollected==="function" && cosmeticSetCollected(setId)) || shopSetMissing(setId).length === 0; }
 function skinIsActiveOn(setId, k){ return typeof champSkinId==="function" ? champSkinId(k) === setId : false; }
-// Pone en `k` todas las piezas del set que están en el inventario. true si la skin quedó activa.
+// Selecciona la apariencia sin equipar piezas ni alterar estadísticas.
 function skinEquipOn(setId, k){
   if(!save.champions[k] || !skinOwnedFull(setId)) return false;
   if(typeof state!=="undefined" && state==="playing") return false;
-  const bySlot = {};
-  for(const it of stashItems()){
-    if(!it || it.set!==setId || !canEquipItem(k, it)) continue;
-    const cur = bySlot[it.type];
-    // si hay piezas repetidas, la de mejor nivel (y la que ya lleva puesta este guardián)
-    const score = x => (itemEquippedBy(x.uid)===k ? 1e6 : 0) + (x.level||0);
-    if(!cur || score(it) > score(cur)) bySlot[it.type] = it;
-  }
-  for(const type in bySlot) equipItem(k, bySlot[type].uid);
-  if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
-  if(typeof persistNow==="function") persistNow(); else persist();
-  return skinIsActiveOn(setId, k);
+  // Selecting an appearance must never replace equipment or grant combat power.
+  return typeof skinCosmeticEquip==="function" && skinCosmeticEquip(k, setId);
 }
 // Después de comprar: {equipped, target, choices}. choices = guardianes posibles cuando es ambiguo.
 function skinAutoEquip(setId){
