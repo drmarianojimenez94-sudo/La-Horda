@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "orsa",
+  "name": "Orsa",
+  "title": "La Cazadora del Trueno",
+  "role": "asesino",
+  "fantasy": "Tiradora que distribuye cargas y decide cuándo descargar la horda.",
+  "lore": "Orsa inspeccionaba los cables que llevaban señales entre los niveles de las Minas. Durante un apagón oyó tres golpes en una línea que llevaba años cortada. Bajó con una bobina a la espalda y encontró una cuadrilla que repetía el mismo turno sin recordar cómo había empezado. Solo uno reconoció la señal de regreso. Orsa lo sacó siguiendo el cable hasta la luz. Hoy su ballesta almacena pequeñas descargas en el metal que alcanza. No persigue tormentas ni controla el cielo: quiere que, cuando alguien golpee desde abajo, todavía quede una respuesta.",
+  "personality": "Tres golpes. Y te contesto.",
+  "silhouette": "Ballesta ancha con bobina, poncho minero y guantes gruesos; ámbar, hierro y azul oscuro.",
+  "stats": {
+    "hp": 101,
+    "damage": 11,
+    "defense": 0.07,
+    "speed": 168
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Ballesta de bobina, proyectil a distancia.",
+      "cooldownMs": 580,
+      "maxTargets": 1,
+      "hordeMechanism": "El kit aporta área.",
+      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "pierce",
+        "description": "Perno lineal que atraviesa varios enemigos y añade una carga.",
+        "cooldownMs": 6500,
+        "energyCost": 25,
+        "range": 340,
+        "radius": 22,
+        "durationMs": 0,
+        "damageMultiplier": 3.08,
+        "maxTargets": 12,
+        "hordeMechanism": "Perno lineal que atraviesa varios enemigos y añade una carga.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Perno lineal que atraviesa varios enemigos y añade una carga.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "brace",
+        "description": "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+        "cooldownMs": 10500,
+        "energyCost": 24,
+        "range": 100,
+        "radius": 50,
+        "durationMs": 3500,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "discharge",
+        "description": "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+        "cooldownMs": 9000,
+        "energyCost": 30,
+        "range": 190,
+        "radius": 175,
+        "durationMs": 0,
+        "damageMultiplier": 1.82,
+        "maxTargets": 12,
+        "hordeMechanism": "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      }
+    ],
+    "ultimate": {
+      "id": "storm",
+      "description": "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 280,
+      "radius": 210,
+      "durationMs": 2400,
+      "damageMultiplier": 1.12,
+      "maxTargets": 12,
+      "hordeMechanism": "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas.",
+      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "execution": "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+    },
+    "passive": {
+      "name": "Carga conductora",
+      "description": "Los básicos dejan hasta 3 cargas por blanco y dueña durante 5 s."
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    },
+    "productionPrompt": "Diseñar Orsa, La Cazadora del Trueno. Ballesta ancha con bobina, poncho minero y guantes gruesos; ámbar, hierro y azul oscuro. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "orsa_skin",
+      "champion": "orsa",
+      "name": "Cazadora de Leviatanes",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Abrigo impermeable, ballesta de arpón y carrete de cuerda al costado.",
+      "lore": "En la costa aprendió a apuntar al agua que se mueve antes de que asome la criatura.",
+      "visualTheme": "Abrigo impermeable, ballesta de arpón y carrete de cuerda al costado.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "orsa_set",
+      "champion": "orsa",
+      "name": "Trueno Carmesí",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Armadura de cuadrilla, visor rojo y ballesta con aisladores de cerámica.",
+      "lore": "Los rescatistas pintaron de rojo el equipo que debía volver a la superficie. Ella nunca lo cambió.",
+      "visualTheme": "Armadura de cuadrilla, visor rojo y ballesta con aisladores de cerámica.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: colección persistente del Set Circuito de Rescate; grant aún no implementado.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "orsa_croma",
+      "champion": "orsa",
+      "name": "Orsa — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Circuito de Rescate",
+    "sourceArena": "minas",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "orsa_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

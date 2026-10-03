@@ -178,3 +178,9 @@ Gate PASS después de integrar los cambios recientes de HUD y VFX de main, con d
 `soporte` conserva estadísticas, guardados y equipo. Alba Purificadora mantiene cura 24%, radio 260, coste 40, CD 7 s y añade daño ×1,2 en radio 160; un solo impacto, escalado común de maestrías/talentos, sin desplazar jefes. Bots la usan contra enemigos aun con el equipo sano. Las otras habilidades no cambian.
 
 31 comprobaciones PASS sobre main actualizado: cura, límites, múltiples objetivos, jefes, bots, maestría, diez arenas, nombres, direcciones de atlas, partículas replicables y aparición en primer plano del título. Tres simulaciones de 150 segundos: daño 4233,69 / 4061,99 / 4724,29, media 4339,99, bajo techo orientativo 8803,53; tres supervivencias sin errores. Gate de referencia y de entrada PASS; no se altera el roster conocido ni las medias de referencia. Evidencia: [docs/elyra/README.md](docs/elyra/README.md).
+
+### Expedición de los Diez — taller aislado (2026-10-03)
+
+Se proponen Vesper, Nahir y Orsa (asesinos); Baltra, Maura y Renko (tanques); Dáriel (soporte); Tibor, Zahra y Sira (magos). Sus módulos solo se cargan con `node tools/expedition/server.js`, antes del normalizador. No se agregan al index de producción ni a `knownChampions` y no se cambian las medias de referencia.
+
+El taller incluye 40 poderes, pasivas, talentos y sets con límites explícitos. Las skins y cromas tienen diseños e historias, pero faltan atlas y previews aprobados: contratos INCOMPLETE, no alta automática. Fichas, valores y evidencia sobre el motor actual: [docs/expedition/README.md](docs/expedition/README.md). El gate se ejecuta con `ENTRY_BASE_URL=http://127.0.0.1:8806`; conserva las mismas semillas, duración, comparación por rol y techo del 135%. El informe del taller se guarda separado del informe de producción. Un PASS de admisión no aprueba arte ni demuestra balance competitivo.

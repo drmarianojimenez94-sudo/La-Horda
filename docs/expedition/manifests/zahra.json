@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "zahra",
+  "name": "Zahra",
+  "title": "La Devoradora de Brasas",
+  "role": "mago",
+  "fantasy": "Maga de calor: gana potencia arriesgando sobrecalentarse y debe purgar.",
+  "lore": "Zahra abría las compuertas de los hornos al final de cada turno. Una noche los indicadores dejaron de bajar, aunque ya no entraba combustible. Los capataces ordenaron mantener la línea. Ella arrancó el cierre de una válvula y sostuvo la salida mientras sus compañeros escapaban. El guante absorbió un calor que desde entonces regresa cuando la Cicatriz está cerca. Zahra lo descarga en ráfagas cortas y cuenta en voz baja antes de volver a abrir el puño. No quiere gobernar el fuego: aprendió demasiado tarde lo que pasa cuando nadie se atreve a apagar una máquina.",
+  "personality": "Cuando diga ahora, soltá la válvula.",
+  "silhouette": "Guante de horno enorme, delantal chamuscado y máscara subida; cobre, carbón y naranja.",
+  "stats": {
+    "hp": 99,
+    "damage": 9,
+    "defense": 0.07,
+    "speed": 158
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Guante de horno, proyectil a distancia.",
+      "cooldownMs": 550,
+      "maxTargets": 1,
+      "hordeMechanism": "El kit aporta área.",
+      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "furnace",
+        "description": "Cono ardiente. Genera 30 de calor.",
+        "cooldownMs": 6000,
+        "energyCost": 25,
+        "range": 190,
+        "radius": 100,
+        "durationMs": 0,
+        "damageMultiplier": 4.4,
+        "maxTargets": 12,
+        "hordeMechanism": "Cono ardiente. Genera 30 de calor.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Cono ardiente. Genera 30 de calor.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "quench",
+        "description": "Consume el calor y extingue sus líneas cercanas; escudo de 4% a 12% según calor.",
+        "cooldownMs": 11000,
+        "energyCost": 26,
+        "range": 160,
+        "radius": 140,
+        "durationMs": 0,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Consume el calor y extingue sus líneas cercanas; escudo de 4% a 12% según calor.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Consume el calor y extingue sus líneas cercanas; escudo de 4% a 12% según calor.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "ash_step",
+        "description": "Avanza por suelo seguro y deja 4 pulsos de ceniza. Genera 25 de calor.",
+        "cooldownMs": 9500,
+        "energyCost": 26,
+        "range": 120,
+        "radius": 28,
+        "durationMs": 2400,
+        "damageMultiplier": 0.8,
+        "maxTargets": 12,
+        "hordeMechanism": "Avanza por suelo seguro y deja 4 pulsos de ceniza. Genera 25 de calor.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Avanza por suelo seguro y deja 4 pulsos de ceniza. Genera 25 de calor.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      }
+    ],
+    "ultimate": {
+      "id": "vent",
+      "description": "Consume el calor en 4 pulsos; +0,4% de daño por punto consumido.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 180,
+      "radius": 155,
+      "durationMs": 2400,
+      "damageMultiplier": 1.8,
+      "maxTargets": 12,
+      "hordeMechanism": "Consume el calor en 4 pulsos; +0,4% de daño por punto consumido.",
+      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "execution": "Consume el calor en 4 pulsos; +0,4% de daño por punto consumido.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+    },
+    "passive": {
+      "name": "Calor prestado",
+      "description": "Calor 0–100: desde 60, +15% de daño. A 100 entra 1,8 s en recuperación; puede usar Enfriar. Fuera de uso pierde 1,5/s."
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    },
+    "productionPrompt": "Diseñar Zahra, La Devoradora de Brasas. Guante de horno enorme, delantal chamuscado y máscara subida; cobre, carbón y naranja. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "zahra_skin",
+      "champion": "zahra",
+      "name": "Horno de Porcelana",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Guante esmaltado, delantal de ceramista y máscara de horno blanca.",
+      "lore": "Reconstruyó un pequeño horno para cocer platos en el refugio. Por primera vez el fuego no esperaba una orden de guerra.",
+      "visualTheme": "Guante esmaltado, delantal de ceramista y máscara de horno blanca.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "zahra_set",
+      "champion": "zahra",
+      "name": "Corazón Volcánico",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Protecciones de piedra porosa, respirador y guante de basalto con juntas incandescentes.",
+      "lore": "Los mineros le dieron una roca que seguía tibia lejos del pozo. La convirtió en aislante, no en una promesa de poder.",
+      "visualTheme": "Protecciones de piedra porosa, respirador y guante de basalto con juntas incandescentes.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: colección persistente del Set Compuerta Abierta; grant aún no implementado.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "zahra_croma",
+      "champion": "zahra",
+      "name": "Zahra — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Compuerta Abierta",
+    "sourceArena": "fortaleza",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "zahra_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

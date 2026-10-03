@@ -117,3 +117,5 @@ let exDeathChain=false;const exOriginalKill=killEnemy;killEnemy=function(e){cons
 const exOriginalUse=useSkill;useSkill=function(idx,...args){if(player?.classKey==='zahra'&&exState(player).recoverUntil>runElapsedMs&&idx!==1)return;return exOriginalUse(idx,...args);};
 const exOriginalBot=botPortador;botPortador=function(h,cd){if(h.classKey==='zahra'&&exState(h).recoverUntil>runElapsedMs)return;return exOriginalBot(h,cd);};
 NET_SKIP_KEYS.add('_exMarks');
+
+const exOriginalUlt=useUltimate;useUltimate=function(...args){if(player?.classKey==='zahra'&&exState(player).recoverUntil>runElapsedMs)return;return exOriginalUlt(...args);};

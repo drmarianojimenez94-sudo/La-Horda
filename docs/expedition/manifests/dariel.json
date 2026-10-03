@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "dariel",
+  "name": "Dáriel",
+  "title": "El Último Aplauso",
+  "role": "soporte",
+  "fantasy": "Músico de ritmo alternado: daño moderado, protección y recuperación acotada.",
+  "lore": "Dáriel dirigía la música entre escenas. Cuando el Presentador dejó de permitir que el público se levantara, cambió el final de una melodía por la señal de evacuación que conocían los tramoyistas. Unos pocos siguieron el ritmo hasta las puertas de servicio. Él salió último, todavía marcando el compás sobre la madera. Desde entonces detesta los aplausos que no terminan: escucha en ellos las butacas llenas y la orden de volver a empezar. Viaja con los portadores para ofrecer otra cosa, una canción que sepa callarse cuando todos hayan cruzado.",
+  "personality": "Escuchá el cambio. Ahí salimos.",
+  "silhouette": "Frac gastado, bufanda de escena y diapasón largo; ocre, negro y vino.",
+  "stats": {
+    "hp": 112,
+    "damage": 6.5,
+    "defense": 0.12,
+    "speed": 165
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Diapasón del telón, proyectil a distancia.",
+      "cooldownMs": 600,
+      "maxTargets": 1,
+      "hordeMechanism": "El kit aporta área.",
+      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "discord",
+        "description": "Cono sonoro: daño y −8% de daño enemigo durante 1,5 s; jefes −4%.",
+        "cooldownMs": 6500,
+        "energyCost": 24,
+        "range": 205,
+        "radius": 95,
+        "durationMs": 0,
+        "damageMultiplier": 0.7,
+        "maxTargets": 12,
+        "hordeMechanism": "Cono sonoro: daño y −8% de daño enemigo durante 1,5 s; jefes −4%.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Cono sonoro: daño y −8% de daño enemigo durante 1,5 s; jefes −4%.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "march",
+        "description": "Aliados cercanos: escudo 4% sin acumular y velocidad +8%.",
+        "cooldownMs": 11000,
+        "energyCost": 28,
+        "range": 150,
+        "radius": 150,
+        "durationMs": 2400,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Aliados cercanos: escudo 4% sin acumular y velocidad +8%.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Aliados cercanos: escudo 4% sin acumular y velocidad +8%.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "refrain",
+        "description": "Daño circular y cura 1% +0,6% por nota consumida; máximo 2,8%.",
+        "cooldownMs": 8500,
+        "energyCost": 28,
+        "range": 150,
+        "radius": 130,
+        "durationMs": 0,
+        "damageMultiplier": 0.4,
+        "maxTargets": 12,
+        "hordeMechanism": "Daño circular y cura 1% +0,6% por nota consumida; máximo 2,8%.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Daño circular y cura 1% +0,6% por nota consumida; máximo 2,8%.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      }
+    ],
+    "ultimate": {
+      "id": "concert",
+      "description": "Seis pulsos alternan daño y cura de 1% con escudo de 2%, sin acumulación.",
+      "cooldownMs": 38000,
+      "energyCost": 0,
+      "range": 170,
+      "radius": 160,
+      "durationMs": 4800,
+      "damageMultiplier": 0.18,
+      "maxTargets": 12,
+      "hordeMechanism": "Seis pulsos alternan daño y cura de 1% con escudo de 2%, sin acumulación.",
+      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "execution": "Seis pulsos alternan daño y cura de 1% con escudo de 2%, sin acumulación.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+    },
+    "passive": {
+      "name": "Contrapunto",
+      "description": "Alternar habilidades distintas acumula hasta 3 notas; repetir la misma no añade notas."
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    },
+    "productionPrompt": "Diseñar Dáriel, El Último Aplauso. Frac gastado, bufanda de escena y diapasón largo; ocre, negro y vino. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "dariel_skin",
+      "champion": "dariel",
+      "name": "Director del Réquiem",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Levitas largas, guantes blancos y batuta de hueso tallado.",
+      "lore": "Reescribió las partituras de los músicos ausentes sin borrar sus nombres del margen.",
+      "visualTheme": "Levitas largas, guantes blancos y batuta de hueso tallado.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "dariel_set",
+      "champion": "dariel",
+      "name": "Carnaval de Medianoche",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Chaqueta de comparsa, máscara lateral y diapasón con cascabeles apagados.",
+      "lore": "La ciudad guardó su último carnaval en baúles. Dáriel abrió uno para que la próxima marcha no fuera un desfile de miedo.",
+      "visualTheme": "Chaqueta de comparsa, máscara lateral y diapasón con cascabeles apagados.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: colección persistente del Set Función Inconclusa; grant aún no implementado.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "dariel_croma",
+      "champion": "dariel",
+      "name": "Dáriel — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Función Inconclusa",
+    "sourceArena": "ciudad",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "dariel_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

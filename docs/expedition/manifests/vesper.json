@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "vesper",
+  "name": "Vesper",
+  "title": "La Costurera de Sombras",
+  "role": "asesino",
+  "fantasy": "Asesina de preparación: marca grupos, cose una salida y consume los hilos.",
+  "lore": "Vesper remendaba los trajes del teatro de la Ciudad. La noche del regreso encontró a su hermana sentada frente a un espejo: el cuerpo seguía allí, pero la sombra ya se movía sola. Intentó sujetarla con el hilo que usaba para coser nombres dentro de los abrigos. Desde entonces puede hilvanar las sombras de los corrompidos durante unos segundos. No sabe si aquello devuelve algo de quienes fueron. Conserva una manga sin terminar y sigue cada Cicatriz con una pregunta que no se anima a hacer en voz alta: cuánto de una persona queda cuando todavía reconocés su nombre.",
+  "personality": "Todavía puedo remendar esto.",
+  "silhouette": "Capucha corta, delantal asimétrico y dos tijeras grandes; ciruela, marfil y acero.",
+  "stats": {
+    "hp": 104,
+    "damage": 11,
+    "defense": 0.07,
+    "speed": 179
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Tijeras de luto, barrido cuerpo a cuerpo (máximo 12).",
+      "cooldownMs": 430,
+      "maxTargets": 12,
+      "hordeMechanism": "Barrido de hasta 12 blancos.",
+      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "needles",
+        "description": "Abanico de agujas: daño y una puntada por enemigo.",
+        "cooldownMs": 5500,
+        "energyCost": 24,
+        "range": 235,
+        "radius": 85,
+        "durationMs": 0,
+        "damageMultiplier": 2.38,
+        "maxTargets": 12,
+        "hordeMechanism": "Abanico de agujas: daño y una puntada por enemigo.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Abanico de agujas: daño y una puntada por enemigo.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "seam",
+        "description": "Avanza por terreno seguro y deja una costura que daña en 4 pulsos.",
+        "cooldownMs": 8500,
+        "energyCost": 25,
+        "range": 120,
+        "radius": 24,
+        "durationMs": 2200,
+        "damageMultiplier": 0.56,
+        "maxTargets": 12,
+        "hordeMechanism": "Avanza por terreno seguro y deja una costura que daña en 4 pulsos.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Avanza por terreno seguro y deja una costura que daña en 4 pulsos.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "unpick",
+        "description": "Consume las puntadas cercanas: +20% de daño por puntada.",
+        "cooldownMs": 7600,
+        "energyCost": 28,
+        "range": 200,
+        "radius": 150,
+        "durationMs": 0,
+        "damageMultiplier": 1.82,
+        "maxTargets": 12,
+        "hordeMechanism": "Consume las puntadas cercanas: +20% de daño por puntada.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Consume las puntadas cercanas: +20% de daño por puntada.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      }
+    ],
+    "ultimate": {
+      "id": "last_stitch",
+      "description": "Cuatro cortes circulares; el último consume las marcas para amplificarse.",
+      "cooldownMs": 35000,
+      "energyCost": 0,
+      "range": 200,
+      "radius": 155,
+      "durationMs": 2400,
+      "damageMultiplier": 0.924,
+      "maxTargets": 12,
+      "hordeMechanism": "Cuatro cortes circulares; el último consume las marcas para amplificarse.",
+      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "execution": "Cuatro cortes circulares; el último consume las marcas para amplificarse.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+    },
+    "passive": {
+      "name": "Hilván",
+      "description": "Los básicos dejan hasta 3 puntadas por objetivo y dueña durante 5 s. Al caer un marcado libera una única rotura de hilo: no provoca cadenas de explosiones."
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    },
+    "productionPrompt": "Diseñar Vesper, La Costurera de Sombras. Capucha corta, delantal asimétrico y dos tijeras grandes; ciruela, marfil y acero. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "vesper_skin",
+      "champion": "vesper",
+      "name": "Sastre de la Corte Muerta",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Frac de marfil, cuello rígido, guantes negros y tijeras ceremoniales doradas.",
+      "lore": "Cosió el traje de una coronación que nunca llegó. Ahora lleva sus retazos para recordar a quienes esperaron afuera.",
+      "visualTheme": "Frac de marfil, cuello rígido, guantes negros y tijeras ceremoniales doradas.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "vesper_set",
+      "champion": "vesper",
+      "name": "Costurera de Espantapájaros",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Capucha de arpillera, delantal de parches y tijeras de hueso.",
+      "lore": "Los refugios del campo le dieron ropa vieja. Con ella vistió espantapájaros; después se puso el último para acompañarlos.",
+      "visualTheme": "Capucha de arpillera, delantal de parches y tijeras de hueso.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: colección persistente del Set Hilo del Recuerdo; grant aún no implementado.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "vesper_croma",
+      "champion": "vesper",
+      "name": "Vesper — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Hilo del Recuerdo",
+    "sourceArena": "ciudad",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "vesper_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

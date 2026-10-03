@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "maura",
+  "name": "Maura",
+  "title": "La Pastora de Espinas",
+  "role": "tanque",
+  "fantasy": "Protectora de avance: recibe el choque, recoge semillas y abre un corredor.",
+  "lore": "Maura guiaba rebaños por senderos que ya no figuran en los mapas. Al regresar a las Ruinas encontró las cercas convertidas en espinas y a los animales agrupados frente a un camino que parecía respirar. No intentó dominar el bosque: cortó una vereda lo bastante estrecha para pasar de a uno. Por allí salieron pastores, refugiados y una niña que había olvidado cómo llamarse. Las zarzas crecieron en su cayado después de aquella noche. Maura las poda todos los días. Sabe que proteger algo vivo también significa impedir que ocupe todo el espacio.",
+  "personality": "De a uno. Yo cierro la fila.",
+  "silhouette": "Abrigo corto de corteza, cayado curvo y zarzas bajas; oliva, tierra y rojo seco.",
+  "stats": {
+    "hp": 152,
+    "damage": 9,
+    "defense": 0.18,
+    "speed": 150
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Cayado de zarza, barrido cuerpo a cuerpo (máximo 12).",
+      "cooldownMs": 590,
+      "maxTargets": 12,
+      "hordeMechanism": "Barrido de hasta 12 blancos.",
+      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "roots",
+        "description": "Una línea de raíces daña, frena y deja un suelo de espinas temporal.",
+        "cooldownMs": 6500,
+        "energyCost": 25,
+        "range": 245,
+        "radius": 26,
+        "durationMs": 0,
+        "damageMultiplier": 3.5,
+        "maxTargets": 12,
+        "hordeMechanism": "Una línea de raíces daña, frena y deja un suelo de espinas temporal.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Una línea de raíces daña, frena y deja un suelo de espinas temporal.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "bark",
+        "description": "Escudo de 10% de vida; al expirar libera una sola descarga si sigue viva.",
+        "cooldownMs": 11500,
+        "energyCost": 28,
+        "range": 100,
+        "radius": 95,
+        "durationMs": 4000,
+        "damageMultiplier": 1.575,
+        "maxTargets": 12,
+        "hordeMechanism": "Escudo de 10% de vida; al expirar libera una sola descarga si sigue viva.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Escudo de 10% de vida; al expirar libera una sola descarga si sigue viva.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "shear",
+        "description": "Corte circular que consume semillas; cura 1% por semilla, máximo 5%.",
+        "cooldownMs": 8000,
+        "energyCost": 26,
+        "range": 110,
+        "radius": 110,
+        "durationMs": 0,
+        "damageMultiplier": 3.15,
+        "maxTargets": 12,
+        "hordeMechanism": "Corte circular que consume semillas; cura 1% por semilla, máximo 5%.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Corte circular que consume semillas; cura 1% por semilla, máximo 5%.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      }
+    ],
+    "ultimate": {
+      "id": "walking_forest",
+      "description": "Seis pulsos móviles de espinas. No aumenta la hitbox ni crea un ejército.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 150,
+      "radius": 135,
+      "durationMs": 4800,
+      "damageMultiplier": 1.12,
+      "maxTargets": 12,
+      "hordeMechanism": "Seis pulsos móviles de espinas. No aumenta la hitbox ni crea un ejército.",
+      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "execution": "Seis pulsos móviles de espinas. No aumenta la hitbox ni crea un ejército.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+    },
+    "passive": {
+      "name": "Semillero",
+      "description": "Impactos directos generan hasta 5 semillas, como máximo una cada 500 ms."
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    },
+    "productionPrompt": "Diseñar Maura, La Pastora de Espinas. Abrigo corto de corteza, cayado curvo y zarzas bajas; oliva, tierra y rojo seco. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "maura_skin",
+      "champion": "maura",
+      "name": "Rosa del Luto",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Armadura de pétalos rígidos, velo corto y cayado de rosal.",
+      "lore": "Plantó una rosa por cada nombre recuperado. Las flores no curan la corrupción: impiden que el recuerdo se vuelva anónimo.",
+      "visualTheme": "Armadura de pétalos rígidos, velo corto y cayado de rosal.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "maura_set",
+      "champion": "maura",
+      "name": "Pastora Invernal",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Capa de lana, botas de nieve y cayado con pequeñas campanas de madera.",
+      "lore": "Aprendió a reconocer las pisadas que la nieve todavía no había borrado y guió al último grupo hasta el fuego.",
+      "visualTheme": "Capa de lana, botas de nieve y cayado con pequeñas campanas de madera.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: colección persistente del Set Sendero de Zarzas; grant aún no implementado.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "maura_croma",
+      "champion": "maura",
+      "name": "Maura — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Sendero de Zarzas",
+    "sourceArena": "bosque",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "maura_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

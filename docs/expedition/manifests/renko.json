@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "renko",
+  "name": "Renko",
+  "title": "El Sepulturero sin Tumbas",
+  "role": "tanque",
+  "fantasy": "Tanque de preparación del terreno, sin obstáculos sólidos ni encierros.",
+  "lore": "Renko anotaba nombres para quienes ya no podían hacerlo. Cuando el cementerio empezó a devolver las lápidas al camino, dejó de cavar: no iba a entregar más recuerdos a una tierra que los repetía mal. Cargó las placas pequeñas en un carro y llevó a los vivos hasta la puerta norte. Su pala todavía arranca surcos de un suelo que parece negarse a quedar quieto. Los usa para contener el avance, nunca para cerrar una salida. Viaja para encontrar un lugar donde dejar los nombres y poder volver a llamarse, simplemente, jardinero.",
+  "personality": "El nombre va primero.",
+  "silhouette": "Pala cuadrada, placas de piedra y abrigo de trabajo; gris cálido, cuero y marfil.",
+  "stats": {
+    "hp": 160,
+    "damage": 9,
+    "defense": 0.19,
+    "speed": 140
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Pala de nombres, barrido cuerpo a cuerpo (máximo 12).",
+      "cooldownMs": 640,
+      "maxTargets": 12,
+      "hordeMechanism": "Barrido de hasta 12 blancos.",
+      "anticipation": "Pose básica compartida del motor; animación propia pendiente.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Firma de prototipo; asset propio pendiente.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "trench",
+        "description": "Traza una línea que daña, frena y deja tierra removida; máximo 3.",
+        "cooldownMs": 6500,
+        "energyCost": 25,
+        "range": 235,
+        "radius": 30,
+        "durationMs": 5000,
+        "damageMultiplier": 2.52,
+        "maxTargets": 12,
+        "hordeMechanism": "Traza una línea que daña, frena y deja tierra removida; máximo 3.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Traza una línea que daña, frena y deja tierra removida; máximo 3.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "mound",
+        "description": "Zona no sólida: reduce 8% el daño a aliados dentro. No se acumula con otros montículos.",
+        "cooldownMs": 11000,
+        "energyCost": 26,
+        "range": 160,
+        "radius": 100,
+        "durationMs": 4200,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Zona no sólida: reduce 8% el daño a aliados dentro. No se acumula con otros montículos.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Zona no sólida: reduce 8% el daño a aliados dentro. No se acumula con otros montículos.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      },
+      {
+        "id": "burial",
+        "description": "Consume hasta 3 surcos para aumentar el daño circular un 20% por surco.",
+        "cooldownMs": 8500,
+        "energyCost": 28,
+        "range": 140,
+        "radius": 120,
+        "durationMs": 0,
+        "damageMultiplier": 2.8,
+        "maxTargets": 12,
+        "hordeMechanism": "Consume hasta 3 surcos para aumentar el daño circular un 20% por surco.",
+        "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+        "execution": "Consume hasta 3 surcos para aumentar el daño circular un 20% por surco.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+        "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+        "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+      }
+    ],
+    "ultimate": {
+      "id": "faults",
+      "description": "Tres sacudidas. La última aturde comunes 300 ms; los jefes no se aturden.",
+      "cooldownMs": 37000,
+      "energyCost": 0,
+      "range": 240,
+      "radius": 180,
+      "durationMs": 2400,
+      "damageMultiplier": 1.82,
+      "maxTargets": 12,
+      "hordeMechanism": "Tres sacudidas. La última aturde comunes 300 ms; los jefes no se aturden.",
+      "anticipation": "Taller: destello de lanzamiento del motor. Producción: pose dedicada y aviso espacial fiel antes del impacto.",
+      "execution": "Tres sacudidas. La última aturde comunes 300 ms; los jefes no se aturden.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Contorno del área persistente, impacto y contadores. Arte final pendiente.",
+      "vfx": "Prototipo geométrico legible; requiere firma visual propia aprobada.",
+      "sfx": "Reutiliza explícitamente cast/ult del motor; diseño y escucha de identidad pendientes."
+    },
+    "passive": {
+      "name": "Tierra removida",
+      "description": "Un básico contra un blanco junto a sus surcos produce una sacudida de ×0,25; recarga interna 900 ms."
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    },
+    "productionPrompt": "Diseñar Renko, El Sepulturero sin Tumbas. Pala cuadrada, placas de piedra y abrigo de trabajo; gris cálido, cuero y marfil. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "renko_skin",
+      "champion": "renko",
+      "name": "Marmolista Real",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Mandil de cantero, placas de mármol y pala cincelada.",
+      "lore": "Talló escaleras para un palacio. Hoy utiliza los recortes para escribir nombres que ninguna corte quiso conservar.",
+      "visualTheme": "Mandil de cantero, placas de mármol y pala cincelada.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: catálogo Alpha, disponible para pruebas al aprobar arte.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "renko_set",
+      "champion": "renko",
+      "name": "Enterrador del Desierto",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Turbante de viaje, gafas de arena y pala ancha de bronce.",
+      "lore": "Aprendió a fijar las placas bajo el viento; una inscripción pequeña puede pesar más que una piedra.",
+      "visualTheme": "Turbante de viaje, gafas de arena y pala ancha de bronce.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Propuesta: colección persistente del Set Nombres Conservados; grant aún no implementado.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Misma geometría y duración del original; variación cosmética pendiente.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "renko_croma",
+      "champion": "renko",
+      "name": "Renko — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Propuesta: pruebas Alpha tras aprobación visual.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Nombres Conservados",
+    "sourceArena": "ciudad",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "renko_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Diseñado: repetir arena y jefe. Drop y grant de skin pendientes de integración final."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

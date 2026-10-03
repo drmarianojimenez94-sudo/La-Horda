@@ -1,0 +1,51 @@
+name: Expedition candidates workshop
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'js/champions/expedition/**'
+      - 'tools/expedition/**'
+      - 'tools/balance/**'
+      - 'js/skills/abilities.js'
+      - 'js/systems/combat.js'
+      - '.github/workflows/expedition-candidates.yml'
+jobs:
+  workshop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Dependencies
+        run: |
+          npm install --prefix /tmp/expedition-deps playwright@1.61.1
+          /tmp/expedition-deps/node_modules/.bin/playwright install --with-deps chromium
+          npm --prefix server ci --ignore-scripts
+          echo "NODE_PATH=/tmp/expedition-deps/node_modules" >> "$GITHUB_ENV"
+      - name: Reference and factory
+        run: |
+          node tools/balance/check-entry-reference.js
+          node --test tools/factory/test.js
+      - name: Start isolated workshop
+        run: |
+          node tools/expedition/server.js > /tmp/expedition-server.log 2>&1 &
+          node -e "const http=require('http');let n=0;function probe(){http.get('http://127.0.0.1:8806',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>{if(++n>20)process.exit(1);setTimeout(probe,250)});}probe();"
+      - name: Functional and balance
+        env:
+          ENTRY_BASE_URL: http://127.0.0.1:8806
+        run: |
+          node tools/expedition/functional.js
+          node tools/balance/entry-gate.js
+          cp docs/balance/entry-gate-results.json docs/expedition/entry-gate-results.json
+      - name: Multiplayer and desktop performance
+        run: |
+          node tools/expedition/online.js
+          node tools/expedition/performance.js
+      - name: Upload workshop evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: expedition-evidence
+          path: docs/expedition

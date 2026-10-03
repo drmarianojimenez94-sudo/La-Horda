@@ -127,7 +127,7 @@ function pageHarness() {
     server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
     for (let k = 0; k < 50 && !(await up()); k++) await sleep(200);
   }
-  const browser = await chromium.launch({ args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || chromium.executablePath(), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
   const out = { };
   try {
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
