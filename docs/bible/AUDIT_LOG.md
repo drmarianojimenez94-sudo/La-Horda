@@ -176,3 +176,9 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   anfitrión (la simulación avanza > 1 s con el panel abierto), muestra el kit del invitado y su enfriamiento baja con la
   simulación del anfitrión; el long press del invitado abre la ficha, no lanza y no manda intención de lanzamiento;
   el panel del anfitrión tampoco pausa la partida. PASS.
+
+### A20. Texto fuera de marco
+- `tools/ux/test-text-overflow.js` recorre 10 pantallas (menú, Códice ×4, tienda, sala, briefing, panel táctico, HUD)
+  a 844×390 y 667×375 midiendo los rectángulos reales del texto contra su caja y su marco.
+- **Hallazgo**: en 667×375 los títulos del Códice "GUARDIANES" (+29 px) y "BESTIARIO" (+9 px) se salían de su tarjeta
+  ("GUARDIANE"). **Arreglo**: tamaño `clamp()` según el ancho. Sin el arreglo la prueba falla; con él, PASS.

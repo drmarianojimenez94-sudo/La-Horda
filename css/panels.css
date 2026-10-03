@@ -56,7 +56,7 @@
   background:transparent; color:var(--text-dim); font-family:inherit; font-size:0.62rem; cursor:pointer;
 }
 .inv-debug-btn:disabled{ opacity:0.4; cursor:default; }
-.inv-capacity{ text-align:right; font-size:0.62rem; color:var(--text-dim); margin-bottom:6px; }
+.inv-capacity{ text-align:right; font-size:0.62rem; white-space:normal; overflow-wrap:anywhere; color:var(--text-dim); margin-bottom:6px; }
 .inv-card{ cursor:pointer; }
 
 /* ---------- Fase 4: pestaña Estadísticas ---------- */
