@@ -13,7 +13,7 @@
 - **Peligro:** La Ciudad Arde — Estructuras y calles en llamas presionan las rutas. Aviso: humo y brasas sobre la estructura atacada + alerta en el HUD.
 - **Objetivos:** Rescatá civiles y llevalos a un refugio. · Que no caigan todas las estructuras críticas. · Derrotá a El Presentador (nivel 10).
 - **Subjefe:** Maestro + Tramoyista → Dama del Telón (nivel 9)
-- **Jefe:** El Presentador — usa la arena: usa el escenario y el público: la ciudad es su teatro; examina: leer avisos de escena y mantener la escolta.
+- **Jefe:** El Presentador — usa la arena: usa el escenario y el público: la ciudad es su teatro; pone a prueba: leer avisos de escena y mantener la escolta.
 - **Botín:** sets de entrada (Alba, Guardián) y oro por rescate. Sets de afinidad: Profecía del Alba, Juramento del Guardián, Sombra del Cazador. Tier: Introducción.
 - **Micro-tutorial:** rescue → shelter
 - **Estado:** identidad, objetivo y jefe propios; rejugabilidad por recompensas de rescate
@@ -29,7 +29,7 @@
 - **Peligro:** Ciclo Mecánico — Daño y empuje por trampas. Aviso: marcas en el piso que se encienden antes de cada trampa.
 - **Objetivos:** Cruzá la Fábrica sector por sector. · Derrotá al Caballero de la Armadura Oxidada.
 - **Subjefe:** Dragón de la Forja (nivel 6)
-- **Jefe:** El Caballero de la Armadura Oxidada — usa la arena: pelea en su cámara entre mecanismos; examina: no pegar cuando brilla azul (contraataque).
+- **Jefe:** El Caballero de la Armadura Oxidada — usa la arena: pelea en su cámara entre mecanismos; pone a prueba: no pegar cuando brilla azul (contraataque).
 - **Botín:** sets de Coloso y Guardián. Sets de afinidad: Corazón del Coloso, Juramento del Guardián, Sangre del Berserker. Tier: Intermedia-alta.
 - **Micro-tutorial:** trap
 - **Estado:** navegación y hazards propios, jefe con regla legible
@@ -46,7 +46,7 @@
 - **Peligro:** Niebla del Olvido — Reduce la visión a distancia. Aviso: niebla visible que se espesa en los bordes.
 - **Objetivos:** Sobreviví 10 niveles. · Vencé al Guardián Ancestral y recuperá el PRIMER CRISTAL.
 - **Subjefe:** Los Dobladores (nivel 9)
-- **Jefe:** Guardián Ancestral — usa la arena: las runas se desbordan y explotan al empezar; examina: usar las runas a favor.
+- **Jefe:** Guardián Ancestral — usa la arena: las runas se desbordan y explotan al empezar; pone a prueba: usar las runas a favor.
 - **Botín:** sets de Alba y Cazador. Sets de afinidad: Profecía del Alba, Sombra del Cazador, Réquiem del Sepulturero. Tier: Introducción.
 - **Micro-tutorial:** rune → ambush
 - **Estado:** identidad jugable propia; jefe usa las runas
@@ -63,7 +63,7 @@
 - **Peligro:** Infección y esporas — Lentitud y daño leve dentro del territorio y de las nubes. Aviso: piso violeta pulsante con borde marcado; nubes visibles con su radio.
 - **Objetivos:** Rompé los NÚCLEOS para contener la colonia. · Sobreviví a las etapas: Germinación, Colonización, Maduración, Floración. · Derrotá a la Madre Espora en el Corazón.
 - **Subjefe:** Micelio Primigenio (nivel 6)
-- **Jefe:** La Madre Espora — usa la arena: ES la estructura del centro: brazos, hongos gigantes que bloquean rutas, nubes y raíces; examina: examina lo aprendido: núcleos, esporas y rutas que se cierran.
+- **Jefe:** La Madre Espora — usa la arena: ES la estructura del centro: brazos, hongos gigantes que bloquean rutas, nubes y raíces; pone a prueba: lo aprendido: núcleos, esporas y rutas que se cierran.
 - **Botín:** sets Sepulturero y Arcano; set de Morwen/Tibor (campeones del Reino). Sets de afinidad: Réquiem del Sepulturero, Ojo del Arcano, Sombra del Cazador. Tier: Intermedia-alta.
 - **Micro-tutorial:** colony → spores → nest → recede
 - **Estado:** Gold Standard: geometría pintada = jugable (2026-10), micro-tutorial, briefing con botín
@@ -79,7 +79,7 @@
 - **Peligro:** Furia del Vendaval Helado — Novas gélidas y lentitud creciente. Aviso: escarcha a los pies, medidor ❄ y borde de pantalla helado.
 - **Objetivos:** Sobreviví 10 niveles moviéndote. · Derrotá al Mago Gélido en sus dos formas y recuperá el SEGUNDO CRISTAL.
 - **Subjefe:** Tundraverx, Dragón de Hielo (nivel 6)
-- **Jefe:** Mago de Hielo y Cristal → Ángel Caído — usa la arena: muro de hielo y novas que empujan fuera de los braseros; examina: moverse entre braseros.
+- **Jefe:** Mago de Hielo y Cristal → Ángel Caído — usa la arena: muro de hielo y novas que empujan fuera de los braseros; pone a prueba: moverse entre braseros.
 - **Botín:** set Glaciar. Sets de afinidad: Pacto del Glaciar, Corazón del Coloso, Ojo del Arcano. Tier: Media-alta.
 - **Micro-tutorial:** cold → brazier
 - **Estado:** curva de dificultad: sigue siendo la pared de la campaña (LA_HORDA_PLAYTEST_REPORT.md)
@@ -95,7 +95,7 @@
 - **Peligro:** Corriente Profunda — Empuje y descargas en charcos. Aviso: chevrones animados; círculo amarillo 1,2 s antes de la descarga; línea 1,1 s antes del chorro.
 - **Objetivos:** Llegá al nivel 10. · Vencé al Leviatán en sus 3 fases.
 - **Subjefe:** Kraken Joven (nivel 6)
-- **Jefe:** Leviatán — usa la arena: ronda el borde y ataca desde el agua; examina: leer el borde y las corrientes.
+- **Jefe:** Leviatán — usa la arena: ronda el borde y ataca desde el agua; pone a prueba: leer el borde y las corrientes.
 - **Botín:** sets Tempestad y Glaciar. Sets de afinidad: Tempestad Eterna, Rey del Laberinto, Pacto del Glaciar. Tier: Intermedia.
 - **Micro-tutorial:** current → puddle
 - **Estado:** movilidad propia y reacción con el rayo
@@ -112,7 +112,7 @@
 - **Peligro:** Maldición del Minotauro — Sismos y rocas. Aviso: temblor de pantalla y sombra de las rocas antes de caer.
 - **Objetivos:** Activá los sellos I → II → III. · Derrotá al Minotauro y recuperá el TERCER CRISTAL.
 - **Subjefe:** Guardián del Laberinto (nivel 6)
-- **Jefe:** Minotauro — usa la arena: se aturde al chocar contra un muro; examina: usar los muros como arma.
+- **Jefe:** Minotauro — usa la arena: se aturde al chocar contra un muro; pone a prueba: usar los muros como arma.
 - **Botín:** sets Laberinto y Coloso. Sets de afinidad: Rey del Laberinto, Corazón del Coloso, Juramento del Guardián. Tier: Avanzada.
 - **Micro-tutorial:** seal
 - **Estado:** resolver + jefe que usa los muros
@@ -128,7 +128,7 @@
 - **Peligro:** El Vacío — Perder el piso. Aviso: la plataforma tiembla y larga piedras antes de caer (2,2 s).
 - **Objetivos:** Sobreviví a las ruinas. · Vencé al Carcelero del Vacío y enfrentá a El Que Mora Debajo.
 - **Subjefe:** El Carcelero del Vacío (nivel 9)
-- **Jefe:** El Que Mora Debajo — usa la arena: destruye plataformas con patrones legibles; examina: leer grietas y conservar piso.
+- **Jefe:** El Que Mora Debajo — usa la arena: destruye plataformas con patrones legibles; pone a prueba: leer grietas y conservar piso.
 - **Botín:** sets Arcano y Laberinto. Sets de afinidad: Ojo del Arcano, Rey del Laberinto, Tempestad Eterna. Tier: Media-alta.
 - **Micro-tutorial:** crack
 - **Estado:** terreno como recurso, rescate cooperativo
@@ -144,7 +144,7 @@
 - **Peligro:** La Oscuridad — Más daño recibido y emboscadas. Aviso: zonas oscuras visibles y antorchas que se sofocan.
 - **Objetivos:** Mantené las luces encendidas. · Derrotá a Cerbero y ATRAVESÁ el Portal Infernal.
 - **Subjefe:** Titán de Piedra (nivel 8)
-- **Jefe:** Cerbero, Guardián del Umbral — usa la arena: se expone a la luz y se enfurece en la oscuridad; examina: controlar la luz.
+- **Jefe:** Cerbero, Guardián del Umbral — usa la arena: se expone a la luz y se enfurece en la oscuridad; pone a prueba: controlar la luz.
 - **Botín:** sets Coloso y Lucifer. Sets de afinidad: Corazón del Coloso, Set de Lucifer, Sangre del Berserker. Tier: Avanzada.
 - **Micro-tutorial:** light
 - **Estado:** territorio de luz + jefe que lo usa
@@ -160,7 +160,7 @@
 - **Peligro:** Ignición Eterna — Fuego del piso y erupciones. Aviso: temblor + grieta 1,7 s antes; aviso circular antes de la erupción.
 - **Objetivos:** Cerrá fisuras para cortar la horda. · Llegá al corazón del Infierno y derrotá al Hechicero.
 - **Subjefe:** Campeones de la Horda (nivel 9)
-- **Jefe:** El Hechicero → Gólem de Cuerpos → Demonio Mayor — usa la arena: la revelación del guía en su propia dimensión; examina: todo lo aprendido.
+- **Jefe:** El Hechicero → Gólem de Cuerpos → Demonio Mayor — usa la arena: la revelación del guía en su propia dimensión; pone a prueba: todo lo aprendido.
 - **Botín:** Lucifer y Berserker; acceso a toda la tabla de sets. Sets de afinidad: Set de Lucifer, Sangre del Berserker, Pacto del Glaciar. Tier: Endgame.
 - **Micro-tutorial:** fissure
 - **Estado:** decisión propia; jefe narrativo en 3 formas
@@ -176,7 +176,7 @@
 - **Peligro:** Mirada Ascendida — Torres que disparan. Aviso: rango de torre visible.
 - **Objetivos:** Derribá las torres y el castillo del equipo divino.
 
-- **Jefe:** Jefes finales de cada bioma — usa la arena: defienden el castillo; examina: asedio.
+- **Jefe:** Jefes finales de cada bioma — usa la arena: defienden el castillo; pone a prueba: asedio.
 - **Botín:** tabla avanzada. Sets de afinidad: Rey del Laberinto, Corazón del Coloso, Juramento del Guardián. Tier: Avanzada.
 - **Micro-tutorial:** —
 - **Estado:** Fase 1: escenario sin combate completo (ARENA_MODS.divina)

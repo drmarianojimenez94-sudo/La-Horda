@@ -11,13 +11,13 @@
 | Elyra, la Guardiana del Alba (`soporte`) | soporte | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Segador, el Olvidado (`segador`) | tanque | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Axiom, el Reescritor (`axiom`) | mago | **PASS*** | 0 | 1 | · | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Ismara, la Profeta Ciega (`profeta`) | soporte | **PASS*** | 0 | 1 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Ismara, la Profeta Ciega (`profeta`) | soporte | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Musashi, el Rōnin del Bokken (`musashi`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Sylva, la Cazadora del Bosque (`cazadora`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Ilvar, el Señor de las Criptas (`nigromante`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| San Martín, el Libertador (`libertador`) | asesino | **PASS*** | 0 | 1 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Eren, el Indómito (`eren`) | asesino | **PASS*** | 0 | 1 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
-| Ynara, la Médica de los Refugios (`ynara`) | soporte | **PASS*** | 0 | 1 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| San Martín, el Libertador (`libertador`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Eren, el Indómito (`eren`) | asesino | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Ynara, la Médica de los Refugios (`ynara`) | soporte | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Myla, la Niña de la Cuchara (`myla`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Brasa, la Mecánica Fugitiva (`brasa`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Garren, el Eslabón (`eslabon`) | tanque | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
@@ -51,16 +51,4 @@
 
 ### Axiom, el Reescritor — PASS*
 - **WARNING** [kit] pasiva — sin pasiva propia (no se inventa: pendiente de diseño)
-
-### Ismara, la Profeta Ciega — PASS*
-- **WARNING** [metadata] Ascensión del Elegido: descripción larga (294): el tooltip usa shortDescription
-
-### San Martín, el Libertador — PASS*
-- **WARNING** [metadata] Cruce de los Andes: descripción larga (201): el tooltip usa shortDescription
-
-### Eren, el Indómito — PASS*
-- **WARNING** [metadata] El Portador: descripción larga (213): el tooltip usa shortDescription
-
-### Ynara, la Médica de los Refugios — PASS*
-- **WARNING** [metadata] Santa Paciencia: descripción larga (202): el tooltip usa shortDescription
 

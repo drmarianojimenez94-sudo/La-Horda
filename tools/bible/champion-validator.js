@@ -30,7 +30,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     console.log('roster', roster.length);
     roster.unshift('__canary__');
     for (const key of roster) {
-      const r = await page.evaluate(k0 => {
+      const r = await page.evaluate(async k0 => {
         // CANARIO: Aldric con sus 4 habilidades reemplazadas por un "kind" que el motor no conoce.
         // El validador DEBE marcarlas FAIL; si no, el validador es decorativo y la corrida falla.
         const canary = k0 === '__canary__', k = canary ? 'tanque' : k0, saved = CLASSES.tanque.skills, savedU = CLASSES.tanque.ultimate;
@@ -118,7 +118,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
             allyState: allies.map(a => JSON.stringify(snapHero(a))), self: snapHero(player), pos: [player.x, player.y]};
         }
         const ctl = run(null);
-        // SPRITE: dibuja el cuerpo real del campeón en un canvas aparte y cuenta píxeles visibles.
+        // SPRITE: espera a que baje su arte (carga diferida) y dibuja el cuerpo real en un canvas aparte.
+        for (let w = 0; w < 80 && typeof champPackPending === 'function' && champPackPending(k); w++) await new Promise(res => setTimeout(res, 100));
         { const cv = document.createElement('canvas'); cv.width = cv.height = 220; const g = cv.getContext('2d'), oc = ctx; let px = 0;
           try { ctx = g; ctx.setTransform(1, 0, 0, 1, 110 - player.x, 150 - player.y); drawHeroBody(player, 1, false, false); } catch (e) {} finally { ctx = oc; }
           const d = g.getImageData(0, 0, 220, 220).data; for (let i = 3; i < d.length; i += 4) if (d[i] > 16) px++;

@@ -40,7 +40,7 @@ SKINS = {
         (14, 78, 280, 460), 'Eren, Titán Bestia'),
     'axiom_skin_z': ('sistema', 'axiom', 'axiom', [431, 506, 581, 654, 727, 799, 872],
         {'idle': (119, 191), 'walk': (191, 256), 'run': (256, 321), 'atk': (321, 382), 'hit': (382, 447), 'death': (447, 529)},
-        (14, 58, 358, 470), 'Axiom, Skin Z · Realidad Corrupta'),
+        (14, 58, 358, 470), 'Axiom, Realidad Corrupta'),
     # --- segunda tanda (Mago, Profeta, Segador/berserk, Asesino, Sanadora) ---
     'profeta_angel_caido': ('profecia', 'profeta', 'profeta', [418, 487, 557, 626, 696, 766, 836],
         {'idle': (127, 191), 'walk': (191, 254), 'run': (254, 317), 'atk': (317, 381), 'cast': (381, 446), 'hit': (446, 510), 'death': (510, 574)},

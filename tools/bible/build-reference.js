@@ -33,7 +33,7 @@ const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '1
         `- **Peligro:** ${a.hazard.name} — ${a.hazard.effect.replace(/\.$/, '')}. Aviso: ${a.hazard.telegraph}.`,
         `- **Objetivos:** ${a.objectives.map(o => o.text).join(' · ')}`,
         a.subBoss ? `- **Subjefe:** ${a.subBoss.name}${a.subBoss.level ? ' (nivel ' + a.subBoss.level + ')' : ''}` : '',
-        `- **Jefe:** ${a.boss.name} — usa la arena: ${a.boss.arena}; examina: ${a.boss.teaches}.`,
+        `- **Jefe:** ${a.boss.name} — usa la arena: ${a.boss.arena}; pone a prueba: ${a.boss.teaches}.`,
         `- **Botín:** ${a.loot.focus}. Sets de afinidad: ${a.sets.join(', ') || '—'}. Tier: ${a.tier}.`,
         `- **Micro-tutorial:** ${a.tut.join(' → ') || '—'}`, `- **Estado:** ${a.why}`, '');
     }

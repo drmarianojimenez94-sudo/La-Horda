@@ -127,3 +127,12 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
 - **Arreglo**: `.ability-btn.sec` 44×44 (`css/hud.css`).
 - **Validación**: `tools/ux/test-touch-targets.js` — 5 viewports (844×390, 667×375, 932×430, 800×360, 1280×800)
   × 3 campeones: todos los controles ≥ 44 px, sin superposición, dentro de pantalla.
+
+### A14. Volver a consultar + descripciones largas
+- Panel táctico: sección **Ayuda** (regla y aviso de la arena actual, "📖 Guía del Hechicero", "↺ Repetir la lección
+  de la arena"). Códice → Arena: sección **Reglas de la arena** desde la Arena Factory + "↺ Repetir la lección".
+- Descripciones que superaban 200 caracteres (Ascensión del Elegido 294, El Portador 213, Santa Paciencia 202,
+  Cruce de los Andes 201) reescritas sin cambiar valores. Skin "Axiom, Skin Z · Realidad Corrupta" → "Realidad Corrupta".
+- El validador de campeones espera a que baje el arte (carga diferida) antes de medir el sprite (evita falsos FAIL).
+- Auditoría completa: 24 PASS, 5 PASS* (Aldric, Kael, Thalen, Elyra y Axiom sin pasiva propia: deuda de diseño
+  documentada, no inventada), 0 FAIL.

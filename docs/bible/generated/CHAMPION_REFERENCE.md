@@ -100,7 +100,7 @@ Sanadora de apoyo cuerpo a cuerpo. Cura, protege y potencia a un aliado elegido.
 | H1 | Destino Restaurado | ✚ ally | 8,0 s | + Curación | Cura al instante al aliado más herido |
 | H2 | Visión del Inmortal | ✚ ally | 11,0 s | + Curación | Un aliado cercano se vuelve inmune a todo daño y a efectos negativos por unos segundos |
 | H3 | Danza del Augurio | ◎ self_aoe | 9,0 s | ✶ Aturdido | Gira con su hoja y genera daño de área a su alrededor |
-| Definitiva | Ascensión del Elegido | ✚ ally | 34,0 s | + Curación, ▲ Mejora | Se acerca a un aliado y se fusiona con él, volviéndose casi invisible e invulnerable |
+| Definitiva | Ascensión del Elegido | ✚ ally | 34,0 s | + Curación, ▲ Mejora | Se fusiona con un aliado |
 
 ## Musashi, el Rōnin del Bokken `musashi` — asesino
 
@@ -160,7 +160,7 @@ Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta,
 | H1 | Bayoneta | ↝ dash | 5,5 s | ◆ Sangrado | Mantené para apuntar y soltá |
 | H2 | ¡Granaderos, a la carga! | ◎ self_aoe | 16,0 s | ▲ Mejora | Levanta el sable, suena el clarín y aparecen Granaderos espectrales |
 | H3 | Carga de San Lorenzo | ↝ dash | 12,0 s | ✶ Aturdido, ▽ Debilitado | Monta su caballo blanco y carga en línea |
-| Definitiva | Cruce de los Andes | ◉ self | 45,0 s | ▼ Ralentizado, ✶ Aturdido, ▲ Mejora | La Cordillera se alza alrededor de la arena |
+| Definitiva | Cruce de los Andes | ◉ self | 45,0 s | ▼ Ralentizado, ✶ Aturdido, ▲ Mejora | Carga con Granaderos espectrales entre nieve y escarcha y queda 10 s a caballo |
 
 ## Eren, el Indómito `eren` — asesino
 
@@ -175,7 +175,7 @@ Guerrero / Berserker: movilidad extrema con ganchos, gana Furia con el riesgo y 
 | H1 | Equipo de Maniobras | ↝ dash | 7,0 s | — | Mantené para apuntar y soltá |
 | H2 | Instinto de Supervivencia | ◉ self | 14,0 s | ▲ Mejora | Por un momento recibís menos daño y cada golpe que te dan carga MUCHA más Furia |
 | H3 | ¡Avancen! | ◎ self_aoe | 15,0 s | ▲ Mejora | Grito de guerra |
-| Definitiva | El Portador | ◉ self | 40,0 s | ▲ Mejora | Con la Furia llena |
+| Definitiva | El Portador | ◉ self | 40,0 s | ▲ Mejora | Con la Furia llena se transforma en El Portador |
 
 ## Ynara, la Médica de los Refugios `ynara` — soporte
 
@@ -190,7 +190,7 @@ Sanadora de área: estrogonof, agua y santa paciencia.
 | H1 | Mirada fulminante | △ cone | 6,5 s | — | Un abanico de luz daña y ralentiza 30% durante 1,5 s |
 | H2 | Estrogonof reparador | ○ point | 12,0 s | — | Sirve estrogonof de pollo |
 | H3 | No quiero seguir esta conversación | → line | 10,0 s | — | Se desliza por terreno seguro y limpia ralentización |
-| Definitiva | Santa Paciencia | ◎ self_aoe | 36,0 s | — | Despliega alas y un santuario móvil |
+| Definitiva | Santa Paciencia | ◎ self_aoe | 36,0 s | — | Santuario móvil |
 
 ## Myla, la Niña de la Cuchara `myla` — mago
 

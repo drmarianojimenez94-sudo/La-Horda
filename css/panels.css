@@ -513,3 +513,6 @@
 #tactical-panel .ab-card{ text-align:left; }
 #tactical-panel .tp-grid .ab-name{ white-space:normal; overflow:visible; line-height:1; }
 #tactical-panel .tp-section{ text-align:left; }
+#tactical-panel .tp-rule{ font-size:13px; margin:2px 0; overflow-wrap:anywhere; }
+#tactical-panel .tp-actions{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+#tactical-panel .tp-actions .btn{ min-height:44px; }

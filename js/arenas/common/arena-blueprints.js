@@ -95,7 +95,7 @@ const ARENA_BLUEPRINTS = {
     dynamic:["etapas: el ecosistema crece y el fondo madura","raíces gigantes cruzan la arena (niveles 7-9)","la Madre interviene y brotan hongos gigantes sólidos","al morir la Madre el Reino queda en silencio"],
     enemySynergy:["Infectados que dejan esporas","Chamán que germina núcleos y cura","Peregrinos que se plantan en carriles","Sabuesos en jauría por los corredores","Acechador que embosca desde el territorio","Hinchado que explota en zonas"],
     subBoss:{name:"Micelio Primigenio", level:6},
-    boss:{type:"madre_espora", name:"La Madre Espora", phases:"3 fases (brazos, alucinaciones, corazón expuesto)", arena:"ES la estructura del centro: brazos, hongos gigantes que bloquean rutas, nubes y raíces", teaches:"examina lo aprendido: núcleos, esporas y rutas que se cierran"},
+    boss:{type:"madre_espora", name:"La Madre Espora", phases:"3 fases (brazos, alucinaciones, corazón expuesto)", arena:"ES la estructura del centro: brazos, hongos gigantes que bloquean rutas, nubes y raíces", teaches:"lo aprendido: núcleos, esporas y rutas que se cierran"},
     loot:{focus:"sets Sepulturero y Arcano; set de Morwen/Tibor (campeones del Reino)"},
     tutorial:{steps:[
       {id:"colony", say:"La colonia late en el piso: ese violeta es territorio infectado.", done:"colony"},

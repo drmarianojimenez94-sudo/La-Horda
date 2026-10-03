@@ -108,7 +108,7 @@
      "area": "ability",
      "name": "Hab. 1 Torbellino: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -236,7 +236,7 @@
      "selfChanged": 5,
      "spawned": 0,
      "vfx": 275,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 54,
      "netEvents": 6,
      "error": null
@@ -747,7 +747,7 @@
      "area": "ability",
      "name": "Hab. 1 Muro de Fuego: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -870,7 +870,7 @@
      "selfChanged": 0,
      "spawned": 1,
      "vfx": 213,
-     "sfx": 7,
+     "sfx": 6,
      "floatText": 66,
      "netEvents": 4,
      "error": null
@@ -1998,12 +1998,6 @@
     },
     {
      "area": "metadata",
-     "name": "Ascensión del Elegido: descripción larga (294): el tooltip usa shortDescription",
-     "level": "WARNING",
-     "detail": ""
-    },
-    {
-     "area": "metadata",
      "name": "nombres de habilidad únicos",
      "level": "PASS",
      "detail": ""
@@ -2226,10 +2220,10 @@
      "error": null
     }
    ],
-   "status": "PASS*",
+   "status": "PASS",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "pass": 34
    }
   },
@@ -3254,12 +3248,6 @@
     },
     {
      "area": "metadata",
-     "name": "Cruce de los Andes: descripción larga (201): el tooltip usa shortDescription",
-     "level": "WARNING",
-     "detail": ""
-    },
-    {
-     "area": "metadata",
      "name": "nombres de habilidad únicos",
      "level": "PASS",
      "detail": ""
@@ -3515,10 +3503,10 @@
      "error": null
     }
    ],
-   "status": "PASS*",
+   "status": "PASS",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "pass": 34
    }
   },
@@ -3598,12 +3586,6 @@
      "name": "skins",
      "level": "PASS",
      "detail": "1 skins, 0 cromas"
-    },
-    {
-     "area": "metadata",
-     "name": "El Portador: descripción larga (213): el tooltip usa shortDescription",
-     "level": "WARNING",
-     "detail": ""
     },
     {
      "area": "metadata",
@@ -3855,10 +3837,10 @@
      "error": null
     }
    ],
-   "status": "PASS*",
+   "status": "PASS",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "pass": 34
    }
   },
@@ -3941,12 +3923,6 @@
     },
     {
      "area": "metadata",
-     "name": "Santa Paciencia: descripción larga (202): el tooltip usa shortDescription",
-     "level": "WARNING",
-     "detail": ""
-    },
-    {
-     "area": "metadata",
      "name": "nombres de habilidad únicos",
      "level": "PASS",
      "detail": ""
@@ -4003,7 +3979,7 @@
      "area": "ability",
      "name": "Hab. 2 Estrogonof reparador: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -4033,7 +4009,7 @@
      "area": "ability",
      "name": "Hab. 3 No quiero seguir esta conversación: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -4063,7 +4039,7 @@
      "area": "ability",
      "name": "Definitiva Santa Paciencia: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -4121,7 +4097,7 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 409,
-     "sfx": 4,
+     "sfx": 5,
      "floatText": 80,
      "netEvents": 4,
      "error": null
@@ -4147,7 +4123,7 @@
      "selfChanged": 7,
      "spawned": 0,
      "vfx": 85,
-     "sfx": 3,
+     "sfx": 2,
      "floatText": 16,
      "netEvents": 4,
      "error": null
@@ -4170,16 +4146,16 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 410,
-     "sfx": 4,
+     "sfx": 5,
      "floatText": 80,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "PASS*",
+   "status": "PASS",
    "summary": {
     "fail": 0,
-    "warning": 1,
+    "warning": 0,
     "pass": 34
    }
   },
@@ -5333,7 +5309,7 @@
      "area": "ability",
      "name": "Definitiva Alambique del Silencio: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -5437,7 +5413,7 @@
      "selfChanged": 2,
      "spawned": 1,
      "vfx": 410,
-     "sfx": 5,
+     "sfx": 6,
      "floatText": 80,
      "netEvents": 6,
      "error": null
@@ -6275,7 +6251,7 @@
      "area": "ability",
      "name": "Definitiva La última puntada: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -6378,7 +6354,7 @@
      "selfChanged": 3,
      "spawned": 0,
      "vfx": 163,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 32,
      "netEvents": 7,
      "error": null
@@ -7208,7 +7184,7 @@
      "area": "ability",
      "name": "Definitiva El bosque camina: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -7310,7 +7286,7 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 244,
-     "sfx": 4,
+     "sfx": 5,
      "floatText": 48,
      "netEvents": 7,
      "error": null
@@ -7834,7 +7810,7 @@
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -7937,7 +7913,7 @@
      "selfChanged": 3,
      "spawned": 0,
      "vfx": 200,
-     "sfx": 6,
+     "sfx": 5,
      "floatText": 40,
      "netEvents": 7,
      "error": null
@@ -8763,7 +8739,7 @@
      "area": "ability",
      "name": "Definitiva Aquí siguen los nombres: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -8862,7 +8838,7 @@
      "selfChanged": 3,
      "spawned": 0,
      "vfx": 153,
-     "sfx": 3,
+     "sfx": 4,
      "floatText": 30,
      "netEvents": 7,
      "error": null
