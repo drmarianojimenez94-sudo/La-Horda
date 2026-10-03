@@ -21,7 +21,7 @@ function renderChampGrid(){
     card.className = "champ-card" + (key===selectedClass && owned ? " selected":"") + (owned ? "" : " locked");
     card.innerHTML = `
       <canvas class="champ-preview" width="104" height="104" style="background:${cls.color}22;" data-class-key="${key}"></canvas>
-      <div class="champ-name">${cls.name}</div>
+      <div class="champ-name">${cls.name}</div><div class="champ-title">${championTitle(key)}</div>
       <div class="champ-role">${cls.role}</div><details class="champ-guide"><summary>Habilidades y estilo</summary>${championGuideHTML(key)}</details>
       <div class="champ-lvl">${typeof HUB_ROLE_LABEL!=="undefined" && HUB_ROLE_LABEL[cls.roleCategory] ? HUB_ROLE_LABEL[cls.roleCategory] + " · " : ""}${owned ? `Nv. ${champ.level}` : grantOnly ? `🔒 ${meta.category==="FOUNDER" ? "Se concede" : "No disponible"}` : `🔒 Tienda · 🪙 ${fmtGold(shopChampionPrice(key))}`}</div>${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? `<div class="champ-founder">${founderBadgeHTML(meta.founderKey,"sm")}</div>` : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
     `;

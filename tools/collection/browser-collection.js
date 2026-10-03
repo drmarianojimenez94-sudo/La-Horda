@@ -12,11 +12,12 @@ const assert = require('node:assert/strict');
    const failures=[];
    for(const c of CHAMPION_CATALOG){
      codexChampTab='ficha';const html=codexChampHtml(c.id);
-     if(duplicated.includes(c.id) && html.split(_cxEsc(c.lore)).length!==2) failures.push(c.id);
+     if(html.split(_cxEsc(c.lore)).length!==2) failures.push(c.id); // la descripción de tarjeta aparece una sola vez
    }
    return {duplicated,failures,catalog:cosmeticCatalog().length};
  });
- assert.ok(audit.duplicated.length>=7); assert.deepEqual(audit.failures,[]);
+ // Presentación uniforme (js/data/champion-presentation.js): ninguna descripción de tarjeta repite la historia.
+ assert.deepEqual(audit.duplicated,[]); assert.deepEqual(audit.failures,[]);
  for(const [width,height] of [[844,390],[667,375]]){
    await page.setViewportSize({width,height});
    await page.evaluate(()=>{for(const k in save.champions)save.champions[k].unlocked=true;openCodex();codexLink('champ:tanque');codexChampTab='skins';codexRender();});

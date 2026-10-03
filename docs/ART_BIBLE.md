@@ -149,3 +149,20 @@ mucha más escala/detalle/VFX, permitido en la sección 9).
 `docs/production/PRODUCTION_BIBLES.md` consolida Champion, Enemy, Ability, VFX, Audio, UI, HUD,
 Cosmetic y Set Bible sin reemplazar esta gramática visual ni el canon narrativo. El contrato
 reutilizable y los gates de incorporación están en `tools/factory/README.md`.
+
+## 13. Roster Art Gate (escala, apoyo y presentación uniformes)
+
+Todos los campeones y todas sus apariencias se presentan **igual que el Caballero**: misma altura de
+cuerpo (±4%) y misma línea de pies (±2 px) en frente, perfil y espalda. `tools/art/roster_gate.js`
+renderiza cada apariencia con el motor (sin VFX), mide la masa del cuerpo (sin puntas finas de armas) y
+genera `js/data/champion-art-normalize.js` (`--write`); en modo normal verifica y falla el CI si alguna
+apariencia se sale. La corrección se aplica en un solo punto (`js/rendering/champion-art-normalize.js`,
+alrededor de `drawHeroBody`): no cambia hitbox, radio ni VFX. Al importar un atlas nuevo o una skin,
+correr `--write` y revisar `docs/art-gate/roster-sheet.png` (líneas de cabeza y pies del Caballero).
+
+Presentación: cada campeón muestra **NOMBRE · TÍTULO**, una descripción de tarjeta propia (80–170
+caracteres, nunca copiada de la historia), una historia de Códice de 300–650 caracteres y descripciones
+de habilidades acotadas, sin textos duplicados entre campeones (`js/data/champion-presentation.js`).
+
+Este gate iguala **escala y apoyo**; no corrige forma ni estilo. Un atlas con proporciones o densidad de
+píxel distintas sigue requiriendo REDRAW según §8.

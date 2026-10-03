@@ -95,7 +95,7 @@ function ascSwarmDraw(h){
 }
 /* ---------------- dibujo del héroe ---------------- */
 const ascOriginalDrawPortador=drawPortador;drawPortador=function(h,scale,alpha){
- if(!ascCandidate(h))return ascOriginalDrawPortador(h,scale,alpha);
+ if(!ascCandidate(h)||(typeof window!=='undefined'&&window.ART_GATE_NO_VFX))return ascOriginalDrawPortador(h,scale,alpha); // Art Gate mide solo el cuerpo
  const k=h.classKey,lift=ascLift(h);
  if(k==='nano_gm')ascNanoWings(h,scale,alpha);
  if(k==='facu_gm')ascFacuMantle(h,scale,alpha);

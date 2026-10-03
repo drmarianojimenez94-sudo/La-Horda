@@ -29,7 +29,7 @@ const ASCENSION = {
   fantasy:'No usa el agua: el océano le responde. Encadena corrientes, presión y oleadas para ordenar el campo antes de que el enemigo entienda el patrón.',
   silhouette:'Joven musculoso de rulos oscuros, postura de quien lee el mar. Manto de agua viva que nace de los hombros y una corona de corrientes; empuña una Quilla Ceremonial de forma hidrodinámica.',
   history:'Las Arenas tienen fondo. Debajo del Acuático, más allá de donde el Leviatán dejó de bajar, hay una marea que no responde a ninguna luna. Facu fue el segundo Regente en cruzar el umbral y el único que volvió con el mar detrás. No lo domó: lo entendió. Sabe cuándo una corriente va a girar y cuándo una ola ya decidió romper. Por eso el agua llega antes que sus órdenes. Los guardianes del Acuático lo nombran en voz baja, como se nombra a la marea alta.',
-  passive:['Mente de Marea','Sus habilidades siguen el flujo Corriente → Presión → Oleada. Cada eslabón en orden sube la Marea (máx. 3): +20% de potencia y −15% de recarga a la siguiente. Con Marea 3 llega MAREA ALTA (8 s): básicos con ola, +15% de velocidad y la próxima habilidad con el doble de área. Romper el orden vuelve a Marea Baja con un pequeño escudo.'],
+  passive:['Mente de Marea','Flujo Corriente → Presión → Oleada: cada eslabón en orden sube la Marea (máx. 3), +20% de potencia y −15% de recarga a la siguiente. Con Marea 3, MAREA ALTA (8 s): básicos con ola, +15% de velocidad y doble área en la próxima. Romper el orden da Marea Baja y un escudo.'],
   weakness:'Sin secuencia su daño es moderado; Cabalgar la Ola no atraviesa muros.',
   voices:['La marea ya decidió. Yo solo la escucho.','El océano devuelve todo… menos a ellos.','Bajamar… por ahora…'],
   entryLine:'El océano no me obedece. Me reconoce.',

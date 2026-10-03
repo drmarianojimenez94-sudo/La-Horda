@@ -267,7 +267,7 @@ function codexChampListHtml(){
     const cls = CLASSES[c.id], ch = save.champions[c.id], own = ch && ch.unlocked, sel = own && selectedClass===c.id, meta = championMeta(c.id);
     return `<button class="cx-card cx-champ-card ${own?"":"locked"} ${sel?"sel":""}" data-go="champ:${c.id}">
       ${_pv({kind:"champ", key:c.id, anim:"idle", bg:"none", fps:15}, "cx-pv cx-card-pv")}
-      <div class="cx-card-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div>
+      <div class="cx-card-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div><div class="cx-card-title">${_cxEsc(championTitle(c.id))}</div>
       <div class="cx-card-sub">${HUB_ROLE_LABEL[cls.roleCategory]||""} · ${own ? "Nv. " + ch.level : meta.purchasable ? "🔒 Tienda" : meta.category==="FOUNDER" ? "Se concede" : "🔒"}</div>
       ${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? founderBadgeHTML(meta.founderKey,"sm") : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
       ${sel ? '<span class="cx-card-flag">EN JUEGO</span>' : ""}
@@ -376,14 +376,14 @@ function codexChampHtml(key){
   const need = own ? xpToNext(ch.level) : 1, pct = own ? Math.min(100, Math.round(ch.xp/need*100)) : 0;
   const tabs = [["ficha","Ficha"],["equipo","Equipo"],["talentos","Talentos"],["habilidades","Maestría"],["skins","Apariencias"]];
   const stage = `<div class="cx-stage">${_pv({kind:"champ", key, anim:"idle", arena:"champ"}, "cx-pv cx-stage-pv")}
-      <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div></div>
+      <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div><div class="cx-stage-title">${_cxEsc(championTitle(key))}</div></div>
     ${_animChips(codexChampAnimList(key))}
     <div class="cx-stage-actions">${own
       ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`) + (typeof ASCENSION_SKINS!=="undefined" && ASCENSION_SKINS[key] && ASCENSION_SKINS[key].length ? `<button class="cx-btn" data-asc-skin="${key}">Apariencia: ${_cxEsc((ch.ascSkin|0) ? ASCENSION_SKINS[key][(ch.ascSkin|0)-1].name : "Original")}</button>` : "")
       : !championMeta(key).purchasable ? `<div class="cx-active">${championMeta(key).category==="FOUNDER" ? `${typeof founderBadgeHTML==="function" ? founderBadgeHTML(championMeta(key).founderKey,"md") : ""} 🪙 ${fmtGold(shopChampionPrice(key))} · ${championMeta(key).storeNotice}<br><small>${championMeta(key).inspectNotice}</small>` : "No disponible"}</div>`
       : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
-      <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle">${_cxEsc(cls.role)}</div>
+      <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle"><b>${_cxEsc(championTitle(key))}</b> · ${_cxEsc(cls.role)}</div>
       ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b> · Talentos: <b>${treePointsAvailable(key)}</b></div>` : ""}
       <div class="cx-tabs cx-scroll-x">${tabs.map(([t,l])=>`<button class="cx-tab ${codexChampTab===t?"on":""} ${!own && t!=="ficha"?"dim":""}" data-ctab="${t}">${l}</button>`).join("")}</div></div>`;
   let panel = head;

@@ -37,7 +37,7 @@ function renderStarterSelect(){
     const cls = CLASSES[c.id];
     return `<button class="gallery-card starter-card ${_starterPick===c.id?"sel":""}" data-champ="${c.id}">
       <canvas class="champ-anim starter-anim" width="110" height="110" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
-      <div class="gallery-card-name">${cls.name}</div>
+      <div class="gallery-card-name">${cls.name}</div><div class="champ-title">${championTitle(c.id)}</div>
       <div class="mychamp-meta">${STARTER_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="starter-lore">${c.lore}</div>
     </button>`;

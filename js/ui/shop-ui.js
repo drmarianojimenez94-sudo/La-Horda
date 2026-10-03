@@ -87,7 +87,7 @@ function shopFounderCardHTML(id){
   const key = m.founderKey, emblem = typeof founderBadgeHTML==="function" ? founderBadgeHTML(key, "md") : "";
   return `<div class="shop-founder-card" data-founder-card="${id}">
     <div style="display:flex;gap:8px;align-items:center"><canvas class="fp-sigil" data-key="${key}" width="48" height="48" aria-hidden="true"></canvas>
-      <div><div class="shop-bundle-name" style="color:${cls.color}">${cls.name}</div><div class="shop-item-sub">${PORTADORES[id] ? PORTADORES[id].title : ""}</div></div></div>
+      <div><div class="shop-bundle-name" style="color:${cls.color}">${cls.name}</div><div class="shop-item-sub">${championTitle(id)}</div></div></div>
     <div class="sf-tags">${emblem}<span>ÚNICO</span><span>NO DISPONIBLE</span></div>
     <div class="sf-price" aria-label="Precio de vitrina">🪙 ${fmtGold(m.showcasePrice)} ORO</div>
     ${owned ? '<span class="shop-st own">✔ Concedido a tu cuenta</span>' : `<button class="sf-granted" type="button" disabled aria-disabled="true">${m.storeNotice}</button>`}
@@ -264,7 +264,7 @@ function renderShopChampions(panel){
       <canvas class="champ-anim shop-champ-anim" width="96" height="96" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
       <div class="shop-champ-info">
         <div class="shop-champ-name" style="color:${cls.color}">${cls.name}${CHAMPION_CATEGORIES[shopChampCategory(c.id)].badge ? `<span class="category-badge cat-${shopChampCategory(c.id)}">${CHAMPION_CATEGORIES[shopChampCategory(c.id)].badge}</span>` : ""} ${status}</div>
-        <div class="shop-champ-role">${cls.role}</div>
+        <div class="shop-champ-role"><b class="champ-title">${championTitle(c.id)}</b> · ${cls.role}</div>
         <div class="shop-champ-lore">${c.lore}</div>
         <div class="shop-skills">${skills}</div>
       </div>

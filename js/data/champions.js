@@ -136,7 +136,7 @@ const CLASSES = {
       {name:"Visión del Inmortal", ico:"◈", cost:34, cd:11000, kind:"brief_immunity", range:260, duration:2400, regenPct:0.06, desc:"Un aliado cercano se vuelve inmune a todo daño y a efectos negativos por unos segundos; al terminar, recibe una pequeña regeneración"},
       {name:"Danza del Augurio", ico:"☾", cost:36, cd:9000, kind:"self_spin_stun", radius:112, innerR:56, dmgMult:1.1, stun:500, desc:"Gira con su hoja y genera daño de área a su alrededor; si un enemigo está muy cerca, lo aturde brevemente"}
     ],
-    ultimate:{name:"Ascensión del Elegido", ico:"★", cd:34000, kind:"ascension_fusion", duration:7000, healPct:0.85, dmgMult:2.0, atkSpeedMult:1.6, defBonus:0.45, lifesteal:0.25, cdClamp:60, desc:"Se acerca a un aliado y se fusiona con él, volviéndose casi invisible e invulnerable: aparece un recipiente espiritual que el aliado absorbe, recibiendo una curación enorme, mucho más daño, velocidad de ataque y resistencia, además de poder lanzar sus habilidades casi al instante mientras dura"}
+    ultimate:{name:"Ascensión del Elegido", ico:"★", cd:34000, kind:"ascension_fusion", duration:7000, healPct:0.85, dmgMult:2.0, atkSpeedMult:1.6, defBonus:0.45, lifesteal:0.25, cdClamp:60, desc:"Se fusiona con un aliado y queda casi invisible e invulnerable: el aliado recibe una gran curación, más daño, velocidad de ataque y resistencia, y lanza sus habilidades casi al instante mientras dura"}
   },
   musashi:{
     name:"Musashi", icon:"⚔", color:"#5aa8d8", glow:"#bfe4ff",

@@ -68,3 +68,8 @@
 .gm-muted{ opacity:.7; }
 .testlab-badge{ position:fixed; top:max(6px, env(safe-area-inset-top)); left:50%; transform:translateX(-50%); z-index:8500; pointer-events:none;
   font-family:var(--font-pixel); font-size:8px; padding:5px 8px; border:2px solid #000; background:repeating-linear-gradient(45deg, #5c3a00 0 8px, #2a1a00 8px 16px); color:#ffd76a; box-shadow:2px 2px 0 #000; }
+
+/* ---------- presentación uniforme: NOMBRE · TÍTULO en todas las tarjetas ---------- */
+.champ-title, .cx-card-title, .cx-stage-title{ font-family:var(--font-retro); font-size:16px; line-height:1.1; color:#d9c7a6; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; }
+.shop-champ-role .champ-title{ display:inline; font-size:inherit; text-align:left; color:#e8c56a; }
+.cx-card-title{ font-size:14px; }
