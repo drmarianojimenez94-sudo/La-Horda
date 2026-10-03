@@ -51,6 +51,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         add('lore', 'origen legible', origin && /[A-ZÁÉÍÓÚ ]/.test(origin) && !/^[a-z]+$/.test(origin) ? 'PASS' : 'FAIL', origin);
         const tag = c.tagline || '';
         add('lore', 'frase de catálogo', tag.length >= S.taglineMin && tag.length <= S.taglineMax ? 'PASS' : 'WARNING', tag.length + ' caracteres');
+        add('lore', 'la frase nombra al campeón', id && tag.includes(id.name) ? 'PASS' : 'FAIL', id ? id.name : '');
         add('role', 'rol', S.roleCategories.includes(c.roleCategory) && c.role ? 'PASS' : 'FAIL', c.roleCategory);
         add('kit', 'pasiva', c.passive && c.passive.desc ? 'PASS' : 'WARNING', c.passive ? c.passive.name : 'sin pasiva propia (no se inventa: pendiente de diseño)');
         add('kit', 'kit completo 3+1', (c.skills || []).length === 3 && c.ultimate ? 'PASS' : 'FAIL');

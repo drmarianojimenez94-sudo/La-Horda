@@ -4,7 +4,7 @@
 
 ## Aldric, el Último Bastión `tanque` — tanque
 
-*Sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino.* · Origen: Muralla de la Ciudad Maldita
+*Aldric sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino.* · Origen: Muralla de la Ciudad Maldita
 
 Resistencia, protección y control de área.
 
@@ -19,7 +19,7 @@ Resistencia, protección y control de área.
 
 ## Kael, la Daga Carmesí `guerrero` — asesino
 
-*Encadena cortes y sangrados, y prepara trampas que castigan a toda una oleada.* · Origen: Los callejones de la Ciudad Maldita
+*Kael encadena cortes y sangrados, y prepara trampas que castigan a toda una oleada.* · Origen: Los callejones de la Ciudad Maldita
 
 Daño físico cuerpo a cuerpo contra objetivos y jefes.
 
@@ -34,7 +34,7 @@ Daño físico cuerpo a cuerpo contra objetivos y jefes.
 
 ## Thalen, el Tejedor Elemental `mago` — mago
 
-*Combina fuego, escarcha y relámpagos para controlar y devastar grupos de enemigos.* · Origen: La Torre de las Dos Llamas
+*Thalen combina fuego, escarcha y relámpagos para controlar y devastar grupos de enemigos.* · Origen: La Torre de las Dos Llamas
 
 Daño mágico, área y control elemental.
 
@@ -49,7 +49,7 @@ Daño mágico, área y control elemental.
 
 ## Elyra, la Guardiana del Alba `soporte` — soporte
 
-*Cura y protege a sus compañeros; la misma luz que los salva purifica a la Horda.* · Origen: El Santuario del Alba
+*Elyra cura y protege a su equipo; la misma luz que los salva purifica a la Horda.* · Origen: El Santuario del Alba
 
 Sanadora a distancia: restaura a sus aliados y purifica las oleadas con luz en área.
 
@@ -64,7 +64,7 @@ Sanadora a distancia: restaura a sus aliados y purifica las oleadas con luz en �
 
 ## Segador, el Olvidado `segador` — tanque
 
-*Cuanto más cerca de la muerte, más peligroso se vuelve.* · Origen: Un campo de batalla que nadie recuerda
+*El Segador se vuelve más peligroso cuanto más cerca está de la muerte.* · Origen: Un campo de batalla que nadie recuerda
 
 Berserker / tanque ofensivo. Cuanto más daño recibe, más peligroso se vuelve.
 
@@ -79,7 +79,7 @@ Berserker / tanque ofensivo. Cuanto más daño recibe, más peligroso se vuelve.
 
 ## Axiom, el Reescritor `axiom` — mago
 
-*Descubrió que la realidad está construida con reglas. No lanza hechizos: reescribe las reglas.* · Origen: Más allá de la realidad conocida
+*Axiom descubrió que la realidad tiene reglas: no lanza hechizos, las reescribe.* · Origen: Más allá de la realidad conocida
 
 Manipula directamente las reglas de la realidad. Daño de área y control.
 
@@ -94,7 +94,7 @@ Manipula directamente las reglas de la realidad. Daño de área y control.
 
 ## Ismara, la Profeta Ciega `profeta` — soporte
 
-*Ve el destino de sus aliados antes de que ocurra. A veces, eso alcanza para cambiarlo.* · Origen: El Oráculo sin ojos
+*Ismara ve el destino de sus aliados antes de que ocurra, y a veces alcanza para cambiarlo.* · Origen: El Oráculo sin ojos
 
 Sanadora de apoyo cuerpo a cuerpo. Cura, protege y potencia a un aliado elegido.
 
@@ -109,7 +109,7 @@ Sanadora de apoyo cuerpo a cuerpo. Cura, protege y potencia a un aliado elegido.
 
 ## Musashi, el Rōnin del Bokken `musashi` — asesino
 
-*Un rōnin que carga un bokken en vez de una katana: elige un rival, lo estudia y lo termina.* · Origen: Un camino sin señor
+*Musashi carga un bokken en vez de una katana: elige un rival, lo estudia y lo termina.* · Origen: Un camino sin señor
 
 Duelista. Daño físico single-target y ejecución: elige un rival y se vuelve cada vez más peligroso contra él.
 
@@ -124,7 +124,7 @@ Duelista. Daño físico single-target y ejecución: elige un rival y se vuelve c
 
 ## Sylva, la Cazadora del Bosque `cazadora` — asesino
 
-*Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.* · Origen: Los bosques de las Ruinas
+*Sylva es una tiradora muy móvil que gana velocidad mientras persigue a su presa.* · Origen: Los bosques de las Ruinas
 
 Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.
 
@@ -139,7 +139,7 @@ Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.
 
 ## Ilvar, el Señor de las Criptas `nigromante` — mago
 
-*No pelea solo: levanta a los caídos, crea un coloso de carne y, si hace falta, se vuelve un demonio.* · Origen: Las criptas bajo la ciudad
+*Ilvar levanta a los caídos, arma un coloso de carne y, si hace falta, se vuelve un demonio.* · Origen: Las criptas bajo la ciudad
 
 Señor de un ejército y cosechador de almas: los caídos se levantan a su lado, las almas alimentan su poder y maldice a la horda.
 
@@ -154,7 +154,7 @@ Señor de un ejército y cosechador de almas: los caídos se levantan a su lado,
 
 ## San Martín, el Libertador `libertador` — asesino
 
-*Un comandante legendario: disparos devastadores, bayoneta y cargas que quiebran ejércitos.* · Origen: Del otro lado de la Cordillera
+*San Martín castiga con disparos devastadores, bayoneta y cargas que quiebran ejércitos.* · Origen: Del otro lado de la Cordillera
 
 Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta, mando y caballería.
 
@@ -169,7 +169,7 @@ Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta,
 
 ## Eren, el Indómito `eren` — asesino
 
-*Convierte el peligro en furia hasta liberar una fuerza monstruosa capaz de hacer temblar la arena.* · Origen: Detrás de los muros
+*Eren convierte el peligro en furia hasta liberar una fuerza capaz de hacer temblar la arena.* · Origen: Detrás de los muros
 
 Guerrero / Berserker: movilidad extrema con ganchos, gana Furia con el riesgo y se transforma en El Portador.
 
@@ -184,7 +184,7 @@ Guerrero / Berserker: movilidad extrema con ganchos, gana Furia con el riesgo y 
 
 ## Ynara, la Médica de los Refugios `ynara` — soporte
 
-*Médica silenciosa: cura, protege y nunca pide perdón.* · Origen: Los refugios de la Ciudad Maldita
+*Ynara es una médica silenciosa: cura, protege y nunca pide perdón.* · Origen: Los refugios de la Ciudad Maldita
 
 Sanadora de área: estrogonof, agua y santa paciencia.
 
@@ -199,7 +199,7 @@ Sanadora de área: estrogonof, agua y santa paciencia.
 
 ## Myla, la Niña de la Cuchara `myla` — mago
 
-*Maga de control: torres de yogur, charcos pegajosos y un berrinche que sacude la arena.* · Origen: La Ciudad de los Primeros Pasos
+*Myla controla el campo con torres de yogur, charcos pegajosos y un berrinche que sacude la arena.* · Origen: La Ciudad de los Primeros Pasos
 
 Maga de control: yogur, torres y ondas de llanto.
 
@@ -214,7 +214,7 @@ Maga de control: yogur, torres y ondas de llanto.
 
 ## Brasa, la Mecánica Fugitiva `brasa` — mago
 
-*Torretas, purgas y desarmes: convierte la maquinaria de la Fábrica contra la Horda.* · Origen: La Fábrica Sin Fin
+*Brasa vuelve contra la Horda la maquinaria de la Fábrica: torretas, purgas y desarmes.* · Origen: La Fábrica Sin Fin
 
 Ingeniera de posición: torretas, presión y vapor.
 
@@ -229,7 +229,7 @@ Ingeniera de posición: torretas, presión y vapor.
 
 ## Garren, el Eslabón `eslabon` — tanque
 
-*Carcelero que abrió las celdas: ganchos, líneas y un grillete que protege al equipo.* · Origen: Las celdas de los portadores
+*Garren abrió las celdas que custodiaba: ganchos, líneas y un grillete que protege al equipo.* · Origen: Las celdas de los portadores
 
 Tanque protector: cadenas, custodia y separación.
 
@@ -244,7 +244,7 @@ Tanque protector: cadenas, custodia y separación.
 
 ## Morwen, la Destiladora de Ecos `morwen` — mago
 
-*Alquimista de reactivos: resina, sal y destilados que reaccionan entre sí.* · Origen: El Reino Fúngico
+*Morwen destila reactivos de resina, sal y ecos que reaccionan entre sí.* · Origen: El Reino Fúngico
 
 Alquimista: resina, catalizador y reacciones controladas.
 
@@ -259,7 +259,7 @@ Alquimista: resina, catalizador y reacciones controladas.
 
 ## Tobías, el Farolero `farolero` — soporte
 
-*Sostiene la luz para el equipo: linternas, destellos y caminos seguros en la oscuridad.* · Origen: Las Minas Profundas
+*Tobías sostiene la luz para el equipo: linternas, destellos y caminos seguros en la oscuridad.* · Origen: Las Minas Profundas
 
 Escolta: luz local, sendas y escudos por pulsos.
 
@@ -274,7 +274,7 @@ Escolta: luz local, sendas y escudos por pulsos.
 
 ## Iria, la Tejedora de Límites `iria` — mago
 
-*Ancla, tensa y corta: une puntos del mapa con hilos que castigan a quien los cruza.* · Origen: Los límites del Laberinto
+*Iria ancla, tensa y corta hilos entre puntos del mapa que castigan a quien los cruza.* · Origen: Los límites del Laberinto
 
 Control geométrico: anclas, hilos y triángulos.
 
@@ -289,7 +289,7 @@ Control geométrico: anclas, hilos y triángulos.
 
 ## Vesper, la Costurera de Sombras `vesper` — asesino
 
-*Asesina de preparación: marca grupos, cose una salida y consume los hilos.* · Origen: El teatro de la Ciudad Maldita
+*Vesper marca grupos con hilos de sombra, cose una salida y consume las puntadas.* · Origen: El teatro de la Ciudad Maldita
 
 Asesina de preparación: marca grupos, cose una salida y consume los hilos.
 
@@ -304,7 +304,7 @@ Asesina de preparación: marca grupos, cose una salida y consume los hilos.
 
 ## Nahir, el Restaurador de Espejos `nahir` — asesino
 
-*Asesino de reflejos: sus fragmentos de espejo repiten cada golpe.* · Origen: Las galerías del Laberinto
+*Nahir pelea con fragmentos de espejo que repiten cada uno de sus golpes.* · Origen: Las galerías del Laberinto
 
 Flanqueador que usa reflejos breves para cubrir ángulos distintos.
 
@@ -319,7 +319,7 @@ Flanqueador que usa reflejos breves para cubrir ángulos distintos.
 
 ## Baltra, la Campana Sumergida `baltra` — tanque
 
-*Tanque de señal: una campana-escafandra que sostiene al equipo bajo presión.* · Origen: La costa de la Arena Acuática
+*Baltra sostiene al equipo bajo presión con una campana convertida en escafandra.* · Origen: La costa de la Arena Acuática
 
 Tanque frontal que transforma golpes recibidos en ondas de campana.
 
@@ -334,7 +334,7 @@ Tanque frontal que transforma golpes recibidos en ondas de campana.
 
 ## Maura, la Pastora de Espinas `maura` — tanque
 
-*Tanque de zarzas: abre veredas estrechas y protege lo vivo sin dejar que lo ocupe todo.* · Origen: Las Ruinas Célticas
+*Maura abre veredas de zarzas y protege lo vivo sin dejar que lo ocupe todo.* · Origen: Las Ruinas Célticas
 
 Protectora de avance: recibe el choque, recoge semillas y abre un corredor.
 
@@ -349,7 +349,7 @@ Protectora de avance: recibe el choque, recoge semillas y abre un corredor.
 
 ## Dáriel, el Último Compás `dariel` — soporte
 
-*Soporte de ritmo: marca el compás que coordina al equipo y lo saca del peligro.* · Origen: El teatro de la Ciudad Maldita
+*Dáriel marca el compás que coordina al equipo y lo saca del peligro.* · Origen: El teatro de la Ciudad Maldita
 
 Músico de ritmo alternado: daño moderado, protección y recuperación acotada.
 
@@ -364,7 +364,7 @@ Músico de ritmo alternado: daño moderado, protección y recuperación acotada.
 
 ## Orsa, la Guardacables `orsa` — asesino
 
-*Asesina de ballesta: almacena descargas en el metal y responde a quien golpee desde abajo.* · Origen: Las Minas Profundas
+*Orsa guarda descargas en el metal de su ballesta y responde a quien golpee desde abajo.* · Origen: Las Minas Profundas
 
 Tiradora que distribuye cargas y decide cuándo descargar la horda.
 
@@ -379,7 +379,7 @@ Tiradora que distribuye cargas y decide cuándo descargar la horda.
 
 ## Tibor, el Rey sin Corona `tibor` — mago
 
-*Mago de enjambre: abejas que marcan, protegen el aire limpio y castigan a la colonia.* · Origen: Los apiarios del Reino Fúngico
+*Tibor guía un enjambre que marca enemigos, protege el aire limpio y castiga a la colonia.* · Origen: Los apiarios del Reino Fúngico
 
 Mago territorial con una sola nube que debe conservar y recolocar.
 
@@ -394,7 +394,7 @@ Mago territorial con una sola nube que debe conservar y recolocar.
 
 ## Zahra, la Mano de la Válvula `zahra` — mago
 
-*Maga de calor contenido: descarga ráfagas cortas y cuenta antes de volver a abrir el puño.* · Origen: Los hornos de la Fábrica Sin Fin
+*Zahra descarga un calor contenido en ráfagas cortas y cuenta antes de volver a abrir el puño.* · Origen: Los hornos de la Fábrica Sin Fin
 
 Maga de calor: gana potencia arriesgando sobrecalentarse y debe purgar.
 
@@ -409,7 +409,7 @@ Maga de calor: gana potencia arriesgando sobrecalentarse y debe purgar.
 
 ## Renko, el Jardinero de Nombres `renko` — tanque
 
-*Tanque de surcos: contiene el avance enemigo sin cerrar nunca una salida.* · Origen: El cementerio de la Ciudad Maldita
+*Renko traza surcos que contienen el avance enemigo sin cerrar nunca una salida.* · Origen: El cementerio de la Ciudad Maldita
 
 Tanque de preparación del terreno, sin obstáculos sólidos ni encierros.
 
@@ -424,7 +424,7 @@ Tanque de preparación del terreno, sin obstáculos sólidos ni encierros.
 
 ## Sira, la Cartógrafa del Regreso `sira` — mago
 
-*Maga de rutas: marca el camino de vuelta y borra los que dejaron de ser seguros.* · Origen: Las entradas del Laberinto
+*Sira marca el camino de vuelta y borra las rutas que dejaron de ser seguras.* · Origen: Las entradas del Laberinto
 
 Maga que dibuja con su recorrido y convierte trayectos recientes en ataques.
 

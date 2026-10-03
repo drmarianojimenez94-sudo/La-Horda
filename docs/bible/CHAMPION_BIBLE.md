@@ -21,7 +21,7 @@ Criptas**; El Libertador → **San Martín, el Libertador**; El Eslabón → **G
 
 ## 2. Lore
 
-- **Frase de catálogo (`tagline`)**: 1 frase, 40–130 caracteres. Fantasía jugable, no biografía.
+- **Frase de catálogo (`tagline`)**: 1 frase, 40–130 caracteres, **empieza con el nombre** ("Aldric sostiene…"). Fantasía jugable, no biografía.
 - **Origen**: lugar legible del mundo (nunca una clave interna como `ciudad`).
 - **Historia del Códice (`lore`)**: 3–4 frases, **260–480 caracteres**. Estructura:
   **herida** (qué le hizo la Horda o el mundo) → **don** (cómo eso se volvió su forma de pelear) →

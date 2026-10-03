@@ -145,3 +145,12 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   ×1,15; bonus ×1,5; ×1,25; 3 por baja con tope 15/s y 0 por básicos). Balance antes/después con el piloto
   automático: todos debajo del techo por rol, 3/3 supervivencia, diferencias dentro del ruido de ±10 % (la propia
   corrida muestra ±10 % en campeones cuya pasiva no puede bajar su daño: no hay señal fuerte en ningún sentido).
+
+### A16. Batería completa de CI local + frase de catálogo con nombre
+- Se corrieron localmente los 41 pasos del workflow `Champion entry balance` (con Playwright 1.56 local; CI usa
+  1.61.1). 40/41 PASS; la falla real: `tools/portadores/test-elyra.js` exige que la frase de catálogo de Aldric,
+  Kael, Thalen y Elyra nombre al campeón, y las frases nuevas de A1 no lo hacían (esta rama habría quedado roja
+  en CI desde el checkpoint 01).
+- **Decisión**: se adopta como estándar para los 29 ("Aldric sostiene…"), con chequeo FAIL en el validador.
+- **Validación**: `test-elyra` PASS, `browser-collection` PASS, champion-validator 29/29.
+- `docs/bible/VALIDATION_MATRIX.md`: matriz final con evidencia por fila.

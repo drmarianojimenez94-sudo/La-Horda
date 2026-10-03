@@ -42,7 +42,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "90 caracteres"
+     "detail": "97 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Aldric"
     },
     {
      "area": "role",
@@ -337,7 +343,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -379,7 +385,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "78 caracteres"
+     "detail": "83 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Kael"
     },
     {
      "area": "role",
@@ -639,7 +651,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -681,7 +693,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "82 caracteres"
+     "detail": "89 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Thalen"
     },
     {
      "area": "role",
@@ -957,7 +975,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -999,7 +1017,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "80 caracteres"
+     "detail": "81 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Elyra"
     },
     {
      "area": "role",
@@ -1290,7 +1314,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -1332,7 +1356,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "55 caracteres"
+     "detail": "70 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Segador"
     },
     {
      "area": "role",
@@ -1612,7 +1642,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -1654,7 +1684,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "94 caracteres"
+     "detail": "79 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Axiom"
     },
     {
      "area": "role",
@@ -1916,7 +1952,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -1958,7 +1994,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "86 caracteres"
+     "detail": "90 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Ismara"
     },
     {
      "area": "role",
@@ -2224,7 +2266,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -2266,7 +2308,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "91 caracteres"
+     "detail": "86 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Musashi"
     },
     {
      "area": "role",
@@ -2543,7 +2591,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -2585,7 +2633,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "78 caracteres"
+     "detail": "80 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Sylva"
     },
     {
      "area": "role",
@@ -2741,7 +2795,7 @@
      "area": "ability",
      "name": "Definitiva Cacería Salvaje: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -2840,7 +2894,7 @@
      "selfChanged": 2,
      "spawned": 0,
      "vfx": 39,
-     "sfx": 3,
+     "sfx": 4,
      "floatText": 7,
      "netEvents": 7,
      "error": null
@@ -2850,7 +2904,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -2892,7 +2946,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "100 caracteres"
+     "detail": "91 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Ilvar"
     },
     {
      "area": "role",
@@ -3166,7 +3226,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -3208,7 +3268,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "90 caracteres"
+     "detail": "87 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "San Martín"
     },
     {
      "area": "role",
@@ -3507,7 +3573,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -3549,7 +3615,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "98 caracteres"
+     "detail": "92 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Eren"
     },
     {
      "area": "role",
@@ -3841,7 +3913,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -3883,7 +3955,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "53 caracteres"
+     "detail": "66 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Ynara"
     },
     {
      "area": "role",
@@ -4156,7 +4234,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -4198,7 +4276,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "87 caracteres"
+     "detail": "97 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Myla"
     },
     {
      "area": "role",
@@ -4470,7 +4554,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -4512,7 +4596,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "83 caracteres"
+     "detail": "86 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Brasa"
     },
     {
      "area": "role",
@@ -4788,7 +4878,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -4830,7 +4920,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "84 caracteres"
+     "detail": "92 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Garren"
     },
     {
      "area": "role",
@@ -5111,7 +5207,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -5153,7 +5249,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "74 caracteres"
+     "detail": "71 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Morwen"
     },
     {
      "area": "role",
@@ -5423,7 +5525,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -5465,7 +5567,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "87 caracteres"
+     "detail": "94 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Tobías"
     },
     {
      "area": "role",
@@ -5741,7 +5849,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -5783,7 +5891,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "83 caracteres"
+     "detail": "85 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Iria"
     },
     {
      "area": "role",
@@ -6053,7 +6167,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -6095,7 +6209,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "74 caracteres"
+     "detail": "80 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Vesper"
     },
     {
      "area": "role",
@@ -6364,7 +6484,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -6406,7 +6526,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "65 caracteres"
+     "detail": "72 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Nahir"
     },
     {
      "area": "role",
@@ -6675,7 +6801,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -6717,7 +6843,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "76 caracteres"
+     "detail": "80 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Baltra"
     },
     {
      "area": "role",
@@ -6986,7 +7118,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -7028,7 +7160,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "87 caracteres"
+     "detail": "75 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Maura"
     },
     {
      "area": "role",
@@ -7296,7 +7434,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -7338,7 +7476,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "79 caracteres"
+     "detail": "68 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Dáriel"
     },
     {
      "area": "role",
@@ -7612,7 +7756,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -7654,7 +7798,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "90 caracteres"
+     "detail": "87 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Orsa"
     },
     {
      "area": "role",
@@ -7810,7 +7960,7 @@
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -7913,7 +8063,7 @@
      "selfChanged": 3,
      "spawned": 0,
      "vfx": 200,
-     "sfx": 6,
+     "sfx": 5,
      "floatText": 40,
      "netEvents": 7,
      "error": null
@@ -7923,7 +8073,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -7965,7 +8115,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "85 caracteres"
+     "detail": "89 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Tibor"
     },
     {
      "area": "role",
@@ -8229,7 +8385,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -8271,7 +8427,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "90 caracteres"
+     "detail": "93 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Zahra"
     },
     {
      "area": "role",
@@ -8541,7 +8703,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -8583,7 +8745,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "73 caracteres"
+     "detail": "79 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Renko"
     },
     {
      "area": "role",
@@ -8848,7 +9016,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   },
   {
@@ -8890,7 +9058,13 @@
      "area": "lore",
      "name": "frase de catálogo",
      "level": "PASS",
-     "detail": "80 caracteres"
+     "detail": "76 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Sira"
     },
     {
      "area": "role",
@@ -9159,7 +9333,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "pass": 34
+    "pass": 35
    }
   }
  ],
