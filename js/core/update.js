@@ -533,7 +533,7 @@ function update(dt){
     updatePacing(dt); // montaña rusa del nivel: calentamiento, oleada con aviso, respiro, clímax (pacing.js)
     const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1) * (typeof endlessOn==="function" && endlessOn() ? endlessSpawnIntervalMult() : 1)) * pacingIntervalMult();
     if(spawnTimer<=0 && !activeChampion){
-      spawnTimer = spawnInterval;
+      spawnTimer = spawnInterval / (typeof alphaWorldMultiplier==="function" ? alphaWorldMultiplier("spawnRate") : 1);
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo
       // (sección "ritmo de oleadas" — preferir muchos enemigos débiles a pocos con mucha vida,
       // más sensación de horda desde temprano). Se reduce a 1 desde el nivel 4 en adelante, así

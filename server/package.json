@@ -4,7 +4,7 @@
   "private": true,
   "description": "LA HORDA — servidor de salas (rooms) y relay WebSocket + cuentas de usuario y guardado en la nube (/api). No corre lógica de juego: la partida la simula el anfitrión.",
   "main": "relay.js",
-  "scripts": { "start": "node relay.js", "test": "node test-relay.js && node test-accounts.js && node test-trades.js" },
+  "scripts": { "start": "node relay.js", "test": "node test-relay.js && node test-accounts.js && node test-trades.js && node test-game-master.js" },
   "engines": { "node": ">=18" },
   "dependencies": { "pg": "^8.23.0", "ws": "^8.18.0" }
 }

@@ -10,3 +10,5 @@ Al crear, importar o registrar cualquier campeón nuevo:
 6. Las skins son cosméticas: no alterar estadísticas por colores, auras o efectos. Respetar `docs/ART_BIBLE.md` y su visual gate.
 
 El workflow `Champion entry balance` ejecuta la verificación en pushes y pull requests. Para impedir merges con el check en rojo en GitHub, configurar ese check como requerido en la protección de `main`; sin protección, GitHub informa el fallo pero permite que un administrador lo omita.
+
+7. Completar el contrato de `tools/factory/cli.js` para campeones nuevos y leer `docs/production/PRODUCTION_BIBLES.md`. `STRUCTURAL_PASS` no sustituye las simulaciones, la revisión de arte/audio ni pruebas reales de multiplayer y performance. Un manifiesto incompleto nunca se registra automáticamente.

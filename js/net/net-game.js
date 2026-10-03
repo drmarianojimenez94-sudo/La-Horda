@@ -264,6 +264,7 @@ function netBuildLoadout(key,nested){
   return {reserve:!nested && duoValid() ? netBuildLoadout(save.duoReserve,true) : null, champ:k, level:c.level, xp:c.xp, talentPoints:c.talentPoints||0,
     skillMastery:c.skillMastery, ultMastery:c.ultMastery, talents:c.talents||mkTalentState(), equipment:eq, items,
     skin:(typeof champSkinId==="function" ? champSkinId(k) : null), // cosmético: la skin de SU guardado (sala)
+    cosmeticSkin:(typeof cosmeticSkinEquippedId==="function" ? (cosmeticSkinEquippedId(k) || (c.cosmeticSkin==="" ? "" : null)) : null),
     croma:(typeof cromaEquippedId==="function" ? cromaEquippedId(k) : null), // cosmético: su croma (js/systems/cromas.js)
     crystal:(typeof resonanceChosen==="function" ? resonanceChosen() : null), // el cristal que lleva (crystal-resonance.js)
     open:ARENA_ORDER.filter(a=>isArenaUnlocked(a))}; // SUS arenas abiertas: el anfitrión avisa en la Sala si alguna no le cuenta para la campaña
@@ -278,6 +279,12 @@ function netLoadoutRecord(L){
   rec.equipment = Object.assign(mkEquipment(), L.equipment||{});
   // su croma: solo un id que exista y sea de ese guardián (cosmético; la compra la valida SU juego)
   if(L.croma && typeof CROMA_SKINS!=="undefined" && CROMA_SKINS[L.croma] && CROMA_SKINS[L.croma].champ===L.champ) rec.croma = L.croma;
+  // Cosmetic selection carries no equipment or modifiers. Validate catalog + champion.
+  if(L.cosmeticSkin === "") rec.cosmeticSkin = "";
+  else if(typeof L.cosmeticSkin === "string" && typeof SET_SKINS!=="undefined"){
+    const d = Object.prototype.hasOwnProperty.call(SET_SKINS, L.cosmeticSkin) && SET_SKINS[L.cosmeticSkin];
+    if(d && (!d.champ || d.champ===L.champ)) rec.cosmeticSkin = L.cosmeticSkin;
+  }
   return rec;
 }
 // Mientras dura la partida, save.champions[guardián del invitado] apunta a SU loadout (así toda

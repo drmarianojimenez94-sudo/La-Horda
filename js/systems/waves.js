@@ -33,6 +33,10 @@ function scaleBossStats(e, type){
   e.dmg = Math.round(runDifficulty.avgHp * (DIFF.bossDmgPct[currentArena]||0.12));
   e.basicMult = DIFF.bossBasicMult;
   if(typeof endlessOn==="function" && endlessOn()) endlessScaleBoss(e);
+  if(typeof alphaWorldMultiplier==="function"){
+    e.hp=e.maxHp=Math.max(1,Math.round(e.maxHp*alphaWorldMultiplier("bossHp")*alphaWorldMultiplier("difficulty")));
+    e.dmg*=alphaWorldMultiplier("enemyDamage")*alphaWorldMultiplier("difficulty");
+  }
 }
 // Llegada del jefe: la horda que quedaba se dispersa (muere con su animación, sin premio),
 // temblor, rugido y cambio de música. Después aparece su guía con 3 consejos (boss-hud.js).

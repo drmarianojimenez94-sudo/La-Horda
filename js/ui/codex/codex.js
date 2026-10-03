@@ -27,6 +27,7 @@ function codexSectionDef(id){ return CODEX_SECTIONS.find(s=>s.id===id) || (id===
 const CODEX_MASTERY = {normal:60, subelite:30, elite:15, invocacion:40, estructura:20, apendice:10, subjefe:3, jefe:3};
 
 let codexStack = [];          // navegación: [{view, id, sub, label}]
+let codexAppearanceFilter = "all";
 let codexChampTab = "ficha";   // pestaña de la ficha de guardián
 let codexFilter = {bestiario:"todas", jefes:"todas"};
 
@@ -195,6 +196,8 @@ function codexBind(body, cur){
     nav.addEventListener("touchend", e=>{ if(sx===null) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
       if(Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)*1.6 && !e.target.closest(".cx-scroll-x")) codexStep(dx < 0 ? 1 : -1); }, {passive:true});
   }
+  const guide = body.querySelector("#codex-guide-btn");
+  if(guide) guide.addEventListener("click", ()=>{ if(typeof alphaGuideOpen==="function") alphaGuideOpen(); });
   const inv = body.querySelector("#codex-inv-btn");
   if(inv) inv.addEventListener("click", ()=>{ codexReturnTo = "codex"; openMyInventory("objetos"); });
   if(cur.view === "champ") codexBindChamp(body, cur.id);
@@ -238,7 +241,7 @@ function codexHomeHtml(){
       <div class="cx-home-txt"><div class="cx-home-title"><span class="cx-home-ico">${sec.icon}</span>${sec.label}</div>
       <div class="cx-home-blurb">${sec.blurb}</div><div class="cx-home-count">${count}</div></div></button>`;
   return `<div class="cx-home">
-    <div class="cx-home-head"><div class="cx-home-brand">CÓDICE</div><div class="cx-home-sub">El archivo prohibido de la Horda · lo que viste, lo que venciste y lo que todavía te espera</div></div>
+    <div class="cx-home-head"><div class="cx-home-brand">CÓDICE</div>${typeof alphaGuideOpen==="function" ? `<button class="cx-btn" id="codex-guide-btn">GUÍA · aprender a jugar</button>` : ""}<div class="cx-home-sub">El archivo prohibido de la Horda · lo que viste, lo que venciste y lo que todavía te espera</div></div>
     <div class="cx-home-grid">
       ${card(CODEX_SECTIONS[0], `<div class="cx-home-trio">${heroes.map((k,i)=>_pv({kind:"champ", key:k, anim:i===1?"idle":"walk", bg:"none"}, "cx-pv cx-trio-"+i)).join("")}</div>`, `${N.champs[0]} / ${N.champs[1]} tuyos`)}
       ${card(CODEX_SECTIONS[1], _pv({kind:"enemy", key:cre, anim:"walk", arena:codexArenaOfType(cre), silhouette:!knownCre.length}), `${N.creatures[0]} / ${N.creatures[1]} descubiertas · ${N.creatures[2]} derrotadas`)}
@@ -343,6 +346,16 @@ function codexEntryHtml(stageHtml, panelHtml, extraCls){
 }
 function _sec(title, html, cls){ return html ? `<section class="cx-sec ${cls||""}"><h3 class="cx-sec-title">${title}</h3>${html}</section>` : ""; }
 function _p(t){ return t ? `<p>${_cxEsc(t)}</p>` : ""; }
+// Some champion adapters intentionally share the catalog synopsis and full history.
+// Render each paragraph once, without hiding DOM content or deleting source lore.
+function codexDistinctHistory(synopsis, history){
+  const normalize = t=>String(t || "").normalize("NFKC").replace(/\s+/g, " ").trim().toLocaleLowerCase("es");
+  const seen = new Set([normalize(synopsis)]);
+  return String(history || "").split(/\n\s*\n/).filter(t=>{
+    const key = normalize(t); if(!key || seen.has(key)) return false;
+    seen.add(key); return true;
+  }).map(_p).join("");
+}
 function _animChips(list){ return `<div class="cx-anim-chips cx-scroll-x">${list.map((a,i)=>`<button class="cx-chip ${i===0?"on":""}" data-anim='${_cxEsc(JSON.stringify(a.p)).replace(/'/g,"&#39;")}'>${_cxEsc(a.l)}</button>`).join("")}</div>`; }
 function codexBindAnimChips(body){
   const cv = body.querySelector(".cx-stage-pv"); if(!cv) return;
@@ -360,7 +373,7 @@ function codexChampHtml(key){
   const own = ch && ch.unlocked, L = CODEX_CHAMP_LORE[key] || {};
   const sel = own && selectedClass === key;
   const need = own ? xpToNext(ch.level) : 1, pct = own ? Math.min(100, Math.round(ch.xp/need*100)) : 0;
-  const tabs = [["ficha","Ficha"],["equipo","Equipo"],["talentos","Talentos"],["habilidades","Maestría"],["skins","Skins"]];
+  const tabs = [["ficha","Ficha"],["equipo","Equipo"],["talentos","Talentos"],["habilidades","Maestría"],["skins","Apariencias"]];
   const stage = `<div class="cx-stage">${_pv({kind:"champ", key, anim:"idle", arena:"champ"}, "cx-pv cx-stage-pv")}
       <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div></div>
     ${_animChips(codexChampAnimList(key))}
@@ -374,7 +387,7 @@ function codexChampHtml(key){
   let panel = head;
   if(codexChampTab === "ficha" || !own){
     const sk = [...cls.skills, cls.ultimate];
-    panel += _sec("¿Quién es?", `<blockquote class="cx-quote">«${_cxEsc(cat.lore)}»</blockquote>${L.origin ? `<div class="cx-origin">Origen: <b>${_cxEsc(L.origin)}</b></div>` : ""}${_p(L.history)}`, "lore");
+    panel += _sec("¿Quién es?", `<blockquote class="cx-quote">«${_cxEsc(cat.lore)}»</blockquote>${L.origin ? `<div class="cx-origin">Origen: <b>${_cxEsc(L.origin)}</b></div>` : ""}${codexDistinctHistory(cat.lore, L.history)}`, "lore");
     if(cls.passive) panel += _sec("Pasiva · "+cls.passive.ico+" "+cls.passive.name,_p(cls.passive.desc),"combat");
     const HV = typeof HERO_VOICES!=="undefined" ? HERO_VOICES[key] : null;
     if(HV) panel += _sec("Su voz", `<div class="cx-voice"><i>Al elegirlo</i>«${_cxEsc(HV.pick)}»</div><div class="cx-voice"><i>Al ganar</i>«${_cxEsc(HV.win)}»</div><div class="cx-voice"><i>Al caer</i>«${_cxEsc(HV.fall)}»</div>`, "lore");
@@ -435,8 +448,8 @@ function codexChampSkinsHtml(key){
     if(typeof isCromaId==="function" && isCromaId(id)) return _cxCromaChip(key, id);
     const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = typeof shopSetMissing==="function" ? shopSetMissing(id) : [];
     const full = typeof setFullCount==="function" ? setFullCount(id) : 4, eq = typeof equippedSetCount==="function" ? equippedSetCount(key, id) : 0;
-    const stTxt = eq >= full ? "✔ EQUIPADA (set completo)" : (!miss.length ? "Tenés el set: equipalo" : `${full - miss.length}/${full} piezas`);
-    return `<button class="cx-skin" data-skin="${id}"><img src="${_cxEsc(sk.preview || sk.src)}" alt="" loading="lazy">
+    const stTxt = skinIsActiveOn(id, key) ? "✔ EQUIPADA" : (skinOwnedFull(id) ? "Apariencia desbloqueada" : `${full - miss.length}/${full} piezas`);
+    return `<button class="cx-skin" data-skin="${id}">${sk.preview ? `<img src="${_cxEsc(sk.preview)}" alt="" loading="lazy">` : _pv({kind:"champ",key,skin:id,anim:"idle",bg:"none"}, "cx-pv cx-card-pv")}
       <span class="cx-skin-name">${_cxEsc(sk.name)}</span><span class="cx-skin-rar">Skin de set · ${_cxEsc(S.name || id)}</span><span class="cx-skin-st">${stTxt}</span></button>`;
   }).join("")}</div><div class="cx-skin-detail" id="cx-skin-detail"></div>`;
 }
@@ -482,20 +495,21 @@ function codexBindChamp(body, key){
 }
 function codexSkinDetail(body, key, id){
   const el = body.querySelector("#cx-skin-detail"); if(!el) return;
-  if(!id){ el.innerHTML = ""; return; }
+  if(!id){ el.innerHTML = `<div class="cx-skin-box"><b>Apariencia original</b><p>Siempre disponible. Conserva todas las estadísticas del campeón.</p></div>`; return; }
   if(typeof isCromaId==="function" && isCromaId(id)){ _cxCromaDetail(el, key, id); return; }
   const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = typeof shopSetMissing==="function" ? shopSetMissing(id) : [];
   const full = typeof setFullCount==="function" ? setFullCount(id) : 4, eq = typeof equippedSetCount==="function" ? equippedSetCount(key, id) : 0;
   let act;
-  if(eq >= full) act = `<div class="cx-active">✔ Equipada: tenés el set completo puesto</div>`;
-  else if(!miss.length) act = `<button class="cx-btn primary" id="cx-skin-equip">USAR · equipar el set completo</button>`;
+  if(skinIsActiveOn(id, key)) act = `<div class="cx-active">✔ Apariencia equipada</div>`;
+  else if(skinOwnedFull(id)) act = `<button class="cx-btn primary" id="cx-skin-equip">USAR APARIENCIA</button>`;
   else act = `<button class="cx-btn" id="cx-skin-shop">Ver en la Tienda · te faltan ${miss.length} piezas</button>`;
-  el.innerHTML = `<div class="cx-skin-box"><b>${_cxEsc(sk.name)}</b><div class="cx-dim">${_cxEsc(S.lore || "")}</div>
-    <div class="cx-dim">Una skin de set nunca se vende suelta: aparece con el set COMPLETO puesto en ${_cxEsc(CLASSES[key].name)}.</div>${act}
+  const meta = typeof cosmeticMetadata==="function" ? cosmeticMetadata(id) : null;
+  el.innerHTML = `<div class="cx-skin-box"><b>${_cxEsc(sk.name)}</b><div class="cx-dim">${_cxEsc(meta ? meta.lore : S.lore || "")}</div>${meta ? `<p class="cx-dim">${meta.artPending ? "Recolor de set · una skin con diseño propio sigue pendiente.<br>" : ""}${_cxEsc(meta.type)} · ${_cxEsc(meta.rarity)} · ${_cxEsc(meta.collection)}<br>Origen: ${_cxEsc(meta.unlockSource)}<br>VFX: ${_cxEsc(meta.vfxProfile)} · SFX: ${_cxEsc(meta.sfxProfile)}</p>` : ""}
+    <div class="cx-dim">La apariencia no cambia estadísticas ni equipa objetos. Se obtiene al reunir el set o mediante un regalo del Game Master.</div>${act}
     <button class="cx-link-card small" data-go="set:${id}"><b>${_cxEsc(S.name || id)}</b><span>ver el set</span></button></div>`;
   el.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click", ()=>codexLink(x.dataset.go)));
   const eqb = el.querySelector("#cx-skin-equip");
-  if(eqb) eqb.addEventListener("click", ()=>{ codexEquipSet(key, id); codexRender(); });
+  if(eqb) eqb.addEventListener("click", ()=>{ skinEquipOn(id, key); codexRender(); });
   const shop = el.querySelector("#cx-skin-shop");
   if(shop) shop.addEventListener("click", ()=>{ codexReturnTo = "codex"; if(typeof shopTab!=="undefined") shopTab = "skins"; setState("shop"); renderShop(); }); // la Tienda REAL (no hay compra duplicada)
 }
@@ -508,17 +522,18 @@ function codexSkinIds(key){
 function codexSkinsTabHtml(key){
   const ids = codexSkinIds(key), cromas = typeof cromaIdsFor==="function" ? cromaIdsFor(key) : [];
   const activeAny = ids.some(id=>skinIsActiveOn(id, key)) || cromas.some(id=>cromaIsEquipped(id));
-  const card = (id, name, sub, st, act, on)=>`<div class="gx-skin ${on?"on":""}" data-skin-pv="${id}">
+  const card = (id, name, sub, st, act, on)=>`<div class="gx-skin ${on?"on":""}" data-skin-pv="${id}" data-appearance-kind="${!id ? "original" : (typeof isCromaId==="function" && isCromaId(id) ? "croma" : (typeof cosmeticIsSetCroma==="function" && cosmeticIsSetCroma(SET_SKINS[id]) ? "set-croma" : "set"))}">
       <canvas class="champ-anim gx-skin-anim" width="84" height="84" data-class-key="${key}" data-skin="${id}" data-idle="1"></canvas>
-      <div class="gx-skin-name">${_cxEsc(name)}</div><div class="gx-skin-sub">${sub}</div><div class="gx-skin-st">${st}</div>${act}</div>`;
-  let html = card("", "Apariencia base", "Siempre disponible", activeAny ? "" : "✔ EN USO", "", !activeAny);
+      <div class="gx-skin-name">${_cxEsc(name)}</div><div class="gx-skin-sub">${sub}</div><div class="gx-skin-st">${st}</div><button class="cx-btn" data-appearance-preview="${id}">PROBAR APARIENCIA</button>${act}</div>`;
+  let html = card("", "Apariencia base", "Siempre disponible", activeAny ? "" : "✔ EN USO", `<button class="cx-btn" data-appearance-original>USAR ORIGINAL</button>`, !activeAny);
   for(const id of ids){
-    const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = shopSetMissing(id), on = skinIsActiveOn(id, key), full = !miss.length;
+    const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = shopSetMissing(id), on = skinIsActiveOn(id, key), full = skinOwnedFull(id);
     const act = on ? '<span class="ui-tag ok">✔ EQUIPADA</span>'
       : full ? `<button class="cx-btn primary" data-skin-use="${id}">USAR</button>`
       : `<button class="cx-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`;
-    const st = on ? "" : full ? "Tenés el set completo" : `${setPieceIds(id).length - miss.length}/${setPieceIds(id).length} piezas`;
-    html += card(id, sk.name || S.name, `Set ${_cxEsc(S.name || id)}`, st, act, on);
+    const st = on ? "" : full ? "Apariencia desbloqueada" : `${setPieceIds(id).length - miss.length}/${setPieceIds(id).length} piezas`;
+    const meta = typeof cosmeticMetadata==="function" ? cosmeticMetadata(id) : null;
+    html += card(id, sk.name || S.name, `Set ${_cxEsc(S.name || id)}${meta && meta.artPending ? " · croma de set" : ""}`, st, act, on);
   }
   // CROMAS (js/systems/cromas.js): la misma armadura con la paleta de un cristal; cosmético suelto por oro
   for(const id of cromas){
@@ -530,10 +545,36 @@ function codexSkinsTabHtml(key){
     html += card(id, d.name, `Croma · ${_cxEsc(C.label)}`, st, act, on);
   }
   const none = ids.length || cromas.length ? "" : `<div class="cx-dim">${_cxEsc(CLASSES[key].name)} todavía no tiene skins: por ahora luce su apariencia base.</div>`;
-  return _sec("Skins · tocá una para verla", `<div class="gx-skins">${html}</div>${none}
-    <div class="cx-dim">Una skin de set aparece con su set COMPLETO puesto: USAR equipa las piezas que ya tenés. Las cromas son solo color y se compran sueltas.</div>`, "skins");
+  return _sec("Apariencias · disponibles para pruebas", `<div class="cx-anim-chips cx-scroll-x" aria-label="Tipo de apariencia">${[["all","TODAS"],["original","ORIGINAL"],["skin","SKINS"],["croma","CROMAS"],["set","SET"]].map(([id,label])=>`<button class="cx-chip ${codexAppearanceFilter===id?"on":""}" data-appearance-filter="${id}" aria-pressed="${codexAppearanceFilter===id}">${label}</button>`).join("")}</div><p class="cx-dim">Probá cualquier apariencia en la vista animada, sin gastar oro ni modificar tu equipo.</p><div class="gx-skins">${html}</div><p class="cx-dim" id="cx-appearance-empty" hidden>No hay apariencias de este tipo para este guardián.</p><div class="cx-skin-detail" id="cx-skin-detail"></div>${none}
+    <div class="cx-dim">Reuní el set para usar su apariencia. USAR cambia solo el aspecto y conserva tu equipamiento. Las cromas cambian la paleta.</div>`, "skins");
+}
+function codexApplyAppearanceFilter(body){
+  let count = 0;
+  body.querySelectorAll("[data-appearance-kind]").forEach(card=>{
+    const kind = card.dataset.appearanceKind;
+    card.hidden = !(codexAppearanceFilter === "all" || kind === codexAppearanceFilter || (kind === "set-croma" && ["set","croma"].includes(codexAppearanceFilter)));
+    card.style.display = card.hidden ? "none" : "";
+    if(!card.hidden) count++;
+  });
+  const empty = body.querySelector("#cx-appearance-empty"); if(empty) empty.hidden = count > 0;
+  body.querySelectorAll("[data-appearance-filter]").forEach(b=>{
+    const active = b.dataset.appearanceFilter === codexAppearanceFilter;
+    b.classList.toggle("on", active); b.setAttribute("aria-pressed", String(active));
+  });
 }
 function codexBindSkinsTab(body, key, cv){
+  codexApplyAppearanceFilter(body);
+  const original = body.querySelector("[data-appearance-original]");
+  if(original) original.addEventListener("click", ()=>{ skinCosmeticEquip(key, null); codexRender(); });
+  body.querySelectorAll("[data-appearance-filter]").forEach(b=>b.addEventListener("click", ()=>{
+    codexAppearanceFilter = b.dataset.appearanceFilter; codexApplyAppearanceFilter(body);
+  }));
+  body.querySelectorAll("[data-appearance-preview]").forEach(b=>b.addEventListener("click", ()=>{
+    const id = b.dataset.appearancePreview || null;
+    if(cv) codexPreviewSet(cv, {skin:id, anim:"idle"});
+    codexSkinDetail(body, key, id);
+    if(typeof showNetToast==="function") showNetToast("Vista previa · tu equipo no cambió");
+  }));
   if(body.querySelector(".gx-skins")) startChampAnimLoop();
   body.querySelectorAll("[data-skin-pv]").forEach(c=> c.addEventListener("click", ev=>{
     if(ev.target.closest("button")) return;
@@ -543,7 +584,7 @@ function codexBindSkinsTab(body, key, cv){
   body.querySelectorAll("[data-skin-use]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.dataset.skinUse;
     if(skinEquipOn(id, key)){ if(typeof _skinEquippedFeedback==="function") _skinEquippedFeedback(id, key); }
-    else gameAlert("No se pudo equipar: revisá que tengas todas las piezas en el inventario.");
+    else gameAlert("No se pudo usar: revisá que hayas desbloqueado esta apariencia.");
     codexRender();
   }));
   body.querySelectorAll("[data-croma-use]").forEach(b=> b.addEventListener("click", ()=>{
@@ -763,7 +804,10 @@ function codexSetHtml(id){
     <div class="cx-subtitle">${_cxEsc(S.theme || "")}</div><div class="cx-links">${champ ? `<button class="cx-link" data-go="champ:${champ}">🛡 ${_cxEsc(CLASSES[champ].name)}</button>` : ""}${arenas.map(a=>`<button class="cx-link" data-go="arena:${a}">⛩ ${_cxEsc(codexArenaTag(a))}</button>`).join("")}</div></div>`;
   panel += _sec("Lore", _p(S.lore), "lore");
   panel += _sec("Bonus", (S.thresholds||[]).map(th=>`<div class="cx-phase"><span class="cx-phase-n">${th.count}</span><div class="cx-dim">${_cxEsc(th.desc)}</div></div>`).join(""), "combat");
-  panel += _sec("Tus piezas", `<p>${full - miss.length} de ${full}${skin ? " · con el set completo aparece la skin <b>" + _cxEsc(skin.name) + "</b>" : ""}.</p>`);
+  panel += _sec("Dónde conseguirlo", `<p>Las piezas pueden caer jugando. ${arenas.length ? "Mayor afinidad: " + arenas.sort((a,b)=>SET_ARENA_WEIGHTS[b][id]-SET_ARENA_WEIGHTS[a][id]).map(a=>_cxEsc(codexArenaName(a))).join(" · ") + "." : "Sin arena de afinidad específica registrada."} La afinidad aumenta su peso en el botín; no garantiza una pieza en cada partida.</p>`);
+  const pieces = Object.entries(S.pieces || {});
+  panel += _sec("Piezas de la colección", pieces.map(([slot,name])=>`<div class="cx-stat"><span>${_cxEsc(name)}</span><b>${!miss.includes(id+"_"+slot) ? "En inventario" : (save.collection && save.collection[id+"_"+slot] ? "Descubierta" : "Por encontrar")}</b></div>`).join(""));
+  panel += _sec("Tus piezas", `<p>${full - miss.length} de ${full} piezas en el inventario.${skin ? " Apariencia de colección: <b>" + _cxEsc(skin.name) + "</b>. " + (skinOwnedFull(id) ? "Desbloqueada permanentemente; vender piezas no la elimina." : "Reuní las piezas para desbloquearla permanentemente.") : ""}</p>`);
   return codexEntryHtml(stage, panel, "cx-entry-set");
 }
 

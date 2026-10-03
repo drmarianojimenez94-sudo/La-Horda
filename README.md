@@ -114,3 +114,7 @@ balance y pruebas: [auditoría de combate y HUD](docs/vfx/AUDITORIA_COMBATE_HUD.
 La intro llega al menú. En campaña y Horda Infinita cada jugador elige dos héroes: al caer el primero entra la reserva automáticamente; al agotarlos queda fuera. Las cartas muestran las habilidades y el nivel; equipo, talentos y aliados se despliegan bajo opciones avanzadas. Los siete héroes recientes tienen refuerzos propios, y Normal reduce los picos de Bosque y Hielo.
 
 El panel de niveles se habilita en Opciones para las cuentas incluidas en `ADMIN_USERS` del servidor. [Auditoría, pruebas, evaluación y configuración](docs/ux/AUDITORIA_ALPHA_02.md).
+
+## Alpha: producción y Game Master
+
+La entrega de la fábrica de producción, Códice/colección, entrenamiento y operaciones está documentada en [LA_HORDA_ALPHA_AUTONOMOUS_AUDIT.md](LA_HORDA_ALPHA_AUTONOMOUS_AUDIT.md), con gates ejecutados y pendientes explícitos. Estándares: [Production Bibles](docs/production/PRODUCTION_BIBLES.md). Incorporación de campeones: [Factory](tools/factory/README.md). Configuración del owner, contratos y respaldos: [Game Master](docs/production/operations.md). No hay pagos activos.

@@ -481,6 +481,7 @@ function vfxDrawDying(){
 }
 function vfxResetRun(){
   vCount = 0; vfxDyingN = 0;
+  fxContrastReset();
   championSignaturesReset();
   resetGore();
   if(typeof floatTexts!=="undefined") for(const f of floatTexts) f.on = false;

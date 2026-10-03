@@ -7,6 +7,10 @@
 
 // Qué criaturas pueden aparecer en cada nivel de arena (dificultad creciente)
 function spawnPoolFor(level){
+  const pool=baseSpawnPoolFor(level);
+  return typeof AlphaServices!=="undefined" ? AlphaServices.spawnPool(pool,level) : pool;
+}
+function baseSpawnPoolFor(level){
   if(arenaHas("spawnPool")) return arenaHook("spawnPool", level);
   if(currentArena==="hielo") return spawnPoolForHielo(level);
   if(currentArena==="bosque") return spawnPoolForBosque(level);
@@ -79,7 +83,7 @@ function spawnPoolForAcuatica(level){
 function pickFromPool(pool){
   // Pesadilla/Infierno: élites y subélites más frecuentes (difficulty-tiers.js)
   const ew = typeof diffEliteWeight==="function" ? diffEliteWeight : null;
-  const wOf = p => ew ? p.w*ew(p.t) : p.w;
+  const wOf = p => (ew ? p.w*ew(p.t) : p.w) * (typeof alphaWorldMultiplier==="function" && ENEMY_BASE[p.t]?.rank==="elite" ? alphaWorldMultiplier("eliteRate") : 1);
   let total = 0; for(const p of pool) total += wOf(p);
   let r = Math.random()*total;
   for(const p of pool){ r -= wOf(p); if(r <= 0) return p.t; }
@@ -123,6 +127,10 @@ function spawnEnemy(type, atBoss, champion){
   if(type==="demonio_hielo_fuego"){ e.escarchaCd = 2500+Math.random()*2500; }
   if(typeof endlessOn==="function" && endlessOn()) endlessOnSpawn(e, atBoss, champion); // Horda Infinita: curva sin techo + economía del modo
   if(e.rank==="elite" && !atBoss && typeof eliteMaybeName==="function") eliteMaybeName(e); // élite con nombre (elite-affixes.js)
+  if(typeof alphaWorldMultiplier==="function"){
+    e.hp = e.maxHp = Math.max(1,Math.round(e.maxHp*alphaWorldMultiplier("enemyHp")*alphaWorldMultiplier("difficulty")));
+    e.dmg *= alphaWorldMultiplier("enemyDamage")*alphaWorldMultiplier("difficulty");
+  }
   enemies.push(e);
   if(typeof codexNoteSeen==="function") codexNoteSeen(type); // Códice: criatura descubierta
   if(arenaHas("placeSpawn")) arenaHook("placeSpawn", e, atBoss, champion); // puertas/túneles propios de la arena

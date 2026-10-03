@@ -92,13 +92,15 @@ personaje mientras están activos.
 |---|---|---|
 | **PASS** | Coincide con la Art Bible | Integrar |
 | **FIX** | Problema técnico corregible sin rediseñar (halo, alfa, escala, pixel snapping, frames desalineados, paleta/contraste menor) | Corregir con `tools/art/scan_sprites.py`, validar de nuevo |
-| **REDRAW REQUIRED** | Válido conceptualmente pero de otra dirección artística (anime, semi-realista, densidad de píxel incompatible, proporciones incompatibles, el diseño cambia entre frames) | **No** esconder con un filtro. **No** reemplazar automáticamente. Documentar en `docs/ART_REPLACEMENT_QUEUE.md` y esperar el arte nuevo |
+| **REDRAW REQUIRED** | Válido conceptualmente pero de otra dirección artística (anime, semi-realista, densidad de píxel incompatible, proporciones incompatibles, el diseño cambia entre frames) | **No** esconder con un filtro. Documentar en `docs/ART_REPLACEMENT_QUEUE.md`, producir arte nuevo autorizado y volver a pasar el gate |
 | **REJECT** | Defectuoso o incorrecto conceptualmente | No integrar; conservar el asset anterior si existe |
 
-**Regla de seguridad — sin excepciones:** ante un REDRAW, la IA no rediseña sola. No cambia
-identidad, ropa, arma, colores principales, temática, silueta característica ni habilidades. Se
-documenta qué hace falta; el arte nuevo lo produce una persona usando el diseño existente como
-canon, y el recorte/integración técnica sí la hace la IA después.
+**Regla de preservación:** un REDRAW conserva identidad, temática, silueta característica y
+habilidades del campeón. En la iniciativa Alpha Autonomous Improvement Factory el owner autoriza
+redraw autónomo cuando corresponda: producir el arte con el diseño existente como canon,
+conservar el asset anterior hasta aprobar el nuevo y repetir revisión técnica y visual. Esta
+autorización no convierte un asset generado automáticamente en PASS ni permite degradar
+referencias excelentes. Fuera de una autorización de rediseño, documentar el encargo pendiente.
 
 **Herramientas del Gate:**
 - `python3 tools/art/redraw/build_all.py` — hoja de sprites (PNG con cuadriculado rasterizado) →
@@ -141,3 +143,9 @@ dirección): un mago de hielo chibi (mismo lenguaje que el Caballero, para caste
 espadachín oscuro y ensangrentado (dirección aceptable para un enemigo/subjefe agresivo — más
 grande y detallado que un común, sin dejar de ser pixel art), y "Diablo Prime" (jefe final:
 mucha más escala/detalle/VFX, permitido en la sección 9).
+
+## 12. Estándares complementarios de producción
+
+`docs/production/PRODUCTION_BIBLES.md` consolida Champion, Enemy, Ability, VFX, Audio, UI, HUD,
+Cosmetic y Set Bible sin reemplazar esta gramática visual ni el canon narrativo. El contrato
+reutilizable y los gates de incorporación están en `tools/factory/README.md`.

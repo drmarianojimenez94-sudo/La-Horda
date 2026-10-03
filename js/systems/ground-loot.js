@@ -35,6 +35,7 @@ function _glSource(e){
     if(rk==="elite" || rk==="named" || rk==="subjefe" || rk==="jefe") grade = GRADE_ORDER_GL.indexOf(g) > GRADE_ORDER_GL.indexOf(grade) ? g : grade;
     if(rk==="elite" || rk==="named") chance = Math.min(0.9, chance * (1 + ENDLESS_CFG.lootGrowthPerRound*(EN.round-1)));
   }
+  if(typeof alphaWorldMultiplier==="function") chance = Math.min(1, chance*alphaWorldMultiplier("drop"));
   return {rk, grade, chance, hm:C.highMult[rk], count:C.count[rk], build:(C.buildChance||{})[rk]||0};
 }
 const GRADE_ORDER_GL = ["C","B","A","S","S+"];

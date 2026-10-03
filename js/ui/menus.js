@@ -465,7 +465,7 @@ function prepSkinsHTML(){
       : full ? `<button class="btn small" data-prep-skin-use="${id}">USAR</button>`
       : `<button class="btn small secondary" data-prep-skin-buy="${id}" ${save.gold < miss*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(miss*SHOP_TEST_PRICE)}</button>`;
     return `<div class="prep-skin ${on?"on":""}"><canvas class="champ-anim prep-skin-anim" width="56" height="56" data-class-key="${k}" data-skin="${id}" data-idle="1"></canvas>
-      <div class="prep-skin-info"><div class="prep-skin-name">${sk.name || SET_DB[id].name}</div><div class="prep-skin-sub">Set ${SET_DB[id].name}${full||on ? "" : ` · faltan ${miss} pieza${miss>1?"s":""}`}</div>${btn}</div></div>`;
+      <div class="prep-skin-info"><div class="prep-skin-name">${sk.name || SET_DB[id].name}${typeof cosmeticArtPending==="function" && cosmeticArtPending(sk) ? " · croma de set" : ""}</div><div class="prep-skin-sub">Set ${SET_DB[id].name}${full||on ? "" : ` · faltan ${miss} pieza${miss>1?"s":""}`}</div>${btn}</div></div>`;
   }).join("");
   return `<div class="prep-skins"><div class="prep-skins-title">🎨 Skins de ${CLASSES[k].name} <button class="btn small secondary" data-prep-shop>🛒 Tienda de skins</button></div><div class="prep-skins-list">${chips}</div></div>`;
 }
@@ -474,7 +474,7 @@ function bindPrepSkins(box){
   if(sh) sh.addEventListener("click", ()=>{ codexReturnTo = "prep"; shopTab = "skins"; setState("shop"); renderShop(); });
   box.querySelectorAll("[data-prep-skin-use]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-prep-skin-use");
-    if(skinEquipOn(id, selectedClass)) _skinEquippedFeedback(id, selectedClass); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas.");
+    if(skinEquipOn(id, selectedClass)) _skinEquippedFeedback(id, selectedClass); else gameAlert("No se pudo usar: revisá que hayas desbloqueado esta apariencia.");
     renderPrepSummary();
   }));
   box.querySelectorAll("[data-prep-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
