@@ -113,3 +113,10 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
 - **Hallazgo (tutorial)**: en el paso final del entrenamiento, Elyra reanimada mataba a los esqueletos y el
   objetivo contaba solo las bajas del jugador → el novato quedaba trabado (1 de 2 corridas en 667×375). Ahora
   cuenta los enemigos derrotados por el equipo.
+
+### A12. Regresión multijugador (relay real)
+- **Problema**: `tools/micelial/t_micelial_net.js` y `tools/identity/t_identity_net.js` estaban rotas ya en la base
+  (`HEAD` limpio): tocaban "Continuar" del título, que ahora abre el flujo de primera vez, y la sala arrancaba en la
+  Ciudad Maldita. No validaban nada.
+- **Arreglo**: crean la sala con `netCreateRoom(arena, …)` y un guardado con el onboarding completo y las arenas abiertas.
+- **Resultado**: Reino Micelial anfitrión + 3 invitados 14/14; Infernal 9/9; Gélida 8/8; `tools/ux/online.js` sin fallas.

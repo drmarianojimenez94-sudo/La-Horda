@@ -19,14 +19,14 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     p.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|WebSocket/.test(m.text())) errs.push('console: ' + m.text().slice(0, 200)); });
     await p.goto(url);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const x = document.getElementById('title-continue-btn'); return x && !x.disabled; })) break; await sleep(100); }
-    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } selectedClass = c; }, [CH[i]]);
+    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } save.arenasCleared = Object.fromEntries(ARENA_ORDER.map(a => [a, true])); save.starterChosen = true; save.tut = Object.assign(save.tut || {}, {training: 1, basics: 1}); selectedClass = c; }, [CH[i]]);
     return { p, errs, i };
   };
   const all = [];
   for (const ARENA of ARENAS) {
   const H = all[0] || await mk(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, 0);
   if (!all.length) {
-    await H.p.evaluate(([a]) => { document.getElementById('title-continue-btn').click(); currentArena = a; setState('prep'); renderPrepSummary(); document.getElementById('net-create-btn').click(); }, [ARENA]);
+    await H.p.evaluate(([a]) => { currentArena = a; setState('prep'); renderPrepSummary(); netCreateRoom(a, selectedClass, 30); }, [ARENA]); // directo: el botón del título abre el flujo de primera vez
     for (let k = 0; k < 50 && !(await H.p.evaluate(() => net.code)); k++) await sleep(100);
     const url = await H.p.evaluate(() => netInviteUrl());
     all.push(H);

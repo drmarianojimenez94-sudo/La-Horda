@@ -21,11 +21,11 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     p.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|WebSocket/.test(m.text())) errs.push('console: ' + m.text().slice(0, 200)); });
     await p.goto(url);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const x = document.getElementById('title-continue-btn'); return x && !x.disabled; })) break; await sleep(100); }
-    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } save.arenasCleared = { bosque: true, acuatica: true, fortaleza: true, micelial: false, hielo: false, laberinto: false, infernal: false }; selectedClass = c; }, [CH[i]]);
+    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 30; save.champions[k].unlocked = true; } save.arenasCleared = { ciudad: true, bosque: true, acuatica: true, fortaleza: true, micelial: false, hielo: false, laberinto: false, infernal: false }; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, {training: 1, basics: 1}); selectedClass = c; }, [CH[i]]);
     return { p, errs, i };
   };
   const H = await mk(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, 0);
-  await H.p.evaluate(() => { document.getElementById('title-continue-btn').click(); currentArena = 'micelial'; setState('prep'); renderPrepSummary(); document.getElementById('net-create-btn').click(); });
+  await H.p.evaluate(() => { currentArena = 'micelial'; setState('prep'); renderPrepSummary(); netCreateRoom('micelial', selectedClass, 30); }); // directo: el botón del título abre el flujo de primera vez
   for (let k = 0; k < 50 && !(await H.p.evaluate(() => net.code)); k++) await sleep(100);
   const url = await H.p.evaluate(() => netInviteUrl());
   const all = [H];
