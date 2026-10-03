@@ -18,6 +18,8 @@ jobs:
         with:
           node-version: 22
       - run: node --test tools/factory/test.js
+      - run: node tools/alpha/account-environments.js
+      - run: node tools/quality/test-floating-text.js
       - run: node tools/alpha/services-test.js
       - run: node tools/collection/check-collection.js
       - run: node tools/quality/test-vfx-pools.js
@@ -40,6 +42,7 @@ jobs:
       - run: node tools/ux/online.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node server/test-owner-policy.js
       - run: node server/test-game-master.js
       - run: node tools/alpha/gm-ui.js
         env:
@@ -51,6 +54,12 @@ jobs:
           node tools/alpha/services-browser.js
           node tools/alpha/navigation-profiles.js
           node tools/alpha/training-test.js
+          node tools/alpha/training-player.js
+          node tools/alpha/main-flow.js
+          node tools/collection/shop-pricing-browser.js
+          node tools/factory/event-runtime.js
+          node tools/factory/options-layout.js
+          node tools/art/alpha_set_skins/browser.js
           node tools/collection/browser-collection.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
@@ -67,3 +76,42 @@ jobs:
             docs/ynara/
             docs/ux/
             docs/portadores/ynara-*
+
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: isolated-test-only
+          POSTGRES_DB: horda_test_operations
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm ci --prefix server --no-audit --no-fund
+      - run: node server/test-postgres.js
+        env:
+          HORDA_TEST_PG_URL: postgres://postgres:isolated-test-only@127.0.0.1:5432/horda_test_operations
+  safari-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install --prefix /tmp/horda-webkit --no-audit --no-fund playwright@1.61.1
+      - run: /tmp/horda-webkit/node_modules/.bin/playwright install --with-deps webkit
+      - run: |
+          python3 -m http.server 8814 > /tmp/webkit-http.log 2>&1 &
+          trap 'kill $!' EXIT
+          curl --retry 10 --retry-connrefused --retry-delay 1 --silent --fail http://127.0.0.1:8814/ > /dev/null
+          node tools/alpha/main-flow.js
+        env:
+          NODE_PATH: /tmp/horda-webkit/node_modules
+          SITE: http://127.0.0.1:8814
+          BROWSER: webkit
