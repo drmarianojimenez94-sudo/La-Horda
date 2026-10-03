@@ -166,3 +166,33 @@ accurate persistent-file health. `npm test` includes both alongside accounts/rel
 PostgreSQL logic is implemented but has not been exercised against a live PostgreSQL
 instance here; no PostgreSQL integration pass is claimed. No production destructive action
 or test-account creation was performed.
+
+## Cloud playtest recovery and NanoGM login
+
+Normal save loading no longer grants every champion level 40 or opens all arenas.
+Existing progress is not silently deleted. In Cuenta, including the cloud/device conflict
+screen, the authenticated player can choose **Borrar progreso de prueba y empezar de cero**.
+After explicit confirmation, both copies are backed up in that browser before a fresh save
+is uploaded with the cloud version (CAS, no forced write). A concurrent device change
+refuses the reset. The account, password and OWNER identity remain intact. This resets
+all game progress including inventory/cosmetics; backups remain local to the initiating
+browser. The player chooses a new starter; other champions are locked at level 1.
+The conflict screen also identifies the account/server, offers account switching, and
+shows the admin shortcut only after the server confirms OWNER.
+
+If NanoGM cannot log in, a main-branch merge does not create the reserved account or
+change its password. The infrastructure operator must run `node server/recover-owner.js`
+in the **principal Fondal relay** with its existing `DATABASE_URL` (or explicit persistent
+`DATA_DIR`). Supply the new 12–128 character password through stdin from a secret manager;
+never use a command-line argument, commit it, or paste it into logs. The CLI creates only
+the reserved configured operator if missing, or rotates that account's password while
+retaining its ID and save. Old sessions are revoked. Restart the relay afterward to bind
+the operator ID. Public registration cannot claim this name. An `ADMIN_USERS` override
+must be absent or explicitly include NanoGM; an empty value intentionally disables OWNER.
+Do not run against a separate Render test database to recover a Fondal account.
+
+Validation: `node server/test-owner-recovery.js` and
+`CHROMIUM_PATH=/path/to/chromium node tools/alpha/cloud-recovery.js` cover account retention,
+session revocation, no automatic level grants, backups, CAS rejection, explicit reset,
+and the owner shortcut during a sync conflict. Production credentials and data are not
+modified by these tests.

@@ -265,6 +265,7 @@ function fileStore(dir){
     async getSession(h){ return db.sessions[h] || null; },
     async touchSession(h, expiresAt){ if(db.sessions[h]){ db.sessions[h].expiresAt = expiresAt; await flush(); } },
     async deleteSession(h){ if(db.sessions[h]){ delete db.sessions[h]; await flush(); } },
+    async deleteUserSessions(id){ for(const h in db.sessions) if(db.sessions[h].userId === id) delete db.sessions[h]; await flush(); },
     async sweepSessions(now){ let n = 0; for(const h in db.sessions) if(db.sessions[h].expiresAt <= now){ delete db.sessions[h]; n++; } if(n) await flush(); return n; },
     async getSaveMeta(id){ return loadMeta(id); },
     async getSave(id){
@@ -395,6 +396,7 @@ function pgStore(url){
     },
     async touchSession(h, exp){ await q(`UPDATE horda_sessions SET expires_at=$2 WHERE token_hash=$1`, [h, exp]); },
     async deleteSession(h){ await q(`DELETE FROM horda_sessions WHERE token_hash=$1`, [h]); },
+    async deleteUserSessions(id){ await q(`DELETE FROM horda_sessions WHERE user_id=$1`, [id]); },
     async sweepSessions(now){ return (await q(`DELETE FROM horda_sessions WHERE expires_at <= $1`, [now])).rowCount; },
     async getSaveMeta(id){ return rowMeta((await q(`SELECT version, updated_at, summary FROM horda_saves WHERE user_id=$1`, [id])).rows[0]); },
     async getSave(id){
