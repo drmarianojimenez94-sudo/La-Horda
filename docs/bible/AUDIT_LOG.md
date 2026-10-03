@@ -120,3 +120,10 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
   Ciudad Maldita. No validaban nada.
 - **Arreglo**: crean la sala con `netCreateRoom(arena, …)` y un guardado con el onboarding completo y las arenas abiertas.
 - **Resultado**: Reino Micelial anfitrión + 3 invitados 14/14; Infernal 9/9; Gélida 8/8; `tools/ux/online.js` sin fallas.
+
+### A13. Objetivos táctiles
+- **Hallazgo**: el botón de curación de emergencia (y el de Pacto, misma clase `.sec`) medía 42×42 px en todos
+  los tamaños: debajo del mínimo táctil de 44.
+- **Arreglo**: `.ability-btn.sec` 44×44 (`css/hud.css`).
+- **Validación**: `tools/ux/test-touch-targets.js` — 5 viewports (844×390, 667×375, 932×430, 800×360, 1280×800)
+  × 3 campeones: todos los controles ≥ 44 px, sin superposición, dentro de pantalla.

@@ -377,7 +377,7 @@ body.reduce-motion .ability-btn.ult.ready{animation:none;}
 }
 
 /* Botones secundarios (Pacto del Nigromante, curación de emergencia): chicos y separados de las habilidades */
-.ability-btn.sec{ width:42px; height:42px; font-size:0.5rem; border-color:#4a6a4a; opacity:0.75; }
+.ability-btn.sec{ width:44px; height:44px; /* mínimo táctil (UX Bible): antes 42 */ font-size:0.5rem; border-color:#4a6a4a; opacity:0.75; }
 .ability-btn.sec .ico{ font-size:1rem; }
 /* curación de emergencia: abajo a la izquierda de las habilidades, lejos del ataque básico */
 .ability-btn.emerg{ right:calc(158px + env(safe-area-inset-right,0px)); bottom:calc(12px + env(safe-area-inset-bottom,0px)); border-color:#2f6b40; opacity:0.35; }
