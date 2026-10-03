@@ -261,4 +261,4 @@ const AlphaServices = (() => {
   setInterval(()=>{if(!document.hidden)refreshWorld();},60000);
   return {emit,flush,multiplier,goldPrice,spawnPool,onState,refreshWorld,activeEvents,eventSet,bossDropSet,bossEvent,announceBoss,enemyDefeated,confirmedBosses,acceptHostEventVictory,completeEvents,openChat,closeChat,build:BUILD};
 })();
-function alphaWorldMultiplier(key){return AlphaServices.multiplier(key);}
+function alphaWorldMultiplier(key){const t=typeof testLabEnemyMods==="function"?testLabEnemyMods():null;return AlphaServices.multiplier(key)*(t&&Number.isFinite(t[key])&&t[key]>0?Math.min(10,t[key]):1);}
