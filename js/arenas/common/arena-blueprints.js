@@ -28,6 +28,7 @@
      multiplayer     qué estado sincroniza el anfitrión
      code            carpeta / archivos
      status          {grade: PASS|FIX|REDRAW|REWORK|REJECT, why}  auditoría de diseño (actualizar al cambiar)
+     variants?       {layouts?, other[]}  variaciones reales (no recolores): el validador prueba 8 semillas de trazado
    ============================================================ */
 const ARENA_BLUEPRINTS = {
   ciudad:{
@@ -67,6 +68,7 @@ const ARENA_BLUEPRINTS = {
     code:"js/arenas/fortaleza/", status:{grade:"PASS", why:"navegación y hazards propios, jefe con regla legible"}
   },
   bosque:{
+    variants:{layouts:"4 trazados de menhires × espejo por semilla (Pesadilla/Infierno, Horda Infinita)", other:["qué 4 de los 8 menhires llevan runa (2 juegos por semilla)"]},
     fantasy:"Ruinas célticas de un bosque sagrado que ahora caza.",
     decision:"Usar las runas de los menhires en el momento justo o guardarlas para la emboscada.",
     biome:"bosque en ruinas", navigation:"claros entre menhires; maleza que oculta emboscadas",
@@ -85,6 +87,7 @@ const ARENA_BLUEPRINTS = {
     code:"js/arenas/bosque/bos-ruins.js (ARENA_EXT)", status:{grade:"PASS", why:"identidad jugable propia; jefe usa las runas"}
   },
   micelial:{
+    variants:{other:["ecosistema: estados de 54 nodos con su reloj","núcleos sembrados por el director cerca de los héroes","raíces, brazos y hongos gigantes de la Madre en posiciones nuevas"]},
     fantasy:"Una caverna viva que crece, madura y muere: el mapa entero es la Madre Espora.",
     decision:"Qué núcleo romper primero: cada uno que cae retrae la infección de su zona, pero la colonia sigue creciendo en otra.",
     biome:"caverna fúngica", navigation:"anillo alrededor del trono de la Madre; montículos y estanques que parten el mapa en carriles",
@@ -107,6 +110,7 @@ const ARENA_BLUEPRINTS = {
     code:"js/arenas/micelial/", status:{grade:"PASS", why:"Gold Standard: geometría pintada = jugable (2026-10), micro-tutorial, briefing con botín"}
   },
   hielo:{
+    variants:{layouts:"4 trazados de pilares de hielo × espejo por semilla", other:["giro de los braseros por semilla"]},
     fantasy:"Una arena helada donde quedarse quieto es morir de a poco.",
     decision:"Moverse o pelear quieto: el frío castiga la quietud y los braseros obligan a reposicionarse.",
     biome:"tundra", navigation:"anillo abierto con braseros en el interior",
@@ -125,6 +129,7 @@ const ARENA_BLUEPRINTS = {
     code:"js/arenas/hielo/hie-cold.js (ARENA_EXT)", status:{grade:"FIX", why:"curva de dificultad: sigue siendo la pared de la campaña (LA_HORDA_PLAYTEST_REPORT.md)"}
   },
   acuatica:{
+    variants:{layouts:"4 trazados de columnas hundidas × espejo por semilla", other:["disposición de corrientes distinta en cada nivel"]},
     fantasy:"Ruinas hundidas: el agua decide hacia dónde vas.",
     decision:"Usar las corrientes para moverte y arrastrar a la horda, o pelear contra ellas.",
     biome:"ruinas sumergidas", navigation:"corrientes lineales, remolinos, anillo y chorros que cambian por nivel",
@@ -143,6 +148,7 @@ const ARENA_BLUEPRINTS = {
     code:"js/arenas/acuatica.js + js/arenas/acuatica/ (ARENA_EXT)", status:{grade:"PASS", why:"movilidad propia y reacción con el rayo"}
   },
   laberinto:{
+    variants:{layouts:"4 trazados de obeliscos × espejo por semilla", other:["juegos de sellos en lugares libres distintos cada 26-36 s"]},
     fantasy:"Muros que levantó un Guardián para esconderse: el laberinto se resuelve.",
     decision:"Activar los sellos en orden I-II-III bajo presión o seguir peleando en los pasillos.",
     biome:"ruinas de piedra", navigation:"pasillos, cámaras y plazas con muros reales",
@@ -197,6 +203,7 @@ const ARENA_BLUEPRINTS = {
     code:"js/arenas/minas/", status:{grade:"PASS", why:"territorio de luz + jefe que lo usa"}
   },
   infernal:{
+    variants:{layouts:"4 trazados de columnas × espejo por semilla", other:["fisuras en posiciones nuevas por nivel"]},
     fantasy:"La dimensión de la Horda: el final del viaje.",
     decision:"¿Mato o cierro? Cerrar fisuras corta la horda pero quema y expone.",
     biome:"infierno", navigation:"octágono con pozos de lava",

@@ -48,7 +48,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -82,7 +82,7 @@
    "summary": {
     "fail": 0,
     "warning": 1,
-    "seconds": 6
+    "seconds": 4
    },
    "status": "WARNING"
   },
@@ -131,7 +131,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -165,7 +165,7 @@
    "summary": {
     "fail": 0,
     "warning": 2,
-    "seconds": 5
+    "seconds": 3
    },
    "status": "WARNING"
   },
@@ -193,6 +193,12 @@
      "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
     },
     {
+     "area": "variants",
+     "name": "variantes por semilla sin bolsillos",
+     "level": "PASS",
+     "detail": "8 semillas, 4 trazados distintos"
+    },
+    {
      "area": "spawn",
      "name": "apariciones válidas",
      "level": "PASS",
@@ -214,7 +220,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -248,7 +254,7 @@
    "summary": {
     "fail": 0,
     "warning": 1,
-    "seconds": 3
+    "seconds": 2
    },
    "status": "WARNING"
   },
@@ -297,7 +303,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -331,7 +337,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 3
+    "seconds": 2
    },
    "status": "PASS"
   },
@@ -359,6 +365,12 @@
      "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
     },
     {
+     "area": "variants",
+     "name": "variantes por semilla sin bolsillos",
+     "level": "PASS",
+     "detail": "8 semillas, 4 trazados distintos"
+    },
+    {
      "area": "spawn",
      "name": "apariciones válidas",
      "level": "PASS",
@@ -380,7 +392,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -442,6 +454,12 @@
      "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
     },
     {
+     "area": "variants",
+     "name": "variantes por semilla sin bolsillos",
+     "level": "PASS",
+     "detail": "8 semillas, 4 trazados distintos"
+    },
+    {
      "area": "spawn",
      "name": "apariciones válidas",
      "level": "PASS",
@@ -463,7 +481,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -525,6 +543,12 @@
      "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
     },
     {
+     "area": "variants",
+     "name": "variantes por semilla sin bolsillos",
+     "level": "PASS",
+     "detail": "8 semillas, 4 trazados distintos"
+    },
+    {
      "area": "spawn",
      "name": "apariciones válidas",
      "level": "PASS",
@@ -546,7 +570,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -629,7 +653,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "WARNING",
-     "detail": "116 cuadros-héroe dentro de colisión [[\"tanque\",324,616,597,\"\"],[\"tanque\",325,623,598,\"\"],[\"tanque\",325,629,599,\"\"],[\"tanque\",321,637,600,\"abHang\"],[\"tanque\",321,637,601,\"abHang\"]] (arena con caídas: colgado del borde)"
+     "detail": "113 cuadros-héroe dentro de colisión (> 4 u) [[\"tanque\",324,616,597,\"\"],[\"tanque\",325,623,598,\"\"],[\"tanque\",325,629,599,\"\"],[\"tanque\",321,637,600,\"abHang\"],[\"tanque\",321,637,601,\"abHang\"]] (arena con caídas: colgado del borde)"
     },
     {
      "area": "explore",
@@ -648,7 +672,7 @@
    "explore": {
     "frames": 1800,
     "nan": 0,
-    "outside": 116,
+    "outside": 113,
     "oob": 0,
     "trapped": 0,
     "trappedAt": [],
@@ -748,7 +772,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",
@@ -782,7 +806,7 @@
    "summary": {
     "fail": 0,
     "warning": 1,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "WARNING"
   },
@@ -810,6 +834,12 @@
      "detail": "la arena no declara sólidos visuales (geometry.solids): revisión manual"
     },
     {
+     "area": "variants",
+     "name": "variantes por semilla sin bolsillos",
+     "level": "PASS",
+     "detail": "8 semillas, 4 trazados distintos"
+    },
+    {
      "area": "spawn",
      "name": "apariciones válidas",
      "level": "PASS",
@@ -831,7 +861,7 @@
      "area": "explore",
      "name": "héroes siempre en zona caminable",
      "level": "PASS",
-     "detail": "0 cuadros-héroe dentro de colisión"
+     "detail": "0 cuadros-héroe dentro de colisión (> 4 u)"
     },
     {
      "area": "explore",

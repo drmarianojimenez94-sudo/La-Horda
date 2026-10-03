@@ -50,7 +50,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         enemies = []; spawnTimer = 1e9; arenaHazardTimer = 1e9;
         for (const h of heroes) { h.hp = h.maxHp = 1e7; }
         const start = {x: player.x, y: player.y};
-        const walk = (x, y, r) => { const e = {x, y, radius: r || 18}; clampToArena(e); resolveWallCollision(e); return Math.hypot(e.x - x, e.y - y) < 0.75; };
+        const walk = (x, y, r, tol) => { const e = {x, y, radius: r || 18}; clampToArena(e); resolveWallCollision(e); return Math.hypot(e.x - x, e.y - y) < (tol || 0.75); };
+        // en la exploración se tolera <= 4 u (márgenes de borde y empujes entre héroes); más es meterse en un sólido
+        const PEN = 4;
         // ---------- grilla ----------
         const def = arenaDef(), nb = def && def.navBounds;
         const bx0 = nb ? nb.x0 : -1340, by0 = nb ? nb.y0 : -940, bx1 = nb ? nb.x1 : 1340, by1 = nb ? nb.y1 : 940;
@@ -94,6 +96,26 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         { const q = [[start.x - 30, start.y - 30], [start.x + 30, start.y - 30], [start.x + 30, start.y + 30], [start.x - 30, start.y + 30]];
           const leaks = [[start.x, start.y], ...q.map(([x, y]) => [start.x + (x - start.x) * 0.55, start.y + (y - start.y) * 0.55])].filter(([x, y]) => walk(x, y, 4)).length;
           if (!leaks) add('geometry', 'canario del validador', 'FAIL', 'un sólido falso sobre el inicio no se detectó: el chequeo visual no funciona'); }
+        // ---------- variantes por semilla (trazados de la Arena Factory) ----------
+        if (typeof AID_LAYOUT_ARENAS !== 'undefined' && AID_LAYOUT_ARENAS[key] && typeof diffNewSoloSeed === 'function') {
+          const oSeed = diffNewSoloSeed, names = new Set(); let badVar = [];
+          window.__layForce = true;
+          for (const sd of [11, 23, 37, 41, 53, 67, 79, 97]) {
+            diffNewSoloSeed = () => { _soloMapSeed = sd; return sd; };
+            try { startRun(3); setState('playing'); enemies = []; spawnTimer = 1e9; } catch (err) { badVar.push(sd + ': ' + err.message); continue; }
+            if (typeof aidLayoutInfo !== 'undefined' && aidLayoutInfo) names.add(aidLayoutInfo.name || JSON.stringify(aidLayoutInfo).slice(0, 30));
+            const ok2 = new Uint8Array(W * H); for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) ok2[j * W + i] = walk(cx(i), cy(j)) ? 1 : 0;
+            const seen = new Uint8Array(W * H), s0 = Math.floor((player.y - by0) / C) * W + Math.floor((player.x - bx0) / C);
+            if (!ok2[s0]) { badVar.push(sd + ': inicio bloqueado'); continue; }
+            const q = [s0]; seen[s0] = 1; let reach = 0, total = 0;
+            while (q.length) { const c = q.pop(); reach++; const i = c % W, j = (c / W) | 0; for (const [di, dj] of [[1,0],[-1,0],[0,1],[0,-1]]) { const ni = i + di, nj = j + dj; if (ni < 0 || nj < 0 || ni >= W || nj >= H) continue; const nc = nj * W + ni; if (ok2[nc] && !seen[nc]) { seen[nc] = 1; q.push(nc); } } }
+            for (let c = 0; c < W * H; c++) if (ok2[c]) total++;
+            if (total - reach > 6) badVar.push(sd + ': ' + (total - reach) + ' celdas aisladas');
+          }
+          diffNewSoloSeed = oSeed; window.__layForce = undefined;
+          try { startRun(3); setState('playing'); enemies = []; spawnTimer = 1e9; } catch (err) {}
+          add('variants', 'variantes por semilla sin bolsillos', badVar.length ? 'FAIL' : 'PASS', badVar.length ? badVar.slice(0, 4).join('; ') : `8 semillas, ${names.size} trazados distintos`);
+        }
         // ---------- spawns ----------
         runLevel = 3; let badSpawn = 0, unreach = 0, sample = [];
         const pool = spawnPoolFor(runLevel);
@@ -134,7 +156,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
           for (const h of [player, ...allies]) {
             if (!Number.isFinite(h.x) || !Number.isFinite(h.y)) { stats.nan++; continue; }
             if (h.x < bx0 - 40 || h.x > bx1 + 40 || h.y < by0 - 40 || h.y > by1 + 40) { stats.oob++; if (stats.oobAt.length < 5) stats.oobAt.push(['heroe', h.classKey, Math.round(h.x), Math.round(h.y), f]); }
-            else if (!walk(h.x, h.y, h.radius || 18)) { stats.outside++; if (stats.outsideAt.length < 5) stats.outsideAt.push([h.classKey, Math.round(h.x), Math.round(h.y), f, Object.keys(h).filter(k => /hang|fall|ledge|dangl|rescue/i.test(k) && h[k]).join('|')]); }
+            else if (!walk(h.x, h.y, h.radius || 18, PEN)) { stats.outside++; if (stats.outsideAt.length < 5) stats.outsideAt.push([h.classKey, Math.round(h.x), Math.round(h.y), f, Object.keys(h).filter(k => /hang|fall|ledge|dangl|rescue/i.test(k) && h[k]).join('|')]); }
           }
           for (const e of enemies) { if (!e.alive || e.flying || e.rank === 'jefe') continue; if (!Number.isFinite(e.x)) stats.nan++; else if (e.x < bx0 - 200 || e.x > bx1 + 200 || e.y < by0 - 200 || e.y > by1 + 200) { stats.oob++; if (stats.oobAt.length < 5) stats.oobAt.push(['enemigo', e.type, Math.round(e.x), Math.round(e.y), f]); } }
           // ¿atrapado? quieto 2 s con el joystick apretado: probar 8 direcciones
@@ -150,7 +172,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         add('explore', 'sin NaN', stats.nan ? 'FAIL' : 'PASS', String(stats.nan));
         add('explore', 'nadie fuera del mapa', stats.oob ? 'FAIL' : 'PASS', stats.oob + (stats.oob ? ' ' + JSON.stringify(stats.oobAt) : ''));
         const fallable = !!(B && B.geometry && B.geometry.fallable);
-        add('explore', 'héroes siempre en zona caminable', stats.outside > 3 ? (fallable ? 'WARNING' : 'FAIL') : stats.outside ? 'WARNING' : 'PASS', stats.outside + ' cuadros-héroe dentro de colisión' + (stats.outside ? ' ' + JSON.stringify(stats.outsideAt) : '') + (fallable && stats.outside ? ' (arena con caídas: colgado del borde)' : ''));
+        add('explore', 'héroes siempre en zona caminable', stats.outside > 3 ? (fallable ? 'WARNING' : 'FAIL') : stats.outside ? 'WARNING' : 'PASS', stats.outside + ' cuadros-héroe dentro de colisión (> ' + 4 + ' u)' + (stats.outside ? ' ' + JSON.stringify(stats.outsideAt) : '') + (fallable && stats.outside ? ' (arena con caídas: colgado del borde)' : ''));
         add('explore', 'nunca atrapado', stats.trapped ? 'FAIL' : 'PASS', stats.trapped ? 'en ' + JSON.stringify(stats.trappedAt.slice(0, 4)) : stats.frames + ' cuadros de exploración');
         // ---------- lámina de depuración ----------
         const sc = Math.min(2, 1000 / (W * 4)), cv = document.createElement('canvas'); cv.width = W * 4 * sc | 0; cv.height = H * 4 * sc | 0;
@@ -172,7 +194,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       r.status = f ? 'FAIL' : w ? 'WARNING' : 'PASS';
       results.push(r);
       console.log(`${r.status.padEnd(8)} ${key.padEnd(10)} fail=${f} warn=${w} (${r.summary.seconds}s)`);
-      for (const c of r.checks.filter(c => c.level !== 'PASS')) console.log(`   ${c.level} [${c.area}] ${c.name} — ${c.detail}`);
+      for (const c of r.checks.filter(c => c.level !== 'PASS' || process.env.VERBOSE)) console.log(`   ${c.level} [${c.area}] ${c.name} — ${c.detail}`);
     }
     const report = {schemaVersion: 1, generatedBy: 'tools/bible/arena-validator.js', scope: 'Automated geometry/spawn/exploration checks on the real engine + blueprint completeness. PASS is not a design approval.', arenas: results, pageErrors};
     if (!process.env.ARENAS) {

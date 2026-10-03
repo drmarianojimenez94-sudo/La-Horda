@@ -27,7 +27,7 @@ Lámina: verde = caminable y alcanzable · rojo = caminable pero inalcanzable (b
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Fábrica Sin Fin — WARNING
@@ -37,17 +37,18 @@ Lámina: verde = caminable y alcanzable · rojo = caminable pero inalcanzable (b
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Ruinas Célticas / Élficas — WARNING
 - ✔ **PASS** [blueprint] ficha completa
 - ✔ **PASS** [geometry] área caminable conexa — 4326 celdas; 0 bolsillos inalcanzables
 - ⚠ **WARNING** [geometry] si se ve sólido, es sólido — la arena no declara sólidos visuales (geometry.solids): revisión manual
+- ✔ **PASS** [variants] variantes por semilla sin bolsillos — 8 semillas, 4 trazados distintos
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Reino Fúngico — PASS
@@ -57,37 +58,40 @@ Lámina: verde = caminable y alcanzable · rojo = caminable pero inalcanzable (b
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Arena Gélida — WARNING
 - ✔ **PASS** [blueprint] ficha completa
 - ✔ **PASS** [geometry] área caminable conexa — 4337 celdas; 0 bolsillos inalcanzables
 - ⚠ **WARNING** [geometry] si se ve sólido, es sólido — la arena no declara sólidos visuales (geometry.solids): revisión manual
+- ✔ **PASS** [variants] variantes por semilla sin bolsillos — 8 semillas, 4 trazados distintos
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Arena Acuática — WARNING
 - ✔ **PASS** [blueprint] ficha completa
 - ✔ **PASS** [geometry] área caminable conexa — 4319 celdas; 0 bolsillos inalcanzables
 - ⚠ **WARNING** [geometry] si se ve sólido, es sólido — la arena no declara sólidos visuales (geometry.solids): revisión manual
+- ✔ **PASS** [variants] variantes por semilla sin bolsillos — 8 semillas, 4 trazados distintos
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Laberinto — WARNING
 - ✔ **PASS** [blueprint] ficha completa
 - ✔ **PASS** [geometry] área caminable conexa — 3838 celdas; 0 bolsillos inalcanzables
 - ⚠ **WARNING** [geometry] si se ve sólido, es sólido — la arena no declara sólidos visuales (geometry.solids): revisión manual
+- ✔ **PASS** [variants] variantes por semilla sin bolsillos — 8 semillas, 4 trazados distintos
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Abismo — WARNING
@@ -97,7 +101,7 @@ Lámina: verde = caminable y alcanzable · rojo = caminable pero inalcanzable (b
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ⚠ **WARNING** [explore] héroes siempre en zona caminable — 116 cuadros-héroe dentro de colisión [["tanque",324,616,597,""],["tanque",325,623,598,""],["tanque",325,629,599,""],["tanque",321,637,600,"abHang"],["tanque",321,637,601,"abHang"]] (arena con caídas: colgado del borde)
+- ⚠ **WARNING** [explore] héroes siempre en zona caminable — 113 cuadros-héroe dentro de colisión (> 4 u) [["tanque",324,616,597,""],["tanque",325,623,598,""],["tanque",325,629,599,""],["tanque",321,637,600,"abHang"],["tanque",321,637,601,"abHang"]] (arena con caídas: colgado del borde)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Minas Profundas — WARNING
@@ -107,16 +111,17 @@ Lámina: verde = caminable y alcanzable · rojo = caminable pero inalcanzable (b
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 
 ### Arena Infernal — WARNING
 - ✔ **PASS** [blueprint] ficha completa
 - ✔ **PASS** [geometry] área caminable conexa — 4280 celdas; 0 bolsillos inalcanzables
 - ⚠ **WARNING** [geometry] si se ve sólido, es sólido — la arena no declara sólidos visuales (geometry.solids): revisión manual
+- ✔ **PASS** [variants] variantes por semilla sin bolsillos — 8 semillas, 4 trazados distintos
 - ✔ **PASS** [spawn] apariciones válidas — 120/120 válidas; 0 dentro de colisión, 0 inalcanzables
 - ✔ **PASS** [explore] sin NaN — 0
 - ✔ **PASS** [explore] nadie fuera del mapa — 0
-- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión
+- ✔ **PASS** [explore] héroes siempre en zona caminable — 0 cuadros-héroe dentro de colisión (> 4 u)
 - ✔ **PASS** [explore] nunca atrapado — 1800 cuadros de exploración
 

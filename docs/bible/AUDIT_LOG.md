@@ -154,3 +154,11 @@ Formato: **Problema → Decisión → Implementación → Validación → Commit
 - **Decisión**: se adopta como estándar para los 29 ("Aldric sostiene…"), con chequeo FAIL en el validador.
 - **Validación**: `test-elyra` PASS, `browser-collection` PASS, champion-validator 29/29.
 - `docs/bible/VALIDATION_MATRIX.md`: matriz final con evidencia por fila.
+
+### A17. Variantes de arena (rejugabilidad sin caos)
+- El motor ya tenía variantes por semilla (trazados de pilares × espejo en Pesadilla/Infierno y Horda Infinita;
+  runas del Bosque; giro de braseros). Ahora están declaradas en la Arena Factory (`variants`) y el validador prueba
+  **8 semillas** por arena con trazados: 4 trazados distintos por arena, 0 bolsillos (Ruinas, Gélida, Acuática,
+  Laberinto, Infernal). En cooperativo la semilla es la del anfitrión (`netMatch.seed`).
+- El chequeo de exploración tolera ≤ 4 u de penetración (márgenes de borde y empujes entre héroes); más que eso
+  sigue siendo FAIL.
