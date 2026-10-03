@@ -1,0 +1,9 @@
+{
+  "generator": "built-in image_gen",
+  "generatedAt": "2026-10-03",
+  "technicalImport": "crop, uniform nearest-neighbor scale, alpha threshold; no authored pixel modifications",
+  "skins": [
+    {"champion":"myla","set":"merienda_magica","name":"Myla — Pastelera de Medianoche","theme":"boina de chef, delantal lunar, chaqueta pastelera y bolsa de arándanos","lore":"Cuando el campamento se queda dormido, Myla prepara una merienda para quienes siguen de guardia. Su pequeña boina guarda una miguita de luna; el bolsillo del delantal, una cuchara de repuesto para quien necesite compañía.","excludedFrames":[{"index":17,"reason":"Ultimate de perfil gira hacia la cámara; se usan 16,18,19 conservando vista derecha."}]},
+    {"champion":"ynara","set":"santa_paciencia","name":"Ynara — Guardiana del Santuario","theme":"abrigo médico blindado, hombreras aladas, banda carmesí y botiquín","lore":"Ynara cosió las insignias de los refugios sobre un abrigo de campaña y reforzó sus hombros para cruzar el asedio. En su botiquín lleva curas; en el bolsillo interior, la receta con la que reunió de nuevo a los supervivientes.","excludedFrames":[{"index":11,"reason":"Walk de espalda invierte la ubicación del botiquín; se usan 8,9,10,9."}]}
+  ]
+}

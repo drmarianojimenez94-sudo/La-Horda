@@ -17,6 +17,38 @@ function pxFont(size){ return `${(size*1.22).toFixed(1)}px 'VT323', monospace`; 
 const floatTexts = [];
 for(let i=0;i<FT_MAX;i++) floatTexts.push({on:false, x:0, y:0, text:"", kind:0, t:0, dur:900, vx:0, val:0, dk:null, key:null, pop:0, sc:1});
 let _ftNext = 0, _ftAvg = 40;
+// Ocupación en coordenadas del mundo calculada con el tamaño real de pantalla.
+// No cambia daño/acumulación: sólo evita dibujar etiquetas ilegibles una encima de otra.
+const _ftRects = Array.from({length:FT_MAX},()=>({x:0,y:0,w:0,h:0}));
+let _ftRectCount = 0;
+const FT_DRAW_ORDER = [4,3,2,1,0]; // avisos, daño recibido, curación, críticos, daño común
+const FT_PRIORITY = [0,1,3,4,5];
+function _ftTake(kind){
+  let best=null;
+  for(let i=0;i<FT_MAX;i++){
+    const index=(_ftNext+i)%FT_MAX, f=floatTexts[index];
+    if(!f.on){ _ftNext=(index+1)%FT_MAX; return f; }
+    if(FT_PRIORITY[f.kind]>FT_PRIORITY[kind]) continue;
+    if(!best || FT_PRIORITY[f.kind]<FT_PRIORITY[best.kind] || (f.kind===best.kind && f.t/f.dur>best.t/best.dur)) best=f;
+  }
+  return best; // daño saliente nunca borra una advertencia/curación por saturación
+}
+function _ftPlace(x,y,w,h){
+  const gap = 4/CAM_ZOOM;
+  for(let row=0;row<3;row++){
+    const top = y - row*(h+gap) - h/2, left = x-w/2;
+    let overlaps = false;
+    for(let i=0;i<_ftRectCount;i++){
+      const r = _ftRects[i];
+      if(left < r.x+r.w+gap && left+w+gap > r.x && top < r.y+r.h+gap && top+h+gap > r.y){ overlaps = true; break; }
+    }
+    if(!overlaps){
+      const r = _ftRects[_ftRectCount++]; r.x=left;r.y=top;r.w=w;r.h=h;
+      return top+h/2;
+    }
+  }
+  return null; // conservar el valor en el pool; reaparece cuando haya espacio
+}
 // Colores por tipo de daño (los números de TUS golpes): se lee qué elemento está pegando sin mirar el ícono.
 const FT_DMG_COL = {physical:"#fff1d6", fire:"#ff9a3c", ice:"#8fdcff", lightning:"#ffe84a", bleed:"#ff6a7e", poison:"#9be35a", arcane:"#c9a0ff", holy:"#ffe9a0"};
 // Tope de números chicos a la vez (en el teléfono tapaban la acción): los críticos siempre entran.
@@ -52,7 +84,7 @@ function floatText(x,y,text,cls,dk,key){
       return;
     }
     if(kind===0 && nNum >= FT_NUM_CAP && n < _ftAvg*1.5) return; // pantalla llena: el número chico no suma nada
-    const f = floatTexts[_ftNext]; _ftNext = (_ftNext+1)%FT_MAX;
+    const f = _ftTake(kind); if(!f) return;
     f.on = true; f.kind = kind; f.t = 0; f.val = n; f.dk = dk; f.key = key; f.pop = kind===1 ? 1 : 0.5;
     f.text = s + (kind===1 ? "!" : ""); f.sc = _ftScale(n, kind);
     f.x = x + (Math.random()-0.5)*14; f.y = y;
@@ -79,7 +111,7 @@ function floatText(x,y,text,cls,dk,key){
     words++; if(!oldest || o.t > oldest.t) oldest = o;
   }
   if(kind===4 && words >= FT_WORD_CAP && oldest){ oldest.on = false; oldest.key = null; }
-  const f = floatTexts[_ftNext]; _ftNext = (_ftNext+1)%FT_MAX;
+  const f = _ftTake(kind); if(!f) return;
   f.on = true; f.x = x; f.y = y; f.text = s; f.kind = kind; f.t = 0; f.val = 0; f.dk = null; f.key = null; f.pop = 0; f.sc = 1;
   f.dur = kind===4 ? 1300 : 820;
   f.vx = 0;
@@ -110,18 +142,21 @@ function _drawFloatText(f){
   const size = Math.max(8, Math.round(st.size*(f.sc||1)*pop))/CAM_ZOOM;
   ctx.globalAlpha = a;
   if(size !== _ftFontSize){ _ftFontSize = size; ctx.font = pxFont(size); }
-  const x = f.x + f.vx*q, y = f.y - rise/CAM_ZOOM*0.9;
+  const x = f.x + f.vx*q;
+  const y = _ftPlace(x, f.y - rise/CAM_ZOOM*0.9, ctx.measureText(f.text).width + 5/CAM_ZOOM, size*1.22 + 5/CAM_ZOOM);
+  if(y===null) return;
   ctx.lineWidth = (f.kind===1 ? 4.5 : 3.5)/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
   ctx.fillStyle = (f.kind<=1 && f.dk && FT_DMG_COL[f.dk]) ? (f.kind===1 && f.dk==="physical" ? st.fill : FT_DMG_COL[f.dk]) : st.fill;
   ctx.fillText(f.text, x, y);
 }
 let _ftFontSize = 0;
 function drawFloatTexts(){
-  ctx.save(); _ftFontSize = 0;
+  ctx.save(); _ftFontSize = 0; _ftRectCount = 0;
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
-  // dos pasadas: los críticos siempre arriba de los números chicos
-  for(const f of floatTexts){ if(f.on && f.kind!==1 && inView(f.x, f.y, 120)) _drawFloatText(f); }
-  for(const f of floatTexts){ if(f.on && f.kind===1 && inView(f.x, f.y, 120)) _drawFloatText(f); }
+  // Reservar espacio a información vital antes del daño saliente; nunca tapar un aviso con AoE.
+  for(const kind of FT_DRAW_ORDER) for(const f of floatTexts){
+    if(f.on && f.kind===kind && inView(f.x, f.y, 120)) _drawFloatText(f);
+  }
   ctx.restore();
 }
 

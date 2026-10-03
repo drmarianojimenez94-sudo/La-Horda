@@ -13,7 +13,7 @@ const ctx = vm.createContext({
   persist(){throw new Error('Presentation must not persist');}
 });
 const run = s=>vm.runInContext(s, ctx);
-for(const file of ['js/systems/cromas.js','js/assets/croma-skins-meta.js','js/assets/set-skins-meta.js','js/assets/portadores-meta.js','js/assets/ynara-meta.js','js/assets/complete-set-skins-meta.js','js/ui/codex/codex.js']){
+for(const file of ['js/systems/cromas.js','js/assets/croma-skins-meta.js','js/assets/set-skins-meta.js','js/assets/portadores-meta.js','js/assets/ynara-meta.js','js/assets/complete-set-skins-meta.js','js/assets/alpha-set-skins-meta.js','js/ui/codex/codex.js']){
   run(fs.readFileSync(path.join(root,file),'utf8'));
 }
 assert.equal(run('codexDistinctHistory("El último guardián.", "  El último   guardián. ")'), '');

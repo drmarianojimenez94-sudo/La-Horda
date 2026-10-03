@@ -29,6 +29,7 @@ let activeChampion = null; // subjefe/jefe activo: mientras exista, se detiene l
 
 // Vida/daño del jefe: base de su ficha x poder del equipo (difficulty.js) x perilla de jefes.
 function scaleBossStats(e, type){
+  if(typeof AlphaServices!=="undefined")AlphaServices.announceBoss(e);
   e.hp = e.maxHp = Math.round(ENEMY_BASE[type].hp * runDifficulty.hp * DIFF.bossHp * (DIFF.bossHpType[type]||1) * (arenaMods().enemyHpMult||1));
   e.dmg = Math.round(runDifficulty.avgHp * (DIFF.bossDmgPct[currentArena]||0.12));
   e.basicMult = DIFF.bossBasicMult;
@@ -51,6 +52,7 @@ function bossEntrance(e){
   vfxShake(12); flashScreen(0.3, "255,200,140"); playSfx("bossRoar");
   if(typeof setMusicMode==="function") setMusicMode("boss");
   bossHudShow(e);
+  if(typeof AlphaServices!=="undefined")AlphaServices.announceBoss(e);
 }
 function startBossFight(){
   bossActive = true;

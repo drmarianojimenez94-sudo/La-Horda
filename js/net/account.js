@@ -27,8 +27,22 @@
    window.__accountTest = true antes de cargar.
    ============================================================ */
 
-const ACCOUNT_KEY = "horda_account";           // {token, user, name, expiresAt}
-const ACCOUNT_SYNC_KEY = "horda_account_sync"; // {user, version, hash, dirty, updatedAt, lastOk}
+// Bind credentials and cloud CAS state to one API for the lifetime of this page.
+// A pasted matchmaking invite must never redirect an authenticated request.
+const ACCOUNT_API_BASE = (()=>{
+  try{
+    const q=new URLSearchParams(location.search).get("api");
+    const raw=q || String(typeof netInitialServer==="function"?netInitialServer():NET_CONFIG.serverUrl).replace(/^ws(s?):\/\//i,"http$1://");
+    if(!raw) return "";
+    const u=new URL(raw);
+    if(!["https:","http:"].includes(u.protocol)||u.username||u.password||u.search||u.hash) return "";
+    if(location.protocol==="https:" && u.protocol!=="https:" && !["localhost","127.0.0.1","[::1]"].includes(u.hostname)) return "";
+    return u.href.replace(/\/+$/,"");
+  }catch(e){return "";}
+})();
+const ACCOUNT_SCOPE=encodeURIComponent(ACCOUNT_API_BASE);
+const ACCOUNT_KEY = "horda_account:"+ACCOUNT_SCOPE;           // {token, user, name, expiresAt}
+const ACCOUNT_SYNC_KEY = "horda_account_sync:"+ACCOUNT_SCOPE; // {user, version, hash, dirty, updatedAt, lastOk}
 const ACCOUNT_GUEST_KEY = "horda_guest_tab";   // sessionStorage: esta pestaña eligió invitado
 const ACCOUNT_DEBOUNCE_MS = 6000, ACCOUNT_DEBOUNCE_PLAYING_MS = 30000;
 const ACCOUNT_BEACON_MAX = 60000;              // navigator.sendBeacon no acepta mucho más de 64 KB
@@ -64,11 +78,25 @@ function _acctEmit(){
 
 /* ---------------- servidor ---------------- */
 // La API vive en el mismo servidor del relay: wss://host -> https://host (?api=... para probar otro).
-function accountApiBase(){
-  try{ const q = new URLSearchParams(location.search).get("api"); if(q) return q.replace(/\/+$/, ""); }catch(e){}
-  const ws = (typeof netServerUrl === "function") ? netServerUrl() : ((typeof NET_CONFIG !== "undefined" && NET_CONFIG.serverUrl) || "");
-  if(!ws) return "";
-  return String(ws).replace(/^ws(s?):\/\//i, "http$1://").replace(/\/+$/, "");
+function accountApiBase(){ return ACCOUNT_API_BASE; }
+function accountEnvironmentHTML(){
+  const ws=ACCOUNT_API_BASE.replace(/^http/,"ws"), e=netEnvironment(ws);
+  return `<div class="net-environment"><b>${e.label}</b><span>${_acctEsc(ACCOUNT_API_BASE)}</span>${e.kind!=="primary"?'<span>Cuenta y progreso separados del servidor principal.</span><a class="btn secondary small" href="https://fondalstudios.com/la-horda/jugar/">IR A FONDAL</a>':''}</div>`;
+}
+// Apply the server's cosmetic grant without replacing loot earned since the upload.
+function accountApplyEventReward(response){
+  if(!response?.ok || !acct.session || !acct.sync || !response.cosmetic) return false;
+  const known=typeof cosmeticCatalog==="function"?cosmeticCatalog().some(c=>c.id===response.cosmetic):false;
+  if(!known) return false;
+  save.cosmeticUnlocks=save.cosmeticUnlocks||{};
+  save.cosmeticUnlocks[response.cosmetic]=true;
+  if(response.cosmeticType==="croma"){save.cromas=save.cromas||{};save.cromas[response.cosmetic]=true;}
+  const y=acct.sync;
+  // Advance CAS only when the exact pre-grant version is still our version.
+  if(Number.isInteger(response.baseVersion) && response.baseVersion===y.version && Number.isInteger(response.saveVersion)) y.version=response.saveVersion;
+  if(typeof persistNow==="function") persistNow();
+  _acctSaveSync(); _acctEmit();
+  return true;
 }
 function accountAvailable(){ return !!accountApiBase(); }
 async function accountFetch(method, path, body, opts){
@@ -79,7 +107,7 @@ async function accountFetch(method, path, body, opts){
   const t = setTimeout(() => { if(ctl) ctl.abort(); }, opts.timeout || 20000);
   const headers = {};
   if(body !== undefined) headers["content-type"] = "application/json";
-  if(opts.auth !== false && acct.session) headers.authorization = "Bearer " + acct.session.token;
+  if(opts.auth !== false && acct.session && acct.session.apiBase===base) headers.authorization = "Bearer " + acct.session.token;
   try{
     const r = await fetch(base + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body),
       signal: ctl ? ctl.signal : undefined, cache: "no-store", mode: "cors" });
@@ -118,7 +146,14 @@ function accountSummarize(sv){
 function _acctMeaningful(sv){
   if(!sv) return false;
   const s = accountSummarize(sv);
-  return s.guardians > 0 || s.arenas > 0 || (Array.isArray(sv.stash) && sv.stash.length > 0);
+  // Newly released champions may be unlocked by default. They are not earned
+  // progress and must not create a false conflict on a second device's first login.
+  const baseline=typeof defaultSave==="function"?defaultSave():{champions:{}};
+  const earnedChampion=Object.entries(sv.champions||{}).some(([key,c])=>{
+    const initial=baseline.champions[key]||{};
+    return (c.unlocked&&!initial.unlocked)||(c.level||1)>(initial.level||1)||(c.xp||0)>0||!!c.croma||!!c.cosmeticSkin||Object.values(c.equipment||{}).some(Boolean);
+  });
+  return !!sv.starterChosen || earnedChampion || s.arenas > 0 || (Array.isArray(sv.stash) && sv.stash.length > 0) || Object.values(sv.cromas||{}).some(Boolean) || Object.values(sv.cosmeticUnlocks||{}).some(Boolean);
 }
 function _acctSummaryHtml(s){
   if(!s) return `<div class="acc-sum-empty">sin datos</div>`;
@@ -318,7 +353,7 @@ async function accountResolveConflict(choice){
 
 /* ---------------- entrar / crear / salir ---------------- */
 function _acctSetSession(j){
-  acct.session = { token: j.token, user: j.user.user, name: j.user.name || j.user.user, expiresAt: j.expiresAt };
+  acct.session = { token: j.token, user: j.user.user, name: j.user.name || j.user.user, expiresAt: j.expiresAt, apiBase: ACCOUNT_API_BASE };
   _acctSaveSession();
   try{ sessionStorage.removeItem(ACCOUNT_GUEST_KEY); }catch(e){}
   // el nombre de la cuenta pasa a ser el de la Sala multijugador
@@ -397,6 +432,7 @@ function _acctRenderAuth(mode){
   const noServer = !accountAvailable();
   const reg = mode === "register";
   body.innerHTML = `
+    ${accountEnvironmentHTML()}
     <div class="acc-tabs" role="tablist">
       <button type="button" class="acc-tab ${reg ? "" : "on"}" data-acc-tab="login" role="tab" aria-selected="${!reg}">Entrar</button>
       <button type="button" class="acc-tab ${reg ? "on" : ""}" data-acc-tab="register" role="tab" aria-selected="${reg}">Crear cuenta</button>
@@ -519,6 +555,7 @@ function _acctRenderProfile(){
   const el = _acctBuild(), body = el.querySelector(".acc-body"), s = acct.session;
   el.querySelector(".acc-title").textContent = "Tu perfil";
   body.innerHTML = `
+    ${accountEnvironmentHTML()}
     <div class="acc-who"><span class="acc-avatar" aria-hidden="true">${_acctEsc((s.name || s.user).charAt(0).toUpperCase())}</span>
       <div><div class="acc-who-name">${_acctEsc(s.name || s.user)}</div><div class="acc-who-user">usuario: ${_acctEsc(s.user)}</div></div></div>
     <div class="acc-sync" id="acc-sync"></div>
@@ -683,8 +720,21 @@ function _acctRenderChip(){
 /* ---------------- arranque ---------------- */
 (function accountInit(){
   acct.session = _acctLoad(ACCOUNT_KEY);
-  if(acct.session && (!acct.session.token || !acct.session.user)) acct.session = null;
-  acct.sync = _acctLoad(ACCOUNT_SYNC_KEY) || { user: "", version: 0, hash: "", dirty: false };
+  acct.sync = _acctLoad(ACCOUNT_SYNC_KEY);
+  // Migrate legacy sessions only on their known original service. Unknown manual
+  // sessions require signing in again; the legacy records and local save remain intact.
+  if(!acct.session && !_acctLoad("horda_account_migrated:"+ACCOUNT_SCOPE)){
+    const old=_acctLoad("horda_account");
+    const legacyBase=old?.apiBase || (location.hostname==="fondalstudios.com" ? "https://fondalstudios.com/la-horda/red" : "https://la-horda-relay.onrender.com");
+    if(old && legacyBase===ACCOUNT_API_BASE && !new URLSearchParams(location.search).has("api")){
+      acct.session=Object.assign({},old,{apiBase:legacyBase});
+      acct.sync=_acctLoad("horda_account_sync");
+      _acctSaveSession(); _acctSaveSync();
+      _acctStore("horda_account_migrated:"+ACCOUNT_SCOPE,true);
+    }
+  }
+  if(acct.session && (!acct.session.token || !acct.session.user || acct.session.apiBase!==ACCOUNT_API_BASE)) acct.session = null;
+  acct.sync = acct.sync || { user: "", version: 0, hash: "", dirty: false };
   window.accountOpen = accountOpen;
   window.accountState = accountState;
   window.accountSyncNow = accountSyncNow;

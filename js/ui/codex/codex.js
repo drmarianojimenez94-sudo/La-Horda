@@ -379,7 +379,7 @@ function codexChampHtml(key){
     ${_animChips(codexChampAnimList(key))}
     <div class="cx-stage-actions">${own
       ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`)
-      : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < cat.priceGold ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(cat.priceGold)}</button>`}</div>`;
+      : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
       <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle">${_cxEsc(cls.role)}</div>
       ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b> · Talentos: <b>${treePointsAvailable(key)}</b></div>` : ""}
@@ -530,7 +530,7 @@ function codexSkinsTabHtml(key){
     const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = shopSetMissing(id), on = skinIsActiveOn(id, key), full = skinOwnedFull(id);
     const act = on ? '<span class="ui-tag ok">✔ EQUIPADA</span>'
       : full ? `<button class="cx-btn primary" data-skin-use="${id}">USAR</button>`
-      : `<button class="cx-btn" data-skin-buy="${id}" ${save.gold < miss.length*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(miss.length*SHOP_TEST_PRICE)}</button>`;
+      : `<button class="cx-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(shopSkinPrice(id))}</button>`;
     const st = on ? "" : full ? "Apariencia desbloqueada" : `${setPieceIds(id).length - miss.length}/${setPieceIds(id).length} piezas`;
     const meta = typeof cosmeticMetadata==="function" ? cosmeticMetadata(id) : null;
     html += card(id, sk.name || S.name, `Set ${_cxEsc(S.name || id)}${meta && meta.artPending ? " · croma de set" : ""}`, st, act, on);
@@ -595,8 +595,9 @@ function codexBindSkinsTab(body, key, cv){
   body.querySelectorAll("[data-croma-off]").forEach(b=> b.addEventListener("click", ()=>{ cromaEquip(key, null); codexRender(); }));
   body.querySelectorAll("[data-croma-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.dataset.cromaBuy, d = CROMA_SKINS[id];
-    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
-      if(!ok) return; const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+    const quotedPrice = cromaPrice(id);
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return; const r = cromaBuy(id, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
       if(save.champions[key] && save.champions[key].unlocked) cromaEquip(key, id);
       if(typeof playSfx==="function") playSfx("levelup");
       if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name} · equipada`);
@@ -606,9 +607,10 @@ function codexBindSkinsTab(body, key, cv){
   }));
   body.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.dataset.skinBuy, S = SET_DB[id] || {};
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || S.name} (${shopSetMissing(id).length} piezas del set ${S.name})?`, {okText:"Comprar"}).then(ok=>{
+    const quotedPrice = shopSkinPrice(id);
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || S.name} (${shopSetMissing(id).length} piezas del set ${S.name}) por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      if(typeof shopBuySkin==="function") shopBuySkin(id);
+      if(typeof shopBuySkin==="function") shopBuySkin(id, quotedPrice);
       setState("codex"); codexRender();
     });
   }));
@@ -625,8 +627,9 @@ function _cxCromaDetail(el, key, id){
   if(on) on.addEventListener("click", ()=>{ if(cromaEquip(key, id) && typeof showNetToast==="function") showNetToast(`🎨 CROMA EQUIPADA · ${d.name}`); codexRender(); });
   if(off) off.addEventListener("click", ()=>{ cromaEquip(key, null); codexRender(); });
   if(buy) buy.addEventListener("click", ()=>{
-    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
-      if(!ok) return; const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+    const quotedPrice = cromaPrice(id);
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
+      if(!ok) return; const r = cromaBuy(id, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
       if(own) cromaEquip(key, id);
       if(typeof playSfx==="function") playSfx("levelup");
       if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name}${own ? " · equipada" : " · comprada"}`);

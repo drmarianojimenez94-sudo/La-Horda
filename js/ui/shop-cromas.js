@@ -49,13 +49,14 @@ function shopCromaMount(panel){
   panel.appendChild(box);
   box.querySelectorAll("[data-croma-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-croma-buy"), d = CROMA_SKINS[id];
-    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(cromaPrice(id))} de oro?`, {okText:"Comprar"}).then(ok=>{
+    const quotedPrice=cromaPrice(id);
+    gameConfirm(`¿Comprar la croma ${d.name} por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      const r = cromaBuy(id); if(!r.ok){ gameAlert(r.reason); return; }
+      const r = cromaBuy(id, quotedPrice); if(!r.ok){ gameAlert(r.reason); return; }
       const ch = save.champions[d.champ];
       if(ch && ch.unlocked) cromaEquip(d.champ, id); // recién comprada: se pone en su guardián
       if(typeof playSfx==="function") playSfx("levelup");
-      if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name}${ch && ch.unlocked ? " · equipada" : " · comprada"} (−${fmtGold(cromaPrice(id))} de oro)`);
+      if(typeof showNetToast==="function") showNetToast(`🎨 CROMA ${d.name}${ch && ch.unlocked ? " · equipada" : " · comprada"} (−${fmtGold(quotedPrice)} de oro)`);
       _cromaRefresh();
     });
   }));

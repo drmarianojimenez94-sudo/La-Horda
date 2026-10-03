@@ -312,7 +312,7 @@ function fileStore(dir){
       for(const w in lb.weeks){ const W = lb.weeks[w]; for(const k in W) if(k.startsWith(userId + "|") && W[k].at > t) t = W[k].at; }
       return t;
     },
-    async close(){ if(writing) await writing; if(lbWriting) await lbWriting; }
+    async close(){ await gmChain.catch(()=>{}); if(writing) await writing; if(lbWriting) await lbWriting; }
   };
 }
 
@@ -336,6 +336,7 @@ function pgConfig(url){
 function pgStore(url){
   const { Pool } = require("pg");
   const pool = new Pool(pgConfig(url));
+  let gmChain = Promise.resolve(); // avoid exhausting the pool with row-lock waiters
   pool.on("error", () => {}); // una conexión inactiva que se corta no tumba el servidor
   const q = (text, params) => pool.query(text, params);
   const rowUser = r => r && { id: Number(r.id), userKey: r.user_key, user: r.username, name: r.display_name, email: r.email,
@@ -345,12 +346,12 @@ function pgStore(url){
     kind: "postgres", persistent: true,
     async listUsers(){return (await q("SELECT * FROM horda_users ORDER BY id")).rows.map(rowUser);},
     async gmRead(){const r=await q("SELECT data FROM horda_operations WHERE id=1");return r.rows[0]?.data||null;},
-    async gmUpdate(fn){const c=await pool.connect();try{
+    async gmUpdate(fn){const job=gmChain.catch(()=>{}).then(async()=>{const c=await pool.connect();try{
       await c.query("BEGIN");await c.query("INSERT INTO horda_operations(id,data) VALUES(1,'null'::jsonb) ON CONFLICT DO NOTHING");
       const r=await c.query("SELECT data FROM horda_operations WHERE id=1 FOR UPDATE");
       const result=await fn(r.rows[0].data, snapshot=>c.query("INSERT INTO horda_operation_snapshots(id,data) VALUES($1,$2::jsonb)",[snapshot.id,JSON.stringify(snapshot)]));await c.query("UPDATE horda_operations SET data=$1::jsonb WHERE id=1",[JSON.stringify(result.state)]);
       await c.query("COMMIT");return result.value;
-    }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}},
+    }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}});gmChain=job;return job;},
     async init(){
       await q(`CREATE TABLE IF NOT EXISTS horda_operations (id INTEGER PRIMARY KEY CHECK(id=1), data JSONB NOT NULL)`);
       await q(`CREATE TABLE IF NOT EXISTS horda_operation_snapshots (id TEXT PRIMARY KEY, data JSONB NOT NULL)`);
@@ -461,7 +462,7 @@ function pgStore(url){
       const r = await q(`SELECT max(created_at) AS t FROM horda_leaderboard WHERE user_id=$1`, [userId]);
       return Number(r.rows[0] && r.rows[0].t || 0);
     },
-    async close(){ await pool.end(); }
+    async close(){ await gmChain.catch(()=>{}); await pool.end(); }
   };
 }
 
@@ -474,6 +475,16 @@ function create(opts){
   const originAllowed = opts.originAllowed || (() => true);
   const url = opts.databaseUrl !== undefined ? opts.databaseUrl : process.env.DATABASE_URL;
   const dataDir = opts.dataDir || process.env.DATA_DIR || path.join(__dirname, "data");
+  // Server-only operator policy. The fallback resolves an EXISTING account once at
+  // startup, then checks its immutable numeric ID. A missing operator is never auto-created.
+  const operatorConfig = require("./operator-config.json");
+  const configuredOwner = userKey(opts.ownerAccount !== undefined ? opts.ownerAccount : operatorConfig.ownerAccount);
+  const explicitAdmins = opts.adminUsers !== undefined ? opts.adminUsers : process.env.ADMIN_USERS;
+  const adminOverride = explicitAdmins !== undefined;
+  const adminNames = String(explicitAdmins || "").split(",").map(s=>userKey(s.trim())).filter(Boolean);
+  let ownerId = null;
+  const isOwner = user => !!user && (adminOverride ? adminNames.includes(userKey(user.user)) : ownerId !== null && user.id === ownerId);
+
   let store = null, status = "starting", lastError = "";
   try{ store = url ? pgStore(url) : fileStore(dataDir); }
   catch(e){ status = "error"; lastError = String(e.message || e); }
@@ -485,6 +496,7 @@ function create(opts){
     if(!store) return;
     try{
       await store.init();
+      if(!adminOverride && configuredOwner){ const owner = await store.getUserByKey(configuredOwner); ownerId = owner ? owner.id : null; log("OWNER_POLICY", { bound: ownerId !== null }); }
       status = "ready"; lastError = "";
       if(store.persistent) log("ACCOUNTS_READY", { store: store.kind });
       else log("ACCOUNTS_READY", { store: store.kind, dir: dataDir,
@@ -512,7 +524,8 @@ function create(opts){
   function healthLine(){
     const i = info();
     if(i.status === "error") return `cuentas: ERROR (${i.store}): ${i.error}`;
-    if(i.persistent) return `cuentas: base de datos Postgres ${i.status === "ready" ? "OK" : "conectando…"}`;
+    if(i.store === "postgres") return `cuentas: base de datos Postgres ${i.status === "ready" ? "OK" : "conectando…"}`;
+    if(i.persistent) return `cuentas: ARCHIVO EN DISCO PERSISTENTE ${i.status === "ready" ? "OK" : "conectando…"}`;
     return "cuentas: ARCHIVO EN DISCO (sin DATABASE_URL) · AVISO: en el plan gratuito de Render las cuentas se BORRAN en cada redeploy/reinicio o cuando el servidor se duerme · ver docs/ACCOUNTS_DEPLOY.md";
   }
 
@@ -614,12 +627,12 @@ function create(opts){
 
   async function adminAuth(req,res){
     const a=await auth(req); if(!a.user){authFail(req,res,a);return null;}
-    if(!adminLevels.allowed(a.user)){err(req,res,403,"FORBIDDEN","Acceso exclusivo de administración.");return null;} return a.user;
+    if(!isOwner(a.user)){err(req,res,403,"FORBIDDEN","Acceso exclusivo de administración.");return null;} return a.user;
   }
   async function adminTarget(body){ const u=await store.getUserByKey(userKey(body.user)); if(!u)return null;const s=await store.getSave(u.id);if(!s)return null;return {u,s,data:JSON.parse(s.data)}; }
   function adminProfile(t,version){return {user:t.u.user,version:version??t.s.version,champions:Object.entries(t.data.champions||{}).map(([key,c])=>({key,level:c.level,unlocked:!!c.unlocked}))};}
   const routes = {
-    "GET /api/admin/status":async(req,res)=>{const a=await auth(req);if(!a.user)return authFail(req,res,a);return send(req,res,200,{admin:adminLevels.allowed(a.user)});},
+    "GET /api/admin/status":async(req,res)=>{const a=await auth(req);if(!a.user)return authFail(req,res,a);return send(req,res,200,{admin:isOwner(a.user)});},
     "POST /api/admin/profile":async(req,res)=>{if(!await adminAuth(req,res))return;const body=await readBody(req,SMALL_BODY_BYTES),t=await adminTarget(body);if(!t)return err(req,res,404,"NOT_FOUND","No hay perfil guardado de ese usuario.");return send(req,res,200,adminProfile(t));},
     "POST /api/admin/level":async(req,res)=>{
       const admin=await adminAuth(req,res);if(!admin)return;
@@ -643,6 +656,7 @@ function create(opts){
       if(email && !EMAIL_RE.test(email)) return err(req, res, 400, "BAD_EMAIL", "El correo no parece válido (podés dejarlo vacío).");
       registers.hit("ip:" + ip, REGISTER_WINDOW_MS);
       const key = userKey(user);
+      if(!adminOverride && configuredOwner && key === configuredOwner) return err(req, res, 403, "RESERVED_USER", "Ese nombre está reservado para la cuenta del operador existente.");
       if(await store.getUserByKey(key)) return err(req, res, 409, "USER_TAKEN", "Ese nombre de usuario ya existe. Probá con otro.");
       const now = Date.now();
       let u;
@@ -756,7 +770,7 @@ function create(opts){
     }
   };
 
-  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0}));
+  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner}));
 
   // Devuelve true si atendió el pedido (todo lo que empieza con /api/).
   function handle(req, res){

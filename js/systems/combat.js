@@ -275,6 +275,7 @@ function killEnemy(e){
     onBossDefeated();
     if(!e.alive && typeof storyOnKill==="function") storyOnKill(e); // un jefe que "revive" (otra vida) todavía no habla
   }
+  if(typeof AlphaServices!=="undefined")AlphaServices.enemyDefeated(e);
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
   if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e, e._dieFly ? [e._dieDx, e._dieDy, e._dieFly] : 0)){ // (2º arg: el cadáver despedido, para el invitado)

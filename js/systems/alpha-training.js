@@ -83,8 +83,9 @@ function alphaTrainingTick(dt){
   if(t.doneAt&&t.phaseTime-t.doneAt>1300){t.step++;if(t.step===ALPHA_TRAINING_STEPS.length)alphaTrainingExit(true);else alphaTrainingEnterStep();}
 }
 function alphaTrainingStart(){
-  if(ALPHA_TRAINING.active||!['mainmenu','codex','modeselect'].includes(state)||netMatch||(typeof netInRoom==='function'&&netInRoom()))return false;
-  if(typeof acct!=='undefined'&&(acct.applying||acct.pulling||acct.conflict))return false;
+  if(ALPHA_TRAINING.active||!['mainmenu','codex','modeselect'].includes(state))return false;
+  if(netMatch||(typeof netInRoom==='function'&&netInRoom())){if(typeof showNetToast==='function')showNetToast('Salí de la sala multijugador antes de entrar al entrenamiento.');return false;}
+  if(typeof acct!=='undefined'&&(acct.applying||acct.pulling||acct.conflict)){if(typeof showNetToast==='function')showNetToast('Esperá a que termine la sincronización de tu cuenta.');return false;}
   persistNow();
   const t=ALPHA_TRAINING;t.snapshot={save,selectedClass,currentArena,divinaMode,lobbyAllies,endlessActive,endlessPending};t.active=true;t.step=0;t.elapsed=0;
   save=defaultSave();save.champions.mago.unlocked=true;selectedClass='mago';currentArena='training';divinaMode=false;endlessActive=false;endlessPending=false;lobbyAllies=null;
@@ -105,16 +106,36 @@ function alphaTrainingExit(completed,message){
   if(!ALPHA_TRAINING.active)return;alphaTrainingRestore(completed);setState('mainmenu');renderMainMenu();
   if(typeof showNetToast==='function')showNetToast(message||(completed?'Entrenamiento completado. Tu próxima aventura: Arena 1.':'Entrenamiento cerrado. Tu progreso se conserva.'));
 }
+function alphaOnboardingLesson(level,seen){
+  const available=ALPHA_GUIDE.filter(g=>g.level<=Math.max(1,Math.min(10,level||1)));
+  return available.find(g=>!seen[g.level])||null;
+}
 function alphaOnboardingMenu(){
   if(ALPHA_TRAINING.active)return;
   const host=document.querySelector('.hub-modes');if(!host)return;
-  let card=document.getElementById('alpha-onboarding');if(!card){card=document.createElement('section');card.id='alpha-onboarding';card.innerHTML='<button type="button" data-train>ARENA DE ENTRENAMIENTO · 3 min</button><details><summary></summary><p></p><button type="button" data-guide>Consultar Guía</button></details>';host.appendChild(card);card.querySelector('[data-train]').onclick=alphaTrainingStart;card.querySelector('[data-guide]').onclick=alphaGuideOpen;}
-  const c=save.champions[selectedClass]||{},level=Math.max(1,Math.min(10,c.level||1)),g=ALPHA_GUIDE[level-1];card.querySelector('summary').textContent=`El Hechicero · Nivel ${level}: ${g.title}`;card.querySelector('p').textContent=g.text;
+  let card=document.getElementById('alpha-onboarding');
+  if(!card){
+    card=document.createElement('section');card.id='alpha-onboarding';
+    card.innerHTML='<button type="button" data-train>ARENA DE ENTRENAMIENTO · 3 min</button><details><summary></summary><p></p><div class="alpha-onboarding-actions"><button type="button" data-guide>Consultar Guía</button><button type="button" data-understood>Entendido</button></div></details>';
+    host.appendChild(card);card.querySelector('[data-train]').onclick=alphaTrainingStart;card.querySelector('[data-guide]').onclick=alphaGuideOpen;
+    card.querySelector('[data-understood]').onclick=()=>{
+      const level=Number(card.dataset.lesson);if(!level)return;
+      save.tut=save.tut||{};save.tut.onboarding=save.tut.onboarding||{};save.tut.onboarding[level]=1;persist();
+      alphaTrainingEmit('guide_lesson_acknowledged',{level});alphaOnboardingMenu();
+    };
+  }
+  const c=save.champions[selectedClass]||{},level=Math.max(1,Math.min(10,c.level||1)),seen=(save.tut&&save.tut.onboarding)||{},g=alphaOnboardingLesson(level,seen);
+  card.dataset.lesson=g?String(g.level):'';
+  card.querySelector('summary').textContent=g?`El Hechicero · Nivel ${g.level}: ${g.title}`:'El Hechicero · Guía al día';
+  card.querySelector('p').textContent=g?g.text:'Ya revisaste los consejos disponibles para este campeón. Podés volver a consultar la Guía cuando quieras.';
+  card.querySelector('[data-understood]').hidden=!g;
+  card.querySelector('[data-train]').textContent=save.tut&&save.tut.training?'REPETIR ENTRENAMIENTO · 3 min':'ARENA DE ENTRENAMIENTO · 3 min';
 }
 (function installAlphaTraining(){
   ARENA_MODS.training=Object.assign({},ARENA_MODS.bosque,{label:'Arena de entrenamiento',enemyRegenPct:0,hazard:null,heroDmgMult:1});
   if(typeof FLOOR_THEME!=='undefined')FLOOR_THEME.training=FLOOR_THEME.bosque;
-  const persistBase=persist,persistNowBase=persistNow,updateBase=update,stateBase=setState,tutBase=tutTick;
+  const persistBase=persist,persistNowBase=persistNow,updateBase=update,stateBase=setState,tutBase=tutTick,menuBase=renderMainMenu;
+  renderMainMenu=function(){const r=menuBase.apply(this,arguments);alphaOnboardingMenu();return r;};
   persist=function(){if(!ALPHA_TRAINING.active)return persistBase.apply(this,arguments);};
   persistNow=function(){if(!ALPHA_TRAINING.active)return persistNowBase.apply(this,arguments);};
   update=function(dt){if(ALPHA_TRAINING.active){bossActive=true;levelTimer=0;player.hp=Math.max(player.hp,player.maxHp*.2);player.energy=player.maxEnergy;}const r=updateBase.apply(this,arguments);alphaTrainingTick(dt);return r;};

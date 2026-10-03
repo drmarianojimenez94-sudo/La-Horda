@@ -10,7 +10,7 @@ const PORTADOR_COSMETICS={
  merienda_magica:{name:"Myla — Yogur de Arándanos",colors:["#432479","#8057c7","#c19aff","#f0e5ff"],tint:"#c19aff"}
 };
 function portadorCosmetic(h){
- const d=activeSetSkin(h);if(!d)return null;
+ const d=activeSetSkin(h);if(!d||d.preserveAuthoredArt)return null;
  return Object.entries(PORTADOR_COSMETICS).find(([id])=>SET_SKINS[id]===d)?.[1]||null;
 }
 function portadorCosmeticAura(h,scale){
@@ -49,7 +49,7 @@ function portadorCosmeticPreview(P,C){
  return out.toDataURL();
 }
 for(const [id,C] of Object.entries(PORTADOR_COSMETICS)){
- const d=SET_SKINS[id];if(!d)continue;d.name=C.name;
+ const d=SET_SKINS[id];if(!d||d.preserveAuthoredArt)continue;d.name=C.name;
  SKIN_FX_PLAN[id]={tint:C.tint};
  for(const key of Object.values(d.packs||{})){
   const P=CHAMP_PACK[key];if(!P)continue;

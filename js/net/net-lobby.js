@@ -92,6 +92,7 @@ function netRenderLobbyBar(){
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Tu guardián ya lo usa otro jugador: elegí otro.</div>` : ""}`;
   }
+  bar._next = netEnvironmentHTML() + bar._next;
   if(!_netCommitHTML(bar, "barHTML")) return; // idéntica: los botones ya tienen sus eventos
   const ni = document.getElementById("net-name-input");
   if(ni) ni.addEventListener("change", ()=>{ netSetPlayerName(ni.value); });
@@ -553,7 +554,16 @@ async function netJoinWithCode(raw, btn, label){
   if(_netJoinBusy) return false;
   const inv = netValidateCode(raw);
   if(inv.err){ _netSetJoinStatus(inv.err, true); return false; }
-  if(inv.server) net.serverOverride = inv.server;
+  if(inv.server){
+    const target=netNormalizeServer(inv.server);
+    if(!target){ _netSetJoinStatus("Dirección de servidor inválida.",true); return false; }
+    if(target!==netServerUrl()){
+      // Keep accounts bound to their original API. A pasted invite only changes matchmaking.
+      if(net.ws || net.room) netLeaveRoom();
+      net.serverOverride=target;
+      if(typeof netRooms!=="undefined"){netRooms.list=null;netRooms.err="";netRooms.at=-1e9;netRooms.hubAt=-1e9;}
+    }
+  }
   if(!netAvailable()){ _netSetJoinStatus("El modo online no está configurado en esta versión.", true); return false; }
   if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
   if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ _netSetJoinStatus("Elegí primero un guardián tuyo.", true); return false; }

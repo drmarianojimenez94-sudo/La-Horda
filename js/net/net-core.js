@@ -29,15 +29,33 @@ function netLog(ev, data){
   try{ console.log("[B1] "+line); }catch(e){}
   if(typeof netDebugRefresh==="function") netDebugRefresh();
 }
-function netServerUrl(){
-  if(net.serverOverride) return net.serverOverride; // vino en un enlace pegado en Multijugador
+function netNormalizeServer(value){
   try{
-    const q = new URLSearchParams(location.search).get("server");
-    if(q) return q;
-    const ls = localStorage.getItem("horda_server");
-    if(ls) return ls;
+    const u=new URL(String(value||""));
+    if(!["ws:","wss:"].includes(u.protocol)||u.username||u.password||u.search||u.hash) return "";
+    if(location.protocol==="https:" && u.protocol!=="wss:" && !["localhost","127.0.0.1","[::1]"].includes(u.hostname)) return "";
+    return u.href.replace(/\/+$/,"");
+  }catch(e){ return ""; }
+}
+function netInitialServer(){
+  try{
+    const q=new URLSearchParams(location.search).get("server");
+    if(q) return netNormalizeServer(q);
+    const stored=localStorage.getItem("horda_server");
+    if(stored) return netNormalizeServer(stored);
   }catch(e){}
-  return NET_CONFIG.serverUrl || "";
+  return netNormalizeServer(NET_CONFIG.serverUrl);
+}
+function netServerUrl(){ return net.serverOverride ? netNormalizeServer(net.serverOverride) : netInitialServer(); }
+function netEnvironment(url){
+  const value=netNormalizeServer(url||netServerUrl());
+  if(value==="wss://fondalstudios.com/la-horda/red") return {kind:"primary",label:"FONDAL · ALPHA PRINCIPAL"};
+  if(value==="wss://la-horda-relay.onrender.com") return {kind:"legacy",label:"RENDER · SERVIDOR ANTERIOR"};
+  return {kind:"test",label:"PRUEBAS · SERVIDOR MANUAL"};
+}
+function netEnvironmentHTML(){
+  const env=netEnvironment(), escape=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  return `<div class="net-environment"><b>${env.label}</b><span>${escape(netServerUrl())}</span>${env.kind!=="primary"?'<a class="btn secondary small" href="https://fondalstudios.com/la-horda/jugar/">IR A LA ALPHA PRINCIPAL</a>':''}</div>`;
 }
 function netAvailable(){ return !!netServerUrl(); }
 // Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min

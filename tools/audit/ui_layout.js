@@ -167,19 +167,27 @@ async function runViewport(browser, vp, report) {
     console.log(`  ${vp.name} ${label.padEnd(24)} small=${u.small} overflow=${u.overflow} tiny=${u.tinyText} primary=${u.primaryHidden} fonts=${u.fonts}${n + u.fonts ? '' : '  ✓'}`);
   };
   const tapEl = async (page, el) => {
-    await el.evaluate(e => e.scrollIntoView({ block: 'center', inline: 'center' }));
-    await sleep(200);
-    const b = await el.boundingBox(); if (!b) return false;
-    await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await sleep(500); return true;
+    if(!await el.isVisible()) return false;
+    // Diálogos y prólogo tienen protección contra el toque que los abrió.
+    // No depender de la pausa de snap(): ONLY puede saltarla completamente.
+    const settle = await el.evaluate(e=>{
+      if(e.closest('#game-dialog') && typeof GAME_DIALOG!=='undefined') return Math.max(0,270-(Date.now()-GAME_DIALOG.openedAt));
+      if(e.closest('#run-intro') && typeof RUN_INTRO!=='undefined') return Math.max(0,470-(performance.now()-RUN_INTRO.t0));
+      return 0;
+    });
+    if(settle) await sleep(settle);
+    await el.tap({timeout:10000}); // comprueba visibilidad, estabilidad y que ningún overlay intercepta
+    await sleep(500); return true;
   };
   const tap = async (page, sel) => { const el = await page.$(sel); if (!el) { console.log('   (no existe', sel, ')'); return false; } return tapEl(page, el); };
-  const js = (page, fn, arg) => page.evaluate(fn, arg).catch(e => console.log('   eval ERR', e.message.split('\n')[0]));
+  const js = (page, fn, arg) => page.evaluate(fn, arg); // un setup fallido no genera capturas engañosas
 
   // ---- perfil limpio: título + primer guardián
   {
     const { ctx, page } = await mk(false);
     await snap(page, 'title', { primary: [{ css: '#title-continue-btn' }] });
     await tap(page, '#title-continue-btn');
+    if(await page.locator('.starter-card').first().isVisible()){
     await snap(page, 'starter');
     await tap(page, '.starter-card');
     await sleep(600);
@@ -189,6 +197,7 @@ async function runViewport(browser, vp, report) {
     await tap(page, '#starter-yes-btn');
     await sleep(500);
     await snap(page, 'starter_skin', { primary: [{ css: '#starter-skin-yes-btn' }] });
+    } else { await snap(page, 'first_menu', {primary:[{css:'#hub-play-btn'}]}); }
     await ctx.close();
   }
   // ---- perfil de desarrollo (todo desbloqueado)
@@ -199,10 +208,13 @@ async function runViewport(browser, vp, report) {
   // (si esos módulos ya están cargados se usan los reales; si no, un reemplazo mínimo que después se saca)
   await js(page, () => { const st = window.__hubStubs = {}; if (typeof window.endlessOpen !== 'function') { st.endless = 1; window.endlessOpen = () => {}; window.endlessUnlocked = () => false; }
     if (typeof window.questsOpen !== 'function') { st.quests = 1; window.questsOpen = () => {}; } renderMainMenu(); });
-  await snap(page, 'mainmenu_full', { primary: [{ css: '#hub-play-btn' }, { css: '#hub-endless-btn' }, { css: '#mainmenu-quests-btn' }] });
+  await js(page,()=>{const more=document.querySelector('.hub-more');if(more)more.open=true;});
+  // Explorar contiene destinos secundarios desplazables; JUGAR conserva prioridad sin scroll.
+  await snap(page, 'mainmenu_full', { primary: [{ css: '#hub-play-btn' }] });
   await js(page, () => { const st = window.__hubStubs || {}; if (st.endless) { delete window.endlessOpen; delete window.endlessUnlocked; } if (st.quests) delete window.questsOpen; renderMainMenu(); openHubOptions(); });
   await snap(page, 'options', { root: '#hub-options', primary: [{ css: '#opt-close-btn' }] });
-  await js(page, () => closeHubOptions());
+  await tap(page, '#opt-close-btn');
+  await page.waitForFunction(()=>document.getElementById('hub-options').classList.contains('hidden'));
   await js(page, () => { if (typeof window.endlessOpen !== 'function') { window.endlessOpen = () => {}; window.__hubStubs.endless2 = 1; } });
   await tap(page, '#mainmenu-jugar-btn');
   await snap(page, 'modes', { primary: [{ css: '#mode-join-btn' }, { css: '#mode-arena-btn' }] });
@@ -213,6 +225,7 @@ async function runViewport(browser, vp, report) {
   await snap(page, 'guardianselect', { primary: [{ css: '#start-btn' }] });
   await tap(page, '#start-btn');
   await snap(page, 'prep_equipo', { primary: [{ css: '#prep-start-btn' }] });
+  await tap(page, '.prep-advanced[data-part=equipo] > summary');
   await tap(page, '#prep-tabs [data-tab=talentos]');
   await snap(page, 'prep_talentos', { primary: [{ css: '#prep-start-btn' }] });
   await tap(page, '#prep-tabs [data-tab=habilidades]');
@@ -291,18 +304,20 @@ async function runViewport(browser, vp, report) {
   await js(page, () => { gameAlert('No se pudo arrancar la partida:\n' + 'TypeError: algo salió mal en la carga del arte de la arena.\n\n'.repeat(4) + 'Probá de nuevo en unos segundos.'); });
   await snap(page, 'dialog_alert', { root: '#game-dialog', primary: [{ css: '#game-dialog .gd-ok' }] });
   await tap(page, '#game-dialog .gd-ok'); await sleep(300);
+  await page.waitForFunction(()=>!gameDialogIsOpen());
   await js(page, () => { window.__autoConfirm = true; });
   // partida: Hechicero → pausa → resultados
-  await js(page, () => { currentArena = ARENA_ORDER[0]; setState('prep'); renderPrepSummary(); });
+  await js(page, () => { currentArena = ARENA_ORDER[0]; save.duoReserve=Object.keys(CLASSES).find(k=>k!==selectedClass&&save.champions[k].unlocked); setState('prep'); renderPrepSummary(); });
   await tap(page, '#prep-start-btn');
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 100; i++) {
     const st = await page.evaluate(() => ({ open: !document.getElementById('run-intro').classList.contains('hidden'), state, go: (document.querySelector('.ri-go') || {}).textContent, dis: (document.querySelector('.ri-go') || {}).disabled }));
-    if (!st.open) break;
+    if (!st.open) { if(st.state==='playing')break;await sleep(300);continue; }
     if (st.dis) { await sleep(500); continue; }
     await snap(page, /BATALLA/.test(st.go) ? 'run_intro' : 'run_prologue', { root: '#run-intro', primary: [{ css: '.ri-go' }] });
     await tap(page, '.ri-go'); await sleep(900);
   }
   for (let k = 0; k < 40 && (await page.evaluate(() => state)) !== 'playing'; k++) await sleep(250);
+  if(await page.evaluate(()=>state)!=='playing'){await page.screenshot({path:path.join(OUT,vp.name+'_start_failure.png')});throw Error('UI audit setup failed: '+JSON.stringify(await page.evaluate(()=>({state,duo:duoValid(),intro:RUN_INTRO.open,ready:assetsAllReady(),button:document.getElementById('prep-start-btn').textContent})))+'; stop instead of reporting false HUD/results findings');}
   await sleep(1200);
   // el HUD no es un menú: solo se mide la entrada a la pausa (botones de arriba), sin texto
   await snap(page, 'hud_playing', { interSel: '#pause-btn, #mute-btn', skipText: true, primary: [{ css: '#pause-btn' }] });
@@ -333,7 +348,7 @@ async function runViewport(browser, vp, report) {
 
 (async () => {
   const srv = await ensureServer();
-  const browser = await chromium.launch({ args: ['--no-sandbox'] });
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || process.env.CHROME || undefined, args: ['--no-sandbox','--disable-dev-shm-usage'] });
   const report = {}, errs = {};
   try {
     for (const vp of VIEWPORTS) { console.log(`== ${vp.name} ${vp.width}x${vp.height}`); errs[vp.name] = await runViewport(browser, vp, report); }
