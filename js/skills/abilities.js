@@ -1144,6 +1144,14 @@ function castAbility(caster, sk, isUlt, idx){
         floatText(h.x, h.y-30, "+"+Math.round(amt), "heal");
         if(newfxReady('holyHealBurst')) vfxSprite("fxHolyHealBurst", 0, h.x, h.y+2, 96, 480, h, 0, false, 0.95, 8);
       }
+      // Elyra: impacto único, con menor radio ofensivo y sin desplazar jefes.
+      if(sk.dmgMult > 0 && sk.damageRadius > 0){
+        const offensiveRadius = sk.damageRadius * AREA;
+        for(const e of enemies){
+          if(e.alive && distance(caster,e) <= offensiveRadius) damageEnemy(e, dmg, {src:caster});
+        }
+        tieredBurstVFX(caster.x, caster.y, offensiveRadius, allocLevel(mastery), "#ffe7a5", "#d3ffdb");
+      }
       particles.push({x:caster.x,y:caster.y, life:600, ring:true, maxLife:600, maxR:(sk.radius*AREA), color:"#7dffa0"});
       tieredBurstVFX(caster.x, caster.y, (sk.radius*AREA)*0.6, allocLevel(mastery), "#7dffa0", "#c8ffd8");
       break;

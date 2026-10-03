@@ -172,3 +172,9 @@ Validación del marco: los cuatro candidatos artificiales extremos respetaron el
 Ynara entra antes del normalizador, conservando `knownChampions` y las medias de referencia. Base propuesta: 110 HP, 6,3 daño, 12% defensa, 165 velocidad y básico cada 600 ms. El kit limita fuentes y cortinas a una por propietaria, curación por pulso, escudo sin acumulación y cargas de Santa Paciencia a ocho. El desplazamiento respeta geometría; los jefes no reciben empuje y su ralentización queda limitada al 12%.
 
 Gate PASS después de integrar los cambios recientes de HUD y VFX de main, con daño de 6580,25 / 8898,14 / 6788,43 en tres semillas de 150 s: media 7422,27 frente al techo de soporte 8803,53. Tres supervivencias, sin errores. Pruebas funcionales: 37 comprobaciones PASS; cooperativo real y visual gate documentados en [la ficha de Ynara](docs/ynara/README.md). Evidencia: [entry-gate-results.json](docs/balance/entry-gate-results.json). La entrada no modifica el roster usado como referencia ni garantiza equilibrio fuera de estos escenarios.
+
+### Elyra — rework de sanadora y pantalla de inicio (2026-10-02)
+
+`soporte` conserva estadísticas, guardados y equipo. Alba Purificadora mantiene cura 24%, radio 260, coste 40, CD 7 s y añade daño ×1,2 en radio 160; un solo impacto, escalado común de maestrías/talentos, sin desplazar jefes. Bots la usan contra enemigos aun con el equipo sano. Las otras habilidades no cambian.
+
+31 comprobaciones PASS sobre main actualizado: cura, límites, múltiples objetivos, jefes, bots, maestría, diez arenas, nombres, direcciones de atlas, partículas replicables y aparición en primer plano del título. Tres simulaciones de 150 segundos: daño 4233,69 / 4061,99 / 4724,29, media 4339,99, bajo techo orientativo 8803,53; tres supervivencias sin errores. Gate de referencia y de entrada PASS; no se altera el roster conocido ni las medias de referencia. Evidencia: [docs/elyra/README.md](docs/elyra/README.md).

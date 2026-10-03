@@ -99,10 +99,10 @@ const BOONS = [
 
   /* ---------------- SOPORTE ---------------- */
   {id:"sp_manantial", champ:"soporte", skill:0, name:"Manantial Sagrado", look:"holy",
-    desc:r=>`La Curación de Área deja un manantial que cura ${[2,3,4][r]}% de la vida por segundo (${[3,4,5][r]} s).`,
+    desc:r=>`La Alba Purificadora deja un manantial que cura ${[2,3,4][r]}% de la vida por segundo (${[3,4,5][r]} s).`,
     fx:[{t:"ground", at:"caster", r:120, dur:[3000,4000,5000], heal:[0.02,0.03,0.04]}], test:"heal"},
   {id:"sp_juicio", champ:"soporte", skill:0, name:"Luz Punitiva", look:"holy",
-    desc:r=>`La Curación de Área también quema a los enemigos cercanos.`,
+    desc:r=>`La Alba Purificadora también quema a los enemigos cercanos.`,
     fx:[{t:"burst", at:"caster", r:150, pct:[0.6,0.9,1.2], status:{burn:[0.25,0.35,0.5]}}], test:"burn"},
   {id:"sp_marca", champ:"soporte", skill:1, name:"Estandarte de Caza", look:"fire",
     desc:r=>`La Bendición de Guerra marca a los enemigos cercanos: reciben +${[12,18,25][r]}% de daño y van más lento.`,

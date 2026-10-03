@@ -104,28 +104,28 @@
     {
       "key": "ynara",
       "seed": 117,
-      "damage": 6580.251284709822,
+      "damage": 5707.096041854984,
       "alive": true,
-      "hp": 234.32482303999996,
-      "casts": 64,
+      "hp": 256.42688128000003,
+      "casts": 56,
       "error": null
     },
     {
       "key": "ynara",
       "seed": 431,
-      "damage": 8898.138859558001,
+      "damage": 6275.590965314474,
       "alive": true,
-      "hp": 163.2337559174401,
+      "hp": 345,
       "casts": 57,
       "error": null
     },
     {
       "key": "ynara",
       "seed": 991,
-      "damage": 6788.431568414215,
+      "damage": 5855.213478041827,
       "alive": true,
       "hp": 274,
-      "casts": 64,
+      "casts": 56,
       "error": null
     }
   ],
