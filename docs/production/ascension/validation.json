@@ -6,21 +6,8 @@
       "releaseState": "TESTING",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "nano_gm_alt1: preview must exist",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "facu_gm": {
@@ -28,21 +15,8 @@
       "releaseState": "TESTING",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "facu_gm_alt1: preview must exist",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "aurelia": {
@@ -50,25 +24,11 @@
       "releaseState": "INTERNAL",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "aurelia_alt1: preview must exist",
-        "aurelia_alt2: preview must exist",
         "initial croma required",
         "initial set required",
         "set reward must reference its cosmetic",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "khepri": {
@@ -76,25 +36,11 @@
       "releaseState": "INTERNAL",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "khepri_alt1: preview must exist",
-        "khepri_alt2: preview must exist",
         "initial croma required",
         "initial set required",
         "set reward must reference its cosmetic",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "velmira": {
@@ -102,25 +48,11 @@
       "releaseState": "INTERNAL",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "velmira_alt1: preview must exist",
-        "velmira_alt2: preview must exist",
         "initial croma required",
         "initial set required",
         "set reward must reference its cosmetic",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "vhal": {
@@ -128,25 +60,11 @@
       "releaseState": "INTERNAL",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "vhal_alt1: preview must exist",
-        "vhal_alt2: preview must exist",
         "initial croma required",
         "initial set required",
         "set reward must reference its cosmetic",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "bront": {
@@ -154,25 +72,11 @@
       "releaseState": "INTERNAL",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "bront_alt1: preview must exist",
-        "bront_alt2: preview must exist",
         "initial croma required",
         "initial set required",
         "set reward must reference its cosmetic",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "oriel": {
@@ -180,25 +84,11 @@
       "releaseState": "INTERNAL",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas and preview must exist",
-        "positive integer frame dimensions required",
-        "art.animations.idle frame count required",
-        "art.animations.walk frame count required",
-        "art.animations.attack frame count required",
-        "art.animations.cast frame count required",
-        "art.animations.hit frame count required",
-        "art.animations.death frame count required",
-        "art.animations.ultimate frame count required",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
-        "oriel_alt1: preview must exist",
-        "oriel_alt2: preview must exist",
         "initial croma required",
         "initial set required",
         "set reward must reference its cosmetic",
-        "visuals evidence required (file presence does not prove gate passed)",
-        "audio evidence required (file presence does not prove gate passed)",
-        "multiplayer evidence required (file presence does not prove gate passed)",
-        "performance evidence required (file presence does not prove gate passed)"
+        "audio evidence required (file presence does not prove gate passed)"
       ]
     }
   }

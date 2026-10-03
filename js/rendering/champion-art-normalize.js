@@ -10,6 +10,7 @@
    ============================================================ */
 let _artSkinIds = null;
 function champArtSkinId(h){
+  if(typeof ascCandidate === "function" && ascCandidate(h)){ const n = typeof ascSkinIndex === "function" ? ascSkinIndex(h) : 0; return n ? h.classKey + "_alt" + n : ""; }
   if(typeof activeSetSkin !== "function") return "";
   const d = activeSetSkin(h); if(!d) return "";
   if(d.id) return d.id;

@@ -28,7 +28,7 @@ const TEXT={cardLore:[80,170],history:[300,650],passive:[40,320],skill:[20,240]}
    const N=260,cv=document.createElement('canvas');cv.width=N;cv.height=N;const g=cv.getContext('2d',{willReadFrequently:true}),saved=ctx;
    const VIEWS={front:h=>{h.fx=0;h.fy=1;},side:h=>{h.fx=1;h.fy=0;},up:h=>{h.fx=0;h.fy=-1;}};
    function measure(k,skin,view){
-    animNow=0;const h=makeHero(k,true,0,0);Object.assign(h,{moving:false,animT:0,attackAnim:0,hurtTimer:0,_packCastUntil:0});if(skin!==undefined)h._codexSkin=skin;VIEWS[view](h);
+    animNow=0;const h=makeHero(k,true,0,0);Object.assign(h,{moving:false,animT:0,attackAnim:0,hurtTimer:0,_packCastUntil:0});if(skin&&skin.asc)h.ascSkin=skin.asc;else if(skin!==undefined)h._codexSkin=skin;VIEWS[view](h);
     g.clearRect(0,0,N,N);g.save();g.translate(N/2,N-40);g.imageSmoothingEnabled=false;ctx=g;
     try{h.x=0;h.y=0;drawHeroBody(h,h.scale,false,false);}catch(e){ctx=saved;g.restore();return {err:String(e.message)};}ctx=saved;g.restore();
     const d=g.getImageData(0,0,N,N).data,rows=new Array(N).fill(0);let x0=N,x1=-1,y0=N,y1=-1;
@@ -42,6 +42,7 @@ const TEXT={cardLore:[80,170],history:[300,650],passive:[40,320],skill:[20,240]}
     const looks=[['',undefined]];
     for(const [id,s] of Object.entries(SET_SKINS))if(s.champ===k)looks.push([id,id]);
     for(const [id,s] of Object.entries(CROMA_SKINS))if(s.champ===k)looks.push([id,id]);
+    if(typeof ASCENSION_SKINS!=='undefined'&&ASCENSION_SKINS[k])ASCENSION_SKINS[k].forEach((_,i)=>looks.push([k+'_alt'+(i+1),{asc:i+1}]));
     for(const [id,skin] of looks){const key=id?k+'@'+id:k;out[key]={};for(const v of Object.keys(VIEWS))out[key][v]=measure(k,skin,v);}
    }
    // Presentación: textos de catálogo/Códice/fichas.

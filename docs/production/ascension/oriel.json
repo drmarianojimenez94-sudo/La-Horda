@@ -83,25 +83,26 @@
     }
   },
   "art": {
-    "atlas": "",
-    "preview": "",
+    "atlas": "assets/sprites/champions/oriel/atlas.png",
+    "preview": "assets/sprites/champions/oriel/preview.png",
     "directions": 4,
-    "frameWidth": 0,
-    "frameHeight": 0,
-    "sha256": "",
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "18048e31199b789505f5d067d5f98e643304d7a8967b91c159f0657c9ef1351c",
     "animations": {
-      "idle": 0,
-      "walk": 0,
-      "attack": 0,
-      "cast": 0,
-      "hit": 0,
-      "death": 0,
-      "ultimate": 0
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
     },
     "review": {
       "status": "PENDING",
       "reviewer": "",
-      "evidence": ""
+      "evidence": "",
+      "note": "Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8)."
     }
   },
   "integration": {
@@ -130,7 +131,7 @@
         "accessory",
         "vfx"
       ],
-      "preview": "",
+      "preview": "assets/sprites/champions/oriel/skins/oriel_alt1/preview.png",
       "availability": "alpha-test",
       "premiumPrice": null
     },
@@ -151,7 +152,7 @@
         "accessory",
         "vfx"
       ],
-      "preview": "",
+      "preview": "assets/sprites/champions/oriel/skins/oriel_alt2/preview.png",
       "availability": "alpha-test",
       "premiumPrice": null
     }
@@ -175,10 +176,10 @@
   "evidence": {
     "reference": "docs/balance/entry-gate-results.json",
     "balance": "docs/balance/entry-gate-results.json",
-    "visuals": "",
+    "visuals": "docs/art-gate/roster-gate.json",
     "audio": "",
-    "multiplayer": "",
-    "performance": ""
+    "multiplayer": "docs/founders/online-presence-results.json",
+    "performance": "docs/founders/performance-results.json"
   },
   "category": "STANDARD"
 }

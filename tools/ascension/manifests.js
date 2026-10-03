@@ -27,8 +27,12 @@ for(const id of ids){
  m.cosmetics=p.skins.map(([name,visualTheme,lore],i)=>({id:id+'_alt'+(i+1),type:'skin',champion:id,name,rarity:category==='FOUNDER'?'Fundador':'Épica',tagline:visualTheme,lore,visualTheme,unlockSource:category==='FOUNDER'?'FOUNDER_ENTITLEMENT':'alpha-test',collection:category==='FOUNDER'?'Los Regentes':'Ascensión',vfxProfile:'js/champions/ascension/render.js',visualChanges:['secondarySilhouette','accessory','vfx'],preview:'',availability:'alpha-test',premiumPrice:null}));
  if(category!=='FOUNDER')m.set={sourceArena:p.arena,pieces:['arma','casco','pechera','botas'],rewardCosmetic:'',rewardGrantsPower:false};
  m.budgets={particles:category==='FOUNDER'?96:64,summons:id==='oriel'?2:id==='khepri'?1:0,audioVoices:category==='FOUNDER'?4:3};
- m.art.review={status:'PENDING',reviewer:'',evidence:''};
- m.evidence={reference:'docs/balance/entry-gate-results.json',balance:'docs/balance/entry-gate-results.json',visuals:'',audio:'',multiplayer:'',performance:''};
+ // Arte GENERADO (tools/art/ascension_sprites.py): estructura completa, revisión visual humana PENDIENTE.
+ const gen=JSON.parse(fs.readFileSync(path.join(ROOT,'docs/founders/generated-art.json'),'utf8'));
+ if(gen[id])Object.assign(m.art,{atlas:gen[id].atlas,preview:gen[id].preview,directions:4,frameWidth:112,frameHeight:112,sha256:gen[id].sha256,animations:{idle:1,walk:4,attack:4,cast:4,hit:1,death:4,ultimate:4}});
+ m.cosmetics.forEach((c,i)=>{const g=gen[id+'_alt'+(i+1)];if(g)c.preview=g.preview;});
+ m.art.review={status:'PENDING',reviewer:'',evidence:'',note:'Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8).'};
+ m.evidence={reference:'docs/balance/entry-gate-results.json',balance:'docs/balance/entry-gate-results.json',visuals:'docs/art-gate/roster-gate.json',audio:'',multiplayer:'docs/founders/online-presence-results.json',performance:'docs/founders/performance-results.json'};
  const errors=validate(m);results[id]={category,releaseState:meta.releaseState,status:errors.length?'INCOMPLETE':'STRUCTURAL_PASS',errors};
  fs.writeFileSync(path.join(OUT,id+'.json'),JSON.stringify(m,null,2)+'\n');
 }

@@ -3,7 +3,7 @@
   "rows": [
     {
       "champion": "nano_gm",
-      "frames": 275,
+      "frames": 298,
       "p50": 16.7,
       "p95": 33.4,
       "maxObjects": 5,
@@ -12,12 +12,12 @@
     },
     {
       "champion": "facu_gm",
-      "frames": 320,
+      "frames": 331,
       "p50": 16.7,
       "p95": 33.3,
       "maxObjects": 9,
       "maxFamilyParticles": 0,
-      "heapMB": 20
+      "heapMB": 19
     },
     {
       "champion": "aurelia",
@@ -26,44 +26,44 @@
       "p95": 16.8,
       "maxObjects": 4,
       "maxFamilyParticles": 0,
-      "heapMB": 23
+      "heapMB": 26
     },
     {
       "champion": "khepri",
-      "frames": 346,
+      "frames": 355,
       "p50": 16.7,
       "p95": 16.8,
       "maxObjects": 2,
       "maxFamilyParticles": 0,
-      "heapMB": 22,
+      "heapMB": 21,
       "swarm": 0
     },
     {
       "champion": "velmira",
-      "frames": 346,
+      "frames": 327,
       "p50": 16.7,
-      "p95": 16.8,
+      "p95": 33.3,
       "maxObjects": 1,
       "maxFamilyParticles": 0,
-      "heapMB": 22
+      "heapMB": 23
     },
     {
       "champion": "vhal",
-      "frames": 330,
+      "frames": 351,
       "p50": 16.7,
       "p95": 16.8,
       "maxObjects": 5,
       "maxFamilyParticles": 0,
-      "heapMB": 26
+      "heapMB": 25
     },
     {
       "champion": "bront",
-      "frames": 339,
+      "frames": 344,
       "p50": 16.7,
-      "p95": 33.2,
+      "p95": 16.8,
       "maxObjects": 9,
       "maxFamilyParticles": 0,
-      "heapMB": 26
+      "heapMB": 22
     },
     {
       "champion": "oriel",
@@ -72,25 +72,25 @@
       "p95": 16.8,
       "maxObjects": 5,
       "maxFamilyParticles": 0,
-      "heapMB": 23
-    },
-    {
-      "champion": "myla",
-      "frames": 300,
-      "p50": 16.7,
-      "p95": 33.4,
-      "maxObjects": 6,
-      "maxFamilyParticles": 179,
       "heapMB": 25
     },
     {
+      "champion": "myla",
+      "frames": 326,
+      "p50": 16.7,
+      "p95": 33.3,
+      "maxObjects": 6,
+      "maxFamilyParticles": 179,
+      "heapMB": 27
+    },
+    {
       "champion": "ynara",
-      "frames": 324,
+      "frames": 337,
       "p50": 16.7,
       "p95": 33.3,
       "maxObjects": 3,
-      "maxFamilyParticles": 45,
-      "heapMB": 28
+      "maxFamilyParticles": 52,
+      "heapMB": 24
     }
   ],
   "errors": []

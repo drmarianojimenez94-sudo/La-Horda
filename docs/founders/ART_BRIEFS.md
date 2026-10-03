@@ -1,14 +1,15 @@
 # Ascensión — encargos de arte (pendientes del Visual Gate)
 
-**Estado:** ningún atlas de esta expansión fue producido. El pipeline del proyecto importa hojas
-encargadas (`tools/expedition/build-art.py`: *"No drawing, recoloring or invented poses"*) y el Visual
-Gate (`docs/ART_BIBLE.md` §8) exige revisión con reviewer y evidencia. Hasta entonces:
+**Estado (actualizado):** los 8 campeones y sus 14 skins tienen **atlas generados por código**
+(`tools/art/ascension_sprites.py`, gramática del Caballero: chibi, contorno de 1 px, 2–3 tonos, 4×9
+cuadros de 112×112, pies en y=106, 4 direcciones; idle/walk/attack/cast/ultimate/hit/death). Pasan el
+**Roster Art Gate** de escala y apoyo (misma altura y línea de pies que el Caballero), pero su estilo es
+más simple que el arte encargado: el Visual Gate (`docs/ART_BIBLE.md` §8) los deja **PENDIENTES DE
+REVISIÓN** y lo esperable es que pidan REDRAW por un artista. Este documento sigue siendo el encargo.
 
-- Los seis STANDARD están en `releaseState: INTERNAL` (solo Test Lab).
-- Nano GM y Facu GM están en `TESTING`: los usa su cuenta Fundadora y aparecen en la Tienda con su
-  **sello** (no con un sprite sin aprobar).
-- En partida se dibujan con el **sprite de respaldo** del rol base con paleta propia y sus VFX en capas
-  separadas (alas, manto, enjambre, máscaras, etc.). Eso es provisorio y **no** cuenta como arte aprobado.
+- Los seis STANDARD siguen en `releaseState: INTERNAL`; Nano GM y Facu GM en `TESTING`.
+- Al llegar el arte encargado: importarlo con el mismo formato, reemplazar los atlas, correr
+  `node tools/art/roster_gate.js --write` y el gate, completar `art.review` del manifiesto.
 
 ## Requisitos comunes (Art Bible §§2–7)
 

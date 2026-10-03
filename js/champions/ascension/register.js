@@ -25,7 +25,7 @@ for(const [k,p] of Object.entries(ASCENSION)){
  PAL[k]={};for(const [c,v] of Object.entries(PAL[base]))PAL[k][c]=c==='a'?v:ascensionTint(v,p.color,.5);GRIDS[k]=GRIDS[base];
  CODEX_CHAMP_LORE[k]={origin:p.arena,history:p.history};HERO_VOICES[k]={pick:p.voices[0],win:p.voices[1],fall:p.voices[2]};
  ANIM_PROFILES[k]={...ANIM_PROFILES[base],basic:ranged?'ranged':'melee'};CHAMP_IDENTITY[k]={sig:'mark',proj:'glyph'};CODEX_SKILL_FX[k]=all.map(()=>({color:hexToRgb(p.color),fx:'zone'}));
- ASCENSION_SKINS[k]=p.skins.map(([name,visualTheme,lore],i)=>({id:k+'_alt'+(i+1),champ:k,name,visualTheme,lore,founderOnly:!!p.founder,status:'VFX_PROFILE_PENDING_ATLAS'}));
+ ASCENSION_SKINS[k]=p.skins.map(([name,visualTheme,lore],i)=>({id:k+'_alt'+(i+1),champ:k,name,visualTheme,lore,founderOnly:!!p.founder,status:'GENERATED_PENDING_REVIEW',pack:k+'_alt'+(i+1)}));
  const tree={masteryRequirement:8,nodes:[],masteries:{}};
  q.skills.forEach((sk,b)=>{
   const branch=k+'_'+b,pref=k+'_t'+b,label={powerMult:'potencia',durationMult:'duración',areaMult:'área',cdMult:'recarga'};
