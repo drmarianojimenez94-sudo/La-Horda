@@ -49,7 +49,9 @@ const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin 0/O/1/I para di
 // Orígenes que SIEMPRE se aceptan si se configuró una lista: el juego publicado (GitHub Pages) y sus
 // previews. Antes render.yaml solo permitía las previews de githack, y el juego publicado quedaba
 // rechazado en silencio: "crear sala" no hacía nada (auditoría pre-alfa).
-const ALWAYS_ALLOWED = ["https://drmarianojimenez94-sudo.github.io", "https://rawcdn.githack.com", "https://raw.githack.com"];
+// La Alpha principal (fondalstudios.com, ver js/net/net-config.js) también: con una lista vieja en
+// ALLOWED_ORIGINS, la página principal quedaba rechazada y "Crear sala" fallaba.
+const ALWAYS_ALLOWED = ["https://fondalstudios.com", "https://drmarianojimenez94-sudo.github.io", "https://rawcdn.githack.com", "https://raw.githack.com"];
 const ALLOWED_ENV = (process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
 const ALLOWED = ALLOWED_ENV.length ? [...new Set(ALLOWED_ENV.concat(ALWAYS_ALLOWED))] : [];
 // ¿Se acepta este origen? (lo usan el WebSocket y la API de cuentas). Coincidencia exacta; una
