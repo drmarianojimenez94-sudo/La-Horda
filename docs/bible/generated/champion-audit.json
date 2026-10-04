@@ -114,7 +114,7 @@
      "area": "ability",
      "name": "Hab. 1 Torbellino: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -144,7 +144,7 @@
      "area": "ability",
      "name": "Hab. 2 Embestida: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -242,7 +242,7 @@
      "selfChanged": 5,
      "spawned": 0,
      "vfx": 275,
-     "sfx": 3,
+     "sfx": 6,
      "floatText": 54,
      "netEvents": 6,
      "error": null
@@ -267,7 +267,7 @@
      "selfChanged": 4,
      "spawned": 0,
      "vfx": 16,
-     "sfx": 3,
+     "sfx": 4,
      "floatText": 2,
      "netEvents": 9,
      "error": null
@@ -439,7 +439,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "470 píxeles"
+     "detail": "348 píxeles"
     },
     {
      "area": "ability",
@@ -747,7 +747,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "540 píxeles"
+     "detail": "296 píxeles"
     },
     {
      "area": "ability",
@@ -765,7 +765,7 @@
      "area": "ability",
      "name": "Hab. 1 Muro de Fuego: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -849,13 +849,13 @@
      "area": "ability",
      "name": "Definitiva Cataclismo Elemental: VFX",
      "level": "PASS",
-     "detail": "388"
+     "detail": "335"
     },
     {
      "area": "ability",
      "name": "Definitiva Cataclismo Elemental: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -867,7 +867,7 @@
      "area": "ability",
      "name": "Definitiva Cataclismo Elemental: replicado a invitados",
      "level": "PASS",
-     "detail": "60 eventos de red"
+     "detail": "49 eventos de red"
     }
    ],
    "abilities": [
@@ -888,7 +888,7 @@
      "selfChanged": 0,
      "spawned": 1,
      "vfx": 213,
-     "sfx": 6,
+     "sfx": 8,
      "floatText": 66,
      "netEvents": 4,
      "error": null
@@ -964,10 +964,10 @@
      "alliesHelped": 0,
      "selfChanged": 13,
      "spawned": 0,
-     "vfx": 388,
-     "sfx": 5,
+     "vfx": 335,
+     "sfx": 6,
      "floatText": 82,
-     "netEvents": 60,
+     "netEvents": 49,
      "error": null
     }
    ],
@@ -2795,7 +2795,7 @@
      "area": "ability",
      "name": "Definitiva Cacería Salvaje: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -2894,7 +2894,7 @@
      "selfChanged": 2,
      "spawned": 0,
      "vfx": 39,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 7,
      "netEvents": 7,
      "error": null
@@ -4087,7 +4087,7 @@
      "area": "ability",
      "name": "Hab. 3 No quiero seguir esta conversación: SFX",
      "level": "PASS",
-     "detail": "2"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -4201,7 +4201,7 @@
      "selfChanged": 7,
      "spawned": 0,
      "vfx": 85,
-     "sfx": 2,
+     "sfx": 3,
      "floatText": 16,
      "netEvents": 4,
      "error": null
@@ -4348,7 +4348,7 @@
      "area": "ability",
      "name": "Hab. 1 Torre de Yogur: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -4473,7 +4473,7 @@
      "selfChanged": 2,
      "spawned": 1,
      "vfx": 32,
-     "sfx": 4,
+     "sfx": 5,
      "floatText": 5,
      "netEvents": 4,
      "error": null
@@ -4758,7 +4758,7 @@
      "area": "ability",
      "name": "Definitiva Turno de Emergencia: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -4868,7 +4868,7 @@
      "selfChanged": 6,
      "spawned": 1,
      "vfx": 44,
-     "sfx": 3,
+     "sfx": 4,
      "floatText": 8,
      "netEvents": 6,
      "error": null
@@ -6311,7 +6311,7 @@
      "area": "ability",
      "name": "Hab. 2 Costura de fuga: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -6428,7 +6428,7 @@
      "selfChanged": 4,
      "spawned": 0,
      "vfx": 106,
-     "sfx": 4,
+     "sfx": 5,
      "floatText": 20,
      "netEvents": 5,
      "error": null
@@ -7638,7 +7638,7 @@
      "area": "ability",
      "name": "Definitiva Todavía hay una salida: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -7746,7 +7746,7 @@
      "selfChanged": 6,
      "spawned": 1,
      "vfx": 163,
-     "sfx": 7,
+     "sfx": 8,
      "floatText": 36,
      "netEvents": 7,
      "error": null
@@ -7960,7 +7960,7 @@
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -8063,7 +8063,7 @@
      "selfChanged": 3,
      "spawned": 0,
      "vfx": 200,
-     "sfx": 5,
+     "sfx": 6,
      "floatText": 40,
      "netEvents": 7,
      "error": null
@@ -8277,7 +8277,7 @@
      "area": "ability",
      "name": "Definitiva El cielo zumba: SFX",
      "level": "PASS",
-     "detail": "8"
+     "detail": "11"
     },
     {
      "area": "ability",
@@ -8375,7 +8375,7 @@
      "selfChanged": 1,
      "spawned": 1,
      "vfx": 416,
-     "sfx": 8,
+     "sfx": 11,
      "floatText": 80,
      "netEvents": 7,
      "error": null
@@ -8589,7 +8589,7 @@
      "area": "ability",
      "name": "Definitiva Abrir todas las válvulas: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -8693,7 +8693,7 @@
      "selfChanged": 3,
      "spawned": 0,
      "vfx": 209,
-     "sfx": 5,
+     "sfx": 6,
      "floatText": 40,
      "netEvents": 7,
      "error": null

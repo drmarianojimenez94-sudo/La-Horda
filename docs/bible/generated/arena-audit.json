@@ -82,7 +82,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 4
+    "seconds": 5
    },
    "status": "PASS"
   },
@@ -254,7 +254,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 3
    },
    "status": "PASS"
   },

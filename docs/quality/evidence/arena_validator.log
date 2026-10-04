@@ -1,0 +1,14 @@
+PASS     ciudad     fail=0 warn=0 (5s)
+WARNING  fortaleza  fail=0 warn=1 (4s)
+   WARNING [geometry] área caminable conexa — 12822 celdas; 7 bolsillos inalcanzables: 1770@(-8,-3888) 1038@(8,-2920) 1992@(-9,-1958) 2294@(4,-1068) 280@(4,-336) 1170@(4,383) (geometría con compuertas)
+PASS     bosque     fail=0 warn=0 (3s)
+PASS     micelial   fail=0 warn=0 (2s)
+PASS     hielo      fail=0 warn=0 (2s)
+PASS     acuatica   fail=0 warn=0 (2s)
+PASS     laberinto  fail=0 warn=0 (2s)
+WARNING  abismo     fail=0 warn=1 (2s)
+   WARNING [explore] héroes siempre en zona caminable — 113 cuadros-héroe dentro de colisión (> 4 u) [["tanque",324,616,597,""],["tanque",325,623,598,""],["tanque",325,629,599,""],["tanque",321,637,600,"abHang"],["tanque",321,637,601,"abHang"]] (arena con caídas: colgado del borde)
+PASS     minas      fail=0 warn=0 (2s)
+PASS     infernal   fail=0 warn=0 (2s)
+page errors: 0
+exit=0 secs=34

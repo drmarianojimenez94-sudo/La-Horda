@@ -1,0 +1,318 @@
+{
+ "generatedBy": "tools/quality/scorecard.js",
+ "date": "2026-10-04",
+ "overall": 88,
+ "target": 90,
+ "aspects": {
+  "Jugabilidad": {
+   "weight": 20,
+   "score": 77,
+   "measured": 7,
+   "total": 7
+  },
+  "Jefes": {
+   "weight": 12,
+   "score": 98,
+   "measured": 4,
+   "total": 4
+  },
+  "Arenas": {
+   "weight": 12,
+   "score": 78,
+   "measured": 2,
+   "total": 2
+  },
+  "Arte": {
+   "weight": 14,
+   "score": 84,
+   "measured": 3,
+   "total": 4
+  },
+  "Audio": {
+   "weight": 10,
+   "score": 100,
+   "measured": 2,
+   "total": 2
+  },
+  "HUD y presentación": {
+   "weight": 14,
+   "score": null,
+   "measured": 0,
+   "total": 6
+  },
+  "Modos de juego": {
+   "weight": 10,
+   "score": 100,
+   "measured": 1,
+   "total": 5
+  },
+  "Rendimiento": {
+   "weight": 8,
+   "score": null,
+   "measured": 0,
+   "total": 1
+  }
+ },
+ "metrics": [
+  {
+   "aspect": "Jugabilidad",
+   "name": "victorias del perfil aprendiz",
+   "score": 100,
+   "weight": 1,
+   "raw": "50 % (1/2)",
+   "formula": "objetivo 50–80 %; −2,5 pts por punto porcentual afuera"
+  },
+  {
+   "aspect": "Jugabilidad",
+   "name": "victorias del perfil ocasional",
+   "score": 0,
+   "weight": 1,
+   "raw": "0 % (0/2)",
+   "formula": "objetivo 70–95 %; −2,5 pts por punto porcentual afuera"
+  },
+  {
+   "aspect": "Jugabilidad",
+   "name": "victorias del perfil habitual",
+   "score": 100,
+   "weight": 1,
+   "raw": "100 % (1/1)",
+   "formula": "objetivo 90–100 %; −2,5 pts por punto porcentual afuera"
+  },
+  {
+   "aspect": "Jugabilidad",
+   "name": "la habilidad importa (habitual ≥ ocasional ≥ aprendiz)",
+   "score": 50,
+   "weight": 1,
+   "raw": "100 / 0 / 50 %",
+   "formula": "50 pts por cada escalón respetado"
+  },
+  {
+   "aspect": "Jugabilidad",
+   "name": "partidas que no terminan (tope 900 s)",
+   "score": 100,
+   "weight": 1,
+   "raw": "0/5",
+   "formula": "−25 por partida trabada"
+  },
+  {
+   "aspect": "Jugabilidad",
+   "name": "duración de una arena ganada (mediana)",
+   "score": 100,
+   "weight": 0.5,
+   "raw": "532 s",
+   "formula": "objetivo 6–13 min; −0,25 pts por segundo afuera"
+  },
+  {
+   "aspect": "Jugabilidad",
+   "name": "errores durante las partidas",
+   "score": 100,
+   "weight": 1,
+   "raw": "0",
+   "formula": "−20 por error"
+  },
+  {
+   "aspect": "Jefes",
+   "name": "validación en pelea real",
+   "score": 96,
+   "weight": 1.5,
+   "raw": {
+    "PASS*": 8,
+    "PASS": 20
+   },
+   "formula": "PASS 100 · PASS* 85 · FIX 40 · REWORK 0"
+  },
+  {
+   "aspect": "Jefes",
+   "name": "ganchos \"auto\" con su arena disparados",
+   "score": 100,
+   "weight": 1,
+   "raw": "24/24",
+   "formula": "% de ganchos que la pelea real produce"
+  },
+  {
+   "aspect": "Jefes",
+   "name": "diseño (fichas PASS)",
+   "score": 96,
+   "weight": 1,
+   "raw": "27/28",
+   "formula": "% de fichas con diseño PASS"
+  },
+  {
+   "aspect": "Jefes",
+   "name": "pruebas de efecto (t_boss_arena_hooks)",
+   "score": 100,
+   "weight": 1,
+   "raw": "29 PASS / 0 FAIL",
+   "formula": "% de pruebas que pasan"
+  },
+  {
+   "aspect": "Arenas",
+   "name": "validador de arenas (colisión, telegraphs, ficha, exploración)",
+   "score": 97,
+   "weight": 1.5,
+   "raw": {
+    "PASS": 8,
+    "WARNING": 2
+   },
+   "formula": "PASS 100 · WARNING 85 · FAIL 0"
+  },
+  {
+   "aspect": "Arenas",
+   "name": "ninguna arena es un muro (gana ≥ 1 de 3 perfiles)",
+   "score": 50,
+   "weight": 1,
+   "raw": "ciudad 67% · fortaleza 0%",
+   "formula": "% de arenas ganables por al menos un tercio de los perfiles"
+  },
+  {
+   "aspect": "Arte",
+   "name": "densidad de píxel coherente con los campeones (< ×2,5)",
+   "score": 85,
+   "weight": 1,
+   "raw": "85/100 tipos; 2 en REDRAW (≥ ×4)",
+   "formula": "% de tipos de enemigo/jefe con densidad < ×2,5 la del roster"
+  },
+  {
+   "aspect": "Arte",
+   "name": "jefes con arte propio y a la densidad del juego",
+   "score": 68,
+   "weight": 1,
+   "raw": "19/28 (REDRAW = cuerpo prestado o densidad ≥ ×4)",
+   "formula": "% de fichas de jefe sin REDRAW"
+  },
+  {
+   "aspect": "Arte",
+   "name": "campeones: sprites y animaciones (validador)",
+   "score": 100,
+   "weight": 1,
+   "raw": "29/29",
+   "formula": "% de campeones PASS en el validador"
+  },
+  {
+   "aspect": "Arte",
+   "name": "proyectiles con identidad propia",
+   "score": null,
+   "weight": 0.5,
+   "raw": "sin evidencia",
+   "formula": "% de pruebas que pasan"
+  },
+  {
+   "aspect": "Audio",
+   "name": "mezcla, identidad por arena/jefe/fase, costo (t_audio_mix)",
+   "score": 100,
+   "weight": 1.5,
+   "raw": "59 PASS / 0 FAIL",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "Audio",
+   "name": "niveles en partida: picos, RMS, silencios",
+   "score": 100,
+   "weight": 1,
+   "raw": "6 PASS / 0 FAIL",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "HUD y presentación",
+   "name": "59 pantallas × 2 teléfonos: botones chicos, desbordes, letra diminuta, fuentes",
+   "score": null,
+   "weight": 1.5,
+   "raw": "sin evidencia",
+   "formula": "100 − 2 por problema"
+  },
+  {
+   "aspect": "HUD y presentación",
+   "name": "texto grande encimado en los momentos más cargados",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "−20 por texto grande de más (>2), −15 por superposición, −10 por botín al centro"
+  },
+  {
+   "aspect": "HUD y presentación",
+   "name": "toques para las acciones comunes",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "HUD y presentación",
+   "name": "controles táctiles ≥ 44 px, en pantalla",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "HUD y presentación",
+   "name": "texto dentro de su marco",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "HUD y presentación",
+   "name": "290 contratos de interfaz (revivir, guías, layout)",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "Modos de juego",
+   "name": "Guerra de Cristales: simulación (partidas completas de bots)",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "Modos de juego",
+   "name": "Guerra de Cristales: integrada al hub, ida y vuelta",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "Modos de juego",
+   "name": "Horda Infinita: rondas, jefes cada 5, mutadores, recompensa",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "Modos de juego",
+   "name": "cooperativo real por el relay (4 clientes)",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  },
+  {
+   "aspect": "Modos de juego",
+   "name": "campaña completa ganable por un jugador habitual",
+   "score": 100,
+   "weight": 1,
+   "raw": "100 %",
+   "formula": "% de arenas ganadas por el perfil habitual"
+  },
+  {
+   "aspect": "Rendimiento",
+   "name": "carga en 4G simulado (portada, MB, tiempo a jugar)",
+   "score": null,
+   "weight": 1,
+   "raw": "sin evidencia",
+   "formula": "% de comprobaciones que pasan"
+  }
+ ],
+ "humanJudgementPending": [
+  "Si la música y los efectos SUENAN bien (son sintetizados; la tarjeta solo mide mezcla, niveles e identidad)",
+  "Si el arte es lindo y coherente a la vista (la tarjeta mide densidad, arte propio y validadores técnicos)",
+  "Sensación en un teléfono real (todo se midió en Chromium emulado)",
+  "Diversión y ritmo percibidos por personas"
+ ]
+}

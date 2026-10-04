@@ -1,0 +1,32 @@
+PASS BOSS_BLUEPRINTS: 28 fichas sin FAIL
+PASS cada gancho lleva el prefijo de su jefe
+PASS cada ficha PASS tiene al menos un gancho con su arena
+PASS Kraken en el charco que descarga: EXPUESTO
+PASS Kraken: el tentáculo golpea un punto fijo (el que se corre lo esquiva)
+PASS Kraken: el agarre avisa 0,75 s antes (y agarra si te quedás)
+PASS Kraken: refuerzos con aviso, salen de una corriente real
+PASS Leviatán: la MAREA invierte las corrientes y carga los charcos
+PASS Leviatán: un tentáculo en el charco pierde ~45 % con la descarga
+PASS Leviatán: la embestida apunta al objetivo del director (no al jugador local) y usa su pose
+PASS Caballero: una trampa en marcha lo daña y aturde
+PASS Caballero: no se encadena (enfriamiento) y no lo toca dormido/inmune
+PASS Guardián del Laberinto: levanta el anillo de pilares (nunca encima de nadie)
+PASS Guardián del Laberinto: su pisotón junto a los pilares los derriba y queda EXPUESTO
+PASS Hechicero: abre una fisura real cerca de un guardián y se alimenta (escudo)
+PASS Hechicero: sellar su grieta lo deja EXPUESTO y sin escudo
+PASS Hechicero: "Grieta Conjurada" está en su rotación
+PASS Doppelgängers: cada uno atado a una runa encendida, con escudo
+PASS Doppelgängers: contener su runa → EXPUESTO y sin escudo
+PASS Tundraverx: se derrite junto al fuego (×1,35) y lo protegen las escamas lejos (−30 %)
+PASS Tundraverx: su aliento apaga el brasero del cono
+PASS Esqueleto Cornudo: sale de una fisura y su embestida contra el basalto lo aturde
+PASS Demonio Menor: la fisura cercana lo protege y sellarla lo expone
+PASS Maestro: su marca no atraviesa el escudo de un refugio en pie
+PASS Cerbero encadenado: quedarse fuera de su alcance ya no es un lugar seguro
+PASS HUD: al cambiar de forma (Gólem → Rey de la Horda) muestra el epíteto de la forma actual
+PASS HUD: el Titán de Piedra muestra su barra grande
+PASS HUD: el Jinete no promete "Vida 1/2" fuera de las Ruinas
+PASS Minotauro: bossPhase sube con su fase (la música escala)
+
+29 pruebas OK
+exit=0 secs=25

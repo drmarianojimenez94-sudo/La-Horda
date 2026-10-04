@@ -513,7 +513,7 @@ function update(dt){
       if((p.wave || p.lob) && updateEnemyProjectileStyle(p, dt)) continue; // el tiro en arco solo pega al caer
       for(const h of heroes){
         if(!h.alive) continue;
-        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25, rank:p.rank}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
+        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25, rank:p.rank, from:p.src}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
       }
     } else {
       for(const e of enemies){
