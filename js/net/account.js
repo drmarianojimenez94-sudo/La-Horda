@@ -75,6 +75,8 @@ async function accountFetch(method, path, body, opts){
   opts = opts || {};
   const base = accountApiBase();
   if(!base){ const e = new Error("NO_SERVER"); e.code = "NO_SERVER"; e.offline = true; throw e; }
+  // servidor viejo sin /api (js/net/net-core.js: netCaps): ni se pide (sería un error de CORS en la consola)
+  if(typeof netApiMissing === "function" && netApiMissing() && base === netHttpBase()){ const e = new Error("NO_API"); e.code = "NO_API"; e.offline = true; throw e; }
   const ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
   const t = setTimeout(() => { if(ctl) ctl.abort(); }, opts.timeout || 20000);
   const headers = {};
@@ -95,7 +97,8 @@ async function accountFetch(method, path, body, opts){
 function accountWarmup(){
   if(!accountAvailable()) return Promise.resolve(false);
   if(acct.warm && Date.now() - acct.warm.at < 60000) return acct.warm.p;
-  const p = accountFetch("GET", "/api/health", undefined, { auth: false, timeout: 90000 })
+  const caps = typeof netCapsProbe === "function" ? netCapsProbe() : Promise.resolve();
+  const p = caps.then(() => accountFetch("GET", "/api/health", undefined, { auth: false, timeout: 90000 }))
     .then(r => { acct.health = r.status === 200 ? r.j : null; return !!(acct.health && acct.health.ok); }).catch(() => false);
   acct.warm = { at: Date.now(), p };
   return p;
@@ -229,10 +232,17 @@ function _acctRetryLater(){
   acct.retryMs = Math.min(300000, acct.retryMs ? acct.retryMs * 2 : 20000);
   _acctSchedule(acct.retryMs);
 }
+// Sesión rechazada. Si el servidor no tiene base de datos (Render plan gratis sin DATABASE_URL), lo más
+// probable es que se haya reiniciado y BORRADO las cuentas: "entrá de nuevo" no serviría (diría "usuario o
+// contraseña incorrectos"), así que se explica qué pasó y qué hacer.
+const ACCOUNT_RESET_MSG = "El servidor de prueba se reinició y borró las cuentas. Tu progreso sigue en este dispositivo: creá la cuenta de nuevo (con el mismo nombre) y se sube sola.";
 function _acctSessionLost(){
   acct.session = null; _acctSaveSession();
-  if(typeof showNetToast === "function") showNetToast("Tu sesión venció: entrá de nuevo desde tu perfil. El progreso sigue en este dispositivo.");
   _acctEmit();
+  if(typeof showNetToast !== "function") return;
+  const say = () => showNetToast(acct.health && acct.health.persistent === false ? ACCOUNT_RESET_MSG
+    : "Tu sesión venció: entrá de nuevo desde tu perfil. El progreso sigue en este dispositivo.");
+  if(acct.health) say(); else accountWarmup().then(say, say);
 }
 // Baja lo de la nube y lo reconcilia con lo local.
 async function accountPull(reason){
@@ -427,6 +437,11 @@ function _acctRenderAuth(mode){
   } else {
     // se despierta mientras escribe; si el servidor no tiene base de datos, se avisa con honestidad
     accountWarmup().then(() => {
+      if(typeof netApiMissing === "function" && netApiMissing() && acct.el && acct.view === mode){ // servidor viejo: sin cuentas
+        acct.el.querySelectorAll(".acc-form input, .acc-form button").forEach(x => { x.disabled = true; });
+        _acctStatus("Las cuentas todavía no están disponibles en el servidor. Jugá como invitado: tu progreso queda en este dispositivo.", "warn");
+        return;
+      }
       const h = acct.health;
       if(!h || h.persistent !== false || acct.view !== mode || !acct.el || acct.el.querySelector(".acc-warn-db")) return;
       const n = document.createElement("div");
@@ -473,12 +488,16 @@ async function _acctSubmit(reg){
   }, 1000);
   let res;
   try{ res = reg ? await accountRegister(user, pass, email) : await accountLogin(user, pass); }
-  catch(e){ res = { ok: false, msg: e.code === "TIMEOUT" ? "El servidor no respondió. Probá de nuevo o jugá como invitado." : "Sin conexión con el servidor. Podés jugar como invitado y entrar después." }; }
+  catch(e){ res = { ok: false, msg: e.code === "NO_API" ? "Las cuentas todavía no están disponibles en el servidor. Jugá como invitado: tu progreso queda en este dispositivo."
+    : e.code === "TIMEOUT" ? "El servidor no respondió. Probá de nuevo o jugá como invitado." : "Sin conexión con el servidor. Podés jugar como invitado y entrar después." }; }
   clearInterval(tick);
   acct.busy = false;
   if(!acct.el || acct.view === "conflict") return;
   inputs.forEach(x => { x.disabled = false; }); btn.disabled = false;
   if(!res.ok){
+    // sin base de datos el servidor pierde las cuentas al reiniciarse: "usuario o contraseña incorrectos" solo confunde
+    if(!reg && res.error === "BAD_CREDENTIALS" && acct.health && acct.health.persistent === false)
+      res.msg += " Si ya tenías cuenta: el servidor de prueba se reinició y la borró. Creala de nuevo con el mismo nombre: tu progreso de este dispositivo se sube solo.";
     _acctStatus(res.msg, "err");
     const f = document.getElementById(res.error === "BAD_PASS" || res.error === "BAD_CREDENTIALS" ? "acc-pass" : "acc-user");
     if(f){ f.focus(); if(res.error === "BAD_CREDENTIALS") f.select(); }

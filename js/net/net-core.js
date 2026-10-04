@@ -50,8 +50,34 @@ setTimeout(()=>{ try{ if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
 function netWarmup(){
   const u = netServerUrl(); if(!u || performance.now() - _netWarmAt < 60000) return;
   _netWarmAt = performance.now();
-  try{ fetch(u.replace(/^ws/, "http").replace(/\/$/, "") + "/health", {mode:"no-cors", cache:"no-store"}).catch(()=>{}); }catch(e){}
+  netCapsProbe(true);
 }
+// QUÉ SABE HACER EL SERVIDOR. Un relay viejo (antes de las cuentas) no tiene /api: pedirle /api/... daba
+// un 404 sin permiso CORS = error rojo en la consola y carteles de "sin conexión" engañosos. /health lo
+// tienen todas las versiones, con CORS abierto: si su texto no trae la línea "cuentas:", no hay /api
+// (ni cuentas, ni ranking, ni salas públicas) y el juego lo dice claro sin pedírselo.
+//   netCaps.api: true | false | null (todavía no se sabe: servidor dormido o sin red)
+const netCaps = { api:null, at:0, url:"" };
+let _netCapsP = null;
+function netHttpBase(){ const u = netServerUrl(); return u ? u.replace(/^ws(s?):\/\//i, "http$1://").replace(/\/+$/, "") : ""; }
+function netCapsProbe(force){
+  const base = netHttpBase();
+  if(!base) return Promise.resolve(netCaps);
+  if(netCaps.url !== base){ netCaps.api = null; netCaps.at = 0; netCaps.url = base; _netCapsP = null; }
+  if(_netCapsP) return _netCapsP;
+  if(!force && netCaps.api !== null && performance.now() - netCaps.at < 300000) return Promise.resolve(netCaps);
+  const ctl = typeof AbortController!=="undefined" ? new AbortController() : null;
+  const t = setTimeout(()=>{ if(ctl) ctl.abort(); }, 90000); // plan gratis: despertar tarda ~1 minuto
+  _netCapsP = fetch(base + "/health", {cache:"no-store", signal: ctl ? ctl.signal : undefined})
+    .then(r => r.ok ? r.text() : null)
+    .then(txt => { if(txt != null && netCaps.url === base){ netCaps.api = /cuentas:/.test(txt); netCaps.at = performance.now(); } return netCaps; })
+    .catch(() => netCaps)
+    .finally(() => { clearTimeout(t); _netCapsP = null; });
+  return _netCapsP;
+}
+// ¿El servidor seguro NO tiene esta parte? (false mientras no se sepa: se intenta igual)
+function netApiMissing(){ return netCaps.api === false && netCaps.url === netHttpBase(); }
+const NET_NOT_ON_SERVER = "Esta función todavía no está disponible en el servidor (hay que actualizarlo).";
 function netClientId(){
   // Identidad anónima de este navegador: permite volver a la misma sala tras perder conexión.
   // sessionStorage: dos pestañas del mismo navegador cuentan como dos jugadores distintos.
