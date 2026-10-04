@@ -11,6 +11,8 @@
 //   node tools/alfa/q6_pixel_scale.js --tag antes [--out docs/alfa/q6] [--arenas ciudad,minas] [--shots] [--perf]
 //   --shots   guarda una captura .webp chica por escena (<out>/<tag>_<arena>_<escena>.webp)
 //   --perf    mide el costo de render() por escena (ms, promedio de 60 cuadros)
+//   --ab      A/B intercalado en la misma página: render() con las capas de Q6 prendidas vs apagadas
+//   --escenas oleada,jefe  solo esas escenas
 //   --q6 k=v  fija window.Q6_ART.<k> antes de medir (p.ej. --q6 light=0 para comparar sin luz)
 // Salida: <out>/q6_pixel_scale_<tag>.json + una tabla por consola.
 let chromium;
@@ -22,7 +24,7 @@ const BASE = process.env.SE_BASE_URL || 'http://127.0.0.1:8906';
 const TAG = opt('tag', 'medicion');
 const OUT = opt('out', 'docs/alfa/q6');
 const ARENAS = (opt('arenas', '') || '').split(',').filter(Boolean);
-const SHOTS = !!opt('shots', false), PERF = !!opt('perf', false);
+const SHOTS = !!opt('shots', false), PERF = !!opt('perf', false), AB = !!opt('ab', false);
 const Q6SET = args.map((a, i) => a === '--q6' ? args[i + 1] : null).filter(Boolean);
 fs.mkdirSync(OUT, { recursive: true });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -34,7 +36,8 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
   const page = await ctxB.newPage();
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(() => { window.__campaignMode = true; });
-  await page.goto(`${BASE}/index.html?dev=1`, { waitUntil: 'load' });
+  page.setDefaultTimeout(180000);
+  await page.goto(`${BASE}/index.html?dev=1${process.env.Q6_QUERY || ''}`, { waitUntil: 'load', timeout: 180000 });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
   await sleep(800);
   await page.evaluate((q6set) => {
@@ -42,9 +45,10 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
     save.tut = { basics: 1, b_move: 1, b_attack: 1, b_skill: 1 };
     window.Q6_ART = window.Q6_ART || {};
     for (const kv of q6set) { const [k, v] = kv.split('='); window.Q6_ART[k] = isNaN(+v) ? v : +v; }
-    window.__go = (arena, lv) => {
+    window.__go = (arena, lv, team) => {
       for (const k of Object.keys(save.champions)) save.champions[k].unlocked = true;
-      save.crystalWorn = 'none'; selectedClass = 'guerrero'; currentArena = arena; lobbyAllies = ['tanque', 'mago', 'soporte']; startRun(lv);
+      const T = team || ['guerrero', 'tanque', 'mago', 'soporte'];
+      save.crystalWorn = 'none'; selectedClass = T[0]; currentArena = arena; lobbyAllies = T.slice(1); startRun(lv);
     };
     window.__st = (ms) => { let t = 0; while (t < ms) { if (state === 'buff') { const c = document.querySelector('#buff-cards > *'); if (c) c.click(); continue; } if (typeof RUN_INTRO !== 'undefined' && RUN_INTRO.open) { try { runIntroClose(); } catch (e) { RUN_INTRO.open = false; } } if (state !== 'playing') break; for (const h of heroes) h.hp = Math.max(h.hp, h.maxHp * 0.6); update(16); t += 16; } };
     // jefe de la arena por su camino real (ganchos de arena del nivel 10); si no llega solo, startBossFight
@@ -125,22 +129,48 @@ const ALL = ['ciudad', 'fortaleza', 'bosque', 'micelial', 'hielo', 'acuatica', '
     scenes.push({ arena, esc: 'jefe', setup: () => page.evaluate((a) => {
       __go(a, 3); __st(1500); __boss(); __st(3500);
       const b = enemies.find(__isBoss);
-      if (b) { player.x = b.x; player.y = b.y + 170; clampToArena && clampToArena(player); for (const h of heroes) if (h !== player) { h.x = player.x + (Math.random() - 0.5) * 80; h.y = player.y + 30; } __st(200); }
+      if (b) { player.x = b.x; player.y = b.y + 110; clampToArena && clampToArena(player); for (const h of heroes) if (h !== player) { h.x = player.x + (Math.random() - 0.5) * 80; h.y = player.y + 30; } __st(32); }
     }, arena) });
   }
+  // todos los guardianes (también los de la Ascensión), de a cuatro, en la Ciudad: tabla de héroes completa
+  if (!ARENAS.length || opt('guardianes', false)) {
+    const ks = await page.evaluate(() => Object.keys(CLASSES).filter(k => save.champions[k]));
+    for (let i = 0; i < ks.length; i += 4) {
+      const team = ks.slice(i, i + 4); while (team.length < 4) team.push(ks[team.length % ks.length]);
+      scenes.push({ arena: 'ciudad', esc: 'guardianes' + (i / 4 + 1), noShot: true, setup: () => page.evaluate((T) => {
+        __go('ciudad', 3, T); __st(800); for (const e of enemies) e.alive = false; enemies = [];
+        heroes.forEach((h, j) => { h.x = player.x + (j - 1.5) * 70; h.y = player.y; }); __st(64);
+      }, team) });
+    }
+  }
+  const ESC = (opt('escenas', '') || '').split(',').filter(Boolean);
+  if (ESC.length) for (let i = scenes.length - 1; i >= 0; i--) if (!ESC.some(e => scenes[i].esc.startsWith(e))) scenes.splice(i, 1);
   const result = { tag: TAG, fecha: new Date().toISOString(), viewport: '844x390 dpr2', q6: Q6SET, escenas: [] };
   for (const sc of scenes) {
     try { await sc.setup(); } catch (e) { console.log('setup', sc.arena, sc.esc, e.message.slice(0, 120)); continue; }
     await page.evaluate(() => { try { updateHUD(); } catch (e) {} for (let i = 0; i < 2; i++) render(); });
     const recs = await page.evaluate(() => __measure());
-    const perf = PERF ? await page.evaluate(() => { __perf(10); return __perf(60); }) : null;
+    let perf = PERF ? await page.evaluate(() => { __perf(10); return __perf(60); }) : null;
+    if (AB) perf = Object.assign(perf || {}, await page.evaluate(() => {
+      // A/B en la MISMA página y el mismo cuadro, intercalado (la carga de la máquina afecta a los dos por igual):
+      // capas de Q6 prendidas (luz, sombra, mipmaps, tope) contra apagadas
+      if (typeof Q6_ART === 'undefined') return {};
+      const keys = ['light', 'shadow', 'mip', 'cap'], set = v => keys.forEach(k => Q6_ART[k] = v);
+      const on = [], off = [];
+      // el MÍNIMO de 11 tandas de 20 cuadros: la interferencia de otros procesos solo suma tiempo, nunca resta
+      for (let r = 0; r < 11; r++) { set(1); on.push(__perf(20).renderMs); set(0); off.push(__perf(20).renderMs); }
+      set(1);
+      return { abOn: Math.min(...on), abOff: Math.min(...off) };
+    }));
     result.escenas.push({ arena: sc.arena, escena: sc.esc, recs, perf });
     if (SHOTS && !sc.noShot) {
+      // la captura es para mirar el arte: se ocultan la guía del jefe, el cartel central y el cuadro del Hechicero
+      await page.addStyleTag({ content: '#boss-intro,#center-banner,#tut-panel,.story-voice,#arena-title-card{display:none!important}' }).catch(() => {});
       const png = path.join(OUT, `${TAG}_${sc.arena}_${sc.esc}.png`);
       await page.screenshot({ path: png });
       try { require('child_process').execFileSync('python3', ['-c', `from PIL import Image;im=Image.open('${png}').convert('RGB');im=im.resize((im.width//2,im.height//2),Image.LANCZOS);im.save('${png.replace(/\.png$/, '.webp')}','WEBP',quality=72,method=6)`]); fs.unlinkSync(png); } catch (e) { console.log('webp', e.message.slice(0, 80)); }
     }
-    process.stdout.write(`${sc.arena}/${sc.esc}: ${recs.length} dibujos${perf ? ' · render ' + perf.renderMs + ' ms' : ''}\n`);
+    process.stdout.write(`${sc.arena}/${sc.esc}: ${recs.length} dibujos${perf ? ' · render ' + perf.renderMs + ' ms' : ''}${perf && perf.abOn !== undefined ? ' · A/B Q6 ' + perf.abOn + ' vs ' + perf.abOff + ' ms' : ''}\n`);
   }
   // --- resumen ---
   const med = a => { const b = [...a].sort((x, y) => x - y); return b.length ? b[Math.floor((b.length - 1) / 2)] : 0; };
