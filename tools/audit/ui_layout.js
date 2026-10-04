@@ -150,7 +150,7 @@ async function runViewport(browser, vp, report) {
     page.on('dialog', d => d.accept());
     await page.goto(BASE + '/index.html' + (dev ? '?dev=1' : ''), { waitUntil: 'load' });
     for (let k = 0; k < 300; k++) {
-      if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toca/.test(b.textContent); })) break;
+      if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toc[aá]/.test(b.textContent); })) break;
       await sleep(100);
     }
     await sleep(400);

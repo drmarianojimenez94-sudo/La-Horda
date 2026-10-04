@@ -202,7 +202,7 @@ function acuLevDrawTop(){
       ctx.strokeStyle = "rgba(160,60,170,0.9)"; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(h.x, h.y - 14, 24, 12, 0, 0, Math.PI*2); ctx.stroke();
     }
     ctx.fillStyle = a.levRole==="agarre" ? "#e6a8ff" : a.levRole==="corriente" ? "#9fe6ff" : "#ffd08a";
-    ctx.font = "bold 12px monospace"; ctx.textAlign = "center";
+    ctx.font = pxFont(13); ctx.textAlign = "center";
     ctx.fillText(LEV_ROLE_TXT[a.levRole] || "", a.x, a.y - 150);
     ctx.restore();
   }

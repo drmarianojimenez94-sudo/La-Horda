@@ -182,7 +182,7 @@ function bestiaAICuSith(e, dt, tgt, dist){
         vfxShock(e.x, e.y - e.radius*0.8, 8, 70 + S.n*18, "120,240,210", 380, 1);
         vfxTelegraph({shape:0, r:24 + S.n*6, follow:m, dur:C.howlEvery, rgb:"120,240,210"});
         if(inView(e.x, e.y, 60)) floatText(e.x, e.y - e.radius*2.2, S.n < 3 ? "¡Auuu!" : "¡AUUU!", S.n < 3 ? null : "crit");
-        if(inView(e.x, e.y, 40)) playSfx("threat");
+        if(inView(e.x, e.y, 40)) playSfx("threat", null, e.x);
         if(S.n >= 3){
           const d = Math.hypot(m.x-e.x, m.y-e.y)||1;
           S.st = "aim"; S.t = 0; S.dx = (m.x-e.x)/d; S.dy = (m.y-e.y)/d;

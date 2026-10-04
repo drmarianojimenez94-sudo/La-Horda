@@ -30,7 +30,7 @@ const exOriginalGround=drawPortadorGround;drawPortadorGround=function(){exOrigin
   if(['pierce','ink_line','roots','trench','cross'].includes(q.action))exDrawStrip(q,{x:q.bx,y:q.by},q.r,c);
   if(['bell','unpick','shear','refrain','discharge','burial'].includes(q.action))portadorDrawRing(q.x,q.y,q.r,c,false);
  }
- if(!s)continue;ctx.globalAlpha=1;ctx.font='12px sans-serif';ctx.fillStyle=c;
+ if(!s)continue;ctx.globalAlpha=1;ctx.font=pxFont(13);ctx.fillStyle=c;
  const label=h.classKey==='zahra'?Math.round(s.heat)+'°':h.classKey==='tibor'?Math.round(s.colony)+'%':h.classKey==='dariel'?'♪'.repeat(s.notes):h.classKey==='baltra'?'•'.repeat(s.vibration):h.classKey==='maura'?'•'.repeat(s.seeds):'';ctx.fillText(label,h.x-15,h.y-55);
  if(h.classKey==='sira')for(let i=1;i<s.route.length;i++)portadorDrawLine(s.route[i-1].x,s.route[i-1].y,s.route[i].x,s.route[i].y,c,2);
  if(s.guardUntil>runElapsedMs){ctx.beginPath();const a=Math.atan2(s.guardY,s.guardX);ctx.arc(h.x,h.y,27,a-Math.PI/3,a+Math.PI/3);ctx.strokeStyle=c;ctx.lineWidth=4;ctx.stroke();}
