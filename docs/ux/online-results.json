@@ -1,19 +1,15 @@
 {
   "checks": [
     {
-      "name": "Four distinct champions",
+      "name": "Four single-champion loadouts, no reserve",
       "ok": true
     },
     {
-      "name": "Host rejects duplicate champion",
+      "name": "Host rejects duplicate main champion",
       "ok": true
     },
     {
-      "name": "Host rejects missing player loadout",
-      "ok": true
-    },
-    {
-      "name": "Death preserves original champion",
+      "name": "Downed guest retains champion, team continues",
       "ok": true
     },
     {
@@ -21,23 +17,23 @@
       "ok": true
     },
     {
-      "name": "Remote revive does not complete before five seconds",
+      "name": "Host revival replicated without champion swap",
       "ok": true
     },
     {
-      "name": "Five-second revive survives hit and reaches guest",
+      "name": "Revived guest can move",
       "ok": true
     },
     {
-      "name": "Revived guest controls same hero",
+      "name": "Living guests prevent early defeat",
       "ok": true
     },
     {
-      "name": "Four deaths end four clients without reserves",
+      "name": "Team wipe ends all four clients",
       "ok": true
     },
     {
-      "name": "Returning to lobby preserves one original champion",
+      "name": "Lobby preserves original single champions",
       "ok": true
     }
   ],
