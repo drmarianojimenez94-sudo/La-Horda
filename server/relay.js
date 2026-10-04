@@ -77,7 +77,8 @@ function chatFilter(text){
 
 const rooms = new Map(); // code -> room
 // Salas públicas: lista cacheada 1 s, límite por IP (HTTP) y por conexión (WS), y tope de filas.
-const ROOMS_LIST_MAX = 40, ROOMS_CACHE_MS = 1000, ROOMS_HTTP_PER_10S = 30, ROOMS_WS_MIN_GAP_MS = 900;
+const ROOMS_LIST_MAX = 40, ROOMS_CACHE_MS = 1000, ROOMS_WS_MIN_GAP_MS = 900;
+const ROOMS_HTTP_PER_10S = Math.max(5, parseInt(process.env.ROOMS_MAX_IP || "30", 10) || 30); // por IP (wifi compartido de un evento: más)
 let _roomsCache = { at: 0, list: [] };
 function publicRoomList(build){
   const now = Date.now();
@@ -341,7 +342,7 @@ function roomsHttp(req, res){
   h["access-control-allow-origin"] = origin || "*";
   if(req.method === "OPTIONS"){ h["access-control-allow-methods"] = "GET, OPTIONS"; res.writeHead(204, h); res.end(); return; }
   if(req.method !== "GET"){ res.writeHead(405, h); res.end('{"error":"METHOD"}'); return; }
-  const ip = req.socket.remoteAddress || "?";
+  const ip = accounts.clientIp(req); // la IP real (detrás del proxy de Render/Fly todos parecían la misma)
   if(!roomsRateOk(ip)){ h["retry-after"] = "10"; res.writeHead(429, h); res.end('{"error":"TOO_MANY"}'); return; }
   let build = ""; try{ build = new URL(req.url, "http://x").searchParams.get("build") || ""; }catch(e){}
   res.writeHead(200, h); res.end(JSON.stringify({ protocol: PROTOCOL, rooms: publicRoomList(build) }));

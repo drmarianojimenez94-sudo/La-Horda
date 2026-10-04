@@ -36,7 +36,8 @@
      AUTH_MAX_FAILS      intentos fallidos por usuario antes de frenar (default 8 cada 15 min)
      AUTH_MAX_FAILS_IP   intentos fallidos por IP antes de frenar (default 30 cada 15 min)
      REGISTER_MAX_IP     cuentas nuevas por IP por hora (default 10)
-     TRUST_PROXY         "1" para leer la IP real de los encabezados del proxy (en Render es automático)
+     TRUST_PROXY         "1" para leer la IP real de los encabezados del proxy (en Render y Fly.io es automático)
+     API_MAX_IP          pedidos a /api por minuto por IP (default 300; en un evento con wifi compartido, más)
 
    RANKING SEMANAL DE LA HORDA INFINITA (mismo adaptador: Postgres o archivo leaderboard.json):
    - GET  /api/leaderboard[?week=2026-W40&guardian=mago&limit=50]  top 50 de la semana (la actual por
@@ -67,8 +68,12 @@ const MAX_FAILS_USER = parseInt(process.env.AUTH_MAX_FAILS || "8", 10);
 const MAX_FAILS_IP = parseInt(process.env.AUTH_MAX_FAILS_IP || "30", 10);
 const REGISTER_WINDOW_MS = 60 * 60 * 1000;
 const MAX_REGISTER_IP = parseInt(process.env.REGISTER_MAX_IP || "10", 10);
-const API_WINDOW_MS = 60 * 1000, MAX_API_IP = 300; // freno general contra inundaciones
-const TRUST_PROXY = process.env.TRUST_PROXY === "1" || !!process.env.RENDER;
+// freno general contra inundaciones. OJO en un evento (Comic Con): todos los celulares del wifi del lugar
+// salen a Internet con la MISMA IP pública y comparten este cupo: API_MAX_IP lo sube (ver la guía del dueño).
+const API_WINDOW_MS = 60 * 1000, MAX_API_IP = Math.max(30, parseInt(process.env.API_MAX_IP || "300", 10) || 300);
+// Detrás del proxy de Render / Fly.io la conexión llega desde el proxy: sin leer sus encabezados, TODOS los
+// jugadores parecían una sola IP y compartían los límites (antes, en Fly.io había que acordarse de TRUST_PROXY).
+const TRUST_PROXY = process.env.TRUST_PROXY === "1" || (process.env.TRUST_PROXY !== "0" && (!!process.env.RENDER || !!process.env.FLY_APP_NAME));
 // scrypt: N=16384 r=8 p=1 (16 MB de memoria, ~50-150 ms por intento: caro para fuerza bruta)
 const SCRYPT = { N: 16384, r: 8, p: 1, keylen: 64 };
 const USER_RE = /^[\p{L}\p{N}_.-]{3,16}$/u;
@@ -582,7 +587,7 @@ function create(opts){
 
   function clientIp(req){
     if(TRUST_PROXY){
-      const h = req.headers["cf-connecting-ip"] || req.headers["true-client-ip"] || String(req.headers["x-forwarded-for"] || "").split(",")[0];
+      const h = req.headers["cf-connecting-ip"] || req.headers["true-client-ip"] || req.headers["fly-client-ip"] || String(req.headers["x-forwarded-for"] || "").split(",")[0];
       if(h && String(h).trim()) return String(h).trim().slice(0, 64);
     }
     return req.socket.remoteAddress || "?";
@@ -876,7 +881,7 @@ function create(opts){
     const ent = await entitledFor(a.user);
     return { name: a.user.name || a.user.user, founder: founderOf(a.user), grantOnly: Object.keys(ent) };
   }
-  return { handle, healthLine, info, ready, presence, get store(){ return store; },
+  return { handle, healthLine, info, ready, presence, clientIp, get store(){ return store; },
     async close(){ clearInterval(sweeper); if(store && store.close) await store.close(); } };
 }
 

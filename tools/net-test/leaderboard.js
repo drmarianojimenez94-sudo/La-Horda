@@ -44,7 +44,11 @@ async function board(q, token){ const r = await fetch(API + '/api/leaderboard' +
   const errors = [];
   async function device(name, session){
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 }, hasTouch: true });
-    await ctx.addInitScript(s => { window.__campaignMode = true; if (s && !localStorage.getItem('horda_account')) localStorage.setItem('horda_account', JSON.stringify(s)); }, session || null);
+    // la sesión se guarda POR SERVIDOR (js/net/account.js: ACCOUNT_KEY = "horda_account:" + servidor): con la
+    // clave vieja "horda_account" un servidor manual (?server=…) no la hereda, a propósito
+    // y la sesión dice de qué servidor es (apiBase): una de otro servidor no se usa
+    const BASE = new URL(API).href.replace(/\/+$/, ''), KEY = 'horda_account:' + encodeURIComponent(BASE);
+    await ctx.addInitScript(([s, key, base]) => { window.__campaignMode = true; if (s && !localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify(Object.assign({}, s, { apiBase: base }))); }, [session || null, KEY, BASE]);
     const page = await ctx.newPage();
     page.on('pageerror', e => errors.push(name + ' pageerror: ' + e.message));
     page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|404|Failed to load resource|ERR_INTERNET_DISCONNECTED|ERR_FAILED|status of 4\d\d/.test(m.text())) errors.push(name + ': ' + m.text().slice(0, 200)); });
