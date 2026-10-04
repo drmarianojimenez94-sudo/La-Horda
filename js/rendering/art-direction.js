@@ -145,7 +145,9 @@ function _mipLevel(img, lv){
 function artMipDraw(img, sx, sy, sw, sh, dx, dy, dw, dh){
   // solo en el lienzo del juego: las vistas previas (Códice, selección, campamento) y el Roster Art Gate
   // dibujan en sus propios lienzos a otra escala y conservan el arte tal cual
-  if(Q6_ART.mip && img && ctx.canvas === canvas && (img.naturalWidth || img.width) > 64){
+  // y solo con arte que no cambia: imágenes o lienzos derivados de una imagen (_srcImg, armados una vez). Un
+  // lienzo que se redibuja (efectos) dejaría el mipmap viejo.
+  if(Q6_ART.mip && img && ctx.canvas === canvas && (img instanceof HTMLImageElement || img._srcImg) && (img.naturalWidth || img.width) > 64){
     const m = ctx.getTransform(), k = Math.sqrt(Math.abs(m.a*m.d - m.b*m.c));
     const s = Math.abs(dw/(sw || 1))*k; // píxeles de pantalla por píxel del arte
     if(s < 0.7){
