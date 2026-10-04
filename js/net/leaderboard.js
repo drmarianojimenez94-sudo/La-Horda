@@ -225,7 +225,8 @@ window.lbOpen = lbOpen;
   const b = document.getElementById("hub-endless-rank-btn");
   if(b) b.addEventListener("click", ev => { ev.stopPropagation(); lbOpen({ guardian: "" }); });
   // al volver al menú con cuenta: pendientes y recompensa de la semana que cerró
-  const tryBg = () => { if(_lbLogged()){ lbFlushPending(); lbCheckWeeklyReward(); } };
+  // nunca antes de cargar el guardado (main.js): el premio se anota en save.endless y llama persist()
+  const tryBg = () => { if(typeof saveLoadStarted !== "undefined" && !saveLoadStarted){ setTimeout(tryBg, 500); return; } if(_lbLogged()){ lbFlushPending(); lbCheckWeeklyReward(); } };
   window.addEventListener("account-change", ev => { if(ev && ev.detail && ev.detail.logged && !ev.detail.syncing) tryBg(); });
   setTimeout(tryBg, 4000);
   document.addEventListener("keydown", ev => { if(ev.key === "Escape" && LB.el && !LB.el.classList.contains("hidden")) lbClose(); });

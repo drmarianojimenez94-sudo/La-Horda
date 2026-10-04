@@ -83,7 +83,7 @@ function crystalTick(dt){
     F.got = true;
     const D = CRYSTAL_DEFS[F.key], n = crystalsOwned().length;
     if(typeof flashScreen==="function") flashScreen(0.35, D.rgb);
-    if(typeof showBanner==="function") showBanner("◆ " + D.name.toUpperCase() + " — " + n + "/3 ◆");
+    if(typeof showBanner==="function") showBanner("◆ " + D.name.toUpperCase() + " — " + n + "/3 ◆", 2); // urgente: un cristal es un hito de la historia, no espera en la cola
     if(player && typeof vfxShock==="function") vfxShock(player.x, player.y - 20, 10, 110, D.rgb, 520, 3);
     // lo que dice el Hechicero del cristal se lee en la escena de salida (pantalla de victoria, story.js):
     // acá ya están el cartel de las últimas palabras y el del cristal (nunca más de 2 textos a la vez)

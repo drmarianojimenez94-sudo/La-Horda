@@ -41,7 +41,7 @@ async function client(browser, mobile, name, champ) {
   await ev(c, ([k]) => {
     for (const q in save.champions) save.champions[q].level = 12;
     for (const it of stashItems().slice()) removeItemFromInventory(null, it.uid, false); // inventario limpio
-    save.champions[k].unlocked = true; save.starterChosen = true; selectedClass = k; save.lastChamp = k;
+    save.champions[k].unlocked = true; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); selectedClass = k; save.lastChamp = k;
     save.arenasCleared.ciudad = true; persistNow();
   }, [champ]);
   return c;

@@ -12,8 +12,9 @@ async function boot(browser, initSave){
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|404/.test(m.text())) errors.push('console: ' + m.text().slice(0, 300)); });
   await page.addInitScript((s) => { window.__campaignMode = true; if (s) localStorage.setItem('laHordaSave_v1', JSON.stringify(s)); }, initSave || null);
-  await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
-  for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
+  page.setDefaultTimeout(180000); // con la máquina cargada, la página (~1.800 archivos) pasa los 30 s por defecto
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'load', timeout: 180000 });
+  for (let k = 0; k < 1200; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   await page.evaluate(() => { loop = function(){};
     window.__start = (arena, lv, champ) => { for (const k of Object.keys(save.champions)) save.champions[k].unlocked = true;
       selectedClass = champ || 'guerrero'; currentArena = arena; lobbyAllies = ['tanque','mago','soporte']; startRun(lv || 1); spawnTimer = 1e12; enemies.length = 0; levelDuration = 9e9; };
@@ -156,7 +157,8 @@ async function boot(browser, initSave){
   const cs = async (setId, champ, fn) => E(([setId, champ, fn]) => { __start('bosque', 3, champ); save.stash = []; for (const k in save.champions) save.champions[k].equipment = mkEquipment();
     for (const pid of setPieceIds(setId)) __equip(pid, champ); invalidatePassiveCache(); resetSetRunState(player); return (new Function('return (' + fn + ')()'))(); }, [setId, champ, fn]);
   const lock = await E(() => { const it = makeDesignedItem('baluarte_casco'); return { tank: canEquipItem('tanque', it), mago: canEquipItem('mago', it), n: Object.keys(CHAMPION_SETS).length }; });
-  check('CSET.piezas_solo_para_su_campeon', lock.tank && !lock.mago && lock.n === 12, lock);
+  // al menos los 12 originales: main sumó los sets de los campeones de la expedición y de Ascensión (29 hoy)
+  check('CSET.piezas_solo_para_su_campeon', lock.tank && !lock.mago && lock.n >= 12, lock);
   check('CSET.baluarte_pisoton_cada_3_basicos', await cs('baluarte', 'tanque', `()=>{ const e = __foe(); const o = __foe('zombie', 90, 30); for (let i = 0; i < 3; i++){ runElapsedMs += 700; damageEnemy(e, 5, {src:player, fromBasic:true}); } return o.stunTimer > 0 && o.hp < o.maxHp; }`));
   check('CSET.nocturno_critico_a_sangrantes_y_sombra', await cs('nocturno', 'guerrero', `()=>{ const e = __foe(); e.bleedTimer = 2000; const c = champSetCritBonus(player, e, {}); const el = __foe('golem'); el.rank = 'elite'; el.hp = 1; player.cds[1] = 5000; damageEnemy(el, 50, {src:player}); return c && c.chance === 1 && player.stealthTimer > 0 && player.cds[1] === 0; }`));
   check('CSET.convergencia_fuego_hielo_rayo_estalla', await cs('convergencia', 'mago', `()=>{ const e = __foe(); const o = __foe('zombie', 80, 0); damageEnemy(e, 5, {src:player, burn:true}); damageEnemy(e, 5, {src:player, slow:0.5}); damageEnemy(e, 5, {src:player, chain:true}); return e.frozenTimer > 0 && o.hp < o.maxHp; }`));

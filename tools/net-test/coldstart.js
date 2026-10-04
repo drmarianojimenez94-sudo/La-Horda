@@ -20,7 +20,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto(`${SITE}/index.html?server=${encodeURIComponent(relayUrl || RELAY)}`);
     for (let k = 0; k < 300; k++) { if (await p.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-    await p.evaluate(() => { save.starterChosen = true; save.champions.mago.unlocked = true; selectedClass = 'mago'; currentArena = 'ciudad'; setState('prep'); renderPrepSummary(); });
+    await p.evaluate(() => { save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); save.champions.mago.unlocked = true; selectedClass = 'mago'; currentArena = 'ciudad'; setState('prep'); renderPrepSummary(); });
     return { p, errs };
   };
   const A = await phone();

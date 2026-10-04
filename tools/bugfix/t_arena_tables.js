@@ -35,7 +35,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     check('TAB.las_10_arenas_tienen_fila', Object.keys(r.miss).length === 0, r.miss);
     check('TAB.familias_y_sets_existen', r.badFam.length === 0 && r.badSet.length === 0, { f: r.badFam, s: r.badSet });
     check('TAB.minas_entre_laberinto_e_infernal', r.leg.minas > r.leg.laberinto && r.leg.minas < r.leg.infernal, r.leg);
-    check('TAB.ciudad_igual_que_la_entrada', Math.abs(r.leg.ciudad - r.leg.bosque) < 1e-9, r.leg);
+    check('TAB.ciudad_es_la_que_menos_paga', r.leg.ciudad <= r.leg.bosque && r.leg.ciudad <= r.leg.laberinto, r.leg); // Q4 (alfa): cada arena de la campaña paga un poco más que la anterior; la Ciudad es la 1
     check('TAB.minas_da_mas_gemas_que_el_bosque', r.gems.minas > r.gems.bosque, r.gems);
     check('TAB.cofres_de_las_minas_se_tiran', !r.err && r.items > 0, { items: r.items, hi: r.hi, err: r.err });
   }
