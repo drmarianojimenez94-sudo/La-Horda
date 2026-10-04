@@ -213,6 +213,7 @@ CTX_KINDS.inf_fissure = {
   onComplete(f, users){
     f.doneT = 0; f.sealedBy = "hero";
     if(f.hech && typeof hechRiftSealed==="function") hechRiftSealed(f); // grieta del Hechicero: queda expuesto
+    if(typeof infGuardianSealed==="function") infGuardianSealed(f);    // Demonio Menor cerca: queda expuesto
     playSfx("infSeal"); vfxShake(6);
     vfxBurst(f.x, f.y, 26, "ember", 220, 700, 3.5, 0, -40, 0);
     particles.push({x:f.x, y:f.y, life:600, ring:true, maxLife:600, maxR:INF_CFG.sealR, color:"#ffb060"});

@@ -3,7 +3,7 @@
 // the game's global lexical scope (joyVec, player, enemies, ...).
 (function(){
   const AP = window.__AP = { on:false, log:[], stats:null, skill:0.85, reaction:260, clock:0 };
-  let lastDecision = 0, dodgeUntil = 0, dodgeVec = null, reviveHold = 0, skillTimer = 0;
+  let lastDecision = 0, dodgeUntil = 0, dodgeAt = -1, dodgeVec = null, reviveHold = 0, skillTimer = 0;
   function norm(x,y){ const l=Math.hypot(x,y)||1; return {x:x/l,y:y/l}; }
   function insideTele(s, px, py, pad){
     // vfxTeles shapes: 0 circle, 1 cone (dx,dy,arc,r), 2 line (dx,dy,len,r). Telegraphs are
@@ -51,8 +51,11 @@
       lastDecision = now;
       let mx = 0, my = 0;
       const dz = dangerAt(player.x, player.y);
-      if(dz && Math.random() < AP.skill){ if(now > dodgeUntil){ dodgeUntil = now + AP.reaction; } }
-      if(dz && now >= dodgeUntil - AP.reaction + AP.reaction*0.6){ const n = norm(dz.x, dz.y); mx += n.x*3; my += n.y*3; }
+      // reacción humana: un peligro NUEVO se percibe recién después de la demora del perfil; con la tirada de
+      // habilidad fallada se lo nota tarde (×2,5). (Antes, fallar la tirada no agendaba nada y el bot esquivaba al instante.)
+      if(dz){ if(dodgeAt < 0) dodgeAt = now + AP.reaction*(Math.random() < AP.skill ? 0.6 : 1.5); }
+      else dodgeAt = -1;
+      if(dz && dodgeAt >= 0 && now >= dodgeAt){ const n = norm(dz.x, dz.y); mx += n.x*3; my += n.y*3; }
       // threats
       let tx=0, ty=0, close=0, nearest=null, nd=1e9;
       for(const e of enemies){ if(!e.alive) continue; const d = Math.hypot(e.x-player.x, e.y-player.y);
@@ -122,7 +125,7 @@
       allies: allies.map(a=>({k:a.classKey, alive:a.alive, hp:Math.round(a.hp)})), enemies: enemies.filter(e=>e.alive).length};
   };
   AP.start = function(cls, arena, level){
-    lastDecision=0;dodgeUntil=0;dodgeVec=null;reviveHold=0;skillTimer=0;AP.clock=0;AP._mv={x:0,y:0};AP.err=null;
+    lastDecision=0;dodgeUntil=0;dodgeAt=-1;dodgeVec=null;reviveHold=0;skillTimer=0;AP.clock=0;AP._mv={x:0,y:0};AP.err=null;
     selectedClass = cls; currentArena = arena;
     startRun(level||1);
     AP.on = true;

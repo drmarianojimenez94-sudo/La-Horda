@@ -18,6 +18,10 @@ var CHAMPION_CATEGORIES = {
   FOUNDER:  {label:"Founder", badge:"FOUNDER", order:2, visibleInStore:true, purchasable:false, grantable:false,
     competitiveAllowed:false, adminOnly:false, founderPresence:true, specialLobbyPresentation:true, starterEligible:false, balanceProfile:"founder",
     showcasePrice:9999, storeNotice:"ESTE CAMPEÓN NO SE COMPRA. SE CONCEDE.", inspectNotice:"Campeón de Fundador. Solo puede ser concedido por el sistema."},
+  // ASCENSIÓN: campeones especiales (más fuertes y mejor logrados). Se ven SIEMPRE en Guardianes (bloqueados si no
+  // son tuyos); se ganan con logros de campaña y modos (js/systems/ascension-unlocks.js) o se compran por 9000 de oro.
+  ASCENSION:{label:"Ascensión", badge:"ASCENSIÓN", order:1.5, visibleInStore:true, purchasable:true, grantable:true,
+    competitiveAllowed:true, adminOnly:false, founderPresence:false, specialLobbyPresentation:false, starterEligible:false, balanceProfile:"ascension", priceGold:9000},
   // EVENT: availability comes from CHAMPION_EVENT_WINDOWS (dates live in data, never in code).
   EVENT:    {label:"Event", badge:"EVENTO", order:3, visibleInStore:true, purchasable:false, grantable:true,
     competitiveAllowed:true, adminOnly:false, founderPresence:false, specialLobbyPresentation:false, starterEligible:false, balanceProfile:"standard"},
@@ -41,13 +45,14 @@ var CHAMPION_TAXONOMY = {
   ynara: {category:"FAMILY"},
   nano_gm: {category:"FOUNDER", founderKey:"nano", releaseState:"TESTING", acquisitionType:"FOUNDER_ENTITLEMENT"},
   facu_gm: {category:"FOUNDER", founderKey:"facu", releaseState:"TESTING", acquisitionType:"FOUNDER_ENTITLEMENT"},
-  // New STANDARD champions stay INTERNAL until commissioned art passes the Visual Gate (docs/founders/ART_BRIEFS.md).
-  aurelia: {releaseState:"INTERNAL"},
-  khepri:  {releaseState:"INTERNAL"},
-  velmira: {releaseState:"INTERNAL"},
-  vhal:    {releaseState:"INTERNAL"},
-  bront:   {releaseState:"INTERNAL"},
-  oriel:   {releaseState:"INTERNAL"}
+  // Ascensión: visibles siempre; se ganan o se compran (ver la categoría ASCENSION). artPending: su arte todavía no
+  // pasa el gate de estilo (tools/art/painter) -> se muestran como CONCEPTO, bloqueados: ni compra ni logro ni concesión.
+  aurelia:  {category:"ASCENSION", artPending:true},
+  khepri:   {category:"ASCENSION", artPending:true},
+  velmira:  {category:"ASCENSION", artPending:true},
+  vhal:     {category:"ASCENSION", artPending:true},
+  bront:    {category:"ASCENSION", artPending:true},
+  oriel:    {category:"ASCENSION", artPending:true}
 };
 
 // EVENT infrastructure. Example shape (no event champion exists yet):
@@ -60,8 +65,10 @@ function championMeta(id){
   var category = Object.prototype.hasOwnProperty.call(CHAMPION_CATEGORIES, row.category) ? row.category : "STANDARD";
   var c = CHAMPION_CATEGORIES[category];
   var releaseState = CHAMPION_RELEASE_STATES.indexOf(row.releaseState) >= 0 ? row.releaseState : "RELEASED";
-  var out = {id:id, category:category, releaseState:releaseState, acquisitionType:row.acquisitionType || (c.purchasable ? "PURCHASE" : "GRANT"), founderKey:row.founderKey || null};
+  var out = {id:id, category:category, releaseState:releaseState, acquisitionType:row.acquisitionType || (c.purchasable ? "PURCHASE" : "GRANT"), founderKey:row.founderKey || null, artPending:!!row.artPending};
   for(var k in c) if(!(k in out)) out[k] = c[k];
+  // Arte pendiente: el campeón se exhibe como concepto y nadie puede conseguirlo hasta que su arte se apruebe.
+  if(out.artPending){ out.purchasable = false; out.grantable = false; }
   return out;
 }
 function championEventWindow(id, now){

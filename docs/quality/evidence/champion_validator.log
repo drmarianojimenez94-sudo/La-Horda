@@ -1,0 +1,37 @@
+loading…
+loaded
+roster 29
+ |  |  | 
+canario: 4/4 habilidades sin efecto detectadas
+PASS    tanque      fail=0 warn=0
+PASS    guerrero    fail=0 warn=0
+PASS    mago        fail=0 warn=0
+PASS    soporte     fail=0 warn=0
+PASS    segador     fail=0 warn=0
+PASS    axiom       fail=0 warn=0
+PASS    profeta     fail=0 warn=0
+PASS    musashi     fail=0 warn=0
+PASS    cazadora    fail=0 warn=0
+PASS    nigromante  fail=0 warn=0
+PASS    libertador  fail=0 warn=0
+PASS    eren        fail=0 warn=0
+PASS    ynara       fail=0 warn=0
+PASS    myla        fail=0 warn=0
+PASS    brasa       fail=0 warn=0
+PASS    eslabon     fail=0 warn=0
+PASS    morwen      fail=0 warn=0
+PASS    farolero    fail=0 warn=0
+PASS    iria        fail=0 warn=0
+PASS    vesper      fail=0 warn=0
+PASS    nahir       fail=0 warn=0
+PASS    baltra      fail=0 warn=0
+PASS    maura       fail=0 warn=0
+PASS    dariel      fail=0 warn=0
+PASS    orsa        fail=0 warn=0
+PASS    tibor       fail=0 warn=0
+PASS    zahra       fail=0 warn=0
+PASS    renko       fail=0 warn=0
+PASS    sira        fail=0 warn=0
+
+29 campeones · page errors: 0
+exit=0 secs=58

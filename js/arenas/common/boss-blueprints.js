@@ -26,6 +26,8 @@
      art {src, borrowed?, brief?, grade, why}    estado del arte según docs/ART_BIBLE.md: PASS | FIX | REDRAW
                                                    (la densidad de píxel la mide tools/art/arena_lineup.js)
      status {grade, why}                         auditoría de diseño: PASS | FIX | REWORK (actualizar al cambiar)
+     members?                                    otros tipos del mismo encuentro (los cuatro Doppelgängers)
+     sim?                                        false = modo propio sin simulación de campaña (Arena Divina)
      after?                                      tipo que hay que vencer antes (formas encadenadas: el validador no la
                                                    alcanza en su ventana y la informa como "posterior")
    ============================================================ */
@@ -42,15 +44,25 @@ const BOSS_BLUEPRINTS = {
       {id:"cm_presentador.reflejo", mode:"player", uses:"estructuras", effect:"interceptar el cometa lo devuelve: EXPUESTO"}],
     counterplay:["Rescatar civiles en los niveles previos (menos público en el acto III)", "Cortar o devolver el Gran Número", "Pilar entre vos y él en la Ovación"],
     presentation:{entrance:"preludio de reflector y aplausos (5,2 s)", titleCard:true, death:"secuencia propia de 9,5 s según el rescate"},
-    art:{src:"assets/sprites/arenas/ciudad/cm_presentador*/atlas.png", borrowed:"mago_hielo_cristal (recoloreado por acto)", brief:"P0-01", grade:"REDRAW", why:"su arte propio es de 32 px dibujado a 4–5×: se ve en bloques; hoy usa el cuerpo del Mago de Hielo recoloreado"},
+    art:{src:"assets/sprites/arenas/ciudad/cm_presentador*/atlas.png", brief:"P0-01", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2–1,7 (3 actos + transformación de 12 cuadros); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"pelea de escenario con pilares, estructuras y rescate; pendiente: arte propio y aviso de los abanicos de proyectiles"}},
+  cm_maestro:{arena:"ciudad", rank:"subjefe", level:9, name:"Maestro de Ceremonias",
+    fantasy:"El que dirige la función: marca a la víctima y el Tramoyista le tira la escenografía encima.",
+    rule:"Su MARCA (reflector) sigue a un guardián: llevala adentro de un REFUGIO en pie y el escudo verde la anula.",
+    hooks:[
+      {id:"cm_maestro.escena", mode:"auto", uses:"escenografía (Tramoyista)", effect:"cada marca le ordena al Tramoyista tirar decorado sobre el marcado"},
+      {id:"cm_maestro.refugio", mode:"player", uses:"refugios (zonas seguras)", effect:"la marca no atraviesa el escudo de un refugio en pie"}],
+    counterplay:["Correr al refugio con la marca encima", "Matarlo primero para que el Tramoyista no tenga a quién seguir"],
+    presentation:{entrance:"telón (3,2 s)", titleCard:false, death:"enfurece al Tramoyista"},
+    art:{src:"assets/sprites/arenas/ciudad/cm_maestro/atlas.png", brief:"P0-03", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,1 (incluye teletransporte en humo rojo); falta el Visual Gate humano para PASS"},
+    status:{grade:"PASS", why:"dirige la escena con el Tramoyista; los refugios lo contrarrestan"}},
   cm_tramoyista:{arena:"ciudad", rank:"subjefe", level:9, name:"El Tramoyista",
     fantasy:"El que mueve la escenografía: derrumba la ciudad encima de los que la defienden.",
     rule:"Sus golpes y decorados rompen las estructuras: pelealo lejos de lo que tenés que proteger.",
     hooks:[{id:"cm_tramoyista.estructura", mode:"auto", uses:"estructuras críticas", effect:"el golpe y la escenografía que tira dañan estructuras"}],
     counterplay:["Alejarlo de las estructuras", "Matar primero al Maestro o al Tramoyista: el otro se enfurece"],
     presentation:{entrance:"telón (3,2 s)", titleCard:false, death:"genérica"},
-    art:{src:"assets/sprites/arenas/ciudad/cm_tramoyista/atlas.png", borrowed:"automata", brief:"P0-04", grade:"REDRAW", why:"arte de 32×46 px dibujado a ~5×"},
+    art:{src:"assets/sprites/arenas/ciudad/cm_tramoyista/atlas.png", brief:"P0-04", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2 (tramoya con poleas y sogas, arrastre y derrumbe); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"amenaza las estructuras de la Ciudad"}},
   cm_dama:{after:"cm_tramoyista", arena:"ciudad", rank:"subjefe", level:9, name:"La Dama del Telón",
     fantasy:"La que baja el telón: espejismos, oscuridad y la ciudad cayendo en línea.",
@@ -58,7 +70,7 @@ const BOSS_BLUEPRINTS = {
     hooks:[{id:"cm_dama.estructura", mode:"auto", uses:"estructuras críticas", effect:"la línea del telón daña estructuras"}],
     counterplay:["Romper los espejismos", "Salir de la zona oscura"],
     presentation:{entrance:"apagón (3,4 s)", titleCard:false, death:"revelación del Presentador"},
-    art:{src:"assets/sprites/arenas/ciudad/cm_dama/atlas.png", borrowed:"dama_bosque", brief:"P0-02", grade:"REDRAW", why:"arte de 27 px dibujado a ~5×"},
+    art:{src:"assets/sprites/arenas/ciudad/cm_dama/atlas.png", brief:"P0-02", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2 (el telón la envuelve y cae vacío; sus espejismos usan el mismo cuerpo); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"usa las estructuras"}},
 
   /* ---------------- 02 · FÁBRICA SIN FIN ---------------- */
@@ -83,7 +95,15 @@ const BOSS_BLUEPRINTS = {
     status:{grade:"PASS", why:"la Fábrica entera es su arma y su debilidad (trampas nuevas: antes nunca lo tocaban)"}},
 
   /* ---------------- 03 · RUINAS (BOSQUE) ---------------- */
-  doblador_guerrero:{arena:"bosque", rank:"subjefe", level:9, name:"Doppelgängers",
+  jinete_sin_cabeza:{sim:false, arena:"divina", rank:"jefe", level:6, name:"Jinete Sin Cabeza",
+    fantasy:"El jinete de las calabazas de fuego, uno de los cuatro jefes del equipo divino.",
+    rule:"En la Arena Divina es un guardián rival del asedio: torres y castillo lo castigan como a cualquier campeón.",
+    hooks:[],
+    counterplay:["Pelearlo bajo tus torres", "Cortar su Sendero de Fuego de costado"],
+    presentation:{entrance:"equipo divino (nivel 6 de la Arena Divina)", titleCard:false, death:"la de guardián divino"},
+    art:{src:"assets/sprites/bosses/bosque/jinete_sin_cabeza/v2/atlas.png", grade:"PASS", why:"hoja propia; densidad ×1,9"},
+    status:{grade:"FIX", why:"ya no es el jefe de las Ruinas: su kit (Resurrección Eterna, cacería) solo vive en código del Bosque y en la Divina pelea como guardián envuelto, sin relación con la arena de asedio"}},
+  doblador_guerrero:{members:["doblador_arquera", "doblador_picaro", "doblador_clerigo"], arena:"bosque", rank:"subjefe", level:9, name:"Doppelgängers",
     fantasy:"Cuatro sombras con la forma de los campeones originales.",
     rule:"Cada sombra está ATADA a una runa que la protege: contené su runa para exponerla (el Clérigo cura a los demás).",
     hooks:[
@@ -151,6 +171,18 @@ const BOSS_BLUEPRINTS = {
     art:{src:"assets/sprites/bosses/hielo/angel_caido_hielo/v2/atlas.png", grade:"PASS", why:"hoja propia; densidad ×1,8"},
     status:{grade:"PASS", why:"el fuego es su debilidad y su objetivo"}},
 
+  dragon_hielo:{arena:"hielo", rank:"subjefe", level:6, name:"Tundraverx, Soberano de Hielo",
+    fantasy:"El dragón que duerme sobre el paso: sus escamas no conocen el calor… hasta que se lo acercan.",
+    rule:"Lejos del fuego sus ESCAMAS DE ESCARCHA lo protegen: pelealo junto a un brasero encendido (y que su aliento no lo apague).",
+    hooks:[
+      {id:"dragon_hielo.frio", mode:"auto", uses:"frío por quietud", effect:"AURA DE INVIERNO: cerca de él el frío sube aunque te muevas"},
+      {id:"dragon_hielo.brasero", mode:"player", uses:"braseros", effect:"su Aliento de Hielo congela el brasero encendido del cono (nunca el último)"},
+      {id:"dragon_hielo.fuego", mode:"player", uses:"braseros", effect:"junto a un brasero encendido se derrite: ×1,35 (si no, −30 %)"}],
+    counterplay:["Pelearlo al lado del fuego", "Ponerse de costado al aliento para no exponer el brasero"],
+    presentation:{entrance:"guardián del nivel 6", titleCard:true, death:"genérica"},
+    art:{src:"assets/sprites/enemies/hielo/dragon_hielo/v2/atlas.png", grade:"PASS", why:"hoja propia; densidad ×1,5"},
+    status:{grade:"PASS", why:"enseña el fuego que el Demonio Gélido evalúa en el nivel 10 (antes: élite agrandado sin relación con la arena)"}},
+
   /* ---------------- 06 · ARENA ACUÁTICA ---------------- */
   kraken_joven:{arena:"acuatica", rank:"subjefe", level:6, name:"Kraken Joven",
     fantasy:"El guardián del arrecife pesca con el agua: corrientes que traen cazadores y charcos que lo electrocutan.",
@@ -205,7 +237,7 @@ const BOSS_BLUEPRINTS = {
       {id:"ab_carcelero.plataformas", mode:"auto", uses:"plataformas", effect:"su pisotón y la ruptura de cadenas tiran plataformas"}],
     counterplay:["Habilidad para soltarse", "Pelear en plataformas firmes"],
     presentation:{entrance:"sube del vacío (3,6 s)", titleCard:true, death:"cadenas rotas + el Ojo se abre"},
-    art:{src:"assets/sprites/arenas/abismo/ab_carcelero/atlas.png", borrowed:"carcelero (Fábrica)", brief:"P0-11", grade:"REDRAW", why:"arte propio de 37 px dibujado a ~5,6×; hoy usa un común de la Fábrica recoloreado"},
+    art:{src:"assets/sprites/arenas/abismo/ab_carcelero/atlas.png", brief:"P0-11", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,9 (cadenas como látigo, pisotón que agrieta, se rompen al morir); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"el vacío es su arma"}},
   ab_morador:{arena:"abismo", rank:"jefe", level:10, name:"El Que Mora Debajo",
     fantasy:"El ojo bajo el Abismo: el terreno es lo que se juega.",
@@ -228,7 +260,7 @@ const BOSS_BLUEPRINTS = {
       {id:"mn_titan.derrumbe", mode:"phase", uses:"escombros sólidos", effect:"desde el 50 %: escombros temporales (nunca cierran pasillos)"}],
     counterplay:["Reencender luces", "No pelear en la oscuridad"],
     presentation:{entrance:"retumbo (2,8 s)", titleCard:true, death:"cuadros propios + sacudida"},
-    art:{src:"assets/sprites/arenas/minas/mn_titan/atlas.png", brief:"R-01", grade:"REDRAW", why:"densidad ×5,0 la del roster: arte de 47×63 px dibujado a 153 u; en pantalla se ve en bloques al lado de los campeones"},
+    art:{src:"assets/sprites/arenas/minas/mn_titan/atlas.png", brief:"R-01", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,0 (antes ×5,0); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"ataca la luz (la regla de las Minas); barra grande arreglada (antes nunca aparecía)"}},
   mn_cerbero:{arena:"minas", rank:"jefe", level:10, name:"Cerbero, Guardián del Umbral",
     fantasy:"El perro del Umbral: en la oscuridad es uno, en la luz son tres.",
@@ -238,10 +270,30 @@ const BOSS_BLUEPRINTS = {
       {id:"mn_cerbero.luz", mode:"player", uses:"luces", effect:"medidor de exposición lleno: EXPUESTO ×1,75"}],
     counterplay:["Encender braseros y llevarlo a la luz"],
     presentation:{entrance:"cadenas y triple rugido (6,2 s)", titleCard:true, death:"fundido propio + portal"},
-    art:{src:"assets/sprites/arenas/minas/mn_cerbero/atlas.png", brief:"F-01", grade:"REDRAW", why:"densidad ×5,4 la del roster: arte de 54×67 px dibujado a 181 u (el outlier más grande del juego)"},
+    art:{src:"assets/sprites/arenas/minas/mn_cerbero/atlas.png", brief:"F-01", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,1 (antes ×5,4; tres cabezas de bestia, fuego y sombra); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"la luz es su debilidad"}},
 
   /* ---------------- 10 · ARENA INFERNAL ---------------- */
+  esqueleto_h:{arena:"infernal", rank:"subjefe", level:4, name:"Esqueleto Cornudo (Guardián de la Horda)",
+    fantasy:"El primer guardián de la Horda sale de una fisura con los cuernos por delante.",
+    rule:"Su EMBESTIDA ÓSEA contra una barricada de basalto lo estampa: aturdido y vulnerable.",
+    hooks:[
+      {id:"esqueleto_h.fisura", mode:"auto", uses:"fisuras", effect:"aparece saliendo de una fisura abierta"},
+      {id:"esqueleto_h.barricada", mode:"player", uses:"barricadas de basalto", effect:"embestida contra el basalto: aturdido 2,2 s y vulnerable"}],
+    counterplay:["Pararse delante de una barricada y esquivar la embestida a último momento"],
+    presentation:{entrance:"sale de una fisura", titleCard:true, death:"genérica"},
+    art:{src:"assets/sprites/enemies/infernal/esqueleto_h/walk*.png", grade:"PASS", why:"cuadros propios; densidad ×1,7"},
+    status:{grade:"PASS", why:"enseña el choque contra el basalto que el Gólem de Cuerpos evalúa (antes: élite agrandado genérico)"}},
+  demonio_menor:{arena:"infernal", rank:"subjefe", level:7, name:"Demonio Menor (Guardián de la Horda)",
+    fantasy:"El que alimenta los portales: con una fisura abierta al lado, no hay forma de bajarlo.",
+    rule:"Alimenta las fisuras y se protege con ellas: SELLÁ la fisura junto a él y queda EXPUESTO.",
+    hooks:[
+      {id:"demonio_menor.fisura", mode:"auto", uses:"fisuras", effect:"abre o agranda una fisura cada ~11 s (aviso en el piso)"},
+      {id:"demonio_menor.sello", mode:"player", uses:"fisuras (acción Cerrar)", effect:"sellar una fisura cerca de él: EXPUESTO ×1,5"}],
+    counterplay:["Sellar la fisura que lo protege", "Moverse: su Lluvia Infernal cae donde estás"],
+    presentation:{entrance:"guardián del nivel 7", titleCard:true, death:"genérica"},
+    art:{src:"assets/sprites/enemies/infernal/demonio_menor/atlas.png", grade:"PASS", why:"hoja propia; densidad ×0,8"},
+    status:{grade:"PASS", why:"enseña el \"cerrá la fisura\" que el Hechicero y el Rey de la Horda evalúan"}},
   hechicero_supremo:{arena:"infernal", rank:"subjefe", level:9, name:"El Hechicero Supremo",
     fantasy:"El guía que te trajo hasta acá abre los portales de la Horda con sus propias manos.",
     rule:"Sus GRIETAS lo alimentan (recibe menos daño): cerralas con la acción de la arena y queda EXPUESTO.",
@@ -260,7 +312,7 @@ const BOSS_BLUEPRINTS = {
       {id:"angel_corrompido.focos", mode:"player", uses:"focos de cristal", effect:"ritual interrumpido: EXPUESTO ×1,7"}],
     counterplay:["Romper focos", "Leer qué poder de Guardián está usando"],
     presentation:{entrance:"ascenso: roba los cristales (3,8 s)", titleCard:false, death:"se convierte en el Gólem de Cuerpos"},
-    art:{src:"assets/sprites/bosses/infernal/hechicero/atlas.png (recoloreado)", brief:"F-02", grade:"REDRAW", why:"es el Hechicero recoloreado con alas procedurales: no tiene cuerpo propio"},
+    art:{src:"assets/sprites/bosses/infernal/hechicero/angel/atlas.png", brief:"F-02", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,9 (alas rotas rojas y negras, halo agrietado; los cristales los dibuja el juego); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"usa los poderes de las otras arenas"}},
   golem_cuerpos:{after:"angel_corrompido", arena:"infernal", rank:"jefe", level:10, name:"Gólem de Cuerpos (forma 2)",
     fantasy:"Los cuerpos de la Horda caída, cosidos en un examen final.",
@@ -271,7 +323,7 @@ const BOSS_BLUEPRINTS = {
       {id:"golem_cuerpos.red", mode:"player", uses:"focos", effect:"romper la Red: EXPUESTO"}],
     counterplay:["Resolver el examen que plantea en cada ciclo"],
     presentation:{entrance:"cinemática (2,6 s)", titleCard:false, death:"se rompe y nace el Rey de la Horda"},
-    art:{src:"assets/sprites/bosses/infernal/hechicero/golem/atlas.png", borrowed:"golem_cristal (recoloreado)", brief:"P0-12", grade:"REDRAW", why:"su hoja propia es de 1 cuadro por estado"},
+    art:{src:"assets/sprites/bosses/infernal/hechicero/golem/v2/atlas.png", brief:"P0-12", grade:"FIX", why:"arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,15 (32 cuadros; antes 1 por estado); falta el Visual Gate humano para PASS"},
     status:{grade:"PASS", why:"usa las barricadas de basalto"}},
   demonio_mayor:{after:"golem_cuerpos", arena:"infernal", rank:"jefe", level:10, name:"Rey de la Horda (forma final)",
     fantasy:"La Horda entera bebe de las fisuras: ciérralas y el núcleo queda desnudo.",

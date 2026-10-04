@@ -210,7 +210,7 @@
 #run-intro .abr{margin-top:4px; border-top:1px solid rgba(255,210,140,0.18); padding-top:4px;}
 #run-intro .abr-row{display:flex; flex-direction:column; gap:1px; margin:5px 0; font-family:'VT323',monospace; font-size:1.06rem; line-height:1.02; color:#eadcc6; overflow-wrap:anywhere;}
 #run-intro .abr-row i{color:#c9b39a;}
-#run-intro .abr-k{font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:1px;}
+#run-intro .abr-k{font-family:'VT323 Texto','Press Start 2P',monospace; font-size:15px; line-height:1; letter-spacing:1px;}
 #run-intro .abr-k.mech{color:#ffcf5c;} #run-intro .abr-k.haz{color:#ff7a5c;} #run-intro .abr-k.boss{color:#e0a0ff;}
 #run-intro .abr-k.loot{color:#5ce39a;} #run-intro .abr-k.tut{color:#5cf0ff;}
 #run-intro .abr-pieces{display:flex; flex-wrap:wrap; gap:3px; margin:2px 0;}

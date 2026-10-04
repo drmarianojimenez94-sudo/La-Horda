@@ -76,7 +76,7 @@
   /* Códice (tipografía pixel) */
   .cx-group-num, .cx-phase-n{ font-size:0.7rem; }
   /* el Hechicero */
-  #run-intro .ri-who{ font-size:0.7rem; letter-spacing:1px; }
+  #run-intro .ri-who{ font-size:0.7rem; letter-spacing:0; overflow-wrap:break-word; } /* "EL HECHICERO SUPREMO" desbordaba a 667 px */
   #run-intro .ri-k, #buff-story .bs-who{ font-size:0.7rem; letter-spacing:0; }
   #run-intro .ri-go{ font-size:0.9rem; }
   /* historia (story.css): rótulos en pixel de 6-8 px, ilegibles en el teléfono; mínimo 11 px */

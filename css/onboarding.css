@@ -98,6 +98,9 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
 
 /* ---------- victoria: el "VICTORIA" entra agrandado (vicHeroIn) y durante 0,6 s asomaba scroll horizontal ---------- */
 #victory-screen{ overflow-x:hidden; }
+/* celular angosto acostado (≈667 px): la tarjeta JUGAR es chica; sin el retrato del héroe el texto entra entero
+   y "SIGUIENTE" ya no pisa el título */
+@media (max-width:700px) and (max-height:520px){ .hub-play-art{ display:none; } .hub-play-next{ font-size:0.85rem; } }
 
 /* ---------- regalo inicial en el teléfono apaisado: el cartel de confirmar en UNA fila ----------
    Antes era una caja de dos renglones (texto arriba, botones abajo) pegada al fondo: en 390 px de alto

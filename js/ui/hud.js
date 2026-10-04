@@ -29,6 +29,15 @@ function updateAbilityButtons(){
 }
 
 let _hudLastCls = null, _hudLastSe = null, _hudStackH = -1;
+// Escrituras al DOM SOLO si el valor cambió. Antes se reescribían en cada cuadro (innerHTML, textContent,
+// anchos) aunque fueran iguales: cada escritura invalida el layout y la lectura de alturas de hudStackLayout lo
+// forzaba de nuevo, cuadro por cuadro (medido: ~5 ms por cuadro con la CPU de un celular de gama media).
+function hudTxt(el, v){ if(el && el._hv !== v){ el._hv = v; el.textContent = v; } }
+function hudHtml(el, v){ if(el && el._hh !== v){ el._hh = v; el.innerHTML = v; } }
+function hudCss(el, prop, v){ if(el){ const k = "_hs_" + prop; if(el[k] !== v){ el[k] = v; el.style[prop] = v; } } }
+const hudPct = x => (Math.round(x*10)/10) + "%"; // décimas de punto: menos escrituras, sin salto visible
+// hudStackLayout lee alturas (layout forzado): solo cuando cambió el tamaño de esos bloques o la ventana
+let _hudStackDirty = true, _hudStackRO = null;
 // El bloque de estado del guardián crece con sus indicadores propios (Nigromante con gólem y
 // Abismo: 4 filas más; El Libertador / Eren con su línea): en celular apaisado pisaba la pastilla
 // de Arena/Nivel/Bajas, que tiene posición fija. Se corren hacia abajo la pastilla y los aliados
@@ -36,6 +45,13 @@ let _hudLastCls = null, _hudLastSe = null, _hudStackH = -1;
 function hudStackLayout(){
   const st = document.getElementById("player-status"), top = document.querySelector("#hud .top"), party = document.getElementById("party");
   if(!st || !top || !party) return;
+  if(!_hudStackRO && typeof ResizeObserver==="function"){
+    _hudStackRO = new ResizeObserver(()=>{ _hudStackDirty = true; });
+    _hudStackRO.observe(st); _hudStackRO.observe(top);
+    addEventListener("resize", ()=>{ _hudStackDirty = true; });
+  }
+  if(_hudStackRO && !_hudStackDirty && allies.length===hudStackLayout._n) return;
+  _hudStackDirty = false; hudStackLayout._n = allies.length;
   const h=st.offsetHeight, signature=[h,top.offsetHeight,innerHeight,innerWidth,allies.length].join('|');
   if(signature===_hudStackH) return;
   _hudStackH=signature;
@@ -97,23 +113,23 @@ function updateHUD(){
   const pShieldTotal = (player.shield||0) + (player.itemShield||0);
   const pShieldPct = Math.max(0, Math.min(100, pShieldTotal/pCap*100));
   const pHpPct = Math.max(0, Math.min(100-pShieldPct, player.hp/pCap*100));
-  document.getElementById("hp-shield-fill").style.width = pShieldPct+"%";
+  hudCss(document.getElementById("hp-shield-fill"), "width", hudPct(pShieldPct));
   const hpFillEl = document.getElementById("hp-fill");
-  hpFillEl.style.left = pShieldPct+"%";
-  hpFillEl.style.width = pHpPct+"%";
-  document.getElementById("en-fill").style.width = (player.energy/player.maxEnergy*100)+"%";
+  hudCss(hpFillEl, "left", hudPct(pShieldPct));
+  hudCss(hpFillEl, "width", hudPct(pHpPct));
+  hudCss(document.getElementById("en-fill"), "width", hudPct(player.energy/player.maxEnergy*100));
   const plevelEl = document.getElementById("plevel");
   const champMastery = talentState(player.classKey).mastery;
   const tree = talentTreeFor(player.classKey);
   // Emblema de Maestría junto al nivel (sección 18): reconocible por fuera, pero no expone el
   // árbol de talentos completo -solo el nombre de la Maestría elegida, nada más-.
   const emblemHtml = (champMastery && tree && tree.masteries[champMastery]) ? ` <span class="mastery-emblem" title="Maestría: ${tree.masteries[champMastery].name}">★</span>` : "";
-  plevelEl.innerHTML = `${hudClassName(CLASSES[player.classKey])} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`;
-  document.getElementById("hud-level").textContent = Math.min(runLevel,10);
+  hudHtml(plevelEl, `${hudClassName(CLASSES[player.classKey])} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`);
+  hudTxt(document.getElementById("hud-level"), String(Math.min(runLevel,10)));
   if(typeof endlessHudTick==="function") endlessHudTick(); // Horda Infinita: ronda, puntaje y mutadores
-  document.getElementById("hud-kills").textContent = kills;
+  hudTxt(document.getElementById("hud-kills"), String(kills));
   const totalSec = Math.floor((runElapsedMs||0)/1000);
-  document.getElementById("hud-timer").textContent = Math.floor(totalSec/60)+":"+String(totalSec%60).padStart(2,"0");
+  hudTxt(document.getElementById("hud-timer"), Math.floor(totalSec/60)+":"+String(totalSec%60).padStart(2,"0"));
   document.getElementById("atk-badge").classList.toggle("hidden", player.atkAuraTimer<=0);
   document.getElementById("shield-badge").classList.toggle("hidden", player.shieldAuraTimer<=0);
   // El Libertador / Eren: indicadores propios (Disparo de Oficial, Cabral, montura / Furia,
@@ -130,9 +146,9 @@ function updateHUD(){
   if(player.classKey==="musashi"){
     musashiHudEl.classList.remove("hidden");
     const concRow = document.getElementById("musashi-conc-row");
-    concRow.textContent = `Concentración ${player.concentration||0}/${MUSASHI_CONC_MAX}`;
+    hudTxt(concRow, `Concentración ${player.concentration||0}/${MUSASHI_CONC_MAX}`);
     concRow.classList.toggle("perfect", (player.concentration||0)>=MUSASHI_CONC_MAX);
-    document.getElementById("musashi-victories-val").textContent = (player.stats&&player.stats.duelVictories)||0;
+    hudTxt(document.getElementById("musashi-victories-val"), String((player.stats&&player.stats.duelVictories)||0));
   } else {
     musashiHudEl.classList.add("hidden");
   }
@@ -142,11 +158,11 @@ function updateHUD(){
   if(player.classKey==="cazadora"){
     sylvaHudEl.classList.remove("hidden");
     const trackRow = document.getElementById("sylva-track-row");
-    trackRow.textContent = `Rastreo ${Math.round(player.trackStacks||0)}/5`;
+    hudTxt(trackRow, `Rastreo ${Math.round(player.trackStacks||0)}/5`);
     trackRow.classList.toggle("cornered", (player.trackStacks||0)>=5);
     const momRow = document.getElementById("sylva-momentum-row");
     const momShown = player.wildHuntTimer>0 ? 10 : Math.floor(player.momentum||0);
-    momRow.textContent = `Impulso ${momShown}/10${player.wildHuntTimer>0?" 🔒":""}`;
+    hudTxt(momRow, `Impulso ${momShown}/10${player.wildHuntTimer>0?" 🔒":""}`);
     momRow.classList.toggle("locked", player.wildHuntTimer>0);
   } else {
     sylvaHudEl.classList.add("hidden");
@@ -157,7 +173,7 @@ function updateHUD(){
   if(player.classKey==="nigromante"){
     nigroHudEl.classList.remove("hidden");
     const maxCount = nigromanteMaxSkeletons(masteryOf("nigromante", 0)) + (typeof champSetExtraSkeletons==="function" ? champSetExtraSkeletons(player) : 0);
-    document.getElementById("nigro-skeleton-val").textContent = `${player.skeletons.length}/${maxCount}`;
+    hudTxt(document.getElementById("nigro-skeleton-val"), `${player.skeletons.length}/${maxCount}`);
     const souls = Math.floor(player.nigroSouls||0);
     const pipsEl = document.getElementById("nigro-souls-pips");
     const sig = souls + (player.nigroPact?"p":"");
@@ -165,12 +181,12 @@ function updateHUD(){
     const pb = document.getElementById("btn-pact"); pb.classList.remove("hidden");
     pb.classList.toggle("ready", souls >= NIGRO_PACT_COST && !player.nigroPact); pb.classList.toggle("armed", !!player.nigroPact);
     const golemRow = document.getElementById("nigro-golem-row");
-    document.getElementById("nigro-golem-val").textContent = player.golem ? "Activo" : "Inactivo";
+    hudTxt(document.getElementById("nigro-golem-val"), player.golem ? "Activo" : "Inactivo");
     golemRow.classList.toggle("active", !!player.golem);
     const demonRow = document.getElementById("nigro-demon-row");
     if(player.nigroDemonForm){
       demonRow.classList.remove("hidden");
-      document.getElementById("nigro-demon-val").textContent = Math.ceil(player.nigroDemonTimer/1000)+"s";
+      hudTxt(document.getElementById("nigro-demon-val"), Math.ceil(player.nigroDemonTimer/1000)+"s");
     } else {
       demonRow.classList.add("hidden");
     }
@@ -188,10 +204,10 @@ function updateHUD(){
     eb.classList.toggle("urgent", can && player.hp < player.maxHp*0.35);
   }
   const pct = bossActive ? 100 : Math.min(100, levelTimer/levelDuration*100);
-  document.getElementById("wave-timer-bar").style.width = pct+"%";
+  hudCss(document.getElementById("wave-timer-bar"), "width", hudPct(pct));
 
   const ultPct = player.ultCharge/player.ultMax*100;
-  document.getElementById("ult-ring").style.background = `conic-gradient(var(--ult) ${ultPct*3.6}deg, #2a1c10 0deg)`;
+  hudCss(document.getElementById("ult-ring"), "background", `conic-gradient(var(--ult) ${Math.round(ultPct*3.6)}deg, #2a1c10 0deg)`);
   const ultBtn = document.getElementById("btn-ult");
   const ultReady = (player.ultCharge>=player.ultMax && player.ultCd<=0 && runLevel>=ULT_MIN_ARENA_LEVEL && !(player.classKey==="eren" && erenUltBlocked(player))) || !!player.erenRumblingReady;
   if(ultReady && !ultBtn.classList.contains("ready") && !ultBtn.classList.contains("locked")){
@@ -306,8 +322,8 @@ function renderParty(){
     const aShieldTotal = (a.shield||0) + (a.itemShield||0);
     const aShieldPct = Math.max(0, Math.min(100, aShieldTotal/aCap*100));
     const aHpPct = Math.max(0, Math.min(100-aShieldPct, a.hp/aCap*100));
-    if(shieldFill) shieldFill.style.width = aShieldPct+"%";
-    if(fill){ fill.style.left = aShieldPct+"%"; fill.style.width = aHpPct+"%"; }
+    hudCss(shieldFill, "width", hudPct(aShieldPct));
+    if(fill){ hudCss(fill, "left", hudPct(aShieldPct)); hudCss(fill, "width", hudPct(aHpPct)); }
     if(row) row.classList.toggle("down", !a.alive);
     const atkB = document.getElementById("ally-atk-"+i);
     const shB = document.getElementById("ally-shield-"+i);

@@ -1,0 +1,8 @@
+{"ctxState":"running","t":62,"frames":604,"peak_dBFS":-2.9,"clip_pct":0,"rms_play_dBFS":-23.1,"silent_pct":0,"modes":["?"]}
+PASS audio_corre  "running t=62"
+PASS sin_saturacion  0
+PASS pico_bajo_0dB  -2.9
+PASS volumen_de_juego_razonable  -23.1
+PASS casi_sin_silencios_en_partida  0
+PASS sin_errores  []
+SUMMARY OK fails=0

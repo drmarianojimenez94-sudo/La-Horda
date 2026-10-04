@@ -12,8 +12,8 @@
    "name": "El Presentador",
    "rule": "La función se corta: interrumpí el GRAN NÚMERO o devolvele el cometa, y cubrite tras los pilares en la OVACIÓN.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "su arte propio es de 32 px dibujado a 4–5×: se ve en bloques; hoy usa el cuerpo del Mago de Hielo recoloreado",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2–1,7 (3 actos + transformación de 12 cuadros); falta el Visual Gate humano para PASS",
    "brief": "P0-01",
    "hooks": [
     {
@@ -100,6 +100,77 @@
    "kinds": 2
   },
   {
+   "type": "cm_maestro",
+   "arena": "ciudad",
+   "arenaName": "Ciudad Maldita",
+   "rank": "subjefe",
+   "level": 9,
+   "name": "Maestro de Ceremonias",
+   "rule": "Su MARCA (reflector) sigue a un guardián: llevala adentro de un REFUGIO en pie y el escudo verde la anula.",
+   "design": "PASS",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,1 (incluye teletransporte en humo rojo); falta el Visual Gate humano para PASS",
+   "brief": "P0-03",
+   "hooks": [
+    {
+     "id": "cm_maestro.escena",
+     "mode": "auto",
+     "n": 6
+    },
+    {
+     "id": "cm_maestro.refugio",
+     "mode": "player",
+     "n": 1
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "42 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "30 avisos, 0 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "5 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 88.5%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 88.5%"
+    },
+    {
+     "name": "gancho de arena: cm_maestro.escena",
+     "level": "PASS",
+     "detail": "6 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 30,
+   "strikes": 0,
+   "kinds": 5
+  },
+  {
    "type": "cm_tramoyista",
    "arena": "ciudad",
    "arenaName": "Ciudad Maldita",
@@ -108,8 +179,8 @@
    "name": "El Tramoyista",
    "rule": "Sus golpes y decorados rompen las estructuras: pelealo lejos de lo que tenés que proteger.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte de 32×46 px dibujado a ~5×",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2 (tramoya con poleas y sogas, arrastre y derrumbe); falta el Visual Gate humano para PASS",
    "brief": "P0-04",
    "hooks": [
     {
@@ -174,8 +245,8 @@
    "name": "La Dama del Telón",
    "rule": "Su línea de telón rompe estructuras; los espejismos tienen 1 de vida: limpiá rápido.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte de 27 px dibujado a ~5×",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2 (el telón la envuelve y cae vacío; sus espejismos usan el mismo cuerpo); falta el Visual Gate humano para PASS",
    "brief": "P0-02",
    "hooks": [
     {
@@ -730,7 +801,7 @@
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "91 avisos, 56 golpes diferidos en la pelea"
+     "detail": "87 avisos, 56 golpes diferidos en la pelea"
     },
     {
      "name": "patrones distintos",
@@ -740,12 +811,12 @@
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 9.6%"
+     "detail": "vida mínima 18.5%"
     },
     {
      "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 9.6%"
+     "detail": "queda 18.5%"
     },
     {
      "name": "gancho de arena: mago_hielo_cristal.brasero",
@@ -759,7 +830,7 @@
     }
    ],
    "status": "PASS",
-   "tele": 91,
+   "tele": 87,
    "strikes": 56,
    "kinds": 7
   },
@@ -815,9 +886,85 @@
     }
    ],
    "status": "PASS*",
-   "tele": 91,
+   "tele": 87,
    "strikes": 56,
    "kinds": 7
+  },
+  {
+   "type": "dragon_hielo",
+   "arena": "hielo",
+   "arenaName": "Arena Gélida",
+   "rank": "subjefe",
+   "level": 6,
+   "name": "Tundraverx, Soberano de Hielo",
+   "rule": "Lejos del fuego sus ESCAMAS DE ESCARCHA lo protegen: pelealo junto a un brasero encendido (y que su aliento no lo apague).",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "hoja propia; densidad ×1,5",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "dragon_hielo.frio",
+     "mode": "auto",
+     "n": 14
+    },
+    {
+     "id": "dragon_hielo.brasero",
+     "mode": "player",
+     "n": 1
+    },
+    {
+     "id": "dragon_hielo.fuego",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "45 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "33 avisos, 0 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "4 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 63.0%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 63.0%"
+    },
+    {
+     "name": "gancho de arena: dragon_hielo.frio",
+     "level": "PASS",
+     "detail": "14 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 33,
+   "strikes": 0,
+   "kinds": 4
   },
   {
    "type": "kraken_joven",
@@ -1132,8 +1279,8 @@
    "name": "El Carcelero del Vacío",
    "rule": "Si te engancha te arrastra al borde: soltate con una habilidad; sus cadenas rompen plataformas.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte propio de 37 px dibujado a ~5,6×; hoy usa un común de la Fábrica recoloreado",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,9 (cadenas como látigo, pisotón que agrieta, se rompen al morir); falta el Visual Gate humano para PASS",
    "brief": "P0-11",
    "hooks": [
     {
@@ -1294,8 +1441,8 @@
    "name": "Titán de Piedra",
    "rule": "Su PISOTÓN apaga las luces: esquivá y volvé a encender.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "densidad ×5,0 la del roster: arte de 47×63 px dibujado a 153 u; en pantalla se ve en bloques al lado de los campeones",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,0 (antes ×5,0); falta el Visual Gate humano para PASS",
    "brief": "R-01",
    "hooks": [
     {
@@ -1365,8 +1512,8 @@
    "name": "Cerbero, Guardián del Umbral",
    "rule": "Iluminado por varias luces a la vez, sus sombras se separan y queda EXPUESTO; a oscuras es más rápido.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "densidad ×5,4 la del roster: arte de 54×67 px dibujado a 181 u (el outlier más grande del juego)",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,1 (antes ×5,4; tres cabezas de bestia, fuego y sombra); falta el Visual Gate humano para PASS",
    "brief": "F-01",
    "hooks": [
     {
@@ -1438,6 +1585,148 @@
    "kinds": 4
   },
   {
+   "type": "esqueleto_h",
+   "arena": "infernal",
+   "arenaName": "Arena Infernal",
+   "rank": "subjefe",
+   "level": 4,
+   "name": "Esqueleto Cornudo (Guardián de la Horda)",
+   "rule": "Su EMBESTIDA ÓSEA contra una barricada de basalto lo estampa: aturdido y vulnerable.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "cuadros propios; densidad ×1,7",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "esqueleto_h.fisura",
+     "mode": "auto",
+     "n": 1
+    },
+    {
+     "id": "esqueleto_h.barricada",
+     "mode": "player",
+     "n": 0
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "13 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "11 avisos, 1 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "4 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 0.0%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 0.0%"
+    },
+    {
+     "name": "gancho de arena: esqueleto_h.fisura",
+     "level": "PASS",
+     "detail": "1 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 11,
+   "strikes": 1,
+   "kinds": 4
+  },
+  {
+   "type": "demonio_menor",
+   "arena": "infernal",
+   "arenaName": "Arena Infernal",
+   "rank": "subjefe",
+   "level": 7,
+   "name": "Demonio Menor (Guardián de la Horda)",
+   "rule": "Alimenta las fisuras y se protege con ellas: SELLÁ la fisura junto a él y queda EXPUESTO.",
+   "design": "PASS",
+   "art": "PASS",
+   "artWhy": "hoja propia; densidad ×0,8",
+   "brief": null,
+   "hooks": [
+    {
+     "id": "demonio_menor.fisura",
+     "mode": "auto",
+     "n": 2
+    },
+    {
+     "id": "demonio_menor.sello",
+     "mode": "player",
+     "n": 1
+    }
+   ],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "name": "sin errores en la pelea",
+     "level": "PASS",
+     "detail": "2800 cuadros"
+    },
+    {
+     "name": "aparece en la simulación",
+     "level": "PASS",
+     "detail": "21 s en pelea"
+    },
+    {
+     "name": "telegraphs (avisos antes del golpe)",
+     "level": "PASS",
+     "detail": "33 avisos, 10 golpes diferidos en la pelea"
+    },
+    {
+     "name": "patrones distintos",
+     "level": "PASS",
+     "detail": "6 tipos de aviso/golpe"
+    },
+    {
+     "name": "el equipo puede dañarlo",
+     "level": "PASS",
+     "detail": "vida mínima 0.0%"
+    },
+    {
+     "name": "no es trivial",
+     "level": "PASS",
+     "detail": "queda 0.0%"
+    },
+    {
+     "name": "gancho de arena: demonio_menor.fisura",
+     "level": "PASS",
+     "detail": "2 vez/veces"
+    }
+   ],
+   "status": "PASS",
+   "tele": 33,
+   "strikes": 10,
+   "kinds": 6
+  },
+  {
    "type": "hechicero_supremo",
    "arena": "infernal",
    "arenaName": "Arena Infernal",
@@ -1453,7 +1742,7 @@
     {
      "id": "hechicero_supremo.fisura",
      "mode": "auto",
-     "n": 4
+     "n": 5
     },
     {
      "id": "hechicero_supremo.sello",
@@ -1480,33 +1769,33 @@
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "74 avisos, 41 golpes diferidos en la pelea"
+     "detail": "79 avisos, 46 golpes diferidos en la pelea"
     },
     {
      "name": "patrones distintos",
      "level": "PASS",
-     "detail": "7 tipos de aviso/golpe"
+     "detail": "6 tipos de aviso/golpe"
     },
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 69.8%"
+     "detail": "vida mínima 77.5%"
     },
     {
      "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 69.8%"
+     "detail": "queda 77.5%"
     },
     {
      "name": "gancho de arena: hechicero_supremo.fisura",
      "level": "PASS",
-     "detail": "4 vez/veces"
+     "detail": "5 vez/veces"
     }
    ],
    "status": "PASS",
-   "tele": 74,
-   "strikes": 41,
-   "kinds": 7
+   "tele": 79,
+   "strikes": 46,
+   "kinds": 6
   },
   {
    "type": "angel_corrompido",
@@ -1517,8 +1806,8 @@
    "name": "El Ángel Corrompido (forma 1)",
    "rule": "CONVERGENCIA: rompé los 4 focos antes de que termine el ritual.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "es el Hechicero recoloreado con alas procedurales: no tiene cuerpo propio",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,9 (alas rotas rojas y negras, halo agrietado; los cristales los dibuja el juego); falta el Visual Gate humano para PASS",
    "brief": "F-02",
    "hooks": [
     {
@@ -1556,7 +1845,7 @@
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "280 avisos, 132 golpes diferidos en la pelea"
+     "detail": "292 avisos, 139 golpes diferidos en la pelea"
     },
     {
      "name": "patrones distintos",
@@ -1566,12 +1855,12 @@
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 34.6%"
+     "detail": "vida mínima 32.9%"
     },
     {
      "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 34.6%"
+     "detail": "queda 32.9%"
     },
     {
      "name": "gancho de arena: angel_corrompido.convergencia",
@@ -1585,8 +1874,8 @@
     }
    ],
    "status": "PASS",
-   "tele": 280,
-   "strikes": 132,
+   "tele": 292,
+   "strikes": 139,
    "kinds": 18
   },
   {
@@ -1598,8 +1887,8 @@
    "name": "Gólem de Cuerpos (forma 2)",
    "rule": "EL EXAMEN: cortá el Número, hacelo chocar contra las barricadas o rompé la Red.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "su hoja propia es de 1 cuadro por estado",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,15 (32 cuadros; antes 1 por estado); falta el Visual Gate humano para PASS",
    "brief": "P0-12",
    "hooks": [
     {
@@ -1646,8 +1935,8 @@
     }
    ],
    "status": "PASS*",
-   "tele": 280,
-   "strikes": 132,
+   "tele": 292,
+   "strikes": 139,
    "kinds": 18
   },
   {
@@ -1702,9 +1991,39 @@
     }
    ],
    "status": "PASS*",
-   "tele": 280,
-   "strikes": 132,
+   "tele": 292,
+   "strikes": 139,
    "kinds": 18
+  },
+  {
+   "type": "jinete_sin_cabeza",
+   "arena": "divina",
+   "arenaName": "divina",
+   "rank": "jefe",
+   "level": 6,
+   "name": "Jinete Sin Cabeza",
+   "rule": "En la Arena Divina es un guardián rival del asedio: torres y castillo lo castigan como a cualquier campeón.",
+   "design": "FIX",
+   "art": "PASS",
+   "artWhy": "hoja propia; densidad ×1,9",
+   "brief": null,
+   "hooks": [],
+   "checks": [
+    {
+     "name": "ficha (BOSS_BLUEPRINTS)",
+     "level": "WARNING",
+     "detail": "ningún gancho con su arena (BOSS + ARENA = ENCUENTRO)"
+    },
+    {
+     "name": "simulación",
+     "level": "WARNING",
+     "detail": "modo propio (divina): sin pelea de campaña que simular"
+    }
+   ],
+   "status": "PASS*",
+   "tele": 0,
+   "strikes": 0,
+   "kinds": 0
   }
  ],
  "pageErrors": []

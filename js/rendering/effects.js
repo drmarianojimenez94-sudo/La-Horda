@@ -87,6 +87,12 @@ function floatText(x,y,text,cls,dk,key){
   else if(cls==="heal") kind = 2;
   else if(s.charAt(0)==="-") kind = 3;
   else if(!/^[0-9]+$/.test(s)) kind = 4;
+  // palabra flotante con el cartel grande de arena/jefe arriba: si caería encima, se corre por debajo del cartel
+  // (zonas del HUD, hud-text.js; tools/audit/center_text.js lo mide)
+  if(kind===4 && typeof _hudTitleOn==="function" && _hudTitleOn(performance.now()) && typeof worldToScreen==="function"){
+    const card = document.getElementById("arena-title-card"), r = card && card.getBoundingClientRect();
+    if(r && r.height){ const sp = worldToScreen(x, y); if(sp.x > r.left - 60 && sp.x < r.right + 60 && sp.y > r.top - 24 && sp.y < r.bottom + 24) y += (r.bottom + 28 - sp.y)/(CAM_ZOOM||1); }
+  }
   if(kind<=1){
     const n = +s;
     _ftAvg = _ftAvg*0.96 + n*0.04;

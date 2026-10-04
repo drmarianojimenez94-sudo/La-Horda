@@ -15,7 +15,7 @@ const {chromium}=require('playwright'),fs=require('node:fs');
  const own=()=>portadorObjects.filter(o=>o.owner===player&&o.asc&&o.life>0);
  const capped={nano_gm:.07,facu_gm:.08,aurelia:.06,khepri:.06,velmira:.06,vhal:.08,oriel:.07};
  for(const k of Object.keys(ASCENSION)){
-  check(k+' registered with taxonomy',!!CLASSES[k]&&!!PORTADORES[k]&&championMeta(k).category===(ASCENSION[k].founder?'FOUNDER':'STANDARD'));
+  check(k+' registered with taxonomy',!!CLASSES[k]&&!!PORTADORES[k]&&championMeta(k).category===(ASCENSION[k].founder?'FOUNDER':'ASCENSION'));
   check(k+' kit 3 skills + ultimate with descriptions',CLASSES[k].skills.length===3&&!!CLASSES[k].ultimate&&[...CLASSES[k].skills,CLASSES[k].ultimate].every(s=>s.desc&&s.cd>0));
   start(k);const es=[enemy(25),enemy(30,'normal',10),enemy(45,'normal',-10)];for(let i=0;i<3;i++)cast(i);cast('ult');tick(4500);
   check(k+' level 1 horde damage',es.filter(e=>e.hp<1e7).length>=2,es.map(e=>1e7-e.hp));

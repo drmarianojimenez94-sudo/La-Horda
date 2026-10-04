@@ -14,7 +14,10 @@ const {chromium}=require('playwright');
    assert.equal(await page.evaluate(()=>alphaTrainingStart()),true);
    await page.waitForTimeout(700);
    assert.deepEqual(await page.evaluate(()=>({active:ALPHA_TRAINING.active,arena:currentArena,alive:player.alive,solo:heroes.length})),{active:true,arena:'training',alive:true,solo:1});
-   assert.equal(await page.evaluate(()=>localStorage.getItem(SAVE_KEY)),initial);
+   {const stored=await page.evaluate(()=>localStorage.getItem(SAVE_KEY));
+    // si falla, nombrar los campos que cambiaron (el guardado entero no entra en el log de CI)
+    if(stored!==initial){const d=[];(function cmp(x,y,p){if(JSON.stringify(x)===JSON.stringify(y))return;if(x&&y&&typeof x==='object'&&typeof y==='object'){for(const k of new Set([...Object.keys(x),...Object.keys(y)]))cmp(x[k],y[k],p+'.'+k);}else d.push(p+': '+JSON.stringify(x)+' -> '+JSON.stringify(y));})(JSON.parse(initial),JSON.parse(stored||'null'),'save');
+     assert.fail('training wrote the real save ('+size.width+'): '+d.slice(0,12).join(' | '));}}
    await page.screenshot({path:'/tmp/horda-training-'+size.width+'.png'});
    const results=await page.evaluate(()=>{
     const step=()=>ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id;

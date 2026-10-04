@@ -1,4 +1,6 @@
 "use strict";
+// forma propia del proyectil de cada portador (skill-evolution.js, drawProjStyle): ninguna se comparte
+const PORTADOR_PROJ = {ynara:"vial", myla:"spoon", brasa:"nut", morwen:"droplet", iria:"needle", eslabon:"glyph", farolero:"glyph"};
 for(const k in PORTADORES){
   const p=PORTADORES[k];
   // Procedural hit/flash masks remain available while the real atlas loads.
@@ -7,7 +9,7 @@ for(const k in PORTADORES){
   CODEX_CHAMP_LORE[k]={origin:p.origin,history:p.history};
   HERO_VOICES[k]={pick:p.voices[0],win:p.voices[1],fall:p.voices[2]};
   ANIM_PROFILES[k]={speed:p.roleCategory==="tanque"?0.85:1,weight:p.roleCategory==="tanque"?1.5:0.9,amp:0.5,recoil:0.8,lunge:p.ranged?3:9,cast:1.2,impact:1.1,particle:k==="farolero"?"holy":k==="morwen"?"necro":"spark",basic:p.ranged?"ranged":"melee",tier:"full"};
-  CHAMP_IDENTITY[k]={sig:k==="eslabon"?"stagger":k==="morwen"?"wither":"mark",proj:k==="brasa"?"bullet":k==="iria"?"rune":"glyph"};
+  CHAMP_IDENTITY[k]={sig:k==="eslabon"?"stagger":k==="morwen"?"wither":"mark",proj:PORTADOR_PROJ[k]||"glyph"};
 }
 Object.assign(AIM_PROFILES,{
   yn_gaze:{type:"cone"},yn_stroganoff:{type:"point",r:sk=>sk.radius},yn_leave:{type:"line",w:32},

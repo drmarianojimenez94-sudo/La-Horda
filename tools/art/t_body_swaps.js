@@ -40,14 +40,13 @@ async function open(browser, q) {
     const r = info[k];
     check(`atlas.${k}`, r.ready && r.key === 'bs_' + k, r);
     check(`animado.${k}`, r.walk >= 3 && r.atk >= 2 && r.atkDiffers, { walk: r.walk, atk: r.atk });
-    // la Sirena y el Maestro usan tiras del Laberinto sin muerte propia (la muerte la hace la animación genérica) y la
-    // tira de la Druida (Maestro) tampoco trae golpe: clona el quieto
-    check(`golpe_muerte.${k}`, (r.hit >= 1 || k === 'cm_maestro') && (r.death >= 2 || ['sirena_abisal', 'cm_maestro'].includes(k)), { hit: r.hit, death: r.death });
+    // la Sirena usa una tira del Laberinto sin muerte propia (la muerte la hace la animación genérica)
+    check(`golpe_muerte.${k}`, r.hit >= 1 && (r.death >= 2 || k === 'sirena_abisal'), { hit: r.hit, death: r.death });
   }
   // en partida: cada tipo en su arena, vivo, atacando y muriendo, sin errores
-  const ARENA = { golem_cuerpos: 'infernal', cm_presentador: 'ciudad', cm_dama: 'ciudad', cm_espejismo: 'ciudad', cm_maestro: 'ciudad', cm_tramoyista: 'ciudad',
-    tiburon_joven: 'acuatica', tiburon_blanco: 'acuatica', cangrejo_acorazado: 'acuatica', medusa_electrica: 'acuatica', sirena_abisal: 'acuatica',
-    ab_jinete: 'abismo', ab_carcelero: 'abismo', esfinge: 'laberinto' };
+  // (los jefes de la Ciudad, el Carcelero y el Gólem de Cuerpos ya tienen arte propio: tools/art/t_pixrig_bosses.js)
+  const ARENA = { tiburon_joven: 'acuatica', tiburon_blanco: 'acuatica', cangrejo_acorazado: 'acuatica', medusa_electrica: 'acuatica', sirena_abisal: 'acuatica',
+    ab_jinete: 'abismo', esfinge: 'laberinto' };
   const byArena = {};
   for (const t in ARENA) (byArena[ARENA[t]] = byArena[ARENA[t]] || []).push(t);
   for (const a in byArena) {
@@ -64,7 +63,6 @@ async function open(browser, q) {
         const f0 = window.drawAnimFrameSized; let used = null;
         window.drawAnimFrameSized = function (img) { if (!used) used = img; return f0.apply(this, arguments); };
         try { drawEnemyBody(e); } finally { window.drawAnimFrameSized = f0; }
-        // (el Espejismo se dibuja con el atlas prestado de la Dama: cualquier atlas "bs_" vale)
         const bs = Object.keys(ENEMY_ATLAS_PACK).filter(k => k.startsWith('bs_')).map(k => ENEMY_ATLAS_PACK[k].atlas);
         res[t].drawnBy = used && bs.includes(used) ? 'prestado' : (used ? 'otro' : 'nada');
       });
@@ -84,7 +82,7 @@ async function open(browser, q) {
   check('sin_errores_de_pagina', errors.length === 0, errors.slice(0, 5));
   // ?bodyswap=0: vuelve el arte y el nombre original
   const off = await open(browser, '&bodyswap=0');
-  const o = await off.page.evaluate(() => ({ key: bodySwapKey('cm_presentador'), name: ENEMY_BASE.tiburon_joven.name }));
+  const o = await off.page.evaluate(() => ({ key: bodySwapKey('tiburon_joven'), name: ENEMY_BASE.tiburon_joven.name }));
   check('apagado_con_bodyswap0', o.key === null && o.name === 'Tiburón Joven', o);
   await browser.close();
   console.log(fails ? `FALLAS: ${fails}` : 'OK: todo pasó');

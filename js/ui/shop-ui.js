@@ -258,9 +258,9 @@ function renderShopChampions(panel){
   panel.innerHTML = filters + '<div class="shop-champ-list">' + list.map(c=>{
     if(shopChampCategory(c.id)==="FOUNDER") return shopFounderCardHTML(c.id);
     const cls = CLASSES[c.id], champ = save.champions[c.id], owned = champ.unlocked, sel = owned && selectedClass===c.id;
-    const status = sel ? '<span class="shop-st sel">★ Seleccionado</span>' : owned ? `<span class="shop-st own">✔ Comprado · Nv. ${champ.level}</span>` : '<span class="shop-st lock">🔒 Bloqueado</span>';
+    const status = sel ? '<span class="shop-st sel">★ Seleccionado</span>' : owned ? `<span class="shop-st own">✔ Comprado · Nv. ${champ.level}</span>` : '<span class="shop-st lock">🔒 Bloqueado</span>' + (championMeta(c.id).artPending ? `<div class="shop-item-sub">🎨 Concepto · arte en producción</div>` : typeof ascensionUnlockOf==="function" && ascensionUnlockOf(c.id) ? `<div class="shop-item-sub">✦ O ganalo · ${ascensionUnlockOf(c.id).mode}: ${ascensionUnlockOf(c.id).how}</div>` : "");
     const skills = cls.skills.map(s=>`<span class="shop-skill">${s.ico} ${s.name}</span>`).join("") + `<span class="shop-skill ult">${cls.ultimate.ico} ${cls.ultimate.name}</span>`;
-    return `<div class="shop-champ-row ${owned?"owned":""}" data-champ="${c.id}">
+    return `<div class="shop-champ-row ${owned?"owned":""} ${championMeta(c.id).artPending?"concept":""}" data-champ="${c.id}">
       <canvas class="champ-anim shop-champ-anim" width="96" height="96" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
       <div class="shop-champ-info">
         <div class="shop-champ-name" style="color:${cls.color}">${championShortName(c.id)}${CHAMPION_CATEGORIES[shopChampCategory(c.id)].badge ? `<span class="category-badge cat-${shopChampCategory(c.id)}">${CHAMPION_CATEGORIES[shopChampCategory(c.id)].badge}</span>` : ""} ${status}</div>

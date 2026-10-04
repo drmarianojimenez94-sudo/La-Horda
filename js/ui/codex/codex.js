@@ -277,10 +277,10 @@ function codexListHtml(sec){
 function codexChampListHtml(){
   const cards = CHAMPION_CATALOG.filter(c=>typeof shopChampionVisible!=="function" || shopChampionVisible(c.id)).map(c=>{
     const cls = CLASSES[c.id], ch = save.champions[c.id], own = ch && ch.unlocked, sel = own && selectedClass===c.id, meta = championMeta(c.id);
-    return `<button class="cx-card cx-champ-card ${own?"":"locked"} ${sel?"sel":""}" data-go="champ:${c.id}">
+    return `<button class="cx-card cx-champ-card ${own?"":"locked"} ${sel?"sel":""} ${meta.artPending?"concept":""}" data-go="champ:${c.id}">
       ${_pv({kind:"champ", key:c.id, anim:"idle", bg:"none", fps:15}, "cx-pv cx-card-pv")}
       <div class="cx-card-name" style="color:${cls.color}">${_cxEsc(championShortName(c.id))}</div><div class="cx-card-title">${_cxEsc(championTitle(c.id))}</div>
-      <div class="cx-card-sub">${HUB_ROLE_LABEL[cls.roleCategory]||""} · ${own ? "Nv. " + ch.level : meta.purchasable ? "🔒 Tienda" : meta.category==="FOUNDER" ? "Se concede" : "🔒"}</div>
+      <div class="cx-card-sub">${HUB_ROLE_LABEL[cls.roleCategory]||""} · ${own ? "Nv. " + ch.level : meta.artPending ? "🎨 Concepto · arte en producción" : typeof ascensionUnlockOf==="function" && ascensionUnlockOf(c.id) ? "🔒 ✦ " + ascensionUnlockOf(c.id).mode + " o Tienda" : meta.purchasable ? "🔒 Tienda" : meta.category==="FOUNDER" ? "Se concede" : "🔒"}</div>
       ${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? founderBadgeHTML(meta.founderKey,"sm") : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
       ${sel ? '<span class="cx-card-flag">EN JUEGO</span>' : ""}
     </button>`;

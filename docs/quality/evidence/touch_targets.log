@@ -1,0 +1,16 @@
+PASS 844x390 mago: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 844x390 eren: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 844x390 nigromante: 11 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 667x375 mago: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 667x375 eren: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 667x375 nigromante: 11 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 932x430 mago: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 932x430 eren: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 932x430 nigromante: 11 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 800x360 mago: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 800x360 eren: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 800x360 nigromante: 11 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 1280x800 mago: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 1280x800 eren: 10 controles >= 44 px, sin superposición, dentro de pantalla
+PASS 1280x800 nigromante: 11 controles >= 44 px, sin superposición, dentro de pantalla
+exit=0 secs=11

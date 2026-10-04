@@ -155,6 +155,7 @@ function update(dt){
     // frame: mientras fxAnim está activo, drawBossFxReplace reemplaza el sprite normal en vez
     // de superponerse (por eso no se usa e.skillAnim acá).
     if(e.type==="dragon_hielo"){
+      if(typeof hieTundraRule==="function") hieTundraRule(e, dt);   // fuego, escamas y aura (hie-tundraverx.js)
       if(e.alientoCd>0) e.alientoCd -= dt;
       if(e.novaCd>0) e.novaCd -= dt;
       if(e.bossWind){
@@ -174,6 +175,7 @@ function update(dt){
               addFrost(h, 2); // Aliento gélido: 2 cargas de escarcha (dos alientos seguidos congelan)
             }
           }
+          if(typeof hieTundraBreath==="function") hieTundraBreath(e, lfx, lfy, 260); // apaga el brasero del cono
           // con el canon nuevo (Tundraverx sin alas) el efecto viejo traía dibujado al dragón alado:
           // se usa el aliento de su propia hoja (cuadros de ataque) en vez del reemplazo de cuerpo
           if(typeof BOSS_SHEET_ATLAS!=="undefined" && BOSS_SHEET_ATLAS[e.type]) bossSheetPack(e, "atk", 900);
@@ -511,7 +513,7 @@ function update(dt){
       if((p.wave || p.lob) && updateEnemyProjectileStyle(p, dt)) continue; // el tiro en arco solo pega al caer
       for(const h of heroes){
         if(!h.alive) continue;
-        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25, rank:p.rank}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
+        if(distance(p,h) < h.radius+p.radius){ damageHero(h, p.dmg, {x:p.x-p.vx*0.25, y:p.y-p.vy*0.25, rank:p.rank, from:p.src}); if(p.frost) addFrost(h, p.frost); p.life=0; vfxBurst(p.x, p.y, 4, "spark", 90, 200, 2.5, h===player?2:0, -20, 1); break; }
       }
     } else {
       for(const e of enemies){
@@ -614,7 +616,8 @@ function update(dt){
           ? "dragon_hielo"
           : (runLevel===4 ? "esqueleto_h" : (runLevel===7 ? "demonio_menor" : "golem"));
         const champ = spawnEnemy(champType, false, true);
-        showBanner("¡" + champ.name + " guardián!");
+        if(typeof infGuardianSpawn==="function") infGuardianSpawn(champ);   // los de la Infernal salen de una fisura
+        if(!(typeof bossTitleCard==="function" && bossTitleCard(champ, "GUARDIÁN"))) showBanner("¡" + champ.name + " guardián!");
       }
     }
     levelTimer += dt;

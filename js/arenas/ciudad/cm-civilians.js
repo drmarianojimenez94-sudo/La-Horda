@@ -302,7 +302,7 @@ function cmDefeat(){
   runEnding = true;
   showBanner("LA CIUDAD HA CAÍDO — no quedó nada en pie para proteger");
   playSfx("cmStructFall"); flashScreen(0.4, "120,20,20");
-  runLater(2200, ()=>{ if(state==="playing") showGameOverScreen(); });
+  runLaterFlow(2200, ()=>{ if(state==="playing") showGameOverScreen(); });
 }
 // punto de ataque sobre una estructura (borde más cercano, del lado de afuera)
 function cmStructAttackPt(i, x, y){

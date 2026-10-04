@@ -195,9 +195,9 @@ function damageDivinaStructure(s, amount, src){
       showBanner("¡CASTILLO DESTRUIDO!");
       if(s.side==="enemy"){
         divinaLevel++; // Fase 4: ganaste -> el próximo intento ya escala al nivel siguiente
-        runLater(900, ()=>{ showGameOverScreen("victory"); });
+        runLaterFlow(900, ()=>{ showGameOverScreen("victory"); });
       } else {
-        runLater(900, ()=>{ showGameOverScreen("castle"); });
+        runLaterFlow(900, ()=>{ showGameOverScreen("castle"); });
       }
     } else {
       showBanner(s.type==="midtower" ? "¡TORRE INTERMEDIA DESTRUIDA!" : "¡TORRE DESTRUIDA!");

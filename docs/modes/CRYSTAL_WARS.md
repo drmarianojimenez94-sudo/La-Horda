@@ -59,3 +59,13 @@ node tools/crystal-wars/browser-test.js
 El campo es una arena funcional inicial con los assets disponibles. Los efectos y sonidos son básicos. No hay nuevas skins, tienda de dinero real, desafíos semanales ni telemetría de monetización en esta entrega. Se priorizó el modo que pidió el usuario.
 
 Antes de ampliar a todo el roster: probar parejas de roles, igualar rendimiento de bots, ensayar latencia real desde celulares, probar Safari/iPhone físico y observar sesiones humanas completas. La prueba móvil actual es emulación de Chromium; no certifica Safari. El anfitrión debe mantener su pestaña activa: la suspensión del navegador pausa la simulación. La conexión de producción y el despliegue deben verificarse por separado de las pruebas locales.
+
+
+## Integración al juego y presentación (octubre 2026)
+- Tarjeta propia **CRISTALES** en el hub (antes solo se llegaba por Multijugador → modos) y entrada en
+  `GAME_MODE_REGISTRY.crystalWars`. El enlace "‹ LA HORDA" vuelve **directo al hub** (`index.html?return=hub`), sin la portada.
+- En celular horizontal el encabezado (con el botón de volver) ya no desaparece en el lobby: solo se oculta durante la partida.
+- Arte del juego reutilizado, sin assets nuevos: piso de piedra de las Minas con viñeta, tres portales de la Horda del Abismo
+  y el cristal del Ángel como cristal del equipo (recoloreado a ámbar para el rival; se agrieta por debajo del 50 %).
+  Héroes más grandes (76 u) y tipografía pixel de La Horda (Press Start 2P para títulos, VT323 para el resto).
+- Prueba: `node tools/crystal-wars/hub-integration.js` (844×390 y 667×375: tarjeta visible, ≥ 44 px, ida y vuelta al hub).

@@ -159,6 +159,9 @@
 .champ-name{font-size:1.15rem;}
 .champ-role{font-size:0.85rem; color:var(--text-dim); line-height:1.25;}
 .champ-lvl{font-size:0.85rem; color:var(--ember3); margin-top:2px;}
+/* Concepto (arte en producción): silueta con el brillo del campeón, nunca el sprite sin aprobar */
+.champ-card.concept canvas, .cx-champ-card.concept canvas, .shop-champ-row.concept canvas{ filter:brightness(0) drop-shadow(0 0 3px rgba(255,190,240,.85)); }
+.champ-unlock-how{font-size:0.78rem; color:#ffb0e8; margin-top:3px; line-height:1.25;}
 
 .btn{
   font-family:var(--font-retro); font-size:1.35rem; font-weight:400; letter-spacing:0.02em;
