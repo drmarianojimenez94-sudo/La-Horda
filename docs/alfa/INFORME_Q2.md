@@ -64,7 +64,8 @@ Fallaron 2 (ver "Pendiente"):
   vacío) o el piloto automático no sabe cruzar hasta él. Hay que verlo jugando: si a una persona le pasa, la
   partida queda trabada en el nivel 9 del Abismo. No lo pude reproducir porque la máquina compartida quedó tan
   cargada (carga 100–150 en 4 núcleos) que la simulación iba a 1/100 de velocidad. Dejé una herramienta de
-  diagnóstico lista y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
+  diagnóstico lista (`tools/alfa/q2_diag_level.js abismo 9 nigromante 30`: arranca directo en ese nivel y
+  registra cada 15 s la vida, el estado y la plataforma del subjefe y del jugador) y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
   un jugador nuevo en la Comic Con no llega ahí en una sesión.
 - **Acuática, Leviatán (jefe final de la arena 6) — probablemente dificultad, no traba.** El Leviatán tiene 3
   vidas de 12.300 (con tentáculos que lo blindan); el piloto guerrero (cuerpo a cuerpo) dejó una de esas vidas al 5 % pero
@@ -104,7 +105,8 @@ Archivos:
 - Avisos circulares: `ab-render.js`, `acu-leviatan.js`, `bos-ruins.js`, `cm-render.js`, `hie-cold.js`,
   `mic-render.js`, `mn-render.js`, `elite-affixes.js`, `enemy-roles.js`, `context-actions.js`.
 - `tools/playtest/autopilot.js`: lee el gancho `botDanger` de la arena y las zonas de peligro.
-- `tools/alfa/q2_campaign_smoke.js` (nuevo). Uso:
+- `tools/alfa/q2_diag_level.js` (nuevo): diagnóstico de un nivel puntual (ver Pendiente).
+- `tools/alfa/q2_campaign_smoke.js` (nuevo; el atasco informa el jefe/subjefe que retiene el nivel). Uso:
   `QUICK=1 GAME_URL=http://127.0.0.1:8902/index.html node tools/alfa/q2_campaign_smoke.js`.
 
 Commits:
@@ -113,3 +115,5 @@ Commits:
 - `7b8c298` Prueba de humo de la campaña (tools/alfa/q2_campaign_smoke.js)
 - `3fde8c7` Tope de enemigos vivos (90; 12 con los subjefes de la Ciudad y 6 con El Presentador) y ritmo
   normal en los niveles retenidos
+- `aa382a1` Prueba de humo: el informe de atasco incluye el jefe/subjefe que retiene el nivel
+- Informe: `e0dc794`, `143f31a`, `d0442ac`, `b0883cb`, `64143cf` y el de esta herramienta
