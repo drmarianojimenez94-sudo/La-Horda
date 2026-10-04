@@ -29,7 +29,8 @@ const MIME = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
   page.setDefaultTimeout(0); // el Monte Carlo tarda; y con la máquina cargada la página (~1.800 archivos) también
   await page.goto('http://q4.local/index.html', { waitUntil: 'load', timeout: 300000 });
   for (let i = 0; i < 1200; i++) { const ok = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; }); if (ok) break; await new Promise(r => setTimeout(r, 100)); }
-  const out = await page.evaluate((N) => {
+  const ONLY = (process.env.Q4_CHAMPS || 'tanque,guerrero,mago,soporte,segador,axiom,profeta,musashi,cazadora,nigromante,libertador,eren').split(',');
+  const out = await page.evaluate(([N, ONLY]) => {
     loop = function () {};
     let seed = 20260929; const rng = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
     const R = Math.random; Math.random = rng; // todo el azar del juego con semilla: antes y después comparables
@@ -102,7 +103,8 @@ const MIME = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
       if (gift) for (const p of setPieceIds(gift)) { const it = makeDesignedItem(p); it.bought = true; it.gift = true; save.stash.push(it); save.champions[k].equipment[it.type] = it.uid; giftUids.add(it.uid); }
       return { gift, giftUids };
     }
-    const CHAMPS = Object.keys(CLASSES).filter(k => save.champions[k]);
+    // los 12 guardianes del lanzamiento por defecto (comparable entre versiones); Q4_CHAMPS=a,b,c para otros
+    const CHAMPS = Object.keys(CLASSES).filter(k => save.champions[k] && ONLY.includes(k));
     const RUNS = 15, SIMS = Math.max(40, Math.round(N / 20));
     for (const withGift of [false, true]) {
       const agg = {}; // por guardián: medianas
@@ -201,7 +203,7 @@ const MIME = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
     const buy = price => ({ precio: price, partidasDesdeCero: r2(price <= tot1 ? price / tot1 : 1 + (price - tot1) / crucero) });
     if (P) res.tienda = { oroTras3Partidas: after3, guardian: buy(champPrice), legendarioConNombre: buy(P.legendario), piezaDeSet: buy(P.set), skinDeSet4Piezas: buy(4 * P.set), muyRaroBasico: buy(P.base.muyraro), legendarioBasico: buy(P.base.legendario) };
     return res;
-  }, N);
+  }, [N, ONLY]);
   out.errores = errors.slice(0, 5);
   console.log(JSON.stringify(out, null, 1));
   await browser.close();
