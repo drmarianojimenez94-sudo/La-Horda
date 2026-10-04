@@ -61,7 +61,7 @@ function netEnvironmentHTML(){
 function netAvailable(){ return !!netServerUrl(); }
 // Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min
 // sin uso y tarda ~1 minuto en arrancar): así, para cuando tocás "Crear sala", ya está listo.
-let _netWarmAt = 0;
+let _netWarmAt = -1e9; // antes 0: performance.now() arranca en 0, así que el "despertar al abrir el juego" nunca corría en el primer minuto
 // Se despierta también apenas abre el juego: mientras el jugador elige guardián y arena (~1 min),
 // el servidor ya está arrancando.
 setTimeout(()=>{ try{ if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
