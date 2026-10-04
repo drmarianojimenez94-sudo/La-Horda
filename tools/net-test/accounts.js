@@ -278,7 +278,9 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await A.boot(URL_ACC);
     await A.page.click('#title-continue-btn');
     await sleep(2500);
-    const after = await A.E(() => ({ st: state, conflict: accountState().conflict, pending: accountState().pending, gold: save.gold, unl: Object.keys(save.champions).filter(k => save.champions[k].unlocked), skinPend: !!save.starterSkinPending }));
+    const after = await A.E(() => ({ st: state, conflict: accountState().conflict, pending: accountState().pending, gold: save.gold, unl: Object.keys(save.champions).filter(k => save.champions[k].unlocked), skinPend: !!save.starterSkinPending,
+      keys: Object.keys(localStorage).filter(k => /laHorda/.test(k)), back: (() => { try { const b = JSON.parse(localStorage.getItem('laHordaSave_v1_antesDeNube') || 'null'); return b && { gold: b.gold, c3: b.campaignResetV3, ts: b.testStageV1 }; } catch (e) { return 'x'; } })(),
+      sync: __account.sync && { v: __account.sync.version, dirty: __account.sync.dirty, beacon: __account.sync.beacon }, ls: (() => { try { const x = JSON.parse(localStorage.getItem('laHordaSave_v1')); return { gold: x.gold, unl: Object.keys(x.champions || {}).filter(k => x.champions[k].unlocked).length }; } catch (e) { return 'x'; } })() }));
     check('beacon.sin_conflicto_falso_al_volver', after.st === 'mainmenu' && !after.conflict && !after.pending && after.gold === 88888, after);
   }
 

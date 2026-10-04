@@ -155,6 +155,7 @@ function loadSave(){
     if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
 function _loadSaveInner(){
+  saveLoadFailed = false;
   try{
     const raw = localStorage.getItem(SAVE_KEY);
     if(raw){
@@ -248,8 +249,18 @@ function _loadSaveInner(){
     } else {
       persist(); // perfil nuevo: queda guardado desde ya (el regalo -guardián + skin- se elige al entrar)
     }
-  }catch(e){ save = defaultSave(); }
+  }catch(e){
+    // Antes esto era silencioso: el progreso se reemplazaba por uno de fábrica y el próximo guardado lo
+    // PISABA en localStorage (y con cuenta, en la nube). Ahora queda una copia intacta del guardado que no
+    // se pudo leer, el error se ve en la consola y no se escribe encima hasta cargar bien (saveLoadFailed).
+    try{ console.error("No se pudo cargar el guardado:", e); }catch(x){}
+    try{ const raw = localStorage.getItem(SAVE_KEY); if(raw) localStorage.setItem(SAVE_KEY + "_noCargo", raw); }catch(x){}
+    saveLoadFailed = true;
+    save = defaultSave();
+  }
 }
+// true si el último loadSave() falló: persistNow no pisa el guardado real con el de fábrica.
+let saveLoadFailed = false;
 function talentTreeV2Migrate(){
   save.talentTreeV2 = true;
   if(typeof treePointsSpent!=="function") return;
@@ -393,6 +404,7 @@ function persistNow(){
   if(typeof testLabActive==="function" && testLabActive()) return;
   // B1: mientras el anfitrión simula a un invitado, su guardián usa los datos del invitado;
   // netPersistView escribe siempre los datos propios del anfitrión.
+  if(saveLoadFailed) return; // el guardado de verdad sigue en localStorage (y copiado en _noCargo)
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }catch(e){ /* storage unavailable, continue in-memory */ }
   // CUENTAS: avisa que el guardado cambió (se sube a la nube con demora: js/net/account.js)
