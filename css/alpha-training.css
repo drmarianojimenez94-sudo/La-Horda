@@ -1,0 +1,28 @@
+/* Bounded cards share the game's dark/gold vocabulary; no browser-blue links. */
+#alpha-onboarding{padding:6px 10px;border:1px solid #80704a;background:#191a24;color:#eee2c5;max-width:100%;font-size:12px}
+#alpha-onboarding button,.alpha-guide button,.alpha-training-panel button{color:#f3dfaa;background:#29283c;border:1px solid #a58b54;border-radius:4px;padding:6px 10px;font:inherit;cursor:pointer}
+#alpha-onboarding button:focus-visible,.alpha-guide button:focus-visible,.alpha-training-panel button:focus-visible{outline:2px solid #ffe193;outline-offset:2px}
+#alpha-onboarding details{margin-top:5px}#alpha-onboarding summary{cursor:pointer}#alpha-onboarding p{line-height:1.4;margin:6px 0}
+.alpha-training-panel{position:fixed;z-index:120;left:50%;top:7px;transform:translateX(-50%);width:min(420px,54vw);box-sizing:border-box;padding:8px 12px;border:2px solid #b6a06a;border-radius:8px;background:rgba(18,19,30,.96);color:#f2e6ca;box-shadow:0 4px 20px #0009;font:12px/1.35 sans-serif;pointer-events:none}
+.alpha-training-panel>div{display:flex;align-items:center;gap:8px}.alpha-training-panel button{pointer-events:auto;margin-left:auto}.alpha-training-clock{color:#b8b4a8;font-size:10px}.alpha-training-panel p{margin:5px 0}.alpha-training-goal{color:#e9cf80}
+.alpha-guide{width:min(660px,90vw);max-height:85dvh;box-sizing:border-box;overflow:auto;background:#171925;color:#ece2c8;border:2px solid #b69b62;border-radius:10px;padding:18px;line-height:1.5}.alpha-guide::backdrop{background:#050611d9}.alpha-guide header{display:flex;gap:10px;align-items:center;justify-content:space-between}.alpha-guide h2{font-size:17px}.alpha-guide h3{font-size:15px;color:#e2c88c;margin-bottom:4px}.alpha-guide p{font-size:14px;margin-top:0}.alpha-guide-list section{border-bottom:1px solid #49465a;padding:4px 0}
+@media(max-height:410px){.alpha-training-panel{font-size:11px;padding:5px 8px;top:3px;width:48vw}.alpha-training-panel button{padding:3px 6px}.alpha-training-panel p{margin:3px 0}#alpha-onboarding{font-size:10px;padding:4px 6px}#alpha-onboarding button{padding:4px 6px}}
+
+.alpha-training-target{outline:3px solid #ffe193!important;outline-offset:3px;box-shadow:0 0 14px #f4d58a!important}
+#alpha-onboarding,.alpha-guide{background:var(--ui-bg-1,#1a0f0a);color:var(--ui-ink,#ece2c8);border-color:var(--ui-line-hi,#6a3e1e);border-radius:2px}
+.alpha-training-panel{background:var(--ui-bg-2,#0f0805);border-color:var(--ui-gold,#ffd76a);border-radius:2px;box-shadow:var(--ui-shadow-sm,2px 2px #000)}
+#alpha-onboarding button,.alpha-guide button,.alpha-training-panel button{background:var(--ui-btn,linear-gradient(#4a2210,#2a1208));border-color:var(--ui-line-hi,#6a3e1e);border-radius:2px}
+@media(orientation:portrait){.alpha-training-panel,.alpha-guide,.alpha-guide::backdrop{visibility:hidden}}
+
+.alpha-onboarding-actions{display:flex;gap:8px;flex-wrap:wrap}
+/* Touch targets remain usable on the compact landscape layouts. */
+#alpha-onboarding{flex:0 0 auto;font-size:11px}
+#alpha-onboarding button,.alpha-guide button{min-height:40px;min-width:40px}
+#alpha-onboarding summary{min-height:32px;display:flex;align-items:center;justify-content:center;gap:5px}
+#alpha-onboarding summary::before{content:'▸'}
+#alpha-onboarding details[open] summary::before{content:'▾'}
+#alpha-onboarding details[open]{max-height:150px;overflow:auto}
+.alpha-training-panel button{min-height:44px;min-width:44px}
+.alpha-training-panel{font-family:var(--font-retro,"VT323",monospace);font-size:18px;line-height:1.1}
+.alpha-training-clock{font-size:14px}
+@media(max-height:410px){.alpha-training-panel{font-size:16px}}

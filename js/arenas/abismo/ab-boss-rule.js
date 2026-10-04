@@ -41,6 +41,7 @@ function abRuleTick(dt){
         const p = abNearestGround(Math.cos(a)*AB_R.hub, Math.sin(a)*AB_R.hub*AB_ASP, 30);
         const r = abSpawnAt("ab_jinete", p.x, p.y); r.x = p.x; r.y = p.y; r.xp = Math.round(r.xp*0.5);
         vfxShock(p.x, p.y, 10, 120, "150,90,255", 600, 2);
+        if(typeof bossArenaEvent==="function") bossArenaEvent("ab_morador.jinete", e);
         showBanner("🐎 El JINETE SIN CABEZA cabalga por el Abismo: su carga tira al vacío a quien toque… guardianes y horda");
         if(typeof tutSay==="function" && !tutSeen("ab_rider")) tutSay("ab_rider", "La embestida del Jinete empuja a TODOS hacia el vacío, también a los enemigos. Esquivala de costado… o ponele la horda en el camino.", null, 9000, true);
       }
@@ -52,6 +53,7 @@ function abRuleTentacleCut(b){
   if(!b || !b.alive) return;
   b.hp = Math.max(1, b.hp - b.maxHp*0.04);
   bossExpose(b, AB_RULE.exposeMs, AB_RULE.exposeMult, null);
+  if(typeof bossArenaEvent==="function") bossArenaEvent("ab_morador.tentaculo", b);
   b.stunTimer = 0;                        // el ojo se abre, pero el Abismo no se detiene
   floatText(b.x, b.y - 140, "¡EL OJO SE ABRE!", "crit");
 }

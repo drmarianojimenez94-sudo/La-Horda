@@ -1,0 +1,264 @@
+"use strict";
+/* Alpha product services. Optional network; combat and saves work offline.
+ * No account identifiers, chat text, error stacks or URLs enter telemetry. */
+const AlphaServices = (() => {
+  const BUILD = "alpha-completion-2";
+  const bytes = new Uint8Array(16); crypto.getRandomValues(bytes);
+  const session = Array.from(bytes, n => n.toString(16).padStart(2,"0")).join("");
+  let world = null, offset = 0, queue = [], sending = false, panel = null, poll = null;
+  let started = 0, inRun = false, terminal = false, lastState = "", worldPending = false;
+  let eventGeneration=0, eventRuns=[], pendingClaims=[], rewardPending=false, claimScope=null, runBossDefeats=new Set();
+  const EVENT_BOSS_ARENAS=Object.freeze({guardian_ancestral:"bosque",mago_hielo_cristal:"hielo",minotauro:"laberinto",leviatan:"acuatica",caballero:"fortaleza",madre_espora:"micelial",cm_presentador:"ciudad",ab_morador:"abismo",mn_cerbero:"minas"});
+  const knownEvents = new Set(["start","login","menu","tutorial_started","tutorial_completed","tutorial_step","tutorial_step_complete","tutorial_abandoned","tutorial_skipped","run_started","death","abandon","victory","defeat","next_arena","codex","skin","croma","set","drop","pickup","skill","talent","equipment","multiplayer","error","heartbeat"]);
+  // Automated QA must never contaminate live product metrics or fetch live tuning.
+  function productEnabled(){return typeof navigator==="undefined"||!navigator.webdriver||window.__alphaServicesTest===true;}
+  function enabled(){try{return productEnabled()&&localStorage.getItem("horda_telemetry")!=="off";}catch{return false;}}
+  function emit(name, data={}){
+    if(!enabled() || !knownEvents.has(name)) return;
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive()&&!name.startsWith("tutorial_"))return;
+    const event = {name};
+    for(const key of ["champion","arena","cosmetic","skill","step"]){if(typeof data[key]==="string"&&/^[a-zA-Z0-9_:.-]{1,80}$/.test(data[key]))event[key]=data[key];}
+    for(const key of ["level","durationMs","value"]){if(Number.isFinite(data[key]))event[key]=Math.max(0,Math.min(43200000, data[key]));}
+    if(event.cosmetic){event[name==="croma"?"croma":"skin"]=event.cosmetic;delete event.cosmetic;}
+    if(event.skill){event.ability=event.skill;delete event.skill;}
+    for(const key of ["talent","equipment","set"]){if(typeof data[key]==="string"&&/^[a-zA-Z0-9_-]{1,64}$/.test(data[key]))event[key]=data[key];}
+    queue.push(event); if(queue.length>100){const disposable=queue.findIndex(e=>["skill","drop","pickup","heartbeat"].includes(e.name));queue.splice(disposable<0?0:disposable,1);}
+  }
+  async function flush(){
+    if(sending||!queue.length||!enabled()||!accountAvailable())return;
+    sending=true;const events=queue.splice(0,25);
+    try{await accountFetch("POST","/api/telemetry",{session,build:BUILD,version:BUILD,alpha:"02",events},{auth:false,timeout:6000});}catch{/* Telemetry never blocks a run; bounded best-effort delivery. */}finally{sending=false;}
+  }
+  function now(){return Date.now()+offset;}
+  function activeEvents(){return (world?.events||[]).filter(e=>e.enabled!==false&&e.start<=now()&&now()<e.end);}
+  function multiplier(key){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return 1;
+    let value=world?.normalConfig?.[key]??1;
+    for(const e of activeEvents())if((!e.arenas?.length||e.arenas.includes(currentArena))&&(!e.wave||runLevel>=e.wave))value*=e.multipliers?.[key]??1;
+    return Number.isFinite(value)?Math.max(.1,Math.min(20,value)):1;
+  }
+  function spawnPool(pool, level){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return pool;
+    const result=pool.map(p=>({...p}));
+    for(const e of activeEvents()){
+      if(e.arenas?.length&&!e.arenas.includes(currentArena)||level<(e.wave||1))continue;
+      for(const type of (e.enemies||[])){
+        if(ENEMY_BASE[type]&&["normal","elite","subelite"].includes(ENEMY_BASE[type].rank)&&!result.some(p=>p.t===type))result.push({t:type,w:2});
+      }
+    }
+    return result;
+  }
+  function goldPrice(kind,id,fallback){
+    const key={item:"itemPrices",cosmetic:"cosmeticPrices",champion:"championPrices"}[kind];
+    const value=key&&world?.normalConfig?.[key]?.[id];
+    return Number.isInteger(value)&&value>=0&&value<=10000000 ? value : fallback;
+  }
+  function matchesArena(e,arena=currentArena,level=runLevel){
+    return (!e.arenas?.length||e.arenas.includes(arena))&&level>=(e.wave||1);
+  }
+  // Directors retain their native map/state/phase controllers. Events cannot transplant
+  // the Mother, Cerberus or other contextual bosses into an incompatible arena.
+  function bossEvent(type,arena=currentArena){
+    return activeEvents().find(e=>e.boss&&EVENT_BOSS_ARENAS[e.boss]===arena&&e.wave===10&&matchesArena(e,arena,10)&&(e.boss===type||(e.boss==="mago_hielo_cristal"&&type==="angel_caido_hielo")))||null;
+  }
+  function eventSet(arena=currentArena,level=runLevel){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return null;
+    const event=activeEvents().filter(e=>e.set&&matchesArena(e,arena,level)).sort((a,b)=>String(a.id).localeCompare(String(b.id)))[0];
+    return event&&typeof SET_DB!=="undefined"&&SET_DB[event.set]?event.set:null;
+  }
+  function bossDropSet(e){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return null;
+    if(!e||e.rank!=="jefe"||e.type==="mago_hielo_cristal")return null;
+    const event=activeEvents().filter(row=>row.set&&matchesArena(row)&&(!row.boss||row.boss===e.type||row.boss==="mago_hielo_cristal"&&e.type==="angel_caido_hielo")).sort((a,b)=>String(a.id).localeCompare(String(b.id)))[0];
+    return event&&typeof SET_DB!=="undefined"&&SET_DB[event.set]?event.set:null;
+  }
+  function announceBoss(e){
+    const event=bossEvent(e.type);if(!event)return;
+    if(e.alphaEventId===event.id)return;
+    e.alphaEventId=event.id;
+    if(typeof showBanner==="function")showBanner("EVENTO · "+event.name+" — "+e.name);
+  }
+  function enemyDefeated(e){
+    if(!e||e.alive||e.hp>0)return;
+    const canonical=e.type==="angel_caido_hielo"?"mago_hielo_cristal":e.type;
+    if(EVENT_BOSS_ARENAS[canonical]===currentArena&&e.type!=="mago_hielo_cristal")runBossDefeats.add(e.type);
+    for(const entry of eventRuns){
+      const expected=entry.event.boss;
+      if(expected&&(e.type===expected||expected==="mago_hielo_cristal"&&e.type==="angel_caido_hielo")){
+        // Ice phase 1 is not completion: wait for the transformed boss.
+        if(expected==="mago_hielo_cristal"&&e.type!=="angel_caido_hielo")continue;
+        entry.bossDefeated=e.type;
+      }
+    }
+  }
+  function confirmedBosses(){return [...runBossDefeats];}
+  function acceptHostEventVictory(types){
+    if(typeof netIsGuest!=="function"||!netIsGuest()||!Array.isArray(types))return;
+    for(const type of types.slice(0,10)){
+      const canonical=type==="angel_caido_hielo"?"mago_hielo_cristal":type;
+      if(EVENT_BOSS_ARENAS[canonical]===currentArena)enemyDefeated({type,alive:false,hp:0});
+    }
+  }
+  // Durable receipts contain only completed objectives. Never serialize acct/session/token.
+  function claimStorageKey(){
+    const user=acct.session?.user;
+    if(typeof user!=="string"||!user||typeof accountApiBase!=="function")return null;
+    return "horda_event_receipts_v1:"+encodeURIComponent(accountApiBase())+":"+encodeURIComponent(user.normalize("NFC").toLowerCase());
+  }
+  function receiptOf(value){
+    if(!value||! /^[a-f0-9]{48}$/.test(value.ticket||"")||! /^[a-zA-Z0-9_-]{1,64}$/.test(value.eventId||""))return null;
+    if(!Number.isInteger(value.wave)||value.wave<1||value.wave>10||!Number.isFinite(value.readyAt)||!Number.isFinite(value.expires)||value.readyAt<0||value.expires<value.readyAt)return null;
+    if(value.bossDefeated!==null&&! /^[a-zA-Z0-9_-]{1,64}$/.test(value.bossDefeated||""))return null;
+    return {ticket:value.ticket,eventId:value.eventId,name:String(value.name||value.eventId).slice(0,100),wave:value.wave,bossDefeated:value.bossDefeated,readyAt:value.readyAt,expires:value.expires};
+  }
+  function receiptNotice(message){if(typeof showNetToast==="function")showNetToast(message);}
+  function saveClaims(){
+    if(!claimScope)return;
+    const distinct=new Map();
+    for(const entry of pendingClaims){const receipt=receiptOf(entry);if(!entry.done&&receipt)distinct.set(receipt.ticket,receipt);}
+    pendingClaims=[...distinct.values()].slice(-20);
+    try{localStorage.setItem(claimScope,JSON.stringify(pendingClaims));}
+    catch{receiptNotice("La recompensa está pendiente, pero el navegador no permite conservar el recibo. Reintentá antes de cerrar.");}
+    const button=document.getElementById("alpha-event-claim");if(button)button.hidden=!pendingClaims.length;
+  }
+  function restoreClaims(){
+    const key=claimStorageKey();
+    if(key!==claimScope){eventGeneration++;eventRuns=[];pendingClaims=[];claimScope=key;}
+    if(!key)return;
+    let stored=[];try{const raw=JSON.parse(localStorage.getItem(key)||"[]");if(Array.isArray(raw))stored=raw.slice(-20);}catch{/* Reject malformed storage; never execute its contents. */}
+    const merged=new Map();let expired=false;
+    for(const value of [...stored,...pendingClaims]){const entry=receiptOf(value);if(!entry)continue;if(entry.expires<=now()){expired=true;continue;}merged.set(entry.ticket,entry);}
+    pendingClaims=[...merged.values()].slice(-20);saveClaims();
+    if(expired)receiptNotice("Un recibo de evento venció antes de poder reclamarse y se retiró de pendientes.");
+  }
+  async function startEvents(){
+    restoreClaims();
+    const generation=++eventGeneration;eventRuns=[];runBossDefeats=new Set();
+    if(!productEnabled()||!acct.session||!accountAvailable())return;
+    const sessionAtStart=acct.session,scopeAtStart=claimStorageKey(),arena=currentArena;
+    const candidates=activeEvents().filter(e=>(!e.arenas?.length||e.arenas.includes(arena))&&(e.cosmetic||e.boss||e.set));
+    await Promise.all(candidates.map(async event=>{
+      try{
+        const r=await accountFetch("POST","/api/events/start",{eventId:event.id,arena},{timeout:6000});
+        if(generation!==eventGeneration||sessionAtStart!==acct.session||scopeAtStart!==claimStorageKey()||r.status!==200||!r.j.ticket)return;
+        eventRuns.push({ticket:r.j.ticket,event:r.j.event||event,bossDefeated:null,done:false,scope:scopeAtStart,readyAt:now()+(r.j.minDurationMs||0),expires:r.j.expires});
+        if(terminal&&lastState==="victory"){queueRunRewards();completeEvents();}
+      }catch{/* An event reward cannot interrupt offline combat. */}
+    }));
+  }
+  function queueRunRewards(){
+    if(typeof netIsGuest==="function"&&netIsGuest()&&typeof boss!=="undefined"&&boss&&!boss.alive)enemyDefeated(boss);
+    for(const entry of eventRuns){
+      if(entry.done||entry.scope!==claimStorageKey()||!entry.event.cosmetic||runLevel<(entry.event.wave||1)||entry.event.boss&&!entry.bossDefeated)continue;
+      const receipt=receiptOf({ticket:entry.ticket,eventId:entry.event.id,name:entry.event.name,wave:runLevel,bossDefeated:entry.bossDefeated,readyAt:entry.readyAt,expires:entry.expires});
+      if(receipt&&!pendingClaims.some(p=>p.ticket===receipt.ticket))pendingClaims.push(receipt);
+    }
+    saveClaims();
+    const host=document.getElementById("victory-screen");
+    if(host&&!document.getElementById("alpha-event-claim")){
+      const button=document.createElement("button");button.id="alpha-event-claim";button.className="btn";button.textContent="Reintentar recompensa de evento";button.onclick=()=>completeEvents();host.append(button);
+    }
+    const button=document.getElementById("alpha-event-claim");if(button)button.hidden=!pendingClaims.length;
+  }
+  async function completeEvents(){
+    if(rewardPending||!acct.session)return;
+    restoreClaims();if(!pendingClaims.length)return;
+    rewardPending=true;const sessionAtStart=acct.session,apiAtStart=accountApiBase(),scopeAtStart=claimScope;
+    const claims=pendingClaims.slice();
+    try{
+      // Persist the finished run before the server changes entitlements/save version.
+      if(typeof accountUpload==="function"&&acct.sync?.dirty){if(!await accountUpload("event-result"))return;}
+      for(const entry of claims){
+        if(sessionAtStart!==acct.session||scopeAtStart!==claimStorageKey())return;
+        if(entry.done||now()<entry.readyAt)continue;
+        const r=await accountFetch("POST","/api/events/complete",{ticket:entry.ticket,wave:entry.wave,outcome:"victory",bossDefeated:entry.bossDefeated},{timeout:6000});
+        if(sessionAtStart!==acct.session||apiAtStart!==accountApiBase())return;
+        if(r.status===200&&r.j.ok){
+          entry.done=true;
+          for(const run of eventRuns)if(run.ticket===entry.ticket)run.done=true;
+          if(typeof accountApplyEventReward==="function")accountApplyEventReward(r.j);
+          if(r.j.granted)receiptNotice("Recompensa de evento obtenida: "+entry.name);
+        }else if(r.status===404||r.status===410||entry.expires<=now()){
+          entry.done=true;
+          for(const run of eventRuns)if(run.ticket===entry.ticket)run.done=true;
+          receiptNotice("No se pudo recuperar la recompensa de "+entry.name+": el recibo venció o ya no es válido.");
+        }
+        // 409 (minimum duration/conflict), 429 and network failures remain retryable.
+        if(entry.done){pendingClaims=pendingClaims.filter(p=>p.ticket!==entry.ticket);saveClaims();}
+      }
+    }catch{if(typeof showNetToast==="function")showNetToast("Recompensa pendiente: reconectá y volvé a intentar desde Resultados.");}
+    finally{rewardPending=false;if(claimScope===scopeAtStart&&claimStorageKey()===scopeAtStart)saveClaims();}
+  }
+  async function refreshWorld(){
+    if(!productEnabled()||worldPending||!accountAvailable())return;worldPending=true;
+    try{const r=await accountFetch("GET","/api/world",undefined,{auth:false,timeout:6000});if(r.status===200){world=r.j;offset=(world.serverTime||Date.now())-Date.now();renderNews();}}
+    catch{/* retain last known base; temporary events still expire using server clock */}finally{worldPending=false;}
+  }
+  function renderNews(){
+    const host=document.getElementById("alpha-news");if(!host)return;host.replaceChildren();
+    for(const m of (world?.messages||[]).filter(m=>m.enabled!==false&&m.start<=now()&&now()<m.end).slice(0,3)){
+      const article=document.createElement("article"),text=document.createElement("p");article.className="alpha-news-card"+(m.type==="global"?" alpha-owner":"");text.textContent=(m.type==="global"?"GAME MASTER · ":"")+m.text;article.append(text);
+      if(m.image&&(/^(https:\/\/|\/assets\/|assets\/)/.test(m.image))){const img=document.createElement("img");img.src=m.image;img.alt="";img.loading="lazy";article.prepend(img);}host.append(article);
+    }
+    for(const e of activeEvents().slice(0,2)){const article=document.createElement("article");article.className="alpha-news-card";const p=document.createElement("p");p.textContent="EVENTO · "+e.name+" · "+(e.announcement||e.description);if(e.banner&&/^(https:\/\/|\/?assets\/)/.test(e.banner)){const img=document.createElement("img");img.src=e.banner;img.alt="";img.loading="lazy";article.append(img);}article.append(p);host.append(article);}
+    host.hidden=!host.children.length;
+  }
+  function context(){return {champion:typeof selectedClass!=="undefined"?selectedClass:"",arena:typeof currentArena!=="undefined"?currentArena:"",level:typeof runLevel!=="undefined"?runLevel:1};}
+  function onState(next,previous){
+    if(typeof alphaTrainingActive==="function"&&alphaTrainingActive())return;
+    if(next===lastState)return;lastState=next;
+    if(next==="mainmenu")emit("menu");
+    if(next==="codex")emit("codex",context());
+    if(next==="playing"&&!inRun){inRun=true;terminal=false;started=performance.now();emit("run_started",context());startEvents();}
+    if(inRun&&!terminal&&["victory","gameover"].includes(next)){terminal=true;emit(next==="victory"?"victory":"defeat",{...context(),durationMs:Math.round(performance.now()-started)});if(next==="victory"){queueRunRewards();completeEvents();}}
+    if(inRun&&["title","mainmenu","prep","modeselect"].includes(next)){
+      if(!terminal)emit("abandon",{...context(),durationMs:Math.round(performance.now()-started)});
+      inRun=false;flush();
+    }
+    if(next!=="playing")renderNews();
+    if(panel&&next==="playing")closeChat();
+  }
+  // Submission can move focus away from a disabled button; Escape remains global
+  // while the dialog is open, before gameplay keyboard handlers receive it.
+  document.addEventListener("keydown",e=>{if(panel&&e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();closeChat();}},true);
+  function closeChat(){if(poll)clearTimeout(poll);poll=null;if(panel){panel.remove();panel=null;}document.getElementById("alpha-chat-open")?.focus();}
+  async function openChat(){
+    if(panel)return;if(!acct.session){accountOpen();return;}
+    panel=document.createElement("section");panel.className="alpha-chat";panel.setAttribute("role","dialog");panel.setAttribute("aria-label","Chat global Alpha");panel.setAttribute("aria-modal","true");
+    panel.innerHTML='<header><h2>CHAT GLOBAL</h2><button type="button" data-close aria-label="Cerrar chat">✕</button></header><p data-status role="status">Conectando…</p><div data-messages role="log" aria-live="polite" tabindex="0"></div><form><label>Mensaje <input maxlength="120" required autocomplete="off"></label><button type="submit">Enviar</button></form>';
+    document.body.append(panel);const local=panel,status=local.querySelector('[data-status]'),list=local.querySelector('[data-messages]'),input=local.querySelector('input');
+    local.querySelector('[data-close]').onclick=closeChat;
+    local.onkeydown=e=>{if(e.key==="Escape")closeChat();if(e.key==="Tab"){const items=[...local.querySelectorAll('button,input,[tabindex="0"]')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}};
+    let lastSignature="";
+    async function load(){if(panel!==local)return;try{
+      const r=await accountFetch("GET","/api/chat",undefined,{timeout:6000});if(r.status!==200)throw Error(r.j.msg||"Chat no disponible");
+      if(panel!==local)return;const messages=r.j.messages||[],signature=JSON.stringify([messages,r.j.pinned]);
+      if(signature!==lastSignature){const atBottom=list.scrollHeight-list.scrollTop-list.clientHeight<32;list.replaceChildren();
+        const rows=r.j.pinned?[r.j.pinned,...messages.filter(m=>m.id!==r.j.pinned.id)]:messages;
+        for(const m of rows){const p=document.createElement("p"),label=document.createElement("b");p.className=m.owner||m.role==="OWNER"?"alpha-owner":"";label.textContent=(m.id===r.j.pinned?.id?"FIJADO · ":"")+(m.name||m.user||"Jugador")+(m.owner||m.role==="OWNER"?" · GAME MASTER":"")+": ";p.append(label);if(m.founder&&typeof founderBadgeHTML==="function")label.insertAdjacentHTML("beforeend"," "+founderBadgeHTML(m.founder,"sm"));p.append(document.createTextNode(m.text||""));list.append(p);}if(atBottom)list.scrollTop=list.scrollHeight;lastSignature=signature;}
+      status.textContent="Todos los jugadores de la Alpha. No compartas datos privados.";
+    }catch(e){if(panel===local)status.textContent=e.message;}finally{if(panel===local)poll=setTimeout(load,5000);}}
+    local.querySelector('form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('button'),text=input.value.trim();if(!text)return;button.disabled=true;
+      try{const r=await accountFetch("POST","/api/chat",{text},{timeout:6000});if(r.status!==200&&r.status!==201)throw Error(r.j.msg||"No se pudo enviar");input.value="";if(poll)clearTimeout(poll);await load();}catch(err){status.textContent=err.message;}finally{button.disabled=false;if(panel===local)input.focus();}};
+    input.focus();await load();
+  }
+  function mount(){
+    const options=document.querySelector("#hub-options > .ui-modal-panel");if(options&&!document.getElementById("alpha-chat-open")){
+      const button=document.createElement("button");button.id="alpha-chat-open";button.className="btn wide";button.textContent="Chat global";button.onclick=openChat;options.insertBefore(button,document.getElementById("opt-close-btn"));
+      const label=document.createElement("label");label.className="alpha-privacy";const check=document.createElement("input");check.type="checkbox";check.checked=enabled();check.onchange=()=>{try{localStorage.setItem("horda_telemetry",check.checked?"on":"off");}catch{}if(!check.checked)queue=[];};label.append(check,document.createTextNode(" Compartir métricas anónimas de juego (sin nombre, correo ni mensajes)"));options.insertBefore(label,document.getElementById("opt-close-btn"));
+    }
+    const menu=document.getElementById("mainmenu-screen");if(menu&&!document.getElementById("alpha-news")){const host=document.createElement("aside");host.id="alpha-news";host.hidden=true;host.setAttribute("aria-label","Noticias de la Alpha");menu.append(host);}
+  }
+  window.addEventListener("account-change",()=>{restoreClaims();if(acct.session){emit("login");completeEvents();}else closeChat();});
+  window.addEventListener("error",()=>emit("error"));
+  window.addEventListener("unhandledrejection",()=>emit("error"));
+  window.addEventListener("horda-alpha",e=>{if(e.detail?.event?.startsWith("tutorial_"))emit(e.detail.event,{step:String(e.detail.step??"start"),durationMs:Number(e.detail.duration||0)*1000});});
+  window.addEventListener("horda-stat",e=>{const map={ground_drop:"drop",ground_pick:"pickup"};if(map[e.detail?.k])emit(map[e.detail.k],{...context(),value:e.detail.v});});
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)flush();else{refreshWorld();if(terminal&&lastState==="victory"){queueRunRewards();completeEvents();}}});
+  window.addEventListener("pagehide",()=>{if(inRun&&!terminal)emit("abandon",{...context(),durationMs:Math.round(performance.now()-started)});flush();});
+  mount();restoreClaims();emit("start");refreshWorld();completeEvents();
+  setInterval(()=>{if(!document.hidden){emit("heartbeat");flush();if(pendingClaims.length)completeEvents();}},30000);
+  setInterval(()=>{if(!document.hidden)refreshWorld();},60000);
+  return {emit,flush,multiplier,goldPrice,spawnPool,onState,refreshWorld,activeEvents,eventSet,bossDropSet,bossEvent,announceBoss,enemyDefeated,confirmedBosses,acceptHostEventVictory,completeEvents,openChat,closeChat,build:BUILD};
+})();
+function alphaWorldMultiplier(key){const t=typeof testLabEnemyMods==="function"?testLabEnemyMods():null;return AlphaServices.multiplier(key)*(t&&Number.isFinite(t[key])&&t[key]>0?Math.min(10,t[key]):1);}

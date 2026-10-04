@@ -3,6 +3,47 @@
    La usa js/assets/preload.js para saber cuándo terminó de cargar todo. Si agregás una imagen
    nueva al juego, sumala también acá. */
 const ASSET_MANIFEST = [
+  // Complete set outfits: eight champions and mounted Granadero.
+  "assets/sprites/champions/tanque/skins/baluarte/atlas.png",
+  "assets/sprites/champions/tanque/skins/baluarte/preview.png",
+  "assets/sprites/champions/nigromante/skins/requiem/atlas.png",
+  "assets/sprites/champions/nigromante/skins/requiem/preview.png",
+  "assets/sprites/champions/libertador/skins/granadero/atlas.png",
+  "assets/sprites/champions/libertador/skins/granadero/preview.png",
+  "assets/sprites/champions/brasa/skins/ultimo_turno/atlas.png",
+  "assets/sprites/champions/brasa/skins/ultimo_turno/preview.png",
+  "assets/sprites/champions/eslabon/skins/juramento_roto/atlas.png",
+  "assets/sprites/champions/eslabon/skins/juramento_roto/preview.png",
+  "assets/sprites/champions/morwen/skins/vidrio_negro/atlas.png",
+  "assets/sprites/champions/morwen/skins/vidrio_negro/preview.png",
+  "assets/sprites/champions/farolero/skins/lumbre_persistente/atlas.png",
+  "assets/sprites/champions/farolero/skins/lumbre_persistente/preview.png",
+  "assets/sprites/champions/iria/skins/hilo_umbral/atlas.png",
+  "assets/sprites/champions/iria/skins/hilo_umbral/preview.png",
+  "assets/sprites/champions/libertador/skins/granadero/horse.png",
+
+  // Five new Portadores, base animations and set palettes.
+  "assets/sprites/champions/brasa/atlas.png",
+  "assets/sprites/champions/brasa/preview.png",
+  "assets/sprites/champions/brasa/set.png",
+  "assets/sprites/champions/brasa/set-preview.png",
+  "assets/sprites/champions/eslabon/atlas.png",
+  "assets/sprites/champions/eslabon/preview.png",
+  "assets/sprites/champions/eslabon/set.png",
+  "assets/sprites/champions/eslabon/set-preview.png",
+  "assets/sprites/champions/morwen/atlas.png",
+  "assets/sprites/champions/morwen/preview.png",
+  "assets/sprites/champions/morwen/set.png",
+  "assets/sprites/champions/morwen/set-preview.png",
+  "assets/sprites/champions/farolero/atlas.png",
+  "assets/sprites/champions/farolero/preview.png",
+  "assets/sprites/champions/farolero/set.png",
+  "assets/sprites/champions/farolero/set-preview.png",
+  "assets/sprites/champions/iria/atlas.png",
+  "assets/sprites/champions/iria/preview.png",
+  "assets/sprites/champions/iria/set.png",
+  "assets/sprites/champions/iria/set-preview.png",
+
   // >>> hoja de bestias (tools/art/hoja_bestias/build.py)
   "assets/sprites/enemies/bosque/cu_sith/v3/atlas.png",
   "assets/sprites/enemies/bosque/enjambre_hadas/v3/atlas.png",

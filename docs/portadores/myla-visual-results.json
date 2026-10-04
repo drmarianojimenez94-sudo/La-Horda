@@ -1,0 +1,41 @@
+{
+  "checks": [
+    {
+      "id": "ultimo_turno",
+      "changed": 78720,
+      "opaque": true,
+      "ready": true
+    },
+    {
+      "id": "juramento_roto",
+      "changed": 95331,
+      "opaque": true,
+      "ready": true
+    },
+    {
+      "id": "vidrio_negro",
+      "changed": 89606,
+      "opaque": true,
+      "ready": true
+    },
+    {
+      "id": "lumbre_persistente",
+      "changed": 68251,
+      "opaque": true,
+      "ready": true
+    },
+    {
+      "id": "hilo_umbral",
+      "changed": 114588,
+      "opaque": true,
+      "ready": true
+    },
+    {
+      "id": "merienda_magica",
+      "changed": 18083,
+      "opaque": true,
+      "ready": true
+    }
+  ],
+  "errors": []
+}

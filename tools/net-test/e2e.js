@@ -19,6 +19,7 @@ let fails = 0;
 const check = (name, ok, extra) => { console.log((ok ? 'PASS ' : 'FAIL ') + name + (extra !== undefined ? '  ' + JSON.stringify(extra).slice(0, 400) : '')); if (!ok) fails++; };
 const NAMES = ['Mariano', 'Facundo', 'Daniel', 'Lucia', 'Quinto'];
 const CHAMPS = ['tanque', 'mago', 'guerrero', 'soporte', 'axiom'];
+const RESERVES = ['eren', 'musashi', 'nigromante', 'cazadora', 'profeta'];
 const CHAMP_LABEL = { tanque: 'Tanque', mago: 'Mago', guerrero: 'Asesino', soporte: 'Soporte', axiom: 'Axiom' };
 
 async function newClient(browser, i, url) {
@@ -41,13 +42,13 @@ async function newClient(browser, i, url) {
   page.on('dialog', d => d.accept());
   await page.goto(url, { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i]]);
+  await page.evaluate(([c,reserve]) => { save.stash=[]; save.duoReserve=reserve; save.lastChamp=c; for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i],RESERVES[i]]);
   return { ctx, page, errors, i };
 }
 const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
 
 (async () => {
-  const browser = await chromium.launch({ args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+  const browser = await chromium.launch({ executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
   // ---------------- anfitrión: menú -> arena -> campeón -> pre-sala -> crear sala ----------------
   const host = await newClient(browser, 0, `${SITE}/index.html?dev=1&server=${encodeURIComponent(RELAY)}`);
   await host.page.click('#title-continue-btn');
@@ -60,13 +61,16 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   const invUid = await ev(host, () => {
     const it = makeItem('arma', 'legendario', selectedClass); addItemToInventory(selectedClass, it); renderPrepSummary(); return it.uid;
   });
+  await host.page.click('[data-prep-sec="equipo"]');
+  await host.page.locator('.prep-advanced[data-part="equipo"] > summary').click();
+  await host.page.click('#prep-tabs [data-tab="equipo"]');
   await host.page.click(`#prep-inventory-panel [data-inv-equip="${invUid}"]`);
   const eqAfter = await ev(host, () => save.champions[selectedClass].equipment.arma);
   check('inventory.equip_in_lobby', eqAfter === invUid, { eqAfter, invUid });
   if (N > 1 || FIFTH) {
     await host.page.evaluate(s => { if (typeof prepSecReveal === 'function') prepSecReveal(s); }, '#net-create-btn'); // pestaña Sala online (js/ui/prep-sections.js)
     await host.page.click('#net-create-btn');
-    for (let k = 0; k < 50 && !(await ev(host, () => net.code)); k++) await sleep(100);
+    await host.page.waitForFunction(()=>!!net.code||!!netLobby.lastError, null, {timeout:30000});
   }
   const code = await ev(host, () => net.code);
   if (N > 1 || FIFTH) check('room.created', /^[A-Z2-9]{6}$/.test(code || ''), code);
@@ -78,8 +82,8 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
   for (let i = 1; i < N; i++) {
     const g = await newClient(browser, i, invite);
     await g.page.click('#title-join-btn');
-    for (let k = 0; k < 60 && !(await ev(g, () => state === 'prep' && !!net.room)); k++) await sleep(100);
-    const st = await ev(g, () => ({ state, slot: net.slot, arena: currentArena, role: net.role }));
+    await g.page.waitForFunction(()=>state==='prep'&&!!net.room||!!netLobby.lastError, null, {timeout:30000});
+    const st = await ev(g, () => ({ state, slot: net.slot, arena: currentArena, role: net.role, error:netLobby.lastError, status:document.getElementById('title-join-status')?.textContent }));
     check(`join.guest${i}_in_prep`, st.state === 'prep' && st.slot === i && st.arena === 'bosque' && st.role === 'guest', st);
     guests.push(g);
   }
@@ -217,23 +221,13 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     const hostSaveGuestChamp = await ev(host, (k) => JSON.parse(localStorage.getItem(SAVE_KEY)).champions[k].level, CHAMPS[1]);
     check('save.host_never_stores_guest_data', hostSaveGuestChamp === 12, hostSaveGuestChamp);
   }
-  // ---------------- caída y revive (humano) ----------------
+  // ---------------- dúo: primera caída activa reserva; ya no hay revivir ilimitado ----------------
   if (guests.length) {
-    // El set "La Última Profecía" (champSetPreventDeath) de un aliado cercano salva de la muerte una vez
-    // cada 40 s y los escudos absorben el golpe: se ponen en enfriamiento/vacían para que la caída sea
-    // determinista (lo que se prueba es que el invitado vea su propia caída, no el set).
-    const dn = await ev(host, () => { const g = heroes[1]; for (const h of heroes) h._prophecyAt = runElapsedMs; g.shield = 0; g.itemShield = 0; g.invulnTimer = 0; g.emergencyShieldUsed = true; const pre = { shield: g.shield, itemShield: g.itemShield, invuln: g.invulnTimer, tk: heroDmgTakenMult(g) }; g.hp = 1; damageHero(g, 99999, enemies.find(e => e.alive) || { x: 0, y: 0, rank: 'normal' }); return { pre, alive: g.alive, hp: g.hp }; });
-    await sleep(400);
-    const downed = await ev(guests[0], () => ({ alive: player.alive, hp: player.hp }));
-    check('revive.guest_sees_self_down', downed.alive === false, { host: dn, guest: downed });
-    const stillPlaying = await ev(host, () => state);
-    check('revive.match_continues_with_humans_alive', stillPlaying === 'playing', stillPlaying);
-    await ev(host, () => { const g = heroes[1]; player.x = g.x + 20; player.y = g.y; });
-    await sleep(150);
-    await ev(host, () => tryReviveAlly(heroes[1]));
-    await sleep(500);
-    const back = await ev(guests[0], () => player.alive);
-    check('revive.guest_revived', back === true);
+    await ev(host, () => { const g=heroes[1]; g.alive=false;g.hp=0; });
+    await guests[0].page.waitForFunction(k=>player.alive&&player.classKey===k&&player._duoUsed,RESERVES[1]);
+    check('duo.guest_sees_reserve', await ev(guests[0], k=>player.classKey===k&&player.alive,RESERVES[1]));
+    check('duo.match_continues',await ev(host,()=>state==='playing'));
+    check('duo.host_and_guest_same_card',await ev(host,k=>heroes[1].classKey===k&&heroes[1]._duoUsed,RESERVES[1]));
     // curación de emergencia pedida por el invitado: la aplica el anfitrión, una sola vez
     // Antes se exigía pct < 0.9 como prueba de "una sola vez", pero la vida también sube por otras
     // curas legítimas (el Soporte bot cura aliados heridos, regeneración, la cura en el tiempo de la

@@ -84,6 +84,14 @@ function cmSolidsNow(){
   if(cmS && cmS.pillars.length) for(const p of cmS.pillars) if(p.t >= 0) L.push(p);
   return L;
 }
+// Sólidos visuales de la Ciudad (Arena Bible §3): paredes de los edificios, estatua y sólidos del mapa;
+// el validador de arenas sondea su interior. El dibujo (cm-render.js) sale de estos mismos datos.
+function cmVisualSolids(){
+  const out = [];
+  for(const w of cmWallsNow()) out.push({id:"pared_"+(w.b||"x")+"@"+Math.round(w.x0)+","+Math.round(w.y0), pts:[[w.x0,w.y0],[w.x1,w.y0],[w.x1,w.y1],[w.x0,w.y1]]});
+  for(const c of cmSolidsNow()){ if(!c || !(c.r > 6)) continue; const r = c.r*0.6; out.push({id:"solido@"+Math.round(c.x)+","+Math.round(c.y), pts:[[c.x-r,c.y-r],[c.x+r,c.y-r],[c.x+r,c.y+r],[c.x-r,c.y+r]]}); }
+  return out;
+}
 function cmGeomSig(){
   if(!cmS) return "";
   let s = "";

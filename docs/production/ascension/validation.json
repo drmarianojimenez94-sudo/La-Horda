@@ -1,0 +1,95 @@
+{
+  "note": "INCOMPLETE is expected until commissioned art passes the Visual Gate (docs/founders/ART_BRIEFS.md). Manifests are never auto-registered.",
+  "results": {
+    "nano_gm": {
+      "category": "FOUNDER",
+      "releaseState": "TESTING",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "facu_gm": {
+      "category": "FOUNDER",
+      "releaseState": "TESTING",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "aurelia": {
+      "category": "STANDARD",
+      "releaseState": "INTERNAL",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "khepri": {
+      "category": "STANDARD",
+      "releaseState": "INTERNAL",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "velmira": {
+      "category": "STANDARD",
+      "releaseState": "INTERNAL",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "vhal": {
+      "category": "STANDARD",
+      "releaseState": "INTERNAL",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "bront": {
+      "category": "STANDARD",
+      "releaseState": "INTERNAL",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "oriel": {
+      "category": "STANDARD",
+      "releaseState": "INTERNAL",
+      "status": "INCOMPLETE",
+      "errors": [
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    }
+  }
+}

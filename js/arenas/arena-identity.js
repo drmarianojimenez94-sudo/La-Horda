@@ -17,10 +17,22 @@ function aidInside(x, y, margin){
   const nx = x/1.18, ny = y/0.82;
   return Math.hypot(nx, ny) < ARENA_RADIUS*0.94*Math.cos(Math.PI/8) - (margin||0);
 }
+// Sólidos VISUALES del decorado del coliseo (Arena Bible §3): todo prop grande dentro de la arena se
+// declara como un rectángulo chico en su base; el validador comprueba que ahí haya colisión real.
+function aidVisualSolids(){
+  const out = [];
+  aidProps.forEach((p, i)=>{
+    if(p.h < 90 || p.w < 50 || p.noSolid) return;
+    const e = {x:p.x, y:p.y, radius:4}; clampToArena(e); if(Math.hypot(e.x-p.x, e.y-p.y) > 1) return; // decorado del borde
+    const hw = p.w*0.25, hh = 12;
+    out.push({id:"prop"+i+"@"+Math.round(p.x)+","+Math.round(p.y), pts:[[p.x-hw, p.y-hh],[p.x+hw, p.y-hh],[p.x+hw, p.y+hh],[p.x-hw, p.y+hh]]});
+  });
+  return out;
+}
 function aidProp(img, x, y, opts){
   opts = opts || {};
   const s = opts.scale || AID_SCALE;
-  const p = { img, x, y, w:img.width*s, h:img.height*s, ay: opts.ay===undefined ? 0.94 : opts.ay, flip: !!opts.flip, alpha: opts.alpha===undefined ? 1 : opts.alpha };
+  const p = { img, x, y, w:img.width*s, h:img.height*s, ay: opts.ay===undefined ? 0.94 : opts.ay, flip: !!opts.flip, alpha: opts.alpha===undefined ? 1 : opts.alpha, noSolid: !!opts.passThrough };
   aidProps.push(p);
   if(opts.solid) aidSolids.push({x, y:y+(opts.solidDy||0), r:opts.solid});
   if(opts.light) aidLights.push({x, y:y+(opts.light.dy||0), r:opts.light.r, rgb:opts.light.rgb, a:opts.light.a||0.5, flick:opts.light.flick||0, ph:Math.random()*6});
@@ -88,6 +100,8 @@ function aidBuildHielo(){
   aidDecal(aidArtFrozenLake(), 0, 0, {scale:1.9});
   // ruina atrapada en el hielo (hito al norte): los dos pilares del arco son sólidos
   aidProp(aidArtIceArch(), 0, -330, {light:{r:140, rgb:"150,210,255", a:0.35, dy:-60}});
+  // el monolito de hielo se ve macizo: choca en toda su base (antes se atravesaba; arena-validator)
+  for(const dx of [-80, -27, 27, 80]) aidSolids.push({x:dx, y:-338, r:32});
   aidSolids.push({x:-66, y:-338, r:18}, {x:66, y:-338, r:18});
   // tres glaciares: arcos de agujas de hielo que parten la arena en zonas
   [0.55, 2.65, 4.45].forEach((a0,gi)=>{
@@ -113,8 +127,8 @@ function aidBuildBosque(){
   // árboles antiguos gigantes cerca del borde
   [0.3, 1.2, 2.1, 3.0, 3.9, 4.8, 5.6].forEach((a,i)=>{ const p = aidOnRing(730+(i%2)*60, 730+(i%2)*60, a); aidProp(aidArtAncientTree(i%3), p.x, p.y, {solid:26, flip:i%2===1}); });
   // ruinas: arco caído (pilares sólidos) y estatuas celtas
-  aidProp(aidArtRuinArch(), -560, 250); aidSolids.push({x:-560-50, y:252, r:14}, {x:-560+52, y:252, r:14});
-  aidProp(aidArtRuinArch(), 540, -300, {flip:true}); aidSolids.push({x:540-52, y:-298, r:14}, {x:540+50, y:-298, r:14});
+  aidProp(aidArtRuinArch(), -560, 250, {passThrough:true}); aidSolids.push({x:-560-50, y:252, r:14}, {x:-560+52, y:252, r:14});
+  aidProp(aidArtRuinArch(), 540, -300, {flip:true, passThrough:true}); // arco: se pasa por la abertura, las patas chocan aidSolids.push({x:540-52, y:-298, r:14}, {x:540+50, y:-298, r:14});
   [[-300,-420],[330,430],[-760,-60]].forEach(([x,y])=>aidProp(aidArtCelticStatue(), x, y, {solid:14, light:{r:60, rgb:"140,230,110", a:0.28, dy:-38}}));
   // arroyo con puente natural de raíces (decorativo, se cruza caminando)
   aidDecal(aidArtStream(), 420, 470, {scale:1.5});

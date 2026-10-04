@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "id": "nano_gm",
+  "name": "Nano GM",
+  "title": "El Regente del Umbral",
+  "role": "mago",
+  "fantasy": "Regente que reescribe las reglas locales de la arena: la Luz decide quién resiste y la Oscuridad, quién cae.",
+  "lore": "Antes de que el Forjador partiera el Sello, alguien escribió las reglas de las Arenas: cuánto pesa un golpe, qué cuenta como victoria. Los Regentes no pelearon contra la Horda; la observaron desde el umbral donde la luz y la sombra aún no se separaban. Nano es el primero que decidió cruzar. Sus tatuajes no son adorno: son las cláusulas del pacto, grabadas en la piel para que ninguna regla se le olvide. Cuando entra en combate, la arena lo reconoce antes que los campeones.",
+  "personality": "La regla acaba de cambiar. / Partida terminada. Yo firmé el resultado. / Esto… no estaba en el reglamento…",
+  "silhouette": "Joven atlético de rulos oscuros; ambos brazos cubiertos de tatuajes negros que se agrietan en runas. Ala de luz y ala de sombra asimétricas, a medio materializar en reposo.",
+  "stats": {
+    "hp": 150,
+    "damage": 15,
+    "speed": 178
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico a distancia",
+      "cooldownMs": 420,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "sentence",
+        "description": "Decreto de sombra en línea: daña y SENTENCIA (+15% de daño recibido, 4 s). Comunes sentenciados con menos de 22% de vida son ejecutados.",
+        "cooldownMs": 4600,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Brazo oscuro se carga de runas",
+        "execution": "Decreto en línea",
+        "impact": "Daño + SENTENCIA; ejecución de comunes <22%",
+        "feedback": "Grieta oscura y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_nano_gm_cast"
+      },
+      {
+        "id": "edict",
+        "description": "Ley de refugio en el suelo: aliados dentro reciben escudo, −15% de daño y regeneración; enemigos dentro se frenan.",
+        "cooldownMs": 8200,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Brazo de luz dibuja un cuadrado",
+        "execution": "Ley de refugio en el suelo",
+        "impact": "Escudo, regeneración y −15% daño a aliados",
+        "feedback": "Glifo cuadrado giratorio",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_nano_gm_cast"
+      },
+      {
+        "id": "invert",
+        "description": "Se traslada al punto elegido. Deja una runa opuesta a su última afinidad: Sombra estalla en daño; Luz cura al llegar.",
+        "cooldownMs": 6800,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Runa bajo los pies",
+        "execution": "Traslado al punto",
+        "impact": "Runa opuesta: estallido o curación",
+        "feedback": "Anillo que se expande",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_nano_gm_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "judgement",
+      "description": "Pausa dramática, alas desplegadas y la arena dividida: aliados restaurados; comunes ejecutados o devastados; élites y jefes reciben daño masivo respetando sus mecánicas. Entra en Forma del Regente.",
+      "cooldownMs": 62000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pausa dramática y cambio de luz (0,7 s)",
+      "execution": "Arena dividida luz/oscuridad; alas desplegadas",
+      "impact": "Aliados restaurados, comunes ejecutados/devastados, jefes con techo",
+      "feedback": "Desaturación y anillo blanco",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_nano_gm_ult"
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/nano_gm/atlas.png",
+    "preview": "assets/sprites/champions/nano_gm/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "9df094c4917cd2b885aa3133b9469451ed4282049f9be7b7b6923fcd866d87b9",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": "",
+      "note": "Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8)."
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "nano_gm_alt1",
+      "type": "skin",
+      "champion": "nano_gm",
+      "name": "Regente del Eclipse Dorado",
+      "rarity": "Fundador",
+      "tagline": "Bordes de ala en oro batido, halo de eclipse detrás de la nuca y runas de los tatuajes que arden en oro en lugar de blanco.",
+      "lore": "Cuando el primer eclipse cubrió las arenas, Nano decidió que la sombra también merecía una corona.",
+      "visualTheme": "Bordes de ala en oro batido, halo de eclipse detrás de la nuca y runas de los tatuajes que arden en oro en lugar de blanco.",
+      "unlockSource": "FOUNDER_ENTITLEMENT",
+      "collection": "Los Regentes",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/nano_gm/skins/nano_gm_alt1/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": null,
+  "budgets": {
+    "particles": 96,
+    "summons": 0,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "docs/art-gate/roster-gate.json",
+    "audio": "",
+    "multiplayer": "docs/founders/online-presence-results.json",
+    "performance": "docs/founders/performance-results.json"
+  },
+  "category": "FOUNDER",
+  "founderKey": "nano",
+  "balanceProfile": "founder",
+  "purchasable": false,
+  "transferable": false
+}

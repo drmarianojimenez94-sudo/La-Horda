@@ -76,8 +76,8 @@ const NEW_SETS = {
     pieces:{escudo:"Égida del Juramento", casco:"Yelmo del Guardián", pechera:"Peto Juramentado", guantes:"Guanteletes de la Promesa"},
     thresholds:[
       {count:2, desc:"+10% defensa", mods:()=>[{effect:"def_add", value:0.10}]},
-      {count:3, desc:"Los aliados que revivís vuelven con 60% de vida (en vez de 40%)", mods:()=>[]},
-      {count:4, desc:"JURAMENTO: absorber daño cerca de aliados, escudar y revivir acumulan Juramento. Completo: protección grupal (escudo + 25% menos daño recibido) por 4 s.", mods:()=>[]}
+      {count:3, desc:"Los aliados que revivís recuperan el 60% de su vida.", mods:()=>[]},
+      {count:4, desc:"JURAMENTO: absorber daño cerca de aliados y escudar acumulan Juramento. Completo: protección grupal (escudo + 25% menos daño recibido) por 4 s.", mods:()=>[]}
     ]},
   alba: {
     name:"Profecía del Alba", theme:"Soporte · curación", aura:"255,230,140", full:"alba",

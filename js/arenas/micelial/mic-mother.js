@@ -197,6 +197,7 @@ function micMotherFightWorld(dt){
     micS.hal.length = w;
   }
   if(M.ph===3 && !M.tr){
+    if(!(M.inf > 0)) if(typeof bossArenaEvent==="function") bossArenaEvent("madre_espora.infeccion", micMotherEntity());
     M.inf = Math.min(1, (M.inf||0) + dt/C.infectMs);
     const K = micSafeK();
     for(const h of heroes){

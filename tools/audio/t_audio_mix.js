@@ -127,7 +127,7 @@ function pageHarness() {
     server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
     for (let k = 0; k < 50 && !(await up()); k++) await sleep(200);
   }
-  const browser = await chromium.launch({ args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || chromium.executablePath(), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
   const out = { };
   try {
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
@@ -413,6 +413,16 @@ function pageHarness() {
     info('materiales_centroide_hz', Object.fromEntries(mk.map(k => [k, mats.out[k].centroid_hz])));
     check('SFX.materiales_suenan_distinto', mMin > 1.5, { minD: +mMin.toFixed(2), par: mPair });
     check('SFX.variacion_por_disparo', mats.varDiff > 0.1, { dif_dB: mats.varDiff, picos: mats.varPk });
+
+    // Champion accents use the same offline mixer and bounded source envelopes.
+    const expedition = await E(async () => {
+      const out={};if(typeof EX_AUDIO==='undefined')return out;
+      for(const k of Object.keys(EX_AUDIO)){
+        const r=await __AH.render(1.2,[[.05,()=>playSfx('ex_'+k+'_cast')],[.4,()=>playSfx('ex_'+k+'_ult')]],{});
+        out[k]={peak:r.peak_dBFS,clip:r.clip,nan:r.nan,never:r.never_stopped,errors:r.errs};
+      }return out;
+    });
+    for(const [k,r] of Object.entries(expedition))check('EXPEDITION.'+k,Number.isFinite(r.peak)&&r.peak<-1&&r.peak>-100&&!r.nan&&!r.errors.length&&r.never<=4,r);
 
     // ---------------- 4) mute y volúmenes ----------------
     const vol = await E(async () => {

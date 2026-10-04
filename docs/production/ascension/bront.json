@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "id": "bront",
+  "name": "Bront",
+  "title": "La Fortaleza Viviente",
+  "role": "tanque",
+  "fantasy": "Tanque que se desarma en placas defensivas y termina convertido en fortificación.",
+  "lore": "Nadie recuerda quién vestía a Bront. En la Fábrica encontraron la armadura vacía, de pie, sosteniendo una puerta mientras los últimos obreros escapaban. El cristal de su pecho es un fragmento del Sello que el Forjador escondió allí. Bront no habla de sí mismo; habla de las puertas que todavía tiene que sostener.",
+  "personality": "Detrás de mí no pasa nadie. / La puerta sigue en pie. / Se… abre… la puerta…",
+  "silhouette": "Armadura gigantesca y vacía; en el pecho, un cristal celeste flota donde debería estar el corazón. Placas sueltas orbitan sus hombros.",
+  "stats": {
+    "hp": 178,
+    "damage": 8,
+    "speed": 132
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico cuerpo a cuerpo",
+      "cooldownMs": 640,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "plate_throw",
+        "description": "Lanza una placa que daña en línea y queda en el suelo como placa defensiva.",
+        "cooldownMs": 5000,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Placa Arrojada",
+        "impact": "Lanza una placa que daña en línea y queda en el suelo como placa defensiva.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_bront_cast"
+      },
+      {
+        "id": "plate_wall",
+        "description": "Levanta una muralla de placas frente a él: los enemigos que la cruzan reciben daño y se frenan mucho.",
+        "cooldownMs": 9400,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Muro de Placas",
+        "impact": "Levanta una muralla de placas frente a él: los enemigos que la cruzan reciben daño y se frenan mucho.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_bront_cast"
+      },
+      {
+        "id": "crystal_pulse",
+        "description": "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
+        "cooldownMs": 7600,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Pulso del Cristal",
+        "impact": "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_bront_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "citadel",
+      "description": "Se ancla y se transforma en fortificación: +40% de reducción de daño, murallas alrededor y refugio para aliados.",
+      "cooldownMs": 42000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de Ciudadela",
+      "impact": "Se ancla y se transforma en fortificación: +40% de reducción de daño, murallas alrededor y refugio para aliados.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_bront_ult"
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/bront/atlas.png",
+    "preview": "assets/sprites/champions/bront/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "92d22ad8e8837632a3a301a62d3cdebcaafee51bc4983ecd172757f5430266e5",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": "",
+      "note": "Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8)."
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "bront_alt1",
+      "type": "skin",
+      "champion": "bront",
+      "name": "Bastión de Bronce Ritual",
+      "rarity": "Épica",
+      "tagline": "Placas de bronce grabadas con plegarias, cristal ámbar y estandartes colgando de los hombros.",
+      "lore": "Los refugiados grabaron sus nombres en cada placa. Bront los lleva para que nadie los borre.",
+      "visualTheme": "Placas de bronce grabadas con plegarias, cristal ámbar y estandartes colgando de los hombros.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/bront/skins/bront_alt1/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "bront_alt2",
+      "type": "skin",
+      "champion": "bront",
+      "name": "Coloso de Hielo Negro",
+      "rarity": "Épica",
+      "tagline": "Armadura de hielo negro, cristal blanco y placas que exhalan escarcha.",
+      "lore": "Sostuvo una puerta en la Gélida durante un invierno entero. El hielo se quedó con él.",
+      "visualTheme": "Armadura de hielo negro, cristal blanco y placas que exhalan escarcha.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/bront/skins/bront_alt2/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "fortaleza",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 0,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "docs/art-gate/roster-gate.json",
+    "audio": "",
+    "multiplayer": "docs/founders/online-presence-results.json",
+    "performance": "docs/founders/performance-results.json"
+  },
+  "category": "STANDARD"
+}

@@ -56,7 +56,7 @@
   background:transparent; color:var(--text-dim); font-family:inherit; font-size:0.62rem; cursor:pointer;
 }
 .inv-debug-btn:disabled{ opacity:0.4; cursor:default; }
-.inv-capacity{ text-align:right; font-size:0.62rem; color:var(--text-dim); margin-bottom:6px; }
+.inv-capacity{ text-align:right; font-size:0.62rem; white-space:normal; overflow-wrap:anywhere; color:var(--text-dim); margin-bottom:6px; }
 .inv-card{ cursor:pointer; }
 
 /* ---------- Fase 4: pestaña Estadísticas ---------- */
@@ -492,3 +492,27 @@
 .stat-row.boon-row small{ color:var(--text-dim); font-size:0.66rem; line-height:1.25; }
 /* teléfono acostado: el título de la derrota ocupaba todo el ancho y el aviso de Desafíos (arriba a la derecha) lo cortaba */
 @media (max-height:500px){ #go-title{ font-size:min(2.7vw, 1.4rem); max-width:calc(100vw - 300px); margin-left:auto; margin-right:auto; } }
+
+/* ===== Panel táctico (js/ui/tactical-panel.js) ===== */
+#pause-screen{ overflow-y:auto; }
+#pause-screen.tactical-live{ background:rgba(8,5,3,0.62); backdrop-filter:blur(1px); }
+#tactical-panel{ width:min(760px, 100%); margin:0 0 12px; font-family:var(--font-body); color:var(--text); }
+#tactical-panel .tp-head{ text-align:center; margin-bottom:6px; }
+#tactical-panel .tp-name{ font-family:var(--font-retro); font-size:24px; color:#ffe3b8; }
+#tactical-panel .tp-sub{ font-size:14px; color:var(--text-dim); }
+#tactical-panel .tp-bars{ display:flex; justify-content:center; flex-wrap:wrap; gap:4px 14px; font-size:15px; margin-top:3px; }
+#tactical-panel .tp-section{ background:rgba(20,12,8,0.78); border:1px solid #4a2a16; border-radius:8px; padding:6px 8px; margin-top:6px; }
+#tactical-panel .tp-h{ font-family:var(--font-pixel); font-size:8px; letter-spacing:1px; color:#d9a66a; text-transform:uppercase; margin-bottom:4px; }
+#tactical-panel .tp-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:6px; }
+#tactical-panel .tp-grid .ab-card{ font-size:13px; padding:6px 8px; }
+#tactical-panel .tp-grid .ab-name{ font-size:17px; }
+#tactical-panel .tp-list{ margin:0; padding-left:16px; font-size:13px; overflow-wrap:anywhere; }
+#tactical-panel .tp-list li.off{ color:var(--text-dim); }
+#tactical-panel .tp-set{ margin-top:4px; font-size:14px; }
+#tactical-panel .tp-empty{ font-size:13px; color:var(--text-dim); }
+#tactical-panel .ab-card{ text-align:left; }
+#tactical-panel .tp-grid .ab-name{ white-space:normal; overflow:visible; line-height:1; }
+#tactical-panel .tp-section{ text-align:left; }
+#tactical-panel .tp-rule{ font-size:13px; margin:2px 0; overflow-wrap:anywhere; }
+#tactical-panel .tp-actions{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+#tactical-panel .tp-actions .btn{ min-height:44px; }

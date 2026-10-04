@@ -69,6 +69,7 @@ function hieMagoRule(e, dt){
   if(!n){                                                       // ¡focos rotos! el clima se corta
     hieGranHeladaEnd(e);
     bossExpose(e, C.exposeMs, C.exposeMult, "¡ROMPISTE LOS FOCOS! El invierno se corta: el Mago queda EXPUESTO");
+    if(typeof bossArenaEvent==="function") bossArenaEvent("mago_hielo_cristal.focos", e);
     return;
   }
   if(G.t >= C.ghMs){                                            // INVIERNO ETERNO
@@ -100,6 +101,7 @@ function hieGranHelada(e){
     runLater(C.snuffWarn, ()=>{
       if(state!=="playing" || !tb.lit || HIE.br.filter(b=>b.lit).length < 2) return;
       tb.lit = false; tb.done = false; tb.prog = 0; tb.fuel = 0;
+      if(typeof bossArenaEvent==="function") bossArenaEvent("mago_hielo_cristal.brasero", e);
       vfxBurst(tb.x, tb.y - 34, 18, "ice", 140, 700, 3, 1, -50, 0); playSfx("hieOut");
       showBanner("¡El Mago congela un brasero! Volvé a encenderlo");
     });
@@ -129,17 +131,19 @@ function hieDemonRule(e, dt){
   for(const b of HIE.br){ if(!b.lit) continue; const d = Math.hypot(b.x - e.x, b.y - e.y); if(d < nd){ nd = d; near = b; } }
   if(near){
     e._encMult = C.demonMelt; e._encTag = "¡SE DERRITE JUNTO AL FUEGO!";
+    if(!e._hieNearFire){ e._hieNearFire = 1; if(typeof bossArenaEvent==="function") bossArenaEvent("angel_caido_hielo.fuego", e); }
     e._meltMs = (e._meltMs||0) + dt;
     if(Math.random() < dt/120) vfxBurst(e.x, e.y - e.radius, 2, "steam", 60, 500, 3, 1, -40, 0);
     if(e._meltMs >= C.snuffMs){
       e._meltMs = 0;
       near.lit = false; near.done = false; near.prog = 0; near.fuel = 0;
+      if(typeof bossArenaEvent==="function") bossArenaEvent("angel_caido_hielo.apaga", e);
       bossSheetPack(e, "wing", 800); vfxBurst(near.x, near.y - 34, 20, "ice", 160, 700, 3, 1, -50, 0);
       playSfx("hieOut"); vfxShake(6);
       showBanner("¡El Demonio apaga el brasero con sus alas! Encendé otro y llevalo al fuego");
     }
   } else {
-    e._meltMs = Math.max(0, (e._meltMs||0) - dt);
+    e._meltMs = Math.max(0, (e._meltMs||0) - dt); e._hieNearFire = 0;
     e._encMult = C.demonShield; e._encTag = `CORAZA DE ESCARCHA −${Math.round((1 - C.demonShield)*100)}% · llevalo al FUEGO`;
   }
   if(typeof tutSay==="function" && !tutSeen("hie_demon")) tutSay("hie_demon", "La CORAZA DE ESCARCHA del Demonio se derrite junto a un BRASERO encendido: peleale al lado del fuego.", null, 9000, true);

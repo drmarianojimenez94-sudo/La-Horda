@@ -1,0 +1,76 @@
+{
+  "checks": [
+    {
+      "name": "new champions unlocked for alpha",
+      "ok": true
+    },
+    {
+      "name": "existing save preserves progression",
+      "ok": true,
+      "detail": {
+        "gold": 12545,
+        "level": 37
+      }
+    },
+    {
+      "name": "old save gains five champions at level 1",
+      "ok": true
+    },
+    {
+      "name": "brasa talent tree renders",
+      "ok": true
+    },
+    {
+      "name": "brasa Divine combat",
+      "ok": true,
+      "detail": {
+        "damage": 223.04077460279404
+      }
+    },
+    {
+      "name": "eslabon talent tree renders",
+      "ok": true
+    },
+    {
+      "name": "eslabon Divine combat",
+      "ok": true,
+      "detail": {
+        "damage": 78.81286987199928
+      }
+    },
+    {
+      "name": "morwen talent tree renders",
+      "ok": true
+    },
+    {
+      "name": "morwen Divine combat",
+      "ok": true,
+      "detail": {
+        "damage": 165.35191750000013
+      }
+    },
+    {
+      "name": "farolero talent tree renders",
+      "ok": true
+    },
+    {
+      "name": "farolero Divine combat",
+      "ok": true,
+      "detail": {
+        "damage": 20.124055564800074
+      }
+    },
+    {
+      "name": "iria talent tree renders",
+      "ok": true
+    },
+    {
+      "name": "iria Divine combat",
+      "ok": true,
+      "detail": {
+        "damage": 60.342448319999676
+      }
+    }
+  ],
+  "errors": []
+}

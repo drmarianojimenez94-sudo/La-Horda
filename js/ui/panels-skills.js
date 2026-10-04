@@ -82,6 +82,8 @@ function talentSkillLabel(classKey, targetSkill){
   return cls.skills[targetSkill] ? cls.skills[targetSkill].name : "";
 }
 function talentBranchLabel(branch){
+  const m=/^(brasa|eslabon|morwen|farolero|iria)_([0-2])$/.exec(branch);
+  if(m && PORTADORES[m[1]]) return PORTADORES[m[1]].branches[Number(m[2])];
   return branch.replace(/_/g," ").replace(/\b\w/g, c=>c.toUpperCase());
 }
 function talentNodeHTML(classKey, node, rank, lockReason, isMastery){
