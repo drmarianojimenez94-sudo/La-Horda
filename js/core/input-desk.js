@@ -269,7 +269,8 @@ let _onbCls = "";
 function deskOnboardTick(){
   let want = "";
   if(state==="playing" && typeof TUT!=="undefined" && TUT.key && !TUT.ducked && player && player.alive){
-    if(TUT.key==="b_move" && !(joyActive || Math.hypot(joyVec.x, joyVec.y) > 0.1)) want = "onb-move";
+    // (con teclado o mando el aro del joystick no sirve: el Hechicero ya dice qué teclas usar)
+    if(TUT.key==="b_move" && DESK.device!=="kb" && DESK.device!=="pad" && !(joyActive || Math.hypot(joyVec.x, joyVec.y) > 0.1)) want = "onb-move";
     else if(TUT.key==="b_attack" && !basicHeld) want = "onb-attack";
     else if(TUT.key==="b_skill" && !(typeof aimState!=="undefined" && aimState) && !(player.cds && player.cds.some(c=>c>0))) want = "onb-skill";
   }
