@@ -120,8 +120,8 @@ const ASCENSION = {
   weakness:'Sin curación ni escudos; depende de que su equipo recoja las Plumas a tiempo.',
   voices:['Que nadie se quede en el suelo.','Todos levantaron vuelo.','Se me cae… la última pluma…'],
   skins:[['Heraldo del Ocaso','Túnica granate, alas de plumas oscuras con puntas rosadas y un aro de fuego cobrizo.','Cuando el sol cae sobre el Bosque, Saelis siembra plumas rojas. Las que no se recogen antes de la noche arden solas.'],['Heraldo de la Aurora Boreal','Túnica verde agua, alas turquesa y un aro pálido que titila como el cielo del norte.','En la Gélida las plumas no caen: flotan. Saelis aprendió allí a esperar a que el cielo decida dónde dejarlas.']],
-  skills:[['Abanico de Plumas','feather_fan',22,5200,300,22,8000,.75,'Lanza cinco plumas en abanico: cada una daña a los dos primeros enemigos que cruza y queda clavada en el suelo como Pluma.','feather'],
+  skills:[['Abanico de Plumas','feather_fan',22,5200,300,22,8000,.65,'Lanza cinco plumas en abanico: cada una daña a los dos primeros enemigos que cruza y queda clavada en el suelo como Pluma.','feather'],
    ['Ráfaga Ascendente','updraft',26,8200,0,150,0,.8,'Bate las alas: aparta a los comunes, frena a los élites, bendice a los aliados cercanos y dispara cada Pluma cercana contra el enemigo más próximo.','feather'],
    ['Llamado del Plumaje','recall',20,7000,0,26,0,.6,'Todas sus Plumas vuelan de regreso: dañan a los enemigos del camino y cada una le acorta 0,2 s las recargas.','feather'],
-   ['Cielo de Plumas','feather_sky',0,40000,260,220,5000,.6,'Abre un cielo sobre la zona: caen plumas sobre los enemigos de adentro, los aliados quedan bendecidos y al final seis Plumas quedan en el suelo.','feather']]}
+   ['Cielo de Plumas','feather_sky',0,40000,260,220,5000,.5,'Abre un cielo sobre la zona: caen plumas sobre los enemigos de adentro, los aliados quedan bendecidos y al final seis Plumas quedan en el suelo.','feather']]}
 };
