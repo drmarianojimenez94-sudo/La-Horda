@@ -1,5 +1,6 @@
 // Scripted experience profiles, not people or age prediction. Gearless arena-level runs.
-const {chromium}=require('playwright'),{spawn}=require('child_process'),fs=require('fs'),path=require('path');
+let chromium;try{({chromium}=require('playwright'));}catch(e){({chromium}=require(process.env.PLAYWRIGHT_MODULE||'/opt/node22/lib/node_modules/playwright'));}
+const {spawn}=require('child_process'),fs=require('fs'),path=require('path');
 const phase=process.argv[2]||'after',port=phase==='before'?'8808':'8807',server=spawn('python3',['-m','http.server',port],{stdio:'ignore',cwd:phase==='before'?(process.env.BASELINE_DIR||process.cwd()):process.cwd()});process.on('exit',()=>server.kill());
 (async()=>{await new Promise(r=>setTimeout(r,500));const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});const p=await browser.newPage();await p.addInitScript(()=>{window.__campaignMode=true;});await p.goto('http://127.0.0.1:'+port);await p.waitForFunction(()=>typeof assetsAllReady==='function'&&assetsAllReady());await p.addScriptTag({path:path.resolve('tools/playtest/autopilot.js')});await p.evaluate(require('../fortaleza/sim-helpers.js'));const errors=[];p.on('pageerror',e=>errors.push(e.message));const maps=process.env.ARENAS?process.env.ARENAS.split(','):await p.evaluate(()=>ARENA_ORDER),results=[];
 for(const arena of maps)for(const profile of [{name:'aprendiz',skill:.45,reaction:650},{name:'ocasional',skill:.7,reaction:400},{name:'habitual',skill:.9,reaction:220}]){

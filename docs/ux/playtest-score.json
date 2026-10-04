@@ -344,6 +344,178 @@
       "active": "mago",
       "boss": null,
       "autopilotError": null
+    },
+    {
+      "arena": "laberinto",
+      "profile": "habitual",
+      "level": 26,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 430,
+      "wave": 10,
+      "kills": 938,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "minotauro",
+        "hp": -91,
+        "max": 22798
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "abismo",
+      "profile": "aprendiz",
+      "level": 28,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 388,
+      "wave": 10,
+      "kills": 579,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "ab_morador",
+        "hp": -137,
+        "max": 35395
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "abismo",
+      "profile": "ocasional",
+      "level": 28,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 432,
+      "wave": 10,
+      "kills": 601,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "ab_morador",
+        "hp": -10,
+        "max": 35395
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "abismo",
+      "profile": "habitual",
+      "level": 28,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 460,
+      "wave": 10,
+      "kills": 577,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "ab_morador",
+        "hp": -1,
+        "max": 33398
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "minas",
+      "profile": "aprendiz",
+      "level": 31,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 582,
+      "wave": 10,
+      "kills": 574,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "mn_cerbero",
+        "hp": -154,
+        "max": 45237
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "minas",
+      "profile": "ocasional",
+      "level": 31,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 495,
+      "wave": 10,
+      "kills": 576,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "mn_cerbero",
+        "hp": -63,
+        "max": 45237
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "minas",
+      "profile": "habitual",
+      "level": 31,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 418,
+      "wave": 10,
+      "kills": 513,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "mn_cerbero",
+        "hp": -54,
+        "max": 42540
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "infernal",
+      "profile": "aprendiz",
+      "level": 34,
+      "phase": "score",
+      "result": "gameover",
+      "seconds": 334,
+      "wave": 10,
+      "kills": 853,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": null,
+      "autopilotError": null
+    },
+    {
+      "arena": "infernal",
+      "profile": "ocasional",
+      "level": 34,
+      "phase": "score",
+      "result": "gameover",
+      "seconds": 280,
+      "wave": 8,
+      "kills": 777,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": null,
+      "autopilotError": null
+    },
+    {
+      "arena": "infernal",
+      "profile": "habitual",
+      "level": 34,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 463,
+      "wave": 10,
+      "kills": 1058,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "demonio_mayor",
+        "hp": -5,
+        "max": 22649
+      },
+      "autopilotError": null
     }
   ],
   "errors": []
