@@ -95,11 +95,20 @@ for(const f in ITEM_FAMILIES) for(const p in ITEM_FAMILIES[f].procs) if(!PROC_FA
 const ITEM_MAX_LEVEL = 10;
 const ITEM_LEVEL_STEP = 0.04;          // +4% de los stats y pasivas numéricas por nivel (Nv.10 = +36%): no salta de rareza
 const ITEM_ROLL_RANGE = [0.90, 1.10];  // dos copias del mismo objeto: stats entre -10% y +10%
+// NIVEL DE OBJETO (alfa, Q4): lo que cae en una arena más alta nace mejor. Es un eje APARTE del nivel de
+// Gemas (it.level, que sigue siendo "mejorar lo que ya te gusta"): it.ilvl = número de la arena de la
+// campaña donde cayó (1-10; la Arena Divina, 10). Multiplica los mismos números que el nivel de Gemas
+// (stat garantizado, pasivas numéricas y afijos). Los objetos viejos, los de la tienda y el regalo
+// inicial no tienen ilvl: valen como nivel de objeto 1 (sin migración: nada cambia en lo que ya tenías).
+const ITEM_ILVL_MAX = 10;
+const ITEM_ILVL_STEP = 0.05;           // +5% por arena: un objeto de la arena 10 vale ×1,45 que el mismo de la arena 1
 // Costo en Gemas de subir de nivel L a L+1 = base × 1,5^(L-1). Sin azar, sin romperse, sin perder nivel.
 const GEM_UPGRADE_BASE = {comun:1, raro:2, muyraro:3, legendario:5, set:6, mitico:8, unico:10};
 const GEM_UPGRADE_GROWTH = 1.5;
 // Gemas ganadas jugando (al terminar la arena). Nunca se compran: no son moneda premium.
-const GEMS_PER_VICTORY = {ciudad:2, bosque:2, acuatica:3, fortaleza:4, micelial:4, hielo:5, abismo:5, laberinto:6, minas:7, infernal:8, divina:6};
+// En el ORDEN DE LA CAMPAÑA (CAMPAIGN_ORDER): antes seguía el orden viejo de las arenas y la 3 (Bosque) pagaba
+// como la 1 y la 8 (Abismo) menos que la 7 (reseña de economía, bug B1).
+const GEMS_PER_VICTORY = {ciudad:2, fortaleza:3, bosque:4, micelial:4, hielo:5, acuatica:5, laberinto:6, abismo:6, minas:7, infernal:8, divina:6};
 const GEMS_GRADE_MULT = {C:0.6, B:0.8, A:1, S:1.25, "S+":1.5};
 const GEMS_DEFEAT_AFTER_SUBBOSS = 1;   // perder después del subjefe deja 1 gema
 

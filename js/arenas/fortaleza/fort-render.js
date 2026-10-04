@@ -470,7 +470,7 @@ function fortDrawScreen(){
   if(!fortS || !player || player.duelActive) return;
   const B = FORT_MAP.bounds, mapW = B.x1 - B.x0, mapH = B.y1 - B.y0;
   const H = Math.min(190, VH*0.3), k = H/mapH, W = mapW*k;
-  const X = VW - W - 10, Y = Math.max(70, VH*0.16);
+  const X = hudMirrorX(VW - W - 10, W) /* modo zurdo: del otro lado (prefs.js) */, Y = Math.max(70, VH*0.16);
   ctx.save();
   ctx.globalAlpha = 0.82;
   ctx.fillStyle = "rgba(14,8,6,0.72)"; ctx.fillRect(X - 4, Y - 4, W + 8, H + 8);

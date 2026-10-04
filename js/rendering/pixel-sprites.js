@@ -150,11 +150,4 @@ function drawSprite(img, x, y, scale, flip, tint){
   ctx.restore();
 }
 
-function drawShadow(x, y, rx){
-  ctx.save();
-  ctx.fillStyle = "rgba(0,0,0,0.45)";
-  ctx.beginPath();
-  ctx.ellipse(x, y+4, rx, rx*0.38, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.restore();
-}
+// drawShadow (sombra de piso común a todos los actores): js/rendering/art-direction.js

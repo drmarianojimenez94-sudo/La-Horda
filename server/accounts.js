@@ -30,6 +30,8 @@
      DATABASE_URL        postgres://usuario:clave@host:5432/base (Render Postgres, Neon, Supabase...)
      PGSSL               "0" para no usar SSL con la base, "1" para forzarlo (default: automático)
      DATA_DIR            carpeta de los archivos cuando no hay base de datos
+     DATA_PERSISTENT     "1" si DATA_DIR es un disco que sobrevive a reinicios (volumen de Fly.io, Disk pago
+                         de Render): /api/health dice persistent:true y el juego no avisa "sin base de datos"
      SESSION_DAYS        días que dura una sesión sin usarse (default 60)
      AUTH_MAX_FAILS      intentos fallidos por usuario antes de frenar (default 8 cada 15 min)
      AUTH_MAX_FAILS_IP   intentos fallidos por IP antes de frenar (default 30 cada 15 min)
@@ -188,6 +190,16 @@ async function writeAtomic(file, str){
   try{ await fh.writeFile(str); await fh.sync(); } finally { await fh.close(); }
   await fsp.rename(tmp, file); // rename es atómico: nunca queda un archivo a medio escribir
 }
+// ¿La carpeta DATA_DIR sobrevive a reinicios? Solo el operador lo sabe (un volumen de Fly.io o un Disk
+// pago de Render sí; el disco del plan gratis de Render no). DATA_PERSISTENT=1 lo declara (0 lo niega).
+// Sin la variable: en Fly.io (FLY_APP_NAME) con DATA_DIR puesto se asume volumen montado; si no, no.
+// Esto decide qué dice /api/health ("persistent") y si el juego avisa "servidor de prueba sin base".
+function filePersistent(){
+  const v = String(process.env.DATA_PERSISTENT || "").trim();
+  if(v === "1" || /^true$/i.test(v)) return true;
+  if(v === "0" || /^false$/i.test(v)) return false;
+  return !!(process.env.FLY_APP_NAME && process.env.DATA_DIR);
+}
 function fileStore(dir){
   const file = path.join(dir, "accounts.json");
   const savesDir = path.join(dir, "saves");
@@ -233,7 +245,7 @@ function fileStore(dir){
     return saveMeta.get(id);
   }
   return {
-    kind: "file", persistent: false,
+    kind: "file", persistent: filePersistent(),
     async listUsers(){ return Object.values(db.users).map(u=>({...u})); },
     async gmRead(){ try{return JSON.parse(await fsp.readFile(path.join(dir,"operations.json"),"utf8"));}catch(e){if(e.code!=="ENOENT")throw e;return null;} },
     async gmUpdate(fn){

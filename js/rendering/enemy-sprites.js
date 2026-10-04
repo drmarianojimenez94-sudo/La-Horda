@@ -266,11 +266,33 @@ function drawEnemyAtlasPack(e){
   }
   if(!arr) return false;
   const v = !dead ? arr[n % arr.length] : arr[Math.min(arr.length-1, n)];
-  const s = e.radius*(P.hMul||2.6)/P.refH;
+  let s = e.radius*(P.hMul||2.6)/P.refH;
+  if(P.sizeVar) s *= packSizeVar(e, P.sizeVar); // cuerpos prestados: cada individuo un poco distinto (body-swaps.js)
   const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
+  const flip = e.fx < -0.12, yy = e.y + (e.hover||0);
+  if(P.auraAtlas && !ANIM_WHITE && !dead){
+    // contorno de agua que late (derivado de la silueta: body-swaps.js)
+    const t = animNow/1000, ph = (e.x*0.013 + e.y*0.007);
+    const a = P.aura.a*(0.65 + 0.35*Math.sin(t*2.6 + ph));
+    drawAnimFrameSized(P.auraAtlas, clip, 0, e.x, yy, P.fw*s, P.fh*s, 0.5, P.anchor, flip, a);
+  }
   // voladores (Dragones de la Fortaleza): el cuerpo se dibuja en el aire, la sombra queda en el piso
-  drawAnimFrameSized(P.atlas, clip, 0, e.x, e.y + (e.hover||0), P.fw*s, P.fh*s, 0.5, P.anchor, e.fx < -0.12, undefined);
+  drawAnimFrameSized(P.atlas, clip, 0, e.x, yy, P.fw*s, P.fh*s, 0.5, P.anchor, flip, undefined);
+  if(P.aura && P.aura.glow && !ANIM_WHITE && !dead){
+    // medusa eléctrica: brillo aditivo que late sobre el cuerpo
+    const q = 0.5 + 0.5*Math.sin(animNow/170 + e.x*0.02);
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    drawAnimFrameSized(P.atlas, clip, 0, e.x, yy, P.fw*s, P.fh*s, 0.5, P.anchor, flip, 0.12 + 0.2*q*q);
+    ctx.restore();
+  }
   return true;
+}
+// Variación de tamaño por individuo (solo dibujo; se guarda fuera del enemigo para no viajar por la red).
+const _PACK_SIZEVAR = new WeakMap();
+function packSizeVar(e, amt){
+  let k = _PACK_SIZEVAR.get(e);
+  if(k === undefined){ const h = Math.sin((e.x||0)*12.9898 + (e.y||0)*78.233)*43758.5453; k = (h - Math.floor(h))*2 - 1; _PACK_SIZEVAR.set(e, k); }
+  return 1 + k*amt;
 }
 // Muerte de 4 cuadros (DEATH_PACK, boss-sheets.js), atada al avance de la muerte (_dyingP) igual que
 // los packs: el cuerpo vivo sigue con su tira/atlas de siempre y recién al morir cambia a esta hoja.

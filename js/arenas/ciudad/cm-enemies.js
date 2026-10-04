@@ -510,5 +510,15 @@ function cmSpawnIntervalMult(){
   if(cmS.sub.st==="blackout" || cmS.sub.st==="curtain" || cmS.sub.st==="reveal") return 99;
   return runLevel <= 1 ? 2.0 : (runLevel <= 3 ? 1.7 : 1.5);
 }
+// Tope de enemigos comunes vivos mientras pelean los subjefes del nivel 9 y El Presentador (update.js, spawnCap).
+// La Ciudad es la PRIMERA arena de un jugador nuevo: antes, con los subjefes en pie la horda seguía entrando sin
+// techo (Saqueadores y Sectarios eran lo que más mataba en el nivel 9 y una partida llegó a 650 enemigos vivos).
+// Con el tope la pelea es contra los subjefes, con algo de horda alrededor, no contra un mar de saqueadores.
+function cmSpawnCap(){
+  if(!cmS) return 0;
+  if(runLevel === LEVEL_COUNT) return 6;
+  if(cmS.sub.st==="fight1" || cmS.sub.st==="fight2") return 12;
+  return 0;   // 0 = el tope general (ENEMY_SPAWN_CAP)
+}
 const CM_ENEMY_AI = {cm_saqueador:cmAISaqueador, cm_perro:cmAIPerro, cm_raptor:cmAIRaptor, cm_verdugo:cmAIVerdugo, cm_planidera:cmAIPlanidera,
                      cm_acechante:cmAIAcechante, cm_campanero:cmAICampanero, cm_sectario:cmAISectario, cm_espectro:cmAIEspectro};

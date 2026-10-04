@@ -34,7 +34,9 @@
 #camp .camp-box-tip{ font-family:'VT323',monospace; font-size:0.9rem; color:#8a7658; margin-top:3px; text-align:right; }
 @media (max-height:500px){
   /* mínimo del celular: 11 px (tools/audit/ui_layout.js) */
-  #camp .camp-k{ font-size:0.6875rem; letter-spacing:1px; }
+  /* el título no llega al centro: ahí flota el nombre del Hechicero (antes "PORTADORES" se le encimaba) */
+  #camp .camp-head{ right:auto; max-width:calc(50vw - 96px); }
+  #camp .camp-k{ font-size:0.6875rem; letter-spacing:1px; line-height:1.35; }
   #camp .camp-who .cw-n{ font-size:0.6875rem; letter-spacing:0; top:-30px; }
   #camp .camp-sub{ font-size:0.95rem; margin-top:2px; }
   #camp .camp-box{ padding:5px 10px 4px; }
