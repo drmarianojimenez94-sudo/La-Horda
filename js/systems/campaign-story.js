@@ -96,7 +96,7 @@ function campaignOnVictory(arena, firstClear){ /* la escena de salida vive en la
 // Guardián del Laberinto (subjefe): antes de caer, advierte a los guardianes. Lo que dice lo pone su voz
 // (BOSS_VOICES.guardian_laberinto, en el cuadro de voz); el cartel deja claro que fue una advertencia.
 function campaignLabyrinthWarning(x, y){
-  if(typeof showBanner==="function") setTimeout(()=>showBanner("El Guardián del Laberinto intentó advertirte algo antes de caer"), 900);
+  if(typeof showBanner==="function") setTimeout(()=>showBanner("El Guardián del Laberinto intentó advertirte algo antes de caer", 2), 900); // urgente: no la tapa el cartel de nivel
 }
 // Cooperativo online: no hay ficha previa (bloquearía a los demás), así que la escena de entrada de cada
 // arena la dice el Hechicero en el cuadro de voz, una vez por perfil, cuando se va el cartel de título.

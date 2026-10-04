@@ -64,7 +64,8 @@ function netAvailable(){ return !!netServerUrl(); }
 let _netWarmAt = -1e9; // antes 0: performance.now() arranca en 0, así que el "despertar al abrir el juego" nunca corría en el primer minuto
 // Se despierta también apenas abre el juego: mientras el jugador elige guardián y arena (~1 min),
 // el servidor ya está arrancando.
-setTimeout(()=>{ try{ if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
+// (Con navegador automatizado y sin ?server= no: las pruebas no salen a Internet a despertar el servidor real.)
+setTimeout(()=>{ try{ if(navigator.webdriver && !/[?&]server=/.test(location.search)) return; if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
 function netWarmup(){
   const u = netServerUrl(); if(!u || performance.now() - _netWarmAt < 60000) return;
   _netWarmAt = performance.now();
@@ -81,6 +82,7 @@ function netHttpBase(){ const u = netServerUrl(); return u ? u.replace(/^ws(s?):
 function netCapsProbe(force){
   const base = netHttpBase();
   if(!base) return Promise.resolve(netCaps);
+  if(navigator.webdriver && !/[?&]server=/.test(location.search)) return Promise.resolve(netCaps); // pruebas sin ?server=: no salen a Internet (queda "no se sabe", como sin red)
   if(netCaps.url !== base){ netCaps.api = null; netCaps.at = 0; netCaps.url = base; _netCapsP = null; }
   if(_netCapsP) return _netCapsP;
   if(!force && netCaps.api !== null && performance.now() - netCaps.at < 300000) return Promise.resolve(netCaps);

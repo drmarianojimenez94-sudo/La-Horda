@@ -100,7 +100,12 @@ async function runArena(browser, cls, arena) {
             hold: (typeof arenaHas === 'function' && arenaHas('holdLevel')) ? !!arenaHook('holdLevel') : null,
             boss: boss ? { type: boss.type, alive: boss.alive, hp: R(boss.hp), max: R(boss.maxHp), x: R(boss.x), y: R(boss.y), inside: inside(boss.x, boss.y), dmgTakenMult: boss.dmgTakenMult, invuln: !!(boss.invuln || boss.invulnerable || boss._invuln) } : null,
             enemies: al.slice(0, 12).map(e => ({ type: e.type, rank: e.rank, hp: R(e.hp), x: R(e.x), y: R(e.y), inside: inside(e.x, e.y) })), enemiesOut: al.filter(e => !inside(e.x, e.y)).length,
-            player: { x: R(player.x), y: R(player.y), inside: inside(player.x, player.y), alive: player.alive } };
+            player: { x: R(player.x), y: R(player.y), inside: inside(player.x, player.y), alive: player.alive },
+            // jefe/subjefe que retiene el nivel: vida, multiplicadores de daño recibido, fase y distancia al jugador
+            champ: (() => { const e = (typeof activeChampion !== 'undefined' && activeChampion) || boss; if (!e) return null;
+              return { type: e.type, alive: e.alive, hp: R(e.hp), max: R(e.maxHp), dmgTakenMult: e.dmgTakenMult, encMult: e._encMult, encTag: e._encTag || null,
+                phase: e.acuaticaPhase || e.bossPhase || null, dist: R(Math.hypot(e.x - player.x, e.y - player.y)),
+                abCa: (typeof abS !== 'undefined' && abS && abS.ca) ? abS.ca.st : undefined }; })() };
         });
         break;
       }

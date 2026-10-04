@@ -83,7 +83,7 @@ async function client(browser, name, champ, url) {
   await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return typeof setState === 'function' && !!b && !b.disabled; }, null, 180000);
   await ev(c, ([k]) => {
     for (const q in save.champions) { save.champions[q].level = 10; save.champions[q].unlocked = true; }
-    save.starterChosen = true; selectedClass = k; save.lastChamp = k;
+    save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); selectedClass = k; save.lastChamp = k;
     save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; persistNow();
   }, [champ]);
   return c;

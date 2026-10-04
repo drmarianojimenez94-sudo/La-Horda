@@ -42,7 +42,7 @@ async function newClient(browser, i, url) {
   page.on('dialog', d => d.accept());
   await page.goto(url, { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c,reserve]) => { save.stash=[]; save.duoReserve=reserve; save.lastChamp=c; for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i],RESERVES[i]]);
+  await page.evaluate(([c,reserve]) => { save.stash=[]; save.duoReserve=reserve; save.lastChamp=c; for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i],RESERVES[i]]);
   return { ctx, page, errors, i };
 }
 const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
@@ -221,13 +221,17 @@ const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
     const hostSaveGuestChamp = await ev(host, (k) => JSON.parse(localStorage.getItem(SAVE_KEY)).champions[k].level, CHAMPS[1]);
     check('save.host_never_stores_guest_data', hostSaveGuestChamp === 12, hostSaveGuestChamp);
   }
-  // ---------------- dúo: primera caída activa reserva; ya no hay revivir ilimitado ----------------
+  // ---------------- caída y revive (humano) ----------------
+  // (el "dúo" con campeón de reserva se sacó en main -331b02a, un campeón por jugador y revivir de 5 s-:
+  //  esta parte probaba la reserva y quedaba esperando para siempre)
   if (guests.length) {
-    await ev(host, () => { const g=heroes[1]; g.alive=false;g.hp=0; });
-    await guests[0].page.waitForFunction(k=>player.alive&&player.classKey===k&&player._duoUsed,RESERVES[1]);
-    check('duo.guest_sees_reserve', await ev(guests[0], k=>player.classKey===k&&player.alive,RESERVES[1]));
-    check('duo.match_continues',await ev(host,()=>state==='playing'));
-    check('duo.host_and_guest_same_card',await ev(host,k=>heroes[1].classKey===k&&heroes[1]._duoUsed,RESERVES[1]));
+    await ev(host, () => { const g = heroes[1]; g.alive = false; g.hp = 0; });
+    await guests[0].page.waitForFunction(() => player && !player.alive, null, { timeout: 15000 });
+    check('revive.guest_sees_self_down', await ev(guests[0], () => !player.alive));
+    check('revive.match_continues_with_humans_alive', await ev(host, () => state === 'playing'));
+    await ev(host, () => { const g = heroes[1]; player.x = g.x + 20; player.y = g.y; tryReviveAlly(g); });
+    await guests[0].page.waitForFunction(() => player && player.alive, null, { timeout: 15000 });
+    check('revive.guest_revived', await ev(guests[0], () => player.alive));
     // curación de emergencia pedida por el invitado: la aplica el anfitrión, una sola vez
     // Antes se exigía pct < 0.9 como prueba de "una sola vez", pero la vida también sube por otras
     // curas legítimas (el Soporte bot cura aliados heridos, regeneración, la cura en el tiempo de la

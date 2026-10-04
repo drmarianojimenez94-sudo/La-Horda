@@ -93,6 +93,11 @@ function defaultSave(){
 // Ciudad Maldita y va a la Mística, las cromas (1.500) y el segundo guardián (2.500). Quien ya recibió los
 // 10.000 los conserva: el oro se lee siempre del guardado persistido.
 let save = defaultSave();
+// ¿Ya empezó a cargarse el guardado de verdad (main.js -> loadSave)? Antes de eso `save` es el de fábrica:
+// guardarlo PISABA el progreso real. Pasaba de verdad: con la sesión recordada, el premio semanal del
+// ranking (js/net/leaderboard.js) llamaba persist() antes de loadSave y el guardado vacío además se subía
+// a la nube (el jugador abría el juego y aparecía sin guardianes ni oro). persistNow lo ignora.
+let saveLoadStarted = false;
 // La campaña normal nunca concede niveles ni desbloqueos de prueba al cargar.
 // Los perfiles antiguos se conservan hasta que su dueño elija reiniciarlos en Cuenta.
 // MODO DESARROLLADOR (auditoría pre-alfa): los regalos de prueba de abajo (nivel 90, todas las arenas,
@@ -150,11 +155,13 @@ function applyTestSkins(){
   persist();
 }
 function loadSave(){
+  saveLoadStarted = true;
   try{ _loadSaveInner(); }finally{ applyTestUnlock90(); applyTestSkins();
     // logros/desafíos/pase: completa los campos que falten (guardados viejos) y rota los desafíos del día
     if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
 function _loadSaveInner(){
+  saveLoadFailed = false;
   try{
     const raw = localStorage.getItem(SAVE_KEY);
     if(raw){
@@ -248,8 +255,18 @@ function _loadSaveInner(){
     } else {
       persist(); // perfil nuevo: queda guardado desde ya (el regalo -guardián + skin- se elige al entrar)
     }
-  }catch(e){ save = defaultSave(); }
+  }catch(e){
+    // Antes esto era silencioso: el progreso se reemplazaba por uno de fábrica y el próximo guardado lo
+    // PISABA en localStorage (y con cuenta, en la nube). Ahora queda una copia intacta del guardado que no
+    // se pudo leer, el error se ve en la consola y no se escribe encima hasta cargar bien (saveLoadFailed).
+    try{ console.error("No se pudo cargar el guardado:", e); }catch(x){}
+    try{ const raw = localStorage.getItem(SAVE_KEY); if(raw) localStorage.setItem(SAVE_KEY + "_noCargo", raw); }catch(x){}
+    saveLoadFailed = true;
+    save = defaultSave();
+  }
 }
+// true si el último loadSave() falló: persistNow no pisa el guardado real con el de fábrica.
+let saveLoadFailed = false;
 function talentTreeV2Migrate(){
   save.talentTreeV2 = true;
   if(typeof treePointsSpent!=="function") return;
@@ -393,6 +410,8 @@ function persistNow(){
   if(typeof testLabActive==="function" && testLabActive()) return;
   // B1: mientras el anfitrión simula a un invitado, su guardián usa los datos del invitado;
   // netPersistView escribe siempre los datos propios del anfitrión.
+  if(saveLoadFailed) return; // el guardado de verdad sigue en localStorage (y copiado en _noCargo)
+  if(!saveLoadStarted){ try{ console.warn("persist antes de cargar el guardado: ignorado"); }catch(e){} return; }
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }catch(e){ /* storage unavailable, continue in-memory */ }
   // CUENTAS: avisa que el guardado cambió (se sube a la nube con demora: js/net/account.js)

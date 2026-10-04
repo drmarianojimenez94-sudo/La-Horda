@@ -34,7 +34,7 @@ async function client(browser, mobile, name, champ, level) {
   await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled; }, null, 40000);
   await ev(c, ([k, lv]) => {
     for (const q in save.champions) save.champions[q].level = lv;
-    save.champions[k].unlocked = true; save.starterChosen = true; selectedClass = k; save.lastChamp = k;
+    save.champions[k].unlocked = true; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); selectedClass = k; save.lastChamp = k;
     save.arenasCleared.ciudad = true; persistNow();
   }, [champ, level]);
   return c;
