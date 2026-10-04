@@ -10,11 +10,7 @@
 .ability-btn.sec{ width:46px; height:46px; }
 /* los "+" de subir habilidad se ven chicos (26 px) pero se tocan en 44 px */
 .skill-plus::before{ content:""; position:absolute; inset:-9px; border-radius:50%; }
-/* pausa y sonido en tablets (pantalla táctil alta, donde no aplica la regla de mobile.css) */
-@media (pointer:coarse){
-  #pause-btn, #mute-btn{ min-width:46px; min-height:44px; border:7px solid transparent; border-width:7px 4px; background-clip:padding-box;
-    border-radius:12px 11px; box-shadow:inset 0 0 0 1px var(--panel-b); padding:5px 11px; }
-}
+/* pausa y sonido: 44 x 44 en todas las pantallas (css/combat-readability.css) */
 
 /* ---------- joystick: se enciende mientras se usa (la base salta abajo del pulgar, input.js) ---------- */
 #joy-base{ transition:background .12s, border-color .12s; }
@@ -62,15 +58,10 @@ body.lefty .ability-btn.emerg, body.lefty .ability-btn.pact{ right:auto; left:ca
 body.lefty #tut-panel{ left:auto; right:calc(126px + env(safe-area-inset-right,0px)); }
 body.lefty #player-status, body.lefty #hud .top, body.lefty #party{ left:auto; right:calc(10px + env(safe-area-inset-right,0px)); }
 body.lefty #hud .top{ align-items:flex-end; }
-body.lefty #ult-meter{ right:auto; left:calc(10px + env(safe-area-inset-left,0px)); }
+body.lefty #hud #ult-meter{ right:auto; left:calc(12px + env(safe-area-inset-left,0px)); } /* sobre la Definitiva, del lado de los botones */
 body.lefty #toast-stack{ right:auto; left:calc(10px + env(safe-area-inset-left,0px)); }
-body.lefty #pause-btn{ left:auto; right:calc(170px + env(safe-area-inset-right,0px)); }
-body.lefty #mute-btn{ left:auto; right:calc(224px + env(safe-area-inset-right,0px)); }
-@media (max-height:500px), (pointer:coarse) and (max-height:760px){
-  body.lefty #pause-btn{ right:calc(166px + env(safe-area-inset-right,0px)); }
-  body.lefty #mute-btn{ right:calc(220px + env(safe-area-inset-right,0px)); }
-}
-body.lefty #boss-hud{ left:calc(50% - 46px); }
+body.lefty #pause-btn{ right:auto; left:calc(60px + env(safe-area-inset-left,0px)); }
+body.lefty #mute-btn{ right:auto; left:calc(10px + env(safe-area-inset-left,0px)); }
 body.lefty .ability-btn .kh{ left:auto; right:-5px; }
 
 /* ---------- TEXTO GRANDE (Opciones): lo que se lee jugando ---------- */
