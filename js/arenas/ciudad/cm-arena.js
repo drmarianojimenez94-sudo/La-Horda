@@ -252,6 +252,7 @@ ARENA_DEFS.ciudad = {
   navBlocked:cmNavBlocked,
   spawnPool:cmSpawnPool,
   spawnIntervalMult:cmSpawnIntervalMult,
+  spawnCap:cmSpawnCap,
   placeSpawn:(e, atBoss)=>cmPlaceSpawn(e, atBoss),
   holdLevel:cmHoldLevel,
   enemyAI:Object.assign({cm_maestro:cmAIMaestro, cm_tramoyista:cmAITramoyista, cm_dama:cmAIDama, cm_espejismo:cmAIEspejismo, cm_presentador:cmAIPresentador, cm_cometa:cmAICometa}, CM_ENEMY_AI),
