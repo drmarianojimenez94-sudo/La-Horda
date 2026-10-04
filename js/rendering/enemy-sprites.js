@@ -270,14 +270,15 @@ function drawEnemyAtlasPack(e){
   if(P.sizeVar) s *= packSizeVar(e, P.sizeVar); // cuerpos prestados: cada individuo un poco distinto (body-swaps.js)
   const clip = {frames:[{x:(v % P.cols)*P.fw, y:Math.floor(v/P.cols)*P.fh, w:P.fw, h:P.fh}]};
   const flip = e.fx < -0.12, yy = e.y + (e.hover||0);
+  // voladores (Dragones de la Fortaleza): el cuerpo se dibuja en el aire, la sombra queda en el piso
+  drawAnimFrameSized(P.atlas, clip, 0, e.x, yy, P.fw*s, P.fh*s, 0.5, P.anchor, flip, undefined);
   if(P.auraAtlas && !ANIM_WHITE && !dead){
-    // contorno de agua que late (derivado de la silueta: body-swaps.js)
+    // contorno de agua que late (derivado de la silueta: body-swaps.js). Solo trae el borde de afuera
+    // (la silueta está recortada), así que va encima del cuerpo sin taparlo.
     const t = animNow/1000, ph = (e.x*0.013 + e.y*0.007);
     const a = P.aura.a*(0.65 + 0.35*Math.sin(t*2.6 + ph));
     drawAnimFrameSized(P.auraAtlas, clip, 0, e.x, yy, P.fw*s, P.fh*s, 0.5, P.anchor, flip, a);
   }
-  // voladores (Dragones de la Fortaleza): el cuerpo se dibuja en el aire, la sombra queda en el piso
-  drawAnimFrameSized(P.atlas, clip, 0, e.x, yy, P.fw*s, P.fh*s, 0.5, P.anchor, flip, undefined);
   if(P.aura && P.aura.glow && !ANIM_WHITE && !dead){
     // medusa eléctrica: brillo aditivo que late sobre el cuerpo
     const q = 0.5 + 0.5*Math.sin(animNow/170 + e.x*0.02);

@@ -101,7 +101,7 @@ async function touchTests(browser) {
   for (let k = 1; k <= 5; k++) { await touch('touchMove', [{ x: j.x + 7 * k, y: j.y, id: 1 }]); await sleep(20); }
   await sleep(250);
   await touch('touchStart', [{ x: j.x + 35, y: j.y, id: 1 }, { x: s1.x, y: s1.y, id: 2 }]);
-  await sleep(80);
+  // toque corto (sin esperar): mantener más de ABILITY_INSPECT_MS abre la ficha de la habilidad en vez de lanzar
   await touch('touchEnd', [{ x: s1.x, y: s1.y, id: 2 }]);   // se levanta el dedo 2 (CDP suelta los puntos listados), el 1 sigue
   await sleep(300);
   const mt = await E(() => ({ jx: joyVec.x, cd: player.cds[0], x: player.x, act: joyActive }));
@@ -348,11 +348,12 @@ async function gamepadTests(browser) {
   const m2 = await E(() => joyVec.x);
   check('PAD.stick_mueve_y_frena', m.jx > 0.9 && m.x > x0 + 5 && m2 === 0, { m, m2 });
   check('PAD.letras_del_mando_en_los_botones', m.pad && /X/.test(m.txt), m);
-  const press = async (i, on) => { await E(([i, on]) => { __pad.buttons[i] = { pressed: on, value: on ? 1 : 0 }; }, [i, on]); await sleep(60); };
+  const press = async (i, on) => { await E(([i, on]) => { __pad.buttons[i] = { pressed: on, value: on ? 1 : 0 }; }, [i, on]); await sleep(260); };
   await press(0, true); const a = await E(() => basicHeld); await press(0, false);
   check('PAD.A_ataca', a && !(await E(() => basicHeld)));
+  await E(() => { window.__pc = []; const us = window.useSkill; window.useSkill = function (i, a) { const r = us(i, a); __pc.push({ i, r, st: state, en: player.energy, cd: player.cds.slice(), aimSt: !!aimState }); return r; }; });
   await press(2, true); await press(2, false); await press(3, true); await press(3, false); await press(1, true); await press(1, false);
-  check('PAD.XYB_habilidades', await E(() => player.cds[0] > 0 && player.cds[1] > 0 && player.cds[2] > 0), await E(() => player.cds));
+  check('PAD.XYB_habilidades', await E(() => player.cds[0] > 0 && player.cds[1] > 0 && player.cds[2] > 0), await E(() => ({ cds: player.cds, calls: __pc })));
   await E(() => { player.ultCharge = player.ultMax; player.ultCd = 0; runLevel = Math.max(runLevel, typeof ULT_MIN_ARENA_LEVEL !== 'undefined' ? ULT_MIN_ARENA_LEVEL : 1); });
   await press(5, true); await press(5, false);
   check('PAD.RB_definitiva', await E(() => player.ultCharge === 0));
@@ -362,8 +363,8 @@ async function gamepadTests(browser) {
   const s2 = await E(() => state);
   check('PAD.start_pausa_y_continua', s1 === 'paused' && s2 === 'playing', { s1, s2 });
   // se desconecta el mando con el stick apretado: no queda caminando
-  await E(() => { __pad.axes[0] = -1; }); await sleep(80);
-  await E(() => { navigator.getGamepads = () => [null, null, null, null]; }); await sleep(80);
+  await E(() => { __pad.axes[0] = -1; }); await sleep(300);
+  await E(() => { navigator.getGamepads = () => [null, null, null, null]; }); await sleep(300);
   check('PAD.desconectar_no_deja_caminando', await E(() => joyVec.x === 0));
   await S.ctx.close();
 }
