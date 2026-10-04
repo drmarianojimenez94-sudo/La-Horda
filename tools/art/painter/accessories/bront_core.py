@@ -110,6 +110,7 @@ def draw(atlas, info, opts):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     import painter
     donor = painter.load_donor(opts.get('donor', 'baltra'))
+    rig = painter.load_donor(opts['rigDonor']) if opts.get('rigDonor') else None
     for i in range(COLS * 9):
         c = cell_view(atlas, i)
         o = cell_view(donor, i)
@@ -120,6 +121,23 @@ def draw(atlas, info, opts):
         if f is not None and f['dir'] == 'up':
             continue  # de espaldas no se ve la cara ni el pecho
         face = None if str(i) in map(str, opts.get('noFace', [])) else face_region(o, None if death else f)
+        useRig = opts.get('useRig')  # lista de cuadros que toman la cara de la hoja base (None = todos)
+        if rig is not None and str(i) not in map(str, opts.get('noFace', [])) and (useRig is None or i in useRig):
+            # skin del mismo rig: la cara se busca en la hoja base y se ajusta con la piel del skin cerca de esa caja
+            ref = face_region(cell_view(rig, i), None if death else f)
+            face = None
+            if ref is not None:
+                ys, xs = np.nonzero(ref)
+                L, C, h = _lab(o)
+                win = np.zeros_like(ref); win[max(0, ys.min() - 3):ys.max() + 4, max(0, xs.min() - 3):xs.max() + 4] = True
+                sk = win & (o[:, :, 3] > 0) & (L > 30) & (C > 18) & (h > 30) & (h < 70)
+                if sk.sum() > 20:
+                    yy, xx = np.nonzero(sk)
+                    x0, x1 = (xx.min() + xs.min()) / 2, (xx.max() + xs.max()) / 2
+                    y0, y1 = (yy.min() + ys.min()) / 2, (yy.max() + ys.max()) / 2
+                    face = ellipse_mask((x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2 + .5, (y1 - y0) / 2 + .5) & (o[:, :, 3] > 0)
+                else:
+                    face = ref & (o[:, :, 3] > 0)
         fbx = opts.get('faceBox', {}).get(str(i))
         if fbx:  # corrección manual de la caja de la cara (cuadros donde la detección toma solo una parte)
             x0, y0, x1, y1 = fbx

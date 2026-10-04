@@ -1,11 +1,12 @@
 """Oriel — convierte el bastón del cuerpo en la Llave de las Cicatrices.
 
 Busca el bastón por su color ya pintado (`iron`: tono/croma del metal de la llave) y por forma (partes finas de
-la silueta). Arriba, la voluta del bastón queda como el ojo de la llave (se repinta con `bow`); en el extremo de
+la silueta). Arriba, la voluta del bastón (el metal que encierra un hueco) queda como el ojo de la llave (se repinta con `bow`); en el extremo de
 abajo se dibuja el paletón (dientes) hacia afuera del cuerpo.
 opts:
   ironHue [desde, hasta], ironChroma [min, max]  color del bastón pintado
   bow     4 tonos del ojo (voluta de arriba)          bit   4 tonos del paletón
+  override {"<cuadro>": [arriba, mentón, x]} para cuadros sin cuello (p. ej. el primero de la muerte)
   outline contorno; teeth: lista de largos de dientes (default [3, 2, 3])
 """
 import numpy as np
@@ -50,8 +51,10 @@ def draw(atlas, info, o):
     bit = [_hex(x) for x in o.get('bit', ['#2a2e3a', '#4c5468', '#7a849c', '#b4bccc'])]
     ol = _hex(o.get('outline', '#120c12'))
     teeth = o.get('teeth', [3, 2, 3])
-    for i, f in info['frames'].items():
-        i = int(i)
+    frames = {int(k): v for k, v in info['frames'].items()}
+    for k, v in (o.get('override') or {}).items():
+        frames[int(k)] = {'top': v[0], 'neckY': v[1], 'neckX': v[2], 'dir': 'down'}
+    for i, f in frames.items():
         r, cc = divmod(i, COLS)
         c = out[r * CELL:(r + 1) * CELL, cc * CELL:(cc + 1) * CELL]
         iron, lab = iron_mask(P, c, o)
@@ -60,14 +63,36 @@ def draw(atlas, info, o):
         comps = [j for j in range(1, n) if st[j, 4] >= 6]
         if not comps:
             continue
-        # ojo de la llave: el componente más alto (la voluta), si está por encima del mentón
+        # ojo de la llave: el trozo de metal que encierra un hueco (la voluta del bastón)
+        n2, comp2, st2, _ = cv2.connectedComponentsWithStats(iron.astype(np.uint8), connectivity=8)
         top = min(comps, key=lambda j: st[j, 1])
-        if st[top, 1] < f['neckY']:
-            sel = comp == top
-            # el ojo incluye el metal de la voluta aunque no sea fino
-            x, y, w, h = st[top, :4]
-            box = np.zeros_like(sel); box[max(0, y - 1):y + h + 1, max(0, x - 1):x + w + 1] = True
-            sel |= box & iron
+        best, bh = None, 2
+        for j in range(1, n2):
+            if st2[j, 4] < 10:
+                continue
+            m = cv2.dilate((comp2 == j).astype(np.uint8), np.ones((3, 3), np.uint8))
+            ff = m.copy(); mask = np.zeros((m.shape[0] + 2, m.shape[1] + 2), np.uint8)
+            cv2.floodFill(ff, mask, (0, 0), 1)
+            hole = ff == 0
+            if hole.sum() > bh:
+                best, bh, bhole = j, hole.sum(), hole
+        sel = None
+        if best is not None:
+            ys_, xs_ = np.where(bhole)
+            box = np.zeros_like(iron)
+            box[max(0, ys_.min() - 5):ys_.max() + 6, max(0, xs_.min() - 5):xs_.max() + 6] = True
+            sel = box & (comp2 == best)
+        else:
+            # voluta abierta (gancho): la punta más alta del metal (la cabeza del bastón queda arriba)
+            big = [j for j in range(1, n2) if st2[j, 4] >= 10]
+            if big:
+                j = min(big, key=lambda j: st2[j, 1])
+                yy, xx = np.where(comp2 == j)
+                k0 = np.argmin(yy)
+                d2 = (xx - xx[k0]) ** 2 + (yy - (yy[k0] + 4)) ** 2
+                sel = np.zeros_like(iron)
+                sel[yy[d2 <= 42], xx[d2 <= 42]] = True
+        if sel is not None and sel.sum() >= 4:
             L = lab[sel][:, 0]
             lo, hi = np.percentile(L, [5, 95])
             t = np.clip((L - lo) / max(hi - lo, 1), 0, 1)

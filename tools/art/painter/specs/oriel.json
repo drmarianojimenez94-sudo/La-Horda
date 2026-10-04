@@ -67,46 +67,6 @@
    "despeckle": 4,
    "paint": [
     {
-     "part": "body",
-     "hue": [
-      55,
-      80
-     ],
-     "minChroma": 10,
-     "minL": 45,
-     "to": "#b03458",
-     "keepLight": 0.25,
-     "chroma": 1.0
-    },
-    {
-     "part": "body",
-     "hue": [
-      35,
-      56
-     ],
-     "minChroma": 18,
-     "maxL": 45,
-     "to": "#5c6a84",
-     "keepLight": 0.55,
-     "chroma": 0.45
-    },
-    {
-     "part": "body",
-     "hue": [
-      40,
-      80
-     ],
-     "minChroma": 5,
-     "maxL": 45,
-     "to": "#3a1a28",
-     "keepLight": 0.6,
-     "chroma": 0.8
-    }
-   ],
-   "neckBand": 9,
-   "minDx": 12,
-   "deathPaint": [
-    {
      "hue": [
       30,
       60
@@ -167,17 +127,82 @@
      "keepLight": 0.6
     }
    ],
+   "neckBand": 9,
+   "minDx": 12,
    "frames": {
     "32": {
-     "transplant": 0
+     "transplant": 0,
+     "remap": true
     },
     "33": "full",
     "34": "full",
-    "35": "full"
+    "35": "full",
+    "12": [
+     [
+      38,
+      38,
+      49,
+      62
+     ]
+    ],
+    "16": [
+     [
+      47,
+      36,
+      54,
+      49
+     ],
+     [
+      47,
+      64,
+      53,
+      71
+     ]
+    ],
+    "24": [
+     [
+      35,
+      34,
+      43,
+      70
+     ]
+    ],
+    "28": [
+     [
+      34,
+      26,
+      39,
+      52
+     ]
+    ]
+   },
+   "detached": false,
+   "radius": 60,
+   "eraseHair": {
+    "hue": [
+     38,
+     58
+    ],
+    "minChroma": 14,
+    "side": "left",
+    "dx": 12,
+    "except": [
+     12,
+     16,
+     24,
+     28
+    ]
    }
   },
   {
-   "module": "oriel_key"
+   "module": "oriel_key",
+   "override": {
+    "32": [
+     42,
+     73,
+     58
+    ]
+   }
   },
   {
    "module": "oriel_rings",

@@ -113,7 +113,12 @@ def draw(atlas, info, opts):
             # cuadro sin cabeza nueva (p. ej. el primero de la muerte, todavía de pie): se repinta el cuerpo con
             # "paint" y se le apoya la cabeza ya pintada de otro cuadro, mentón con mentón
             src = int(how['transplant'])
-            base = _repaint(P, d, opts) if opts.get('paint') else d.copy()
+            usep = opts.get('paint') and not how.get('remap')
+            if usep:
+                base = _repaint(P, d, opts)
+            else:
+                base = np.zeros_like(d); mm = d[:, :, 3] > 0
+                base[mm] = remap(d[mm], keys, vals, rgb, P)
             nk = P.frame_neck(d)
             old = P.head_mask(d, nk, how.get('longHair', False)) if nk else None
             if old is not None:
@@ -130,7 +135,10 @@ def draw(atlas, info, opts):
             base[Y[ok], X[ok]] = scell[yy[ok], xx[ok]]
             # huecos que dejó la cabeza vieja por debajo del mentón: se restauran del cuerpo repintado
             if nk:
-                full = _repaint(P, d, opts) if opts.get('paint') else d
+                full = base if not usep else _repaint(P, d, opts)
+                if not usep:
+                    full = np.zeros_like(d); mm = d[:, :, 3] > 0
+                    full[mm] = remap(d[mm], keys, vals, rgb, P)
                 hole = (base[:, :, 3] == 0) & (full[:, :, 3] > 0)
                 hole[:nk[1] + 1] = False
                 base[hole] = full[hole]
@@ -184,6 +192,35 @@ def draw(atlas, info, opts):
         if m.any():
             o[m] = remap(d[m], keys, vals, rgb, P)
             out[ys, xs] = o
+    if opts.get('eraseHair'):
+        out = erase_hair(P, out, donor, info, opts['eraseHair'])
     if opts.get('despeckle'):
         out = despeckle(out, CELL, COLS, int(opts['despeckle']))
+    return out
+
+
+def erase_hair(P, out, donor, info, e):
+    """Borra restos del pelo del cuerpo que el ensamble dejó fuera de la cabeza nueva (puntas que caen al costado
+    opuesto al arma): píxeles por encima del mentón + `below`, a más de `dx` del eje hacia `side`, fuera de la
+    cabeza nueva, cuyo color en el donante era el del pelo (hue/minChroma)."""
+    CELL, COLS = info['CELL'], info['COLS']
+    a, b = e.get('hue', [38, 58])
+    for i, f in info['frames'].items():
+        i = int(i)
+        if i in e.get('except', []):
+            continue
+        r, c = divmod(i, COLS)
+        ys, xs = slice(r * CELL, (r + 1) * CELL), slice(c * CELL, (c + 1) * CELL)
+        d = donor[ys, xs]; o = out[ys, xs]; hm = info['headmap'][ys, xs]
+        lab = P.to_lab(d[:, :, :3].reshape(-1, 3)).reshape(CELL, CELL, 3)
+        h = np.degrees(np.arctan2(lab[:, :, 2], lab[:, :, 1])) % 360
+        ch = np.hypot(lab[:, :, 1], lab[:, :, 2])
+        hair = (d[:, :, 3] > 0) & (((h >= a) & (h <= b) & (ch >= e.get('minChroma', 14))) | (lab[:, :, 0] < 12))
+        reg = np.zeros((CELL, CELL), bool)
+        reg[:f['neckY'] + e.get('below', 2)] = True
+        X = np.arange(CELL)[None, :]
+        reg &= (X < f['neckX'] - e.get('dx', 10)) if e.get('side', 'left') == 'left' else (X > f['neckX'] + e.get('dx', 10))
+        m = reg & hair & ~hm & (o[:, :, 3] > 0)
+        o[m] = 0
+        out[ys, xs] = o
     return out
