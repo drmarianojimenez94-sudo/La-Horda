@@ -743,9 +743,9 @@
       "name": "saelis level 1 horde damage",
       "ok": true,
       "details": [
-        100.83655999973416,
-        75.28136000037193,
-        35.3513600025326
+        91.04039998911321,
+        65.48519998975098,
+        30.87919999100268
       ]
     },
     {
@@ -768,7 +768,7 @@
     {
       "name": "saelis ultimate respects boss damage cap",
       "ok": true,
-      "details": 29.069039999998722
+      "details": 24.224199999999428
     },
     {
       "name": "saelis elites never executed",
