@@ -186,6 +186,16 @@ function skCone(e, R, arc, windMs, mult, o, rgb, label, onResolve){
   });
   if(label) bossSkillLabel(e, label);
 }
+// ¿Hay una pared/barricada (labyrinthWalls) pegada al frente de e? (misma caja que labBossCrash)
+function bossNearWall(e){
+  if(typeof labyrinthWalls==="undefined" || !labyrinthWalls.length) return false;
+  const rad = e.radius*0.55 + 22, ax = e.x + (e.fx||0)*e.radius*0.4, ay = e.y + (e.fy||0)*e.radius*0.4;
+  for(const w of labyrinthWalls){
+    const dx = ax - w.x, dy = ay - w.y, c = Math.cos(-w.rot), s = Math.sin(-w.rot);
+    if(Math.abs(dx*c - dy*s) < w.len/2 + rad && Math.abs(dx*s + dy*c) < w.thick/2 + rad) return true;
+  }
+  return false;
+}
 function skCharge(e, dist, maxLen, speed, mult, o, rgb, label){
   const dx = e.fx, dy = e.fy, len = Math.min(dist + 110, maxLen), td = teleDir(dx, dy);
   bossWindup(e, 850, "bossCharge", {shape:2, r:Math.max(26, e.radius*0.7), dx:td.dx, dy:td.dy, len:len*td.k, rgb}, ()=>{
@@ -255,6 +265,7 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
     // aturdido y VULNERABLE -contrajuego del Laberinto: pararse delante de una pared-.
     if(e.minoCharge && (Math.abs(e.x-bx) + Math.abs(e.y-by) > 2 || bossInWall(e))){
       if(typeof labBossCrash==="function" && labBossCrash(e)) return true;   // jefe del Laberinto: paredes agrietadas (lab-boss.js)
+      if(e.type==="esqueleto_h" && bossNearWall(e) && typeof bossArenaEvent==="function") bossArenaEvent("esqueleto_h.barricada", e); // contra el basalto
       e.bossCharge = null; e.minoCharge = false; e.chargeQueue = 0;
       e.stunTimer = 2200; e.crashTimer = 2200; e.crashVuln = true;
       vfxShock(e.x, e.y, e.radius*0.3, e.radius*2.2, "220,190,140", 520, 2);
@@ -455,8 +466,9 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
   if(t==="esqueleto_h"){
     skCdInit(e, 3000, 6000, 0);
     if(e.skA<=0 && dist < 150){ e.skA = 6000; skCircleSlam(e, 150, 650, 1.3, {knock:50}, "236,228,204", "Tajo Giratorio", "bossHeavyAttack"); }
-    else if(e.skB<=0 && dist > 140 && dist < 480){ e.skB = 8000; skCharge(e, dist, 500, 900, 1.3, {knock:70}, "236,228,204", "Embestida Ósea"); }
+    else if(e.skB<=0 && dist > 140 && dist < 480){ e.skB = 8000; skCharge(e, dist, 500, 900, 1.3, {knock:70}, "236,228,204", "Embestida Ósea"); e.minoCharge = true; } // choca contra el basalto (inf-guardians.js)
   } else if(t==="demonio_menor"){
+    if(typeof infGuardianTick==="function") infGuardianTick(e, dt_boss);   // alimenta fisuras (inf-guardians.js)
     skCdInit(e, 3000, 5000, 0);
     if(e.skA<=0 && dist < 520){ e.skA = 6500; skStrikes(e, heroTargets(3).map(h=>({x:h.x, y:h.y})), 64, 1100, 1.1, "fire", {burn:e.dmg*0.12}, "Lluvia Infernal"); }
     else if(e.skB<=0 && dist < 160){ e.skB = 7000; skCircleSlam(e, 160, 700, 1.2, {burn:e.dmg*0.12}, "255,120,40", "Estallido Infernal", "bossCast"); }

@@ -4,7 +4,7 @@ Regla de la casa: **JEFE + ARENA = ENCUENTRO.** Un jefe que podría pelear igual
 Cada jefe es la última lección de su arena: usa lo que la arena enseñó y lo vuelve contra el jugador, o deja que el
 jugador lo vuelva contra él.
 
-Fuente de datos: `js/arenas/common/boss-blueprints.js` (`BOSS_BLUEPRINTS`, 23 fichas: 14 jefes/formas y 9 subjefes).
+Fuente de datos: `js/arenas/common/boss-blueprints.js` (`BOSS_BLUEPRINTS`, 28 fichas: todos los jefes, formas, subjefes y guardianes de nivel del juego).
 Evidencia: `docs/bible/generated/BOSS_AUDIT.md` (pelea real) y `docs/bible/generated/ENEMY_ART_AUDIT.md` (arte a escala).
 
 ## 1. Ficha obligatoria (BossDefinition)
@@ -66,6 +66,11 @@ Ver `generated/BOSS_AUDIT.md` (se regenera). Resumen de esta auditoría (octubre
 | Minas | Titán de Piedra | nunca mostraba su barra grande | barra y consejos |
 | Infernal | Rey de la Horda | HUD con epíteto y consejos del Demonio Mayor suelto | HUD de la forma actual (`designKey`) |
 | Varias | Minotauro, Guardián, Jinete… | música de fase fija en 1 | `bossPhase` sigue la fase |
+| Gélida | Tundraverx (nivel 6) | élite agrandado sin relación con la arena | **Escamas de escarcha**: se derrite junto al fuego; su aliento apaga braseros; aura de invierno (enseña lo que el Demonio Gélido evalúa) |
+| Infernal | Esqueleto Cornudo (nivel 4) | élite agrandado genérico | sale de una fisura; su embestida contra el basalto lo aturde (enseña el choque del Gólem de Cuerpos) |
+| Infernal | Demonio Menor (nivel 7) | élite agrandado genérico | **alimenta las fisuras** y se protege con ellas; sellar la cercana lo expone (enseña al Hechicero y al Rey) |
+| Ciudad | Maestro de Ceremonias | sin ficha | su marca ordena la escenografía del Tramoyista; un refugio en pie la anula |
+| Divina | Jinete Sin Cabeza | sin ficha | ficha FIX honesta: en la Divina es un guardián de asedio envuelto; su kit de jefe quedó en código del Bosque |
 
 ## 5. Arte de jefes
 
@@ -97,8 +102,8 @@ registra nada en el juego). `list` muestra el estado de todas las fichas y `chec
 
 ## 7. Pendiente (honesto)
 
-- **Tundraverx** (subjefe de la Arena Gélida, nivel 6) es un élite "campeón" sin ficha: no usa braseros ni el frío.
-  Próximo candidato a la Boss Factory.
+- **Jinete Sin Cabeza** (Arena Divina): FIX. Para PASS necesita una relación con el asedio (torres, carriles) o volver a
+  ser jefe de una arena de campaña.
 - **Formas encadenadas** (Ángel Gélido, Gólem de Cuerpos, Rey de la Horda, Dama del Telón): el validador no las alcanza
   en su ventana; sus ganchos auto/player se cubren con pruebas directas o quedan informados.
 - **Arte**: los REDRAW (Titán, Cerbero y los cuerpos prestados) esperan las hojas encargadas; la herramienta solo mide.

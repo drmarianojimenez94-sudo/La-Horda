@@ -23,6 +23,12 @@ function cmPartyCenter(){ let sx = 0, sy = 0, n = 0; for(const h of heroes){ if(
 function cmRandHero(){ const L = heroes.filter(h=>h.alive); return L.length ? cmPick(L) : player; }
 // impacto con aviso en el piso (lo resuelve cmDropsUpdate)
 function cmDrop(k, x, y, r, wind, dmg, o){ cmS.drops.push(Object.assign({k, x:Math.round(x), y:Math.round(y), r, t:0, d:wind, dmg}, o||{})); }
+// ¿(x,y) está dentro de la zona segura de un refugio que sigue en pie?
+function cmInRefuge(x, y){
+  const R = CM_CFG.civ.safeR;
+  for(const z of CM_SAFE){ const S = cmS.st[cmStructIdx(z.id)]; if(S && S.st!==CM_ST.DESTROYED && Math.hypot(x - z.x, y - z.y) < R) return true; }
+  return false;
+}
 function cmStructHpSum(){ let n = 0; for(const S of cmS.st) n += S.hp; return n; }
 function cmZone(k, x, y, r, ms, o){ cmS.zones.push(Object.assign({k, x:Math.round(x), y:Math.round(y), r, t:0, d:ms}, o||{})); }
 function cmDropsUpdate(dt){
@@ -30,7 +36,11 @@ function cmDropsUpdate(dt){
     const D = cmS.drops[i]; D.t += dt;
     if(D.follow){ const h = heroes[D.follow - 1]; if(h && h.alive && D.t < D.d - 600){ D.x = Math.round(h.x); D.y = Math.round(h.y); } }
     if(D.t >= D.d){
-      cmHeroesNear(D.x, D.y, D.r, h=>bossHitHero(h, D.dmg, {from:D.from ? cmEnt(D.from) : null, knock:D.knock||0, stun:D.stun||0}));
+      // la MARCA del Maestro (reflector) no atraviesa el escudo verde de un refugio en pie (BOSS_BLUEPRINTS.cm_maestro)
+      cmHeroesNear(D.x, D.y, D.r, h=>{
+        if(D.k==="mae" && cmInRefuge(h.x, h.y)){ floatText(h.x, h.y - 60, "¡EL REFUGIO TE CUBRE!", "heal"); if(typeof bossArenaEvent==="function") bossArenaEvent("cm_maestro.refugio", cmEnt("cm_maestro")); return; }
+        bossHitHero(h, D.dmg, {from:D.from ? cmEnt(D.from) : null, knock:D.knock||0, stun:D.stun||0});
+      });
       if(D.civ) cmCivsNear(D.x, D.y, D.r, c=>cmHurtCiv(c, D.dmg*0.5, null));
       if(D.struct){ const h0 = cmStructHpSum(); cmStructArea(D.x, D.y, D.r + 30, D.struct, null); if(D.k==="curtain" && cmStructHpSum() < h0 && typeof bossArenaEvent==="function") bossArenaEvent("cm_dama.estructura", cmEnt("cm_dama")); }
       const fx = {scenery:"cmScenery", mark:"cmShowMark", curtain:"cmChaosCurtain", mae:"cmMark", burst:"cmFinalBoom", spect:"cmPreBolt"}[D.k];
@@ -149,7 +159,7 @@ function cmAIMaestro(e, dt, tgt, dist){
     const h = cmRandHero(), hi = heroes.indexOf(h);
     cmDrop("mae", h.x, h.y, C.markR, C.markMs, e.dmg*1.2, {follow:hi + 1, from:"cm_maestro"});
     // sinergia: el Tramoyista deja caer decorado sobre la marca
-    const t = cmEnt("cm_tramoyista"); if(t) t._dropOn = hi + 1;
+    const t = cmEnt("cm_tramoyista"); if(t){ t._dropOn = hi + 1; if(typeof bossArenaEvent==="function") bossArenaEvent("cm_maestro.escena", e); }
     cmBossPack(e, "cast", 700); e.cast = {t:0, d:500}; e.cmBusy = true;
     floatText(h.x, h.y - 80, "¡MARCADO!", "warn"); playSfx("cmMark");
     return true;

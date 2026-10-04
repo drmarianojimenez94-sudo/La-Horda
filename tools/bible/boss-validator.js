@@ -115,6 +115,13 @@ function simFight({key, level, mode, frames}) {
         for (const c of checks.filter(c => c.level !== 'PASS')) console.log(`   ${c.level} ${c.name} — ${c.detail}`);
       }
     }
+    // fichas de modos propios (Arena Divina): no hay pelea de campaña que simular; se informan
+    if (!process.env.ARENAS) for (const [type, B] of Object.entries(BP).filter(([, b]) => !keys.includes(b.arena))) {
+      const fails = B.issues.filter(i => i.level === 'FAIL');
+      const checks = [{name: 'ficha (BOSS_BLUEPRINTS)', level: fails.length ? 'FAIL' : 'WARNING', detail: B.issues.map(i => i.msg).join('; ') || 'ok'}, {name: 'simulación', level: 'WARNING', detail: 'modo propio (' + B.arena + '): sin pelea de campaña que simular'}];
+      results.push({type, arena: B.arena, arenaName: B.arena, rank: B.rank, level: B.level, name: B.name, rule: B.rule, design: B.status.grade, art: B.art.grade, artWhy: B.art.why, brief: B.art.brief || null, hooks: (B.hooks || []).map(h => ({id: h.id, mode: h.mode, n: 0})), checks, status: fails.length ? 'FIX' : 'PASS*', tele: 0, strikes: 0, kinds: 0});
+      console.log(`PASS*   ${B.arena.padEnd(10)} ${type.padEnd(20)} (modo propio: sin simulación)`);
+    }
     const rep = {schemaVersion: 2, generatedBy: 'tools/bible/boss-validator.js', scope: 'Pelea real por jefe/subjefe (~42–45 s, bots invulnerables, azar con semilla). Evidencia automática, no aprobación de diseño.', bosses: results, pageErrors};
     if (!process.env.ARENAS) {
       fs.writeFileSync(path.join(OUT, 'boss-audit.json'), JSON.stringify(rep, null, 1) + '\n');

@@ -169,6 +169,47 @@ const ok = (name, cond, detail) => { assert(cond, name + (detail ? ' — ' + JSO
     ok('Doppelgängers: cada uno atado a una runa encendida, con escudo', r.bound === 4 && r.shield === 0.6 && r.hookB === 1, r);
     ok('Doppelgängers: contener su runa → EXPUESTO y sin escudo', r.exp > 3000 && r.after === 1 && r.hook === 1, r);
 
+    // ---- 7b. Guardianes nuevos de la fábrica: Tundraverx, Esqueleto Cornudo, Demonio Menor, Maestro ----
+    await start('hielo', 6);
+    r = await E(() => {
+      const d = spawnEnemy('dragon_hielo', false, true); const b = HIE.br.find(q => q.lit); d.x = b.x + 30; d.y = b.y; d._expT = 0;
+      hieTundraRule(d, 16); const melt = d._encMult;
+      d.x = b.x + 900; d.y = b.y; hieTundraRule(d, 16); const scale = d._encMult;
+      // aliento hacia un brasero encendido (con otro encendido: nunca el último)
+      const lit0 = HIE.br.filter(q => q.lit).length; d.x = b.x - 150; d.y = b.y; hieTundraBreath(d, 1, 0, 260);
+      return {melt, scale, lit0, lit1: HIE.br.filter(q => q.lit).length, out: !b.lit, hf: bossArenaCount('dragon_hielo.fuego'), hb: bossArenaCount('dragon_hielo.brasero')};
+    });
+    ok('Tundraverx: se derrite junto al fuego (×1,35) y lo protegen las escamas lejos (−30 %)', r.melt === 1.35 && r.scale === 0.7 && r.hf === 1, r);
+    ok('Tundraverx: su aliento apaga el brasero del cono', r.out && r.lit1 === r.lit0 - 1 && r.hb === 1, r);
+    await start('infernal', 4);
+    r = await E(() => {
+      const e = spawnEnemy('esqueleto_h', false, true); const sp = infGuardianSpawn(e);
+      const W = labyrinthWalls[0]; if (!W) return {noWall: true, sp};
+      // embestida que termina dentro de una barricada de basalto
+      e.x = W.x - Math.cos(W.rot) * 0; e.y = W.y; e.minoCharge = true; e.bossCharge = {dx: 1, dy: 0, speed: 900, dur: 500, t: 0, hit: new Set(), mult: 1, o: {}, rgb: '1,1,1'};
+      e.stunTimer = 0; for (let i = 0; i < 3 && e.bossCharge; i++) update(16);
+      return {sp, stun: e.stunTimer, vuln: e.crashVuln, hook: bossArenaCount('esqueleto_h.barricada'), hf: bossArenaCount('esqueleto_h.fisura')};
+    });
+    ok('Esqueleto Cornudo: sale de una fisura y su embestida contra el basalto lo aturde', !r.noWall && r.sp && r.hf === 1 && r.stun > 1500 && r.vuln && r.hook === 1, r);
+    await start('infernal', 7);
+    r = await E(() => {
+      const e = spawnEnemy('demonio_menor', false, true); infGuardianSpawn(e);
+      const f = INF.fis.find(q => !q.done); f.warn = 0; e.x = f.x + 120; e.y = f.y; e._igFeed = 1e9;
+      infGuardianTick(e, 16); const shield = e._encMult;
+      f.done = true; CTX_KINDS.inf_fissure.onComplete(f, [heroes[1]]);
+      return {shield, exp: e._expT, hook: bossArenaCount('demonio_menor.sello')};
+    });
+    ok('Demonio Menor: la fisura cercana lo protege y sellarla lo expone', r.shield === 0.75 && r.exp > 3000 && r.hook === 1, r);
+    await start('ciudad', 9);
+    r = await E(() => {
+      const z = CM_SAFE.find(q => { const S = cmS.st[cmStructIdx(q.id)]; return S && S.st !== CM_ST.DESTROYED; }); if (!z) return {noSafe: true};
+      const h = heroes[1]; h.x = z.x; h.y = z.y; const hp0 = h.hp;
+      cmDrop('mae', h.x, h.y, 100, 10, 500, {follow: 2});
+      for (let i = 0; i < 3; i++) { h.x = z.x; h.y = z.y; cmDropsUpdate(16); }
+      return {lost: hp0 - h.hp, hook: bossArenaCount('cm_maestro.refugio'), inR: cmInRefuge(h.x, h.y)};
+    });
+    ok('Maestro: su marca no atraviesa el escudo de un refugio en pie', !r.noSafe && r.inR && r.lost === 0 && r.hook >= 1, r);
+
     // ---- 8. Cerbero (acto 1, encadenado): el anti-kite castiga fuera del alcance del lanzallamas ----
     await start('minas', 10);
     r = await E(() => {

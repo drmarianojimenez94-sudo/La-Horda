@@ -26,6 +26,8 @@
      art {src, borrowed?, brief?, grade, why}    estado del arte según docs/ART_BIBLE.md: PASS | FIX | REDRAW
                                                    (la densidad de píxel la mide tools/art/arena_lineup.js)
      status {grade, why}                         auditoría de diseño: PASS | FIX | REWORK (actualizar al cambiar)
+     members?                                    otros tipos del mismo encuentro (los cuatro Doppelgängers)
+     sim?                                        false = modo propio sin simulación de campaña (Arena Divina)
      after?                                      tipo que hay que vencer antes (formas encadenadas: el validador no la
                                                    alcanza en su ventana y la informa como "posterior")
    ============================================================ */
@@ -44,6 +46,16 @@ const BOSS_BLUEPRINTS = {
     presentation:{entrance:"preludio de reflector y aplausos (5,2 s)", titleCard:true, death:"secuencia propia de 9,5 s según el rescate"},
     art:{src:"assets/sprites/arenas/ciudad/cm_presentador*/atlas.png", borrowed:"mago_hielo_cristal (recoloreado por acto)", brief:"P0-01", grade:"REDRAW", why:"su arte propio es de 32 px dibujado a 4–5×: se ve en bloques; hoy usa el cuerpo del Mago de Hielo recoloreado"},
     status:{grade:"PASS", why:"pelea de escenario con pilares, estructuras y rescate; pendiente: arte propio y aviso de los abanicos de proyectiles"}},
+  cm_maestro:{arena:"ciudad", rank:"subjefe", level:9, name:"Maestro de Ceremonias",
+    fantasy:"El que dirige la función: marca a la víctima y el Tramoyista le tira la escenografía encima.",
+    rule:"Su MARCA (reflector) sigue a un guardián: llevala adentro de un REFUGIO en pie y el escudo verde la anula.",
+    hooks:[
+      {id:"cm_maestro.escena", mode:"auto", uses:"escenografía (Tramoyista)", effect:"cada marca le ordena al Tramoyista tirar decorado sobre el marcado"},
+      {id:"cm_maestro.refugio", mode:"player", uses:"refugios (zonas seguras)", effect:"la marca no atraviesa el escudo de un refugio en pie"}],
+    counterplay:["Correr al refugio con la marca encima", "Matarlo primero para que el Tramoyista no tenga a quién seguir"],
+    presentation:{entrance:"telón (3,2 s)", titleCard:false, death:"enfurece al Tramoyista"},
+    art:{src:"assets/sprites/arenas/ciudad/cm_maestro/atlas.png", borrowed:"druida_arena", brief:"P0-03", grade:"REDRAW", why:"arte de 24 px dibujado a 5×"},
+    status:{grade:"PASS", why:"dirige la escena con el Tramoyista; los refugios lo contrarrestan"}},
   cm_tramoyista:{arena:"ciudad", rank:"subjefe", level:9, name:"El Tramoyista",
     fantasy:"El que mueve la escenografía: derrumba la ciudad encima de los que la defienden.",
     rule:"Sus golpes y decorados rompen las estructuras: pelealo lejos de lo que tenés que proteger.",
@@ -83,7 +95,15 @@ const BOSS_BLUEPRINTS = {
     status:{grade:"PASS", why:"la Fábrica entera es su arma y su debilidad (trampas nuevas: antes nunca lo tocaban)"}},
 
   /* ---------------- 03 · RUINAS (BOSQUE) ---------------- */
-  doblador_guerrero:{arena:"bosque", rank:"subjefe", level:9, name:"Doppelgängers",
+  jinete_sin_cabeza:{sim:false, arena:"divina", rank:"jefe", level:6, name:"Jinete Sin Cabeza",
+    fantasy:"El jinete de las calabazas de fuego, uno de los cuatro jefes del equipo divino.",
+    rule:"En la Arena Divina es un guardián rival del asedio: torres y castillo lo castigan como a cualquier campeón.",
+    hooks:[],
+    counterplay:["Pelearlo bajo tus torres", "Cortar su Sendero de Fuego de costado"],
+    presentation:{entrance:"equipo divino (nivel 6 de la Arena Divina)", titleCard:false, death:"la de guardián divino"},
+    art:{src:"assets/sprites/bosses/bosque/jinete_sin_cabeza/v2/atlas.png", grade:"PASS", why:"hoja propia; densidad ×1,9"},
+    status:{grade:"FIX", why:"ya no es el jefe de las Ruinas: su kit (Resurrección Eterna, cacería) solo vive en código del Bosque y en la Divina pelea como guardián envuelto, sin relación con la arena de asedio"}},
+  doblador_guerrero:{members:["doblador_arquera", "doblador_picaro", "doblador_clerigo"], arena:"bosque", rank:"subjefe", level:9, name:"Doppelgängers",
     fantasy:"Cuatro sombras con la forma de los campeones originales.",
     rule:"Cada sombra está ATADA a una runa que la protege: contené su runa para exponerla (el Clérigo cura a los demás).",
     hooks:[
@@ -150,6 +170,18 @@ const BOSS_BLUEPRINTS = {
     presentation:{entrance:"transformación del Mago", titleCard:false, death:"genérica + cristal"},
     art:{src:"assets/sprites/bosses/hielo/angel_caido_hielo/v2/atlas.png", grade:"PASS", why:"hoja propia; densidad ×1,8"},
     status:{grade:"PASS", why:"el fuego es su debilidad y su objetivo"}},
+
+  dragon_hielo:{arena:"hielo", rank:"subjefe", level:6, name:"Tundraverx, Soberano de Hielo",
+    fantasy:"El dragón que duerme sobre el paso: sus escamas no conocen el calor… hasta que se lo acercan.",
+    rule:"Lejos del fuego sus ESCAMAS DE ESCARCHA lo protegen: pelealo junto a un brasero encendido (y que su aliento no lo apague).",
+    hooks:[
+      {id:"dragon_hielo.frio", mode:"auto", uses:"frío por quietud", effect:"AURA DE INVIERNO: cerca de él el frío sube aunque te muevas"},
+      {id:"dragon_hielo.brasero", mode:"player", uses:"braseros", effect:"su Aliento de Hielo congela el brasero encendido del cono (nunca el último)"},
+      {id:"dragon_hielo.fuego", mode:"player", uses:"braseros", effect:"junto a un brasero encendido se derrite: ×1,35 (si no, −30 %)"}],
+    counterplay:["Pelearlo al lado del fuego", "Ponerse de costado al aliento para no exponer el brasero"],
+    presentation:{entrance:"guardián del nivel 6", titleCard:true, death:"genérica"},
+    art:{src:"assets/sprites/enemies/hielo/dragon_hielo/v2/atlas.png", grade:"PASS", why:"hoja propia; densidad ×1,5"},
+    status:{grade:"PASS", why:"enseña el fuego que el Demonio Gélido evalúa en el nivel 10 (antes: élite agrandado sin relación con la arena)"}},
 
   /* ---------------- 06 · ARENA ACUÁTICA ---------------- */
   kraken_joven:{arena:"acuatica", rank:"subjefe", level:6, name:"Kraken Joven",
@@ -242,6 +274,26 @@ const BOSS_BLUEPRINTS = {
     status:{grade:"PASS", why:"la luz es su debilidad"}},
 
   /* ---------------- 10 · ARENA INFERNAL ---------------- */
+  esqueleto_h:{arena:"infernal", rank:"subjefe", level:4, name:"Esqueleto Cornudo (Guardián de la Horda)",
+    fantasy:"El primer guardián de la Horda sale de una fisura con los cuernos por delante.",
+    rule:"Su EMBESTIDA ÓSEA contra una barricada de basalto lo estampa: aturdido y vulnerable.",
+    hooks:[
+      {id:"esqueleto_h.fisura", mode:"auto", uses:"fisuras", effect:"aparece saliendo de una fisura abierta"},
+      {id:"esqueleto_h.barricada", mode:"player", uses:"barricadas de basalto", effect:"embestida contra el basalto: aturdido 2,2 s y vulnerable"}],
+    counterplay:["Pararse delante de una barricada y esquivar la embestida a último momento"],
+    presentation:{entrance:"sale de una fisura", titleCard:true, death:"genérica"},
+    art:{src:"assets/sprites/enemies/infernal/esqueleto_h/walk*.png", grade:"PASS", why:"cuadros propios; densidad ×1,7"},
+    status:{grade:"PASS", why:"enseña el choque contra el basalto que el Gólem de Cuerpos evalúa (antes: élite agrandado genérico)"}},
+  demonio_menor:{arena:"infernal", rank:"subjefe", level:7, name:"Demonio Menor (Guardián de la Horda)",
+    fantasy:"El que alimenta los portales: con una fisura abierta al lado, no hay forma de bajarlo.",
+    rule:"Alimenta las fisuras y se protege con ellas: SELLÁ la fisura junto a él y queda EXPUESTO.",
+    hooks:[
+      {id:"demonio_menor.fisura", mode:"auto", uses:"fisuras", effect:"abre o agranda una fisura cada ~11 s (aviso en el piso)"},
+      {id:"demonio_menor.sello", mode:"player", uses:"fisuras (acción Cerrar)", effect:"sellar una fisura cerca de él: EXPUESTO ×1,5"}],
+    counterplay:["Sellar la fisura que lo protege", "Moverse: su Lluvia Infernal cae donde estás"],
+    presentation:{entrance:"guardián del nivel 7", titleCard:true, death:"genérica"},
+    art:{src:"assets/sprites/enemies/infernal/demonio_menor/atlas.png", grade:"PASS", why:"hoja propia; densidad ×0,8"},
+    status:{grade:"PASS", why:"enseña el \"cerrá la fisura\" que el Hechicero y el Rey de la Horda evalúan"}},
   hechicero_supremo:{arena:"infernal", rank:"subjefe", level:9, name:"El Hechicero Supremo",
     fantasy:"El guía que te trajo hasta acá abre los portales de la Horda con sus propias manos.",
     rule:"Sus GRIETAS lo alimentan (recibe menos daño): cerralas con la acción de la arena y queda EXPUESTO.",
