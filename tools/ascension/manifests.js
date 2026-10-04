@@ -5,6 +5,8 @@
 // pass the Visual Gate: the expected result today is INCOMPLETE, never a fabricated STRUCTURAL_PASS.
 // Usage: node tools/ascension/manifests.js   -> docs/production/ascension/<id>.json + validation.json
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+// Gate de estilo (tools/art/painter/style_gate.py): la evidencia solo vale si el reporte marca PASS para esta hoja.
+const stylePass=src=>{try{const g=JSON.parse(require('fs').readFileSync('docs/art-gate/style-gate.json','utf8'));return !!(g.sheets&&g.sheets[src]&&g.sheets[src].pass);}catch(e){return false;}};
 const {validate,scaffold,BUDGETS,taxonomy}=require('../factory/contracts');
 const ROOT=path.resolve(__dirname,'../..'),OUT=path.join(ROOT,'docs/production/ascension');
 const c={};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(ROOT,'js/champions/ascension/catalog.js'),'utf8')+';this.ASCENSION=ASCENSION;',c);
@@ -32,7 +34,7 @@ for(const id of ids){
  if(gen[id])Object.assign(m.art,{atlas:gen[id].atlas,preview:gen[id].preview,directions:4,frameWidth:112,frameHeight:112,sha256:gen[id].sha256,animations:{idle:1,walk:4,attack:4,cast:4,hit:1,death:4,ultimate:4}});
  m.cosmetics.forEach((c,i)=>{const g=gen[id+'_alt'+(i+1)];if(g)c.preview=g.preview;});
  m.art.review={status:'PENDING',reviewer:'',evidence:'',note:'Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8).'};
- m.evidence={reference:'docs/balance/entry-gate-results.json',balance:'docs/balance/entry-gate-results.json',visuals:'docs/art-gate/roster-gate.json',audio:'',multiplayer:'docs/founders/online-presence-results.json',performance:'docs/founders/performance-results.json'};
+ m.evidence={reference:'docs/balance/entry-gate-results.json',balance:'docs/balance/entry-gate-results.json',visuals:'docs/art-gate/roster-gate.json',audio:'',multiplayer:'docs/founders/online-presence-results.json',performance:'docs/founders/performance-results.json',style:stylePass('assets/sprites/champions/'+id+'/atlas.png')?'docs/art-gate/style-gate.json':''};
  const errors=validate(m);results[id]={category,releaseState:meta.releaseState,status:errors.length?'INCOMPLETE':'STRUCTURAL_PASS',errors};
  fs.writeFileSync(path.join(OUT,id+'.json'),JSON.stringify(m,null,2)+'\n');
 }
