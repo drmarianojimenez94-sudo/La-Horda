@@ -30,8 +30,8 @@
    ],
    "minChroma": 10,
    "minL": 45,
-   "to": "#c03e60",
-   "keepLight": 0.5,
+   "to": "#b03458",
+   "keepLight": 0.25,
    "chroma": 1.0
   },
   {
@@ -42,9 +42,9 @@
    ],
    "minChroma": 18,
    "maxL": 45,
-   "to": "#6a6470",
-   "keepLight": 0.6,
-   "chroma": 0.3
+   "to": "#5c6a84",
+   "keepLight": 0.55,
+   "chroma": 0.45
   },
   {
    "part": "body",
@@ -74,8 +74,8 @@
      ],
      "minChroma": 10,
      "minL": 45,
-     "to": "#c03e60",
-     "keepLight": 0.5,
+     "to": "#b03458",
+     "keepLight": 0.25,
      "chroma": 1.0
     },
     {
@@ -86,9 +86,9 @@
      ],
      "minChroma": 18,
      "maxL": 45,
-     "to": "#6a6470",
-     "keepLight": 0.6,
-     "chroma": 0.3
+     "to": "#5c6a84",
+     "keepLight": 0.55,
+     "chroma": 0.45
     },
     {
      "part": "body",
@@ -102,6 +102,27 @@
      "keepLight": 0.6,
      "chroma": 0.8
     }
+   ],
+   "neckBand": 9,
+   "minDx": 12
+  },
+  {
+   "module": "oriel_key"
+  },
+  {
+   "module": "oriel_rings",
+   "dx": 34,
+   "dy": 4,
+   "ramp": [
+    "#4a1424",
+    "#9c2c48",
+    "#e86a88",
+    "#ffd0d8"
+   ],
+   "glow": [
+    "#e0405e",
+    "#ff9ab0",
+    "#fff4f6"
    ]
   }
  ]

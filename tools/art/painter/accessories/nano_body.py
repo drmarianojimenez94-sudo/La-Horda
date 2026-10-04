@@ -77,7 +77,7 @@ def zahra_hair_walk(z, nk):
     return m & a
 
 
-def gauntlet(z, nk):
+def gauntlet(z, nk, wide=19):
     """guantelete: píxeles cobre/naranja de componentes grandes, fuera de la caja de las antiparras (arriba y al
     centro de la cabeza), con su contorno oscuro."""
     lab = lab_of(z)
@@ -86,7 +86,7 @@ def gauntlet(z, nk):
     top, ny, nx = nk
     hh = int(np.clip(ny - top, 28, 38))
     gog = np.zeros_like(orange)
-    gog[max(0, ny - hh - 8):ny - int(hh * .42), max(0, nx - 19):nx + 20] = True
+    gog[max(0, ny - hh - 8):ny - int(hh * .42), max(0, nx - wide):nx + wide + 1] = True
     cand = orange & ~gog
     n, comp, st, _ = cv2.connectedComponentsWithStats(cand.astype(np.uint8), connectivity=8)
     g = np.zeros_like(orange)
@@ -97,9 +97,16 @@ def gauntlet(z, nk):
     return g & (z[:, :, 3] > 0) & ~gog & ((lab[:, :, 0] < 22) | orange)
 
 
-def zahra_head_action(z, nk):
+def gbox_any(nk, a):
+    top, ny, nx = nk
+    hh = int(np.clip(ny - top, 28, 38))
+    m = np.zeros_like(a); m[max(0, ny - hh - 8):ny - int(hh * .3), max(0, nx - 25):nx + 26] = True
+    return m[:ny - int(hh * .55)]
+
+
+def zahra_head_action(z, nk, wide=19):
     a = z[:, :, 3] > 0
-    g = gauntlet(z, nk)
+    g = gauntlet(z, nk, wide)
     lab = lab_of(z)
     h, C = hue_chroma(lab)
     m = a & ellipse(nk, 1.3, up=6) & ~g
@@ -124,10 +131,18 @@ def zahra_head_action(z, nk):
             armsk |= cj
     far = np.zeros_like(a); far[:, :max(0, nk[2] - 17)] = True; far[:, nk[2] + 18:] = True
     far[:nk[1] - int(np.clip(nk[1] - nk[0], 28, 38) * .55)] = False
+    glove[:nk[1] - int(np.clip(nk[1] - nk[0], 28, 38) * .55)] &= ~gbox_any(nk, a)
     hair_s = (lab[:, :, 0] < 34) & (C < 16)
     arm = (armsk | glove | (far & ~hair_s)) & m
     arm = cv2.dilate(arm.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool) & m & ((lab[:, :, 0] < 20) | armsk | glove | far)
-    return m & ~arm, g | arm
+    # antiparras completas (también las patillas laterales, fuera de la elipse)
+    top, ny, nx = nk
+    hh = int(np.clip(ny - top, 28, 38))
+    gb = np.zeros_like(a); gb[max(0, ny - hh - 8):ny - int(hh * .3), max(0, nx - 23):nx + 24] = True
+    orange = a & (C > 30) & (h > 28) & (h < 72) & (lab[:, :, 0] > 14)
+    gp = gb & orange & ~g
+    gp = (cv2.dilate(gp.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0) & a & ~g & ~face & ((lab[:, :, 0] < 22) | orange)
+    return (m & ~arm) | gp, g | arm
 
 
 def dariel_head_action(d, nk, back=False):
@@ -176,6 +191,25 @@ DEATH_GOGGLES = {32: (34, 44, 67, 64), 33: (26, 47, 61, 68), 34: (12, 68, 52, 84
 DEATH_EYES = {32: (42, 58, 62, 70)}
 
 
+def retexture(new, orig, k=.45, kl=0.0):
+    """una rampa elige el color solo por la luz y aplana la textura del donante (pocos colores por cuadro). Devuelve
+    parte de la variación de tono/croma original (desvío respecto de la media local 5x5) a los píxeles repintados."""
+    ch = (new[:, :, 3] > 0) & np.any(new[:, :, :3] != orig[:, :, :3], axis=2)
+    if not ch.any():
+        return new
+    lo = P.to_lab(orig[:, :, :3].reshape(-1, 3)).reshape(orig.shape[0], orig.shape[1], 3)
+    mu = cv2.blur(lo, (5, 5))
+    dev = lo - mu
+    mag = np.hypot(dev[:, :, 1], dev[:, :, 2])[..., None]
+    dev[:, :, 1:] *= np.minimum(1, 5 / np.maximum(mag, 1e-3))   # sin devolver el naranja de lava del donante
+    ln = P.to_lab(new[:, :, :3].reshape(-1, 3)).reshape(new.shape[0], new.shape[1], 3)
+    ln[ch, 1:] += k * dev[ch, 1:]
+    ln[ch, 0] += kl * dev[ch, 0]
+    out = new.copy()
+    out[ch, :3] = P.from_lab(ln[ch].astype(np.float32))
+    return out
+
+
 def rules_of(lst):
     out = []
     for r in lst or []:
@@ -189,7 +223,22 @@ def draw(atlas, info, opts):
     Z = P.load_donor(opts.get('body', 'zahra'))
     D = P.load_donor(opts.get('head', 'dariel'))
     Zp = P.recolor(Z, np.zeros(Z.shape[:2], np.int32), rules_of(opts.get('bodyPaint')), None)
+    Zp = retexture(Zp, Z, opts.get('texture', .5))
     hair_ramp = opts['hairRamp']
+    if opts.get('trimRamp'):
+        # hebillas, correas y remaches cobre (componentes chicos) -> oro; el guantelete queda con su rampa
+        for i in range(36):
+            z = P.cell(Z, i)
+            lab = lab_of(z)
+            h, C = hue_chroma(lab)
+            orange = (z[:, :, 3] > 0) & (C > 26) & (h > 28) & (h < 75) & ~P.skin_mask(z) & (lab[:, :, 0] > 14)
+            n, comp, st, _ = cv2.connectedComponentsWithStats(orange.astype(np.uint8), connectivity=8)
+            small = np.isin(comp, [j for j in range(1, n) if st[j, cv2.CC_STAT_AREA] < opts.get('trimMax', 40)])
+            small &= ~(cv2.dilate(P.skin_mask(z).astype(np.uint8), np.ones((5, 5), np.uint8)) > 0)   # sombras de piel no
+            if small.any():
+                zp = P.cell(Zp, i)
+                zp[small, :3] = ramp_paint(lab[small], opts['trimRamp'], 20, 75)
+
     out = atlas.copy()
 
     # cuellos de acción (de espaldas: altura del cuadro de ataque de frente de la misma columna)
@@ -218,6 +267,7 @@ def draw(atlas, info, opts):
         r['region'] = dmask & ~dface
         hr.append(r)
     Dp = P.recolor(D, np.zeros(D.shape[:2], np.int32), hr, None)
+    Dp = retexture(Dp, D, opts.get('texture', .5))
 
     for i in range(36):
         row = i // COLS
@@ -233,6 +283,29 @@ def draw(atlas, info, opts):
             zh = zahra_hair_walk(zi, nk)
             body = base.copy(); body[zh] = 0
             body[hm] = cur[hm]
+            # textura del pelo: la rampa del pintor la aplanó; se recupera de la cabeza de Dariel (mismo apoyo)
+            dw = P.cell(D, i)
+            dnk = P.frame_neck(dw, P.frame_neck(P.cell(D, i % COLS)) if row == 2 else None)
+            if dnk and nk:
+                dy, dx = nk[1] - dnk[1], nk[2] - dnk[2]
+                src = np.zeros_like(dw)
+                ys, xs = np.where(dw[:, :, 3] > 0)
+                Y, X = ys + dy, xs + dx
+                ok = (Y >= 0) & (Y < CELL) & (X >= 0) & (X < CELL)
+                src[Y[ok], X[ok]] = dw[ys[ok], xs[ok]]
+                tex = retexture(body, src, opts.get('texture', .5))
+                body[hm] = tex[hm]
+                # abrigo rojo y pañuelo dorado de Dariel que entraron con la cabeza: afuera
+                sl = lab_of(src); sh, sC = hue_chroma(sl)
+                ssk = P.skin_mask(src)
+                face = largest(ssk & hm)
+                junk = hm & (src[:, :, 3] > 0) & ~face & (
+                    ((sC > 16) & ((sh < 38) | (sh > 325)) & ~ssk) |
+                    ((sC > 26) & (sh > 58) & (sh < 110) & (sl[:, :, 0] > 38)))
+                junk = cv2.dilate(junk.astype(np.uint8), np.ones((2, 2), np.uint8)).astype(bool) & hm & ~face & (sl[:, :, 0] > 9) | junk
+                body[junk] = 0
+                restore = junk & ~zh & (zi[:, :, 3] > 0)
+                body[restore] = base[restore]
             P.put_cell(out, i, drop_orphans(body))
             continue
         if kind == 'death':
@@ -241,21 +314,39 @@ def draw(atlas, info, opts):
             if i in DEATH_GOGGLES:
                 x0, y0, x1, y1 = DEATH_GOGGLES[i]
                 box = np.zeros((CELL, CELL), bool); box[y0:y1 + 1, x0:x1 + 1] = True
-                sel = box & (zi[:, :, 3] > 0) & ~P.skin_mask(zi) & (lab[:, :, 0] > 9)
+                a = zi[:, :, 3] > 0
+                sk = P.skin_mask(zi)
+                edge = a & ~(cv2.erode(a.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0)
+                gog = box & a & ~sk
+                inner = gog & ~edge
+                # antiparras -> mata de pelo: luz rellenada desde el pelo vecino (inpaint) + mechones diagonales
+                L8 = np.clip(lab[:, :, 0] * 2.55, 0, 255).astype(np.uint8)
+                hairL = (lab[:, :, 0] < 30) & (C < 18) & a
+                L8i = cv2.inpaint(np.where(hairL | ~box, L8, 0).astype(np.uint8), inner.astype(np.uint8), 3, cv2.INPAINT_TELEA)
+                yy, xx = np.mgrid[0:CELL, 0:CELL]
+                Lf = L8i.astype(np.float32) / 2.55
+                Lf += 7 * (((xx + 2 * yy) % 6) == 0) - 4 * (((xx * 2 + yy) % 7) == 0)
+                Lf += np.random.default_rng(i).normal(0, 2.0, Lf.shape)
+                fake = lab.copy(); fake[:, :, 0] = Lf
+                base[inner, :3] = ramp_paint(fake[inner], hair_ramp, 6, 40, .9)
+                base[gog & edge, :3] = P.from_lab(np.array([P.hex_lab(hair_ramp[0])] * int((gog & edge).sum()), np.float32)) if (gog & edge).any() else base[gog & edge, :3]
                 near = cv2.dilate(box.astype(np.uint8), np.ones((9, 9), np.uint8)) > 0
-                sel |= near & (zi[:, :, 3] > 0) & (lab[:, :, 0] < 30) & (C < 18) & (lab[:, :, 0] > 9)
-                base[sel, :3] = ramp_paint(lab[sel], hair_ramp, 8, 52, .9)
+                hs = near & hairL & (lab[:, :, 0] > 9) & ~gog
+                base[hs, :3] = ramp_paint(lab[hs], hair_ramp, 6, 40, .9)
+                big = cv2.dilate(box.astype(np.uint8), np.ones((27, 27), np.uint8)) > 0
+                face = largest(sk & big)
+                P.put_cell(headmap, i, (gog | hs | fill_holes(face)) & a)
             if i in DEATH_EYES:
                 x0, y0, x1, y1 = DEATH_EYES[i]
                 box = np.zeros((CELL, CELL), bool); box[y0:y1 + 1, x0:x1 + 1] = True
                 eye = box & (C > 22) & ~P.skin_mask(zi) & (zi[:, :, 3] > 0) & (lab[:, :, 0] > 12)
                 if eye.any():
                     base[eye, :3] = ramp_paint(lab[eye], ['#140e18', '#3a2a40', '#6a5070'], 15, 60)
-            P.put_cell(out, i, drop_orphans(base))
+            P.put_cell(out, i, drop_orphans(base, 90))
             continue
         # acción
         znk, dnk = zn[i], dn[i]
-        zh, g = zahra_head_action(zi, znk)
+        zh, g = zahra_head_action(zi, znk, 25 if i in opts.get('gogglesWide', []) else 19)
         occl = g & ellipse(znk, 1.3, up=6) & (zi[:, :, 3] > 0)   # guantelete delante de la cara
         base[zh] = 0
         dh = P.cell(dmask, i)

@@ -1,6 +1,8 @@
 """Reparación de cuadros que el ensamble rompe (cabeza no detectada, arma borrada junto con la cabeza).
 
 opts = {"module": "velmira_repair", "donor": "<cuerpo>",
+        "auto": true,       # en cada cuadro: lo borrado bajo el mentón, lejos del eje (radius), piezas que no tocan
+                            # la cabeza nueva (detached, neckBand) y, con minDx, lo que queda a la derecha del mentón
         "frames": {"31": "full",            # el cuadro vuelve al del cuerpo (repintado con "paint" o por mapa)
                    "28": [[x0, y0, x1, y1], ...]}} # restaura los píxeles del cuerpo borrados dentro de la caja
 El repintado usa el mapa color-del-donante -> color-final aprendido de los píxeles del cuerpo que el pintor no
@@ -162,6 +164,13 @@ def draw(atlas, info, opts):
                     cj = comp == j
                     if cj.sum() >= opts.get('detachedMin', 3) and not (cj & near).any():
                         reg |= cj
+            if 'minDx' in opts:
+                # el arma va en la mano derecha: lo borrado con centro a la derecha del mentón (>= minDx) es bastón
+                import cv2
+                n, comp, st, cen = cv2.connectedComponentsWithStats(lost.astype(np.uint8), connectivity=8)
+                for j in range(1, n):
+                    if cen[j][0] - f['neckX'] >= opts['minDx']:
+                        reg |= comp == j
             m = reg & lost
             if m.any():
                 o[m] = remap(d[m], keys, vals, rgb, P)

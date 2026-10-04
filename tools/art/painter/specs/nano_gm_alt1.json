@@ -1,7 +1,7 @@
 {
- "id": "nano_gm",
- "name": "Nano GM, El Regente del Umbral",
- "prompt": "Joven atlético de pelo oscuro rizado; brazos cubiertos de tatuajes negros que se agrietan en runas; un ala de luz y una de sombra, asimétricas, semimaterializadas. Arma: Brazos del Umbral.",
+ "id": "nano_gm_alt1",
+ "name": "Nano GM — Regente del Eclipse Dorado",
+ "prompt": "Skin fundadora (cosmética): bordes de las alas de oro batido, halo de eclipse detrás de la nuca, runas de los tatuajes ardiendo en oro.",
  "body": "zahra",
  "head": "dariel",
  "paint": [
@@ -40,8 +40,8 @@
       "#0f0a17",
       "#221636",
       "#3a2758",
-      "#5e4590",
-      "#e8c56a"
+      "#6a4a7a",
+      "#f0c75a"
      ],
      "gamma": 1.1
     },
@@ -88,10 +88,10 @@
     }
    ],
    "trimRamp": [
-    "#5a3a12",
-    "#a8782a",
-    "#e8c56a",
-    "#fff1c2"
+    "#6a4410",
+    "#b8862a",
+    "#f0c75a",
+    "#fff3c4"
    ],
    "gogglesWide": [
     21
@@ -103,8 +103,8 @@
     "#120a14",
     "#2a1a2e"
    ],
-   "rune": "#fff4d6",
-   "runeGlow": "#b9a6d8",
+   "rune": "#ffd25a",
+   "runeGlow": "#a8701e",
    "eye": [
     "#c99a3a",
     "#ffe9a0"
@@ -126,7 +126,13 @@
     "#2a1c40",
     "#43306a",
     "#6a52a0"
-   ]
+   ],
+   "edge": "#e0a93c",
+   "shadowEdge": "#b8862a"
+  },
+  {
+   "module": "nano_halo",
+   "radius": 17
   }
  ]
 }
