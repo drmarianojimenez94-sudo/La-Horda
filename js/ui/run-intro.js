@@ -22,7 +22,7 @@ const ARENA_BRIEF = {
     help:"Mirá el piso: las marcas avisan. Al Caballero NO le pegues cuando brilla azul (contraataca).",
     goal:"Cruzá la Fábrica Sin Fin y derrotá al Caballero de la Armadura Oxidada."},
   bosque: {
-    say:"Acá duerme el PRIMERO de los Cuatro Guardianes, y lo que duerme ya no es él. Liberalo y traé su cristal. Yo sé cómo cuidarlo.",
+    say:"Acá duerme el más viejo de los Cuatro Guardianes, el de la NIEBLA, y lo que duerme ya no es él. Liberalo y traé su cristal. Yo sé cómo cuidarlo.",
     kill:"Enemigos que se regeneran, emboscadas en la maleza que se sacude y el Guardián Ancestral, que se corrompe en la Bestia del Bosque.",
     help:"Las RUNAS de piedra: mantené ✚ junto a una que brille y las raíces atrapan a la horda.",
     goal:"Sobreviví 10 niveles, vencé al Guardián Ancestral y recuperá el PRIMER CRISTAL."},

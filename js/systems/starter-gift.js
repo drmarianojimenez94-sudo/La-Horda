@@ -20,7 +20,9 @@ function starterGiftEnabled(){
   try{
     if(window.__starterGift === false) return false;
     if(window.__starterGift) return true;
-    if(typeof firstRunEnabled === "function") return firstRunEnabled();
+    // OJO: ya no depende de firstRunEnabled() (el primer arranque corto a la Ciudad se apagó en #41 y con él
+    // se había apagado sin querer la skin de regalo para todos). Mismo criterio que tenía el arranque corto:
+    if(window.__firstRun || /[?&]primera=1\b/.test(location.search)) return true;
     return !navigator.webdriver;
   }catch(e){ return true; }
 }

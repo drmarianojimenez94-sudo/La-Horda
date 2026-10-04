@@ -14,6 +14,27 @@ const FT_WORD_CAP = 3; // textos flotantes de palabras a la vez (los números va
 // Letra del texto dibujado en el canvas: la misma fuente pixel que el HUD (antes era Georgia en negrita).
 // VT323 es un 20 % más chica que Georgia a igual tamaño: se agranda para que se lea igual (ver base.css).
 function pxFont(size){ return `${(size*1.22).toFixed(1)}px 'VT323', monospace`; }
+// Íconos chicos dibujados en el lienzo (acciones contextuales, marcas de la Ciudad y del Abismo). Antes eran
+// emojis con fillText: el celular los pinta con SU fuente de emojis (a color, otro estilo en cada teléfono).
+// Ahora: si el emoji tiene ícono pixel (js/ui/pixel-icons.js) se dibuja ese; una persona (🧍 🤝: civil,
+// prisionero) es una silueta hecha con dos formas; el resto queda como texto en la letra pixel.
+const _cvIcoCache = {};
+const CV_PERSON = {"🧍":1, "🤝":1, "🧍‍♂️":1};
+function drawCanvasIcon(c, icon, x, y, size, col){
+  size = size || 16;
+  const id = typeof PXI_EMOJI!=="undefined" ? PXI_EMOJI[String(icon).replace(/️/g, "")] : null;
+  if(id && typeof _pxiCanvas==="function"){
+    let cv = _cvIcoCache[id]; if(cv===undefined){ try{ cv = _pxiCanvas(id); }catch(e){ cv = null; } _cvIcoCache[id] = cv; }
+    if(cv){ const s = Math.round(size), sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false; c.drawImage(cv, Math.round(x - s/2), Math.round(y - s/2), s, s); c.imageSmoothingEnabled = sm; return; }
+  }
+  if(CV_PERSON[icon]){
+    const u = size/16; c.save(); c.fillStyle = col || "#fff";
+    c.beginPath(); c.arc(x, y - 4*u, 3.2*u, 0, Math.PI*2); c.fill();
+    c.fillRect(Math.round(x - 3.5*u), Math.round(y - 0.5*u), Math.round(7*u), Math.round(7.5*u));
+    c.restore(); return;
+  }
+  c.save(); if(col) c.fillStyle = col; c.font = pxFont(Math.round(size*0.8)); c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(icon, x, y); c.restore();
+}
 const floatTexts = [];
 for(let i=0;i<FT_MAX;i++) floatTexts.push({on:false, x:0, y:0, text:"", kind:0, t:0, dur:900, vx:0, val:0, dk:null, key:null, pop:0, sc:1});
 let _ftNext = 0, _ftAvg = 40;

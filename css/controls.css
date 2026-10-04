@@ -1,0 +1,95 @@
+/* css/controls.css — Controles y accesibilidad (js/core/input.js, js/core/input-desk.js, js/core/prefs.js):
+   higiene táctil, blancos de 44 px, joystick flotante, teclas en los botones, guía de primera vez,
+   modo zurdo y texto grande. Se carga al final: a igual especificidad manda sobre hud.css/mobile.css. */
+
+/* ---------- higiene táctil: mantener apretado no selecciona texto, ni abre la lupa/menú de iOS ---------- */
+#game, #controls, #controls *, #pause-btn, #mute-btn, .skill-plus{
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+
+/* ---------- blancos táctiles de 44 px o más ---------- */
+.ability-btn.sec{ width:46px; height:46px; }
+/* los "+" de subir habilidad se ven chicos (26 px) pero se tocan en 44 px */
+.skill-plus::before{ content:""; position:absolute; inset:-9px; border-radius:50%; }
+/* pausa y sonido: 44 x 44 en todas las pantallas (css/combat-readability.css) */
+
+/* ---------- joystick: se enciende mientras se usa (la base salta abajo del pulgar, input.js) ---------- */
+#joy-base{ transition:background .12s, border-color .12s; }
+#joy-base.on{ background:rgba(40,20,10,0.5); border-color:rgba(255,160,80,0.75); }
+
+/* ---------- teclas / botones del mando sobre cada control (input-desk.js) ---------- */
+.kh{ display:none; }
+body.inp-kb .kh, body.inp-pad .kh{
+  display:block; position:absolute; left:-5px; top:-7px; z-index:2; pointer-events:none;
+  min-width:18px; padding:1px 4px; border-radius:5px; background:#0e0906; border:1px solid #d9b25a;
+  color:#ffe6a8; font-family:var(--font-retro); font-size:0.85rem; line-height:1; text-align:center; font-weight:normal; letter-spacing:0;
+}
+body.inp-kb .kh::before{ content:attr(data-kb); }
+body.inp-pad .kh::before{ content:attr(data-pad); }
+#pause-btn .kh{ left:auto; right:-8px; top:auto; bottom:-10px; }
+.ability-btn.key-press{ filter:brightness(1.5); }
+
+/* ---------- guía de la primera partida (input-desk.js: deskOnboardTick) ---------- */
+@keyframes onbRing{ 0%{ transform:scale(0.9); opacity:0.95; } 70%{ transform:scale(1.35); opacity:0; } 100%{ transform:scale(1.35); opacity:0; } }
+@keyframes onbKnob{ 0%,100%{ transform:translate(25px,25px); } 25%{ transform:translate(55px,25px); } 50%{ transform:translate(25px,-5px); } 75%{ transform:translate(-5px,25px); } }
+body.onb-move #joy-base::after, body.onb-attack #btn-basic::before,
+body.onb-skill #btn-s1:not(.cd):not(.noen)::before, body.onb-skill #btn-s2:not(.cd):not(.noen)::before, body.onb-skill #btn-s3:not(.cd):not(.noen)::before{
+  content:""; position:absolute; inset:-8px; border-radius:50%; border:3px solid #ffcf5c; box-shadow:0 0 12px rgba(255,207,92,0.8);
+  pointer-events:none; animation:onbRing 1.2s ease-out infinite;
+}
+body.onb-move #joy-base{ border-color:rgba(255,207,92,0.9); background:rgba(60,34,10,0.45); }
+body.onb-move #joy-base:not(.on) ~ #joy-knob{ animation:onbKnob 2.4s ease-in-out infinite; }
+body.reduce-motion.onb-move #joy-base:not(.on) ~ #joy-knob{ animation:none; }
+body.reduce-motion.onb-move #joy-base::after, body.reduce-motion.onb-attack #btn-basic::before,
+body.reduce-motion.onb-skill .ability-btn::before{ animation:none; opacity:1; }
+
+/* ---------- MODO ZURDO: joystick a la derecha, botones a la izquierda (Opciones) ---------- */
+body.lefty #joyzone{ left:auto; right:0; }
+body.lefty #skillzone{ right:auto; left:0; }
+body.lefty #joy-base{ left:auto; right:calc(24px + env(safe-area-inset-right,0px)); }
+body.lefty #joy-knob{ left:auto; right:calc(74px + env(safe-area-inset-right,0px)); }
+body.lefty .ability-btn.basic{ right:auto; left:calc(16px + env(safe-area-inset-left,0px)); }
+body.lefty .ability-btn.s1{ right:auto; left:calc(96px + env(safe-area-inset-left,0px)); }
+body.lefty .ability-btn.s2{ right:auto; left:calc(138px + env(safe-area-inset-left,0px)); }
+body.lefty .ability-btn.s3{ right:auto; left:calc(96px + env(safe-area-inset-left,0px)); }
+body.lefty .ability-btn.ult{ right:auto; left:calc(16px + env(safe-area-inset-left,0px)); }
+body.lefty .ability-btn.emerg, body.lefty .ability-btn.pact{ right:auto; left:calc(158px + env(safe-area-inset-left,0px)); }
+/* el resto del HUD se espeja también: la columna de vida/arena/aliados/pausa va a la derecha y la
+   Definitiva + avisos a la izquierda (si no, los botones caían encima de la pastilla de Arena/Nivel) */
+body.lefty #tut-panel{ left:auto; right:calc(126px + env(safe-area-inset-right,0px)); }
+body.lefty #player-status, body.lefty #hud .top, body.lefty #party{ left:auto; right:calc(10px + env(safe-area-inset-right,0px)); }
+body.lefty #hud .top{ align-items:flex-end; }
+body.lefty #hud #ult-meter{ right:auto; left:calc(12px + env(safe-area-inset-left,0px)); } /* sobre la Definitiva, del lado de los botones */
+body.lefty #toast-stack{ right:auto; left:calc(10px + env(safe-area-inset-left,0px)); }
+body.lefty #pause-btn{ right:auto; left:calc(60px + env(safe-area-inset-left,0px)); }
+body.lefty #mute-btn{ right:auto; left:calc(10px + env(safe-area-inset-left,0px)); }
+body.lefty .ability-btn .kh{ left:auto; right:-5px; }
+
+/* ---------- TEXTO GRANDE (Opciones): lo que se lee jugando ---------- */
+body.text-lg #tut-panel .tut-text{ font-size:1.25rem; line-height:1.08; }
+body.text-lg #tut-panel .tut-goal{ font-size:1.3rem; }
+body.text-lg .float-text{ font-size:1.4rem; }
+body.text-lg .float-text.crit{ font-size:1.7rem; }
+body.text-lg .ability-btn{ font-size:0.98rem; }
+body.text-lg #run-intro .ri-say{ font-size:1.45rem; }
+body.text-lg #run-intro .ri-row{ font-size:1.12em; }
+body.text-lg .gd-msg{ font-size:1.2em; }
+body.text-lg .pause-note{ font-size:1.1em; }
+body.text-lg .ally-name{ font-size:1rem; }
+@media (max-height:500px){
+  body.text-lg #tut-panel{ width:max(220px, min(320px, calc(50vw - 120px))); }
+  body.text-lg #tut-panel .tut-text{ font-size:1.02rem; line-height:1; }
+  body.text-lg #tut-panel .tut-goal{ font-size:1.06rem; }
+  body.text-lg #run-intro .ri-say{ font-size:1.18rem; }
+}
+
+/* ---------- Opciones: interruptores y selectores de varias opciones ---------- */
+.opt-sec{ font-family:var(--ui-font, var(--font-retro)); font-size:0.95rem; letter-spacing:0.08em; color:var(--ui-dim, #b89a86); margin:10px 0 2px; text-transform:uppercase; }
+.opt-seg{ display:flex; gap:4px; flex:none; }
+.opt-seg button, .opt-switch{
+  min-height:44px; min-width:64px; padding:4px 10px; font-family:inherit; font-size:1.05rem; cursor:pointer;
+  background:var(--ui-inset, #1a100a); color:var(--ui-dim, #b89a86); border:2px solid #000; border-radius:4px; }
+.opt-seg button[aria-pressed="true"], .opt-switch[aria-checked="true"]{ background:#5a3212; color:#ffe6a8; border-color:#d9b25a; }
+.opt-switch{ min-width:76px; }
+.opt-row .opt-lbl{ flex:1; min-width:0; }
+.opt-row .opt-sub{ display:block; font-size:0.85rem; color:var(--ui-dim, #b89a86); line-height:1.1; }
+.pause-opts-btn{ margin:0 auto 8px; display:block; }

@@ -25,6 +25,10 @@ function beginLevel(){
   if(runLevel===1 && typeof campaignTitleCard==="function"){ campaignTitleCard(); campaignMaybePrologue(); } // "ARENA NN" + prólogo de la Ciudad Maldita (campaign-story.js)
 }
 let midBossSpawned = false;
+// Tope de enemigos comunes (no jefes ni subjefes) vivos a la vez: red de seguridad contra la acumulación sin
+// fin (en partidas normales el pico medido ronda 40-50). Lo lee update.js; cada arena puede bajarlo (spawnCap).
+const ENEMY_SPAWN_CAP = 90;
+function enemyAliveCount(){ let n = 0; for(const e of enemies){ if(e.alive && e.rank!=="jefe" && e.rank!=="subjefe") n++; } return n; }
 let activeChampion = null; // subjefe/jefe activo: mientras exista, se detiene la aparición normal de monstruos
 
 // Vida/daño del jefe: base de su ficha x poder del equipo (difficulty.js) x perilla de jefes.

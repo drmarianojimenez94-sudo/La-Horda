@@ -112,11 +112,11 @@
 .cx-parchment{ max-width:680px; margin:0 auto; padding:18px 22px 20px; color:#3a2412; position:relative;
   background:radial-gradient(ellipse at 30% 20%, #f6e8c4, #e4cc96 70%, #cdb07a); border:2px solid #2a170a; box-shadow:0 0 0 2px #6b4a28, 0 6px 22px rgba(0,0,0,0.7); }
 .cx-parchment .cxp-book{ font-family:'Press Start 2P',monospace; font-size:0.5rem; letter-spacing:2px; color:#7a4a1c; }
-.cx-parchment h2{ margin:6px 0 10px; font-family:Georgia, serif; font-size:1.35rem; color:#3a1a08; }
-.cx-parchment p{ margin:0 0 10px; font-family:Georgia, serif; font-size:1rem; line-height:1.45; white-space:pre-line; }
-.cx-parchment .cxp-sign{ text-align:right; font-family:Georgia, serif; font-style:italic; color:#6b4a28; margin-top:6px; }
+.cx-parchment h2{ margin:6px 0 10px; font-family:var(--font-retro); font-weight:normal; font-size:1.6rem; line-height:1; color:#3a1a08; }
+.cx-parchment p{ margin:0 0 10px; font-family:var(--font-body); font-size:1rem; line-height:1.25; white-space:pre-line; }
+.cx-parchment .cxp-sign{ text-align:right; font-family:var(--font-body); font-style:italic; color:#6b4a28; margin-top:6px; }
 .cx-parchment .cxp-seal{ position:absolute; right:14px; bottom:-10px; width:26px; height:26px; background:radial-gradient(circle at 40% 35%, #d8453a, #8e1b16 70%); border-radius:50%; box-shadow:0 2px 0 #2a0a06; }
 .cx-chron-nav{ display:flex; justify-content:space-between; align-items:center; gap:10px; max-width:680px; margin:0 auto 10px; }
 .cx-voice{ font-family:var(--font-retro); font-size:1.05rem; line-height:1.1; color:var(--cx-ink); margin:3px 0; }
 .cx-voice i{ color:var(--cx-dim); font-style:normal; margin-right:6px; }
-@media (max-height:480px) and (orientation:landscape){ .cx-parchment{ padding:12px 14px 14px; } .cx-parchment p{ font-size:0.92rem; line-height:1.35; } }
+@media (max-height:480px) and (orientation:landscape){ .cx-parchment{ padding:12px 14px 14px; } .cx-parchment p{ font-size:0.95rem; line-height:1.18; } }

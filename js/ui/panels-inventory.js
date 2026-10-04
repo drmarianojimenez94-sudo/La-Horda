@@ -42,7 +42,7 @@ const STAT_ROWS = [
   {key:"shield",    label:"Escudo (casco+escudo)",fmt:v=>Math.round(v)},
   {key:"atkspeed",  label:"Velocidad de ataque",  fmt:v=>v+"%"},
   {key:"movespeed", label:"Velocidad de movimiento", fmt:v=>Math.round(v)},
-  {key:"cdr",       label:"Reducción de cooldown",fmt:v=>v+"%"},
+  {key:"cdr",       label:"Reducción de enfriamiento",fmt:v=>v+"%"},
   {key:"lifesteal", label:"Robo de vida",         fmt:v=>v+"%"},
   {key:"healMult",  label:"Curación realizada",   fmt:v=>(v>=0?"+":"")+v+"%"},
   {key:"critChance",label:"Prob. crítico",        fmt:v=>v+"%"},

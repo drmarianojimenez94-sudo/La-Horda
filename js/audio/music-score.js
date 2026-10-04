@@ -345,6 +345,85 @@ const MUSIC_SCORE = {
     } }
 };
 
+/* ---------- OLEADAS POR ARENA: la misma partitura de `wave`, reescrita en cada arena ----------
+   Antes las 10 arenas tocaban la MISMA oleada (solo cambiaban tonalidad, modo, tempo e instrumento): en una
+   campaña de 3-4 horas era papel tapiz. Cada arena cambia acá, sobre el material ya escrito (leitmotiv,
+   "brio", "headAug"), el ORDEN de las secciones, las PROGRESIONES, el ritmo del bajo, del arpegio y de la
+   batería y, en algunas, el instrumento. El leitmotiv (mel de A) entra más tarde (lv 0,4-0,45): que el
+   tema sea un premio cuando la horda crece, no un fondo. El puente C queda más ralo y bajo (valle).
+   La sección A de cada arena cambia de acordes y queda SIN la melodía (textura propia: arpegio, bajo y batería);
+   B, A2 y C conservan los acordes de wave porque ahí cantan el leitmotiv / "brio" (prueba de consonancia).
+   Formato: form = orden; sec.X.ch = acordes; sec.X.set = {índice de capa de wave.sec.X: cambios}
+   (null = se saca), sec.X.add = capas nuevas; swing = suingueo de la pieza.
+   Índices de wave: A[pad, arp, bajo, mel, batería, charles, batería+, stab] · B[pad, arp, bajo, mel brio,
+   pluck brio, batería, charles, coro] · A2[pad, arp, bajo, mel, mel 2.ª voz, metales, batería, batería+, stab]
+   · C[pad, bajo, metales headAug, arpegio, batería, charles]. */
+const _WV_C_VALLE = { 0:{ v:0.04 }, 1:{ v:0.095 }, 2:{ v:0.042 }, 3:{ lv:0.5 } };
+const MUSIC_WAVE_ARENA = {
+  // Ciudad: la oleada original; el tema entra con la horda y el puente es un valle
+  ciudad: { sec:{ A:{ set:{ 3:{ lv:0.4 } } }, C:{ set:_WV_C_VALLE } } },
+  // Fábrica: máquina — bajo en semicorcheas, bombo en negras, progresión frigia con el II napolitano
+  fortaleza: { form:["A","C","B","A2"],
+    sec:{
+      A:{ ch:"1 | b2M | 1 | 7 | 6 | b2M | 4 | 5M", set:{ 1:{ pat:"0 1 2 1" }, 2:{ pat:"R R R O" }, 3:null, 4:{ k:"X...X...X...X...", s:"....X.......X..." } } },
+      B:{ set:{ 2:{ pat:"R R O R R R O R" }, 5:{ k:"X.X...X.X.X...X.", s:"....X.......X.X." } } },
+      A2:{ set:{ 2:{ pat:"R R R O" } } },
+      C:{ set:Object.assign({ 4:{ T:"X...X...X...X...", s:"..x...x...x...x." } }, _WV_C_VALLE) } } },
+  // Ruinas: danza — suingueo de jiga, arpa en lugar del staccato, bajo que salta, I-bVII-IV dórico
+  bosque: { form:["A","B","C","B"], swing:0.28,
+    sec:{
+      A:{ ch:"1 | 7 | 4 | 1 | 1 | 7 | 4:8 5:8 | 1", set:{ 1:{ i:"harp", pat:"0:2 1 2 1' 2 1 0' 2", v:0.05 }, 2:{ pat:"R:4 F:2 R:2 O:4 F:4" }, 3:null, 4:{ k:"X..x..X.X..x..x.", s:"......X.......X." } } },
+      B:{ set:{ 1:{ i:"harp", v:0.045 }, 5:{ k:"X..x..X.X..x..x.", s:"......X.....X.x." } } },
+      C:{ set:Object.assign({ 2:{ i:"flute", o:12, v:0.05 } }, _WV_C_VALLE) } } },
+  // Reino Fúngico: medio tiempo, bajo largo, arpa rala; empieza en el valle
+  micelial: { form:["C","A","B","A2"],
+    sec:{
+      A:{ ch:"1 | 6 | 7 | 1 | 4 | 6 | 5 | 5", set:{ 1:{ i:"harp", pat:"0:4 2 1' 2", v:0.045 }, 2:{ pat:"R:8 F:8" }, 3:null, 4:{ k:"X.......X.......", s:"........X......." }, 5:{ h:"..x...x...x...x." } } },
+      B:{ set:{ 2:{ pat:"R:8 F:4 A:4" }, 5:{ k:"X.......X..x....", s:"........X......." } } },
+      A2:{ set:{ 2:{ pat:"R:8 F:8" }, 6:{ k:"X.......X.......", s:"........X......." } } },
+      C:{ set:_WV_C_VALLE } } },
+  // Gélida: cristal — arpa en arpegios abiertos, bajo en pizzicato, casi sin batería
+  hielo: { form:["A","C","B","A2"],
+    sec:{
+      A:{ ch:"1 | 4 | 6 | 5 | 1 | 4 | 2 | 5", set:{ 1:{ i:"harp", pat:"0:2 1 2 1' 2' 1' 2 1", v:0.04 }, 2:{ i:"pizz", pat:"R:8 O:8", v:0.26 }, 3:null, 4:{ k:"X.........X.....", s:"........X......." } } },
+      B:{ set:{ 2:{ i:"pizz", pat:"R:6 F:2 O:8", v:0.26 }, 5:{ k:"X.........X.....", s:"....x.......X..." } } },
+      A2:{ set:{ 2:{ i:"pizz", pat:"R:8 O:8", v:0.26 } } },
+      C:{ set:_WV_C_VALLE } } },
+  // Acuática: oleaje — 3+3+2 en el bajo y la batería
+  acuatica: { form:["A","B","C","A2"],
+    sec:{
+      A:{ ch:"1 | 6 | 3 | 7 | 1 | 6 | 4 | 5M", set:{ 1:{ pat:"0 2 1' 2 0' 2 1 2" }, 2:{ pat:"R:6 F:2 O:8" }, 3:null, 4:{ k:"X..X..X.X..X..X.", s:"....x..X....x..X" } } },
+      B:{ set:{ 2:{ pat:"R:3 R:3 F:2 R:3 R:3 O:2" }, 5:{ k:"X..X..X.X..X..X." } } },
+      C:{ set:_WV_C_VALLE } } },
+  // Laberinto: pasos que no cuadran — acentos 3+3+3+3+2+2 en bajo, arpegio y batería
+  laberinto: { form:["A","A2","C","B"],
+    sec:{
+      A:{ ch:"1 | b2M | 7 | 1 | 6 | b2M | 4 | 5M", set:{ 1:{ pat:"0:3 1:3 2:3 1':3 2:2 1:2" }, 2:{ pat:"R:3 R:3 F:3 R:3 O:2 A:2" }, 3:null, 4:{ k:"X..x..x..x..X.x.", s:"...X.....X....X." } } },
+      B:{ set:{ 2:{ pat:"R:3 R:3 F:3 R:3 O:2 A:2" } } },
+      A2:{ set:{ 1:{ pat:"0:3 1:3 2:3 1':3 2:2 1:2" }, 2:{ pat:"R:3 R:3 F:3 R:3 O:2 A:2" }, 6:{ k:"X..x..x..x..X.x.", s:"...X.....X....X." } } },
+      C:{ set:_WV_C_VALLE } } },
+  // Abismo: vacío — casi sin pulso, bajo largo con el tritono, empieza y vuelve al valle
+  abismo: { form:["C","A","C","B"],
+    sec:{
+      A:{ ch:"1 | b2M | 4 | b2M | 1 | 6 | b2M | 5", set:{ 1:{ pat:"0:4 1' 2:4 0'", v:0.035 }, 2:{ pat:"R:12 +6:4" }, 3:null, 4:{ k:"X...............", s:"........X......." }, 5:{ h:"....x.......x..." } } },
+      B:{ set:{ 2:{ pat:"R:8 R:4 +6:4" }, 5:{ k:"X.......X.......", s:"............X..." } } },
+      C:{ set:_WV_C_VALLE } } },
+  // Minas: canto de trabajo — bombo en negras, bajo que camina, arpegio grave
+  minas: { form:["A","B","A2","C"],
+    sec:{
+      A:{ ch:"1 | 4 | 5M | 1 | 6 | 4 | 5M | 5M", set:{ 1:{ pat:"0 1 2 1 0 1 2 1'", o:0 }, 2:{ pat:"R:4 F:4 R:4 A:4" }, 3:null, 4:{ k:"X...X...X...X...", s:"..x...X...x...X." } } },
+      B:{ set:{ 2:{ pat:"R:4 T:4 F:4 A:4" }, 5:{ k:"X...X...X...X...", s:"....X..x....X..x" } } },
+      A2:{ set:{ 2:{ pat:"R:4 F:4 R:4 A:4" } } },
+      C:{ set:Object.assign({ 4:{ T:"X...X...X...X...", s:"..X...X...X...X." } }, _WV_C_VALLE) } } },
+  // Infernal: marcha de guerra — doble bombo, redoblante con adornos, progresión frigia dominante
+  infernal: { form:["A","A2","B","C"],
+    sec:{
+      A:{ ch:"1 | b2M | 7 | 1 | 4 | b2M | 5 | 1", set:{ 2:{ pat:"R R O R R R +1 R" }, 3:null, 4:{ k:"X.x.X.x.X.x.X.x.", s:"....X.......X.xx" } } },
+      B:{ set:{ 2:{ pat:"R R O R R +1 O R" } } },
+      A2:{  },
+      C:{ set:Object.assign({ 4:{ T:"X..X..X.X..X..X.", s:"xxxxX...xxxxX..." } }, _WV_C_VALLE) } } }
+};
+
 // GOLPES (stingers): frases cortas que se tocan sobre la TONALIDAD y el ACORDE que esté sonando
 // (así una subida de nivel no desafina con la música). m = motivo (grados, en el modo `scale`
 // desde la fundamental del acorde actual), i = instrumento, o = octava, arp = arpegio del acorde.

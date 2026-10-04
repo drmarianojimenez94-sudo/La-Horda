@@ -306,6 +306,7 @@ function useUltimate(){
   const passiveCdMult = Math.max(0.4, 1 - passiveSum(player.classKey,"cd_mult"));
   player.ultCd = ultCooldownFor(player, ult.cd, passiveCdMult);
   gainSkillUseXp(player.classKey, "ult");
+  if(typeof hapticPulse==="function") hapticPulse([30, 40, 60], true); // vibración (Opciones, js/core/prefs.js)
   castAbility(player, ult, true);
 }
 function castAbility(caster, sk, isUlt, idx){
