@@ -45,14 +45,15 @@ var CHAMPION_TAXONOMY = {
   ynara: {category:"FAMILY"},
   nano_gm: {category:"FOUNDER", founderKey:"nano", releaseState:"TESTING", acquisitionType:"FOUNDER_ENTITLEMENT"},
   facu_gm: {category:"FOUNDER", founderKey:"facu", releaseState:"TESTING", acquisitionType:"FOUNDER_ENTITLEMENT"},
-  // Ascensión: visibles siempre; se ganan o se compran (ver la categoría ASCENSION). artPending: su arte todavía no
-  // pasa el gate de estilo (tools/art/painter) -> se muestran como CONCEPTO, bloqueados: ni compra ni logro ni concesión.
-  aurelia:  {category:"ASCENSION", artPending:true},
-  khepri:   {category:"ASCENSION", artPending:true},
-  velmira:  {category:"ASCENSION", artPending:true},
-  vhal:     {category:"ASCENSION", artPending:true},
-  bront:    {category:"ASCENSION", artPending:true},
-  oriel:    {category:"ASCENSION", artPending:true}
+  // Ascensión: visibles siempre; se ganan o se compran (ver la categoría ASCENSION). Su arte lo pintó El Pintor
+  // (tools/art/painter) y pasa los gates de estilo y escala. artPending:true vuelve a dejar a un campeón como CONCEPTO
+  // (bloqueado: ni compra ni logro ni concesión) mientras su arte no pase esos gates.
+  aurelia:  {category:"ASCENSION"},
+  khepri:   {category:"ASCENSION"},
+  velmira:  {category:"ASCENSION"},
+  vhal:     {category:"ASCENSION"},
+  bront:    {category:"ASCENSION"},
+  oriel:    {category:"ASCENSION"}
 };
 
 // EVENT infrastructure. Example shape (no event champion exists yet):

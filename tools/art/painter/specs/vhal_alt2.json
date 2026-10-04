@@ -1,0 +1,140 @@
+{
+ "id": "vhal_alt2",
+ "name": "Vhal — Nebulosa Carmesí",
+ "skinOf": "vhal",
+ "prompt": "Skin de Vhal: cuerpo de nebulosa roja y rosa, túnica de seda estelar, astrolabio de cristal.",
+ "body": "sira_skin",
+ "head": "dariel_skin",
+ "paint": [
+  {
+   "part": "head",
+   "materialsOf": "#633d2e",
+   "take": 2,
+   "noSkin": true,
+   "ramp": [
+    "#2a0a1c",
+    "#5a1838",
+    "#952c5a",
+    "#d2648e",
+    "#ffc2d8"
+   ],
+   "gamma": 0.9
+  },
+  {
+   "part": "all",
+   "hue": [
+    5,
+    35
+   ],
+   "minChroma": 22,
+   "noSkin": true,
+   "to": "#7a1838",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "body",
+   "hue": [
+    200,
+    350
+   ],
+   "minChroma": 5,
+   "to": "#5a1030",
+   "keepLight": 0.5,
+   "chroma": 1.2
+  },
+  {
+   "part": "body",
+   "materialsOf": "#ebd2ae",
+   "take": 1,
+   "to": "#f2d4e4",
+   "keepLight": 0.6,
+   "chroma": 0.6
+  },
+  {
+   "part": "body",
+   "materialsOf": "#aba3b5",
+   "take": 1,
+   "to": "#d8a8c8",
+   "keepLight": 0.6,
+   "chroma": 0.8
+  },
+  {
+   "part": "body",
+   "materialsOf": "#7c523c",
+   "take": 1,
+   "to": "#5a3040",
+   "keepLight": 0.6,
+   "chroma": 0.6
+  }
+ ],
+ "accessories": [
+  {
+   "module": "vhal_death",
+   "ramp": [
+    "#2a0a1c",
+    "#5a1838",
+    "#952c5a",
+    "#d2648e",
+    "#ffc2d8"
+   ]
+  },
+  {
+   "module": "vhal_stars",
+   "hue": [
+    300,
+    60
+   ],
+   "minChroma": 10,
+   "maxL": 40,
+   "density": 0.05,
+   "ramp": [
+    "#ff8ab8",
+    "#ffd6e8",
+    "#ffffff"
+   ],
+   "glow": [
+    "#b02a5a",
+    "#ff6a8e",
+    "#ffb0c8"
+   ],
+   "chest": {
+    "size": [
+     4,
+     10
+    ],
+    "dy": 10,
+    "ramp": [
+     "#12030c",
+     "#2e0a1e",
+     "#5a1236",
+     "#8a1e4c"
+    ],
+    "rim": [
+     "#c23a6e",
+     "#ff9ac0"
+    ]
+   }
+  },
+  {
+   "module": "vhal_astrolabe",
+   "r": [
+    8,
+    5
+   ],
+   "width": 1,
+   "ramp": [
+    "#3a5a8a",
+    "#7ab8e0",
+    "#c8f0ff",
+    "#ffffff"
+   ],
+   "core": [
+    "#ff4a8a",
+    "#ffb0d0",
+    "#ffffff"
+   ],
+   "gap": 100
+  }
+ ]
+}

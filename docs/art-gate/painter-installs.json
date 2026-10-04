@@ -1,0 +1,178 @@
+{
+ "aurelia": {
+  "champion": "aurelia",
+  "spec": "tools/art/painter/specs/aurelia.json",
+  "body": "sira_set",
+  "head": "maura_skin",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "nano_gm": {
+  "champion": "nano_gm",
+  "spec": "tools/art/painter/specs/nano_gm.json",
+  "body": "zahra",
+  "head": "dariel",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "nano_gm_alt1": {
+  "champion": "nano_gm",
+  "spec": "tools/art/painter/specs/nano_gm_alt1.json",
+  "body": "zahra",
+  "head": "dariel",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "facu_gm": {
+  "champion": "facu_gm",
+  "spec": "tools/art/painter/specs/facu_gm.json",
+  "body": "nahir",
+  "head": null,
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "facu_gm_alt1": {
+  "champion": "facu_gm",
+  "spec": "tools/art/painter/specs/facu_gm_alt1.json",
+  "body": "nahir",
+  "head": null,
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "khepri": {
+  "champion": "khepri",
+  "spec": "tools/art/painter/specs/khepri.json",
+  "body": "nahir",
+  "head": "vesper",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "khepri_alt2": {
+  "champion": "khepri",
+  "spec": "tools/art/painter/specs/khepri_alt2.json",
+  "body": "nahir",
+  "head": "vesper_set",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "vhal": {
+  "champion": "vhal",
+  "spec": "tools/art/painter/specs/vhal.json",
+  "body": "sira",
+  "head": "dariel",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "vhal_alt1": {
+  "champion": "vhal",
+  "spec": "tools/art/painter/specs/vhal_alt1.json",
+  "body": "sira_set",
+  "head": "dariel_set",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "bront": {
+  "champion": "bront",
+  "spec": "tools/art/painter/specs/bront.json",
+  "body": "baltra",
+  "head": null,
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "bront_alt1": {
+  "champion": "bront",
+  "spec": "tools/art/painter/specs/bront_alt1.json",
+  "body": "baltra_set",
+  "head": null,
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "oriel": {
+  "champion": "oriel",
+  "spec": "tools/art/painter/specs/oriel.json",
+  "body": "maura_set",
+  "head": "sira",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "oriel_alt1": {
+  "champion": "oriel",
+  "spec": "tools/art/painter/specs/oriel_alt1.json",
+  "body": "maura_set",
+  "head": "sira",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "oriel_alt2": {
+  "champion": "oriel",
+  "spec": "tools/art/painter/specs/oriel_alt2.json",
+  "body": "maura_set",
+  "head": "sira",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "khepri_alt1": {
+  "champion": "khepri",
+  "spec": "tools/art/painter/specs/khepri_alt1.json",
+  "body": "nahir_skin",
+  "head": "vesper",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "velmira": {
+  "champion": "velmira",
+  "spec": "tools/art/painter/specs/velmira.json",
+  "body": "maura_skin",
+  "head": "orsa",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "velmira_alt1": {
+  "champion": "velmira",
+  "spec": "tools/art/painter/specs/velmira_alt1.json",
+  "body": "maura_skin",
+  "head": "orsa",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "velmira_alt2": {
+  "champion": "velmira",
+  "spec": "tools/art/painter/specs/velmira_alt2.json",
+  "body": "maura_skin",
+  "head": "orsa",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "vhal_alt2": {
+  "champion": "vhal",
+  "spec": "tools/art/painter/specs/vhal_alt2.json",
+  "body": "sira_skin",
+  "head": "dariel_skin",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "bront_alt2": {
+  "champion": "bront",
+  "spec": "tools/art/painter/specs/bront_alt2.json",
+  "body": "baltra_skin",
+  "head": null,
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "aurelia_alt1": {
+  "champion": "aurelia",
+  "spec": "tools/art/painter/specs/aurelia_alt1.json",
+  "body": "sira_set",
+  "head": "maura_skin",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "aurelia_alt2": {
+  "champion": "aurelia",
+  "spec": "tools/art/painter/specs/aurelia_alt2.json",
+  "body": "sira_set",
+  "head": "maura_skin",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ }
+}

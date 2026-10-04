@@ -1,0 +1,130 @@
+{
+ "id": "bront_alt1",
+ "name": "Bront — Bastión de Bronce Ritual",
+ "skinOf": "bront",
+ "prompt": "Skin de Bront: placas de bronce grabadas con plegarias, cristal ámbar, estandartes en los hombros.",
+ "body": "baltra_set",
+ "paint": [
+  {
+   "part": "all",
+   "hue": [
+    55,
+    95
+   ],
+   "minChroma": 16,
+   "to": "#b07a3a",
+   "keepLight": 0.6,
+   "chroma": 0.85
+  },
+  {
+   "part": "all",
+   "hue": [
+    25,
+    55
+   ],
+   "minChroma": 45,
+   "to": "#8a1e16",
+   "keepLight": 0.6,
+   "chroma": 0.9
+  },
+  {
+   "part": "all",
+   "materialsOf": "#20373e",
+   "take": 1,
+   "to": "#2a1e1a",
+   "keepLight": 0.7,
+   "chroma": 0.6
+  }
+ ],
+ "accessories": [
+  {
+   "module": "bront_core",
+   "donor": "baltra_set",
+   "noFace": [
+    18,
+    19,
+    25
+   ],
+   "chestDy": 7,
+   "faceBox": {
+    "13": [
+     53,
+     60,
+     73,
+     80
+    ],
+    "30": [
+     45,
+     55,
+     68,
+     76
+    ]
+   },
+   "chestAt": {
+    "25": [
+     56,
+     82
+    ]
+   },
+   "noChest": [
+    19
+   ],
+   "crystal": [
+    "#5a2004",
+    "#a8520e",
+    "#e8901e",
+    "#ffc860",
+    "#fff2c0"
+   ],
+   "glow": "#ffb040",
+   "eyes": [
+    "#e88a1e",
+    "#ffd27a",
+    "#fff6d8"
+   ],
+   "deathEyes": [
+    "#4a2a10",
+    "#6a3a18"
+   ],
+   "void": [
+    "#060302",
+    "#120a06",
+    "#1e140c",
+    "#2e2014"
+   ],
+   "rigDonor": "baltra",
+   "useRig": [
+    6,
+    17
+   ]
+  },
+  {
+   "module": "bront_plates",
+   "size": [
+    8,
+    11
+   ],
+   "spread": 21,
+   "orbit": [
+    3,
+    3
+   ],
+   "ramp": [
+    "#2a1608",
+    "#6a4018",
+    "#b07a3a",
+    "#e2b06a",
+    "#fbe0a8"
+   ],
+   "rune": [
+    "#3a1e08",
+    "#ffd27a"
+   ]
+  },
+  {
+   "module": "bront_banners",
+   "h": 40,
+   "spread": 17
+  }
+ ]
+}

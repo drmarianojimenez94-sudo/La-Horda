@@ -1,0 +1,412 @@
+{
+ "baltra": {
+  "atlas": "assets/sprites/champions/baltra/atlas.png",
+  "champion": "baltra",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "casco de buzo, armadura de bronce, campana",
+  "tags": [
+   "tanque",
+   "pesado",
+   "robusto",
+   "metal",
+   "bronce",
+   "casco",
+   "campana"
+  ]
+ },
+ "baltra_set": {
+  "atlas": "assets/sprites/champions/baltra/skins/baltra_set/atlas.png",
+  "champion": "baltra",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "casco de buzo con cintas rojas de festival",
+  "tags": [
+   "tanque",
+   "pesado",
+   "metal",
+   "casco",
+   "festival",
+   "cintas"
+  ]
+ },
+ "baltra_skin": {
+  "atlas": "assets/sprites/champions/baltra/skins/baltra_skin/atlas.png",
+  "champion": "baltra",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "casco de buzo plateado de campanario",
+  "tags": [
+   "tanque",
+   "pesado",
+   "metal",
+   "plata",
+   "casco",
+   "campana"
+  ]
+ },
+ "dariel": {
+  "atlas": "assets/sprites/champions/dariel/atlas.png",
+  "champion": "dariel",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "levita carmesí, pelo castaño revuelto, batuta dorada",
+  "tags": [
+   "elegante",
+   "abrigo",
+   "levita",
+   "musico",
+   "batuta",
+   "delgado"
+  ]
+ },
+ "dariel_set": {
+  "atlas": "assets/sprites/champions/dariel/skins/dariel_set/atlas.png",
+  "champion": "dariel",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "levita de carnaval con sombrero y plumas",
+  "tags": [
+   "elegante",
+   "abrigo",
+   "carnaval",
+   "sombrero",
+   "pluma"
+  ]
+ },
+ "dariel_skin": {
+  "atlas": "assets/sprites/champions/dariel/skins/dariel_skin/atlas.png",
+  "champion": "dariel",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "levita con guantes blancos, director",
+  "tags": [
+   "elegante",
+   "abrigo",
+   "guantes",
+   "director"
+  ]
+ },
+ "maura": {
+  "atlas": "assets/sprites/champions/maura/atlas.png",
+  "champion": "maura",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "túnica verde de curandera, pelo castaño largo, báculo de madera",
+  "tags": [
+   "sanadora",
+   "baculo",
+   "bastón",
+   "tunica",
+   "pelo",
+   "largo",
+   "naturaleza"
+  ]
+ },
+ "maura_set": {
+  "atlas": "assets/sprites/champions/maura/skins/maura_set/atlas.png",
+  "champion": "maura",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "capa blanca de piel, báculo, pelo castaño",
+  "tags": [
+   "sanadora",
+   "baculo",
+   "bastón",
+   "capa",
+   "blanca",
+   "invierno"
+  ]
+ },
+ "maura_skin": {
+  "atlas": "assets/sprites/champions/maura/skins/maura_skin/atlas.png",
+  "champion": "maura",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "vestido rojo con rosa en el pelo, báculo rojo",
+  "tags": [
+   "vestido",
+   "rojo",
+   "rosa",
+   "baculo",
+   "bastón",
+   "pelo",
+   "largo",
+   "elegante"
+  ]
+ },
+ "nahir": {
+  "atlas": "assets/sprites/champions/nahir/atlas.png",
+  "champion": "nahir",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "armadura oscura, pelo negro, garras de cristal turquesa, media máscara",
+  "tags": [
+   "asesino",
+   "garras",
+   "armadura",
+   "oscuro",
+   "cristal",
+   "agil"
+  ]
+ },
+ "nahir_set": {
+  "atlas": "assets/sprites/champions/nahir/skins/nahir_set/atlas.png",
+  "champion": "nahir",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "armadura de fuego naranja y garras de cristal",
+  "tags": [
+   "asesino",
+   "garras",
+   "fuego",
+   "armadura",
+   "naranja"
+  ]
+ },
+ "nahir_skin": {
+  "atlas": "assets/sprites/champions/nahir/skins/nahir_skin/atlas.png",
+  "champion": "nahir",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "armadura negra y oro con capa violeta",
+  "tags": [
+   "asesino",
+   "garras",
+   "capa",
+   "violeta",
+   "oro",
+   "oscuro"
+  ]
+ },
+ "orsa": {
+  "atlas": "assets/sprites/champions/orsa/atlas.png",
+  "champion": "orsa",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "trenzas pelirrojas, ballesta mecánica, hombrera de metal",
+  "tags": [
+   "tiradora",
+   "ballesta",
+   "trenzas",
+   "pelirroja",
+   "mecanica"
+  ]
+ },
+ "orsa_set": {
+  "atlas": "assets/sprites/champions/orsa/skins/orsa_set/atlas.png",
+  "champion": "orsa",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "gorro rojo, ballesta pesada, trenzas",
+  "tags": [
+   "tiradora",
+   "ballesta",
+   "gorro",
+   "rojo",
+   "trenzas"
+  ]
+ },
+ "orsa_skin": {
+  "atlas": "assets/sprites/champions/orsa/skins/orsa_skin/atlas.png",
+  "champion": "orsa",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "capa azul petróleo, ballesta, trenzas pelirrojas",
+  "tags": [
+   "tiradora",
+   "ballesta",
+   "capa",
+   "azul",
+   "trenzas"
+  ]
+ },
+ "renko": {
+  "atlas": "assets/sprites/champions/renko/atlas.png",
+  "champion": "renko",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "barba gris, gorro, pala/cuchilla pesada, abrigo de cuero",
+  "tags": [
+   "tanque",
+   "fuerte",
+   "barba",
+   "cuchilla",
+   "pala",
+   "viejo",
+   "minero"
+  ]
+ },
+ "renko_skin": {
+  "atlas": "assets/sprites/champions/renko/skins/renko_skin/atlas.png",
+  "champion": "renko",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "armadura de placas clara, barba blanca, cuchilla",
+  "tags": [
+   "tanque",
+   "fuerte",
+   "armadura",
+   "placas",
+   "barba",
+   "cuchilla"
+  ]
+ },
+ "sira": {
+  "atlas": "assets/sprites/champions/sira/atlas.png",
+  "champion": "sira",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "pelo plateado corto, capa azul, pluma y brújula",
+  "tags": [
+   "maga",
+   "cartografa",
+   "pluma",
+   "brujula",
+   "capa",
+   "azul",
+   "plateado"
+  ]
+ },
+ "sira_set": {
+  "atlas": "assets/sprites/champions/sira/skins/sira_set/atlas.png",
+  "champion": "sira",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "túnica azul y oro, pluma, brújula dorada",
+  "tags": [
+   "maga",
+   "tunica",
+   "azul",
+   "oro",
+   "brujula",
+   "compas",
+   "pluma"
+  ]
+ },
+ "sira_skin": {
+  "atlas": "assets/sprites/champions/sira/skins/sira_skin/atlas.png",
+  "champion": "sira",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "capa azul con engranaje dorado en el pelo",
+  "tags": [
+   "maga",
+   "capa",
+   "azul",
+   "engranaje",
+   "pluma"
+  ]
+ },
+ "tibor": {
+  "atlas": "assets/sprites/champions/tibor/atlas.png",
+  "champion": "tibor",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "capucha de apicultor, barba, farol",
+  "tags": [
+   "apicultor",
+   "capucha",
+   "farol",
+   "barba",
+   "humilde"
+  ]
+ },
+ "tibor_set": {
+  "atlas": "assets/sprites/champions/tibor/skins/tibor_set/atlas.png",
+  "champion": "tibor",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "capucha con máscara de apicultor dorada, farol",
+  "tags": [
+   "apicultor",
+   "mascara",
+   "capucha",
+   "farol",
+   "misterioso"
+  ]
+ },
+ "tibor_skin": {
+  "atlas": "assets/sprites/champions/tibor/skins/tibor_skin/atlas.png",
+  "champion": "tibor",
+  "source": "commissioned",
+  "gender": "hombre",
+  "look": "capucha clara, barba, farol dorado",
+  "tags": [
+   "apicultor",
+   "capucha",
+   "farol"
+  ]
+ },
+ "vesper": {
+  "atlas": "assets/sprites/champions/vesper/atlas.png",
+  "champion": "vesper",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "capucha carmesí, pelo blanco, dagas dobles",
+  "tags": [
+   "asesina",
+   "capucha",
+   "dagas",
+   "sigilo",
+   "oscuro",
+   "rojo"
+  ]
+ },
+ "vesper_set": {
+  "atlas": "assets/sprites/champions/vesper/skins/vesper_set/atlas.png",
+  "champion": "vesper",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "capucha marrón de viaje, dagas",
+  "tags": [
+   "asesina",
+   "capucha",
+   "dagas",
+   "viajera"
+  ]
+ },
+ "zahra": {
+  "atlas": "assets/sprites/champions/zahra/atlas.png",
+  "champion": "zahra",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "gafas de soldadora, guantelete de horno, brazos desnudos",
+  "tags": [
+   "mecanica",
+   "guantelete",
+   "gafas",
+   "fuego",
+   "vapor",
+   "fuerte",
+   "brazos"
+  ]
+ },
+ "zahra_set": {
+  "atlas": "assets/sprites/champions/zahra/skins/zahra_set/atlas.png",
+  "champion": "zahra",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "gafas, máscara de filtro, guantelete al rojo",
+  "tags": [
+   "mecanica",
+   "guantelete",
+   "fuego",
+   "mascara",
+   "vapor"
+  ]
+ },
+ "zahra_skin": {
+  "atlas": "assets/sprites/champions/zahra/skins/zahra_skin/atlas.png",
+  "champion": "zahra",
+  "source": "commissioned",
+  "gender": "mujer",
+  "look": "pañuelo rojo con lunares, brazo vendado",
+  "tags": [
+   "mecanica",
+   "pañuelo",
+   "vendas",
+   "guantelete"
+  ]
+ }
+}

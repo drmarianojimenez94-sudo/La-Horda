@@ -1,0 +1,137 @@
+{
+ "id": "vhal",
+ "name": "Vhal, El Astrónomo Caído",
+ "prompt": "Mago astrónomo (#6f7cf2) de túnica larga; el torso y los brazos se abren en cielo estrellado; un astrolabio roto orbita su mano.",
+ "body": "sira",
+ "head": "dariel",
+ "paint": [
+  {
+   "part": "head",
+   "materialsOf": "#633d2e",
+   "take": 2,
+   "noSkin": true,
+   "ramp": [
+    "#0b0c1c",
+    "#181a38",
+    "#272c5a",
+    "#3e4688",
+    "#6a74c4"
+   ],
+   "gamma": 0.9
+  },
+  {
+   "part": "head",
+   "hue": [
+    250,
+    340
+   ],
+   "minChroma": 0,
+   "minL": 40,
+   "ramp": [
+    "#14162e",
+    "#22274e",
+    "#333b74",
+    "#4a549a",
+    "#6872bc"
+   ]
+  },
+  {
+   "part": "all",
+   "hue": [
+    5,
+    35
+   ],
+   "minChroma": 22,
+   "noSkin": true,
+   "to": "#1c2156",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "body",
+   "hue": [
+    250,
+    330
+   ],
+   "minChroma": 8,
+   "to": "#151a46",
+   "keepLight": 0.55,
+   "chroma": 1.1
+  },
+  {
+   "part": "body",
+   "materialsOf": "#d6c0a8",
+   "take": 1,
+   "to": "#262e78",
+   "keepLight": 0.25,
+   "chroma": 1.0,
+   "contrast": 0.6
+  },
+  {
+   "part": "body",
+   "materialsOf": "#856f66",
+   "take": 1,
+   "to": "#262c70",
+   "keepLight": 0.5,
+   "chroma": 1.0
+  },
+  {
+   "part": "body",
+   "materialsOf": "#beb6bc",
+   "take": 1,
+   "to": "#5a64c8",
+   "keepLight": 0.4,
+   "chroma": 0.9
+  },
+  {
+   "part": "body",
+   "materialsOf": "#614339",
+   "take": 1,
+   "to": "#3a2f4a",
+   "keepLight": 0.7,
+   "chroma": 0.6
+  }
+ ],
+ "accessories": [
+  {
+   "module": "vhal_death",
+   "ramp": [
+    "#0b0c1c",
+    "#181a38",
+    "#272c5a",
+    "#3e4688",
+    "#6a74c4"
+   ]
+  },
+  {
+   "module": "vhal_stars",
+   "hue": [
+    250,
+    320
+   ],
+   "maxL": 42,
+   "density": 0.05,
+   "chest": {
+    "size": [
+     4,
+     10
+    ],
+    "dy": 10,
+    "ramp": [
+     "#04051a",
+     "#0a0e34",
+     "#141a52",
+     "#222c80"
+    ]
+   }
+  },
+  {
+   "module": "vhal_astrolabe",
+   "r": [
+    8,
+    5
+   ],
+   "width": 1
+  }
+ ]
+}

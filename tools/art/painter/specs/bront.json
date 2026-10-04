@@ -1,0 +1,83 @@
+{
+ "id": "bront",
+ "name": "Bront, La Fortaleza Viviente",
+ "prompt": "Tanque (#8aa4b8): armadura gigantesca y VACÍA; en el pecho flota un cristal celeste donde iría el corazón; placas sueltas orbitan sus hombros.",
+ "body": "baltra",
+ "paint": [
+  {
+   "part": "all",
+   "hue": [
+    35,
+    95
+   ],
+   "minChroma": 16,
+   "to": "#8aa4b8",
+   "keepLight": 0.55,
+   "chroma": 0.7,
+   "contrast": 1.1
+  },
+  {
+   "part": "all",
+   "materialsOf": "#23262f",
+   "take": 1,
+   "to": "#2a3440",
+   "keepLight": 0.75,
+   "chroma": 0.8
+  },
+  {
+   "part": "all",
+   "materialsOf": "#4b4543",
+   "take": 1,
+   "to": "#4a5a68",
+   "keepLight": 0.7,
+   "chroma": 0.6
+  }
+ ],
+ "accessories": [
+  {
+   "module": "bront_core",
+   "donor": "baltra",
+   "noFace": [
+    18,
+    19,
+    25
+   ],
+   "chestDy": 7,
+   "faceBox": {
+    "13": [
+     53,
+     60,
+     73,
+     80
+    ],
+    "30": [
+     45,
+     55,
+     68,
+     76
+    ]
+   },
+   "chestAt": {
+    "25": [
+     56,
+     82
+    ]
+   },
+   "noChest": [
+    19
+   ]
+  },
+  {
+   "module": "bront_plates",
+   "size": [
+    8,
+    11
+   ],
+   "spread": 21,
+   "orbit": [
+    3,
+    3
+   ]
+  }
+ ]
+}

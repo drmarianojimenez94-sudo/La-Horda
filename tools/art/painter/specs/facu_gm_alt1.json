@@ -1,0 +1,150 @@
+{
+ "id": "facu_gm_alt1",
+ "name": "Facu GM — Soberano de la Fosa",
+ "prompt": "Skin fundadora (cosmética). Manto de agua negra con bioluminiscencia violeta, corona de hueso de leviatán, quilla de obsidiana marina. Mismo cuerpo, misma silueta, mismas poses.",
+ "body": "nahir",
+ "head": null,
+ "paint": [
+  {
+   "part": "all",
+   "materialsOf": "#0c4e54",
+   "take": 3,
+   "noSkin": true,
+   "ramp": [
+    "#040410",
+    "#0c0b24",
+    "#1a1540",
+    "#2e2066",
+    "#5a38a8",
+    "#b48cff"
+   ],
+   "gamma": 1.0
+  },
+  {
+   "part": "all",
+   "materialsOf": "#c3d7db",
+   "take": 1,
+   "noSkin": true,
+   "ramp": [
+    "#2a2340",
+    "#4b4170",
+    "#7d6fa8",
+    "#c3b6e6"
+   ],
+   "gamma": 1.0
+  },
+  {
+   "part": "all",
+   "materialsOf": "#4d7190",
+   "take": 1,
+   "noSkin": true,
+   "ramp": [
+    "#0e0b1c",
+    "#2a2240",
+    "#4b4170",
+    "#7d6fa8"
+   ],
+   "gamma": 1.0
+  },
+  {
+   "part": "all",
+   "materialsOf": "#544035",
+   "take": 1,
+   "noSkin": true,
+   "ramp": [
+    "#0a090f",
+    "#1c1924",
+    "#343040",
+    "#5a5070"
+   ],
+   "gamma": 1.0
+  },
+  {
+   "part": "all",
+   "materialsOf": "#4a4a4a",
+   "take": 2,
+   "noSkin": true,
+   "ramp": [
+    "#07070d",
+    "#131422",
+    "#22243a",
+    "#373a56",
+    "#5d6080"
+   ],
+   "gamma": 0.9
+  }
+ ],
+ "accessories": [
+  {
+   "module": "facu_keel",
+   "body": "nahir",
+   "ramp": [
+    "#030207",
+    "#0c0918",
+    "#1b1430",
+    "#33275a",
+    "#5e4aa0",
+    "#cdb6ff"
+   ],
+   "edge": "#b98cff",
+   "gamma": 2.4
+  },
+  {
+   "module": "facu_head",
+   "body": "nahir",
+   "head": "dariel",
+   "hairRamp": [
+    "#050408",
+    "#0e0c12",
+    "#1b1720",
+    "#2c2532",
+    "#463b4c"
+   ],
+   "hairGamma": 0.9,
+   "grain": 0.9,
+   "grainL": 0.45,
+   "hairGrain": 1.0,
+   "hairGrainL": 0.6
+  },
+  {
+   "module": "facu_mantle",
+   "body": "nahir",
+   "ripple": 0.55,
+   "foam": "#dcc8ff",
+   "foam2": "#9b74e8",
+   "frillRamp": [
+    "#1c1238",
+    "#4a2f8a",
+    "#a47ef0"
+   ],
+   "light": "#8a5cf0",
+   "outline": "#05030c",
+   "outHue": [
+    150,
+    340
+   ],
+   "minC": 3
+  },
+  {
+   "module": "facu_crown",
+   "water": [
+    "#4a4034",
+    "#857660",
+    "#c2b493",
+    "#e9dfc2",
+    "#fffaf0"
+   ],
+   "metal": [
+    "#120c22",
+    "#2e2350",
+    "#55409a",
+    "#a07ff0"
+   ],
+   "outline": "#0a0710",
+   "crestScale": 0.6,
+   "heightAdd": 2,
+   "wave": 0.0
+  }
+ ],
+ "skinOf": "facu_gm"
+}
