@@ -26,8 +26,9 @@ const MIME = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
   const page = await ctx.newPage();
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(() => { window.__campaignMode = true; });
-  await page.goto('http://q4.local/index.html', { waitUntil: 'load' });
-  for (let i = 0; i < 300; i++) { const ok = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; }); if (ok) break; await new Promise(r => setTimeout(r, 100)); }
+  page.setDefaultTimeout(0); // el Monte Carlo tarda; y con la máquina cargada la página (~1.800 archivos) también
+  await page.goto('http://q4.local/index.html', { waitUntil: 'load', timeout: 300000 });
+  for (let i = 0; i < 1200; i++) { const ok = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; }); if (ok) break; await new Promise(r => setTimeout(r, 100)); }
   const out = await page.evaluate((N) => {
     loop = function () {};
     let seed = 20260929; const rng = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };

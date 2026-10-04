@@ -14,8 +14,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|404/.test(m.text())) errors.push('console: ' + m.text().slice(0, 300)); });
   await page.addInitScript(() => { window.__campaignMode = true; });
-  await page.goto(`${BASE}/index.html?dev=1`, { waitUntil: 'load' });
-  for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
+  page.setDefaultTimeout(180000); // con la máquina cargada la carga (~1.800 archivos) pasa los 30 s por defecto
+  await page.goto(`${BASE}/index.html?dev=1`, { waitUntil: 'load', timeout: 180000 });
+  for (let k = 0; k < 1200; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   const E = (fn, a) => page.evaluate(fn, a);
   await E(() => { loop = function(){};
     window.__start = (arena, lv, champ) => { for (const k of Object.keys(save.champions)) save.champions[k].unlocked = true;
