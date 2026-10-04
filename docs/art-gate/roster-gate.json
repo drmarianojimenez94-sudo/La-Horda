@@ -1836,80 +1836,80 @@
   "nano_gm": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 33,
+    "full": 82,
+    "w": 112,
     "foot": -2
    },
    "side": {
     "body": 59,
     "full": 61,
-    "w": 33,
+    "w": 57,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 60,
-    "w": 33,
+    "full": 66,
+    "w": 83,
     "foot": -2
    }
   },
   "nano_gm@nano_gm_alt1": {
    "front": {
-    "body": 60,
-    "full": 60,
-    "w": 34,
+    "body": 59,
+    "full": 70,
+    "w": 94,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 59,
+    "w": 54,
     "foot": -2
    },
    "up": {
-    "body": 60,
-    "full": 60,
-    "w": 34,
+    "body": 59,
+    "full": 62,
+    "w": 76,
     "foot": -2
    }
   },
   "facu_gm": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 33,
+    "full": 67,
+    "w": 52,
     "foot": -2
    },
    "side": {
-    "body": 59,
-    "full": 61,
-    "w": 33,
+    "body": 60,
+    "full": 63,
+    "w": 62,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 60,
-    "w": 33,
+    "body": 58,
+    "full": 69,
+    "w": 60,
     "foot": -2
    }
   },
   "facu_gm@facu_gm_alt1": {
    "front": {
-    "body": 58,
-    "full": 60,
-    "w": 33,
+    "body": 59,
+    "full": 67,
+    "w": 52,
     "foot": -2
    },
    "side": {
-    "body": 58,
-    "full": 61,
-    "w": 32,
+    "body": 60,
+    "full": 63,
+    "w": 62,
     "foot": -2
    },
    "up": {
     "body": 58,
-    "full": 60,
-    "w": 33,
+    "full": 69,
+    "w": 60,
     "foot": -2
    }
   },
@@ -1935,341 +1935,341 @@
   },
   "aurelia@aurelia_alt1": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 61,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 61,
+    "w": 65,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 57,
+    "full": 65,
+    "w": 62,
     "foot": -2
    }
   },
   "aurelia@aurelia_alt2": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 61,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 61,
+    "w": 65,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 57,
+    "full": 65,
+    "w": 62,
     "foot": -2
    }
   },
   "khepri": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 66,
+    "w": 54,
     "foot": -2
    },
    "side": {
-    "body": 60,
-    "full": 69,
-    "w": 38,
+    "body": 58,
+    "full": 62,
+    "w": 56,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 68,
+    "w": 54,
     "foot": -2
    }
   },
   "khepri@khepri_alt1": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 71,
+    "w": 60,
     "foot": -2
    },
    "side": {
-    "body": 60,
-    "full": 69,
-    "w": 38,
+    "body": 59,
+    "full": 63,
+    "w": 60,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 69,
+    "w": 57,
     "foot": -2
    }
   },
   "khepri@khepri_alt2": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 58,
+    "full": 66,
+    "w": 56,
     "foot": -2
    },
    "side": {
-    "body": 60,
-    "full": 69,
-    "w": 38,
+    "body": 59,
+    "full": 62,
+    "w": 61,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 58,
+    "full": 67,
+    "w": 56,
     "foot": -2
    }
   },
   "velmira": {
    "front": {
-    "body": 59,
-    "full": 61,
-    "w": 31,
+    "body": 58,
+    "full": 65,
+    "w": 57,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 61,
-    "w": 29,
+    "full": 62,
+    "w": 51,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 61,
-    "w": 31,
+    "full": 64,
+    "w": 59,
     "foot": -2
    }
   },
   "velmira@velmira_alt1": {
    "front": {
-    "body": 59,
-    "full": 64,
-    "w": 30,
+    "body": 58,
+    "full": 65,
+    "w": 57,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 60,
-    "w": 28,
+    "full": 64,
+    "w": 49,
     "foot": -2
    },
    "up": {
     "body": 59,
     "full": 64,
-    "w": 30,
+    "w": 61,
     "foot": -2
    }
   },
   "velmira@velmira_alt2": {
    "front": {
-    "body": 59,
-    "full": 61,
-    "w": 31,
+    "body": 58,
+    "full": 65,
+    "w": 57,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 61,
-    "w": 29,
+    "full": 62,
+    "w": 51,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 61,
-    "w": 31,
+    "full": 64,
+    "w": 59,
     "foot": -2
    }
   },
   "vhal": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 37,
+    "body": 60,
+    "full": 71,
+    "w": 71,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 63,
+    "w": 64,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 61,
+    "full": 66,
+    "w": 59,
     "foot": -2
    }
   },
   "vhal@vhal_alt1": {
    "front": {
     "body": 59,
-    "full": 59,
-    "w": 37,
+    "full": 67,
+    "w": 59,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 62,
+    "w": 63,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 58,
+    "full": 65,
+    "w": 60,
     "foot": -2
    }
   },
   "vhal@vhal_alt2": {
    "front": {
     "body": 59,
-    "full": 59,
-    "w": 37,
+    "full": 62,
+    "w": 58,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 63,
+    "w": 63,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 67,
+    "w": 69,
     "foot": -2
    }
   },
   "bront": {
    "front": {
     "body": 59,
-    "full": 63,
-    "w": 46,
+    "full": 69,
+    "w": 62,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 32,
+    "full": 66,
+    "w": 50,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 63,
-    "w": 46,
+    "full": 68,
+    "w": 58,
     "foot": -2
    }
   },
   "bront@bront_alt1": {
    "front": {
     "body": 59,
-    "full": 63,
-    "w": 46,
+    "full": 66,
+    "w": 59,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 32,
+    "full": 63,
+    "w": 50,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 63,
-    "w": 46,
+    "body": 58,
+    "full": 64,
+    "w": 54,
     "foot": -2
    }
   },
   "bront@bront_alt2": {
    "front": {
-    "body": 59,
-    "full": 63,
-    "w": 46,
+    "body": 60,
+    "full": 75,
+    "w": 70,
     "foot": -2
    },
    "side": {
-    "body": 59,
-    "full": 62,
-    "w": 32,
+    "body": 60,
+    "full": 69,
+    "w": 54,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 63,
-    "w": 46,
+    "body": 58,
+    "full": 71,
+    "w": 68,
     "foot": -2
    }
   },
   "oriel": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 80,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 34,
+    "full": 61,
+    "w": 66,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 59,
-    "w": 33,
+    "full": 64,
+    "w": 76,
     "foot": -2
    }
   },
   "oriel@oriel_alt1": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 80,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 34,
+    "full": 61,
+    "w": 66,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 59,
-    "w": 33,
+    "full": 64,
+    "w": 76,
     "foot": -2
    }
   },
   "oriel@oriel_alt2": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 80,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 34,
+    "full": 61,
+    "w": 66,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 59,
-    "w": 33,
+    "full": 64,
+    "w": 76,
     "foot": -2
    }
   }

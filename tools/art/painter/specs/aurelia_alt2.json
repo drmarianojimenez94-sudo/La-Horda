@@ -1,0 +1,10 @@
+{"id":"aurelia_alt2","name":"Aurelia · Catedral Corrupta",
+ "prompt":"Armadura de piedra ennegrecida con grietas de luz roja y prismas de obsidiana; pelo negro.",
+ "body":"sira_set","head":"maura_skin",
+ "paint":[
+  {"part":"head","hue":[0,360],"minChroma":0,"noSkin":true,"ramp":["#0c0a0e","#1e1a22","#38323e","#5a5262"]},
+  {"part":"body","hue":[240,300],"minChroma":35,"to":"#e0283a","keepLight":0.45,"chroma":1.3},
+  {"part":"body","hue":[190,330],"minChroma":8,"to":"#3a3640","keepLight":0.6,"chroma":0.25},
+  {"part":"body","hue":[60,100],"minChroma":25,"minL":45,"to":"#ff4a3a","keepLight":0.55}
+ ],
+ "install":{"champion":"aurelia","pack":"aurelia_alt2"}}

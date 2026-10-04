@@ -1,0 +1,10 @@
+{"id":"aurelia_alt1","name":"Aurelia · Vitral del Mediodía",
+ "prompt":"Túnica de paneles de vitral emplomado (turquesa y rosa), compás de plomo, prismas de colores; pelo cobrizo.",
+ "body":"sira_set","head":"maura_skin",
+ "paint":[
+  {"part":"head","hue":[0,360],"minChroma":0,"noSkin":true,"gamma":0.85,"ramp":["#3a1408","#7a3a16","#b8642a","#e09a52","#f4c88a"]},
+  {"part":"body","hue":[240,300],"minChroma":35,"to":"#e04a8a","keepLight":0.5},
+  {"part":"body","hue":[190,330],"minChroma":8,"to":"#1fb3a8","keepLight":0.55,"chroma":1.2},
+  {"part":"body","hue":[60,100],"minChroma":25,"minL":45,"to":"#c8d0d8","keepLight":0.6}
+ ],
+ "install":{"champion":"aurelia","pack":"aurelia_alt1"}}

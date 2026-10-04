@@ -26,9 +26,16 @@ def donor_meta(donor_key):
     """Metadato (refH, sets...) con el que el juego carga la hoja del donante."""
     src = EXP_ART_JS.read_text()
     m = re.search(r'champPackLoadAtlas\("' + re.escape(donor_key) + r'","[^"]+",(\{.*?\})\);', src)
-    if not m:
-        raise SystemExit(f'sin metadato para el donante {donor_key} en {EXP_ART_JS}')
-    return json.loads(m.group(1))
+    if m:
+        return json.loads(m.group(1))
+    # skins de la Expedición vendidas como CROMA_SKINS: el metadato vive en authoredPacks.<campeón>.meta
+    m = re.search(r'CROMA_SKINS\["' + re.escape(donor_key) + r'"\]=(\{.*\});\s*$', src, re.M)
+    if m:
+        d = json.loads(m.group(1))
+        for pk in (d.get('authoredPacks') or {}).values():
+            if pk.get('meta'):
+                return pk['meta']
+    raise SystemExit(f'sin metadato para el donante {donor_key} en {EXP_ART_JS}')
 
 
 def install(pid):
