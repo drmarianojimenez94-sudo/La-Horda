@@ -138,8 +138,9 @@ sin mis cambios, y dan el mismo resultado:
 - t_difficulty: 4 fallas de calibración y del trazado de la Gélida. Son de Q2 y del mundo, no las comparé
   contra `main`.
 - t_codex: cortó por tiempo.
-- La corrida completa de `tools/items` sobre la ÚLTIMA fusión: con esa carga, solo terminó t_q4_economia. El
-  resto pasó sobre la fusión anterior, que difiere solo en el trabajo de los otros equipos.
+- Sobre la ÚLTIMA fusión, cuando bajó la carga, corrí t_q4_economia (23), t_ground_loot (44), t_items (60),
+  t_itemization (28), t_quests (32), t_build_uniques (36), t_sets (48) y t_starter_gift (31): **0 fallas**. El
+  resto de `tools/items` se corrió sobre la fusión anterior.
 
 ## 7. Detalle técnico
 
