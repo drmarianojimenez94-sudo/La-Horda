@@ -103,7 +103,7 @@ async function touchTests(browser) {
   await sleep(250);
   await touch('touchStart', [{ x: j.x + 35, y: j.y, id: 1 }, { x: s1.x, y: s1.y, id: 2 }]);
   await sleep(80);
-  await touch('touchEnd', [{ x: j.x + 35, y: j.y, id: 1 }]);   // se levanta el dedo 2, el 1 sigue
+  await touch('touchEnd', [{ x: s1.x, y: s1.y, id: 2 }]);   // se levanta el dedo 2 (CDP suelta los puntos listados), el 1 sigue
   await sleep(300);
   const mt = await E(() => ({ jx: joyVec.x, cd: player.cds[0], x: player.x, act: joyActive }));
   check('TOUCH.multitouch_camina_y_lanza_a_la_vez', mt.jx > 0.6 && mt.act && mt.cd > 0 && mt.x > x0 + 20, { mt, x0 });
