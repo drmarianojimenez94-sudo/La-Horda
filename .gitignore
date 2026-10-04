@@ -12,3 +12,6 @@ __pycache__/
 
 # Cuentas sin base de datos (server/accounts.js): datos locales del servidor, nunca al repo
 server/data/
+
+# salidas de experimentos del playtest (tools/ux/playtest.js con fase "exp"): datos de trabajo, no evidencia
+docs/ux/playtest-exp*.json
