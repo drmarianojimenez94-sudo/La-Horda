@@ -35,14 +35,25 @@ mago / soporte con piloto automático, sin ayudas (si el guardián cae, pierde).
 | | Ganaron | Perdieron en el nivel 9 (subjefes) | Perdieron con El Presentador | Partida trabada |
 |---|---|---|---|---|
 | Antes (base integrada, sin el tope) | 4 de 11 (36 %) | 6 de 11 | 0 | 1 (tanque, 22 min en el nivel 9 sin terminar) |
-| Después (con el tope) | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
+| Después (con el tope) | **8 de 12 (67 %)** | 2 de 12 | 2 de 12 | **0** |
+
+En resumen: casi el doble de victorias, el nivel 9 dejó de ser un muro (de 6 derrotas allí a 2) y ninguna partida
+quedó trabada. Las victorias duran 8,5–16 min de juego y El Presentador tarda 1,5–2,5 min en caer; las dos derrotas
+con El Presentador fueron con el mago (el más frágil), con el jefe ya muy bajo. Es exigente pero ganable para
+alguien nuevo, que es lo que buscamos para la primera arena.
 
 Lo que más mataba en el nivel 9 no eran los subjefes sino los Saqueadores comunes que seguían entrando
 (en la partida de guerrero: 1.362 de daño de Saqueadores contra ~100 de cada subjefe).
 
 ## Prueba de humo de las 10 arenas sobre la base integrada
 
-PENDIENTE (corriendo).
+Una partida completa por arena (nivel 1 al jefe), en modo "no muere" (mide que la arena se pueda terminar, no la
+habilidad): **8 de 10 OK** — Ciudad, Fortaleza, Bosque, Micelial, Hielo, Laberinto, Minas e Infernal se terminan
+con el jefe muerto y la victoria disparada, sin errores de página ni contadores desbocados.
+
+Fallaron 2 (ver "Pendiente"):
+- **Acuática**: el Leviatán quedó en 619 de 12.300 de vida y no murió en 9 min de juego.
+- **Abismo**: el nivel 9 no terminó en 6 min; el subjefe Carcelero seguía con 12.448 de vida.
 
 ## Pendiente y por qué
 
