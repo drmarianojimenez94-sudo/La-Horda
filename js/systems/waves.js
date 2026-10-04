@@ -78,6 +78,7 @@ function startBossFight(){
   }
   boss.bossPhase = 1;
   bossEntrance(boss);
+  if(!divinaMode && typeof bossTitleCard==="function" && bossTitleCard(boss)) return; // cartel grande (boss-blueprints.js)
   showBanner(currentArena==="hielo" ? "EL MAGO GÉLIDO DESPIERTA" : (currentArena==="bosque" ? "EL GUARDIÁN ANCESTRAL CORROMPIDO DESPIERTA" : (currentArena==="laberinto" ? "EL MINOTAURO DESPIERTA" : (currentArena==="acuatica" ? "¡EL LEVIATÁN EMERGE DE LAS PROFUNDIDADES!" : "EL DEMONIO MAYOR DESPIERTA"))));
 }
 

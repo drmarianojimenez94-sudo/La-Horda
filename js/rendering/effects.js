@@ -21,8 +21,8 @@ let _ftNext = 0, _ftAvg = 40;
 // No cambia daño/acumulación: sólo evita dibujar etiquetas ilegibles una encima de otra.
 const _ftRects = Array.from({length:FT_MAX},()=>({x:0,y:0,w:0,h:0}));
 let _ftRectCount = 0;
-const FT_DRAW_ORDER = [4,3,2,1,0]; // avisos, daño recibido, curación, críticos, daño común
-const FT_PRIORITY = [0,1,3,4,5];
+const FT_DRAW_ORDER = [4,3,2,5,1,0,6]; // avisos, daño recibido, curación, escudo, críticos, daño común, DoT
+const FT_PRIORITY = [0,1,3,4,5,3,0];
 function _ftTake(kind){
   let best=null;
   for(let i=0;i<FT_MAX;i++){
@@ -53,12 +53,15 @@ function _ftPlace(x,y,w,h){
 const FT_DMG_COL = {physical:"#fff1d6", fire:"#ff9a3c", ice:"#8fdcff", lightning:"#ffe84a", bleed:"#ff6a7e", poison:"#9be35a", arcane:"#c9a0ff", holy:"#ffe9a0"};
 // Tope de números chicos a la vez (en el teléfono tapaban la acción): los críticos siempre entran.
 const FT_NUM_CAP = (function(){ try{ return window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? 14 : 22; }catch(e){ return 22; } })();
-// kind: 0 daño, 1 crítico, 2 curación, 3 daño recibido, 4 aviso/etiqueta
+// kind: 0 daño, 1 crítico, 2 curación, 3 daño recibido, 4 aviso/etiqueta, 5 escudo, 6 daño en el tiempo (DoT)
+// Lenguaje visual (js/data/combat-language.js): cada tipo se distingue también SIN color: "!" crítico,
+// "+" curación, "-" recibido, "◈" escudo, número chico y corto para DoT.
 // dk (opcional): tipo de daño -> color. key (opcional): el enemigo golpeado -> golpes seguidos al mismo
 // objetivo se AGRUPAN en un solo número que crece (sin key se agrupan por cercanía: invitados).
 function floatText(x,y,text,cls,dk,key){
   let kind = 0;
-  const s = String(text);
+  let s = String(text);
+  if(cls==="shield" || cls==="dot") return _ftNumberAgg(x, y, +String(text).replace(/[^0-9.]/g,""), cls==="shield" ? 5 : 6, dk, key);
   if(cls==="crit") kind = /^[0-9]+$/.test(s) ? 1 : 4;
   else if(cls==="heal") kind = 2;
   else if(s.charAt(0)==="-") kind = 3;
@@ -117,6 +120,26 @@ function floatText(x,y,text,cls,dk,key){
   f.vx = 0;
   f.cls = cls;
 }
+// Escudo (5) y DoT (6): números agrupados por objetivo con ventana propia. El DoT se agrupa más
+// tiempo y se dibuja más chico y con menor prioridad: informa sin tapar los golpes directos.
+function _ftNumberAgg(x, y, n, kind, dk, key){
+  if(!(n >= 1)) return;
+  key = (key && typeof key==="object") ? key : null;
+  const win = kind===6 ? 700 : 400;
+  for(let i=0;i<FT_MAX;i++){
+    const f = floatTexts[i];
+    if(!f.on || f.kind!==kind || f.t > win || f.dk !== (dk||null)) continue;
+    if(key ? f.key===key : (Math.abs(f.x - x) < 30 && Math.abs(f.y - y) < 28)){
+      f.val += n; f.text = (kind===5 ? "◈" : "") + Math.round(f.val); f.t = Math.min(f.t, 120); f.pop = 0.6; return;
+    }
+  }
+  if(kind===6){ let nNum = 0; for(let i=0;i<FT_MAX;i++){ const f = floatTexts[i]; if(f.on && (f.kind<=1 || f.kind===6)) nNum++; } if(nNum >= FT_NUM_CAP) return; }
+  const f = _ftTake(kind); if(!f) return;
+  f.on = true; f.kind = kind; f.t = 0; f.val = n; f.dk = dk||null; f.key = key; f.pop = 0.5; f.sc = 1;
+  f.text = (kind===5 ? "◈" : "") + Math.round(n);
+  f.x = x + (Math.random()-0.5)*10; f.y = y; f.vx = kind===6 ? (Math.random()-0.5)*10 : 0;
+  f.dur = kind===6 ? 640 : 900; f.cls = kind===5 ? "shield" : "dot";
+}
 // tamaño según el peso del golpe respecto de lo que venís pegando (los golpes grandes se leen grandes)
 function _ftScale(n, kind){
   const r = Math.log2(Math.max(0.25, n/Math.max(1, _ftAvg)));
@@ -127,15 +150,45 @@ const FT_STYLE = [
   {size:21, fill:"#fff4c8", stroke:"rgba(150,14,0,0.95)"},
   {size:16, fill:"#6fdc8c", stroke:"rgba(0,40,10,0.9)"},
   {size:17, fill:"#ff5a4a", stroke:"rgba(40,0,0,0.95)"},
-  {size:15, fill:"#ffe7a8", stroke:"rgba(0,0,0,0.9)"}
+  {size:15, fill:"#ffe7a8", stroke:"rgba(0,0,0,0.9)"},
+  {size:16, fill:"#8fd0ff", stroke:"rgba(0,20,50,0.95)"},
+  {size:12, fill:"#c9b8a0", stroke:"rgba(0,0,0,0.8)"}
 ];
+// Escudo ganado (cualquier fuente: habilidades, sets, objetos): "◈N" celeste sobre el héroe. Corre
+// también en el invitado (net-game.js llama a updateFloatTexts), así cada uno lo ve sin red extra.
+function _ftTrackShields(){
+  if(typeof heroes==="undefined" || !heroes || !heroes.length) return;
+  for(const h of heroes){
+    if(!h) continue;
+    const sh = (h.shield||0) + (h.itemShield||0);
+    if(h._ftSh!==undefined && h.alive && sh > h._ftSh + 1 && inView(h.x, h.y, 80)){
+      const quiet = typeof netQuiet==="function" ? netQuiet : (fn)=>fn();
+      quiet(()=>floatText(h.x, h.y-74, Math.round(sh - h._ftSh), "shield", null, h));
+    }
+    h._ftSh = sh;
+  }
+}
+// DoT (quemadura, sangrado, veneno, maldición): el motor lo resta cuadro a cuadro sin número.
+// update.js acumula por enemigo y lo muestra cada ~0,65 s agrupado (chico, color del elemento).
+function ftDotTick(e, amount, dk, dt){
+  if(!(amount > 0)) return;
+  e._dotAcc = (e._dotAcc||0) + amount; e._dotT = (e._dotT||0) + dt; e._dotK = dk;
+  if(e._dotT < 650) return;
+  const n = e._dotAcc; e._dotAcc = 0; e._dotT = 0;
+  if(n >= 1 && inView(e.x, e.y, 60)){
+    const quiet = typeof netQuiet==="function" ? netQuiet : (fn)=>fn();
+    quiet(()=>floatText(e.x, e.y-16-(e.radius||20)*0.6, Math.round(n), "dot", e._dotK, e));
+  }
+}
 function updateFloatTexts(dt){
+  _ftTrackShields();
   for(const f of floatTexts){ if(!f.on) continue; f.t += dt; if(f.pop>0) f.pop = Math.max(0, f.pop - dt/160); if(f.t >= f.dur){ f.on = false; f.key = null; } }
 }
 function _drawFloatText(f){
   const q = f.t/f.dur, st = FT_STYLE[f.kind];
   // subida con desaceleración + "pop" al aparecer o al sumar otro golpe
-  const rise = (f.kind===4 ? 30 : (f.kind===1 ? 40 : 34)) * (1-(1-q)*(1-q));
+  // el daño recibido CAE (se lee como pérdida); el resto sube; el DoT sube poco
+  const rise = (f.kind===3 ? -22 : f.kind===6 ? 18 : f.kind===4 ? 30 : (f.kind===1 ? 40 : 34)) * (1-(1-q)*(1-q));
   const pop = f.kind===1 ? 1 + 0.6*f.pop*f.pop : 1 + 0.3*f.pop*f.pop;
   const a = q < 0.65 ? 1 : (1-q)/0.35;
   // tamaño en pasos de 1 px de pantalla: pocas cadenas de fuente distintas (el cambio de fuente es lo caro)
@@ -146,7 +199,7 @@ function _drawFloatText(f){
   const y = _ftPlace(x, f.y - rise/CAM_ZOOM*0.9, ctx.measureText(f.text).width + 5/CAM_ZOOM, size*1.22 + 5/CAM_ZOOM);
   if(y===null) return;
   ctx.lineWidth = (f.kind===1 ? 4.5 : 3.5)/CAM_ZOOM; ctx.strokeStyle = st.stroke; ctx.strokeText(f.text, x, y);
-  ctx.fillStyle = (f.kind<=1 && f.dk && FT_DMG_COL[f.dk]) ? (f.kind===1 && f.dk==="physical" ? st.fill : FT_DMG_COL[f.dk]) : st.fill;
+  ctx.fillStyle = ((f.kind<=1 || f.kind===6) && f.dk && FT_DMG_COL[f.dk]) ? (f.kind===1 && f.dk==="physical" ? st.fill : FT_DMG_COL[f.dk]) : st.fill;
   ctx.fillText(f.text, x, y);
 }
 let _ftFontSize = 0;

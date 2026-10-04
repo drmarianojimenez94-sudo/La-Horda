@@ -136,7 +136,7 @@ const CLASSES = {
       {name:"Visión del Inmortal", ico:"◈", cost:34, cd:11000, kind:"brief_immunity", range:260, duration:2400, regenPct:0.06, desc:"Un aliado cercano se vuelve inmune a todo daño y a efectos negativos por unos segundos; al terminar, recibe una pequeña regeneración"},
       {name:"Danza del Augurio", ico:"☾", cost:36, cd:9000, kind:"self_spin_stun", radius:112, innerR:56, dmgMult:1.1, stun:500, desc:"Gira con su hoja y genera daño de área a su alrededor; si un enemigo está muy cerca, lo aturde brevemente"}
     ],
-    ultimate:{name:"Ascensión del Elegido", ico:"★", cd:34000, kind:"ascension_fusion", duration:7000, healPct:0.85, dmgMult:2.0, atkSpeedMult:1.6, defBonus:0.45, lifesteal:0.25, cdClamp:60, desc:"Se fusiona con un aliado y queda casi invisible e invulnerable: el aliado recibe una gran curación, más daño, velocidad de ataque y resistencia, y lanza sus habilidades casi al instante mientras dura"}
+    ultimate:{name:"Ascensión del Elegido", ico:"★", cd:34000, kind:"ascension_fusion", duration:7000, healPct:0.85, dmgMult:2.0, atkSpeedMult:1.6, defBonus:0.45, lifesteal:0.25, cdClamp:60, desc:"Se fusiona con un aliado: él recibe una gran curación, mucho más daño, velocidad de ataque y resistencia, y recarga sus habilidades casi al instante mientras dura"}
   },
   musashi:{
     name:"Musashi", icon:"⚔", color:"#5aa8d8", glow:"#bfe4ff",
@@ -200,7 +200,7 @@ const CLASSES = {
       {name:"¡Granaderos, a la carga!", ico:"📯", cost:36, cd:16000, kind:"sm_granaderos", radius:430, duration:8000, desc:"Levanta el sable, suena el clarín y aparecen Granaderos espectrales: +velocidad, +velocidad de ataque, +daño y resistencia al control para vos y tus aliados cercanos"},
       {name:"Carga de San Lorenzo", ico:"🐎", cost:40, cd:12000, kind:"sm_san_lorenzo", range:430, dmgMult:1.9, desc:"Monta su caballo blanco y carga en línea: atraviesa y empuja a los comunes, aturde a los élite y baja la defensa de los jefes"}
     ],
-    ultimate:{name:"Cruce de los Andes", ico:"★", cd:45000, kind:"sm_andes_ult", dmgMult:4.2, duration:10000, desc:"La Cordillera se alza alrededor de la arena: nieve, viento y escarcha. Carga con una formación de Granaderos espectrales montados y queda 10 s a caballo (sable corvo, +velocidad, +daño, -daño recibido)"}
+    ultimate:{name:"Cruce de los Andes", ico:"★", cd:45000, kind:"sm_andes_ult", dmgMult:4.2, duration:10000, desc:"Carga con Granaderos espectrales entre nieve y escarcha y queda 10 s a caballo: sable corvo, más velocidad y daño, menos daño recibido"}
   },
   eren:{
     name:"Eren", icon:"⚔", color:"#7a3b2e", glow:"#ff7a55",
@@ -215,7 +215,7 @@ const CLASSES = {
       {name:"Instinto de Supervivencia", ico:"⚡", cost:25, cd:14000, kind:"eren_instinct", duration:3500, desc:"Por un momento recibís menos daño y cada golpe que te dan carga MUCHA más Furia. No es invulnerabilidad: es exponerse para transformarse antes"},
       {name:"¡Avancen!", ico:"📢", cost:30, cd:15000, kind:"eren_advance", duration:7000, desc:"Grito de guerra: más velocidad, daño y Furia (más fuerte con poca vida). Los aliados cercanos reciben una parte"}
     ],
-    ultimate:{name:"El Portador", ico:"★", cd:40000, kind:"eren_titan_ult", duration:22000, desc:"Con la Furia llena: se muerde la mano, cae un rayo y surge la forma monstruosa (golpes en área, Sismo, Terremoto, Retumbar, regeneración con vapor). Si llenás la Furia otra vez transformado, se desbloquea algo más"}
+    ultimate:{name:"El Portador", ico:"★", cd:40000, kind:"eren_titan_ult", duration:22000, desc:"Con la Furia llena se transforma en El Portador: golpes en área, Sismo, Terremoto, Retumbar y regeneración. Llenar la Furia de nuevo desbloquea algo más"}
   }
 };
 // Eren transformado usa esta "clase" mientras dura El Portador (h.cls apunta acá): así todo lo que

@@ -196,6 +196,7 @@ function codexBind(body, cur){
     nav.addEventListener("touchend", e=>{ if(sx===null) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
       if(Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)*1.6 && !e.target.closest(".cx-scroll-x")) codexStep(dx < 0 ? 1 : -1); }, {passive:true});
   }
+  body.querySelectorAll("[data-replay-tut]").forEach(b=>b.addEventListener("click", ev=>{ ev.stopPropagation(); if(typeof arenaTutorialReplay==="function"){ arenaTutorialReplay(b.dataset.replayTut); b.textContent = "✓ La próxima vez que entres, el Hechicero te la vuelve a enseñar"; b.disabled = true; } }));
   const guide = body.querySelector("#codex-guide-btn");
   if(guide) guide.addEventListener("click", ()=>{ if(typeof alphaGuideOpen==="function") alphaGuideOpen(); });
   const inv = body.querySelector("#codex-inv-btn");
@@ -267,7 +268,7 @@ function codexChampListHtml(){
     const cls = CLASSES[c.id], ch = save.champions[c.id], own = ch && ch.unlocked, sel = own && selectedClass===c.id, meta = championMeta(c.id);
     return `<button class="cx-card cx-champ-card ${own?"":"locked"} ${sel?"sel":""}" data-go="champ:${c.id}">
       ${_pv({kind:"champ", key:c.id, anim:"idle", bg:"none", fps:15}, "cx-pv cx-card-pv")}
-      <div class="cx-card-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div><div class="cx-card-title">${_cxEsc(championTitle(c.id))}</div>
+      <div class="cx-card-name" style="color:${cls.color}">${_cxEsc(championShortName(c.id))}</div><div class="cx-card-title">${_cxEsc(championTitle(c.id))}</div>
       <div class="cx-card-sub">${HUB_ROLE_LABEL[cls.roleCategory]||""} · ${own ? "Nv. " + ch.level : meta.purchasable ? "🔒 Tienda" : meta.category==="FOUNDER" ? "Se concede" : "🔒"}</div>
       ${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? founderBadgeHTML(meta.founderKey,"sm") : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
       ${sel ? '<span class="cx-card-flag">EN JUEGO</span>' : ""}
@@ -376,14 +377,14 @@ function codexChampHtml(key){
   const need = own ? xpToNext(ch.level) : 1, pct = own ? Math.min(100, Math.round(ch.xp/need*100)) : 0;
   const tabs = [["ficha","Ficha"],["equipo","Equipo"],["talentos","Talentos"],["habilidades","Maestría"],["skins","Apariencias"]];
   const stage = `<div class="cx-stage">${_pv({kind:"champ", key, anim:"idle", arena:"champ"}, "cx-pv cx-stage-pv")}
-      <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(cls.name)}</div><div class="cx-stage-title">${_cxEsc(championTitle(key))}</div></div>
+      <div class="cx-stage-name" style="color:${cls.color}">${_cxEsc(championShortName(key))}</div><div class="cx-stage-title">${_cxEsc(championTitle(key))}</div></div>
     ${_animChips(codexChampAnimList(key))}
     <div class="cx-stage-actions">${own
       ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`) + (typeof ASCENSION_SKINS!=="undefined" && ASCENSION_SKINS[key] && ASCENSION_SKINS[key].length ? `<button class="cx-btn" data-asc-skin="${key}">Apariencia: ${_cxEsc((ch.ascSkin|0) ? ASCENSION_SKINS[key][(ch.ascSkin|0)-1].name : "Original")}</button>` : "")
       : !championMeta(key).purchasable ? `<div class="cx-active">${championMeta(key).category==="FOUNDER" ? `${typeof founderBadgeHTML==="function" ? founderBadgeHTML(championMeta(key).founderKey,"md") : ""} 🪙 ${fmtGold(shopChampionPrice(key))} · ${championMeta(key).storeNotice}<br><small>${championMeta(key).inspectNotice}</small>` : "No disponible"}</div>`
       : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
-      <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(cls.name)}</h2><div class="cx-subtitle"><b>${_cxEsc(championTitle(key))}</b> · ${_cxEsc(cls.role)}</div>
+      <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(championShortName(key))}</h2><div class="cx-subtitle"><b>${_cxEsc(championTitle(key))}</b> · ${_cxEsc(cls.role)}</div>
       ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b> · Talentos: <b>${treePointsAvailable(key)}</b></div>` : ""}
       <div class="cx-tabs cx-scroll-x">${tabs.map(([t,l])=>`<button class="cx-tab ${codexChampTab===t?"on":""} ${!own && t!=="ficha"?"dim":""}" data-ctab="${t}">${l}</button>`).join("")}</div></div>`;
   let panel = head;
@@ -772,6 +773,16 @@ function codexArenaHtml(a){
   if(st === "cleared" && story.scar) panel += _sec("La Cicatriz", `<div class="cx-reveal"><b>✦</b>${_p(story.scar)}</div>`, "lore");
   if(L.soon){ panel += _sec("En construcción", `<p>Esta arena todavía no se puede jugar: su historia se cuenta ${a==="ciudad" ? "como prólogo antes de la Fábrica Sin Fin" : "en los textos del descenso hacia el Laberinto"}.</p>`); return codexEntryHtml(stage, panel, "cx-entry-arena"); }
   if(L.mechanics) panel += _sec("Mecánicas exclusivas", `<div class="cx-attacks">${L.mechanics.map(x=>`<div class="cx-attack">✦ ${_cxEsc(x)}</div>`).join("")}</div>`, "combat");
+  // Reglas de la arena desde la Arena Factory (decisión propia, mecánica, aviso del peligro, qué examina el jefe)
+  const BP = typeof arenaBlueprint==="function" ? arenaBlueprint(a) : null;
+  if(BP){
+    const canReplay = typeof ARENA_TUT_DRIVERS!=="undefined" && ARENA_TUT_DRIVERS[a] && typeof arenaTutorialSeen==="function" && arenaTutorialSeen(a);
+    panel += _sec("Reglas de la arena", `<div class="cx-mech">✦ <b>${_cxEsc(BP.primary.name)}:</b> ${_cxEsc(BP.primary.rule)}</div>
+      <div class="cx-mech">◎ <b>La decisión:</b> ${_cxEsc(BP.decision)}</div>
+      <div class="cx-mech">⚠ <b>${_cxEsc(BP.hazard.name)}</b> — aviso: ${_cxEsc(BP.hazard.telegraph)}</div>
+      ${BP.boss && BP.boss.name ? `<div class="cx-mech">♛ <b>${_cxEsc(BP.boss.name)}</b> pone a prueba: ${_cxEsc(BP.boss.teaches)}</div>` : ""}
+      ${canReplay ? `<button class="cx-link" data-replay-tut="${_cxEsc(a)}">↺ Repetir la lección de esta arena</button>` : ""}`, "combat");
+  }
   if(brief) panel += _sec("Peligros", `<div class="cx-mech">☠ ${_cxEsc(brief.kill)}</div><div class="cx-mech ok">✚ ${_cxEsc(brief.help)}</div>${L.hazards ? `<div class="cx-hazards">${L.hazards.map(h=>`<span class="cx-chip static">${_cxEsc(h)}</span>`).join("")}</div>` : ""}`, "combat");
   if(typeof CHRONICLE_PAGES!=="undefined"){
     const pages = CHRONICLE_PAGES.filter(p=>p.arena===a);

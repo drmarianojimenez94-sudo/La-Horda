@@ -114,6 +114,11 @@ referencias excelentes. Fuera de una autorización de rediseño, documentar el e
   `node tools/art/roster_visual_test.js` (10 campeones) y `node tools/art/boss_visual_test.js`
   (enemigos/jefes), sirviendo el repo con `python3 -m http.server 8750` (ver cabecera de cada
   script para `REGRESSION_BASE_URL`).
+- **Alineación a escala real** — `node tools/art/arena_lineup.js --report`: las hojas de contacto
+  agrandan cada entidad para que entre en su celda y esconden la escala; esta herramienta dibuja cada
+  arena con el MISMO zoom de mundo junto al Caballero y mide la **densidad de píxel** (unidades de mundo
+  por píxel de arte) contra la mediana del roster de campeones. ≥ ×4 = mezcla de densidades (§1) →
+  REDRAW REQUIRED; ×2,5–4 = vigilar. Salida: `docs/bible/generated/ENEMY_ART_AUDIT.md`.
 
 ## 9. Enemigos, élites y jefes
 
@@ -123,7 +128,9 @@ Misma gramática, pero **se permite más escala y detalle** cuanto más importan
 - Élites/subjefes: algo más de detalle y tamaño.
 - Jefes: pueden ser mucho más grandes, con más detalle, animaciones más complejas y VFX más
   espectaculares — mientras seamos capaces de decir que pertenecen al mismo universo visual (no
-  a otro juego). Esto es intencional y ya está así en varios jefes/élites del juego (ver el
+  a otro juego). **Más tamaño y más detalle, nunca píxeles más gruesos:** un jefe de arte chico dibujado
+  muy grande (Cerbero y el Titán de las Minas: ×5 la densidad del roster) es mezcla de densidades
+  aunque sea "pixel art". Ver `docs/bible/BOSS_BIBLE.md` §5. Esto es intencional y ya está así en varios jefes/élites del juego (ver el
   audit).
 
 ## 10. Naming y organización

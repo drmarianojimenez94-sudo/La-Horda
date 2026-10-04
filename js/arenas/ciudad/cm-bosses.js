@@ -23,6 +23,7 @@ function cmPartyCenter(){ let sx = 0, sy = 0, n = 0; for(const h of heroes){ if(
 function cmRandHero(){ const L = heroes.filter(h=>h.alive); return L.length ? cmPick(L) : player; }
 // impacto con aviso en el piso (lo resuelve cmDropsUpdate)
 function cmDrop(k, x, y, r, wind, dmg, o){ cmS.drops.push(Object.assign({k, x:Math.round(x), y:Math.round(y), r, t:0, d:wind, dmg}, o||{})); }
+function cmStructHpSum(){ let n = 0; for(const S of cmS.st) n += S.hp; return n; }
 function cmZone(k, x, y, r, ms, o){ cmS.zones.push(Object.assign({k, x:Math.round(x), y:Math.round(y), r, t:0, d:ms}, o||{})); }
 function cmDropsUpdate(dt){
   for(let i=cmS.drops.length-1;i>=0;i--){
@@ -31,7 +32,7 @@ function cmDropsUpdate(dt){
     if(D.t >= D.d){
       cmHeroesNear(D.x, D.y, D.r, h=>bossHitHero(h, D.dmg, {from:D.from ? cmEnt(D.from) : null, knock:D.knock||0, stun:D.stun||0}));
       if(D.civ) cmCivsNear(D.x, D.y, D.r, c=>cmHurtCiv(c, D.dmg*0.5, null));
-      if(D.struct) cmStructArea(D.x, D.y, D.r + 30, D.struct, null);
+      if(D.struct){ const h0 = cmStructHpSum(); cmStructArea(D.x, D.y, D.r + 30, D.struct, null); if(D.k==="curtain" && cmStructHpSum() < h0 && typeof bossArenaEvent==="function") bossArenaEvent("cm_dama.estructura", cmEnt("cm_dama")); }
       const fx = {scenery:"cmScenery", mark:"cmShowMark", curtain:"cmChaosCurtain", mae:"cmMark", burst:"cmFinalBoom", spect:"cmPreBolt"}[D.k];
       if(fx && typeof CIUDAD_FX!=="undefined") bossSheetFx(fx, D.x, D.y, Math.max(70, D.r*1.6), 520, {anchorY:D.k==="curtain" || D.k==="scenery" ? 0.9 : 0.6});
       vfxBurst(D.x, D.y, 8, D.k==="scenery" ? "wood" : "ember", 110, 480, 3, 1, -30, 0);
@@ -185,7 +186,7 @@ function cmAITramoyista(e, dt, tgt, dist){
       if(W.k==="slam"){
         const cx = e.x + e.fx*C.slamR*0.5, cy = e.y + e.fy*C.slamR*0.5;
         cmHeroesNear(cx, cy, C.slamR*0.75, h=>bossHitHero(h, e.dmg*1.3, {from:e, knock:50}));
-        cmStructArea(cx, cy, C.slamR, 60, e);
+        const sh0 = cmStructHpSum(); cmStructArea(cx, cy, C.slamR, 60, e); if(cmStructHpSum() < sh0 && typeof bossArenaEvent==="function") bossArenaEvent("cm_tramoyista.estructura", e);
         if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmTraImpact", cx, cy, 110, 520, {anchorY:0.6});
         vfxShake(6); playSfx("cmSmash");
       } else if(W.k==="throw"){ cmShot(e, W.x, W.y, "prop", 300, 1.2, {r:24}); playSfx("cmThrow"); }
@@ -398,6 +399,7 @@ function cmPresSpectators(){
   const n = Math.max(2, 6 - Math.floor(cmS.saved/6));
   cmS.spec = [];
   const S = CM_MAP.stage;
+  if(typeof bossArenaEvent==="function") bossArenaEvent("cm_presentador.publico", cmPresEntity());
   for(let k=0;k<n;k++){ const a = Math.PI*(0.1 + 0.8*k/Math.max(1, n - 1)); cmS.spec.push({x:Math.round(S.x + Math.cos(a)*560), y:Math.round(S.y + 180 + Math.sin(a)*420), t:cmRand(0, 2000), v:k % 4}); }
   if(cmS.saved >= 6) runLater(2000, ()=>{ if(state==="playing") showBanner("Entre los espectadores espectrales faltan asientos: los que salvaste no vinieron a verte caer."); });
 }
@@ -421,6 +423,7 @@ function cmAIPresentador(e, dt, tgt, dist){
     if(e.ov.t >= C.ovationWind){
       e.ov = null; e.cmBusy = false;
       const ovPct = cmOvationPct();
+      if(typeof bossArenaEvent==="function") bossArenaEvent("cm_presentador.ovacion", e);
       for(const h of heroes){ if(!h.alive) continue; if(!cmCovered(e, h)){ bossHitHero(h, h.maxHp*ovPct, {from:e}); floatText(h.x, h.y - 70, "¡SIN COBERTURA!", "crit"); } else floatText(h.x, h.y - 70, "¡A CUBIERTO!", "heal"); }
       if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmFinalBoom", e.x, e.y, 360, 800, {anchorY:0.7});
       vfxShock(e.x, e.y, 60, 900, "255,70,110", 900, 2); vfxShake(14); flashScreen(0.3, "255,90,120"); playSfx("cmBlast");
@@ -436,6 +439,7 @@ function cmAIPresentador(e, dt, tgt, dist){
     if(e.gn.hp0 - e.hp >= e.maxHp*C.gnBreakPct){
       e.gn = null; e.cmBusy = false; e.gnCd = cmRand(C.gnCd[0], C.gnCd[1]);
       bossExpose(e, C.gnExposeMs, 1.6, "¡LE CORTASTE LA FUNCIÓN! El Presentador queda EXPUESTO");
+      if(typeof bossArenaEvent==="function") bossArenaEvent("cm_presentador.corte", e);
       return true;
     }
     if(e.gn.t >= C.gnWind){
@@ -447,6 +451,7 @@ function cmAIPresentador(e, dt, tgt, dist){
         const p = cmStructAttackPt(si, e.x, e.y), c = cmSpawnAt("cm_cometa", e.x + (k ? 40 : -40), e.y + 40);
         c.maxHp = c.hp = Math.max(40, Math.round(e.dmg*2.4)); c.gnSi = si; c.gnTx = Math.round(p.ex); c.gnTy = Math.round(p.ey); c.gnFrom = cmId(e);
         cmAlert("struct", p.ex, p.ey, `¡EL GRAN NÚMERO VA HACIA ${CM_STRUCTS[si].name.toUpperCase()}!`, 4200);
+        if(typeof bossArenaEvent==="function") bossArenaEvent("cm_presentador.estructura", e);
       }
       e.gn = null; e.cmBusy = false; e.gnCd = cmRand(C.gnCd[0], C.gnCd[1])*(act===3 ? 0.8 : 1);
       playSfx("cmBlast"); vfxShake(6);
@@ -544,7 +549,7 @@ function cmReflUpdate(dt){
     const R = cmS.refl[i]; R.t += dt;
     if(!P){ cmS.refl.splice(i, 1); continue; }
     const dx = P.x - R.x, dy = (P.y - 50) - R.y, d = Math.hypot(dx, dy), v = 700*dt/1000;
-    if(d <= v + 10){ cmS.refl.splice(i, 1); bossExpose(P, CM_CFG.presentador.gnExposeMs, 1.6, "¡SU PROPIO NÚMERO LO GOLPEA! El Presentador queda EXPUESTO"); if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmBoom", P.x, P.y - 40, 180, 700, {anchorY:0.7}); continue; }
+    if(d <= v + 10){ cmS.refl.splice(i, 1); bossExpose(P, CM_CFG.presentador.gnExposeMs, 1.6, "¡SU PROPIO NÚMERO LO GOLPEA! El Presentador queda EXPUESTO"); if(typeof bossArenaEvent==="function") bossArenaEvent("cm_presentador.reflejo", P); if(typeof CIUDAD_FX!=="undefined") bossSheetFx("cmBoom", P.x, P.y - 40, 180, 700, {anchorY:0.7}); continue; }
     R.x += dx/d*v; R.y += dy/d*v;
   }
 }

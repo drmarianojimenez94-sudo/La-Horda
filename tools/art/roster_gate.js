@@ -13,7 +13,10 @@ const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:
 const ROOT=path.resolve(__dirname,'../..'),BASE=process.env.ROSTER_BASE_URL||'http://127.0.0.1:8750',WRITE=process.argv.includes('--write');
 const TOL={height:.04,foot:2};
 // Presentación: mismos campos y largos acotados para todo el roster.
-const TEXT={cardLore:[80,170],history:[300,650],passive:[40,320],skill:[20,240]};
+// Longitudes de texto: una sola fuente, el CHAMPION_STANDARD de la Biblia (js/data/champion-identity.js).
+const STD=(()=>{const src=require('node:fs').readFileSync(require('node:path').join(__dirname,'../../js/data/champion-identity.js'),'utf8'),n=k=>+(new RegExp(k+':(\\d+)').exec(src)||[])[1];
+ return {taglineMin:n('taglineMin'),taglineMax:n('taglineMax'),loreMin:n('loreMin'),loreMax:n('loreMax')};})();
+const TEXT={cardLore:[STD.taglineMin,STD.taglineMax],history:[STD.loreMin,STD.loreMax],passive:[40,320],skill:[20,240]};
 (async()=>{
  const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
  try{

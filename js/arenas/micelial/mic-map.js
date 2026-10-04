@@ -44,6 +44,67 @@ function micEllNorm(x, y){
   return Math.hypot(dx, dy)/micEdgeK(Math.atan2(dy, dx));
 }
 function micPodSolid(){ return true; } // el capullo (y después la Madre) es siempre sólido
+// Polígonos sólidos del fondo pintado en coordenadas de mundo (MIC_BG_SOLIDS, mic-data.js).
+let _micPolys = null;
+function micBgPolys(){
+  if(_micPolys) return _micPolys;
+  const S = MIC_IMG.s, W = MIC_WORLD, out = [];
+  for(const o of MIC_BG_SOLIDS){
+    let pts;
+    if(o.c){ pts = []; for(let i=0;i<10;i++){ const a = i/10*Math.PI*2; pts.push([o.c[0] + Math.cos(a)*o.c[2], o.c[1] + Math.sin(a)*o.c[2]]); } }
+    else pts = o.p;
+    const w = pts.map(([x,y])=>[W.x0 + x*S, W.y0 + y*S]);
+    let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity; for(const [x,y] of w){ x0=Math.min(x0,x); y0=Math.min(y0,y); x1=Math.max(x1,x); y1=Math.max(y1,y); }
+    out.push({id:o.id, pts:w, x0, y0, x1, y1, water:!!o.water});
+  }
+  return (_micPolys = out);
+}
+function _micPtInPoly(x, y, pts){
+  let inside = false;
+  for(let i=0, j=pts.length-1; i<pts.length; j=i++){
+    const xi = pts[i][0], yi = pts[i][1], xj = pts[j][0], yj = pts[j][1];
+    if(((yi > y) !== (yj > y)) && (x < (xj - xi)*(y - yi)/((yj - yi)||1e-9) + xi)) inside = !inside;
+  }
+  return inside;
+}
+// Punto más cercano del borde del polígono a (x,y): {x, y, d}
+function _micPolyNearest(x, y, pts){
+  let best = null;
+  for(let i=0, j=pts.length-1; i<pts.length; j=i++){
+    const ax = pts[j][0], ay = pts[j][1], bx = pts[i][0], by = pts[i][1], dx = bx-ax, dy = by-ay;
+    const t = Math.max(0, Math.min(1, ((x-ax)*dx + (y-ay)*dy)/((dx*dx + dy*dy)||1)));
+    const px = ax + dx*t, py = ay + dy*t, d = Math.hypot(x-px, y-py);
+    if(!best || d < best.d) best = {x:px, y:py, d};
+  }
+  return best;
+}
+// ¿(x,y) está dentro de un sólido pintado (o a menos de m de su borde)?
+function micInBgSolid(x, y, m){
+  m = m||0;
+  for(const P of micBgPolys()){
+    if(x < P.x0 - m || x > P.x1 + m || y < P.y0 - m || y > P.y1 + m) continue;
+    if(_micPtInPoly(x, y, P.pts)) return P;
+    if(m > 0 && _micPolyNearest(x, y, P.pts).d < m) return P;
+  }
+  return null;
+}
+// Empuja una entidad fuera de los sólidos pintados (radio efectivo = medio cuerpo, como el capullo).
+function micPushBgSolids(ent){
+  const r = ent.radius ? Math.min(ent.radius, 30)*0.5 : 8;
+  for(let pass=0; pass<2; pass++){
+    let moved = false;
+    for(const P of micBgPolys()){
+      if(ent.x < P.x0 - r || ent.x > P.x1 + r || ent.y < P.y0 - r || ent.y > P.y1 + r) continue;
+      const inside = _micPtInPoly(ent.x, ent.y, P.pts), nb = _micPolyNearest(ent.x, ent.y, P.pts);
+      if(!inside && nb.d >= r) continue;
+      let nx = ent.x - nb.x, ny = ent.y - nb.y, l = Math.hypot(nx, ny);
+      if(l < 1e-6){ nx = ent.x - (P.x0+P.x1)/2; ny = ent.y - (P.y0+P.y1)/2; l = Math.hypot(nx, ny)||1; }
+      if(inside){ nx = -nx; ny = -ny; }
+      ent.x = nb.x + nx/l*(r + 0.5); ent.y = nb.y + ny/l*(r + 0.5); moved = true;
+    }
+    if(!moved) break;
+  }
+}
 function micInside(x, y, m){
   m = m||0;
   const E = MIC_MAP.ell, dx = (x - E.cx)/E.rx, dy = (y - E.cy)/E.ry;
@@ -51,6 +112,7 @@ function micInside(x, y, m){
   if(Math.hypot(dx, dy) > k - m/Math.min(E.rx, E.ry)) return false;
   const P = MIC_MAP.pod;
   if(micPodSolid() && Math.hypot(x - P.x, y - P.y) < P.r + m) return false;
+  if(micInBgSolid(x, y, m)) return false;
   return true;
 }
 // Punto del borde de la caverna en el ángulo a (desde el centro de la elipse), hacia adentro `m`.
@@ -100,9 +162,40 @@ function micClamp(ent){
     const px = ent.x - P.x, py = ent.y - P.y, d = Math.hypot(px, py), R = P.r + (ent.radius ? Math.min(ent.radius, 30)*0.5 : 8);
     if(d < R){ const l = d || 1; ent.x = P.x + (d ? px/l : 0)*R; ent.y = P.y + (d ? py/l : 1)*R; }
   }
-  if(!(ent.rank==="jefe" || ent.structure || (ent.radius||0) > 60)) micPushSolids(ent); // los grandes pasan por encima
+  if(!(ent.rank==="jefe" || ent.structure || (ent.radius||0) > 60)) micPushSolids(ent); // los grandes pasan por encima de los hongos chicos
+  if(!(ent.rank==="jefe" || ent.structure || ent.flying)){
+    micPushBgSolids(ent); // los montículos pintados frenan a todos los que caminan
+    // rincón entre un montículo y el borde (empujes opuestos): al punto libre más cercano
+    if(!micInside(ent.x, ent.y, 0)){ const q = micNearestFree(ent.x, ent.y, 2); ent.x = q.x; ent.y = q.y; }
+  }
 }
 function micNavBlocked(x, y){ return !micInside(x, y, 14); }
+// Punto caminable más cercano (anillos de 10 u, 16 direcciones). Nunca devuelve algo inválido.
+function micNearestFree(x, y, m){
+  for(let r=10; r<=320; r+=10){
+    let best = null, bd = Infinity;
+    for(let k=0;k<16;k++){
+      const a = k/16*Math.PI*2, px = x + Math.cos(a)*r, py = y + Math.sin(a)*r;
+      if(micInside(px, py, m||0)){ const d = Math.hypot(px - x, py - y); if(d < bd){ bd = d; best = {x:px, y:py}; } }
+    }
+    if(best) return best;
+  }
+  return {x:MIC_MAP.start.x, y:MIC_MAP.start.y};
+}
+// Boca de túnel: el punto del borde se corre hacia el centro hasta quedar libre (los montículos
+// pintados llegan al borde en algunos túneles). Cacheado por ángulo.
+const _micMouths = {};
+function micTunnelMouth(a){
+  if(_micMouths[a]) return _micMouths[a];
+  const E = MIC_MAP.ell;
+  for(let m=40; m<420; m+=16){
+    const p = micEdgePoint(a, m);
+    if(micInside(p.x, p.y, 26)) return (_micMouths[a] = p);
+    // probar también a los costados del túnel antes de seguir hacia adentro
+    for(const da of [0.05, -0.05, 0.1, -0.1]){ const q = micEdgePoint(a + da, m); if(micInside(q.x, q.y, 26)) return (_micMouths[a] = q); }
+  }
+  return (_micMouths[a] = {x:E.cx, y:E.cy + E.ry*0.6});
+}
 function micRand(a, b){ return a + Math.random()*(b - a); }
 function micRandPick(a){ return a[(Math.random()*a.length)|0]; }
 function micAliveHeroes(){ return heroes.filter(h=>h.alive); }
@@ -119,11 +212,15 @@ function micPointNear(x, y, d0, d1, m){
 
 /* ---------------- aparición por los túneles ---------------- */
 function micPlaceSpawn(e, atBoss){
-  if(_micSpawnAt){ e.x = _micSpawnAt.x; e.y = _micSpawnAt.y; micClamp(e); return; }
+  if(_micSpawnAt){
+    let q = _micSpawnAt;
+    if(!micInside(q.x, q.y, 14)) q = micPointNear(q.x, q.y, 0, 140, 26); // jauría/adds nunca dentro de un sólido
+    e.x = q.x; e.y = q.y; micClamp(e); return;
+  }
   if(atBoss || e.rank==="jefe" || e.rank==="subjefe") return; // los ubica quien los crea
   const cands = [];
   for(const a of MIC_MAP.tunnels){
-    const p = micEdgePoint(a, 40), dm = micMinHeroDist(p.x, p.y);
+    const p = micTunnelMouth(a), dm = micMinHeroDist(p.x, p.y);
     if(dm < 430) continue;                                 // nunca encima del equipo
     cands.push({x:p.x, y:p.y, w: dm < 1300 ? 3 : 0.6});
   }
@@ -137,6 +234,7 @@ function micPlaceSpawn(e, atBoss){
     p = micPointNear(h.x, h.y, 440, 620, 30);
   }
   e.x = p.x + (Math.random()-0.5)*50; e.y = p.y + (Math.random()-0.5)*50;
+  if(!micInside(e.x, e.y, 14)){ e.x = p.x; e.y = p.y; } // el desvío al azar no puede meterlo en un montículo
   micClamp(e);
   // brota del suelo: un puñado de esporas donde aparece (solo si se ve)
   if(Math.random() < 0.4 && inView(e.x, e.y, 160)) vfxBurst(e.x, e.y-10, 5, "micSpore", 60, 500, 3, 0, -30, 1);

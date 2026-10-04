@@ -8,15 +8,18 @@ const assert = require('node:assert/strict');
  await page.goto(process.env.SE_BASE_URL || 'http://127.0.0.1:8805/',{waitUntil:'load'});
  await page.waitForFunction(()=>typeof codexChampHtml==='function' && typeof cosmeticCatalog==='function');
  const audit = await page.evaluate(()=>{
+   // Champion Bible: la frase de catálogo (tagline) y la historia del Códice son textos distintos;
+   // la ficha muestra la historia una sola vez.
    const duplicated = CHAMPION_CATALOG.filter(c=>CODEX_CHAMP_LORE[c.id] && c.lore === CODEX_CHAMP_LORE[c.id].history).map(c=>c.id);
    const failures=[];
    for(const c of CHAMPION_CATALOG){
-     codexChampTab='ficha';const html=codexChampHtml(c.id);
+     codexChampTab='ficha';const html=codexChampHtml(c.id);const hist=(CODEX_CHAMP_LORE[c.id]||{}).history;
      if(html.split(_cxEsc(c.lore)).length!==2) failures.push(c.id); // la descripción de tarjeta aparece una sola vez
+     if(hist && html.split(_cxEsc(hist)).length!==2) failures.push(c.id+':history');
    }
    return {duplicated,failures,catalog:cosmeticCatalog().length};
  });
- // Presentación uniforme (js/data/champion-presentation.js): ninguna descripción de tarjeta repite la historia.
+ // Presentación uniforme (js/data/champion-identity.js + champion-presentation.js): ninguna descripción de tarjeta repite la historia.
  assert.deepEqual(audit.duplicated,[]); assert.deepEqual(audit.failures,[]);
  for(const [width,height] of [[844,390],[667,375]]){
    await page.setViewportSize({width,height});

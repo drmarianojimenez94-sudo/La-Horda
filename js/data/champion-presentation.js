@@ -66,6 +66,9 @@ const CHAMPION_PRESENTATION = {
   bront:{tagline:"Armadura viviente: desprende placas protectoras, levanta murallas y se ancla como una ciudadela."},
   oriel:{tagline:"Portera de las Cicatrices: abre pares de portales que llevan a su equipo lejos de la Horda."}
 };
+// Nombre propio sin epíteto: la identidad de la Biblia (js/data/champion-identity.js) deja CLASSES[id].name
+// como "Nombre, título"; las tarjetas muestran el título en su propia línea y no lo repiten.
+function championShortName(id){ const c = typeof CLASSES !== "undefined" && CLASSES[id]; return c ? (c.shortName || c.name) : id; }
 function championTitle(id){ const c = typeof CLASSES !== "undefined" && CLASSES[id]; return (c && c.title) || ""; }
 (function(){
   for(const [id, p] of Object.entries(CHAMPION_PRESENTATION)){

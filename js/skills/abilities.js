@@ -505,9 +505,24 @@ function castAbility(caster, sk, isUlt, idx){
     case "last_duel_ult": {
       // Musashi — Último Duelo: ver enterLastDuel/updateLastDuel/exitLastDuel para el ciclo de
       // vida completo (aislamiento, buffs temporales, Golpe de Gracia, Senda del Rōnin).
-      const duelTarget = caster.duelTarget;
+      let duelTarget = caster.duelTarget;
+      // Sin Marca activa la definitiva ya gastó la carga (useUltimate la consume antes de lanzar): en vez
+      // de fallar en silencio, Musashi elige al rival más digno a 320 u (jefe > élite > común, el más cercano).
       if(!duelTarget || !duelTarget.alive || duelTarget.isDuelLocked){
-        if(caster===player) floatText(caster.x, caster.y-46, "Necesitás una Marca de Duelo activa", null);
+        const W = {jefe:6, subjefe:5, elite:3, subelite:2};
+        let best = null, bestScore = -1;
+        for(const e of enemies){
+          if(!e.alive || e.isDuelLocked || e.cineT > 0) continue;
+          const d = distance(caster, e); if(d > 320) continue;
+          const score = (W[e.rank]||1)*1000 - d;
+          if(score > bestScore){ bestScore = score; best = e; }
+        }
+        if(best){ musashiAddConcentration(caster, best, 1); duelTarget = best; }
+      }
+      if(!duelTarget || !duelTarget.alive || duelTarget.isDuelLocked){
+        // nadie a quien retar: se devuelve la carga y el enfriamiento (nunca se pierde la definitiva)
+        caster.ultCharge = caster.ultMax; caster.ultCd = 0;
+        if(caster===player) floatText(caster.x, caster.y-46, "No hay rival cerca para el duelo", null);
         break;
       }
       enterLastDuel(caster, duelTarget, sk);

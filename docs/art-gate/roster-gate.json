@@ -10,7 +10,12 @@
  },
  "appearances": 113,
  "scaleFailures": [],
- "presentationFailures": [],
+ "presentationFailures": [
+  {
+   "k": "nano_gm",
+   "reason": "historia 540 (esperado 260–480)"
+  }
+ ],
  "errors": [],
  "metrics": {
   "tanque": {
@@ -2277,11 +2282,11 @@
  "text": {
   "tanque": {
    "name": "Aldric, el Último Bastión",
-   "title": "El Muro de la Puerta Norte",
+   "title": "el Último Bastión",
    "role": "Resistencia, protección y control de área.",
    "cardLore": "Aldric sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino.",
-   "history": "Aldric fue capitán de la guardia de la ciudad cuando la Horda volvió. Sostuvo la puerta norte tres noches seguidas y nadie sabe cómo sigue en pie. Desde entonces camina adelante de todos: dice que ya tiene la costumbre de recibir los golpes. Lleva el escudo abollado de esa noche y no deja que nadie lo enderece: cada golpe es una persona que llegó al otro lado.",
-   "passive": "",
+   "history": "Aldric era capitán de la guardia cuando la Horda volvió a la Ciudad Maldita. Sostuvo la puerta norte tres noches seguidas, hasta que el escudo le quedó soldado al brazo. Nadie sabe cómo sigue en pie. Desde entonces camina delante de todos: dice que ya tiene la costumbre de recibir los golpes y que prefiere que sean suyos.",
+   "passive": "Los aliados a menos de 200 u de Aldric reciben 8% menos daño.",
    "skills": [
     "Gira sin parar dañando a su alrededor",
     "Carga, arrastra y golpea a un enemigo",
@@ -2292,11 +2297,11 @@
   },
   "guerrero": {
    "name": "Kael, la Daga Carmesí",
-   "title": "La Hoja de los Callejones",
+   "title": "la Daga Carmesí",
    "role": "Daño físico cuerpo a cuerpo contra objetivos y jefes.",
    "cardLore": "Kael encadena cortes y sangrados, y prepara trampas que castigan a toda una oleada.",
-   "history": "Kael cobraba por desaparecer a la gente equivocada. Cuando la ciudad cayó descubrió que los monstruos también sangran y que él sabe dónde cortar. No pelea por los Guardianes: pelea porque nadie le paga mejor que la venganza. Todavía cobra, pero ahora el precio es otro: que la Horda no vuelva a entrar a su barrio.",
-   "passive": "",
+   "history": "Kael cobraba por desaparecer a la gente equivocada. Cuando la ciudad cayó descubrió que los monstruos también sangran, y que él sabe exactamente dónde cortar. No pelea por los Guardianes ni por la gloria: pelea porque nadie le paga mejor que la venganza, y porque la Horda se llevó lo único que no estaba en venta.",
+   "passive": "Sus ataques básicos hacen 15% más de daño a enemigos que sangran o están envenenados.",
    "skills": [
     "Aplica un sangrado profundo",
     "Tres golpes veloces; el último causa +300% de daño",
@@ -2307,11 +2312,11 @@
   },
   "mago": {
    "name": "Thalen, el Tejedor Elemental",
-   "title": "El Tejedor Elemental",
+   "title": "el Tejedor Elemental",
    "role": "Daño mágico, área y control elemental.",
    "cardLore": "Thalen combina fuego, escarcha y relámpagos para controlar y devastar grupos de enemigos.",
-   "history": "Thalen estudió el fuego y el hielo como opuestos hasta entender que son el mismo idioma. Leyó sobre los Cuatro Guardianes en libros que el Hechicero Supremo había prohibido, y es de los pocos que sospecha que la historia oficial está incompleta. Guarda sus apuntes en dos idiomas que solo él lee, por si el Hechicero vuelve a quemar una biblioteca.",
-   "passive": "",
+   "history": "Thalen estudió el fuego y el hielo como opuestos hasta entender que son el mismo idioma. Leyó sobre los Cuatro Guardianes en libros que el Hechicero Supremo había prohibido, y es de los pocos que sospecha que la historia oficial está incompleta. Cada hechizo que lanza es también una pregunta que todavía nadie le responde.",
+   "passive": "Las reacciones que provoca (Vapor, Quiebre, Conducción) pegan más: su bonus de daño crece 50%.",
    "skills": [
     "Crea un anillo de fuego que quema al pisarlo",
     "Congela a los enemigos cercanos",
@@ -2322,11 +2327,11 @@
   },
   "soporte": {
    "name": "Elyra, la Guardiana del Alba",
-   "title": "La Luz del Último Santuario",
+   "title": "la Guardiana del Alba",
    "role": "Sanadora a distancia: restaura a sus aliados y purifica las oleadas con luz en área.",
-   "cardLore": "Elyra cura y protege a sus compañeros; la misma luz que los salva purifica a la Horda.",
-   "history": "Elyra, sanadora del último santuario que resistió en la ciudad. Aprendió que una bendición a tiempo salva más vidas que cualquier espada. Ahora libera el Alba Purificadora: su luz restaura a los vivos y golpea a los monstruos que se acercan. Su juramento es que ninguna vida se pierda sin luchar. Reza en voz baja.",
-   "passive": "",
+   "cardLore": "Elyra cura y protege a su equipo; la misma luz que los salva purifica a la Horda.",
+   "history": "Elyra era la sanadora del último santuario que resistió en la ciudad. Aprendió que una bendición a tiempo salva más vidas que cualquier espada, y que la luz que cierra heridas también quema a lo que la Horda corrompió. Su juramento es sencillo y obstinado: que ninguna vida se pierda sin que alguien haya luchado por ella.",
+   "passive": "Sus curaciones a aliados con menos de 35% de vida curan 25% más.",
    "skills": [
     "Un pulso de luz cura a los aliados en 260 u y daña a todos los enemigos en 160 u por el 120% de su daño. Ambos radios crecen con la maestría.",
     "Aumenta el daño de los aliados cercanos",
@@ -2336,12 +2341,12 @@
    "inCatalog": true
   },
   "segador": {
-   "name": "Segador Olvidado",
-   "title": "El Segador Olvidado",
+   "name": "Segador, el Olvidado",
+   "title": "el Olvidado",
    "role": "Berserker / tanque ofensivo. Cuanto más daño recibe, más peligroso se vuelve.",
-   "cardLore": "Cuanto más cerca de la muerte, más peligroso se vuelve: su guadaña no conoce el cansancio.",
-   "history": "Nadie sabe su nombre, ni él. Despertó entre los muertos de una guerra olvidada con una guadaña en las manos y una furia que no se apaga. Cuanto más cerca está de volver a morir, más se parece a lo que la Horda teme. A veces se detiene frente a una tumba sin nombre, como si esperara reconocer la suya.",
-   "passive": "",
+   "cardLore": "El Segador se vuelve más peligroso cuanto más cerca está de la muerte.",
+   "history": "Nadie sabe su nombre, ni siquiera él. Despertó entre los muertos de una guerra olvidada con una guadaña en las manos y una furia que no se apaga. La Horda lo reconoce como algo propio y lo teme por eso mismo. Cuanto más cerca está de volver a morir, más se parece a lo que los monstruos sueñan cuando sueñan con un cazador.",
+   "passive": "No regenera energía sola: la Furia se gana golpeando y recibiendo daño. Pelear es su recurso.",
    "skills": [
     "Corte horizontal amplio; golpea a varios enemigos frente a él",
     "Recibe menos daño; cada golpe recibido genera más Furia",
@@ -2351,12 +2356,12 @@
    "inCatalog": true
   },
   "axiom": {
-   "name": "Axiom",
-   "title": "El Que Reescribe las Reglas",
+   "name": "Axiom, el Reescritor",
+   "title": "el Reescritor",
    "role": "Manipula directamente las reglas de la realidad. Daño de área y control.",
-   "cardLore": "Descubrió que la realidad está construida con reglas y código. No lanza hechizos: reescribe las reglas.",
-   "history": "Descubrió que el mundo está construido con reglas, y que las reglas se pueden reescribir. Para él la Horda es un error en el sistema: una línea de código que alguien dejó abierta a propósito. Quiere encontrar a quien la escribió. Lleva una lista de excepciones que no logra explicar; la más larga empieza en las Cicatrices.",
-   "passive": "",
+   "cardLore": "Axiom descubrió que la realidad tiene reglas: no lanza hechizos, las reescribe.",
+   "history": "Axiom descubrió que el mundo está construido con reglas, y que las reglas se pueden reescribir. Para él la Horda es un error en el sistema: una línea de código que alguien dejó abierta a propósito. Cada vez que corrige una zona del mapa encuentra otra firma del mismo autor. Quiere encontrar a quien la escribió antes de que termine el programa.",
+   "passive": "Cada enemigo que muere por sus habilidades le devuelve 3 de energía (hasta 15 por segundo).",
    "skills": [
     "Marca una zona; tras una breve demora, colapsa y daña/ralentiza en un área",
     "Infecta al enemigo más cercano con código corrupto: se contagia de enemigo en enemigo y sigue dañando con el tiempo (más saltos y más daño al mejorarla)",
@@ -2366,27 +2371,27 @@
    "inCatalog": true
   },
   "profeta": {
-   "name": "La Profeta",
-   "title": "El Oráculo sin Ojos",
+   "name": "Ismara, la Profeta Ciega",
+   "title": "la Profeta Ciega",
    "role": "Sanadora de apoyo cuerpo a cuerpo. Cura, protege y potencia a un aliado elegido.",
-   "cardLore": "Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo.",
-   "history": "Ve el destino de sus aliados segundos antes de que ocurra. A veces le alcanza para cambiarlo, y a veces solo para verlo venir. Sus visiones sobre los cristales la despiertan de noche: siempre termina en el mismo lugar, en llamas. No cuenta todo lo que ve: aprendió que algunas visiones se cumplen justamente por nombrarlas.",
-   "passive": "",
+   "cardLore": "Ismara ve el destino de sus aliados antes de que ocurra, y a veces alcanza para cambiarlo.",
+   "history": "Ismara entregó los ojos al Oráculo a cambio de ver unos segundos más adelante. A veces le alcanza para cambiar el destino de un aliado, y a veces solo para verlo venir. Pelea cuerpo a cuerpo porque nadie más está tan cerca del golpe que va a llegar. Sus visiones sobre los cristales la despiertan de noche: siempre terminan en el mismo lugar, en llamas.",
+   "passive": "Cada 4 golpes básicos consecutivos dispara sola un giro extra que golpea en área.",
    "skills": [
     "Cura al instante al aliado más herido. Si está gravemente herido, además revierte parte del daño reciente que recibió",
     "Un aliado cercano se vuelve inmune a todo daño y a efectos negativos por unos segundos; al terminar, recibe una pequeña regeneración",
     "Gira con su hoja y genera daño de área a su alrededor; si un enemigo está muy cerca, lo aturde brevemente",
-    "Se fusiona con un aliado y queda casi invisible e invulnerable: el aliado recibe una gran curación, más daño, velocidad de ataque y resistencia, y lanza sus habilidades casi al instante mientras dura"
+    "Se fusiona con un aliado: él recibe una gran curación, mucho más daño, velocidad de ataque y resistencia, y recarga sus habilidades casi al instante mientras dura"
    ],
    "inCatalog": true
   },
   "musashi": {
-   "name": "Musashi",
-   "title": "El Rōnin del Bokken",
+   "name": "Musashi, el Rōnin del Bokken",
+   "title": "el Rōnin del Bokken",
    "role": "Duelista. Daño físico single-target y ejecución: elige un rival y se vuelve cada vez más peligroso contra él.",
-   "cardLore": "Un rōnin veterano que carga un bokken en vez de una katana. Cualquier arma alcanza contra un rival al que se entiende de verdad.",
-   "history": "Cruzó cien duelos para llegar a la Ciudad Maldita y ganó todos sin desenvainar una hoja de verdad. Elige un rival, lo estudia y lo termina de un solo corte. Ahora busca al único adversario que todavía no entiende: la Horda. Cada noche anota en un cuaderno lo que aprendió del enemigo; las páginas sobre la Horda siguen en blanco.",
-   "passive": "",
+   "cardLore": "Musashi carga un bokken en vez de una katana: elige un rival, lo estudia y lo termina.",
+   "history": "Musashi cruzó cien duelos para llegar a la Ciudad Maldita y ganó todos sin desenvainar una hoja de verdad. Cree que cualquier arma alcanza contra un rival al que se entiende por completo. Elige uno, lo estudia y lo termina de un solo corte. Ahora busca al único adversario que todavía no entiende: la Horda, que nunca pelea dos veces igual.",
+   "passive": "Marca a su rival: golpearlo acumula Concentración (hasta 10), que aumenta su daño contra ese objetivo.",
    "skills": [
     "Avanza y ejecuta un corte horizontal único y extremadamente rápido",
     "Atraviesa a un enemigo y aparece detrás suyo; el siguiente básico gana probabilidad de crítico. Si se activa justo antes de recibir un golpe, es un Paso Perfecto: lo evita por completo",
@@ -2396,12 +2401,12 @@
    "inCatalog": true
   },
   "cazadora": {
-   "name": "La Cazadora",
-   "title": "La Cazadora de las Ruinas",
+   "name": "Sylva, la Cazadora del Bosque",
+   "title": "la Cazadora del Bosque",
    "role": "Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.",
-   "cardLore": "Una tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.",
-   "history": "Creció entre los menhires de las Ruinas Célticas, antes de que se pudrieran. Conoce cada sendero y cada presa. Volvió a su bosque persiguiendo a la Horda y encontró al Guardián Ancestral convertido en otra cosa: todavía no se lo perdona. Deja una flecha clavada en cada sendero que limpia, para que los suyos sepan por dónde volver.",
-   "passive": "",
+   "cardLore": "Sylva es una tiradora muy móvil que gana velocidad mientras persigue a su presa.",
+   "history": "Sylva creció entre los menhires de las Ruinas Célticas, antes de que se pudrieran. Conoce cada sendero, cada rastro y cada presa del bosque viejo. Volvió persiguiendo a la Horda y encontró al Guardián Ancestral convertido en otra cosa. Todavía no se lo perdona, y por eso nunca deja de moverse: quedarse quieta sería empezar a llorarlo.",
+   "passive": "Rastreo marca a su Presa e Impulso crece mientras se mueve o ataca: más velocidad y cadencia.",
    "skills": [
     "Mantené pulsado para cargar: más carga = más daño, velocidad, alcance y penetración. A carga máxima atraviesa varios enemigos",
     "Coloca una trampa de raíces; inmoviliza (o ralentiza mucho a bosses) al primer enemigo que la pise",
@@ -2411,12 +2416,12 @@
    "inCatalog": true
   },
   "nigromante": {
-   "name": "Nigromante",
-   "title": "El Señor de las Criptas",
+   "name": "Ilvar, el Señor de las Criptas",
+   "title": "el Señor de las Criptas",
    "role": "Señor de un ejército y cosechador de almas: los caídos se levantan a su lado, las almas alimentan su poder y maldice a la horda.",
-   "cardLore": "No pelea solo: levanta a los caídos, crea un coloso de piedra y, si hace falta, se vuelve un demonio.",
-   "history": "Los vivos le tienen miedo; los muertos le obedecen. No pelea solo: levanta a los caídos, cose gólems con lo que queda y, si hace falta, se convierte en un demonio. Dice que la Horda y él hacen lo mismo, pero que él les pide permiso. Devuelve a cada muerto a su tumba cuando termina la pelea; es la única promesa que nunca rompió.",
-   "passive": "",
+   "cardLore": "Ilvar levanta a los caídos, arma un coloso de carne y, si hace falta, se vuelve un demonio.",
+   "history": "Ilvar creció cuidando las criptas bajo la ciudad. Los vivos le tienen miedo; los muertos le obedecen. Levanta a los caídos, cose gólems con lo que queda y, si hace falta, deja que el Abismo lo use de puerta. Dice que la Horda y él hacen exactamente lo mismo, con una única diferencia: él les pide permiso a los muertos.",
+   "passive": "Los enemigos caídos dejan cadáveres: sus esqueletos se levantan solos de los cuerpos cercanos.",
    "skills": [
     "Arranca almas en un cono: daña, ralentiza y suelta almas. PASIVA: tus esqueletos se levantan solos de los cadáveres cercanos (hasta 6 al mejorarla)",
     "Arma un gólem con los cadáveres cercanos (más cuerpos, más vida). Si ya tenés uno: salta al punto apuntado y APLASTA (daño y aturdimiento)",
@@ -2426,56 +2431,56 @@
    "inCatalog": true
   },
   "libertador": {
-   "name": "El Libertador",
-   "title": "El Comandante de la Cordillera",
+   "name": "San Martín, el Libertador",
+   "title": "el Libertador",
    "role": "Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta, mando y caballería.",
-   "cardLore": "Un comandante legendario que castiga con disparos devastadores y lidera cargas capaces de quebrar ejércitos.",
-   "history": "Un comandante legendario que ya cruzó una cordillera entera para liberar a medio continente. Castiga con disparos devastadores y lidera cargas capaces de quebrar ejércitos. Frente a la Horda repite lo que siempre dijo: seamos libres, lo demás no importa nada. Su caballo conoce el camino de vuelta de todas las campañas; él solo conoce el de ida.",
-   "passive": "",
+   "cardLore": "San Martín castiga con disparos devastadores, bayoneta y cargas que quiebran ejércitos.",
+   "history": "José de San Martín ya cruzó una cordillera entera para liberar a medio continente. Ahora cruza otra, más extraña, para llegar a la Ciudad Maldita. Castiga con disparos lentos y devastadores, y lidera cargas capaces de quebrar ejércitos. Frente a la Horda repite lo mismo que dijo siempre: seamos libres, que lo demás no importa nada.",
+   "passive": "Una vez por partida, un golpe mortal lo deja en 1 de vida, invulnerable 2 s y más rápido.",
    "skills": [
     "Mantené para apuntar y soltá: embestida corta con la bayoneta. Mucho daño, sangrado y un pequeño tambaleo; se detiene al conectar",
     "Levanta el sable, suena el clarín y aparecen Granaderos espectrales: +velocidad, +velocidad de ataque, +daño y resistencia al control para vos y tus aliados cercanos",
     "Monta su caballo blanco y carga en línea: atraviesa y empuja a los comunes, aturde a los élite y baja la defensa de los jefes",
-    "La Cordillera se alza alrededor de la arena: nieve, viento y escarcha. Carga con una formación de Granaderos espectrales montados y queda 10 s a caballo (sable corvo, +velocidad, +daño, -daño recibido)"
+    "Carga con Granaderos espectrales entre nieve y escarcha y queda 10 s a caballo: sable corvo, más velocidad y daño, menos daño recibido"
    ],
    "inCatalog": true
   },
   "eren": {
-   "name": "Eren",
-   "title": "El Portador de los Muros",
+   "name": "Eren, el Indómito",
+   "title": "el Indómito",
    "role": "Guerrero / Berserker: movilidad extrema con ganchos, gana Furia con el riesgo y se transforma en El Portador.",
-   "cardLore": "Convierte el peligro en furia y domina el campo con movilidad extrema hasta liberar una fuerza monstruosa.",
-   "history": "Creció encerrado entre muros mientras algo enorme golpeaba del otro lado. Convierte el peligro en furia y la furia en velocidad. Cuando no alcanza, libera algo que no debería llevar adentro: El Portador. No quiere salvar el mundo; quiere que nada vuelva a encerrarlo. Escucha los muros antes de cruzarlos: todavía cree oír golpes del otro lado.",
-   "passive": "",
+   "cardLore": "Eren convierte el peligro en furia hasta liberar una fuerza capaz de hacer temblar la arena.",
+   "history": "Eren creció encerrado entre muros mientras algo enorme golpeaba del otro lado. Convierte el peligro en furia y la furia en velocidad. Cuando no alcanza, libera algo que no debería llevar adentro: El Portador. No quiere salvar el mundo ni heredar a los Cuatro; quiere que nada, nunca más, vuelva a encerrarlo.",
+   "passive": "Con menos de 25% de vida gana velocidad, daño y más Furia.",
    "skills": [
     "Mantené para apuntar y soltá: dispara los ganchos y sale volando. Durante el vuelo, volvé a usarla para un SEGUNDO gancho con cambio de dirección. Corta a los que pasan cerca",
     "Por un momento recibís menos daño y cada golpe que te dan carga MUCHA más Furia. No es invulnerabilidad: es exponerse para transformarse antes",
     "Grito de guerra: más velocidad, daño y Furia (más fuerte con poca vida). Los aliados cercanos reciben una parte",
-    "Con la Furia llena: se muerde la mano, cae un rayo y surge la forma monstruosa (golpes en área, Sismo, Terremoto, Retumbar, regeneración con vapor). Si llenás la Furia otra vez transformado, se desbloquea algo más"
+    "Con la Furia llena se transforma en El Portador: golpes en área, Sismo, Terremoto, Retumbar y regeneración. Llenar la Furia de nuevo desbloquea algo más"
    ],
    "inCatalog": true
   },
   "ynara": {
-   "name": "Ynara",
+   "name": "Ynara, la Médica de los Refugios",
    "title": "El Ángel del Silencio",
    "role": "Sanadora de área: estrogonof, agua y santa paciencia.",
-   "cardLore": "Médica silenciosa del halo blanco: cura con luz, agua limpia y estrogonof, y castiga con una mirada.",
+   "cardLore": "Ynara es una médica silenciosa: cura, protege y nunca pide perdón.",
    "history": "Médica silenciosa y cuidadosa, Ynara sostiene los refugios con luz, agua limpia y estrogonof de pollo. Bajo su halo blanco guarda una paciencia finita y una bondad obstinada. Cura incluso a quien la hizo enojar. Nunca pide perdón: escucha, se queda callada y sigue cuidando. Cuando la paciencia se le termina, el halo se abre y los refugios entienden por qué la llaman santa.",
    "passive": "Tras 8 s sin recibir golpes obtiene un escudo del 8% de vida. Al romperse por daño libera luz en un radio de 90. No se acumula; vuelve a prepararse tras perderlo.",
    "skills": [
     "Un abanico de luz daña y ralentiza 30% durante 1,5 s. Empuja comunes cercanos; jefes resisten el empuje y limitan el freno al 12%.",
     "Sirve estrogonof de pollo: cada 600 ms cura 1% de vida y su vapor daña. Dentro reduce daño 8%. Máximo una fuente por Ynara.",
     "Se desliza por terreno seguro y limpia ralentización. Deja una cortina de agua que daña y frena. No cruza muros ni vacíos.",
-    "Despliega alas y un santuario móvil. Cura 0,8% por pulso y daña cada 600 ms. Cada golpe recibido por aliados dentro suma paciencia agotada (máximo 8, uno cada 400 ms). Al terminar libera una onda final."
+    "Santuario móvil: cura 0,8% por pulso y daña cada 0,6 s. Cada golpe que reciben los aliados adentro carga paciencia (máx. 8); al final estalla una onda."
    ],
    "inCatalog": true
   },
   "myla": {
-   "name": "Myla",
+   "name": "Myla, la Niña de la Cuchara",
    "title": "La Maga del Yogur",
    "role": "Maga de control: yogur, torres y ondas de llanto.",
-   "cardLore": "Maga de la merienda encantada: levanta torres de yogur, cubre de crema el camino y hace berrinches devastadores.",
-   "history": "Myla descubrió que su merienda podía convertirse en magia. Con una cuchara encantada y una sonrisa desafiante, levanta torres de yogur y cubre de crema los caminos de la Horda. Donde otros ven oscuridad, ella ve una aventura por compartir. Sus berrinches asustan más a la Horda que a sus amigos: ellos ya saben que después viene la merienda.",
+   "cardLore": "Myla controla el campo con torres de yogur, charcos pegajosos y un berrinche que sacude la arena.",
+   "history": "Myla descubrió que su merienda podía convertirse en magia. Con una cuchara encantada y una sonrisa desafiante levanta torres de yogur y cubre de crema los caminos de la Horda. Los adultos de los refugios dicen que es demasiado chica para pelear; ella responde que los monstruos también le tienen miedo a un berrinche. Donde otros ven oscuridad, ve una aventura por compartir.",
    "passive": "Los disparos de sus torres ralentizan brevemente. Los jefes reciben una ralentización reducida.",
    "skills": [
     "Invoca una torre de yogur que dispara y ralentiza. Máximo dos; la tercera reemplaza la más antigua.",
@@ -2486,11 +2491,11 @@
    "inCatalog": true
   },
   "brasa": {
-   "name": "Brasa",
+   "name": "Brasa, la Mecánica Fugitiva",
    "title": "La Última Maquinista",
    "role": "Ingeniera de posición: torretas, presión y vapor.",
-   "cardLore": "Maquinista de la Fábrica: arma torretas, purga la corrupción y sobrecarga sus máquinas en el momento justo.",
-   "history": "Mantenía las máquinas de la Fábrica. Descubrió que una de sus cadenas no era para un monstruo, sino para alguien que se negó a obedecer. Escapó con los planos: todavía no sabe quién estaba al otro extremo. Repara cada torreta con piezas de las máquinas que la Horda corrompió, para que trabajen otra vez del lado correcto.",
+   "cardLore": "Brasa vuelve contra la Horda la maquinaria de la Fábrica: torretas, purgas y desarmes.",
+   "history": "Brasa mantenía las máquinas de la Fábrica Sin Fin. Un día descubrió que una de sus cadenas no estaba hecha para un monstruo, sino para alguien que se había negado a obedecer. Escapó con los planos bajo el brazo y una llave inglesa que nunca suelta. Todavía no sabe quién estaba del otro lado de esa cadena, y desarma cada máquina de la Horda buscando la respuesta.",
    "passive": "Las habilidades acumulan hasta tres cargas. El siguiente básico con tres cargas descarga un cono pequeño y consume la presión.",
    "skills": [
     "Monta una torreta fija con vida propia. Máximo dos; una tercera retira la más antigua.",
@@ -2501,11 +2506,11 @@
    "inCatalog": true
   },
   "eslabon": {
-   "name": "El Eslabón",
+   "name": "Garren, el Eslabón",
    "title": "El Carcelero que Abrió la Puerta",
    "role": "Tanque protector: cadenas, custodia y separación.",
-   "cardLore": "Carcelero arrepentido: engancha, traza líneas que nadie cruza y protege a quien más lo necesita.",
-   "history": "Custodió una prisión de portadores mucho después de los Cuatro. Rompió su juramento y abrió las celdas. Conserva un grillete: el peso le recuerda que proteger también puede empezar por abrir una puerta. Las cadenas que antes cerraban celdas ahora frenan a la Horda; las llaves se las dio a los presos.",
+   "cardLore": "Garren abrió las celdas que custodiaba: ganchos, líneas y un grillete que protege al equipo.",
+   "history": "Garren custodió una prisión de portadores mucho después de los Cuatro. Lo llamaban el Eslabón porque nada salía de las celdas sin pasar por él. Una noche rompió su juramento y abrió todas las puertas. Conserva un grillete atado al brazo: el peso le recuerda que proteger también puede empezar por abrir una puerta.",
    "passive": "Controlar a un enemigo concede 12% de resistencia durante 1,6 s, con 2,2 s de recarga interna. No acumula resistencia.",
    "skills": [
     "Engancha y acerca un enemigo. Los jefes reciben daño y ralentización, pero nunca se desplazan.",
@@ -2516,11 +2521,11 @@
    "inCatalog": true
   },
   "morwen": {
-   "name": "Morwen",
+   "name": "Morwen, la Destiladora de Ecos",
    "title": "La Destiladora de Ecos",
    "role": "Alquimista: resina, catalizador y reacciones controladas.",
-   "cardLore": "Alquimista del Fúngico: mezcla resina y catalizador para provocar reacciones controladas sobre la Horda.",
-   "history": "Estudiaba las voces que el micelio repite cuando nadie escucha. Aprendió a destilar sus ecos sin entregarse a la Madre Espora. En algunos frascos todavía hay una voz que dice: váyanse, yo me quedo. Etiqueta cada frasco con el nombre de la voz que guarda, para que nadie la confunda con la Madre Espora.",
+   "cardLore": "Morwen destila reactivos de resina, sal y ecos que reaccionan entre sí.",
+   "history": "Morwen estudiaba las voces que el micelio repite cuando nadie escucha. Aprendió a destilar sus ecos en frascos sin entregarse a la Madre Espora, y descubrió que cada reactivo recuerda a quien lo pronunció. Viaja con un alambique a la espalda y etiqueta cada frasco con un nombre. En algunos todavía hay una voz que dice: váyanse, yo me quedo.",
    "passive": "Resina y Catalizador reaccionan una sola vez, se consumen y dejan un residuo. Conserva hasta cinco residuos para Destilación.",
    "skills": [
     "Un frasco marca y ralentiza. Combinar Resina y Catalizador detona una sola reacción y consume ambos.",
@@ -2531,11 +2536,11 @@
    "inCatalog": true
   },
   "farolero": {
-   "name": "El Farolero",
+   "name": "Tobías, el Farolero",
    "title": "La Última Luz",
    "role": "Escolta: luz local, sendas y escudos por pulsos.",
-   "cardLore": "Guía de las expediciones: planta faroles, abre senderos seguros y sostiene la luz hasta que pase el último.",
-   "history": "Volvió de otra expedición siguiendo el ruido de un yunque. No volvió con todos. Ahora baja otra vez: no promete que la oscuridad desaparezca, promete sostener la luz hasta que pase el último. Cuenta a los que vuelven antes de apagar el farol y, si falta alguno, lo deja encendido toda la noche en la entrada de la mina.",
+   "cardLore": "Tobías sostiene la luz para el equipo: linternas, destellos y caminos seguros en la oscuridad.",
+   "history": "Tobías encendía los faroles de las Minas Profundas. Volvió de otra expedición siguiendo el ruido de un yunque y no volvió con todos. Ahora baja otra vez con la misma lámpara. No promete que la oscuridad desaparezca: promete sostener la luz hasta que pase el último, y quedarse un rato más por si alguien vuelve.",
    "passive": "Aliados a menos de 230 unidades que se mueven hacia el Farolero ganan 8% de velocidad. No se acumula con otros faroleros.",
    "skills": [
     "Coloca un farol, máximo uno, que protege cerca y da luz débil local. No enciende braseros ni elimina oscuridad especial.",
@@ -2546,11 +2551,11 @@
    "inCatalog": true
   },
   "iria": {
-   "name": "Iria",
+   "name": "Iria, la Tejedora de Límites",
    "title": "La Tejedora de Sellos",
    "role": "Control geométrico: anclas, hilos y triángulos.",
-   "cardLore": "Reparadora de sellos: tiende anclas, tensa sus hilos y cierra triángulos de control sobre la Horda.",
-   "history": "Reparaba límites pequeños bajo la sombra del Guardián del Laberinto. Encontró puertas que nadie había roto: alguien las abrió desde adentro. Puede sostener una fisura, pero el Sello de los Cuatro pesa más que toda su orden. Lleva en la muñeca el primer nudo que ató, por si alguna vez tiene que deshacer todo y empezar de nuevo.",
+   "cardLore": "Iria ancla, tensa y corta hilos entre puntos del mapa que castigan a quien los cruza.",
+   "history": "Iria reparaba límites pequeños bajo la sombra del Guardián del Laberinto: umbrales, cerrojos, costuras entre un pasillo y otro. Un día encontró puertas que nadie había roto, abiertas desde adentro. Aprendió a anclar hilos entre tres puntos y a sostener una fisura el tiempo justo para que alguien cruce. Sabe que el Sello de los Cuatro pesa más que toda su orden, y lo sostiene igual.",
    "passive": "Hasta tres anclas se unen en orden, con un máximo de 400 unidades por hilo. Tensión activa su daño y control; no son paredes.",
    "skills": [
     "Coloca un sello, máximo tres. Las anclas cercanas se unen en orden; sus hilos no son paredes.",
@@ -2561,11 +2566,11 @@
    "inCatalog": true
   },
   "vesper": {
-   "name": "Vesper",
+   "name": "Vesper, la Costurera de Sombras",
    "title": "La Costurera de Sombras",
    "role": "Asesina de preparación: marca grupos, cose una salida y consume los hilos.",
-   "cardLore": "Asesina de preparación: hilvana las sombras de los corrompidos, marca grupos y consume las puntadas.",
-   "history": "Vesper remendaba los trajes del teatro de la Ciudad. La noche del regreso encontró a su hermana sentada frente a un espejo: el cuerpo seguía allí, pero la sombra ya se movía sola. Intentó sujetarla con el hilo que usaba para coser nombres dentro de los abrigos. Desde entonces puede hilvanar las sombras de los corrompidos durante unos segundos. No sabe si aquello devuelve algo de quienes fueron. Conserva una manga sin terminar y sigue cada Cicatriz con una pregunta que no se anima a hacer en voz alta: cuánto de una persona queda cuando todavía reconocés su nombre.",
+   "cardLore": "Vesper marca grupos con hilos de sombra, cose una salida y consume las puntadas.",
+   "history": "Vesper remendaba los trajes del teatro de la Ciudad. La noche del regreso encontró a su hermana frente a un espejo: el cuerpo seguía allí, pero la sombra ya se movía sola. Intentó sujetarla con el hilo con el que cosía nombres dentro de los abrigos. Desde entonces hilvana las sombras de los corrompidos, y sigue cada Cicatriz preguntándose cuánto queda de una persona.",
    "passive": "Los básicos dejan hasta 3 puntadas por objetivo y dueña durante 5 s. Al caer un marcado libera una única rotura de hilo: no provoca cadenas de explosiones.",
    "skills": [
     "Abanico de agujas: daño y una puntada por enemigo.",
@@ -2576,11 +2581,11 @@
    "inCatalog": true
   },
   "nahir": {
-   "name": "Nahir",
+   "name": "Nahir, el Restaurador de Espejos",
    "title": "El Vidrio Errante",
    "role": "Flanqueador que usa reflejos breves para cubrir ángulos distintos.",
-   "cardLore": "Flanqueador del Laberinto: usa reflejos breves para atacar desde ángulos que la Horda no espera.",
-   "history": "Antes de entrar al Laberinto, Nahir restauraba espejos: devolvía a otros un rostro sin las manchas del tiempo. En una galería encontró su propia imagen varios pasos por delante. La siguió hasta verla arrodillarse ante una figura que no aparecía en el cristal. Rompió el espejo, pero tres fragmentos conservaron aquel gesto. Los lleva sujetos a sus muñecas; cada reflejo repite por un instante lo que él hace. Nahir busca una salida que su imagen todavía no conozca. No predice el futuro: teme que una elección repetida termine pareciéndose a un destino.",
+   "cardLore": "Nahir pelea con fragmentos de espejo que repiten cada uno de sus golpes.",
+   "history": "Nahir restauraba espejos antes de entrar al Laberinto. En una galería encontró su propia imagen varios pasos por delante, arrodillada ante una figura que no aparecía en el cristal. Rompió el espejo, pero tres fragmentos conservaron aquel gesto: los lleva en las muñecas y cada uno repite lo que él hace. Busca una salida que su reflejo todavía no conozca.",
    "passive": "Cambiar al menos 60° el ángulo de ataque contra el mismo enemigo añade 15% de daño; recarga interna 900 ms.",
    "skills": [
     "Proyecta astillas en abanico contra la horda.",
@@ -2591,11 +2596,11 @@
    "inCatalog": true
   },
   "baltra": {
-   "name": "Baltra",
+   "name": "Baltra, la Campana Sumergida",
    "title": "La Campana Hundida",
    "role": "Tanque frontal que transforma golpes recibidos en ondas de campana.",
-   "cardLore": "Tanque de la campana hundida: convierte cada golpe recibido en ondas que protegen y castigan.",
-   "history": "Baltra cuidaba una campana de aviso en un poblado de la costa nueva. Cuando el agua apareció donde antes había calles, se ató al badajo para seguir tocando mientras los demás subían. La encontraron dentro de la campana, respirando en una bolsa de aire que nadie supo explicar. No afirma que el bronce la salvara: recuerda las manos que tiraron de la cuerda desde arriba. Convirtió la campana en escafandra y vuelve al borde del agua en cada expedición. Su señal no promete victoria. Promete que todavía hay alguien sosteniendo la otra punta.",
+   "cardLore": "Baltra sostiene al equipo bajo presión con una campana convertida en escafandra.",
+   "history": "Baltra cuidaba la campana de aviso de un poblado de la costa. Cuando el agua apareció donde antes había calles, se ató al badajo para seguir tocando mientras los demás subían. La encontraron dentro de la campana, respirando una bolsa de aire que nadie supo explicar. Convirtió el bronce en escafandra: su señal no promete victoria, promete que alguien sostiene la otra punta.",
    "passive": "Recibir daño efectivo en vida o escudo suma vibración: máximo 5, una cada 500 ms.",
    "skills": [
     "Onda circular que consume vibración: +12% de daño por carga.",
@@ -2606,11 +2611,11 @@
    "inCatalog": true
   },
   "maura": {
-   "name": "Maura",
+   "name": "Maura, la Pastora de Espinas",
    "title": "La Pastora de Espinas",
    "role": "Protectora de avance: recibe el choque, recoge semillas y abre un corredor.",
-   "cardLore": "Pastora de zarzas: siembra espinas, cura con lo que crece y hace caminar al bosque contra la Horda.",
-   "history": "Maura guiaba rebaños por senderos que ya no figuran en los mapas. Al regresar a las Ruinas encontró las cercas convertidas en espinas y a los animales agrupados frente a un camino que parecía respirar. No intentó dominar el bosque: cortó una vereda lo bastante estrecha para pasar de a uno. Por allí salieron pastores, refugiados y una niña que había olvidado cómo llamarse. Las zarzas crecieron en su cayado después de aquella noche. Maura las poda todos los días. Sabe que proteger algo vivo también significa impedir que ocupe todo el espacio.",
+   "cardLore": "Maura abre veredas de zarzas y protege lo vivo sin dejar que lo ocupe todo.",
+   "history": "Maura guiaba rebaños por senderos que ya no figuran en los mapas. Al volver a las Ruinas encontró las cercas convertidas en espinas y un camino que parecía respirar. No intentó dominar el bosque: cortó una vereda tan estrecha que solo se pasaba de a uno, y por ella salieron todos. Desde esa noche las zarzas crecen en su cayado, y ella las poda cada mañana.",
    "passive": "Impactos directos generan hasta 5 semillas, como máximo una cada 500 ms.",
    "skills": [
     "Una línea de raíces daña, frena y deja un suelo de espinas temporal.",
@@ -2621,11 +2626,11 @@
    "inCatalog": true
   },
   "dariel": {
-   "name": "Dáriel",
+   "name": "Dáriel, el Último Compás",
    "title": "El Último Aplauso",
    "role": "Músico de ritmo alternado: daño moderado, protección y recuperación acotada.",
-   "cardLore": "Director de una marcha que no se rinde: alterna notas para curar, proteger y quebrar a la Horda.",
-   "history": "Dáriel dirigía la música entre escenas. Cuando el Presentador dejó de permitir que el público se levantara, cambió el final de una melodía por la señal de evacuación que conocían los tramoyistas. Unos pocos siguieron el ritmo hasta las puertas de servicio. Él salió último, todavía marcando el compás sobre la madera. Desde entonces detesta los aplausos que no terminan: escucha en ellos las butacas llenas y la orden de volver a empezar. Viaja con los portadores para ofrecer otra cosa, una canción que sepa callarse cuando todos hayan cruzado.",
+   "cardLore": "Dáriel marca el compás que coordina al equipo y lo saca del peligro.",
+   "history": "Dáriel dirigía la música entre escenas. Cuando el Presentador dejó de permitir que el público se levantara, cambió el final de una melodía por la señal de evacuación de los tramoyistas, y unos pocos siguieron el ritmo hasta las puertas de servicio. Él salió último, marcando el compás. Ahora viaja con los portadores tocando una canción que sabe callarse cuando todos cruzaron.",
    "passive": "Alternar habilidades distintas acumula hasta 3 notas; repetir la misma no añade notas.",
    "skills": [
     "Cono sonoro: daño y −8% de daño enemigo durante 1,5 s; jefes −4%.",
@@ -2636,11 +2641,11 @@
    "inCatalog": true
   },
   "orsa": {
-   "name": "Orsa",
+   "name": "Orsa, la Guardacables",
    "title": "La Cazadora del Trueno",
    "role": "Tiradora que distribuye cargas y decide cuándo descargar la horda.",
-   "cardLore": "Tiradora paciente: perfora y marca a distancia, se afirma y descarga todas las marcas de una vez.",
-   "history": "Orsa inspeccionaba los cables que llevaban señales entre los niveles de las Minas. Durante un apagón oyó tres golpes en una línea que llevaba años cortada. Bajó con una bobina a la espalda y encontró una cuadrilla que repetía el mismo turno sin recordar cómo había empezado. Solo uno reconoció la señal de regreso. Orsa lo sacó siguiendo el cable hasta la luz. Hoy su ballesta almacena pequeñas descargas en el metal que alcanza. No persigue tormentas ni controla el cielo: quiere que, cuando alguien golpee desde abajo, todavía quede una respuesta.",
+   "cardLore": "Orsa guarda descargas en el metal de su ballesta y responde a quien golpee desde abajo.",
+   "history": "Orsa revisaba los cables que llevaban señales entre los niveles de las Minas. Durante un apagón oyó tres golpes en una línea cortada hacía años, bajó con una bobina a la espalda y encontró una cuadrilla que repetía el mismo turno sin recordar cómo había empezado. Solo uno siguió el cable hasta la luz. Hoy su ballesta guarda descargas para que siempre quede una respuesta.",
    "passive": "Los básicos dejan hasta 3 cargas por blanco y dueña durante 5 s.",
    "skills": [
     "Perno lineal que atraviesa varios enemigos y añade una carga.",
@@ -2651,11 +2656,11 @@
    "inCatalog": true
   },
   "tibor": {
-   "name": "Tibor",
+   "name": "Tibor, el Rey sin Corona",
    "title": "El Rey del Enjambre",
    "role": "Mago territorial con una sola nube que debe conservar y recolocar.",
-   "cardLore": "Apicultor de la colmena errante: envía su colonia a picar zonas enteras y la recoge para protegerse.",
-   "history": "A Tibor lo llamaban rey porque era incapaz de dar una orden a sus abejas. Les abría las cajas y esperaba. Cuando el micelio empezó a repetir voces humanas, una colonia abandonó el apiario y se instaló en su carro. Las demás quedaron cubiertas de una cera gris. No sabe por qué esas sobrevivieron; se niega a atribuirse el mérito. Las conduce por zonas donde el aire todavía deja pasar la luz y marca con polen las cosas que deben evitar. Si alguna vez encuentra un lugar seguro, piensa dejar allí la colmena y marcharse sin corona.",
+   "cardLore": "Tibor guía un enjambre que marca enemigos, protege el aire limpio y castiga a la colonia.",
+   "history": "A Tibor lo llamaban rey porque era incapaz de dar una orden a sus abejas: les abría las cajas y esperaba. Cuando el micelio empezó a repetir voces humanas, una colonia se instaló en su carro y las demás quedaron cubiertas de cera gris. Las conduce por donde el aire todavía deja pasar la luz. Si encuentra un lugar seguro, piensa dejar allí la colmena y marcharse sin corona.",
    "passive": "Fuerza de colonia 0–100. Sin nube recupera 9/s; cada pulso de nube cuesta 8. Una sola nube por dueño.",
    "skills": [
     "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
@@ -2666,11 +2671,11 @@
    "inCatalog": true
   },
   "zahra": {
-   "name": "Zahra",
+   "name": "Zahra, la Mano de la Válvula",
    "title": "La Devoradora de Brasas",
    "role": "Maga de calor: gana potencia arriesgando sobrecalentarse y debe purgar.",
-   "cardLore": "Forjadora de ceniza: calienta su horno con cada golpe, lo enfría a tiempo y libera el calor acumulado.",
-   "history": "Zahra abría las compuertas de los hornos al final de cada turno. Una noche los indicadores dejaron de bajar, aunque ya no entraba combustible. Los capataces ordenaron mantener la línea. Ella arrancó el cierre de una válvula y sostuvo la salida mientras sus compañeros escapaban. El guante absorbió un calor que desde entonces regresa cuando la Cicatriz está cerca. Zahra lo descarga en ráfagas cortas y cuenta en voz baja antes de volver a abrir el puño. No quiere gobernar el fuego: aprendió demasiado tarde lo que pasa cuando nadie se atreve a apagar una máquina.",
+   "cardLore": "Zahra descarga un calor contenido en ráfagas cortas y cuenta antes de volver a abrir el puño.",
+   "history": "Zahra abría las compuertas de los hornos de la Fábrica al final de cada turno. Una noche los indicadores dejaron de bajar y los capataces ordenaron mantener la línea. Ella arrancó el cierre de una válvula y sostuvo la salida mientras sus compañeros escapaban. Su guante absorbió un calor que vuelve cada vez que una Cicatriz está cerca, y aprendió a soltarlo de a poco.",
    "passive": "Calor 0–100: desde 60, +15% de daño. A 100 entra 1,8 s en recuperación; puede usar Enfriar. Fuera de uso pierde 1,5/s.",
    "skills": [
     "Cono ardiente. Genera 30 de calor.",
@@ -2681,11 +2686,11 @@
    "inCatalog": true
   },
   "renko": {
-   "name": "Renko",
+   "name": "Renko, el Jardinero de Nombres",
    "title": "El Sepulturero sin Tumbas",
    "role": "Tanque de preparación del terreno, sin obstáculos sólidos ni encierros.",
-   "cardLore": "Zapador incansable: cava trincheras, levanta montículos y entierra a la Horda bajo su propio terreno.",
-   "history": "Renko anotaba nombres para quienes ya no podían hacerlo. Cuando el cementerio empezó a devolver las lápidas al camino, dejó de cavar: no iba a entregar más recuerdos a una tierra que los repetía mal. Cargó las placas pequeñas en un carro y llevó a los vivos hasta la puerta norte. Su pala todavía arranca surcos de un suelo que parece negarse a quedar quieto. Los usa para contener el avance, nunca para cerrar una salida. Viaja para encontrar un lugar donde dejar los nombres y poder volver a llamarse, simplemente, jardinero.",
+   "cardLore": "Renko traza surcos que contienen el avance enemigo sin cerrar nunca una salida.",
+   "history": "Renko anotaba nombres para quienes ya no podían hacerlo. Cuando el cementerio empezó a devolver las lápidas al camino, dejó de cavar: no iba a entregar más recuerdos a una tierra que los repetía mal. Cargó las placas pequeñas en un carro y llevó a los vivos hasta la puerta norte. Busca un lugar donde dejar esos nombres y volver a llamarse, simplemente, jardinero.",
    "passive": "Un básico contra un blanco junto a sus surcos produce una sacudida de ×0,25; recarga interna 900 ms.",
    "skills": [
     "Traza una línea que daña, frena y deja tierra removida; máximo 3.",
@@ -2696,11 +2701,11 @@
    "inCatalog": true
   },
   "sira": {
-   "name": "Sira",
+   "name": "Sira, la Cartógrafa del Regreso",
    "title": "La Cartógrafa de lo Perdido",
    "role": "Maga que dibuja con su recorrido y convierte trayectos recientes en ataques.",
-   "cardLore": "Cartógrafa de rutas vivas: dibuja su camino, lo recorre al revés y convierte el mapa en un arma.",
-   "history": "El padre de Sira volvió del Laberinto con un mapa en blanco. Durante semanas señaló sobre él caminos que nadie más veía, hasta que un día dejó una marca de tinta y salió sin abrigo. Sira siguió la marca. Encontró otras en muros, telas y huesos de animales: no indicaban dónde ir, sino dónde alguien había conseguido regresar. Desde entonces registra sus propios pasos y borra las rutas que ya no son seguras. Sus mapas duran poco cerca de la Cicatriz. Le basta con que duren hasta que cruce la última persona.",
+   "cardLore": "Sira marca el camino de vuelta y borra las rutas que dejaron de ser seguras.",
+   "history": "El padre de Sira volvió del Laberinto con un mapa en blanco, señaló caminos que nadie más veía y un día salió sin abrigo. Sira siguió su última marca y encontró otras en muros, telas y huesos: no indicaban adónde ir, sino dónde alguien había conseguido regresar. Desde entonces registra sus propios pasos y borra las rutas que ya no son seguras.",
    "passive": "Conserva hasta 12 puntos de los últimos 4 s. Un salto de más de 75 unidades o terreno inaccesible interrumpe el trazo.",
    "skills": [
     "Trazo recto que atraviesa hasta 12 enemigos.",

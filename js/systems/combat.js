@@ -45,6 +45,8 @@ function damageEnemy(e, amount, opts){
   // refuerzos de la partida: rematar (enemigo bajo 30% de vida) y cazador de élites/jefes
   if(runStats.executeBonus && e.hp < e.maxHp*0.3) dmg *= 1 + runStats.executeBonus;
   if(runStats.eliteDmgMult!==1 && (e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) dmg *= runStats.eliteDmgMult;
+  // Kael — Depredador (CLASSIC_PASSIVES.guerrero): sus básicos castigan a los que ya sangran o están envenenados
+  if(opts.fromBasic && src && src.classKey==="guerrero" && (e.bleedTimer>0 || e.poisonTimer>0)) dmg *= CLASSIC_PASSIVES.guerrero.basicVsDotMult;
   let critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
   let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
   const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
@@ -60,6 +62,13 @@ function damageEnemy(e, amount, opts){
     const fl = bossPhaseFloor(e); if(fl !== null && e.hp > fl && e.hp - dmg < fl) dmg = e.hp - fl;   // solo si el golpe CRUZA el umbral (un DoT que ya bajó la vida no lo vuelve inmortal)
   }
   e.hp -= dmg;
+  // Axiom — Recompilar (CLASSIC_PASSIVES.axiom): una baja por habilidad le devuelve energía (con tope por segundo)
+  if(src && src.classKey==="axiom" && !opts.fromBasic && _hpBefore > 0 && e.hp <= 0 && src.alive){
+    const P = CLASSIC_PASSIVES.axiom, now = runElapsedMs;
+    if(now - (src._recompT||-1e9) > 1000){ src._recompT = now; src._recompN = 0; }
+    const give = Math.min(P.energyPerKill, P.maxPerSec - (src._recompN||0));
+    if(give > 0){ src._recompN = (src._recompN||0) + give; src.energy = Math.min(src.maxEnergy||src.energy+give, (src.energy||0) + give); }
+  }
   // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
   // "farmear" daño pegándole fuerte a enemigos casi muertos).
   const usefulDmg = Math.min(dmg, _hpBefore);

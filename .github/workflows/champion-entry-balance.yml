@@ -1,10 +1,10 @@
 name: Champion entry balance
 on:
   pull_request:
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   push:
     branches: [main, 'chatgpt/**']
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,11 +18,13 @@ jobs:
         with:
           node-version: 22
       - run: node --test tools/factory/test.js
+      - run: node tools/factory/boss-cli.js check
       - run: node tools/alpha/public-defaults.js
       - run: node tools/alpha/account-environments.js
       - run: node tools/alpha/rooms-unit.js
       - run: node tools/quality/test-single-champion-revive.js
       - run: node tools/quality/test-floating-text.js
+      - run: node tools/quality/test-combat-language.js
       - run: node tools/alpha/services-test.js
       - run: node tools/alpha/event-receipts-test.js
       - run: node tools/collection/check-collection.js
@@ -32,6 +34,36 @@ jobs:
       - run: npm install --prefix /tmp/horda-balance --no-audit --no-fund playwright@1.61.1
       - run: /tmp/horda-balance/node_modules/.bin/playwright install --with-deps chromium
       - run: node tools/balance/entry-gate.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/champion-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/arena-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/boss-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bosses/t_boss_arena_hooks.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-ability-inspector.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-tactical-panel.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-arena-briefing-tutorial.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-touch-targets.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/quality/test-classic-passives.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-text-overflow.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/portadores/test-elyra.js
@@ -51,6 +83,9 @@ jobs:
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/ux/online.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/online-tactical.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node server/test-owner-recovery.js
