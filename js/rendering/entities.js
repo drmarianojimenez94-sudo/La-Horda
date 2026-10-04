@@ -503,9 +503,6 @@ function _entPush(y, e, h, w, p, s){
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){
-  if(p.src && p.src.classKey==="myla" && p.fromBasic){
-    ctx.save();ctx.fillStyle=p.color;ctx.fillRect(p.x-5,p.y-4,10,8);ctx.fillRect(p.x-3,p.y-6,6,12);ctx.fillStyle="#ffffff";ctx.fillRect(p.x-3,p.y-3,4,4);ctx.restore();return;
-  }
   if(p.fortSpr && arenaHook("drawProjectile", p)) return;
   if(p.lob){
     // tiro en arco: sombra en el piso + proyectil elevado según la altura del arco

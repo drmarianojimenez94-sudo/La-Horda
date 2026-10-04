@@ -71,7 +71,7 @@ function libertadorBasic(caster, aspd){
   const O = SM_CFG.officer;
   const everyBonus = Math.round(talentSkillMods(caster.classKey, 0).flags.officerEveryMinus||0);
   const p = {x:caster.x+dir.x*26, y:caster.y-16+dir.y*26, vx:dir.x*C.projSpeed, vy:dir.y*C.projSpeed, dmg: officer ? base*O.dmgMult*(1+(talentSkillMods(caster.classKey,0).flags.officerDmgPct||0)) : base,
-    life:C.projLife, radius: officer ? 8 : 5, color: officer ? "#ffd66b" : "#fff1c2", fromBasic:true, src:caster, smShot:true, smOfficer:officer};
+    life:C.projLife, radius: officer ? 8 : 5, color: officer ? "#ffd66b" : "#fff1c2", fromBasic:true, src:caster, smShot:true, smOfficer:officer, projStyle: officer ? "officer" : undefined};
   let hits = 0;
   if(officer){
     p.pierce = true; p.hitSet = new Set(); p.critChanceOverride = 1; // crítico garantizado sobre el objetivo principal
