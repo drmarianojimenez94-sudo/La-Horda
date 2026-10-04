@@ -115,5 +115,7 @@ document.addEventListener("pointerdown", ev=>{ if(_abInspFor!==null && _abInspEl
   };
   el.addEventListener("pointerup", ev=>up(ev, false));
   el.addEventListener("pointercancel", ev=>up(ev, true));
+  // captura perdida sin soltar (se escondieron los controles, cambio de pestaña): no se lanza ni queda la ficha armada
+  el.addEventListener("lostpointercapture", ev=>{ if(ev.target===el) up(ev, true); });
 })();
 _abInspNode(); // existe desde el arranque (lo miran pruebas y lectores de pantalla)

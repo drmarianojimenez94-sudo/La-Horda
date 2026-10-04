@@ -595,7 +595,7 @@ function mnDrawScreen(){
 }
 function _mnMinimap(){
   const B = MN_BOUNDS, W = Math.min(150, VW*0.26), k = W/(B.x1 - B.x0), Hh = (B.y1 - B.y0)*k;
-  const X = VW - W - 12, Y = Math.max(70, VH*0.16), tx = x=>X + (x - B.x0)*k, ty = y=>Y + (y - B.y0)*k;
+  const X = hudMirrorX(VW - W - 12, W) /* modo zurdo: del otro lado (prefs.js) */, Y = Math.max(70, VH*0.16), tx = x=>X + (x - B.x0)*k, ty = y=>Y + (y - B.y0)*k;
   ctx.save(); ctx.globalAlpha = 0.9;
   ctx.fillStyle = "rgba(8,4,10,0.78)"; ctx.fillRect(X - 3, Y - 3, W + 6, Hh + 6); ctx.strokeStyle = "rgba(200,140,90,0.5)"; ctx.strokeRect(X - 3, Y - 3, W + 6, Hh + 6);
   ctx.fillStyle = "#2a2226"; for(const r of mnRocksNow()) ctx.fillRect(tx(r.x0), ty(r.y0), (r.x1 - r.x0)*k, (r.y1 - r.y0)*k);
