@@ -22,6 +22,9 @@ def _rgb(lab):
 
 def ramp_colors(ramp, t):
     """t (0..1, array) -> RGB interpolado en Lab sobre la rampa (oscuro -> claro)."""
+    t = np.asarray(t, np.float32).reshape(-1)
+    if not len(t):
+        return np.zeros((0, 3), np.uint8)
     R = _lab(np.array([hexrgb(c) for c in ramp]))
     pos = np.clip(t, 0, 1) * (len(R) - 1)
     i0 = np.floor(pos).astype(int).clip(0, len(R) - 2)

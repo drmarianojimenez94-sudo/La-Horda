@@ -150,7 +150,19 @@ def draw(atlas, info, opts):
             reg[f['neckY'] + opts.get('below', 1):] = True
             far = np.abs(np.arange(CELL) - f['neckX']) > R
             reg[:, far] = True
-            m = reg & (d[:, :, 3] > 0) & (o[:, :, 3] == 0)
+            lost = (d[:, :, 3] > 0) & (o[:, :, 3] == 0)
+            if opts.get('detached', True):
+                # piezas borradas que no tocan la cabeza nueva (bastón junto a la cara, mano levantada): vuelven
+                import cv2
+                hm = info['headmap'][ys, xs]
+                hm = hm.copy(); hm[f['neckY'] - opts.get('neckBand', 4):] = False  # el contacto en el cuello no cuenta
+                near = cv2.dilate(hm.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
+                n, comp = cv2.connectedComponents(lost.astype(np.uint8), connectivity=4)
+                for j in range(1, n):
+                    cj = comp == j
+                    if cj.sum() >= opts.get('detachedMin', 3) and not (cj & near).any():
+                        reg |= cj
+            m = reg & lost
             if m.any():
                 o[m] = remap(d[m], keys, vals, rgb, P)
                 out[ys, xs] = o

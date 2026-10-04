@@ -7,6 +7,7 @@ opts:
   hole     color de ojos/boca
   trim     (opcional) 2 tonos del ribete de la frente (oro, etc.)
   feather  (opcional) 3 tonos: pluma que sale de cada máscara (Mascarada Veneciana)
+  featherOn índices de las máscaras con pluma (default todas)
   crack    (opcional) color de grieta: porcelana rajada (Réquiem Blanco)
   radius   separación extra sobre el radio de la cabeza (default 7)
   override {"<cuadro>": [arriba, mentón, x]} cuando el cuello del ensamble no sirve
@@ -47,7 +48,7 @@ TRAGEDY = [
 ]
 
 
-def mask_pixels(kind, o):
+def mask_pixels(kind, o, plume=True, left=False):
     """Lista de (dx, dy, rgba) de una máscara de 8x8 con sombreado de 4 tonos (luz arriba-izquierda)."""
     ramp = [_hex(c) for c in (o.get('ramp2') if kind == 1 and o.get('ramp2') else o.get('ramp', ['#6b5a4a', '#b8a58a', '#e6d8bd', '#fff6e2']))]
     outline = _hex(o.get('outline', '#1a1016'))
@@ -79,18 +80,22 @@ def mask_pixels(kind, o):
         for (x, y) in ((6, 1), (5, 2), (6, 4), (5, 5)) if kind == 0 else ((2, 1), (3, 2), (2, 4)):
             px = [p for p in px if not (p[0] == x and p[1] == y)]
             px.append((x, y, np.array([*cc, 255], np.uint8)))
-    if o.get('feather'):
+    if o.get('feather') and plume:
         fr = [_hex(c) for c in o['feather']]
-        # pluma curva que sale del borde de arriba hacia afuera
-        pts = [(7, -1, 1), (8, -2, 1), (8, -3, 2), (9, -4, 2), (9, -5, 1), (7, -2, 0), (8, -4, 0), (10, -5, 0)]
-        if kind == 1:
-            pts = [(8 - x, y, s) for x, y, s in pts]
-        for x, y, s in pts:
-            px.append((x, y, np.array([*fr[s], 255], np.uint8)))
-        # contorno de la pluma
+        # pluma: penacho de 3 px de ancho que sube y se abre hacia afuera (luz a la izquierda)
+        rows = {-1: (6, 7), -2: (6, 8), -3: (7, 9), -4: (7, 9), -5: (8, 9), -6: (9, 9)}
+        pts = []
+        for y, (x0, x1) in rows.items():
+            for x in range(x0, x1 + 1):
+                s_ = 2 if x == x0 else (0 if x == x1 and x1 > x0 else 1)
+                pts.append((x, y, s_))
+        if left:  # la pluma se abre hacia afuera del semicírculo
+            pts = [(8 - x, y, s_) for x, y, s_ in pts]
         have = {(x, y) for x, y, _ in pts}
+        for x, y, s_ in pts:
+            px.append((x, y, np.array([*fr[s_], 255], np.uint8)))
         for x, y, _ in pts:
-            for ddx, ddy in ((1, 0), (-1, 0), (0, -1)):
+            for ddx, ddy in ((1, 0), (-1, 0), (0, -1), (0, 1)):
                 q = (x + ddx, y + ddy)
                 if q not in have and q[1] < 0:
                     have.add(q)
@@ -112,7 +117,7 @@ def draw(atlas, info, o):
     for k, v in (o.get('override') or {}).items():
         frames[int(k)] = {'top': v[0], 'neckY': v[1], 'neckX': v[2], 'dir': 'down'}
     out = atlas.copy()
-    sprites = [mask_pixels(k % 2, o) for k in range(4)]
+    sprites = [mask_pixels(k % 2, o, k in o.get('featherOn', [0, 1, 2, 3]), k < 2) for k in range(4)]
     for i, f in frames.items():
         r, c = divmod(i, COLS)
         cimg = out[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL]
