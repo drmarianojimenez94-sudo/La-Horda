@@ -101,7 +101,7 @@ async function touchTests(browser) {
   for (let k = 1; k <= 5; k++) { await touch('touchMove', [{ x: j.x + 7 * k, y: j.y, id: 1 }]); await sleep(20); }
   await sleep(250);
   await touch('touchStart', [{ x: j.x + 35, y: j.y, id: 1 }, { x: s1.x, y: s1.y, id: 2 }]);
-  await sleep(80);
+  // toque corto (sin esperar): mantener más de ABILITY_INSPECT_MS abre la ficha de la habilidad en vez de lanzar
   await touch('touchEnd', [{ x: s1.x, y: s1.y, id: 2 }]);   // se levanta el dedo 2 (CDP suelta los puntos listados), el 1 sigue
   await sleep(300);
   const mt = await E(() => ({ jx: joyVec.x, cd: player.cds[0], x: player.x, act: joyActive }));
