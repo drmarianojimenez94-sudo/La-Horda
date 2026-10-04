@@ -33,15 +33,20 @@ async function run(browser, query, full) {
   const res = { query, tTitle, tAll, MB_at_title: +(bytesAtTitle / 1048576).toFixed(1), arenaReqBeforeTitle };
   if (full) {
     // el recorrido del jugador, SIN esperar a la segunda tanda: se toca apenas se puede
-    const tap = async sel => { const el = await page.$(sel); await el.evaluate(e => e.scrollIntoView({ block: 'center' })); const b = await el.boundingBox(); await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await sleep(500); };
+    const tap = async sel => { const el = await page.$(sel); if (!el) return false; await el.evaluate(e => e.scrollIntoView({ block: 'center' })); const b = await el.boundingBox(); if (!b) return false; await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await sleep(500); return true; };
     await page.reload({ waitUntil: 'commit' });
     const t1 = Date.now();
     for (let k = 0; k < 1200; k++) { await sleep(100); if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled && /Toca/.test(b.textContent); }).catch(() => false)) break; }
     res.tTitleCached = Date.now() - t1;
     await tap('#title-continue-btn');
-    await page.evaluate(() => { const c = [...document.querySelectorAll('#starter-grid > *')].find(x => /Mago/.test(x.innerText)); c && c.click(); });
-    await sleep(400); await tap('#starter-yes-btn'); await tap('#mainmenu-jugar-btn'); await tap('#mode-arena-btn'); await tap('.arena-card'); await tap('#start-btn');
-    await tap('#prep-start-btn'); await sleep(600);
+    // jugador nuevo: hoy la portada lleva al ENTRENAMIENTO inicial (alpha-training.js), que ya es partida
+    for (let k = 0; k < 60 && !(await page.evaluate(() => state === 'playing' || !!document.querySelector('#starter-grid > *'))); k++) await sleep(200);
+    res.firstScreen = await page.evaluate(() => state === 'playing' ? 'entrenamiento' : 'elegir campeón');
+    if (res.firstScreen !== 'entrenamiento') {
+      await page.evaluate(() => { const c = [...document.querySelectorAll('#starter-grid > *')].find(x => /Mago/.test(x.innerText)); c && c.click(); });
+      await sleep(400); await tap('#starter-yes-btn'); await tap('#mainmenu-jugar-btn'); await tap('#mode-arena-btn'); await tap('.arena-card'); await tap('#start-btn');
+      await tap('#prep-start-btn'); await sleep(600);
+    }
     const introBtn = await page.evaluate(() => { const g = document.querySelector('#run-intro .ri-go'); return g ? { txt: g.textContent, dis: g.disabled } : null; });
     res.introAtStart = introBtn;
     await page.screenshot({ path: path.join(OUT, 'intro.png') });
@@ -69,7 +74,9 @@ async function run(browser, query, full) {
   console.log('ANTES', JSON.stringify(before));
   const after = await run(browser, '?lazy=1', true);
   console.log('AHORA', JSON.stringify(after));
-  check('titulo_mas_rapido', after.tTitle < before.tTitle * 0.5, { antes: before.tTitle, ahora: after.tTitle });
+  // portada en 4G simulado: menos de 15 s y la mitad que sin carga diferida (si la referencia llegó a medirse)
+  check('titulo_en_menos_de_15s_en_4G', after.tTitle !== null && after.tTitle < 15000, { ahora: after.tTitle, MB: after.MB_at_title });
+  check('titulo_mas_rapido', before.tTitle === null || after.tTitle < before.tTitle * 0.5, { antes: before.tTitle, ahora: after.tTitle });
   check('arte_de_arena_no_frena_el_titulo', after.arenaReqBeforeTitle === 0, after.arenaReqBeforeTitle);
   check('la_partida_arranca_con_todo_cargado', after.allReadyWhenPlaying === true, after.allReadyWhenPlaying);
   check('ninguna_imagen_quedo_pendiente', after.inGame && after.inGame.pendientes === 0, after.inGame);

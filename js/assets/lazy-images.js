@@ -33,8 +33,10 @@ const LAZY_IMG = (function(){
     if(q.get("lazy")==="0" || (navigator.webdriver && !forced)) S.deferredOn = false;
     if(q.get("webp")==="0") S.webp = false;
   }catch(e){}
-  // segunda tanda: arte de arenas (enemigos, jefes, escenarios) y TODOS los efectos (solo se ven en partida)
-  const DEFER_RE = /(^|\/)assets\/(sprites\/(arenas|enemies|bosses)\/|vfx\/)/;
+  // segunda tanda: arte de arenas (enemigos, jefes, escenarios), TODOS los efectos (solo se ven en partida) y los
+  // COSMÉTICOS de campeón (skins y sets: ~8 MB que no se ven hasta la tienda, Guardianes o una partida con esa
+  // skin). En 4G simulado la portada bajaba 24 MB y tardaba ~22 s (tools/audit/loadtime.js).
+  const DEFER_RE = /(^|\/)assets\/(sprites\/(arenas|enemies|bosses)\/|vfx\/|sprites\/champions\/[^/]+\/(skins\/|set(-preview)?\.))/;
   function isDeferred(u){ return DEFER_RE.test(u); }
   function pick(u){
     if(!S.webp || typeof ASSET_WEBP==="undefined" || !/\.png(\?|$)/.test(u)) return u;
