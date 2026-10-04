@@ -142,9 +142,9 @@ def act1_frames():
     add('walk', wk)
     atk = []
     for i in range(6):
-        if i < 2: k = (i + 1) / 2; P = merge(breathe(0), {'shN': -18 - 130 * k, 'elbN': -40 + 30 * k, 'cane': 40 - 40 * k, 'head': -6 * k, 'shF': 8})
-        elif i < 4: P = {'shN': -130, 'elbN': -6, 'cane': -10, 'shF': 110, 'elbF': -10, 'head': -10, 'chest': -6}
-        else: k = (i - 3) / 2; P = merge({'shN': -130 + 112 * k, 'elbN': -6 - 34 * k, 'cane': -10 + 50 * k, 'shF': 110 - 102 * k})
+        if i < 2: k = (i + 1) / 2; P = merge(breathe(0), {'shN': -18 - 90 * k, 'elbN': -40 + 30 * k, 'cane': 40 - 30 * k, 'head': -6 * k, 'shF': 8})
+        elif i < 4: P = {'shN': -105, 'elbN': -6, 'cane': 0, 'shF': 100, 'elbF': -10, 'head': -10, 'chest': -6}
+        else: k = (i - 3) / 2; P = merge({'shN': -105 + 87 * k, 'elbN': -6 - 34 * k, 'cane': 0 + 40 * k, 'shF': 100 - 92 * k})
         ex = sparks(i / 6, 0, 0, 0)
         if 2 <= i < 4:
             M_ = R.world(P)['cane']; ox, oy = (M_ @ np.array([0, -9.5, 1.0]))[:2]
@@ -163,7 +163,7 @@ def act1_frames():
     dth = []
     for i in range(6):
         k = ease(min(1, i / 4))
-        P = {'root': (-80 * k, 6 * k, 0), 'hipN': -30 * k, 'kneeN': 20 * k, 'hipF': -20 * k, 'kneeF': 30 * k,
+        P = {'root': (-78 * k, 36 * k, 0), 'hipN': -30 * k, 'kneeN': 20 * k, 'hipF': -20 * k, 'kneeF': 30 * k,
              'shN': -60 * k, 'shF': 40 * k, 'cane': 70 * k, 'hat': (-60 * k, -8 * k, -6 * k), 'head': -10 * k}
         dth.append(R.render(P, [], hide=hide, dissolve=((i - 3) / 3 * 0.8, 31) if i >= 4 else None))
     add('death', dth)
@@ -217,7 +217,7 @@ def act2_frames():
     dth = []
     for i in range(6):
         k = ease(min(1, i / 4))
-        P = merge(base, {'root': (70 * k, 0, 0), 'pelvis': (6, 0, 7 + 26 * k), 'kneeN': 30 + 60 * k, 'kneeF': 26 + 60 * k, 'hipN': -18 - 50 * k, 'hipF': -10 - 50 * k,
+        P = merge(base, {'root': (70 * k, -34 * k, 0), 'pelvis': (6, 0, 7 + 10 * k), 'kneeN': 30 + 60 * k, 'kneeF': 26 + 60 * k, 'hipN': -18 - 50 * k, 'hipF': -10 - 50 * k,
                          'hat': (-40 * k, -10 * k, 20 * k)})
         dth.append(R.render(P, sparks(i / 6, W / 2, 80, 6, 18, 90, 'smoke', 2.5) if i >= 3 else [], hide=hide, dissolve=((i - 3) / 3 * 0.85, 33) if i >= 4 else None))
     add('death', dth)
@@ -238,7 +238,7 @@ def rig_spectre(W, H, ground):
         R.bone('elb' + side, 'sh' + side, (0, 20))
         R.bone('hand' + side, 'elb' + side, (0, 18))
     # túnica en jirones (carmesí por fuera, violeta por dentro); las tiras se arman por cuadro (ondulan)
-    R.part('robe', 'body', Poly([(-10, -34), (10, -34), (16, -6), (18, 14), (-18, 14), (-14, -6)]), 'crimson', 20)
+    R.part('robe', 'body', Poly([(-10, -34), (10, -34), (16, -6), (18, 12), (13, 18), (9, 12), (4, 19), (-1, 12), (-6, 18), (-11, 12), (-17, 17), (-14, -6)]), 'crimson', 20)
     R.part('robeIn', 'body', Poly([(2, -30), (9, -30), (12, 4), (4, 6)]), 'violet', 21)
     R.part('collarL', 'body', Poly([(-12, -36), (-4, -44), (2, -34)]), 'crimson', 22)
     R.part('collarR', 'body', Poly([(4, -34), (12, -44), (13, -32)]), 'crimson', 22)
@@ -265,18 +265,27 @@ def rig_spectre(W, H, ground):
     return R
 
 
-def strips(t, n=7, amp=1.0, fade=1.0, z=18):
-    """Tiras de tela que cuelgan de la túnica y ondulan (alternan carmesí y violeta)."""
+def strips(t, n=6, amp=1.0, fade=1.0, z=18):
+    """Telas que ondulan hacia atrás desde el ruedo (anchas, de largo distinto; alternan carmesí y violeta)."""
     out = []
     for k in range(n):
-        x0 = -16 + k * 32 / (n - 1)
-        pts, rad = [], []
-        L = (26 + 8 * _hash(k, 9, 2)) * fade
-        for j in range(5):
-            u = j / 4
-            pts.append((x0 + 6 * amp * u * math.sin(2 * math.pi * (t + k * 0.17 + u * 0.4)) - 6 * u, 10 + L * u))
-            rad.append(3.2 * (1 - u * 0.7))
-        out.append(Part(f'st{k}', 'body', Chain(pts, rad), 'crimson' if k % 2 else 'violet', z + k * .01))
+        x0 = -15 + k * 30 / (n - 1)
+        L = (20 + 14 * _hash(k, 9, 2)) * fade
+        top, bot = [], []
+        for j in range(6):
+            u = j / 5
+            cx = x0 - 14 * u * u * amp + 5 * amp * u * math.sin(2 * math.pi * (t + k * 0.21 + u * 0.5))
+            cy = 10 + L * u
+            w = 4.2 * (1 - 0.75 * u) + 0.6
+            top.append((cx - w, cy)); bot.append((cx + w, cy))
+        out.append(Part(f'st{k}', 'body', Poly(top + bot[::-1]), 'crimson' if k % 2 else 'violet', z + (k % 2) * .5 + k * .01))
+    # capa que flamea detrás
+    pts = [(-8, -34), (-14, -20)]
+    for j in range(1, 6):
+        u = j / 5
+        pts.append((-16 - 26 * u * amp, -18 + 34 * u + 4 * math.sin(2 * math.pi * (t + u * 0.6))))
+    pts += [(-20 - 22 * amp, 22 + 3 * math.sin(2 * math.pi * (t + .4))), (-6, 8)]
+    out.append(Part('cape', 'body', Poly(pts), 'violet', 15))
     return out
 
 

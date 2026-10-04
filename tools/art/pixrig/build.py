@@ -20,7 +20,7 @@ def body_height(frames, idxs):
     hs.sort(); return hs[len(hs) // 2]
 
 
-def update_meta(meta_file, const, key, src, meta, extra=None):
+def update_meta(meta_file, const, key, src, meta, extra=None, aliases=()):
     path = os.path.join(ROOT, meta_file); txt = open(path, encoding='utf-8').read()
     m = re.search(r'(const\s+' + const + r'\s*=\s*)(\{.*?\})(;\s*$)', txt, re.S | re.M)
     if not m: raise SystemExit('no encuentro ' + const + ' en ' + meta_file)
@@ -29,6 +29,7 @@ def update_meta(meta_file, const, key, src, meta, extra=None):
     if extra: entry.update(extra)
     entry['pixrig'] = True
     data[key] = entry
+    for a in aliases: data[a] = dict(entry)  # otros tipos con el mismo cuerpo (p. ej. los espejismos de la Dama)
     out = txt[:m.start(2)] + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + txt[m.end(2):]
     open(path, 'w', encoding='utf-8').write(out)
 
@@ -43,7 +44,7 @@ def build_one(key, frames, sets, info, target, prev=None):
     meta = {'w': w, 'h': h, 'cols': 8, 'refH': refH, 'anchor': info['anchor'], 'sets': sets}
     if info.get('hMul'): meta['hMul'] = info['hMul']
     if 'meta_file' in target:
-        update_meta(target['meta_file'], target['const'], target.get('key', key), target['png'], meta, target.get('extra'))
+        update_meta(target['meta_file'], target['const'], target.get('key', key), target['png'], meta, target.get('extra'), target.get('aliases', ()))
     if prev: preview(frames, 2).save(prev.replace('.png', '_' + key + '.png'))
     print(json.dumps({'key': key, 'frames': len(frames), 'cell': [w, h], 'refH': refH, 'hMul': info.get('hMul'), 'atlas': list(A.size), 'png_kb': os.path.getsize(png) // 1024}))
     return meta

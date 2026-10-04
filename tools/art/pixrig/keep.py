@@ -2,7 +2,7 @@
 las saltean: no pisan su atlas.png ni su entrada en js/assets/<arena>-meta.js con el arte viejo de las hojas fuente."""
 import json, os, re
 PIXRIG_KEYS = {'mn_cerbero', 'mn_titan', 'cm_presentador', 'cm_presentador2', 'cm_presentador3', 'cm_maestro',
-               'cm_tramoyista', 'cm_dama', 'ab_carcelero'}
+               'cm_tramoyista', 'cm_dama', 'cm_espejismo', 'ab_carcelero'}
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
 

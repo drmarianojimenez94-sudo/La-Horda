@@ -41,27 +41,8 @@ const BODY_SWAPS = {
     tint:{hueTo:354, satTo:0.34, minSat:0.1, sat:0.9, lum:0.86},
     sets:{slam:"stomp", tf:"charge", pre:"idle"}},
 
-  /* ---- 01 · Ciudad Maldita: jefe y subjefes (arte de 22–50 px dibujado a 4–5x: se ve en bloques) ---- */
-  cm_presentador: {body:"mago_hielo_cristal", brief:"P0-01", hMul:3.3,
-    tint:{hueTo:352, satTo:0.5, minSat:0.12, lum:0.95},
-    sets:{transform:"canal", cast:"cast"}},
-  cm_presentador2: {body:"mago_hielo_cristal", brief:"P0-01", hMul:3.1,
-    tint:{hueTo:300, satTo:0.45, minSat:0.12, lum:0.82},
-    sets:{transform:"canal", cast:"nova"}},
-  cm_presentador3: {body:"mago_hielo_cristal", brief:"P0-01", hMul:3.2,
-    tint:{hueTo:14, satTo:0.7, minSat:0.1, sat:1.1, lum:1.02},
-    sets:{transform:"canal", cast:"muro"}},
-  cm_dama: {body:"dama_bosque", brief:"P0-02", hMul:3.6,
-    tint:{ranges:[[280, 360, 18], [0, 20, 0]], sat:1.1, lum:0.98},
-    sets:{cast:"atk", summon:"atk", mirror:"hit"}, death:"frames"},
-  cm_espejismo: {body:"dama_bosque", brief:"P0-02", hMul:3.6,
-    tint:{ranges:[[280, 360, 18], [0, 20, 0]], sat:1.1, lum:0.98}},
-  cm_maestro: {body:"druida_arena", brief:"P0-03", hMul:3.3,
-    tint:{hueTo:350, satTo:0.45, minSat:0.08, lum:0.8},
-    sets:{cast:"atk", tp:"hit"}},
-  cm_tramoyista: {body:"automata", brief:"P0-04", hMul:2.8,
-    tint:{hueTo:348, satTo:0.32, minSat:0.12, lum:0.9},
-    sets:{heavy:"atk", drag:"charge", wreck:"atk", throw:"atk"}, death:"frames"},
+  /* ---- 01 · Ciudad Maldita: el Presentador (3 actos), la Dama del Telón (y sus espejismos), el Maestro de
+     Ceremonias y el Tramoyista ya tienen arte propio a la densidad del juego (tools/art/pixrig): sin préstamo. ---- */
 
   /* ---- 06 · Arena Acuática: comunes y élite (1–2 cuadros quietos + 1 de ataque, sin golpe ni muerte) ---- */
   tiburon_joven: {body:"esqueleto_h", brief:"P0-05", hMul:2.5,
