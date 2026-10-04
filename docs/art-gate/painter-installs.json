@@ -174,5 +174,29 @@
   "head": "maura_skin",
   "styleGate": "PASS",
   "date": "2026-10-04"
+ },
+ "saelis": {
+  "champion": "saelis",
+  "spec": "tools/art/painter/specs/saelis.json",
+  "body": "maura",
+  "head": "orsa",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "saelis_alt1": {
+  "champion": "saelis",
+  "spec": "tools/art/painter/specs/saelis_alt1.json",
+  "body": "maura",
+  "head": "orsa",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ },
+ "saelis_alt2": {
+  "champion": "saelis",
+  "spec": "tools/art/painter/specs/saelis_alt2.json",
+  "body": "maura",
+  "head": "orsa",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
  }
 }

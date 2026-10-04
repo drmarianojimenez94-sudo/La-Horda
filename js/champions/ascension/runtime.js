@@ -42,6 +42,13 @@ function ascTeleport(h,p){if(!p)return false;const o={x:p.x,y:p.y,radius:h.radiu
  if((arenaHas('heroReachable')&&!arenaHook('heroReachable',h,o))||(currentArena==='abismo'&&abS&&!abSafeAt(o.x,o.y)))return false;h.x=o.x;h.y=o.y;return true;}
 function ascCue(h,action,extra={}){const dir=aimDir(h,200);h.asCue={action,x:h.x,y:h.y,angle:Math.atan2(dir.y,dir.x),until:ascNow()+(extra.ult?900:420),...extra};}
 
+/* ---------------- Saelis: Plumas y Bendición del Plumaje ---------------- */
+const SAELIS_FEATHERS=8;
+function saelisFeather(h,p,life=8000){const q={x:p.x,y:p.y,radius:10};clampToArena(q);resolveWallCollision(q);return ascObject(h,'feather',q,life,{r:18,born:ascNow()},SAELIS_FEATHERS);}
+function saelisBless(h,a,ms){if(!a||!a.alive||a.fused)return;const t=ascNow(),active=a.portSpeedTimer>0;a._ascBlessUntil=Math.max(a._ascBlessUntil||0,t+ms);
+ a.portSpeedBonus=Math.max(active?(a.portSpeedBonus||0):0,.15);a.portSpeedTimer=Math.max(a.portSpeedTimer||0,ms);if(h.stats&&a!==h)h.stats.buffsGiven=(h.stats.buffsGiven||0)+1;}
+function saelisBlessed(a){return !!a&&a._ascBlessUntil>ascNow();}
+
 /* ---------------- Nano GM: Autoridad del GM ---------------- */
 function nanoRegent(h){return ascState(h).regentUntil>ascNow();}
 function nanoEnterRegent(h,ms,force){const s=ascState(h);if(!force&&s.regentCdUntil>ascNow())return;s.regentUntil=ascNow()+ms;s.regentCdUntil=ascNow()+20000;s.light=0;s.dark=0;ascCue(h,'regent',{ult:true});if(typeof playSfx==='function')playSfx('asc_regent');}
@@ -149,6 +156,17 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
  case 'rift_step':{const ps=ascOwned(h,'portal').sort((a,b)=>distance(b,h)-distance(a,h)),dest=ps[0]?{x:ps[0].x,y:ps[0].y}:point();
   ascObject(h,'scar',origin,2500,{r:sk.radius*area,dmg:dmg*.4,tick:0},2);if(ascTeleport(h,dest))ascArea(h,h,60,e=>ascHit(h,e,dmg*.6));break;}
  case 'great_rift':ascObject(h,'great',point(),life,{r,dmg,tick:0,echoes:0,castId},1);break;
+ // ---- Saelis ----
+ case 'feather_fan':{const base=Math.atan2(dir.y,dir.x);for(const off of [-.42,-.21,0,.21,.42]){const a=base+off,tip={x:h.x+Math.cos(a)*range,y:h.y+Math.sin(a)*range};
+   ascLine(h,h,tip,sk.radius*area,e=>ascHit(h,e,dmg),2);saelisFeather(h,tip);}break;}
+ case 'updraft':{ascArea(h,h,r,e=>{ascHit(h,e,dmg);if(isBossRank(e))return;if(isEliteRank(e))portadorSlow(h,e,.4,1200);else{const d=Math.hypot(e.x-h.x,e.y-h.y)||1;ascSafeMove(e,(e.x-h.x)/d,(e.y-h.y)/d,70);}},24);
+  for(const a of ascAllies(h,h,r))if(a!==h)saelisBless(h,a,3000);
+  const shots=[];for(const f of ascOwned(h,'feather').filter(f=>distance(f,h)<360)){const tgt=ascTargets(h,e=>distance(e,f)<300,1)[0];if(tgt){ascHit(h,tgt,dmg*.6);shots.push({x:f.x,y:f.y,tx:tgt.x,ty:tgt.y});}f.life=0;}
+  ascCue(h,'updraft',{r,shots});break;}
+ case 'recall':{const fs=ascOwned(h,'feather'),lines=[];for(const f of fs){ascLine(h,f,h,sk.radius*area,e=>ascHit(h,e,dmg),6);lines.push({x:f.x,y:f.y});f.life=0;}
+  if(h.cds)for(let i=0;i<h.cds.length;i++)h.cds[i]=Math.max(0,h.cds[i]-200*fs.length);
+  ascCue(h,'recall',{lines});break;}
+ case 'feather_sky':ascObject(h,'sky',point(),life,{r,dmg,castId,tick:0},1);break;
  }
 }
 function ascMass(e,n){if(!e.alive)return;const m=e._ascMass&&e._ascMass.until>ascNow()?e._ascMass.n:0;e._ascMass={n:Math.min(5,m+n),until:ascNow()+8000};}
@@ -208,6 +226,11 @@ function ascUpdateObject(o,dt){
   if(o.tick<=0){o.tick=600;ascArea(h,o,o.r+8,e=>{ascHit(h,e,h.baseDmg?h.baseDmg*.5:4);const d=distance(e,o)||1;ascSafeMove(e,(e.x-o.x)/d,(e.y-o.y)/d,50);},8);}
   break;}
  case 'as_scar':if(o.tick<=0){o.tick=500;ascArea(h,o,o.r,e=>ascHit(h,e,o.dmg));}break;
+ case 'as_feather':if(age>350)for(const a of heroes)if(a!==h&&a.alive&&!a.fused&&distance(a,o)<o.r+(a.radius||14)){saelisBless(h,a,3000);o.life=0;if(typeof playSfx==='function')playSfx('asc_feather');break;}break;
+ case 'as_sky':if(o.tick<=0){o.tick=400;const inside=ascTargets(h,e=>distance(e,o)<=o.r+(e.radius||0),40);for(let i=0;i<Math.min(4,inside.length);i++){const e=inside[(o.rot=(o.rot||0)+1)%inside.length];ascHit(h,e,o.dmg*.35,o.castId,.06);}
+   for(const a of ascAllies(h,o,o.r))if(a!==h)saelisBless(h,a,800);}
+  if(old>0&&o.life===0)for(let i=0;i<6;i++){const a=i*Math.PI/3;saelisFeather(h,{x:o.x+Math.cos(a)*o.r*.5,y:o.y+Math.sin(a)*o.r*.5},6000);}
+  break;
  case 'as_great':if(o.tick<=0){o.tick=600;ascArea(h,o,o.r,e=>{ascHit(h,e,o.dmg*.35,o.castId,.07);portadorSlow(h,e,.35,800);},40);
    if(o.echoes<6&&age>400){o.echoes++;const tgt=ascTargets(h,e=>distance(e,o)<o.r,1)[0];if(tgt){ascHit(h,tgt,o.dmg*1.2,o.castId,.07);o.echo={x:tgt.x,y:tgt.y,until:t+500,champ:o.echoes};}}}
   break;
@@ -254,6 +277,7 @@ const ascOriginalHurt=damageHero;damageHero=function(h,amount,src,transferred){
  return out;};
 const ascOriginalDamage=damageEnemy;damageEnemy=function(e,amount,opts={}){const h=opts.src;
  if(h&&h._ascInspireUntil>ascNow()&&!opts.execute)amount*=1.12;
+ if(h&&h._ascBlessUntil>ascNow()&&!opts.execute)amount*=1.08;
  if(h&&h.classKey==='facu_gm'&&opts.fromBasic&&h.asState&&h.asState.highTideUntil>ascNow()&&!opts.fromProc){const res=ascOriginalDamage(e,amount,opts);portadorWith(h,()=>ascArea(h,e,60,x=>{if(x!==e)ascHit(h,x,amount*.35,null,.07,true);},4));return res;}
  return ascOriginalDamage(e,amount,opts);};
 const ascOriginalKill=killEnemy;killEnemy=function(e){const out=ascOriginalKill(e);for(const h of heroes)if(h.alive&&h.classKey==='khepri'&&distance(h,e)<260){const s=ascState(h);s.swarm=Math.min(60,s.swarm+3);}return out;};

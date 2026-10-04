@@ -95,3 +95,10 @@ rango de estilo del roster. Si la pieza cambia la altura de cuerpo medida, avisa
 La forja es también la librería de dibujo compartida de los accesorios a medida (`bront_lib`, `khepri_lib` y
 `vhal_lib` eran copias idénticas y ahora la reexportan). `python3 tools/art/painter/test_forge.py --regress`
 comprueba el gate en casos negativos y que las 22 hojas instaladas se repintan idénticas.
+
+## Primer campeón con elementos de la forja: Saelis
+`specs/saelis.json` (y `saelis_alt1`, `saelis_alt2`): cuerpo de `maura`, cabeza de `orsa`, pelo platino por rampa, túnica y
+manto por corrimiento de tono (conserva la textura del donante: con rampas el gate de estilo marcaba pocos colores y
+demasiado contraste) y tres elementos de la forja: `alas_de_plumas`, `halo_de_luz` y `hombreras_redondas` (escala
+0,8). Cada skin solo cambia las rampas de los elementos y de la pintura. Las tres hojas pasan el gate de estilo y el
+Roster Art Gate. Captura en partida: `docs/production/saelis-ingame.png`.

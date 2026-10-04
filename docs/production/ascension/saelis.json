@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "id": "saelis",
+  "name": "Saelis",
+  "title": "La Heraldo del Plumaje",
+  "role": "soporte",
+  "fantasy": "Soporte de bendiciones: deja Plumas en el suelo que aceleran y fortalecen a quien las recoge, y las convierte en proyectiles cuando la Horda se acerca.",
+  "lore": "Saelis cuidaba los nidos de las copas altas del Bosque cuando la Horda subió por los troncos. Las aves se fueron todas juntas, en una sola bandada, y le dejaron las plumas que perdieron al huir. Desde entonces las siembra en cada campo de batalla. Dice que una pluma en el suelo es una promesa: alguien va a volver a levantar vuelo.",
+  "personality": "Que nadie se quede en el suelo. / Todos levantaron vuelo. / Se me cae… la última pluma…",
+  "silhouette": "Heraldo de túnica larga y báculo de pastora; dos alas de plumas a la espalda, un aro dorado detrás de la cabeza y hombreras redondas.",
+  "stats": {
+    "hp": 100,
+    "damage": 10,
+    "speed": 172
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico a distancia",
+      "cooldownMs": 520,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "feather_fan",
+        "description": "Lanza cinco plumas en abanico: cada una daña a los enemigos que cruza y queda clavada en el suelo como Pluma.",
+        "cooldownMs": 5200,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Abanico de Plumas",
+        "impact": "Lanza cinco plumas en abanico: cada una daña a los enemigos que cruza y queda clavada en el suelo como Pluma.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_saelis_cast"
+      },
+      {
+        "id": "updraft",
+        "description": "Bate las alas: aparta a los comunes, frena a los élites, bendice a los aliados cercanos y dispara cada Pluma cercana contra el enemigo más próximo.",
+        "cooldownMs": 8200,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Ráfaga Ascendente",
+        "impact": "Bate las alas: aparta a los comunes, frena a los élites, bendice a los aliados cercanos y dispara cada Pluma cercana contra el enemigo más próximo.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_saelis_cast"
+      },
+      {
+        "id": "recall",
+        "description": "Todas sus Plumas vuelan de regreso: dañan a los enemigos del camino y cada una le acorta 0,3 s las recargas.",
+        "cooldownMs": 7000,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Llamado del Plumaje",
+        "impact": "Todas sus Plumas vuelan de regreso: dañan a los enemigos del camino y cada una le acorta 0,3 s las recargas.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_saelis_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "feather_sky",
+      "description": "Abre un cielo sobre la zona: caen plumas sobre los enemigos de adentro, los aliados quedan bendecidos y al final seis Plumas quedan en el suelo.",
+      "cooldownMs": 40000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de Cielo de Plumas",
+      "impact": "Abre un cielo sobre la zona: caen plumas sobre los enemigos de adentro, los aliados quedan bendecidos y al final seis Plumas quedan en el suelo.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_saelis_ult"
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/saelis/atlas.png",
+    "preview": "assets/sprites/champions/saelis/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "83334504771cd89feed282c427a43eb3b824a7463b5f1541a2d87c72f6eb0226",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": "",
+      "note": "Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8)."
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "saelis_alt1",
+      "type": "skin",
+      "champion": "saelis",
+      "name": "Heraldo del Ocaso",
+      "rarity": "Épica",
+      "tagline": "Túnica granate, alas de plumas oscuras con puntas rosadas y un aro de fuego cobrizo.",
+      "lore": "Cuando el sol cae sobre el Bosque, Saelis siembra plumas rojas. Las que no se recogen antes de la noche arden solas.",
+      "visualTheme": "Túnica granate, alas de plumas oscuras con puntas rosadas y un aro de fuego cobrizo.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/saelis/skins/saelis_alt1/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "saelis_alt2",
+      "type": "skin",
+      "champion": "saelis",
+      "name": "Heraldo de la Aurora Boreal",
+      "rarity": "Épica",
+      "tagline": "Túnica verde agua, alas turquesa y un aro pálido que titila como el cielo del norte.",
+      "lore": "En la Gélida las plumas no caen: flotan. Saelis aprendió allí a esperar a que el cielo decida dónde dejarlas.",
+      "visualTheme": "Túnica verde agua, alas turquesa y un aro pálido que titila como el cielo del norte.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/saelis/skins/saelis_alt2/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "bosque",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 0,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "docs/art-gate/roster-gate.json",
+    "audio": "",
+    "multiplayer": "docs/founders/online-presence-results.json",
+    "performance": "docs/founders/performance-results.json",
+    "style": "docs/art-gate/style-gate.json"
+  },
+  "category": "ASCENSION"
+}

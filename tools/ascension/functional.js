@@ -1,5 +1,5 @@
 'use strict';
-// Kit tests for the Ascension expansion (2 FOUNDER + 6 STANDARD) on the real engine.
+// Kit tests for the Ascension expansion (2 FOUNDER + 7 ASCENSION) on the real engine.
 // Usage: ENTRY_BASE_URL=http://127.0.0.1:8750 node tools/ascension/functional.js  (serve the repo first)
 const {chromium}=require('playwright'),fs=require('node:fs');
 (async()=>{const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});try{const p=await b.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));
@@ -13,7 +13,7 @@ const {chromium}=require('playwright'),fs=require('node:fs');
  function tick(ms){for(let t=0;t<ms;t+=50){runElapsedMs+=50;for(const h of heroes)updatePortadorHero(h,50);updatePortadorObjects(50);}}
  function inBounds(e){const c={x:e.x,y:e.y,radius:e.radius||12};clampToArena(c);return Math.abs(c.x-e.x)<1e-6&&Math.abs(c.y-e.y)<1e-6;}
  const own=()=>portadorObjects.filter(o=>o.owner===player&&o.asc&&o.life>0);
- const capped={nano_gm:.07,facu_gm:.08,aurelia:.06,khepri:.06,velmira:.06,vhal:.08,oriel:.07};
+ const capped={nano_gm:.07,facu_gm:.08,aurelia:.06,khepri:.06,velmira:.06,vhal:.08,oriel:.07,saelis:.06};
  for(const k of Object.keys(ASCENSION)){
   check(k+' registered with taxonomy',!!CLASSES[k]&&!!PORTADORES[k]&&championMeta(k).category===(ASCENSION[k].founder?'FOUNDER':'ASCENSION'));
   check(k+' kit 3 skills + ultimate with descriptions',CLASSES[k].skills.length===3&&!!CLASSES[k].ultimate&&[...CLASSES[k].skills,CLASSES[k].ultimate].every(s=>s.desc&&s.cd>0));
@@ -54,6 +54,19 @@ const {chromium}=require('playwright'),fs=require('node:fs');
  start('bront');for(let i=0;i<10;i++){player.invulnTimer=0;damageHero(player,1,{x:player.x+40,y:player.y,type:'esqueleto'});tick(2600);}check('Bront plates capped at 4',ascOwned(player,'plate').length<=4&&ascOwned(player,'plate').length>=3);
  cast('ult');check('Bront citadel roots',portadorSpeedMult(player)===0);tick(7100);check('Bront citadel ends',portadorSpeedMult(player)>0);
  start('oriel');player.aim={x:player.x+250,y:player.y};cast(0);const pair=ascOwned(player,'portal');const mate=heroes.find(h=>h!==player);mate.x=pair[0].x;mate.y=pair[0].y;mate._ascPortalAt=0;tick(100);check('Oriel portal moves allies',distance(mate,pair[1])<45);
+ // ---- Saelis ----
+ start('saelis');player.aim={x:player.x+200,y:player.y};cast(0);check('Saelis fan leaves 5 feathers',ascOwned(player,'feather').length===5);
+ for(let i=0;i<4;i++){player.cds=[0,0,0];player.energy=player.energyMax;cast(0);}check('Saelis feathers capped at 8',ascOwned(player,'feather').length===8);
+ start('saelis');player.aim={x:player.x+200,y:player.y};cast(0);tick(400);const fth=ascOwned(player,'feather')[0],mate2=heroes.find(h=>h!==player);mate2._ascBlessUntil=0;mate2.x=fth.x;mate2.y=fth.y;tick(100);
+ check('Saelis ally absorbs a feather and is blessed',fth.life===0&&mate2._ascBlessUntil>runElapsedMs&&mate2.portSpeedTimer>0);
+ const tgt=enemy(80);const hpB=tgt.hp;portadorWith(mate2,()=>damageEnemy(tgt,100,{src:mate2}));const blessedHit=hpB-tgt.hp;const hpC=tgt.hp;mate2._ascBlessUntil=0;portadorWith(mate2,()=>damageEnemy(tgt,100,{src:mate2}));
+ check('Saelis blessing adds damage',blessedHit>hpC-tgt.hp,[blessedHit,hpC-tgt.hp]);
+ start('saelis');player.aim={x:player.x+120,y:player.y};cast(0);const far=enemy(140,'normal',30),before=far.hp,nF=ascOwned(player,'feather').filter(f=>distance(f,player)<360).length;player.cds=[0,0,0];cast(1);
+ check('Saelis updraft fires nearby feathers',nF>0&&ascOwned(player,'feather').length===5-nF&&far.hp<before,[nF,before-far.hp]);
+ start('saelis');player.aim={x:player.x+200,y:player.y};cast(0);player.cds=[4000,4000,0];const nR=ascOwned(player,'feather').length;cast(2);
+ check('Saelis recall returns every feather and shortens cooldowns',ascOwned(player,'feather').length===0&&player.cds[0]===Math.max(0,4000-200*nR),player.cds);
+ start('saelis');player.aim={x:player.x+150,y:player.y};cast('ult');const sky=ascOwned(player,'sky')[0];check('Saelis sky opens',!!sky);tick(5200);check('Saelis sky leaves six feathers',ascOwned(player,'feather').length===6);
+ start('saelis');player.aim={x:player.x+200,y:player.y};cast(0);tick(400);const own1=ascOwned(player,'feather')[0];player._ascBlessUntil=0;player.x=own1.x;player.y=own1.y;tick(100);check('Saelis never blesses herself',own1.life>0&&!(player._ascBlessUntil>runElapsedMs));
  // ---- network snapshot ----
  start('facu_gm');cast('ult');start;_netHeroIdx=new Map(heroes.map((h,i)=>[h,i]));netMatch={snapN:0,last:{},lastG:{},lastH:[{},{},{},{}]};const snap=netBuildSnapshot(true,true);
  check('snapshot keeps construct owner',snap.c.portadorObjects.u.every(([id,o])=>o.owner&&o.owner.$h===0));check('bounded serializable snapshot',JSON.stringify(snap).length<300000);

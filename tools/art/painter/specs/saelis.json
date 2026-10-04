@@ -1,0 +1,119 @@
+{
+ "id": "saelis",
+ "name": "Saelis, La Heraldo del Plumaje",
+ "prompt": "Heraldo alado: túnica larga con manto, báculo de pastora, alas de plumas, halo y hombreras. Pelo platino trenzado.",
+ "body": "maura",
+ "head": "orsa",
+ "headLongHair": true,
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    15,
+    75
+   ],
+   "minChroma": 12,
+   "minL": 12,
+   "noSkin": true,
+   "ramp": [
+    "#4e4a5c",
+    "#8e8aa2",
+    "#cfccdc",
+    "#f7f6ff"
+   ]
+  },
+  {
+   "part": "body",
+   "hue": [
+    75,
+    140
+   ],
+   "minChroma": 10,
+   "noSkin": true,
+   "to": "#4a8cc0",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "body",
+   "hue": [
+    20,
+    46
+   ],
+   "minChroma": 45,
+   "noSkin": true,
+   "to": "#d0a840",
+   "keepLight": 0.6
+  },
+  {
+   "part": "body",
+   "hue": [
+    25,
+    80
+   ],
+   "minChroma": 4,
+   "maxL": 50,
+   "noSkin": true,
+   "to": "#d8d2e6",
+   "keepLight": 0.62,
+   "chroma": 0.8,
+   "contrast": 0.9,
+   "darkL": 4
+  }
+ ],
+ "accessories": [
+  {
+   "element": "alas_de_plumas",
+   "materials": {
+    "feather": {
+     "ramp": [
+      "#2a2a40",
+      "#5a5a80",
+      "#9a9ac0",
+      "#d8d8f0",
+      "#ffffff"
+     ]
+    },
+    "down": {
+     "ramp": [
+      "#3a3a58",
+      "#7a7aa8",
+      "#c0c0e0"
+     ]
+    }
+   }
+  },
+  {
+   "element": "halo_de_luz",
+   "materials": {
+    "light": {
+     "ramp": [
+      "#a07a18",
+      "#e0b030",
+      "#fff0a0",
+      "#fffbe6"
+     ]
+    }
+   }
+  },
+  {
+   "element": "hombreras_redondas",
+   "scale": 0.8,
+   "materials": {
+    "shell": {
+     "ramp": [
+      "#3a2a08",
+      "#7a5a18",
+      "#c09838",
+      "#ecd27a",
+      "#fff4cc"
+     ]
+    }
+   }
+  }
+ ],
+ "install": {
+  "champion": "saelis",
+  "pack": "saelis"
+ }
+}

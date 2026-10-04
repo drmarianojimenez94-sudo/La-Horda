@@ -519,6 +519,36 @@
    "pass": true,
    "fails": []
   },
+  "assets/sprites/champions/saelis/atlas.png": {
+   "metrics": {
+    "colores": 1464.5,
+    "contorno": 0.7311870073549553,
+    "sombreado": 15.818137168884277,
+    "detalle": 0.715361042992161
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/saelis/skins/saelis_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1499.5,
+    "contorno": 0.8959784548193774,
+    "sombreado": 11.480618476867676,
+    "detalle": 0.652334114417974
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/saelis/skins/saelis_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1516.0,
+    "contorno": 0.7311870073549553,
+    "sombreado": 15.968544960021973,
+    "detalle": 0.7289795002366222
+   },
+   "pass": true,
+   "fails": []
+  },
   "assets/sprites/champions/sira/atlas.png": {
    "metrics": {
     "colores": 1975.0,
