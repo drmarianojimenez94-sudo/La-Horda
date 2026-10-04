@@ -9,23 +9,35 @@
   "ownerAccount": "NanoGM",
   "founders": {
     "nano": { "account": "NanoGM", "accountId": null },
-    "facu": { "account": null, "accountId": null }
+    "facu": { "account": "FacuGM", "accountId": null }
+  },
+  "roles": {
+    "FacuGM": ["ADMIN"]
   }
 }
 ```
 
 - **Nano GM** queda vinculado a la cuenta existente **NanoGM** (usuario de login, resuelto UNA vez al
   arrancar a su ID numérico). Cambiar el nombre visible no afecta nada.
-- **Facu GM: PENDIENTE.** No existe ninguna cuenta "Facu GM" en el código ni en la configuración; no se
-  adivinó. Para vincularla:
-  1. Facu crea su cuenta normalmente (los usuarios no admiten espacios: p. ej. `FacuGM`).
-  2. Preferido: obtener su **ID numérico** en el panel (Usuarios → ficha → "ID interno") y poner
-     `"facu": { "accountId": 123 }`. Alternativa: `"facu": { "account": "FacuGM" }`.
-  3. Reiniciar el relay. El log `FOUNDER_POLICY` informa `bound:true`; en el panel,
-     Usuarios → Fundadores muestra `VINCULADO`.
-- `accountId` gana sobre `account`. Si no hay coincidencia exacta, el Fundador queda **sin vincular**:
-  nunca se crea una cuenta ni se usa el nombre visible. Un `account` configurado queda **reservado** en el
-  registro (nadie más puede crearlo).
+- **Facu GM → cuenta `FacuGM`** (decisión del operador; los usuarios no admiten espacios). Se resuelve a
+  su ID al arrancar el relay. El log `FOUNDER_POLICY` informa `bound:true` y Usuarios → Fundadores
+  muestra `VINCULADO`. Si la cuenta todavía no existe, queda **sin vincular** (nunca se crea sola).
+- **Panel de administración para FacuGM:** `"roles"` asigna roles estáticos por cuenta, resueltos al ID
+  estable al arrancar (log `ROLE_POLICY`). `ADMIN` = todos los permisos menos `MANAGE_ROLES`; nunca da
+  `OWNER` y, como a cualquiera, no le permite conceder campeones FOUNDER. Se suma a los roles que el
+  OWNER asigne en el panel (quitarlo del panel no lo quita de la configuración: se edita este archivo).
+- **Nombres reservados:** cada `account` de `founders` y cada cuenta de `roles` quedan reservados en el
+  registro. Si `FacuGM` no existe todavía, el operador define en el servidor la variable secreta
+  `FOUNDER_SIGNUP_CODE` (≥ 8 caracteres) y Facu se registra una vez enviando ese código:
+
+  ```bash
+  curl -X POST https://<servidor>/api/register -H 'content-type: application/json' \
+    -d '{"user":"FacuGM","pass":"<contraseña>","signupCode":"<FOUNDER_SIGNUP_CODE>"}'
+  ```
+
+  El vínculo de Fundador y el rol ADMIN se aplican en el acto (sin reiniciar). Después conviene borrar
+  la variable. Sin ella, nadie puede ocupar el nombre. Opcional: pasar a `"facu": { "accountId": <ID> }`
+  (ID interno visible en Usuarios → ficha), que gana sobre `account`.
 - **No transferibles:** no hay endpoint de transferencia. Una delegación futura debe ser una operación
   aparte, explícita y auditada.
 

@@ -492,6 +492,30 @@ function create(opts){
   const founderOf = user => { const f = user ? entitlements.founderOf(founderBindings, user.id) : null; return f ? { key: f.key, champion: f.champion } : null; };
   let ownerId = null;
   const isOwner = user => !!user && (adminOverride ? adminNames.includes(userKey(user.user)) : ownerId !== null && user.id === ownerId);
+  // Static roles (operator-config "roles": {"<account>": ["ADMIN"]}) resolved to stable ids at startup and
+  // after the reserved account registers. Never OWNER; an absent account is never auto-created.
+  const roleConfig = opts.roles !== undefined ? opts.roles : (operatorConfig.roles || {});
+  let configRoleIds = new Map();
+  isOwner.configRoles = user => (user && configRoleIds.get(user.id)) || [];
+  const reservedNames = () => new Set([...Object.values(founderConfig || {}).map(f => f && typeof f.account === "string" ? userKey(f.account.trim()) : ""),
+    ...Object.keys(roleConfig || {}).map(n => userKey(n.trim()))].filter(Boolean));
+  const founderSignupCode = opts.founderSignupCode !== undefined ? opts.founderSignupCode : process.env.FOUNDER_SIGNUP_CODE;
+  function signupCodeOk(given){
+    if(typeof founderSignupCode !== "string" || founderSignupCode.length < 8 || typeof given !== "string") return false;
+    const a = crypto.createHash("sha256").update(founderSignupCode).digest(), b = crypto.createHash("sha256").update(given).digest();
+    return crypto.timingSafeEqual(a, b);
+  }
+  async function resolvePolicies(){
+    founderBindings = await entitlements.resolveFounders(store, founderConfig, log);
+    const ids = new Map();
+    for(const [name, roles] of Object.entries(roleConfig || {})){
+      const u = await store.getUserByKey(userKey(String(name).trim()));
+      const valid = Array.isArray(roles) ? roles.filter(r => rbac.ASSIGNABLE.includes(r)) : [];
+      if(u && valid.length) ids.set(u.id, valid);
+      log("ROLE_POLICY", { roles: valid, bound: !!u });
+    }
+    configRoleIds = ids;
+  }
 
   function ownerAccess(user){
     const owner = isOwner(user);
@@ -511,7 +535,7 @@ function create(opts){
     try{
       await store.init();
       if(!adminOverride && configuredOwner){ const owner = await store.getUserByKey(configuredOwner); ownerId = owner ? owner.id : null; log("OWNER_POLICY", { bound: ownerId !== null }); }
-      founderBindings = await entitlements.resolveFounders(store, founderConfig, log);
+      await resolvePolicies();
       status = "ready"; lastError = "";
       if(store.persistent) log("ACCOUNTS_READY", { store: store.kind });
       else log("ACCOUNTS_READY", { store: store.kind, dir: dataDir,
@@ -679,7 +703,10 @@ function create(opts){
       registers.hit("ip:" + ip, REGISTER_WINDOW_MS);
       const key = userKey(user);
       if(!adminOverride && configuredOwner && key === configuredOwner) return err(req, res, 403, "RESERVED_USER", "Ese nombre está reservado para la cuenta del operador existente.");
-      if(Object.values(founderConfig || {}).some(f => f && typeof f.account === "string" && userKey(f.account.trim()) === key)) return err(req, res, 403, "RESERVED_USER", "Ese nombre está reservado.");
+      // Cuentas de Fundador / roles por configuración: reservadas. Solo el operador puede crearlas con el
+      // código FOUNDER_SIGNUP_CODE del servidor (nunca en el cliente); sin él, nadie puede ocuparlas.
+      const reserved = reservedNames().has(key);
+      if(reserved && !signupCodeOk(body.signupCode)) return err(req, res, 403, "RESERVED_USER", "Ese nombre está reservado.");
       if(await store.getUserByKey(key)) return err(req, res, 409, "USER_TAKEN", "Ese nombre de usuario ya existe. Probá con otro.");
       const now = Date.now();
       let u;
@@ -689,6 +716,7 @@ function create(opts){
       }catch(e){ if(e.code === "EXISTS") return err(req, res, 409, "USER_TAKEN", "Ese nombre de usuario ya existe. Probá con otro."); throw e; }
       const s = await newSession(u);
       log("ACCOUNT_CREATED", { user: u.id });
+      if(reserved) await resolvePolicies();
       return send(req, res, 201, Object.assign({ user: publicUser(u) }, s));
     },
     "POST /api/login": async (req, res, ip) => {

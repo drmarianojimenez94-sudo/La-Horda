@@ -26,15 +26,16 @@ Rama: `claude/founders-gm-expansion`. Auditoría inicial: `docs/founders/AUDITOR
 
 ## 3. Cuentas Fundadoras
 - **Nano GM → cuenta `NanoGM`**, vinculada por ID al iniciar el servidor (`server/operator-config.json`).
-- **Facu GM → PENDIENTE DE CONFIGURACIÓN.** No existe cuenta "Facu GM"; no se adivinó. Pasos en
-  `docs/founders/OPERACION.md` §1 (`accountId` preferido).
+- **Facu GM → cuenta `FacuGM`** con rol estático **ADMIN** (panel de administración, sin `MANAGE_ROLES`
+  ni OWNER), ambos resueltos por ID al arrancar. Si la cuenta no existe todavía, el nombre queda
+  reservado y se crea con `FOUNDER_SIGNUP_CODE` (`docs/founders/OPERACION.md` §1).
 
 ## 4. Gates y QA (última corrida)
 | Gate / suite | Resultado |
 |---|---|
 | Entry gate (37 clases, 19 candidatas, 57 simulaciones) | PASS |
 | Roster Art Gate (113 apariencias, 3 vistas, presentación) | PASS |
-| Server `npm test` (relay, cuentas, trades, GM, owner, **founders 86**, **presence 18**) | PASS |
+| Server `npm test` (relay, cuentas, trades, GM, owner, **founders 106**, **presence 18**) | PASS |
 | Kits Ascensión (`tools/ascension/functional.js`, 195) | PASS |
 | Presencia en relay real, 3 navegadores (15) | PASS |
 | Admin usuarios/Test Lab e2e (35) | PASS |

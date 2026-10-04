@@ -19,7 +19,7 @@ async function run(){
   const facu=await seed.store.createUser({user:'FacuGM',userKey:'facugm',name:'Facu GM',createdAt:Date.now(),lastLogin:0,passHash:await hashPassword('fixture-password')});
   await seed.close();
   // Facu bound by immutable id; Nano by login handle resolved once.
-  app=create({dataDir:dir,databaseUrl:'',log:()=>{},originAllowed:()=>true,founders:{nano:{account:'NanoGM'},facu:{accountId:facu.id}}});await app.ready;
+  app=create({dataDir:dir,databaseUrl:'',log:()=>{},originAllowed:()=>true,roles:{},founders:{nano:{account:'NanoGM'},facu:{accountId:facu.id}}});await app.ready;
   server=http.createServer((q,s)=>{if(!app.handle(q,s)){s.writeHead(404);s.end('{}');}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
   const base='http://127.0.0.1:'+server.address().port;
   async function api(method,url,body,token,status=200){const r=await fetch(base+url,{method,headers:{'content-type':'application/json',...(token?{authorization:'Bearer '+token}:{})},body:body===undefined?undefined:JSON.stringify(body)});const j=await r.json();assert.equal(r.status,status,method+' '+url+' '+JSON.stringify(j));checks++;return j;}
@@ -128,6 +128,38 @@ async function run(){
   // Unbound founder: never guessed, never auto-created.
   const unbound=create({dataDir:dir,databaseUrl:'',log:()=>{},founders:{nano:{account:'NanoGM'},facu:{account:'facu gm'}}});await unbound.ready;
   assert.equal((await unbound.presence(facuT)).founder,null);await unbound.close();checks++;
+
+  // Shipped operator-config: FacuGM is the Facu founder and holds the static ADMIN role (never OWNER).
+  const cfg=require('./operator-config.json');assert.equal(cfg.founders.facu.account,'FacuGM');assert.deepEqual(cfg.roles.FacuGM,['ADMIN']);checks+=2;
+  const shipped=create({dataDir:dir,databaseUrl:'',log:()=>{},originAllowed:()=>true});await shipped.ready;
+  const s2=http.createServer((q,r)=>{if(!shipped.handle(q,r)){r.writeHead(404);r.end('{}');}});await new Promise(r=>s2.listen(0,'127.0.0.1',r));
+  const b2='http://127.0.0.1:'+s2.address().port;
+  async function api2(method,url,body,token,status=200){const r=await fetch(b2+url,{method,headers:{'content-type':'application/json',...(token?{authorization:'Bearer '+token}:{})},body:body===undefined?undefined:JSON.stringify(body)});const j=await r.json();assert.equal(r.status,status,method+' '+url+' '+JSON.stringify(j));checks++;return j;}
+  try{
+   const fT=(await api2('POST','/api/login',{user:'FacuGM',pass:'fixture-password'})).token;
+   st=await api2('GET','/api/gm/status',undefined,fT);
+   assert.deepEqual(st.founder,{key:'facu',champion:'facu_gm'});assert.ok(st.roles.includes('ADMIN'));assert.ok(!st.roles.includes('OWNER'));
+   assert.ok(st.permissions.includes('VIEW_USERS'));assert.ok(!st.permissions.includes('MANAGE_ROLES'));assert.equal(st.owner,false);checks+=6;
+   assert.equal((await api2('GET','/api/admin/status',undefined,fT)).admin,true);
+   await api2('GET','/api/gm/users',undefined,fT);
+   await api2('POST','/api/gm/roles',{id:1,roles:['ADMIN']},fT,403);
+   // Facu cannot hand FOUNDER champions out either.
+   await api2('POST','/api/gm/user/champion',{id:1,champion:'nano_gm',action:'grant',confirm:true},fT,403);
+  }finally{await new Promise(r=>s2.close(r));await shipped.close();}
+
+  // Reserved founder/role names: nobody can take them without the server-side signup code.
+  const dir2=fs.mkdtempSync(path.join(os.tmpdir(),'horda-founders-signup-'));
+  const fresh=create({dataDir:dir2,databaseUrl:'',log:()=>{},originAllowed:()=>true,founderSignupCode:'codigo-secreto-123'});await fresh.ready;
+  const s3=http.createServer((q,r)=>{if(!fresh.handle(q,r)){r.writeHead(404);r.end('{}');}});await new Promise(r=>s3.listen(0,'127.0.0.1',r));
+  const b3='http://127.0.0.1:'+s3.address().port;
+  async function api3(method,url,body,token,status=200){const r=await fetch(b3+url,{method,headers:{'content-type':'application/json',...(token?{authorization:'Bearer '+token}:{})},body:body===undefined?undefined:JSON.stringify(body)});const j=await r.json();assert.equal(r.status,status,method+' '+url+' '+JSON.stringify(j));checks++;return j;}
+  try{
+   await api3('POST','/api/register',{user:'facugm',pass:'player-password'},null,403);
+   await api3('POST','/api/register',{user:'FacuGM',pass:'player-password',signupCode:'incorrecto'},null,403);
+   const reg=await api3('POST','/api/register',{user:'FacuGM',pass:'player-password',signupCode:'codigo-secreto-123'},null,201);
+   // Bound immediately (no restart needed): founder champion + ADMIN.
+   st=await api3('GET','/api/gm/status',undefined,reg.token);assert.deepEqual(st.founder,{key:'facu',champion:'facu_gm'});assert.ok(st.roles.includes('ADMIN'));checks+=2;
+  }finally{await new Promise(r=>s3.close(r));await fresh.close();fs.rmSync(dir2,{recursive:true,force:true});}
   console.log('PASS founders + admin RBAC: '+checks+' checks');
  }finally{
   if(original===undefined)delete process.env.ADMIN_USERS;else process.env.ADMIN_USERS=original;
