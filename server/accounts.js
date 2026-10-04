@@ -52,6 +52,7 @@ const adminLevels=require("./admin-levels");
 const gameMaster = require("./game-master");
 const entitlements = require("./entitlements");
 const rbac = require("./rbac");
+const walletMod = require("./wallet");
 const fs = require("fs");
 const fsp = fs.promises;
 const path = require("path");
@@ -225,6 +226,9 @@ function fileStore(dir){
     return lbBestPerUser(out);
   }
   const lbName = id => { const u = db.users[id]; return u ? (u.name || u.user) : "?"; };
+  // billetera premium (server/wallet.js): saldo por cuenta + libro de movimientos con referencia única (idempotente)
+  const walletFile = path.join(dir, "wallet.json");
+  let wallet = { balances: {}, ledger: [], refs: {}, nextId: 1 }, walletChain = Promise.resolve();
   async function loadMeta(id){
     if(saveMeta.has(id)) return saveMeta.get(id);
     let meta = null;
@@ -249,6 +253,9 @@ function fileStore(dir){
       try{ lb = JSON.parse(await fsp.readFile(lbFile, "utf8")); }
       catch(e){ if(e.code !== "ENOENT") throw new Error("leaderboard.json ilegible: " + e.message); }
       if(!lb || typeof lb.weeks !== "object") lb = { weeks: {} };
+      try{ wallet = JSON.parse(await fsp.readFile(walletFile, "utf8")); }
+      catch(e){ if(e.code !== "ENOENT") throw new Error("wallet.json ilegible: " + e.message); }
+      wallet.balances = wallet.balances || {}; wallet.ledger = wallet.ledger || []; wallet.refs = wallet.refs || {}; wallet.nextId = wallet.nextId || 1;
       // restos de una escritura cortada a la mitad
       for(const d of [dir, savesDir]) for(const f of await fsp.readdir(d)) if(f.endsWith(".tmp")) fsp.unlink(path.join(d, f)).catch(() => {});
     },
@@ -315,7 +322,22 @@ function fileStore(dir){
       for(const w in lb.weeks){ const W = lb.weeks[w]; for(const k in W) if(k.startsWith(userId + "|") && W[k].at > t) t = W[k].at; }
       return t;
     },
-    async close(){ await gmChain.catch(()=>{}); if(writing) await writing; if(lbWriting) await lbWriting; }
+    async walletGet(userId){ return { premium: (wallet.balances[userId] || {}).premium || 0 }; },
+    async walletLedger(userId, limit){ return wallet.ledger.filter(e => e.userId === userId).slice(-(limit || 50)).reverse(); },
+    // Aplica un movimiento de forma atómica: misma ref = devuelve el resultado anterior sin repetirlo; nunca deja saldo negativo.
+    async walletApply(e){
+      const job = walletChain.catch(() => {}).then(async () => {
+        if(e.ref && wallet.refs[e.ref]){ const prev = wallet.ledger.find(x => x.id === wallet.refs[e.ref]); return { duplicate: true, premium: (wallet.balances[prev ? prev.userId : e.userId] || {}).premium || 0, entry: prev || null }; }
+        const cur = (wallet.balances[e.userId] || {}).premium || 0, next = cur + e.delta;
+        if(next < 0) return { insufficient: true, premium: cur };
+        const entry = { id: wallet.nextId++, userId: e.userId, delta: e.delta, balanceAfter: next, reason: e.reason, ref: e.ref || null, actor: e.actor || null, at: e.at };
+        wallet.balances[e.userId] = { premium: next }; wallet.ledger.push(entry); if(e.ref) wallet.refs[e.ref] = entry.id;
+        await writeAtomic(walletFile, JSON.stringify(wallet));
+        return { ok: true, premium: next, entry };
+      });
+      walletChain = job; return job;
+    },
+    async close(){ await gmChain.catch(()=>{}); await walletChain.catch(()=>{}); if(writing) await writing; if(lbWriting) await lbWriting; }
   };
 }
 
@@ -349,6 +371,25 @@ function pgStore(url){
     kind: "postgres", persistent: true,
     async listUsers(){return (await q("SELECT * FROM horda_users ORDER BY id")).rows.map(rowUser);},
     async gmRead(){const r=await q("SELECT data FROM horda_operations WHERE id=1");return r.rows[0]?.data||null;},
+    async walletGet(userId){ const r = await q("SELECT premium FROM horda_wallet WHERE user_id=$1", [userId]); return { premium: r.rows[0] ? Number(r.rows[0].premium) : 0 }; },
+    async walletLedger(userId, limit){ const r = await q("SELECT * FROM horda_wallet_ledger WHERE user_id=$1 ORDER BY id DESC LIMIT $2", [userId, limit || 50]);
+      return r.rows.map(x => ({ id: Number(x.id), userId: Number(x.user_id), delta: Number(x.delta), balanceAfter: Number(x.balance_after), reason: x.reason, ref: x.ref, actor: x.actor == null ? null : Number(x.actor), at: Number(x.at) })); },
+    async walletApply(e){
+      const c = await pool.connect();
+      try{
+        await c.query("BEGIN");
+        await c.query("INSERT INTO horda_wallet(user_id, premium, updated_at) VALUES($1, 0, $2) ON CONFLICT DO NOTHING", [e.userId, e.at]);
+        const cur = Number((await c.query("SELECT premium FROM horda_wallet WHERE user_id=$1 FOR UPDATE", [e.userId])).rows[0].premium);
+        if(e.ref){ const d = await c.query("SELECT * FROM horda_wallet_ledger WHERE ref=$1", [e.ref]); if(d.rows[0]){ await c.query("ROLLBACK"); return { duplicate: true, premium: cur, entry: { id: Number(d.rows[0].id), delta: Number(d.rows[0].delta) } }; } }
+        const next = cur + e.delta;
+        if(next < 0){ await c.query("ROLLBACK"); return { insufficient: true, premium: cur }; }
+        const ins = await c.query("INSERT INTO horda_wallet_ledger(user_id, delta, balance_after, reason, ref, actor, at) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id", [e.userId, e.delta, next, e.reason, e.ref || null, e.actor || null, e.at]);
+        await c.query("UPDATE horda_wallet SET premium=$2, updated_at=$3 WHERE user_id=$1", [e.userId, next, e.at]);
+        await c.query("COMMIT");
+        return { ok: true, premium: next, entry: { id: Number(ins.rows[0].id), userId: e.userId, delta: e.delta, balanceAfter: next, reason: e.reason, ref: e.ref || null, at: e.at } };
+      }catch(err){ await c.query("ROLLBACK").catch(() => {}); if(err && err.code === "23505") return { duplicate: true }; throw err; }
+      finally{ c.release(); }
+    },
     async gmUpdate(fn){const job=gmChain.catch(()=>{}).then(async()=>{const c=await pool.connect();try{
       await c.query("BEGIN");await c.query("INSERT INTO horda_operations(id,data) VALUES(1,'null'::jsonb) ON CONFLICT DO NOTHING");
       const r=await c.query("SELECT data FROM horda_operations WHERE id=1 FOR UPDATE");
@@ -357,6 +398,11 @@ function pgStore(url){
     }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}});gmChain=job;return job;},
     async init(){
       await q(`CREATE TABLE IF NOT EXISTS horda_operations (id INTEGER PRIMARY KEY CHECK(id=1), data JSONB NOT NULL)`);
+      // billetera premium: saldo (nunca negativo) + libro append-only; ref UNIQUE = cada movimiento se aplica una sola vez
+      await q(`CREATE TABLE IF NOT EXISTS horda_wallet (user_id BIGINT PRIMARY KEY, premium BIGINT NOT NULL DEFAULT 0 CHECK (premium >= 0), updated_at BIGINT NOT NULL)`);
+      await q(`CREATE TABLE IF NOT EXISTS horda_wallet_ledger (id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL, delta BIGINT NOT NULL,
+        balance_after BIGINT NOT NULL, reason TEXT NOT NULL, ref TEXT UNIQUE, actor BIGINT, at BIGINT NOT NULL)`);
+      await q(`CREATE INDEX IF NOT EXISTS horda_wallet_ledger_user ON horda_wallet_ledger(user_id, id)`);
       await q(`CREATE TABLE IF NOT EXISTS horda_operation_snapshots (id TEXT PRIMARY KEY, data JSONB NOT NULL)`);
       await q(`CREATE TABLE IF NOT EXISTS horda_users (
         id BIGSERIAL PRIMARY KEY, user_key TEXT UNIQUE NOT NULL, username TEXT NOT NULL, display_name TEXT,
@@ -832,6 +878,7 @@ function create(opts){
   };
 
   Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,ownerAccess,founderOf,founders:()=>founderBindings}));
+  Object.assign(routes, walletMod.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,log}));
 
   // Devuelve true si atendió el pedido (todo lo que empieza con /api/).
   function handle(req, res){

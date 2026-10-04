@@ -1,0 +1,98 @@
+[
+  {
+    "name": "catálogo de skins con entradas",
+    "ok": true
+  },
+  {
+    "name": "anónimo no ve billetera",
+    "ok": true
+  },
+  {
+    "name": "saldo inicial 0 y precios 9000/1000",
+    "ok": true
+  },
+  {
+    "name": "pagos apagados por defecto",
+    "ok": true
+  },
+  {
+    "name": "comprar sin saldo: 402",
+    "ok": true
+  },
+  {
+    "name": "jugador no puede acreditar",
+    "ok": true
+  },
+  {
+    "name": "acreditar exige motivo",
+    "ok": true
+  },
+  {
+    "name": "monto inválido rechazado",
+    "ok": true
+  },
+  {
+    "name": "acreditar 2500",
+    "ok": true
+  },
+  {
+    "name": "reintentar la misma acreditación no duplica",
+    "ok": true
+  },
+  {
+    "name": "descontar exige confirmación",
+    "ok": true
+  },
+  {
+    "name": "no se puede dejar saldo negativo",
+    "ok": true
+  },
+  {
+    "name": "la ficha del panel muestra el saldo y el libro",
+    "ok": true
+  },
+  {
+    "name": "sku inexistente",
+    "ok": true
+  },
+  {
+    "name": "precio cambiado: 409",
+    "ok": true
+  },
+  {
+    "name": "compra: 1000 menos",
+    "ok": true
+  },
+  {
+    "name": "la skin queda en el guardado (y el oro intacto)",
+    "ok": true
+  },
+  {
+    "name": "reintentar la misma compra no cobra de nuevo",
+    "ok": true
+  },
+  {
+    "name": "comprar algo que ya tenés: 409 sin cobrar",
+    "ok": true
+  },
+  {
+    "name": "sin guardado: no se entrega y se reintegra",
+    "ok": true
+  },
+  {
+    "name": "checkout apagado: 501",
+    "ok": true
+  },
+  {
+    "name": "webhook sin proveedor: rechazado",
+    "ok": true
+  },
+  {
+    "name": "firma inválida rechazada",
+    "ok": true
+  },
+  {
+    "name": "pago verificado acredita una sola vez",
+    "ok": true
+  }
+]

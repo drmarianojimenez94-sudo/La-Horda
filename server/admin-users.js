@@ -68,7 +68,10 @@ function routes(ctx){
   });
   route("GET", "/api/gm/user", "VIEW_USERS", async({req}) => {
     const u = await target(new URL(req.url, "http://x").searchParams.get("id"));
-    return sheet(u, await store().getSave(u.id), await read());
+    const out = sheet(u, await store().getSave(u.id), await read());
+    // moneda premium (Brasas): vive en la billetera del servidor, no en el guardado (server/wallet.js)
+    if(store().walletGet){ out.premium = (await store().walletGet(u.id)).premium; out.premiumLedger = await store().walletLedger(u.id, 25); }
+    return out;
   });
   route("GET", "/api/gm/user/save", "EDIT_USER_PROGRESS", async({req, user}) => {
     const u = await target(new URL(req.url, "http://x").searchParams.get("id")), saved = await store().getSave(u.id);
@@ -121,6 +124,21 @@ function routes(ctx){
     });
     await mutate(s => { audit(s, user, grant ? "cosmetic.grant" : "cosmetic.revoke", {target:u.id, type:cosmetic.type, content:cosmetic.id, origin:grant ? "ADMIN_GRANT" : undefined, reason:reasonOf(body), before:r.result, after:grant}, now()); return null; });
     return {ok:true, version:r.version};
+  });
+
+  // Brasas (premium): ACREDITAR un monto (o corregir con uno negativo). Va al libro de la billetera con ref única
+  // (reintentar el mismo pedido no acredita dos veces) y al registro de auditoría del panel.
+  route("POST", "/api/gm/user/premium", "MODIFY_CURRENCY", async({user, body}) => {
+    const u = await target(body.id), amount = body.amount;
+    if(!store().walletApply) fail("WALLET_DOWN", 503);
+    if(!Number.isSafeInteger(amount) || amount === 0 || Math.abs(amount) > 1000000) fail("BAD_AMOUNT");
+    const reason = reasonOf(body); if(!reason) fail("NEED_REASON");
+    needConfirm(body, amount < 0);
+    const ref = typeof body.ref === "string" && /^[a-zA-Z0-9_.:-]{8,80}$/.test(body.ref) ? body.ref : null; if(!ref) fail("BAD_REF");
+    const r = await store().walletApply({userId:u.id, delta:amount, reason:"gm:" + reason, ref:"gm:" + ref, actor:user.id, at:now()});
+    if(r.insufficient) fail("INSUFFICIENT", 409);
+    if(!r.duplicate) await mutate(s => { audit(s, user, "currency.premium", {target:u.id, type:"premium", reason, before:r.premium - amount, after:r.premium}, now()); return null; });
+    return {ok:true, premium:r.premium, repeated:!!r.duplicate};
   });
 
   route("POST", "/api/gm/user/currency", "MODIFY_CURRENCY", async({user, body}) => {

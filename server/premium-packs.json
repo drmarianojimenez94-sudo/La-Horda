@@ -1,0 +1,10 @@
+{
+  "currency": { "id": "brasas", "name": "Brasas", "icon": "✦" },
+  "note": "Paquetes de Brasas para la venta con dinero real. 'price' lo fija el dueño (moneda ISO y monto); sin precio, el paquete no se ofrece. 1000 Brasas = 1 skin.",
+  "packs": [
+    { "id": "brasas_500", "premium": 500, "bonus": 0, "price": null },
+    { "id": "brasas_1000", "premium": 1000, "bonus": 0, "price": null },
+    { "id": "brasas_2500", "premium": 2500, "bonus": 250, "price": null },
+    { "id": "brasas_5000", "premium": 5000, "bonus": 750, "price": null }
+  ]
+}

@@ -534,7 +534,7 @@ function codexSkinsTabHtml(key){
     const sk = SET_SKINS[id], S = SET_DB[id] || {}, miss = shopSetMissing(id), on = skinIsActiveOn(id, key), full = skinOwnedFull(id);
     const act = on ? '<span class="ui-tag ok">✔ EQUIPADA</span>'
       : full ? `<button class="cx-btn primary" data-skin-use="${id}">USAR</button>`
-      : `<button class="cx-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(shopSkinPrice(id))}</button>`;
+      : `<button class="cx-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(shopSkinPrice(id))}</button>${(typeof premiumSkinButton === "function" ? premiumSkinButton(id, "cx-btn") : "")}`;
     const st = on ? "" : full ? "Apariencia desbloqueada" : `${setPieceIds(id).length - miss.length}/${setPieceIds(id).length} piezas`;
     const meta = typeof cosmeticMetadata==="function" ? cosmeticMetadata(id) : null;
     html += card(id, sk.name || S.name, `Set ${_cxEsc(S.name || id)}${meta && meta.artPending ? " · croma de set" : ""}`, st, act, on);
@@ -544,7 +544,7 @@ function codexSkinsTabHtml(key){
     const d = CROMA_SKINS[id], C = (typeof CROMA_CRYSTALS!=="undefined" && CROMA_CRYSTALS[d.crystal]) || {label:d.crystal}, on = cromaIsEquipped(id);
     const act = on ? `<button class="cx-btn" data-croma-off="${id}">Quitar</button>`
       : cromaOwned(id) ? `<button class="cx-btn primary" data-croma-use="${id}">USAR</button>`
-      : `<button class="cx-btn" data-croma-buy="${id}" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>`;
+      : `<button class="cx-btn" data-croma-buy="${id}" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>${(typeof premiumSkinButton === "function" ? premiumSkinButton(id, "cx-btn") : "")}`;
     const st = on ? (cromaHiddenBySet(key) ? "✔ EQUIPADA · la tapa el set completo" : "✔ EQUIPADA") : (cromaOwned(id) ? "Comprada" : "Cosmética: no da poder");
     html += card(id, d.name, `${cosmeticAppearanceLabel(id)} · ${_cxEsc(C.label)}`, st, act, on);
   }
@@ -612,7 +612,7 @@ function codexBindSkinsTab(body, key, cv){
   body.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.dataset.skinBuy, S = SET_DB[id] || {};
     const quotedPrice = shopSkinPrice(id);
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || S.name} (${shopSetMissing(id).length} piezas del set ${S.name}) por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || S.name} por ${fmtGold(quotedPrice)} de oro? Es solo apariencia: las piezas del set ${S.name} se compran aparte.`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
       if(typeof shopBuySkin==="function") shopBuySkin(id, quotedPrice);
       setState("codex"); codexRender();
@@ -624,7 +624,7 @@ function _cxCromaDetail(el, key, id){
   let act;
   if(cromaIsEquipped(id)) act = `<div class="cx-active">✔ Equipada${cromaHiddenBySet(key) ? " (la tapa la skin de set completo mientras lo lleves)" : ""}</div><button class="cx-btn" id="cx-croma-off">Quitar · volver a la apariencia original</button>`;
   else if(cromaOwned(id)) act = own ? `<button class="cx-btn primary" id="cx-croma-on">USAR</button>` : `<div class="cx-dim">Conseguí a ${_cxEsc(CLASSES[key].name)} para usarla.</div>`;
-  else act = `<button class="cx-btn primary" id="cx-croma-buy" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>`;
+  else act = `<button class="cx-btn primary" id="cx-croma-buy" ${save.gold < cromaPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(cromaPrice(id))}</button>${(typeof premiumSkinButton === "function" ? premiumSkinButton(id, "cx-btn") : "")}`;
   el.innerHTML = `<div class="cx-skin-box"><b>${_cxEsc(d.name)}</b><div class="cx-dim">${_cxEsc(d.lore)}</div>
     <div class="cx-dim">${cosmeticAppearanceLabel(id)} · ${_cxEsc(d.visualTheme || C.label)}. Cosmético puro (no da poder), se compra con oro del juego.</div>${act}</div>`;
   const on = el.querySelector("#cx-croma-on"), off = el.querySelector("#cx-croma-off"), buy = el.querySelector("#cx-croma-buy");
