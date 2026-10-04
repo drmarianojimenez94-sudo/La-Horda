@@ -32,7 +32,6 @@ Probado en celular apaisado 844×390 táctil y en compu 1280×720, desde un perf
    → Ahora el borde se desvanece para mostrar que se puede deslizar y hay más.
 10. **Tienda.** Antes el guardián de regalo mostraba su precio (2.500) al lado de "Ver ficha", como si
     hubiera que pagarlo. → Ahora dice "✔ Tuyo".
-
 11. **Menú en el celular — "Explorar".** Antes, al abrir "Explorar · Códice y desafíos", Códice quedaba
     angosto y Desafíos se iba abajo de la pantalla (había que deslizar el menú para encontrarlo). → Ahora
     los dos aparecen lado a lado dentro de su lugar.
@@ -84,7 +83,20 @@ objeto) → Guardianes/Códice. Sin errores de página en el camino.
 
 - `tools/items/t_starter_gift.js` (regalo inicial, actualizada al camino nuevo con entrenamiento):
   **TODO OK**.
-- `tools/alfa/q1_first_session.js` (nueva): **RESULTADO_Q1_FULL**.
+- `tools/alfa/q1_first_session.js` (nueva), sobre la base anterior a la última integración:
+  - corrida completa 1: **59 PASS**, ganó la Ciudad, recorrió victoria y Campamento; solo falló un chequeo
+    de la propia prueba (esperaba el menú y el juego, con razón, vuelve a la Sala de la arena siguiente).
+    Corregido en la prueba.
+  - corrida completa 2: el piloto perdió la Ciudad porque cayeron las estructuras (no es un error del juego,
+    es puntería del piloto). Ahora la prueba también repara las estructuras.
+  - corrida rápida (`SKIP_WIN=1`, sin la partida larga): **TODO OK** (regalo, entrenamiento, menús, Tienda,
+    recargas, 3 derrotas seguidas, abandonar desde la pausa).
+  - **NO VERIFICADO EN RUNTIME sobre la base integrada final** (merge de `claude/horda-latest-updates-gv4tlf`
+    con los controles de Q7 y la carga diferida de skins de Q5): la máquina quedó sin memoria (16 GB usados,
+    dos procesos de Chromium de la simulación de economía de Q4, `q4_econ.js`, ocupan ~13 GB y carga 50 en 4
+    núcleos) y Chromium ni siquiera llega a abrir. No maté procesos ajenos. Hay que correr:
+    `GAME_URL=http://127.0.0.1:8901/index.html node tools/alfa/q1_first_session.js` cuando la máquina esté libre.
+  - Chequeo estático sobre la base integrada: mis cambios siguen presentes después del merge (sin conflictos).
 - Recorridos manuales automatizados con Playwright (844×390 táctil y 1280×720) por cada pantalla de
   arriba, midiendo que la barra de confirmar no pise las cartas y que los botones no queden tapados.
 
@@ -112,4 +124,4 @@ con la base nueva (muy cambiada a último momento) inventario/talentos/derrotas 
 | 12 | `js/ui/inventory-ui.js` |
 | prueba | `tools/alfa/q1_first_session.js` |
 
-Commits: b581550, 1f63d93, d7df6fd, 99a23b1, 6d0d72d (merge main), 376b4bb, f1c4488, e9c9487 (informe), e5ead42, 2a6faf7 (prueba), 874bca5.
+Commits: b581550, 1f63d93, d7df6fd, 99a23b1, 6d0d72d (merge main), 376b4bb, f1c4488, e9c9487 (informe), e5ead42, 2a6faf7 (prueba), 874bca5, db2b44f (prueba/informe), 0118718 (merge de la integración).
