@@ -18,7 +18,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto(url, { timeout: 120000 });
     for (let k = 0; k < 1200; k++) { if (await p.evaluate(() => { const x = document.getElementById('title-continue-btn'); return x && !x.disabled; })) break; await sleep(100); }
-    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 5; save.champions[k].xp = 0; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = {}; for (const a of CAMPAIGN_ORDER) save.arenasCleared[a] = true; save.stash = []; selectedClass = c; persistNow(); }, [champ]);
+    await p.evaluate(([c]) => { for (const k in save.champions) { save.champions[k].level = 5; save.champions[k].xp = 0; save.champions[k].unlocked = true; } save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); save.arenasCleared = {}; for (const a of CAMPAIGN_ORDER) save.arenasCleared[a] = true; save.stash = []; selectedClass = c; persistNow(); }, [champ]);
     return { p, errs };
   };
   const H = await mk(`${SITE}/index.html?dev=1&server=${encodeURIComponent(RELAY)}`, 'Mariano', 'tanque');

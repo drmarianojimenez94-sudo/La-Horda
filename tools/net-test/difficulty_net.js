@@ -37,7 +37,7 @@ async function client(browser, name, champ, cleared, url) {
   await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toc[aá]/.test(b.textContent); }, null, 60000);
   await ev(c, ([k, cl]) => {
     for (const q in save.champions) save.champions[q].level = 40;
-    save.champions[k].unlocked = true; save.starterChosen = true; selectedClass = k; save.lastChamp = k;
+    save.champions[k].unlocked = true; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); selectedClass = k; save.lastChamp = k;
     save.arenasCleared = {}; for (const a of cl) save.arenasCleared[a] = true;
     save.legacyOpenArenas = []; save.justUnlockedArena = null; save.defeatCount = 5; persistNow();
   }, [champ, cleared]);

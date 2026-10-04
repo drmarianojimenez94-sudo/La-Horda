@@ -25,7 +25,7 @@ async function client(browser, mobile, name, champ) {
   page.on('console', m => { if (m.type() === 'error' && /loop del juego/.test(m.text())) errors.push(m.text().slice(0, 200)); });
   await page.goto(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`);
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c]) => { for (const k in save.champions) save.champions[k].level = 30; save.champions[c].unlocked = true; save.starterChosen = true; selectedClass = c; save.lastChamp = c;
+  await page.evaluate(([c]) => { for (const k in save.champions) save.champions[k].level = 30; save.champions[c].unlocked = true; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); selectedClass = c; save.lastChamp = c;
     for (const a of ARENA_ORDER) if (a !== 'minas' && a !== 'infernal') save.arenasCleared[a] = true; save.arenasCleared.minas = false; save.arenasCleared.infernal = false; save.legacyOpenArenas = (save.legacyOpenArenas || []).filter(k => k !== 'infernal'); persistNow(); }, [champ]);
   return { ctx, page, errors, mobile, name };
 }

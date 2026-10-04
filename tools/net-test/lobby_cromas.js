@@ -29,7 +29,7 @@ async function client(browser, name, champ) {
   await page.evaluate(([c]) => {
     for (const k in save.champions) save.champions[k].level = 12;
     for (const it of stashItems().slice()) if (it.set) removeItemFromInventory(null, it.uid, false); // sin skins de set de regalo
-    save.champions[c].unlocked = true; save.starterChosen = true; save.gold = 99999; save.cromas = {};
+    save.champions[c].unlocked = true; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); save.gold = 99999; save.cromas = {};
     save.arenasCleared.fortaleza = true; selectedClass = c; save.lastChamp = c; persistNow();
   }, [champ]);
   return { ctx, page, errors, name };

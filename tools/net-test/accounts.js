@@ -41,11 +41,13 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
 (async () => {
   const relay = await startRelay();
   const browser = await chromium.launch({ executablePath:process.env.CHROMIUM_PATH||undefined, args: ['--no-sandbox'] });
-  const errors = [];
+  const errors = [], saveLog = [];
   async function device(name, opts){
     const ctx = await browser.newContext(Object.assign({ viewport: { width: 844, height: 390 }, hasTouch: true }, opts || {}));
     await ctx.addInitScript(() => { window.__campaignMode = true; });
     const page = await ctx.newPage();
+    // diagnóstico: quién sube qué a la nube (para la falla intermitente del beacon)
+    ctx.on('request', rq => { if (/\/api\/save/.test(rq.url()) && rq.method() !== 'GET') { let g = null, u = null; try { const b = JSON.parse(rq.postData() || '{}'); g = b.data && b.data.gold; u = b.data && Object.keys(b.data.champions || {}).filter(k => b.data.champions[k].unlocked).length; } catch (e) {} saveLog.push({ dev: name, t: Date.now() % 1e6, m: rq.method(), u: rq.url().split('/api/')[1], gold: g, unl: u }); } });
     page.on('pageerror', e => errors.push(name + ' pageerror: ' + e.message));
     page.on('console', m => { if (m.type() === 'error' && !/ERR_CERT|fonts\.g|net::|404|Failed to load resource|ERR_INTERNET_DISCONNECTED|ERR_FAILED/.test(m.text())) errors.push(name + ': ' + m.text().slice(0, 200)); });
     const d = { name, ctx, page, E: (fn, a) => d.page.evaluate(fn, a) };
@@ -278,7 +280,10 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await A.boot(URL_ACC);
     await A.page.click('#title-continue-btn');
     await sleep(2500);
-    const after = await A.E(() => ({ st: state, conflict: accountState().conflict, pending: accountState().pending, gold: save.gold, unl: Object.keys(save.champions).filter(k => save.champions[k].unlocked), skinPend: !!save.starterSkinPending }));
+    const after = await A.E(() => ({ st: state, conflict: accountState().conflict, pending: accountState().pending, gold: save.gold, unl: Object.keys(save.champions).filter(k => save.champions[k].unlocked), skinPend: !!save.starterSkinPending,
+      keys: Object.keys(localStorage).filter(k => /laHorda/.test(k)), back: (() => { try { const b = JSON.parse(localStorage.getItem('laHordaSave_v1_antesDeNube') || 'null'); return b && { gold: b.gold, c3: b.campaignResetV3, ts: b.testStageV1 }; } catch (e) { return 'x'; } })(),
+      sync: __account.sync && { v: __account.sync.version, dirty: __account.sync.dirty, beacon: __account.sync.beacon }, ls: (() => { try { const x = JSON.parse(localStorage.getItem('laHordaSave_v1')); return { gold: x.gold, unl: Object.keys(x.champions || {}).filter(k => x.champions[k].unlocked).length }; } catch (e) { return 'x'; } })() }));
+    { const c = await cloudSave(tokA); after.cloud = { v: c.version, gold: c.data && c.data.gold, unl: c.data && Object.keys(c.data.champions || {}).filter(k => c.data.champions[k].unlocked).length, tut: c.data && c.data.tut }; after.vBefore = vBefore; after.beaconV = v && v.version; after.saves = saveLog.slice(-8); console.log("SAVES " + JSON.stringify(after.saves) + " CLOUD " + JSON.stringify(after.cloud)); }
     check('beacon.sin_conflicto_falso_al_volver', after.st === 'mainmenu' && !after.conflict && !after.pending && after.gold === 88888, after);
   }
 

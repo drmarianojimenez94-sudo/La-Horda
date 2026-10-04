@@ -24,7 +24,7 @@ async function client(browser, mobile, name, champ) {
   page.on('pageerror', e => errors.push(e.message));
   await page.goto(`${SITE}/index.html?server=${encodeURIComponent(RELAY)}`);
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c]) => { for (const k in save.champions) save.champions[k].level = 12; save.champions[c].unlocked = true; save.starterChosen = true; selectedClass = c; save.lastChamp = c; persistNow(); }, [champ]);
+  await page.evaluate(([c]) => { for (const k in save.champions) save.champions[k].level = 12; save.champions[c].unlocked = true; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); selectedClass = c; save.lastChamp = c; persistNow(); }, [champ]);
   return { ctx, page, errors, mobile, name };
 }
 const ev = (c, fn, a) => c.page.evaluate(fn, a);
