@@ -99,6 +99,10 @@
 .hub-profile-name{ font-weight:400; font-size:1.15rem; color:var(--ui-ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .hub-profile-lvl{ font-size:0.95rem; color:var(--ui-dim); white-space:nowrap; }
 .hub-gold{ font-family:var(--ui-font); font-size:1.2rem; color:var(--ui-gold); white-space:nowrap; padding-left:10px; border-left:2px solid var(--ui-line); }
+/* Brasas ✦ (moneda premium, js/systems/premium.js): violeta-brasa para no confundirse con el oro */
+.hub-premium, .ui-chip.premium{ color:#ffb0e8; }
+.premium-btn{ background:linear-gradient(180deg,#5a2470,#3a1450) !important; border-color:#c070ff !important; color:#ffe0f8 !important; }
+.premium-btn:disabled{ opacity:.55; }
 .hub-brand{ flex:1; min-width:0; text-align:center; font-family:var(--ui-font-brand); font-size:1.05rem; color:var(--ui-accent-2); letter-spacing:0.06em;
   text-shadow:3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; white-space:nowrap; }
 .hub-main{ flex:1 1 auto; min-height:0; width:100%; max-width:1000px; display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1fr); gap:10px; }

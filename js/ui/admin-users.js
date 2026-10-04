@@ -59,7 +59,7 @@ window.GMExt = (function(){
   card.append(h);
   ctx.list(card, [`ID interno: ${a.id}`, `Correo: ${s.email || "—"}`, `Alta: ${fmtDate(a.createdAt)}`, `Última actividad: ${fmtDate(a.lastLogin)}`, `Roles: ${a.roles.join(", ") || "jugador"}`,
    `Fundador: ${a.founder ? a.founder.champion + " (FOUNDER_ENTITLEMENT)" : "no"}`, `Guardado en la nube: ${s.save ? "versión " + s.save.version + " · " + fmtDate(s.save.updatedAt) : "sin guardado"}`,
-   `Oro: ${s.gold} · Gemas: ${s.gems}`, `Arenas superadas: ${Object.keys(s.arenasCleared).filter(k=>s.arenasCleared[k]).join(", ") || "ninguna"}`,
+   `Oro: ${s.gold} · Gemas: ${s.gems} · Brasas ✦: ${s.premium ?? "—"}`, `Arenas superadas: ${Object.keys(s.arenasCleared).filter(k=>s.arenasCleared[k]).join(", ") || "ninguna"}`,
    `Inventario: ${s.inventory.stash} objetos · Colección: ${s.inventory.collection} · Códice: ${s.codex.seen} vistos / ${s.codex.kills} derrotados`,
    `Cosméticos: ${s.cosmetics.unlocks.length + s.cosmetics.cromas.length} · Cristales: ${Object.keys(s.crystals).filter(k=>s.crystals[k]).join(", ") || "—"}`,
    `Buzón pendiente: ${s.mailbox.length} · Flags: ${Object.entries(s.flags).map(([k, x])=>k + "=" + x).join(", ")}`]);
@@ -94,6 +94,26 @@ window.GMExt = (function(){
     await api("POST", "/user/currency", {id, field:field_, value, confirm:lower || undefined, reason:d.reason, baseVersion:v()}); say("Valor actualizado."); reload();
    });
    select(f.f, "Recurso", "field", [["gold", "Oro"], ["gems", "Gemas"]]); const val = field(f.f, "Nuevo valor", "value", "number", s.gold); val.min = 0; val.max = 10000000; val.required = true; field(f.f, "Motivo", "reason", "text"); f.end();
+  }
+  // Brasas (moneda premium): saldo en la billetera del SERVIDOR (no en el guardado). Acreditar suma un monto con motivo;
+  // un monto negativo corrige (pide confirmación). Cada envío lleva una referencia única: reintentar no acredita dos veces.
+  if(can("MODIFY_CURRENCY") && s.premium !== undefined){
+   const pc = node("section", undefined, "gm-card gm-premium"); box.append(pc);
+   pc.append(node("h3", "Brasas ✦ · moneda premium"), node("p", `Saldo actual: ${s.premium} ✦ · 1000 ✦ = 1 skin.`));
+   if(s.premiumLedger && s.premiumLedger.length) ctx.list(pc, s.premiumLedger.slice(0, 10).map(e => `${fmtDate(e.at)} · ${e.delta > 0 ? "+" : ""}${e.delta} ✦ → ${e.balanceAfter} · ${e.reason}`));
+   else pc.append(node("p", "Sin movimientos.", "gm-muted"));
+   let pref = crypto.randomUUID();
+   const pf = form(pc, "Acreditar Brasas", async d=>{
+    const amount = Number(d.amount);
+    if(!Number.isSafeInteger(amount) || amount === 0 || Math.abs(amount) > 1000000) throw Error("Monto inválido (entero distinto de 0).");
+    if(!String(d.reason || "").trim()) throw Error("El motivo es obligatorio: queda en el libro de la billetera y en el registro.");
+    const neg = amount < 0;
+    if(!await confirmDialog(ctx, {title:neg ? "Descontar Brasas" : "Acreditar Brasas", user:a.user, action:(neg ? "" : "+") + amount + " ✦", before:s.premium + " ✦", after:(s.premium + amount) + " ✦", danger:neg})) return;
+    const r = await api("POST", "/user/premium", {id, amount, reason:d.reason, ref:pref, confirm:neg || undefined});
+    pref = crypto.randomUUID(); say(r.repeated ? "Ese envío ya estaba acreditado." : `Listo: ${r.premium} ✦.`); reload();
+   });
+   const am = field(pf.f, "Monto (negativo para corregir)", "amount", "number", 1000); am.step = 1; am.required = true;
+   field(pf.f, "Motivo (obligatorio)", "reason", "text"); pf.end();
   }
   if(can("EDIT_USER_PROGRESS")){
    const prog = node("section", undefined, "gm-card"); prog.append(node("h3", "Progreso")); box.append(prog);
