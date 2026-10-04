@@ -214,3 +214,18 @@ sin desplazarse, 1,5×, radio 120, aparta comunes y aturde élites 0,3 s, máxim
 REVIEW, no DUPLICATE. Los 8 campeones tienen ahora entrada en `CHAMPION_IDENTITY`, generada desde su
 catálogo (`js/champions/ascension/catalog.js`, sin duplicar texto). El validador de la Biblia los da
 PASS* (avisos: sin Set publicado mientras sean INTERNAL; pasivas largas con descripción corta).
+
+## Saelis, la Heraldo del Plumaje (ASCENSIÓN, soporte) — 4 octubre 2026
+
+Registrada en `js/champions/ascension/catalog.js` antes del normalizador; `knownChampions` y las medias por rol no se
+tocaron. Perfil `ascension` (techo de simulación 1,5 × 6.521 = 9.782 de daño a 150 s). Normalizador: defensa 0,07 →
+0,108, vida 100 → 103,95, daño 10 → 9,68.
+
+Ajustes de kit hasta pasar con margen (la simulación varía ±10 % entre corridas aunque fije semillas):
+- Primera versión: 9.790 de media (sobre el techo); se autobendecía y lanzaba ≈ 95 habilidades por partida.
+- La Bendición del Plumaje pasó a ser **solo para aliados**; cada pluma del abanico golpea a 2 enemigos como máximo;
+  Abanico 1,0 → 0,65, Ráfaga 0,9 → 0,8, Llamado 0,8 → 0,6 (acorta 0,2 s por pluma), Cielo 0,7 → 0,5.
+- Gate final, tres corridas seguidas: **PASS** con medias 8.293, 9.167 y 8.619 (38 clases, 20 candidatas, 60
+  simulaciones). Pruebas de kit: 225 comprobaciones en `tools/ascension/functional.js` (Plumas con tope 8, absorción
+  y Bendición, Ráfaga que dispara plumas, Llamado y recargas, Cielo que deja 6 plumas, nunca se bendice a sí misma).
+- Duplicidad: DISTINCT (sin curación ni escudo). Biblia de Campeones: PASS*. Roster Art Gate: 116 apariencias PASS.
