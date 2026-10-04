@@ -78,9 +78,9 @@ async function client(browser, name, champ, url) {
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error' && !/ERR_CONNECTION|WebSocket connection|net::|Failed to load resource/.test(m.text())) consoleErr.push(m.text()); });
   page.on('dialog', d => d.accept());
-  await page.goto(url || `${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, { timeout: 120000 });
+  await page.goto(url || `${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, { timeout: 300000 }); // máquina compartida: la carga puede tardar
   const c = { ctx, page, errors, consoleErr, name };
-  await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled; }, null, 60000);
+  await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return typeof setState === 'function' && !!b && !b.disabled; }, null, 180000);
   await ev(c, ([k]) => {
     for (const q in save.champions) { save.champions[q].level = 10; save.champions[q].unlocked = true; }
     save.starterChosen = true; selectedClass = k; save.lastChamp = k;

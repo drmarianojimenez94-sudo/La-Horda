@@ -229,13 +229,12 @@ function _netHandle(m){
       _netEmit("closed", m.reason, role);
       return;
     case "error":
-      if(m.code==="NO_ROOM" && !net.room) return; // un relay viejo no conoce "identify": no es un error de sala
+      // NO_ROOM: un relay viejo no conoce "identify", o el invitado mandó su movimiento al reconectarse antes
+      // del "joined": no es un motivo para el jugador ni la respuesta al "join"
+      if(m.code==="NO_ROOM"){ netLog("NETWORK_ERROR", {code:m.code}); return; }
       if(m.code==="CHAMP_NOT_OWNED"){ _netEmit("chatError", m.code); return; }
       if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
       if(m.trade || /^(TRADE_|ROOMS_)/.test(m.code||"")){ _netEmit("tradeError", m); return; } // intercambio / lista de salas: no es un error de la sala
-      // respuesta a un mensaje de partida mandado sin sala (p. ej. el movimiento del invitado justo al
-      // reconectarse, antes del "joined"): no es un motivo para el jugador ni la respuesta al "join"
-      if(m.code==="NO_ROOM"){ netLog("NETWORK_ERROR", {code:m.code}); return; }
       if(!net.room || net._awaitingJoin) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
       if(m.code==="ROOM_FULL") netLog("ROOM_FULL"); else netLog("NETWORK_ERROR", {code:m.code});
       // reconectando solo (netTryReconnect): el motivo lo resuelve la reconexión, sin el cartel de
