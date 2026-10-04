@@ -1,0 +1,7071 @@
+{
+ "tag": "antes",
+ "fecha": "2026-10-04T10:47:30.745Z",
+ "viewport": "844x390 dpr2",
+ "q6": [],
+ "escenas": [
+  {
+   "arena": "ciudad",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "cm_perro/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_raptor",
+     "img": "cm_raptor/atlas.webp",
+     "s": 2.611,
+     "px": 159
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 69
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_saqueador",
+     "img": "cm_saqueador/atlas.webp",
+     "s": 2.259,
+     "px": 117
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 6.01,
+    "flushMs": 33.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_campanero",
+     "img": "cm_campanero/atlas.webp",
+     "s": 3.532,
+     "px": 159
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_sectario",
+     "img": "cm_sectario/atlas.webp",
+     "s": 2.488,
+     "px": 70
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_espectro",
+     "img": "cm_espectro/atlas.webp",
+     "s": 2.909,
+     "px": 84
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_acechante",
+     "img": "cm_acechante/atlas.webp",
+     "s": 3.197,
+     "px": 96
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_saqueador",
+     "img": "cm_saqueador/atlas.webp",
+     "s": 2.258,
+     "px": 117
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 53
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_planidera",
+     "img": "cm_planidera/atlas.webp",
+     "s": 2.367,
+     "px": 69
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 68
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_perro",
+     "img": "cm_perro/atlas.webp",
+     "s": 3.094,
+     "px": 114
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_verdugo",
+     "img": "cm_verdugo/atlas.webp",
+     "s": 3.381,
+     "px": 230
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_raptor",
+     "img": "cm_raptor/atlas.webp",
+     "s": 2.595,
+     "px": 158
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 7.97,
+    "flushMs": 39.1
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.747,
+     "px": 36
+    },
+    {
+     "g": "jefe",
+     "k": "cm_presentador",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 1.662,
+     "px": 199
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-torbellino.webp",
+     "s": 0.642,
+     "px": 164
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_puerta.webp",
+     "s": 0.917,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    }
+   ],
+   "perf": {
+    "renderMs": 4.28,
+    "flushMs": 83.9
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 820x397",
+     "s": 2.4,
+     "px": 1968
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 760x445",
+     "s": 2.4,
+     "px": 1824
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "prisionero/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 210
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "engendro/atlas.webp (derivado)",
+     "s": 0.992,
+     "px": 126
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "dragon_bronce/atlas.webp (derivado)",
+     "s": 0.997,
+     "px": 176
+    },
+    {
+     "g": "enemigo",
+     "k": "prisionero",
+     "img": "prisionero/atlas.webp",
+     "s": 0.81,
+     "px": 203
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x26",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 16x20",
+     "s": 2.4,
+     "px": 38
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x30",
+     "s": 2.4,
+     "px": 43
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x64",
+     "s": 2.4,
+     "px": 53
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x50",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x46",
+     "s": 2.4,
+     "px": 48
+    }
+   ],
+   "perf": {
+    "renderMs": 5.16,
+    "flushMs": 125.5
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 820x397",
+     "s": 2.4,
+     "px": 1968
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 760x445",
+     "s": 2.4,
+     "px": 1824
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x26",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 16x20",
+     "s": 2.4,
+     "px": 38
+    },
+    {
+     "g": "enemigo",
+     "k": "automata",
+     "img": "automata/atlas.webp",
+     "s": 0.936,
+     "px": 288
+    },
+    {
+     "g": "enemigo",
+     "k": "automata",
+     "img": "automata/atlas.webp (derivado)",
+     "s": 0.936,
+     "px": 288
+    },
+    {
+     "g": "enemigo",
+     "k": "verdugo",
+     "img": "verdugo/atlas.webp",
+     "s": 0.825,
+     "px": 208
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 68
+    },
+    {
+     "g": "enemigo",
+     "k": "arana",
+     "img": "arana/atlas.webp",
+     "s": 0.705,
+     "px": 125
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "carcelero",
+     "img": "carcelero/atlas.webp",
+     "s": 0.894,
+     "px": 241
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 67
+    },
+    {
+     "g": "enemigo",
+     "k": "engendro",
+     "img": "engendro/atlas.webp",
+     "s": 0.753,
+     "px": 81
+    },
+    {
+     "g": "enemigo",
+     "k": "dragon_bronce",
+     "img": "dragon_bronce/atlas.webp",
+     "s": 0.818,
+     "px": 173
+    },
+    {
+     "g": "enemigo",
+     "k": "prisionero",
+     "img": "prisionero/atlas.webp",
+     "s": 0.778,
+     "px": 195
+    },
+    {
+     "g": "enemigo",
+     "k": "prisionero",
+     "img": "prisionero/atlas.webp (derivado)",
+     "s": 0.778,
+     "px": 195
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x30",
+     "s": 2.4,
+     "px": 43
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x64",
+     "s": 2.4,
+     "px": 53
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x50",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x46",
+     "s": 2.4,
+     "px": 48
+    }
+   ],
+   "perf": {
+    "renderMs": 91.53,
+    "flushMs": 144.2
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 820x397",
+     "s": 2.4,
+     "px": 1968
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 760x445",
+     "s": 2.4,
+     "px": 1824
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x26",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "jefe",
+     "k": "demonio_mayor",
+     "img": "demonio_mayor/atlas.webp",
+     "s": 2.581,
+     "px": 307
+    },
+    {
+     "g": "jefe",
+     "k": "demonio_mayor",
+     "img": "demonio_mayor/atlas.webp (derivado)",
+     "s": 2.581,
+     "px": 307
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 16x20",
+     "s": 2.4,
+     "px": 38
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-torbellino.webp",
+     "s": 0.544,
+     "px": 139
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x30",
+     "s": 2.4,
+     "px": 43
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x64",
+     "s": 2.4,
+     "px": 53
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x50",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x46",
+     "s": 2.4,
+     "px": 48
+    }
+   ],
+   "perf": {
+    "renderMs": 2.31,
+    "flushMs": 44.7
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x210",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x90",
+     "s": 1.8,
+     "px": 756
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 100x54",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 160x80",
+     "s": 2.4,
+     "px": 384
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "bestia_bosque/death4.webp (derivado) (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "duende_bosque/death3.webp (derivado) (derivado) (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawDying",
+     "img": "duende_bosque/death3.webp (derivado) (derivado)",
+     "s": 1.44,
+     "px": 63
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawDying",
+     "img": "bestia_bosque/death3.webp (derivado) (derivado)",
+     "s": 1.523,
+     "px": 93
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk4.webp (derivado) (derivado)",
+     "s": 1.435,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x64",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 100x130",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk5.webp (derivado) (derivado)",
+     "s": 1.446,
+     "px": 54
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x22",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "enemigo",
+     "k": "enjambre_hadas",
+     "img": "v3/atlas.webp",
+     "s": 1.253,
+     "px": 69
+    },
+    {
+     "g": "enemigo",
+     "k": "enjambre_hadas",
+     "img": "vendor/cadena-relampagos.webp",
+     "s": 0.309,
+     "px": 79
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 96x80",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 24x60",
+     "s": 2.4,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 65
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.997,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk3.webp (derivado) (derivado)",
+     "s": 1.433,
+     "px": 44
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "enemigo",
+     "k": "bestia_bosque",
+     "img": "bestia_bosque/atk1.webp (derivado) (derivado)",
+     "s": 1.525,
+     "px": 95
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 53
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.354,
+     "px": 53
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk1.webp (derivado) (derivado)",
+     "s": 1.446,
+     "px": 52
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk2.webp (derivado) (derivado)",
+     "s": 1.444,
+     "px": 45
+    },
+    {
+     "g": "efectos",
+     "k": "drawProjectileFx",
+     "img": "bosque/csHadaShot_0.webp",
+     "s": 0.495,
+     "px": 50
+    }
+   ],
+   "perf": {
+    "renderMs": 2.91,
+    "flushMs": 75.1
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x210",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x90",
+     "s": 1.8,
+     "px": 756
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 100x54",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 160x80",
+     "s": 2.4,
+     "px": 384
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x64",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 100x130",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 96x80",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x22",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 24x60",
+     "s": 2.4,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "ent",
+     "img": "ent/idle1.webp",
+     "s": 2.329,
+     "px": 130
+    },
+    {
+     "g": "enemigo",
+     "k": "dama_bosque",
+     "img": "v2/atlas.webp",
+     "s": 0.823,
+     "px": 99
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/idle2.webp (derivado) (derivado)",
+     "s": 1.436,
+     "px": 45
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "cu_sith",
+     "img": "v3/atlas.webp",
+     "s": 1.529,
+     "px": 167
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 69
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "enjambre_hadas",
+     "img": "v3/atlas.webp",
+     "s": 1.252,
+     "px": 69
+    },
+    {
+     "g": "enemigo",
+     "k": "bestia_bosque",
+     "img": "bestia_bosque/idle2.webp (derivado) (derivado)",
+     "s": 1.529,
+     "px": 101
+    }
+   ],
+   "perf": {
+    "renderMs": 5.72,
+    "flushMs": 30.7
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x210",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x90",
+     "s": 1.8,
+     "px": 756
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 100x54",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 160x80",
+     "s": 2.4,
+     "px": 384
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "duende_bosque/death3.webp (derivado) (derivado) (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "bestia_bosque/death4.webp (derivado) (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "ent/death5.webp (derivado)",
+     "s": 1.2,
+     "px": 319
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 96x80",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 24x60",
+     "s": 2.4,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x22",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x64",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "jefe",
+     "k": "guardian_ancestral",
+     "img": "guardian_ancestral/atlas.webp",
+     "s": 2.582,
+     "px": 258
+    },
+    {
+     "g": "jefe",
+     "k": "guardian_ancestral",
+     "img": "vendor/cadena-relampagos.webp",
+     "s": 0.281,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 100x130",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-torbellino.webp",
+     "s": 0.545,
+     "px": 139
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    }
+   ],
+   "perf": {
+    "renderMs": 5.54,
+    "flushMs": 76.3
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "map/map_initial.jpg",
+     "s": 2.64,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "map/map_mature.jpg",
+     "s": 2.64,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "peregrino/atlas.webp",
+     "s": 0.606,
+     "px": 130
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "fx/nucleo_3.webp",
+     "s": 0.59,
+     "px": 20
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "acechador/atlas.webp",
+     "s": 0.682,
+     "px": 149
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "infectado/atlas.webp",
+     "s": 0.682,
+     "px": 130
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "fx/leap_splat.webp",
+     "s": 0.742,
+     "px": 56
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_3.webp",
+     "s": 0.571,
+     "px": 19
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/m_summon_b.webp",
+     "s": 1.151,
+     "px": 83
+    },
+    {
+     "g": "enemigo",
+     "k": "nucleo_micelial",
+     "img": "fx/nucleo_3.webp",
+     "s": 1.059,
+     "px": 36
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x24",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_4.webp",
+     "s": 1.31,
+     "px": 72
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png (derivado)",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/mush_row_small.webp",
+     "s": 0.974,
+     "px": 139
+    },
+    {
+     "g": "enemigo",
+     "k": "acechador",
+     "img": "acechador/atlas.webp",
+     "s": 0.816,
+     "px": 178
+    },
+    {
+     "g": "enemigo",
+     "k": "sabueso",
+     "img": "sabueso/atlas.webp",
+     "s": 0.674,
+     "px": 152
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.642,
+     "px": 164
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_2.webp",
+     "s": 1.059,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 64
+    },
+    {
+     "g": "enemigo",
+     "k": "nucleo_micelial",
+     "img": "fx/nucleo_2.webp",
+     "s": 1.243,
+     "px": 67
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "fx/claw_blue_a.webp",
+     "s": 0.573,
+     "px": 31
+    }
+   ],
+   "perf": {
+    "renderMs": 120.02,
+    "flushMs": 77.9
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "map/map_initial.jpg",
+     "s": 2.64,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "map/map_mature.jpg",
+     "s": 2.64,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "peregrino/atlas.webp",
+     "s": 0.606,
+     "px": 130
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "fx/nucleo_3.webp",
+     "s": 0.59,
+     "px": 20
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "acechador/atlas.webp",
+     "s": 0.682,
+     "px": 149
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "infectado/atlas.webp",
+     "s": 0.682,
+     "px": 130
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x24",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "enemigo",
+     "k": "nucleo_micelial",
+     "img": "fx/nucleo_3.webp",
+     "s": 1.064,
+     "px": 36
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_3.webp",
+     "s": 0.871,
+     "px": 30
+    },
+    {
+     "g": "enemigo",
+     "k": "chaman",
+     "img": "chaman/atlas.webp",
+     "s": 0.67,
+     "px": 111
+    },
+    {
+     "g": "enemigo",
+     "k": "raiz_absorcion",
+     "img": "fx/root_curl.webp",
+     "s": 0.916,
+     "px": 71
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 68
+    },
+    {
+     "g": "enemigo",
+     "k": "infectado",
+     "img": "infectado/atlas.webp",
+     "s": 0.925,
+     "px": 176
+    },
+    {
+     "g": "enemigo",
+     "k": "hinchado",
+     "img": "hinchado/atlas.webp",
+     "s": 1.069,
+     "px": 239
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 70
+    },
+    {
+     "g": "enemigo",
+     "k": "sabueso",
+     "img": "sabueso/atlas.webp",
+     "s": 0.671,
+     "px": 151
+    },
+    {
+     "g": "enemigo",
+     "k": "peregrino",
+     "img": "peregrino/atlas.webp",
+     "s": 0.907,
+     "px": 194
+    },
+    {
+     "g": "enemigo",
+     "k": "acechador",
+     "img": "acechador/atlas.webp",
+     "s": 0.821,
+     "px": 179
+    }
+   ],
+   "perf": {
+    "renderMs": 104.82,
+    "flushMs": 13.3
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "map/map_initial.jpg",
+     "s": 2.64,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "map/map_mature.jpg",
+     "s": 2.64,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "peregrino/atlas.webp",
+     "s": 0.606,
+     "px": 130
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "fx/nucleo_3.webp",
+     "s": 0.59,
+     "px": 20
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "acechador/atlas.webp",
+     "s": 0.682,
+     "px": 149
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "infectado/atlas.webp",
+     "s": 0.682,
+     "px": 130
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "hinchado/atlas.webp",
+     "s": 0.677,
+     "px": 152
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 200x230",
+     "s": 2.154,
+     "px": 431
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "mother/mp_cap.webp",
+     "s": 1.091,
+     "px": 428
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "sabueso/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "fx/root_spike_a.webp (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_4.webp",
+     "s": 1.602,
+     "px": 88
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x24",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_1.webp",
+     "s": 1.604,
+     "px": 173
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_2.webp",
+     "s": 1.244,
+     "px": 67
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/m_summon_b.webp",
+     "s": 1.564,
+     "px": 113
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/mush_row_big.webp",
+     "s": 1.512,
+     "px": 221
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/mush_row_small.webp",
+     "s": 1.297,
+     "px": 185
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 65
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    }
+   ],
+   "perf": {
+    "renderMs": 186.74,
+    "flushMs": 9.4
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x200",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 110x50",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x70",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 0.96,
+     "px": 19
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "lobo_artico/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawDying",
+     "img": "lobo_artico/atlas.webp",
+     "s": 0.608,
+     "px": 58
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawDying",
+     "img": "hada_escarcha/atlas.webp",
+     "s": 0.767,
+     "px": 41
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x80",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "enemigo",
+     "k": "hada_escarcha",
+     "img": "hada_escarcha/atlas.webp",
+     "s": 0.762,
+     "px": 40
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x36",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "enemigo",
+     "k": "lobo_artico",
+     "img": "lobo_artico/atlas.webp",
+     "s": 0.607,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x28",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 110x80",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "enemigo",
+     "k": "hada_escarcha",
+     "img": "hada_escarcha/atlas.webp (derivado)",
+     "s": 0.756,
+     "px": 40
+    },
+    {
+     "g": "enemigo",
+     "k": "hada_escarcha",
+     "img": "vendor/cadena-relampagos.webp",
+     "s": 0.309,
+     "px": 79
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/walk1.webp",
+     "s": 1.597,
+     "px": 86
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/walk2.webp",
+     "s": 1.591,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 32x66",
+     "s": 2.4,
+     "px": 77
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "enemigo",
+     "k": "dragoncito_hielo",
+     "img": "v2/atlas.webp",
+     "s": 1.147,
+     "px": 108
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 53
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/walk3.webp",
+     "s": 1.591,
+     "px": 65
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "hielo/hbDragAliento_0.webp",
+     "s": 3.72,
+     "px": 249
+    },
+    {
+     "g": "efectos",
+     "k": "drawFxContrastTop",
+     "img": "canvas 96x96",
+     "s": 1.05,
+     "px": 101
+    }
+   ],
+   "perf": {
+    "renderMs": 6.94,
+    "flushMs": 53.1
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x200",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 110x50",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x70",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x80",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 110x80",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 32x66",
+     "s": 2.4,
+     "px": 77
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x36",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "enemigo",
+     "k": "cristal_servo",
+     "img": "cristal_servo/atlas.webp",
+     "s": 0.702,
+     "px": 40
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_cristal",
+     "img": "golem_cristal/atlas.webp",
+     "s": 0.974,
+     "px": 91
+    },
+    {
+     "g": "enemigo",
+     "k": "cristal_volador",
+     "img": "cristal_volador/atlas.webp",
+     "s": 0.601,
+     "px": 43
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
+    },
+    {
+     "g": "enemigo",
+     "k": "demonio_hielo_fuego",
+     "img": "demonio_hielo_fuego/idle1.webp",
+     "s": 1.776,
+     "px": 94
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x28",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "lobo_artico",
+     "img": "lobo_artico/atlas.webp",
+     "s": 0.607,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "angel_hielo",
+     "img": "v2/atlas.webp",
+     "s": 0.899,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/idle2.webp",
+     "s": 1.596,
+     "px": 77
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "dragoncito_hielo",
+     "img": "v2/atlas.webp",
+     "s": 1.092,
+     "px": 103
+    },
+    {
+     "g": "enemigo",
+     "k": "dragoncito_hielo",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 1.092,
+     "px": 103
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 70
+    },
+    {
+     "g": "enemigo",
+     "k": "hada_escarcha",
+     "img": "hada_escarcha/atlas.webp",
+     "s": 0.755,
+     "px": 40
+    },
+    {
+     "g": "enemigo",
+     "k": "hada_escarcha",
+     "img": "hada_escarcha/atlas.webp (derivado)",
+     "s": 0.755,
+     "px": 40
+    },
+    {
+     "g": "efectos",
+     "k": "drawFxContrastTop",
+     "img": "canvas 96x96",
+     "s": 0.893,
+     "px": 86
+    }
+   ],
+   "perf": {
+    "renderMs": 2.18,
+    "flushMs": 81.7
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x200",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 110x50",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x70",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.2,
+     "px": 24
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "lobo_artico/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "golem_hielo/death4.webp (derivado)",
+     "s": 0.998,
+     "px": 202
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "demonio_hielo_fuego/death4.webp (derivado)",
+     "s": 1,
+     "px": 247
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x80",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x36",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 110x80",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 32x66",
+     "s": 2.4,
+     "px": 77
+    },
+    {
+     "g": "jefe",
+     "k": "mago_hielo_cristal",
+     "img": "v2/atlas.webp",
+     "s": 1.368,
+     "px": 164
+    },
+    {
+     "g": "jefe",
+     "k": "mago_hielo_cristal",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 1.368,
+     "px": 164
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x28",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_03.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "otro",
+     "k": "drawIceWall",
+     "img": "bosses/ice-wall_01.webp",
+     "s": 0.827,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_03.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-estampida.webp",
+     "s": 0.545,
+     "px": 140
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "abilities/holyShieldBubble_03.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_03.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/iceCrystal_01.webp",
+     "s": 1.309,
+     "px": 37
+    }
+   ],
+   "perf": {
+    "renderMs": 1.97,
+    "flushMs": 53.3
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 340x230",
+     "s": 2.16,
+     "px": 734
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 130x60",
+     "s": 2.4,
+     "px": 312
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x40",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_joven",
+     "img": "esqueleto_h/walk1.webp (derivado)",
+     "s": 1.495,
+     "px": 111
+    },
+    {
+     "g": "enemigo",
+     "k": "cangrejo_acorazado",
+     "img": "arana/atlas.webp (derivado)",
+     "s": 0.824,
+     "px": 147
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa_electrica",
+     "img": "acechador/atlas.webp (derivado)",
+     "s": 0.834,
+     "px": 182
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_joven",
+     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
+     "s": 1.502,
+     "px": 111
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x76",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 56x36",
+     "s": 2.4,
+     "px": 134
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 64
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.641,
+     "px": 164
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 150x80",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/waterSplash_04.webp",
+     "s": 0.828,
+     "px": 64
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/waterSplash_01.webp",
+     "s": 0.828,
+     "px": 64
+    }
+   ],
+   "perf": {
+    "renderMs": 4.09,
+    "flushMs": 257.4
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 340x230",
+     "s": 2.16,
+     "px": 734
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 130x60",
+     "s": 2.4,
+     "px": 312
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x40",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x76",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 56x36",
+     "s": 2.4,
+     "px": 134
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_blanco",
+     "img": "demonio_hielo_fuego/walk1.webp (derivado)",
+     "s": 2.271,
+     "px": 150
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_blanco",
+     "img": "demonio_hielo_fuego/walk1.webp (derivado) (derivado)",
+     "s": 2.271,
+     "px": 150
+    },
+    {
+     "g": "enemigo",
+     "k": "anguila_electrica",
+     "img": "anguila_electrica/idle_02.webp",
+     "s": 1.483,
+     "px": 105
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_joven",
+     "img": "esqueleto_h/walk1.webp (derivado)",
+     "s": 1.505,
+     "px": 111
+    },
+    {
+     "g": "enemigo",
+     "k": "sirena_abisal",
+     "img": "medusa/walk-strip.webp (derivado)",
+     "s": 0.957,
+     "px": 76
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "cangrejo_acorazado",
+     "img": "arana/atlas.webp (derivado)",
+     "s": 0.828,
+     "px": 147
+    },
+    {
+     "g": "enemigo",
+     "k": "cangrejo_acorazado",
+     "img": "arana/atlas.webp (derivado) (derivado)",
+     "s": 0.828,
+     "px": 147
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa_electrica",
+     "img": "acechador/atlas.webp (derivado)",
+     "s": 0.838,
+     "px": 183
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 70
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 150x80",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/waterSplash_01.webp",
+     "s": 0.828,
+     "px": 64
+    }
+   ],
+   "perf": {
+    "renderMs": 3.79,
+    "flushMs": 37.9
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 340x230",
+     "s": 2.16,
+     "px": 734
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 130x60",
+     "s": 2.4,
+     "px": 312
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "demonio_hielo_fuego/walk1.webp (derivado) (derivado)",
+     "s": 1.116,
+     "px": 286
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "arana/atlas.webp (derivado) (derivado)",
+     "s": 0.997,
+     "px": 218
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "acechador/atlas.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "anguila_electrica/death_05.webp (derivado)",
+     "s": 0.994,
+     "px": 168
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 56x36",
+     "s": 2.4,
+     "px": 134
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x40",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "jefe",
+     "k": "leviatan",
+     "img": "leviatan/coil_01.webp",
+     "s": 3.056,
+     "px": 278
+    },
+    {
+     "g": "jefe",
+     "k": "leviatan",
+     "img": "leviatan/coil_02.webp",
+     "s": 2.41,
+     "px": 255
+    },
+    {
+     "g": "jefe",
+     "k": "leviatan",
+     "img": "leviatan/head_01.webp",
+     "s": 4.242,
+     "px": 479
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "lev_tentaculo",
+     "img": "kraken_joven/tent_02.webp",
+     "s": 2.735,
+     "px": 156
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.549,
+     "px": 84
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x76",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/iceCrystal_01.webp",
+     "s": 1.4,
+     "px": 39
+    }
+   ],
+   "perf": {
+    "renderMs": 6.74,
+    "flushMs": 179.4
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x290",
+     "s": 2.04,
+     "px": 857
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x50",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 80x50",
+     "s": 2.4,
+     "px": 192
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 1300x900",
+     "s": 2.4,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "escorpion_gigante/walk-strip.webp (derivado)",
+     "s": 0.994,
+     "px": 168
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x26",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_piedra",
+     "img": "v2/atlas.webp",
+     "s": 1.465,
+     "px": 141
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 64
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x90",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "enemigo",
+     "k": "escorpion_gigante",
+     "img": "escorpion_gigante/walk-strip.webp",
+     "s": 1.42,
+     "px": 78
+    },
+    {
+     "g": "enemigo",
+     "k": "escorpion_gigante",
+     "img": "escorpion_gigante/walk-strip.webp (derivado)",
+     "s": 1.42,
+     "px": 78
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.594,
+     "px": 152
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.997,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    }
+   ],
+   "perf": {
+    "renderMs": 2.78,
+    "flushMs": 29.8
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x290",
+     "s": 2.04,
+     "px": 857
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x50",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 80x50",
+     "s": 2.4,
+     "px": 192
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 1300x900",
+     "s": 2.4,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x90",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "enemigo",
+     "k": "esfinge",
+     "img": "v3/atlas.webp (derivado)",
+     "s": 2.054,
+     "px": 224
+    },
+    {
+     "g": "enemigo",
+     "k": "druida_arena",
+     "img": "druida_arena/walk-strip.webp",
+     "s": 1.144,
+     "px": 93
+    },
+    {
+     "g": "enemigo",
+     "k": "druida_arena",
+     "img": "druida_arena/walk-strip.webp (derivado)",
+     "s": 1.144,
+     "px": 93
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 69
+    },
+    {
+     "g": "enemigo",
+     "k": "escorpion_gigante",
+     "img": "escorpion_gigante/walk-strip.webp",
+     "s": 1.416,
+     "px": 78
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x26",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa",
+     "img": "medusa/walk-strip.webp",
+     "s": 1.038,
+     "px": 82
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_piedra",
+     "img": "v2/atlas.webp",
+     "s": 1.465,
+     "px": 141
+    },
+    {
+     "g": "efectos",
+     "k": "drawFxContrastTop",
+     "img": "canvas 96x96",
+     "s": 0.613,
+     "px": 59
+    }
+   ],
+   "perf": {
+    "renderMs": 3.49,
+    "flushMs": 65.2
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x290",
+     "s": 2.04,
+     "px": 857
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x50",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 80x50",
+     "s": 2.4,
+     "px": 192
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 1300x900",
+     "s": 2.4,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "laberinto/csMinoWave_0.webp",
+     "s": 3.038,
+     "px": 437
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "druida_arena/walk-strip.webp (derivado)",
+     "s": 0.997,
+     "px": 218
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "medusa/walk-strip.webp (derivado)",
+     "s": 0.998,
+     "px": 202
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 0.646,
+     "px": 163
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "escorpion_gigante/walk-strip.webp (derivado)",
+     "s": 0.994,
+     "px": 168
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "v3/atlas.webp (derivado) (derivado)",
+     "s": 1.116,
+     "px": 286
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x26",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x90",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "jefe",
+     "k": "minotauro",
+     "img": "v3/atlas.webp",
+     "s": 3.238,
+     "px": 473
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 70
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "laberinto/csMinoAxe_0.webp",
+     "s": 1.6,
+     "px": 213
+    }
+   ],
+   "perf": {
+    "renderMs": 6.65,
+    "flushMs": 188.6
+   }
+  },
+  {
+   "arena": "abismo",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x179",
+     "s": 2.4,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 176x196",
+     "s": 2.4,
+     "px": 422
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x178",
+     "s": 2.4,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 181x186",
+     "s": 2.4,
+     "px": 434
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 57x194",
+     "s": 2.4,
+     "px": 137
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 139x217",
+     "s": 2.4,
+     "px": 334
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 220x153",
+     "s": 2.4,
+     "px": 528
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 96x181",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 137x173",
+     "s": 2.4,
+     "px": 329
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 147x141",
+     "s": 2.4,
+     "px": 353
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "ab_errante/atlas.webp (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_errante",
+     "img": "ab_errante/atlas.webp",
+     "s": 1.532,
+     "px": 86
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/pilares_0.webp",
+     "s": 1.458,
+     "px": 47
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/portal_activo_0.webp",
+     "s": 2.093,
+     "px": 186
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 68
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/altar_0.webp",
+     "s": 1.655,
+     "px": 156
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 114
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_acechador",
+     "img": "ab_acechador/atlas.webp",
+     "s": 1.787,
+     "px": 107
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.344,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado)",
+     "s": 0.344,
+     "px": 58
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abismo/abAcechImpact_0.webp",
+     "s": 1.371,
+     "px": 139
+    }
+   ],
+   "perf": {
+    "renderMs": 1.41,
+    "flushMs": 43.8
+   }
+  },
+  {
+   "arena": "abismo",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x179",
+     "s": 2.4,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 176x196",
+     "s": 2.4,
+     "px": 422
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x178",
+     "s": 2.4,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 181x186",
+     "s": 2.4,
+     "px": 434
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 57x194",
+     "s": 2.4,
+     "px": 137
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 139x217",
+     "s": 2.4,
+     "px": 334
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 220x153",
+     "s": 2.4,
+     "px": 528
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 96x181",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 137x173",
+     "s": 2.4,
+     "px": 329
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 147x141",
+     "s": 2.4,
+     "px": 353
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/pilares_0.webp",
+     "s": 1.458,
+     "px": 47
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/portal_activo_0.webp",
+     "s": 2.093,
+     "px": 186
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_jinete",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 1.767,
+     "px": 145
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_jinete",
+     "img": "v2/atlas.webp (derivado) (derivado)",
+     "s": 1.767,
+     "px": 145
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_tentaculo",
+     "img": "abismo/tent_grande_0.webp",
+     "s": 1.677,
+     "px": 176
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/altar_0.webp",
+     "s": 1.655,
+     "px": 156
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_tejedor",
+     "img": "ab_tejedor/atlas.webp",
+     "s": 2.422,
+     "px": 121
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 54
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_errante",
+     "img": "ab_errante/atlas.webp",
+     "s": 1.527,
+     "px": 85
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_devorador",
+     "img": "ab_devorador/atlas.webp",
+     "s": 2.891,
+     "px": 173
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_acechador",
+     "img": "ab_acechador/atlas.webp",
+     "s": 1.779,
+     "px": 107
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_heraldo",
+     "img": "ab_heraldo/atlas.webp",
+     "s": 1.683,
+     "px": 91
+    }
+   ],
+   "perf": {
+    "renderMs": 7.93,
+    "flushMs": 225.1
+   }
+  },
+  {
+   "arena": "abismo",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "abismo/ojo_idle_2.webp",
+     "s": 5.018,
+     "px": 306
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "abismo/tent_grande_0.webp",
+     "s": 3.524,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x178",
+     "s": 2.4,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x179",
+     "s": 2.4,
+     "px": 370
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 176x196",
+     "s": 2.4,
+     "px": 422
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 201x89",
+     "s": 2.4,
+     "px": 482
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 181x186",
+     "s": 2.4,
+     "px": 434
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 57x194",
+     "s": 2.4,
+     "px": 137
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 139x217",
+     "s": 2.4,
+     "px": 334
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 220x153",
+     "s": 2.4,
+     "px": 528
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 96x181",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 137x173",
+     "s": 2.4,
+     "px": 329
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 147x141",
+     "s": 2.4,
+     "px": 353
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "ab_errante/atlas.webp (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/pilares_0.webp",
+     "s": 1.234,
+     "px": 39
+    },
+    {
+     "g": "jefe",
+     "k": "ab_morador",
+     "img": "abismo/tex_carne.webp",
+     "s": 5.938,
+     "px": 333
+    },
+    {
+     "g": "jefe",
+     "k": "ab_morador",
+     "img": "abismo/tent_segmento_2.webp",
+     "s": 1.018,
+     "px": 42
+    },
+    {
+     "g": "jefe",
+     "k": "ab_morador",
+     "img": "abismo/ojo_idle_3.webp",
+     "s": 3.298,
+     "px": 188
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-torbellino.webp",
+     "s": 0.563,
+     "px": 144
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/portal_cerrado_0.webp",
+     "s": 1.895,
+     "px": 108
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_tentaculo",
+     "img": "abismo/tent_grande_0.webp",
+     "s": 1.68,
+     "px": 176
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "abismo/altar_0.webp",
+     "s": 1.655,
+     "px": 156
+    }
+   ],
+   "perf": {
+    "renderMs": 2.53,
+    "flushMs": 557.3
+   }
+  },
+  {
+   "arena": "minas",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_lampara_encendida.webp",
+     "s": 1.953,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_carbon.webp",
+     "s": 1.182,
+     "px": 59
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/andamio_0.webp",
+     "s": 2.028,
+     "px": 110
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_caja_rota.webp",
+     "s": 1.35,
+     "px": 53
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_barril.webp",
+     "s": 1.696,
+     "px": 44
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_cubo_piedra.webp",
+     "s": 1.478,
+     "px": 108
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/riel_0.webp",
+     "s": 1.521,
+     "px": 70
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.997,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 54
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 64
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_piedras.webp",
+     "s": 1.179,
+     "px": 91
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_caja.webp",
+     "s": 1.194,
+     "px": 61
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_vagoneta.webp",
+     "s": 1.552,
+     "px": 113
+    }
+   ],
+   "perf": {
+    "renderMs": 3.82,
+    "flushMs": 166.1
+   }
+  },
+  {
+   "arena": "minas",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_lampara_encendida.webp",
+     "s": 1.953,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_antorcha.webp",
+     "s": 1.8,
+     "px": 65
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_caja_chica.webp",
+     "s": 1.363,
+     "px": 50
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_carbon.webp",
+     "s": 1.046,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/andamio_0.webp",
+     "s": 2.028,
+     "px": 110
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_caja.webp",
+     "s": 1.428,
+     "px": 73
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_balde.webp",
+     "s": 1.572,
+     "px": 39
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_consumidor",
+     "img": "mn_consumidor/atlas.webp",
+     "s": 2.342,
+     "px": 94
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_devoraluz",
+     "img": "mn_devoraluz/atlas.webp",
+     "s": 3.165,
+     "px": 215
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_escupidor",
+     "img": "mn_escupidor/atlas.webp",
+     "s": 2.481,
+     "px": 94
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_esclavo",
+     "img": "mn_esclavo/atlas.webp",
+     "s": 2.144,
+     "px": 105
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_esclavo",
+     "img": "mn_esclavo/atlas.webp (derivado)",
+     "s": 2.144,
+     "px": 105
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-torbellino.webp",
+     "s": 0.544,
+     "px": 139
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_vagoneta.webp",
+     "s": 1.333,
+     "px": 97
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_minero",
+     "img": "mn_minero/atlas.webp",
+     "s": 2.178,
+     "px": 183
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_piedras.webp",
+     "s": 1.101,
+     "px": 85
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_insecto",
+     "img": "mn_insecto/atlas.webp",
+     "s": 1.96,
+     "px": 90
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_rocas_grandes.webp",
+     "s": 1.352,
+     "px": 147
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_acechador",
+     "img": "mn_acechador/atlas.webp",
+     "s": 2.855,
+     "px": 154
+    }
+   ],
+   "perf": {
+    "renderMs": 12.73,
+    "flushMs": 213.3
+   }
+  },
+  {
+   "arena": "minas",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_caja.webp (derivado)",
+     "s": 1.375,
+     "px": 70
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_vagoneta.webp (derivado)",
+     "s": 1.264,
+     "px": 92
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_lampara_encendida.webp",
+     "s": 1.953,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_herramientas.webp (derivado)",
+     "s": 0.875,
+     "px": 59
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/riel_0.webp",
+     "s": 1.521,
+     "px": 70
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_estacas.webp (derivado)",
+     "s": 1.268,
+     "px": 95
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_piedras.webp (derivado)",
+     "s": 1.203,
+     "px": 93
+    },
+    {
+     "g": "jefe",
+     "k": "mn_cerbero",
+     "img": "mn_cerbero/atlas.webp",
+     "s": 6.197,
+     "px": 335
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_caja_rota.webp (derivado)",
+     "s": 1.343,
+     "px": 52
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 64
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_01.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/andamio_0.webp",
+     "s": 2.028,
+     "px": 110
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_barril.webp (derivado)",
+     "s": 1.329,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_antorcha.webp",
+     "s": 1.8,
+     "px": 65
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/mnHowl_1.png",
+     "s": 0.462,
+     "px": 12
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "minas/x_carbon.webp (derivado)",
+     "s": 1.182,
+     "px": 59
+    }
+   ],
+   "perf": {
+    "renderMs": 14.7,
+    "flushMs": 130.4
+   }
+  },
+  {
+   "arena": "infernal",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 280x200",
+     "s": 2.28,
+     "px": 638
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 150x60",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 90x50",
+     "s": 2.4,
+     "px": 216
+    },
+    {
+     "g": "otro",
+     "k": "infDrawMural",
+     "img": "canvas 132x54",
+     "s": 2.882,
+     "px": 380
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 28x28",
+     "s": 1.08,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.02,
+     "px": 49
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto/atlas.webp (derivado)",
+     "s": 0.647,
+     "px": 120
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/walk1.webp",
+     "s": 1.67,
+     "px": 57
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x70",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/walk1.webp",
+     "s": 1.99,
+     "px": 90
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto",
+     "img": "esqueleto/atlas.webp",
+     "s": 0.75,
+     "px": 89
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.4,
+     "px": 43
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 64x44",
+     "s": 2.4,
+     "px": 154
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x24",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/walk3.webp",
+     "s": 1.988,
+     "px": 85
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/walk2.webp",
+     "s": 1.665,
+     "px": 55
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 61
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.593,
+     "px": 152
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.343,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/atk1.webp",
+     "s": 1.991,
+     "px": 111
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/walk4.webp",
+     "s": 2.092,
+     "px": 94
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/walk3.webp",
+     "s": 1.67,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 34x62",
+     "s": 2.4,
+     "px": 82
+    }
+   ],
+   "perf": {
+    "renderMs": 12.77,
+    "flushMs": 412
+   }
+  },
+  {
+   "arena": "infernal",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 280x200",
+     "s": 2.28,
+     "px": 638
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 150x60",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 90x50",
+     "s": 2.4,
+     "px": 216
+    },
+    {
+     "g": "otro",
+     "k": "infDrawMural",
+     "img": "canvas 132x54",
+     "s": 2.882,
+     "px": 380
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x70",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x24",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.4,
+     "px": 43
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 64x44",
+     "s": 2.4,
+     "px": 154
+    },
+    {
+     "g": "enemigo",
+     "k": "golem",
+     "img": "v2/atlas.webp",
+     "s": 2.147,
+     "px": 185
+    },
+    {
+     "g": "enemigo",
+     "k": "demonio_mago",
+     "img": "demonio_mago/atlas.webp",
+     "s": 1.031,
+     "px": 123
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.997,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto",
+     "img": "esqueleto/atlas.webp",
+     "s": 0.747,
+     "px": 89
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "enemigo",
+     "k": "demonio_menor",
+     "img": "demonio_menor/atlas.webp",
+     "s": 0.951,
+     "px": 113
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/hit1.webp",
+     "s": 1.983,
+     "px": 99
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/hit1.webp (derivado)",
+     "s": 1.983,
+     "px": 99
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/idle1.webp",
+     "s": 1.66,
+     "px": 53
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.354,
+     "px": 54
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 34x62",
+     "s": 2.4,
+     "px": 82
+    }
+   ],
+   "perf": {
+    "renderMs": 12.49,
+    "flushMs": 86.6
+   }
+  },
+  {
+   "arena": "infernal",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 280x200",
+     "s": 2.28,
+     "px": 638
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 150x60",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 90x50",
+     "s": 2.4,
+     "px": 216
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.311,
+     "px": 86
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "demonio_mago/atlas.webp (derivado)",
+     "s": 0.997,
+     "px": 235
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "demonio_menor/atlas.webp (derivado)",
+     "s": 0.997,
+     "px": 235
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto/atlas.webp (derivado)",
+     "s": 0.647,
+     "px": 120
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "zombie/death3.webp (derivado)",
+     "s": 0.998,
+     "px": 202
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto_h/death3.webp (derivado)",
+     "s": 0.997,
+     "px": 235
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x70",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.4,
+     "px": 43
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 64x44",
+     "s": 2.4,
+     "px": 154
+    },
+    {
+     "g": "jefe",
+     "k": "angel_corrompido",
+     "img": "canvas 816x565",
+     "s": 2.172,
+     "px": 222
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_02.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.383,
+     "px": 70
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "abilities/holyShieldBubble_02.webp",
+     "s": 0.69,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x24",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 34x62",
+     "s": 2.4,
+     "px": 82
+    }
+   ],
+   "perf": {
+    "renderMs": 11.08,
+    "flushMs": 406.3
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes1",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp",
+     "s": 0.396,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 3.02,
+    "flushMs": 541.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes2",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "segador",
+     "img": "v2/atlas.webp",
+     "s": 0.895,
+     "px": 81
+    },
+    {
+     "g": "guardian",
+     "k": "axiom",
+     "img": "v2/atlas.webp",
+     "s": 0.872,
+     "px": 77
+    },
+    {
+     "g": "guardian",
+     "k": "profeta",
+     "img": "v2/atlas.webp",
+     "s": 0.889,
+     "px": 83
+    },
+    {
+     "g": "guardian",
+     "k": "musashi",
+     "img": "v2/atlas.webp",
+     "s": 0.929,
+     "px": 85
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 3.23,
+    "flushMs": 21.8
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes3",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "cazadora",
+     "img": "v2/atlas.webp",
+     "s": 0.967,
+     "px": 87
+    },
+    {
+     "g": "guardian",
+     "k": "nigromante",
+     "img": "v2/atlas.webp",
+     "s": 0.85,
+     "px": 137
+    },
+    {
+     "g": "guardian",
+     "k": "libertador",
+     "img": "v2/atlas.webp",
+     "s": 1.001,
+     "px": 103
+    },
+    {
+     "g": "guardian",
+     "k": "eren",
+     "img": "v2/atlas.webp",
+     "s": 1.104,
+     "px": 141
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 2.94,
+    "flushMs": 287.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes4",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "ynara",
+     "img": "ynara/atlas.png",
+     "s": 1.006,
+     "px": 97
+    },
+    {
+     "g": "guardian",
+     "k": "myla",
+     "img": "myla/atlas.png",
+     "s": 0.903,
+     "px": 87
+    },
+    {
+     "g": "guardian",
+     "k": "brasa",
+     "img": "brasa/atlas.webp",
+     "s": 1.011,
+     "px": 97
+    },
+    {
+     "g": "guardian",
+     "k": "eslabon",
+     "img": "eslabon/atlas.webp",
+     "s": 1.062,
+     "px": 102
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 6.32,
+    "flushMs": 135
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes5",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "morwen",
+     "img": "morwen/atlas.webp",
+     "s": 1.029,
+     "px": 99
+    },
+    {
+     "g": "guardian",
+     "k": "farolero",
+     "img": "farolero/atlas.webp",
+     "s": 1.117,
+     "px": 107
+    },
+    {
+     "g": "guardian",
+     "k": "iria",
+     "img": "iria/atlas.webp",
+     "s": 1.027,
+     "px": 99
+    },
+    {
+     "g": "guardian",
+     "k": "vesper",
+     "img": "vesper/atlas.png",
+     "s": 1.275,
+     "px": 143
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 12.74,
+    "flushMs": 80.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes6",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "nahir",
+     "img": "nahir/atlas.png",
+     "s": 1.15,
+     "px": 129
+    },
+    {
+     "g": "guardian",
+     "k": "baltra",
+     "img": "baltra/atlas.png",
+     "s": 1.305,
+     "px": 146
+    },
+    {
+     "g": "guardian",
+     "k": "maura",
+     "img": "maura/atlas.png",
+     "s": 1.085,
+     "px": 122
+    },
+    {
+     "g": "guardian",
+     "k": "dariel",
+     "img": "dariel/atlas.png",
+     "s": 1.138,
+     "px": 127
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 5.13,
+    "flushMs": 20.6
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes7",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "orsa",
+     "img": "orsa/atlas.png",
+     "s": 1.129,
+     "px": 126
+    },
+    {
+     "g": "guardian",
+     "k": "tibor",
+     "img": "tibor/atlas.png",
+     "s": 1.009,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "zahra",
+     "img": "zahra/atlas.png",
+     "s": 1.103,
+     "px": 124
+    },
+    {
+     "g": "guardian",
+     "k": "renko",
+     "img": "renko/atlas.png",
+     "s": 1.495,
+     "px": 167
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 3.08,
+    "flushMs": 35.7
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes8",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "sira",
+     "img": "sira/atlas.png",
+     "s": 1.24,
+     "px": 139
+    },
+    {
+     "g": "guardian",
+     "k": "nano_gm",
+     "img": "nano_gm/atlas.png",
+     "s": 1.055,
+     "px": 118
+    },
+    {
+     "g": "guardian",
+     "k": "facu_gm",
+     "img": "facu_gm/atlas.png",
+     "s": 1.055,
+     "px": 118
+    },
+    {
+     "g": "guardian",
+     "k": "aurelia",
+     "img": "aurelia/atlas.png",
+     "s": 1.103,
+     "px": 124
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 4.38,
+    "flushMs": 47.6
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes9",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "khepri",
+     "img": "khepri/atlas.png",
+     "s": 0.943,
+     "px": 106
+    },
+    {
+     "g": "guardian",
+     "k": "velmira",
+     "img": "velmira/atlas.png",
+     "s": 0.997,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "vhal",
+     "img": "vhal/atlas.png",
+     "s": 1.102,
+     "px": 123
+    },
+    {
+     "g": "guardian",
+     "k": "bront",
+     "img": "bront/atlas.png",
+     "s": 1.121,
+     "px": 126
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 4.9,
+    "flushMs": 76.9
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes10",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "ciudad/barril_0.webp",
+     "s": 0.587,
+     "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/farol_0.webp",
+     "s": 3.6,
+     "px": 122
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/tex_ventana.webp",
+     "s": 0.631,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/escombros_0.webp",
+     "s": 1.65,
+     "px": 56
+    },
+    {
+     "g": "guardian",
+     "k": "oriel",
+     "img": "oriel/atlas.png",
+     "s": 1.071,
+     "px": 120
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp",
+     "s": 0.342,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp",
+     "s": 0.278,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "ciudad/reja_0.webp",
+     "s": 1.388,
+     "px": 79
+    }
+   ],
+   "perf": {
+    "renderMs": 1.13,
+    "flushMs": 52.1
+   }
+  }
+ ],
+ "grupos": {
+  "decorado": {
+   "n": 387,
+   "min": 0.462,
+   "med": 2.04,
+   "max": 5.018,
+   "efMed": 2.04
+  },
+  "enemigo": {
+   "n": 122,
+   "min": 0.309,
+   "med": 1.446,
+   "max": 3.532,
+   "efMed": 1.446
+  },
+  "guardian": {
+   "n": 176,
+   "min": 0.278,
+   "med": 0.544,
+   "max": 1.495,
+   "efMed": 1
+  },
+  "otro": {
+   "n": 6,
+   "min": 0.307,
+   "med": 0.307,
+   "max": 2.882,
+   "efMed": 1
+  },
+  "jefe": {
+   "n": 16,
+   "min": 0.281,
+   "med": 2.581,
+   "max": 6.197,
+   "efMed": 2.581
+  },
+  "efectos": {
+   "n": 19,
+   "min": 0.495,
+   "med": 0.893,
+   "max": 3.72,
+   "efMed": 1
+  }
+ },
+ "entidades": [
+  {
+   "g": "jefe",
+   "k": "mn_cerbero",
+   "med": 6.197,
+   "min": 6.197,
+   "max": 6.197,
+   "arenas": "minas",
+   "img": "mn_cerbero/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_campanero",
+   "med": 3.532,
+   "min": 3.532,
+   "max": 3.532,
+   "arenas": "ciudad",
+   "img": "cm_campanero/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_verdugo",
+   "med": 3.381,
+   "min": 3.381,
+   "max": 3.381,
+   "arenas": "ciudad",
+   "img": "cm_verdugo/atlas.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "ab_morador",
+   "med": 3.298,
+   "min": 1.018,
+   "max": 5.938,
+   "arenas": "abismo",
+   "img": "abismo/tex_carne.webp | abismo/tent_segmento_2.webp | abismo/ojo_idle_3.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "minotauro",
+   "med": 3.238,
+   "min": 3.238,
+   "max": 3.238,
+   "arenas": "laberinto",
+   "img": "v3/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_acechante",
+   "med": 3.197,
+   "min": 3.197,
+   "max": 3.197,
+   "arenas": "ciudad",
+   "img": "cm_acechante/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_devoraluz",
+   "med": 3.165,
+   "min": 3.165,
+   "max": 3.165,
+   "arenas": "minas",
+   "img": "mn_devoraluz/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_perro",
+   "med": 3.094,
+   "min": 3.094,
+   "max": 3.094,
+   "arenas": "ciudad",
+   "img": "cm_perro/atlas.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "leviatan",
+   "med": 3.056,
+   "min": 2.41,
+   "max": 4.242,
+   "arenas": "acuatica",
+   "img": "leviatan/coil_01.webp | leviatan/coil_02.webp | leviatan/head_01.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_espectro",
+   "med": 2.909,
+   "min": 2.909,
+   "max": 2.909,
+   "arenas": "ciudad",
+   "img": "cm_espectro/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_devorador",
+   "med": 2.891,
+   "min": 2.891,
+   "max": 2.891,
+   "arenas": "abismo",
+   "img": "ab_devorador/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_acechador",
+   "med": 2.855,
+   "min": 2.855,
+   "max": 2.855,
+   "arenas": "minas",
+   "img": "mn_acechador/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "lev_tentaculo",
+   "med": 2.735,
+   "min": 2.735,
+   "max": 2.735,
+   "arenas": "acuatica",
+   "img": "kraken_joven/tent_02.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_raptor",
+   "med": 2.595,
+   "min": 2.595,
+   "max": 2.611,
+   "arenas": "ciudad",
+   "img": "cm_raptor/atlas.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "demonio_mayor",
+   "med": 2.581,
+   "min": 2.581,
+   "max": 2.581,
+   "arenas": "fortaleza",
+   "img": "demonio_mayor/atlas.webp | demonio_mayor/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_sectario",
+   "med": 2.488,
+   "min": 2.488,
+   "max": 2.488,
+   "arenas": "ciudad",
+   "img": "cm_sectario/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_escupidor",
+   "med": 2.481,
+   "min": 2.481,
+   "max": 2.481,
+   "arenas": "minas",
+   "img": "mn_escupidor/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_tejedor",
+   "med": 2.422,
+   "min": 2.422,
+   "max": 2.422,
+   "arenas": "abismo",
+   "img": "ab_tejedor/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_planidera",
+   "med": 2.367,
+   "min": 2.367,
+   "max": 2.367,
+   "arenas": "ciudad",
+   "img": "cm_planidera/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_consumidor",
+   "med": 2.342,
+   "min": 2.342,
+   "max": 2.342,
+   "arenas": "minas",
+   "img": "mn_consumidor/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ent",
+   "med": 2.329,
+   "min": 2.329,
+   "max": 2.329,
+   "arenas": "bosque",
+   "img": "ent/idle1.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "tiburon_blanco",
+   "med": 2.271,
+   "min": 2.271,
+   "max": 2.271,
+   "arenas": "acuatica",
+   "img": "demonio_hielo_fuego/walk1.webp (derivado) | demonio_hielo_fuego/walk1.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_saqueador",
+   "med": 2.258,
+   "min": 2.258,
+   "max": 2.259,
+   "arenas": "ciudad",
+   "img": "cm_saqueador/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_minero",
+   "med": 2.178,
+   "min": 2.178,
+   "max": 2.178,
+   "arenas": "minas",
+   "img": "mn_minero/atlas.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "angel_corrompido",
+   "med": 2.172,
+   "min": 2.172,
+   "max": 2.172,
+   "arenas": "infernal",
+   "img": "canvas 816x565"
+  },
+  {
+   "g": "enemigo",
+   "k": "golem",
+   "med": 2.147,
+   "min": 2.147,
+   "max": 2.147,
+   "arenas": "infernal",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_esclavo",
+   "med": 2.144,
+   "min": 2.144,
+   "max": 2.144,
+   "arenas": "minas",
+   "img": "mn_esclavo/atlas.webp | mn_esclavo/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "esfinge",
+   "med": 2.054,
+   "min": 2.054,
+   "max": 2.054,
+   "arenas": "laberinto",
+   "img": "v3/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "esqueleto_h",
+   "med": 1.988,
+   "min": 1.983,
+   "max": 2.092,
+   "arenas": "infernal",
+   "img": "esqueleto_h/walk1.webp | esqueleto_h/walk3.webp | esqueleto_h/atk1.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "mn_insecto",
+   "med": 1.96,
+   "min": 1.96,
+   "max": 1.96,
+   "arenas": "minas",
+   "img": "mn_insecto/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_acechador",
+   "med": 1.779,
+   "min": 1.779,
+   "max": 1.787,
+   "arenas": "abismo",
+   "img": "ab_acechador/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "demonio_hielo_fuego",
+   "med": 1.776,
+   "min": 1.776,
+   "max": 1.776,
+   "arenas": "hielo",
+   "img": "demonio_hielo_fuego/idle1.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_jinete",
+   "med": 1.767,
+   "min": 1.767,
+   "max": 1.767,
+   "arenas": "abismo",
+   "img": "v2/atlas.webp (derivado) | v2/atlas.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_heraldo",
+   "med": 1.683,
+   "min": 1.683,
+   "max": 1.683,
+   "arenas": "abismo",
+   "img": "ab_heraldo/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_tentaculo",
+   "med": 1.677,
+   "min": 1.677,
+   "max": 1.68,
+   "arenas": "abismo",
+   "img": "abismo/tent_grande_0.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "zombie",
+   "med": 1.665,
+   "min": 1.66,
+   "max": 1.67,
+   "arenas": "infernal",
+   "img": "zombie/walk1.webp | zombie/walk2.webp | zombie/walk3.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "cm_presentador",
+   "med": 1.662,
+   "min": 1.662,
+   "max": 1.662,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "golem_hielo",
+   "med": 1.591,
+   "min": 1.591,
+   "max": 1.597,
+   "arenas": "hielo",
+   "img": "golem_hielo/walk1.webp | golem_hielo/walk2.webp | golem_hielo/walk3.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cu_sith",
+   "med": 1.529,
+   "min": 1.529,
+   "max": 1.529,
+   "arenas": "bosque",
+   "img": "v3/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_errante",
+   "med": 1.527,
+   "min": 1.527,
+   "max": 1.532,
+   "arenas": "abismo",
+   "img": "ab_errante/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "bestia_bosque",
+   "med": 1.525,
+   "min": 1.525,
+   "max": 1.529,
+   "arenas": "bosque",
+   "img": "bestia_bosque/atk1.webp (derivado) (derivado) | bestia_bosque/idle2.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "tiburon_joven",
+   "med": 1.502,
+   "min": 1.495,
+   "max": 1.505,
+   "arenas": "acuatica",
+   "img": "esqueleto_h/walk1.webp (derivado) | esqueleto_h/walk1.webp (derivado) (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "renko",
+   "med": 1.495,
+   "min": 1.495,
+   "max": 1.495,
+   "arenas": "ciudad",
+   "img": "renko/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "anguila_electrica",
+   "med": 1.483,
+   "min": 1.483,
+   "max": 1.483,
+   "arenas": "acuatica",
+   "img": "anguila_electrica/idle_02.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "golem_piedra",
+   "med": 1.465,
+   "min": 1.465,
+   "max": 1.465,
+   "arenas": "laberinto",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "duende_bosque",
+   "med": 1.436,
+   "min": 1.433,
+   "max": 1.446,
+   "arenas": "bosque",
+   "img": "duende_bosque/walk4.webp (derivado) (derivado) | duende_bosque/walk5.webp (derivado) (derivado) | duende_bosque/walk3.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "escorpion_gigante",
+   "med": 1.42,
+   "min": 1.416,
+   "max": 1.42,
+   "arenas": "laberinto",
+   "img": "escorpion_gigante/walk-strip.webp | escorpion_gigante/walk-strip.webp (derivado)"
+  },
+  {
+   "g": "jefe",
+   "k": "mago_hielo_cristal",
+   "med": 1.368,
+   "min": 1.368,
+   "max": 1.368,
+   "arenas": "hielo",
+   "img": "v2/atlas.webp | v2/atlas.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "baltra",
+   "med": 1.305,
+   "min": 1.305,
+   "max": 1.305,
+   "arenas": "ciudad",
+   "img": "baltra/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "vesper",
+   "med": 1.275,
+   "min": 1.275,
+   "max": 1.275,
+   "arenas": "ciudad",
+   "img": "vesper/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "enjambre_hadas",
+   "med": 1.252,
+   "min": 0.309,
+   "max": 1.253,
+   "arenas": "bosque",
+   "img": "v3/atlas.webp | vendor/cadena-relampagos.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "sira",
+   "med": 1.24,
+   "min": 1.24,
+   "max": 1.24,
+   "arenas": "ciudad",
+   "img": "sira/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "nahir",
+   "med": 1.15,
+   "min": 1.15,
+   "max": 1.15,
+   "arenas": "ciudad",
+   "img": "nahir/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "druida_arena",
+   "med": 1.144,
+   "min": 1.144,
+   "max": 1.144,
+   "arenas": "laberinto",
+   "img": "druida_arena/walk-strip.webp | druida_arena/walk-strip.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "dariel",
+   "med": 1.138,
+   "min": 1.138,
+   "max": 1.138,
+   "arenas": "ciudad",
+   "img": "dariel/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "orsa",
+   "med": 1.129,
+   "min": 1.129,
+   "max": 1.129,
+   "arenas": "ciudad",
+   "img": "orsa/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "bront",
+   "med": 1.121,
+   "min": 1.121,
+   "max": 1.121,
+   "arenas": "ciudad",
+   "img": "bront/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "farolero",
+   "med": 1.117,
+   "min": 1.117,
+   "max": 1.117,
+   "arenas": "ciudad",
+   "img": "farolero/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "eren",
+   "med": 1.104,
+   "min": 1.104,
+   "max": 1.104,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "zahra",
+   "med": 1.103,
+   "min": 1.103,
+   "max": 1.103,
+   "arenas": "ciudad",
+   "img": "zahra/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "aurelia",
+   "med": 1.103,
+   "min": 1.103,
+   "max": 1.103,
+   "arenas": "ciudad",
+   "img": "aurelia/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "vhal",
+   "med": 1.102,
+   "min": 1.102,
+   "max": 1.102,
+   "arenas": "ciudad",
+   "img": "vhal/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "dragoncito_hielo",
+   "med": 1.092,
+   "min": 1.092,
+   "max": 1.147,
+   "arenas": "hielo",
+   "img": "v2/atlas.webp | v2/atlas.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "maura",
+   "med": 1.085,
+   "min": 1.085,
+   "max": 1.085,
+   "arenas": "ciudad",
+   "img": "maura/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "oriel",
+   "med": 1.071,
+   "min": 1.071,
+   "max": 1.071,
+   "arenas": "ciudad",
+   "img": "oriel/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "hinchado",
+   "med": 1.069,
+   "min": 1.069,
+   "max": 1.069,
+   "arenas": "micelial",
+   "img": "hinchado/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "nucleo_micelial",
+   "med": 1.064,
+   "min": 1.059,
+   "max": 1.243,
+   "arenas": "micelial",
+   "img": "fx/nucleo_3.webp | fx/nucleo_2.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "eslabon",
+   "med": 1.062,
+   "min": 1.062,
+   "max": 1.062,
+   "arenas": "ciudad",
+   "img": "eslabon/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "nano_gm",
+   "med": 1.055,
+   "min": 1.055,
+   "max": 1.055,
+   "arenas": "ciudad",
+   "img": "nano_gm/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "facu_gm",
+   "med": 1.055,
+   "min": 1.055,
+   "max": 1.055,
+   "arenas": "ciudad",
+   "img": "facu_gm/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "medusa",
+   "med": 1.038,
+   "min": 1.038,
+   "max": 1.038,
+   "arenas": "laberinto",
+   "img": "medusa/walk-strip.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "demonio_mago",
+   "med": 1.031,
+   "min": 1.031,
+   "max": 1.031,
+   "arenas": "infernal",
+   "img": "demonio_mago/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "morwen",
+   "med": 1.029,
+   "min": 1.029,
+   "max": 1.029,
+   "arenas": "ciudad",
+   "img": "morwen/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "iria",
+   "med": 1.027,
+   "min": 1.027,
+   "max": 1.027,
+   "arenas": "ciudad",
+   "img": "iria/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "brasa",
+   "med": 1.011,
+   "min": 1.011,
+   "max": 1.011,
+   "arenas": "ciudad",
+   "img": "brasa/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "tibor",
+   "med": 1.009,
+   "min": 1.009,
+   "max": 1.009,
+   "arenas": "ciudad",
+   "img": "tibor/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "ynara",
+   "med": 1.006,
+   "min": 1.006,
+   "max": 1.006,
+   "arenas": "ciudad",
+   "img": "ynara/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "libertador",
+   "med": 1.001,
+   "min": 1.001,
+   "max": 1.001,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "soporte",
+   "med": 0.998,
+   "min": 0.69,
+   "max": 1.015,
+   "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
+   "img": "v2/atlas.png | abilities/holyShieldBubble_01.webp | v2/atlas.png (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "velmira",
+   "med": 0.997,
+   "min": 0.997,
+   "max": 0.997,
+   "arenas": "ciudad",
+   "img": "velmira/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "golem_cristal",
+   "med": 0.974,
+   "min": 0.974,
+   "max": 0.974,
+   "arenas": "hielo",
+   "img": "golem_cristal/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "cazadora",
+   "med": 0.967,
+   "min": 0.967,
+   "max": 0.967,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "sirena_abisal",
+   "med": 0.957,
+   "min": 0.957,
+   "max": 0.957,
+   "arenas": "acuatica",
+   "img": "medusa/walk-strip.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "demonio_menor",
+   "med": 0.951,
+   "min": 0.951,
+   "max": 0.951,
+   "arenas": "infernal",
+   "img": "demonio_menor/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "khepri",
+   "med": 0.943,
+   "min": 0.943,
+   "max": 0.943,
+   "arenas": "ciudad",
+   "img": "khepri/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "automata",
+   "med": 0.936,
+   "min": 0.936,
+   "max": 0.936,
+   "arenas": "fortaleza",
+   "img": "automata/atlas.webp | automata/atlas.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "musashi",
+   "med": 0.929,
+   "min": 0.929,
+   "max": 0.929,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "infectado",
+   "med": 0.925,
+   "min": 0.925,
+   "max": 0.925,
+   "arenas": "micelial",
+   "img": "infectado/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "raiz_absorcion",
+   "med": 0.916,
+   "min": 0.916,
+   "max": 0.916,
+   "arenas": "micelial",
+   "img": "fx/root_curl.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "peregrino",
+   "med": 0.907,
+   "min": 0.907,
+   "max": 0.907,
+   "arenas": "micelial",
+   "img": "peregrino/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "myla",
+   "med": 0.903,
+   "min": 0.903,
+   "max": 0.903,
+   "arenas": "ciudad",
+   "img": "myla/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "angel_hielo",
+   "med": 0.899,
+   "min": 0.899,
+   "max": 0.899,
+   "arenas": "hielo",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "segador",
+   "med": 0.895,
+   "min": 0.895,
+   "max": 0.895,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "carcelero",
+   "med": 0.894,
+   "min": 0.894,
+   "max": 0.894,
+   "arenas": "fortaleza",
+   "img": "carcelero/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "profeta",
+   "med": 0.889,
+   "min": 0.889,
+   "max": 0.889,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "axiom",
+   "med": 0.872,
+   "min": 0.872,
+   "max": 0.872,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "nigromante",
+   "med": 0.85,
+   "min": 0.85,
+   "max": 0.85,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "medusa_electrica",
+   "med": 0.834,
+   "min": 0.834,
+   "max": 0.838,
+   "arenas": "acuatica",
+   "img": "acechador/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "cangrejo_acorazado",
+   "med": 0.828,
+   "min": 0.824,
+   "max": 0.828,
+   "arenas": "acuatica",
+   "img": "arana/atlas.webp (derivado) | arana/atlas.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "verdugo",
+   "med": 0.825,
+   "min": 0.825,
+   "max": 0.825,
+   "arenas": "fortaleza",
+   "img": "verdugo/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "dama_bosque",
+   "med": 0.823,
+   "min": 0.823,
+   "max": 0.823,
+   "arenas": "bosque",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "dragon_bronce",
+   "med": 0.818,
+   "min": 0.818,
+   "max": 0.818,
+   "arenas": "fortaleza",
+   "img": "dragon_bronce/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "acechador",
+   "med": 0.816,
+   "min": 0.816,
+   "max": 0.821,
+   "arenas": "micelial",
+   "img": "acechador/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "prisionero",
+   "med": 0.778,
+   "min": 0.778,
+   "max": 0.81,
+   "arenas": "fortaleza",
+   "img": "prisionero/atlas.webp | prisionero/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "hada_escarcha",
+   "med": 0.755,
+   "min": 0.309,
+   "max": 0.762,
+   "arenas": "hielo",
+   "img": "hada_escarcha/atlas.webp | hada_escarcha/atlas.webp (derivado) | vendor/cadena-relampagos.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "engendro",
+   "med": 0.753,
+   "min": 0.753,
+   "max": 0.753,
+   "arenas": "fortaleza",
+   "img": "engendro/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "esqueleto",
+   "med": 0.747,
+   "min": 0.747,
+   "max": 0.75,
+   "arenas": "infernal",
+   "img": "esqueleto/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "arana",
+   "med": 0.705,
+   "min": 0.705,
+   "max": 0.705,
+   "arenas": "fortaleza",
+   "img": "arana/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cristal_servo",
+   "med": 0.702,
+   "min": 0.702,
+   "max": 0.702,
+   "arenas": "hielo",
+   "img": "cristal_servo/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "sabueso",
+   "med": 0.671,
+   "min": 0.671,
+   "max": 0.674,
+   "arenas": "micelial",
+   "img": "sabueso/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "chaman",
+   "med": 0.67,
+   "min": 0.67,
+   "max": 0.67,
+   "arenas": "micelial",
+   "img": "chaman/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "lobo_artico",
+   "med": 0.607,
+   "min": 0.607,
+   "max": 0.607,
+   "arenas": "hielo",
+   "img": "lobo_artico/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cristal_volador",
+   "med": 0.601,
+   "min": 0.601,
+   "max": 0.601,
+   "arenas": "hielo",
+   "img": "cristal_volador/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "tanque",
+   "med": 0.383,
+   "min": 0.354,
+   "max": 0.69,
+   "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
+   "img": "tanque/atlas.webp | vendor/caballerito-torbellino.webp | tanque/atlas.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "guerrero",
+   "med": 0.343,
+   "min": 0.342,
+   "max": 0.69,
+   "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
+   "img": "guerrero/atlas.webp | abilities/holyShieldBubble_01.webp | abilities/holyShieldBubble_03.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "guardian_ancestral",
+   "med": 0.281,
+   "min": 0.281,
+   "max": 2.582,
+   "arenas": "bosque",
+   "img": "guardian_ancestral/atlas.webp | vendor/cadena-relampagos.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "mago",
+   "med": 0.278,
+   "min": 0.278,
+   "max": 0.69,
+   "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
+   "img": "mago/atlas.webp | abilities/holyShieldBubble_01.webp | abilities/holyShieldBubble_03.webp"
+  }
+ ],
+ "dispersion": [
+  {
+   "arena": "ciudad",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 3.6,
+   "actoresEfMax": 2.611,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 6.01,
+    "flushMs": 33.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 3.6,
+   "actoresEfMax": 3.532,
+   "actoresEfMed": 2.488,
+   "perf": {
+    "renderMs": 7.97,
+    "flushMs": 39.1
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.662,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 4.28,
+    "flushMs": 83.9
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.015,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 5.16,
+    "flushMs": 125.5
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 91.53,
+    "flushMs": 144.2
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.581,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 2.31,
+    "flushMs": 44.7
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.525,
+   "actoresEfMed": 1.253,
+   "perf": {
+    "renderMs": 2.91,
+    "flushMs": 75.1
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.329,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 5.72,
+    "flushMs": 30.7
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.582,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 5.54,
+    "flushMs": 76.3
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.243,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 120.02,
+    "flushMs": 77.9
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.069,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 104.82,
+    "flushMs": 13.3
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.013,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 186.74,
+    "flushMs": 9.4
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 3.72,
+   "actoresEfMax": 1.597,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 6.94,
+    "flushMs": 53.1
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.776,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 2.18,
+    "flushMs": 81.7
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.368,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 1.97,
+    "flushMs": 53.3
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.502,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 4.09,
+    "flushMs": 257.4
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.271,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 3.79,
+    "flushMs": 37.9
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 4.242,
+   "actoresEfMax": 4.242,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 6.74,
+    "flushMs": 179.4
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.465,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 2.78,
+    "flushMs": 29.8
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.054,
+   "actoresEfMed": 1.038,
+   "perf": {
+    "renderMs": 3.49,
+    "flushMs": 65.2
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 3.238,
+   "actoresEfMax": 3.238,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 6.65,
+    "flushMs": 188.6
+   }
+  },
+  {
+   "arena": "abismo",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.4,
+   "actoresEfMax": 1.787,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 1.41,
+    "flushMs": 43.8
+   }
+  },
+  {
+   "arena": "abismo",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.891,
+   "actoresEfMax": 2.891,
+   "actoresEfMed": 1.677,
+   "perf": {
+    "renderMs": 7.93,
+    "flushMs": 225.1
+   }
+  },
+  {
+   "arena": "abismo",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 5.938,
+   "actoresEfMax": 5.938,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 2.53,
+    "flushMs": 557.3
+   }
+  },
+  {
+   "arena": "minas",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.028,
+   "actoresEfMax": 1,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 3.82,
+    "flushMs": 166.1
+   }
+  },
+  {
+   "arena": "minas",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 3.165,
+   "actoresEfMax": 3.165,
+   "actoresEfMed": 2.144,
+   "perf": {
+    "renderMs": 12.73,
+    "flushMs": 213.3
+   }
+  },
+  {
+   "arena": "minas",
+   "escena": "jefe",
+   "crudoMin": 0.278,
+   "crudoMax": 6.197,
+   "actoresEfMax": 6.197,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 14.7,
+    "flushMs": 130.4
+   }
+  },
+  {
+   "arena": "infernal",
+   "escena": "oleada",
+   "crudoMin": 0.278,
+   "crudoMax": 2.882,
+   "actoresEfMax": 2.092,
+   "actoresEfMed": 1.665,
+   "perf": {
+    "renderMs": 12.77,
+    "flushMs": 412
+   }
+  },
+  {
+   "arena": "infernal",
+   "escena": "plantel",
+   "crudoMin": 0.278,
+   "crudoMax": 2.882,
+   "actoresEfMax": 2.147,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 12.49,
+    "flushMs": 86.6
+   }
+  },
+  {
+   "arena": "infernal",
+   "escena": "jefe",
+   "crudoMin": 0.311,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.172,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 11.08,
+    "flushMs": 406.3
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes1",
+   "crudoMin": 0.278,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 3.02,
+    "flushMs": 541.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes2",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 3.23,
+    "flushMs": 21.8
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes3",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.104,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 2.94,
+    "flushMs": 287.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes4",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.062,
+   "actoresEfMed": 1.006,
+   "perf": {
+    "renderMs": 6.32,
+    "flushMs": 135
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes5",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.275,
+   "actoresEfMed": 1.029,
+   "perf": {
+    "renderMs": 12.74,
+    "flushMs": 80.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes6",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.305,
+   "actoresEfMed": 1.138,
+   "perf": {
+    "renderMs": 5.13,
+    "flushMs": 20.6
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes7",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.495,
+   "actoresEfMed": 1.103,
+   "perf": {
+    "renderMs": 3.08,
+    "flushMs": 35.7
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes8",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.24,
+   "actoresEfMed": 1.055,
+   "perf": {
+    "renderMs": 4.38,
+    "flushMs": 47.6
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes9",
+   "crudoMin": 0.587,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.121,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 4.9,
+    "flushMs": 76.9
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "guardianes10",
+   "crudoMin": 0.278,
+   "crudoMax": 3.6,
+   "actoresEfMax": 1.071,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 1.13,
+    "flushMs": 52.1
+   }
+  }
+ ]
+}

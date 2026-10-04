@@ -100,6 +100,9 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
         if (sk0.kind === 'summon_golem') { useSkill(i); player.cds[i] = 0; __casts.length = 0; }   // con el gólem en pie se apunta "¡Aplasta!"
         const sk = player.cls.skills[i]; const prof = aimProfileOf(sk, player); return { kind: sk.kind, type: prof ? prof.type : null }; }, [cls, i, !!titan]);
       if (!info.type) { table.push({ cls, i, kind: info.kind, type: 'propia' }); continue; }
+      // apuntan a un ALIADO (Custodia del Eslabón: el arrastre elige al compañero más cercano al punto), no a un
+      // enemigo: este caso con señuelos enemigos no aplica
+      if (info.kind === 'es_guard') { table.push({ cls, i, kind: info.kind, type: 'aliado' }); continue; }
       // señuelo MÁS CERCA a la derecha (el que elegiría el autoapuntado) y el enemigo buscado arriba a la
       // izquierda, hacia donde se arrastra; los dos al alcance de la habilidad
       await E(([i]) => { const sk = player.cls.skills[i], R = aimRangeOf(player, sk, i) || 200;
@@ -122,7 +125,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
       table.push({ cls, i, kind: info.kind, type: info.type, ok, dot: Math.round(dot * 100) / 100, want: r.want, decoy: r.decoy, err: pre && pre.err });
     }
   }
-  const bad = table.filter(t => t.type !== 'propia' && !t.ok);
+  const bad = table.filter(t => t.type !== 'propia' && t.type !== 'aliado' && !t.ok);
   console.log(table.map(t => `${t.cls}.${t.i} ${t.kind} [${t.type}] ${t.type === 'propia' ? '' : (t.ok ? 'ok' : 'MAL') + ' dot=' + t.dot + (t.type === 'target' ? ' elegido=' + t.want + ' señuelo=' + t.decoy : '')}`).join('\n'));
   check('AIM.las_12_fichas_respetan_el_arrastre', bad.length === 0 && table.filter(t => t.type !== 'propia').length >= 20, bad);
 
