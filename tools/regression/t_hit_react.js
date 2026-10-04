@@ -201,7 +201,7 @@ async function boot(browser, opts) {
     check(`CAM.${v.name}.hechicero_no_tapa_al_heroe`, !overlap(r.tut, heroBox), { tut: r.tut, heroBox });
     check(`CAM.${v.name}.cartel_central_no_tapa_al_heroe`, !overlap(r.ban, heroBox) && !overlap(r.banLow, heroBox) && !overlap(r.banLow, r.tut), { ban: r.ban, banLow: r.banLow, heroBox });
     check(`CAM.${v.name}.hechicero_se_agacha_al_recibir_danio_y_vuelve`, r.ducked && Number(r.op) < 0.2 && r.keyKept && r.sameText && r.extended && r.back, r);
-    check(`HUD.${v.name}.nombre_corto_en_una_linea`, /^Segador · Nv\./.test(r.plevel) && r.oneLine && r.full === 'Segador Olvidado', { plevel: r.plevel, oneLine: r.oneLine });
+    check(`HUD.${v.name}.nombre_corto_en_una_linea`, /^Segador · Nv\./.test(r.plevel) && r.oneLine && r.full === 'Segador, el Olvidado', { plevel: r.plevel, oneLine: r.oneLine });
     if (OUT) { await page.evaluate(() => { tutSay('~t_hit2', 'Cada habilidad necesita recargarse: esperá a que el botón se llene otra vez para volver a usarla.', null, 60000, true); render(); }); await sleep(400); await page.screenshot({ path: `${OUT}/hit_react_${v.name}.png` }); }
     check(`CAM.${v.name}.sin_errores`, errors.length === 0, errors.slice(0, 3));
     await ctx.close();

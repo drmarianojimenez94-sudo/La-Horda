@@ -45,6 +45,7 @@ function _lbLeft(ms){
 
 /* ---------------- envío al terminar una partida ---------------- */
 async function _lbSubmit(entry){
+  if(typeof championCompetitive==="function" && entry && entry.guardian && !championCompetitive(entry.guardian)) return { status: 403, j: { error: "NOT_COMPETITIVE", msg: "Ese campeón no participa del ranking." } };
   const r = await accountFetch("POST", "/api/leaderboard/submit", entry, { timeout: 20000 });
   return r;
 }
@@ -176,7 +177,7 @@ async function lbLoad(){
   LB.loading = false; _lbRender();
 }
 function _lbGuardianChips(){
-  const keys = typeof CLASSES!=="undefined" ? Object.keys(CLASSES).filter(k=>!CLASSES[k].hidden) : [];
+  const keys = typeof CLASSES!=="undefined" ? Object.keys(CLASSES).filter(k=>!CLASSES[k].hidden && championCompetitive(k)) : [];
   const chip = (k, txt) => `<button type="button" class="lb-chip${LB.guardian===k ? " on" : ""}" data-lb-g="${_lbEsc(k)}">${txt}</button>`;
   return chip("", "Todos") + keys.map(k => chip(k, `${_lbClassIco(k)} ${_lbEsc(_lbClassName(k))}`)).join("");
 }

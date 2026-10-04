@@ -96,3 +96,31 @@ objetos de prueba de la Sala; `?debug=1` abre solo el panel de red.
 
 Prototipo en desarrollo activo. Mejoras técnicas pendientes (no urgentes) en
 [MODULARIZATION_FOLLOWUPS.md](MODULARIZATION_FOLLOWUPS.md).
+
+## Myla y referencia de balance
+
+Myla, la Maga del Yogur, incorpora Torre de Yogur, Yogurazo, Burbuja Cremosa y **BERRINCHE**: transformación en pañales, ondas de llanto y yogur en área. Incluye sprites direccionales, talentos, set Merienda Mágica y sincronización cooperativa. Las skins de los nuevos portadores tienen paletas propias, aura y efectos cosméticos.
+
+Estadísticas, resultados de 57 simulaciones, ajustes y comandos de verificación: [BALANCE_CAMPEONES.md](BALANCE_CAMPEONES.md).
+
+## Revisión de legibilidad de combate y HUD
+
+La revisión de los 18 campeones conserva sus roles y movilidad, refuerza efectos desde
+talento inicial y separa visualmente todos los controles del escenario. Detalles, límites de
+balance y pruebas: [auditoría de combate y HUD](docs/vfx/AUDITORIA_COMBATE_HUD.md).
+
+### Dos héroes e interfaz de preparación
+
+La intro llega al menú. En campaña y Horda Infinita cada jugador elige dos héroes: al caer el primero entra la reserva automáticamente; al agotarlos queda fuera. Las cartas muestran las habilidades y el nivel; equipo, talentos y aliados se despliegan bajo opciones avanzadas. Los siete héroes recientes tienen refuerzos propios, y Normal reduce los picos de Bosque y Hielo.
+
+El panel de niveles se habilita en Opciones para las cuentas incluidas en `ADMIN_USERS` del servidor. [Auditoría, pruebas, evaluación y configuración](docs/ux/AUDITORIA_ALPHA_02.md).
+
+## Alpha: producción y Game Master
+
+La entrega de la fábrica de producción, Códice/colección, entrenamiento y operaciones está documentada en [LA_HORDA_ALPHA_AUTONOMOUS_AUDIT.md](LA_HORDA_ALPHA_AUTONOMOUS_AUDIT.md), con gates ejecutados y pendientes explícitos. Estándares: [Production Bibles](docs/production/PRODUCTION_BIBLES.md). Incorporación de campeones: [Factory](tools/factory/README.md). Configuración del owner, contratos y respaldos: [Game Master](docs/production/operations.md). No hay pagos activos.
+
+## Guerra de Cristales (Alpha)
+
+Nuevo modo de Coliseo 2 contra 2, accesible desde Modos: defensa de cristales, oleadas simétricas, fragmentos compartidos y envío de amenazas. Entrenamiento con bots o salas privadas sobre el relay existente. Cuatro kits adaptados al modo, sin afectar la progresión de campaña.
+
+[Reglas, controles, arquitectura y validación](docs/modes/CRYSTAL_WARS.md).

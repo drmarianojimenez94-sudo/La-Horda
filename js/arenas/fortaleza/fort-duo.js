@@ -80,6 +80,7 @@ function fortDuoUpdate(dt){
       if(s && s.st===FORT_TRAP_ACT && Math.hypot(kn.x - T.x, kn.y - T.y) <= FORT_CFG.cycle.steam.r + kn.radius){
         D.heat = 0; D.shocks++;
         bossExpose(kn, C.shockMs, C.shockMult, "¡SHOCK TÉRMICO! La armadura oxidada se quiebra");
+        if(typeof bossArenaEvent==="function") bossArenaEvent("caballero.valvula", kn);
         vfxBurst(kn.x, kn.y - 60, 40, "steam", 220, 900, 5, 2, -80, 0); vfxBurst(kn.x, kn.y - 40, 24, "spark", 200, 600, 4, 1, -50, 0);
         playSfx("fortSteamBig"); playSfx("fortMetal");
         break;

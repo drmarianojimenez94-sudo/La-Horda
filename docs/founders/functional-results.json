@@ -1,0 +1,854 @@
+{
+  "checks": [
+    {
+      "name": "nano_gm registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "nano_gm kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "nano_gm level 1 horde damage",
+      "ok": true,
+      "details": [
+        293.3972183987498,
+        293.3972183987498,
+        293.3972183987498
+      ]
+    },
+    {
+      "name": "nano_gm bounded entities",
+      "ok": true,
+      "details": 5
+    },
+    {
+      "name": "nano_gm finite state",
+      "ok": true
+    },
+    {
+      "name": "nano_gm boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "nano_gm boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "nano_gm ultimate respects boss damage cap",
+      "ok": true,
+      "details": 94.96080000000006
+    },
+    {
+      "name": "nano_gm elites never executed",
+      "ok": true
+    },
+    {
+      "name": "nano_gm timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "nano_gm cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "nano_gm arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "facu_gm kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "facu_gm level 1 horde damage",
+      "ok": true,
+      "details": [
+        452.2650000024587,
+        452.2650000024587,
+        452.2650000024587
+      ]
+    },
+    {
+      "name": "facu_gm bounded entities",
+      "ok": true,
+      "details": 3
+    },
+    {
+      "name": "facu_gm finite state",
+      "ok": true
+    },
+    {
+      "name": "facu_gm boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "facu_gm boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "facu_gm ultimate respects boss damage cap",
+      "ok": true,
+      "details": 160.00000000000023
+    },
+    {
+      "name": "facu_gm elites never executed",
+      "ok": true
+    },
+    {
+      "name": "facu_gm timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "facu_gm cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "facu_gm arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "aurelia kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "aurelia level 1 horde damage",
+      "ok": true,
+      "details": [
+        150.7440000027418,
+        133.32000000216067,
+        133.32000000216067
+      ]
+    },
+    {
+      "name": "aurelia bounded entities",
+      "ok": true,
+      "details": 4
+    },
+    {
+      "name": "aurelia finite state",
+      "ok": true
+    },
+    {
+      "name": "aurelia boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "aurelia boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "aurelia ultimate respects boss damage cap",
+      "ok": true,
+      "details": 118.7999999999995
+    },
+    {
+      "name": "aurelia elites never executed",
+      "ok": true
+    },
+    {
+      "name": "aurelia timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "aurelia cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "aurelia arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "khepri kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "khepri level 1 horde damage",
+      "ok": true,
+      "details": [
+        175.39958332665265,
+        175.39958332665265,
+        175.39958332665265
+      ]
+    },
+    {
+      "name": "khepri bounded entities",
+      "ok": true,
+      "details": 2
+    },
+    {
+      "name": "khepri finite state",
+      "ok": true
+    },
+    {
+      "name": "khepri boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "khepri boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "khepri ultimate respects boss damage cap",
+      "ok": true,
+      "details": 108.89999999999986
+    },
+    {
+      "name": "khepri elites never executed",
+      "ok": true
+    },
+    {
+      "name": "khepri timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "khepri cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "khepri arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "khepri arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "velmira kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "velmira level 1 horde damage",
+      "ok": true,
+      "details": [
+        72.68905599974096,
+        81.3623360004276,
+        81.3623360004276
+      ]
+    },
+    {
+      "name": "velmira bounded entities",
+      "ok": true,
+      "details": 1
+    },
+    {
+      "name": "velmira finite state",
+      "ok": true
+    },
+    {
+      "name": "velmira boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "velmira boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "velmira ultimate respects boss damage cap",
+      "ok": true,
+      "details": 36.938880000000154
+    },
+    {
+      "name": "velmira elites never executed",
+      "ok": true
+    },
+    {
+      "name": "velmira timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "velmira cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "velmira arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "velmira arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "vhal kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "vhal level 1 horde damage",
+      "ok": true,
+      "details": [
+        147.04800000041723,
+        147.04800000041723,
+        147.04800000041723
+      ]
+    },
+    {
+      "name": "vhal bounded entities",
+      "ok": true,
+      "details": 5
+    },
+    {
+      "name": "vhal finite state",
+      "ok": true
+    },
+    {
+      "name": "vhal boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "vhal boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "vhal ultimate respects boss damage cap",
+      "ok": true,
+      "details": 27.587999999999965
+    },
+    {
+      "name": "vhal elites never executed",
+      "ok": true
+    },
+    {
+      "name": "vhal timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "vhal cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "vhal arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "vhal arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "bront kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "bront level 1 horde damage",
+      "ok": true,
+      "details": [
+        27.279999999329448,
+        27.279999999329448,
+        27.279999999329448
+      ]
+    },
+    {
+      "name": "bront bounded entities",
+      "ok": true,
+      "details": 9
+    },
+    {
+      "name": "bront finite state",
+      "ok": true
+    },
+    {
+      "name": "bront boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "bront boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "bront elites never executed",
+      "ok": true
+    },
+    {
+      "name": "bront timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "bront cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "bront arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "bront arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "oriel kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "oriel level 1 horde damage",
+      "ok": true,
+      "details": [
+        61.64684599637985,
+        111.02524199150503,
+        57.416345996782184
+      ]
+    },
+    {
+      "name": "oriel bounded entities",
+      "ok": true,
+      "details": 5
+    },
+    {
+      "name": "oriel finite state",
+      "ok": true
+    },
+    {
+      "name": "oriel boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "oriel boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "oriel ultimate respects boss damage cap",
+      "ok": true,
+      "details": 79.66877599999998
+    },
+    {
+      "name": "oriel elites never executed",
+      "ok": true
+    },
+    {
+      "name": "oriel timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "oriel cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "oriel arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "oriel arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "Nano alternation enters Forma del Regente",
+      "ok": true
+    },
+    {
+      "name": "Nano regent internal cooldown",
+      "ok": true
+    },
+    {
+      "name": "Nano executes sentenced commons only",
+      "ok": true
+    },
+    {
+      "name": "Nano judgement restores allies",
+      "ok": true
+    },
+    {
+      "name": "Nano judgement never executes objectives",
+      "ok": true
+    },
+    {
+      "name": "Nano judgement enters Regent",
+      "ok": true
+    },
+    {
+      "name": "Facu tide rises in order",
+      "ok": true
+    },
+    {
+      "name": "Facu tide chain 2",
+      "ok": true
+    },
+    {
+      "name": "Facu Marea Alta at 3",
+      "ok": true
+    },
+    {
+      "name": "Facu wrong order resets to low tide",
+      "ok": true
+    },
+    {
+      "name": "Facu rides the wave fluidly and bounded",
+      "ok": true,
+      "details": 320
+    },
+    {
+      "name": "Facu ride stops at walls",
+      "ok": true
+    },
+    {
+      "name": "Facu ocean drags the horde to the centre",
+      "ok": true,
+      "details": [
+        108,
+        88,
+        68
+      ]
+    },
+    {
+      "name": "Facu ocean leaves nobody out of bounds",
+      "ok": true
+    },
+    {
+      "name": "Aurelia node cap 3",
+      "ok": true
+    },
+    {
+      "name": "Aurelia Convergencia triangle damages",
+      "ok": true
+    },
+    {
+      "name": "Khepri swarm fed and capped",
+      "ok": true
+    },
+    {
+      "name": "Khepri carapace consumes swarm",
+      "ok": true
+    },
+    {
+      "name": "Khepri swarm leaves Khepri",
+      "ok": true
+    },
+    {
+      "name": "Velmira face swap cycles and empowers",
+      "ok": true
+    },
+    {
+      "name": "Velmira silence mask applied",
+      "ok": true
+    },
+    {
+      "name": "Vhal mass capped at 5",
+      "ok": true
+    },
+    {
+      "name": "Bront plates capped at 4",
+      "ok": true
+    },
+    {
+      "name": "Bront citadel roots",
+      "ok": true
+    },
+    {
+      "name": "Bront citadel ends",
+      "ok": true
+    },
+    {
+      "name": "Oriel portal moves allies",
+      "ok": true
+    },
+    {
+      "name": "snapshot keeps construct owner",
+      "ok": true
+    },
+    {
+      "name": "bounded serializable snapshot",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

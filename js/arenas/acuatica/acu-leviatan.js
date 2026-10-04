@@ -35,8 +35,11 @@ function acuLevClear(){
 function acuLevSpawnArms(L){
   const n = LEV_T.count[Math.min(LEV_T.count.length - 1, (L.acuaticaPhase||1) - 1)] - acuLevArms().length;
   const a0 = Math.random()*Math.PI*2, R = LEVIATAN_ORBIT_R*LEV_T.ringK;
+  const charcos = (typeof ACU!=="undefined" ? ACU.zones : []).filter(z=>z.type==="charco");
   for(let i=0;i<n;i++){
     let p = null;
+    // el primero brota en un charco (si hay): CONDUCTOR, la descarga lo castiga (acuDischarge)
+    if(i===0 && charcos.length){ const z = charcos[(Math.random()*charcos.length)|0]; const q = {x:z.x, y:z.y, radius:30}; clampToArena(q); if(!heroes.some(h=>h.alive && Math.hypot(h.x - q.x, h.y - q.y) < 130)) p = q; }
     for(let k=0;k<8 && !p;k++){
       const a = a0 + i/n*Math.PI*2 + k*0.25, q = {x:Math.cos(a)*R, y:Math.sin(a)*R, radius:30}; clampToArena(q);
       if(!heroes.some(h=>h.alive && Math.hypot(h.x - q.x, h.y - q.y) < 130)) p = q;
@@ -60,6 +63,7 @@ function acuLevRule(dt){
   const ph = L.acuaticaPhase||1;
   if(S.ph !== ph){
     S.ph = ph;
+    if(ph >= 2 && typeof acuLevTide==="function" && acuLevTide() && typeof bossArenaEvent==="function") bossArenaEvent("leviatan.marea", L);
     if(S.st!=="open"){ acuLevSpawnArms(L); S.st = "arms"; S.t = 0; }
     if(ph===1){
       showBanner("🐙 Sus TENTÁCULOS lo protegen: neutralizalos para exponer el núcleo");
@@ -73,6 +77,7 @@ function acuLevRule(dt){
     if(!n){
       S.st = "open"; S.t = 0; S.x0 = L.x; S.y0 = L.y;
       bossExpose(L, C.exposeMs, C.exposeMult, "🌊 ¡SIN TENTÁCULOS! El Leviatán sale a respirar: NÚCLEO EXPUESTO");
+      if(typeof bossArenaEvent==="function") bossArenaEvent("leviatan.tentaculos", L);
       playSfx("bossRoar");
     }
   } else if(S.st==="open"){

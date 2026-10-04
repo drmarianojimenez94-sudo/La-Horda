@@ -35,6 +35,7 @@ function _glSource(e){
     if(rk==="elite" || rk==="named" || rk==="subjefe" || rk==="jefe") grade = GRADE_ORDER_GL.indexOf(g) > GRADE_ORDER_GL.indexOf(grade) ? g : grade;
     if(rk==="elite" || rk==="named") chance = Math.min(0.9, chance * (1 + ENDLESS_CFG.lootGrowthPerRound*(EN.round-1)));
   }
+  if(typeof alphaWorldMultiplier==="function") chance = Math.min(1, chance*alphaWorldMultiplier("drop"));
   return {rk, grade, chance, hm:C.highMult[rk], count:C.count[rk], build:(C.buildChance||{})[rk]||0};
 }
 const GRADE_ORDER_GL = ["C","B","A","S","S+"];
@@ -57,10 +58,11 @@ function groundLootOnKill(e){
   if(e.noLoot || e.summonedByRole || e._eliteMirror) return;
   const src = _glSource(e); if(!src) return;
   const arena = currentArena;
+  const eventSetId=typeof AlphaServices!=="undefined"?AlphaServices.bossDropSet(e):null;
   for(const h of heroes){
     const local = h===player, remote = !!h.isRemote;
     if(!local && !remote) continue; // los bots no juntan botín (el inventario es de la cuenta del jugador)
-    const n = groundLootRollCount(src);
+    const n = Math.max(groundLootRollCount(src),eventSetId?1:0);
     // el legendario que cambia la build se tira aparte (y no reemplaza a lo demás)
     const build = src.build > 0 && buildLegendAllowed(arena) && Math.random() < src.build;
     for(let i=0;i<n + (build ? 1 : 0);i++){
@@ -68,19 +70,25 @@ function groundLootOnKill(e){
       const p = {x:e.x + Math.cos(a)*d, y:e.y + Math.sin(a)*d*0.7, radius:14};
       try{ clampToArena(p); if(typeof resolveWallCollision==="function") resolveWallCollision(p); clampToArena(p); }catch(err){}
       const x = Math.round(p.x), y = Math.round(p.y), b = build && i===n ? 1 : 0;
-      if(local) groundLootDrop(x, y, src.grade, src.hm, arena, src.rk, b);
-      else netEmitTo(h._netSlot, "groundLootDrop", [x, y, src.grade, src.hm, arena, src.rk, b]);
+      if(local) groundLootDrop(x, y, src.grade, src.hm, arena, src.rk, b, i===0?eventSetId:null);
+      else netEmitTo(h._netSlot, "groundLootDrop", [x, y, src.grade, src.hm, arena, src.rk, b, i===0?eventSetId:null]);
     }
   }
 }
 // Cliente del jugador (anfitrión: directo; invitado: por evento de red). Arma el objeto con SU guardado.
-function groundLootDrop(x, y, grade, hm, arena, rk, build){
+function groundLootDrop(x, y, grade, hm, arena, rk, build, eventSetId){
   if(!player || typeof state==="undefined" || (state!=="playing" && state!=="buff" && state!=="paused")) return null;
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, save.lootPity||{});
   const classKey = player.classKey || selectedClass;
   let tier = build ? "legendario" : groundLootRollTier(arena || currentArena, grade || "B", hm==null ? 1 : hm, save.lootPity);
   let spec = build ? {tier, build:true} : {tier};
   if(tier==="set"){ const sp = _rollSetPiece(arena, ownedDesignIds(), Math.random, classKey); spec = sp ? {tier, setId:sp.setId, designId:sp.designId, type:sp.type} : {tier:"legendario"}; tier = spec.tier; }
+  if(eventSetId&&typeof SET_DB!=="undefined"&&SET_DB[eventSetId]){
+    const owned=ownedDesignIds(),weights={};
+    for(const id of setPieceIds(eventSetId))if(DESIGNED_ITEMS[id])weights[id]=owned.has(id)?1:SET_MISSING_PIECE_BIAS;
+    const id=_pick(weights,Math.random);
+    if(id)spec={tier:"set",setId:eventSetId,designId:id,type:DESIGNED_ITEMS[id].type};
+  }
   const it = materializeLoot(spec, classKey, arena || currentArena);
   if(!it) return null;
   it.lootTier = spec.tier;

@@ -16,10 +16,10 @@
 const CHAMPION_PRICE_GOLD = 2500; // alfa: el regalo inicial es UN guardián (+ una skin); el segundo se gana jugando (antes 1.000 con 10.000 de oro de regalo: se compraban todos de entrada)
 const CHAMPION_PRICE_GOLD_FINAL = 5000; // precio definitivo (se vuelve a él al terminar la etapa de prueba)
 const CHAMPION_CATALOG = [
-  {id:"tanque",   priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"El primero en entrar y el último en caer. Un muro viviente entre la horda y sus aliados."},
-  {id:"guerrero", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Rápido, letal, sin piedad. Golpea antes de que lo vean venir."},
-  {id:"mago",     priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Domina el fuego y el hielo. El área alrededor suyo es territorio enemigo."},
-  {id:"soporte",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Mientras respire, nadie de su equipo cae para siempre."},
+  {id:"tanque",   priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Aldric sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino."},
+  {id:"guerrero", priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Kael encadena cortes y sangrados, y prepara trampas que castigan a toda una oleada."},
+  {id:"mago",     priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Thalen combina fuego, escarcha y relámpagos para controlar y devastar grupos de enemigos."},
+  {id:"soporte",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Elyra cura y protege a sus compañeros; la misma luz que los salva purifica a la Horda."},
   {id:"segador",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Cuanto más cerca de la muerte, más peligroso se vuelve."},
   {id:"axiom",    priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Descubrió que la realidad está construida con reglas y código. No lanza hechizos: reescribe las reglas."},
   {id:"profeta",  priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Ve el destino de sus aliados antes de que ocurra. A veces, eso es suficiente para cambiarlo."},
@@ -32,7 +32,7 @@ const CHAMPION_CATALOG = [
 
 const CLASSES = {
   tanque:{
-    name:"Tanque", icon:"🛡", color:"#5f8fc4", glow:"#a9cdf0",
+    name:"Aldric, el Último Bastión", hudName:"Aldric", icon:"🛡", color:"#5f8fc4", glow:"#a9cdf0",
     role:"Resistencia, protección y control de área.", roleCategory:"tanque",
     baseHP:150, baseDmg:9, baseDef:0.18, baseSpeed:150, energyMax:100, energyRegen:10, hpGrowthMult:1.45, dmgGrowthMult:0.75,
     basicRange:78, basicCd:620, basicArc:true,
@@ -44,7 +44,7 @@ const CLASSES = {
     ultimate:{name:"Grito Provocador", ico:"★", cd:30000, kind:"taunt_provoke", radius:230, defBonus:0.38, hpBonusPct:0.35, spinMult:2, duration:6000, desc:"Provoca a los enemigos, se agiganta y gana armadura y vida máxima"}
   },
   guerrero:{
-    name:"Asesino", icon:"🗡", color:"#c4544a", glow:"#f0a89a",
+    name:"Kael, la Daga Carmesí", hudName:"Kael", icon:"🗡", color:"#c4544a", glow:"#f0a89a",
     role:"Daño físico cuerpo a cuerpo contra objetivos y jefes.", roleCategory:"asesino",
     baseHP:120, baseDmg:13, baseDef:0.10, baseSpeed:175, energyMax:100, energyRegen:10.5, hpGrowthMult:0.9, dmgGrowthMult:1.3,
     basicRange:64, basicCd:420, basicArc:false,
@@ -56,7 +56,7 @@ const CLASSES = {
     ultimate:{name:"Pestilencia Sombría", ico:"★", cd:32000, kind:"shadow_stealth", stealthDuration:2000, dmgMult:1.15, finalMult:1.4, poisonDmgMult:0.16, bleedDmgMult:0.14, duration:3000, chainRadius:150, desc:"Sigilo total y un triple golpe que envenena y encadena sangrado"}
   },
   mago:{
-    name:"Mago", icon:"🔥", color:"#a15fc7", glow:"#d9a9f0",
+    name:"Thalen, el Tejedor Elemental", hudName:"Thalen", icon:"🔥", color:"#a15fc7", glow:"#d9a9f0",
     role:"Daño mágico, área y control elemental.", roleCategory:"mago",
     baseHP:95, baseDmg:11, baseDef:0.06, baseSpeed:155, energyMax:110, energyRegen:8, hpGrowthMult:0.7, dmgGrowthMult:1.45,
     basicRange:340, basicCd:560, basicArc:false, ranged:true,
@@ -68,12 +68,12 @@ const CLASSES = {
     ultimate:{name:"Cataclismo Elemental", ico:"★", cd:32000, kind:"elemental_storm", radius:230, dmgMult:1.55, strikeDmgMult:0.85, duration:5000, strikeInterval:420, burn:true, slow:0.45, novaCount:3, novaDmgMult:0.7, novaFreeze:0.7, novaFreezeDur:1300, armorDefBonus:0.25, desc:"3 novas de hielo, lluvia de rayos por 5s y armadura de fuego"}
   },
   soporte:{
-    name:"Soporte", icon:"✦", color:"#5fc48c", glow:"#a9f0c9",
-    role:"Curación, supervivencia y potenciación del equipo.", roleCategory:"soporte",
+    name:"Elyra, la Guardiana del Alba", hudName:"Elyra", icon:"✦", color:"#5fc48c", glow:"#a9f0c9",
+    role:"Sanadora a distancia: restaura a sus aliados y purifica las oleadas con luz en área.", roleCategory:"soporte",
     baseHP:105, baseDmg:7, baseDef:0.12, baseSpeed:165, energyMax:110, energyRegen:11, hpGrowthMult:1.2, dmgGrowthMult:0.7,
     basicRange:320, basicCd:600, basicArc:false, ranged:true,
     skills:[
-      {name:"Curación de Área", ico:"✚", cost:40, cd:7000, kind:"team_heal_aoe", healPct:0.24, radius:260, element:"heal", desc:"Cura a los aliados cercanos"},
+      {name:"Alba Purificadora", ico:"✚", cost:40, cd:7000, kind:"team_heal_aoe", healPct:0.24, radius:260, damageRadius:160, dmgMult:1.2, element:"heal", desc:"Un pulso de luz cura a los aliados en 260 u y daña a todos los enemigos en 160 u por el 120% de su daño. Ambos radios crecen con la maestría."},
       {name:"Bendición de Guerra", ico:"⚔", cost:36, cd:8200, kind:"team_atk_buff", dmgBonus:0.22, duration:5500, radius:260, element:"atk", desc:"Aumenta el daño de los aliados cercanos"},
       {name:"Escudo Sagrado", ico:"🛡", cost:38, cd:8600, kind:"team_shield_buff", defBonus:0.26, shieldPct:0.18, duration:5500, radius:260, element:"shield", desc:"Aumenta la defensa de los aliados cercanos"}
     ],
@@ -136,7 +136,7 @@ const CLASSES = {
       {name:"Visión del Inmortal", ico:"◈", cost:34, cd:11000, kind:"brief_immunity", range:260, duration:2400, regenPct:0.06, desc:"Un aliado cercano se vuelve inmune a todo daño y a efectos negativos por unos segundos; al terminar, recibe una pequeña regeneración"},
       {name:"Danza del Augurio", ico:"☾", cost:36, cd:9000, kind:"self_spin_stun", radius:112, innerR:56, dmgMult:1.1, stun:500, desc:"Gira con su hoja y genera daño de área a su alrededor; si un enemigo está muy cerca, lo aturde brevemente"}
     ],
-    ultimate:{name:"Ascensión del Elegido", ico:"★", cd:34000, kind:"ascension_fusion", duration:7000, healPct:0.85, dmgMult:2.0, atkSpeedMult:1.6, defBonus:0.45, lifesteal:0.25, cdClamp:60, desc:"Se acerca a un aliado y se fusiona con él, volviéndose casi invisible e invulnerable: aparece un recipiente espiritual que el aliado absorbe, recibiendo una curación enorme, mucho más daño, velocidad de ataque y resistencia, además de poder lanzar sus habilidades casi al instante mientras dura"}
+    ultimate:{name:"Ascensión del Elegido", ico:"★", cd:34000, kind:"ascension_fusion", duration:7000, healPct:0.85, dmgMult:2.0, atkSpeedMult:1.6, defBonus:0.45, lifesteal:0.25, cdClamp:60, desc:"Se fusiona con un aliado: él recibe una gran curación, mucho más daño, velocidad de ataque y resistencia, y recarga sus habilidades casi al instante mientras dura"}
   },
   musashi:{
     name:"Musashi", icon:"⚔", color:"#5aa8d8", glow:"#bfe4ff",
@@ -200,7 +200,7 @@ const CLASSES = {
       {name:"¡Granaderos, a la carga!", ico:"📯", cost:36, cd:16000, kind:"sm_granaderos", radius:430, duration:8000, desc:"Levanta el sable, suena el clarín y aparecen Granaderos espectrales: +velocidad, +velocidad de ataque, +daño y resistencia al control para vos y tus aliados cercanos"},
       {name:"Carga de San Lorenzo", ico:"🐎", cost:40, cd:12000, kind:"sm_san_lorenzo", range:430, dmgMult:1.9, desc:"Monta su caballo blanco y carga en línea: atraviesa y empuja a los comunes, aturde a los élite y baja la defensa de los jefes"}
     ],
-    ultimate:{name:"Cruce de los Andes", ico:"★", cd:45000, kind:"sm_andes_ult", dmgMult:4.2, duration:10000, desc:"La Cordillera se alza alrededor de la arena: nieve, viento y escarcha. Carga con una formación de Granaderos espectrales montados y queda 10 s a caballo (sable corvo, +velocidad, +daño, -daño recibido)"}
+    ultimate:{name:"Cruce de los Andes", ico:"★", cd:45000, kind:"sm_andes_ult", dmgMult:4.2, duration:10000, desc:"Carga con Granaderos espectrales entre nieve y escarcha y queda 10 s a caballo: sable corvo, más velocidad y daño, menos daño recibido"}
   },
   eren:{
     name:"Eren", icon:"⚔", color:"#7a3b2e", glow:"#ff7a55",
@@ -215,7 +215,7 @@ const CLASSES = {
       {name:"Instinto de Supervivencia", ico:"⚡", cost:25, cd:14000, kind:"eren_instinct", duration:3500, desc:"Por un momento recibís menos daño y cada golpe que te dan carga MUCHA más Furia. No es invulnerabilidad: es exponerse para transformarse antes"},
       {name:"¡Avancen!", ico:"📢", cost:30, cd:15000, kind:"eren_advance", duration:7000, desc:"Grito de guerra: más velocidad, daño y Furia (más fuerte con poca vida). Los aliados cercanos reciben una parte"}
     ],
-    ultimate:{name:"El Portador", ico:"★", cd:40000, kind:"eren_titan_ult", duration:22000, desc:"Con la Furia llena: se muerde la mano, cae un rayo y surge la forma monstruosa (golpes en área, Sismo, Terremoto, Retumbar, regeneración con vapor). Si llenás la Furia otra vez transformado, se desbloquea algo más"}
+    ultimate:{name:"El Portador", ico:"★", cd:40000, kind:"eren_titan_ult", duration:22000, desc:"Con la Furia llena se transforma en El Portador: golpes en área, Sismo, Terremoto, Retumbar y regeneración. Llenar la Furia de nuevo desbloquea algo más"}
   }
 };
 // Eren transformado usa esta "clase" mientras dura El Portador (h.cls apunta acá): así todo lo que

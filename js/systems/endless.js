@@ -198,7 +198,7 @@ function endlessEnterArena(key){
   heroes.forEach((h, i)=>{
     const ang = (i/heroes.length)*Math.PI*2 + Math.PI/4, d = i===0 ? 0 : 70;
     h.x = Math.cos(ang)*d; h.y = Math.sin(ang)*d;
-    if(!h.alive){ h.alive = true; h.hp = Math.round(h.maxHp*0.5); h._reviveT = 0; h._reviveBy = null; }
+    if(!h.alive && !duoEnabled()){ h.alive = true; h.hp = Math.round(h.maxHp*0.5); h._reviveT = 0; h._reviveBy = null; }
     h.slowAmt = 0; h.slowTimer = 0; h.stunTimer = 0; h.burnTimer = 0; h.fused = false; h.abHang = null; h._ctxHold = null; h._ctxGoal = null;
   });
   setupRunDifficulty();
@@ -423,7 +423,7 @@ function endlessRescueDone(t, users){
     const xp = Math.round(C.rescueXp + C.rescueXpPerRound*r);
     heroes.forEach(h=>{
       if(h.alive){ h.hp = Math.min(h.maxHp, h.hp + h.maxHp*0.35); h.energy = h.maxEnergy; }
-      if(h===player) grantXP(player.classKey, xp); else if(h.isRemote) netEmitTo(h._netSlot, "xp", [xp]);
+      if(h===player) grantXP(player.classKey, xp); else if(h.isRemote) netEmitTo(h._netSlot, "xp", [xp,h.classKey]);
     });
     floatText(t.x, t.y-40, `+${xp} XP`, "heal");
     if(Math.random() < C.rescueGemChance){

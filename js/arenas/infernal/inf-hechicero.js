@@ -94,6 +94,7 @@ ARENA_BOSS_TIPS.angel_corrompido = {epithet:"Forma 1 de 3 — con el poder de lo
   "JUICIO DE LOS CUATRO: cuatro golpes alrededor y al final el centro. Salí en diagonal.",
   "Si te acercás, se teletransporta: rodealo entre varios."]};
 ARENA_BOSS_TIPS.hechicero_supremo = {epithet:"El que te guió hasta acá", tips:[
+  "GRIETA CONJURADA: abre fisuras y se alimenta de ellas. CERRALAS (acción contextual): queda EXPUESTO.",
   "ORBE SAGRADO: una bola de luz lenta. Esquivala de costado.",
   "PILARES y METEOROS: salí del círculo dorado antes de que se llene.",
   "Si te acercás, se teletransporta: rodealo entre varios."]};
@@ -154,12 +155,14 @@ Object.assign(BOSS_ATTACKS, {
     _hPack(e, "cast", 900);
     bossAnnounce(e, "Meteoros Sagrados", "movete, no te quedes quieto"); return true; }
 });
+// GRIETA CONJURADA (inf-hech-rift.js): abre fisuras reales de la arena y se alimenta de ellas
+BOSS_ATTACKS.hsRift = function(e, t, d){ if(typeof hechRiftOpen!=="function" || !hechRiftOpen(e, t)) return false; _hPack(e, "cast", 900); bossAnnounce(e, "Grieta Conjurada", "cerrala: sin grietas queda expuesto"); return true; };
 BOSS_DESIGNS.hechicero_supremo = {
   epithet:"El que te guió hasta acá",
   tips:ARENA_BOSS_TIPS.hechicero_supremo.tips,
   phases:[
-    {hp:1.00, gap:[1100,1600], rot:["hsOrb","hsPillars","hsOrb","hsMeteors"]},
-    {hp:0.50, gap:[850,1300], rot:["hsJudgment","hsOrb","hsMeteors","hsPillars","hsOrb"], banner:"EL HECHICERO REVELA SU PODER"}
+    {hp:1.00, gap:[1100,1600], rot:["hsRift","hsOrb","hsPillars","hsOrb","hsMeteors"]},
+    {hp:0.50, gap:[850,1300], rot:["hsJudgment","hsRift","hsOrb","hsMeteors","hsPillars","hsOrb"], banner:"EL HECHICERO REVELA SU PODER"}
   ]
 };
 
@@ -392,6 +395,7 @@ function hechEnemyTick(e, dt, tgt, dist){
     }
     return true;
   }
+  if(e.type==="hechicero_supremo" && typeof hechRiftRule==="function") hechRiftRule(e);
   if(e.type==="hechicero_supremo" || e.type==="angel_corrompido"){
     // si lo acorralan, se teletransporta (con aviso breve)
     e.blinkCd = (e.blinkCd||2500) - dt;

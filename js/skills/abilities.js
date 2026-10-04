@@ -312,6 +312,7 @@ function castAbility(caster, sk, isUlt, idx){
   if(axiomFreezeTimer>0 && caster!==axiomFreezeCaster && sk.kind!=="force_quit_ult") return; // nadie mas actua mientras dura Force Quit
   if(caster.fused) return; // La Profeta fusionada (Ascensión del Elegido): no puede lanzar nada ella misma
   const skillKey = isUlt ? "ult" : (idx===undefined ? 0 : idx);
+  if(caster===player&&caster.alive&&typeof AlphaServices!=="undefined") AlphaServices.emit("skill",{champion:caster.classKey,arena:currentArena,skill:String(skillKey)});
   // Overcap de objetos (sección 14): legendarios/míticos pueden sumar niveles EFECTIVOS de
   // habilidad sin tocar los puntos permanentes invertidos -por eso esto usa una copia
   // (effectiveMasteryFor), nunca masteryOf() a secas, que sigue siendo lo que ve la UI-.
@@ -340,6 +341,7 @@ function castAbility(caster, sk, isUlt, idx){
     if(isUlt){ showBanner("★ "+sk.name); flashScreen(0.22, hexToRgb(caster.cls.glow)); }
     playSfx(isUlt?"ult":"cast");
   }
+  if(caster.alive) vfxChampionSignature(caster.x,caster.y,caster.classKey,idx||0,isUlt,Math.atan2(caster.fy,caster.fx));
   if(caster.alive) vfxShock(caster.x, caster.y, 8, isUlt ? 70 : 44, hexToRgb(caster.cls.glow||"#ffffff"), isUlt ? 420 : 260, caster===player ? 1 : 0);
   if(caster.classKey && caster.alive){ itemProcsOnCast(caster, sk, isUlt); setsOnCast(caster, sk, isUlt); if(caster.stats) caster.stats.skillCasts = (caster.stats.skillCasts||0) + 1; }
   caster.attackAnim = isUlt ? 320 : 240;
@@ -355,8 +357,20 @@ function castAbility(caster, sk, isUlt, idx){
   // Refuerzos de habilidad (js/systems/boons.js): anota a quién golpea ESTE lanzamiento y, al
   // terminar, dispara lo que transforma la habilidad (zonas, rebotes, estados, ecos...).
   const _boonR = boonCastBegin(caster, sk);
+  const priorOwner=runCastOwner; runCastOwner=caster;
   try{
   switch(sk.kind){
+    case "expedition": expeditionCast(caster,sk,isUlt,dmg,AREA,DUR,POWER); break;
+    case "ascension": ascensionCast(caster,sk,isUlt,dmg,AREA,DUR,POWER); break;
+
+    case "yn_gaze": case "yn_stroganoff": case "yn_leave": case "yn_patience":
+    case "my_tower": case "my_splash": case "my_bubble": case "my_tantrum":
+    case "br_turret": case "br_purge": case "br_dismantle": case "br_overclock":
+    case "es_hook": case "es_line": case "es_guard": case "es_ring":
+    case "mo_resin": case "mo_salt": case "mo_distill": case "mo_alembic":
+    case "fa_lantern": case "fa_flash": case "fa_path": case "fa_vigil":
+    case "ir_anchor": case "ir_tension": case "ir_cut": case "ir_triangle":
+      portadorCast(caster, sk, isUlt, dmg, AREA, DUR, POWER); break;
 
     // El Libertador (js/champions/libertador.js) y Eren (js/champions/eren.js)
     case "sm_bayonet": case "sm_granaderos": case "sm_san_lorenzo": case "sm_andes_ult":
@@ -491,9 +505,24 @@ function castAbility(caster, sk, isUlt, idx){
     case "last_duel_ult": {
       // Musashi — Último Duelo: ver enterLastDuel/updateLastDuel/exitLastDuel para el ciclo de
       // vida completo (aislamiento, buffs temporales, Golpe de Gracia, Senda del Rōnin).
-      const duelTarget = caster.duelTarget;
+      let duelTarget = caster.duelTarget;
+      // Sin Marca activa la definitiva ya gastó la carga (useUltimate la consume antes de lanzar): en vez
+      // de fallar en silencio, Musashi elige al rival más digno a 320 u (jefe > élite > común, el más cercano).
       if(!duelTarget || !duelTarget.alive || duelTarget.isDuelLocked){
-        if(caster===player) floatText(caster.x, caster.y-46, "Necesitás una Marca de Duelo activa", null);
+        const W = {jefe:6, subjefe:5, elite:3, subelite:2};
+        let best = null, bestScore = -1;
+        for(const e of enemies){
+          if(!e.alive || e.isDuelLocked || e.cineT > 0) continue;
+          const d = distance(caster, e); if(d > 320) continue;
+          const score = (W[e.rank]||1)*1000 - d;
+          if(score > bestScore){ bestScore = score; best = e; }
+        }
+        if(best){ musashiAddConcentration(caster, best, 1); duelTarget = best; }
+      }
+      if(!duelTarget || !duelTarget.alive || duelTarget.isDuelLocked){
+        // nadie a quien retar: se devuelve la carga y el enfriamiento (nunca se pierde la definitiva)
+        caster.ultCharge = caster.ultMax; caster.ultCd = 0;
+        if(caster===player) floatText(caster.x, caster.y-46, "No hay rival cerca para el duelo", null);
         break;
       }
       enterLastDuel(caster, duelTarget, sk);
@@ -1132,6 +1161,14 @@ function castAbility(caster, sk, isUlt, idx){
         floatText(h.x, h.y-30, "+"+Math.round(amt), "heal");
         if(newfxReady('holyHealBurst')) vfxSprite("fxHolyHealBurst", 0, h.x, h.y+2, 96, 480, h, 0, false, 0.95, 8);
       }
+      // Elyra: impacto único, con menor radio ofensivo y sin desplazar jefes.
+      if(sk.dmgMult > 0 && sk.damageRadius > 0){
+        const offensiveRadius = sk.damageRadius * AREA;
+        for(const e of enemies){
+          if(e.alive && distance(caster,e) <= offensiveRadius) damageEnemy(e, dmg, {src:caster});
+        }
+        tieredBurstVFX(caster.x, caster.y, offensiveRadius, allocLevel(mastery), "#ffe7a5", "#d3ffdb");
+      }
       particles.push({x:caster.x,y:caster.y, life:600, ring:true, maxLife:600, maxR:(sk.radius*AREA), color:"#7dffa0"});
       tieredBurstVFX(caster.x, caster.y, (sk.radius*AREA)*0.6, allocLevel(mastery), "#7dffa0", "#c8ffd8");
       break;
@@ -1482,5 +1519,5 @@ function castAbility(caster, sk, isUlt, idx){
       break;
     }
   }
-  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; if(_boonR) boonCastEnd(_boonR, POWER, AREA); }
+  } finally { _castCtx = _prevCastCtx; caster._castUlt = _prevUlt; if(_boonR) boonCastEnd(_boonR, POWER, AREA); runCastOwner=priorOwner; }
 }

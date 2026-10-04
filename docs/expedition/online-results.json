@@ -1,0 +1,495 @@
+{
+  "checks": [
+    {
+      "host": "nahir",
+      "guest": "vesper",
+      "ok": true,
+      "rh": {
+        "k": "vesper",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_line"
+          },
+          {
+            "id": 2,
+            "owner": 1,
+            "kind": "ex_stitch"
+          },
+          {
+            "id": 3,
+            "owner": 2,
+            "kind": "ex_soil"
+          }
+        ],
+        "hp": 218,
+        "skin": "vesper_skin"
+      },
+      "rg": {
+        "k": "vesper",
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_line"
+          },
+          {
+            "id": 2,
+            "owner": 1,
+            "kind": "ex_stitch"
+          },
+          {
+            "id": 3,
+            "owner": 2,
+            "kind": "ex_soil"
+          }
+        ],
+        "hp": 218,
+        "skin": "vesper_skin"
+      }
+    },
+    {
+      "host": "baltra",
+      "guest": "nahir",
+      "ok": true,
+      "rh": {
+        "k": "nahir",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 5,
+            "owner": 1,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 6,
+            "owner": 1,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 7,
+            "owner": 1,
+            "kind": "ex_reflection"
+          }
+        ],
+        "hp": 215,
+        "skin": "nahir_skin"
+      },
+      "rg": {
+        "k": "nahir",
+        "objects": [
+          {
+            "id": 5,
+            "owner": 1,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 6,
+            "owner": 1,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 7,
+            "owner": 1,
+            "kind": "ex_reflection"
+          }
+        ],
+        "hp": 215,
+        "skin": "nahir_skin"
+      }
+    },
+    {
+      "host": "maura",
+      "guest": "baltra",
+      "ok": true,
+      "rh": {
+        "k": "baltra",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_toll"
+          }
+        ],
+        "hp": 366,
+        "skin": "baltra_skin"
+      },
+      "rg": {
+        "k": "baltra",
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_toll"
+          }
+        ],
+        "hp": 366,
+        "skin": "baltra_skin"
+      }
+    },
+    {
+      "host": "dariel",
+      "guest": "maura",
+      "ok": true,
+      "rh": {
+        "k": "maura",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_thorns"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_bark"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_line"
+          },
+          {
+            "id": 5,
+            "owner": 1,
+            "kind": "ex_forest"
+          },
+          {
+            "id": 7,
+            "owner": 2,
+            "kind": "ex_stitch"
+          }
+        ],
+        "hp": 352,
+        "skin": "maura_skin"
+      },
+      "rg": {
+        "k": "maura",
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_thorns"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_bark"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_line"
+          },
+          {
+            "id": 5,
+            "owner": 1,
+            "kind": "ex_forest"
+          },
+          {
+            "id": 7,
+            "owner": 2,
+            "kind": "ex_stitch"
+          }
+        ],
+        "hp": 352,
+        "skin": "maura_skin"
+      }
+    },
+    {
+      "host": "orsa",
+      "guest": "dariel",
+      "ok": true,
+      "rh": {
+        "k": "dariel",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 1,
+            "owner": 2,
+            "kind": "ex_thorns"
+          },
+          {
+            "id": 2,
+            "owner": 2,
+            "kind": "ex_bark"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_concert"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_forest"
+          }
+        ],
+        "hp": 276,
+        "skin": "dariel_skin"
+      },
+      "rg": {
+        "k": "dariel",
+        "objects": [
+          {
+            "id": 1,
+            "owner": 2,
+            "kind": "ex_thorns"
+          },
+          {
+            "id": 2,
+            "owner": 2,
+            "kind": "ex_bark"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_concert"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_forest"
+          }
+        ],
+        "hp": 276,
+        "skin": "dariel_skin"
+      }
+    },
+    {
+      "host": "tibor",
+      "guest": "orsa",
+      "ok": true,
+      "rh": {
+        "k": "orsa",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 2,
+            "owner": 2,
+            "kind": "ex_thorns"
+          },
+          {
+            "id": 3,
+            "owner": 2,
+            "kind": "ex_bark"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_forest"
+          },
+          {
+            "id": 5,
+            "owner": 1,
+            "kind": "ex_storm"
+          }
+        ],
+        "hp": 215,
+        "skin": "orsa_skin"
+      },
+      "rg": {
+        "k": "orsa",
+        "objects": [
+          {
+            "id": 2,
+            "owner": 2,
+            "kind": "ex_thorns"
+          },
+          {
+            "id": 3,
+            "owner": 2,
+            "kind": "ex_bark"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_forest"
+          },
+          {
+            "id": 5,
+            "owner": 1,
+            "kind": "ex_storm"
+          }
+        ],
+        "hp": 215,
+        "skin": "orsa_skin"
+      }
+    },
+    {
+      "host": "zahra",
+      "guest": "tibor",
+      "ok": true,
+      "rh": {
+        "k": "tibor",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 2,
+            "owner": 1,
+            "kind": "ex_swarm"
+          }
+        ],
+        "hp": 213,
+        "skin": "tibor_skin"
+      },
+      "rg": {
+        "k": "tibor",
+        "objects": [
+          {
+            "id": 2,
+            "owner": 1,
+            "kind": "ex_swarm"
+          }
+        ],
+        "hp": 213,
+        "skin": "tibor_skin"
+      }
+    },
+    {
+      "host": "renko",
+      "guest": "zahra",
+      "ok": true,
+      "rh": {
+        "k": "zahra",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_line"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_vent"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 5,
+            "owner": 2,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 6,
+            "owner": 2,
+            "kind": "ex_reflection"
+          }
+        ],
+        "hp": 213,
+        "skin": "zahra_skin"
+      },
+      "rg": {
+        "k": "zahra",
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_line"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_vent"
+          },
+          {
+            "id": 4,
+            "owner": 2,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 5,
+            "owner": 2,
+            "kind": "ex_reflection"
+          },
+          {
+            "id": 6,
+            "owner": 2,
+            "kind": "ex_reflection"
+          }
+        ],
+        "hp": 213,
+        "skin": "zahra_skin"
+      }
+    },
+    {
+      "host": "sira",
+      "guest": "renko",
+      "ok": true,
+      "rh": {
+        "k": "renko",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 2,
+            "owner": 1,
+            "kind": "ex_mound"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_faults"
+          }
+        ],
+        "hp": 360,
+        "skin": "renko_skin"
+      },
+      "rg": {
+        "k": "renko",
+        "objects": [
+          {
+            "id": 2,
+            "owner": 1,
+            "kind": "ex_mound"
+          },
+          {
+            "id": 3,
+            "owner": 1,
+            "kind": "ex_faults"
+          }
+        ],
+        "hp": 360,
+        "skin": "renko_skin"
+      }
+    },
+    {
+      "host": "vesper",
+      "guest": "sira",
+      "ok": true,
+      "rh": {
+        "k": "sira",
+        "casts": 4,
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_atlas"
+          }
+        ],
+        "hp": 210,
+        "skin": "sira_skin"
+      },
+      "rg": {
+        "k": "sira",
+        "objects": [
+          {
+            "id": 1,
+            "owner": 1,
+            "kind": "ex_atlas"
+          }
+        ],
+        "hp": 210,
+        "skin": "sira_skin"
+      }
+    }
+  ],
+  "errors": []
+}

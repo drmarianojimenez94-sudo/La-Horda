@@ -1,0 +1,119 @@
+{
+  "checks": [
+    {
+      "host": "brasa",
+      "guest": "myla",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "brasa",
+          "myla",
+          "eslabon",
+          "cazadora"
+        ],
+        "casts": 4,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 1
+          },
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "chain",
+            "owner": 2
+          },
+          {
+            "kind": "tantrum",
+            "owner": 1
+          }
+        ]
+      },
+      "rg": {
+        "k": "myla",
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 1
+          },
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "chain",
+            "owner": 2
+          },
+          {
+            "kind": "shot",
+            "owner": 0
+          },
+          {
+            "kind": "tantrum",
+            "owner": 1
+          },
+          {
+            "kind": "shot",
+            "owner": 0
+          }
+        ],
+        "tantrum": 1,
+        "ready": true,
+        "skin": "skin_merienda_magica"
+      }
+    },
+    {
+      "host": "myla",
+      "guest": "iria",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "myla",
+          "iria",
+          "eslabon",
+          "cazadora"
+        ],
+        "casts": 4,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "chain",
+            "owner": 2
+          },
+          {
+            "kind": "triangle",
+            "owner": 1
+          }
+        ]
+      },
+      "rg": {
+        "k": "iria",
+        "casts": 3,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "chain",
+            "owner": 2
+          },
+          {
+            "kind": "triangle",
+            "owner": 1
+          }
+        ],
+        "tantrum": 0,
+        "ready": true,
+        "skin": "skin_hilo_umbral"
+      }
+    }
+  ],
+  "errors": []
+}
