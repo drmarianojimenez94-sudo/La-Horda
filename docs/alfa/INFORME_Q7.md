@@ -19,20 +19,24 @@
 11. **Botones chicos para dedos grandes** → los "+" para subir habilidad se ven igual pero ahora se tocan en 44 px; Pausa y Sonido tienen 44 px también en tablets; Curación/Pacto 46 px.
 12. **Menús del navegador al mantener apretado** → mantener un botón ya no abre el menú de Android ni la lupa/copiar de iPhone, ni selecciona texto.
 13. **Teclado en Opciones** → al abrir Opciones con teclado el foco entra al panel, Esc las cierra y el foco vuelve al botón que las abrió.
-14. **Cooperativo (invitado con Sylva)** → antes, si el invitado cancelaba la Flecha Perforante, el anfitrión la disparaba igual. Ahora se cancela de verdad.
+14. **Mouse en la compu** → antes el mouse solo "apuntaba" sobre la parte libre del mapa (las zonas invisibles del joystick y de los botones tapan media pantalla cada una). Ahora las habilidades apuntan al mouse en cualquier lugar y el clic en el hueco de la zona de botones también ataca.
+15. **Modo zurdo con el HUD nuevo** → pausa/sonido y la Definitiva también cambian de lado.
+16. **Cooperativo (invitado con Sylva)** → antes, si el invitado cancelaba la Flecha Perforante, el anfitrión la disparaba igual. Ahora se cancela de verdad.
 
 ### Lo que quedó pendiente y por qué
 
-- **El joystick (en reposo) se dibuja encima de la lista de aliados** en celulares apaisados (la lista baja hasta donde está el joystick). No traba nada (la lista no se toca) pero se lee peor. Arreglarlo bien requiere mover la lista de aliados o el cuadro del Hechicero, que son del HUD (equipo Q5). Recomendación: compactar la lista de aliados en pantallas de menos de 420 px de alto.
+- **Mantener una habilidad sin arrastrar no la lanza**: desde la rama principal, mantener un botón de habilidad medio segundo abre su ficha ("inspector") y al soltar NO se lanza. Un jugador nuevo que deja el dedo apoyado puede creer que no anda. Es una decisión de diseño de la rama principal y no la cambié; recomendación: que el mantener sin arrastrar lance igual al soltar cuando la habilidad está lista, y dejar la ficha solo para cuando está en enfriamiento (o desde la pausa/panel táctico).
 - **Alto contraste** cubre los avisos de peligro comunes (círculos, conos, líneas, anillos y zona segura). Algunos jefes dibujan avisos propios en su archivo y no lo toman.
 - **Mando**: sirve para jugar la partida y pausar/continuar; los menús todavía se manejan con toque o mouse.
 - **Vibración en iPhone**: no se puede (limitación de Safari).
-- Probado en navegador emulado (Chromium con toques reales simulados); **no probado en un teléfono físico ni con un mando físico** (el mando se probó simulado).
+- El joystick encima de la lista de aliados (que había visto al principio) ya no pasa con el HUD nuevo que integró el equipo de HUD.
+- Probado en navegador emulado (Chromium con toques reales simulados por el protocolo del navegador); **no probado en un teléfono físico ni con un mando físico** (el mando se probó simulado).
 
 ### Pruebas corridas
 
 - Nueva: `tools/alfa/q7_controls.js` (5 pantallas × normal/zurdo, multitouch, joystick flotante, dedo que sale, cambio de pestaña, pausa con el dedo apoyado, apuntado cortado, sin zoom/selección, mouse, teclado, foco, Opciones y persistencia, mando simulado, guía de primera vez, vibración, sacudida, alto contraste). Resultado: ver detalle técnico.
-- Existentes: `tools/regression/t_drag_aim.js` (apuntado arrastrando y tocando), `tools/regression/t_juice.js` (sacudida). Resultado: ver detalle técnico.
+- Existentes: `tools/regression/t_drag_aim.js` (apuntado arrastrando y tocando, 12 controles) y `tools/regression/t_juice.js` (sacudida y efectos): **pasan**.
+- Nueva `q7_controls.js`: **81 controles, todos pasan** sobre la rama integrada (última corrida por partes: disposición 40/40, táctil, opciones, teclado y mando OK).
 
 ### Nota de mi área para el alfa: **7,5 / 10**
 
@@ -62,11 +66,21 @@ Los controles táctiles ya no se traban, se pueden jugar con teclado y mando, y 
 - `js/arenas/{micelial,abismo,ciudad,fortaleza,minas}/*-render.js` — minimapa con `hudMirrorX` (modo zurdo).
 - `index.html` — filas nuevas de Opciones, botón de Opciones en la Pausa, carga de `prefs.js`, `input-desk.js`, `controls.css`.
 
-### Commits (rama del worktree, integrados como "Integración alfa: Q7")
+### Commits
 - 04a10dc Controles: joystick flotante, nada queda pegado, teclado/mouse/mando, opciones de accesibilidad y modo zurdo
 - (prueba) Prueba de controles: soltar solo el dedo de la habilidad en el multitouch
 - edbdc2d Merge origin/main en la rama de controles (Q7)
 - ae00eba Controles: el mouse apunta en toda la pantalla y el clic en el hueco de los botones ataca; la ficha de habilidad y la Definitiva se sueltan si se pierde el dedo; prueba robusta tras recargar
+- (todo lo anterior entró en "Integración alfa: Q7", 4fdd58c). Después de integrar:
+- ba79843 Informe Q7; prueba del mando con más margen
+- f30d4f2 Prueba Q7: esperas más largas para el mando con la máquina cargada
+- 66d6fc8 Pruebas: el arrastre de la Custodia (apunta a un aliado) no se mide con señuelos enemigos; t_juice espera más la carga
+- 4ca3535 Modo zurdo con el HUD nuevo: pausa/sonido y Definitiva espejados; sin pisar el diseño 44x44 de pausa y sonido
+- 14c92cc Guía de primera vez: sin aro en el joystick cuando se juega con teclado o mando
+- ae10780 Prueba Q7: el toque del multitouch es corto
 
-### Resultados de pruebas
-(se completa abajo con la última corrida)
+### Resultados de pruebas (rama integrada `claude/horda-latest-updates-gv4tlf` + estos commits)
+- `SE_BASE_URL=http://127.0.0.1:8907 node tools/alfa/q7_controls.js` → TODO OK (81 PASS). Secciones: `ONLY=layout|touch|options|keyboard|gamepad`.
+- `node tools/regression/t_drag_aim.js` → TODO OK (había 1 falla por un campeón nuevo de la rama principal, la Custodia del Eslabón, que apunta a un ALIADO: la prueba ahora lo reconoce; no era un error del juego).
+- `node tools/regression/t_juice.js` → SUMMARY OK fails=0 (se le subió el tiempo de carga: con la máquina cargada no llegaba en 30 s).
+- Nota: con 5 agentes a la vez la máquina estaba muy cargada (y el disco casi lleno, por archivos de otros equipos); algunas esperas de las pruebas se alargaron para no dar falsos rojos.
