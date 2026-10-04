@@ -60,16 +60,28 @@ actualizar el servidor, mantenerlo despierto y qué hacer si algo falla ese día
 
 ## Pruebas corridas
 
-- `server/test-relay.js`, `test-accounts.js`, `test-trades.js`, `test-game-master.js`,
-  `test-owner-policy.js`, `test-founders.js`, `test-presence.js`, `test-admin.js`,
-  `test-owner-recovery.js`: todas OK.
-- `tools/alpha/account-environments.js`, `tools/alpha/services-test.js`: OK.
-- Nuevas: `tools/net-test/server_restart.js` (dormido 15 s, reinicio en sala, reinicio en partida, solo
-  sin servidor; celulares 844×390 táctiles): OK. `tools/net-test/old_server.js` (relays viejos v0 y v1):
-  OK.
-- `tools/net-test/coldstart.js`, `disconnect.js`, `e2e.js 2`: OK (antes del merge con main; a repetir).
+Sobre la base integrada final (rama de integración + main ff9054d):
+- Servidor, sin navegador: `server/test-relay.js`, `test-accounts.js`, `test-trades.js`,
+  `test-game-master.js` (127), `test-owner-policy.js`, `test-founders.js` (106), `test-presence.js`,
+  `test-admin.js`, `test-owner-recovery.js`, `tools/alpha/account-environments.js`,
+  `tools/alpha/services-test.js`: **todas OK**.
 
-## Nota de mi área para el alfa: 7/10 (provisoria)
+Con navegadores (celular 844×390 táctil, relay real), sobre main mergeado (antes del último merge de
+integración, que no tocó el online):
+- `tools/net-test/server_restart.js` (nueva: servidor dormido 15 s, reinicio en la sala, reinicio en
+  partida, SOLO sin servidor): **OK** (23/23).
+- `tools/net-test/old_server.js` (nueva: relays viejos v0 y v1 sacados del historial): **OK** (24/24).
+- `tools/net-test/leaderboard.js`: **OK** (antes 12 fallas: era la prueba).
+- `tools/net-test/accounts.js`: **OK** en 2 de 3 corridas; 1 falla intermitente (ver Pendiente).
+- `disconnect.js`, `coldstart.js`, `e2e.js 2`: OK antes del merge con main.
+
+**NO pude correr** `e2e.js 2/4`, `public_rooms`, `trade` sobre la base integrada final: la máquina
+compartida se quedó sin memoria (16 GB usados por los 7 equipos, carga 40–150 sobre 4 núcleos; ni
+`node -e "console.log(1)"` arrancaba en 100 s y el sistema mató mi relay). Esas pruebas quedaron
+actualizadas (marcan el entrenamiento hecho) y hay que correrlas cuando la máquina esté libre:
+`bash` con `SITE=… RELAY=… node tools/net-test/e2e.js 2` (ver tools/net-test/README.md).
+
+## Nota de mi área para el alfa: 7/10
 
 Lo que se juega (crear sala, unirse, jugar, reconectar) es sólido y ahora los cortes del servidor se
 explican bien. Resta: el servidor real no lo pude verificar y depende de que la base de datos y las
