@@ -1,8 +1,8 @@
 "use strict";
 // Generated from docs/balance/champion-entry-reference.json; do not drift from that file.
 const CHAMPION_BALANCE_REFERENCE = {
-  "version": 1,
-  "date": "2026-09-30",
+  "version": 2,
+  "date": "2026-10-03",
   "knownChampions": [
     "tanque",
     "guerrero",
@@ -218,5 +218,16 @@ const CHAMPION_BALANCE_REFERENCE = {
     "basicDPS": 0.45,
     "speed": 0.15
   },
-  "compositeCeiling": 1.15
+  "compositeCeiling": 1.15,
+  "profiles": {
+    "founder": {
+      "categories": [
+        "FOUNDER"
+      ],
+      "statMultiplier": 1.35,
+      "compositeCeiling": 1.6,
+      "simulationCeilingMultiplier": 2.6,
+      "rationale": "Regentes Fundadores: deliberadamente por encima de STANDARD pero acotados (sin valores infinitos). Mismo normalizador y misma simulación; solo cambia el techo, explícito y versionado."
+    }
+  }
 };

@@ -34,6 +34,49 @@
 | Zahra, la Mano de la Válvula (`zahra`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Renko, el Jardinero de Nombres (`renko`) | tanque | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Sira, la Cartógrafa del Regreso (`sira`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Nano GM, el Regente del Umbral (`nano_gm`) | mago | **PASS*** | 0 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Facu GM, el Soberano de las Mareas (`facu_gm`) | asesino | **PASS*** | 0 | 4 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Aurelia, la Arquitecta Solar (`aurelia`) | mago | **PASS*** | 0 | 2 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Khepri, el Portador del Enjambre (`khepri`) | asesino | **PASS*** | 0 | 2 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Velmira, la Reina de las Máscaras (`velmira`) | soporte | **PASS*** | 0 | 2 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Vhal, el Astrónomo Caído (`vhal`) | mago | **PASS*** | 0 | 2 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Bront, la Fortaleza Viviente (`bront`) | tanque | **PASS*** | 0 | 2 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Oriel, la Portera de las Cicatrices (`oriel`) | soporte | **PASS*** | 0 | 2 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 
 ## Detalle de FAIL / WARNING
+
+### Nano GM, el Regente del Umbral — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+- **WARNING** [metadata] Autoridad del GM: descripción larga (273): el tooltip usa shortDescription
+
+### Facu GM, el Soberano de las Mareas — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+- **WARNING** [metadata] Mente de Marea: descripción larga (269): el tooltip usa shortDescription
+- **WARNING** [metadata] El Océano Reclama la Arena: descripción larga (204): el tooltip usa shortDescription
+
+### Aurelia, la Arquitecta Solar — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Khepri, el Portador del Enjambre — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Velmira, la Reina de las Máscaras — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Vhal, el Astrónomo Caído — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Bront, la Fortaleza Viviente — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Oriel, la Portera de las Cicatrices — PASS*
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
 

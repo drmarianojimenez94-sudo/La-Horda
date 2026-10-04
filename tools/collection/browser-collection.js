@@ -14,10 +14,12 @@ const assert = require('node:assert/strict');
    const failures=[];
    for(const c of CHAMPION_CATALOG){
      codexChampTab='ficha';const html=codexChampHtml(c.id);const hist=(CODEX_CHAMP_LORE[c.id]||{}).history;
-     if(hist && html.split(_cxEsc(hist)).length!==2) failures.push(c.id);
+     if(html.split(_cxEsc(c.lore)).length!==2) failures.push(c.id); // la descripción de tarjeta aparece una sola vez
+     if(hist && html.split(_cxEsc(hist)).length!==2) failures.push(c.id+':history');
    }
    return {duplicated,failures,catalog:cosmeticCatalog().length};
  });
+ // Presentación uniforme (js/data/champion-identity.js + champion-presentation.js): ninguna descripción de tarjeta repite la historia.
  assert.deepEqual(audit.duplicated,[]); assert.deepEqual(audit.failures,[]);
  for(const [width,height] of [[844,390],[667,375]]){
    await page.setViewportSize({width,height});

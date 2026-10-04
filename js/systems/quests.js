@@ -155,7 +155,7 @@ function questsRoll(kind, key, V, exclude){
     if(out.length >= 3) break;
     if(t.champ && out.some(c=>c.champ)) continue;              // un solo desafío de guardián por rotación
     const c = {tpl:t.id, stat:t.stat, n:t.n[ix], gold:t.gold[ix], done:false};
-    if(t.champ){ const all = CHAMPION_CATALOG.map(x=>x.id); let i = Math.floor(rng()*all.length);
+    if(t.champ){ const all = CHAMPION_CATALOG.map(x=>x.id).filter(k=>typeof championInProgression!=="function" || championInProgression(k)); let i = Math.floor(rng()*all.length);
       for(let k=0;k<all.length && !owned.includes(all[i]); k++) i = (i+1) % all.length; c.champ = all[i]; }
     if(c.stat === "distinctArenas" || c.stat === "distinctChamps") c.set = [];
     c.base = _qChalStat(V, c);

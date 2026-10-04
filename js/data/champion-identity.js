@@ -186,5 +186,8 @@ function applyChampionIdentity(){
   }
   return report;
 }
+// Expansión Ascensión (js/champions/ascension/catalog.js): misma forma canónica, una sola fuente de texto.
+if(typeof ASCENSION !== "undefined") for(const [k, p] of Object.entries(ASCENSION)) if(!CHAMPION_IDENTITY[k])
+  CHAMPION_IDENTITY[k] = {name:p.name, title:p.title.replace(/^(El|La|Los|Las) /, m => m.toLowerCase()), origin:p.origin, tagline:p.tagline, lore:p.history};
 const CHAMPION_IDENTITY_CHANGES = applyChampionIdentity();
 const SKIN_NAMES_NORMALIZED = applySkinNameStandard();

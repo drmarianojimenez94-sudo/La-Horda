@@ -59,7 +59,7 @@ function pickLobbyAllies(mine){
   const myRole = CLASSES[mine].roleCategory;
   const others = [];
   ROLE_ORDER.filter(r=>r!==myRole).forEach(role=>{
-    const pool = Object.keys(CLASSES).filter(k=>k!==mine && CLASSES[k].roleCategory===role);
+    const pool = Object.keys(CLASSES).filter(k=>k!==mine && CLASSES[k].roleCategory===role && championBotEligible(k));
     if(pool.length) others.push(pool[(Math.random()*pool.length)|0]);
   });
   return others;
@@ -82,6 +82,8 @@ function resetRunTransients(){
 function startRun(fromLevel){
   if(["gameover","victory"].includes(state)) duoRestoreLead();
   runLevel = fromLevel || 1;
+  // Campeones sin fila en el guardado (INTERNAL en Test Lab / herramientas): fila temporal en memoria.
+  if(CLASSES[selectedClass] && !save.champions[selectedClass]) save.champions[selectedClass] = mkChampion(false);
   resetRunTransients();
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
@@ -148,6 +150,8 @@ function startRun(fromLevel){
   beginLevel();
   if(typeof questsOnRunStart==="function") questsOnRunStart(); // logros y desafíos: empieza a contar esta partida
   setState("playing");
+  if(typeof founderPresenceOnRunStart==="function" && (fromLevel||1)===1) founderPresenceOnRunStart(); // Regente Fundador: banner de ARENA (online lo manda el relay)
+  if(typeof founderArenaInteraction==="function") founderArenaInteraction(); // Nano + Facu juntos: reacción cosmética 1–2 s
 }
 
 function spawnEmber(){

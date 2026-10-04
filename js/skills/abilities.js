@@ -361,6 +361,7 @@ function castAbility(caster, sk, isUlt, idx){
   try{
   switch(sk.kind){
     case "expedition": expeditionCast(caster,sk,isUlt,dmg,AREA,DUR,POWER); break;
+    case "ascension": ascensionCast(caster,sk,isUlt,dmg,AREA,DUR,POWER); break;
 
     case "yn_gaze": case "yn_stroganoff": case "yn_leave": case "yn_patience":
     case "my_tower": case "my_splash": case "my_bubble": case "my_tantrum":

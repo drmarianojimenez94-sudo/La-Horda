@@ -50,6 +50,8 @@
 const crypto = require("crypto");
 const adminLevels=require("./admin-levels");
 const gameMaster = require("./game-master");
+const entitlements = require("./entitlements");
+const rbac = require("./rbac");
 const fs = require("fs");
 const fsp = fs.promises;
 const path = require("path");
@@ -484,8 +486,36 @@ function create(opts){
   const explicitAdmins = opts.adminUsers !== undefined ? opts.adminUsers : process.env.ADMIN_USERS;
   const adminOverride = explicitAdmins !== undefined;
   const adminNames = String(explicitAdmins || "").split(",").map(s=>userKey(s.trim())).filter(Boolean);
+  // Founder champions: bound to stable account ids (operator-config "founders"), never to display names.
+  const founderConfig = opts.founders !== undefined ? opts.founders : (operatorConfig.founders || {});
+  let founderBindings = {};
+  const founderOf = user => { const f = user ? entitlements.founderOf(founderBindings, user.id) : null; return f ? { key: f.key, champion: f.champion } : null; };
   let ownerId = null;
   const isOwner = user => !!user && (adminOverride ? adminNames.includes(userKey(user.user)) : ownerId !== null && user.id === ownerId);
+  // Static roles (operator-config "roles": {"<account>": ["ADMIN"]}) resolved to stable ids at startup and
+  // after the reserved account registers. Never OWNER; an absent account is never auto-created.
+  const roleConfig = opts.roles !== undefined ? opts.roles : (operatorConfig.roles || {});
+  let configRoleIds = new Map();
+  isOwner.configRoles = user => (user && configRoleIds.get(user.id)) || [];
+  const reservedNames = () => new Set([...Object.values(founderConfig || {}).map(f => f && typeof f.account === "string" ? userKey(f.account.trim()) : ""),
+    ...Object.keys(roleConfig || {}).map(n => userKey(n.trim()))].filter(Boolean));
+  const founderSignupCode = opts.founderSignupCode !== undefined ? opts.founderSignupCode : process.env.FOUNDER_SIGNUP_CODE;
+  function signupCodeOk(given){
+    if(typeof founderSignupCode !== "string" || founderSignupCode.length < 8 || typeof given !== "string") return false;
+    const a = crypto.createHash("sha256").update(founderSignupCode).digest(), b = crypto.createHash("sha256").update(given).digest();
+    return crypto.timingSafeEqual(a, b);
+  }
+  async function resolvePolicies(){
+    founderBindings = await entitlements.resolveFounders(store, founderConfig, log);
+    const ids = new Map();
+    for(const [name, roles] of Object.entries(roleConfig || {})){
+      const u = await store.getUserByKey(userKey(String(name).trim()));
+      const valid = Array.isArray(roles) ? roles.filter(r => rbac.ASSIGNABLE.includes(r)) : [];
+      if(u && valid.length) ids.set(u.id, valid);
+      log("ROLE_POLICY", { roles: valid, bound: !!u });
+    }
+    configRoleIds = ids;
+  }
 
   function ownerAccess(user){
     const owner = isOwner(user);
@@ -505,6 +535,7 @@ function create(opts){
     try{
       await store.init();
       if(!adminOverride && configuredOwner){ const owner = await store.getUserByKey(configuredOwner); ownerId = owner ? owner.id : null; log("OWNER_POLICY", { bound: ownerId !== null }); }
+      await resolvePolicies();
       status = "ready"; lastError = "";
       if(store.persistent) log("ACCOUNTS_READY", { store: store.kind });
       else log("ACCOUNTS_READY", { store: store.kind, dir: dataDir,
@@ -616,11 +647,17 @@ function create(opts){
       { headers: { "retry-after": String(secs) }, body: { retryAfter: secs } });
   }
 
+  // Server-controlled champion ownership (Founder / grant-only). Applied to every save the server
+  // accepts or serves, so a manipulated client can never persist or receive a Founder it is not owed.
+  async function opsState(){ return (await store.gmRead()) || {}; }
+  async function entitledFor(u){ return entitlements.entitledChampions(founderBindings, await opsState(), u.id); }
   async function putSaveCommon(req, res, u, body){
     const data = body.data;
     if(!data || typeof data !== "object" || Array.isArray(data)) return err(req, res, 400, "BAD_SAVE", "El guardado no tiene el formato esperado.");
+    if(Buffer.byteLength(JSON.stringify(data)) > SAVE_MAX_BYTES) return err(req, res, 413, "SAVE_TOO_BIG", "El guardado es demasiado grande.");
+    const enforced = entitlements.sanitizeSave(data, await entitledFor(u)).changed;
+    if(enforced.length) log("SAVE_ENTITLEMENT_ENFORCED", { user: u.id, changed: enforced });
     const dataStr = JSON.stringify(data);
-    if(Buffer.byteLength(dataStr) > SAVE_MAX_BYTES) return err(req, res, 413, "SAVE_TOO_BIG", "El guardado es demasiado grande.");
     const base = Number.isInteger(body.baseVersion) && body.baseVersion >= 0 ? body.baseVersion : -1;
     if(base < 0 && !body.force) return err(req, res, 400, "BAD_VERSION", "Falta la versión base del guardado.");
     const summary = summarize(data);
@@ -630,27 +667,28 @@ function create(opts){
       return send(req, res, 409, { error: "CONFLICT", msg: "La nube tiene un progreso más nuevo de otro dispositivo.", version: c.version, updatedAt: c.updatedAt, summary: c.summary });
     }
     log("SAVE_PUT", { user: u.id, v: r.version, bytes: dataStr.length });
-    return send(req, res, 200, { ok: true, version: r.version, updatedAt: r.updatedAt, summary });
+    return send(req, res, 200, { ok: true, version: r.version, updatedAt: r.updatedAt, summary, enforced });
   }
 
-  async function adminAuth(req,res){
+  async function adminAuth(req,res,permission){
     const a=await auth(req); if(!a.user){authFail(req,res,a);return null;}
-    if(!isOwner(a.user)){err(req,res,403,"FORBIDDEN","Acceso exclusivo de administración.");return null;} return a.user;
+    if(!rbac.can(a.user,await opsState(),isOwner,permission)){err(req,res,403,"FORBIDDEN","Acceso exclusivo de administración.");return null;} return a.user;
   }
   async function adminTarget(body){ const u=await store.getUserByKey(userKey(body.user)); if(!u)return null;const s=await store.getSave(u.id);if(!s)return null;return {u,s,data:JSON.parse(s.data)}; }
   function adminProfile(t,version){return {user:t.u.user,version:version??t.s.version,champions:Object.entries(t.data.champions||{}).map(([key,c])=>({key,level:c.level,unlocked:!!c.unlocked}))};}
   const routes = {
-    "GET /api/admin/status":async(req,res)=>{const a=await auth(req);if(!a.user)return authFail(req,res,a);return send(req,res,200,{admin:isOwner(a.user)});},
-    "POST /api/admin/profile":async(req,res)=>{if(!await adminAuth(req,res))return;const body=await readBody(req,SMALL_BODY_BYTES),t=await adminTarget(body);if(!t)return err(req,res,404,"NOT_FOUND","No hay perfil guardado de ese usuario.");return send(req,res,200,adminProfile(t));},
+    "GET /api/admin/status":async(req,res)=>{const a=await auth(req);if(!a.user)return authFail(req,res,a);return send(req,res,200,{admin:rbac.rolesOf(a.user,await opsState(),isOwner).length>0});},
+    "POST /api/admin/profile":async(req,res)=>{if(!await adminAuth(req,res,"VIEW_USERS"))return;const body=await readBody(req,SMALL_BODY_BYTES),t=await adminTarget(body);if(!t)return err(req,res,404,"NOT_FOUND","No hay perfil guardado de ese usuario.");return send(req,res,200,adminProfile(t));},
     "POST /api/admin/level":async(req,res)=>{
-      const admin=await adminAuth(req,res);if(!admin)return;
+      const admin=await adminAuth(req,res,"EDIT_USER_PROGRESS");if(!admin)return;
       const body=await readBody(req,SMALL_BODY_BYTES),t=await adminTarget(body);if(!t)return err(req,res,404,"NOT_FOUND","No hay perfil guardado de ese usuario.");
       if(!Number.isInteger(body.baseVersion)||body.baseVersion!==t.s.version)return err(req,res,409,"CONFLICT","El perfil cambió. Consultalo de nuevo.");
       const old=t.data.champions?.[body.champion]?.level;
       try{t.data=adminLevels.editLevel(t.data,body.champion,body.level);}catch(e){return err(req,res,400,"BAD_LEVEL","Elegí un campeón desbloqueado y un nivel entero de 1 a 99.");}
       const put=await store.putSave(t.u.id,JSON.stringify(t.data),summarize(t.data),body.baseVersion,false);
       if(!put.ok)return err(req,res,409,"CONFLICT","El perfil cambió. Consultalo de nuevo.");
-      log("ADMIN_LEVEL",{admin:admin.id,user:t.u.id,champion:body.champion,from:old,to:body.level,version:put.version});return send(req,res,200,adminProfile(t,put.version));
+      log("ADMIN_LEVEL",{admin:admin.id,user:t.u.id,champion:body.champion,from:old,to:body.level,version:put.version});
+      await store.gmUpdate(async raw=>{const st=gameMaster.stateOf(raw);gameMaster.audit(st,admin,"level.set",{target:t.u.id,type:"champion",content:body.champion,before:old,after:body.level},now0());return {state:st,value:null};});return send(req,res,200,adminProfile(t,put.version));
     },
     "GET /api/health": async (req, res) => send(req, res, 200, Object.assign({ ok: status === "ready" }, info())),
     "POST /api/register": async (req, res, ip) => {
@@ -665,6 +703,10 @@ function create(opts){
       registers.hit("ip:" + ip, REGISTER_WINDOW_MS);
       const key = userKey(user);
       if(!adminOverride && configuredOwner && key === configuredOwner) return err(req, res, 403, "RESERVED_USER", "Ese nombre está reservado para la cuenta del operador existente.");
+      // Cuentas de Fundador / roles por configuración: reservadas. Solo el operador puede crearlas con el
+      // código FOUNDER_SIGNUP_CODE del servidor (nunca en el cliente); sin él, nadie puede ocuparlas.
+      const reserved = reservedNames().has(key);
+      if(reserved && !signupCodeOk(body.signupCode)) return err(req, res, 403, "RESERVED_USER", "Ese nombre está reservado.");
       if(await store.getUserByKey(key)) return err(req, res, 409, "USER_TAKEN", "Ese nombre de usuario ya existe. Probá con otro.");
       const now = Date.now();
       let u;
@@ -674,6 +716,7 @@ function create(opts){
       }catch(e){ if(e.code === "EXISTS") return err(req, res, 409, "USER_TAKEN", "Ese nombre de usuario ya existe. Probá con otro."); throw e; }
       const s = await newSession(u);
       log("ACCOUNT_CREATED", { user: u.id });
+      if(reserved) await resolvePolicies();
       return send(req, res, 201, Object.assign({ user: publicUser(u) }, s));
     },
     "POST /api/login": async (req, res, ip) => {
@@ -709,7 +752,15 @@ function create(opts){
       const s = await store.getSave(a.user.id);
       if(!s) return send(req, res, 200, { version: 0, updatedAt: 0, summary: null, data: null });
       let data = null; try{ data = JSON.parse(s.data); }catch(e){}
-      return send(req, res, 200, { version: s.version, updatedAt: s.updatedAt, summary: s.summary, data });
+      let version = s.version, updatedAt = s.updatedAt, summary = s.summary;
+      // A new entitlement (e.g. a founder bound after the save was written) is persisted with a new
+      // version so every device converges; a CAS conflict just serves the corrected copy.
+      if(data && entitlements.sanitizeSave(data, await entitledFor(a.user)).changed.length){
+        summary = summarize(data);
+        const put = await store.putSave(a.user.id, JSON.stringify(data), summary, s.version, false);
+        if(put.ok){ version = put.version; updatedAt = put.updatedAt; }
+      }
+      return send(req, res, 200, { version, updatedAt, summary, data });
     },
     "PUT /api/save": async (req, res) => {
       const a = await auth(req); if(!a.user) return authFail(req, res, a);
@@ -763,11 +814,13 @@ function create(opts){
       const e = { score: body.score, round: body.round, durationMs: body.durationMs, guardian: typeof body.guardian === "string" ? body.guardian : "",
         week: typeof body.week === "string" ? body.week : "", at: now };
       let bad = lbCheck(e, now);
+      // Rankings competitivos: Fundadores y campeones sin publicar no compiten (taxonomía compartida).
+      if(!bad && entitlements.isChampion(e.guardian)){ const m = entitlements.taxonomy().meta(e.guardian); if(!m.competitiveAllowed || m.releaseState !== "RELEASED") bad = { error: "NOT_COMPETITIVE", msg: "Ese campeón no participa del ranking." }; }
       // la partida tiene que entrar en el tiempo que pasó desde tu envío anterior (con 2 min de margen)
       if(!bad && last && e.durationMs > now - last + 120000) bad = { error: "IMPLAUSIBLE", msg: "Esa partida no entra en el tiempo desde tu envío anterior." };
       if(bad){
         log("LB_REJECT", { user: uid, why: bad.error, score: e.score, round: e.round, ms: e.durationMs });
-        return err(req, res, bad.error === "WEEK_CLOSED" ? 409 : bad.error === "IMPLAUSIBLE" ? 422 : 400, bad.error, bad.msg);
+        return err(req, res, bad.error === "WEEK_CLOSED" ? 409 : bad.error === "IMPLAUSIBLE" ? 422 : bad.error === "NOT_COMPETITIVE" ? 403 : 400, bad.error, bad.msg);
       }
       lbLast.set(uid, now);
       const put = await store.lbPut(e.week, uid, e.guardian, e);
@@ -778,7 +831,7 @@ function create(opts){
     }
   };
 
-  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,ownerAccess}));
+  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,ownerAccess,founderOf,founders:()=>founderBindings}));
 
   // Devuelve true si atendió el pedido (todo lo que empieza con /api/).
   function handle(req, res){
@@ -804,7 +857,14 @@ function create(opts){
     return true;
   }
 
-  return { handle, healthLine, info, ready, get store(){ return store; },
+  // Relay hook: resolves a session token to PUBLIC presence data only (never ids, email or IPs).
+  async function presence(token){
+    if(status !== "ready" || typeof token !== "string" || !/^[a-f0-9]{64}$/i.test(token)) return null;
+    const a = await auth({ headers: {} }, token); if(!a.user) return null;
+    const ent = await entitledFor(a.user);
+    return { name: a.user.name || a.user.user, founder: founderOf(a.user), grantOnly: Object.keys(ent) };
+  }
+  return { handle, healthLine, info, ready, presence, get store(){ return store; },
     async close(){ clearInterval(sweeper); if(store && store.close) await store.close(); } };
 }
 
