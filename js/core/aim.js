@@ -132,6 +132,8 @@ function aimCancelActive(){
   const st = aimState; aimState = null;
   st.el.classList.remove("aiming","aim-cancel");
   _showPad(false);
+  if(typeof abilityInspectorDisarm==="function") abilityInspectorDisarm(); // ficha de la habilidad (mantener): también se suelta
+  if(typeof abilityInspectorClose==="function" && (st.inspecting || (typeof abilityInspectorIsOpen==="function" && abilityInspectorIsOpen()))) abilityInspectorClose();
   if(st.sylva && player){ player.sylvaCharging = false; player.sylvaChargeTimer = 0; if(typeof netIsGuest==="function" && netIsGuest()) netSendToHost({k:"sylva", on:false, aim:null, cancel:true}); }
 }
 

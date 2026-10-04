@@ -33,10 +33,7 @@ async function boot(browser, vp, opts) {
       navigator.getGamepads = () => [window.__pad, null, null, null];
     }
     window.__vib = []; navigator.vibrate = (p) => { window.__vib.push(p); return true; };
-  }, opts);
-  await page.goto(`${BASE}/index.html`, { waitUntil: 'load', timeout: 180000 });
-  for (let k = 0; k < 400; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(() => {
+    // ayudantes (en el script de inicio: siguen existiendo después de recargar)
     window.__start = (champ, keepTut) => {
       for (const k of Object.keys(save.champions)) save.champions[k].unlocked = true;
       if (!keepTut) { save.tut = save.tut || {}; for (const k of ['basics', 'b_move', 'b_attack', 'b_skill', 'b_end', 'cooldown', 'hurt', 'energy', 'elite', 'boss', 'levelup', 'skillup', 'revive']) save.tut[k] = 1; }
@@ -49,7 +46,9 @@ async function boot(browser, vp, opts) {
       player.energy = player.maxEnergy = 9999; player.cds = [0, 0, 0]; player.ultCharge = 0;
     };
     window.__rect = id => { const el = typeof id === 'string' ? (document.getElementById(id) || document.querySelector(id)) : id; if (!el) return null; const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, vis: cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.05 && r.width > 0 }; };
-  });
+  }, opts);
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'load', timeout: 240000 });
+  for (let k = 0; k < 400; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
   const cdp = opts.desk ? null : await ctx.newCDPSession(page);
   return { ctx, page, cdp, E: (fn, a) => page.evaluate(fn, a), touch: (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts }) };
 }
@@ -233,11 +232,11 @@ async function optionsTests(browser) {
   const { E, page } = S;
   const saveBefore = await E(() => localStorage.getItem('laHordaSave_v1'));
   await E(() => openHubOptions());
-  await sleep(150);
+  await sleep(700);   // la ventana entra con una animación de escala: se mide quieta
   const vis = await E(() => { const box = document.getElementById('hub-options'); const p = box.querySelector('.ui-modal-panel').getBoundingClientRect();
-    const sm = [...box.querySelectorAll('.opt-switch, .opt-seg button')].map(b => b.getBoundingClientRect()).filter(r => r.height < 44 || r.width < 44).length;
-    return { open: !box.classList.contains('hidden'), fits: p.bottom <= innerHeight + 1 && p.right <= innerWidth + 1, sm, n: box.querySelectorAll('.opt-switch, .opt-seg').length }; });
-  check('OPTIONS.pantalla_abre_entra_y_blancos_44px', vis.open && vis.fits && vis.sm === 0 && vis.n >= 6, vis);
+    const sm = [...box.querySelectorAll('.opt-switch, .opt-seg button')].map(b => ({ t: b.textContent, w: b.offsetWidth, h: b.offsetHeight })).filter(r => r.h < 44 || r.w < 44);
+    return { anim: getComputedStyle(box.querySelector('.ui-modal-panel')).transform, open: !box.classList.contains('hidden'), fits: p.bottom <= innerHeight + 1 && p.right <= innerWidth + 1, sm, n: box.querySelectorAll('.opt-switch, .opt-seg').length }; });
+  check('OPTIONS.pantalla_abre_entra_y_blancos_44px', vis.open && vis.fits && vis.sm.length === 0 && vis.n >= 6, vis); console.log('  (transform del panel al medir: ' + vis.anim + ')');
   // tocar las opciones como un jugador
   for (const sel of ['.opt-switch[data-pref="lefty"]', '.opt-seg[data-pref="textLg"] button[data-v="1"]', '.opt-seg[data-pref="shake"] button[data-v="reducida"]', '.opt-switch[data-pref="vibrate"]', '.opt-switch[data-pref="contrast"]', '.opt-switch[data-pref="motion"]']) {
     await page.locator('#hub-options ' + sel).scrollIntoViewIfNeeded();
@@ -249,7 +248,7 @@ async function optionsTests(browser) {
   check('OPTIONS.se_guardan_al_tocar', st.p.lefty === true && st.p.textLg === true && st.p.shake === 'reducida' && st.p.vibrate === false && st.p.contrast === true && st.motion === '1'
     && /lefty/.test(st.body) && /text-lg/.test(st.body) && /hi-contrast/.test(st.body) && st.aria === 'true', st);
   await E(() => closeHubOptions());
-  await page.reload({ waitUntil: 'load' });
+  await page.reload({ waitUntil: 'load', timeout: 240000 });
   for (let k = 0; k < 400; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
   const re = await E(() => ({ P: Object.assign({}, PREFS), rm: JUICE.reduceMotion, body: document.body.className }));
   check('OPTIONS.persisten_al_recargar', re.P.lefty && re.P.textLg && re.P.shake === 'reducida' && !re.P.vibrate && re.P.contrast && re.rm && /lefty/.test(re.body) && /text-lg/.test(re.body), re);
@@ -339,7 +338,7 @@ async function keyboardTests(browser) {
 async function gamepadTests(browser) {
   const S = await boot(browser, { width: 1280, height: 720 }, { desk: true, gamepad: true });
   const { E } = S;
-  await E(() => __start('mago'));
+  await E(() => { __start('mago'); const e = spawnEnemy('esqueleto', false); e.x = 150; e.y = 40; e.hp = e.maxHp = 1e7; e.speed = e.baseSpeed = 0; e.atkCd = 1e9; });
   const x0 = await E(() => player.x);
   await E(() => { __pad.axes[0] = 1; __pad.axes[1] = 0; });
   await sleep(300);

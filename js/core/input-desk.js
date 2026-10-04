@@ -186,16 +186,24 @@ window.addEventListener("keyup", (ev)=>{
 /* ---------------- mouse sobre el mapa ---------------- */
 (function(){
   const cv = document.getElementById("game"); if(!cv) return;
-  cv.addEventListener("pointermove", (e)=>{ if(e.pointerType==="mouse"){ DESK.mouse.x = e.clientX; DESK.mouse.y = e.clientY; DESK.mouse.on = true; } });
-  cv.addEventListener("pointerleave", (e)=>{ if(e.pointerType==="mouse") DESK.mouse.on = false; });
-  cv.addEventListener("pointerdown", (e)=>{
-    if(e.pointerType!=="mouse" || e.button!==0 || state!=="playing") return;
+  // el mouse se sigue en TODA la ventana: las zonas del joystick y de los botones cubren media pantalla
+  // cada una y, mirando solo el canvas, apuntar hacia abajo a la derecha no funcionaba
+  window.addEventListener("pointermove", (e)=>{ if(e.pointerType==="mouse"){ DESK.mouse.x = e.clientX; DESK.mouse.y = e.clientY; DESK.mouse.on = true; } }, {passive:true});
+  document.documentElement.addEventListener("mouseleave", ()=>{ DESK.mouse.on = false; });
+  const sz = document.getElementById("skillzone");
+  const down = (e, host)=>{
+    if(e.pointerType!=="mouse" || e.button!==0 || state!=="playing" || e.target!==host) return;
     DESK.mouse.x = e.clientX; DESK.mouse.y = e.clientY; DESK.mouse.on = true;
     DESK.mouseBasic = true; _deskBasicSync();
-    try{ cv.setPointerCapture(e.pointerId); }catch(_){}
-  });
+    try{ host.setPointerCapture(e.pointerId); }catch(_){}
+  };
   const up = (e)=>{ if(e.pointerType==="mouse" && DESK.mouseBasic){ DESK.mouseBasic = false; _deskBasicSync(); } };
-  cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up); cv.addEventListener("lostpointercapture", up);
+  // clic en el mapa = atacar; también en el hueco de la zona de botones (que tapa el mapa abajo a la derecha)
+  for(const host of [cv, sz]){
+    if(!host) continue;
+    host.addEventListener("pointerdown", e=> down(e, host));
+    host.addEventListener("pointerup", up); host.addEventListener("pointercancel", up); host.addEventListener("lostpointercapture", up);
+  }
   cv.addEventListener("contextmenu", (e)=> e.preventDefault());
   // después de tocar un botón con el mouse (pausa, continuar) el foco no se queda en él: si no, Espacio lo volvía a apretar
   document.addEventListener("click", (e)=>{
