@@ -19,6 +19,12 @@ function _withRng(rng, fn){ const r = Math.random; Math.random = rng; try{ retur
 function shopState(){
   const day = shopDayKey();
   if(!save.shop || save.shop.day !== day) save.shop = generateShopOffers(day);
+  for(const of of save.shop.offers || []){
+    if(of.basePrice == null) of.basePrice = of.price;
+    const item = of.item || {};
+    const key = item.designId ? "d:"+item.designId : "a:"+item.type+":"+item.noun;
+    of.price = shopConfiguredPrice("item", key, of.basePrice);
+  }
   return save.shop;
 }
 function generateShopOffers(day){
@@ -71,10 +77,56 @@ const SHOP_PRICES = {
 };
 const SHOP_TEST_PRICE = SHOP_PRICES.set; // precio por pieza de set (lo usan "comprar lo que falta" y las skins)
 const SHOP_ARCHETYPE_TIERS = ["comun", "raro", "muyraro", "legendario"];
+// All prices remain earned gold. Server configuration is optional; offline uses
+// authored defaults. Invalid configuration cannot produce negative/NaN purchases.
+function shopValidGoldPrice(value){ return Number.isSafeInteger(value) && value >= 0 && value <= 10000000; }
+function shopConfiguredPrice(kind, id, fallback){
+  const base = Number.isSafeInteger(fallback) && fallback >= 0 ? fallback : 0;
+  const configured = typeof AlphaServices!=="undefined" && typeof AlphaServices.goldPrice==="function"
+    ? AlphaServices.goldPrice(kind, id, base) : base;
+  return configured === base || shopValidGoldPrice(configured) ? configured : base;
+}
 function shopPriceOf(entry, tier){
   if(!entry) return 0;
-  if(entry.kind==="archetype") return SHOP_PRICES.base[tier] || SHOP_PRICES.base.raro;
-  return SHOP_PRICES[entry.cat] || SHOP_PRICES.campeon;
+  const base = entry.kind==="archetype" ? (SHOP_PRICES.base[tier] || SHOP_PRICES.base.raro) : (SHOP_PRICES[entry.cat] || SHOP_PRICES.campeon);
+  return shopConfiguredPrice("item", entry.key || "d:"+entry.id, base);
+}
+function shopChampionPrice(id){
+  const cat = CHAMPION_CATALOG.find(c=>c.id===id);
+  if(cat && typeof championMeta==="function" && championMeta(id).showcasePrice) return championMeta(id).showcasePrice; // vitrina: precio visible, nunca comprable
+  return cat ? shopConfiguredPrice("champion", id, cat.priceGold) : 0;
+}
+// Categorías (js/data/champion-taxonomy.js): ¿se puede comprar con oro AHORA? Founders y EVENT fuera
+// de ventana no. El servidor además fuerza la propiedad de los no comprables al guardar.
+function shopChampionPurchasable(id){ return typeof championAvailability!=="function" || championAvailability(id).purchasable; }
+function shopChampionVisible(id){ return typeof championAvailability!=="function" || championAvailability(id).visible || !!(save.champions[id]||{}).unlocked; }
+function shopSetPrice(setId){
+  return shopSetMissing(setId).reduce((total,id)=>total+shopPriceOf({key:"d:"+id,id,kind:"designed",cat:"set"}),0);
+}
+function shopSkinPrice(setId){
+  const missing = shopSetMissing(setId), all = setPieceIds(setId);
+  if(!missing.length || skinOwnedFull(setId)) return 0;
+  const full = all.reduce((total,id)=>total+shopPriceOf({key:"d:"+id,id,kind:"designed",cat:"set"}),0);
+  // A cosmetic override quotes the whole set package. Partial collections pay
+  // the remaining proportion, so collecting pieces never increases its price.
+  const configured = shopConfiguredPrice("cosmetic", setId, full);
+  return configured===full ? shopSetPrice(setId) : Math.round(configured*missing.length/all.length);
+}
+function shopBuySetBundle(setId, appearance, discount, expectedPrice){
+  if(typeof state!=="undefined" && state==="playing") return {ok:false, reason:"La tienda se usa fuera de la partida"};
+  if(!Object.prototype.hasOwnProperty.call(SET_DB,setId)) return {ok:false,reason:"Ese set no existe"};
+  const missing=shopSetMissing(setId);
+  if(!missing.length || (appearance && skinOwnedFull(setId))) return {ok:false,reason:"Ya es tuyo"};
+  let price=appearance ? shopSkinPrice(setId) : shopSetPrice(setId);
+  if(discount!=null){ if(!SHOP_DEAL_OFF.includes(discount)) return {ok:false,reason:"Descuento inválido"}; price=_shopDisc(price,discount); }
+  if(expectedPrice!=null && expectedPrice!==price) return {ok:false,reason:"El precio cambió. Revisá el nuevo valor y volvé a confirmar."};
+  if(!Number.isSafeInteger(price) || price<0 || (save.gold||0)<price) return {ok:false,reason:"No te alcanza el oro"};
+  if(stashUsedSlots()+missing.length>INVENTORY_CAPACITY) return {ok:false,reason:"No hay espacio para el paquete completo: vendé o descartá objetos"};
+  const items=missing.map(id=>makeDesignedItem(id));
+  if(items.some(it=>!it)) return {ok:false,reason:"El paquete contiene una pieza no disponible"};
+  for(const item of items){ item.bought=true; addItemToInventory(null,item); }
+  save.gold-=price; persist();
+  return {ok:true,id:setId,n:items.length,price};
 }
 // Categoría de tienda de un objeto diseñado (una sola por objeto: no hay dos definiciones)
 function shopCategoryOf(d){
@@ -110,12 +162,14 @@ function shopOwnedCount(entry){
   return stashItems().filter(it=>!it.designed && it.type===entry.type && it.noun===entry.noun).length;
 }
 // priceOverride: precio de una oferta del día (vitrina); sin él, el de lista.
-function shopBuyCatalog(key, tier, priceOverride){
+function shopBuyCatalog(key, tier, priceOverride, expectedPrice){
   if(typeof state!=="undefined" && state==="playing") return {ok:false, reason:"La tienda se usa fuera de la partida"};
   const entry = shopCatalog().find(e=>e.key===key);
   if(!entry) return {ok:false, reason:"Ese objeto no existe"};
   if(entry.kind==="archetype" && !SHOP_ARCHETYPE_TIERS.includes(tier)) return {ok:false, reason:"Categoría inválida"};
   const price = priceOverride!=null ? priceOverride : shopPriceOf(entry, tier);
+  if(expectedPrice!=null && expectedPrice!==price) return {ok:false,reason:"El precio cambió. Revisá el nuevo valor y volvé a confirmar."};
+  if(!shopValidGoldPrice(price)) return {ok:false, reason:"Precio inválido"};
   if((save.gold||0) < price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${price})`};
   if(stashFull()) return {ok:false, reason:`Tu inventario está lleno (${INVENTORY_CAPACITY}/${INVENTORY_CAPACITY}): vendé o descartá algo`};
   const it = entry.kind==="designed" ? makeDesignedItem(entry.id) : makeItem(entry.type, tier, null, {noun:entry.noun});
@@ -123,13 +177,16 @@ function shopBuyCatalog(key, tier, priceOverride){
   save.gold -= price;
   addItemToInventory(null, it);
   persist();
-  return {ok:true, item:it};
+  return {ok:true, item:it, price};
 }
-function shopBuyChampion(id, priceOverride){
+function shopBuyChampion(id, priceOverride, expectedPrice){
   const cat = CHAMPION_CATALOG.find(c=>c.id===id), champ = save.champions[id];
   if(!cat || !champ) return {ok:false, reason:"Ese guardián no existe"};
   if(champ.unlocked) return {ok:false, reason:"Ya es tuyo"};
-  const price = priceOverride!=null ? priceOverride : cat.priceGold;
+  if(!shopChampionPurchasable(id)) return {ok:false, reason:(typeof championMeta==="function" && championMeta(id).storeNotice) || "Este campeón no está a la venta"};
+  const price = priceOverride!=null ? priceOverride : shopChampionPrice(id);
+  if(expectedPrice!=null && expectedPrice!==price) return {ok:false,reason:"El precio cambió. Revisá el nuevo valor y volvé a confirmar."};
+  if(!shopValidGoldPrice(price)) return {ok:false, reason:"Precio inválido"};
   if((save.gold||0) < price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${price})`};
   save.gold -= price; champ.unlocked = true; save.starterChosen = true;
   persist();
@@ -138,12 +195,11 @@ function shopBuyChampion(id, priceOverride){
 // Piezas de un set que el jugador todavía no tiene (para "comprar lo que falta")
 function shopSetMissing(setId){ const owned = ownedDesignIds(); return setPieceIds(setId).filter(id=>!owned.has(id)); }
 
-/* ---------------- Skins de set: equipar / autoequipar ----------------
-   Una skin de set se ve cuando su set está COMPLETO en su guardián (regla canónica: nunca se vende
-   suelta). "Equipar la skin" = ponerle a ese guardián todas las piezas del set que ya tenés.
-   Al comprarla se autoequipa si el destino no es ambiguo: el guardián seleccionado (si es compatible)
-   o el ÚNICO guardián compatible que tenés. Si hay varios posibles (sets universales), no se decide
-   por el jugador: queda desbloqueada y la tarjeta ofrece "Equipar en: …". */
+/* ---------------- Apariencias de colección ----------------
+   Reunir el set o recibir un regalo desbloquea su apariencia. Elegirla cambia
+   exclusivamente el aspecto: las piezas y bonificaciones se gestionan en Equipo.
+   Los perfiles antiguos conservan la apariencia automática del set equipado
+   hasta que el jugador elige una apariencia explícita. */
 function skinSetChamp(setId){
   const sk = typeof SET_SKINS!=="undefined" && SET_SKINS[setId]; if(!sk) return null;
   return sk.champ || setPieceIds(setId).map(p=>(DESIGNED_ITEMS[p]||{}).champion).find(Boolean) || null;
@@ -153,24 +209,14 @@ function skinCompatibleChamps(setId){
   const c = skinSetChamp(setId);
   return Object.keys(save.champions).filter(k=>save.champions[k].unlocked!==false && CLASSES[k] && (!c || c===k));
 }
-function skinOwnedFull(setId){ return shopSetMissing(setId).length === 0; }
+function skinOwnedFull(setId){ return !!(save.cosmeticUnlocks && save.cosmeticUnlocks[setId]) || (typeof cosmeticSetCollected==="function" && cosmeticSetCollected(setId)) || shopSetMissing(setId).length === 0; }
 function skinIsActiveOn(setId, k){ return typeof champSkinId==="function" ? champSkinId(k) === setId : false; }
-// Pone en `k` todas las piezas del set que están en el inventario. true si la skin quedó activa.
+// Selecciona la apariencia sin equipar piezas ni alterar estadísticas.
 function skinEquipOn(setId, k){
   if(!save.champions[k] || !skinOwnedFull(setId)) return false;
   if(typeof state!=="undefined" && state==="playing") return false;
-  const bySlot = {};
-  for(const it of stashItems()){
-    if(!it || it.set!==setId || !canEquipItem(k, it)) continue;
-    const cur = bySlot[it.type];
-    // si hay piezas repetidas, la de mejor nivel (y la que ya lleva puesta este guardián)
-    const score = x => (itemEquippedBy(x.uid)===k ? 1e6 : 0) + (x.level||0);
-    if(!cur || score(it) > score(cur)) bySlot[it.type] = it;
-  }
-  for(const type in bySlot) equipItem(k, bySlot[type].uid);
-  if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
-  if(typeof persistNow==="function") persistNow(); else persist();
-  return skinIsActiveOn(setId, k);
+  // Selecting an appearance must never replace equipment or grant combat power.
+  return typeof skinCosmeticEquip==="function" && skinCosmeticEquip(k, setId);
 }
 // Después de comprar: {equipped, target, choices}. choices = guardianes posibles cuando es ambiguo.
 function skinAutoEquip(setId){
@@ -201,14 +247,14 @@ const SHOP_DEALS_PER_DAY = 4;
 // cobra nada, y ningún precio del juego la usa (currency:"gold" en todas las ofertas).
 const SHOP_PREMIUM = {enabled:false, id:"brasas", name:"Brasas", icon:"✦", cosmeticOnly:true};
 function _shopShuffle(arr, rng){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = (rng()*(i+1))|0; const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-function _shopDisc(base, off){ return Math.max(10, Math.round(base*(1-off/100)/10)*10); }
+function _shopDisc(base, off){ return base===0 ? 0 : Math.min(base, Math.max(1, Math.round(base*(1-off/100)/10)*10)); }
 let _shopShowcaseCache = null;
 function shopDailyShowcase(){
   const day = shopDayKey();
   if(!_shopShowcaseCache || _shopShowcaseCache.day !== day){
     const rng = _shopRng("vitrina-"+day);
     const skins = typeof SET_SKINS!=="undefined" ? Object.keys(SET_SKINS).filter(id=>SET_DB[id]) : [];
-    const pool = _shopShuffle(skins.map(id=>({kind:"skin", id})).concat(CHAMPION_CATALOG.map(c=>({kind:"champ", id:c.id}))), rng);
+    const pool = _shopShuffle(skins.map(id=>({kind:"skin", id})).concat(CHAMPION_CATALOG.filter(c=>shopChampionPurchasable(c.id)).map(c=>({kind:"champ", id:c.id}))), rng);
     const featOff = SHOP_DEAL_OFF[(rng()*SHOP_DEAL_OFF.length)|0];
     const cands = _shopShuffle(shopCatalog().filter(e=>e.cat==="legendario" || e.cat==="campeon" || e.cat==="base"), rng);
     const deals = [], perCat = {};
@@ -228,10 +274,11 @@ function shopDailyShowcase(){
   const f = sc.pool.find(x=>!owned(x)) || sc.pool[0] || null;
   let featured = null;
   if(f){
-    const base = f.kind==="skin" ? shopSetMissing(f.id).length*SHOP_TEST_PRICE : (CHAMPION_CATALOG.find(c=>c.id===f.id)||{}).priceGold||0;
+    const base = f.kind==="skin" ? shopSkinPrice(f.id) : shopChampionPrice(f.id);
     featured = {kind:f.kind, id:f.id, off:sc.featOff, base, price:base ? _shopDisc(base, sc.featOff) : 0, owned:owned(f), currency:"gold"};
   }
-  return {day:sc.day, featured, deals:sc.deals};
+  const deals = sc.deals.map(d=>{ const base=shopPriceOf(shopCatalog().find(e=>e.key===d.key), d.tier); return Object.assign({},d,{base,price:_shopDisc(base,d.off)}); });
+  return {day:sc.day, featured, deals};
 }
 function _shopDealsState(){
   const day = shopDayKey();
@@ -241,26 +288,21 @@ function _shopDealsState(){
 function shopDealBought(id){ return !!_shopDealsState().bought[id]; }
 // Minutos que faltan para que se renueve la vitrina (medianoche local).
 function shopMinutesToRenew(){ const n = new Date(), m = new Date(n.getFullYear(), n.getMonth(), n.getDate()+1); return Math.max(1, Math.ceil((m - n)/60000)); }
-function shopBuyDeal(id){
+function shopBuyDeal(id, expectedPrice){
   const d = shopDailyShowcase().deals.find(x=>x.id===id);
   if(!d) return {ok:false, reason:"Esa oferta ya no está"};
   if(shopDealBought(id)) return {ok:false, reason:"Ya aprovechaste esta oferta hoy: mañana hay otras"};
+  if(expectedPrice!=null && expectedPrice!==d.price) return {ok:false,reason:"La oferta cambió. Revisá el nuevo precio."};
   const r = shopBuyCatalog(d.key, d.tier, d.price);
   if(r.ok){ _shopDealsState().bought[id] = true; persist(); }
   return r;
 }
 // Destacado del día: el guardián o la skin (su set completo, las piezas que falten) con descuento.
-function shopBuyFeatured(){
+function shopBuyFeatured(expected){
   const f = shopDailyShowcase().featured;
   if(!f || f.owned) return {ok:false, reason:"Ya es tuyo"};
+  if(expected && (expected.kind!==f.kind || expected.id!==f.id || expected.price!==f.price)) return {ok:false,reason:"La oferta cambió. Revisá el nuevo valor y volvé a confirmar."};
   if(typeof state!=="undefined" && state==="playing") return {ok:false, reason:"La tienda se usa fuera de la partida"};
   if(f.kind==="champ") return Object.assign(shopBuyChampion(f.id, f.price), {kind:"champ", id:f.id});
-  const miss = shopSetMissing(f.id);
-  if(!miss.length) return {ok:false, reason:"Ya tenés el set completo"};
-  if((save.gold||0) < f.price) return {ok:false, reason:`No te alcanza el oro (tenés ${save.gold||0}, cuesta ${f.price})`};
-  if(stashUsedSlots() + miss.length > INVENTORY_CAPACITY) return {ok:false, reason:`No entran las ${miss.length} piezas en tu inventario (${stashUsedSlots()}/${INVENTORY_CAPACITY}): vendé o descartá algo`};
-  for(const p of miss){ const it = makeDesignedItem(p); if(!it) continue; it.bought = true; addItemToInventory(null, it); }
-  save.gold -= f.price;
-  persist();
-  return {ok:true, kind:"skin", id:f.id, n:miss.length};
+  return Object.assign(shopBuySetBundle(f.id, true, f.off), {kind:"skin", id:f.id});
 }

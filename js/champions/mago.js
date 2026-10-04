@@ -43,12 +43,18 @@ function drawFireWall(fw){
   // Sprites reales del paquete "Muro de Fuego": se reparten llamas individuales a lo largo de
   // la circunferencia del anillo (la habilidad es un aro, no un muro recto). Más llamas y más
   // grandes cuanto mayor el talento invertido — así se nota mucho más al subir de nivel.
-  const n = 7 + tier*5;
-  const flameSize = (thick*0.95 + tier*7);
+  // Visible damage annulus, matching the Euclidean collision test exactly.
+  for(const radius of [fw.innerR,fw.outerR]){
+    ctx.beginPath();ctx.arc(fw.x,fw.y,radius,0,Math.PI*2);
+    ctx.strokeStyle="#24121b";ctx.lineWidth=6;ctx.stroke();
+    ctx.strokeStyle=fw.voidFire?"#c292ff":"#ffb34e";ctx.lineWidth=3;ctx.stroke();
+  }
+  const n = 12 + tier*4;
+  const flameSize = (thick*1.1 + 12 + tier*5);
   const animName = dying ? "extincion" : (spawnProg<1 ? "formacion" : "activo");
   for(let i=0;i<n;i++){
     const a = (i/n)*Math.PI*2 + (dying?0:now*0.12);
-    const fx = fw.x + Math.cos(a)*mid, fy = fw.y + Math.sin(a)*mid*0.62;
+    const fx = fw.x + Math.cos(a)*mid, fy = fw.y + Math.sin(a)*mid;
     const t = animName==="formacion" ? ageSec : (now + i*0.11);
     MuroFuego.draw(ctx, animName, t, fx, fy, flameSize);
   }
@@ -74,7 +80,7 @@ function drawFireWall(fw){
     // humo ascendente en los niveles más altos de talento
     for(let i=0;i<4;i++){
       const a = (i/4)*Math.PI*2 + now*0.15;
-      const sx = fw.x+Math.cos(a)*mid, sy = fw.y+Math.sin(a)*mid*0.62 - 14 - ((now*24)%22);
+      const sx = fw.x+Math.cos(a)*mid, sy = fw.y+Math.sin(a)*mid - 14 - ((now*24)%22);
       ctx.fillStyle = "rgba(150,150,150,0.22)";
       ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI*2); ctx.fill();
     }

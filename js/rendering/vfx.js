@@ -235,6 +235,7 @@ function vfxImpactHeavy(ent, prof, strength){
 }
 function vfxUpdate(dt){
   vfxUpdateParticles(dt);
+  championSignaturesUpdate(dt);
   fxContrastUpdate(dt); // destellos de impacto y de lanzamiento (fx-contrast.js)
   for(let i=0;i<VFX_SHOCK_MAX;i++){ const s = vfxShocks[i]; if(s.on){ s.t += dt; if(s.t>=s.dur) s.on = false; } }
   for(let i=0;i<VFX_TELE_MAX;i++){
@@ -501,6 +502,8 @@ function vfxDrawDying(){
 }
 function vfxResetRun(){
   vCount = 0; vfxDyingN = 0;
+  fxContrastReset();
+  championSignaturesReset();
   resetGore();
   if(typeof floatTexts!=="undefined") for(const f of floatTexts) f.on = false;
   for(const s of vfxShocks) s.on = false;

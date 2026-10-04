@@ -36,6 +36,8 @@ function trackHeal(caster, target, amount){
 // ya usa el robo de vida del propio golpeador, ver damageEnemy-.
 function applyHealOverheal(caster, target, amount){
   amount *= arenaRuleHealMult();
+  // Elyra — Gracia del Alba (CLASSIC_PASSIVES.soporte): cura más a quien está en peligro
+  if(caster && caster.classKey==="soporte" && target && target.hp < target.maxHp*CLASSIC_PASSIVES.soporte.lowHpPct) amount *= CLASSIC_PASSIVES.soporte.lowHpHealMult;
   const before = target.hp;
   target.hp = Math.min(target.maxHp, target.hp + amount);
   const overheal = amount - (target.hp-before);

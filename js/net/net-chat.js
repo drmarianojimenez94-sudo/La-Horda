@@ -34,7 +34,7 @@ function _chatLineHTML(m){
   const col = NET_SLOT_COLORS[m.from] || "#ccc";
   const mine = m.from === net.slot;
   const canMute = net.role === "host" && m.from > 0;
-  return `<div class="nc-line ${mine ? "mine" : ""}"><b class="nc-name" style="color:${col}" ${canMute ? `data-mute="${m.from}" title="Tocá para silenciar/activar"` : ""}>${_chatEsc(m.name)}</b> ${_chatEsc(m.text)}</div>`;
+  return `<div class="nc-line ${mine ? "mine" : ""}"><b class="nc-name" style="color:${col}" ${canMute ? `data-mute="${m.from}" title="Tocá para silenciar/activar"` : ""}>${_chatEsc(m.name)}</b>${m.founder && typeof founderBadgeHTML==="function" ? founderBadgeHTML(m.founder, "sm") : ""} ${_chatEsc(m.text)}</div>`;
 }
 // Arma el panel una sola vez; después solo refresca la lista (no pisa el cuadro de texto).
 function netRenderChat(){
@@ -84,5 +84,5 @@ function netChatOnMessage(m){
 }
 netOn("chat", netChatOnMessage);
 netOn("chatError", (code)=>{
-  netChatNotice(code === "CHAT_SLOW" ? "Más despacio: esperá un segundo." : code === "CHAT_DUP" ? "Ese mensaje ya lo mandaste." : code === "CHAT_MUTED" ? "El anfitrión te silenció." : "No se pudo enviar.");
+  netChatNotice(code === "CHAT_SLOW" ? "Más despacio: esperá un segundo." : code === "CHAT_DUP" ? "Ese mensaje ya lo mandaste." : code === "CHAT_MUTED" ? "El anfitrión te silenció." : code === "CHAMP_NOT_OWNED" ? "Ese campeón solo lo usa su cuenta autorizada." : "No se pudo enviar.");
 });

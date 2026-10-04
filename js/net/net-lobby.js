@@ -36,11 +36,12 @@ function netTogglePublic(){
 function netNotReady(){ return net.room ? net.room.slots.filter((s,i)=> i>0 && s && s.connected && !s.ready) : []; }
 function netInRoom(){ return !!(net.room && net.role); }
 function netHumanCount(){ return net.room ? net.room.slots.filter(s=>s && s.connected).length : 1; }
+function netDuoLoadoutValid(i){ const L=netLobby.loadouts[i], s=net.room.slots[i]; return !!(L&&s&&L.champ===s.champ&&CLASSES[L.champ]); }
 function netDuplicateChamps(){
-  if(!net.room) return [];
-  const seen = {}, dup = [];
-  net.room.slots.forEach((s,i)=>{ if(!s || !s.connected) return; const k = i===net.slot ? selectedClass : s.champ; if(seen[k]) dup.push(k); seen[k] = 1; });
-  return dup;
+ if(!net.room) return [];
+ const seen=new Set(), dup=[];
+ net.room.slots.forEach((s,i)=>{ if(!s?.connected)return; const keys=i===net.slot?duoKeys():[s.champ]; for(const k of keys){if(!k)continue;if(seen.has(k))dup.push(k);seen.add(k);} });
+ return dup;
 }
 
 /* ---------------- barra online de la pre-sala ---------------- */
@@ -91,6 +92,7 @@ function netRenderLobbyBar(){
       ${netChampStripHTML()}
       ${dup.length ? `<div class="net-err">Tu guardián ya lo usa otro jugador: elegí otro.</div>` : ""}`;
   }
+  bar._next = netEnvironmentHTML() + bar._next;
   if(!_netCommitHTML(bar, "barHTML")) return; // idéntica: los botones ya tienen sus eventos
   const ni = document.getElementById("net-name-input");
   if(ni) ni.addEventListener("change", ()=>{ netSetPlayerName(ni.value); });
@@ -164,7 +166,7 @@ function netTakenChamps(){
 }
 function netChampStripHTML(){
   const taken = netTakenChamps();
-  const btns = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false).map(k=>{
+  const btns = Object.keys(CLASSES).filter(k=>save.champions[k] && save.champions[k].unlocked!==false && championPlayable(k)).map(k=>{
     const c = CLASSES[k], lv = save.champions[k].level;
     return `<button class="net-champ ${k===selectedClass?"sel":""}" data-net-champ="${k}" ${taken.has(k)&&k!==selectedClass?"disabled":""} title="${c.name}">${c.icon||""} ${c.name} · ${lv}</button>`;
   }).join("");
@@ -190,10 +192,11 @@ function netRenderLobbySlots(){
     const lv = you ? save.champions[selectedClass].level : s.level;
     const tag = `P${i+1} · ` + (i===0 ? "HOST" : (you ? "VOS" : "AMIGO"));
     const st = !s.connected ? `<div class="lobby-ready off">⚠ Sin conexión</div>` : (i===0 ? `<div class="lobby-ready">● Conectado</div>` : (s.ready ? `<div class="lobby-ready">✔ Listo</div>` : `<div class="lobby-ready wait">● Conectado</div>`));
-    return `<div class="lobby-slot pc${i} ${you?"you":""}">
+    const fb = s.founder && typeof founderBadgeHTML==="function" ? founderBadgeHTML(s.founder, "md") : "";
+    return `<div class="lobby-slot pc${i} ${you?"you":""} ${fb?"is-founder":""}">
       <div class="lobby-tag p${i}">${tag}</div>
       <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-skin="${skin}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
-      <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>
+      <div class="lobby-name" style="color:${NET_SLOT_COLORS[i]}">${s.name}</div>${fb ? `<div class="lobby-founder">${fb}</div>` : ""}
       ${skin && (typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]) ? `<div class="lobby-skin">🎨 ${(typeof skinDefOf==="function" ? skinDefOf(skin) : SET_SKINS[skin]).name}</div>` : ""}
       <div class="lobby-meta">${cls.name} · ${NET_ROLE_LABEL[cls.roleCategory]||""}</div>
       <div class="lobby-meta">Nv. ${lv||1}</div>
@@ -253,12 +256,13 @@ function netHostBroadcastCos(force){
   const m = {};
   net.room.slots.forEach((s,i)=>{ if(!s) return; m[i] = i===0 ? champSkinId(selectedClass) : ((netLobby.loadouts[i]||{}).skin || null); });
   const d = typeof diffEffective==="function" ? diffEffective(currentArena) : "normal"; // dificultad elegida por el anfitrión
-  const sig = JSON.stringify([m, net.room.slots.map(s=>s ? !!s.connected : null), d]);
+  const duos={}; net.room.slots.forEach((s,i)=>{ if(s) duos[i]=null; });
+  const sig = JSON.stringify([m, duos, net.room.slots.map(s=>s ? !!s.connected : null), d]);
   if(!force && sig === netLobby.cosSig) return;
   netLobby.cosSig = sig;
   // la dificultad también la ve el relay, para la lista de salas públicas
   if(d !== netLobby.sentDiff){ netLobby.sentDiff = d; netSend({t:"update", diff:d}); }
-  netBroadcast({k:"cos", m, d});
+  netBroadcast({k:"cos", m, d, duos});
 }
 // Refresco liviano de la sala ante cambios de red: solo título, barra y lugares (no el equipo, los
 // talentos ni la tienda de skins, que no dependen de la sala). Si hay un dedo apoyado en la pantalla
@@ -267,6 +271,7 @@ function netRefreshLobby(){
   if(state!=="prep") return;
   if(netLobby.touching){ netLobby.pendingRefresh = true; return; }
   netLobby.pendingRefresh = false;
+  renderDuoPicker();
   if(!netInRoom()){ renderPrepSummary(); return; }
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
@@ -550,7 +555,16 @@ async function netJoinWithCode(raw, btn, label){
   if(_netJoinBusy) return false;
   const inv = netValidateCode(raw);
   if(inv.err){ _netSetJoinStatus(inv.err, true); return false; }
-  if(inv.server) net.serverOverride = inv.server;
+  if(inv.server){
+    const target=netNormalizeServer(inv.server);
+    if(!target){ _netSetJoinStatus("Dirección de servidor inválida.",true); return false; }
+    if(target!==netServerUrl()){
+      // Keep accounts bound to their original API. A pasted invite only changes matchmaking.
+      if(net.ws || net.room) netLeaveRoom();
+      net.serverOverride=target;
+      if(typeof netRooms!=="undefined"){netRooms.list=null;netRooms.err="";netRooms.at=-1e9;netRooms.hubAt=-1e9;}
+    }
+  }
   if(!netAvailable()){ _netSetJoinStatus("El modo online no está configurado en esta versión.", true); return false; }
   if(typeof ensureOwnedSelection==="function") ensureOwnedSelection();
   if(!save.champions[selectedClass] || !save.champions[selectedClass].unlocked){ _netSetJoinStatus("Elegí primero un guardián tuyo.", true); return false; }

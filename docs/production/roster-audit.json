@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "scope": "runtime registrations only; not gameplay/visual approval",
+  "roster": [
+    {
+      "id": "tanque",
+      "name": "Tanque",
+      "role": "tanque",
+      "sets": [
+        "baluarte"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "guerrero",
+      "name": "Asesino",
+      "role": "asesino",
+      "sets": [
+        "nocturno"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "mago",
+      "name": "Mago",
+      "role": "mago",
+      "sets": [
+        "convergencia"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "soporte",
+      "name": "Soporte",
+      "role": "soporte",
+      "sets": [
+        "custodio"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "segador",
+      "name": "Segador Olvidado",
+      "role": "tanque",
+      "sets": [
+        "marea"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "axiom",
+      "name": "Axiom",
+      "role": "mago",
+      "sets": [
+        "sistema"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "profeta",
+      "name": "La Profeta",
+      "role": "soporte",
+      "sets": [
+        "profecia"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "musashi",
+      "name": "Musashi",
+      "role": "asesino",
+      "sets": [
+        "errante"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "cazadora",
+      "name": "La Cazadora",
+      "role": "asesino",
+      "sets": [
+        "manada"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "nigromante",
+      "name": "Nigromante",
+      "role": "mago",
+      "sets": [
+        "requiem"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "libertador",
+      "name": "El Libertador",
+      "role": "asesino",
+      "sets": [
+        "granadero"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "eren",
+      "name": "Eren",
+      "role": "asesino",
+      "sets": [
+        "legion"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "ynara",
+      "name": "Ynara",
+      "role": "soporte",
+      "sets": [
+        "santa_paciencia"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "myla",
+      "name": "Myla",
+      "role": "mago",
+      "sets": [
+        "merienda_magica"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "brasa",
+      "name": "Brasa",
+      "role": "mago",
+      "sets": [
+        "ultimo_turno"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "eslabon",
+      "name": "El Eslabón",
+      "role": "tanque",
+      "sets": [
+        "juramento_roto"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "morwen",
+      "name": "Morwen",
+      "role": "mago",
+      "sets": [
+        "vidrio_negro"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "farolero",
+      "name": "El Farolero",
+      "role": "soporte",
+      "sets": [
+        "lumbre_persistente"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    },
+    {
+      "id": "iria",
+      "name": "Iria",
+      "role": "mago",
+      "sets": [
+        "hilo_umbral"
+      ],
+      "issues": [],
+      "hordeReview": "candidate; gameplay verification required"
+    }
+  ],
+  "pageErrors": []
+}

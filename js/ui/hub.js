@@ -81,22 +81,8 @@ function renderHub(){
    online no pasan por acá. */
 // Pruebas automáticas viejas (webdriver) siguen el camino de antes (guardián → hub), como la pantalla de
 // cuenta (_acctAutoSkip, js/net/account.js). Las que miden el camino nuevo definen window.__firstRun (o ?primera=1).
-function firstRunEnabled(){
-  try{
-    if(window.__firstRun || /[?&]primera=1\b/.test(location.search)) return true;
-    return !navigator.webdriver;
-  }catch(e){ return true; }
-}
-function firstRunStart(){
-  if(!firstRunEnabled()){ setState("mainmenu"); renderMainMenu(); return; }
-  save.firstRun = "jugando"; persist();
-  currentArena = hubNextArena(); // la frontera de un perfil nuevo: la Ciudad Maldita
-  updateMenuBrandSub();
-  lobbyAllies = pickLobbyAllies(selectedClass);
-  prepReturnTo = "mainmenu";
-  if(typeof playSfx==="function") playSfx("ready");
-  runIntroShow(currentArena, ()=>{ try{ startRun(1); }catch(err){ _prepStartFailed(err); } });
-}
+function firstRunEnabled(){ return false; }
+function firstRunStart(){ setState("mainmenu"); renderMainMenu(); }
 // Fin de la primera partida: al hub (true) en vez del camino de siempre (false = seguir como antes).
 function firstRunToHub(){
   if(save.firstRun!=="jugando") return false;
@@ -107,7 +93,7 @@ function firstRunToHub(){
   return true;
 }
 function hubPlay(){
-  if(typeof needsStarterChampion==="function" && (needsStarterChampion() || (typeof needsStarterSkin==="function" && needsStarterSkin()))){ openStarterSelect(()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
+  if(typeof needsStarterChampion==="function" && (needsStarterChampion() || (typeof needsStarterSkin==="function" && needsStarterSkin()))){ openStarterSelect(()=>hubPlay()); return; }
   if(!ensureOwnedSelection()) return;
   if(save.firstRun){ save.firstRun = null; persist(); } // el resalte "SIGUIENTE" ya cumplió
   if(typeof netInRoom==="function" && netInRoom()){ setState("prep"); renderPrepSummary(); return; }

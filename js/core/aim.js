@@ -51,27 +51,36 @@ function aimPointerDown(ev, idx){
   const sk = player && player.cls ? player.cls.skills[idx] : null;
   if(!sk) return;
   const isSylvaShot = player.classKey==="cazadora" && sk.kind==="piercing_shot";
-  if(!_skillReadyFor(idx)){ _denyFeedback(el, idx); return; }
   const r = el.getBoundingClientRect();
+  try{ el.setPointerCapture(ev.pointerId); }catch(_){}
+  // LONG PRESS (js/ui/ability-inspector.js): mantener sin arrastrar abre la ficha y ese toque ya no lanza.
+  // Vale también con la habilidad en enfriamiento o sin energía (así se consulta cuánto falta).
+  if(!_skillReadyFor(idx)){
+    aimState = {idx, id:ev.pointerId, el, cx:r.left+r.width/2, cy:r.top+r.height/2, dx:0, dy:0, manual:false, t0:performance.now(), inspectOnly:true};
+    abilityInspectorArm(idx, el, ()=>{ if(aimState && aimState.idx===idx) aimState.inspecting = true; });
+    return;
+  }
   const prof = aimProfileOf(sk);
   aimState = {idx, id:ev.pointerId, el, cx:r.left+r.width/2, cy:r.top+r.height/2, dx:0, dy:0, manual:false, t0:performance.now(),
     cancelArmed:false, selfCast:!prof && !isSylvaShot, sylva:isSylvaShot};
-  try{ el.setPointerCapture(ev.pointerId); }catch(_){}
   el.classList.add("aiming");
-  if(isSylvaShot) sylvaChargeStart();
-  if(aimState.selfCast){
-    // sin apuntado: sale al instante (como siempre); el radio se ve mientras se mantiene
-    useSkill(idx);
-  } else {
-    _showPad(true);
-  }
+  if(isSylvaShot){ sylvaChargeStart(); return; } // mantener = cargar la flecha (sin ficha: se consulta en el panel táctico)
+  // sin apuntado (curas, buffs, novas propias): se lanza al SOLTAR si fue un toque; mientras se mantiene
+  // se ve su radio. Con apuntado: aparece el pad y la previsualización, como siempre.
+  if(!aimState.selfCast) _showPad(true);
+  abilityInspectorArm(idx, el, ()=>{ if(aimState && aimState.idx===idx && !aimState.manual){ aimState.inspecting = true; _showPad(false); } });
 }
 function aimPointerMove(ev){
   if(!aimState || ev.pointerId!==aimState.id) return;
   aimState.dx = ev.clientX - aimState.cx; aimState.dy = ev.clientY - aimState.cy;
   const l = Math.hypot(aimState.dx, aimState.dy);
+  if(aimState.inspectOnly) return;
   if(!aimState.selfCast){
-    if(l > AIM_DEADZONE){ aimState.manual = true; aimState.cancelArmed = true; }
+    if(l > AIM_DEADZONE){
+      aimState.manual = true; aimState.cancelArmed = true;
+      if(aimState.inspecting || abilityInspectorIsOpen()){ abilityInspectorClose(); aimState.inspecting = false; _showPad(true); } // arrastrar = volver a apuntar
+      else abilityInspectorDisarm();
+    }
     aimState.el.classList.toggle("aim-cancel", aimState.manual && l < AIM_CANCEL_R);
     _moveKnob(aimState.dx, aimState.dy);
   }
@@ -96,7 +105,10 @@ function aimPointerUp(ev, cancelled){
   st.el.classList.remove("aiming","aim-cancel");
   _showPad(false);
   aimState = null;
-  if(st.selfCast) return;
+  abilityInspectorDisarm();
+  if(st.inspecting){ abilityInspectorClose(); if(st.sylva){ player.sylvaCharging = false; player.sylvaChargeTimer = 0; } return; } // fue una consulta: no se lanza
+  if(st.inspectOnly){ if(!cancelled) _denyFeedback(st.el, st.idx); return; }
+  if(st.selfCast){ if(!cancelled && !useSkill(st.idx)) _denyFeedback(st.el, st.idx); return; }
   if(cancel){
     if(st.sylva){ player.sylvaCharging = false; player.sylvaChargeTimer = 0; if(netIsGuest()) netSendToHost({k:"sylva", on:false, aim:null, cancel:true}); }
     floatText(player.x, player.y-64, "Cancelado", null);

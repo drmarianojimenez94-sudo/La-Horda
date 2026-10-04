@@ -81,7 +81,7 @@ function bindAbilityButton(el, handler){
 bindAbilityButton(document.getElementById("btn-basic"), ()=> triggerBasic(player));
 // Las 3 habilidades (btn-s1/s2/s3) se manejan en js/core/aim.js: tocar = lanzar al mejor
 // objetivo; mantener y arrastrar = apuntar con previsualización del área.
-bindAbilityButton(document.getElementById("btn-ult"), ()=> useUltimate());
+// La definitiva (btn-ult) se maneja en js/ui/ability-inspector.js: tocar = lanzar al soltar, mantener = inspeccionar.
 // Nigromante: Pacto (gasta 5 almas -> la próxima habilidad sale potenciada)
 // Curación de emergencia (1 por nivel). Tecla Q en escritorio.
 function emergPress(){ if(netIsGuest()) netSendToHost({k:"emerg"}); else emergUse(player); }
@@ -139,10 +139,11 @@ function sylvaChargeRelease(aim){
    Mantenerlo apretado = "estoy reviviendo a X". El progreso y el resultado los decide la
    simulación (updateRevives en allies.js; en cooperativo, el anfitrión): el botón solo muestra
    el progreso real y se suelta solo si el revivir deja de ser válido. */
-const REVIVE_BTN_HOLD_MS = 1300; // demo: 1.3s en vez de 2s
+const REVIVE_BTN_HOLD_MS = REVIVE_DURATION_MS;
 let reviveBtnHoldRaf = null, reviveBtnTarget = null;
 function reviveTargetValid(a){
-  return !!(a && !a.alive && a!==player && player && player.alive && !(player.stunTimer>0) && state==="playing" && !runEnding && !divinaMode
+  if(duoEnabled()) return false;
+  return !!(a && !a.alive && a!==player && player && player.alive && state==="playing" && !runEnding && !divinaMode
     && distance(player, a) < REVIVE_RANGE && !reviveBusyFor(a, player));
 }
 function nearestDownedAlly(){
@@ -226,14 +227,19 @@ function updateReviveBtn(){
 
 document.getElementById("pause-btn").addEventListener("click", ()=>{
   // B1: en una partida online no hay pausa: el menú se abre encima y la partida sigue
-  if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); return; }
-  if(state==="playing"){ setState("paused"); renderStatsPanel(); }
+  // Multijugador: PANEL TÁCTICO encima de la partida, que sigue (js/ui/tactical-panel.js)
+  if(netMatch && state==="playing"){ document.getElementById("pause-screen").classList.remove("hidden"); renderStatsPanel(); tacticalPanelOpen(); return; }
+  if(state==="playing"){ setState("paused"); renderStatsPanel(); tacticalPanelOpen(); }
 });
 // Celular: una llamada, una notificación o cambiar de app en plena partida SOLO. Antes el juego
 // quedaba congelado y al volver seguía de golpe, con la horda encima y sin aviso. Ahora vuelve en
 // pausa (en cooperativo no hay pausa: la partida es de todos y la sigue el anfitrión).
 document.addEventListener("visibilitychange", ()=>{
-  if(document.visibilityState==="hidden" && state==="playing" && !netMatch && typeof renderStatsPanel==="function"){ setState("paused"); renderStatsPanel(); }
+  if(document.visibilityState==="hidden" && state==="playing" && !netMatch && typeof renderStatsPanel==="function"){ setState("paused"); renderStatsPanel(); if(typeof tacticalPanelOpen==="function") tacticalPanelOpen(); }
+});
+// Multijugador: tocar el fondo del panel táctico lo cierra (la partida nunca se detuvo).
+document.getElementById("pause-screen").addEventListener("click", (ev)=>{
+  if(netMatch && state==="playing" && ev.target===ev.currentTarget) ev.currentTarget.classList.add("hidden");
 });
 document.getElementById("resume-btn").addEventListener("click", ()=>{
   if(netMatch){ document.getElementById("pause-screen").classList.add("hidden"); return; }

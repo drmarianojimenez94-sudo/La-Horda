@@ -1,0 +1,290 @@
+{
+  "status": "PASS",
+  "reviewer": "Codex visual inspection (AI; not a human art sign-off)",
+  "master": "assets/sprites/champions/tanque/atlas.png",
+  "evidence": [
+    "docs/expedition/visual-roster.png",
+    "docs/expedition/roster-contact.png",
+    "docs/expedition/cosmetics-results.json"
+  ],
+  "findings": [
+    "Same compact dark fantasy pixel-art family as Tanque at actual game scale; silhouettes distinguished by weapons, headgear and clothing.",
+    "Binary alpha and nearest-neighbor import; no opaque backgrounds or adjacent-frame contamination in contact sheets.",
+    "Original, wardrobe skin and set skin remain the same character. Cromas are explicitly palette-only.",
+    "Incorrect facing frames omitted from loops; supplemental back attacks authored for Nahir set, Orsa variants and Renko set.",
+    "Cast/ultimate/death are front sequences reused in all directions. Vesper Corte reuses its cast sequence for ultimate. Idle and hit reuse coherent poses.",
+    "No gameplay statistics are attached to cosmetic definitions."
+  ],
+  "assets": [
+    {
+      "id": "baltra",
+      "status": "PASS",
+      "sha256": "7574a58b2b244a9ceff3de50dfb737b8a121ad2514c0d2ded5cd8b72a0e3b547",
+      "atlas": "assets/sprites/champions/baltra/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "baltra_set",
+      "status": "PASS",
+      "sha256": "363f3bb3560f79358573eee728d1613ee3089bdb2a9e4fb0fd228f24f7925ce4",
+      "atlas": "assets/sprites/champions/baltra/skins/baltra_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "baltra_skin",
+      "status": "PASS",
+      "sha256": "ddc97e136c13a35779a255bd973ded61e15f5d897810a4b2488e636e82d2c036",
+      "atlas": "assets/sprites/champions/baltra/skins/baltra_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "dariel",
+      "status": "PASS",
+      "sha256": "506fba3f259765aad5c05ef13da0855f4ebf0faa92265e1a2d5de7d992b48d78",
+      "atlas": "assets/sprites/champions/dariel/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "dariel_set",
+      "status": "PASS",
+      "sha256": "0261d09f114ce778069b21ac160e9699a3a3da6ec4e08bd635eb4e4e42961982",
+      "atlas": "assets/sprites/champions/dariel/skins/dariel_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "dariel_skin",
+      "status": "PASS",
+      "sha256": "e5199581bbee910783c4e767f3b355e9d108bc52cffe5377dc665fe4e186ae82",
+      "atlas": "assets/sprites/champions/dariel/skins/dariel_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "maura",
+      "status": "PASS",
+      "sha256": "3c2e79f8a8f7b3ef4997b451b982f8a20a7c97a51e008c208092922797c1004e",
+      "atlas": "assets/sprites/champions/maura/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "maura_set",
+      "status": "PASS",
+      "sha256": "1749a948e65f3091cf0321473c597bec3d868451997ef2d086f244f81d0774ea",
+      "atlas": "assets/sprites/champions/maura/skins/maura_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "maura_skin",
+      "status": "PASS",
+      "sha256": "c7d319e42e4d3e9026792ffb3644da767805e7a82eedbfb7379fded34edb3aaa",
+      "atlas": "assets/sprites/champions/maura/skins/maura_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "nahir",
+      "status": "PASS",
+      "sha256": "0a6417f894c029e2e3b61d12a47b46ba0312e3799b408a6589cb4dd1f4e350c1",
+      "atlas": "assets/sprites/champions/nahir/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "nahir_set",
+      "status": "PASS",
+      "sha256": "71275167a1c01e2505ccd6ce1ff89b07d284fbb76d8982e8aedf4912bc75fb01",
+      "atlas": "assets/sprites/champions/nahir/skins/nahir_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "nahir_skin",
+      "status": "PASS",
+      "sha256": "2a3280839bb8b09b8740f03f2e6c5da1b90ebb696c94fcf35aeb85077225bcf9",
+      "atlas": "assets/sprites/champions/nahir/skins/nahir_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "orsa",
+      "status": "PASS",
+      "sha256": "608e55ecd2a59010247d5c62bf7741520e05599ee16b28fb8131a6e70ef22e3d",
+      "atlas": "assets/sprites/champions/orsa/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "orsa_set",
+      "status": "PASS",
+      "sha256": "cb95dfcbfc067cf4d63256befdc18da392e22133ed181bdd9c5b5649c79bc1cb",
+      "atlas": "assets/sprites/champions/orsa/skins/orsa_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "orsa_skin",
+      "status": "PASS",
+      "sha256": "c829af64b782a184061649607d70ea6bfabc9ec9ac606c9ca7213fcae92a63cd",
+      "atlas": "assets/sprites/champions/orsa/skins/orsa_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "renko",
+      "status": "PASS",
+      "sha256": "9f9cd8fc2e5af5fc0645e7d3bb497ee2c679b8b4a44808f180bebc95b121b2bf",
+      "atlas": "assets/sprites/champions/renko/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "renko_set",
+      "status": "PASS",
+      "sha256": "77d8b938fa050edc1ae05b93e30653a7073bc5a94ac333852d8ecb4f62929156",
+      "atlas": "assets/sprites/champions/renko/skins/renko_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 40,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "renko_skin",
+      "status": "PASS",
+      "sha256": "f21e83f85d7a503a50c20456d0ed5924588166f73fcbbb58a93e0f1394204080",
+      "atlas": "assets/sprites/champions/renko/skins/renko_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "sira",
+      "status": "PASS",
+      "sha256": "6f574d5aae27f770497d6657720a7b8fc7e0e4952df59f68a8487dbc914ac3bd",
+      "atlas": "assets/sprites/champions/sira/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "sira_set",
+      "status": "PASS",
+      "sha256": "117e8053e754d4d959336b96abdee41d6b59378ea698d62c39963aaad976e824",
+      "atlas": "assets/sprites/champions/sira/skins/sira_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "sira_skin",
+      "status": "PASS",
+      "sha256": "71d907cd2352b64437385c8dd60b3816262b5dd72dd82d20b54bc41ef70354ed",
+      "atlas": "assets/sprites/champions/sira/skins/sira_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "tibor",
+      "status": "PASS",
+      "sha256": "016a41728871a413f4d4fc3abb8bb4a1c4cfe2e635268e593879a51439307a07",
+      "atlas": "assets/sprites/champions/tibor/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "tibor_set",
+      "status": "PASS",
+      "sha256": "fe04b97d10bc9e48bc92a1aafc8a36290357be661bd2a957c55e38ecbe67d9ec",
+      "atlas": "assets/sprites/champions/tibor/skins/tibor_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "tibor_skin",
+      "status": "PASS",
+      "sha256": "562954ddf75fd5f4ebb12ddb2ba59309743e46304a91ad2bfe4e3045eef5de76",
+      "atlas": "assets/sprites/champions/tibor/skins/tibor_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "vesper",
+      "status": "PASS",
+      "sha256": "e51a3c7d4675a1058685ae5eccc41a727b1b7d8acd447eda0b4c0cf530e0473c",
+      "atlas": "assets/sprites/champions/vesper/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "vesper_set",
+      "status": "PASS",
+      "sha256": "ad5a6fe497f35e853ae910d2c669dff72c8adc99e05a2fdbd6441b805b846686",
+      "atlas": "assets/sprites/champions/vesper/skins/vesper_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "vesper_skin",
+      "status": "PASS",
+      "sha256": "14c234810dec0ae25736718c5b25f23b7e7525ff3db4c75ffb3d9f54436c3f5b",
+      "atlas": "assets/sprites/champions/vesper/skins/vesper_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 32,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "zahra",
+      "status": "PASS",
+      "sha256": "dc102c4ce2d6639e233d9886739f77ce8bbdc3c2bc59f51f4f3c2b30de2d842c",
+      "atlas": "assets/sprites/champions/zahra/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "zahra_set",
+      "status": "PASS",
+      "sha256": "d2281ba149ed6768fbfcc227c0b703ab7f94737eff27956ef518d7778c9a6b60",
+      "atlas": "assets/sprites/champions/zahra/skins/zahra_set/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    },
+    {
+      "id": "zahra_skin",
+      "status": "PASS",
+      "sha256": "0bc22a535255c8302db9df4ada27d39f804154c5382dcf1641b5235dbb03916a",
+      "atlas": "assets/sprites/champions/zahra/skins/zahra_skin/atlas.png",
+      "alphaBinary": true,
+      "frameCount": 36,
+      "notes": "Left mirrored. Cast, ultimate and death use authored front sequence explicitly for all facings."
+    }
+  ]
+}

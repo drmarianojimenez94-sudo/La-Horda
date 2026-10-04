@@ -138,7 +138,10 @@ function aidResolveCircles(ent, k){
   const rr = (ent.radius||18)*(k||0.8);
   for(const s of aidSolids){
     const dx = ent.x-s.x, dy = ent.y-s.y, min = s.r+rr, d2 = dx*dx+dy*dy;
-    if(d2 < min*min){ const d = Math.sqrt(d2) || 0.01; ent.x = s.x + dx/d*min; ent.y = s.y + dy/d*min; }
+    if(d2 < min*min){
+      if(d2 < 1e-6){ ent.x = s.x + min; continue; } // justo en el centro: antes la dirección 0/0 no lo movía
+      const d = Math.sqrt(d2); ent.x = s.x + dx/d*min; ent.y = s.y + dy/d*min;
+    }
   }
 }
 function aidResolveWalls(ent, k){

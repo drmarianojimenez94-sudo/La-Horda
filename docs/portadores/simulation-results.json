@@ -1,0 +1,795 @@
+{
+  "checks": [
+    {
+      "name": "brasa all casts finite",
+      "ok": true,
+      "detail": {
+        "damage": 220.56993420049548
+      }
+    },
+    {
+      "name": "brasa set complete",
+      "ok": true,
+      "detail": {
+        "count": 4,
+        "pack": "skin_ultimo_turno"
+      }
+    },
+    {
+      "name": "brasa cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "eslabon all casts finite",
+      "ok": true,
+      "detail": {
+        "damage": 110.6907119974494
+      }
+    },
+    {
+      "name": "eslabon set complete",
+      "ok": true,
+      "detail": {
+        "count": 4,
+        "pack": "skin_juramento_roto"
+      }
+    },
+    {
+      "name": "eslabon cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "morwen all casts finite",
+      "ok": true,
+      "detail": {
+        "damage": 168.64910370111465
+      }
+    },
+    {
+      "name": "morwen set complete",
+      "ok": true,
+      "detail": {
+        "count": 4,
+        "pack": "skin_vidrio_negro"
+      }
+    },
+    {
+      "name": "morwen cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "farolero all casts finite",
+      "ok": true,
+      "detail": {
+        "damage": 24.43716000020504
+      }
+    },
+    {
+      "name": "farolero set complete",
+      "ok": true,
+      "detail": {
+        "count": 4,
+        "pack": "skin_lumbre_persistente"
+      }
+    },
+    {
+      "name": "farolero cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "iria all casts finite",
+      "ok": true,
+      "detail": {
+        "damage": 70.93548000045121
+      }
+    },
+    {
+      "name": "iria set complete",
+      "ok": true,
+      "detail": {
+        "count": 4,
+        "pack": "skin_hilo_umbral"
+      }
+    },
+    {
+      "name": "iria cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "turret cap",
+      "ok": true
+    },
+    {
+      "name": "turret shoots",
+      "ok": true
+    },
+    {
+      "name": "overclock recovery",
+      "ok": true
+    },
+    {
+      "name": "recovery ends",
+      "ok": true
+    },
+    {
+      "name": "owner death removes constructs",
+      "ok": true
+    },
+    {
+      "name": "reaction consumes both marks",
+      "ok": true
+    },
+    {
+      "name": "distillation consumes residues",
+      "ok": true
+    },
+    {
+      "name": "shield capped",
+      "ok": true
+    },
+    {
+      "name": "eslabon boss resists displacement",
+      "ok": true
+    },
+    {
+      "name": "brasa boss resists displacement",
+      "ok": true
+    },
+    {
+      "name": "farolero boss resists displacement",
+      "ok": true
+    },
+    {
+      "name": "flash stuns common",
+      "ok": true
+    },
+    {
+      "name": "light remains local and weak",
+      "ok": true
+    },
+    {
+      "name": "custody transfers bounded damage",
+      "ok": true
+    },
+    {
+      "name": "immune custodian cannot absorb for free",
+      "ok": true
+    },
+    {
+      "name": "anchor cap",
+      "ok": true
+    },
+    {
+      "name": "triangle has finite geometry",
+      "ok": true
+    },
+    {
+      "name": "Custody power talent increases protection budget",
+      "ok": true
+    },
+    {
+      "name": "Dismantle power talent increases speed",
+      "ok": true
+    },
+    {
+      "name": "Safe Path power talent improves environment protection",
+      "ok": true
+    },
+    {
+      "name": "Anchor talent explicitly improves duration",
+      "ok": true
+    },
+    {
+      "name": "Fallback triangle rejects unrelated anchor set proc",
+      "ok": true
+    },
+    {
+      "name": "Triangle records actual anchor identities",
+      "ok": true
+    },
+    {
+      "name": "Actual triangle anchor triggers set proc once",
+      "ok": true
+    },
+    {
+      "name": "Unrelated later anchor rejects triangle set proc",
+      "ok": true
+    },
+    {
+      "name": "construct snapshots include owner slot",
+      "ok": true
+    },
+    {
+      "name": "snapshots remain bounded",
+      "ok": true,
+      "detail": {
+        "bytes": 14418
+      }
+    },
+    {
+      "name": "reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "brasa arena bosque",
+      "ok": true
+    },
+    {
+      "name": "brasa arena hielo",
+      "ok": true
+    },
+    {
+      "name": "brasa arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "brasa arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "brasa arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "brasa arena micelial",
+      "ok": true
+    },
+    {
+      "name": "brasa arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "brasa arena abismo",
+      "ok": true
+    },
+    {
+      "name": "brasa arena minas",
+      "ok": true
+    },
+    {
+      "name": "brasa arena infernal",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena bosque",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena hielo",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena micelial",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena abismo",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena minas",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena infernal",
+      "ok": true
+    },
+    {
+      "name": "morwen arena bosque",
+      "ok": true
+    },
+    {
+      "name": "morwen arena hielo",
+      "ok": true
+    },
+    {
+      "name": "morwen arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "morwen arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "morwen arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "morwen arena micelial",
+      "ok": true
+    },
+    {
+      "name": "morwen arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "morwen arena abismo",
+      "ok": true
+    },
+    {
+      "name": "morwen arena minas",
+      "ok": true
+    },
+    {
+      "name": "morwen arena infernal",
+      "ok": true
+    },
+    {
+      "name": "farolero arena bosque",
+      "ok": true
+    },
+    {
+      "name": "farolero arena hielo",
+      "ok": true
+    },
+    {
+      "name": "farolero arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "farolero arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "farolero arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "farolero arena micelial",
+      "ok": true
+    },
+    {
+      "name": "farolero arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "farolero arena abismo",
+      "ok": true
+    },
+    {
+      "name": "farolero arena minas",
+      "ok": true
+    },
+    {
+      "name": "farolero arena infernal",
+      "ok": true
+    },
+    {
+      "name": "iria arena bosque",
+      "ok": true
+    },
+    {
+      "name": "iria arena hielo",
+      "ok": true
+    },
+    {
+      "name": "iria arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "iria arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "iria arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "iria arena micelial",
+      "ok": true
+    },
+    {
+      "name": "iria arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "iria arena abismo",
+      "ok": true
+    },
+    {
+      "name": "iria arena minas",
+      "ok": true
+    },
+    {
+      "name": "iria arena infernal",
+      "ok": true
+    }
+  ],
+  "runs": [
+    {
+      "k": "brasa",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 508,
+      "hp": 222,
+      "maxHp": 222,
+      "damage": 16876.612128015262,
+      "casts": 72,
+      "shieldAbsorbed": 53.26998336000001,
+      "error": null,
+      "objects": 1
+    },
+    {
+      "k": "brasa",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 496,
+      "hp": 221.97517191,
+      "maxHp": 222,
+      "damage": 12310.628271414704,
+      "casts": 71,
+      "shieldAbsorbed": 62.01791999999998,
+      "error": null,
+      "objects": 1
+    },
+    {
+      "k": "brasa",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 505,
+      "hp": 280,
+      "maxHp": 280,
+      "damage": 15387.066628849674,
+      "casts": 70,
+      "shieldAbsorbed": 0,
+      "error": null,
+      "objects": 2
+    },
+    {
+      "k": "eslabon",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 511,
+      "hp": 189.48338579110435,
+      "maxHp": 364,
+      "damage": 11575.852996999745,
+      "casts": 58,
+      "shieldAbsorbed": 195.9344107716403,
+      "error": null,
+      "objects": 1
+    },
+    {
+      "k": "eslabon",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 497,
+      "hp": 167.90335212825602,
+      "maxHp": 364,
+      "damage": 9664.932193034252,
+      "casts": 58,
+      "shieldAbsorbed": 0,
+      "error": null,
+      "objects": 1
+    },
+    {
+      "k": "eslabon",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 497,
+      "hp": 245.19743564608018,
+      "maxHp": 364,
+      "damage": 9574.598896321248,
+      "casts": 60,
+      "shieldAbsorbed": 166.7693105279385,
+      "error": null,
+      "objects": 1
+    },
+    {
+      "k": "morwen",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 515,
+      "hp": 333,
+      "maxHp": 333,
+      "damage": 13734.67857653097,
+      "casts": 69,
+      "shieldAbsorbed": 275.37149229999994,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "morwen",
+      "seed": 431,
+      "state": "gameover",
+      "level": 4,
+      "kills": 404,
+      "hp": 0,
+      "maxHp": 210,
+      "damage": 12032.106290180824,
+      "casts": 53,
+      "shieldAbsorbed": 214.32706751999996,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "morwen",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 507,
+      "hp": 265,
+      "maxHp": 265,
+      "damage": 12296.434643436569,
+      "casts": 69,
+      "shieldAbsorbed": 172.97557600000002,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "farolero",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 507,
+      "hp": 235.35435327999997,
+      "maxHp": 340,
+      "damage": 6957.96678576593,
+      "casts": 57,
+      "shieldAbsorbed": 575.016568807549,
+      "error": null,
+      "objects": 2
+    },
+    {
+      "k": "farolero",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 504,
+      "hp": 250.09595231999998,
+      "maxHp": 288,
+      "damage": 7776.770867659566,
+      "casts": 57,
+      "shieldAbsorbed": 555.1666333916622,
+      "error": null,
+      "objects": 2
+    },
+    {
+      "k": "farolero",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 494,
+      "hp": 224.6807348385525,
+      "maxHp": 288,
+      "damage": 8024.246846386341,
+      "casts": 57,
+      "shieldAbsorbed": 595.8991357856002,
+      "error": null,
+      "objects": 2
+    },
+    {
+      "k": "iria",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 502,
+      "hp": 120.04621907999963,
+      "maxHp": 214,
+      "damage": 11186.440968566398,
+      "casts": 113,
+      "shieldAbsorbed": 182.70810439999997,
+      "error": null,
+      "objects": 3
+    },
+    {
+      "k": "iria",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 507,
+      "hp": 270,
+      "maxHp": 270,
+      "damage": 12000.457387420478,
+      "casts": 105,
+      "shieldAbsorbed": 0,
+      "error": null,
+      "objects": 3
+    },
+    {
+      "k": "iria",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 514,
+      "hp": 340,
+      "maxHp": 340,
+      "damage": 12666.372263284518,
+      "casts": 113,
+      "shieldAbsorbed": 142.98456504800004,
+      "error": null,
+      "objects": 3
+    },
+    {
+      "k": "tanque",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 487,
+      "hp": 711,
+      "maxHp": 711,
+      "damage": 11486.666062379461,
+      "casts": 59,
+      "shieldAbsorbed": 206.29241855999996,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "tanque",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 502,
+      "hp": 603,
+      "maxHp": 603,
+      "damage": 10194.626307579274,
+      "casts": 61,
+      "shieldAbsorbed": 233.96505599999995,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "tanque",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 492,
+      "hp": 447,
+      "maxHp": 447,
+      "damage": 12343.176608403512,
+      "casts": 65,
+      "shieldAbsorbed": 153.2897856,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "mago",
+      "seed": 117,
+      "state": "gameover",
+      "level": 5,
+      "kills": 494,
+      "hp": 0,
+      "maxHp": 195,
+      "damage": 15496.844049305433,
+      "casts": 54,
+      "shieldAbsorbed": 50.735214,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "mago",
+      "seed": 431,
+      "state": "gameover",
+      "level": 4,
+      "kills": 390,
+      "hp": 0,
+      "maxHp": 246,
+      "damage": 10056.697422209067,
+      "casts": 42,
+      "shieldAbsorbed": 20.19312,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "mago",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 511,
+      "hp": 186.08592,
+      "maxHp": 195,
+      "damage": 17755.640645797244,
+      "casts": 49,
+      "shieldAbsorbed": 104.49939599999999,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "soporte",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 507,
+      "hp": 264.23222783999995,
+      "maxHp": 276,
+      "damage": 4668.2167211795795,
+      "casts": 63,
+      "shieldAbsorbed": 374.2753411199999,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "soporte",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 502,
+      "hp": 276,
+      "maxHp": 276,
+      "damage": 4261.686327022257,
+      "casts": 56,
+      "shieldAbsorbed": 360.23216111999994,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "soporte",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 503,
+      "hp": 410,
+      "maxHp": 410,
+      "damage": 5225.329526557711,
+      "casts": 58,
+      "shieldAbsorbed": 262.55927952,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "cazadora",
+      "seed": 117,
+      "state": "playing",
+      "level": 5,
+      "kills": 504,
+      "hp": 173.02911999999998,
+      "maxHp": 179,
+      "damage": 15760.364983915631,
+      "casts": 60,
+      "shieldAbsorbed": 14.971088,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "cazadora",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 515,
+      "hp": 179,
+      "maxHp": 179,
+      "damage": 19286.097743127262,
+      "casts": 59,
+      "shieldAbsorbed": 7.485544,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "cazadora",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 520,
+      "hp": 179,
+      "maxHp": 179,
+      "damage": 17507.386295843524,
+      "casts": 61,
+      "shieldAbsorbed": 13.61008,
+      "error": null,
+      "objects": 0
+    }
+  ],
+  "errors": []
+}

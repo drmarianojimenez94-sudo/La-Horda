@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "orsa",
+  "name": "Orsa",
+  "title": "La Cazadora del Trueno",
+  "role": "asesino",
+  "fantasy": "Tiradora que distribuye cargas y decide cuándo descargar la horda.",
+  "lore": "Orsa inspeccionaba los cables que llevaban señales entre los niveles de las Minas. Durante un apagón oyó tres golpes en una línea que llevaba años cortada. Bajó con una bobina a la espalda y encontró una cuadrilla que repetía el mismo turno sin recordar cómo había empezado. Solo uno reconoció la señal de regreso. Orsa lo sacó siguiendo el cable hasta la luz. Hoy su ballesta almacena pequeñas descargas en el metal que alcanza. No persigue tormentas ni controla el cielo: quiere que, cuando alguien golpee desde abajo, todavía quede una respuesta.",
+  "personality": "Tres golpes. Y te contesto.",
+  "silhouette": "Ballesta ancha con bobina, poncho minero y guantes gruesos; ámbar, hierro y azul oscuro.",
+  "stats": {
+    "hp": 101,
+    "damage": 11,
+    "defense": 0.07,
+    "speed": 168
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Ballesta de bobina, proyectil a distancia.",
+      "cooldownMs": 580,
+      "maxTargets": 1,
+      "hordeMechanism": "El kit aporta área.",
+      "anticipation": "Secuencia propia de ataque por dirección, con anticipación corta.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Atlas propio y feedback de impacto del motor.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "pierce",
+        "description": "Perno lineal que atraviesa varios enemigos y añade una carga.",
+        "cooldownMs": 6500,
+        "energyCost": 25,
+        "range": 340,
+        "radius": 22,
+        "durationMs": 0,
+        "damageMultiplier": 3.08,
+        "maxTargets": 12,
+        "hordeMechanism": "Perno lineal que atraviesa varios enemigos y añade una carga.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Perno lineal que atraviesa varios enemigos y añade una carga.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "brace",
+        "description": "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+        "cooldownMs": 10500,
+        "energyCost": 24,
+        "range": 100,
+        "radius": 50,
+        "durationMs": 3500,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "discharge",
+        "description": "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+        "cooldownMs": 9000,
+        "energyCost": 30,
+        "range": 190,
+        "radius": 175,
+        "durationMs": 0,
+        "damageMultiplier": 1.82,
+        "maxTargets": 12,
+        "hordeMechanism": "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      }
+    ],
+    "ultimate": {
+      "id": "storm",
+      "description": "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 280,
+      "radius": 210,
+      "durationMs": 2400,
+      "damageMultiplier": 1.12,
+      "maxTargets": 12,
+      "hordeMechanism": "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas.",
+      "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+      "execution": "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+      "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+      "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+    },
+    "passive": {
+      "name": "Carga conductora",
+      "description": "Los básicos dejan hasta 3 cargas por blanco y dueña durante 5 s."
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/orsa/atlas.png",
+    "preview": "assets/sprites/champions/orsa/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "608e55ecd2a59010247d5c62bf7741520e05599ee16b28fb8131a6e70ef22e3d",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PASS",
+      "reviewer": "Codex — inspección visual frente a Tanque y revisión técnica",
+      "evidence": "docs/expedition/visual-review.json"
+    },
+    "productionPrompt": "Diseñar Orsa, La Cazadora del Trueno. Ballesta ancha con bobina, poncho minero y guantes gruesos; ámbar, hierro y azul oscuro. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "orsa_skin",
+      "champion": "orsa",
+      "name": "Cazadora de Leviatanes",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Abrigo impermeable, ballesta de arpón y carrete de cuerda al costado.",
+      "lore": "En la costa aprendió a apuntar al agua que se mueve antes de que asome la criatura.",
+      "visualTheme": "Abrigo impermeable, ballesta de arpón y carrete de cuerda al costado.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego, disponible para pruebas.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/orsa/skins/orsa_skin/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "orsa_set",
+      "champion": "orsa",
+      "name": "Trueno Carmesí",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Armadura de cuadrilla, visor rojo y ballesta con aisladores de cerámica.",
+      "lore": "Los rescatistas pintaron de rojo el equipo que debía volver a la superficie. Ella nunca lo cambió.",
+      "visualTheme": "Armadura de cuadrilla, visor rojo y ballesta con aisladores de cerámica.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Colección persistente del Set Circuito de Rescate; se conserva al vender o desequipar.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/orsa/skins/orsa_set/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "orsa_croma",
+      "champion": "orsa",
+      "name": "Orsa — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "assets/sprites/champions/orsa/croma-preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Circuito de Rescate",
+    "sourceArena": "minas",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "orsa_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Repetir arena y jefe. Peso doble en su arena temática; también disponible en otros mapas y tienda Alpha. Grant persistente por colección completa."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "docs/expedition/visual-review.json",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

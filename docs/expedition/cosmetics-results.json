@@ -1,0 +1,405 @@
+{
+  "checks": [
+    {
+      "name": "vesper starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "vesper buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "vesper rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "vesper set grant",
+      "ok": true
+    },
+    {
+      "name": "vesper grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "vesper set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "vesper croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "vesper cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "vesper croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "nahir starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "nahir buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "nahir rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "nahir set grant",
+      "ok": true
+    },
+    {
+      "name": "nahir grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "nahir set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "nahir croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "nahir cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "nahir croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "baltra starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "baltra buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "baltra rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "baltra set grant",
+      "ok": true
+    },
+    {
+      "name": "baltra grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "baltra set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "baltra croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "baltra cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "baltra croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "maura starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "maura buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "maura rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "maura set grant",
+      "ok": true
+    },
+    {
+      "name": "maura grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "maura set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "maura croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "maura cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "maura croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "dariel starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "dariel buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "dariel rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "dariel set grant",
+      "ok": true
+    },
+    {
+      "name": "dariel grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "dariel set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "dariel croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "dariel cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "dariel croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "orsa starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "orsa buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "orsa rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "orsa set grant",
+      "ok": true
+    },
+    {
+      "name": "orsa grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "orsa set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "orsa croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "orsa cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "orsa croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "tibor starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "tibor buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "tibor rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "tibor set grant",
+      "ok": true
+    },
+    {
+      "name": "tibor grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "tibor set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "tibor croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "tibor cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "tibor croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "zahra starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "zahra buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "zahra rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "zahra set grant",
+      "ok": true
+    },
+    {
+      "name": "zahra grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "zahra set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "zahra croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "zahra cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "zahra croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "renko starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "renko buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "renko rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "renko set grant",
+      "ok": true
+    },
+    {
+      "name": "renko grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "renko set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "renko croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "renko cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "renko croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "sira starts locked at level 1",
+      "ok": true
+    },
+    {
+      "name": "sira buy and equip real skin",
+      "ok": true
+    },
+    {
+      "name": "sira rejects wrong champion",
+      "ok": true
+    },
+    {
+      "name": "sira set grant",
+      "ok": true
+    },
+    {
+      "name": "sira grant idempotent",
+      "ok": true
+    },
+    {
+      "name": "sira set stays after sale",
+      "ok": true
+    },
+    {
+      "name": "sira croma buys/equips",
+      "ok": true
+    },
+    {
+      "name": "sira cosmetic cannot change combat",
+      "ok": true
+    },
+    {
+      "name": "sira croma changes palette only",
+      "ok": true
+    },
+    {
+      "name": "vesper set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "nahir set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "baltra set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "maura set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "dariel set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "orsa set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "tibor set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "zahra set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "renko set persists across reload",
+      "ok": true
+    },
+    {
+      "name": "sira set persists across reload",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

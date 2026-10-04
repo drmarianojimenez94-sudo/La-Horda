@@ -349,7 +349,7 @@ function micDrawTall(it, now){
 function _micDrawNode(i, now){
   const n = MIC_NODES[i], K = FN_KINDS[n.kind]; if(!K) return;
   const st = (micS.nodes||"").charCodeAt(i) - 48, from = _micNodeFrom[i], age = animNow - (_micNodeAt[i]||-9999);
-  const tw = Math.min(1, age/700);
+  const tw = Math.max(0, Math.min(1, age/700));
   const bloom = micS.mo.bloom && micS.mo.st==="fight" && !micS.dead;
   let name, h = K.h*n.s, a = 1;
   if(st===FN.SPROUT){ name = K.grow[0]; h *= 0.42*(0.4 + 0.6*tw); }
@@ -359,7 +359,7 @@ function _micDrawNode(i, now){
   else if(st===FN.DEAD){ name = K.mature + "_dead"; h *= 0.92 - 0.1*tw; }
   else { name = K.mature + "_dead"; h *= 0.8; a = Math.max(0, 1 - age/700); } // desaparece
   const sw = st===FN.SPORE ? 1 + 0.04*Math.sin(now*14 + n.ph) : 1 + 0.015*Math.sin(now*1.6 + n.ph);
-  ctx.save(); ctx.fillStyle = "rgba(0,0,0,0.28)"; ctx.beginPath(); ctx.ellipse(n.x, n.y + 2, h*0.32, h*0.1, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.fillStyle = "rgba(0,0,0,0.28)"; ctx.beginPath(); ctx.ellipse(n.x, n.y + 2, Math.max(0, h*0.32), Math.max(0, h*0.1), 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
   _micSpr(name, n.x, n.y + 4, h*sw, n.flip, a);
   if(st===FN.MATURE || st===FN.SPORE || (st===FN.GROWN && bloom)){
     const rgb = bloom ? micHueRgb(now*0.5 + i*0.37) : micStageRgb();

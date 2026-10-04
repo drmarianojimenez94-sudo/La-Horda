@@ -8,6 +8,7 @@ function damageEnemy(e, amount, opts){
   opts = opts || {};
   if(e.cineT > 0) return; // cinemática de un jefe (inf-hechicero.js): intocable mientras habla o se transforma
   const src = opts.src || player;
+  amount = portadorBasicPower(src, amount, opts);
   if(_boonRec) boonRecHit(e, amount, src, opts); // refuerzos de habilidad: quién recibió ESTE lanzamiento
   let dmg = amount * (e.dmgTakenMult||1) * (e.curseDefTakenMult||1) * (e.crashVuln ? 1.6 : 1);
   if(e._protT) dmg *= roleDmgTakenMult(e); // bajo el escudo de un Protector (enemy-roles.js)
@@ -44,6 +45,8 @@ function damageEnemy(e, amount, opts){
   // refuerzos de la partida: rematar (enemigo bajo 30% de vida) y cazador de élites/jefes
   if(runStats.executeBonus && e.hp < e.maxHp*0.3) dmg *= 1 + runStats.executeBonus;
   if(runStats.eliteDmgMult!==1 && (e.rank==="elite" || e.rank==="subjefe" || e.rank==="jefe")) dmg *= runStats.eliteDmgMult;
+  // Kael — Depredador (CLASSIC_PASSIVES.guerrero): sus básicos castigan a los que ya sangran o están envenenados
+  if(opts.fromBasic && src && src.classKey==="guerrero" && (e.bleedTimer>0 || e.poisonTimer>0)) dmg *= CLASSIC_PASSIVES.guerrero.basicVsDotMult;
   let critChance = opts.critChanceOverride!==undefined ? opts.critChanceOverride : runStats.critChance;
   let critMult = opts.critMultOverride!==undefined ? opts.critMultOverride : (runStats.critMult||1.8);
   const setCrit = setCritBonus(src, e); if(setCrit){ critChance += setCrit.chance; critMult += setCrit.mult; }
@@ -59,6 +62,13 @@ function damageEnemy(e, amount, opts){
     const fl = bossPhaseFloor(e); if(fl !== null && e.hp > fl && e.hp - dmg < fl) dmg = e.hp - fl;   // solo si el golpe CRUZA el umbral (un DoT que ya bajó la vida no lo vuelve inmortal)
   }
   e.hp -= dmg;
+  // Axiom — Recompilar (CLASSIC_PASSIVES.axiom): una baja por habilidad le devuelve energía (con tope por segundo)
+  if(src && src.classKey==="axiom" && !opts.fromBasic && _hpBefore > 0 && e.hp <= 0 && src.alive){
+    const P = CLASSIC_PASSIVES.axiom, now = runElapsedMs;
+    if(now - (src._recompT||-1e9) > 1000){ src._recompT = now; src._recompN = 0; }
+    const give = Math.min(P.energyPerKill, P.maxPerSec - (src._recompN||0));
+    if(give > 0){ src._recompN = (src._recompN||0) + give; src.energy = Math.min(src.maxEnergy||src.energy+give, (src.energy||0) + give); }
+  }
   // Calificación: solo cuenta el daño ÚTIL (el que sobra al rematar no suma: no se puede
   // "farmear" daño pegándole fuerte a enemigos casi muertos).
   const usefulDmg = Math.min(dmg, _hpBefore);
@@ -229,7 +239,7 @@ function killEnemy(e){
   if(killer){
     const xpAmt = Math.round(e.xp*(krs.xpMult||1));
     const leveledUp = grantXP(killer.classKey, xpAmt);
-    if(killer.isRemote) netEmitTo(killer._netSlot, "xp", [xpAmt]);
+    if(killer.isRemote) netEmitTo(killer._netSlot, "xp", [xpAmt,killer.classKey]);
     else if(leveledUp && killer!==player && !killer._net) autoInvestTalentPoints(killer.classKey);
   } else {
     grantXP(player.classKey, Math.round(e.xp*(runStats.xpMult||1)));
@@ -274,6 +284,7 @@ function killEnemy(e){
     onBossDefeated();
     if(!e.alive && typeof storyOnKill==="function") storyOnKill(e); // un jefe que "revive" (otra vida) todavía no habla
   }
+  if(typeof AlphaServices!=="undefined")AlphaServices.enemyDefeated(e);
   // DEATH: si sigue muerto (un jefe con fases revive dentro de onBossDefeated), su propio
   // cuerpo hace la animación de muerte; si el pool está lleno, cae al "cadáver" de siempre.
   if(!e.alive && e._deathKind!=="shatter" && !vfxOnDeath(e, e._dieFly ? [e._dieDx, e._dieDy, e._dieFly] : 0)){ // (2º arg: el cadáver despedido, para el invitado)
@@ -285,7 +296,7 @@ function killEnemy(e){
 }
 
 let _avoidableHit = false; // lo prende bossHitHero: el golpe venía con aviso en el suelo
-function damageHero(h, amount, src){
+function damageHero(h, amount, src, portTransferred){
   if(!h || !h.alive) return;
   if(h.invulnTimer>0) return; // p.ej. la breve transición del Teletransporte de Axiom
   { const tk = heroDmgTakenMult(h); if(tk<=0) return; amount *= tk; } // montado / Instinto / titán / cinemáticas
@@ -306,6 +317,8 @@ function damageHero(h, amount, src){
   const defBonus = (h===player) ? runStats.defBonus : 0;
   const passiveDef = h.classKey ? Math.min(0.5, passiveSum(h.classKey,"def_add")) : 0; // "Piel de Brasa"
   let dmg = amount * (1 - h.def) * (1 - defBonus) * (1-(h.buffDefMult?(1-h.buffDefMult):0)) * (1-passiveDef);
+  dmg *= portadorTakenMult(h, src);
+  if(!portTransferred) dmg = portadorShareDamage(h, dmg, src);
   const mitigated = Math.max(0, amount - dmg), dmgBeforeShields = dmg;
   if(h.shield>0){
     const absorbed = Math.min(h.shield, dmg);
@@ -331,6 +344,7 @@ function damageHero(h, amount, src){
       vfxShock(h.x, h.y-10, 10, 60, "255,90,90", 420, h===player?2:1); // se ve que fue el objeto mítico
     }
   }
+  ynaraOnHit(h, dmgBeforeShields);
   h.hp -= dmg;
   if(src && src.eliteMods && dmg>0) eliteOnHitHero(src, h, dmg); // élite con nombre: vampírico / encantado de fuego
   if(h.classKey==="eren" && dmg>0) erenOnHurt(h, dmg);

@@ -454,12 +454,12 @@ TALENT_TREES.soporte = {
   nodes: [
     // ---- RAMA: VITALIDAD (curación) ----
     {id:"sp_vit_c1", branch:"vitalidad", type:"common", maxRank:3, cost:1, requires:null,
-      name:"Manantial", desc:"La Curación de Área cura más.",
-      rankDesc:r=>`+${r*5}% curación de Curación de Área`,
+      name:"Manantial", desc:"La Alba Purificadora cura más.",
+      rankDesc:r=>`+${r*5}% curación de Alba Purificadora`,
       mods:r=>[{targetSkill:0, key:"powerMult", value:0.05*r}]},
     {id:"sp_vit_c2", branch:"vitalidad", type:"common", maxRank:3, cost:1, requires:"sp_vit_c1",
-      name:"Alcance Sagrado", desc:"La Curación de Área llega más lejos.",
-      rankDesc:r=>`+${r*7}% radio de Curación de Área`,
+      name:"Alcance Sagrado", desc:"La Alba Purificadora llega más lejos.",
+      rankDesc:r=>`+${r*7}% radio de Alba Purificadora`,
       mods:r=>[{targetSkill:0, key:"areaMult", value:0.07*r}]},
     {id:"sp_vit_c3", branch:"vitalidad", type:"common", maxRank:3, cost:1, requires:"sp_vit_c2",
       name:"Bendición Constante", desc:"+Curación general permanente (afecta todas sus curaciones).",
@@ -509,8 +509,8 @@ TALENT_TREES.soporte = {
       desc:"Curación llevada al extremo: un aliado bien protegido se vuelve casi imposible de matar.",
       miniTree:[
         {id:"sp_m_vit_1", maxRank:2, cost:4, requires:null, name:"Fuente Eterna",
-          desc:"La Curación de Área cura muchísimo más.",
-          rankDesc:r=>`+${r*15}% curación de Curación de Área`,
+          desc:"La Alba Purificadora cura muchísimo más.",
+          rankDesc:r=>`+${r*15}% curación de Alba Purificadora`,
           mods:r=>[{targetSkill:0, key:"powerMult", value:0.15*r}]},
         {id:"sp_m_vit_2", maxRank:2, cost:4, requires:null, name:"Desborde Mayor",
           desc:"La conversión de exceso de curación a escudo es mucho más eficiente.",
