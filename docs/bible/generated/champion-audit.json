@@ -10723,7 +10723,7 @@
      "area": "ability",
      "name": "Hab. 1 Máscara Arrojada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 215, enemigos con estado 0, aliados 1, propio 5, entidades 0"
+     "detail": "daño 199, enemigos con estado 0, aliados 1, propio 5, entidades 0"
     },
     {
      "area": "ability",
@@ -10855,7 +10855,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 215,
+     "dmg": 199,
      "enemiesAffected": 0,
      "alliesHelped": 1,
      "selfChanged": 5,
@@ -11779,7 +11779,7 @@
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: SFX",
      "level": "PASS",
-     "detail": "9"
+     "detail": "10"
     },
     {
      "area": "ability",
@@ -11881,7 +11881,7 @@
      "selfChanged": 1,
      "spawned": 1,
      "vfx": 452,
-     "sfx": 9,
+     "sfx": 10,
      "floatText": 86,
      "netEvents": 7,
      "error": null
