@@ -127,6 +127,13 @@ function _mipLevel(img, lv){
     const c = document.createElement("canvas"); c.width = w; c.height = h;
     const g = c.getContext("2d"); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
     g.drawImage(src, 0, 0, w, h);
+    // alfa binario (pixel art): el promedio deja un borde semitransparente que agrandaba la silueta
+    // (el Roster Art Gate medía +3 px de cuerpo). Corte en la mitad: el contorno queda del mismo tamaño.
+    try{
+      const d = g.getImageData(0, 0, w, h), p = d.data;
+      for(let i=3;i<p.length;i+=4) p[i] = p[i] >= 128 ? 255 : 0;
+      g.putImageData(d, 0, 0);
+    }catch(err){} // lienzo contaminado: queda el promedio
     c._srcImg = img._srcImg || img; // de qué arte real sale (herramientas de medición/cobertura)
     arr.push(c);
   }
@@ -136,7 +143,9 @@ function _mipLevel(img, lv){
 // se usa quede entre ~0,7 y 1,4 píxeles de pantalla. Si la imagen no está lista, o no hace falta reducir,
 // dibuja tal cual. Devuelve siempre lo mismo que un drawImage de 9 argumentos.
 function artMipDraw(img, sx, sy, sw, sh, dx, dy, dw, dh){
-  if(Q6_ART.mip && img && (img.naturalWidth || img.width) > 64){
+  // solo en el lienzo del juego: las vistas previas (Códice, selección, campamento) y el Roster Art Gate
+  // dibujan en sus propios lienzos a otra escala y conservan el arte tal cual
+  if(Q6_ART.mip && img && ctx.canvas === canvas && (img.naturalWidth || img.width) > 64){
     const m = ctx.getTransform(), k = Math.sqrt(Math.abs(m.a*m.d - m.b*m.c));
     const s = Math.abs(dw/(sw || 1))*k; // píxeles de pantalla por píxel del arte
     if(s < 0.7){
