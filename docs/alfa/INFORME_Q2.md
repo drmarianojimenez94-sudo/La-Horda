@@ -38,9 +38,11 @@ mago / soporte con piloto automático, sin ayudas (si el guardián cae, pierde).
 | Después (con el tope) | **8 de 12 (67 %)** | 2 de 12 | 2 de 12 | **0** |
 
 En resumen: casi el doble de victorias, el nivel 9 dejó de ser un muro (de 6 derrotas allí a 2) y ninguna partida
-quedó trabada. Las victorias duran 8,5–16 min de juego y El Presentador tarda 1,5–2,5 min en caer; las dos derrotas
-con El Presentador fueron con el mago (el más frágil), con el jefe ya muy bajo. Es exigente pero ganable para
-alguien nuevo, que es lo que buscamos para la primera arena.
+quedó trabada. Las victorias duran entre 8,5 y 16 min de juego y El Presentador tarda entre 1 y 3 min en caer. Las
+dos derrotas con El Presentador fueron con el mago (el más frágil), con el jefe al 20 % y al 32 % de vida. Antes, 4
+de las 6 derrotas del nivel 9 las causaban Saqueadores comunes. Ahora las 2 derrotas de ese nivel las causan los
+subjefes: la pelea es contra ellos, como corresponde. Es exigente pero ganable para alguien nuevo, que es lo que
+buscamos para la primera arena.
 
 Lo que más mataba en el nivel 9 no eran los subjefes sino los Saqueadores comunes que seguían entrando
 (en la partida de guerrero: 1.362 de daño de Saqueadores contra ~100 de cada subjefe).
