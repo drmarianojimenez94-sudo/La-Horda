@@ -152,5 +152,5 @@ function artMipDraw(img, sx, sy, sw, sh, dx, dy, dw, dh){
 // arte, jefes a ≤ 3 (antes hasta 6,2). Recortes chicos (≤ 12 %) salvo los jefes que se leían como bloques.
 // Los comunes y jefes con tabla propia de alto (CM_HMUL, MN_HMUL, canon-sheets-meta) se corrigieron en su tabla;
 // acá quedan los que se dibujan con código propio (el Leviatán: cabeza y lomos a 2,4-4,4).
-const ART_SCALE_CAP = { leviatan:0.88 };
+const ART_SCALE_CAP = { leviatan:0.8 };
 function artScaleCap(e){ return Q6_ART.cap ? (ART_SCALE_CAP[e.type] || 1) : 1; }
