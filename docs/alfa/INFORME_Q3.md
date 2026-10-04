@@ -37,6 +37,11 @@ actualizar el servidor, mantenerlo despierto y qué hacer si algo falla ese día
    automáticamente en Fly.io y Render, y los cupos se pueden subir con variables (en la guía).
 9. **Página principal (fondalstudios.com) rechazada** → si el servidor tenía una lista vieja de páginas
    permitidas, "Crear sala" fallaba desde la Alpha principal. **Ahora** esa página se acepta siempre.
+11. **Pruebas automáticas de cuentas y ranking que fallaban en main** → no eran bugs del juego: (a) el
+    alfa ahora obliga al entrenamiento la primera vez y las pruebas no lo marcaban como hecho (por eso
+    "B quedaba en Entrando…": en realidad estaba en el entrenamiento); (b) las cuentas ahora se guardan
+    por servidor y la prueba del ranking usaba la clave vieja (todos quedaban como invitados: tabla
+    vacía). Se actualizaron esas pruebas y las demás del online con el mismo detalle.
 10. **Servidor con disco persistente (Fly.io)** → decía "sin base de datos" aunque guardara bien, y el
     juego avisaba "servidor de prueba". **Ahora** se declara con `DATA_PERSISTENT=1` (en Fly.io se asume).
 
@@ -47,7 +52,11 @@ actualizar el servidor, mantenerlo despierto y qué hacer si algo falla ese día
   **NO VERIFICADO EN RUNTIME**.
 - Si el anfitrión pierde la conexión, la sala se cierra para todos (el servidor no le guarda el lugar al
   anfitrión como a los invitados). Cambiarlo es un sistema nuevo: no para mañana.
-- (En curso) revisar las fallas reportadas de `tools/net-test/accounts.js` y `leaderboard.js` en main.
+- `tools/net-test/accounts.js` falló 1 vez de 3 en "beacon.sin_conflicto_falso_al_volver" (al volver,
+  el juego mostró la elección del regalo inicial en vez del menú). No pude reproducirlo de nuevo; dejé la
+  prueba anotando qué guardianes y regalo tenía para encontrar la causa si se repite.
+- Un jugador con progreso viejo en la nube que entra desde un celular nuevo es mandado al entrenamiento
+  obligatorio (lo puede saltear). Es decisión del onboarding (Q1), no del online.
 
 ## Pruebas corridas
 
