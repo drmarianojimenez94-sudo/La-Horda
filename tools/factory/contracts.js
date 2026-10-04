@@ -18,12 +18,30 @@ function safeFile(file, root = ROOT) {
   const real = fs.realpathSync(resolved);
   return real.startsWith(fs.realpathSync(root) + path.sep) && fs.statSync(real).isFile() ? real : null;
 }
+// Categories come from js/data/champion-taxonomy.js (same file the game and server use).
+let TAXONOMY;
+function taxonomy(root = ROOT) {
+  if (TAXONOMY) return TAXONOMY;
+  const vm = require('node:vm'), c = {}; vm.createContext(c);
+  vm.runInContext(fs.readFileSync(path.join(root, 'js/data/champion-taxonomy.js'), 'utf8'), c, {timeout:1000});
+  return (TAXONOMY = {categories:c.CHAMPION_CATEGORIES, entries:c.CHAMPION_TAXONOMY, meta:id => c.championMeta(id)});
+}
+// Admission ceilings by category. FOUNDER ultimates are deliberately bigger but still bounded.
+const BUDGETS = {STANDARD:{particles:64, summons:8, audioVoices:4}, FAMILY:{particles:64, summons:8, audioVoices:4}, FOUNDER:{particles:96, summons:8, audioVoices:5}};
 function validate(m, root = ROOT) {
   const errors = [], check = (condition, message) => { if (!condition) errors.push(message); };
   const text = value => typeof value === 'string' && value.trim().length > 0 && !/^TODO|^PENDING/.test(value);
   if (!m || typeof m !== 'object' || Array.isArray(m)) return ['manifest must be an object'];
   check(m.schemaVersion === 1, 'schemaVersion must be 1');
   check(/^[a-z][a-z0-9_]*$/.test(m.id || ''), 'id must be a stable lowercase identifier');
+  const T = taxonomy(), category = m.category || 'STANDARD', founder = category === 'FOUNDER';
+  check(Object.hasOwn(T.categories, category), `category must be one of ${Object.keys(T.categories).join(', ')}`);
+  if (Object.hasOwn(T.entries, m.id || '')) check(T.meta(m.id).category === category, 'manifest category must match js/data/champion-taxonomy.js');
+  if (founder) {
+    check(text(m.founderKey) && T.meta(m.id).founderKey === m.founderKey, 'FOUNDER requires founderKey bound in champion-taxonomy.js');
+    check(m.balanceProfile === 'founder', 'FOUNDER must declare balanceProfile "founder" (explicit reference profile, never skipped)');
+    check(m.purchasable !== true && m.transferable !== true, 'FOUNDER can never be purchasable or transferable');
+  }
   for (const key of ['name', 'title', 'role', 'fantasy', 'lore', 'personality', 'silhouette']) check(text(m[key]), `${key} required`);
   const kit = m.kit || {}, skills = Array.isArray(kit.skills) ? kit.skills : [];
   check(skills.length === 3, 'kit requires three skills');
@@ -71,17 +89,20 @@ function validate(m, root = ROOT) {
     check(!!safeFile(c.preview, root), `${c.id}: preview must exist`);
     check(c.availability === 'alpha-test' && c.premiumPrice == null, `${c.id}: Alpha must remain testable without monetary price`);
   }
-  for (const type of ['skin', 'croma', 'set']) check(cosmetics.some(c => c.type === type), `initial ${type} required`);
-  check(text(m.set?.sourceArena) && Array.isArray(m.set?.pieces) && m.set.pieces.length >= 2 && new Set(m.set.pieces).size === m.set.pieces.length, 'set requires distinct pieces and explicit farm source');
-  check(cosmetics.some(c => c.type === 'set' && c.id === m.set?.rewardCosmetic), 'set reward must reference its cosmetic');
-  check(m.set?.rewardGrantsPower === false, 'set cosmetic reward cannot grant power');
-  const budgets = m.budgets || {};
-  for (const [key, cap] of Object.entries({particles:64, summons:8, audioVoices:4})) check(Number.isInteger(budgets[key]) && budgets[key] >= 0 && budgets[key] <= cap, `budgets.${key} must be bounded by ${cap}`);
+  // FOUNDER: outside normal progression -> no Set/croma requirement, but at least one Founder skin.
+  for (const type of founder ? ['skin'] : ['skin', 'croma', 'set']) check(cosmetics.some(c => c.type === type), `initial ${type} required`);
+  if (!founder) {
+    check(text(m.set?.sourceArena) && Array.isArray(m.set?.pieces) && m.set.pieces.length >= 2 && new Set(m.set.pieces).size === m.set.pieces.length, 'set requires distinct pieces and explicit farm source');
+    check(cosmetics.some(c => c.type === 'set' && c.id === m.set?.rewardCosmetic), 'set reward must reference its cosmetic');
+    check(m.set?.rewardGrantsPower === false, 'set cosmetic reward cannot grant power');
+  } else check(m.set == null, 'FOUNDER has no Set (no loot, no progression rewards)');
+  const budgets = m.budgets || {}, caps = BUDGETS[category] || BUDGETS.STANDARD;
+  for (const [key, cap] of Object.entries(caps)) check(Number.isInteger(budgets[key]) && budgets[key] >= 0 && budgets[key] <= cap, `budgets.${key} must be bounded by ${cap}`);
   for (const gate of Object.keys(GATES)) check(!!safeFile(m.evidence?.[gate], root), `${gate} evidence required (file presence does not prove gate passed)`);
   return errors;
 }
-function scaffold(id) {
+function scaffold(id, category = 'STANDARD') {
   const ability = name => ({id:name, description:'', cooldownMs:0, maxTargets:1, hordeMechanism:'', anticipation:'', execution:'', impact:'', feedback:'', vfx:'', sfx:''});
-  return {schemaVersion:1,id,name:'',title:'',role:'',fantasy:'',lore:'',personality:'',silhouette:'',stats:{hp:0,damage:0,speed:0},kit:{basic:ability('basic'),skills:[1,2,3].map(n=>ability(`skill_${n}`)),ultimate:ability('ultimate')},art:{atlas:'',preview:'',directions:4,frameWidth:0,frameHeight:0,sha256:'',animations:{idle:0,walk:0,attack:0,cast:0,hit:0,death:0,ultimate:0},review:{status:'PENDING',reviewer:'',evidence:''}},integration:{runtime:'',codex:'',talents:'',mastery:'',set:'',kitTest:''},cosmetics:[],set:{sourceArena:'',pieces:[],rewardCosmetic:'',rewardGrantsPower:false},budgets:{particles:32,summons:3,audioVoices:2},evidence:Object.fromEntries(Object.keys(GATES).map(k=>[k,'']))};
+  return {schemaVersion:1,id,name:'',title:'',role:'',fantasy:'',lore:'',personality:'',silhouette:'',stats:{hp:0,damage:0,speed:0},kit:{basic:ability('basic'),skills:[1,2,3].map(n=>ability(`skill_${n}`)),ultimate:ability('ultimate')},art:{atlas:'',preview:'',directions:4,frameWidth:0,frameHeight:0,sha256:'',animations:{idle:0,walk:0,attack:0,cast:0,hit:0,death:0,ultimate:0},review:{status:'PENDING',reviewer:'',evidence:''}},integration:{runtime:'',codex:'',talents:'',mastery:'',set:'',kitTest:''},cosmetics:[],set:{sourceArena:'',pieces:[],rewardCosmetic:'',rewardGrantsPower:false},budgets:{particles:32,summons:3,audioVoices:2},evidence:Object.fromEntries(Object.keys(GATES).map(k=>[k,''])),category,...(category==='FOUNDER'?{founderKey:'',balanceProfile:'founder',purchasable:false,transferable:false,set:null}:{})};
 }
-module.exports = {ROOT, GATES, safeFile, validate, scaffold};
+module.exports = {ROOT, GATES, BUDGETS, safeFile, validate, scaffold, taxonomy};

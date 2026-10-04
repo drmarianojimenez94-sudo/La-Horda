@@ -12,4 +12,12 @@ for(const role of Object.keys(ref.roles)){
  const old={...c},known=normalize(ref.knownChampions[0],c,ref);assert(known.existing);assert.deepEqual(c,old,'existing champion unchanged');
 }
 assert(normalize('__invalid',{roleCategory:'missing'},ref).error,'Unknown role must be reported');
-console.log('PASS: reference synchronization, four new-role budgets, known roster unchanged, invalid role reported');
+// Founder profile: still normalized, bounded by its own explicit ceiling (never infinite, never skipped).
+const fp=Object.assign({name:'founder'},ref.profiles.founder);
+for(const role of Object.keys(ref.roles)){
+ const c={roleCategory:role,baseHP:100000,baseDmg:100000,baseDef:.99,baseSpeed:10000,basicCd:100,hpGrowthMult:100,dmgGrowthMult:100};
+ const r=normalize('__founder_'+role,c,ref,fp);
+ assert.equal(r.profile,'founder');assert(r.budgetAfter<=fp.compositeCeiling+1e-6,role+' founder budget');assert(r.budgetAfter>ref.compositeCeiling,role+' founder above standard');
+ assert(c.baseDef<=.5&&Number.isFinite(c.baseHP)&&Number.isFinite(c.baseDmg));
+}
+console.log('PASS: reference synchronization, four new-role budgets, four founder-profile budgets, known roster unchanged, invalid role reported');

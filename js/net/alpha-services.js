@@ -235,7 +235,7 @@ const AlphaServices = (() => {
       if(panel!==local)return;const messages=r.j.messages||[],signature=JSON.stringify([messages,r.j.pinned]);
       if(signature!==lastSignature){const atBottom=list.scrollHeight-list.scrollTop-list.clientHeight<32;list.replaceChildren();
         const rows=r.j.pinned?[r.j.pinned,...messages.filter(m=>m.id!==r.j.pinned.id)]:messages;
-        for(const m of rows){const p=document.createElement("p"),label=document.createElement("b");p.className=m.owner||m.role==="OWNER"?"alpha-owner":"";label.textContent=(m.id===r.j.pinned?.id?"FIJADO · ":"")+(m.name||m.user||"Jugador")+(m.owner||m.role==="OWNER"?" · GAME MASTER":"")+": ";p.append(label,document.createTextNode(m.text||""));list.append(p);}if(atBottom)list.scrollTop=list.scrollHeight;lastSignature=signature;}
+        for(const m of rows){const p=document.createElement("p"),label=document.createElement("b");p.className=m.owner||m.role==="OWNER"?"alpha-owner":"";label.textContent=(m.id===r.j.pinned?.id?"FIJADO · ":"")+(m.name||m.user||"Jugador")+(m.owner||m.role==="OWNER"?" · GAME MASTER":"")+": ";p.append(label);if(m.founder&&typeof founderBadgeHTML==="function")label.insertAdjacentHTML("beforeend"," "+founderBadgeHTML(m.founder,"sm"));p.append(document.createTextNode(m.text||""));list.append(p);}if(atBottom)list.scrollTop=list.scrollHeight;lastSignature=signature;}
       status.textContent="Todos los jugadores de la Alpha. No compartas datos privados.";
     }catch(e){if(panel===local)status.textContent=e.message;}finally{if(panel===local)poll=setTimeout(load,5000);}}
     local.querySelector('form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('button'),text=input.value.trim();if(!text)return;button.disabled=true;
@@ -261,4 +261,4 @@ const AlphaServices = (() => {
   setInterval(()=>{if(!document.hidden)refreshWorld();},60000);
   return {emit,flush,multiplier,goldPrice,spawnPool,onState,refreshWorld,activeEvents,eventSet,bossDropSet,bossEvent,announceBoss,enemyDefeated,confirmedBosses,acceptHostEventVictory,completeEvents,openChat,closeChat,build:BUILD};
 })();
-function alphaWorldMultiplier(key){return AlphaServices.multiplier(key);}
+function alphaWorldMultiplier(key){const t=typeof testLabEnemyMods==="function"?testLabEnemyMods():null;return AlphaServices.multiplier(key)*(t&&Number.isFinite(t[key])&&t[key]>0?Math.min(10,t[key]):1);}

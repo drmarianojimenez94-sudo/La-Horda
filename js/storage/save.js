@@ -163,6 +163,9 @@ function _loadSaveInner(){
       save = Object.assign(defaultSave(), parsed);
       save.itemSchemaV = ITEM_SCHEMA_VERSION;
       const defChamps = defaultSave().champions;
+      // Nunca se descarta progreso: también se conservan filas de campeones registrados fuera del
+      // catálogo público (INTERNAL/DRAFT de js/data/champion-taxonomy.js) o registrados más tarde.
+      if(typeof CLASSES!=="undefined") for(const k of Object.keys(parsed.champions||{})) if(!defChamps[k] && CLASSES[k]) defChamps[k] = mkChampion(false);
       save.champions = {};
       Object.keys(defChamps).forEach(k=>{
         const base = defChamps[k], loaded = (parsed.champions||{})[k] || {};
@@ -386,6 +389,8 @@ function needsStarterChampion(){
 let _persistTimer = null;
 function persistNow(){
   if(_persistTimer){ clearTimeout(_persistTimer); _persistTimer = null; }
+  // GM / TEST LAB: una sesión de prueba nunca escribe el progreso real (js/systems/test-lab.js).
+  if(typeof testLabActive==="function" && testLabActive()) return;
   // B1: mientras el anfitrión simula a un invitado, su guardián usa los datos del invitado;
   // netPersistView escribe siempre los datos propios del anfitrión.
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;

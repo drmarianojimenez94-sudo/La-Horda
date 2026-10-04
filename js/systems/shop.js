@@ -93,8 +93,13 @@ function shopPriceOf(entry, tier){
 }
 function shopChampionPrice(id){
   const cat = CHAMPION_CATALOG.find(c=>c.id===id);
+  if(cat && typeof championMeta==="function" && championMeta(id).showcasePrice) return championMeta(id).showcasePrice; // vitrina: precio visible, nunca comprable
   return cat ? shopConfiguredPrice("champion", id, cat.priceGold) : 0;
 }
+// Categorías (js/data/champion-taxonomy.js): ¿se puede comprar con oro AHORA? Founders y EVENT fuera
+// de ventana no. El servidor además fuerza la propiedad de los no comprables al guardar.
+function shopChampionPurchasable(id){ return typeof championAvailability!=="function" || championAvailability(id).purchasable; }
+function shopChampionVisible(id){ return typeof championAvailability!=="function" || championAvailability(id).visible || !!(save.champions[id]||{}).unlocked; }
 function shopSetPrice(setId){
   return shopSetMissing(setId).reduce((total,id)=>total+shopPriceOf({key:"d:"+id,id,kind:"designed",cat:"set"}),0);
 }
@@ -178,6 +183,7 @@ function shopBuyChampion(id, priceOverride, expectedPrice){
   const cat = CHAMPION_CATALOG.find(c=>c.id===id), champ = save.champions[id];
   if(!cat || !champ) return {ok:false, reason:"Ese guardián no existe"};
   if(champ.unlocked) return {ok:false, reason:"Ya es tuyo"};
+  if(!shopChampionPurchasable(id)) return {ok:false, reason:(typeof championMeta==="function" && championMeta(id).storeNotice) || "Este campeón no está a la venta"};
   const price = priceOverride!=null ? priceOverride : shopChampionPrice(id);
   if(expectedPrice!=null && expectedPrice!==price) return {ok:false,reason:"El precio cambió. Revisá el nuevo valor y volvé a confirmar."};
   if(!shopValidGoldPrice(price)) return {ok:false, reason:"Precio inválido"};
@@ -248,7 +254,7 @@ function shopDailyShowcase(){
   if(!_shopShowcaseCache || _shopShowcaseCache.day !== day){
     const rng = _shopRng("vitrina-"+day);
     const skins = typeof SET_SKINS!=="undefined" ? Object.keys(SET_SKINS).filter(id=>SET_DB[id]) : [];
-    const pool = _shopShuffle(skins.map(id=>({kind:"skin", id})).concat(CHAMPION_CATALOG.map(c=>({kind:"champ", id:c.id}))), rng);
+    const pool = _shopShuffle(skins.map(id=>({kind:"skin", id})).concat(CHAMPION_CATALOG.filter(c=>shopChampionPurchasable(c.id)).map(c=>({kind:"champ", id:c.id}))), rng);
     const featOff = SHOP_DEAL_OFF[(rng()*SHOP_DEAL_OFF.length)|0];
     const cands = _shopShuffle(shopCatalog().filter(e=>e.cat==="legendario" || e.cat==="campeon" || e.cat==="base"), rng);
     const deals = [], perCat = {};

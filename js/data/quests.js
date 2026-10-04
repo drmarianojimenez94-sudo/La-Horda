@@ -24,7 +24,7 @@ const QUEST_CATS = [
 
 // Ayudas para las condiciones (V = vista de la cuenta).
 const _qArenasWon = V => ARENA_ORDER.filter(a=>V.cleared[a]).length;
-const _qOwned = V => Object.keys(V.champs).filter(k=>V.champs[k].unlocked).length;
+const _qOwned = V => Object.keys(V.champs).filter(k=>V.champs[k].unlocked && (typeof championInProgression!=="function" || championInProgression(k))).length;
 const _qMaxLvl = V => Object.values(V.champs).reduce((m,c)=>Math.max(m, c.level||1), 1);
 const _qChampsWon = V => Object.keys(V.byChamp).filter(k=>(V.byChamp[k].wins||0) > 0).length;
 const _qRolesWon = V => new Set(Object.keys(V.byChamp).filter(k=>(V.byChamp[k].wins||0) > 0 && CLASSES[k]).map(k=>CLASSES[k].roleCategory)).size;
@@ -63,7 +63,7 @@ const ACHIEVEMENTS = [
   // ---------------- GUARDIANES (los héroes) ----------------
   {id:"g_own3",   cat:"guardianes", icon:"shield", name:"Hermandad", desc:"Tené 3 guardianes.", goal:3, prog:_qOwned, reward:{gold:200}},
   {id:"g_own6",   cat:"guardianes", icon:"shield", name:"Escuadrón completo", desc:"Tené 6 guardianes.", goal:6, prog:_qOwned, reward:{gold:400}},
-  {id:"g_own_all",cat:"guardianes", icon:"crown",  name:"Todos los guardianes", desc:"Tené a todos los guardianes.", goal:()=>CHAMPION_CATALOG.length, prog:_qOwned, reward:{gold:500, title:"coleccionista"}},
+  {id:"g_own_all",cat:"guardianes", icon:"crown",  name:"Todos los guardianes", desc:"Tené a todos los guardianes.", goal:()=>CHAMPION_CATALOG.filter(c=>typeof championInProgression!=="function" || championInProgression(c.id)).length, prog:_qOwned, reward:{gold:500, title:"coleccionista"}},
   {id:"g_lvl20",  cat:"guardianes", icon:"star",   name:"Forjado en batalla", desc:"Llevá un guardián al nivel 20.", goal:20, prog:_qMaxLvl, reward:{gold:200}},
   {id:"g_lvl40",  cat:"guardianes", icon:"star",   name:"Curtido", desc:"Llevá un guardián al nivel 40.", goal:40, prog:_qMaxLvl, reward:{gold:400}},
   {id:"g_lvl60",  cat:"guardianes", icon:"star",   name:"Leyenda viviente", desc:"Llevá un guardián al nivel 60.", goal:60, prog:_qMaxLvl, reward:{gold:500, title:"leyenda"}},

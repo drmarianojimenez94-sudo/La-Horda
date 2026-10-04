@@ -1,8 +1,8 @@
 "use strict";
 // Sprite states share host attackAnim, so guests animate the same casts locally.
 function drawPortador(h,scale,alpha){
- if(typeof portadorCosmeticAura==="function")portadorCosmeticAura(h,scale);
- ynaraDrawWings(h,scale,alpha);
+ if(!window.ART_GATE_NO_VFX){ if(typeof portadorCosmeticAura==="function")portadorCosmeticAura(h,scale);
+ ynaraDrawWings(h,scale,alpha); }
  if(h.classKey==="myla" && portadorOwned(h,"tantrum").length)return drawChampPack("myla_berrinche",h,scale*1.35,alpha);
  return drawChampPack(h.classKey,h,scale,alpha);
 }

@@ -246,6 +246,7 @@ async function accountUpload(reason){
   try{
     const r = await accountFetch("PUT", "/api/save", { data, baseVersion: y.version | 0 });
     if(r.status === 200){
+      if(r.j.enforced && r.j.enforced.length){ _acctApplyEnforced(r.j.enforced); }
       y.version = r.j.version | 0; y.hash = _acctHash(raw); y.updatedAt = r.j.updatedAt || Date.now(); y.lastOk = Date.now();
       y.dirty = _acctHash(_acctLocalRaw()) !== y.hash; y.beacon = null;
       acct.retryMs = 0; _acctSaveSync();
@@ -265,7 +266,7 @@ function _acctRetryLater(){
   _acctSchedule(acct.retryMs);
 }
 function _acctSessionLost(){
-  acct.session = null; _acctSaveSession();
+  acct.session = null; acct.identity = null; _acctSaveSession();
   if(typeof showNetToast === "function") showNetToast("Tu sesión venció: entrá de nuevo desde tu perfil. El progreso sigue en este dispositivo.");
   _acctEmit();
 }
@@ -358,6 +359,39 @@ async function accountStartFresh(){
     return false;
   }
 }
+/* ---------------- identidad pública: Fundador / permisos ----------------
+   SOLO para la interfaz (insignia, botón del panel, Test Lab). El servidor decide todo lo demás:
+   la propiedad de los Fundadores se fuerza al guardar y los permisos se comprueban en cada pedido. */
+acct.identity = null;
+async function accountRefreshIdentity(){
+  if(!acct.session){ acct.identity = null; _acctEmit(); return null; }
+  try{
+    const r = await accountFetch("GET", "/api/gm/status", undefined, {timeout:20000});
+    if(r.status === 200) acct.identity = { founder: r.j.founder || null, roles: r.j.roles || [], permissions: r.j.permissions || [], owner: !!r.j.owner };
+    else if(r.status === 401) acct.identity = null;
+  }catch(e){}
+  _acctEmit();
+  if(typeof window !== "undefined") window.dispatchEvent(new CustomEvent("account-identity", { detail: acct.identity }));
+  return acct.identity;
+}
+function accountIdentity(){ return acct.identity; }
+function accountCan(permission){ return !!(acct.identity && acct.identity.permissions.includes(permission)); }
+// El token de la cuenta solo viaja al relay si es el MISMO servidor que atiende las cuentas.
+function accountPresenceToken(wsUrl){
+  if(!acct.session) return null;
+  try{ if(new URL(String(wsUrl).replace(/^ws(s?):/i, "http$1:")).host !== new URL(ACCOUNT_API_BASE).host) return null; }catch(e){ return null; }
+  return acct.session.token;
+}
+// Respuesta del servidor al guardar: campeones de propiedad controlada (Fundador / sin publicar).
+function _acctApplyEnforced(list){
+  if(!Array.isArray(list) || !list.length || typeof save === "undefined" || !save || !save.champions) return;
+  for(const e of list){
+    if(!e || typeof e.id !== "string" || typeof CLASSES === "undefined" || !CLASSES[e.id]) continue;
+    if(save.champions[e.id]) save.champions[e.id].unlocked = !!e.unlocked;
+    else if(e.unlocked && typeof mkChampion === "function") save.champions[e.id] = mkChampion(true);
+  }
+  if(typeof persist === "function") persist();
+}
 function accountOwnerCandidate(){
   return !!acct.session && _acctKey(acct.session.user) === "nanogm";
 }
@@ -446,6 +480,7 @@ async function accountLogin(user, pass){
   if(r.status !== 200) return { ok: false, status: r.status, error: r.j.error, msg: r.j.msg || "No se pudo entrar." };
   _acctSetSession(r.j);
   await accountPull("login");
+  accountRefreshIdentity();
   return { ok: true };
 }
 async function accountRegister(user, pass, email){
@@ -460,7 +495,7 @@ async function accountLogout(){
   if(acct.sync && acct.sync.dirty && !acct.conflict) await accountUpload("salir");
   const token = acct.session.token;
   try{ await fetch(accountApiBase() + "/api/logout", { method: "POST", headers: { authorization: "Bearer " + token }, cache: "no-store" }); }catch(e){}
-  acct.session = null; acct.conflict = null; acct.pendingApply = null;
+  acct.session = null; acct.identity = null; acct.conflict = null; acct.pendingApply = null;
   if(acct.timer){ clearTimeout(acct.timer); acct.timer = null; }
   _acctSaveSession();
   _acctEmit();
@@ -644,7 +679,7 @@ function _acctRenderProfile(){
   body.innerHTML = `
     ${accountEnvironmentHTML()}
     <div class="acc-who"><span class="acc-avatar" aria-hidden="true">${_acctEsc((s.name || s.user).charAt(0).toUpperCase())}</span>
-      <div><div class="acc-who-name">${_acctEsc(s.name || s.user)}</div><div class="acc-who-user">usuario: ${_acctEsc(s.user)}</div></div></div>
+      <div><div class="acc-who-name">${_acctEsc(s.name || s.user)} ${acct.identity && acct.identity.founder && typeof founderBadgeHTML === "function" ? founderBadgeHTML(acct.identity.founder.key, "md") : ""}</div><div class="acc-who-user">usuario: ${_acctEsc(s.user)}</div></div></div>
     <div class="acc-sync" id="acc-sync"></div>
     <form class="acc-form acc-rename" novalidate>
       <label class="acc-field"><span>Nombre visible (en la Sala)</span>
@@ -855,5 +890,5 @@ function _acctRenderChip(){
   window.addEventListener("focus", () => _acctPullIfStale("foco"));
   window.addEventListener("online", () => { if(acct.session && acct.sync && acct.sync.dirty){ acct.retryMs = 0; _acctSchedule(1000); } });
   // sesión recordada: se entra directo y la nube se baja en segundo plano (nunca frena el arranque)
-  setTimeout(() => { _acctRenderChip(); if(acct.session) accountPull("inicio"); }, 0);
+  setTimeout(() => { _acctRenderChip(); if(acct.session){ accountPull("inicio"); accountRefreshIdentity(); } }, 0);
 })();

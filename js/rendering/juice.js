@@ -17,7 +17,9 @@
    ============================================================ */
 
 /* ---------------- Opciones (por dispositivo, como el volumen) ---------------- */
-const JUICE = {reduceMotion:false};
+// reduceFx: "Reducir efectos intensos" (destellos, partículas de definitivas, banners y efectos de Fundador).
+// No cambia hitboxes, daño ni telegraphs: solo decoración (ver founder-presence.js, champion VFX).
+const JUICE = {reduceMotion:false, reduceFx:false};
 // Contadores para las pruebas (tools/regression/t_juice.js) y para medir en campo.
 const JUICE_STATS = {hitStop:0, freeze:0, slowMo:0, punch:0, shake:0, vignette:0, streak:0, streakReward:0, levelUp:0, ultReady:0};
 (function(){
@@ -25,6 +27,7 @@ const JUICE_STATS = {hitStop:0, freeze:0, slowMo:0, punch:0, shake:0, vignette:0
     const v = localStorage.getItem("horda_motion");
     if(v!==null) JUICE.reduceMotion = v==="1";
     else JUICE.reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    JUICE.reduceFx = localStorage.getItem("horda_fx") === "1";
   }catch(e){}
 })();
 function setReduceMotion(on){
@@ -33,6 +36,13 @@ function setReduceMotion(on){
   try{ document.body.classList.toggle("reduce-motion", JUICE.reduceMotion); const el = document.getElementById("opt-reduce-motion"); if(el) el.checked = JUICE.reduceMotion; }catch(e){}
   if(on){ screenShake = 0; hitStopTimer = 0; hitFreezeTimer = 0; slowMoTimer = 0; slowMoScale = 1; camPunchT = 0; CAM_LEAD_X = 0; CAM_LEAD_Y = 0; }
 }
+function setReduceFx(on){
+  JUICE.reduceFx = !!on;
+  try{ localStorage.setItem("horda_fx", on ? "1" : "0"); }catch(e){}
+  try{ document.body.classList.toggle("reduce-fx", JUICE.reduceFx); const el = document.getElementById("opt-reduce-fx"); if(el) el.checked = JUICE.reduceFx; }catch(e){}
+}
+// Presupuesto decorativo: multiplica la cantidad de partículas cosméticas (nunca telegraphs).
+function fxBudget(n){ return JUICE.reduceFx ? Math.max(1, Math.round(n * 0.35)) : n; }
 // casilla de la pausa (index.html #opt-reduce-motion) + clase en <body> para los pops del HUD (hud.css)
 (function(){
   const apply = ()=>{ try{ document.body.classList.toggle("reduce-motion", JUICE.reduceMotion); }catch(e){} };
@@ -41,6 +51,8 @@ function setReduceMotion(on){
     const el = document.getElementById("opt-reduce-motion"); if(!el) return;
     el.checked = JUICE.reduceMotion;
     el.addEventListener("change", ()=>{ setReduceMotion(el.checked); apply(); });
+    const fx = document.getElementById("opt-reduce-fx");
+    if(fx){ fx.checked = JUICE.reduceFx; document.body.classList.toggle("reduce-fx", JUICE.reduceFx); fx.addEventListener("change", ()=>setReduceFx(fx.checked)); }
   };
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", bind); else bind();
 })();

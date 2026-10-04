@@ -1,10 +1,10 @@
 name: Champion entry balance
 on:
   pull_request:
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   push:
     branches: [main, 'chatgpt/**']
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -94,6 +94,14 @@ jobs:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node server/test-owner-policy.js
       - run: node server/test-game-master.js
+      - run: node server/test-founders.js
+      - run: node server/test-presence.js
+      - run: node tools/alpha/gm-users-ui.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/founders/online-presence.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/alpha/gm-ui.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
@@ -113,10 +121,17 @@ jobs:
           node tools/art/alpha_set_skins/browser.js
           node tools/art/unique_skins/check.js
           node tools/collection/browser-collection.js
+          node tools/ascension/functional.js
+          node tools/ascension/performance.js
+          node tools/factory/duplicity.js
+          node tools/art/roster_gate.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
           SITE: http://127.0.0.1:8813
           SE_BASE_URL: http://127.0.0.1:8813
+          ENTRY_BASE_URL: http://127.0.0.1:8813
+          FACTORY_BASE_URL: http://127.0.0.1:8813
+          ROSTER_BASE_URL: http://127.0.0.1:8813
       - run: node test-admin.js
         working-directory: server
       - uses: actions/upload-artifact@v4
@@ -129,6 +144,8 @@ jobs:
             docs/elyra/
             docs/ux/
             docs/portadores/ynara-*
+            docs/founders/
+            docs/art-gate/
 
   postgres:
     runs-on: ubuntu-latest
