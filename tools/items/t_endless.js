@@ -124,7 +124,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   check('END.el_jefe_cae_y_sigue_la_horda', r9.round === 11 && r9.st === 'playing' && !r9.vic && r9.arenaAfter !== r9.arena && r9.campaignUntouched, r9);
 
   // 10) muerte: resultados con estadísticas, botín y récord guardado; "una más" arranca otra
-  const r10 = await E(() => { const runs0 = endlessSave().runs; for (const h of heroes) h.hp = 1; player.hp = 0; player.alive = false; onPlayerDeath(); let t = 0; while (state === 'playing' && t < 3000){ update(16); t += 16; }
+  const r10 = await E(() => { const runs0 = endlessSave().runs; for (const h of heroes){ h.hp = 0; h.alive = false; } onPlayerDeath(); /* cae TODO el equipo: con aliados en pie el caído se revive (PR #47) y la Horda sigue */ let t = 0; while (state === 'playing' && t < 3000){ update(16); t += 16; }
     const scr = document.getElementById('endless-screen'); const S = endlessSave();
     return { st: state, visible: scr && !scr.classList.contains('hidden'), txt: scr ? scr.textContent : '', runs: S.runs - runs0, best: S.best.score, score: EN.score, g: (S.byGuardian.guerrero||{}).score, again: !!document.getElementById('en-again-btn'), saved: JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k => /save/i.test(k)) || '{}') || '{}').endless || null }; });
   check('END.pantalla_de_resultados', r10.st === 'endless' && r10.visible && /Ronda/.test(r10.txt) && /Botín juntado/.test(r10.txt) && /Arenas recorridas/.test(r10.txt), { st: r10.st, txt: r10.txt.slice(0, 300) });
