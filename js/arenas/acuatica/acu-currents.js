@@ -79,7 +79,8 @@ function acuFlowAt(x, y){
       if(d < C.r && d > 4){ const k = 1 - d/C.r*0.6; vx += (-rx/d*C.pull + -ry/d*C.swirl)*k; vy += (-ry/d*C.pull + rx/d*C.swirl)*k/1.25; any = true; }
     } else if(z.type==="anillo"){
       const C = ACU_CFG.anillo, nx = x/1.18, ny = y/0.82, d = Math.hypot(nx, ny);
-      if(d > C.r1 && d < C.r2){ vx += -ny/d*C.push*1.18; vy += nx/d*C.push*0.82; any = true; }
+      const sg = z.dir || 1; // la MAREA del Leviatán lo invierte (acuLevTide)
+      if(d > C.r1 && d < C.r2){ vx += -ny/d*C.push*1.18*sg; vy += nx/d*C.push*0.82*sg; any = true; }
     }
   }
   return any ? {x:vx, y:vy} : null;
@@ -155,7 +156,15 @@ function acuDischarge(z){
   for(const e of enemies){
     if(!e.alive || Math.hypot(e.x-z.x, (e.y-z.y)*1.25) > C.r) continue;
     const boss = e.rank==="jefe";
-    damageEnemy(e, Math.max(1, e.maxHp*(boss ? C.bossPct : C.enemyPct)), {src:player, critChanceOverride:0, fromProc:true});
+    // tentáculo del Leviatán nacido en el charco: es CONDUCTOR, la descarga lo deja casi muerto
+    const pct = e.type==="lev_tentaculo" ? 0.45 : (boss ? C.bossPct : C.enemyPct);
+    damageEnemy(e, Math.max(1, e.maxHp*pct), {src:player, critChanceOverride:0, fromProc:true});
+    if(e.type==="lev_tentaculo" && typeof bossArenaEvent==="function") bossArenaEvent("leviatan.charco", e);
+    // el Kraken Joven atraído al charco queda EXPUESTO (la jugada de la arena; BOSS_BLUEPRINTS.kraken_joven)
+    if(e.type==="kraken_joven" && e.alive && typeof bossExpose==="function"){
+      bossExpose(e, 4200, 1.6, "⚡ ¡El KRAKEN se electrocutó en el charco: EXPUESTO!");
+      if(typeof bossArenaEvent==="function") bossArenaEvent("kraken_joven.charco", e);
+    }
     if(!boss) e.stunTimer = Math.max(e.stunTimer||0, e.rank==="subjefe" ? C.stun*0.4 : C.stun);
     hitE++;
   }
@@ -163,6 +172,34 @@ function acuDischarge(z){
   for(let i=0;i<5;i++){ const a = Math.random()*Math.PI*2, r = Math.random()*C.r; particles.push({x:z.x, y:z.y, x2:z.x+Math.cos(a)*r, y2:z.y+Math.sin(a)*r*0.8, life:200, bolt:true, color:"#ffe86a"}); }
   playSfx("acuZap");
   if(hitE >= 3) floatText(z.x, z.y-60, `¡Descarga! ×${hitE}`, "crit");
+}
+// Dónde salen los refuerzos del Kraken Joven: aguas arriba de la corriente lineal (o el ojo del remolino)
+// más cercana a él. null si el nivel no tiene corrientes (entonces salen junto a él).
+function acuKrakenCurrentSpot(e){
+  let best = null, bd = Infinity;
+  for(const z of ACU.zones){
+    if(z.type!=="lineal" && z.type!=="remolino") continue;
+    const d = Math.hypot(z.x - e.x, z.y - e.y); if(d < bd){ bd = d; best = z; }
+  }
+  if(!best) return null;
+  if(best.type==="remolino") return {x:best.x + 40, y:best.y, cur:true};
+  const k = ACU_CFG.lineal.len*0.38;
+  return {x:best.x - best.dx*k, y:best.y - best.dy*k, cur:true};
+}
+// MAREA (Leviatán, cada vida nueva): las corrientes se dan vuelta y TODOS los charcos se cargan a la vez.
+// Lo que servía para escapar ahora empuja hacia él; los tentáculos nacidos en un charco son conductores.
+function acuLevTide(){
+  const C = ACU_CFG.charco; let n = 0;
+  for(const z of ACU.zones){
+    if(z.type==="lineal"){ z.dx = -z.dx; z.dy = -z.dy; n++; }
+    else if(z.type==="anillo"){ z.dir = -(z.dir||1); n++; }
+    else if(z.type==="charco" && !(z.warn > 0)){
+      z.warn = C.warn + 600; n++;
+      vfxTelegraph({shape:0, x:z.x, y:z.y, r:C.r, dur:z.warn, rgb:"255,232,106"});
+    }
+  }
+  if(n){ showBanner("🌊 ¡MAREA! Las corrientes se dan vuelta y los charcos se cargan"); playSfx("acuCharge"); }
+  return n;
 }
 function acuGuestUpdate(dt){
   // predicción: el invitado arrastra a su propio guardián con las mismas corrientes
@@ -190,12 +227,12 @@ function acuBotDanger(x, y, pad){
   return null;
 }
 // ---- red ----
-function acuNetState(){ return {z:ACU.zones.map(z=>[z.id, z.type, z.x, z.y, +z.dx.toFixed(3), +z.dy.toFixed(3), Math.max(0, z.warn|0), z.seed]), l:ACU.lvl}; }
+function acuNetState(){ return {z:ACU.zones.map(z=>[z.id, z.type, z.x, z.y, +z.dx.toFixed(3), +z.dy.toFixed(3), Math.max(0, z.warn|0), z.seed, z.dir||1]), l:ACU.lvl}; }
 function acuApplyNetState(s){
   if(!s || !s.z) return;
   ACU.lvl = s.l;
   const old = {}; for(const z of ACU.zones) old[z.id] = z;
-  ACU.zones = s.z.map(a=>{ const z = old[a[0]] || {id:a[0], t:0}; z.type = a[1]; z.x = a[2]; z.y = a[3]; z.dx = a[4]; z.dy = a[5]; if(a[6] > 0 && !(z.warn > 0)) z.warn = a[6]; else if(a[6] <= 0) z.warn = 0; z.seed = a[7]; return z; });
+  ACU.zones = s.z.map(a=>{ const z = old[a[0]] || {id:a[0], t:0}; z.type = a[1]; z.x = a[2]; z.y = a[3]; z.dx = a[4]; z.dy = a[5]; if(a[6] > 0 && !(z.warn > 0)) z.warn = a[6]; else if(a[6] <= 0) z.warn = 0; z.seed = a[7]; z.dir = a[8]||1; return z; });
 }
 // ---- dibujo ----
 function acuDrawGround(now){

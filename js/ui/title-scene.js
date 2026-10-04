@@ -45,7 +45,7 @@ function _titleSetup(cvs){
   rows.forEach((r, ri)=>{
     const span = W*0.8, x0 = W*0.01;
     for(let i=0;i<r.n;i++){
-      const key = TITLE_HERO_KEYS[(k++ * 3 + ri) % TITLE_HERO_KEYS.length];
+      const key = TITLE_HERO_KEYS[(k++ + ri) % TITLE_HERO_KEYS.length];
       _titleCast.push({key, row:ri, baseX: x0 + span*(i+0.5)/r.n + (ri%2?span/r.n*0.5:0), y:H*r.y + (i%2)*H*0.012,
         s:r.s*unit*1.25, a:r.a, spd:r.spd*unit, t:Math.random()*4000, ph:Math.random()*6.28});
     }

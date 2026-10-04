@@ -57,8 +57,11 @@ function _rollSetPiece(arena, owned, rng, classKey){
     const ch = SET_DB[id].champion; if(!ch) continue;
     const has = setPieceIds(id).some(p=>owned.has(p));
     sw[id] = (ch===classKey ? SET_CHAMPION_BIAS : SET_OTHER_CHAMP_W) * (has ? SET_OWNED_BIAS : 1);
+    // Expedition sets retain cross-arena drops; their documented home doubles the weight.
+    if(SET_DB[id].sourceArena===arena) sw[id] *= 2;
   }
-  const setId = _pick(sw, rng);
+  const eventSetId=typeof AlphaServices!=="undefined"?AlphaServices.eventSet(arena):null;
+  const setId = eventSetId || _pick(sw, rng);
   if(!setId) return null;
   const pw = {};
   for(const pid of setPieceIds(setId)) pw[pid] = owned.has(pid) ? 1 : SET_MISSING_PIECE_BIAS;

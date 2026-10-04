@@ -92,13 +92,15 @@ personaje mientras están activos.
 |---|---|---|
 | **PASS** | Coincide con la Art Bible | Integrar |
 | **FIX** | Problema técnico corregible sin rediseñar (halo, alfa, escala, pixel snapping, frames desalineados, paleta/contraste menor) | Corregir con `tools/art/scan_sprites.py`, validar de nuevo |
-| **REDRAW REQUIRED** | Válido conceptualmente pero de otra dirección artística (anime, semi-realista, densidad de píxel incompatible, proporciones incompatibles, el diseño cambia entre frames) | **No** esconder con un filtro. **No** reemplazar automáticamente. Documentar en `docs/ART_REPLACEMENT_QUEUE.md` y esperar el arte nuevo |
+| **REDRAW REQUIRED** | Válido conceptualmente pero de otra dirección artística (anime, semi-realista, densidad de píxel incompatible, proporciones incompatibles, el diseño cambia entre frames) | **No** esconder con un filtro. Documentar en `docs/ART_REPLACEMENT_QUEUE.md`, producir arte nuevo autorizado y volver a pasar el gate |
 | **REJECT** | Defectuoso o incorrecto conceptualmente | No integrar; conservar el asset anterior si existe |
 
-**Regla de seguridad — sin excepciones:** ante un REDRAW, la IA no rediseña sola. No cambia
-identidad, ropa, arma, colores principales, temática, silueta característica ni habilidades. Se
-documenta qué hace falta; el arte nuevo lo produce una persona usando el diseño existente como
-canon, y el recorte/integración técnica sí la hace la IA después.
+**Regla de preservación:** un REDRAW conserva identidad, temática, silueta característica y
+habilidades del campeón. En la iniciativa Alpha Autonomous Improvement Factory el owner autoriza
+redraw autónomo cuando corresponda: producir el arte con el diseño existente como canon,
+conservar el asset anterior hasta aprobar el nuevo y repetir revisión técnica y visual. Esta
+autorización no convierte un asset generado automáticamente en PASS ni permite degradar
+referencias excelentes. Fuera de una autorización de rediseño, documentar el encargo pendiente.
 
 **Herramientas del Gate:**
 - `python3 tools/art/redraw/build_all.py` — hoja de sprites (PNG con cuadriculado rasterizado) →
@@ -112,6 +114,11 @@ canon, y el recorte/integración técnica sí la hace la IA después.
   `node tools/art/roster_visual_test.js` (10 campeones) y `node tools/art/boss_visual_test.js`
   (enemigos/jefes), sirviendo el repo con `python3 -m http.server 8750` (ver cabecera de cada
   script para `REGRESSION_BASE_URL`).
+- **Alineación a escala real** — `node tools/art/arena_lineup.js --report`: las hojas de contacto
+  agrandan cada entidad para que entre en su celda y esconden la escala; esta herramienta dibuja cada
+  arena con el MISMO zoom de mundo junto al Caballero y mide la **densidad de píxel** (unidades de mundo
+  por píxel de arte) contra la mediana del roster de campeones. ≥ ×4 = mezcla de densidades (§1) →
+  REDRAW REQUIRED; ×2,5–4 = vigilar. Salida: `docs/bible/generated/ENEMY_ART_AUDIT.md`.
 
 ## 9. Enemigos, élites y jefes
 
@@ -121,7 +128,9 @@ Misma gramática, pero **se permite más escala y detalle** cuanto más importan
 - Élites/subjefes: algo más de detalle y tamaño.
 - Jefes: pueden ser mucho más grandes, con más detalle, animaciones más complejas y VFX más
   espectaculares — mientras seamos capaces de decir que pertenecen al mismo universo visual (no
-  a otro juego). Esto es intencional y ya está así en varios jefes/élites del juego (ver el
+  a otro juego). **Más tamaño y más detalle, nunca píxeles más gruesos:** un jefe de arte chico dibujado
+  muy grande (Cerbero y el Titán de las Minas: ×5 la densidad del roster) es mezcla de densidades
+  aunque sea "pixel art". Ver `docs/bible/BOSS_BIBLE.md` §5. Esto es intencional y ya está así en varios jefes/élites del juego (ver el
   audit).
 
 ## 10. Naming y organización
@@ -141,3 +150,26 @@ dirección): un mago de hielo chibi (mismo lenguaje que el Caballero, para caste
 espadachín oscuro y ensangrentado (dirección aceptable para un enemigo/subjefe agresivo — más
 grande y detallado que un común, sin dejar de ser pixel art), y "Diablo Prime" (jefe final:
 mucha más escala/detalle/VFX, permitido en la sección 9).
+
+## 12. Estándares complementarios de producción
+
+`docs/production/PRODUCTION_BIBLES.md` consolida Champion, Enemy, Ability, VFX, Audio, UI, HUD,
+Cosmetic y Set Bible sin reemplazar esta gramática visual ni el canon narrativo. El contrato
+reutilizable y los gates de incorporación están en `tools/factory/README.md`.
+
+## 13. Roster Art Gate (escala, apoyo y presentación uniformes)
+
+Todos los campeones y todas sus apariencias se presentan **igual que el Caballero**: misma altura de
+cuerpo (±4%) y misma línea de pies (±2 px) en frente, perfil y espalda. `tools/art/roster_gate.js`
+renderiza cada apariencia con el motor (sin VFX), mide la masa del cuerpo (sin puntas finas de armas) y
+genera `js/data/champion-art-normalize.js` (`--write`); en modo normal verifica y falla el CI si alguna
+apariencia se sale. La corrección se aplica en un solo punto (`js/rendering/champion-art-normalize.js`,
+alrededor de `drawHeroBody`): no cambia hitbox, radio ni VFX. Al importar un atlas nuevo o una skin,
+correr `--write` y revisar `docs/art-gate/roster-sheet.png` (líneas de cabeza y pies del Caballero).
+
+Presentación: cada campeón muestra **NOMBRE · TÍTULO**, una descripción de tarjeta propia (80–170
+caracteres, nunca copiada de la historia), una historia de Códice de 300–650 caracteres y descripciones
+de habilidades acotadas, sin textos duplicados entre campeones (`js/data/champion-presentation.js`).
+
+Este gate iguala **escala y apoyo**; no corrige forma ni estilo. Un atlas con proporciones o densidad de
+píxel distintas sigue requiriendo REDRAW según §8.

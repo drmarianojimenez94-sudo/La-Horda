@@ -1,0 +1,1165 @@
+{
+  "checks": [
+    {
+      "name": "Intro ends in menu",
+      "ok": true
+    },
+    {
+      "name": "First-run path ends in menu",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff tanque",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move tanque",
+      "ok": true
+    },
+    {
+      "name": "Revive not early tanque",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit tanque",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion tanque",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff guerrero",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move guerrero",
+      "ok": true
+    },
+    {
+      "name": "Revive not early guerrero",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit guerrero",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion guerrero",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff mago",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move mago",
+      "ok": true
+    },
+    {
+      "name": "Revive not early mago",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit mago",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion mago",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff soporte",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move soporte",
+      "ok": true
+    },
+    {
+      "name": "Revive not early soporte",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit soporte",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion soporte",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff segador",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move segador",
+      "ok": true
+    },
+    {
+      "name": "Revive not early segador",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit segador",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion segador",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff axiom",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move axiom",
+      "ok": true
+    },
+    {
+      "name": "Revive not early axiom",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit axiom",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion axiom",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff profeta",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move profeta",
+      "ok": true
+    },
+    {
+      "name": "Revive not early profeta",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit profeta",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion profeta",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff musashi",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move musashi",
+      "ok": true
+    },
+    {
+      "name": "Revive not early musashi",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit musashi",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion musashi",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff cazadora",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move cazadora",
+      "ok": true
+    },
+    {
+      "name": "Revive not early cazadora",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit cazadora",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion cazadora",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff nigromante",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move nigromante",
+      "ok": true
+    },
+    {
+      "name": "Revive not early nigromante",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit nigromante",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion nigromante",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff libertador",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move libertador",
+      "ok": true
+    },
+    {
+      "name": "Revive not early libertador",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit libertador",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion libertador",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff eren",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move eren",
+      "ok": true
+    },
+    {
+      "name": "Revive not early eren",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit eren",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion eren",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff ynara",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move ynara",
+      "ok": true
+    },
+    {
+      "name": "Revive not early ynara",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit ynara",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion ynara",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff myla",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move myla",
+      "ok": true
+    },
+    {
+      "name": "Revive not early myla",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit myla",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion myla",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff brasa",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move brasa",
+      "ok": true
+    },
+    {
+      "name": "Revive not early brasa",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit brasa",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion brasa",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff eslabon",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move eslabon",
+      "ok": true
+    },
+    {
+      "name": "Revive not early eslabon",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit eslabon",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion eslabon",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff morwen",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move morwen",
+      "ok": true
+    },
+    {
+      "name": "Revive not early morwen",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit morwen",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion morwen",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff farolero",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move farolero",
+      "ok": true
+    },
+    {
+      "name": "Revive not early farolero",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit farolero",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion farolero",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff iria",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move iria",
+      "ok": true
+    },
+    {
+      "name": "Revive not early iria",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit iria",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion iria",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff vesper",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move vesper",
+      "ok": true
+    },
+    {
+      "name": "Revive not early vesper",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit vesper",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion vesper",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff nahir",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move nahir",
+      "ok": true
+    },
+    {
+      "name": "Revive not early nahir",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit nahir",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion nahir",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff baltra",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move baltra",
+      "ok": true
+    },
+    {
+      "name": "Revive not early baltra",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit baltra",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion baltra",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff maura",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move maura",
+      "ok": true
+    },
+    {
+      "name": "Revive not early maura",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit maura",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion maura",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff dariel",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move dariel",
+      "ok": true
+    },
+    {
+      "name": "Revive not early dariel",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit dariel",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion dariel",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff orsa",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move orsa",
+      "ok": true
+    },
+    {
+      "name": "Revive not early orsa",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit orsa",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion orsa",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff tibor",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move tibor",
+      "ok": true
+    },
+    {
+      "name": "Revive not early tibor",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit tibor",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion tibor",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff zahra",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move zahra",
+      "ok": true
+    },
+    {
+      "name": "Revive not early zahra",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit zahra",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion zahra",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff renko",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move renko",
+      "ok": true
+    },
+    {
+      "name": "Revive not early renko",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit renko",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion renko",
+      "ok": true
+    },
+    {
+      "name": "No reserve handoff sira",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move sira",
+      "ok": true
+    },
+    {
+      "name": "Revive not early sira",
+      "ok": true
+    },
+    {
+      "name": "Five second revive after hit sira",
+      "ok": true
+    },
+    {
+      "name": "Return keeps selected champion sira",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "myla_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "brasa_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "morwen_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "farolero_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "iria_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_0 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_0 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_0 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_1 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_1 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_1 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_2 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_2 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_2 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_3 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_3 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_3 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_4 rarity 0",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_4 rarity 1",
+      "ok": true
+    },
+    {
+      "name": "ynara_ref_4 rarity 2",
+      "ok": true
+    },
+    {
+      "name": "Complete guide tanque",
+      "ok": true
+    },
+    {
+      "name": "Complete guide guerrero",
+      "ok": true
+    },
+    {
+      "name": "Complete guide mago",
+      "ok": true
+    },
+    {
+      "name": "Complete guide soporte",
+      "ok": true
+    },
+    {
+      "name": "Complete guide segador",
+      "ok": true
+    },
+    {
+      "name": "Complete guide axiom",
+      "ok": true
+    },
+    {
+      "name": "Complete guide profeta",
+      "ok": true
+    },
+    {
+      "name": "Complete guide musashi",
+      "ok": true
+    },
+    {
+      "name": "Complete guide cazadora",
+      "ok": true
+    },
+    {
+      "name": "Complete guide nigromante",
+      "ok": true
+    },
+    {
+      "name": "Complete guide libertador",
+      "ok": true
+    },
+    {
+      "name": "Complete guide eren",
+      "ok": true
+    },
+    {
+      "name": "Complete guide ynara",
+      "ok": true
+    },
+    {
+      "name": "Complete guide myla",
+      "ok": true
+    },
+    {
+      "name": "Complete guide brasa",
+      "ok": true
+    },
+    {
+      "name": "Complete guide eslabon",
+      "ok": true
+    },
+    {
+      "name": "Complete guide morwen",
+      "ok": true
+    },
+    {
+      "name": "Complete guide farolero",
+      "ok": true
+    },
+    {
+      "name": "Complete guide iria",
+      "ok": true
+    },
+    {
+      "name": "Complete guide vesper",
+      "ok": true
+    },
+    {
+      "name": "Complete guide nahir",
+      "ok": true
+    },
+    {
+      "name": "Complete guide baltra",
+      "ok": true
+    },
+    {
+      "name": "Complete guide maura",
+      "ok": true
+    },
+    {
+      "name": "Complete guide dariel",
+      "ok": true
+    },
+    {
+      "name": "Complete guide orsa",
+      "ok": true
+    },
+    {
+      "name": "Complete guide tibor",
+      "ok": true
+    },
+    {
+      "name": "Complete guide zahra",
+      "ok": true
+    },
+    {
+      "name": "Complete guide renko",
+      "ok": true
+    },
+    {
+      "name": "Complete guide sira",
+      "ok": true
+    },
+    {
+      "name": "Only one champion in loadout",
+      "ok": true
+    },
+    {
+      "name": "Stale reserve ignored",
+      "ok": true
+    },
+    {
+      "name": "Dead host does not freeze team equipment timers",
+      "ok": true
+    },
+    {
+      "name": "Selectors clear of footer 844",
+      "ok": true
+    },
+    {
+      "name": "Layout 844",
+      "ok": true
+    },
+    {
+      "name": "Selectors clear of footer 667",
+      "ok": true
+    },
+    {
+      "name": "Layout 667",
+      "ok": true
+    },
+    {
+      "name": "Layout 390",
+      "ok": true
+    },
+    {
+      "name": "Layout 1280",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,451 @@
+{
+  "checks": [
+    {
+      "name": "myla all casts finite",
+      "ok": true,
+      "detail": {
+        "damage": 188.8986825030297
+      }
+    },
+    {
+      "name": "myla set complete",
+      "ok": true,
+      "detail": {
+        "count": 4,
+        "pack": "skin_merienda_magica"
+      }
+    },
+    {
+      "name": "myla cooldown talent",
+      "ok": true
+    },
+    {
+      "name": "Myla tower cap",
+      "ok": true
+    },
+    {
+      "name": "Myla towers damage and slow",
+      "ok": true
+    },
+    {
+      "name": "Myla yogurt puddle",
+      "ok": true
+    },
+    {
+      "name": "Myla protective bubble",
+      "ok": true
+    },
+    {
+      "name": "Myla tantrum starts",
+      "ok": true
+    },
+    {
+      "name": "Myla crying follows and damages",
+      "ok": true
+    },
+    {
+      "name": "Myla tantrum expires",
+      "ok": true
+    },
+    {
+      "name": "turret cap",
+      "ok": true
+    },
+    {
+      "name": "turret shoots",
+      "ok": true
+    },
+    {
+      "name": "overclock recovery",
+      "ok": true
+    },
+    {
+      "name": "recovery ends",
+      "ok": true
+    },
+    {
+      "name": "owner death removes constructs",
+      "ok": true
+    },
+    {
+      "name": "reaction consumes both marks",
+      "ok": true
+    },
+    {
+      "name": "distillation consumes residues",
+      "ok": true
+    },
+    {
+      "name": "shield capped",
+      "ok": true
+    },
+    {
+      "name": "eslabon boss resists displacement",
+      "ok": true
+    },
+    {
+      "name": "brasa boss resists displacement",
+      "ok": true
+    },
+    {
+      "name": "farolero boss resists displacement",
+      "ok": true
+    },
+    {
+      "name": "flash stuns common",
+      "ok": true
+    },
+    {
+      "name": "light remains local and weak",
+      "ok": true
+    },
+    {
+      "name": "custody transfers bounded damage",
+      "ok": true
+    },
+    {
+      "name": "immune custodian cannot absorb for free",
+      "ok": true
+    },
+    {
+      "name": "anchor cap",
+      "ok": true
+    },
+    {
+      "name": "triangle has finite geometry",
+      "ok": true
+    },
+    {
+      "name": "Custody power talent increases protection budget",
+      "ok": true
+    },
+    {
+      "name": "Dismantle power talent increases speed",
+      "ok": true
+    },
+    {
+      "name": "Safe Path power talent improves environment protection",
+      "ok": true
+    },
+    {
+      "name": "Anchor talent explicitly improves duration",
+      "ok": true
+    },
+    {
+      "name": "Fallback triangle rejects unrelated anchor set proc",
+      "ok": true
+    },
+    {
+      "name": "Triangle records actual anchor identities",
+      "ok": true
+    },
+    {
+      "name": "Actual triangle anchor triggers set proc once",
+      "ok": true
+    },
+    {
+      "name": "Unrelated later anchor rejects triangle set proc",
+      "ok": true
+    },
+    {
+      "name": "construct snapshots include owner slot",
+      "ok": true
+    },
+    {
+      "name": "snapshots remain bounded",
+      "ok": true,
+      "detail": {
+        "bytes": 14421
+      }
+    },
+    {
+      "name": "reset clears constructs",
+      "ok": true
+    },
+    {
+      "name": "myla arena bosque",
+      "ok": true
+    },
+    {
+      "name": "myla arena hielo",
+      "ok": true
+    },
+    {
+      "name": "myla arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "myla arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "myla arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "myla arena micelial",
+      "ok": true
+    },
+    {
+      "name": "myla arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "myla arena abismo",
+      "ok": true
+    },
+    {
+      "name": "myla arena minas",
+      "ok": true
+    },
+    {
+      "name": "myla arena infernal",
+      "ok": true
+    },
+    {
+      "name": "brasa arena bosque",
+      "ok": true
+    },
+    {
+      "name": "brasa arena hielo",
+      "ok": true
+    },
+    {
+      "name": "brasa arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "brasa arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "brasa arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "brasa arena micelial",
+      "ok": true
+    },
+    {
+      "name": "brasa arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "brasa arena abismo",
+      "ok": true
+    },
+    {
+      "name": "brasa arena minas",
+      "ok": true
+    },
+    {
+      "name": "brasa arena infernal",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena bosque",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena hielo",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena micelial",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena abismo",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena minas",
+      "ok": true
+    },
+    {
+      "name": "eslabon arena infernal",
+      "ok": true
+    },
+    {
+      "name": "morwen arena bosque",
+      "ok": true
+    },
+    {
+      "name": "morwen arena hielo",
+      "ok": true
+    },
+    {
+      "name": "morwen arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "morwen arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "morwen arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "morwen arena micelial",
+      "ok": true
+    },
+    {
+      "name": "morwen arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "morwen arena abismo",
+      "ok": true
+    },
+    {
+      "name": "morwen arena minas",
+      "ok": true
+    },
+    {
+      "name": "morwen arena infernal",
+      "ok": true
+    },
+    {
+      "name": "farolero arena bosque",
+      "ok": true
+    },
+    {
+      "name": "farolero arena hielo",
+      "ok": true
+    },
+    {
+      "name": "farolero arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "farolero arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "farolero arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "farolero arena micelial",
+      "ok": true
+    },
+    {
+      "name": "farolero arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "farolero arena abismo",
+      "ok": true
+    },
+    {
+      "name": "farolero arena minas",
+      "ok": true
+    },
+    {
+      "name": "farolero arena infernal",
+      "ok": true
+    },
+    {
+      "name": "iria arena bosque",
+      "ok": true
+    },
+    {
+      "name": "iria arena hielo",
+      "ok": true
+    },
+    {
+      "name": "iria arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "iria arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "iria arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "iria arena micelial",
+      "ok": true
+    },
+    {
+      "name": "iria arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "iria arena abismo",
+      "ok": true
+    },
+    {
+      "name": "iria arena minas",
+      "ok": true
+    },
+    {
+      "name": "iria arena infernal",
+      "ok": true
+    }
+  ],
+  "runs": [
+    {
+      "k": "myla",
+      "seed": 117,
+      "state": "gameover",
+      "level": 5,
+      "kills": 479,
+      "hp": 0,
+      "maxHp": 253,
+      "damage": 16942.718109430978,
+      "casts": 59,
+      "shieldAbsorbed": 253.26497791999992,
+      "error": null,
+      "objects": 0
+    },
+    {
+      "k": "myla",
+      "seed": 431,
+      "state": "playing",
+      "level": 5,
+      "kills": 508,
+      "hp": 270,
+      "maxHp": 270,
+      "damage": 19272.520877362535,
+      "casts": 67,
+      "shieldAbsorbed": 183.88476799999995,
+      "error": null,
+      "objects": 3
+    },
+    {
+      "k": "myla",
+      "seed": 991,
+      "state": "playing",
+      "level": 5,
+      "kills": 510,
+      "hp": 188,
+      "maxHp": 188,
+      "damage": 18333.13195817694,
+      "casts": 61,
+      "shieldAbsorbed": 120.422928,
+      "error": null,
+      "objects": 3
+    }
+  ],
+  "errors": []
+}

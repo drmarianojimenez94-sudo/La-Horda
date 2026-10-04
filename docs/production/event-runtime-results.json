@@ -1,0 +1,127 @@
+{
+  "status": "PASS",
+  "scope": "real browser engine; mocked transport/time, not backend or device performance",
+  "result": {
+    "prices": [
+      17,
+      0,
+      23,
+      100
+    ],
+    "multiplier": 2,
+    "nativeBoss": {
+      "type": "minotauro",
+      "event": "factory-event",
+      "hp": 16028
+    },
+    "rolled": {
+      "setId": "lucifer",
+      "designId": "lucifer_arma",
+      "type": "arma"
+    },
+    "guaranteed": true,
+    "completions": [
+      {
+        "ticket": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "wave": 10,
+        "outcome": "victory",
+        "bossDefeated": "minotauro"
+      }
+    ],
+    "repeatCount": 1,
+    "hostConfirmed": [
+      "minotauro"
+    ],
+    "guestConfirmed": [
+      "minotauro"
+    ],
+    "guestCompletion": {
+      "ticket": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "wave": 10,
+      "outcome": "victory",
+      "bossDefeated": "minotauro"
+    },
+    "rewards": 2,
+    "incompatible": null,
+    "expired": [
+      1,
+      null
+    ],
+    "fungal": {
+      "type": "madre_espora",
+      "event": "fungal",
+      "dormant": 1,
+      "state": "reveal"
+    },
+    "tutorial": [
+      null,
+      1
+    ],
+    "directors": [
+      {
+        "arena": "bosque",
+        "expected": "guardian_ancestral",
+        "actual": "guardian_ancestral",
+        "event": "director-bosque",
+        "finite": true
+      },
+      {
+        "arena": "hielo",
+        "expected": "mago_hielo_cristal",
+        "actual": "mago_hielo_cristal",
+        "event": "director-hielo",
+        "finite": true
+      },
+      {
+        "arena": "laberinto",
+        "expected": "minotauro",
+        "actual": "minotauro",
+        "event": "director-laberinto",
+        "finite": true
+      },
+      {
+        "arena": "acuatica",
+        "expected": "leviatan",
+        "actual": "leviatan",
+        "event": "director-acuatica",
+        "finite": true
+      },
+      {
+        "arena": "fortaleza",
+        "expected": "caballero",
+        "actual": "caballero",
+        "event": "director-fortaleza",
+        "finite": true
+      },
+      {
+        "arena": "micelial",
+        "expected": "madre_espora",
+        "actual": "madre_espora",
+        "event": "director-micelial",
+        "finite": true
+      },
+      {
+        "arena": "ciudad",
+        "expected": "cm_presentador",
+        "actual": "cm_presentador",
+        "event": "director-ciudad",
+        "finite": true
+      },
+      {
+        "arena": "abismo",
+        "expected": "ab_morador",
+        "actual": "ab_morador",
+        "event": "director-abismo",
+        "finite": true
+      },
+      {
+        "arena": "minas",
+        "expected": "mn_cerbero",
+        "actual": "mn_cerbero",
+        "event": "director-minas",
+        "finite": true
+      }
+    ]
+  },
+  "errors": []
+}

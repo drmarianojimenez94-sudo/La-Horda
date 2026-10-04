@@ -475,9 +475,10 @@ function drawAcua2(e){
     ctx.beginPath(); ctx.ellipse(e.x-fx*R*1.8, e.y-fy*R*0.9+10, R*3.4, R*1.1, Math.atan2(fy,fx)*0.35, 0, Math.PI*2); ctx.fill();
     ctx.restore();
     let img, nativeLeft = true, h = R*2.2;
+    const levPose = e._levPoseUntil > animNow ? e._levPose : null; // mordida / embestida (boss-patterns.js)
     if(dying && acua2Ready("levDeath")){ img = acua2Pick("levDeath", Math.min(2, Math.floor(dyingP*3))); } // el #3 trae restos del fondo de la hoja
-    else if(e.charging2 && acua2Ready("levDash")){ img = acua2Pick("levDash", Math.floor(t/90)); nativeLeft = false; }
-    else if((e.biteTelegraph>0 || (e.attackAnim>0 && e._lastAtk==="bite")) && acua2Ready("levBite")){ img = acua2Pick("levBite", 0); nativeLeft = false; }
+    else if((e.charging2 || levPose==="dash" || e.bossCharge) && acua2Ready("levDash")){ img = acua2Pick("levDash", Math.floor(t/90)); nativeLeft = false; }
+    else if((e.biteTelegraph>0 || levPose==="bite" || (e.attackAnim>0 && e._lastAtk==="bite")) && acua2Ready("levBite")){ img = acua2Pick("levBite", 0); nativeLeft = false; }
     else if(e.hitFlash>55 && acua2Ready("levHit")){ img = acua2Pick("levHit", 0); }
     else if(phase>=3 && acua2Ready("levP3")){ img = acua2Pick("levP3", 0); h = R*2.0; }
     else if(phase===2 && acua2Ready("levP2")){ img = acua2Pick("levP2", Math.floor(t/420)); }

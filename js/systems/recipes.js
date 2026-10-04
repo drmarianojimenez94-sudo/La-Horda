@@ -20,6 +20,7 @@ function collectionRegister(it, silent){
   const c = save.collection[key] || (save.collection[key] = {n:0, first:Date.now()});
   c.n++;
   if(!silent) c.isNew = true;
+  if(it.set && typeof cosmeticUnlockCompletedSet==="function") cosmeticUnlockCompletedSet(it.set);
 }
 function collectionHas(designId){ return !!(save.collection && save.collection[designId]); }
 

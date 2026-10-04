@@ -1,0 +1,858 @@
+{
+  "tanque": {
+    "name": "Tanque",
+    "role": "tanque",
+    "hp": 150,
+    "damage": 9,
+    "defense": 0.18,
+    "speed": 150,
+    "basicCd": 620,
+    "range": 78,
+    "ranged": false,
+    "hpGrowth": 1.45,
+    "damageGrowth": 0.75,
+    "skills": [
+      {
+        "name": "Torbellino",
+        "cost": 46,
+        "cd": 9500,
+        "damage": 0.5,
+        "duration": 2400
+      },
+      {
+        "name": "Embestida",
+        "cost": 34,
+        "cd": 6500,
+        "damage": 1.6,
+        "duration": 0
+      },
+      {
+        "name": "Grito de Guerra",
+        "cost": 32,
+        "cd": 8500,
+        "damage": 0,
+        "duration": 5000
+      }
+    ],
+    "ultimate": {
+      "name": "Grito Provocador",
+      "ico": "★",
+      "cd": 30000,
+      "kind": "taunt_provoke",
+      "radius": 230,
+      "defBonus": 0.38,
+      "hpBonusPct": 0.35,
+      "spinMult": 2,
+      "duration": 6000,
+      "desc": "Provoca a los enemigos, se agiganta y gana armadura y vida máxima"
+    }
+  },
+  "guerrero": {
+    "name": "Asesino",
+    "role": "asesino",
+    "hp": 120,
+    "damage": 13,
+    "defense": 0.1,
+    "speed": 175,
+    "basicCd": 420,
+    "range": 64,
+    "ranged": false,
+    "hpGrowth": 0.9,
+    "damageGrowth": 1.3,
+    "skills": [
+      {
+        "name": "Corte Sangrante",
+        "cost": 32,
+        "cd": 5000,
+        "damage": 1.25,
+        "duration": 0
+      },
+      {
+        "name": "Triple Golpe",
+        "cost": 40,
+        "cd": 6800,
+        "damage": 0.6,
+        "duration": 0
+      },
+      {
+        "name": "Trampa de Área",
+        "cost": 38,
+        "cd": 9500,
+        "damage": 1.5,
+        "duration": 12000
+      }
+    ],
+    "ultimate": {
+      "name": "Pestilencia Sombría",
+      "ico": "★",
+      "cd": 32000,
+      "kind": "shadow_stealth",
+      "stealthDuration": 2000,
+      "dmgMult": 1.15,
+      "finalMult": 1.4,
+      "poisonDmgMult": 0.16,
+      "bleedDmgMult": 0.14,
+      "duration": 3000,
+      "chainRadius": 150,
+      "desc": "Sigilo total y un triple golpe que envenena y encadena sangrado"
+    }
+  },
+  "mago": {
+    "name": "Mago",
+    "role": "mago",
+    "hp": 95,
+    "damage": 11,
+    "defense": 0.06,
+    "speed": 155,
+    "basicCd": 560,
+    "range": 340,
+    "ranged": true,
+    "hpGrowth": 0.7,
+    "damageGrowth": 1.45,
+    "skills": [
+      {
+        "name": "Muro de Fuego",
+        "cost": 42,
+        "cd": 9000,
+        "damage": 0.42,
+        "duration": 4500
+      },
+      {
+        "name": "Nova de Escarcha",
+        "cost": 40,
+        "cd": 8200,
+        "damage": 1.05,
+        "duration": 0
+      },
+      {
+        "name": "Cadena de Relámpago",
+        "cost": 42,
+        "cd": 5800,
+        "damage": 1.45,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Cataclismo Elemental",
+      "ico": "★",
+      "cd": 32000,
+      "kind": "elemental_storm",
+      "radius": 230,
+      "dmgMult": 1.55,
+      "strikeDmgMult": 0.85,
+      "duration": 5000,
+      "strikeInterval": 420,
+      "burn": true,
+      "slow": 0.45,
+      "novaCount": 3,
+      "novaDmgMult": 0.7,
+      "novaFreeze": 0.7,
+      "novaFreezeDur": 1300,
+      "armorDefBonus": 0.25,
+      "desc": "3 novas de hielo, lluvia de rayos por 5s y armadura de fuego"
+    }
+  },
+  "soporte": {
+    "name": "Soporte",
+    "role": "soporte",
+    "hp": 105,
+    "damage": 7,
+    "defense": 0.12,
+    "speed": 165,
+    "basicCd": 600,
+    "range": 320,
+    "ranged": true,
+    "hpGrowth": 1.2,
+    "damageGrowth": 0.7,
+    "skills": [
+      {
+        "name": "Curación de Área",
+        "cost": 40,
+        "cd": 7000,
+        "damage": 0,
+        "duration": 0
+      },
+      {
+        "name": "Bendición de Guerra",
+        "cost": 36,
+        "cd": 8200,
+        "damage": 0,
+        "duration": 5500
+      },
+      {
+        "name": "Escudo Sagrado",
+        "cost": 38,
+        "cd": 8600,
+        "damage": 0,
+        "duration": 5500
+      }
+    ],
+    "ultimate": {
+      "name": "Bendición Suprema",
+      "ico": "★",
+      "cd": 32000,
+      "kind": "team_grand_buff",
+      "healPct": 0.3,
+      "dmgBonus": 0.28,
+      "defBonus": 0.3,
+      "duration": 6500,
+      "radius": 280,
+      "desc": "Cura y bendice a todo el equipo con ataque y defensa"
+    }
+  },
+  "segador": {
+    "name": "Segador Olvidado",
+    "role": "tanque",
+    "hp": 192,
+    "damage": 12,
+    "defense": 0.22,
+    "speed": 138,
+    "basicCd": 640,
+    "range": 88,
+    "ranged": false,
+    "hpGrowth": 1.35,
+    "damageGrowth": 0.85,
+    "skills": [
+      {
+        "name": "Tajo del Segador",
+        "cost": 34,
+        "cd": 6200,
+        "damage": 1.7,
+        "duration": 0
+      },
+      {
+        "name": "Armadura de la Furia",
+        "cost": 30,
+        "cd": 11000,
+        "damage": 0,
+        "duration": 5000
+      },
+      {
+        "name": "Último Aliento",
+        "cost": 26,
+        "cd": 9000,
+        "damage": 0,
+        "duration": 3500
+      }
+    ],
+    "ultimate": {
+      "name": "Segador de Almas",
+      "ico": "★",
+      "cd": 34000,
+      "kind": "berserker_ult",
+      "dmgBonus": 0.65,
+      "defBonus": 0.35,
+      "lifesteal": 0.3,
+      "duration": 6000,
+      "killExtendMs": 450,
+      "desc": "Furia máxima: daño e impacto enormes, resiste el control y roba vida. Cada baja alarga la duración"
+    }
+  },
+  "axiom": {
+    "name": "Axiom",
+    "role": "mago",
+    "hp": 92,
+    "damage": 13,
+    "defense": 0.05,
+    "speed": 158,
+    "basicCd": 540,
+    "range": 340,
+    "ranged": true,
+    "hpGrowth": 0.62,
+    "damageGrowth": 1.52,
+    "skills": [
+      {
+        "name": "Error 404",
+        "cost": 38,
+        "cd": 8500,
+        "damage": 1.5,
+        "duration": 0
+      },
+      {
+        "name": "Sobrescribir",
+        "cost": 40,
+        "cd": 9200,
+        "damage": 0.95,
+        "duration": 0
+      },
+      {
+        "name": "Teletransporte",
+        "cost": 24,
+        "cd": 2500,
+        "damage": 0,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Force Quit",
+      "ico": "★",
+      "cd": 33000,
+      "kind": "force_quit_ult",
+      "radius": 230,
+      "dmgMult": 1.6,
+      "eliteMult": 0.55,
+      "freezeDuration": 4000,
+      "desc": "Fuerza el cierre de la realidad: 4 segundos de colores invertidos donde nadie más se mueve — al terminar, todo el daño cae de golpe sobre los enemigos cercanos"
+    }
+  },
+  "profeta": {
+    "name": "La Profeta",
+    "role": "soporte",
+    "hp": 114,
+    "damage": 8,
+    "defense": 0.14,
+    "speed": 168,
+    "basicCd": 520,
+    "range": 82,
+    "ranged": false,
+    "hpGrowth": 1.15,
+    "damageGrowth": 0.75,
+    "skills": [
+      {
+        "name": "Destino Restaurado",
+        "cost": 38,
+        "cd": 8000,
+        "damage": 0,
+        "duration": 0
+      },
+      {
+        "name": "Visión del Inmortal",
+        "cost": 34,
+        "cd": 11000,
+        "damage": 0,
+        "duration": 2400
+      },
+      {
+        "name": "Danza del Augurio",
+        "cost": 36,
+        "cd": 9000,
+        "damage": 1.1,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Ascensión del Elegido",
+      "ico": "★",
+      "cd": 34000,
+      "kind": "ascension_fusion",
+      "duration": 7000,
+      "healPct": 0.85,
+      "dmgMult": 2,
+      "atkSpeedMult": 1.6,
+      "defBonus": 0.45,
+      "lifesteal": 0.25,
+      "cdClamp": 60,
+      "desc": "Se acerca a un aliado y se fusiona con él, volviéndose casi invisible e invulnerable: aparece un recipiente espiritual que el aliado absorbe, recibiendo una curación enorme, mucho más daño, velocidad de ataque y resistencia, además de poder lanzar sus habilidades casi al instante mientras dura"
+    }
+  },
+  "musashi": {
+    "name": "Musashi",
+    "role": "asesino",
+    "hp": 100,
+    "damage": 11,
+    "defense": 0.06,
+    "speed": 176,
+    "basicCd": 260,
+    "range": 60,
+    "ranged": false,
+    "hpGrowth": 0.8,
+    "damageGrowth": 1.35,
+    "skills": [
+      {
+        "name": "Corte del Rōnin",
+        "cost": 22,
+        "cd": 3800,
+        "damage": 1.9,
+        "duration": 0
+      },
+      {
+        "name": "Paso Fantasma",
+        "cost": 20,
+        "cd": 5500,
+        "damage": 0,
+        "duration": 0
+      },
+      {
+        "name": "Mil Cortes",
+        "cost": 34,
+        "cd": 8000,
+        "damage": 0.24,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Último Duelo",
+      "ico": "★",
+      "cd": 28000,
+      "kind": "last_duel_ult",
+      "duration": 13000,
+      "speedMult": 1.25,
+      "atkSpeedMult": 1.35,
+      "dmgMult": 1.25,
+      "critChanceBonus": 0.15,
+      "critMultBonus": 0.4,
+      "ghostStepCdMult": 0.4,
+      "desc": "Se transporta con su objetivo de duelo a una arena privada: 1 contra 1 hasta que uno de los dos caiga o se acabe el tiempo"
+    }
+  },
+  "cazadora": {
+    "name": "La Cazadora",
+    "role": "asesino",
+    "hp": 86,
+    "damage": 9,
+    "defense": 0.05,
+    "speed": 185,
+    "basicCd": 420,
+    "range": 300,
+    "ranged": true,
+    "hpGrowth": 0.65,
+    "damageGrowth": 1.05,
+    "skills": [
+      {
+        "name": "Flecha Perforante",
+        "cost": 30,
+        "cd": 6500,
+        "damage": 1.3,
+        "duration": 0
+      },
+      {
+        "name": "Trampa del Bosque",
+        "cost": 26,
+        "cd": 9500,
+        "damage": 0,
+        "duration": 0
+      },
+      {
+        "name": "Lluvia de la Cazadora",
+        "cost": 42,
+        "cd": 12000,
+        "damage": 0.28,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Cacería Salvaje",
+      "ico": "★",
+      "cd": 32000,
+      "kind": "wild_hunt_ult",
+      "duration": 8000,
+      "speedMult": 1.3,
+      "atkSpeedMult": 1.35,
+      "critChanceBonus": 0.2,
+      "rangeMult": 1.15,
+      "cdrOnHit": 250,
+      "desc": "Impulso al máximo fijo, puede correr y disparar a la vez, invoca a un Lobo Espectral que persigue a su Presa"
+    }
+  },
+  "nigromante": {
+    "name": "Nigromante",
+    "role": "mago",
+    "hp": 98,
+    "damage": 9,
+    "defense": 0.07,
+    "speed": 150,
+    "basicCd": 480,
+    "range": 320,
+    "ranged": true,
+    "hpGrowth": 0.75,
+    "damageGrowth": 1,
+    "skills": [
+      {
+        "name": "Cosecha de Almas",
+        "cost": 28,
+        "cd": 6500,
+        "damage": 1.15,
+        "duration": 0
+      },
+      {
+        "name": "Gólem de Carne",
+        "cost": 36,
+        "cd": 12000,
+        "damage": 0.9,
+        "duration": 0
+      },
+      {
+        "name": "Plaga de los Condenados",
+        "cost": 44,
+        "cd": 13000,
+        "damage": 0.22,
+        "duration": 6000
+      }
+    ],
+    "ultimate": {
+      "name": "Encarnación del Abismo",
+      "ico": "★",
+      "cd": 38000,
+      "kind": "abyss_incarnation_ult",
+      "duration": 11000,
+      "hpMult": 1.9,
+      "dmgMult": 1.8,
+      "desc": "Absorbe temporalmente a todo tu ejército y te transforma en un Demonio Nigromántico; tu poder escala con cuántos absorbiste"
+    }
+  },
+  "libertador": {
+    "name": "El Libertador",
+    "role": "asesino",
+    "hp": 120,
+    "damage": 24,
+    "defense": 0.1,
+    "speed": 160,
+    "basicCd": 1450,
+    "range": 380,
+    "ranged": true,
+    "hpGrowth": 1,
+    "damageGrowth": 1.05,
+    "skills": [
+      {
+        "name": "Bayoneta",
+        "cost": 24,
+        "cd": 5500,
+        "damage": 2.5,
+        "duration": 0
+      },
+      {
+        "name": "¡Granaderos, a la carga!",
+        "cost": 36,
+        "cd": 16000,
+        "damage": 0,
+        "duration": 8000
+      },
+      {
+        "name": "Carga de San Lorenzo",
+        "cost": 40,
+        "cd": 12000,
+        "damage": 1.9,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Cruce de los Andes",
+      "ico": "★",
+      "cd": 45000,
+      "kind": "sm_andes_ult",
+      "dmgMult": 4.2,
+      "duration": 10000,
+      "desc": "La Cordillera se alza alrededor de la arena: nieve, viento y escarcha. Carga con una formación de Granaderos espectrales montados y queda 10 s a caballo (sable corvo, +velocidad, +daño, -daño recibido)"
+    }
+  },
+  "eren": {
+    "name": "Eren",
+    "role": "asesino",
+    "hp": 128,
+    "damage": 11,
+    "defense": 0.08,
+    "speed": 178,
+    "basicCd": 380,
+    "range": 84,
+    "ranged": false,
+    "hpGrowth": 1.05,
+    "damageGrowth": 1,
+    "skills": [
+      {
+        "name": "Equipo de Maniobras",
+        "cost": 22,
+        "cd": 7000,
+        "damage": 1.4,
+        "duration": 0
+      },
+      {
+        "name": "Instinto de Supervivencia",
+        "cost": 25,
+        "cd": 14000,
+        "damage": 0,
+        "duration": 3500
+      },
+      {
+        "name": "¡Avancen!",
+        "cost": 30,
+        "cd": 15000,
+        "damage": 0,
+        "duration": 7000
+      }
+    ],
+    "ultimate": {
+      "name": "El Portador",
+      "ico": "★",
+      "cd": 40000,
+      "kind": "eren_titan_ult",
+      "duration": 22000,
+      "desc": "Con la Furia llena: se muerde la mano, cae un rayo y surge la forma monstruosa (golpes en área, Sismo, Terremoto, Retumbar, regeneración con vapor). Si llenás la Furia otra vez transformado, se desbloquea algo más"
+    }
+  },
+  "myla": {
+    "name": "Myla",
+    "role": "mago",
+    "hp": 100,
+    "damage": 8,
+    "defense": 0.08,
+    "speed": 162,
+    "basicCd": 560,
+    "range": 320,
+    "ranged": true,
+    "hpGrowth": 0.8,
+    "damageGrowth": 1.1,
+    "skills": [
+      {
+        "name": "Torre de Yogur",
+        "cost": 32,
+        "cd": 9000,
+        "damage": 0.5,
+        "duration": 12000
+      },
+      {
+        "name": "Yogurazo",
+        "cost": 28,
+        "cd": 6200,
+        "damage": 1,
+        "duration": 3600
+      },
+      {
+        "name": "Burbuja Cremosa",
+        "cost": 26,
+        "cd": 10000,
+        "damage": 0,
+        "duration": 4500
+      }
+    ],
+    "ultimate": {
+      "name": "BERRINCHE",
+      "ico": "★",
+      "kind": "my_tantrum",
+      "cd": 34000,
+      "range": 240,
+      "radius": 180,
+      "duration": 6500,
+      "dmgMult": 0.55,
+      "desc": "En pañales y más grande, llora durante 6,5 segundos: cada onda de llanto daña y salpica yogur a su alrededor. Puede moverse; los jefes resisten parte de la ralentización."
+    }
+  },
+  "brasa": {
+    "name": "Brasa",
+    "role": "mago",
+    "hp": 108,
+    "damage": 10,
+    "defense": 0.09,
+    "speed": 156,
+    "basicCd": 580,
+    "range": 310,
+    "ranged": true,
+    "hpGrowth": 0.8,
+    "damageGrowth": 1.1,
+    "skills": [
+      {
+        "name": "Centinela de Latón",
+        "cost": 34,
+        "cd": 8500,
+        "damage": 0.65,
+        "duration": 15000
+      },
+      {
+        "name": "Purga de Vapor",
+        "cost": 28,
+        "cd": 6500,
+        "damage": 1.65,
+        "duration": 0
+      },
+      {
+        "name": "Desmontaje Rápido",
+        "cost": 18,
+        "cd": 7500,
+        "damage": 0,
+        "duration": 2200
+      }
+    ],
+    "ultimate": {
+      "name": "Turno de Emergencia",
+      "ico": "★",
+      "kind": "br_overclock",
+      "cd": 34000,
+      "duration": 8000,
+      "dmgMult": 1,
+      "desc": "Sobrecarga sus torretas. Sin ninguna, monta una temporal. Después deben enfriarse."
+    }
+  },
+  "eslabon": {
+    "name": "El Eslabón",
+    "role": "tanque",
+    "hp": 164,
+    "damage": 9,
+    "defense": 0.2,
+    "speed": 145,
+    "basicCd": 650,
+    "range": 85,
+    "ranged": false,
+    "hpGrowth": 1.4,
+    "damageGrowth": 0.8,
+    "skills": [
+      {
+        "name": "Cadena de Retorno",
+        "cost": 26,
+        "cd": 6500,
+        "damage": 1.4,
+        "duration": 0
+      },
+      {
+        "name": "Línea Infranqueable",
+        "cost": 32,
+        "cd": 10500,
+        "damage": 0.35,
+        "duration": 6000
+      },
+      {
+        "name": "Custodia",
+        "cost": 30,
+        "cd": 10000,
+        "damage": 0,
+        "duration": 5000
+      }
+    ],
+    "ultimate": {
+      "name": "Nadie Queda Atrás",
+      "ico": "★",
+      "kind": "es_ring",
+      "cd": 35000,
+      "radius": 190,
+      "duration": 6500,
+      "dmgMult": 0.4,
+      "desc": "Un anillo móvil empuja comunes hacia afuera y protege aliados dentro. Reduce su velocidad mientras dura."
+    }
+  },
+  "morwen": {
+    "name": "Morwen",
+    "role": "mago",
+    "hp": 96,
+    "damage": 10,
+    "defense": 0.07,
+    "speed": 164,
+    "basicCd": 540,
+    "range": 300,
+    "ranged": true,
+    "hpGrowth": 0.8,
+    "damageGrowth": 1.1,
+    "skills": [
+      {
+        "name": "Resina Amarga",
+        "cost": 26,
+        "cd": 6000,
+        "damage": 0.75,
+        "duration": 5000
+      },
+      {
+        "name": "Sal de Ruptura",
+        "cost": 30,
+        "cd": 6500,
+        "damage": 0.9,
+        "duration": 5000
+      },
+      {
+        "name": "Destilación",
+        "cost": 24,
+        "cd": 10000,
+        "damage": 0,
+        "duration": 4000
+      }
+    ],
+    "ultimate": {
+      "name": "Alambique del Silencio",
+      "ico": "★",
+      "kind": "mo_alembic",
+      "cd": 36000,
+      "range": 240,
+      "radius": 170,
+      "duration": 8000,
+      "dmgMult": 0.4,
+      "desc": "Área que prolonga reactivos y permite una onda secundaria por reacción. Sin propagación infinita."
+    }
+  },
+  "farolero": {
+    "name": "El Farolero",
+    "role": "soporte",
+    "hp": 124,
+    "damage": 8,
+    "defense": 0.13,
+    "speed": 162,
+    "basicCd": 590,
+    "range": 90,
+    "ranged": false,
+    "hpGrowth": 1.15,
+    "damageGrowth": 0.8,
+    "skills": [
+      {
+        "name": "Farol de Guardia",
+        "cost": 28,
+        "cd": 9500,
+        "damage": 0,
+        "duration": 9000
+      },
+      {
+        "name": "Destello",
+        "cost": 26,
+        "cd": 7500,
+        "damage": 1.1,
+        "duration": 0
+      },
+      {
+        "name": "Paso Seguro",
+        "cost": 30,
+        "cd": 10500,
+        "damage": 0,
+        "duration": 4500
+      }
+    ],
+    "ultimate": {
+      "name": "Vigilia",
+      "ico": "★",
+      "kind": "fa_vigil",
+      "cd": 35000,
+      "radius": 190,
+      "duration": 7000,
+      "desc": "Círculo móvil de luz y pequeños escudos periódicos. No concede inmunidad ni borra mecánicas de arena."
+    }
+  },
+  "iria": {
+    "name": "Iria",
+    "role": "mago",
+    "hp": 100,
+    "damage": 10,
+    "defense": 0.07,
+    "speed": 160,
+    "basicCd": 560,
+    "range": 320,
+    "ranged": true,
+    "hpGrowth": 0.8,
+    "damageGrowth": 1.1,
+    "skills": [
+      {
+        "name": "Ancla",
+        "cost": 16,
+        "cd": 2200,
+        "damage": 0,
+        "duration": 16000
+      },
+      {
+        "name": "Tensión",
+        "cost": 28,
+        "cd": 8000,
+        "damage": 0.4,
+        "duration": 4500
+      },
+      {
+        "name": "Corte de Hilo",
+        "cost": 30,
+        "cd": 9000,
+        "damage": 2,
+        "duration": 0
+      }
+    ],
+    "ultimate": {
+      "name": "Sello de los Tres Caminos",
+      "ico": "★",
+      "kind": "ir_triangle",
+      "cd": 36000,
+      "radius": 160,
+      "duration": 6500,
+      "dmgMult": 0.55,
+      "desc": "Activa un triángulo de daño y control. Sin tres anclas válidas crea uno pequeño propio; no encierra ni desplaza jugadores."
+    }
+  }
+}

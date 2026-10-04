@@ -129,7 +129,7 @@ function tutTick(){
   }
   if(TUT.key==="skillup" && !document.querySelector(".skill-plus:not(.hidden)")) tutDone("skillup");
   // ---- revivir: la primera vez que cae un compañero ----
-  if(!tutSeen("revive") && TUT.key!=="revive" && player.alive && heroes.some(h=>h!==player && !h.alive))
+  if(!duoEnabled() && !tutSeen("revive") && TUT.key!=="revive" && player.alive && heroes.some(h=>h!==player && !h.alive))
     tutSay("revive", "¡Cayó un compañero! Parate al lado y mantené ✚ para revivirlo.", "Mantené ✚ junto al caído para revivirlo", 12000, true);
   if(TUT.key==="revive" && (st.revives||0) > 0) tutDone("revive");
   if(typeof storyTick==="function") storyTick(); // voces de la historia y Crónicas (js/systems/story.js)

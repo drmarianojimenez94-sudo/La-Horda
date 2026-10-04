@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "sira",
+  "name": "Sira",
+  "title": "La Cartógrafa de lo Perdido",
+  "role": "mago",
+  "fantasy": "Maga que dibuja con su recorrido y convierte trayectos recientes en ataques.",
+  "lore": "El padre de Sira volvió del Laberinto con un mapa en blanco. Durante semanas señaló sobre él caminos que nadie más veía, hasta que un día dejó una marca de tinta y salió sin abrigo. Sira siguió la marca. Encontró otras en muros, telas y huesos de animales: no indicaban dónde ir, sino dónde alguien había conseguido regresar. Desde entonces registra sus propios pasos y borra las rutas que ya no son seguras. Sus mapas duran poco cerca de la Cicatriz. Le basta con que duren hasta que cruce la última persona.",
+  "personality": "Esta línea llega hasta nosotros.",
+  "silhouette": "Capa corta con mapas, rollo lateral y pluma larga; azul tinta, pergamino y plata.",
+  "stats": {
+    "hp": 96,
+    "damage": 9,
+    "defense": 0.06,
+    "speed": 164
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Pluma de agrimensor, proyectil a distancia.",
+      "cooldownMs": 570,
+      "maxTargets": 1,
+      "hordeMechanism": "El kit aporta área.",
+      "anticipation": "Secuencia propia de ataque por dirección, con anticipación corta.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Atlas propio y feedback de impacto del motor.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "ink_line",
+        "description": "Trazo recto que atraviesa hasta 12 enemigos.",
+        "cooldownMs": 6000,
+        "energyCost": 25,
+        "range": 290,
+        "radius": 24,
+        "durationMs": 0,
+        "damageMultiplier": 4.41,
+        "maxTargets": 12,
+        "hordeMechanism": "Trazo recto que atraviesa hasta 12 enemigos.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Trazo recto que atraviesa hasta 12 enemigos.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "retrace",
+        "description": "Recorre hacia atrás hasta 170 unidades del trazo válido. Comprueba cada paso contra muros y vacíos.",
+        "cooldownMs": 10500,
+        "energyCost": 24,
+        "range": 170,
+        "radius": 24,
+        "durationMs": 0,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Recorre hacia atrás hasta 170 unidades del trazo válido. Comprueba cada paso contra muros y vacíos.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Recorre hacia atrás hasta 170 unidades del trazo válido. Comprueba cada paso contra muros y vacíos.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "erase",
+        "description": "Consume el trazo e impacta una sola vez por objetivo; sin ruta usa un círculo de radio 80.",
+        "cooldownMs": 8500,
+        "energyCost": 28,
+        "range": 200,
+        "radius": 28,
+        "durationMs": 0,
+        "damageMultiplier": 5.04,
+        "maxTargets": 12,
+        "hordeMechanism": "Consume el trazo e impacta una sola vez por objetivo; sin ruta usa un círculo de radio 80.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Consume el trazo e impacta una sola vez por objetivo; sin ruta usa un círculo de radio 80.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      }
+    ],
+    "ultimate": {
+      "id": "atlas",
+      "description": "Tres pulsos sobre una copia de la ruta; sin ruta dibuja un rombo local. No altera el mapa.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 190,
+      "radius": 32,
+      "durationMs": 2400,
+      "damageMultiplier": 2.016,
+      "maxTargets": 12,
+      "hordeMechanism": "Tres pulsos sobre una copia de la ruta; sin ruta dibuja un rombo local. No altera el mapa.",
+      "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+      "execution": "Tres pulsos sobre una copia de la ruta; sin ruta dibuja un rombo local. No altera el mapa.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+      "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+      "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+    },
+    "passive": {
+      "name": "Trazado reciente",
+      "description": "Conserva hasta 12 puntos de los últimos 4 s. Un salto de más de 75 unidades o terreno inaccesible interrumpe el trazo."
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/sira/atlas.png",
+    "preview": "assets/sprites/champions/sira/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "6f574d5aae27f770497d6657720a7b8fc7e0e4952df59f68a8487dbc914ac3bd",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PASS",
+      "reviewer": "Codex — inspección visual frente a Tanque y revisión técnica",
+      "evidence": "docs/expedition/visual-review.json"
+    },
+    "productionPrompt": "Diseñar Sira, La Cartógrafa de lo Perdido. Capa corta con mapas, rollo lateral y pluma larga; azul tinta, pergamino y plata. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "sira_skin",
+      "champion": "sira",
+      "name": "Atlas Astral",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Capa de observatorio, visor de latón y pluma con regla circular.",
+      "lore": "Comparaba las estrellas con caminos terrestres hasta descubrir que ninguno garantiza el regreso.",
+      "visualTheme": "Capa de observatorio, visor de latón y pluma con regla circular.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego, disponible para pruebas.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/sira/skins/sira_skin/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "sira_set",
+      "champion": "sira",
+      "name": "Cartógrafa Corsaria",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Casaca de navegante, compás grande y tubos de cartas marinas.",
+      "lore": "El mar nuevo dejó sin sentido las costas dibujadas. Sira empezó por anotar los refugios que aún tenían luz.",
+      "visualTheme": "Casaca de navegante, compás grande y tubos de cartas marinas.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Colección persistente del Set Ruta Imborrable; se conserva al vender o desequipar.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/sira/skins/sira_set/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "sira_croma",
+      "champion": "sira",
+      "name": "Sira — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "assets/sprites/champions/sira/croma-preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Ruta Imborrable",
+    "sourceArena": "laberinto",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "sira_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Repetir arena y jefe. Peso doble en su arena temática; también disponible en otros mapas y tienda Alpha. Grant persistente por colección completa."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "docs/expedition/visual-review.json",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

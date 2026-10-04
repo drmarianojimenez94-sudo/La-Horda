@@ -1,0 +1,1 @@
+PASS: reference synchronization, four new-role budgets, known roster unchanged, invalid role reported

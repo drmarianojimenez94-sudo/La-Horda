@@ -143,7 +143,7 @@ function renderMyInventory(){
 function renderMyItemsPanel(panel){
   const rarChips = [["todas","Todas"],["comun","Común"],["raro","Raro"],["muyraro","Muy Raro"],["legendario","Legendario"],["mitico","Mítico"],["set","Set"],["unico","Único"]];
   const typeChips = [["todos","Todos"]].concat(EQUIP_SLOT_TYPES.map(t=>[t, ITEM_TYPES[t].icon+" "+ITEM_TYPES[t].label]));
-  const champOpts = [["todos","Todos los guardianes"],["universal","Sirve a cualquiera"]].concat(Object.keys(CLASSES).map(k=>[k, "Para "+CLASSES[k].name]));
+  const champOpts = [["todos","Todos los guardianes"],["universal","Sirve a cualquiera"]].concat(Object.keys(CLASSES).filter(k=>CHAMPION_CATALOG.some(c=>c.id===k)).map(k=>[k, "Para "+CLASSES[k].name]));
   let html = `<div class="inv-filters">${rarChips.map(([k,l])=>`<button class="inv-chip ${myInvFilter.rarity===k?"on":""}" data-f-rar="${k}" ${k!=="todas"&&k!=="set"&&RARITY_META[k]?`style="color:${RARITY_META[k].color}"`:(k==="set"?`style="color:${SET_COLOR}"`:"")}>${l}</button>`).join("")}</div>
     <div class="inv-filters">${typeChips.map(([k,l])=>`<button class="inv-chip ${myInvFilter.type===k?"on":""}" data-f-type="${k}">${l}</button>`).join("")}</div>
     <div class="inv-filters"><select id="myinv-champ">${champOpts.map(([k,l])=>`<option value="${k}" ${myInvFilter.champ===k?"selected":""}>${l}</option>`).join("")}</select></div>`;

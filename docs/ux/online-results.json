@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "name": "Four distinct champions",
+      "ok": true
+    },
+    {
+      "name": "Host rejects duplicate champion",
+      "ok": true
+    },
+    {
+      "name": "Host rejects missing player loadout",
+      "ok": true
+    },
+    {
+      "name": "Death preserves original champion",
+      "ok": true
+    },
+    {
+      "name": "Dead guest input cannot move authoritative hero",
+      "ok": true
+    },
+    {
+      "name": "Remote revive does not complete before five seconds",
+      "ok": true
+    },
+    {
+      "name": "Five-second revive survives hit and reaches guest",
+      "ok": true
+    },
+    {
+      "name": "Revived guest controls same hero",
+      "ok": true
+    },
+    {
+      "name": "Four deaths end four clients without reserves",
+      "ok": true
+    },
+    {
+      "name": "Returning to lobby preserves one original champion",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

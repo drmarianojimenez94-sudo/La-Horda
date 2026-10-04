@@ -122,6 +122,7 @@
       allies: allies.map(a=>({k:a.classKey, alive:a.alive, hp:Math.round(a.hp)})), enemies: enemies.filter(e=>e.alive).length};
   };
   AP.start = function(cls, arena, level){
+    lastDecision=0;dodgeUntil=0;dodgeVec=null;reviveHold=0;skillTimer=0;AP.clock=0;AP._mv={x:0,y:0};AP.err=null;
     selectedClass = cls; currentArena = arena;
     startRun(level||1);
     AP.on = true;
