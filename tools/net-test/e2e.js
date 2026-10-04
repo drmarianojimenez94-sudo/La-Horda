@@ -42,7 +42,7 @@ async function newClient(browser, i, url) {
   page.on('dialog', d => d.accept());
   await page.goto(url, { waitUntil: 'load' });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled; })) break; await sleep(100); }
-  await page.evaluate(([c,reserve]) => { save.stash=[]; save.duoReserve=reserve; save.lastChamp=c; for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i],RESERVES[i]]);
+  await page.evaluate(([c,reserve]) => { save.stash=[]; save.duoReserve=reserve; save.lastChamp=c; for (const k in save.champions) { save.champions[k].level = 12; save.champions[k].talentPoints = 2; save.champions[k].unlocked = true; } save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1 }); save.arenasCleared = save.arenasCleared || {}; save.arenasCleared.ciudad = true; save.arenasCleared.fortaleza = true; selectedClass = c; persistNow(); }, [CHAMPS[i],RESERVES[i]]);
   return { ctx, page, errors, i };
 }
 const ev = (c, fn, arg) => c.page.evaluate(fn, arg);
