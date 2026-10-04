@@ -6,6 +6,7 @@ abajo se dibuja el paletón (dientes) hacia afuera del cuerpo.
 opts:
   ironHue [desde, hasta], ironChroma [min, max]  color del bastón pintado
   bow     4 tonos del ojo (voluta de arriba)          bit   4 tonos del paletón
+  shaft   (opcional) tonos del astil (partes finas del metal): cristal, hierro negro...
   override {"<cuadro>": [arriba, mentón, x]} para cuadros sin cuello (p. ej. el primero de la muerte)
   outline contorno; teeth: lista de largos de dientes (default [3, 2, 3])
 """
@@ -98,6 +99,17 @@ def draw(atlas, info, o):
             t = np.clip((L - lo) / max(hi - lo, 1), 0, 1)
             idx = np.clip((t * 3.999).astype(int), 0, 3)
             c[sel] = np.array(bow)[idx]
+        if o.get('shaft'):
+            # astil de otro material (cristal, hierro negro): las partes finas del metal que no son el ojo
+            sh = [_hex(x) for x in o['shaft']]
+            m = (cand | (iron & thin_mask(c, 5))) & ~((c[:, :, :3] == np.array(bow)[:, None, None, :3]).all(-1).any(0) if False else np.zeros_like(cand))
+            if sel is not None:
+                m &= ~sel
+            if m.any():
+                L = lab[m][:, 0]
+                lo, hi = np.percentile(L, [5, 95])
+                t = np.clip((L - lo) / max(hi - lo, 1), 0, 1)
+                c[m] = np.array(sh)[np.clip((t * (len(sh) - .001)).astype(int), 0, len(sh) - 1)]
         # paletón: en el extremo de abajo del componente más bajo (fuera del cuerpo grueso)
         low = max(comps, key=lambda j: st[j, 1] + st[j, 3])
         if low == top and st[low, 1] + st[low, 3] < f['neckY'] + 6:
