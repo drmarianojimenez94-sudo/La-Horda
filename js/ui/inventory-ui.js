@@ -46,7 +46,7 @@ function itemCardHTML(it, o){
     const equipBtn = o.classKey ? (onMe ? `<button data-inv-unequip="${it.type}">Quitar</button>`
       : (compat ? `<button class="primary" data-inv-equip="${it.uid}">${by?"Equipar (sacárselo a "+CLASSES[by].name+")":"Equipar"}</button>` : `<button disabled>No compatible</button>`)) : "";
     actions = `<div class="vic-item-actions">${equipBtn}
-      ${it.rarity!=="unico" ? `<button data-inv-sell="${it.uid}">Vender (+${sell}o)</button>` : ""}
+      ${it.rarity!=="unico" ? `<button data-inv-sell="${it.uid}">Vender · +${typeof fmtGold==="function" ? fmtGold(sell) : sell} 🪙</button>` : ""}
       <button data-inv-discard="${it.uid}">Descartar</button></div>`;
   }
   return `<div class="inv-card tier-${itemTier(it)} ${it.set?"set-item":""} ${compat?"":"incompat"}" data-inv-card="${it.uid}" style="border-left-color:${col};">
