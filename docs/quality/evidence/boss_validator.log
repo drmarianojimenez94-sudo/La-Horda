@@ -1,0 +1,39 @@
+PASS*   ciudad     cm_presentador       ganchos ✓estructura(a) ·publico(p) ·ovacion(p) ·corte(p) ✓reflejo(p)
+   WARNING patrones distintos — 2 tipos de aviso/golpe
+PASS    ciudad     cm_maestro           ganchos ✓escena(a) ✓refugio(p)
+PASS    ciudad     cm_tramoyista        ganchos ✓estructura(a)
+PASS*   ciudad     cm_dama              ganchos ·estructura(a)
+   WARNING aparece en la simulación — forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)
+PASS    fortaleza  dragon_forja         ganchos ✓horno(a)
+PASS    fortaleza  caballero            ganchos ✓camara(a) ·valvula(p) ·trampa(p)
+PASS    bosque     doblador_guerrero    ganchos ✓runas(a) ✓contencion(p)
+PASS    bosque     guardian_ancestral   ganchos ✓rearma(a) ✓runa_rota(a) ✓purifica(p)
+PASS    micelial   micelio              ganchos ✓cadaveres(a) ✓germina(a) ✓raices(p)
+PASS*   micelial   madre_espora         ganchos ·floracion(p) ·infeccion(p) ·nucleos(p)
+   WARNING ficha (BOSS_BLUEPRINTS) — ningún gancho 'auto': la arena sólo importa si el jugador la busca
+PASS    hielo      mago_hielo_cristal   ganchos ✓brasero(a) ·focos(p)
+PASS*   hielo      angel_caido_hielo    ganchos ·fuego(p) ·apaga(p)
+   WARNING ficha (BOSS_BLUEPRINTS) — ningún gancho 'auto': la arena sólo importa si el jugador la busca
+   WARNING aparece en la simulación — forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)
+PASS    hielo      dragon_hielo         ganchos ✓frio(a) ✓brasero(p) ·fuego(p)
+PASS    acuatica   kraken_joven         ganchos ✓corriente(a) ·charco(p)
+PASS    acuatica   leviatan             ganchos ✓charco(a) ·marea(p) ✓tentaculos(p)
+PASS    laberinto  guardian_laberinto   ganchos ✓muro(a) ✓derrumbe(p)
+PASS*   laberinto  minotauro            ganchos ·muro(p) ·colapso(p)
+   WARNING ficha (BOSS_BLUEPRINTS) — ningún gancho 'auto': la arena sólo importa si el jugador la busca
+PASS    abismo     ab_carcelero         ganchos ✓gancho(a) ✓plataformas(a)
+PASS    abismo     ab_morador           ganchos ✓plataformas(a) ·jinete(p) ✓tentaculo(p)
+PASS    minas      mn_titan             ganchos ✓luces(a) ·derrumbe(p)
+PASS    minas      mn_cerbero           ganchos ✓oscuridad(a) ·luz(p)
+PASS    infernal   esqueleto_h          ganchos ✓fisura(a) ·barricada(p)
+PASS    infernal   demonio_menor        ganchos ✓fisura(a) ✓sello(p)
+PASS    infernal   hechicero_supremo    ganchos ✓fisura(a) ✓sello(p)
+PASS    infernal   angel_corrompido     ganchos ✓convergencia(a) ·focos(p)
+PASS*   infernal   golem_cuerpos        ganchos ·barricada(p) ·numero(p) ·red(p)
+   WARNING ficha (BOSS_BLUEPRINTS) — ningún gancho 'auto': la arena sólo importa si el jugador la busca
+   WARNING aparece en la simulación — forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)
+PASS*   infernal   demonio_mayor        ganchos ·fisuras_poder(a) ·fisuras(p)
+   WARNING aparece en la simulación — forma posterior: no se alcanza en la ventana (la cubre t_boss_arena_hooks.js)
+PASS*   divina     jinete_sin_cabeza    (modo propio: sin simulación)
+page errors: 0
+exit=0 secs=81

@@ -215,6 +215,156 @@ function drawProjStyle(p, style, r){
       ctx.fillStyle = c; ctx.fillRect(-r*0.9, -r*0.7, r*1.8, r*1.4);
       ctx.fillStyle = "rgba(255,255,255,0.8)"; ctx.fillRect(r*0.2, -r*0.3, r*0.5, r*0.6);
       break;
+    /* ---- formas propias del resto del roster (una por guardián: ninguna se comparte) ---- */
+    case "vial":        // Ynara, la Médica: frasco de remedio con tapón
+      ctx.rotate(Math.sin(t/120)*0.35);
+      ctx.fillStyle = "#1a1418"; ctx.fillRect(-r*0.9-1, -r*0.55-1, r*1.6+2, r*1.1+2);
+      ctx.fillStyle = "#e8f4ff"; ctx.fillRect(-r*0.9, -r*0.55, r*1.6, r*1.1);
+      ctx.fillStyle = c; ctx.fillRect(-r*0.9, -r*0.05, r*1.6, r*0.6);
+      ctx.fillStyle = "#8a5a3a"; ctx.fillRect(r*0.7, -r*0.35, r*0.45, r*0.7);
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(-r*0.6, -r*0.4, r*0.3, r*0.2);
+      break;
+    case "spoon":       // Myla: cuchara con un copo de yogur
+      ctx.fillStyle = "#c8c8d0"; ctx.fillRect(-r*1.9, -r*0.18, r*1.6, r*0.36);
+      ctx.fillStyle = "#e8e8f0"; ctx.beginPath(); ctx.ellipse(r*0.1, 0, r*0.75, r*0.55, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(r*0.15, -r*0.12, r*0.42, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(r*0.05, -r*0.35, r*0.22, r*0.18);
+      break;
+    case "nut": {       // Brasa, la Mecánica: tuerca que gira, con chispas
+      ctx.rotate(t/70 - ang);
+      ctx.fillStyle = "#3a3a42"; ctx.beginPath(); for(let i=0;i<6;i++){ const a = i*Math.PI/3; ctx.lineTo(Math.cos(a)*r*1.05, Math.sin(a)*r*1.05); } ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); for(let i=0;i<6;i++){ const a = i*Math.PI/3; ctx.lineTo(Math.cos(a)*r*0.85, Math.sin(a)*r*0.85); } ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#1a1a20"; ctx.fillRect(-r*0.3, -r*0.3, r*0.6, r*0.6);
+      ctx.rotate(-(t/70 - ang)); ctx.fillStyle = "#fff1a8"; for(let i=0;i<3;i++){ const a = Math.PI + (Math.sin(t/40 + i*2)*0.6); ctx.fillRect(Math.cos(a)*r*(1.4+i*0.5), Math.sin(a)*r*(1.4+i*0.5), 2, 2); }
+      break;
+    }
+    case "droplet":     // Morwen, la Destiladora: gota de resina en tres capas (resina, sal, eco)
+      ctx.fillStyle = "#2a1a10"; ctx.beginPath(); ctx.moveTo(r*1.5, 0); ctx.quadraticCurveTo(-r*0.2, -r*1.1, -r*0.9, 0); ctx.quadraticCurveTo(-r*0.2, r*1.1, r*1.5, 0); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(r*1.2, 0); ctx.quadraticCurveTo(-r*0.1, -r*0.85, -r*0.7, 0); ctx.quadraticCurveTo(-r*0.1, r*0.85, r*1.2, 0); ctx.fill();
+      ctx.fillStyle = "#f4ead8"; ctx.fillRect(-r*0.35, -r*0.12, r*0.7, r*0.24);
+      ctx.globalAlpha = 0.6; ctx.fillStyle = c; for(let i=1;i<=3;i++) ctx.fillRect(-r*(1.1+i*0.7), Math.sin(t/90 + i)*r*0.4 - 1, 2, 2);
+      break;
+    case "needle": {    // Iria, la Tejedora: aguja que arrastra su hilo
+      ctx.fillStyle = "#e8e8f8"; ctx.beginPath(); ctx.moveTo(r*1.8, 0); ctx.lineTo(-r*0.4, -r*0.22); ctx.lineTo(-r*0.4, r*0.22); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#1a1a28"; ctx.fillRect(-r*0.3, -1, r*0.25, 2);
+      ctx.strokeStyle = c; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-r*0.4, 0);
+      for(let i=1;i<=8;i++) ctx.lineTo(-r*0.4 - i*r*0.45, Math.sin(t/60 + i*0.9)*r*0.35);
+      ctx.stroke();
+      break;
+    }
+    case "note":        // Dáriel, el Último Compás: corchea que rebota al compás
+      ctx.rotate(-ang); ctx.translate(0, Math.sin(t/90)*r*0.35);
+      ctx.fillStyle = "#1a1418"; ctx.beginPath(); ctx.ellipse(-r*0.3, r*0.55, r*0.62, r*0.45, -0.4, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(-r*0.3, r*0.55, r*0.48, r*0.34, -0.4, 0, Math.PI*2); ctx.fill();
+      ctx.fillRect(r*0.08, -r*1.2, r*0.22, r*1.75); ctx.fillRect(r*0.08, -r*1.2, r*0.8, r*0.25); ctx.fillRect(r*0.65, -r*1.2, r*0.22, r*0.7);
+      break;
+    case "bolt": {      // Orsa, la Guardacables: virote de ballesta con descarga
+      ctx.fillStyle = "#5a4a3a"; ctx.fillRect(-r*2.2, -1, r*2.8, 2);
+      ctx.fillStyle = "#cfd6e0"; ctx.beginPath(); ctx.moveTo(r*1.3, 0); ctx.lineTo(r*0.5, -r*0.5); ctx.lineTo(r*0.5, r*0.5); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = c; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(r*0.6, 0);
+      for(let i=1;i<=5;i++) ctx.lineTo(r*0.6 - i*r*0.55, ((i + Math.floor(t/50))%2 ? -1 : 1)*r*0.45);
+      ctx.stroke();
+      break;
+    }
+    case "swarm":       // Tibor, el Rey sin Corona: tres abejas que giran alrededor del tiro
+      ctx.rotate(-ang);
+      for(let i=0;i<3;i++){ const a = t/90 + i*2.1, x = Math.cos(a)*r*0.9, y = Math.sin(a)*r*0.6;
+        ctx.fillStyle = "#1a1408"; ctx.fillRect(x - r*0.4, y - r*0.28, r*0.8, r*0.56);
+        ctx.fillStyle = c; ctx.fillRect(x - r*0.32, y - r*0.2, r*0.64, r*0.4);
+        ctx.fillStyle = "#1a1408"; ctx.fillRect(x - 1, y - r*0.2, 2, r*0.4);
+        ctx.fillStyle = "rgba(255,255,255,0.8)"; ctx.fillRect(x - r*0.2, y - r*0.55, r*0.4, r*0.25); }
+      break;
+    case "steam": {     // Zahra, la Mano de la Válvula: bocanada de calor con anillos
+      const k = 0.8 + 0.25*Math.sin(t/50);
+      ctx.fillStyle = "#fff3d0"; ctx.beginPath(); ctx.arc(0, 0, r*0.55*k, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = c; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, r*1.0*k, 0, Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(-r*0.9, 0, r*1.3*k, -1.2, 1.2); ctx.stroke();
+      ctx.globalAlpha = 0.4; ctx.fillStyle = "#d8d0c8"; for(let i=1;i<=3;i++) ctx.fillRect(-r*(1.4+i*0.6), Math.sin(t/70 + i*1.4)*r*0.5 - 1.5, 3, 3);
+      break;
+    }
+    case "compass":     // Sira, la Cartógrafa: aguja de brújula y la ruta punteada detrás
+      ctx.fillStyle = "#1a1a24"; ctx.beginPath(); ctx.moveTo(r*1.5, 0); ctx.lineTo(0, -r*0.6); ctx.lineTo(-r*0.9, 0); ctx.lineTo(0, r*0.6); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(r*1.25, 0); ctx.lineTo(0, -r*0.4); ctx.lineTo(0, r*0.4); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#f4f0e0"; ctx.beginPath(); ctx.moveTo(-r*0.7, 0); ctx.lineTo(0, -r*0.4); ctx.lineTo(0, r*0.4); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; for(let i=1;i<=4;i++) if((i + Math.floor(t/120))%2) ctx.fillRect(-r*(0.9+i*0.7), -1, r*0.4, 2);
+      break;
+    case "officer":     // San Martín, Disparo de Oficial: bala grande dorada con anillo de pólvora
+      ctx.fillStyle = "#3a2a10"; ctx.beginPath(); ctx.arc(0, 0, r*0.75, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(0, 0, r*0.6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#fff8e0"; ctx.fillRect(-r*0.2, -r*0.35, r*0.3, r*0.3);
+      ctx.strokeStyle = "#ffd66b"; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.arc(-r*0.6, 0, r*1.2, -1.3, 1.3); ctx.stroke();
+      ctx.globalAlpha = 0.35; ctx.fillStyle = "#bdb4a8"; for(let i=1;i<=4;i++){ const sz = 3 + i; ctx.fillRect(-r*1.3*i - sz/2, Math.sin(t/90 + i*1.7)*2 - sz/2, sz, sz); }
+      break;
+    case "arrow_heavy": // Sylva, Flecha Perforante: flecha larga, punta que brilla según la carga
+      ctx.fillStyle = "#e8e0c8"; ctx.fillRect(-r*3.4, -1.5, r*4.2, 3);
+      ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(r*2.0, 0); ctx.lineTo(r*0.6, -r*0.9); ctx.lineTo(r*0.6, r*0.9); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.globalAlpha = 0.6 + 0.4*Math.sin(t/40); ctx.fillRect(r*0.9, -1, r*0.9, 2); ctx.globalAlpha = 1;
+      ctx.fillStyle = c; ctx.fillRect(-r*3.6, -r*0.8, r*0.8, r*0.45); ctx.fillRect(-r*3.6, r*0.35, r*0.8, r*0.45);
+      break;
+    case "bone_arrow":  // esqueletos arqueros del Nigromante: flecha de hueso con llama verde
+      ctx.fillStyle = "#e8e0d0"; ctx.fillRect(-r*2.4, -1, r*3.0, 2);
+      ctx.fillStyle = "#f4ecdc"; ctx.beginPath(); ctx.moveTo(r*1.2, 0); ctx.lineTo(r*0.4, -r*0.55); ctx.lineTo(r*0.4, r*0.55); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 0.7; ctx.fillStyle = c; for(let i=0;i<3;i++) ctx.fillRect(-r*(2.4 + i*0.5), Math.sin(t/60 + i)*r*0.4 - 1.5, 3, 3);
+      break;
+    /* ---- Ascensión: una forma por guardián (antes compartían el "glyph" de Axiom) ---- */
+    case "halfmoon": {  // Nano GM, el Regente del Umbral: esfera partida en Luz y Oscuridad
+      ctx.rotate(t/160 - ang);
+      ctx.fillStyle = "#0d0a12"; ctx.beginPath(); ctx.arc(0, 0, r*1.0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#fff4d6"; ctx.beginPath(); ctx.arc(0, 0, r*0.85, -Math.PI/2, Math.PI/2); ctx.fill();
+      ctx.fillStyle = "#1b1124"; ctx.beginPath(); ctx.arc(0, 0, r*0.85, Math.PI/2, Math.PI*1.5); ctx.fill();
+      ctx.fillStyle = c; ctx.fillRect(-1, -r*1.25, 2, r*2.5);
+      break;
+    }
+    case "wave":        // Facu GM, el Soberano de las Mareas: cresta de ola con espuma
+      ctx.fillStyle = "#0a2238"; ctx.beginPath(); ctx.moveTo(r*1.3, r*0.6); ctx.quadraticCurveTo(r*0.9, -r*1.3, -r*0.6, -r*0.5); ctx.lineTo(-r*1.2, r*0.6); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(r*1.0, r*0.45); ctx.quadraticCurveTo(r*0.7, -r*1.0, -r*0.5, -r*0.3); ctx.lineTo(-r*0.9, r*0.45); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#f0fbff"; for(let i=0;i<3;i++) ctx.fillRect(r*(0.6 - i*0.45), -r*(0.75 - i*0.15) + Math.sin(t/60 + i)*1, 2, 2);
+      break;
+    case "prism":       // Aurelia, la Arquitecta Solar: esquirla de luz sólida con rayo central
+      ctx.fillStyle = "#3a2a08"; ctx.beginPath(); ctx.moveTo(r*1.7, 0); ctx.lineTo(0, -r*0.75); ctx.lineTo(-r*1.0, 0); ctx.lineTo(0, r*0.75); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(r*1.4, 0); ctx.lineTo(0, -r*0.55); ctx.lineTo(-r*0.75, 0); ctx.lineTo(0, r*0.55); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#fffbe8"; ctx.fillRect(-r*0.6, -1, r*1.9, 2);
+      ctx.globalAlpha = 0.5 + 0.5*Math.sin(t/45); ctx.fillStyle = "#ffffff"; ctx.fillRect(-r*0.2, -r*0.2, r*0.4, r*0.4);
+      break;
+    case "scarab":      // Khepri, el Portador del Enjambre: escarabajo con élitros abiertos
+      ctx.fillStyle = "#14100a"; ctx.beginPath(); ctx.ellipse(0, 0, r*1.0, r*0.75, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(-r*0.1, -r*0.3, r*0.8, r*0.35, -0.25 - Math.sin(t/40)*0.2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(-r*0.1, r*0.3, r*0.8, r*0.35, 0.25 + Math.sin(t/40)*0.2, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#f4e6a0"; ctx.fillRect(r*0.7, -r*0.15, r*0.35, r*0.3);
+      break;
+    case "mask": {      // Velmira, la Reina de las Máscaras: máscara de teatro que gira
+      ctx.rotate(-ang + Math.sin(t/110)*0.5);
+      ctx.fillStyle = "#1a0a14"; ctx.beginPath(); ctx.ellipse(0, 0, r*1.05, r*1.2, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#f4ecf0"; ctx.beginPath(); ctx.ellipse(0, 0, r*0.85, r*1.0, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = c; ctx.fillRect(-r*0.85, -r*0.1, r*1.7, r*0.18);
+      ctx.fillStyle = "#1a0a14"; ctx.fillRect(-r*0.5, -r*0.4, r*0.3, r*0.22); ctx.fillRect(r*0.2, -r*0.4, r*0.3, r*0.22);
+      ctx.beginPath(); ctx.arc(0, r*0.35, r*0.32, 0.2, Math.PI - 0.2); ctx.lineWidth = 1.5; ctx.strokeStyle = "#1a0a14"; ctx.stroke();
+      break;
+    }
+    case "comet":       // Vhal, el Astrónomo Caído: estrella de cuatro puntas con cola de polvo
+      ctx.globalAlpha = 0.55; ctx.fillStyle = c; for(let i=1;i<=4;i++) ctx.fillRect(-r*(0.8 + i*0.6), Math.sin(t/80 + i)*r*0.3 - (3 - i*0.5)/2, 3 - i*0.5, 3 - i*0.5);
+      ctx.globalAlpha = 1; ctx.rotate(t/90 - ang);
+      ctx.fillStyle = "#0e0a20"; ctx.beginPath(); for(let i=0;i<8;i++){ const a = i*Math.PI/4, rr = i%2 ? r*0.45 : r*1.3; ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); } ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); for(let i=0;i<8;i++){ const a = i*Math.PI/4, rr = i%2 ? r*0.3 : r*1.05; ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); } ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(-1.5, -1.5, 3, 3);
+      break;
+    case "fist":        // Bront, la Fortaleza Viviente: guantelete de piedra
+      ctx.fillStyle = "#1a1612"; ctx.fillRect(-r*1.0, -r*0.85, r*2.0, r*1.7);
+      ctx.fillStyle = c; ctx.fillRect(-r*0.85, -r*0.7, r*1.7, r*1.4);
+      ctx.fillStyle = "#1a1612"; for(let i=0;i<3;i++) ctx.fillRect(r*0.3, -r*0.7 + i*r*0.47, r*0.55, 1.5);
+      ctx.fillStyle = "rgba(255,255,255,0.7)"; ctx.fillRect(-r*0.6, -r*0.55, r*0.4, r*0.25);
+      break;
+    case "key":         // Oriel, la Portera de las Cicatrices: llave antigua con una costura de luz
+      ctx.fillStyle = "#1a1018"; ctx.fillRect(-r*1.6, -r*0.22, r*2.6, r*0.44);
+      ctx.fillStyle = c; ctx.fillRect(-r*1.5, -r*0.12, r*2.4, r*0.24);
+      ctx.fillRect(r*0.35, r*0.1, r*0.25, r*0.45); ctx.fillRect(r*0.75, r*0.1, r*0.25, r*0.3);
+      ctx.strokeStyle = c; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(-r*1.75, 0, r*0.5, 0, Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 0.5 + 0.5*Math.sin(t/50); ctx.fillStyle = "#ffffff"; ctx.fillRect(-r*1.8, -1, r*0.25, 2);
+      break;
+    case "exglyph":     // expedición sin forma propia todavía: su marca de identidad (expedition/render.js)
+      if(typeof exGlyph!=="function" || !p.src) { ctx.restore(); return false; }
+      ctx.rotate(-ang); exGlyph(p.src.classKey, 0, 0, r*1.1, c);
+      break;
     default: ctx.restore(); return false;
   }
   ctx.restore();

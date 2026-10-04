@@ -1,4 +1,6 @@
 'use strict';
+// forma propia del proyectil de cada campeón de la expedición (drawProjStyle); los de cuerpo a cuerpo no disparan
+const EXPEDITION_PROJ={dariel:'note',orsa:'bolt',tibor:'swarm',zahra:'steam',sira:'compass'};
 // Registered before champion-entry-balance. New records preserve all existing account progress.
 for(const [k,p] of Object.entries(EXPEDITION)){
  const [hp,dmg,def,speed,range,basic,ranged]=p.stats,base=p.role==='asesino'?'guerrero':p.role;
@@ -10,7 +12,7 @@ for(const [k,p] of Object.entries(EXPEDITION)){
  // Legacy fallback only if the dedicated atlas fails to load.
  PAL[k]={...PAL[base]};GRIDS[k]=GRIDS[base];
  CODEX_CHAMP_LORE[k]={origin:p.arena,history:p.history};HERO_VOICES[k]={pick:p.voices[0],win:p.voices[1],fall:p.voices[2]};
- ANIM_PROFILES[k]={...ANIM_PROFILES[base],basic:ranged?'ranged':'melee'};CHAMP_IDENTITY[k]={sig:'mark',proj:'glyph'};CODEX_SKILL_FX[k]=all.map(()=>({color:hexToRgb(p.color),fx:'zone'}));
+ ANIM_PROFILES[k]={...ANIM_PROFILES[base],basic:ranged?'ranged':'melee'};CHAMP_IDENTITY[k]={sig:'mark',proj:EXPEDITION_PROJ[k]||'exglyph'};CODEX_SKILL_FX[k]=all.map(()=>({color:hexToRgb(p.color),fx:'zone'}));
  const tree={masteryRequirement:8,nodes:[],masteries:{}};
  q.skills.forEach((sk,b)=>{
   const branch=k+'_'+b,pref=k+'_t'+b,powerKey=['reflect','brace','mound'].includes(sk.action)?'durationMult':sk.action==='retrace'?'areaMult':'powerMult';

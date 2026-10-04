@@ -45,3 +45,26 @@ validador de arenas.
 
 Nunca se recorta: telegraphs, avisos, daño recibido, definitivas. Se recorta primero: partículas
 decorativas, números chicos, decals. Ver `js/systems/performance.js`.
+
+
+## Proyectiles con identidad (octubre 2026)
+
+Cada guardián que dispara tiene una **forma propia**; ninguna se comparte y ninguna cae en el cuadrado genérico.
+Base común (contraste, estela con alma blanca, brillo del color del guardián) + la forma de `drawProjStyle`
+(`js/systems/skill-evolution.js`), elegida por `CHAMP_IDENTITY[k].proj` o por proyectil con `p.projStyle` (viaja por la red).
+
+| Forma | Guardián | Forma | Guardián |
+|---|---|---|---|
+| orb | Thalen (mago) | vial | Ynara, la Médica |
+| wisp | Elyra (soporte) | spoon | Myla, la Niña de la Cuchara |
+| glyph | Axiom | nut | Brasa, la Mecánica |
+| arrow / arrow_heavy | Sylva (básico / Flecha Perforante) | droplet | Morwen, la Destiladora |
+| soul / bone_arrow | Nigromante (básico / esqueletos arqueros) | needle | Iria, la Tejedora |
+| bullet / officer | San Martín (fusil / Disparo de Oficial) | note | Dáriel, el Último Compás |
+| rune | La Profeta (Augurio Cortante) | bolt | Orsa, la Guardacables |
+| | | swarm | Tibor, el Rey sin Corona |
+| | | steam | Zahra, la Mano de la Válvula |
+| | | compass | Sira, la Cartógrafa |
+
+Prueba: `node tools/quality/test-projectile-identity.js` juega a los 29 campeones hasta que disparan y exige forma
+propia, sin repetidas y distinta píxel a píxel (en el CI).

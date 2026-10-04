@@ -13,6 +13,9 @@ efectos) · abismo_mapa (tiles y elementos especiales; el mapa general es refere
 Escribe assets/sprites/arenas/abismo/<ente>/atlas.png, assets/vfx/abismo/*.png y js/assets/abismo-meta.js.
 usage: python3 extract.py <frames_dir> [--reuse]
 """
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'pixrig'))
+from keep import PIXRIG_KEYS, pixrig_keep
 import json, os, sys
 import numpy as np
 from PIL import Image
@@ -291,9 +294,11 @@ if __name__ == '__main__':
         atlas, w, h = pack(frames, 8)
         dest = f'assets/sprites/arenas/abismo/{ent}'
         os.makedirs(os.path.join(REPO, dest), exist_ok=True)
-        atlas.save(os.path.join(REPO, dest, 'atlas.png'), optimize=True); manifest.append(f'{dest}/atlas.png')
+        if ent not in PIXRIG_KEYS: atlas.save(os.path.join(REPO, dest, 'atlas.png'), optimize=True)
+        manifest.append(f'{dest}/atlas.png')
         hs = sorted(frames[j].height for j in sets['walk']); refH = hs[len(hs)//2]
         atlases[ent] = {"src": f"{dest}/atlas.png", "meta": {"w": w, "h": h, "cols": 8, "refH": refH, "anchor": round((h - 2)/h, 4), "sets": sets}}
+        if ent in PIXRIG_KEYS: atlases[ent] = pixrig_keep('js/assets/abismo-meta.js', 'ABISMO_ATLAS', ent)  # redibujado: tools/art/pixrig
         print(ent, atlas.size, {k: len(v) for k, v in sets.items()})
     # ---- efectos ----
     fxdir = 'assets/vfx/abismo'; os.makedirs(os.path.join(REPO, fxdir), exist_ok=True)

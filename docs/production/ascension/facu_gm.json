@@ -148,7 +148,8 @@
     "visuals": "docs/art-gate/roster-gate.json",
     "audio": "",
     "multiplayer": "docs/founders/online-presence-results.json",
-    "performance": "docs/founders/performance-results.json"
+    "performance": "docs/founders/performance-results.json",
+    "style": "docs/art-gate/style-gate.json"
   },
   "category": "FOUNDER",
   "founderKey": "facu",

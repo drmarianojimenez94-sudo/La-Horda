@@ -1,0 +1,16 @@
+PASS after iphone14 arena   toques=4
+PASS after iphone14 equipo  toques=3
+PASS after iphone14 compra  toques=4
+PASS after iphone14 skin    toques=4
+PASS after iphone14 sala    toques=4
+PASS after iphone14 primera toques=3
+PASS after iphone14 primera_salta toques=11
+PASS after iphoneSE arena   toques=4
+PASS after iphoneSE equipo  toques=3
+PASS after iphoneSE compra  toques=4
+PASS after iphoneSE skin    toques=4
+PASS after iphoneSE sala    toques=4
+PASS after iphoneSE primera toques=3
+PASS after iphoneSE primera_salta toques=11
+SUMMARY after fallas=0
+exit=0 secs=165

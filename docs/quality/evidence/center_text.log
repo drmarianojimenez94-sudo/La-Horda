@@ -1,0 +1,40 @@
+A t= 150ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [234,35 376x133] JEFEMAGO DE HIELO Y CRISTALCustodio del 
+     ○ voz        [126,345 280x42] EL HECHICEROEl frío te frena: movete ent
+     ○ botin      [616,84 216x27] Botas Robustas del InviernoComún
+     ○ botin      [616,115 216x27] Rodela de la SalamandraRaro
+A t= 700ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [242,47 360x127] JEFEMAGO DE HIELO Y CRISTALCustodio del 
+     ○ voz        [126,345 280x42] EL HECHICEROEl frío te frena: movete ent
+     ○ botin      [614,80 220x28] Botas Robustas del InviernoComún
+     ○ botin      [614,111 220x28] Rodela de la SalamandraRaro
+A t=1400ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [242,47 360x127] JEFEMAGO DE HIELO Y CRISTALCustodio del 
+     ○ voz        [126,345 280x42] EL HECHICEROEl frío te frena: movete ent
+A t=2300ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [242,47 360x127] JEFEMAGO DE HIELO Y CRISTALCustodio del 
+     ○ voz        [126,345 280x42] EL HECHICEROEl frío te frena: movete ent
+A t=3200ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● banner     [383,128 79x25] NIVEL 1
+     ○ bossguide  [232,290 380x92] COMO SOBREVIVIRCustodio del InviernoLa N
+B t= 150ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [279,38 286x103] LA CICATRIZ TE LLEVAArena GélidaRonda 10
+     ○ voz        [126,345 280x42] EL HECHICEROCada cinco rondas, un jefe. 
+     ○ botin      [615,81 218x28] Botas de la PiedraComún
+     ○ botin      [615,112 218x28] Sandalias de la TormentaComún
+B t= 900ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [284,47 276x99] LA CICATRIZ TE LLEVAArena GélidaRonda 10
+     ○ voz        [126,345 280x42] EL HECHICEROCada cinco rondas, un jefe. 
+     ○ botin      [614,80 220x28] Botas de la PiedraComún
+     ○ botin      [614,111 220x28] Sandalias de la TormentaComún
+B t=1800ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● titlecard  [284,47 276x99] LA CICATRIZ TE LLEVAArena GélidaRonda 10
+     ○ voz        [126,345 280x42] EL HECHICEROCada cinco rondas, un jefe. 
+B t=2800ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● banner     [383,115 79x25] NIVEL 1
+     ○ voz        [126,345 280x42] EL HECHICEROCada cinco rondas, un jefe. 
+B t=4000ms grandes=2 centro=1 (con flotantes y botín: 1) pisadas=[] botinCentro=0
+     ● banner     [253,115 337x25] RONDA 10 — EL JEFE DE LA ARENA
+     ○ voz        [126,345 280x42] EL HECHICEROCada cinco rondas, un jefe. 
+SUMMARY maxBig=2 maxCenter=1 overlaps=0 lootCenter=0 errors=0
+exit=0 secs=27

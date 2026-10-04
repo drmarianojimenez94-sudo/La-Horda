@@ -1,0 +1,138 @@
+{
+ "id": "nano_gm_alt1",
+ "name": "Nano GM — Regente del Eclipse Dorado",
+ "prompt": "Skin fundadora (cosmética): bordes de las alas de oro batido, halo de eclipse detrás de la nuca, runas de los tatuajes ardiendo en oro.",
+ "body": "zahra",
+ "head": "dariel",
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true,
+   "ramp": [
+    "#130d12",
+    "#2a2026",
+    "#43353d",
+    "#62505a"
+   ],
+   "gamma": 0.9
+  }
+ ],
+ "accessories": [
+  {
+   "module": "nano_body",
+   "body": "zahra",
+   "bodyPaint": [
+    {
+     "part": "body",
+     "hue": [
+      25,
+      75
+     ],
+     "minChroma": 36,
+     "noSkin": true,
+     "maxL": 66,
+     "ramp": [
+      "#0f0a17",
+      "#221636",
+      "#3a2758",
+      "#6a4a7a",
+      "#f0c75a"
+     ],
+     "gamma": 1.1
+    },
+    {
+     "part": "body",
+     "hue": [
+      0,
+      360
+     ],
+     "minChroma": 0,
+     "noSkin": true,
+     "maxL": 30,
+     "ramp": [
+      "#141219",
+      "#25212b",
+      "#3a343f",
+      "#554d5a"
+     ]
+    }
+   ],
+   "hairRamp": [
+    "#130d12",
+    "#2a2026",
+    "#43353d",
+    "#62505a"
+   ],
+   "head": "dariel",
+   "headPaint": [
+    {
+     "part": "head",
+     "hue": [
+      0,
+      360
+     ],
+     "minChroma": 0,
+     "noSkin": true,
+     "ramp": [
+      "#130d12",
+      "#2a2026",
+      "#43353d",
+      "#62505a"
+     ],
+     "gamma": 0.9
+    }
+   ],
+   "trimRamp": [
+    "#6a4410",
+    "#b8862a",
+    "#f0c75a",
+    "#fff3c4"
+   ],
+   "gogglesWide": [
+    21
+   ]
+  },
+  {
+   "module": "nano_tattoo",
+   "ink": [
+    "#120a14",
+    "#2a1a2e"
+   ],
+   "rune": "#ffd25a",
+   "runeGlow": "#a8701e",
+   "eye": [
+    "#c99a3a",
+    "#ffe9a0"
+   ]
+  },
+  {
+   "module": "nano_wings",
+   "scale": 1.1,
+   "lightRamp": [
+    "#6b4a26",
+    "#a77b3c",
+    "#d4ab5c",
+    "#ecd08e",
+    "#fbecc4"
+   ],
+   "shadowRamp": [
+    "#0e0914",
+    "#1a1128",
+    "#2a1c40",
+    "#43306a",
+    "#6a52a0"
+   ],
+   "edge": "#e0a93c",
+   "shadowEdge": "#b8862a"
+  },
+  {
+   "module": "nano_halo",
+   "radius": 17
+  }
+ ]
+}

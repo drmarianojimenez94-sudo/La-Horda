@@ -1,0 +1,57 @@
+{
+ "id": "aurelia",
+ "name": "Aurelia, la Arquitecta Solar",
+ "prompt": "Maga arquitecta de luz sólida: túnica marfil con ribetes de oro solar, pelo rubio claro, compás de luz.",
+ "body": "sira_set",
+ "head": "maura_skin",
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true,
+   "ramp": [
+    "#6a4512",
+    "#b8862e",
+    "#dcb04e",
+    "#efd27e",
+    "#f9e6aa"
+   ],
+   "gamma": 0.6
+  },
+  {
+   "part": "body",
+   "hue": [
+    200,
+    320
+   ],
+   "minChroma": 35,
+   "ramp": [
+    "#6a4a14",
+    "#d9a84a",
+    "#fff0b8"
+   ]
+  },
+  {
+   "part": "body",
+   "hue": [
+    190,
+    330
+   ],
+   "minChroma": 8,
+   "ramp": [
+    "#6b5e46",
+    "#b5a582",
+    "#ddd1b2",
+    "#f3ead3"
+   ]
+  }
+ ],
+ "install": {
+  "champion": "aurelia",
+  "pack": "aurelia"
+ }
+}

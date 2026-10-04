@@ -7,6 +7,7 @@ const GATES = {
   reference: ['node', 'tools/balance/check-entry-reference.js'],
   balance: ['node', 'tools/balance/entry-gate.js'],
   visuals: ['node', 'tools/art/roster_visual_test.js'],
+  style: ['python3', 'tools/art/painter/style_gate.py'],
   audio: ['node', 'tools/audio/t_audio_mix.js'],
   multiplayer: ['node', 'tools/net-test/lobby_code_skins.js'],
   performance: ['node', 'tools/audit/fps.js']

@@ -717,7 +717,8 @@ const ASSET_MANIFEST = [
   "assets/vfx/bosses/hielo/bsAngelWalls_5.png",
   // <<< hojas de jefes
   "assets/sprites/bosses/infernal/hechicero/atlas.png",
-  "assets/sprites/bosses/infernal/hechicero/golem/atlas.png",
+  "assets/sprites/bosses/infernal/hechicero/golem/v2/atlas.png",
+  "assets/sprites/bosses/infernal/hechicero/angel/atlas.png",
   "assets/sprites/bosses/infernal/hechicero/portrait.png",
   "assets/sprites/bosses/infernal/hechicero/fx/arms_rise.png",
   "assets/sprites/bosses/infernal/hechicero/fx/bolt.png",

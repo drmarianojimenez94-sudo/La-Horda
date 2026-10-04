@@ -6,8 +6,8 @@
    - Guardianes: todos los de CHAMPION_CATALOG, animados, con rol, historia, habilidades, precio y compra.
    - Objetos y sets: TODO el catálogo (shopCatalog en js/systems/shop.js) por categoría; los sets se
      muestran como conjunto (piezas que tenés / que faltan, bonus y cuáles tenés activos).
-   - Skins: las skins de set que existen (SET_SKINS); se activan con el set COMPLETO, así que la
-     tarjeta vende las piezas que te faltan (regla canónica: la skin nunca se compra suelta).
+   - Skins: las skins de set que existen (SET_SKINS). Toda skin cuesta 9000 de oro o 1000 Brasas ✦ y da SOLO la
+     apariencia (js/systems/premium.js); completar el set la sigue regalando. Las piezas se compran aparte.
    Tocar un objeto abre su ficha completa (itemDetailHTML en modo tienda).
    ============================================================ */
 let shopTab = "destacados", shopCat = "set", shopTier = {};
@@ -15,7 +15,8 @@ const SHOP_CATS = [["set", "Sets"], ["legendario", "Legendarios"], ["campeon", "
 const TIER_LABEL = {comun:"Común", raro:"Raro", muyraro:"Muy Raro", legendario:"Legendario", mitico:"Mítico"};
 
 function renderShop(){
-  const prem = typeof SHOP_PREMIUM!=="undefined" && SHOP_PREMIUM.enabled ? `<span class="ui-chip">${SHOP_PREMIUM.icon} 0</span>` : ""; // apagada (ver shop.js)
+  const prem = typeof premiumLabel === "function" ? `<span class="ui-chip premium" data-premium-chip title="Brasas: moneda premium" ${PREMIUM.premium == null ? "hidden" : ""}>✦ <b data-premium-balance>${premiumLabel()}</b></span>` : "";
+  if(typeof premiumRefresh === "function") premiumRefresh();
   document.getElementById("shop-gold-line").innerHTML = `<span class="ui-chip gold">🪙 <b>${fmtGold(save.gold)}</b></span><span class="ui-chip" title="Inventario">🎒 ${stashUsedSlots()}/${INVENTORY_CAPACITY}</span>${prem}`;
   document.querySelectorAll("[data-shop-tab]").forEach(b=>{
     b.classList.toggle("on", b.getAttribute("data-shop-tab")===shopTab);
@@ -150,8 +151,8 @@ function renderShopShowcase(panel){
     return `<div class="shop-bundle ${own ? "owned" : ""}" data-bundle="${id}">
       <div class="shop-bundle-art"><img data-portador-skin="${id}" src="${sk.preview || sk.src}" alt="" loading="lazy">${own ? "" : _shopTagNew(key)}</div>
       <div class="shop-bundle-name">${sk.name || S.name}</div>
-      <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · ${n} piezas + skin</div>
-      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>🪙 ${fmtGold(shopSkinPrice(id))}</button>`}${_shopVoucherBtn(id)}</div>
+      <div class="shop-item-sub">${champ ? CLASSES[champ].name : "Universal"} · skin (solo apariencia)</div>
+      <div class="shop-deal-buy">${own ? '<span class="shop-st own">✔ Tuyo</span>' : `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>🪙 ${fmtGold(shopSkinPrice(id))}</button>${typeof premiumSkinButton === "function" ? premiumSkinButton(id) : ""}`}${_shopVoucherBtn(id)}</div>
     </div>`;
   }).join("");
   // cromas: cosméticas sueltas (js/ui/shop-cromas.js da los productos); las que no tenés primero
@@ -239,7 +240,7 @@ function _bindSkinBuy(panel){
   panel.querySelectorAll("[data-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-skin-buy");
     const quotedPrice = shopSkinPrice(id);
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name}) por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} por ${fmtGold(quotedPrice)} de oro? Es solo apariencia: las piezas del set ${SET_DB[id].name} se compran aparte.`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
       shopBuySkin(id, quotedPrice);
     });
@@ -258,9 +259,9 @@ function renderShopChampions(panel){
   panel.innerHTML = filters + '<div class="shop-champ-list">' + list.map(c=>{
     if(shopChampCategory(c.id)==="FOUNDER") return shopFounderCardHTML(c.id);
     const cls = CLASSES[c.id], champ = save.champions[c.id], owned = champ.unlocked, sel = owned && selectedClass===c.id;
-    const status = sel ? '<span class="shop-st sel">★ Seleccionado</span>' : owned ? `<span class="shop-st own">✔ Comprado · Nv. ${champ.level}</span>` : '<span class="shop-st lock">🔒 Bloqueado</span>';
+    const status = sel ? '<span class="shop-st sel">★ Seleccionado</span>' : owned ? `<span class="shop-st own">✔ Comprado · Nv. ${champ.level}</span>` : '<span class="shop-st lock">🔒 Bloqueado</span>' + (championMeta(c.id).artPending ? `<div class="shop-item-sub">🎨 Concepto · arte en producción</div>` : typeof ascensionUnlockOf==="function" && ascensionUnlockOf(c.id) ? `<div class="shop-item-sub">✦ O ganalo · ${ascensionUnlockOf(c.id).mode}: ${ascensionUnlockOf(c.id).how}</div>` : "");
     const skills = cls.skills.map(s=>`<span class="shop-skill">${s.ico} ${s.name}</span>`).join("") + `<span class="shop-skill ult">${cls.ultimate.ico} ${cls.ultimate.name}</span>`;
-    return `<div class="shop-champ-row ${owned?"owned":""}" data-champ="${c.id}">
+    return `<div class="shop-champ-row ${owned?"owned":""} ${championMeta(c.id).artPending?"concept":""}" data-champ="${c.id}">
       <canvas class="champ-anim shop-champ-anim" width="96" height="96" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
       <div class="shop-champ-info">
         <div class="shop-champ-name" style="color:${cls.color}">${championShortName(c.id)}${CHAMPION_CATEGORIES[shopChampCategory(c.id)].badge ? `<span class="category-badge cat-${shopChampCategory(c.id)}">${CHAMPION_CATEGORIES[shopChampCategory(c.id)].badge}</span>` : ""} ${status}</div>
@@ -379,7 +380,7 @@ function renderShopSkins(panel){
     const eq = champ ? equippedSetCount(champ, id) : 0, active = activeOn.length > 0;
     const previewKey = champ || comp[0];
     let action;
-    if(!skinOwnedFull(id)) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar la skin (${miss.length} pieza${miss.length>1?"s":""} que faltan) · 🪙 ${fmtGold(shopSkinPrice(id))}</button>${_shopVoucherBtn(id)}`;
+    if(!skinOwnedFull(id)) action = `<button class="shop-btn" data-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar skin · 🪙 ${fmtGold(shopSkinPrice(id))}</button>${typeof premiumSkinButton === "function" ? premiumSkinButton(id) : ""}${_shopVoucherBtn(id)}`;
     else if(!comp.length) action = `<div class="shop-item-sub">Skin desbloqueada: conseguí a <b>${champ ? CLASSES[champ].name : "un guardián"}</b> en la pestaña Guardianes para usarla.</div>`;
     else {
       const rest = comp.filter(k=>!activeOn.includes(k));

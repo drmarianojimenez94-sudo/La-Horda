@@ -4,7 +4,7 @@ Regla de la casa: **JEFE + ARENA = ENCUENTRO.** Un jefe que podría pelear igual
 Cada jefe es la última lección de su arena: usa lo que la arena enseñó y lo vuelve contra el jugador, o deja que el
 jugador lo vuelva contra él.
 
-Fuente de datos: `js/arenas/common/boss-blueprints.js` (`BOSS_BLUEPRINTS`, 23 fichas: 14 jefes/formas y 9 subjefes).
+Fuente de datos: `js/arenas/common/boss-blueprints.js` (`BOSS_BLUEPRINTS`, 28 fichas: todos los jefes, formas, subjefes y guardianes de nivel del juego).
 Evidencia: `docs/bible/generated/BOSS_AUDIT.md` (pelea real) y `docs/bible/generated/ENEMY_ART_AUDIT.md` (arte a escala).
 
 ## 1. Ficha obligatoria (BossDefinition)
@@ -66,18 +66,31 @@ Ver `generated/BOSS_AUDIT.md` (se regenera). Resumen de esta auditoría (octubre
 | Minas | Titán de Piedra | nunca mostraba su barra grande | barra y consejos |
 | Infernal | Rey de la Horda | HUD con epíteto y consejos del Demonio Mayor suelto | HUD de la forma actual (`designKey`) |
 | Varias | Minotauro, Guardián, Jinete… | música de fase fija en 1 | `bossPhase` sigue la fase |
+| Gélida | Tundraverx (nivel 6) | élite agrandado sin relación con la arena | **Escamas de escarcha**: se derrite junto al fuego; su aliento apaga braseros; aura de invierno (enseña lo que el Demonio Gélido evalúa) |
+| Infernal | Esqueleto Cornudo (nivel 4) | élite agrandado genérico | sale de una fisura; su embestida contra el basalto lo aturde (enseña el choque del Gólem de Cuerpos) |
+| Infernal | Demonio Menor (nivel 7) | élite agrandado genérico | **alimenta las fisuras** y se protege con ellas; sellar la cercana lo expone (enseña al Hechicero y al Rey) |
+| Ciudad | Maestro de Ceremonias | sin ficha | su marca ordena la escenografía del Tramoyista; un refugio en pie la anula |
+| Divina | Jinete Sin Cabeza | sin ficha | ficha FIX honesta: en la Divina es un guardián de asedio envuelto; su kit de jefe quedó en código del Bosque |
 
 ## 5. Arte de jefes
 
 - Medición: `node tools/art/arena_lineup.js --report` dibuja todo a escala real junto al Caballero y compara la densidad
   contra la mediana del roster de campeones (0,95 u/px).
-- **REDRAW por densidad**: Titán de Piedra (×5,0) y Cerbero (×5,4). Encargos: `docs/ART_COMMISSION_BRIEF.md` §R
-  (R-01 nuevo, F-01 sube de prioridad).
-- **REDRAW por cuerpo prestado** (ya documentados en P0): Presentador, Maestro, Tramoyista, Dama, Carcelero del Vacío,
-  Gólem de Cuerpos; F-02 (Ángel Corrompido recoloreado).
-- **FIX aplicado**: alfa 0/255 en los atlas del Hechicero (y su recoloreado del Ángel Corrompido).
-- Lo que este repo NO hace: generar arte. La fábrica (`tools/art/redraw/`) recorta y arma las hojas que se encargan;
-  la herramienta mide. Ningún asset generado automáticamente es PASS sin el Visual Gate humano.
+- **Redibujados con `tools/art/pixrig`** (2026-10): Cerbero (×5,4 → ×1,1), Titán de Piedra (×5,0 → ×1,0), el
+  Presentador (3 actos + transformación), el Maestro, el Tramoyista, la Dama del Telón (sus espejismos usan su cuerpo),
+  el Carcelero del Vacío, el Ángel Corrompido y el Gólem de Cuerpos (32 cuadros; antes 1 por estado). Cada uno sale de
+  su ficha de `docs/ART_COMMISSION_BRIEF.md` (descripción, paleta, celda, planilla de animaciones) y conserva todos los
+  estados que pide su código. Se retiraron sus cuerpos prestados (`js/data/body-swaps.js`).
+- pixrig dibuja por código a resolución nativa: títere de huesos y piezas, contorno oscuro de 1 px, 4–5 tonos por material
+  con luz desde arriba a la izquierda, texturas en coordenadas de la pieza, emisivos sin sombreado. NO reescala arte viejo
+  (eso movería la métrica sin mejorar el dibujo).
+- Grado: **FIX**, no PASS — tienen cuerpo propio a la densidad del juego, pero ningún asset generado automáticamente es
+  PASS sin el Visual Gate humano. Las fichas de encargo siguen abiertas por si un artista las reemplaza.
+- Prueba: `tools/art/t_pixrig_bosses.js` (carga, sin préstamo, estados del código, cuadros de ataque ≠ caminata,
+  densidad < ×2,5, dibujado con su atlas en su arena, muerte sin errores). Los extractores de arena
+  (`tools/art/<arena>/extract.py`) saltean estas claves (`tools/art/pixrig/keep.py`).
+- **FIX aplicado**: alfa 0/255 en los atlas del Hechicero.
+- La fábrica de recorte (`tools/art/redraw/`) sigue sirviendo para hojas encargadas; `arena_lineup.js` mide.
 
 ## 6. Cómo fabricar un jefe nuevo
 
@@ -90,18 +103,19 @@ registra nada en el juego). `list` muestra el estado de todas las fichas y `chec
    `bossArenaEvent` en cada interacción real.
 3. Entrada (`bossTitleCard` o cartel propio), fases (`bossPhase`, `bossHudPhase`), consejos (`ARENA_BOSS_TIPS` o
    `BOSS_DESIGNS`), voz (`js/data/story-text.js`).
-4. Arte: hoja encargada con el formato de `docs/ART_COMMISSION_BRIEF.md`, recortada con `tools/art/redraw/`, medida con
+4. Arte: hoja encargada con el formato de `docs/ART_COMMISSION_BRIEF.md` (recortada con `tools/art/redraw/`) o
+   dibujada desde esa ficha con `tools/art/pixrig/` (`python3 tools/art/pixrig/build.py <clave>`); medida con
    `arena_lineup.js` (≤ ×2,5) y Visual Gate humano.
 5. Pruebas: `node tools/bible/boss-validator.js --strict` (aparece, avisa, se lo daña, ganchos auto) y un caso propio
    en `tools/bosses/t_boss_arena_hooks.js` para cada gancho player/phase.
 
 ## 7. Pendiente (honesto)
 
-- **Tundraverx** (subjefe de la Arena Gélida, nivel 6) es un élite "campeón" sin ficha: no usa braseros ni el frío.
-  Próximo candidato a la Boss Factory.
+- **Jinete Sin Cabeza** (Arena Divina): FIX. Para PASS necesita una relación con el asedio (torres, carriles) o volver a
+  ser jefe de una arena de campaña.
 - **Formas encadenadas** (Ángel Gélido, Gólem de Cuerpos, Rey de la Horda, Dama del Telón): el validador no las alcanza
   en su ventana; sus ganchos auto/player se cubren con pruebas directas o quedan informados.
-- **Arte**: los REDRAW (Titán, Cerbero y los cuerpos prestados) esperan las hojas encargadas; la herramienta solo mide.
+- **Arte**: los nueve redibujos de pixrig esperan el Visual Gate humano para pasar de FIX a PASS.
 - Abanicos de proyectiles sin aviso en el Presentador, el Maestro y la Madre Espora (heredado; no se tocó).
 - Prueba cooperativa específica de las mecánicas nuevas (hoy: estado sincronizado por las vías existentes de cada arena
   y regresión con `t_identity_net`).

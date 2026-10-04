@@ -1,0 +1,36 @@
+PASS END.bloqueado_hasta_la_arena_02  {"locked":true,"opened":false,"unlocked":true,"reg":true}
+PASS END.tarjeta_en_el_selector_de_modos  {"card":true,"locked":false,"txt":"∞Horda Infinita\n    Supervivencia sin fin: rondas que no paran, la Cicatriz te l"}
+PASS END.mutadores_misma_semana_iguales  {"a":{"key":"2026-W40","ids":["furious","dense"]},"b":{"key":"2026-W40","ids":["furious","dense"]},"c":{"key":"2026-W41","ids":["fast_horde","no_potions"]},"distinct":18,"key":"2026-W01"}
+PASS END.mutadores_cambian_entre_semanas  {"a":{"key":"2026-W40","ids":["furious","dense"]},"b":{"key":"2026-W40","ids":["furious","dense"]},"c":{"key":"2026-W41","ids":["fast_horde","no_potions"]},"distinct":18,"key":"2026-W01"}
+PASS END.arranca_desde_la_sala  {"pend":true,"st1":"prep","title":"Sala · Horda Infinita","st":"playing","active":true,"round":1,"arena":"ciudad","lvl":5,"base":5,"muts":["furious","dense"],"dur":22000,"expBase":5,"hud":"∞ Ronda 1 · 0 pts · Bajas 0 😡⏳"}
+PASS END.primer_tramo_arena_temprana_y_nivel_del_subjefe  {"pend":true,"st1":"prep","title":"Sala · Horda Infinita","st":"playing","active":true,"round":1,"arena":"ciudad","lvl":5,"base":5,"muts":["furious","dense"],"dur":22000,"expBase":5,"hud":"∞ Ronda 1 · 0 pts · Bajas 0 😡⏳"}
+PASS END.hud_ronda_y_puntaje  "∞ Ronda 1 · 0 pts · Bajas 0 😡⏳"
+PASS END.hay_horda_y_puntaje  {"n":13,"kills":0,"score":0,"anyGoldInt":true}
+PASS END.rondas_avanzan  [{"r0":1,"r":2,"guard":96,"arena":"ciudad","st":"playing"},{"r0":2,"r":3,"guard":96,"arena":"ciudad","st":"playing"},{"r0":3,"r":4,"guard":96,"arena":"ciudad","st":"playing"},{"r0":4,"r":5,"guard":96,"arena":"ciudad","st":"playing"}]
+PASS END.ronda_5_con_subjefe  {"log":[{"r0":1,"r":2,"guard":96,"arena":"ciudad","st":"playing"},{"r0":2,"r":3,"guard":96,"arena":"ciudad","st":"playing"},{"r0":3,"r":4,"guard":96,"arena":"ciudad","st":"playing"},{"r0":4,"r":5,"guard":96,"arena":"ciudad","st":"playing"}],"boss5":true,"lvl5":9,"arena5":"ciudad","seenSub":true,"held":true,"fin":{"r0":5,"r":6,"guard":598,"arena":"bosque","st":"playing"},"arenaNow":"bosque","round":6,"bossKills":1,"loot":5,"gems":0,"arenas":["ciudad","bosque"]}
+PASS END.ronda_de_subjefe_no_termina_con_el_subjefe_vivo  {"log":[{"r0":1,"r":2,"guard":96,"arena":"ciudad","st":"playing"},{"r0":2,"r":3,"guard":96,"arena":"ciudad","st":"playing"},{"r0":3,"r":4,"guard":96,"arena":"ciudad","st":"playing"},{"r0":4,"r":5,"guard":96,"arena":"ciudad","st":"playing"}],"boss5":true,"lvl5":9,"arena5":"ciudad","seenSub":true,"held":true,"fin":{"r0":5,"r":6,"guard":598,"arena":"bosque","st":"playing"},"arenaNow":"bosque","round":6,"bossKills":1,"loot":5,"gems":0,"arenas":["ciudad","bosque"]}
+PASS END.la_cicatriz_cambia_de_arena  {"log":[{"r0":1,"r":2,"guard":96,"arena":"ciudad","st":"playing"},{"r0":2,"r":3,"guard":96,"arena":"ciudad","st":"playing"},{"r0":3,"r":4,"guard":96,"arena":"ciudad","st":"playing"},{"r0":4,"r":5,"guard":96,"arena":"ciudad","st":"playing"}],"boss5":true,"lvl5":9,"arena5":"ciudad","seenSub":true,"held":true,"fin":{"r0":5,"r":6,"guard":598,"arena":"bosque","st":"playing"},"arenaNow":"bosque","round":6,"bossKills":1,"loot":5,"gems":0,"arenas":["ciudad","bosque"]}
+PASS END.cofre_del_subjefe_objeto_o_cofre_menor  {"log":[{"r0":1,"r":2,"guard":96,"arena":"ciudad","st":"playing"},{"r0":2,"r":3,"guard":96,"arena":"ciudad","st":"playing"},{"r0":3,"r":4,"guard":96,"arena":"ciudad","st":"playing"},{"r0":4,"r":5,"guard":96,"arena":"ciudad","st":"playing"}],"boss5":true,"lvl5":9,"arena5":"ciudad","seenSub":true,"held":true,"fin":{"r0":5,"r":6,"guard":598,"arena":"bosque","st":"playing"},"arenaNow":"bosque","round":6,"bossKills":1,"loot":5,"gems":0,"arenas":["ciudad","bosque"]}
+PASS END.mutadores_aplicados  {"fast":true,"fastSpeed":true,"elites":true,"dense":true,"furious":true,"swarm":true,"noPot":true,"rifts":true,"pool":true}
+PASS END.sinergia_se_activa  {"d0":1.1,"mid":1.32,"after":1.9602000000000004,"expect":1.9602000000000004,"syn":1,"hint":"<div class=\"en-syn-hint\"><span class=\"en-syn-chip hot\">⚔ Filo de la Cicatriz II 3/3</span><span class=\"en-syn-chip \">🩸 Pacto de Sangre 1/2</span></div>"}
+PASS END.rescate_se_completa_y_paga  {"listed":true,"done":true,"ms":2400,"gold":66,"score":725,"rescues":1,"failed":1,"kind":"en_chest"}
+PASS END.rescate_vencido_castiga  {"listed":true,"done":true,"ms":2400,"gold":66,"score":725,"rescues":1,"failed":1,"kind":"en_chest"}
+PASS END.dificultad_sin_techo  {"v":[1.01,2.82,6.85,12.9],"m0":2.8,"m20":3.6399999999999997,"burst":5,"role":0.5165768898035498}
+PASS END.ronda_10_jefe_de_la_arena  {"arena":"bosque","lvl":10,"kind":"boss","bossOn":true,"bname":null,"inBoss":true,"round":11,"st":"playing","arenaAfter":"fortaleza","campaignUntouched":true,"vic":false}
+PASS END.el_jefe_cae_y_sigue_la_horda  {"arena":"bosque","lvl":10,"kind":"boss","bossOn":true,"bname":null,"inBoss":true,"round":11,"st":"playing","arenaAfter":"fortaleza","campaignUntouched":true,"vic":false}
+FAIL END.pantalla_de_resultados  {"st":"playing","txt":""}
+FAIL END.record_guardado  {"runs":0,"best":0,"score":25579,"saved":true}
+FAIL END.ranking_invitado_record_local_con_aviso  {"vis":false,"txt":"","acc":false,"open":false,"pend":false}
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+page.evaluate: TypeError: Cannot read properties of null (reading 'click')
+    at eval (eval at evaluate (:290:30), <anonymous>:1:67)
+    at UtilityScript.evaluate (<anonymous>:292:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at E (/home/user/La-Horda/tools/items/t_endless.js:19:29)
+    at /home/user/La-Horda/tools/items/t_endless.js:136:21
+
+Node.js v22.22.0
+exit=1 secs=8

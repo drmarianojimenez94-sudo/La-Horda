@@ -1,15 +1,11 @@
 {
   "checks": [
     {
-      "name": "Intro ends in menu",
+      "name": "Completed onboarding reaches menu",
       "ok": true
     },
     {
-      "name": "First-run path ends in menu",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff tanque",
+      "name": "No automatic champion swap tanque",
       "ok": true
     },
     {
@@ -17,19 +13,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early tanque",
+      "name": "Revival keeps chosen champion tanque",
       "ok": true
     },
     {
-      "name": "Five second revive after hit tanque",
+      "name": "Return preserves champion tanque",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion tanque",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff guerrero",
+      "name": "No automatic champion swap guerrero",
       "ok": true
     },
     {
@@ -37,19 +29,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early guerrero",
+      "name": "Revival keeps chosen champion guerrero",
       "ok": true
     },
     {
-      "name": "Five second revive after hit guerrero",
+      "name": "Return preserves champion guerrero",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion guerrero",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff mago",
+      "name": "No automatic champion swap mago",
       "ok": true
     },
     {
@@ -57,19 +45,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early mago",
+      "name": "Revival keeps chosen champion mago",
       "ok": true
     },
     {
-      "name": "Five second revive after hit mago",
+      "name": "Return preserves champion mago",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion mago",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff soporte",
+      "name": "No automatic champion swap soporte",
       "ok": true
     },
     {
@@ -77,19 +61,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early soporte",
+      "name": "Revival keeps chosen champion soporte",
       "ok": true
     },
     {
-      "name": "Five second revive after hit soporte",
+      "name": "Return preserves champion soporte",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion soporte",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff segador",
+      "name": "No automatic champion swap segador",
       "ok": true
     },
     {
@@ -97,19 +77,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early segador",
+      "name": "Revival keeps chosen champion segador",
       "ok": true
     },
     {
-      "name": "Five second revive after hit segador",
+      "name": "Return preserves champion segador",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion segador",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff axiom",
+      "name": "No automatic champion swap axiom",
       "ok": true
     },
     {
@@ -117,19 +93,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early axiom",
+      "name": "Revival keeps chosen champion axiom",
       "ok": true
     },
     {
-      "name": "Five second revive after hit axiom",
+      "name": "Return preserves champion axiom",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion axiom",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff profeta",
+      "name": "No automatic champion swap profeta",
       "ok": true
     },
     {
@@ -137,19 +109,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early profeta",
+      "name": "Revival keeps chosen champion profeta",
       "ok": true
     },
     {
-      "name": "Five second revive after hit profeta",
+      "name": "Return preserves champion profeta",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion profeta",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff musashi",
+      "name": "No automatic champion swap musashi",
       "ok": true
     },
     {
@@ -157,19 +125,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early musashi",
+      "name": "Revival keeps chosen champion musashi",
       "ok": true
     },
     {
-      "name": "Five second revive after hit musashi",
+      "name": "Return preserves champion musashi",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion musashi",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff cazadora",
+      "name": "No automatic champion swap cazadora",
       "ok": true
     },
     {
@@ -177,19 +141,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early cazadora",
+      "name": "Revival keeps chosen champion cazadora",
       "ok": true
     },
     {
-      "name": "Five second revive after hit cazadora",
+      "name": "Return preserves champion cazadora",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion cazadora",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff nigromante",
+      "name": "No automatic champion swap nigromante",
       "ok": true
     },
     {
@@ -197,19 +157,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early nigromante",
+      "name": "Revival keeps chosen champion nigromante",
       "ok": true
     },
     {
-      "name": "Five second revive after hit nigromante",
+      "name": "Return preserves champion nigromante",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion nigromante",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff libertador",
+      "name": "No automatic champion swap libertador",
       "ok": true
     },
     {
@@ -217,19 +173,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early libertador",
+      "name": "Revival keeps chosen champion libertador",
       "ok": true
     },
     {
-      "name": "Five second revive after hit libertador",
+      "name": "Return preserves champion libertador",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion libertador",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff eren",
+      "name": "No automatic champion swap eren",
       "ok": true
     },
     {
@@ -237,19 +189,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early eren",
+      "name": "Revival keeps chosen champion eren",
       "ok": true
     },
     {
-      "name": "Five second revive after hit eren",
+      "name": "Return preserves champion eren",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion eren",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff ynara",
+      "name": "No automatic champion swap ynara",
       "ok": true
     },
     {
@@ -257,19 +205,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early ynara",
+      "name": "Revival keeps chosen champion ynara",
       "ok": true
     },
     {
-      "name": "Five second revive after hit ynara",
+      "name": "Return preserves champion ynara",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion ynara",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff myla",
+      "name": "No automatic champion swap myla",
       "ok": true
     },
     {
@@ -277,19 +221,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early myla",
+      "name": "Revival keeps chosen champion myla",
       "ok": true
     },
     {
-      "name": "Five second revive after hit myla",
+      "name": "Return preserves champion myla",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion myla",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff brasa",
+      "name": "No automatic champion swap brasa",
       "ok": true
     },
     {
@@ -297,19 +237,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early brasa",
+      "name": "Revival keeps chosen champion brasa",
       "ok": true
     },
     {
-      "name": "Five second revive after hit brasa",
+      "name": "Return preserves champion brasa",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion brasa",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff eslabon",
+      "name": "No automatic champion swap eslabon",
       "ok": true
     },
     {
@@ -317,19 +253,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early eslabon",
+      "name": "Revival keeps chosen champion eslabon",
       "ok": true
     },
     {
-      "name": "Five second revive after hit eslabon",
+      "name": "Return preserves champion eslabon",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion eslabon",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff morwen",
+      "name": "No automatic champion swap morwen",
       "ok": true
     },
     {
@@ -337,19 +269,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early morwen",
+      "name": "Revival keeps chosen champion morwen",
       "ok": true
     },
     {
-      "name": "Five second revive after hit morwen",
+      "name": "Return preserves champion morwen",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion morwen",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff farolero",
+      "name": "No automatic champion swap farolero",
       "ok": true
     },
     {
@@ -357,19 +285,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early farolero",
+      "name": "Revival keeps chosen champion farolero",
       "ok": true
     },
     {
-      "name": "Five second revive after hit farolero",
+      "name": "Return preserves champion farolero",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion farolero",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff iria",
+      "name": "No automatic champion swap iria",
       "ok": true
     },
     {
@@ -377,19 +301,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early iria",
+      "name": "Revival keeps chosen champion iria",
       "ok": true
     },
     {
-      "name": "Five second revive after hit iria",
+      "name": "Return preserves champion iria",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion iria",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff vesper",
+      "name": "No automatic champion swap vesper",
       "ok": true
     },
     {
@@ -397,19 +317,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early vesper",
+      "name": "Revival keeps chosen champion vesper",
       "ok": true
     },
     {
-      "name": "Five second revive after hit vesper",
+      "name": "Return preserves champion vesper",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion vesper",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff nahir",
+      "name": "No automatic champion swap nahir",
       "ok": true
     },
     {
@@ -417,19 +333,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early nahir",
+      "name": "Revival keeps chosen champion nahir",
       "ok": true
     },
     {
-      "name": "Five second revive after hit nahir",
+      "name": "Return preserves champion nahir",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion nahir",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff baltra",
+      "name": "No automatic champion swap baltra",
       "ok": true
     },
     {
@@ -437,19 +349,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early baltra",
+      "name": "Revival keeps chosen champion baltra",
       "ok": true
     },
     {
-      "name": "Five second revive after hit baltra",
+      "name": "Return preserves champion baltra",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion baltra",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff maura",
+      "name": "No automatic champion swap maura",
       "ok": true
     },
     {
@@ -457,19 +365,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early maura",
+      "name": "Revival keeps chosen champion maura",
       "ok": true
     },
     {
-      "name": "Five second revive after hit maura",
+      "name": "Return preserves champion maura",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion maura",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff dariel",
+      "name": "No automatic champion swap dariel",
       "ok": true
     },
     {
@@ -477,19 +381,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early dariel",
+      "name": "Revival keeps chosen champion dariel",
       "ok": true
     },
     {
-      "name": "Five second revive after hit dariel",
+      "name": "Return preserves champion dariel",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion dariel",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff orsa",
+      "name": "No automatic champion swap orsa",
       "ok": true
     },
     {
@@ -497,19 +397,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early orsa",
+      "name": "Revival keeps chosen champion orsa",
       "ok": true
     },
     {
-      "name": "Five second revive after hit orsa",
+      "name": "Return preserves champion orsa",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion orsa",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff tibor",
+      "name": "No automatic champion swap tibor",
       "ok": true
     },
     {
@@ -517,19 +413,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early tibor",
+      "name": "Revival keeps chosen champion tibor",
       "ok": true
     },
     {
-      "name": "Five second revive after hit tibor",
+      "name": "Return preserves champion tibor",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion tibor",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff zahra",
+      "name": "No automatic champion swap zahra",
       "ok": true
     },
     {
@@ -537,19 +429,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early zahra",
+      "name": "Revival keeps chosen champion zahra",
       "ok": true
     },
     {
-      "name": "Five second revive after hit zahra",
+      "name": "Return preserves champion zahra",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion zahra",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff renko",
+      "name": "No automatic champion swap renko",
       "ok": true
     },
     {
@@ -557,19 +445,15 @@
       "ok": true
     },
     {
-      "name": "Revive not early renko",
+      "name": "Revival keeps chosen champion renko",
       "ok": true
     },
     {
-      "name": "Five second revive after hit renko",
+      "name": "Return preserves champion renko",
       "ok": true
     },
     {
-      "name": "Return keeps selected champion renko",
-      "ok": true
-    },
-    {
-      "name": "No reserve handoff sira",
+      "name": "No automatic champion swap sira",
       "ok": true
     },
     {
@@ -577,15 +461,11 @@
       "ok": true
     },
     {
-      "name": "Revive not early sira",
+      "name": "Revival keeps chosen champion sira",
       "ok": true
     },
     {
-      "name": "Five second revive after hit sira",
-      "ok": true
-    },
-    {
-      "name": "Return keeps selected champion sira",
+      "name": "Return preserves champion sira",
       "ok": true
     },
     {
@@ -1009,6 +889,10 @@
       "ok": true
     },
     {
+      "name": "Obsolete reserve selection cannot grant champion",
+      "ok": true
+    },
+    {
       "name": "Complete guide tanque",
       "ok": true
     },
@@ -1125,19 +1009,15 @@
       "ok": true
     },
     {
-      "name": "Only one champion in loadout",
-      "ok": true
-    },
-    {
-      "name": "Stale reserve ignored",
-      "ok": true
-    },
-    {
       "name": "Dead host does not freeze team equipment timers",
       "ok": true
     },
     {
-      "name": "Selectors clear of footer 844",
+      "name": "Network loadout has no reserve",
+      "ok": true
+    },
+    {
+      "name": "Only one champion selector 844",
       "ok": true
     },
     {
@@ -1145,7 +1025,7 @@
       "ok": true
     },
     {
-      "name": "Selectors clear of footer 667",
+      "name": "Only one champion selector 667",
       "ok": true
     },
     {
@@ -1153,7 +1033,15 @@
       "ok": true
     },
     {
+      "name": "Only one champion selector 390",
+      "ok": true
+    },
+    {
       "name": "Layout 390",
+      "ok": true
+    },
+    {
+      "name": "Only one champion selector 1280",
       "ok": true
     },
     {

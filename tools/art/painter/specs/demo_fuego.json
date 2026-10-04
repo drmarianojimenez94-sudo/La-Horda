@@ -1,0 +1,43 @@
+{
+ "id": "demo_fuego",
+ "prompt": "mago con capa roja que tira fuego, pelo blanco",
+ "body": "sira_skin",
+ "head": "nahir_skin",
+ "paint": [
+  {
+   "part": "body",
+   "ramp": [
+    "#3a0a0e",
+    "#7a1620",
+    "#b8323a",
+    "#e0646a"
+   ],
+   "hue": [
+    255,
+    335
+   ],
+   "minChroma": 12,
+   "noSkin": true
+  },
+  {
+   "part": "head",
+   "ramp": [
+    "#5c5a60",
+    "#9c9aa2",
+    "#d6d4da",
+    "#f8f6fa"
+   ],
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true
+  }
+ ],
+ "install": {
+  "champion": "demo_fuego",
+  "pack": "demo_fuego"
+ },
+ "notes": "BORRADOR de suggest.py: pintar, mirar sheet.png, ajustar reglas (hue/materialsOf/part) y accesorios."
+}

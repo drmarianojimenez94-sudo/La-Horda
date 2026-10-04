@@ -1,0 +1,693 @@
+{
+ "tolerance": 0.15,
+ "range": {
+  "colores": [
+   1484.5,
+   2535.5
+  ],
+  "contorno": [
+   0.6124416537008224,
+   0.9355275075924863
+  ],
+  "sombreado": [
+   7.641646862030029,
+   15.534060001373291
+  ],
+  "detalle": [
+   0.36993699369936994,
+   0.8462209863836732
+  ]
+ },
+ "reference": {
+  "baltra": {
+   "colores": 1806.5,
+   "contorno": 0.8875850177220039,
+   "sombreado": 11.561045169830322,
+   "detalle": 0.7402893812080331
+  },
+  "baltra_set": {
+   "colores": 2023.5,
+   "contorno": 0.7929600578549176,
+   "sombreado": 15.00158166885376,
+   "detalle": 0.8271539439161513
+  },
+  "baltra_skin": {
+   "colores": 1962.0,
+   "contorno": 0.8583128022629802,
+   "sombreado": 15.436080932617188,
+   "detalle": 0.8462209863836732
+  },
+  "dariel": {
+   "colores": 1484.5,
+   "contorno": 0.9176119028712333,
+   "sombreado": 9.454582214355469,
+   "detalle": 0.46708363571699774
+  },
+  "dariel_set": {
+   "colores": 1919.5,
+   "contorno": 0.8655555246389717,
+   "sombreado": 14.1157865524292,
+   "detalle": 0.6283252140976929
+  },
+  "dariel_skin": {
+   "colores": 1661.0,
+   "contorno": 0.9163328639588774,
+   "sombreado": 10.53469467163086,
+   "detalle": 0.48520432406747444
+  },
+  "maura": {
+   "colores": 2181.0,
+   "contorno": 0.8833644336629969,
+   "sombreado": 7.641646862030029,
+   "detalle": 0.36993699369936994
+  },
+  "maura_set": {
+   "colores": 2156.5,
+   "contorno": 0.7864943286731734,
+   "sombreado": 12.361729145050049,
+   "detalle": 0.5347298777471556
+  },
+  "maura_skin": {
+   "colores": 2243.5,
+   "contorno": 0.8927794338709267,
+   "sombreado": 9.164104461669922,
+   "detalle": 0.504098378690455
+  },
+  "nahir": {
+   "colores": 1811.5,
+   "contorno": 0.8570088897250769,
+   "sombreado": 9.198503494262695,
+   "detalle": 0.4944277988892137
+  },
+  "nahir_set": {
+   "colores": 1918.0,
+   "contorno": 0.8934366025899592,
+   "sombreado": 14.803564071655273,
+   "detalle": 0.6601437345282072
+  },
+  "nahir_skin": {
+   "colores": 1821.5,
+   "contorno": 0.9355275075924863,
+   "sombreado": 11.372718811035156,
+   "detalle": 0.5607661625293198
+  },
+  "orsa": {
+   "colores": 2228.5,
+   "contorno": 0.8545016835334396,
+   "sombreado": 10.43508768081665,
+   "detalle": 0.5801579343690552
+  },
+  "orsa_set": {
+   "colores": 2262.5,
+   "contorno": 0.8022760685599541,
+   "sombreado": 13.005635261535645,
+   "detalle": 0.710809072414475
+  },
+  "orsa_skin": {
+   "colores": 2488.5,
+   "contorno": 0.770245883149109,
+   "sombreado": 11.300792694091797,
+   "detalle": 0.6683121897407611
+  },
+  "renko": {
+   "colores": 1639.0,
+   "contorno": 0.8719981396922036,
+   "sombreado": 7.708817720413208,
+   "detalle": 0.46522340046093064
+  },
+  "renko_skin": {
+   "colores": 1794.0,
+   "contorno": 0.878899491782007,
+   "sombreado": 13.916523933410645,
+   "detalle": 0.6888473791570213
+  },
+  "sira": {
+   "colores": 1975.0,
+   "contorno": 0.6124416537008224,
+   "sombreado": 11.920074462890625,
+   "detalle": 0.6683323814962878
+  },
+  "sira_set": {
+   "colores": 2277.0,
+   "contorno": 0.7372100680471207,
+   "sombreado": 13.310723781585693,
+   "detalle": 0.7209266944904288
+  },
+  "sira_skin": {
+   "colores": 2255.5,
+   "contorno": 0.6504564163700758,
+   "sombreado": 14.442456722259521,
+   "detalle": 0.7319917218070846
+  },
+  "tibor": {
+   "colores": 2535.5,
+   "contorno": 0.7346284342932803,
+   "sombreado": 11.432106971740723,
+   "detalle": 0.6504097884940585
+  },
+  "tibor_set": {
+   "colores": 2022.0,
+   "contorno": 0.7718529445794284,
+   "sombreado": 13.876938343048096,
+   "detalle": 0.7104943301534916
+  },
+  "tibor_skin": {
+   "colores": 1972.0,
+   "contorno": 0.789969108818558,
+   "sombreado": 15.534060001373291,
+   "detalle": 0.7874108315521104
+  },
+  "vesper": {
+   "colores": 1560.5,
+   "contorno": 0.787917737789203,
+   "sombreado": 9.137616157531738,
+   "detalle": 0.4058811558811559
+  },
+  "vesper_set": {
+   "colores": 1905.5,
+   "contorno": 0.6156515620602308,
+   "sombreado": 13.94443130493164,
+   "detalle": 0.6589878855496306
+  },
+  "zahra": {
+   "colores": 1641.5,
+   "contorno": 0.8761967575847835,
+   "sombreado": 9.247375011444092,
+   "detalle": 0.4657909489841288
+  },
+  "zahra_set": {
+   "colores": 1861.5,
+   "contorno": 0.855442863390184,
+   "sombreado": 10.530298233032227,
+   "detalle": 0.5484732531022104
+  },
+  "zahra_skin": {
+   "colores": 1789.5,
+   "contorno": 0.789032144118686,
+   "sombreado": 13.251096725463867,
+   "detalle": 0.5935305600044346
+  }
+ },
+ "sheets": {
+  "assets/sprites/champions/aurelia/atlas.png": {
+   "metrics": {
+    "colores": 1578.5,
+    "contorno": 0.6284719472600571,
+    "sombreado": 17.755346298217773,
+    "detalle": 0.7960620429798513
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/aurelia/skins/aurelia_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1661.0,
+    "contorno": 0.7001605412533685,
+    "sombreado": 14.03009843826294,
+    "detalle": 0.7087035416133374
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/aurelia/skins/aurelia_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1596.0,
+    "contorno": 0.8484987481604648,
+    "sombreado": 11.783745288848877,
+    "detalle": 0.5701202089071268
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/baltra/atlas.png": {
+   "metrics": {
+    "colores": 1806.5,
+    "contorno": 0.8875850177220039,
+    "sombreado": 11.561045169830322,
+    "detalle": 0.7402893812080331
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/baltra/skins/baltra_set/atlas.png": {
+   "metrics": {
+    "colores": 2023.5,
+    "contorno": 0.7929600578549176,
+    "sombreado": 15.00158166885376,
+    "detalle": 0.8271539439161513
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/baltra/skins/baltra_skin/atlas.png": {
+   "metrics": {
+    "colores": 1962.0,
+    "contorno": 0.8583128022629802,
+    "sombreado": 15.436080932617188,
+    "detalle": 0.8462209863836732
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/bront/atlas.png": {
+   "metrics": {
+    "colores": 1281.5,
+    "contorno": 0.8656423458954134,
+    "sombreado": 14.09880256652832,
+    "detalle": 0.7692278665096617
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/bront/skins/bront_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1959.5,
+    "contorno": 0.7417894788210033,
+    "sombreado": 14.821829795837402,
+    "detalle": 0.8026856823489491
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/bront/skins/bront_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1302.0,
+    "contorno": 0.9466524480712166,
+    "sombreado": 14.33409595489502,
+    "detalle": 0.6862084328047762
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/dariel/atlas.png": {
+   "metrics": {
+    "colores": 1484.5,
+    "contorno": 0.9176119028712333,
+    "sombreado": 9.454582214355469,
+    "detalle": 0.46708363571699774
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/dariel/skins/dariel_set/atlas.png": {
+   "metrics": {
+    "colores": 1919.5,
+    "contorno": 0.8655555246389717,
+    "sombreado": 14.1157865524292,
+    "detalle": 0.6283252140976929
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/dariel/skins/dariel_skin/atlas.png": {
+   "metrics": {
+    "colores": 1661.0,
+    "contorno": 0.9163328639588774,
+    "sombreado": 10.53469467163086,
+    "detalle": 0.48520432406747444
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/facu_gm/atlas.png": {
+   "metrics": {
+    "colores": 1635.5,
+    "contorno": 0.8771084337349397,
+    "sombreado": 11.941627502441406,
+    "detalle": 0.567230450660994
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/facu_gm/skins/facu_gm_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1522.0,
+    "contorno": 0.963368758878308,
+    "sombreado": 10.0018630027771,
+    "detalle": 0.41838606778281195
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/khepri/atlas.png": {
+   "metrics": {
+    "colores": 1411.0,
+    "contorno": 0.7474358763293931,
+    "sombreado": 14.656259059906006,
+    "detalle": 0.738024784681936
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/khepri/skins/khepri_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1762.5,
+    "contorno": 0.82699644123186,
+    "sombreado": 13.507443904876709,
+    "detalle": 0.7618776058336805
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/khepri/skins/khepri_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1311.5,
+    "contorno": 0.7550796375394195,
+    "sombreado": 14.85301160812378,
+    "detalle": 0.7104836028892293
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/maura/atlas.png": {
+   "metrics": {
+    "colores": 2181.0,
+    "contorno": 0.8833644336629969,
+    "sombreado": 7.641646862030029,
+    "detalle": 0.36993699369936994
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/maura/skins/maura_set/atlas.png": {
+   "metrics": {
+    "colores": 2156.5,
+    "contorno": 0.7864943286731734,
+    "sombreado": 12.361729145050049,
+    "detalle": 0.5347298777471556
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/maura/skins/maura_skin/atlas.png": {
+   "metrics": {
+    "colores": 2243.5,
+    "contorno": 0.8927794338709267,
+    "sombreado": 9.164104461669922,
+    "detalle": 0.504098378690455
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/nahir/atlas.png": {
+   "metrics": {
+    "colores": 1811.5,
+    "contorno": 0.8570088897250769,
+    "sombreado": 9.198503494262695,
+    "detalle": 0.4944277988892137
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/nahir/skins/nahir_set/atlas.png": {
+   "metrics": {
+    "colores": 1918.0,
+    "contorno": 0.8934366025899592,
+    "sombreado": 14.803564071655273,
+    "detalle": 0.6601437345282072
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/nahir/skins/nahir_skin/atlas.png": {
+   "metrics": {
+    "colores": 1821.5,
+    "contorno": 0.9355275075924863,
+    "sombreado": 11.372718811035156,
+    "detalle": 0.5607661625293198
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/nano_gm/atlas.png": {
+   "metrics": {
+    "colores": 1696.5,
+    "contorno": 0.7596481373136685,
+    "sombreado": 12.034730911254883,
+    "detalle": 0.5741834176418997
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/nano_gm/skins/nano_gm_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1880.5,
+    "contorno": 0.830221392371299,
+    "sombreado": 13.701988220214844,
+    "detalle": 0.6316526558508273
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/oriel/atlas.png": {
+   "metrics": {
+    "colores": 1357.5,
+    "contorno": 0.7770756772285998,
+    "sombreado": 11.167176246643066,
+    "detalle": 0.6075855450678203
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/oriel/skins/oriel_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1323.5,
+    "contorno": 0.5803994298668941,
+    "sombreado": 13.737764835357666,
+    "detalle": 0.6485330612497884
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/oriel/skins/oriel_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1282.0,
+    "contorno": 0.8482738095238096,
+    "sombreado": 10.467348098754883,
+    "detalle": 0.5320854580622473
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/orsa/atlas.png": {
+   "metrics": {
+    "colores": 2228.5,
+    "contorno": 0.8545016835334396,
+    "sombreado": 10.43508768081665,
+    "detalle": 0.5801579343690552
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/orsa/skins/orsa_set/atlas.png": {
+   "metrics": {
+    "colores": 2262.5,
+    "contorno": 0.8022760685599541,
+    "sombreado": 13.005635261535645,
+    "detalle": 0.710809072414475
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/orsa/skins/orsa_skin/atlas.png": {
+   "metrics": {
+    "colores": 2488.5,
+    "contorno": 0.770245883149109,
+    "sombreado": 11.300792694091797,
+    "detalle": 0.6683121897407611
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/renko/atlas.png": {
+   "metrics": {
+    "colores": 1639.0,
+    "contorno": 0.8719981396922036,
+    "sombreado": 7.708817720413208,
+    "detalle": 0.46522340046093064
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/renko/skins/renko_skin/atlas.png": {
+   "metrics": {
+    "colores": 1794.0,
+    "contorno": 0.878899491782007,
+    "sombreado": 13.916523933410645,
+    "detalle": 0.6888473791570213
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/sira/atlas.png": {
+   "metrics": {
+    "colores": 1975.0,
+    "contorno": 0.6124416537008224,
+    "sombreado": 11.920074462890625,
+    "detalle": 0.6683323814962878
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/sira/skins/sira_set/atlas.png": {
+   "metrics": {
+    "colores": 2277.0,
+    "contorno": 0.7372100680471207,
+    "sombreado": 13.310723781585693,
+    "detalle": 0.7209266944904288
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/sira/skins/sira_skin/atlas.png": {
+   "metrics": {
+    "colores": 2255.5,
+    "contorno": 0.6504564163700758,
+    "sombreado": 14.442456722259521,
+    "detalle": 0.7319917218070846
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/tibor/atlas.png": {
+   "metrics": {
+    "colores": 2535.5,
+    "contorno": 0.7346284342932803,
+    "sombreado": 11.432106971740723,
+    "detalle": 0.6504097884940585
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/tibor/skins/tibor_set/atlas.png": {
+   "metrics": {
+    "colores": 2022.0,
+    "contorno": 0.7718529445794284,
+    "sombreado": 13.876938343048096,
+    "detalle": 0.7104943301534916
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/tibor/skins/tibor_skin/atlas.png": {
+   "metrics": {
+    "colores": 1972.0,
+    "contorno": 0.789969108818558,
+    "sombreado": 15.534060001373291,
+    "detalle": 0.7874108315521104
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/velmira/atlas.png": {
+   "metrics": {
+    "colores": 1935.5,
+    "contorno": 0.8189930209371884,
+    "sombreado": 11.32778024673462,
+    "detalle": 0.6366475880807091
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/velmira/skins/velmira_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1623.0,
+    "contorno": 0.8767224080267558,
+    "sombreado": 10.218511581420898,
+    "detalle": 0.5704315091755379
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/velmira/skins/velmira_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1364.0,
+    "contorno": 0.6377742946708465,
+    "sombreado": 16.72775650024414,
+    "detalle": 0.7799216916038357
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/vesper/atlas.png": {
+   "metrics": {
+    "colores": 1560.5,
+    "contorno": 0.787917737789203,
+    "sombreado": 9.137616157531738,
+    "detalle": 0.4058811558811559
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/vesper/skins/vesper_set/atlas.png": {
+   "metrics": {
+    "colores": 1905.5,
+    "contorno": 0.6156515620602308,
+    "sombreado": 13.94443130493164,
+    "detalle": 0.6589878855496306
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/vhal/atlas.png": {
+   "metrics": {
+    "colores": 1392.0,
+    "contorno": 0.8162153572336639,
+    "sombreado": 12.793071746826172,
+    "detalle": 0.6753788085046477
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/vhal/skins/vhal_alt1/atlas.png": {
+   "metrics": {
+    "colores": 1638.5,
+    "contorno": 0.8665859685596528,
+    "sombreado": 15.980430126190186,
+    "detalle": 0.725561501071533
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/vhal/skins/vhal_alt2/atlas.png": {
+   "metrics": {
+    "colores": 1591.5,
+    "contorno": 0.7694663864757867,
+    "sombreado": 15.94674015045166,
+    "detalle": 0.7942661981622984
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/zahra/atlas.png": {
+   "metrics": {
+    "colores": 1641.5,
+    "contorno": 0.8761967575847835,
+    "sombreado": 9.247375011444092,
+    "detalle": 0.4657909489841288
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/zahra/skins/zahra_set/atlas.png": {
+   "metrics": {
+    "colores": 1861.5,
+    "contorno": 0.855442863390184,
+    "sombreado": 10.530298233032227,
+    "detalle": 0.5484732531022104
+   },
+   "pass": true,
+   "fails": []
+  },
+  "assets/sprites/champions/zahra/skins/zahra_skin/atlas.png": {
+   "metrics": {
+    "colores": 1789.5,
+    "contorno": 0.789032144118686,
+    "sombreado": 13.251096725463867,
+    "detalle": 0.5935305600044346
+   },
+   "pass": true,
+   "fails": []
+  }
+ }
+}

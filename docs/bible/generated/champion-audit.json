@@ -114,7 +114,7 @@
      "area": "ability",
      "name": "Hab. 1 Torbellino: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -242,7 +242,7 @@
      "selfChanged": 5,
      "spawned": 0,
      "vfx": 275,
-     "sfx": 4,
+     "sfx": 2,
      "floatText": 54,
      "netEvents": 6,
      "error": null
@@ -765,7 +765,7 @@
      "area": "ability",
      "name": "Hab. 1 Muro de Fuego: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -855,7 +855,7 @@
      "area": "ability",
      "name": "Definitiva Cataclismo Elemental: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -888,7 +888,7 @@
      "selfChanged": 0,
      "spawned": 1,
      "vfx": 213,
-     "sfx": 7,
+     "sfx": 5,
      "floatText": 66,
      "netEvents": 4,
      "error": null
@@ -965,7 +965,7 @@
      "selfChanged": 13,
      "spawned": 0,
      "vfx": 388,
-     "sfx": 5,
+     "sfx": 3,
      "floatText": 82,
      "netEvents": 60,
      "error": null
@@ -2795,7 +2795,7 @@
      "area": "ability",
      "name": "Definitiva Cacería Salvaje: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -2894,7 +2894,7 @@
      "selfChanged": 2,
      "spawned": 0,
      "vfx": 39,
-     "sfx": 3,
+     "sfx": 2,
      "floatText": 7,
      "netEvents": 7,
      "error": null
@@ -3048,7 +3048,7 @@
      "area": "ability",
      "name": "Hab. 2 Gólem de Carne: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -3164,7 +3164,7 @@
      "selfChanged": 0,
      "spawned": 0,
      "vfx": 127,
-     "sfx": 3,
+     "sfx": 2,
      "floatText": 25,
      "netEvents": 8,
      "error": null
@@ -4057,7 +4057,7 @@
      "area": "ability",
      "name": "Hab. 2 Estrogonof reparador: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -4117,7 +4117,7 @@
      "area": "ability",
      "name": "Definitiva Santa Paciencia: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -4175,7 +4175,7 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 409,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 80,
      "netEvents": 4,
      "error": null
@@ -4224,7 +4224,7 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 410,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 80,
      "netEvents": 7,
      "error": null
@@ -4348,7 +4348,7 @@
      "area": "ability",
      "name": "Hab. 1 Torre de Yogur: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -4378,7 +4378,7 @@
      "area": "ability",
      "name": "Hab. 2 Yogurazo: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -4473,7 +4473,7 @@
      "selfChanged": 2,
      "spawned": 1,
      "vfx": 32,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 5,
      "netEvents": 4,
      "error": null
@@ -4495,7 +4495,7 @@
      "selfChanged": 2,
      "spawned": 0,
      "vfx": 355,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 70,
      "netEvents": 26,
      "error": null
@@ -4668,7 +4668,7 @@
      "area": "ability",
      "name": "Hab. 1 Centinela de Latón: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -4758,7 +4758,7 @@
      "area": "ability",
      "name": "Definitiva Turno de Emergencia: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -4792,7 +4792,7 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 33,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 5,
      "netEvents": 5,
      "error": null
@@ -4868,7 +4868,7 @@
      "selfChanged": 6,
      "spawned": 1,
      "vfx": 44,
-     "sfx": 3,
+     "sfx": 2,
      "floatText": 8,
      "netEvents": 6,
      "error": null
@@ -5022,7 +5022,7 @@
      "area": "ability",
      "name": "Hab. 2 Línea Infranqueable: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -5082,7 +5082,7 @@
      "area": "ability",
      "name": "Definitiva Nadie Queda Atrás: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -5143,7 +5143,7 @@
      "selfChanged": 6,
      "spawned": 1,
      "vfx": 327,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 64,
      "netEvents": 4,
      "error": null
@@ -5197,7 +5197,7 @@
      "selfChanged": 8,
      "spawned": 0,
      "vfx": 183,
-     "sfx": 4,
+     "sfx": 2,
      "floatText": 36,
      "netEvents": 6,
      "error": null
@@ -5411,7 +5411,7 @@
      "area": "ability",
      "name": "Definitiva Alambique del Silencio: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -5515,7 +5515,7 @@
      "selfChanged": 2,
      "spawned": 1,
      "vfx": 410,
-     "sfx": 5,
+     "sfx": 4,
      "floatText": 80,
      "netEvents": 6,
      "error": null
@@ -6053,7 +6053,7 @@
      "area": "ability",
      "name": "Definitiva Sello de los Tres Caminos: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "2"
     },
     {
      "area": "ability",
@@ -6157,7 +6157,7 @@
      "selfChanged": 4,
      "spawned": 1,
      "vfx": 44,
-     "sfx": 3,
+     "sfx": 2,
      "floatText": 8,
      "netEvents": 6,
      "error": null
@@ -7322,7 +7322,7 @@
      "area": "ability",
      "name": "Definitiva El bosque camina: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -7424,7 +7424,7 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 244,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 48,
      "netEvents": 7,
      "error": null
@@ -7638,7 +7638,7 @@
      "area": "ability",
      "name": "Definitiva Todavía hay una salida: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -7746,7 +7746,7 @@
      "selfChanged": 6,
      "spawned": 1,
      "vfx": 163,
-     "sfx": 7,
+     "sfx": 6,
      "floatText": 36,
      "netEvents": 7,
      "error": null
@@ -8187,7 +8187,7 @@
      "area": "ability",
      "name": "Hab. 1 Nube obrera: SFX",
      "level": "PASS",
-     "detail": "8"
+     "detail": "7"
     },
     {
      "area": "ability",
@@ -8277,7 +8277,7 @@
      "area": "ability",
      "name": "Definitiva El cielo zumba: SFX",
      "level": "PASS",
-     "detail": "8"
+     "detail": "7"
     },
     {
      "area": "ability",
@@ -8309,7 +8309,7 @@
      "selfChanged": 1,
      "spawned": 1,
      "vfx": 416,
-     "sfx": 8,
+     "sfx": 7,
      "floatText": 80,
      "netEvents": 5,
      "error": null
@@ -8375,7 +8375,7 @@
      "selfChanged": 1,
      "spawned": 1,
      "vfx": 416,
-     "sfx": 8,
+     "sfx": 7,
      "floatText": 80,
      "netEvents": 7,
      "error": null
@@ -9338,14 +9338,26 @@
   },
   {
    "key": "nano_gm",
-   "name": "Nano GM",
+   "name": "Nano GM, el Regente del Umbral",
    "role": "mago",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.nano_gm"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Nano GM"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "el Regente del Umbral"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Nano GM, el Regente del Umbral"
     },
     {
      "area": "lore",
@@ -9356,20 +9368,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "infernal"
+     "level": "PASS",
+     "detail": "El umbral sobre la Arena Infernal"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "98 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Nano GM"
     },
     {
      "area": "role",
@@ -9423,7 +9435,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "571 píxeles"
+     "detail": "746 píxeles"
     },
     {
      "area": "ability",
@@ -9646,23 +9658,35 @@
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 4,
-    "pass": 27
+    "fail": 0,
+    "warning": 3,
+    "pass": 33
    }
   },
   {
    "key": "facu_gm",
-   "name": "Facu GM",
+   "name": "Facu GM, el Soberano de las Mareas",
    "role": "asesino",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.facu_gm"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Facu GM"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "el Soberano de las Mareas"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Facu GM, el Soberano de las Mareas"
     },
     {
      "area": "lore",
@@ -9673,20 +9697,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "acuatica"
+     "level": "PASS",
+     "detail": "La fosa bajo la Arena Acuática"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "87 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Facu GM"
     },
     {
      "area": "role",
@@ -9746,7 +9770,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "729 píxeles"
+     "detail": "787 píxeles"
     },
     {
      "area": "ability",
@@ -9764,7 +9788,7 @@
      "area": "ability",
      "name": "Hab. 1 Corriente de Resaca: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -9854,7 +9878,7 @@
      "area": "ability",
      "name": "Definitiva El Océano Reclama la Arena: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -9890,7 +9914,7 @@
      "selfChanged": 5,
      "spawned": 0,
      "vfx": 246,
-     "sfx": 5,
+     "sfx": 4,
      "floatText": 48,
      "netEvents": 5,
      "error": null
@@ -9961,29 +9985,41 @@
      "selfChanged": 5,
      "spawned": 0,
      "vfx": 256,
-     "sfx": 6,
+     "sfx": 5,
      "floatText": 54,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 5,
-    "pass": 27
+    "fail": 0,
+    "warning": 4,
+    "pass": 33
    }
   },
   {
    "key": "aurelia",
-   "name": "Aurelia",
+   "name": "Aurelia, la Arquitecta Solar",
    "role": "mago",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.aurelia"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Aurelia"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "la Arquitecta Solar"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Aurelia, la Arquitecta Solar"
     },
     {
      "area": "lore",
@@ -9994,20 +10030,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "laberinto"
+     "level": "PASS",
+     "detail": "El templo solar del Laberinto"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "88 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Aurelia"
     },
     {
      "area": "role",
@@ -10036,8 +10072,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_aurelia"
     },
     {
      "area": "art",
@@ -10055,7 +10091,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "489 píxeles"
+     "detail": "728 píxeles"
     },
     {
      "area": "ability",
@@ -10163,7 +10199,7 @@
      "area": "ability",
      "name": "Definitiva Catedral del Sol: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -10260,29 +10296,41 @@
      "selfChanged": 1,
      "spawned": 4,
      "vfx": 363,
-     "sfx": 6,
+     "sfx": 5,
      "floatText": 70,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 3,
-    "pass": 27
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
    }
   },
   {
    "key": "khepri",
-   "name": "Khepri",
+   "name": "Khepri, el Portador del Enjambre",
    "role": "asesino",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.khepri"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Khepri"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "el Portador del Enjambre"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Khepri, el Portador del Enjambre"
     },
     {
      "area": "lore",
@@ -10293,20 +10341,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "abismo"
+     "level": "PASS",
+     "detail": "Las tumbas del Abismo"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "91 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Khepri"
     },
     {
      "area": "role",
@@ -10335,8 +10383,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_khepri"
     },
     {
      "area": "art",
@@ -10354,7 +10402,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "424 píxeles"
+     "detail": "391 píxeles"
     },
     {
      "area": "ability",
@@ -10372,7 +10420,7 @@
      "area": "ability",
      "name": "Hab. 1 Enjambre: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -10462,7 +10510,7 @@
      "area": "ability",
      "name": "Definitiva Eclipse de Escarabajos: SFX",
      "level": "PASS",
-     "detail": "12"
+     "detail": "11"
     },
     {
      "area": "ability",
@@ -10494,7 +10542,7 @@
      "selfChanged": 1,
      "spawned": 0,
      "vfx": 482,
-     "sfx": 7,
+     "sfx": 6,
      "floatText": 94,
      "netEvents": 5,
      "error": null
@@ -10563,29 +10611,41 @@
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 628,
-     "sfx": 12,
+     "sfx": 11,
      "floatText": 120,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 3,
-    "pass": 27
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
    }
   },
   {
    "key": "velmira",
-   "name": "Velmira",
+   "name": "Velmira, la Reina de las Máscaras",
    "role": "soporte",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.velmira"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Velmira"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "la Reina de las Máscaras"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Velmira, la Reina de las Máscaras"
     },
     {
      "area": "lore",
@@ -10596,20 +10656,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "ciudad"
+     "level": "PASS",
+     "detail": "El viejo teatro de la Ciudad Maldita"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "102 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Velmira"
     },
     {
      "area": "role",
@@ -10638,8 +10698,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_velmira"
     },
     {
      "area": "art",
@@ -10657,13 +10717,13 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "662 píxeles"
+     "detail": "721 píxeles"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Máscara Arrojada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 215, enemigos con estado 0, aliados 1, propio 5, entidades 0"
+     "detail": "daño 201, enemigos con estado 0, aliados 1, propio 5, entidades 0"
     },
     {
      "area": "ability",
@@ -10693,7 +10753,7 @@
      "area": "ability",
      "name": "Hab. 2 Coro de Rostros: efecto de juego",
      "level": "PASS",
-     "detail": "daño 230, enemigos con estado 0, aliados 3, propio 5, entidades 0"
+     "detail": "daño 232, enemigos con estado 0, aliados 3, propio 5, entidades 0"
     },
     {
      "area": "ability",
@@ -10723,7 +10783,7 @@
      "area": "ability",
      "name": "Hab. 3 Cambio de Rostro: efecto de juego",
      "level": "PASS",
-     "detail": "daño 205, enemigos con estado 0, aliados 0, propio 4, entidades 0"
+     "detail": "daño 206, enemigos con estado 0, aliados 0, propio 4, entidades 0"
     },
     {
      "area": "ability",
@@ -10753,7 +10813,7 @@
      "area": "ability",
      "name": "Definitiva El Gran Teatro: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1015, enemigos con estado 10, aliados 6, propio 7, entidades 1"
+     "detail": "daño 1023, enemigos con estado 10, aliados 6, propio 7, entidades 1"
     },
     {
      "area": "ability",
@@ -10765,7 +10825,7 @@
      "area": "ability",
      "name": "Definitiva El Gran Teatro: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -10795,7 +10855,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 215,
+     "dmg": 201,
      "enemiesAffected": 0,
      "alliesHelped": 1,
      "selfChanged": 5,
@@ -10820,7 +10880,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 230,
+     "dmg": 232,
      "enemiesAffected": 0,
      "alliesHelped": 3,
      "selfChanged": 5,
@@ -10843,7 +10903,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 205,
+     "dmg": 206,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 4,
@@ -10870,35 +10930,47 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 1015,
+     "dmg": 1023,
      "enemiesAffected": 10,
      "alliesHelped": 6,
      "selfChanged": 7,
      "spawned": 1,
      "vfx": 210,
-     "sfx": 6,
+     "sfx": 5,
      "floatText": 44,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 3,
-    "pass": 27
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
    }
   },
   {
    "key": "vhal",
-   "name": "Vhal",
+   "name": "Vhal, el Astrónomo Caído",
    "role": "mago",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.vhal"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Vhal"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "el Astrónomo Caído"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Vhal, el Astrónomo Caído"
     },
     {
      "area": "lore",
@@ -10909,20 +10981,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "hielo"
+     "level": "PASS",
+     "detail": "La torre de la Arena Gélida"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "86 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Vhal"
     },
     {
      "area": "role",
@@ -10951,8 +11023,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_vhal"
     },
     {
      "area": "art",
@@ -10970,7 +11042,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "393 píxeles"
+     "detail": "479 píxeles"
     },
     {
      "area": "ability",
@@ -11018,7 +11090,7 @@
      "area": "ability",
      "name": "Hab. 2 Pozo Gravitatorio: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -11078,7 +11150,7 @@
      "area": "ability",
      "name": "Definitiva Colapso: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -11133,7 +11205,7 @@
      "selfChanged": 1,
      "spawned": 0,
      "vfx": 353,
-     "sfx": 4,
+     "sfx": 3,
      "floatText": 70,
      "netEvents": 5,
      "error": null
@@ -11175,29 +11247,41 @@
      "selfChanged": 1,
      "spawned": 0,
      "vfx": 203,
-     "sfx": 5,
+     "sfx": 4,
      "floatText": 40,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 3,
-    "pass": 27
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
    }
   },
   {
    "key": "bront",
-   "name": "Bront",
+   "name": "Bront, la Fortaleza Viviente",
    "role": "tanque",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.bront"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Bront"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "la Fortaleza Viviente"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Bront, la Fortaleza Viviente"
     },
     {
      "area": "lore",
@@ -11208,20 +11292,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "fortaleza"
+     "level": "PASS",
+     "detail": "Las murallas de la Fortaleza"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "89 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Bront"
     },
     {
      "area": "role",
@@ -11250,8 +11334,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_bront"
     },
     {
      "area": "art",
@@ -11269,13 +11353,13 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "481 píxeles"
+     "detail": "655 píxeles"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Placa Arrojada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 237, enemigos con estado 0, aliados 0, propio 3, entidades 1"
+     "detail": "daño 245, enemigos con estado 0, aliados 0, propio 3, entidades 1"
     },
     {
      "area": "ability",
@@ -11305,7 +11389,7 @@
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: efecto de juego",
      "level": "PASS",
-     "detail": "daño 368, enemigos con estado 8, aliados 0, propio 3, entidades 1"
+     "detail": "daño 381, enemigos con estado 8, aliados 0, propio 3, entidades 1"
     },
     {
      "area": "ability",
@@ -11317,7 +11401,7 @@
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -11335,7 +11419,7 @@
      "area": "ability",
      "name": "Hab. 3 Pulso del Cristal: efecto de juego",
      "level": "PASS",
-     "detail": "daño 296, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 306, enemigos con estado 0, aliados 0, propio 3, entidades 0"
     },
     {
      "area": "ability",
@@ -11365,7 +11449,7 @@
      "area": "ability",
      "name": "Definitiva Ciudadela: efecto de juego",
      "level": "PASS",
-     "detail": "daño 200, enemigos con estado 4, aliados 6, propio 4, entidades 5"
+     "detail": "daño 207, enemigos con estado 4, aliados 6, propio 4, entidades 5"
     },
     {
      "area": "ability",
@@ -11377,7 +11461,7 @@
      "area": "ability",
      "name": "Definitiva Ciudadela: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -11405,7 +11489,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 237,
+     "dmg": 245,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 3,
@@ -11428,13 +11512,13 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 368,
+     "dmg": 381,
      "enemiesAffected": 8,
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 1,
      "vfx": 370,
-     "sfx": 6,
+     "sfx": 5,
      "floatText": 72,
      "netEvents": 5,
      "error": null
@@ -11451,7 +11535,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 296,
+     "dmg": 306,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 3,
@@ -11475,35 +11559,47 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 200,
+     "dmg": 207,
      "enemiesAffected": 4,
      "alliesHelped": 6,
      "selfChanged": 4,
      "spawned": 5,
      "vfx": 188,
-     "sfx": 5,
+     "sfx": 3,
      "floatText": 36,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 3,
-    "pass": 27
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
    }
   },
   {
    "key": "oriel",
-   "name": "Oriel",
+   "name": "Oriel, la Portera de las Cicatrices",
    "role": "soporte",
    "checks": [
     {
      "area": "identity",
-     "name": "identidad registrada",
-     "level": "FAIL",
-     "detail": "falta CHAMPION_IDENTITY.oriel"
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Oriel"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "la Portera de las Cicatrices"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Oriel, la Portera de las Cicatrices"
     },
     {
      "area": "lore",
@@ -11514,20 +11610,20 @@
     {
      "area": "lore",
      "name": "origen legible",
-     "level": "FAIL",
-     "detail": "micelial"
+     "level": "PASS",
+     "detail": "Las grietas del Reino Fúngico"
     },
     {
      "area": "lore",
      "name": "frase de catálogo",
-     "level": "WARNING",
-     "detail": "0 caracteres"
+     "level": "PASS",
+     "detail": "73 caracteres"
     },
     {
      "area": "lore",
      "name": "la frase nombra al campeón",
-     "level": "FAIL",
-     "detail": ""
+     "level": "PASS",
+     "detail": "Oriel"
     },
     {
      "area": "role",
@@ -11556,8 +11652,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_oriel"
     },
     {
      "area": "art",
@@ -11575,13 +11671,13 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "589 píxeles"
+     "detail": "690 píxeles"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Abrir Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 137, enemigos con estado 0, aliados 0, propio 5, entidades 2"
+     "detail": "daño 142, enemigos con estado 0, aliados 0, propio 5, entidades 2"
     },
     {
      "area": "ability",
@@ -11611,7 +11707,7 @@
      "area": "ability",
      "name": "Hab. 2 Eco de la Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 232, enemigos con estado 0, aliados 6, propio 4, entidades 0"
+     "detail": "daño 240, enemigos con estado 0, aliados 6, propio 4, entidades 0"
     },
     {
      "area": "ability",
@@ -11641,7 +11737,7 @@
      "area": "ability",
      "name": "Hab. 3 Paso entre Mundos: efecto de juego",
      "level": "PASS",
-     "detail": "daño 433, enemigos con estado 1, aliados 0, propio 2, entidades 0"
+     "detail": "daño 449, enemigos con estado 1, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
@@ -11671,7 +11767,7 @@
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 743, enemigos con estado 10, aliados 0, propio 1, entidades 1"
+     "detail": "daño 771, enemigos con estado 10, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
@@ -11683,7 +11779,7 @@
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: SFX",
      "level": "PASS",
-     "detail": "10"
+     "detail": "9"
     },
     {
      "area": "ability",
@@ -11713,7 +11809,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 137,
+     "dmg": 142,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 5,
@@ -11737,7 +11833,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 232,
+     "dmg": 240,
      "enemiesAffected": 0,
      "alliesHelped": 6,
      "selfChanged": 4,
@@ -11758,7 +11854,7 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 433,
+     "dmg": 449,
      "enemiesAffected": 1,
      "alliesHelped": 0,
      "selfChanged": 2,
@@ -11779,23 +11875,23 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 743,
+     "dmg": 771,
      "enemiesAffected": 10,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
      "vfx": 452,
-     "sfx": 10,
+     "sfx": 9,
      "floatText": 86,
      "netEvents": 7,
      "error": null
     }
    ],
-   "status": "FIX",
+   "status": "PASS*",
    "summary": {
-    "fail": 3,
-    "warning": 3,
-    "pass": 27
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
    }
   }
  ],

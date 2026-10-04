@@ -5,10 +5,9 @@
 //   compra → comprar (desbloquear) un guardián
 //   skin   → cambiar de skin (una que ya tenés)
 //   sala   → entrar a una sala con código (escribir el código cuenta como un toque)
-//   primera→ PERFIL NUEVO: del título a estar jugando la Arena 01 (elegir el guardián de regalo y su skin de
-//            regalo incluidos -la primera skin ya viene marcada: un toque-; el prólogo y la ficha del Hechicero
-//            cuentan un toque por página; primera_salta: con "Saltar ▸▸")
-// Perfil de prueba: guardián Musashi (Nv. 5), Arena 01 superada, 20.000 de oro, un arma en el inventario
+//   primera→ PERFIL NUEVO: título → guardián de regalo → ya jugando el entrenamiento inicial;
+//            primera_salta: saltea el entrenamiento y entra a la primera arena desde el hub
+// Perfil de prueba (entrenamiento ya hecho): guardián Musashi (Nv. 5), Arena 01 superada, 20.000 de oro, un arma en el inventario
 // y las piezas del set de la skin "errante" sin equipar.
 //   node tools/audit/menu_taps.js [outdir=/tmp/menu_taps]     (FLOWS=before para el camino viejo; ONLY=regex)
 // Sirve el repo en SE_BASE_URL (default http://127.0.0.1:8783; lo levanta si no hay nada escuchando).
@@ -48,10 +47,10 @@ const FLOWS = {
     compra: ['#title-continue-btn', '#mainmenu-tienda-btn', '[data-champ-buy="mago"]', '#game-dialog .gd-ok'],
     skin: ['#title-continue-btn', '#mainmenu-guardianes-btn', '[data-ctab="skins"]', '[data-skin-use="errante"]'],
     sala: ['#title-continue-btn', '#mainmenu-jugar-btn', { fill: '#mode-join-code', text: 'QKL58J' }, '#mode-join-btn'],
-    // primer arranque corto: título → guardián de regalo → su skin de regalo → directo a la Ciudad (sin hub ni Sala)
-    primera: ['#title-continue-btn', '.starter-card[data-champ="mago"]', '#starter-yes-btn', '#starter-skin-yes-btn', RI],
-    // lo mismo salteando el prólogo con "Saltar ▸▸"
-    primera_salta: ['#title-continue-btn', '.starter-card[data-champ="mago"]', '#starter-yes-btn', '#starter-skin-yes-btn', '#run-intro .ri-skip', RI],
+    // primer arranque: guardián de regalo y directo al ENTRENAMIENTO (alpha-training.js), que ya es partida
+    primera: ['#title-continue-btn', '.starter-card[data-champ="mago"]', '#starter-yes-btn'],
+    // perfil nuevo que saltea el entrenamiento ("Saltar tutorial") y va a la primera arena desde el hub
+    primera_salta: ['#title-continue-btn', '.starter-card[data-champ="mago"]', '#starter-yes-btn', '#alpha-training-panel button', '#hub-play-btn', '#prep-start-btn', RI],
   },
 };
 const GOALS = {
@@ -59,13 +58,13 @@ const GOALS = {
   equipo: () => Object.values(save.champions.musashi.equipment).filter(Boolean).length > (window.__eq0 || 0),
   compra: () => !!save.champions.mago.unlocked,
   skin: () => typeof skinIsActiveOn === 'function' && skinIsActiveOn('errante', 'musashi'),
-  primera: () => state === 'playing' && currentArena === 'ciudad' && !!save.starterSkin && typeof champSkinId === 'function' && !!champSkinId('mago'),
-  primera_salta: () => state === 'playing' && currentArena === 'ciudad' && !!save.starterSkin && typeof champSkinId === 'function' && !!champSkinId('mago'),
+  primera: () => state === 'playing' && typeof alphaTrainingActive === 'function' && alphaTrainingActive(),
+  primera_salta: () => state === 'playing' && !alphaTrainingActive() && !!(save.tut && save.tut.trainingSkipped),
   sala: () => /caracteres|No existe|servidor|Conectando|conect|sala/i.test((document.getElementById('mode-join-status') || {}).textContent || '') || state === 'prep',
 };
 function setupProfile() {
   for (const k in save.champions) { save.champions[k].unlocked = (k === 'musashi'); save.champions[k].level = 5; }
-  selectedClass = 'musashi'; save.lastChamp = 'musashi'; save.starterChosen = true; save.skinVoucher = 0; save.skinVoucherNotice = false;
+  selectedClass = 'musashi'; save.lastChamp = 'musashi'; save.starterChosen = true; save.tut = Object.assign(save.tut || {}, { training: 1, basics: 1 }); save.skinVoucher = 0; save.skinVoucherNotice = false;
   save.gold = 20000; save.arenasCleared = { ciudad: true }; save.legacyOpenArenas = []; save.justUnlockedArena = null;
   currentArena = 'ciudad';
   const it = makeItem('arma', 'raro', null); addItemToInventory(null, it);

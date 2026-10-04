@@ -147,7 +147,7 @@ function updateNigromanteSkeletons(h, dt){
           const dmgMult = (1+(mods.skeletonDmgPct||0)) * (champSetLegion(h) ? 1.2 : 1);
           const finalDmg = sk.dmg*runStats.dmgMult*dmgMult*arenaMods().heroDmgMult;
           if(sk.ranged){
-            projectiles.push({x:sk.x,y:sk.y-10, vx:sk.fx*300, vy:sk.fy*300, dmg:finalDmg, life:1100, radius:6, color:"#7ad48a", src:h});
+            projectiles.push({x:sk.x,y:sk.y-10, vx:sk.fx*300, vy:sk.fy*300, dmg:finalDmg, life:1100, radius:6, color:"#7ad48a", src:h, projStyle:"bone_arrow"});
           } else {
             damageEnemy(target, finalDmg, {src:h});
           }

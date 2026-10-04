@@ -553,6 +553,24 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{
 })();
 
 // Crystal Wars has isolated match state and shares the configured room relay.
+function openCrystalWars(){ document.getElementById("mode-crystal-wars-btn").click(); }
+// acceso directo desde el hub (tarjeta propia, como la Horda Infinita)
+(function(){ const b = document.getElementById("hub-crystal-btn"); if(b) b.addEventListener("click", openCrystalWars); })();
+// registro de modos (mismo formato que la Horda Infinita: js/data/endless.js)
+window.GAME_MODE_REGISTRY = window.GAME_MODE_REGISTRY || {};
+window.GAME_MODE_REGISTRY.crystalWars = {id:"crystalWars", name:"Guerra de Cristales", icon:"◆",
+  desc:"Coliseo 2 contra 2: defendé tu cristal, reuní fragmentos y enviá la Horda al rival.", unlock:()=>true, open:openCrystalWars, coop:true};
+// volver del Coliseo (crystal-wars.html → index.html?return=hub): directo al hub, sin pasar por la portada
+(function(){
+  let q; try{ q = new URLSearchParams(location.search); }catch(e){ return; }
+  if(q.get("return")!=="hub") return;
+  try{ q.delete("return"); history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); }catch(e){}
+  let n = 0; const t = setInterval(()=>{
+    const btn = document.getElementById("title-continue-btn");
+    if(++n > 600){ clearInterval(t); return; }
+    if(btn && !btn.disabled && state==="title"){ clearInterval(t); btn.click(); }
+  }, 100);
+})();
 document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
   if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al Coliseo."); return; }
   if(!HordaOnboarding.ready(save)){ alphaFirstRunContinue(); return; }

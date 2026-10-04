@@ -1,0 +1,11 @@
+ANTES {"query":"?lazy=0&webp=0","tTitle":52888,"tAll":52888,"MB_at_title":65,"arenaReqBeforeTitle":1090,"errors":[]}
+AHORA {"query":"?lazy=1","tTitle":12793,"tAll":48294,"MB_at_title":15,"arenaReqBeforeTitle":0,"tTitleCached":979,"firstScreen":"elegir campeón","introAtStart":{"txt":"¡A LA BATALLA!","dis":false},"playingAfterMs":4798,"allReadyWhenPlaying":true,"inGame":{"enemies":0,"pendientes":0,"sample":[],"webp":true},"errors":[]}
+PASS titulo_en_menos_de_15s_en_4G  {"ahora":12793,"MB":15}
+PASS titulo_mas_rapido  {"antes":52888,"ahora":12793}
+PASS arte_de_arena_no_frena_el_titulo  0
+PASS la_partida_arranca_con_todo_cargado  true
+PASS ninguna_imagen_quedo_pendiente  {"enemies":0,"pendientes":0,"sample":[],"webp":true}
+PASS usa_webp
+PASS sin_errores  []
+SUMMARY OK fails=0
+exit=0 secs=116

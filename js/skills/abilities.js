@@ -548,7 +548,7 @@ function castAbility(caster, sk, isUlt, idx){
       const finalDmg = dmg * tierDmgMult * mods3.dmgMult;
       const guaranteedCrit = tier===3 && mods3.cornered;
       projectiles.push({
-        x:caster.x, y:caster.y-14, vx:dx3*640, vy:dy3*640, dmg:finalDmg, life:900, radius:7, color:"#e8f5c8",
+        x:caster.x, y:caster.y-14, vx:dx3*640, vy:dy3*640, dmg:finalDmg, life:900, radius:7 + (tier-1), color:tier===3 ? "#fff6a8" : "#e8f5c8", projStyle:"arrow_heavy",
         pierce: tier===3, hitSet:new Set(), src:caster,
         critChanceOverride: guaranteedCrit ? 1 : (runStats.critChance+mods3.critChanceAdd),
         critMultOverride: guaranteedCrit ? (runStats.critMult||1.8)*1.2 : undefined,

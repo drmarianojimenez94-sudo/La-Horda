@@ -132,6 +132,16 @@ function arenaBlockBake(w){
   w._bake = c; w._bakeOx = b.x0 - PAD; w._bakeOy = b.y0 - H - PAD; w._bakeArena = currentArena;
   return c;
 }
+// Brillo de lava de las grietas, horneado del mismo tamaño que el muro (coordenadas del horneado).
+function arenaBlockBakeGlow(w){
+  const c = document.createElement("canvas"); c.width = w._bake.width; c.height = w._bake.height;
+  const g = c.getContext("2d"); g.lineCap = "round";
+  for(const [lw, col] of [[5, "rgba(255,80,20,0.22)"], [2, "rgba(255,170,60,0.85)"]]){
+    g.strokeStyle = col; g.lineWidth = lw;
+    for(const pts of w._cracks){ g.beginPath(); pts.forEach((q,k)=>k?g.lineTo(q[0], q[1]):g.moveTo(q[0], q[1])); g.stroke(); }
+  }
+  w._glow = c; w._glowBake = w._bake;
+}
 // Dibujo por cuadro (lo llama aidDrawWall cuando la arena tiene estilo propio).
 function drawArenaBlock(w, now){
   if(!w._bake || w._bakeArena!==currentArena) arenaBlockBake(w);
@@ -145,15 +155,14 @@ function drawArenaBlock(w, now){
   ctx.fillStyle = "rgba(0,0,0,0.42)"; ctx.fillRect(b.x0+8, b.y1-2, b.x1-b.x0, 16);
   ctx.globalAlpha = behind ? 0.55 : 1;
   ctx.drawImage(w._bake, w._bakeOx, w._bakeOy);
-  // latido de lava en las grietas (Infernal)
+  // latido de lava en las grietas (Infernal). El brillo se hornea UNA vez por muro y cada cuadro se dibuja con
+  // globalAlpha = latido: con "lighter" el resultado es el mismo que trazar las grietas con alfa·latido (antes,
+  // ~250 operaciones de trazo por cuadro; medido con tools/audit/frame_profile.js OPS=1).
   if(w._cracks && inView(w.x, w.y, 300)){
+    if(!w._glow || w._glowBake !== w._bake) arenaBlockBakeGlow(w);
     const p = 0.55 + 0.45*Math.sin(now*2.2 + w.x*0.01);
-    ctx.globalCompositeOperation = "lighter"; ctx.lineCap = "round";
-    const ox = w._bakeOx, oy = w._bakeOy;
-    for(const [lw, col] of [[5, `rgba(255,80,20,${0.22*p})`], [2, `rgba(255,170,60,${0.85*p})`]]){
-      ctx.strokeStyle = col; ctx.lineWidth = lw;
-      for(const pts of w._cracks){ ctx.beginPath(); pts.forEach((q,k)=>k?ctx.lineTo(ox+q[0], oy+q[1]):ctx.moveTo(ox+q[0], oy+q[1])); ctx.stroke(); }
-    }
+    ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = (behind ? 0.55 : 1)*p;
+    ctx.drawImage(w._glow, w._bakeOx, w._bakeOy);
   }
   ctx.restore();
   return true;

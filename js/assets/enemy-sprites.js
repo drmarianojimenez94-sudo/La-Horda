@@ -773,7 +773,7 @@ acua2Load('fxBolt', ["assets/vfx/acuatica/bolt_01.png"]);
 const ENEMY_ATLAS_PACK = {};
 function enemyAtlasPackLoad(type, src, meta){
   const img = new Image();
-  const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:meta.sets, ready:false };
+  const P = { atlas:img, fw:meta.w, fh:meta.h, cols:meta.cols, refH:meta.refH, anchor:meta.anchor, sets:meta.sets, hMul:meta.hMul, ready:false }; // hMul: alto dibujado / radio (si falta, 2,6)
   // vistas de frente/espalda del ataque y del golpe que ya estaban recortadas en la grilla de la hoja
   // (packDeriveDirSets, js/rendering/enemy-sprites.js)
   img.onload = ()=>{ P.ready = true; if(typeof packDeriveDirSets==="function") packDeriveDirSets(P); };

@@ -33,11 +33,12 @@ const LAZY_IMG = (function(){
     if(q.get("lazy")==="0" || (navigator.webdriver && !forced)) S.deferredOn = false;
     if(q.get("webp")==="0") S.webp = false;
   }catch(e){}
-  // segunda tanda: arte de arenas (enemigos, jefes, escenarios), TODOS los efectos (solo se ven en partida) y
-  // las hojas de las SKINS y CROMAS de los guardianes (~15 MB en PNG con la expedición): hasta que bajan se ve
-  // el atlas base (setSkinPackKey / champPackCloneAtlas) y la partida espera a que esté todo (whenAssetsReady).
-  // Las miniaturas (preview) de las skins siguen en la primera tanda: las muestran la tienda y la Sala.
-  const DEFER_RE = /(^|\/)assets\/(sprites\/(arenas|enemies|bosses)\/|vfx\/|sprites\/champions\/[^/]+\/(skins\/[^/]+\/(?!preview)|cromas\/))/;
+  // segunda tanda: arte de arenas (enemigos, jefes, escenarios), TODOS los efectos (solo se ven en partida),
+  // las hojas de las SKINS y CROMAS de los guardianes (~15 MB en PNG con la expedición) y sus hojas de set: hasta
+  // que bajan se ve el atlas base (setSkinPackKey / champPackCloneAtlas) y la partida espera a que esté todo
+  // (whenAssetsReady). Las miniaturas (preview) de las skins siguen en la primera tanda: las muestran la tienda y
+  // la Sala. En 4G simulado la portada bajaba 24 MB y tardaba ~22 s (tools/audit/loadtime.js).
+  const DEFER_RE = /(^|\/)assets\/(sprites\/(arenas|enemies|bosses)\/|vfx\/|sprites\/champions\/[^/]+\/(skins\/[^/]+\/(?!preview)|cromas\/|set\.))/;
   function isDeferred(u){ return DEFER_RE.test(u); }
   function pick(u){
     if(!S.webp || typeof ASSET_WEBP==="undefined" || !/\.png(\?|$)/.test(u)) return u;

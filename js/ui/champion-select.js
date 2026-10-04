@@ -18,17 +18,18 @@ function renderChampGrid(){
     const owned = champ.unlocked!==false;
     const meta = championMeta(key), grantOnly = !meta.purchasable;
     const card = document.createElement("div");
-    card.className = "champ-card" + (key===selectedClass && owned ? " selected":"") + (owned ? "" : " locked");
+    card.className = "champ-card" + (key===selectedClass && owned ? " selected":"") + (owned ? "" : " locked") + (meta.artPending ? " concept" : "");
     card.innerHTML = `
       <canvas class="champ-preview" width="104" height="104" style="background:${cls.color}22;" data-class-key="${key}"></canvas>
       <div class="champ-name">${championShortName(key)}</div><div class="champ-title">${championTitle(key)}</div>
       <div class="champ-role">${cls.role}</div><details class="champ-guide"><summary>Habilidades y estilo</summary>${championGuideHTML(key)}</details>
-      <div class="champ-lvl">${typeof HUB_ROLE_LABEL!=="undefined" && HUB_ROLE_LABEL[cls.roleCategory] ? HUB_ROLE_LABEL[cls.roleCategory] + " · " : ""}${owned ? `Nv. ${champ.level}` : grantOnly ? `🔒 ${meta.category==="FOUNDER" ? "Se concede" : "No disponible"}` : `🔒 Tienda · 🪙 ${fmtGold(shopChampionPrice(key))}`}</div>${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? `<div class="champ-founder">${founderBadgeHTML(meta.founderKey,"sm")}</div>` : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
+      <div class="champ-lvl">${typeof HUB_ROLE_LABEL!=="undefined" && HUB_ROLE_LABEL[cls.roleCategory] ? HUB_ROLE_LABEL[cls.roleCategory] + " · " : ""}${owned ? `Nv. ${champ.level}` : meta.artPending ? "🔒 Concepto" : grantOnly ? `🔒 ${meta.category==="FOUNDER" ? "Se concede" : "No disponible"}` : `🔒 Tienda · 🪙 ${fmtGold(shopChampionPrice(key))}`}</div>${meta.artPending ? `<div class="champ-unlock-how">🎨 Arte en producción: se libera cuando su arte esté aprobado</div>` : ""}${!owned && !meta.artPending && typeof ascensionUnlockOf==="function" && ascensionUnlockOf(key) ? `<div class="champ-unlock-how">✦ Se gana · ${ascensionUnlockOf(key).mode}: ${ascensionUnlockOf(key).how}</div>` : ""}${meta.category==="FOUNDER" && typeof founderBadgeHTML==="function" ? `<div class="champ-founder">${founderBadgeHTML(meta.founderKey,"sm")}</div>` : meta.badge ? `<span class="category-badge cat-${meta.category}">${meta.badge}</span>` : ""}
     `;
     card.addEventListener("click", (ev)=>{
       if(ev.target.closest("details")) return;
       // modo campaña: los guardianes que no tenés se compran en la Tienda
-      if(!owned){ if(typeof showNetToast==="function") showNetToast(grantOnly ? (meta.inspectNotice || `${cls.name} no está a la venta.`) : `${cls.name} está bloqueado: se desbloquea en la Tienda por ${fmtGold(shopChampionPrice(key))} de oro.`); return; }
+      if(!owned && meta.artPending){ if(typeof showNetToast==="function") showNetToast(`${cls.name}: concepto. Su arte está en producción; cuando se apruebe se gana (${typeof ascensionUnlockOf==="function" && ascensionUnlockOf(key) ? ascensionUnlockOf(key).mode : "logro"}) o se compra por 🪙 9.000.`); return; }
+      if(!owned){ if(typeof showNetToast==="function") showNetToast(grantOnly ? (meta.inspectNotice || `${cls.name} no está a la venta.`) : typeof ascensionUnlockOf==="function" && ascensionUnlockOf(key) ? `${cls.name} está bloqueado. ${ascensionUnlockHint(key)}.` : `${cls.name} está bloqueado: se desbloquea en la Tienda por ${fmtGold(shopChampionPrice(key))} de oro.`); return; }
       selectedClass = key; if(typeof netRememberChamp==="function") netRememberChamp(key); renderChampGrid();
     });
     grid.appendChild(card);
