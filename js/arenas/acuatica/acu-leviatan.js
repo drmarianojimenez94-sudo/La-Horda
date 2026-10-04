@@ -192,7 +192,7 @@ function acuLevDrawTop(){
     ctx.save();
     if(a.levRole==="corriente"){
       ctx.strokeStyle = "rgba(140,220,240,0.35)"; ctx.lineWidth = 3; ctx.setLineDash([18, 16]); ctx.lineDashOffset = -t*70;
-      ctx.beginPath(); ctx.ellipse(a.x, a.y, LEV_T.pushR, LEV_T.pushR*0.62, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(a.x, a.y, LEV_T.pushR, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     }
     const h = a.levGrabIdx >= 0 ? heroes[a.levGrabIdx] : null;
     if(h && h.alive){
@@ -202,7 +202,7 @@ function acuLevDrawTop(){
       ctx.strokeStyle = "rgba(160,60,170,0.9)"; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(h.x, h.y - 14, 24, 12, 0, 0, Math.PI*2); ctx.stroke();
     }
     ctx.fillStyle = a.levRole==="agarre" ? "#e6a8ff" : a.levRole==="corriente" ? "#9fe6ff" : "#ffd08a";
-    ctx.font = "bold 12px monospace"; ctx.textAlign = "center";
+    ctx.font = pxFont(13); ctx.textAlign = "center";
     ctx.fillText(LEV_ROLE_TXT[a.levRole] || "", a.x, a.y - 150);
     ctx.restore();
   }

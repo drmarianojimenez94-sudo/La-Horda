@@ -217,6 +217,7 @@ function _qTierIcon(r){
   if(r.frame) return `<span class="qs-frame-sw" style="${_qFrameCss(r.frame)}"></span>`;
   if(r.emblem) return _qIco(QUEST_EMBLEMS[r.emblem].icon, QUEST_EMBLEMS[r.emblem].tint);
   if(r.title) return _qIco("scroll", "#ffcf5c");
+  if(r.gems) return _qIco("crystal", "#7fe0f0"); // Gemas del pase (economía alfa: parte del oro pasó a Gemas)
   return _qIco("coin", "#ffcf5c");
 }
 function _qPassHTML(){

@@ -56,7 +56,7 @@ function _brkArm(b, src){
   b.fuse = BRK_CFG.fuse; b.by = src ? heroes.indexOf(src) : -1;
   const K = BRK_CFG.kinds[b.kind];
   vfxTelegraph({x:b.x, y:b.y, r:K.r, dur:BRK_CFG.fuse, rgb:K.rgb});
-  if(inView(b.x, b.y, 0)) playSfx("threat");
+  if(inView(b.x, b.y, 0)) playSfx("threat", null, b.x);
 }
 function updateBreakables(dt){
   if(!breakables.length || netIsGuest()) return;

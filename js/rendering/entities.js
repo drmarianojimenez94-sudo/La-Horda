@@ -241,17 +241,7 @@ function drawEnemy(e){
   const prof = animProfileOf(e);
   const P = animPose(e, prof, false);
   const lift = P.oy<0 ? Math.min(0.35, -P.oy/60) : 0;
-  drawShadow(e.x, e.y, e.radius*0.8*(1-lift));
-  if(SHINE_KEYS[e.type]){
-    // Sombra de contacto extra, más ajustada y oscura, para anclar mejor al suelo
-    // a los enemigos que aparecen desde el principio del juego.
-    ctx.save();
-    ctx.fillStyle = "rgba(0,0,0,0.30)";
-    ctx.beginPath();
-    ctx.ellipse(e.x, e.y+3, e.radius*0.55, e.radius*0.2, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
-  }
+  drawShadow(e.x, e.y, e.radius*0.8*(1-lift)); // sombra común con núcleo de contacto (art-direction.js): la misma para todos
   if(e.rank!=="normal"){
     // Jerarquía legible dentro de la horda: subélite = aro tenue; élite = aro dorado grueso que
     // gira (se encuentra de un vistazo entre 40 enemigos); subjefe = doble aro naranja; jefe =
@@ -282,6 +272,8 @@ function drawEnemy(e){
   // Cuerpo con la pose del sistema de animación (solo transformación visual: la hitbox no se mueve).
   ctx.save();
   animApply(e.x, e.y, P);
+  const _cap = artScaleCap(e); // tope de escala de píxel (art-direction.js): solo el dibujo, desde los pies
+  if(_cap !== 1){ ctx.translate(e.x, e.y); ctx.scale(_cap, _cap); ctx.translate(-e.x, -e.y); }
   drawEnemyBody(e);
   if(P.flash>0.02 && (prof.isBoss || animFlashBudget-- > 0)){
     // destello de golpe: silueta blanca del cuadro actual (juice.js). Si el cuerpo de este tipo no pasa

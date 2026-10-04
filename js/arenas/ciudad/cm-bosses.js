@@ -92,7 +92,7 @@ function cmSubDirector(dt){
       t.slamCd = 2500; t.dropCd = 5500; t.barCd = 9000; t.throwCd = 4500;
       vfxShake(10); flashScreen(0.25, "255,120,140"); playSfx("bossRoar");
       if(typeof setMusicMode==="function") setMusicMode("boss");
-      arenaTitleCard("SUBJEFES", "MAESTRO DE CEREMONIAS Y EL TRAMOYISTA", "«Damas y caballeros… la función comienza.»", 4600);
+      arenaTitleCard("SUBJEFES", "MAESTRO DE CEREMONIAS Y EL TRAMOYISTA", "Los que montan la función de la Horda.", 4600);
       cmTutSay("cm_sub1", "Dos a la vez: el MAESTRO marca y abre zonas; el TRAMOYISTA tira decorado sobre las marcas. Separalos o bajá primero al que controla.", 9000, true);
     }
     return;
@@ -118,7 +118,7 @@ function cmSubDirector(dt){
       activeChampion = d;
       cmS.spot = {x:Math.round(d.x), y:Math.round(d.y), t:0};
       playSfx("cmSpot"); vfxShake(8); if(typeof setMusicMode==="function") setMusicMode("boss");
-      arenaTitleCard("SUBJEFE", "LA DAMA DEL TELÓN", "«Nadie aplaude en la oscuridad.»", 4600);
+      arenaTitleCard("SUBJEFE", "LA DAMA DEL TELÓN", "La que baja el telón sobre la ciudad.", 4600);
     }
     return;
   }
@@ -344,7 +344,7 @@ function cmPresController(dt){
       // reconocimiento de los civiles salvados (narrativo; un empujón chico, nunca un castigo)
       const sv = cmS.saved; P.cheer = Math.min(8, Math.floor(sv/3));
       if(P.cheer){ e.maxHp = e.hp = Math.round(e.maxHp/(1 + P.cheer*0.01)); }   // equivale a +cheer% de daño del equipo
-      arenaTitleCard("JEFE FINAL", "EL PRESENTADOR", "«Todo esto es un espectáculo… y ustedes son mis invitados especiales.»", 5200);
+      arenaTitleCard("JEFE FINAL", "EL PRESENTADOR", "El dueño del espectáculo. La ciudad es su escenario.", 5200);
       if(sv >= 10) runLater(5600, ()=>{ if(state==="playing") showBanner(`Desde los refugios, ${sv} voces gritan tu nombre. (+${P.cheer}% de daño)`); });
     }
     return;
