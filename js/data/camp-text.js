@@ -94,7 +94,26 @@ const CAMP_SMITH_HERO = {
   cazadora:"Cuerdas de tripa, de las del bosque. Mañana te trenzo una con crin, que en el frío no se corta.",
   nigromante:"Los huesos que llevás colgando no los templé yo, y no pienso preguntar de dónde salieron.",
   libertador:"Un sable de caballería, tan lejos de cualquier caballo. Te enderezo la punta; la cordillera, no.",
-  eren:"Esas hojas son para cortar algo mucho más grande que un hombre. Ojalá no tengas que usarlas para eso."
+  eren:"Esas hojas son para cortar algo mucho más grande que un hombre. Ojalá no tengas que usarlas para eso.",
+  ynara:"Curás sin preguntar a quién. Te dejé una olla de cobre junto al fuego: la tuya ya no aguanta otro guiso para cuarenta.",
+  myla:"Me pediste que te arregle la cuchara. Es la primera vez en treinta años que alguien me trae una cuchara a la fragua. Quedó como nueva.",
+  brasa:"Vos sabés de engranajes más que yo, mecánica. Pero esas torretas tienen remaches flojos: dejame a mí, que el martillo no se apura.",
+  eslabon:"Cadenas de carcelero, y las usás para que nadie caiga. Les cambié dos eslabones gastados. Que sostengan hasta el final.",
+  morwen:"Tu alambique huele a resina y a algo que no quiero nombrar. Te soldé el caño roto; no me pidas probar lo que sale.",
+  farolero:"Un farol sin vidrio no es un farol, es una promesa. Te puse uno nuevo, de los gruesos. Que alumbre hasta el fondo de las Minas.",
+  iria:"Hilo tenso, ancla firme. Te forjé tres estacas de hierro dulce: en la piedra del Abismo, las de madera se parten.",
+  vesper:"Tus agujas son finas como pestañas. Mis manos son demasiado gruesas para afilarlas; te presto la piedra y te miro.",
+  nahir:"Me trajiste una bolsa de vidrio roto y me pediste que no la tire. No la tiro. Algunos espejos todavía reflejan lo que fuimos.",
+  baltra:"Esa campana tiene una fisura que canta en falso. La remaché por adentro: mañana vas a sonar como el bronce de la Ciudad.",
+  maura:"Espinas en el mango y tierra en las uñas. Te afilé la hoz; para lo que crece adentro de vos no tengo herramienta.",
+  dariel:"Te tensé las cuerdas con alambre de la Fábrica. Suenan raro, pero no se cortan. A veces eso alcanza.",
+  orsa:"Esa ballesta guarda rayos en el metal. La desarmé con guantes de cuero y igual me hizo saltar. Te cambié el gatillo.",
+  tibor:"Tu enjambre se metió en mi fragua y no me picó ni una abeja. Dicen que respetan al que trabaja. Te limpié la colmena de hollín.",
+  zahra:"Calor contenido en un puño. Te hice un guante de cuero doble con hebilla de hierro: abrilo cuando cuentes, no antes.",
+  renko:"Tu pala tiene el filo comido por la piedra. Le soldé una punta nueva. Que siga abriendo surcos y nunca tumbas.",
+  sira:"Me pediste tinta que no se corra con la lluvia. Hollín de la fragua y aceite de lámpara: así se marcan los caminos de vuelta.",
+  nano_gm:"No sé si sos guardián o algo que manda sobre los guardianes. Te dejé el yunque libre esta noche: lo que quieras forjar, forjalo.",
+  facu_gm:"Te mojaste las botas en la arena seca de la Fábrica, y nadie sabe de dónde vino el agua. Te las engrasé con sebo: que el mar te espere."
 };
 // La vidente, en la Ciudad: los civiles que se perdieron en esta partida.
 const CAMP_SEER_CIVILIANS = {
