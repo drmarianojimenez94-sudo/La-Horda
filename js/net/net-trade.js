@@ -38,7 +38,9 @@ function _tradeSave(){
   if(!t.pend || typeof t.pend!=="object") t.pend = {};
   return t;
 }
-function tradePendingCount(){ const t = _tradeSave(); return Object.keys(t.esc).length + Object.keys(t.pend).length; }
+// Solo lee: no crea save.trades (si lo creara, el siguiente guardado escribiría un campo nuevo aunque no haya
+// intercambios, y el entrenamiento —que no debe tocar el guardado real— lo terminaba persistiendo).
+function tradePendingCount(){ const t = save.trades; if(!t || typeof t!=="object") return 0; return Object.keys(t.esc||{}).length + Object.keys(t.pend||{}).length; }
 
 /* ---------------- qué se puede dar ---------------- */
 // Motivo por el que el objeto queda ligado a la cuenta (o null). Mismas reglas que el relay.
