@@ -138,3 +138,17 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
 .starter-confirm:has(details[open]) .net-row{ position:sticky; bottom:-10px; justify-content:center; padding:6px 0 4px; margin-top:6px; background:rgba(20,12,8,0.97); }
 #starter-confirm details{ font-size:1rem; text-align:left; }
 #starter-confirm summary{ cursor:pointer; text-align:center; min-height:32px; line-height:32px; }
+
+/* ---------- menú principal: "Explorar · Códice y desafíos" abierto en el teléfono apaisado ----------
+   Desde #41 Códice y Desafíos viven plegados en la cuarta celda del menú. Abiertos en 390 px de alto,
+   Códice quedaba angosto y Desafíos se iba abajo de la pantalla (había que deslizar el menú para verlo).
+   Ahora van lado a lado, compactos (ícono + título), dentro de la celda. */
+@media (orientation:landscape) and (max-height:520px){
+  .hub-more summary{ min-height:40px; padding:4px; font-size:14px; line-height:1.2; }
+  .hub-more[open] .hub-actions{ display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:2px; }
+  .hub-more .hub-tile, .hub-grid.hub-grid-6 .hub-more .hub-tile:not(#mainmenu-quests-btn){ min-height:62px; padding:6px 4px; gap:2px; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .hub-grid .hub-more #mainmenu-quests-btn{ grid-column:auto; flex-direction:column; align-items:center; justify-content:center; padding:6px 4px; gap:2px; }
+  .hub-more .hub-tile-sub{ display:none; }
+  .hub-more .hub-tile-ico, .hub-grid.hub-grid-6 .hub-more .hub-tile-ico{ width:28px; height:28px; margin:0; font-size:1rem; }
+  .hub-more .hub-tile-title, .hub-grid.hub-grid-6 .hub-more .hub-tile-title{ font-size:0.95rem; letter-spacing:0; }
+}
