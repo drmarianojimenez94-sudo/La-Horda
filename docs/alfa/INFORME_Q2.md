@@ -59,16 +59,36 @@ Fallaron 2 (ver "Pendiente"):
 
 ## Pendiente y por qué
 
-- Ver arriba: se completa en cuanto terminen las corridas.
+- **Abismo, nivel 9 (Carcelero) — posible traba, SIN DIAGNOSTICAR.** En la prueba de humo el subjefe quedó con
+  la vida llena 6 minutos y el nivel no avanzó: o el Carcelero no llega hasta el jugador (está del otro lado del
+  vacío) o el piloto automático no sabe cruzar hasta él. Hay que verlo jugando: si a una persona le pasa, la
+  partida queda trabada en el nivel 9 del Abismo. No lo pude reproducir porque la máquina compartida quedó tan
+  cargada (carga 100–150 en 4 núcleos) que la simulación iba a 1/100 de velocidad. Dejé una herramienta de
+  diagnóstico lista y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
+  un jugador nuevo en la Comic Con no llega ahí en una sesión.
+- **Acuática, Leviatán (jefe final de la arena 6) — probablemente dificultad, no traba.** El Leviatán tiene 3
+  vidas de 12.300 (con tentáculos que lo blindan); el piloto guerrero cuerpo a cuerpo lo dejó en la tercera...
+  o en una de ellas, al 5 %, sin terminarlo en 9 min, con 77 "rescates" (cayó bajo el 30 % 77 veces). Falta
+  confirmar con otra clase si es solo lentitud del piloto. NO VERIFICADO EN RUNTIME.
+- **Saqueadores del nivel 9 de la Ciudad**: con el tope ya no ahogan, pero el nivel 9 sigue siendo el pico de
+  la primera arena (2 de 12 derrotas ahí). Lo dejo así a propósito: bajarlo más lo haría trivial.
 
 ## Pruebas corridas
 
-- Baseline de la Ciudad sobre la base integrada (11 partidas): resultados en la tabla.
+- Ciudad completa sin ayudas, antes (11 partidas) y después (12 partidas) del tope: tabla de arriba. Sin errores de
+  página en ninguna.
+- Prueba de humo de las 10 arenas (`QUICK=1 node tools/alfa/q2_campaign_smoke.js`) sobre la base integrada: 8/10.
 - Revisión de sintaxis de todos los archivos tocados (`node --check`): OK.
+- La segunda integración (Q5/Q6/Q7 finales) se mezcló sin conflictos; NO pude volver a correr la prueba de humo
+  sobre esa última base por la carga de la máquina (NO VERIFICADO EN RUNTIME sobre el último merge).
 
 ## Nota del área para el alfa
 
-PENDIENTE (se pone al final con los números).
+**7/10.** La primera arena —la que va a ver casi toda la gente de la Comic Con— se termina, el primer jefe es
+exigente pero ganable (de 36 % a 67 % de victorias en partidas sin ayudas) y ya no hay partidas trabadas ni
+hordas infinitas; los avisos del piso ahora dicen la verdad. 8 de las 10 arenas se recorren de punta a punta. Le
+resto puntos por la posible traba del Carcelero en el Abismo, que no pude diagnosticar, y por el Leviatán sin
+confirmar.
 
 ---
 
