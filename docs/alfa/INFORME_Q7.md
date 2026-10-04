@@ -16,7 +16,7 @@
 8. **Modo zurdo** → espeja todo: joystick a la derecha, botones a la izquierda, y el resto del HUD (vida, arena, aliados, pausa, Definitiva, avisos, minimapas de las arenas grandes y el contador de racha) cambia de lado para que nada quede tapado.
 9. **Vibración** → antes no existía. Ahora vibra corto con un golpe fuerte y al lanzar la Definitiva (en Android; iPhone no permite vibrar desde una página web).
 10. **Primera partida: no se sabía qué tocar** → ahora, mientras el Hechicero dice "movete / atacá / usá una habilidad", un aro dorado late sobre el joystick (y la perilla muestra el gesto), sobre Ataque o sobre las habilidades, y desaparece apenas el jugador lo hace. El texto del objetivo se adapta: "Movete con el joystick (pulgar izquierdo/derecho)", "Movete con WASD o las flechas" o "Movete con el stick izquierdo" según con qué juegue.
-11. **Botones chicos para dedos grandes** → los "+" para subir habilidad se ven igual pero ahora se tocan en 44 px; Pausa y Sonido tienen 44 px también en tablets; Curación/Pacto 46 px.
+11. **Botones chicos para dedos grandes** → los "+" para subir habilidad se ven igual pero ahora se tocan en 44 px; Curación/Pacto 46 px (Pausa y Sonido ya quedaron en 44 × 44 con el HUD nuevo).
 12. **Menús del navegador al mantener apretado** → mantener un botón ya no abre el menú de Android ni la lupa/copiar de iPhone, ni selecciona texto.
 13. **Teclado en Opciones** → al abrir Opciones con teclado el foco entra al panel, Esc las cierra y el foco vuelve al botón que las abrió.
 14. **Mouse en la compu** → antes el mouse solo "apuntaba" sobre la parte libre del mapa (las zonas invisibles del joystick y de los botones tapan media pantalla cada una). Ahora las habilidades apuntan al mouse en cualquier lugar y el clic en el hueco de la zona de botones también ataca.
@@ -34,13 +34,12 @@
 
 ### Pruebas corridas
 
-- Nueva: `tools/alfa/q7_controls.js` (5 pantallas × normal/zurdo, multitouch, joystick flotante, dedo que sale, cambio de pestaña, pausa con el dedo apoyado, apuntado cortado, sin zoom/selección, mouse, teclado, foco, Opciones y persistencia, mando simulado, guía de primera vez, vibración, sacudida, alto contraste). Resultado: ver detalle técnico.
+- Nueva: `tools/alfa/q7_controls.js` (5 pantallas × normal/zurdo, multitouch, joystick flotante, dedo que sale, cambio de pestaña, pausa con el dedo apoyado, apuntado cortado, sin zoom/selección, mouse, teclado, foco, Opciones y persistencia, mando simulado, guía de primera vez, vibración, sacudida, alto contraste). **81 controles, todos pasan** sobre la rama integrada (última corrida por partes: disposición 40/40, táctil, opciones, teclado y mando OK).
 - Existentes: `tools/regression/t_drag_aim.js` (apuntado arrastrando y tocando, 12 controles) y `tools/regression/t_juice.js` (sacudida y efectos): **pasan**.
-- Nueva `q7_controls.js`: **81 controles, todos pasan** sobre la rama integrada (última corrida por partes: disposición 40/40, táctil, opciones, teclado y mando OK).
 
 ### Nota de mi área para el alfa: **7,5 / 10**
 
-Los controles táctiles ya no se traban, se pueden jugar con teclado y mando, y hay opciones de accesibilidad reales. Resta pulir la superposición joystick/aliados y probar en teléfonos y mandos físicos.
+Los controles táctiles ya no se traban, se pueden jugar con teclado y mando, y hay opciones de accesibilidad reales. Resta probar en teléfonos y mandos físicos, y decidir qué pasa al mantener una habilidad sin arrastrar (hoy no se lanza).
 
 ---
 
