@@ -44,8 +44,8 @@ de las 6 derrotas del nivel 9 las causaban Saqueadores comunes. Ahora las 2 derr
 subjefes: la pelea es contra ellos, como corresponde. Es exigente pero ganable para alguien nuevo, que es lo que
 buscamos para la primera arena.
 
-Lo que más mataba en el nivel 9 no eran los subjefes sino los Saqueadores comunes que seguían entrando
-(en la partida de guerrero: 1.362 de daño de Saqueadores contra ~100 de cada subjefe).
+Ejemplo de antes: en una partida de guerrero, los Saqueadores le hicieron 1.362 de daño en el nivel 9, contra
+~100 de cada subjefe.
 
 ## Prueba de humo de las 10 arenas sobre la base integrada
 
@@ -63,9 +63,10 @@ Fallaron 2 (ver "Pendiente"):
   la vida llena 6 minutos y el nivel no avanzó: o el Carcelero no llega hasta el jugador (está del otro lado del
   vacío) o el piloto automático no sabe cruzar hasta él. Hay que verlo jugando: si a una persona le pasa, la
   partida queda trabada en el nivel 9 del Abismo. No lo pude reproducir porque la máquina compartida quedó tan
-  cargada (carga 100–150 en 4 núcleos) que la simulación iba a 1/100 de velocidad. Dejé una herramienta de
+  cargada (carga 100–150 en 4 núcleos y la memoria casi llena) que la simulación iba a 1/100 de velocidad y al final el
+  navegador de pruebas ni siquiera llegaba a abrir la página. Dejé una herramienta de
   diagnóstico lista (`tools/alfa/q2_diag_level.js abismo 9 nigromante 30`: arranca directo en ese nivel y
-  registra cada 15 s la vida, el estado y la plataforma del subjefe y del jugador) y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
+  registra cada 15 s la vida, el estado y la plataforma del subjefe y del jugador; todavía NO la pude correr) y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
   un jugador nuevo en la Comic Con no llega ahí en una sesión.
 - **Acuática, Leviatán (jefe final de la arena 6) — probablemente dificultad, no traba.** El Leviatán tiene 3
   vidas de 12.300 (con tentáculos que lo blindan); el piloto guerrero (cuerpo a cuerpo) dejó una de esas vidas al 5 % pero
@@ -116,4 +117,4 @@ Commits:
 - `3fde8c7` Tope de enemigos vivos (90; 12 con los subjefes de la Ciudad y 6 con El Presentador) y ritmo
   normal en los niveles retenidos
 - `aa382a1` Prueba de humo: el informe de atasco incluye el jefe/subjefe que retiene el nivel
-- Informe: `e0dc794`, `143f31a`, `d0442ac`, `b0883cb`, `64143cf` y el de esta herramienta
+- Informe: `e0dc794`, `143f31a`, `d0442ac`, `b0883cb`, `64143cf` `1565936` (herramienta de diagnóstico + informe)
