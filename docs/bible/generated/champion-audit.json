@@ -4438,7 +4438,7 @@
      "area": "ability",
      "name": "Definitiva BERRINCHE: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -4544,7 +4544,7 @@
      "selfChanged": 2,
      "spawned": 1,
      "vfx": 419,
-     "sfx": 4,
+     "sfx": 5,
      "floatText": 80,
      "netEvents": 7,
      "error": null
@@ -9435,7 +9435,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "571 píxeles"
+     "detail": "746 píxeles"
     },
     {
      "area": "ability",
@@ -9770,7 +9770,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "729 píxeles"
+     "detail": "787 píxeles"
     },
     {
      "area": "ability",
@@ -10072,8 +10072,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_aurelia"
     },
     {
      "area": "art",
@@ -10091,7 +10091,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "489 píxeles"
+     "detail": "728 píxeles"
     },
     {
      "area": "ability",
@@ -10305,8 +10305,8 @@
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "pass": 33
+    "warning": 1,
+    "pass": 34
    }
   },
   {
@@ -10383,8 +10383,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_khepri"
     },
     {
      "area": "art",
@@ -10402,7 +10402,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "424 píxeles"
+     "detail": "391 píxeles"
     },
     {
      "area": "ability",
@@ -10620,8 +10620,8 @@
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "pass": 33
+    "warning": 1,
+    "pass": 34
    }
   },
   {
@@ -10698,8 +10698,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_velmira"
     },
     {
      "area": "art",
@@ -10717,13 +10717,13 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "662 píxeles"
+     "detail": "721 píxeles"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Máscara Arrojada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 199, enemigos con estado 0, aliados 1, propio 5, entidades 0"
+     "detail": "daño 201, enemigos con estado 0, aliados 1, propio 5, entidades 0"
     },
     {
      "area": "ability",
@@ -10753,7 +10753,7 @@
      "area": "ability",
      "name": "Hab. 2 Coro de Rostros: efecto de juego",
      "level": "PASS",
-     "detail": "daño 230, enemigos con estado 0, aliados 3, propio 5, entidades 0"
+     "detail": "daño 232, enemigos con estado 0, aliados 3, propio 5, entidades 0"
     },
     {
      "area": "ability",
@@ -10783,7 +10783,7 @@
      "area": "ability",
      "name": "Hab. 3 Cambio de Rostro: efecto de juego",
      "level": "PASS",
-     "detail": "daño 205, enemigos con estado 0, aliados 0, propio 4, entidades 0"
+     "detail": "daño 206, enemigos con estado 0, aliados 0, propio 4, entidades 0"
     },
     {
      "area": "ability",
@@ -10813,7 +10813,7 @@
      "area": "ability",
      "name": "Definitiva El Gran Teatro: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1015, enemigos con estado 10, aliados 6, propio 7, entidades 1"
+     "detail": "daño 1023, enemigos con estado 10, aliados 6, propio 7, entidades 1"
     },
     {
      "area": "ability",
@@ -10855,7 +10855,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 199,
+     "dmg": 201,
      "enemiesAffected": 0,
      "alliesHelped": 1,
      "selfChanged": 5,
@@ -10880,7 +10880,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 230,
+     "dmg": 232,
      "enemiesAffected": 0,
      "alliesHelped": 3,
      "selfChanged": 5,
@@ -10903,7 +10903,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 205,
+     "dmg": 206,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 4,
@@ -10930,7 +10930,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 1015,
+     "dmg": 1023,
      "enemiesAffected": 10,
      "alliesHelped": 6,
      "selfChanged": 7,
@@ -10945,8 +10945,8 @@
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "pass": 33
+    "warning": 1,
+    "pass": 34
    }
   },
   {
@@ -11023,8 +11023,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_vhal"
     },
     {
      "area": "art",
@@ -11042,7 +11042,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "393 píxeles"
+     "detail": "479 píxeles"
     },
     {
      "area": "ability",
@@ -11256,8 +11256,8 @@
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "pass": 33
+    "warning": 1,
+    "pass": 34
    }
   },
   {
@@ -11334,8 +11334,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_bront"
     },
     {
      "area": "art",
@@ -11353,13 +11353,13 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "481 píxeles"
+     "detail": "655 píxeles"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Placa Arrojada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 237, enemigos con estado 0, aliados 0, propio 3, entidades 1"
+     "detail": "daño 245, enemigos con estado 0, aliados 0, propio 3, entidades 1"
     },
     {
      "area": "ability",
@@ -11389,7 +11389,7 @@
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: efecto de juego",
      "level": "PASS",
-     "detail": "daño 368, enemigos con estado 8, aliados 0, propio 3, entidades 1"
+     "detail": "daño 381, enemigos con estado 8, aliados 0, propio 3, entidades 1"
     },
     {
      "area": "ability",
@@ -11419,7 +11419,7 @@
      "area": "ability",
      "name": "Hab. 3 Pulso del Cristal: efecto de juego",
      "level": "PASS",
-     "detail": "daño 296, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 306, enemigos con estado 0, aliados 0, propio 3, entidades 0"
     },
     {
      "area": "ability",
@@ -11449,7 +11449,7 @@
      "area": "ability",
      "name": "Definitiva Ciudadela: efecto de juego",
      "level": "PASS",
-     "detail": "daño 200, enemigos con estado 4, aliados 6, propio 4, entidades 5"
+     "detail": "daño 207, enemigos con estado 4, aliados 6, propio 4, entidades 5"
     },
     {
      "area": "ability",
@@ -11489,7 +11489,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 237,
+     "dmg": 245,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 3,
@@ -11512,7 +11512,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 368,
+     "dmg": 381,
      "enemiesAffected": 8,
      "alliesHelped": 0,
      "selfChanged": 3,
@@ -11535,7 +11535,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 296,
+     "dmg": 306,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 3,
@@ -11559,7 +11559,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 200,
+     "dmg": 207,
      "enemiesAffected": 4,
      "alliesHelped": 6,
      "selfChanged": 4,
@@ -11574,8 +11574,8 @@
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "pass": 33
+    "warning": 1,
+    "pass": 34
    }
   },
   {
@@ -11652,8 +11652,8 @@
     {
      "area": "loot",
      "name": "set propio",
-     "level": "WARNING",
-     "detail": ""
+     "level": "PASS",
+     "detail": "asc_oriel"
     },
     {
      "area": "art",
@@ -11671,13 +11671,13 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "589 píxeles"
+     "detail": "690 píxeles"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Abrir Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 137, enemigos con estado 0, aliados 0, propio 5, entidades 2"
+     "detail": "daño 142, enemigos con estado 0, aliados 0, propio 5, entidades 2"
     },
     {
      "area": "ability",
@@ -11707,7 +11707,7 @@
      "area": "ability",
      "name": "Hab. 2 Eco de la Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 232, enemigos con estado 0, aliados 6, propio 4, entidades 0"
+     "detail": "daño 240, enemigos con estado 0, aliados 6, propio 4, entidades 0"
     },
     {
      "area": "ability",
@@ -11737,7 +11737,7 @@
      "area": "ability",
      "name": "Hab. 3 Paso entre Mundos: efecto de juego",
      "level": "PASS",
-     "detail": "daño 433, enemigos con estado 1, aliados 0, propio 2, entidades 0"
+     "detail": "daño 449, enemigos con estado 1, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
@@ -11767,7 +11767,7 @@
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 743, enemigos con estado 10, aliados 0, propio 1, entidades 1"
+     "detail": "daño 771, enemigos con estado 10, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
@@ -11779,7 +11779,7 @@
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: SFX",
      "level": "PASS",
-     "detail": "10"
+     "detail": "9"
     },
     {
      "area": "ability",
@@ -11809,7 +11809,7 @@
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 137,
+     "dmg": 142,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 5,
@@ -11833,7 +11833,7 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 232,
+     "dmg": 240,
      "enemiesAffected": 0,
      "alliesHelped": 6,
      "selfChanged": 4,
@@ -11854,7 +11854,7 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 433,
+     "dmg": 449,
      "enemiesAffected": 1,
      "alliesHelped": 0,
      "selfChanged": 2,
@@ -11875,13 +11875,13 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 743,
+     "dmg": 771,
      "enemiesAffected": 10,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
      "vfx": 452,
-     "sfx": 10,
+     "sfx": 9,
      "floatText": 86,
      "netEvents": 7,
      "error": null
@@ -11890,8 +11890,8 @@
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 2,
-    "pass": 33
+    "warning": 1,
+    "pass": 34
    }
   }
  ],

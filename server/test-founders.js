@@ -13,10 +13,9 @@ async function run(){
   assert.equal(ent.taxonomy().meta('nano_gm').category,'FOUNDER');assert.equal(ent.taxonomy().meta('facu_gm').category,'FOUNDER');
   assert.equal(ent.taxonomy().meta('nano_gm').purchasable,false);assert.equal(ent.taxonomy().meta('nano_gm').grantable,false);
   assert.equal(ent.taxonomy().requiresGrant('tanque'),false);assert.equal(ent.taxonomy().requiresGrant('myla'),false);assert.equal(ent.taxonomy().requiresGrant('nano_gm'),true);checks+=11;
-  // Ascensión: categoría propia; mientras su arte está pendiente (artPending) es un concepto: ni compra ni concesión,
-  // y el servidor la fuerza bloqueada como a cualquier campeón no publicado.
-  assert.equal(ent.taxonomy().meta('aurelia').category,'ASCENSION');assert.equal(ent.taxonomy().meta('aurelia').artPending,true);
-  assert.equal(ent.taxonomy().meta('aurelia').purchasable,false);assert.equal(ent.taxonomy().requiresGrant('aurelia'),true);checks+=4;
+  // Ascensión: categoría propia, arte aprobado: se compra (9000) o se gana; el cliente decide como con STANDARD.
+  assert.equal(ent.taxonomy().meta('aurelia').category,'ASCENSION');assert.equal(ent.taxonomy().meta('aurelia').artPending,false);
+  assert.equal(ent.taxonomy().meta('aurelia').purchasable,true);assert.equal(ent.taxonomy().requiresGrant('aurelia'),false);checks+=4;
   // Fixture: 'aurelia' hace de campeón INTERNAL concedible en el resto de esta prueba (concesión y revocación desde el
   // panel), sin depender de si su arte ya se aprobó.
   {const T=ent.taxonomy(),meta0=T.meta,rg0=T.requiresGrant;T.meta=id=>id==='aurelia'?Object.assign(meta0(id),{category:'STANDARD',releaseState:'INTERNAL',artPending:false,grantable:true,purchasable:true}):meta0(id);T.requiresGrant=id=>id==='aurelia'||rg0(id);}
