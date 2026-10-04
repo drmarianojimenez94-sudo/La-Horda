@@ -12,6 +12,11 @@
 
 ## Reparaciones ("antes pasaba X → ahora Y")
 
+0. **EL MÁS GRAVE — se borraba el progreso con cuenta** → antes, con la sesión recordada, la primera vez
+   que se abría el juego en la semana el premio semanal del ranking se guardaba **antes** de leer el
+   progreso: escribía un guardado vacío encima del real y la cuenta lo subía a la nube. El jugador abría el
+   juego y aparecía sin guardianes ni oro (en este celular y en todos). **Ahora** nada se guarda antes de
+   leer el progreso, y el premio espera. Lo reproduje y lo verifiqué arreglado.
 1. **El servidor se reinicia con amigos en la Sala** → antes el invitado quedaba en una sala "fantasma"
    (la pantalla seguía igual pero la sala ya no existía) con el cartel "No existe ninguna sala con ese
    código. Revisá que esté bien escrito". **Ahora** sale con un aviso claro ("La sala ya no existe: el
@@ -58,11 +63,8 @@
 - **No pude entrar a Render, Fly.io ni a los servidores reales** desde esta máquina: la guía está hecha
   con el código. Que el servidor principal conteste en `…/la-horda/red/api/health` y cómo se llama la app
   en Fly.io quedan **NO VERIFICADOS EN RUNTIME**.
-- `tools/net-test/accounts.js` falla a veces (3 de 7 corridas) en el último paso, "volver después de
-  cerrar la pestaña": el dispositivo arranca con un guardado sin guardianes y muestra la elección del
-  regalo. La nube sí tiene el progreso correcto (se recupera al entrar). No encontré la causa (no es que
-  el guardado no se pueda leer: lo descarté con el arreglo 11); la prueba deja el diagnóstico para
-  seguirlo. Es un paso con 4 "dispositivos" y conflictos encadenados; un jugador normal no hace eso.
+- `tools/alfa/q1_first_session.js` (de Q1) falla 2 controles ("CAMPAMENTO.lleva_al_menú", "#hub-play-btn")
+  con y sin mis cambios: es del área de Q1.
 - Si el **anfitrión** pierde la conexión, la sala se cierra para todos (el servidor le guarda el lugar a
   los invitados, no al anfitrión). Cambiarlo es un sistema nuevo: no para mañana.
 - Un jugador con progreso viejo en la nube que entra desde un celular nuevo pasa por el entrenamiento
@@ -81,7 +83,7 @@
   - `public_rooms.js`: **OK** 22/22 · `trade.js`: **OK** 24/24 · `leaderboard.js`: **OK** 20/20.
   - `server_restart.js` (nueva; celular 844×390 táctil: dormido, reinicio en sala y en partida, SOLO sin
     servidor): **OK** 24/24 · `old_server.js` (nueva; relays viejos v0 y v1): **OK**.
-  - `accounts.js`: 38/39, con la falla intermitente de arriba.
+  - `accounts.js`: **OK** 39/39 (antes fallaba "volver después de cerrar la pestaña": era el bug 0).
   - `disconnect.js`, `coldstart.js`: OK (antes de los últimos merges).
 - No corrí esta vez `boons_coop`, `difficulty_net`, `ground_loot_coop`, `synergies_coop`, `lobby_*`,
   `next_arena` (quedaron actualizadas con el entrenamiento marcado; la máquina estuvo sin memoria varias
@@ -92,7 +94,7 @@
 Lo que se juega (crear sala, unirse por código o enlace, salas públicas, jugar, reconectar, intercambio,
 ranking) anda en las pruebas y ahora los cortes del servidor se explican bien. Resta: el servidor real no
 lo pude verificar, depende de que la base de datos y las variables del evento estén cargadas, y queda la
-falla intermitente de la prueba de cuentas.
+posibilidad de que haya otros caminos raros de sincronización que no probé.
 
 ## Detalle técnico
 
@@ -101,7 +103,8 @@ sala fantasma + aviso "Reconectando…" · `d5c984a` servidor viejo detectado po
 explicadas · `4aef5c8` NO_ROOM unificado · `21013cc` ranking/intercambio con servidor viejo, despertar al
 abrir · `ad5b4cf` DATA_PERSISTENT, fondalstudios.com permitido · `11ac13a` IP real detrás del proxy,
 API_MAX_IP/ROOMS_MAX_IP · `e473ec6`/`0b51ee2` guía del dueño · `685cb46`/`21c7311` pruebas al día con
-main · `565c5e0` guardado ilegible no se pisa, e2e sin "dúo".
+main · `565c5e0` guardado ilegible no se pisa, e2e sin "dúo" · `11bdeea` nada se guarda antes de cargar
+(premio semanal del ranking pisaba el progreso).
 
 - `js/net/net-core.js`: `joinSeq` + `_awaitingJoin` (la reconexión espera un `joined` nuevo; antes
   terminaba al instante porque `net.room` seguía puesto); `NET_ROOM_GONE`/`_netGiveUp("room_gone")`;
@@ -114,7 +117,10 @@ main · `565c5e0` guardado ilegible no se pisa, e2e sin "dúo".
 - `server/accounts.js`: `DATA_PERSISTENT`/`filePersistent()`, `API_MAX_IP`, TRUST_PROXY automático en
   Fly.io, `fly-client-ip`, `clientIp` exportado. `server/relay.js`: `ROOMS_MAX_IP`, IP real en /api/rooms,
   fondalstudios.com en ALWAYS_ALLOWED. `render.yaml`: ALLOWED_ORIGINS.
-- `js/storage/save.js`: `saveLoadFailed` (copia `laHordaSave_v1_noCargo`, persistNow no escribe).
+- `js/storage/save.js`: `saveLoadStarted` (persistNow ignora lo que llegue antes de `loadSave()`: el
+  `lbGrantWeekly` -> `persist()` disparado por el evento `account-change` durante la carga de scripts
+  escribía `defaultSave()`), `saveLoadFailed` (copia `laHordaSave_v1_noCargo`, persistNow no escribe).
+  `js/net/leaderboard.js`: `tryBg` espera a `saveLoadStarted`.
 - Pruebas: nuevas `tools/net-test/server_restart.js` (proxy que imita a Render: retiene conexiones mientras
   despierta), `tools/net-test/old_server.js` (relays de 3bb85e4 y 3c5156a sacados con `git show`);
   actualizadas `accounts.js`, `leaderboard.js`, `e2e.js` y el resto de `tools/net-test/*` (entrenamiento).
