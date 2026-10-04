@@ -5,19 +5,86 @@
  "body": "nahir",
  "head": null,
  "paint": [
-  {"part": "body", "hue": [165, 245], "minChroma": 8, "noSkin": true,
-   "ramp": ["#06142a", "#0a3256", "#0f6676", "#22b3ad", "#7fe9dc", "#e8fff9"], "gamma": 0.95},
-  {"part": "body", "hue": [0, 360], "minChroma": 0, "minL": 62, "noSkin": true,
-   "ramp": ["#5a3a10", "#a87326", "#dcae52", "#f7e3a0", "#fffbe8"], "gamma": 0.8},
-  {"part": "body", "hue": [245, 300], "minChroma": 10, "noSkin": true,
-   "ramp": ["#1a1408", "#5a3c14", "#9c6c26"]},
-  {"part": "body", "hue": [15, 85], "minChroma": 12, "maxL": 47, "noSkin": true,
-   "ramp": ["#2a1606", "#6b4318", "#b07a2e", "#e6be66"]},
-  {"part": "body", "hue": [0, 360], "minChroma": 0, "maxL": 61, "noSkin": true,
-   "ramp": ["#070b17", "#111c33", "#1d2f52", "#2f4a74", "#56769e"], "gamma": 0.9}
+  {
+   "part": "all",
+   "materialsOf": "#0c4e54",
+   "take": 3,
+   "noSkin": true,
+   "ramp": [
+    "#06142a",
+    "#0a3256",
+    "#0f6676",
+    "#22b3ad",
+    "#7fe9dc",
+    "#e8fff9"
+   ],
+   "gamma": 0.95
+  },
+  {
+   "part": "all",
+   "materialsOf": "#c3d7db",
+   "take": 1,
+   "noSkin": true,
+   "ramp": [
+    "#6a4512",
+    "#b07a2a",
+    "#dcae52",
+    "#f7e3a0",
+    "#fffbe8"
+   ],
+   "gamma": 0.85
+  },
+  {
+   "part": "all",
+   "materialsOf": "#4d7190",
+   "take": 1,
+   "noSkin": true,
+   "ramp": [
+    "#2a1a08",
+    "#6b4618",
+    "#a87326"
+   ]
+  },
+  {
+   "part": "all",
+   "materialsOf": "#544035",
+   "take": 1,
+   "noSkin": true,
+   "ramp": [
+    "#1e1006",
+    "#55340f",
+    "#8f5f22",
+    "#c99a48"
+   ]
+  },
+  {
+   "part": "all",
+   "materialsOf": "#4a4a4a",
+   "take": 2,
+   "noSkin": true,
+   "ramp": [
+    "#070b17",
+    "#111c33",
+    "#1d2f52",
+    "#2f4a74",
+    "#56769e"
+   ],
+   "gamma": 0.9
+  }
  ],
  "accessories": [
-  {"module": "facu_head", "body": "nahir", "head": "dariel",
-   "hairRamp": ["#0a0807", "#1b1411", "#32241d", "#4f392b", "#76563f"], "hairGamma": 0.9}
+  {
+   "module": "facu_head",
+   "body": "nahir",
+   "head": "dariel",
+   "hairRamp": [
+    "#08070a",
+    "#151216",
+    "#262022",
+    "#3b3131",
+    "#594a45"
+   ],
+   "hairGamma": 0.9
+  }
  ]
 }

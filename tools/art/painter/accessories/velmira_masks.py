@@ -127,10 +127,19 @@ def draw(atlas, info, o):
             angs = [-185, -145, -105, -68]
         else:
             angs = [-168, -128, -52, -12]
+        alpha = cimg[:, :, 3] > 0
         for k, a in enumerate(angs):
             bob = round(math.sin((c + k * 1.3) * math.pi / 2))
-            x = cx + R * math.cos(math.radians(a)) - 4
-            y = cy + R * .78 * math.sin(math.radians(a)) - 5 + bob
+            ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+            # borde de la silueta en esa dirección: la máscara asoma por detrás (≈ 2/3 visible)
+            edge = R * .6
+            for rr in range(int(R * .4), int(R * 1.6)):
+                X, Y = int(round(cx + rr * ca)), int(round(cy + rr * sa * .85))
+                if 0 <= X < CELL and 0 <= Y < CELL and alpha[Y, X]:
+                    edge = rr
+            rr = max(edge + o.get('out', 2), R * .8)
+            x = cx + rr * ca - 4
+            y = cy + rr * .85 * sa - 5 + bob
             stamp(cimg, sprites[k], int(round(x)), int(round(y)), over=(d == 'up'))
     if o.get('death', True):
         # muerte: dos máscaras caídas en el suelo, a los lados del cuerpo (último cuadro)

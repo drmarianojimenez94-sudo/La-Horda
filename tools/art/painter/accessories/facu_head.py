@@ -93,6 +93,27 @@ def _ramp(lab_px, ramp, gamma, lo=None, hi=None):
     return P.from_lab((R[i0] * (1 - f) + R[i0 + 1] * f).astype(np.float32))
 
 
+def _grain(atlas, N, k):
+    """Devuelve a la pintura la micro-variación de tono del donante (la rampa mapea solo la luz y aplana los
+    colores: el roster tiene cientos por cuadro). Suma k x (ab del donante - ab medio local) a cada píxel."""
+    if k <= 0:
+        return atlas
+    H, W = atlas.shape[:2]
+    lo = _lab(atlas).reshape(-1, 3)
+    ln = _lab(N)
+    ab = ln[..., 1:].astype(np.float32)
+    mean = np.stack([cv2.blur(ab[..., j], (5, 5)) for j in range(2)], -1)
+    dev = np.clip(ab - mean, -7, 7).reshape(-1, 2)
+    Ld = (ln[..., 0] - cv2.blur(ln[..., 0], (3, 3))).reshape(-1)
+    m = ((atlas[:, :, 3] > 0) & (N[:, :, 3] > 0)).reshape(-1) & (lo[:, 0] > 9)
+    lo[m, 1:] += k * dev[m] + 0.0
+    lo[m, 0] += 0.0 * Ld[m]
+    out = atlas.copy()
+    out[..., :3] = P.from_lab(lo.astype(np.float32)).reshape(H, W, 3)
+    out[..., :3][~m.reshape(H, W)] = atlas[..., :3][~m.reshape(H, W)]
+    return out
+
+
 def draw(atlas, info, opts):
     ramp = opts.get('hairRamp', DEFAULT_RAMP)
     gamma = opts.get('hairGamma', 0.9)
@@ -134,7 +155,8 @@ def draw(atlas, info, opts):
         c[hair, :3] = _ramp(lab[hair], ramp, gamma, 6, 46)
         P.put_cell(Dp, w, c)
 
-    out = atlas.copy()
+    out = _grain(atlas, N, opts.get('grain', 0.9))
+    atlas = out.copy()
     for i in range(COLS * 9):
         row = i // COLS
         n = P.cell(N, i)

@@ -118,10 +118,10 @@
     200
    ],
    "deathHood": [
-    "#0c241d",
-    "#17503e",
-    "#2a8366",
-    "#5fc49a"
+    "#0a1a15",
+    "#123a2e",
+    "#1d5a46",
+    "#2a7a60"
    ],
    "deathBoxes": {
     "32": [
@@ -155,6 +155,12 @@
     "#d6ad48",
     "#f6e19a"
    ]
+  },
+  {
+   "module": "khepri_elytra"
+  },
+  {
+   "module": "khepri_disc"
   }
  ]
 }
