@@ -35,27 +35,62 @@ mago / soporte con piloto automático, sin ayudas (si el guardián cae, pierde).
 | | Ganaron | Perdieron en el nivel 9 (subjefes) | Perdieron con El Presentador | Partida trabada |
 |---|---|---|---|---|
 | Antes (base integrada, sin el tope) | 4 de 11 (36 %) | 6 de 11 | 0 | 1 (tanque, 22 min en el nivel 9 sin terminar) |
-| Después (con el tope) | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
+| Después (con el tope) | **8 de 12 (67 %)** | 2 de 12 | 2 de 12 | **0** |
 
-Lo que más mataba en el nivel 9 no eran los subjefes sino los Saqueadores comunes que seguían entrando
-(en la partida de guerrero: 1.362 de daño de Saqueadores contra ~100 de cada subjefe).
+En resumen: casi el doble de victorias, el nivel 9 dejó de ser un muro (de 6 derrotas allí a 2) y ninguna partida
+quedó trabada. Las victorias duran entre 8,5 y 16 min de juego y El Presentador tarda entre 1 y 3 min en caer. Las
+dos derrotas con El Presentador fueron con el mago (el más frágil), con el jefe al 20 % y al 32 % de vida. Antes, 4
+de las 6 derrotas del nivel 9 las causaban Saqueadores comunes. Ahora las 2 derrotas de ese nivel las causan los
+subjefes: la pelea es contra ellos, como corresponde. Es exigente pero ganable para alguien nuevo, que es lo que
+buscamos para la primera arena.
+
+Ejemplo de antes: en una partida de guerrero, los Saqueadores le hicieron 1.362 de daño en el nivel 9, contra
+~100 de cada subjefe.
 
 ## Prueba de humo de las 10 arenas sobre la base integrada
 
-PENDIENTE (corriendo).
+Una partida completa por arena (nivel 1 al jefe), en modo "no muere" (mide que la arena se pueda terminar, no la
+habilidad): **8 de 10 OK** — Ciudad, Fortaleza, Bosque, Micelial, Hielo, Laberinto, Minas e Infernal se terminan
+con el jefe muerto y la victoria disparada, sin errores de página ni contadores desbocados.
+
+Fallaron 2 (ver "Pendiente"):
+- **Acuática**: el Leviatán quedó en 619 de 12.300 de vida y no murió en 9 min de juego.
+- **Abismo**: el nivel 9 no terminó en 6 min; el subjefe Carcelero seguía con 12.448 de vida.
 
 ## Pendiente y por qué
 
-- Ver arriba: se completa en cuanto terminen las corridas.
+- **Abismo, nivel 9 (Carcelero) — posible traba, SIN DIAGNOSTICAR.** En la prueba de humo el subjefe quedó con
+  la vida llena 6 minutos y el nivel no avanzó: o el Carcelero no llega hasta el jugador (está del otro lado del
+  vacío) o el piloto automático no sabe cruzar hasta él. Hay que verlo jugando: si a una persona le pasa, la
+  partida queda trabada en el nivel 9 del Abismo. No lo pude reproducir porque la máquina compartida quedó tan
+  cargada (carga 100–150 en 4 núcleos y la memoria casi llena) que la simulación iba a 1/100 de velocidad y al final el
+  navegador de pruebas ni siquiera llegaba a abrir la página. Dejé una herramienta de
+  diagnóstico lista (`tools/alfa/q2_diag_level.js abismo 9 nigromante 30`: arranca directo en ese nivel y
+  registra cada 15 s la vida, el estado y la plataforma del subjefe y del jugador; todavía NO la pude correr) y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
+  un jugador nuevo en la Comic Con no llega ahí en una sesión.
+- **Acuática, Leviatán (jefe final de la arena 6) — probablemente dificultad, no traba.** El Leviatán tiene 3
+  vidas de 12.300 (con tentáculos que lo blindan); el piloto guerrero (cuerpo a cuerpo) dejó una de esas vidas al 5 % pero
+  no lo terminó en 9 min (la prueba de entonces no registraba en qué vida iba), con 77 "rescates" (cayó bajo el 30 % 77 veces). Falta
+  confirmar con otra clase si es solo lentitud del piloto. NO VERIFICADO EN RUNTIME.
+- **Saqueadores del nivel 9 de la Ciudad**: con el tope ya no ahogan, pero el nivel 9 sigue siendo el pico de
+  la primera arena (2 de 12 derrotas ahí). Lo dejo así a propósito: bajarlo más lo haría trivial.
 
 ## Pruebas corridas
 
-- Baseline de la Ciudad sobre la base integrada (11 partidas): resultados en la tabla.
+- Ciudad completa sin ayudas, antes (11 partidas) y después (12 partidas) del tope: tabla de arriba. Sin errores de
+  página en ninguna.
+- Prueba de humo de las 10 arenas (`QUICK=1 node tools/alfa/q2_campaign_smoke.js`) sobre la base integrada: 8/10.
 - Revisión de sintaxis de todos los archivos tocados (`node --check`): OK.
+- La segunda integración (Q5/Q6/Q7 finales) se mezcló sin conflictos; NO pude volver a correr la prueba de humo
+  sobre esa última base por la carga de la máquina (NO VERIFICADO EN RUNTIME sobre el último merge).
 
 ## Nota del área para el alfa
 
-PENDIENTE (se pone al final con los números).
+**7/10.** La primera arena —la que va a ver casi toda la gente de la Comic Con— se termina, el primer jefe es
+exigente pero ganable (de 36 % a 67 % de victorias en partidas sin ayudas) y ya no hay partidas trabadas ni
+hordas infinitas; los avisos del piso ahora dicen la verdad. 8 de las 10 arenas se recorren de punta a punta. Le
+resto puntos por la posible traba del Carcelero en el Abismo, que no pude diagnosticar, y por el Leviatán sin
+confirmar.
 
 ---
 
@@ -71,7 +106,8 @@ Archivos:
 - Avisos circulares: `ab-render.js`, `acu-leviatan.js`, `bos-ruins.js`, `cm-render.js`, `hie-cold.js`,
   `mic-render.js`, `mn-render.js`, `elite-affixes.js`, `enemy-roles.js`, `context-actions.js`.
 - `tools/playtest/autopilot.js`: lee el gancho `botDanger` de la arena y las zonas de peligro.
-- `tools/alfa/q2_campaign_smoke.js` (nuevo). Uso:
+- `tools/alfa/q2_diag_level.js` (nuevo): diagnóstico de un nivel puntual (ver Pendiente).
+- `tools/alfa/q2_campaign_smoke.js` (nuevo; el atasco informa el jefe/subjefe que retiene el nivel). Uso:
   `QUICK=1 GAME_URL=http://127.0.0.1:8902/index.html node tools/alfa/q2_campaign_smoke.js`.
 
 Commits:
@@ -80,3 +116,5 @@ Commits:
 - `7b8c298` Prueba de humo de la campaña (tools/alfa/q2_campaign_smoke.js)
 - `3fde8c7` Tope de enemigos vivos (90; 12 con los subjefes de la Ciudad y 6 con El Presentador) y ritmo
   normal en los niveles retenidos
+- `aa382a1` Prueba de humo: el informe de atasco incluye el jefe/subjefe que retiene el nivel
+- Informe: `e0dc794`, `143f31a`, `d0442ac`, `b0883cb`, `64143cf` `1565936` (herramienta de diagnóstico + informe)
