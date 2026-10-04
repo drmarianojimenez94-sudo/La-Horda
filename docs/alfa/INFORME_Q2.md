@@ -67,8 +67,8 @@ Fallaron 2 (ver "Pendiente"):
   diagnóstico lista y la prueba de humo ahora informa el estado del subjefe al trabarse. Es la arena 8 de 10:
   un jugador nuevo en la Comic Con no llega ahí en una sesión.
 - **Acuática, Leviatán (jefe final de la arena 6) — probablemente dificultad, no traba.** El Leviatán tiene 3
-  vidas de 12.300 (con tentáculos que lo blindan); el piloto guerrero cuerpo a cuerpo lo dejó en la tercera...
-  o en una de ellas, al 5 %, sin terminarlo en 9 min, con 77 "rescates" (cayó bajo el 30 % 77 veces). Falta
+  vidas de 12.300 (con tentáculos que lo blindan); el piloto guerrero (cuerpo a cuerpo) dejó una de esas vidas al 5 % pero
+  no lo terminó en 9 min (la prueba de entonces no registraba en qué vida iba), con 77 "rescates" (cayó bajo el 30 % 77 veces). Falta
   confirmar con otra clase si es solo lentitud del piloto. NO VERIFICADO EN RUNTIME.
 - **Saqueadores del nivel 9 de la Ciudad**: con el tope ya no ahogan, pero el nivel 9 sigue siendo el pico de
   la primera arena (2 de 12 derrotas ahí). Lo dejo así a propósito: bajarlo más lo haría trivial.
