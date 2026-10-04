@@ -198,7 +198,10 @@ const check = (name, ok, extra) => { console.log((ok ? 'PASS ' : 'FAIL ') + name
     await E(() => { window.__AP.on = true; });
     let res = null;
     for (let i = 0; i < 90; i++) {
-      res = await E(() => { if (player && player.alive && player.hp < player.maxHp * 0.3) player.hp = player.maxHp; const r = window.__AP.sim(15000); return { st: state, lvl: runLevel }; });
+      // también se reparan las estructuras de la Ciudad que no cayeron (si caen todas se pierde: no es lo que se mide acá)
+      res = await E(() => { if (player && player.alive && player.hp < player.maxHp * 0.3) player.hp = player.maxHp;
+        if (typeof cmS !== 'undefined' && cmS && cmS.st) for (const q of cmS.st) if (q.hp > 0 && q.hp < q.max * 0.5) q.hp = q.max;
+        window.__AP.sim(15000); return { st: state, lvl: runLevel }; });
       if (res.st !== 'playing' && res.st !== 'buff') break;
     }
     await E(() => { window.__AP.on = false; });
@@ -214,7 +217,11 @@ const check = (name, ok, extra) => { console.log((ok ? 'PASS ' : 'FAIL ') + name
       await shot('campamento'); await noDeadEnd('CAMPAMENTO');
       await tapText('Seguir', '#camp button');
     }
-    check('CAMPAMENTO.lleva_al_menú', (await waitState('mainmenu')) === 'mainmenu', await state());
+    // del Campamento se vuelve a la Sala (lista para la arena siguiente) o al menú; de ahí, "atrás" al menú
+    const sc = await waitState(['mainmenu', 'prep']);
+    check('CAMPAMENTO.sigue_a_la_Sala_o_al_menú', sc === 'mainmenu' || sc === 'prep', sc);
+    if (sc === 'prep') { await shot('sala_arena2'); check('SALA.ofrece_la_arena_siguiente', await E(() => currentArena !== 'ciudad'), await E(() => currentArena)); await noDeadEnd('SALA.arena2'); }
+    await backToMenu('CAMPAMENTO');
     noNewErrors('CIUDAD');
   }
 

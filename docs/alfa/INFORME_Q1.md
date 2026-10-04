@@ -33,7 +33,23 @@ Probado en celular apaisado 844×390 táctil y en compu 1280×720, desde un perf
 10. **Tienda.** Antes el guardián de regalo mostraba su precio (2.500) al lado de "Ver ficha", como si
     hubiera que pagarlo. → Ahora dice "✔ Tuyo".
 
+11. **Menú en el celular — "Explorar".** Antes, al abrir "Explorar · Códice y desafíos", Códice quedaba
+    angosto y Desafíos se iba abajo de la pantalla (había que deslizar el menú para encontrarlo). → Ahora
+    los dos aparecen lado a lado dentro de su lugar.
+12. **Inventario.** Antes el botón decía "Vender (+1100o)". → Ahora "Vender · +1.100 🪙".
+
 Capturas antes/después en `docs/alfa/q1/` (archivos `*_antes_*` y `*_despues_*`).
+
+## Prueba automática nueva
+
+`tools/alfa/q1_first_session.js` juega como un jugador nuevo en el celular (844×390, toques reales; con
+`DESKTOP=1` en 1280×720 con mouse): título, invitado, regalo (guardián, Ver habilidades, Elegir otro, skin),
+entrenamiento (Saltar), menú, Guardianes (todas las pestañas), Tienda (4 pestañas), recargar la página en la
+Tienda y en la Sala, Explorar/Códice, Sala → prólogo → Ciudad hasta ganarle a El Presentador (piloto
+automático), todas las páginas de la victoria, Campamento, perder 3 veces seguidas (Reintentar / Volver al
+menú) y abandonar desde la pausa. Falla si aparece un error de página o una pantalla sin ningún botón que
+se pueda tocar. Uso: `GAME_URL=http://127.0.0.1:8901/index.html node tools/alfa/q1_first_session.js`
+(`SKIP_WIN=1` saltea la partida larga; `SHOTS=carpeta` guarda una captura por paso).
 
 ## Recorrido probado (jugador nuevo)
 
@@ -55,13 +71,20 @@ objeto) → Guardianes/Códice. Sin errores de página en el camino.
 - **Mensaje "Playtest V1: recibiste 2.000 de oro"** y precios: son de economía (Q4), no los toqué.
 - **Pantalla de cuenta:** "Jugar como invitado" tiene letra más chica que "Entrar". Es de red/cuentas
   (Q3); detalle menor.
-- Falta repetir con la base nueva el recorrido completo de inventario lleno, perder 3 veces y girar el
-  celular a mitad de cada pantalla (ver "Pruebas").
+- **Sala en el celular:** el botón fijo "Comenzar" tapa a medias el desplegable "Equipamiento, talentos…"
+  hasta que uno desliza la pantalla. Probé desvanecerlo, pero quedaba un recuadro vacío que confunde más;
+  hace falta acomodar la Sala (diseño de #41) para que todo entre en 390 px.
+- **Textos en mayúscula pixel sin tilde** ("PROLOGO", "VOLVIO", "GUIA"): es la tipografía de títulos
+  (Q5).
+- **Inventario lleno / girar el celular:** el inventario lleno (30/30) se ve y se puede vender, descartar y
+  equipar; al girar a vertical aparece "girá el teléfono" y al volver sigue en la misma pantalla. No probé
+  levantar botín con el inventario lleno dentro de la partida (es de botín, Q4).
 
 ## Pruebas corridas
 
 - `tools/items/t_starter_gift.js` (regalo inicial, actualizada al camino nuevo con entrenamiento):
   **TODO OK**.
+- `tools/alfa/q1_first_session.js` (nueva): **RESULTADO_Q1_FULL**.
 - Recorridos manuales automatizados con Playwright (844×390 táctil y 1280×720) por cada pantalla de
   arriba, midiendo que la barra de confirmar no pise las cartas y que los botones no queden tapados.
 
@@ -85,5 +108,8 @@ con la base nueva (muy cambiada a último momento) inventario/talentos/derrotas 
 | 8 | `css/camp.css` (`.camp-head` con `max-width:calc(50vw - 96px)`) |
 | 9 | `js/ui/codex/codex.js` (`codexScrollHints`), `css/codex.css` (`.cx-scroll-x.fade-r`) |
 | 10 | `js/ui/shop-ui.js` |
+| 11 | `css/onboarding.css` (`.hub-more[open] .hub-actions` en grilla de 2; `#mainmenu-screen .hub-more summary` porque `duo-ux.css` se carga después) |
+| 12 | `js/ui/inventory-ui.js` |
+| prueba | `tools/alfa/q1_first_session.js` |
 
-Commits: b581550, 1f63d93, d7df6fd, 99a23b1, 6d0d72d (merge main), 376b4bb, f1c4488.
+Commits: b581550, 1f63d93, d7df6fd, 99a23b1, 6d0d72d (merge main), 376b4bb, f1c4488, e9c9487 (informe), e5ead42, 2a6faf7 (prueba), 874bca5.
