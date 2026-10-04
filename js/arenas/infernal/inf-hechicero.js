@@ -401,7 +401,7 @@ function hechStartFinalBoss(){
   for(const o of enemies){ if(o.alive && o!==g && o.rank!=="subjefe"){ o.alive = false; o.hp = 0; vfxOnDeath(o); } }
   enemies = enemies.filter(o=>o.alive);
   if(typeof setMusicMode==="function") setMusicMode("boss");
-  arenaTitleCard("JEFE FINAL", "EL HECHICERO SUPREMO", "El cuarto Guardián. Forma 1 de 3: quiere fundir los cuatro cristales en uno.", 3400);
+  arenaTitleCard("JEFE FINAL", "EL HECHICERO SUPREMO", "El Primero de los Cuatro. Forma 1 de 3: quiere fundir los cuatro cristales en uno.", 3400);
   if(typeof tutSay==="function") tutSay("hech_final", "Tres cristales de los Guardianes, y el mío. El Forjador se negó a fundirlos en uno solo: por eso está encadenado. No importa. Con los Cuatro fundidos, yo SOY la Horda. Gracias por traérmelos.", "Derrotá al Hechicero en sus 3 formas", 9000, true);
   return g;
 }

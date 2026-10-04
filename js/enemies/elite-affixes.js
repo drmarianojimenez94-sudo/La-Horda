@@ -123,7 +123,7 @@ function eliteTick(e, dt){
     // texto flotante con el mismo nombre y se leían dos "★ Gruthul el Ciego" encimados)
     e._eliteSeen = true; e._eliteIntro = (typeof animNow!=="undefined" && animNow) || performance.now();
     if(typeof vfxShock==="function") vfxShock(e.x, e.y, 10, (e.radius||20)*2.6, "255,205,80", 520, 1);
-    if(typeof playSfx==="function") playSfx("threat");
+    if(typeof playSfx==="function") playSfx("threat", null, e.x);
     if(typeof tutSay==="function") tutSay("elite_named", "ÉLITE CON NOMBRE (en dorado): tiene modificadores, pega distinto y suelta mejor botín. Leé qué es antes de meterte.", null, 6500);
   }
 }
@@ -163,7 +163,7 @@ function drawEliteMarks(e){
   ctx.save();
   if(eliteHas(e, "escarcha")){
     ctx.strokeStyle = `rgba(150,220,255,${0.18 + 0.14*pulse})`; ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
-    ctx.beginPath(); ctx.ellipse(e.x, e.y + 3, ELITE_MODS.escarcha.r, ELITE_MODS.escarcha.r*0.62, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(e.x, e.y + 3, ELITE_MODS.escarcha.r, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
   ctx.strokeStyle = `rgba(255,205,80,${0.55 + 0.35*pulse})`; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.ellipse(e.x, e.y + 3, R*1.35, R*0.55, 0, 0, Math.PI*2); ctx.stroke();

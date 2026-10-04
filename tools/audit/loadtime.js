@@ -26,7 +26,7 @@ async function run(browser, query, full) {
   let tTitle = null, tAll = null;
   for (let k = 0; k < 2400; k++) {
     await sleep(100);
-    const st = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return { t: !!(b && !b.disabled && /Toca/.test(b.textContent)), all: typeof assetsAllReady === 'function' ? assetsAllReady() : null }; }).catch(() => ({}));
+    const st = await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return { t: !!(b && !b.disabled && /Toc[aá]/.test(b.textContent)), all: typeof assetsAllReady === 'function' ? assetsAllReady() : null }; }).catch(() => ({}));
     if (st.t && tTitle === null) { tTitle = Date.now() - t0; titleReady = true; bytesAtTitle = bytes; }
     if (tTitle !== null && (st.all || !full)) { tAll = st.all ? Date.now() - t0 : null; break; }
   }
@@ -36,7 +36,7 @@ async function run(browser, query, full) {
     const tap = async sel => { const el = await page.$(sel); if (!el) return false; await el.evaluate(e => e.scrollIntoView({ block: 'center' })); const b = await el.boundingBox(); if (!b) return false; await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await sleep(500); return true; };
     await page.reload({ waitUntil: 'commit' });
     const t1 = Date.now();
-    for (let k = 0; k < 1200; k++) { await sleep(100); if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled && /Toca/.test(b.textContent); }).catch(() => false)) break; }
+    for (let k = 0; k < 1200; k++) { await sleep(100); if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return b && !b.disabled && /Toc[aá]/.test(b.textContent); }).catch(() => false)) break; }
     res.tTitleCached = Date.now() - t1;
     await tap('#title-continue-btn');
     // jugador nuevo: hoy la portada lleva al ENTRENAMIENTO inicial (alpha-training.js), que ya es partida

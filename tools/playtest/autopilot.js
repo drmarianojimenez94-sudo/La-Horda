@@ -40,6 +40,12 @@
     if(typeof bossStrikes!=="undefined") for(const s of bossStrikes){
       if(Math.hypot(px-s.x, py-s.y) < s.r+28){ hit = true; const n = norm(px-s.x, py-s.y); v.x += n.x; v.y += n.y; }
     }
+    // Avisos PROPIOS de cada arena (impactos y zonas de la Ciudad, trampas de la Fábrica, zonas de las Minas...):
+    // se dibujan en el piso igual que los genéricos y un humano los esquiva. Antes el piloto no los veía (solo
+    // vfxTeles/bossStrikes): contra El Presentador se comía todos los reflectores y telones. Es el mismo
+    // gancho que usan los bots (botDangerVec, js/ai/bot-brain.js).
+    if(typeof arenaHas==="function" && arenaHas("botDanger")){ const ad = arenaHook("botDanger", px, py, 26); if(ad){ hit = true; v.x += ad.x; v.y += ad.y; } }
+    if(typeof hazardZones!=="undefined" && hazardZones) for(const z of hazardZones){ const d = Math.hypot(px-z.x, py-z.y); if(d < (z.r||60) + 13){ hit = true; const n = norm(px-z.x, py-z.y); v.x += n.x*0.7; v.y += n.y*0.7; } }
     return hit ? v : null;
   }
   // Acción contextual reservada a humanos (los bots nunca la toman: botWorth 0 / maxBots 0). Se usa

@@ -32,6 +32,7 @@
 <link rel="stylesheet" href="css/game-master.css">
 <link rel="stylesheet" href="css/founders.css">
 <link rel="stylesheet" href="css/alpha-training.css">
+<link rel="stylesheet" href="css/controls.css">
 </head>
 <body>
 
@@ -181,6 +182,16 @@
       <label class="opt-row">Tu nombre <input id="opt-name" maxlength="16" placeholder="Jugador"></label>
       <label class="opt-row">🎵 Música <input type="range" id="opt-vol-music" min="0" max="100" step="5"></label>
       <label class="opt-row">💥 Efectos <input type="range" id="opt-vol-sfx" min="0" max="100" step="5"></label>
+      <!-- controles y accesibilidad (js/core/prefs.js): se guardan en este aparato, como el volumen -->
+      <div class="opt-sec">Controles</div>
+      <div class="opt-row"><span class="opt-lbl">Modo zurdo<span class="opt-sub">Joystick a la derecha y botones a la izquierda</span></span><button class="opt-switch" data-pref="lefty" role="switch" aria-checked="false">No</button></div>
+      <div class="opt-row"><span class="opt-lbl">Vibración<span class="opt-sub">Al recibir un golpe fuerte y con la Definitiva</span></span><button class="opt-switch" data-pref="vibrate" role="switch" aria-checked="true">Sí</button></div>
+      <div class="opt-sec">Pantalla</div>
+      <div class="opt-row"><span class="opt-lbl">Sacudida de pantalla</span><div class="opt-seg" data-pref="shake" role="group" aria-label="Sacudida de pantalla"><button data-v="normal">Normal</button><button data-v="reducida">Poca</button><button data-v="off">No</button></div></div>
+      <div class="opt-row"><span class="opt-lbl">Reducir movimiento<span class="opt-sub">Sin sacudidas, cámara lenta ni pulsos</span></span><button class="opt-switch" data-pref="motion" role="switch" aria-checked="false">No</button></div>
+      <div class="opt-row"><span class="opt-lbl">Tamaño del texto</span><div class="opt-seg" data-pref="textLg" role="group" aria-label="Tamaño del texto"><button data-v="0">Normal</button><button data-v="1">Grande</button></div></div>
+      <div class="opt-row"><span class="opt-lbl">Avisos de alto contraste<span class="opt-sub">Zonas de peligro con borde y rayado, no solo color</span></span><button class="opt-switch" data-pref="contrast" role="switch" aria-checked="false">No</button></div>
+      <div class="opt-note">Teclado: WASD o flechas para moverte, Espacio para atacar, 1 2 3 habilidades, R Definitiva, Q curación, E acción, Esc pausa. También funciona con mando.</div>
       <div class="opt-note">El progreso se guarda en este navegador. Para llevarlo a otro lado, usá el código de guardado.</div>
       <div class="opt-btns">
         <button class="btn small" id="opt-export-btn">Copiar código de guardado</button>
@@ -433,6 +444,7 @@
       <label class="pause-motion" title="Apaga sacudidas de cámara, congelados de golpe, cámara lenta y pulsos de pantalla">🌀 Reducir movimiento <input type="checkbox" id="opt-reduce-motion"></label>
       <label class="pause-motion" title="Menos partículas y sin destellos en definitivas, banners y efectos especiales. No cambia el daño ni los avisos de peligro">✨ Reducir efectos intensos <input type="checkbox" id="opt-reduce-fx"></label>
     </div>
+    <button class="btn small secondary pause-opts-btn" id="pause-opts-btn">⚙ Opciones: zurdo, texto, vibración…</button>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
     <button class="btn secondary" id="quit-btn">Abandonar arena</button>
@@ -487,6 +499,7 @@
 <script src="js/core/canvas.js"></script>
 <script src="js/core/anti-zoom.js"></script>
 <script src="js/core/fullscreen.js"></script>
+<script src="js/core/prefs.js"></script>
 <script src="js/core/state.js"></script>
 <script src="js/assets/ui-icons.js"></script>
 <script src="js/assets/nigro-golems-meta.js"></script>
@@ -502,6 +515,7 @@
 <script src="js/rendering/arena.js"></script>
 <script src="js/rendering/arena-props.js"></script>
 <script src="js/rendering/arena-ambience.js"></script>
+<script src="js/rendering/art-direction.js"></script>
 <script src="js/rendering/divina.js"></script>
 <script src="js/rendering/camera.js"></script>
 <script src="js/rendering/effects.js"></script>
@@ -674,6 +688,7 @@
 <script src="js/ui/title-scene.js"></script>
 <script src="js/core/input.js"></script>
 <script src="js/core/aim.js"></script>
+<script src="js/core/input-desk.js"></script>
 <script src="js/ui/screens.js"></script>
 <script src="js/ui/panels-skills.js"></script>
 <script src="js/ui/panels-inventory.js"></script>

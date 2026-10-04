@@ -19,6 +19,7 @@ const net = {
   slot:-1, room:null,             // room: estado público de la sala (slots, arena, estado)
   code:null, ping:0, lastPongAt:0,
   reconnectAttempts:0, wantReconnect:false,
+  joinSeq:0,                      // cuántos "joined" llegaron (crear/unirse/reconectar esperan uno NUEVO)
   logs:[], errors:[],
   handlers:{}                     // room / msg / closed / error / joined
 };
@@ -60,15 +61,41 @@ function netEnvironmentHTML(){
 function netAvailable(){ return !!netServerUrl(); }
 // Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min
 // sin uso y tarda ~1 minuto en arrancar): así, para cuando tocás "Crear sala", ya está listo.
-let _netWarmAt = 0;
+let _netWarmAt = -1e9; // antes 0: performance.now() arranca en 0, así que el "despertar al abrir el juego" nunca corría en el primer minuto
 // Se despierta también apenas abre el juego: mientras el jugador elige guardián y arena (~1 min),
 // el servidor ya está arrancando.
 setTimeout(()=>{ try{ if(netAvailable()) netWarmup(); }catch(e){} }, 1500);
 function netWarmup(){
   const u = netServerUrl(); if(!u || performance.now() - _netWarmAt < 60000) return;
   _netWarmAt = performance.now();
-  try{ fetch(u.replace(/^ws/, "http").replace(/\/$/, "") + "/health", {mode:"no-cors", cache:"no-store"}).catch(()=>{}); }catch(e){}
+  netCapsProbe(true);
 }
+// QUÉ SABE HACER EL SERVIDOR. Un relay viejo (antes de las cuentas) no tiene /api: pedirle /api/... daba
+// un 404 sin permiso CORS = error rojo en la consola y carteles de "sin conexión" engañosos. /health lo
+// tienen todas las versiones, con CORS abierto: si su texto no trae la línea "cuentas:", no hay /api
+// (ni cuentas, ni ranking, ni salas públicas) y el juego lo dice claro sin pedírselo.
+//   netCaps.api: true | false | null (todavía no se sabe: servidor dormido o sin red)
+const netCaps = { api:null, at:0, url:"" };
+let _netCapsP = null;
+function netHttpBase(){ const u = netServerUrl(); return u ? u.replace(/^ws(s?):\/\//i, "http$1://").replace(/\/+$/, "") : ""; }
+function netCapsProbe(force){
+  const base = netHttpBase();
+  if(!base) return Promise.resolve(netCaps);
+  if(netCaps.url !== base){ netCaps.api = null; netCaps.at = 0; netCaps.url = base; _netCapsP = null; }
+  if(_netCapsP) return _netCapsP;
+  if(!force && netCaps.api !== null && performance.now() - netCaps.at < 300000) return Promise.resolve(netCaps);
+  const ctl = typeof AbortController!=="undefined" ? new AbortController() : null;
+  const t = setTimeout(()=>{ if(ctl) ctl.abort(); }, 90000); // plan gratis: despertar tarda ~1 minuto
+  _netCapsP = fetch(base + "/health", {cache:"no-store", signal: ctl ? ctl.signal : undefined})
+    .then(r => r.ok ? r.text() : null)
+    .then(txt => { if(txt != null && netCaps.url === base){ netCaps.api = /cuentas:/.test(txt); netCaps.at = performance.now(); } return netCaps; })
+    .catch(() => netCaps)
+    .finally(() => { clearTimeout(t); _netCapsP = null; });
+  return _netCapsP;
+}
+// ¿El servidor seguro NO tiene esta parte? (false mientras no se sepa: se intenta igual)
+function netApiMissing(){ return netCaps.api === false && netCaps.url === netHttpBase(); }
+const NET_NOT_ON_SERVER = "Esta función todavía no está disponible en el servidor (hay que actualizarlo).";
 function netClientId(){
   // Identidad anónima de este navegador: permite volver a la misma sala tras perder conexión.
   // sessionStorage: dos pestañas del mismo navegador cuentan como dos jugadores distintos.
@@ -164,6 +191,7 @@ function _netHandle(m){
   switch(m.t){
     case "pong": net.ping = Math.round(performance.now() - m.c); net.lastPongAt = performance.now(); if(typeof netDebugRefresh==="function") netDebugRefresh(); return;
     case "joined":
+      net.joinSeq++;
       net.slot = m.slot; net.role = m.host ? "host" : "guest"; net.room = m.room; net.code = m.room.code;
       net.reconnectAttempts = 0;
       if(typeof netChatReset==="function") netChatReset(m.chat); // historial corto del chat de la sala
@@ -201,12 +229,17 @@ function _netHandle(m){
       _netEmit("closed", m.reason, role);
       return;
     case "error":
-      if(m.code==="NO_ROOM" && !net.room) return; // un relay viejo no conoce "identify": no es un error de sala
+      // NO_ROOM: un relay viejo no conoce "identify", o el invitado mandó su movimiento al reconectarse antes
+      // del "joined": no es un motivo para el jugador ni la respuesta al "join"
+      if(m.code==="NO_ROOM"){ netLog("NETWORK_ERROR", {code:m.code}); return; }
       if(m.code==="CHAMP_NOT_OWNED"){ _netEmit("chatError", m.code); return; }
       if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
       if(m.trade || /^(TRADE_|ROOMS_)/.test(m.code||"")){ _netEmit("tradeError", m); return; } // intercambio / lista de salas: no es un error de la sala
-      if(!net.room) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
+      if(!net.room || net._awaitingJoin) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)
       if(m.code==="ROOM_FULL") netLog("ROOM_FULL"); else netLog("NETWORK_ERROR", {code:m.code});
+      // reconectando solo (netTryReconnect): el motivo lo resuelve la reconexión, sin el cartel de
+      // "no existe ninguna sala con ese código… revisá que esté bien escrito" (el jugador no escribió nada)
+      if(net.wantReconnect && net._awaitingJoin) return;
       _netEmit("error", m);
       return;
   }
@@ -227,17 +260,22 @@ function netCloseExplanation(){
 // Crear/unirse no termina al mandar el pedido: espera la respuesta REAL del servidor (la sala, un
 // error con motivo o que corte). Antes, si el servidor cortaba (p. ej. página no autorizada), el
 // botón quedaba en "Conectando…" y no aparecía ningún cartel.
+// Se espera un "joined" NUEVO (joinSeq): al reconectar, net.room todavía tiene la sala vieja y antes
+// esto "terminaba" al instante aunque el servidor contestara que la sala ya no existe (se reinició):
+// el invitado quedaba en una sala fantasma, con la pantalla congelada.
 function _netAwaitJoin(ms){
+  const seq0 = net.joinSeq;
+  net._awaitingJoin = true;
   return new Promise((resolve, reject)=>{
     const t0 = performance.now();
     const iv = setInterval(()=>{
-      if(net.room && net.role){ clearInterval(iv); resolve(); return; }
+      if(net.joinSeq !== seq0 && net.room && net.role){ clearInterval(iv); resolve(); return; }
       if(net._joinError){ const m = net._joinError; net._joinError = null; clearInterval(iv);
         const e = new Error((typeof NET_ERRORS!=="undefined" && NET_ERRORS[m.code]) || m.msg || m.code); e.handled = true; e.code = m.code; reject(e); return; }
       if(!net.ws || net.ws.readyState > 1){ clearInterval(iv); reject(new Error(netCloseExplanation())); return; }
       if(performance.now() - t0 > ms){ clearInterval(iv); reject(new Error("el servidor no respondió al pedido de sala")); }
     }, 100);
-  });
+  }).finally(()=>{ net._awaitingJoin = false; });
 }
 async function netCreateRoom(arena, champ, level, onTick){
   await netConnect(onTick);
@@ -289,14 +327,30 @@ netOn("socketClosed", ()=>{
     _netEmit("closed", "connection_lost", role);
   }
 });
+const NET_RECONNECT_TRIES = 8;
+// La sala ya no está en el servidor (se reinició —Render plan gratis: se duerme o se redeploya y pierde la
+// memoria— o el anfitrión la cerró mientras estabas desconectado): no tiene sentido seguir reintentando.
+const NET_ROOM_GONE = ["NOT_FOUND","STARTED","ROOM_FULL","BUILD","VERSION","HOST_RECONNECT"];
+function _netGiveUp(reason){
+  const code = net.code;
+  _netReset();
+  try{ if(net.ws){ net.ws.onclose = null; net.ws.onmessage = null; net.ws.close(); } }catch(e){}
+  net.ws = null; net.status = "off";
+  netLog("NETWORK_ERROR", {reconnect:reason, code});
+  _netEmit("closed", reason, "guest");
+}
 function netTryReconnect(){
   if(!net.wantReconnect || !net.code) return;
-  if(net.reconnectAttempts >= 8){ const code = net.code; _netReset(); _netEmit("closed", "connection_lost", "guest"); netLog("NETWORK_ERROR", {reconnect:"gave_up", code}); return; }
+  if(net.reconnectAttempts >= NET_RECONNECT_TRIES){ _netGiveUp("connection_lost"); return; }
   net.reconnectAttempts++;
   netLog("RECONNECT", {attempt:net.reconnectAttempts});
   const delay = Math.min(8000, 800 * net.reconnectAttempts);
   setTimeout(()=>{
     if(!net.wantReconnect) return;
-    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1, null, 12000).catch(()=> netTryReconnect());
+    netJoinRoom(net.code, selectedClass, (save.champions[selectedClass]||{}).level||1, null, 12000).catch((e)=>{
+      if(!net.wantReconnect) return;
+      if(e && NET_ROOM_GONE.includes(e.code)){ _netGiveUp("room_gone"); return; }
+      netTryReconnect();
+    });
   }, delay);
 }

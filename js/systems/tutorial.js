@@ -85,6 +85,8 @@ function tutHide(){
   if(TUT.key && !TUT.goal) tutMark(TUT.key); // los consejos sin objetivo se dan por vistos al mostrarse
   TUT.key = null; TUT.goal = null;
 }
+// objetivo de los básicos según con qué se juega (táctil / teclado / mando): js/core/input-desk.js
+function _ctl(kind, fallback){ return (typeof ctlHint==="function" && ctlHint(kind)) || fallback; }
 function tutReset(){ TUT.basicsStep = 0; TUT.moved = 0; TUT.lx = null; TUT.k0 = 0; TUT.r0 = 0; tutHide(); }
 // Cada cuadro desde updateHUD (anfitrión e invitado).
 function tutTick(){
@@ -103,13 +105,13 @@ function tutTick(){
     if(TUT.lx===null){ TUT.lx = player.x; TUT.ly = player.y; TUT.k0 = st.kills||0; }
     TUT.moved += Math.hypot(player.x-TUT.lx, player.y-TUT.ly); TUT.lx = player.x; TUT.ly = player.y;
     if(!tutSeen("b_move")){
-      if(!TUT.key) tutSay("b_move", "Bienvenido, guardián. Soy el Hechicero y te voy a guiar. Primero: movete.", "Movete con el joystick", 14000);
+      if(!TUT.key) tutSay("b_move", "Bienvenido, guardián. Soy el Hechicero y te voy a guiar. Primero: movete.", _ctl("move", "Movete con el joystick"), 14000);
       if(TUT.moved > 260) tutDone("b_move");
     } else if(!tutSeen("b_attack")){
-      if(!TUT.key) tutSay("b_attack", "¡Ahí viene la horda! Mantené apretado Ataque: tu guardián le pega solo al más cercano.", "Mantené Ataque para pelear", 16000);
+      if(!TUT.key) tutSay("b_attack", "¡Ahí viene la horda! Mantené apretado Ataque: tu guardián le pega solo al más cercano.", _ctl("attack", "Mantené Ataque para pelear"), 16000);
       if((st.kills||0) > TUT.k0) tutDone("b_attack");
     } else if(!tutSeen("b_skill")){
-      if(!TUT.key) tutSay("b_skill", "Tus habilidades pegan mucho más fuerte que el ataque. Tocá una; si la mantenés, podés apuntarla.", "Tocá una habilidad (mantené y arrastrá para apuntar)", 16000);
+      if(!TUT.key) tutSay("b_skill", "Tus habilidades pegan mucho más fuerte que el ataque. Tocá una; si la mantenés, podés apuntarla.", _ctl("skill", "Tocá una habilidad (mantené y arrastrá para apuntar)"), 16000);
       if(player.cds && player.cds.some(c=>c>0)) tutDone("b_skill");
     } else {
       tutMark("basics");

@@ -21,22 +21,26 @@ const LOOT_TIER_META = {
 // Calibrado con simulación (tools/balance/lootsim.js, ver LA_HORDA_PROGRESSION_ECONOMY_REPORT.md):
 // el Legendario emociona (no llueve), el Mítico directo es raro (su camino normal es la RECETA),
 // el Set es muy especial y el Único es un acontecimiento (del orden de 1 cada varios miles de objetos).
+// Filas en el ORDEN DE LA CAMPAÑA (CAMPAIGN_ORDER: ciudad, fortaleza, bosque, micelial, hielo, acuatica,
+// laberinto, abismo, minas, infernal). Antes estaban en el orden viejo de las arenas y, al reordenarse la
+// campaña, la arena 3 (Bosque) pagaba como la 1, la 6 (Acuática) menos que la 2 y la 8 (Abismo) menos que
+// la 7 (reseña de economía, bug B1). Ahora cada arena paga un poco mejor que la anterior; el Abismo (8)
+// queda entre el Laberinto (7) y las Minas (9).
 const ARENA_LOOT = {
-  bosque:    {comun:66, raro:26, muyraro:6.5, legendario:1.0,  mitico:0.03, set:0.08, unico:0.001},
-  acuatica:  {comun:52, raro:34, muyraro:11,  legendario:2.0,  mitico:0.06, set:0.20, unico:0.002},
-  fortaleza: {comun:45, raro:37, muyraro:14,  legendario:2.8,  mitico:0.08, set:0.35, unico:0.003},
+  ciudad:    {comun:66, raro:26, muyraro:6.5, legendario:1.0,  mitico:0.03, set:0.08, unico:0.001},
+  fortaleza: {comun:52, raro:34, muyraro:11,  legendario:2.0,  mitico:0.06, set:0.20, unico:0.002},
+  bosque:    {comun:45, raro:37, muyraro:14,  legendario:2.8,  mitico:0.08, set:0.35, unico:0.003},
   micelial:  {comun:42, raro:38, muyraro:15.5,legendario:3.2,  mitico:0.10, set:0.40, unico:0.004},
   hielo:     {comun:39, raro:38, muyraro:17,  legendario:4.0,  mitico:0.12, set:0.50, unico:0.005},
-  abismo:    {comun:33, raro:38, muyraro:22,  legendario:5.0,  mitico:0.20, set:1.00, unico:0.012},
+  acuatica:  {comun:33, raro:38, muyraro:22,  legendario:5.0,  mitico:0.20, set:1.00, unico:0.012},
   laberinto: {comun:28, raro:37, muyraro:26,  legendario:6.0,  mitico:0.30, set:1.50, unico:0.020},
+  abismo:    {comun:25, raro:36.5,muyraro:28, legendario:6.8,  mitico:0.38, set:1.75, unico:0.024},
   minas:     {comun:22, raro:36, muyraro:30,  legendario:7.5,  mitico:0.45, set:2.00, unico:0.028},
   infernal:  {comun:16, raro:34, muyraro:36,  legendario:10.0, mitico:0.80, set:3.00, unico:0.040}
 };
-// Ciudad Maldita (Arena 01) usa la tabla de entrada; las Minas (Arena 09) tenían que tener la suya:
-// sin fila caían a la del Bosque (la más pobre) justo antes del Infierno.
-ARENA_LOOT.ciudad = ARENA_LOOT.bosque;
+// La Arena Divina (postgame) usa la tabla del Laberinto; cualquier arena sin fila cae a la de la Ciudad.
 ARENA_LOOT.divina = ARENA_LOOT.laberinto;
-const ARENA_LOOT_LABEL = {ciudad:"Introducción", bosque:"Introducción", acuatica:"Intermedia", fortaleza:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", abismo:"Media-alta", laberinto:"Avanzada", minas:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
+const ARENA_LOOT_LABEL = {ciudad:"Introducción", fortaleza:"Intermedia", bosque:"Intermedia-alta", micelial:"Intermedia-alta", hielo:"Media-alta", acuatica:"Media-alta", laberinto:"Avanzada", abismo:"Avanzada", minas:"Avanzada", infernal:"Endgame", divina:"Avanzada"};
 // La calificación mejora las probabilidades de lo raro (más cuanto más rara la categoría),
 // sin garantizar nada: peso × factor^exponente, y "común" absorbe la diferencia.
 const GRADE_LOOT = {
@@ -91,4 +95,13 @@ const SET_ARENA_WEIGHTS = {
 const SET_OWNED_BIAS = 1.7, SET_MISSING_PIECE_BIAS = 2.2;
 // Sets de guardián (js/data/champion-sets.js): el del guardián que jugás pesa mucho más; los de
 // otros guardianes también pueden caer (botín cruzado), con poco peso.
+// PISO DE RAREZA (alfa, Q4): el PRIMER objeto del cofre de victoria no baja de esta categoría (lo que iba
+// a salir por debajo sube al piso; la probabilidad de Legendario o más no cambia). En la primera partida
+// caían 10 Comunes de 12 objetos y todo era peor que lo que ya tenías.
+const LOOT_VICTORY_FLOOR = "raro";
+// PRIMERA VICTORIA DE LA CAMPAÑA: el primer objeto del cofre es un Muy Raro para una ranura VACÍA del
+// guardián que jugás (si no tiene ninguna vacía, para la más floja): una mejora que se ve en la
+// comparación ▲ al terminar la primera arena. Una sola vez por cuenta (save.firstWinLoot); los guardados
+// que ya ganaron alguna arena no lo reciben. Orden de ranuras: lo que más se nota primero.
+const FIRST_WIN_LOOT = {tier:"muyraro", slotOrder:["arma","pechera","casco","guantes","botas","escudo"]};
 const SET_CHAMPION_BIAS = 14, SET_OTHER_CHAMP_W = 0.35; // 14: ~45% de las piezas de set son del set de TU guardián (lootsim2: set completo en ~100-150 victorias finales)

@@ -185,9 +185,9 @@ function hieDrawGround(now){
     // (sobre el hielo blanco lo aditivo no se ve: tinte normal + borde marcado)
     const g = ctx.createRadialGradient(b.x, b.y, 10, b.x, b.y, HIE_CFG.warmR);
     g.addColorStop(0, `rgba(255,150,60,${0.30*low})`); g.addColorStop(0.75, `rgba(255,130,50,${0.14*low})`); g.addColorStop(1, "rgba(255,120,40,0)");
-    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(b.x, b.y, HIE_CFG.warmR, HIE_CFG.warmR*0.8, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(b.x, b.y, HIE_CFG.warmR, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = `rgba(230,110,30,${0.75*low})`; ctx.lineWidth = 3; ctx.setLineDash([10, 8]);
-    ctx.beginPath(); ctx.ellipse(b.x, b.y, HIE_CFG.warmR, HIE_CFG.warmR*0.8, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(b.x, b.y, HIE_CFG.warmR, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.restore();
   }
   // hilo de luz de las Hadas de Escarcha que le roban el calor a un brasero (js/enemies/bestias-ai.js)

@@ -14,7 +14,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   await page.addInitScript(() => { window.__campaignMode = true; try { localStorage.removeItem('horda_motion'); } catch (e) {} });
-  await page.goto(`${BASE}/index.html`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'load', timeout: 180000 });
   for (let k = 0; k < 300; k++) { if (await page.evaluate(() => !document.getElementById('title-continue-btn').disabled)) break; await sleep(100); }
   const E = (fn, a) => page.evaluate(fn, a);
   await E(() => { loop = function(){};

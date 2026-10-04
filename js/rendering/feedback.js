@@ -157,7 +157,7 @@ function updateHitKnock(e, dt){
 function killFeedback(e, byPlayer){
   if(e.rank==="elite"){
     if(byPlayer) netQuiet(()=>{ hitStop(45); slowMo(0.5, 170); camPunch(0.03, 260); flashScreen(0.1, "255,236,170"); });
-    vfxShake(4); playSfx("eliteKill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null);
+    vfxShake(4); playSfx("eliteKill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null, e.x);
   }
   else if(e.rank==="subjefe"){
     hitStop(90, true); slowMo(0.35, 450); vfxShake(9); flashScreen(0.28); playSfx("bigKill");
@@ -165,7 +165,7 @@ function killFeedback(e, byPlayer){
     if(!others) showBanner("¡"+String(e.name).toUpperCase()+" DERROTADO!");
     else floatText(e.x, e.y-(e.radius||30)*2, "¡Derrotado!", "crit");
   }
-  else if(e.rank!=="jefe" && byPlayer) playSfx("kill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null);
+  else if(e.rank!=="jefe" && byPlayer) playSfx("kill", typeof sfxMatTag==="function" ? sfxMatTag(e) : null, e.x);
 }
 // Cambio de fase del jefe (renace / se transforma / se enfurece) y muerte definitiva.
 function bossPhaseFeedback(){ hitStop(110, true); slowMo(0.4, 650); vfxShake(10); flashScreen(0.35, "255,230,180"); playSfx("bossRoar"); }
@@ -186,7 +186,7 @@ function registerPlayerHurt(dmg, src){
     for(const d of hurtDirs){ let da = Math.abs(d.ang-ang); if(da>Math.PI) da = Math.PI*2-da; if(da < 0.4){ d.ang = ang; d.t = 0; d.heavy = d.heavy || pct>0.08; merged = true; break; } }
     if(!merged){ if(hurtDirs.length >= 6) hurtDirs.shift(); hurtDirs.push({ang, t:0, dur:900, heavy:pct>0.08, off:!inView(src.x, src.y, -40)}); }
   }
-  if(pct > 0.12){ hitStop(55, true); vfxShake(6); playSfx("hurtHeavy"); }
+  if(pct > 0.12){ hitStop(55, true); vfxShake(6); playSfx("hurtHeavy"); if(typeof hapticPulse==="function") hapticPulse(45); } // vibración (Opciones, js/core/prefs.js)
   else if(pct > 0.05) vfxShake(2.5);
 }
 function flashScreen(alpha, rgb){ screenFlash = Math.max(screenFlash, alpha); screenFlashRgb = rgb||"255,255,255"; }

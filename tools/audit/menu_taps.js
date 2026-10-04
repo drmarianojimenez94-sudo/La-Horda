@@ -81,7 +81,7 @@ async function runFlow(browser, vp, which, name, steps) {
   page.on('pageerror', e => errors.push(e.message));
   page.on('dialog', d => d.accept());
   await page.goto(BASE + '/index.html', { waitUntil: 'load' });
-  for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toca/.test(b.textContent); })) break; await sleep(100); }
+  for (let k = 0; k < 300; k++) { if (await page.evaluate(() => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toc[aá]/.test(b.textContent); })) break; await sleep(100); }
   if (!/^primera/.test(name)) await page.evaluate(setupProfile); // "primera" arranca con el perfil vacío
   await sleep(300);
   let taps = 0, n = 0, ok = false, fail = '';

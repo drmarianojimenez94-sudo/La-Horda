@@ -34,14 +34,24 @@
      name     nombre nuevo (si el cuerpo prestado ya no corresponde al nombre de antes)
      codex    campos del Códice que se reemplazan (lore, family, behavior...)
      brief    id de la ficha en docs/ART_COMMISSION_BRIEF.md
+     pal      paleta propia (mapa de degradé): {ramp:["#oscuro", ..., "#claro"], mix, keepSat}. Cada píxel toma
+              el color del degradé según su luz (mix = cuánto; keepSat = los píxeles más saturados que eso,
+              como ojos y brasas, conservan su color). Borra la paleta del donante: deja de leerse como copia
+     aura     contorno animado derivado de la silueta: {rgb:"r,g,b", d:grosor en px del arte, a:alfa, glow:1 =
+              además un brillo aditivo que late (medusa eléctrica)}
+     sizeVar  variación de tamaño por individuo (±, solo dibujo): una horda del mismo tipo no parece clonada
    ============================================================ */
 const BODY_SWAPS = {
   /* ---- 01 · Ciudad Maldita: el Presentador (3 actos), la Dama del Telón (y sus espejismos), el Maestro de
      Ceremonias y el Tramoyista ya tienen arte propio a la densidad del juego (tools/art/pixrig): sin préstamo. ---- */
 
   /* ---- 06 · Arena Acuática: comunes y élite (1–2 cuadros quietos + 1 de ataque, sin golpe ni muerte) ---- */
+  // Los cinco llevan paleta de agua propia (degradé), un contorno de agua que late y variación de tamaño:
+  // derivan del arte de otras arenas, pero no se leen como copias (panel de críticos, Q6 del alfa).
   tiburon_joven: {body:"esqueleto_h", brief:"P0-05", hMul:2.5,
     tint:{hueTo:168, satTo:0.28, minSat:0.08, lum:0.92}, death:"frames",
+    pal:{ramp:["#04161b", "#0d383b", "#2a6b5e", "#79b294", "#d6efd6"], mix:0.82, keepSat:0.7},
+    aura:{rgb:"90,220,200", d:1, a:0.5}, sizeVar:0.08,
     name:"Ahogado de las Ruinas",
     codex:{family:"Muerto del agua",
       lore:"Soldados que se hundieron con las ruinas. El agua inestable no los deja descansar: se arrastran por el fondo, rápidos y en jauría, con percebes donde antes tenían armadura.",
@@ -50,6 +60,8 @@ const BODY_SWAPS = {
       behavior:"Rápido, ataca de frente y en grupo.", attacks:["Zarpazo"]}},
   tiburon_blanco: {body:"demonio_hielo_fuego", brief:"P0-06", hMul:2.6,
     tint:{hueTo:176, satTo:0.4, minSat:0.1, lum:0.85}, death:"frames",
+    pal:{ramp:["#0a0614", "#2a1640", "#51397c", "#3fb3a8", "#d8fff2"], mix:0.86, keepSat:0.72},
+    aura:{rgb:"90,230,200", d:1, a:0.55}, sizeVar:0.05,
     name:"Tritón de las Fosas",
     codex:{family:"Criatura abisal",
       lore:"El más grande de los cazadores de las fosas: medio hombre, medio bestia, con un tridente de coral negro. Dicen que el Leviatán lo dejó vivir para que cace por él.",
@@ -58,13 +70,19 @@ const BODY_SWAPS = {
       behavior:"Élite: embiste en línea recta y ensarta con el tridente.", attacks:["Embestida","Estocada de tridente"]}},
   cangrejo_acorazado: {body:"arana", brief:"P0-07", hMul:2.35,
     tint:{hue:-14, sat:1.3, lum:1.02}, death:"frames",
+    pal:{ramp:["#061214", "#14333a", "#35655f", "#c7744a", "#ffe0b0"], mix:0.86, keepSat:0.8},
+    aura:{rgb:"120,210,230", d:2, a:0.42}, sizeVar:0.1,
     name:"Cangrejo Araña",
     codex:{lore:"Cangrejos de patas larguísimas que crecieron dentro de las armaduras de los soldados ahogados: el caparazón es de hierro oxidado y los ojos, brasas bajo el agua.",
       behavior:"Lento y duro; se clava en el lugar y pincha."}},
   medusa_electrica: {body:"acechador", brief:"P0-08", hMul:2.8,
-    tint:{hue:-38, sat:1.15, lum:1.08}, death:"frames"},
+    tint:{hue:-38, sat:1.15, lum:1.08}, death:"frames",
+    pal:{ramp:["#041018", "#0a3050", "#1a7fb0", "#7fe8ff", "#ffffff"], mix:0.86, keepSat:0.85},
+    aura:{rgb:"110,220,255", d:2, a:0.5, glow:1}, sizeVar:0.1},
   sirena_abisal: {body:"medusa", brief:"P0-09", hMul:2.6,
-    tint:{hueTo:192, satTo:0.38, minSat:0.08, lum:0.95}},
+    tint:{hueTo:192, satTo:0.38, minSat:0.08, lum:0.95},
+    pal:{ramp:["#03131a", "#0b3943", "#1e7876", "#6ccfb6", "#e6fff3"], mix:0.76, keepSat:0.75},
+    aura:{rgb:"120,255,210", d:2, a:0.45}, sizeVar:0.05},
 
   /* ---- 08 · Abismo: élite (1 cuadro de caminar, arte a 4–5x). El Carcelero ya tiene arte propio (tools/art/pixrig). ---- */
   ab_jinete: {body:"jinete_sin_cabeza", brief:"P0-10", hMul:3.0,
@@ -80,11 +98,15 @@ const BODY_SWAPS = {
 const BODY_SWAP_ON = (()=>{ try{ return !/[?&]bodyswap=0\b/.test(location.search); }catch(err){ return true; } })();
 
 /* ---------------- recoloreo (una vez por atlas, al cargar) ---------------- */
-function _bsRecolor(img, T){
+function _bsHex(hx){ const n = parseInt(hx.slice(1), 16); return [(n>>16)&255, (n>>8)&255, n&255]; }
+function _bsRecolor(img, T, PAL){
   const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
   const c = document.createElement("canvas"); c.width = w; c.height = h;
   const g = c.getContext("2d", {willReadFrequently:true}); g.drawImage(img, 0, 0);
-  if(!T) return c;
+  if(!T && !PAL) return c;
+  T = T || {};
+  const ramp = PAL ? PAL.ramp.map(_bsHex) : null, rn = ramp ? ramp.length - 1 : 0;
+  const pmix = PAL ? (PAL.mix === undefined ? 0.8 : PAL.mix) : 0, keepSat = PAL && PAL.keepSat !== undefined ? PAL.keepSat : 2;
   const d = g.getImageData(0, 0, w, h), p = d.data;
   const sat = T.sat === undefined ? 1 : T.sat, lum = T.lum === undefined ? 1 : T.lum, minSat = T.minSat || 0;
   for(let i=0;i<p.length;i+=4){
@@ -105,9 +127,39 @@ function _bsRecolor(img, T){
     const L = Math.max(0, Math.min(1, l*lum));
     const q = L < 0.5 ? L*(1 + s) : L + s - L*s, pp = 2*L - q, hk = hh/360;
     const f = (t)=>{ t = ((t % 1) + 1) % 1; return t < 1/6 ? pp + (q - pp)*6*t : t < 1/2 ? q : t < 2/3 ? pp + (q - pp)*(2/3 - t)*6 : pp; };
-    p[i] = Math.round(f(hk + 1/3)*255); p[i+1] = Math.round(f(hk)*255); p[i+2] = Math.round(f(hk - 1/3)*255);
+    let R = f(hk + 1/3)*255, G = f(hk)*255, B = f(hk - 1/3)*255;
+    if(ramp && s < keepSat){
+      // mapa de degradé: la luz del píxel elige el color de la paleta propia (sombras, medios y brillos)
+      const lu = Math.max(0, Math.min(0.9999, (0.3*R + 0.59*G + 0.11*B)/255))*rn, j = Math.floor(lu), u = lu - j, A = ramp[j], Z = ramp[j + 1];
+      R += (A[0] + (Z[0] - A[0])*u - R)*pmix; G += (A[1] + (Z[1] - A[1])*u - G)*pmix; B += (A[2] + (Z[2] - A[2])*u - B)*pmix;
+    }
+    p[i] = Math.round(R); p[i+1] = Math.round(G); p[i+2] = Math.round(B);
   }
   g.putImageData(d, 0, 0);
+  return c;
+}
+
+// Contorno de agua: la silueta del atlas dilatada d píxeles, de un solo color (se dibuja detrás del cuerpo
+// con un alfa que late). Se arma una vez por atlas; las celdas no se tocan entre sí (se recorta por celda).
+function _bsAura(atlas, A, fw, fh){
+  const w = atlas.width, h = atlas.height, d = Math.max(1, A.d || 1);
+  const sil = document.createElement("canvas"); sil.width = w; sil.height = h;
+  const g0 = sil.getContext("2d", {willReadFrequently:true}); g0.drawImage(atlas, 0, 0);
+  const im = g0.getImageData(0, 0, w, h), p = im.data, [r, gg, b] = A.rgb.split(",").map(Number);
+  for(let i=0;i<p.length;i+=4){ const on = p[i+3] > 60; p[i] = r; p[i+1] = gg; p[i+2] = b; p[i+3] = on ? 255 : 0; }
+  g0.putImageData(im, 0, 0);
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const g = c.getContext("2d"); g.imageSmoothingEnabled = false;
+  const cols = Math.max(1, Math.round(w/fw)), rows = Math.max(1, Math.round(h/fh));
+  for(let cy=0; cy<rows; cy++) for(let cx=0; cx<cols; cx++){
+    g.save(); g.beginPath(); g.rect(cx*fw, cy*fh, fw, fh); g.clip();
+    for(let oy=-d; oy<=d; oy++) for(let ox=-d; ox<=d; ox++){ if((ox || oy) && ox*ox + oy*oy <= d*d + 1) g.drawImage(sil, cx*fw, cy*fh, fw, fh, cx*fw + ox, cy*fh + oy, fw, fh); }
+    g.restore();
+  }
+  // hueco donde está el cuerpo: queda solo el borde (el cuerpo se dibuja encima igual, pero así el borde no
+  // tiñe los píxeles semitransparentes del arte)
+  g.globalCompositeOperation = "destination-out"; g.drawImage(sil, 0, 0);
+  c._srcImg = atlas._srcImg || atlas;
   return c;
 }
 
@@ -180,12 +232,14 @@ function _bsBuild(key){
       for(let i=0;i<n;i++){ g.save(); g.translate((i + 1)*D.fw, 0); g.scale(-1, 1); g.drawImage(src, i*D.fw, 0, D.fw, D.fh, 0, 0, D.fw, D.fh); g.restore(); }
       c._srcImg = src; src = c;
     }
-    const c = _bsRecolor(src, S.tint);
+    const c = _bsRecolor(src, S.tint, S.pal);
     c._srcImg = src._srcImg || src; // de qué arte real sale (lo lee tools/art/enemy_coverage.js)
     const sets = {};
     for(const k in D.sets) if(Array.isArray(D.sets[k]) && D.sets[k].length) sets[k] = D.sets[k].slice();
     for(const k in (S.sets || {})) if(sets[S.sets[k]]) sets[k] = sets[S.sets[k]];
     Object.assign(P, {atlas:c, fw:D.fw, fh:D.fh, cols:D.cols, refH:D.refH, anchor:D.anchor, sets, hMul:S.hMul || D.hMul || 2.6});
+    if(S.aura){ P.aura = S.aura; P.auraAtlas = _bsAura(c, S.aura, D.fw, D.fh); }
+    if(S.sizeVar) P.sizeVar = S.sizeVar;
     if(typeof _PACK_DIR_DONE !== "undefined") _PACK_DIR_DONE.add(sets); // grilla ya resuelta: no re-derivar sobre el lienzo
     P.ready = true;
   }catch(err){ console.warn("body-swaps", key, err && err.message); P.failed = true; }

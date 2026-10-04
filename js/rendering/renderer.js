@@ -39,6 +39,7 @@ function render(){
     ctx.fillRect(em.x, em.y, 2, 2);
   }
   drawAcuaAmbience();
+  drawArenaLight(); // penumbra del piso con luz alrededor de los guardianes (art-direction.js): debajo de avisos, lava y actores
   drawHazardZones(); // pozos de lava (regla de la Arena Infernal)
   if(arenaHas("drawGround")) arenaHook("drawGround", animNow/1000); // marcas propias en el piso (ARENA_EXT)
   drawClassicPassiveGround(animNow/1000); // Bastión de Aldric (lenguaje "mejora": dorado/celeste, ▲)

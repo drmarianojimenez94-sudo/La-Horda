@@ -269,7 +269,7 @@ function renderShopChampions(panel){
         <div class="shop-skills">${skills}</div>
       </div>
       <div class="shop-champ-buy">
-        <div class="shop-price">🪙 ${fmtGold(shopChampionPrice(c.id))}</div>
+        ${owned ? '<div class="shop-price">✔ Tuyo</div>' : `<div class="shop-price">🪙 ${fmtGold(shopChampionPrice(c.id))}</div>`}
         ${owned ? `<button class="shop-btn sec" data-champ-detail="${c.id}">Ver ficha</button>`
                 : shopChampionPurchasable(c.id) ? `<button class="shop-btn" data-champ-buy="${c.id}" ${save.gold < shopChampionPrice(c.id) ? "disabled" : ""}>Comprar</button>` : '<span class="shop-st lock">No disponible</span>'}
       </div>

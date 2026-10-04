@@ -34,6 +34,9 @@ function pacingPhaseAt(p){ for(const ph of PACE_PHASES) if(p < ph.until) return 
 // Multiplicador del intervalo de aparición (lo lee update.js). Sin director en la Divina ni con jefe.
 function pacingIntervalMult(){
   if(divinaMode || bossActive || !levelDuration || levelDuration > 1e8) return 1;
+  // nivel RETENIDO por la arena (subjefes en pie después del tiempo del nivel): ritmo normal, no el del clímax
+  // (antes quedaba en clímax para siempre y la horda se apuraba justo mientras se peleaba contra los subjefes)
+  if(levelTimer >= levelDuration) return 1;
   return pacingPhaseAt(levelTimer/levelDuration).mult;
 }
 const _PACE_DIRS = ["el este","el sureste","el sur","el suroeste","el oeste","el noroeste","el norte","el noreste"];
