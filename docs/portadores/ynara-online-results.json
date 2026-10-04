@@ -1,0 +1,103 @@
+{
+  "checks": [
+    {
+      "name": "guest dish and curtain replicate",
+      "ok": true,
+      "active": [
+        {
+          "kind": "stroganoff",
+          "owner": 1
+        },
+        {
+          "kind": "watercurtain",
+          "owner": 1
+        }
+      ]
+    },
+    {
+      "host": "brasa",
+      "guest": "ynara",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "brasa",
+          "ynara",
+          "tanque",
+          "eren"
+        ],
+        "casts": 4,
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "patience",
+            "owner": 1
+          }
+        ]
+      },
+      "rg": {
+        "k": "ynara",
+        "objects": [
+          {
+            "kind": "turret",
+            "owner": 0
+          },
+          {
+            "kind": "patience",
+            "owner": 1
+          }
+        ],
+        "patience": 1,
+        "ready": true,
+        "skin": "skin_santa_paciencia"
+      }
+    },
+    {
+      "name": "host Santa Paciencia replicates",
+      "ok": true
+    },
+    {
+      "host": "ynara",
+      "guest": "iria",
+      "ok": true,
+      "rh": {
+        "classes": [
+          "ynara",
+          "iria",
+          "tanque",
+          "libertador"
+        ],
+        "casts": 4,
+        "objects": [
+          {
+            "kind": "triangle",
+            "owner": 1
+          },
+          {
+            "kind": "patience",
+            "owner": 0
+          }
+        ]
+      },
+      "rg": {
+        "k": "iria",
+        "objects": [
+          {
+            "kind": "triangle",
+            "owner": 1
+          },
+          {
+            "kind": "patience",
+            "owner": 0
+          }
+        ],
+        "patience": 0,
+        "ready": true,
+        "skin": "skin_hilo_umbral"
+      }
+    }
+  ],
+  "errors": []
+}

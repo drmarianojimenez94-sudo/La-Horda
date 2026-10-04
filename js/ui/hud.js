@@ -21,6 +21,7 @@ function updateAbilityButtons(){
     }
     if(labelEl && id!=="btn-ult") labelEl.textContent = sk.name.split(" ")[0];
     el.title = sk.name + " — " + sk.desc;
+    el.setAttribute('aria-label', sk.name);
     // Sinergias del árbol (estilo Diablo II) con su valor actual
     { const syn = typeof talentSynergySkillLine==="function" ? talentSynergySkillLine(selectedClass, mi===3 ? "ult" : mi) : ""; if(syn) el.title += "\n" + syn; }
     if(typeof boonDecorateButton==="function") boonDecorateButton(el, sk); // refuerzos que la transforman: marca + texto en el tooltip
@@ -35,13 +36,18 @@ let _hudLastCls = null, _hudLastSe = null, _hudStackH = -1;
 function hudStackLayout(){
   const st = document.getElementById("player-status"), top = document.querySelector("#hud .top"), party = document.getElementById("party");
   if(!st || !top || !party) return;
-  const h = st.offsetHeight;
-  if(h === _hudStackH) return;
-  _hudStackH = h;
-  const d = h ? Math.max(0, st.offsetTop + h + 6 - top.offsetTop) : 0;
-  top.style.transform = d ? `translateY(${d}px)` : "";
-  party.style.transform = d ? `translateY(${d}px)` : "";
-  party.style.maxHeight = d ? Math.max(80, 140 - d) + "px" : "";
+  const h=st.offsetHeight, signature=[h,top.offsetHeight,innerHeight,innerWidth,allies.length].join('|');
+  if(signature===_hudStackH) return;
+  _hudStackH=signature;
+  // Actual panel heights, including class resources; no fixed 210px overlap.
+  top.style.transform='';party.style.transform='';
+  const topY=st.offsetTop+h+6;
+  top.style.top=topY+'px';
+  const partyY=topY+top.offsetHeight+6;
+  party.style.top=partyY+'px';
+  const available=Math.max(0,innerHeight-118-partyY);
+  party.classList.toggle('compact',available<allies.length*31+6);
+  party.style.maxHeight=available+'px';
 }
 // Nombre del guardián en el HUD de partida: el corto si lo tiene ("Segador" por "Segador Olvidado"),
 // para que "Nombre · Nv. 30" entre en una línea en el teléfono. Menús, Códice y tienda: el completo.
@@ -59,7 +65,7 @@ function showBanner(text, prio){
 // progreso es el real, el que lleva el anfitrión).
 function updateDownedOverlay(){
   const el = document.getElementById("downed-overlay"); if(!el) return;
-  const show = !!(netMatch && player && !player.alive && state==="playing" && !runEnding);
+  const show = !!(!divinaMode && player && !player.alive && state==="playing" && !runEnding);
   el.classList.toggle("hidden", !show);
   // el cartel central ("NIVEL 7", "RUNA ACTIVA…") caía justo detrás de este y no se leía ninguno
   const cb = document.getElementById("center-banner"); if(cb) cb.classList.toggle("downed", show);
@@ -73,7 +79,7 @@ function updateDownedOverlay(){
   const by = player._reviveBy, prog = by && player._reviveT>0 ? Math.min(1, player._reviveT/(player._reviveDur||BOT_REVIVE_MS)) : 0;
   const alive = heroes.filter(h=>h.alive).length;
   document.getElementById("downed-sub").textContent = prog>0 ? `${heroLabel(by)} te está reviviendo… ${Math.round(prog*100)}%`
-    : (alive ? "Tus aliados pueden revivirte: que se acerquen y mantengan ✚" : "Todo el equipo cayó");
+    : (alive ? "Has caído. Un aliado puede revivirte en 5 segundos." : "Todo el equipo cayó");
   document.getElementById("downed-bar").style.width = Math.round(prog*100)+"%";
 }
 /* ============================================================
@@ -249,7 +255,8 @@ function _setBtnState(id, el, st, cdFrac, cdSec){
     }
     ui.st = st;
   }
-  if(st==="cd"){
+  el.dataset.state=st;
+  if(st==="cd" || st==="active"){
     el.style.setProperty("--cdp", cdFrac.toFixed(3));
     if(ui.sec !== cdSec){ ui.ov.textContent = cdSec; ui.sec = cdSec; }
   }
@@ -282,7 +289,7 @@ function renderParty(){
       row.innerHTML = `
         <div class="ally-badge" style="color:${a.cls.color};background:${a.cls.color}22;">${a.cls.icon}</div>
         <div class="ally-meta">
-          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+hudClassName(a.cls) : hudClassName(a.cls)}</div>
+          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+hudClassName(a.cls) : hudClassName(a.cls)}${a.netFounder && typeof founderBadgeHTML==="function" ? founderBadgeHTML(a.netFounder, "sm") : ""}</div>
           <div class="ally-hp-track"><div class="ally-hp-fill shield-seg" id="ally-shieldbar-${i}"></div><div class="ally-hp-fill" id="ally-hp-${i}"></div></div>
         </div>
         <span class="status-badge atk hidden" id="ally-atk-${i}">⚔</span>
@@ -383,3 +390,5 @@ function updateSkillLevelUI(){
 function resetSkillLevelUI(){ _skillLvlKey = ""; _skillPlusHintShown = false; }
 window.addEventListener("resize", ()=>{ _skillLvlKey = ""; });
 window.addEventListener("orientationchange", ()=>{ _skillLvlKey = ""; });
+
+setInterval(()=>{ if(typeof duoHud==="function") duoHud(); },200);

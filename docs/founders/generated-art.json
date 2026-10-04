@@ -1,0 +1,178 @@
+{
+ "nano_gm": {
+  "atlas": "assets/sprites/champions/nano_gm/atlas.png",
+  "preview": "assets/sprites/champions/nano_gm/preview.png",
+  "sha256": "9df094c4917cd2b885aa3133b9469451ed4282049f9be7b7b6923fcd866d87b9",
+  "refH": 68,
+  "review": "PENDING",
+  "generated": true
+ },
+ "nano_gm_alt1": {
+  "atlas": "assets/sprites/champions/nano_gm/skins/nano_gm_alt1/atlas.png",
+  "preview": "assets/sprites/champions/nano_gm/skins/nano_gm_alt1/preview.png",
+  "sha256": "b9440ce72d1447faa9fb588693b8b598b6eb4f5018c4c9120441c32bde254b97",
+  "refH": 71,
+  "review": "PENDING",
+  "generated": true
+ },
+ "facu_gm": {
+  "atlas": "assets/sprites/champions/facu_gm/atlas.png",
+  "preview": "assets/sprites/champions/facu_gm/preview.png",
+  "sha256": "9e62308df17399f4cfc6166fcc3153e248a7b803fdc4085f2a78491dc91fe3ce",
+  "refH": 68,
+  "review": "PENDING",
+  "generated": true
+ },
+ "facu_gm_alt1": {
+  "atlas": "assets/sprites/champions/facu_gm/skins/facu_gm_alt1/atlas.png",
+  "preview": "assets/sprites/champions/facu_gm/skins/facu_gm_alt1/preview.png",
+  "sha256": "b930393fdbb83931a9bfd0c0cad18b15781b2c8c16cb960c7fe4065ed00be3fc",
+  "refH": 70,
+  "review": "PENDING",
+  "generated": true
+ },
+ "aurelia": {
+  "atlas": "assets/sprites/champions/aurelia/atlas.png",
+  "preview": "assets/sprites/champions/aurelia/preview.png",
+  "sha256": "70a8c54b3798570ee6222a336d8d9b56477fa695fdee59e8056d1c708513f3aa",
+  "refH": 64,
+  "review": "PENDING",
+  "generated": true
+ },
+ "aurelia_alt1": {
+  "atlas": "assets/sprites/champions/aurelia/skins/aurelia_alt1/atlas.png",
+  "preview": "assets/sprites/champions/aurelia/skins/aurelia_alt1/preview.png",
+  "sha256": "863af237a610b9dd92181924b72d8802f6bf1a393b232d36611a824870dd4eeb",
+  "refH": 64,
+  "review": "PENDING",
+  "generated": true
+ },
+ "aurelia_alt2": {
+  "atlas": "assets/sprites/champions/aurelia/skins/aurelia_alt2/atlas.png",
+  "preview": "assets/sprites/champions/aurelia/skins/aurelia_alt2/preview.png",
+  "sha256": "40b1ecfd77afd6cdac7e72ae968c2824709377205286311bf5dcff4bac63f362",
+  "refH": 64,
+  "review": "PENDING",
+  "generated": true
+ },
+ "khepri": {
+  "atlas": "assets/sprites/champions/khepri/atlas.png",
+  "preview": "assets/sprites/champions/khepri/preview.png",
+  "sha256": "88e322b9a385e994c52d164b004451fe4da2555818052a03cedd5d0ad06f8caa",
+  "refH": 76,
+  "review": "PENDING",
+  "generated": true
+ },
+ "khepri_alt1": {
+  "atlas": "assets/sprites/champions/khepri/skins/khepri_alt1/atlas.png",
+  "preview": "assets/sprites/champions/khepri/skins/khepri_alt1/preview.png",
+  "sha256": "f29a14b92bead9c3e34a6d33a3dd9b472f06470307018da82896a3defc278737",
+  "refH": 76,
+  "review": "PENDING",
+  "generated": true
+ },
+ "khepri_alt2": {
+  "atlas": "assets/sprites/champions/khepri/skins/khepri_alt2/atlas.png",
+  "preview": "assets/sprites/champions/khepri/skins/khepri_alt2/preview.png",
+  "sha256": "36fa104aa7bafdd964326d22c0b00790abd1dea8656e02bc2b9b5ccbdd1e8b48",
+  "refH": 76,
+  "review": "PENDING",
+  "generated": true
+ },
+ "velmira": {
+  "atlas": "assets/sprites/champions/velmira/atlas.png",
+  "preview": "assets/sprites/champions/velmira/preview.png",
+  "sha256": "609be7bdeb63019e7ba3e11b8c91f98dfff8629d1b566f177cf340235ec2f165",
+  "refH": 73,
+  "review": "PENDING",
+  "generated": true
+ },
+ "velmira_alt1": {
+  "atlas": "assets/sprites/champions/velmira/skins/velmira_alt1/atlas.png",
+  "preview": "assets/sprites/champions/velmira/skins/velmira_alt1/preview.png",
+  "sha256": "e424cb725a4c120e34dba013418c352f620373d8f8ff1314039cc565de7942b3",
+  "refH": 79,
+  "review": "PENDING",
+  "generated": true
+ },
+ "velmira_alt2": {
+  "atlas": "assets/sprites/champions/velmira/skins/velmira_alt2/atlas.png",
+  "preview": "assets/sprites/champions/velmira/skins/velmira_alt2/preview.png",
+  "sha256": "fa20c365529aaf1368f2f4bfc2772dcc71c507c24f3436626ce4fd6e94c17a09",
+  "refH": 73,
+  "review": "PENDING",
+  "generated": true
+ },
+ "vhal": {
+  "atlas": "assets/sprites/champions/vhal/atlas.png",
+  "preview": "assets/sprites/champions/vhal/preview.png",
+  "sha256": "c81ef52b8ffd9a9f5a32e5793f4642313b5db44aa09d4d6addf6c700023ad98f",
+  "refH": 64,
+  "review": "PENDING",
+  "generated": true
+ },
+ "vhal_alt1": {
+  "atlas": "assets/sprites/champions/vhal/skins/vhal_alt1/atlas.png",
+  "preview": "assets/sprites/champions/vhal/skins/vhal_alt1/preview.png",
+  "sha256": "cc8f1299fad005afa353fd1deb7de66655d18a34477b708d3ff49e9671504d85",
+  "refH": 64,
+  "review": "PENDING",
+  "generated": true
+ },
+ "vhal_alt2": {
+  "atlas": "assets/sprites/champions/vhal/skins/vhal_alt2/atlas.png",
+  "preview": "assets/sprites/champions/vhal/skins/vhal_alt2/preview.png",
+  "sha256": "0470951321bc79690ea7b07771328f94d37e6c617104f67a7c058d59d173af4b",
+  "refH": 64,
+  "review": "PENDING",
+  "generated": true
+ },
+ "bront": {
+  "atlas": "assets/sprites/champions/bront/atlas.png",
+  "preview": "assets/sprites/champions/bront/preview.png",
+  "sha256": "92d22ad8e8837632a3a301a62d3cdebcaafee51bc4983ecd172757f5430266e5",
+  "refH": 67,
+  "review": "PENDING",
+  "generated": true
+ },
+ "bront_alt1": {
+  "atlas": "assets/sprites/champions/bront/skins/bront_alt1/atlas.png",
+  "preview": "assets/sprites/champions/bront/skins/bront_alt1/preview.png",
+  "sha256": "a85fd9f120b869a8f2717f33a1d3bcc85231098c4ad0e2259e4f402b3c64e613",
+  "refH": 67,
+  "review": "PENDING",
+  "generated": true
+ },
+ "bront_alt2": {
+  "atlas": "assets/sprites/champions/bront/skins/bront_alt2/atlas.png",
+  "preview": "assets/sprites/champions/bront/skins/bront_alt2/preview.png",
+  "sha256": "0fad74ca114d1192c93b0cd354d419e19160ac5c448acedb731b213e3d866670",
+  "refH": 67,
+  "review": "PENDING",
+  "generated": true
+ },
+ "oriel": {
+  "atlas": "assets/sprites/champions/oriel/atlas.png",
+  "preview": "assets/sprites/champions/oriel/preview.png",
+  "sha256": "18048e31199b789505f5d067d5f98e643304d7a8967b91c159f0657c9ef1351c",
+  "refH": 68,
+  "review": "PENDING",
+  "generated": true
+ },
+ "oriel_alt1": {
+  "atlas": "assets/sprites/champions/oriel/skins/oriel_alt1/atlas.png",
+  "preview": "assets/sprites/champions/oriel/skins/oriel_alt1/preview.png",
+  "sha256": "43b3f8aa442f5f1697b6f92eee9c2a7a89933d0574637414269dcbf80b2b6ddd",
+  "refH": 68,
+  "review": "PENDING",
+  "generated": true
+ },
+ "oriel_alt2": {
+  "atlas": "assets/sprites/champions/oriel/skins/oriel_alt2/atlas.png",
+  "preview": "assets/sprites/champions/oriel/skins/oriel_alt2/preview.png",
+  "sha256": "e95b4c68f70a34ef98f455ce10f9c14c7c9676c2518aed0094e698cfa8ea2d0a",
+  "refH": 68,
+  "review": "PENDING",
+  "generated": true
+ }
+}

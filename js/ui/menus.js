@@ -22,11 +22,7 @@ document.getElementById("title-continue-btn").addEventListener("click", ()=>{
   titleContinue();
 });
 function titleContinue(){
-  // PRIMER ARRANQUE CORTO: perfil nuevo → guardián de regalo → directo a la Ciudad jugando (sin hub, Modos,
-  // Arenas ni Sala). El hub y la Sala aparecen después de la primera partida (firstRunStart, js/ui/hub.js).
-  // REGALO INICIAL: guardián + skin (js/systems/starter-gift.js). Si cerró el juego después de elegir el
-  // guardián y antes de la skin, vuelve directo a la skin y sigue el mismo camino.
-  if(needsStarterChampion() || (typeof needsStarterSkin==="function" && needsStarterSkin())){ openStarterSelect(typeof firstRunStart==="function" ? firstRunStart : ()=>{ setState("mainmenu"); renderMainMenu(); }); return; }
+  if(typeof alphaFirstRunContinue==="function"){ alphaFirstRunContinue(); return; }
   if(save.firstRun==="jugando"){ save.firstRun = "hub"; persist(); } // cerró el juego en plena primera partida
   setState("mainmenu");
   renderMainMenu();
@@ -131,21 +127,21 @@ function renderChampDetail(champId){
         <div class="cd-role">${cls.role}</div>
       </div>
     </div>
-    <div class="cd-section"><div class="cd-section-title">Historia</div>${catEntry.lore}</div>`;
+    ${championGuideHTML(champId)}<div class="cd-section"><div class="cd-section-title">Historia</div>${catEntry.lore}</div>`;
   if(locked){
-    const canAfford = save.gold >= catEntry.priceGold;
+    const canAfford = save.gold >= shopChampionPrice(champId);
     html += `
       <div class="cd-section cd-unlock-box">
         <div>🔒 Guardián bloqueado</div>
-        <div class="cd-unlock-price">${fmtGold(catEntry.priceGold)} 🪙</div>
+        <div class="cd-unlock-price">${fmtGold(shopChampionPrice(champId))} 🪙</div>
         ${canAfford
           ? `<button class="btn wide" id="cd-unlock-btn">Desbloquear</button>`
-          : `<div style="font-size:0.72rem; color:var(--text-dim);">Tenés ${save.gold} oro — te faltan ${catEntry.priceGold-save.gold}.</div>`}
+          : `<div style="font-size:0.72rem; color:var(--text-dim);">Tenés ${save.gold} oro — te faltan ${shopChampionPrice(champId)-save.gold}.</div>`}
       </div>`;
   } else {
     const need = xpToNext(champ.level);
     html += `
-      <div class="cd-section cd-owned-line">✔ Ya es tuyo &nbsp;·&nbsp; Precio en tienda: <b>${fmtGold(catEntry.priceGold)} 🪙</b></div>`;
+      <div class="cd-section cd-owned-line">✔ Ya es tuyo &nbsp;·&nbsp; Precio en tienda: <b>${fmtGold(shopChampionPrice(champId))} 🪙</b></div>`;
     html += `
       <div class="cd-section">
         <div class="cd-section-title">Progreso</div>
@@ -160,7 +156,7 @@ function renderChampDetail(champId){
       </div>
       <div class="cd-section">
         <div class="cd-section-title">Habilidades</div>
-        ${cls.skills.map(s=>`<div class="cd-stat-row"><span>${s.ico} ${s.name}</span></div>`).join("")}
+
         <div class="cd-stat-row"><span>${cls.ultimate.ico} ${cls.ultimate.name} <i>(definitiva)</i></span></div>
       </div>
       <div class="cd-section">
@@ -174,10 +170,8 @@ function renderChampDetail(champId){
   const unlockBtn = document.getElementById("cd-unlock-btn");
   if(unlockBtn){
     unlockBtn.addEventListener("click", ()=>{
-      if(save.gold < catEntry.priceGold) return;
-      save.gold -= catEntry.priceGold;
-      champ.unlocked = true;
-      persist();
+      const result = shopBuyChampion(champId);
+      if(!result.ok){ if(typeof gameAlert==="function") gameAlert(result.reason); return; }
       renderChampDetail(champId);
     });
   }
@@ -301,6 +295,7 @@ function _prepStartFailed(err){
   gameAlert("No se pudo arrancar la partida:\n"+(err.message||err)+"\n\n"+(err.stack||"").split("\n").slice(0,4).join("\n"));
 }
 document.getElementById("prep-start-btn").addEventListener("click", ()=>{
+  if(!duoValid()){ showNetToast("Elegí un campeón desbloqueado antes de comenzar."); return; }
   lobbyNextArena = null; // la marca "SIGUIENTE" de la Sala dura hasta la próxima partida
   try{
     if(netInRoom()){
@@ -412,6 +407,7 @@ function renderPrepSummary(){
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
   const back = document.getElementById("prep-back-btn");
   if(back) back.textContent = netInRoom() ? "‹ Salir" : ((typeof prepReturnTo!=="undefined" && prepReturnTo==="mainmenu") ? "‹ Menú" : "‹ Guardián");
+  renderDuoPicker();
   renderLobbyArena();
   netRenderLobbyBar();
   if(typeof prepSecSync==="function") prepSecSync(); // pestañas Equipo · Arena · Sala online
@@ -466,9 +462,9 @@ function prepSkinsHTML(){
     const sk = SET_SKINS[id], on = skinIsActiveOn(id, k), full = skinOwnedFull(id), miss = shopSetMissing(id).length;
     const btn = on ? `<span class="prep-skin-on">✔ EQUIPADA</span>`
       : full ? `<button class="btn small" data-prep-skin-use="${id}">USAR</button>`
-      : `<button class="btn small secondary" data-prep-skin-buy="${id}" ${save.gold < miss*SHOP_TEST_PRICE ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(miss*SHOP_TEST_PRICE)}</button>`;
+      : `<button class="btn small secondary" data-prep-skin-buy="${id}" ${save.gold < shopSkinPrice(id) ? "disabled" : ""}>Comprar · 🪙 ${fmtGold(shopSkinPrice(id))}</button>`;
     return `<div class="prep-skin ${on?"on":""}"><canvas class="champ-anim prep-skin-anim" width="56" height="56" data-class-key="${k}" data-skin="${id}" data-idle="1"></canvas>
-      <div class="prep-skin-info"><div class="prep-skin-name">${sk.name || SET_DB[id].name}</div><div class="prep-skin-sub">Set ${SET_DB[id].name}${full||on ? "" : ` · faltan ${miss} pieza${miss>1?"s":""}`}</div>${btn}</div></div>`;
+      <div class="prep-skin-info"><div class="prep-skin-name">${sk.name || SET_DB[id].name}${typeof cosmeticArtPending==="function" && cosmeticArtPending(sk) ? " · croma de set" : ""}</div><div class="prep-skin-sub">Set ${SET_DB[id].name}${full||on ? "" : ` · faltan ${miss} pieza${miss>1?"s":""}`}</div>${btn}</div></div>`;
   }).join("");
   return `<div class="prep-skins"><div class="prep-skins-title">🎨 Skins de ${CLASSES[k].name} <button class="btn small secondary" data-prep-shop>🛒 Tienda de skins</button></div><div class="prep-skins-list">${chips}</div></div>`;
 }
@@ -477,14 +473,15 @@ function bindPrepSkins(box){
   if(sh) sh.addEventListener("click", ()=>{ codexReturnTo = "prep"; shopTab = "skins"; setState("shop"); renderShop(); });
   box.querySelectorAll("[data-prep-skin-use]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-prep-skin-use");
-    if(skinEquipOn(id, selectedClass)) _skinEquippedFeedback(id, selectedClass); else gameAlert("No se pudo equipar: revisá que tengas todas las piezas.");
+    if(skinEquipOn(id, selectedClass)) _skinEquippedFeedback(id, selectedClass); else gameAlert("No se pudo usar: revisá que hayas desbloqueado esta apariencia.");
     renderPrepSummary();
   }));
   box.querySelectorAll("[data-prep-skin-buy]").forEach(b=> b.addEventListener("click", ()=>{
     const id = b.getAttribute("data-prep-skin-buy");
-    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name})?`, {okText:"Comprar"}).then(ok=>{
+    const quotedPrice = shopSkinPrice(id);
+    gameConfirm(`¿Comprar la skin ${SET_SKINS[id].name || SET_DB[id].name} (${shopSetMissing(id).length} piezas del set ${SET_DB[id].name}) por ${fmtGold(quotedPrice)} de oro?`, {okText:"Comprar"}).then(ok=>{
       if(!ok) return;
-      shopBuySkin(id);
+      shopBuySkin(id, quotedPrice);
       renderPrepSummary();
     });
   }));
@@ -554,3 +551,13 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{
     el.addEventListener("input", ()=>{ if(typeof setAudioVolume==="function") setAudioVolume(kind, el.value/100); if(kind==="sfx" && typeof playSfx==="function") playSfx("ready"); /* muestra del volumen de efectos */ });
   }
 })();
+
+// Crystal Wars has isolated match state and shares the configured room relay.
+document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
+  if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al Coliseo."); return; }
+  if(!HordaOnboarding.ready(save)){ alphaFirstRunContinue(); return; }
+  const url=new URL("crystal-wars.html",location.href);
+  const server=new URLSearchParams(location.search).get("server");
+  if(server)url.searchParams.set("server",server);
+  location.href=url.href;
+});

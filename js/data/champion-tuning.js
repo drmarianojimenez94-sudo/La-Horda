@@ -61,3 +61,13 @@ const EREN_CFG = {
              maxPerRun:2, gapMs2:90000, lowHpPct:0.35, bossHpPct2:0.5},
   exhausted:{durationMs:6000, speedPct:-0.30, noTransformMs:20000}
 };
+// PASIVAS DE LOS CAMPEONES CLÁSICOS (2026-10, Champion Bible §4): Aldric, Kael, Thalen, Elyra y Axiom no
+// tenían rasgo permanente. Son de IDENTIDAD (refuerzan su verbo), condicionales y chicas: no son DPS plano.
+// Medidas con tools/balance/known-champion-sim.js contra la referencia por rol (docs/bible/AUDIT_LOG.md A15).
+const CLASSIC_PASSIVES = {
+  tanque:   {name:"Bastión",          ico:"🛡", allyRadius:200, allyDmgTakenMult:0.92},          // aliados cerca de Aldric: -8% daño
+  guerrero: {name:"Depredador",       ico:"🩸", basicVsDotMult:1.15},                            // básicos contra sangrantes/envenenados: +15%
+  mago:     {name:"Maestro Elemental",ico:"✶", reactionBonusMult:1.5},                           // bonus de sus reacciones x1,5 (Vapor +50% -> +75%)
+  soporte:  {name:"Gracia del Alba",  ico:"✚", lowHpPct:0.35, lowHpHealMult:1.25},              // curar a un aliado bajo 35%: +25%
+  axiom:    {name:"Recompilar",       ico:"↻", energyPerKill:3, maxPerSec:15}                    // bajas con habilidades devuelven energía
+};

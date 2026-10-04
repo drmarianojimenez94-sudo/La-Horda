@@ -27,8 +27,22 @@
    window.__accountTest = true antes de cargar.
    ============================================================ */
 
-const ACCOUNT_KEY = "horda_account";           // {token, user, name, expiresAt}
-const ACCOUNT_SYNC_KEY = "horda_account_sync"; // {user, version, hash, dirty, updatedAt, lastOk}
+// Bind credentials and cloud CAS state to one API for the lifetime of this page.
+// A pasted matchmaking invite must never redirect an authenticated request.
+const ACCOUNT_API_BASE = (()=>{
+  try{
+    const q=new URLSearchParams(location.search).get("api");
+    const raw=q || String(typeof netInitialServer==="function"?netInitialServer():NET_CONFIG.serverUrl).replace(/^ws(s?):\/\//i,"http$1://");
+    if(!raw) return "";
+    const u=new URL(raw);
+    if(!["https:","http:"].includes(u.protocol)||u.username||u.password||u.search||u.hash) return "";
+    if(location.protocol==="https:" && u.protocol!=="https:" && !["localhost","127.0.0.1","[::1]"].includes(u.hostname)) return "";
+    return u.href.replace(/\/+$/,"");
+  }catch(e){return "";}
+})();
+const ACCOUNT_SCOPE=encodeURIComponent(ACCOUNT_API_BASE);
+const ACCOUNT_KEY = "horda_account:"+ACCOUNT_SCOPE;           // {token, user, name, expiresAt}
+const ACCOUNT_SYNC_KEY = "horda_account_sync:"+ACCOUNT_SCOPE; // {user, version, hash, dirty, updatedAt, lastOk}
 const ACCOUNT_GUEST_KEY = "horda_guest_tab";   // sessionStorage: esta pestaña eligió invitado
 const ACCOUNT_DEBOUNCE_MS = 6000, ACCOUNT_DEBOUNCE_PLAYING_MS = 30000;
 const ACCOUNT_BEACON_MAX = 60000;              // navigator.sendBeacon no acepta mucho más de 64 KB
@@ -64,11 +78,25 @@ function _acctEmit(){
 
 /* ---------------- servidor ---------------- */
 // La API vive en el mismo servidor del relay: wss://host -> https://host (?api=... para probar otro).
-function accountApiBase(){
-  try{ const q = new URLSearchParams(location.search).get("api"); if(q) return q.replace(/\/+$/, ""); }catch(e){}
-  const ws = (typeof netServerUrl === "function") ? netServerUrl() : ((typeof NET_CONFIG !== "undefined" && NET_CONFIG.serverUrl) || "");
-  if(!ws) return "";
-  return String(ws).replace(/^ws(s?):\/\//i, "http$1://").replace(/\/+$/, "");
+function accountApiBase(){ return ACCOUNT_API_BASE; }
+function accountEnvironmentHTML(){
+  const ws=ACCOUNT_API_BASE.replace(/^http/,"ws"), e=netEnvironment(ws);
+  return `<div class="net-environment"><b>${e.label}</b><span>${_acctEsc(ACCOUNT_API_BASE)}</span>${e.kind!=="primary"?'<span>Cuenta y progreso separados del servidor principal.</span><a class="btn secondary small" href="https://fondalstudios.com/la-horda/jugar/">IR A FONDAL</a>':''}</div>`;
+}
+// Apply the server's cosmetic grant without replacing loot earned since the upload.
+function accountApplyEventReward(response){
+  if(!response?.ok || !acct.session || !acct.sync || !response.cosmetic) return false;
+  const known=typeof cosmeticCatalog==="function"?cosmeticCatalog().some(c=>c.id===response.cosmetic):false;
+  if(!known) return false;
+  save.cosmeticUnlocks=save.cosmeticUnlocks||{};
+  save.cosmeticUnlocks[response.cosmetic]=true;
+  if(response.cosmeticType==="croma"){save.cromas=save.cromas||{};save.cromas[response.cosmetic]=true;}
+  const y=acct.sync;
+  // Advance CAS only when the exact pre-grant version is still our version.
+  if(Number.isInteger(response.baseVersion) && response.baseVersion===y.version && Number.isInteger(response.saveVersion)) y.version=response.saveVersion;
+  if(typeof persistNow==="function") persistNow();
+  _acctSaveSync(); _acctEmit();
+  return true;
 }
 function accountAvailable(){ return !!accountApiBase(); }
 async function accountFetch(method, path, body, opts){
@@ -81,7 +109,7 @@ async function accountFetch(method, path, body, opts){
   const t = setTimeout(() => { if(ctl) ctl.abort(); }, opts.timeout || 20000);
   const headers = {};
   if(body !== undefined) headers["content-type"] = "application/json";
-  if(opts.auth !== false && acct.session) headers.authorization = "Bearer " + acct.session.token;
+  if(opts.auth !== false && acct.session && acct.session.apiBase===base) headers.authorization = "Bearer " + acct.session.token;
   try{
     const r = await fetch(base + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body),
       signal: ctl ? ctl.signal : undefined, cache: "no-store", mode: "cors" });
@@ -121,7 +149,14 @@ function accountSummarize(sv){
 function _acctMeaningful(sv){
   if(!sv) return false;
   const s = accountSummarize(sv);
-  return s.guardians > 0 || s.arenas > 0 || (Array.isArray(sv.stash) && sv.stash.length > 0);
+  // Newly released champions may be unlocked by default. They are not earned
+  // progress and must not create a false conflict on a second device's first login.
+  const baseline=typeof defaultSave==="function"?defaultSave():{champions:{}};
+  const earnedChampion=Object.entries(sv.champions||{}).some(([key,c])=>{
+    const initial=baseline.champions[key]||{};
+    return (c.unlocked&&!initial.unlocked)||(c.level||1)>(initial.level||1)||(c.xp||0)>0||!!c.croma||!!c.cosmeticSkin||Object.values(c.equipment||{}).some(Boolean);
+  });
+  return !!sv.starterChosen || earnedChampion || s.arenas > 0 || (Array.isArray(sv.stash) && sv.stash.length > 0) || Object.values(sv.cromas||{}).some(Boolean) || Object.values(sv.cosmeticUnlocks||{}).some(Boolean);
 }
 function _acctSummaryHtml(s){
   if(!s) return `<div class="acc-sum-empty">sin datos</div>`;
@@ -214,6 +249,7 @@ async function accountUpload(reason){
   try{
     const r = await accountFetch("PUT", "/api/save", { data, baseVersion: y.version | 0 });
     if(r.status === 200){
+      if(r.j.enforced && r.j.enforced.length){ _acctApplyEnforced(r.j.enforced); }
       y.version = r.j.version | 0; y.hash = _acctHash(raw); y.updatedAt = r.j.updatedAt || Date.now(); y.lastOk = Date.now();
       y.dirty = _acctHash(_acctLocalRaw()) !== y.hash; y.beacon = null;
       acct.retryMs = 0; _acctSaveSync();
@@ -237,7 +273,7 @@ function _acctRetryLater(){
 // contraseña incorrectos"), así que se explica qué pasó y qué hacer.
 const ACCOUNT_RESET_MSG = "El servidor de prueba se reinició y borró las cuentas. Tu progreso sigue en este dispositivo: creá la cuenta de nuevo (con el mismo nombre) y se sube sola.";
 function _acctSessionLost(){
-  acct.session = null; _acctSaveSession();
+  acct.session = null; acct.identity = null; _acctSaveSession();
   _acctEmit();
   if(typeof showNetToast !== "function") return;
   const say = () => showNetToast(acct.health && acct.health.persistent === false ? ACCOUNT_RESET_MSG
@@ -298,6 +334,120 @@ async function _acctReconcile(cloud){
   // en el título no se interrumpe: se pregunta al tocar "Toca para continuar" (accountGate)
   if(_acctCanApplyNow() && !(typeof state !== "undefined" && state === "title")) _acctShowConflict();
 }
+// Reinicio explícito del jugador: respalda ambas copias antes de reemplazar la nube.
+// La cuenta, contraseña y permisos no cambian. CAS evita borrar cambios de otro celular.
+async function accountStartFresh(){
+  if(!acct.session || acct.uploading || acct.pulling) return false;
+  acct.lastError = "";
+  try{
+    const r = await accountFetch("GET", "/api/save");
+    if(r.status !== 200){ if(r.status === 401) _acctSessionLost(); return false; }
+    const cloud = r.j;
+    const stamp = Date.now();
+    localStorage.setItem(SAVE_KEY+"_antesDeReinicio_"+stamp, _acctLocalRaw() || "{}");
+    localStorage.setItem(SAVE_KEY+"_nubeAntesDeReinicio_"+stamp, JSON.stringify(cloud));
+    const data = defaultSave();
+    for(const c of Object.values(data.champions)) c.unlocked = false;
+    const put = await accountFetch("PUT", "/api/save", {data, baseVersion:cloud.version|0});
+    if(put.status !== 200){
+      acct.lastError = put.status === 409 ? "Otro dispositivo cambió la nube. Revisá las copias y volvé a intentar el reinicio." : (put.j.msg || "No se pudo reiniciar la nube.");
+      if(put.status === 409) await accountPull("conflicto");
+      if(put.status === 401) _acctSessionLost();
+      return false;
+    }
+    localStorage.removeItem("laHordaDev");
+    if(new URLSearchParams(location.search).has("dev")){
+      const url = new URL(location.href); url.searchParams.delete("dev"); history.replaceState(null, "", url.href);
+    }
+    acct.conflict = null; acct.pendingApply = null;
+    acct.sync = acct.sync || {};
+    acct.sync.user = _acctKey(acct.session.user);
+    accountApplyCloud({data, version:put.j.version, updatedAt:put.j.updatedAt});
+    return true;
+  }catch(e){
+    acct.lastError = e.name === "QuotaExceededError" ? "No hay espacio para respaldar las partidas. No se borró el progreso." : "No se pudo confirmar el reinicio. Sincronizá antes de volver a intentar.";
+    return false;
+  }
+}
+/* ---------------- identidad pública: Fundador / permisos ----------------
+   SOLO para la interfaz (insignia, botón del panel, Test Lab). El servidor decide todo lo demás:
+   la propiedad de los Fundadores se fuerza al guardar y los permisos se comprueban en cada pedido. */
+acct.identity = null;
+async function accountRefreshIdentity(){
+  if(!acct.session){ acct.identity = null; _acctEmit(); return null; }
+  try{
+    const r = await accountFetch("GET", "/api/gm/status", undefined, {timeout:20000});
+    if(r.status === 200) acct.identity = { founder: r.j.founder || null, roles: r.j.roles || [], permissions: r.j.permissions || [], owner: !!r.j.owner };
+    else if(r.status === 401) acct.identity = null;
+  }catch(e){}
+  _acctEmit();
+  if(typeof window !== "undefined") window.dispatchEvent(new CustomEvent("account-identity", { detail: acct.identity }));
+  return acct.identity;
+}
+function accountIdentity(){ return acct.identity; }
+function accountCan(permission){ return !!(acct.identity && acct.identity.permissions.includes(permission)); }
+// El token de la cuenta solo viaja al relay si es el MISMO servidor que atiende las cuentas.
+function accountPresenceToken(wsUrl){
+  if(!acct.session) return null;
+  try{ if(new URL(String(wsUrl).replace(/^ws(s?):/i, "http$1:")).host !== new URL(ACCOUNT_API_BASE).host) return null; }catch(e){ return null; }
+  return acct.session.token;
+}
+// Respuesta del servidor al guardar: campeones de propiedad controlada (Fundador / sin publicar).
+function _acctApplyEnforced(list){
+  if(!Array.isArray(list) || !list.length || typeof save === "undefined" || !save || !save.champions) return;
+  for(const e of list){
+    if(!e || typeof e.id !== "string" || typeof CLASSES === "undefined" || !CLASSES[e.id]) continue;
+    if(save.champions[e.id]) save.champions[e.id].unlocked = !!e.unlocked;
+    else if(e.unlocked && typeof mkChampion === "function") save.champions[e.id] = mkChampion(true);
+  }
+  if(typeof persist === "function") persist();
+}
+function accountOwnerCandidate(){
+  return !!acct.session && _acctKey(acct.session.user) === "nanogm";
+}
+async function accountAdminAccess(){
+  try{
+    const r = await accountFetch("GET", "/api/gm/status", undefined, {timeout:15000});
+    if(r.status === 200){
+      const owner = !!(r.j.owner || r.j.role === "OWNER");
+      const messages = {
+        OWNER_EXCLUDED:"NanoGM inició sesión, pero la configuración ADMIN_USERS del servidor no le concede OWNER. Hay que corregirla en el relay principal.",
+        OWNER_NOT_BOUND:"NanoGM inició sesión, pero el servidor no vinculó esa cuenta como OWNER. Hay que reiniciar el relay principal y revisar su configuración.",
+        OWNER_ID_MISMATCH:"La cuenta no coincide con el ID OWNER vinculado en este servidor. El operador debe revisar la configuración."
+      };
+      return {owner, message:owner ? "Permiso OWNER confirmado por el servidor." : messages[r.j.reason] || "La sesión funciona, pero este servidor no reconoce esta cuenta como OWNER. El operador debe revisar el permiso de NanoGM en el relay principal."};
+    }
+    return {owner:false,message:r.status===503 ? "El servidor principal está arrancando o no está disponible. Reintentá el acceso al panel en unos segundos." : r.status===401 ? "Tu sesión no es válida en este servidor. Cerrá sesión y volvé a entrar." : r.status===404 ? "El servidor todavía no tiene la API de administración. Hace falta desplegar el relay actualizado." : "No se pudo comprobar el permiso de administración. Reintentá el acceso al panel."};
+  }catch(e){return {owner:false,message:"No se pudo conectar con el servidor para comprobar OWNER. Reintentá el acceso al panel."};}
+}
+function _acctAddRecovery(body){
+  const reset = document.createElement("button");
+  reset.type = "button"; reset.className = "btn secondary acc-danger";
+  reset.textContent = "Borrar progreso de prueba y empezar de cero";
+  reset.onclick = async () => {
+    if(acct.busy) return;
+    const ok = typeof gameConfirm === "function" && await gameConfirm("Se reiniciará el progreso de ESTA cuenta en la nube y en este dispositivo: campeones a nivel 1, nueva elección de guardián y campaña desde el inicio. También se borrarán oro, objetos y logros. Las dos partidas anteriores quedarán respaldadas en este dispositivo. Tu cuenta y permisos se conservan.\n\n¿Empezar de cero?", {okText:"Reiniciar mi progreso",cancelText:"Cancelar"});
+    if(!ok) return;
+    acct.busy = true; reset.disabled = true; _acctStatus("Respaldando y reiniciando…");
+    const done = await accountStartFresh();
+    acct.busy = false; reset.disabled = false;
+    if(done) _acctFinish("Progreso reiniciado en la nube y en este dispositivo.");
+    else _acctStatus(acct.lastError || "No se pudo reiniciar. Probá de nuevo.", "err");
+  };
+  body.append(reset);
+  const gm = document.createElement("button");
+  gm.type = "button"; gm.className = "btn secondary"; gm.textContent = "Entrar al panel de administración"; gm.hidden = !accountOwnerCandidate();
+  gm.onclick = () => { if(typeof window.gameMasterOpen === "function") window.gameMasterOpen(); else location.hash = "game-master"; };
+  const access = document.createElement("p"); access.className = "acc-note"; access.setAttribute("role", "status");
+  access.hidden = gm.hidden; access.textContent = "Comprobando permiso de administración…";
+  body.append(gm, access);
+  const session = acct.session;
+  accountAdminAccess().then(result => {
+    if(!body.isConnected || acct.session !== session) return;
+    gm.hidden = !(result.owner || accountOwnerCandidate());
+    access.hidden = gm.hidden; access.textContent = result.message;
+  });
+}
 // El jugador eligió en el aviso de conflicto.
 async function accountResolveConflict(choice){
   const c = acct.conflict; if(!c || !acct.session) return;
@@ -328,7 +478,7 @@ async function accountResolveConflict(choice){
 
 /* ---------------- entrar / crear / salir ---------------- */
 function _acctSetSession(j){
-  acct.session = { token: j.token, user: j.user.user, name: j.user.name || j.user.user, expiresAt: j.expiresAt };
+  acct.session = { token: j.token, user: j.user.user, name: j.user.name || j.user.user, expiresAt: j.expiresAt, apiBase: ACCOUNT_API_BASE };
   _acctSaveSession();
   try{ sessionStorage.removeItem(ACCOUNT_GUEST_KEY); }catch(e){}
   // el nombre de la cuenta pasa a ser el de la Sala multijugador
@@ -340,6 +490,7 @@ async function accountLogin(user, pass){
   if(r.status !== 200) return { ok: false, status: r.status, error: r.j.error, msg: r.j.msg || "No se pudo entrar." };
   _acctSetSession(r.j);
   await accountPull("login");
+  accountRefreshIdentity();
   return { ok: true };
 }
 async function accountRegister(user, pass, email){
@@ -354,7 +505,7 @@ async function accountLogout(){
   if(acct.sync && acct.sync.dirty && !acct.conflict) await accountUpload("salir");
   const token = acct.session.token;
   try{ await fetch(accountApiBase() + "/api/logout", { method: "POST", headers: { authorization: "Bearer " + token }, cache: "no-store" }); }catch(e){}
-  acct.session = null; acct.conflict = null; acct.pendingApply = null;
+  acct.session = null; acct.identity = null; acct.conflict = null; acct.pendingApply = null;
   if(acct.timer){ clearTimeout(acct.timer); acct.timer = null; }
   _acctSaveSession();
   _acctEmit();
@@ -407,6 +558,7 @@ function _acctRenderAuth(mode){
   const noServer = !accountAvailable();
   const reg = mode === "register";
   body.innerHTML = `
+    ${accountEnvironmentHTML()}
     <div class="acc-tabs" role="tablist">
       <button type="button" class="acc-tab ${reg ? "" : "on"}" data-acc-tab="login" role="tab" aria-selected="${!reg}">Entrar</button>
       <button type="button" class="acc-tab ${reg ? "on" : ""}" data-acc-tab="register" role="tab" aria-selected="${reg}">Crear cuenta</button>
@@ -504,6 +656,12 @@ async function _acctSubmit(reg){
     return;
   }
   if(acct.conflict){ _acctShowConflict(); return; }
+  if(!reg && accountOwnerCandidate()){
+    _acctRenderProfile();
+    const next = document.createElement("button"); next.type = "button"; next.className = "btn"; next.textContent = "Continuar como jugador";
+    next.onclick = () => _acctFinish(null); acct.el.querySelector(".acc-body").append(next);
+    return;
+  }
   _acctFinish(reg ? `¡Cuenta creada! Bienvenido, ${acct.session.name}.` : `Hola, ${acct.session.name}. Progreso sincronizado.`);
 }
 function _acctGuest(){
@@ -538,8 +696,9 @@ function _acctRenderProfile(){
   const el = _acctBuild(), body = el.querySelector(".acc-body"), s = acct.session;
   el.querySelector(".acc-title").textContent = "Tu perfil";
   body.innerHTML = `
+    ${accountEnvironmentHTML()}
     <div class="acc-who"><span class="acc-avatar" aria-hidden="true">${_acctEsc((s.name || s.user).charAt(0).toUpperCase())}</span>
-      <div><div class="acc-who-name">${_acctEsc(s.name || s.user)}</div><div class="acc-who-user">usuario: ${_acctEsc(s.user)}</div></div></div>
+      <div><div class="acc-who-name">${_acctEsc(s.name || s.user)} ${acct.identity && acct.identity.founder && typeof founderBadgeHTML === "function" ? founderBadgeHTML(acct.identity.founder.key, "md") : ""}</div><div class="acc-who-user">usuario: ${_acctEsc(s.user)}</div></div></div>
     <div class="acc-sync" id="acc-sync"></div>
     <form class="acc-form acc-rename" novalidate>
       <label class="acc-field"><span>Nombre visible (en la Sala)</span>
@@ -575,6 +734,7 @@ function _acctRenderProfile(){
     if(typeof showNetToast === "function") showNetToast("Sesión cerrada. Seguís como invitado en este dispositivo.");
     _acctRenderAuth("login");
   });
+  _acctAddRecovery(body);
   _acctRenderProfileStatus();
   _acctShowBack();
 }
@@ -603,6 +763,8 @@ function _acctShowConflict(){
   el.querySelector(".acc-title").textContent = "¿Qué progreso usamos?";
   const localSum = accountSummarize(c.local);
   body.innerHTML = `
+    ${accountEnvironmentHTML()}
+    <div class="acc-note">Sesión iniciada: ${_acctEsc(acct.session.user)}. La elección de progreso no cambia tus permisos.</div>
     <div class="acc-note acc-conflict-note">Tu cuenta tiene progreso guardado en la nube y este dispositivo tiene otro distinto. Elegí con cuál seguir: el otro queda respaldado en este dispositivo.</div>
     <div class="acc-conflict">
       <button type="button" class="acc-choice" id="acc-use-cloud">
@@ -635,6 +797,11 @@ function _acctShowConflict(){
   };
   body.querySelector("#acc-use-cloud").addEventListener("click", () => pick("cloud"));
   body.querySelector("#acc-use-local").addEventListener("click", () => pick("local"));
+  _acctAddRecovery(body);
+  const logout = document.createElement("button");
+  logout.type = "button"; logout.className = "btn secondary"; logout.textContent = "Cambiar de cuenta";
+  logout.onclick = async () => { if(acct.busy) return; acct.busy = true; await accountLogout(); acct.busy = false; _acctRenderAuth("login"); };
+  body.append(logout);
 }
 
 /* ---------------- API pública ---------------- */
@@ -702,8 +869,21 @@ function _acctRenderChip(){
 /* ---------------- arranque ---------------- */
 (function accountInit(){
   acct.session = _acctLoad(ACCOUNT_KEY);
-  if(acct.session && (!acct.session.token || !acct.session.user)) acct.session = null;
-  acct.sync = _acctLoad(ACCOUNT_SYNC_KEY) || { user: "", version: 0, hash: "", dirty: false };
+  acct.sync = _acctLoad(ACCOUNT_SYNC_KEY);
+  // Migrate legacy sessions only on their known original service. Unknown manual
+  // sessions require signing in again; the legacy records and local save remain intact.
+  if(!acct.session && !_acctLoad("horda_account_migrated:"+ACCOUNT_SCOPE)){
+    const old=_acctLoad("horda_account");
+    const legacyBase=old?.apiBase || (location.hostname==="fondalstudios.com" ? "https://fondalstudios.com/la-horda/red" : "https://la-horda-relay.onrender.com");
+    if(old && legacyBase===ACCOUNT_API_BASE && !new URLSearchParams(location.search).has("api")){
+      acct.session=Object.assign({},old,{apiBase:legacyBase});
+      acct.sync=_acctLoad("horda_account_sync");
+      _acctSaveSession(); _acctSaveSync();
+      _acctStore("horda_account_migrated:"+ACCOUNT_SCOPE,true);
+    }
+  }
+  if(acct.session && (!acct.session.token || !acct.session.user || acct.session.apiBase!==ACCOUNT_API_BASE)) acct.session = null;
+  acct.sync = acct.sync || { user: "", version: 0, hash: "", dirty: false };
   window.accountOpen = accountOpen;
   window.accountState = accountState;
   window.accountSyncNow = accountSyncNow;
@@ -729,5 +909,5 @@ function _acctRenderChip(){
   window.addEventListener("focus", () => _acctPullIfStale("foco"));
   window.addEventListener("online", () => { if(acct.session && acct.sync && acct.sync.dirty){ acct.retryMs = 0; _acctSchedule(1000); } });
   // sesión recordada: se entra directo y la nube se baja en segundo plano (nunca frena el arranque)
-  setTimeout(() => { _acctRenderChip(); if(acct.session) accountPull("inicio"); }, 0);
+  setTimeout(() => { _acctRenderChip(); if(acct.session){ accountPull("inicio"); accountRefreshIdentity(); } }, 0);
 })();

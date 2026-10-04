@@ -1,0 +1,101 @@
+/* Combat surfaces, loaded after mobile overrides. All original controls remain. */
+:root{--hud-surface:#101927;--hud-line:#657b98;--hud-ink:#f2f7ff;}
+#hud #player-status,#hud .top-pill,#hud .ally-row,#hud #ult-meter{
+ background:rgba(12,20,33,.94);border:1px solid var(--hud-line);color:var(--hud-ink);
+ border-radius:8px;box-shadow:0 2px 0 #030609,inset 0 1px 0 #8aa3c333;
+}
+#hud #player-status{width:164px;box-sizing:border-box;padding:7px 9px;}
+#hud .bar-row{margin-bottom:4px;gap:5px;}
+#hud .bar-track{height:11px;outline:1px solid #050a13;background:#361724;}
+#hud .bar-track.energy{background:#102b47;}
+#hud .bar-fill{background:linear-gradient(180deg,#ff8194,#cf3656);}
+#hud .bar-fill.energy{background:linear-gradient(180deg,#90e9ff,#248fd0);}
+#hud .bar-fill.shield-seg{background:linear-gradient(180deg,#c9f1ff,#58b5ff);}
+#hud .bar-label,#hud #plevel,#hud .ally-name{color:#e0ebfa;}
+#hud #plevel{text-align:left;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#hud :is(#se-hud,#musashi-hud,#sylva-hud,#nigromante-hud){text-align:left;font-size:.88rem;}
+#hud #nigromante-hud{display:grid;grid-template-columns:1fr 1fr;gap:2px 5px;}
+#hud #nigromante-hud.hidden{display:none;}
+#hud #nigro-souls-row{grid-column:1/-1;white-space:nowrap;}
+#hud #nigro-souls-pips{white-space:nowrap;}
+#hud #nigro-golem-row{white-space:nowrap;}
+#hud .top{width:164px;min-width:0;max-width:none;gap:3px;}
+#hud .top-pill{display:grid;grid-template-columns:1fr auto;gap:3px 6px;padding:5px 7px;font-size:.9rem;}
+#hud .top-pill>span:nth-child(2){grid-column:1/-1;grid-row:2;}
+#hud #arena-rule-chip{grid-column:1/-1;grid-row:3;font-size:.85rem;}
+#hud #hud-arena-line{font-size:.9rem;}
+#hud #wave-timer-wrap{width:100%;height:4px;margin:0;background:#172a40;}
+#hud #wave-timer-bar{background:linear-gradient(90deg,#4ea7ff,#a4eaff);}
+#hud #party{width:164px;gap:3px;}
+#hud .ally-row{padding:4px 6px;min-height:22px;box-sizing:border-box;}
+#hud .ally-name{font-size:.83rem;}
+#hud .ally-hp-fill{background:linear-gradient(90deg,#bc3355,#ff8b9f);}
+#hud .ally-hp-fill.shield-seg{background:#81ceff;}
+/* A resource-heavy champion uses compact ally rows, never clips an ally offscreen. */
+#hud #party.compact .ally-row{min-height:20px;padding:2px 5px;}
+#hud #party.compact .ally-name{font-size:.8rem;line-height:12px;margin-bottom:0;}
+#hud #party.compact .ally-hp-track{height:4px;}
+#hud #party.compact .ally-badge{width:14px;height:14px;}
+/* Charge joins combat controls; it no longer occupies the top-right of the playfield. */
+#hud #ult-meter{top:auto;right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(207px + env(safe-area-inset-bottom,0px));width:64px;padding:4px;box-sizing:border-box;}
+#hud #ult-ring{width:28px;height:28px;margin-bottom:1px;}
+#hud #ult-ring-inner{width:22px;height:22px;font-size:.8rem;background:#101927;}
+#hud #ult-label{font-size:.78rem;color:#ffe08d;}
+#pause-btn,#mute-btn{
+ top:calc(8px + env(safe-area-inset-top,0px));left:auto;width:44px;height:44px;padding:0;
+ background:linear-gradient(180deg,#334765,#18283f);border:2px solid #9aafd0;
+ color:#fff;border-radius:8px;box-shadow:0 3px 0 #03060c,inset 0 1px 0 #ffffff55;cursor:pointer;
+}
+#pause-btn{right:calc(60px + env(safe-area-inset-right,0px));}
+#mute-btn{right:calc(10px + env(safe-area-inset-right,0px));}
+#mute-btn{font-family:var(--font-retro);font-size:.85rem;}
+#mute-btn[data-audio="off"]{border-color:#ffbf8c;color:#ffd2b1;}
+#pause-btn:active,#mute-btn:active{box-shadow:0 1px 0 #03060c,inset 0 2px 4px #0009;}
+#hud #boss-hud{left:50%;width:min(42vw,420px);padding:5px 8px;background:rgba(12,20,33,.92);border-radius:8px;box-sizing:border-box;}
+#hud #boss-name{font-size:.65rem;}
+#hud #boss-name-row{gap:4px;}
+#hud #boss-epithet{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.88rem;}
+#controls .ability-btn{
+ --action:#77cfff;background:linear-gradient(155deg,#304c6b 0%,#182d46 48%,#101c30 100%);
+ border:3px solid var(--action);color:#fff;border-radius:18px;cursor:pointer;touch-action:none;
+ box-shadow:0 4px 0 #03070e,0 0 0 2px #03070e,inset 0 2px 0 #ffffff50;
+ text-shadow:0 1px 2px #000;font-size:.83rem;box-sizing:border-box;
+}
+#controls .ability-btn .ico{filter:none;}
+#controls .ability-btn.basic{--action:#ffbc79;background:linear-gradient(150deg,#825031,#402b24);border-radius:23px;}
+#controls .ability-btn.s1{--action:#75d9ff;}
+#controls .ability-btn.s2{--action:#bdacff;background:linear-gradient(150deg,#554979,#23213c);}
+#controls .ability-btn.s3{--action:#83ebc1;background:linear-gradient(150deg,#2e685a,#172d32);}
+#controls .ability-btn.ult{--action:#ffe28e;background:linear-gradient(150deg,#695228,#322a20);opacity:1;}
+#controls .ability-btn.ult.locked{opacity:1;border-color:#65738b;color:#b5c2d5;}
+#controls .ability-btn.ult.locked::after{content:'🔒';position:absolute;top:2px;right:3px;font-size:.65rem;}
+#controls .ability-btn.sec{border-radius:12px;opacity:1;font-size:.74rem;}
+#controls .ability-btn.emerg,#controls .ability-btn.pact,#controls .ability-btn.revive{--action:#97f3b4;background:linear-gradient(150deg,#2e6b4a,#162e26);}
+#controls .ability-btn.emerg.spent{border-color:#65738b;color:#b5c2d5;}
+#controls .ability-btn.revive{opacity:0;border-radius:18px;}
+#controls .ability-btn.revive.ready{opacity:1;}
+#controls .ability-btn.revive.ctx.ready{border-color:var(--ctx-col,#ffe08d);}
+#controls .ability-btn.ready:not(.revive){border-color:var(--action);box-shadow:0 4px 0 #03070e,0 0 0 2px #03070e,inset 0 2px 0 #ffffff66;}
+#controls .ability-btn.cd{border-color:#8295b2;box-shadow:0 3px 0 #03070e,0 0 0 2px #03070e;}
+#controls .ability-btn.cd .ico{opacity:.7;filter:grayscale(.4);}
+#controls .ability-btn.noen{border-style:dashed;border-color:#8fc7ff;}
+#controls .ability-btn.noen::after{content:'✦';background:#0c1728;border-radius:3px;padding:1px 2px;}
+#controls .ability-btn.active{border-color:#b0ffbf;box-shadow:0 4px 0 #03070e,0 0 0 2px #03070e,inset 0 0 0 2px #439e63;}
+#controls .ability-btn.active::before{content:'●';position:absolute;top:2px;right:4px;color:#b0ffbf;font-size:.6rem;}
+#controls .ability-btn.ult.ready{box-shadow:0 4px 0 #03070e,0 0 0 2px #03070e,0 0 14px #ffd46a66;}
+#controls .ability-btn:active{box-shadow:0 1px 0 #03070e,0 0 0 2px #03070e,inset 0 3px 5px #0009;}
+#controls .cd-overlay{border-radius:15px;font-size:1.05rem;z-index:1;}
+#controls .skill-lvl-pip{z-index:2;font-size:.8rem;line-height:16px;background:#111d30;}
+#controls .skill-plus{width:32px;height:32px;box-shadow:0 3px 0 #050910,0 0 0 1px #050910;font-size:1.2rem;}
+#joy-base{background:rgba(13,25,43,.82);border:2px solid #85b9e2;box-shadow:0 0 0 2px #030810;}
+#joy-knob{background:linear-gradient(145deg,#93caff,#37618b);border:2px solid #dcf1ff;box-shadow:0 3px 0 #080f1b;}
+#controls .ability-btn:focus-visible,#pause-btn:focus-visible,#mute-btn:focus-visible{outline:3px solid white;outline-offset:3px;}
+@media(max-height:420px){
+ #hud #player-status{padding:5px 8px;}
+ #hud .top-pill{padding:4px 6px;}
+ #hud .ally-row{padding:3px 5px;}
+ #hud #boss-epithet{font-size:.78rem;max-width:34%;}
+ #hud #ult-meter{bottom:calc(201px + env(safe-area-inset-bottom,0px));}
+}
+@media(prefers-reduced-motion:reduce){#controls .ability-btn,#controls .skill-plus{animation:none!important;}}
+body.reduce-motion #controls .ability-btn,body.reduce-motion #controls .skill-plus{animation:none!important;}

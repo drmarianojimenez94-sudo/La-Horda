@@ -1,7 +1,7 @@
-// CROMAS (js/systems/cromas.js): variantes de color por recoloreo del atlas base, compradas con oro del
+// Apariencias independientes: IDs históricos CROMA_SKINS, ahora con diseños propios, compradas con oro del
 // juego y equipadas por guardián. Verifica: registro completo (cada guardián sin skin tiene al menos
-// una; imágenes del mismo tamaño que la base), compra / equipar / quitar con sus reglas, que la skin de
-// set completo manda sobre la croma, que se DIBUJA con otra paleta (píxeles distintos, misma silueta),
+// una; imágenes según metadata propia o base), compra / equipar / quitar con sus reglas, que la skin de
+// set completo manda sobre la croma, que se DIBUJA con otra paleta (píxeles distintos, silueta propia en skins),
 // que no cambia ninguna estadística, que viaja en el loadout del invitado, guardado y Tienda.
 //   (python3 -m http.server 8771 &) ; node tools/items/t_cromas.js
 let chromium;
@@ -10,7 +10,7 @@ const BASE = process.env.SE_BASE_URL || 'http://127.0.0.1:8771';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 500) : '')); if (!ok) fails++; };
 (async () => {
-  const browser = await chromium.launch({ args: ['--no-sandbox'] });
+  const browser = await chromium.launch({ executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH, args: ['--no-sandbox'] });
   const page = await (await browser.newContext({ viewport: { width: 900, height: 506 } })).newPage();
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
@@ -36,6 +36,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
       if (!CLASSES[d.champ] || !CROMA_CRYSTALS[d.crystal] || !(d.price > 0) || !d.name || !d.lore || !d.preview) bad.push(id);
       for (const k in d.packs) { const P = CHAMP_PACK[d.packs[k]], B = CHAMP_PACK[k];
         if (!P || !P.ready) { bad.push(id + ':' + k + ' sin cargar'); continue; }
+        if (d.authoredPacks) { if(P.cromaOf || P.fw!==d.authoredPacks[k].meta.w || P.fh!==d.authoredPacks[k].meta.h) sizes.push(id+':'+k); continue; }
         if (P.atlas.naturalWidth !== B.atlas.naturalWidth || P.atlas.naturalHeight !== B.atlas.naturalHeight || P.fw !== B.fw || P.refH !== B.refH) sizes.push(id + ':' + k); }
       for (const k in d.imgs) { const im = d.imgs[k]; if (!im.naturalWidth) bad.push(id + ':' + k + ' sin cargar'); }
       if (!Object.keys(d.packs).length && !Object.keys(d.imgs).length) bad.push(id + ' vacía');
@@ -46,7 +47,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     return { n: ids.length, bad, sizes, cover, noSkin };
   });
   check('REGISTRO.datos_completos_y_cargadas', reg.n >= 3 && reg.bad.length === 0, reg.bad);
-  check('REGISTRO.mismo_tamano_y_grilla_que_la_base', reg.sizes.length === 0, reg.sizes);
+  check('REGISTRO.grilla_segun_contrato_propio_o_croma', reg.sizes.length === 0, reg.sizes);
   check('REGISTRO.cada_guardian_sin_skin_tiene_croma', reg.cover.every(c => c[1] >= 1), reg.cover);
 
   // ---------- compra y equipar ----------
@@ -71,7 +72,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const id = Object.keys(SET_SKINS).find(s => CROMA_SKINS && Object.values(CROMA_SKINS).some(d => d.champ === SET_SKINS[s].champ));
     if (!id) return { skip: true };
     const k = SET_SKINS[id].champ, cid = Object.keys(CROMA_SKINS).find(c => CROMA_SKINS[c].champ === k);
-    save.cromas[cid] = true; cromaEquip(k, cid);
+    save.cromas[cid] = true; cromaEquip(k, cid); delete save.champions[k].cosmeticSkin;
     const a = champSkinId(k);
     save.stash = []; setPieceIds(id).forEach(p => { const it = makeDesignedItem(p); stashItems().push(it); equipItem(k, it.uid); }); invalidatePassiveCache();
     const b = champSkinId(k);
@@ -105,14 +106,14 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
         if (A.d[i + 3] > 128 && B.d[i + 3] > 128 && (Math.abs(A.d[i] - B.d[i]) + Math.abs(A.d[i + 1] - B.d[i + 1]) + Math.abs(A.d[i + 2] - B.d[i + 2])) > 40) diff++;
       }
       out[cid] = { solidA, diffPct: +(diff / Math.max(1, solidA) * 100).toFixed(1), silueta: +(sameAlpha / (A.d.length / 4) * 100).toFixed(2),
-        skin: B.skin, mismasStats: A.stats.join() === B.stats.join() };
+        authored:!!CROMA_SKINS[cid].authoredPacks, skin: B.skin, mismasStats: A.stats.join() === B.stats.join() };
       cromaEquip(k, null);
     }
     return out;
   });
   const dv = Object.entries(draw);
   check('DIBUJO.otra_paleta_se_ve', dv.every(([, o]) => o.solidA > 200 && o.diffPct >= 4), draw);
-  check('DIBUJO.misma_silueta', dv.every(([, o]) => o.silueta >= 99.5), dv.map(([k, o]) => [k, o.silueta]));
+  check('DIBUJO.silueta_propia_en_skins_y_preservada_en_cromas', dv.every(([, o]) => o.authored ? o.silueta < 99.5 : o.silueta >= 99.5), dv.map(([k, o]) => [k, o.silueta]));
   check('DIBUJO.skin_activa_es_la_croma', dv.every(([k, o]) => o.skin === k));
   check('PODER.croma_no_cambia_estadisticas', dv.every(([, o]) => o.mismasStats));
 
@@ -124,7 +125,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     const orig = CaballeritoHabilidades.draw; CaballeritoHabilidades.draw = function(){ during = CaballeritoHabilidades.images.torbellino; return orig.apply(this, arguments); };
     try { drawHeroBody(h, 2, true, false); } finally { CaballeritoHabilidades.draw = orig; }
     const after = CaballeritoHabilidades.images.torbellino; h.spinTimer = 0; cromaEquip('tanque', null);
-    return { cambio: during === CROMA_SKINS.tanque_ancestral.imgs.torbellino, restaurada: after === before };
+    return { cambio: CROMA_SKINS.tanque_ancestral.authoredPacks ? during===null : during === CROMA_SKINS.tanque_ancestral.imgs.torbellino, restaurada: after === before };
   });
   check('DIBUJO.tanque_torbellino_con_croma_y_restaurado', knight.cambio && knight.restaurada, knight);
 
@@ -177,7 +178,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   // ---------- Códice (ficha del guardián): chips de croma y su ficha con comprar / usar ----------
   const cx = await E(() => {
     save.cromas = {}; cromaEquip('nigromante', null);
-    const html = codexChampSkinsHtml('nigromante'), chips = (html.match(/Croma · /g) || []).length;
+    const html = codexChampSkinsHtml('nigromante'), chips = (html.match(/(?:Skin|Croma) · /g) || []).length;
     const el = document.createElement('div'); el.innerHTML = '<div id="cx-skin-detail"></div>'; document.body.appendChild(el);
     codexSkinDetail(el, 'nigromante', 'nigromante_piedra');
     const buyBtn = !!el.querySelector('#cx-croma-buy');

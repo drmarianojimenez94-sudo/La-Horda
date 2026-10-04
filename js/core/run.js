@@ -14,7 +14,8 @@
    ============================================================ */
 let runTimers = [];
 let runEnding = false; // true desde que el jefe final cae (o el jugador muere) hasta salir de la partida
-function runLater(ms, fn){ runTimers.push({t:ms, fn}); }
+let runCastOwner=null;
+function runLater(ms, fn){ const owner=runCastOwner, key=owner&&owner.classKey; runTimers.push({t:ms, fn:()=>{ if(!owner||(owner.alive&&owner.classKey===key)){ const prior=runCastOwner;runCastOwner=owner;try{fn();}finally{runCastOwner=prior;} } }}); }
 function clearRunTimers(){ runTimers.length = 0; }
 function updateRunTimers(dt){
   if(!runTimers.length) return;
@@ -53,7 +54,7 @@ function pickLobbyAllies(mine){
   const myRole = CLASSES[mine].roleCategory;
   const others = [];
   ROLE_ORDER.filter(r=>r!==myRole).forEach(role=>{
-    const pool = Object.keys(CLASSES).filter(k=>k!==mine && CLASSES[k].roleCategory===role);
+    const pool = Object.keys(CLASSES).filter(k=>k!==mine && CLASSES[k].roleCategory===role && championBotEligible(k));
     if(pool.length) others.push(pool[(Math.random()*pool.length)|0]);
   });
   return others;
@@ -69,12 +70,15 @@ function resetRunTransients(){
   axiomForceQuitFlash = 0; axiomFreezeTimer = 0; axiomFreezeCaster = null; axiomForceQuitPending = null;
   if(typeof canvas!=="undefined" && canvas && canvas.style) canvas.style.filter = "";
   musashiDuelSlotsUsed = 0; musashiAfterimages = []; musashiSecondCuts = [];
-  activeAxiomVfx = []; bossDangerPulse = 0; champFx = [];
+  activeAxiomVfx = []; bossDangerPulse = 0; champFx = []; portadorReset();
   boss = null; bossActive = false; activeChampion = null; midBossSpawned = false; levelClearing = 0;
   if(typeof groundLootReset==="function") groundLootReset(); // botín del piso: se junta si la partida sigue (cambio de arena)
 }
 function startRun(fromLevel){
+  if(["gameover","victory"].includes(state)) duoRestoreLead();
   runLevel = fromLevel || 1;
+  // Campeones sin fila en el guardado (INTERNAL en Test Lab / herramientas): fila temporal en memoria.
+  if(CLASSES[selectedClass] && !save.champions[selectedClass]) save.champions[selectedClass] = mkChampion(false);
   resetRunTransients();
   markRunStartProgress(selectedClass); // base para el castigo de derrota/abandono (solo lo ganado en esta partida)
   clearRunTimers();
@@ -82,6 +86,7 @@ function startRun(fromLevel){
   crystalReset();
   kills = 0;
   runElapsedMs = 0;
+  if(typeof bossArenaReset==="function") bossArenaReset();
   subjefesDefeated = 0; // Fase 3.1: un objeto por cada subjefe derrotado en esta partida
   arenaHazardTimer = 6000; // primer peligro ambiental recién a los 6s, para no golpear apenas arranca
   screenShake = 0;
@@ -136,9 +141,12 @@ function startRun(fromLevel){
   updateAbilityButtons();
   if(typeof resetSkillLevelUI==="function") resetSkillLevelUI();
   if(arenaHas("runStart")) arenaHook("runStart"); // mapa propio: estado inicial y héroes en la entrada
+  duoInitRun();
   beginLevel();
   if(typeof questsOnRunStart==="function") questsOnRunStart(); // logros y desafíos: empieza a contar esta partida
   setState("playing");
+  if(typeof founderPresenceOnRunStart==="function" && (fromLevel||1)===1) founderPresenceOnRunStart(); // Regente Fundador: banner de ARENA (online lo manda el relay)
+  if(typeof founderArenaInteraction==="function") founderArenaInteraction(); // Nano + Facu juntos: reacción cosmética 1–2 s
 }
 
 function spawnEmber(){
@@ -201,6 +209,7 @@ function onBossDefeated(){
   if(currentArena==="acuatica" && boss && boss.type==="leviatan" && (boss.acuaticaPhase||1) < 3){
     boss.alive = true;
     boss.acuaticaPhase = (boss.acuaticaPhase||1) + 1;
+    boss.bossPhase = boss.acuaticaPhase; // la música (capa de fase, audio.js) y el HUD siguen la vida actual
     boss.hp = boss.maxHp;
     boss.dmg = Math.round(boss.dmg*1.22);
     boss.speed = Math.round(boss.speed*1.15);
@@ -277,10 +286,12 @@ function completeArenaByExit(){
 function bossDefeatOutcome(type){ return (ENEMY_BASE[type] && ENEMY_BASE[type].defeatOutcome) || "victory"; }
 
 function onPlayerDeath(){
-  player.alive = false;
+  player.alive = false; player.moving=false;
+  if(duoPending(player)) return;
   // B1: en cooperativo caer no termina la partida mientras quede algún humano en pie (te
   // pueden revivir); la derrota la decide netHostCheckDefeat.
   if(netIsHost()){ showBanner(`${player.netName||player.cls.name} ha caído`); return; }
+  if(!divinaMode && heroes.some(h=>h.alive)){ showBanner("Has caído · un aliado puede revivirte"); return; }
   if(runEnding) return; // la victoria ya estaba en camino: no se pisa con una derrota
   runEnding = true;
   runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });

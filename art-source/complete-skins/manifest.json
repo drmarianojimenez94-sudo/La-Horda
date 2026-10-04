@@ -1,0 +1,58 @@
+[
+  {
+    "k": "tanque",
+    "set": "baluarte",
+    "name": "Baluarte Inquebrantable — El Último Juramento",
+    "ref": "assets/sprites/champions/tanque/atlas.png",
+    "design": "The same young brown-haired blue-eyed chibi male knight, now wearing massive repaired dark gunmetal plate armor, open helmet exposing the recognisable face and some brown hair, navy blue torn cape, pale steel rivets, muted gold heraldic cross, enormous rectangular battered pavise shield with a tiny blue crystal inset and a broad steel sword. This is a new detailed outfit silhouette, not a recolor. Noble weary protector; no horns, no skull mask."
+  },
+  {
+    "k": "nigromante",
+    "set": "requiem",
+    "name": "Réquiem del Señor de la Muerte — Rey Sin Tumba",
+    "ref": "assets/sprites/champions/nigromante/v2/atlas.png",
+    "design": "The same pale sinister male necromancer as reference, crown made of broken ivory bones, black funerary cloak with strips of named burial linen suggested without readable text, bone breastplate, skull-topped staff containing a small jade green soul flame. Ivory and black silhouette with restrained green accents, recognizable pale face. Royal ossuary detail, no gore, no excessive green glow."
+  },
+  {
+    "k": "libertador",
+    "set": "granadero",
+    "name": "Uniforme del Granadero — Granadero del Alba",
+    "ref": "assets/sprites/champions/libertador/v2/atlas.png",
+    "design": "The same recognisable Jose de San Martin inspired male commander face and dark hair, in ornate navy blue early-19th-century grenadier uniform with white cross-belts, gold epaulettes, short navy campaign cape, high black boots, dark tall military shako with blue-white cockade, sabre and long period flintlock musket with fixed bayonet. Proud historical fantasy commander, no modern weapon, no modern tactical gear, restrained gold details."
+  },
+  {
+    "k": "brasa",
+    "set": "ultimo_turno",
+    "name": "Último Turno — Maquinista de la Caldera",
+    "ref": "assets/sprites/champions/brasa/atlas.png",
+    "design": "The same lively red-haired female mechanic with brass goggles and recognisable face, now in a dark reinforced leather engineering apron, brass shoulder plates, heavy asymmetric gloves, rivet gun and a compact coal-fired boiler backpack with two chunky copper steam valves. Rust red, dark leather, aged brass and small amber indicators. New visible boiler and plated workwear silhouettes, not a recolor."
+  },
+  {
+    "k": "eslabon",
+    "set": "juramento_roto",
+    "name": "Juramento Roto — Carcelero de Puertas Abiertas",
+    "ref": "assets/sprites/champions/eslabon/atlas.png",
+    "design": "The same imposing chibi chain jailer and recognizable face as reference, battered dark steel prison armor, opened-bar visor helmet, asymmetric iron shoulder plate, broken wrist shackles, broad segmented chain weapon with visibly open handcuffs, small bunch of brass keys on belt, torn charcoal cloak. Pale iron and muted warm ivory. Heavy protective silhouette, no modern police symbols."
+  },
+  {
+    "k": "morwen",
+    "set": "vidrio_negro",
+    "name": "Vidrio Negro — Destiladora del Silencio",
+    "ref": "assets/sprites/champions/morwen/atlas.png",
+    "design": "The same identifiable female alchemist and hair/face as reference, rich plum short coat, smoked black-glass half-mask leaving eyes visible, black crystal back harness containing three clearly separate small amber and violet reagent bottles, leather gloves and fine glass needle weapon. Distinct bottle and black-glass silhouette, restrained ivory highlights, no modern laboratory gear, no opaque mask hiding identity."
+  },
+  {
+    "k": "farolero",
+    "set": "lumbre_persistente",
+    "name": "Lumbre Persistente — Vigía de la Última Expedición",
+    "ref": "assets/sprites/champions/farolero/atlas.png",
+    "design": "The same old expedition lantern keeper and recognizable face as reference, coal-black quilted mining greatcoat, old iron miner helmet, patched shoulder armor, reinforced boots, a robust iron-caged amber lantern hanging from one hand and a mining pick in the other, small expedition name tags at belt without readable writing. Warm amber, soot black, weathered iron. Distinct mine-rescue coat and lantern shapes, never futuristic."
+  },
+  {
+    "k": "iria",
+    "set": "hilo_umbral",
+    "name": "Hilo del Umbral — Tejedora de los Tres Caminos",
+    "ref": "assets/sprites/champions/iria/atlas.png",
+    "design": "The same recognizable female rune weaver face and hairstyle as reference, ivory and violet ceremonial fitted robes with geometric embroidered edges, triangular shoulder pieces, exactly three small hanging triangular seals at waist, long luminous runic needle, strands of restrained pale lilac magic thread. Crisp triangular silhouette details and woven rune patterns, no huge wings, no spherical sci-fi machinery."
+  }
+]

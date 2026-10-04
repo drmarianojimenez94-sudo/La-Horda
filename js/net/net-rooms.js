@@ -23,14 +23,15 @@ async function netFetchRooms(){
   const url = netRoomsUrl(); if(!url) return null;
   if(netRooms.busy) return netRooms.list;
   netRooms.busy = true; netRooms.at = performance.now(); // también si falla: no reintenta en cada segundo
+  let t=0;
   try{
     // servidor viejo sin /api (net-core.js: netCaps): ni se pide (404 sin CORS = error en la consola)
     if(typeof netCapsProbe==="function" && netCaps.api===null) await netCapsProbe();
     if(typeof netApiMissing==="function" && netApiMissing()){ netRooms.unsupported = true; netRooms.err = ""; netRooms.list = []; return []; }
     const ctl = typeof AbortController!=="undefined" ? new AbortController() : null;
-    const t = ctl ? setTimeout(()=>ctl.abort(), 12000) : 0;
+    t = ctl ? setTimeout(()=>ctl.abort(), 12000) : 0;
     const r = await fetch(url, {cache:"no-store", signal: ctl ? ctl.signal : undefined});
-    clearTimeout(t);
+    if(url!==netRoomsUrl())return null;
     if(r.status===404){ netRooms.unsupported = true; netRooms.err = ""; netRooms.list = []; return []; }
     if(r.status===429){ netRooms.err = "Muchos pedidos seguidos: esperá unos segundos."; return netRooms.list; }
     if(!r.ok) throw new Error("HTTP " + r.status);
@@ -41,7 +42,7 @@ async function netFetchRooms(){
   }catch(e){
     netRooms.err = "No se pudo consultar el servidor (puede estar despertando: probá en un minuto).";
     return null;
-  }finally{ netRooms.busy = false; }
+  }finally{ clearTimeout(t); netRooms.busy = false; }
 }
 function _roomRowHTML(r){
   const A = (typeof ARENA_MODS!=="undefined" && ARENA_MODS[r.arena]) || {};

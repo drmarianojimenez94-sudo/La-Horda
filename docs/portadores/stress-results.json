@@ -1,0 +1,86 @@
+{
+  "checks": [
+    {
+      "name": "brasa mastery 0",
+      "ok": true
+    },
+    {
+      "name": "brasa mastery 1",
+      "ok": true
+    },
+    {
+      "name": "brasa mastery 2",
+      "ok": true
+    },
+    {
+      "name": "eslabon mastery 0",
+      "ok": true
+    },
+    {
+      "name": "eslabon mastery 1",
+      "ok": true
+    },
+    {
+      "name": "eslabon mastery 2",
+      "ok": true
+    },
+    {
+      "name": "morwen mastery 0",
+      "ok": true
+    },
+    {
+      "name": "morwen mastery 1",
+      "ok": true
+    },
+    {
+      "name": "morwen mastery 2",
+      "ok": true
+    },
+    {
+      "name": "iria mastery 0",
+      "ok": true
+    },
+    {
+      "name": "iria mastery 1",
+      "ok": true
+    },
+    {
+      "name": "iria mastery 2",
+      "ok": true
+    },
+    {
+      "name": "farolero mastery 0",
+      "ok": true
+    },
+    {
+      "name": "farolero mastery 1",
+      "ok": true
+    },
+    {
+      "name": "farolero mastery 2",
+      "ok": true
+    },
+    {
+      "name": "four champion mechanics stay bounded",
+      "ok": true,
+      "detail": {
+        "objects": 3,
+        "elapsedMs": 65
+      }
+    },
+    {
+      "name": "absolute entity ceiling",
+      "ok": true
+    },
+    {
+      "name": "escort follows movement direction",
+      "ok": true
+    }
+  ],
+  "perf": {
+    "fps": 55.45360248942585,
+    "objects": 4,
+    "enemies": 30
+  },
+  "errors": []
+}
