@@ -69,8 +69,8 @@ Sobre la base integrada final (rama de integración + main ff9054d):
 Con navegadores (celular 844×390 táctil, relay real), sobre main mergeado (antes del último merge de
 integración, que no tocó el online):
 - `tools/net-test/server_restart.js` (nueva: servidor dormido 15 s, reinicio en la sala, reinicio en
-  partida, SOLO sin servidor): **OK** (23/23).
-- `tools/net-test/old_server.js` (nueva: relays viejos v0 y v1 sacados del historial): **OK** (24/24).
+  partida, SOLO sin servidor): **OK**.
+- `tools/net-test/old_server.js` (nueva: relays viejos v0 y v1 sacados del historial): **OK** (v0 y v1).
 - `tools/net-test/leaderboard.js`: **OK** (antes 12 fallas: era la prueba).
 - `tools/net-test/accounts.js`: **OK** en 2 de 3 corridas; 1 falla intermitente (ver Pendiente).
 - `disconnect.js`, `coldstart.js`, `e2e.js 2`: OK antes del merge con main.
