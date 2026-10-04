@@ -12,11 +12,11 @@ Detalle técnico y tablas completas: `docs/alfa/q6_arte_tecnico.md`. Capturas an
    cortan y titilan al caminar) mientras los monstruos iban a 1,5 y los jefes a 2,6 → ahora los héroes se
    dibujan desde una versión reducida y filtrada de su propio arte y quedan en ~1,1, igual que los 30 héroes
    nuevos de la expedición. La diferencia de tamaño de píxel entre el actor más fino y el más grueso de cada
-   pantalla bajó de ×7,0 a ×3,0 (mediana de 30 pantallas).
+   pantalla bajó de ×7,0 a ×2,7 (mediana de 30 pantallas).
 2. **Algunos monstruos y jefes se veían "en bloques".** Antes el Verdugo, el Campanero, el Acechante y el Perro
    de la Ciudad y el Devoraluz de las Minas se veían más pixelados que un jefe (3,1-3,5), Cerbero en bloques de
-   6 píxeles, el Minotauro como una mancha de ruido y el Leviatán a 4,4 → ahora ningún común pasa de ~3, Cerbero
-   bajó a 5,0 (sigue siendo el más grande de su arena), Minotauro a 3,0 y el Leviatán un 20 % más chico. Las
+   6 píxeles, el Minotauro como una mancha de ruido y el Leviatán a 3,1 de mediana → ahora ningún común pasa de
+   ~3,1, Cerbero bajó a 5,0 (sigue siendo el más grande de su arena), Minotauro a 3,0 y el Leviatán a 2,4. Las
    zonas de golpe (hitbox) NO cambiaron: solo el dibujo.
 3. **Faltaba la luz "estilo Diablo".** Antes solo las Minas y el apagón de la Ciudad tenían oscuridad con radio
    de luz → ahora las otras 9 arenas tienen una penumbra suave en el piso con luz alrededor de cada héroe y de
@@ -57,8 +57,13 @@ Detalle técnico y tablas completas: `docs/alfa/q6_arte_tecnico.md`. Capturas an
 | `tools/art/roster_gate.js` (Roster Art Gate del dueño, 113 apariencias) | 0 fallas (con mipmaps restringidos al lienzo del juego) |
 | `tools/regression/t_juice.js` | pasa |
 | `tools/regression/t_hit_react.js` | pasa |
-| `tools/art/t_body_swaps.js` | (en curso al escribir este borrador) |
-| `tools/items/t_camp.js` | (en curso al escribir este borrador) |
+| `tools/art/t_body_swaps.js` | pasa (después de dibujar el contorno de agua encima del cuerpo) |
+| `tools/items/t_camp.js` | 1 falla AJENA: `DATOS.herrero_para_cada_guardian` — faltan líneas del herrero para los 19 héroes nuevos de la expedición (texto, no arte; viene de main) |
+| A/B de rendimiento (`q6_pixel_scale.js --ab`, misma página) | +0,5 a +2 ms por cuadro en el emulador; en el Reino Micelial 20× más rápido (ver documento técnico) |
+
+Nota de entorno: la máquina estuvo con carga 30-45 y el disco casi lleno; varias pruebas cortaron por el tiempo
+de carga de la página (30 s). `t_juice` y el Roster Art Gate se corrieron con una copia que solo alarga ese
+tiempo de espera (misma prueba).
 
 ## Nota de mi área para el alfa: 6,5 / 10
 
@@ -88,4 +93,12 @@ en bloques grandes, y eso solo se arregla con arte de más resolución.
 - `tools/alfa/q6_pixel_scale.js`: medición (intercepta `drawImage` dentro de `render()`), capturas `.webp`,
   `--perf`, `--ab`.
 
-Commits: ver `git log --oneline` con prefijo "Q6:" (lista en el mensaje final).
+Commits (prefijo "Q6:"):
+- 28f426a herramienta de medición del tamaño de píxel
+- 2d984e0 medición con el jefe real de cada arena y el plantel completo
+- ffeb878 luz por arena, sombra común, mipmaps del arte fino y Acuática con paleta de agua propia
+- 75c436c tope de escala de píxel y campamento en una sola grilla
+- e527b96 medición antes/después sobre la base nueva y tope del Leviatán
+- 279cce3 mipmaps con alfa binario y solo en el lienzo del juego (Roster Art Gate sin fallas); contorno encima
+- 9ce3f48 mipmaps solo para arte estático
+- (más los merges de main y de la rama de integración, y este informe)

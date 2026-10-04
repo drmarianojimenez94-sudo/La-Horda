@@ -1,6 +1,6 @@
 {
  "tag": "despues",
- "fecha": "2026-10-04T10:53:16.106Z",
+ "fecha": "2026-10-04T15:09:38.355Z",
  "viewport": "844x390 dpr2",
  "q6": [],
  "escenas": [
@@ -18,23 +18,16 @@
     {
      "g": "decorado",
      "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
      "img": "canvas 20x20",
-     "s": 0.96,
-     "px": 19
+     "s": 1.08,
+     "px": 22
     },
     {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "cm_perro/atlas.webp (derivado)",
-     "s": 0.995,
-     "px": 151
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
     },
     {
      "g": "decorado",
@@ -47,8 +40,8 @@
      "g": "enemigo",
      "k": "cm_saqueador",
      "img": "cm_saqueador/atlas.webp",
-     "s": 2.263,
-     "px": 118
+     "s": 2.246,
+     "px": 117
     },
     {
      "g": "decorado",
@@ -58,6 +51,20 @@
      "px": 30
     },
     {
+     "g": "enemigo",
+     "k": "cm_perro",
+     "img": "cm_perro/atlas.webp",
+     "s": 3.054,
+     "px": 113
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_perro",
+     "img": "cm_perro/atlas.webp (derivado)",
+     "s": 3.054,
+     "px": 113
+    },
+    {
      "g": "decorado",
      "k": "aidDrawTall",
      "img": "ciudad/escombros_0.webp",
@@ -65,24 +72,38 @@
      "px": 56
     },
     {
+     "g": "enemigo",
+     "k": "cm_raptor",
+     "img": "cm_raptor/atlas.webp",
+     "s": 2.609,
+     "px": 159
+    },
+    {
+     "g": "enemigo",
+     "k": "cm_raptor",
+     "img": "vendor/cadena-relampagos.webp",
+     "s": 0.309,
+     "px": 79
+    },
+    {
      "g": "guardian",
      "k": "tanque",
-     "img": "vendor/caballerito-grito.webp",
-     "s": 0.664,
-     "px": 170
+     "img": "vendor/caballerito-estampida.webp",
+     "s": 0.502,
+     "px": 129
     },
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.113,
-     "px": 61
+     "px": 59
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
+     "s": 1.371,
      "px": 58
     },
     {
@@ -101,8 +122,8 @@
     }
    ],
    "perf": {
-    "renderMs": 3.26,
-    "flushMs": 71.5
+    "renderMs": 25.28,
+    "flushMs": 135.5
    }
   },
   {
@@ -141,28 +162,28 @@
      "g": "enemigo",
      "k": "cm_campanero",
      "img": "cm_campanero/atlas.webp",
-     "s": 3.012,
-     "px": 136
+     "s": 3.01,
+     "px": 135
     },
     {
      "g": "enemigo",
      "k": "cm_sectario",
      "img": "cm_sectario/atlas.webp",
-     "s": 2.473,
-     "px": 69
+     "s": 2.483,
+     "px": 70
     },
     {
      "g": "enemigo",
      "k": "cm_espectro",
      "img": "cm_espectro/atlas.webp",
-     "s": 2.912,
+     "s": 2.913,
      "px": 84
     },
     {
      "g": "enemigo",
      "k": "cm_acechante",
      "img": "cm_acechante/atlas.webp",
-     "s": 3.017,
+     "s": 3.018,
      "px": 91
     },
     {
@@ -176,34 +197,34 @@
      "g": "enemigo",
      "k": "cm_saqueador",
      "img": "cm_saqueador/atlas.webp",
-     "s": 2.247,
+     "s": 2.249,
      "px": 117
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.37,
-     "px": 58
+     "s": 1.369,
+     "px": 57
     },
     {
      "g": "guardian",
      "k": "tanque",
      "img": "tanque/atlas.webp (derivado)",
-     "s": 0.707,
+     "s": 0.708,
      "px": 53
     },
     {
      "g": "enemigo",
      "k": "cm_planidera",
      "img": "cm_planidera/atlas.webp",
-     "s": 2.366,
+     "s": 2.38,
      "px": 69
     },
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.112,
      "px": 68
     },
@@ -211,22 +232,22 @@
      "g": "enemigo",
      "k": "cm_perro",
      "img": "cm_perro/atlas.webp",
-     "s": 3.046,
-     "px": 113
+     "s": 3.027,
+     "px": 112
     },
     {
      "g": "enemigo",
      "k": "cm_verdugo",
      "img": "cm_verdugo/atlas.webp",
-     "s": 3.037,
-     "px": 207
+     "s": 3.03,
+     "px": 206
     },
     {
      "g": "enemigo",
      "k": "cm_raptor",
      "img": "cm_raptor/atlas.webp",
-     "s": 2.594,
-     "px": 158
+     "s": 2.599,
+     "px": 159
     },
     {
      "g": "decorado",
@@ -237,8 +258,8 @@
     }
    ],
    "perf": {
-    "renderMs": 4.24,
-    "flushMs": 62.2
+    "renderMs": 4.47,
+    "flushMs": 40.7
    }
   },
   {
@@ -277,8 +298,8 @@
      "g": "jefe",
      "k": "cm_presentador",
      "img": "v2/atlas.webp (derivado)",
-     "s": 1.662,
-     "px": 199
+     "s": 1.663,
+     "px": 200
     },
     {
      "g": "decorado",
@@ -291,29 +312,29 @@
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.37,
+     "s": 1.369,
      "px": 58
     },
     {
      "g": "guardian",
      "k": "tanque",
-     "img": "vendor/caballerito-torbellino.webp",
-     "s": 0.642,
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.641,
      "px": 164
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 59
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 1.013,
-     "px": 113
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 63
+     "s": 1.014,
+     "px": 114
     },
     {
      "g": "decorado",
@@ -331,8 +352,8 @@
     }
    ],
    "perf": {
-    "renderMs": 4.45,
-    "flushMs": 36.6
+    "renderMs": 24.48,
+    "flushMs": 34.7
    }
   },
   {
@@ -356,16 +377,16 @@
     {
      "g": "decorado",
      "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
     },
     {
      "g": "decorado",
      "k": "drawGoreDecals",
-     "img": "canvas 20x20",
+     "img": "canvas 48x48",
      "s": 1.2,
-     "px": 24
+     "px": 58
     },
     {
      "g": "decorado",
@@ -382,11 +403,11 @@
      "px": 126
     },
     {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "dragon_bronce/atlas.webp (derivado)",
-     "s": 0.996,
-     "px": 185
+     "g": "enemigo",
+     "k": "dragon_bronce",
+     "img": "dragon_bronce/atlas.webp",
+     "s": 0.818,
+     "px": 173
     },
     {
      "g": "decorado",
@@ -404,31 +425,31 @@
     },
     {
      "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 63
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
     },
     {
      "g": "guardian",
      "k": "tanque",
      "img": "tanque/atlas.webp (derivado)",
-     "s": 0.766,
-     "px": 68
+     "s": 0.708,
+     "px": 53
     },
     {
      "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.996,
-     "px": 112
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 66
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.371,
-     "px": 58
+     "s": 1.369,
+     "px": 57
     },
     {
      "g": "decorado",
@@ -460,8 +481,8 @@
     }
    ],
    "perf": {
-    "renderMs": 21.63,
-    "flushMs": 45.3
+    "renderMs": 6.15,
+    "flushMs": 47.8
    }
   },
   {
@@ -500,21 +521,21 @@
      "g": "enemigo",
      "k": "automata",
      "img": "automata/atlas.webp",
-     "s": 0.938,
+     "s": 0.94,
      "px": 289
     },
     {
      "g": "enemigo",
      "k": "verdugo",
      "img": "verdugo/atlas.webp",
-     "s": 0.825,
+     "s": 0.827,
      "px": 208
     },
     {
      "g": "enemigo",
      "k": "arana",
      "img": "arana/atlas.webp",
-     "s": 0.7,
+     "s": 0.703,
      "px": 125
     },
     {
@@ -527,57 +548,57 @@
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.111,
      "px": 68
     },
     {
      "g": "enemigo",
      "k": "carcelero",
      "img": "carcelero/atlas.webp",
-     "s": 0.894,
-     "px": 241
+     "s": 0.899,
+     "px": 243
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 57
+     "s": 1.372,
+     "px": 58
     },
     {
      "g": "guardian",
      "k": "tanque",
      "img": "tanque/atlas.webp (derivado)",
-     "s": 0.767,
-     "px": 67
+     "s": 0.766,
+     "px": 69
     },
     {
      "g": "enemigo",
      "k": "engendro",
      "img": "engendro/atlas.webp",
-     "s": 0.752,
+     "s": 0.751,
      "px": 81
     },
     {
      "g": "enemigo",
      "k": "dragon_bronce",
      "img": "dragon_bronce/atlas.webp",
-     "s": 0.816,
+     "s": 0.815,
      "px": 173
     },
     {
      "g": "enemigo",
      "k": "prisionero",
      "img": "prisionero/atlas.webp",
-     "s": 0.771,
+     "s": 0.772,
      "px": 193
     },
     {
      "g": "enemigo",
      "k": "prisionero",
      "img": "prisionero/atlas.webp (derivado)",
-     "s": 0.771,
+     "s": 0.772,
      "px": 193
     },
     {
@@ -610,14 +631,21 @@
     }
    ],
    "perf": {
-    "renderMs": 7.7,
-    "flushMs": 66.2
+    "renderMs": 11.7,
+    "flushMs": 38.2
    }
   },
   {
    "arena": "fortaleza",
    "escena": "jefe",
    "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 820x397",
+     "s": 2.4,
+     "px": 1968
+    },
     {
      "g": "decorado",
      "k": "drawArena",
@@ -633,6 +661,13 @@
      "px": 22
     },
     {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
      "g": "otro",
      "k": "Object.draw",
      "img": "vendor/muro-fuego.webp",
@@ -642,16 +677,72 @@
     {
      "g": "decorado",
      "k": "aidDrawTall",
+     "img": "canvas 22x26",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "jefe",
+     "k": "demonio_mayor",
+     "img": "demonio_mayor/atlas.webp",
+     "s": 2.581,
+     "px": 307
+    },
+    {
+     "g": "jefe",
+     "k": "demonio_mayor",
+     "img": "demonio_mayor/atlas.webp (derivado)",
+     "s": 2.581,
+     "px": 307
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
      "img": "canvas 16x20",
      "s": 2.4,
      "px": 38
     },
     {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 22x26",
-     "s": 2.88,
-     "px": 63
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.369,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_03.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-estampida.webp",
+     "s": 0.642,
+     "px": 164
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_03.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 66
     },
     {
      "g": "decorado",
@@ -668,62 +759,6 @@
      "px": 53
     },
     {
-     "g": "jefe",
-     "k": "demonio_mayor",
-     "img": "demonio_mayor/atlas.webp",
-     "s": 2.583,
-     "px": 307
-    },
-    {
-     "g": "jefe",
-     "k": "demonio_mayor",
-     "img": "demonio_mayor/atlas.webp (derivado)",
-     "s": 2.583,
-     "px": 307
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "abilities/holyShieldBubble_02.webp (derivado)",
-     "s": 1.38,
-     "px": 66
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-torbellino.webp",
-     "s": 0.593,
-     "px": 152
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 63
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.997,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "abilities/holyShieldBubble_02.webp (derivado)",
-     "s": 1.38,
-     "px": 66
-    },
-    {
      "g": "decorado",
      "k": "aidDrawTall",
      "img": "canvas 26x50",
@@ -736,25 +771,11 @@
      "img": "canvas 20x46",
      "s": 2.4,
      "px": 48
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawSprites",
-     "img": "abilities/holyHealBurst_01.webp",
-     "s": 0.86,
-     "px": 77
-    },
-    {
-     "g": "efectos",
-     "k": "drawFxContrastTop",
-     "img": "canvas 96x96",
-     "s": 0.75,
-     "px": 72
     }
    ],
    "perf": {
-    "renderMs": 17.01,
-    "flushMs": 316.6
+    "renderMs": 3.01,
+    "flushMs": 37.2
    }
   },
   {
@@ -792,9 +813,358 @@
     {
      "g": "decorado",
      "k": "drawGoreDecals",
+     "img": "canvas 28x28",
+     "s": 1.44,
+     "px": 40
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
      "img": "canvas 20x20",
      "s": 1.08,
      "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "bestia_bosque/death4.webp (derivado) (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "duende_bosque/death3.webp (derivado) (derivado) (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x64",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "enemigo",
+     "k": "bestia_bosque",
+     "img": "bestia_bosque/walk4.webp (derivado) (derivado)",
+     "s": 1.528,
+     "px": 76
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 100x130",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x22",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 96x80",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk1.webp (derivado) (derivado)",
+     "s": 1.442,
+     "px": 52
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk3.webp (derivado) (derivado)",
+     "s": 1.447,
+     "px": 45
+    },
+    {
+     "g": "enemigo",
+     "k": "enjambre_hadas",
+     "img": "v3/atlas.webp",
+     "s": 1.25,
+     "px": 69
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 24x60",
+     "s": 2.4,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk2.webp (derivado) (derivado)",
+     "s": 1.44,
+     "px": 45
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-estampida.webp",
+     "s": 0.563,
+     "px": 144
+    },
+    {
+     "g": "enemigo",
+     "k": "bestia_bosque",
+     "img": "bestia_bosque/walk4.webp (derivado) (derivado) (derivado)",
+     "s": 1.523,
+     "px": 76
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.372,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/walk5.webp (derivado) (derivado)",
+     "s": 1.445,
+     "px": 53
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
+    },
+    {
+     "g": "efectos",
+     "k": "drawProjectileFx",
+     "img": "bosque/csHadaShot_0.webp (derivado)",
+     "s": 0.99,
+     "px": 50
+    }
+   ],
+   "perf": {
+    "renderMs": 18.52,
+    "flushMs": 33.1
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x210",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x90",
+     "s": 1.8,
+     "px": 756
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 100x54",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 160x80",
+     "s": 2.4,
+     "px": 384
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x64",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 100x130",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x22",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 96x80",
+     "s": 2.4,
+     "px": 230
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 24x60",
+     "s": 2.4,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "dama_bosque",
+     "img": "v2/atlas.webp",
+     "s": 0.822,
+     "px": 99
+    },
+    {
+     "g": "enemigo",
+     "k": "dama_bosque",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 0.822,
+     "px": 99
+    },
+    {
+     "g": "enemigo",
+     "k": "ent",
+     "img": "ent/idle2.webp",
+     "s": 2.32,
+     "px": 132
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.765,
+     "px": 69
+    },
+    {
+     "g": "enemigo",
+     "k": "duende_bosque",
+     "img": "duende_bosque/idle3.webp (derivado) (derivado)",
+     "s": 1.447,
+     "px": 46
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.372,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "cu_sith",
+     "img": "v3/atlas.webp",
+     "s": 1.605,
+     "px": 175
+    },
+    {
+     "g": "enemigo",
+     "k": "enjambre_hadas",
+     "img": "v3/atlas.webp",
+     "s": 1.253,
+     "px": 69
+    },
+    {
+     "g": "enemigo",
+     "k": "bestia_bosque",
+     "img": "bestia_bosque/idle3.webp (derivado) (derivado)",
+     "s": 1.529,
+     "px": 95
+    }
+   ],
+   "perf": {
+    "renderMs": 18.73,
+    "flushMs": 199.1
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x210",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x90",
+     "s": 1.8,
+     "px": 756
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 100x54",
+     "s": 2.4,
+     "px": 240
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 160x80",
+     "s": 2.4,
+     "px": 384
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 0.96,
+     "px": 19
     },
     {
      "g": "decorado",
@@ -825,18 +1195,11 @@
      "px": 151
     },
     {
-     "g": "efectos",
-     "k": "vfxDrawDying",
-     "img": "duende_bosque/death1.webp (derivado) (derivado)",
-     "s": 1.44,
-     "px": 58
-    },
-    {
      "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x64",
-     "s": 2.4,
-     "px": 72
+     "k": "drawCorpses",
+     "img": "ent/death5.webp (derivado)",
+     "s": 1.197,
+     "px": 335
     },
     {
      "g": "decorado",
@@ -844,27 +1207,6 @@
      "img": "canvas 100x130",
      "s": 2.4,
      "px": 240
-    },
-    {
-     "g": "enemigo",
-     "k": "duende_bosque",
-     "img": "duende_bosque/walk4.webp (derivado) (derivado)",
-     "s": 1.435,
-     "px": 46
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 22x22",
-     "s": 2.88,
-     "px": 63
-    },
-    {
-     "g": "enemigo",
-     "k": "enjambre_hadas",
-     "img": "v3/atlas.webp",
-     "s": 1.248,
-     "px": 69
     },
     {
      "g": "decorado",
@@ -881,25 +1223,60 @@
      "px": 58
     },
     {
-     "g": "enemigo",
-     "k": "bestia_bosque",
-     "img": "bestia_bosque/walk5.webp (derivado) (derivado)",
-     "s": 1.525,
-     "px": 85
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x64",
+     "s": 2.4,
+     "px": 72
     },
     {
-     "g": "enemigo",
-     "k": "bestia_bosque",
-     "img": "bestia_bosque/walk5.webp (derivado) (derivado) (derivado)",
-     "s": 1.525,
-     "px": 85
+     "g": "jefe",
+     "k": "guardian_ancestral",
+     "img": "guardian_ancestral/atlas.webp",
+     "s": 2.586,
+     "px": 259
     },
     {
-     "g": "enemigo",
-     "k": "duende_bosque",
-     "img": "duende_bosque/walk2.webp (derivado) (derivado)",
-     "s": 1.433,
-     "px": 44
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.37,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.844,
+     "px": 216
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
     },
     {
      "g": "guardian",
@@ -910,104 +1287,10 @@
     },
     {
      "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 65
-    },
-    {
-     "g": "enemigo",
-     "k": "duende_bosque",
-     "img": "duende_bosque/walk3.webp (derivado) (derivado)",
-     "s": 1.441,
-     "px": 45
-    },
-    {
-     "g": "enemigo",
-     "k": "duende_bosque",
-     "img": "duende_bosque/walk1.webp (derivado) (derivado)",
-     "s": 1.438,
-     "px": 52
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.371,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-estampida.webp",
-     "s": 0.544,
-     "px": 139
-    },
-    {
-     "g": "efectos",
-     "k": "drawProjectileFx",
-     "img": "bosque/csHadaShot_0.webp (derivado)",
-     "s": 0.99,
-     "px": 50
-    }
-   ],
-   "perf": {
-    "renderMs": 6.73,
-    "flushMs": 46.8
-   }
-  },
-  {
-   "arena": "bosque",
-   "escena": "plantel",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 300x210",
-     "s": 2.28,
-     "px": 684
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 420x90",
-     "s": 1.8,
-     "px": 756
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 100x54",
-     "s": 2.4,
-     "px": 240
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 160x80",
-     "s": 2.4,
-     "px": 384
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x64",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 100x130",
-     "s": 2.4,
-     "px": 240
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 96x80",
-     "s": 2.4,
-     "px": 230
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
     },
     {
      "g": "decorado",
@@ -1015,266 +1298,11 @@
      "img": "canvas 22x22",
      "s": 2.88,
      "px": 63
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 24x60",
-     "s": 2.4,
-     "px": 58
-    },
-    {
-     "g": "enemigo",
-     "k": "ent",
-     "img": "ent/idle1.webp",
-     "s": 2.442,
-     "px": 137
-    },
-    {
-     "g": "enemigo",
-     "k": "dama_bosque",
-     "img": "v2/atlas.webp",
-     "s": 0.825,
-     "px": 99
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.996,
-     "px": 112
-    },
-    {
-     "g": "enemigo",
-     "k": "duende_bosque",
-     "img": "duende_bosque/idle2.webp (derivado) (derivado)",
-     "s": 1.447,
-     "px": 45
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
-    },
-    {
-     "g": "enemigo",
-     "k": "cu_sith",
-     "img": "v3/atlas.webp",
-     "s": 1.524,
-     "px": 166
-    },
-    {
-     "g": "enemigo",
-     "k": "enjambre_hadas",
-     "img": "v3/atlas.webp",
-     "s": 1.238,
-     "px": 68
-    },
-    {
-     "g": "enemigo",
-     "k": "enjambre_hadas",
-     "img": "v3/atlas.webp (derivado)",
-     "s": 1.238,
-     "px": 68
-    },
-    {
-     "g": "enemigo",
-     "k": "bestia_bosque",
-     "img": "bestia_bosque/idle1.webp (derivado) (derivado)",
-     "s": 1.529,
-     "px": 99
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 59
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.709,
-     "px": 70
-    },
-    {
-     "g": "efectos",
-     "k": "drawFxContrastTop",
-     "img": "canvas 96x96",
-     "s": 0.893,
-     "px": 86
     }
    ],
    "perf": {
-    "renderMs": 21.7,
-    "flushMs": 315.1
-   }
-  },
-  {
-   "arena": "bosque",
-   "escena": "jefe",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 300x210",
-     "s": 2.28,
-     "px": 684
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 420x90",
-     "s": 1.8,
-     "px": 756
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 100x54",
-     "s": 2.4,
-     "px": 240
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 160x80",
-     "s": 2.4,
-     "px": 384
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 1.08,
-     "px": 22
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 0.96,
-     "px": 46
-    },
-    {
-     "g": "otro",
-     "k": "Object.draw",
-     "img": "vendor/muro-fuego.webp",
-     "s": 0.307,
-     "px": 78
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "duende_bosque/death3.webp (derivado) (derivado) (derivado)",
-     "s": 0.995,
-     "px": 151
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "ent/death5.webp (derivado)",
-     "s": 1.2,
-     "px": 319
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "bestia_bosque/death4.webp (derivado) (derivado) (derivado)",
-     "s": 0.999,
-     "px": 185
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 24x60",
-     "s": 2.4,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x64",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 22x22",
-     "s": 2.88,
-     "px": 63
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 100x130",
-     "s": 2.4,
-     "px": 240
-    },
-    {
-     "g": "jefe",
-     "k": "guardian_ancestral",
-     "img": "guardian_ancestral/atlas.webp",
-     "s": 2.58,
-     "px": 258
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 96x80",
-     "s": 2.4,
-     "px": 230
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.765,
-     "px": 68
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.998,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png (derivado)",
-     "s": 0.998,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 63
-    },
-    {
-     "g": "efectos",
-     "k": "drawProjectileFx",
-     "img": "bosque/gdLance_0.webp (derivado)",
-     "s": 1.016,
-     "px": 44
-    }
-   ],
-   "perf": {
-    "renderMs": 7.74,
-    "flushMs": 42.6
+    "renderMs": 14.95,
+    "flushMs": 62.6
    }
   },
   {
@@ -1326,9 +1354,65 @@
     {
      "g": "decorado",
      "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
      "img": "canvas 20x20",
      "s": 1.08,
      "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "sabueso/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawDying",
+     "img": "sabueso/atlas.webp (derivado)",
+     "s": 1.343,
+     "px": 151
+    },
+    {
+     "g": "enemigo",
+     "k": "peregrino",
+     "img": "peregrino/atlas.webp",
+     "s": 0.904,
+     "px": 193
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_2.webp",
+     "s": 1.339,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 22x24",
+     "s": 2.88,
+     "px": 63
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_3.webp",
+     "s": 0.781,
+     "px": 27
+    },
+    {
+     "g": "enemigo",
+     "k": "nucleo_micelial",
+     "img": "fx/nucleo_3.webp",
+     "s": 1.094,
+     "px": 37
     },
     {
      "g": "enemigo",
@@ -1340,105 +1424,63 @@
     {
      "g": "decorado",
      "k": "aidDrawTall",
-     "img": "fx/nucleo_2.webp",
-     "s": 1.242,
-     "px": 67
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "fx/nucleo_3.webp",
-     "s": 0.61,
-     "px": 21
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
      "img": "fx/m_summon_b.webp",
-     "s": 1.623,
-     "px": 117
+     "s": 1.088,
+     "px": 78
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.663,
+     "px": 170
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.368,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
     },
     {
      "g": "decorado",
      "k": "aidDrawTall",
-     "img": "fx/mush_row_big.webp",
-     "s": 1.12,
-     "px": 163
-    },
-    {
-     "g": "enemigo",
-     "k": "nucleo_micelial",
-     "img": "fx/nucleo_3.webp",
-     "s": 1.074,
-     "px": 37
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 22x24",
-     "s": 2.88,
-     "px": 63
-    },
-    {
-     "g": "enemigo",
-     "k": "nucleo_micelial",
-     "img": "fx/nucleo_2.webp",
-     "s": 1.27,
-     "px": 69
+     "img": "fx/nucleo_4.webp",
+     "s": 1.19,
+     "px": 65
     },
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.112,
      "px": 59
     },
     {
      "g": "decorado",
      "k": "aidDrawTall",
-     "img": "fx/nucleo_4.webp",
-     "s": 1.126,
-     "px": 62
-    },
-    {
-     "g": "enemigo",
-     "k": "acechador",
-     "img": "acechador/atlas.webp",
-     "s": 0.821,
+     "img": "fx/nucleo_1.webp",
+     "s": 1.656,
      "px": 179
     },
     {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "fx/mush_row_small.webp",
-     "s": 0.985,
-     "px": 141
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.707,
-     "px": 53
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.997,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 58
+     "g": "enemigo",
+     "k": "nucleo_micelial",
+     "img": "fx/nucleo_2.webp",
+     "s": 1.223,
+     "px": 66
     }
    ],
    "perf": {
-    "renderMs": 13.3,
-    "flushMs": 58.4
+    "renderMs": 8.01,
+    "flushMs": 138.2
    }
   },
   {
@@ -1496,17 +1538,10 @@
     },
     {
      "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
-    },
-    {
-     "g": "decorado",
      "k": "aidDrawTall",
      "img": "fx/nucleo_3.webp",
-     "s": 0.848,
-     "px": 29
+     "s": 0.562,
+     "px": 19
     },
     {
      "g": "decorado",
@@ -1519,34 +1554,27 @@
      "g": "enemigo",
      "k": "nucleo_micelial",
      "img": "fx/nucleo_3.webp",
-     "s": 1.141,
-     "px": 39
-    },
-    {
-     "g": "enemigo",
-     "k": "sabueso",
-     "img": "sabueso/atlas.webp (derivado)",
-     "s": 1.341,
-     "px": 151
+     "s": 1.087,
+     "px": 37
     },
     {
      "g": "enemigo",
      "k": "chaman",
      "img": "chaman/atlas.webp (derivado)",
-     "s": 1.349,
-     "px": 112
+     "s": 1.343,
+     "px": 111
     },
     {
      "g": "enemigo",
      "k": "raiz_absorcion",
      "img": "fx/root_curl.webp",
-     "s": 0.915,
+     "s": 0.916,
      "px": 71
     },
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.113,
      "px": 59
     },
@@ -1554,76 +1582,76 @@
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 0.997,
+     "s": 0.996,
      "px": 112
     },
     {
      "g": "enemigo",
      "k": "infectado",
      "img": "infectado/atlas.webp",
-     "s": 0.928,
-     "px": 176
+     "s": 0.929,
+     "px": 177
     },
     {
      "g": "enemigo",
      "k": "hinchado",
      "img": "hinchado/atlas.webp",
-     "s": 1.07,
-     "px": 240
+     "s": 1.119,
+     "px": 251
     },
     {
      "g": "enemigo",
      "k": "hinchado",
      "img": "hinchado/atlas.webp (derivado)",
-     "s": 1.07,
-     "px": 240
+     "s": 1.119,
+     "px": 251
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.371,
+     "s": 1.37,
      "px": 58
     },
     {
      "g": "guardian",
      "k": "tanque",
      "img": "tanque/atlas.webp (derivado)",
-     "s": 0.765,
+     "s": 0.766,
      "px": 71
+    },
+    {
+     "g": "enemigo",
+     "k": "sabueso",
+     "img": "sabueso/atlas.webp (derivado)",
+     "s": 1.348,
+     "px": 152
     },
     {
      "g": "enemigo",
      "k": "peregrino",
      "img": "peregrino/atlas.webp",
-     "s": 0.905,
-     "px": 194
+     "s": 0.909,
+     "px": 195
     },
     {
      "g": "enemigo",
      "k": "peregrino",
      "img": "peregrino/atlas.webp (derivado)",
-     "s": 0.905,
-     "px": 194
+     "s": 0.909,
+     "px": 195
     },
     {
      "g": "enemigo",
      "k": "acechador",
      "img": "acechador/atlas.webp",
-     "s": 0.819,
+     "s": 0.821,
      "px": 179
-    },
-    {
-     "g": "efectos",
-     "k": "drawFxContrastTop",
-     "img": "canvas 96x96",
-     "s": 0.893,
-     "px": 86
     }
    ],
    "perf": {
-    "renderMs": 51.24,
-    "flushMs": 147
+    "renderMs": 10.13,
+    "flushMs": 408
    }
   },
   {
@@ -1696,36 +1724,43 @@
     {
      "g": "decorado",
      "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
      "img": "canvas 20x20",
      "s": 1.08,
      "px": 22
     },
     {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
+    },
+    {
      "g": "decorado",
      "k": "drawCorpses",
-     "img": "sabueso/atlas.webp (derivado) (derivado)",
-     "s": 0.995,
-     "px": 151
+     "img": "peregrino/atlas.webp (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/nucleo_4.webp",
+     "s": 1.592,
+     "px": 88
     },
     {
      "g": "decorado",
      "k": "aidDrawTall",
      "img": "fx/nucleo_1.webp",
-     "s": 1.668,
-     "px": 180
+     "s": 1.66,
+     "px": 179
     },
     {
      "g": "decorado",
      "k": "aidDrawTall",
      "img": "fx/nucleo_2.webp",
-     "s": 1.29,
+     "s": 1.291,
      "px": 70
     },
     {
@@ -1736,1389 +1771,18 @@
      "px": 63
     },
     {
-     "g": "jefe",
-     "k": "madre_espora",
-     "img": "vendor/cadena-relampagos.webp",
-     "s": 0.309,
-     "px": 79
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "fx/m_summon_b.webp",
-     "s": 1.588,
-     "px": 114
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "fx/mush_row_big.webp",
-     "s": 1.531,
-     "px": 224
-    },
-    {
      "g": "decorado",
      "k": "aidDrawTall",
      "img": "fx/mush_row_small.webp",
-     "s": 1.323,
-     "px": 189
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "fx/nucleo_4.webp",
-     "s": 1.806,
-     "px": 99
+     "s": 1.332,
+     "px": 190
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.37,
+     "s": 1.371,
      "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-grito.webp",
-     "s": 0.642,
-     "px": 164
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 64
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 1.015,
-     "px": 114
-    }
-   ],
-   "perf": {
-    "renderMs": 25.1,
-    "flushMs": 119
-   }
-  },
-  {
-   "arena": "hielo",
-   "escena": "oleada",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 300x200",
-     "s": 2.28,
-     "px": 684
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 110x50",
-     "s": 2.4,
-     "px": 264
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 120x70",
-     "s": 2.4,
-     "px": 288
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 0.96,
-     "px": 19
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "lobo_artico/atlas.webp (derivado) (derivado)",
-     "s": 0.995,
-     "px": 151
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x80",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x28",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 44x36",
-     "s": 2.4,
-     "px": 106
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_hielo",
-     "img": "golem_hielo/walk3.webp",
-     "s": 1.59,
-     "px": 65
-    },
-    {
-     "g": "enemigo",
-     "k": "lobo_artico",
-     "img": "lobo_artico/atlas.webp (derivado)",
-     "s": 1.215,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 110x80",
-     "s": 2.4,
-     "px": 264
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_hielo",
-     "img": "golem_hielo/walk1.webp",
-     "s": 1.591,
-     "px": 86
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 32x66",
-     "s": 2.4,
-     "px": 77
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 18x26",
-     "s": 2.88,
-     "px": 52
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_hielo",
-     "img": "golem_hielo/walk2.webp",
-     "s": 1.597,
-     "px": 78
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.997,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.766,
-     "px": 68
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 64
-    },
-    {
-     "g": "enemigo",
-     "k": "hada_escarcha",
-     "img": "hada_escarcha/atlas.webp",
-     "s": 0.76,
-     "px": 40
-    }
-   ],
-   "perf": {
-    "renderMs": 38.01,
-    "flushMs": 51.2
-   }
-  },
-  {
-   "arena": "hielo",
-   "escena": "plantel",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 300x200",
-     "s": 2.28,
-     "px": 684
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 110x50",
-     "s": 2.4,
-     "px": 264
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 120x70",
-     "s": 2.4,
-     "px": 288
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x80",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 110x80",
-     "s": 2.4,
-     "px": 264
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x28",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 18x26",
-     "s": 2.88,
-     "px": 52
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 44x36",
-     "s": 2.4,
-     "px": 106
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 32x66",
-     "s": 2.4,
-     "px": 77
-    },
-    {
-     "g": "enemigo",
-     "k": "cristal_servo",
-     "img": "cristal_servo/atlas.webp",
-     "s": 0.702,
-     "px": 40
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_cristal",
-     "img": "golem_cristal/atlas.webp",
-     "s": 0.972,
-     "px": 90
-    },
-    {
-     "g": "enemigo",
-     "k": "cristal_volador",
-     "img": "cristal_volador/atlas.webp (derivado)",
-     "s": 1.201,
-     "px": 43
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 1.015,
-     "px": 114
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 59
-    },
-    {
-     "g": "enemigo",
-     "k": "demonio_hielo_fuego",
-     "img": "demonio_hielo_fuego/idle3.webp",
-     "s": 1.878,
-     "px": 92
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.765,
-     "px": 69
-    },
-    {
-     "g": "enemigo",
-     "k": "hada_escarcha",
-     "img": "hada_escarcha/atlas.webp",
-     "s": 0.762,
-     "px": 40
-    },
-    {
-     "g": "enemigo",
-     "k": "lobo_artico",
-     "img": "lobo_artico/atlas.webp (derivado)",
-     "s": 1.216,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.368,
-     "px": 57
-    },
-    {
-     "g": "enemigo",
-     "k": "angel_hielo",
-     "img": "v2/atlas.webp",
-     "s": 0.944,
-     "px": 118
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_hielo",
-     "img": "golem_hielo/idle1.webp",
-     "s": 1.597,
-     "px": 86
-    },
-    {
-     "g": "enemigo",
-     "k": "dragoncito_hielo",
-     "img": "v2/atlas.webp",
-     "s": 1.092,
-     "px": 103
-    }
-   ],
-   "perf": {
-    "renderMs": 14.72,
-    "flushMs": 189.2
-   }
-  },
-  {
-   "arena": "hielo",
-   "escena": "jefe",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 300x200",
-     "s": 2.28,
-     "px": 684
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 110x50",
-     "s": 2.4,
-     "px": 264
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 120x70",
-     "s": 2.4,
-     "px": 288
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.02,
-     "px": 49
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "lobo_artico/atlas.webp (derivado) (derivado)",
-     "s": 0.995,
-     "px": 151
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "golem_hielo/death4.webp (derivado)",
-     "s": 0.998,
-     "px": 202
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "demonio_hielo_fuego/death4.webp (derivado)",
-     "s": 0.997,
-     "px": 235
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x80",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 44x36",
-     "s": 2.4,
-     "px": 106
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 110x80",
-     "s": 2.4,
-     "px": 264
-    },
-    {
-     "g": "jefe",
-     "k": "mago_hielo_cristal",
-     "img": "v2/atlas.webp",
-     "s": 1.37,
-     "px": 164
-    },
-    {
-     "g": "jefe",
-     "k": "mago_hielo_cristal",
-     "img": "v2/atlas.webp (derivado)",
-     "s": 1.37,
-     "px": 164
-    },
-    {
-     "g": "jefe",
-     "k": "mago_hielo_cristal",
-     "img": "vendor/cadena-relampagos.webp",
-     "s": 0.281,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 18x26",
-     "s": 2.88,
-     "px": 52
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x28",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 32x66",
-     "s": 2.4,
-     "px": 77
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.37,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 1.015,
-     "px": 114
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-grito.webp",
-     "s": 0.664,
-     "px": 170
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 63
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawSprites",
-     "img": "abilities/iceCrystal_01.webp",
-     "s": 1.4,
-     "px": 39
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawSprites",
-     "img": "abilities/frostRune_01.webp",
-     "s": 1.015,
-     "px": 14
-    },
-    {
-     "g": "efectos",
-     "k": "drawFxContrastTop",
-     "img": "canvas 96x96",
-     "s": 0.71,
-     "px": 68
-    }
-   ],
-   "perf": {
-    "renderMs": 16.67,
-    "flushMs": 58.2
-   }
-  },
-  {
-   "arena": "acuatica",
-   "escena": "oleada",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 340x230",
-     "s": 2.16,
-     "px": 734
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 130x60",
-     "s": 2.4,
-     "px": 312
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 1.08,
-     "px": 22
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 0.96,
-     "px": 46
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
-     "s": 0.999,
-     "px": 185
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawDying",
-     "img": "esqueleto_h/walk1.webp (derivado)",
-     "s": 1.435,
-     "px": 106
-    },
-    {
-     "g": "enemigo",
-     "k": "cangrejo_acorazado",
-     "img": "arana/atlas.webp (derivado)",
-     "s": 0.887,
-     "px": 158
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x76",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 18x26",
-     "s": 2.88,
-     "px": 52
-    },
-    {
-     "g": "enemigo",
-     "k": "medusa_electrica",
-     "img": "acechador/atlas.webp (derivado)",
-     "s": 0.761,
-     "px": 166
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 44x40",
-     "s": 2.4,
-     "px": 106
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 56x36",
-     "s": 2.4,
-     "px": 134
-    },
-    {
-     "g": "enemigo",
-     "k": "tiburon_joven",
-     "img": "esqueleto_h/walk1.webp (derivado)",
-     "s": 1.506,
-     "px": 111
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 59
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.998,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.708,
-     "px": 54
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 150x80",
-     "s": 2.4,
-     "px": 360
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawSprites",
-     "img": "abilities/waterSplash_01.webp",
-     "s": 1.2,
-     "px": 92
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawSprites",
-     "img": "abilities/waterSplash_04.webp",
-     "s": 0.828,
-     "px": 64
-    },
-    {
-     "g": "efectos",
-     "k": "drawFxContrastTop",
-     "img": "canvas 96x96",
-     "s": 1.033,
-     "px": 99
-    }
-   ],
-   "perf": {
-    "renderMs": 7.87,
-    "flushMs": 86.3
-   }
-  },
-  {
-   "arena": "acuatica",
-   "escena": "plantel",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 340x230",
-     "s": 2.16,
-     "px": 734
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 130x60",
-     "s": 2.4,
-     "px": 312
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 44x40",
-     "s": 2.4,
-     "px": 106
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x76",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 18x26",
-     "s": 2.88,
-     "px": 52
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 56x36",
-     "s": 2.4,
-     "px": 134
-    },
-    {
-     "g": "enemigo",
-     "k": "tiburon_blanco",
-     "img": "demonio_hielo_fuego/walk1.webp (derivado)",
-     "s": 2.056,
-     "px": 136
-    },
-    {
-     "g": "enemigo",
-     "k": "anguila_electrica",
-     "img": "anguila_electrica/idle_01.webp",
-     "s": 2.256,
-     "px": 106
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.998,
-     "px": 112
-    },
-    {
-     "g": "enemigo",
-     "k": "tiburon_joven",
-     "img": "esqueleto_h/walk1.webp (derivado)",
-     "s": 1.526,
-     "px": 113
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 58
-    },
-    {
-     "g": "enemigo",
-     "k": "sirena_abisal",
-     "img": "medusa/walk-strip.webp (derivado)",
-     "s": 0.942,
-     "px": 74
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 59
-    },
-    {
-     "g": "enemigo",
-     "k": "medusa_electrica",
-     "img": "acechador/atlas.webp (derivado)",
-     "s": 0.85,
-     "px": 185
-    },
-    {
-     "g": "enemigo",
-     "k": "medusa_electrica",
-     "img": "acechador/atlas.webp (derivado) (derivado)",
-     "s": 0.85,
-     "px": 185
-    },
-    {
-     "g": "enemigo",
-     "k": "cangrejo_acorazado",
-     "img": "arana/atlas.webp (derivado)",
-     "s": 0.909,
-     "px": 162
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.766,
-     "px": 75
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 150x80",
-     "s": 2.4,
-     "px": 360
-    },
-    {
-     "g": "efectos",
-     "k": "drawFxContrastTop",
-     "img": "canvas 96x96",
-     "s": 0.893,
-     "px": 86
-    }
-   ],
-   "perf": {
-    "renderMs": 5.41,
-    "flushMs": 33.3
-   }
-  },
-  {
-   "arena": "acuatica",
-   "escena": "jefe",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 340x230",
-     "s": 2.16,
-     "px": 734
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 130x60",
-     "s": 2.4,
-     "px": 312
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 1.08,
-     "px": 22
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 0.96,
-     "px": 46
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "acechador/atlas.webp (derivado) (derivado)",
-     "s": 0.999,
-     "px": 185
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
-     "s": 0.999,
-     "px": 185
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "demonio_hielo_fuego/walk1.webp (derivado) (derivado)",
-     "s": 1.171,
-     "px": 300
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 44x40",
-     "s": 2.4,
-     "px": 106
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 56x36",
-     "s": 2.4,
-     "px": 134
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 30x76",
-     "s": 2.4,
-     "px": 72
-    },
-    {
-     "g": "jefe",
-     "k": "leviatan",
-     "img": "leviatan/coil_01.webp",
-     "s": 2.695,
-     "px": 245
-    },
-    {
-     "g": "jefe",
-     "k": "leviatan",
-     "img": "leviatan/coil_02.webp",
-     "s": 2.126,
-     "px": 225
-    },
-    {
-     "g": "jefe",
-     "k": "leviatan",
-     "img": "leviatan/dash_02.webp",
-     "s": 4.656,
-     "px": 680
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 18x26",
-     "s": 2.88,
-     "px": 52
-    },
-    {
-     "g": "enemigo",
-     "k": "lev_tentaculo",
-     "img": "kraken_joven/tent_02.webp",
-     "s": 2.742,
-     "px": 156
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 57
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 63
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-torbellino.webp",
-     "s": 0.779,
-     "px": 199
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "abilities/holyShieldBubble_04.webp (derivado)",
-     "s": 1.38,
-     "px": 66
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.998,
-     "px": 112
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 150x80",
-     "s": 2.4,
-     "px": 360
-    },
-    {
-     "g": "enemigo",
-     "k": "lev_tentaculo",
-     "img": "kraken_joven/tent_01.webp",
-     "s": 2.134,
-     "px": 220
-    }
-   ],
-   "perf": {
-    "renderMs": 14.75,
-    "flushMs": 150.9
-   }
-  },
-  {
-   "arena": "laberinto",
-   "escena": "oleada",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 420x290",
-     "s": 2.04,
-     "px": 857
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 120x50",
-     "s": 2.4,
-     "px": 288
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 80x50",
-     "s": 2.4,
-     "px": 192
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 1300x900",
-     "s": 2.4,
-     "px": 1784
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 1.08,
-     "px": 22
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "escorpion_gigante/walk-strip.webp (derivado)",
-     "s": 0.994,
-     "px": 168
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_piedra",
-     "img": "v2/atlas.webp",
-     "s": 1.461,
-     "px": 140
-    },
-    {
-     "g": "enemigo",
-     "k": "escorpion_gigante",
-     "img": "escorpion_gigante/walk-strip.webp",
-     "s": 1.417,
-     "px": 78
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 26x90",
-     "s": 2.4,
-     "px": 62
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 1.014,
-     "px": 114
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x26",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.792,
-     "px": 72
-    },
-    {
-     "g": "enemigo",
-     "k": "escorpion_gigante",
-     "img": "escorpion_gigante/walk-strip.webp (derivado)",
-     "s": 1.418,
-     "px": 78
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 65
-    }
-   ],
-   "perf": {
-    "renderMs": 17.02,
-    "flushMs": 266
-   }
-  },
-  {
-   "arena": "laberinto",
-   "escena": "plantel",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 420x290",
-     "s": 2.04,
-     "px": 857
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 120x50",
-     "s": 2.4,
-     "px": 288
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 80x50",
-     "s": 2.4,
-     "px": 192
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 1300x900",
-     "s": 2.4,
-     "px": 1784
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 26x90",
-     "s": 2.4,
-     "px": 62
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x26",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "enemigo",
-     "k": "esfinge",
-     "img": "v3/atlas.webp (derivado)",
-     "s": 2.065,
-     "px": 225
-    },
-    {
-     "g": "enemigo",
-     "k": "druida_arena",
-     "img": "druida_arena/walk-strip.webp",
-     "s": 1.161,
-     "px": 94
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 1.014,
-     "px": 114
-    },
-    {
-     "g": "enemigo",
-     "k": "escorpion_gigante",
-     "img": "escorpion_gigante/walk-strip.webp",
-     "s": 1.415,
-     "px": 78
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 58
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.766,
-     "px": 69
-    },
-    {
-     "g": "enemigo",
-     "k": "medusa",
-     "img": "medusa/walk-strip.webp",
-     "s": 1.04,
-     "px": 82
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 59
-    },
-    {
-     "g": "enemigo",
-     "k": "golem_piedra",
-     "img": "v2/atlas.webp",
-     "s": 1.462,
-     "px": 140
-    }
-   ],
-   "perf": {
-    "renderMs": 4.66,
-    "flushMs": 66.8
-   }
-  },
-  {
-   "arena": "laberinto",
-   "escena": "jefe",
-   "recs": [
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 420x290",
-     "s": 2.04,
-     "px": 857
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 120x50",
-     "s": 2.4,
-     "px": 288
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 80x50",
-     "s": 2.4,
-     "px": 192
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 1300x900",
-     "s": 2.4,
-     "px": 1784
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 1.08,
-     "px": 22
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 0.96,
-     "px": 46
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 28x28",
-     "s": 1.08,
-     "px": 30
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "druida_arena/walk-strip.webp (derivado)",
-     "s": 0.997,
-     "px": 229
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "v2/atlas.webp (derivado)",
-     "s": 0.646,
-     "px": 163
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "escorpion_gigante/walk-strip.webp (derivado)",
-     "s": 0.994,
-     "px": 168
-    },
-    {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "v3/atlas.webp (derivado) (derivado)",
-     "s": 1.116,
-     "px": 286
-    },
-    {
-     "g": "jefe",
-     "k": "minotauro",
-     "img": "v3/atlas.webp",
-     "s": 3.002,
-     "px": 438
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x26",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 26x90",
-     "s": 2.4,
-     "px": 62
-    },
-    {
-     "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.368,
-     "px": 57
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 63
     },
     {
      "g": "guardian",
@@ -3132,18 +1796,1438 @@
      "k": "tanque",
      "img": "tanque/atlas.webp (derivado)",
      "s": 0.767,
-     "px": 66
+     "px": 70
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "fx/m_summon_b.webp",
+     "s": 1.523,
+     "px": 110
     }
    ],
    "perf": {
-    "renderMs": 7.06,
-    "flushMs": 101.4
+    "renderMs": 3.61,
+    "flushMs": 48
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x200",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 110x50",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x70",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.2,
+     "px": 24
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "lobo_artico/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x80",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "enemigo",
+     "k": "lobo_artico",
+     "img": "lobo_artico/atlas.webp (derivado)",
+     "s": 1.217,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x36",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/walk3.webp",
+     "s": 1.589,
+     "px": 65
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 110x80",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 32x66",
+     "s": 2.4,
+     "px": 77
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "enemigo",
+     "k": "dragoncito_hielo",
+     "img": "v2/atlas.webp",
+     "s": 1.148,
+     "px": 108
+    },
+    {
+     "g": "enemigo",
+     "k": "dragoncito_hielo",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 1.148,
+     "px": 108
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x28",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.765,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.368,
+     "px": 57
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/walk2.webp",
+     "s": 1.597,
+     "px": 78
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
+    }
+   ],
+   "perf": {
+    "renderMs": 15.19,
+    "flushMs": 258
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x200",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 110x50",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x70",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x80",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x36",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 110x80",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "enemigo",
+     "k": "hada_escarcha",
+     "img": "hada_escarcha/atlas.webp",
+     "s": 0.76,
+     "px": 40
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 32x66",
+     "s": 2.4,
+     "px": 77
+    },
+    {
+     "g": "enemigo",
+     "k": "cristal_servo",
+     "img": "cristal_servo/atlas.webp",
+     "s": 0.703,
+     "px": 40
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x28",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_cristal",
+     "img": "golem_cristal/atlas.webp",
+     "s": 0.972,
+     "px": 90
+    },
+    {
+     "g": "enemigo",
+     "k": "cristal_volador",
+     "img": "cristal_volador/atlas.webp (derivado)",
+     "s": 1.202,
+     "px": 43
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "enemigo",
+     "k": "demonio_hielo_fuego",
+     "img": "demonio_hielo_fuego/idle3.webp",
+     "s": 1.788,
+     "px": 88
+    },
+    {
+     "g": "enemigo",
+     "k": "lobo_artico",
+     "img": "lobo_artico/atlas.webp (derivado)",
+     "s": 1.213,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.369,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "angel_hielo",
+     "img": "v2/atlas.webp",
+     "s": 0.901,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.709,
+     "px": 70
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/hit1.webp",
+     "s": 1.591,
+     "px": 78
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_hielo",
+     "img": "golem_hielo/hit1.webp (derivado)",
+     "s": 1.591,
+     "px": 78
+    },
+    {
+     "g": "enemigo",
+     "k": "dragoncito_hielo",
+     "img": "v2/atlas.webp",
+     "s": 1.09,
+     "px": 102
+    }
+   ],
+   "perf": {
+    "renderMs": 12.46,
+    "flushMs": 142.4
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 300x200",
+     "s": 2.28,
+     "px": 684
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 110x50",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x70",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.2,
+     "px": 24
+    },
+    {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.307,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "lobo_artico/atlas.webp (derivado)",
+     "s": 0.995,
+     "px": 151
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "demonio_hielo_fuego/death4.webp (derivado)",
+     "s": 1,
+     "px": 247
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "golem_hielo/death4.webp (derivado)",
+     "s": 0.998,
+     "px": 202
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x80",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x28",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x36",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 110x80",
+     "s": 2.4,
+     "px": 264
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 32x66",
+     "s": 2.4,
+     "px": 77
+    },
+    {
+     "g": "jefe",
+     "k": "mago_hielo_cristal",
+     "img": "v2/atlas.webp",
+     "s": 1.367,
+     "px": 164
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.369,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-torbellino.webp",
+     "s": 0.781,
+     "px": 200
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 63
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/iceCrystal_01.webp",
+     "s": 1.4,
+     "px": 39
+    }
+   ],
+   "perf": {
+    "renderMs": 14.31,
+    "flushMs": 241.9
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 340x230",
+     "s": 2.16,
+     "px": 734
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 130x60",
+     "s": 2.4,
+     "px": 312
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "acechador/atlas.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa_electrica",
+     "img": "acechador/atlas.webp (derivado)",
+     "s": 0.772,
+     "px": 168
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x40",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x76",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "enemigo",
+     "k": "cangrejo_acorazado",
+     "img": "arana/atlas.webp (derivado)",
+     "s": 0.839,
+     "px": 149
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 56x36",
+     "s": 2.4,
+     "px": 134
+    },
+    {
+     "g": "enemigo",
+     "k": "cangrejo_acorazado",
+     "img": "arana/atlas.webp (derivado) (derivado)",
+     "s": 0.772,
+     "px": 137
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_joven",
+     "img": "esqueleto_h/walk1.webp (derivado)",
+     "s": 1.48,
+     "px": 110
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_joven",
+     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
+     "s": 1.48,
+     "px": 110
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.767,
+     "px": 70
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.369,
+     "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 59
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 150x80",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/waterSplash_03.webp",
+     "s": 0.828,
+     "px": 64
+    }
+   ],
+   "perf": {
+    "renderMs": 19.55,
+    "flushMs": 105.1
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 340x230",
+     "s": 2.16,
+     "px": 734
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 130x60",
+     "s": 2.4,
+     "px": 312
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x40",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x76",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 56x36",
+     "s": 2.4,
+     "px": 134
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_blanco",
+     "img": "demonio_hielo_fuego/walk1.webp (derivado)",
+     "s": 2.064,
+     "px": 136
+    },
+    {
+     "g": "enemigo",
+     "k": "anguila_electrica",
+     "img": "anguila_electrica/idle_03.webp",
+     "s": 1.506,
+     "px": 105
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.998,
+     "px": 112
+    },
+    {
+     "g": "enemigo",
+     "k": "sirena_abisal",
+     "img": "medusa/walk-strip.webp (derivado)",
+     "s": 0.921,
+     "px": 73
+    },
+    {
+     "g": "enemigo",
+     "k": "tiburon_joven",
+     "img": "esqueleto_h/walk1.webp (derivado)",
+     "s": 1.519,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.372,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.767,
+     "px": 71
+    },
+    {
+     "g": "enemigo",
+     "k": "cangrejo_acorazado",
+     "img": "arana/atlas.webp (derivado)",
+     "s": 0.903,
+     "px": 161
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa_electrica",
+     "img": "acechador/atlas.webp (derivado)",
+     "s": 0.915,
+     "px": 200
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa_electrica",
+     "img": "acechador/atlas.webp (derivado) (derivado)",
+     "s": 0.915,
+     "px": 200
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 150x80",
+     "s": 2.4,
+     "px": 360
+    }
+   ],
+   "perf": {
+    "renderMs": 14.39,
+    "flushMs": 197.3
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 340x230",
+     "s": 2.16,
+     "px": 734
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 130x60",
+     "s": 2.4,
+     "px": 312
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "arana/atlas.webp (derivado) (derivado)",
+     "s": 0.997,
+     "px": 229
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "acechador/atlas.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "esqueleto_h/walk1.webp (derivado) (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "anguila_electrica/death_05.webp (derivado)",
+     "s": 0.994,
+     "px": 168
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 30x76",
+     "s": 2.4,
+     "px": 72
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 44x40",
+     "s": 2.4,
+     "px": 106
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 18x26",
+     "s": 2.88,
+     "px": 52
+    },
+    {
+     "g": "enemigo",
+     "k": "lev_tentaculo",
+     "img": "kraken_joven/tent_03.webp",
+     "s": 2.566,
+     "px": 205
+    },
+    {
+     "g": "enemigo",
+     "k": "lev_tentaculo",
+     "img": "kraken_joven/tent_01.webp",
+     "s": 2.129,
+     "px": 219
+    },
+    {
+     "g": "jefe",
+     "k": "leviatan",
+     "img": "leviatan/coil_01.webp",
+     "s": 2.439,
+     "px": 222
+    },
+    {
+     "g": "jefe",
+     "k": "leviatan",
+     "img": "leviatan/coil_02.webp",
+     "s": 1.923,
+     "px": 204
+    },
+    {
+     "g": "jefe",
+     "k": "leviatan",
+     "img": "leviatan/dash_02.webp",
+     "s": 4.212,
+     "px": 615
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.371,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "abilities/holyShieldBubble_01.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 65
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_01.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-estampida.webp",
+     "s": 0.544,
+     "px": 139
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "abilities/holyShieldBubble_01.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.014,
+     "px": 114
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "abilities/holyShieldBubble_01.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 150x80",
+     "s": 2.4,
+     "px": 360
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 56x36",
+     "s": 2.4,
+     "px": 134
+    },
+    {
+     "g": "efectos",
+     "k": "vfxDrawSprites",
+     "img": "abilities/iceCrystal_01.webp",
+     "s": 1.4,
+     "px": 39
+    }
+   ],
+   "perf": {
+    "renderMs": 13.07,
+    "flushMs": 123.8
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "oleada",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x290",
+     "s": 2.04,
+     "px": 857
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x50",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 80x50",
+     "s": 2.4,
+     "px": 192
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 1300x900",
+     "s": 2.4,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
+    },
+    {
+     "g": "otro",
+     "k": "groundLootDrawGround",
+     "img": "canvas 32x32",
+     "s": 1.5,
+     "px": 48
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "escorpion_gigante/walk-strip.webp (derivado)",
+     "s": 0.994,
+     "px": 168
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_piedra",
+     "img": "v2/atlas.webp",
+     "s": 1.465,
+     "px": 141
+    },
+    {
+     "g": "enemigo",
+     "k": "escorpion_gigante",
+     "img": "escorpion_gigante/walk-strip.webp",
+     "s": 1.415,
+     "px": 78
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x90",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.997,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.372,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "escorpion_gigante",
+     "img": "escorpion_gigante/walk-strip.webp (derivado)",
+     "s": 1.474,
+     "px": 81
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.708,
+     "px": 55
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x26",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "efectos",
+     "k": "drawFxContrastTop",
+     "img": "canvas 96x96",
+     "s": 1.05,
+     "px": 101
+    }
+   ],
+   "perf": {
+    "renderMs": 3.7,
+    "flushMs": 43.1
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "plantel",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x290",
+     "s": 2.04,
+     "px": 857
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x50",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 80x50",
+     "s": 2.4,
+     "px": 192
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 1300x900",
+     "s": 2.4,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x90",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "enemigo",
+     "k": "esfinge",
+     "img": "v3/atlas.webp (derivado)",
+     "s": 1.969,
+     "px": 215
+    },
+    {
+     "g": "enemigo",
+     "k": "druida_arena",
+     "img": "druida_arena/walk-strip.webp",
+     "s": 1.219,
+     "px": 99
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.015,
+     "px": 114
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x26",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "escorpion_gigante",
+     "img": "escorpion_gigante/walk-strip.webp",
+     "s": 1.418,
+     "px": 78
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.37,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 59
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa",
+     "img": "medusa/walk-strip.webp",
+     "s": 1.038,
+     "px": 82
+    },
+    {
+     "g": "enemigo",
+     "k": "medusa",
+     "img": "medusa/walk-strip.webp (derivado)",
+     "s": 1.038,
+     "px": 82
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_piedra",
+     "img": "v2/atlas.webp",
+     "s": 1.463,
+     "px": 140
+    },
+    {
+     "g": "enemigo",
+     "k": "golem_piedra",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 1.463,
+     "px": 140
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.707,
+     "px": 70
+    }
+   ],
+   "perf": {
+    "renderMs": 5.18,
+    "flushMs": 194.2
+   }
+  },
+  {
+   "arena": "laberinto",
+   "escena": "jefe",
+   "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 420x290",
+     "s": 2.04,
+     "px": 857
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 120x50",
+     "s": 2.4,
+     "px": 288
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 80x50",
+     "s": 2.4,
+     "px": 192
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 1300x900",
+     "s": 2.4,
+     "px": 1784
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 28x28",
+     "s": 1.08,
+     "px": 30
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 0.96,
+     "px": 46
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "v2/atlas.webp (derivado)",
+     "s": 0.646,
+     "px": 163
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "druida_arena/walk-strip.webp (derivado)",
+     "s": 0.997,
+     "px": 218
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "medusa/walk-strip.webp (derivado)",
+     "s": 0.998,
+     "px": 202
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "v3/atlas.webp (derivado) (derivado)",
+     "s": 1.116,
+     "px": 286
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x26",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 26x90",
+     "s": 2.4,
+     "px": 62
+    },
+    {
+     "g": "jefe",
+     "k": "minotauro",
+     "img": "v3/atlas.webp",
+     "s": 3.001,
+     "px": 438
+    },
+    {
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.372,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.642,
+     "px": 164
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 1.013,
+     "px": 113
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 65
+    }
+   ],
+   "perf": {
+    "renderMs": 6.6,
+    "flushMs": 43.7
    }
   },
   {
    "arena": "abismo",
    "escena": "oleada",
    "recs": [
+    {
+     "g": "decorado",
+     "k": "drawArena",
+     "img": "canvas 154x178",
+     "s": 2.4,
+     "px": 370
+    },
     {
      "g": "decorado",
      "k": "drawArena",
@@ -3157,13 +3241,6 @@
      "img": "canvas 176x196",
      "s": 2.4,
      "px": 422
-    },
-    {
-     "g": "decorado",
-     "k": "drawArena",
-     "img": "canvas 154x178",
-     "s": 2.4,
-     "px": 370
     },
     {
      "g": "decorado",
@@ -3216,10 +3293,10 @@
     },
     {
      "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.44,
-     "px": 69
+     "k": "drawArena",
+     "img": "abismo/abHeraldoZone_0.webp",
+     "s": 4.308,
+     "px": 181
     },
     {
      "g": "decorado",
@@ -3229,11 +3306,25 @@
      "px": 22
     },
     {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.44,
+     "px": 69
+    },
+    {
+     "g": "decorado",
+     "k": "drawCorpses",
+     "img": "ab_errante/atlas.webp (derivado)",
+     "s": 0.999,
+     "px": 185
+    },
+    {
      "g": "enemigo",
-     "k": "ab_heraldo",
-     "img": "ab_heraldo/atlas.webp",
-     "s": 1.682,
-     "px": 91
+     "k": "ab_errante",
+     "img": "ab_errante/atlas.webp",
+     "s": 1.526,
+     "px": 85
     },
     {
      "g": "decorado",
@@ -3241,20 +3332,6 @@
      "img": "abismo/pilares_0.webp",
      "s": 1.458,
      "px": 47
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 65
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-grito.webp",
-     "s": 0.642,
-     "px": 164
     },
     {
      "g": "decorado",
@@ -3265,10 +3342,24 @@
     },
     {
      "g": "guardian",
-     "k": "guerrero",
-     "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.766,
+     "px": 66
+    },
+    {
+     "g": "enemigo",
+     "k": "ab_heraldo",
+     "img": "ab_heraldo/atlas.webp",
+     "s": 1.682,
+     "px": 91
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 65
     },
     {
      "g": "decorado",
@@ -3278,30 +3369,30 @@
      "px": 156
     },
     {
-     "g": "enemigo",
-     "k": "ab_errante",
-     "img": "ab_errante/atlas.webp",
-     "s": 1.538,
-     "px": 86
+     "g": "guardian",
+     "k": "guerrero",
+     "img": "guerrero/atlas.webp (derivado) (derivado)",
+     "s": 1.372,
+     "px": 58
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 1.013,
-     "px": 113
+     "s": 0.996,
+     "px": 112
     },
     {
-     "g": "enemigo",
-     "k": "ab_acechador",
-     "img": "ab_acechador/atlas.webp",
-     "s": 1.877,
-     "px": 113
+     "g": "otro",
+     "k": "_abSpr",
+     "img": "abismo/abHeraldoOrb_1.webp",
+     "s": 2.291,
+     "px": 55
     }
    ],
    "perf": {
-    "renderMs": 6.14,
-    "flushMs": 61.7
+    "renderMs": 5.35,
+    "flushMs": 175.5
    }
   },
   {
@@ -3396,22 +3487,15 @@
      "g": "enemigo",
      "k": "ab_jinete",
      "img": "v2/atlas.webp (derivado)",
-     "s": 1.679,
-     "px": 138
+     "s": 1.676,
+     "px": 137
     },
     {
      "g": "enemigo",
      "k": "ab_tentaculo",
      "img": "abismo/tent_grande_0.webp",
-     "s": 1.68,
+     "s": 1.679,
      "px": 176
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.113,
-     "px": 59
     },
     {
      "g": "decorado",
@@ -3421,24 +3505,24 @@
      "px": 156
     },
     {
-     "g": "enemigo",
-     "k": "ab_tejedor",
-     "img": "ab_tejedor/atlas.webp",
-     "s": 2.42,
-     "px": 121
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
     },
     {
      "g": "enemigo",
      "k": "ab_tejedor",
-     "img": "ab_tejedor/atlas.webp (derivado)",
-     "s": 2.42,
-     "px": 121
+     "img": "ab_tejedor/atlas.webp",
+     "s": 2.436,
+     "px": 122
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 0.998,
+     "s": 0.996,
      "px": 112
     },
     {
@@ -3450,17 +3534,17 @@
     },
     {
      "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.767,
-     "px": 76
-    },
-    {
-     "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
      "s": 1.368,
      "px": 57
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.767,
+     "px": 76
     },
     {
      "g": "enemigo",
@@ -3480,20 +3564,20 @@
      "g": "enemigo",
      "k": "ab_acechador",
      "img": "ab_acechador/atlas.webp",
-     "s": 1.78,
+     "s": 1.778,
      "px": 107
     },
     {
      "g": "enemigo",
      "k": "ab_heraldo",
      "img": "ab_heraldo/atlas.webp",
-     "s": 1.686,
+     "s": 1.676,
      "px": 91
     }
    ],
    "perf": {
-    "renderMs": 14.46,
-    "flushMs": 69.7
+    "renderMs": 2.26,
+    "flushMs": 64.8
    }
   },
   {
@@ -3503,9 +3587,9 @@
     {
      "g": "decorado",
      "k": "drawArena",
-     "img": "abismo/ojo_idle_3.webp",
+     "img": "abismo/ojo_idle_1.webp",
      "s": 5.018,
-     "px": 286
+     "px": 306
     },
     {
      "g": "decorado",
@@ -3559,6 +3643,13 @@
     {
      "g": "decorado",
      "k": "drawArena",
+     "img": "canvas 57x202",
+     "s": 2.4,
+     "px": 137
+    },
+    {
+     "g": "decorado",
+     "k": "drawArena",
      "img": "canvas 139x217",
      "s": 2.4,
      "px": 334
@@ -3592,20 +3683,6 @@
      "px": 353
     },
     {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 20x20",
-     "s": 1.08,
-     "px": 22
-    },
-    {
-     "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 0.96,
-     "px": 46
-    },
-    {
      "g": "otro",
      "k": "Object.draw",
      "img": "vendor/muro-fuego.webp",
@@ -3615,16 +3692,16 @@
     {
      "g": "decorado",
      "k": "drawCorpses",
-     "img": "ab_acechador/atlas.webp (derivado)",
-     "s": 0.994,
-     "px": 168
+     "img": "ab_errante/atlas.webp (derivado)",
+     "s": 0.999,
+     "px": 185
     },
     {
      "g": "decorado",
      "k": "drawCorpses",
-     "img": "ab_errante/atlas.webp (derivado)",
-     "s": 0.999,
-     "px": 185
+     "img": "ab_acechador/atlas.webp (derivado)",
+     "s": 0.994,
+     "px": 168
     },
     {
      "g": "decorado",
@@ -3637,50 +3714,50 @@
      "g": "jefe",
      "k": "ab_morador",
      "img": "abismo/tex_carne.webp",
-     "s": 5.941,
+     "s": 5.938,
      "px": 333
     },
     {
      "g": "jefe",
      "k": "ab_morador",
      "img": "abismo/tent_segmento_2.webp",
-     "s": 1.019,
+     "s": 1.018,
      "px": 42
     },
     {
      "g": "jefe",
      "k": "ab_morador",
-     "img": "abismo/ojo_blink_3.webp",
-     "s": 3.183,
-     "px": 178
+     "img": "abismo/ojo_idle_4.webp",
+     "s": 3.298,
+     "px": 198
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 57
+     "s": 1.372,
+     "px": 58
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 0.997,
+     "s": 0.998,
      "px": 112
     },
     {
      "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-estampida.webp",
-     "s": 0.562,
-     "px": 144
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 59
     },
     {
      "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 59
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.663,
+     "px": 170
     },
     {
      "g": "decorado",
@@ -3690,23 +3767,23 @@
      "px": 108
     },
     {
+     "g": "enemigo",
+     "k": "ab_tentaculo",
+     "img": "abismo/tent_grande_0.webp",
+     "s": 1.677,
+     "px": 176
+    },
+    {
      "g": "decorado",
      "k": "aidDrawTall",
      "img": "abismo/altar_0.webp",
      "s": 1.655,
      "px": 156
-    },
-    {
-     "g": "enemigo",
-     "k": "ab_tentaculo",
-     "img": "abismo/tent_grande_0.webp",
-     "s": 1.679,
-     "px": 176
     }
    ],
    "perf": {
-    "renderMs": 16.24,
-    "flushMs": 109.5
+    "renderMs": 1.57,
+    "flushMs": 52.6
    }
   },
   {
@@ -3779,7 +3856,7 @@
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.113,
      "px": 65
     },
@@ -3787,8 +3864,8 @@
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.37,
-     "px": 58
+     "s": 1.368,
+     "px": 57
     },
     {
      "g": "decorado",
@@ -3813,14 +3890,21 @@
     }
    ],
    "perf": {
-    "renderMs": 5.62,
-    "flushMs": 109.3
+    "renderMs": 4.28,
+    "flushMs": 54.5
    }
   },
   {
    "arena": "minas",
    "escena": "plantel",
    "recs": [
+    {
+     "g": "otro",
+     "k": "Object.draw",
+     "img": "vendor/muro-fuego.webp",
+     "s": 0.319,
+     "px": 82
+    },
     {
      "g": "decorado",
      "k": "aidDrawTall",
@@ -3874,50 +3958,57 @@
      "g": "enemigo",
      "k": "mn_consumidor",
      "img": "mn_consumidor/atlas.webp",
-     "s": 2.453,
-     "px": 98
+     "s": 2.336,
+     "px": 93
     },
     {
      "g": "enemigo",
      "k": "mn_devoraluz",
      "img": "mn_devoraluz/atlas.webp",
-     "s": 3.02,
-     "px": 205
+     "s": 3.154,
+     "px": 214
     },
     {
      "g": "enemigo",
      "k": "mn_escupidor",
      "img": "mn_escupidor/atlas.webp",
-     "s": 2.474,
+     "s": 2.466,
      "px": 94
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.765,
-     "px": 70
     },
     {
      "g": "enemigo",
      "k": "mn_esclavo",
      "img": "mn_esclavo/atlas.webp",
-     "s": 2.127,
-     "px": 104
+     "s": 2.145,
+     "px": 105
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_esclavo",
+     "img": "mn_esclavo/atlas.webp (derivado)",
+     "s": 2.145,
+     "px": 105
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
      "s": 1.369,
-     "px": 57
+     "px": 58
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 0.996,
+     "s": 0.997,
      "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.766,
+     "px": 71
     },
     {
      "g": "decorado",
@@ -3927,18 +4018,18 @@
      "px": 97
     },
     {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 68
-    },
-    {
      "g": "enemigo",
      "k": "mn_minero",
      "img": "mn_minero/atlas.webp",
-     "s": 2.172,
+     "s": 2.17,
      "px": 182
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
     },
     {
      "g": "decorado",
@@ -3951,7 +4042,14 @@
      "g": "enemigo",
      "k": "mn_insecto",
      "img": "mn_insecto/atlas.webp",
-     "s": 1.962,
+     "s": 1.964,
+     "px": 90
+    },
+    {
+     "g": "enemigo",
+     "k": "mn_insecto",
+     "img": "mn_insecto/atlas.webp (derivado)",
+     "s": 1.964,
      "px": 90
     },
     {
@@ -3965,13 +4063,13 @@
      "g": "enemigo",
      "k": "mn_acechador",
      "img": "mn_acechador/atlas.webp",
-     "s": 2.872,
+     "s": 2.865,
      "px": 155
     }
    ],
    "perf": {
-    "renderMs": 3.83,
-    "flushMs": 160.6
+    "renderMs": 12.39,
+    "flushMs": 176.9
    }
   },
   {
@@ -4031,8 +4129,8 @@
      "g": "jefe",
      "k": "mn_cerbero",
      "img": "mn_cerbero/atlas.webp",
-     "s": 5.022,
-     "px": 271
+     "s": 5.045,
+     "px": 272
     },
     {
      "g": "decorado",
@@ -4045,36 +4143,29 @@
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.372,
-     "px": 58
+     "s": 1.368,
+     "px": 57
     },
     {
      "g": "guardian",
-     "k": "guerrero",
-     "img": "abilities/holyShieldBubble_03.webp (derivado)",
-     "s": 1.38,
-     "px": 66
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 59
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 1.015,
+     "s": 1.014,
      "px": 114
     },
     {
      "g": "guardian",
-     "k": "soporte",
-     "img": "abilities/holyShieldBubble_03.webp (derivado)",
-     "s": 1.38,
-     "px": 66
-    },
-    {
-     "g": "guardian",
      "k": "tanque",
-     "img": "tanque/atlas.webp (derivado)",
-     "s": 0.793,
-     "px": 62
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.594,
+     "px": 152
     },
     {
      "g": "decorado",
@@ -4082,20 +4173,6 @@
      "img": "minas/andamio_0.webp",
      "s": 2.028,
      "px": 110
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 65
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "abilities/holyShieldBubble_03.webp (derivado)",
-     "s": 1.38,
-     "px": 66
     },
     {
      "g": "decorado",
@@ -4114,7 +4191,7 @@
     {
      "g": "decorado",
      "k": "aidDrawTall",
-     "img": "minas/mnHowl_4.webp",
+     "img": "minas/mnHowl_2.webp",
      "s": 0.486,
      "px": 13
     },
@@ -4127,8 +4204,8 @@
     }
    ],
    "perf": {
-    "renderMs": 26.96,
-    "flushMs": 303.8
+    "renderMs": 4.42,
+    "flushMs": 34.2
    }
   },
   {
@@ -4166,9 +4243,9 @@
     {
      "g": "decorado",
      "k": "drawGoreDecals",
-     "img": "canvas 48x48",
-     "s": 1.2,
-     "px": 58
+     "img": "canvas 28x28",
+     "s": 1.08,
+     "px": 30
     },
     {
      "g": "decorado",
@@ -4179,24 +4256,17 @@
     },
     {
      "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 28x28",
-     "s": 1.08,
-     "px": 30
-    },
-    {
-     "g": "decorado",
      "k": "drawCorpses",
      "img": "esqueleto/atlas.webp (derivado)",
      "s": 0.647,
      "px": 120
     },
     {
-     "g": "decorado",
-     "k": "drawCorpses",
-     "img": "zombie/death3.webp (derivado)",
-     "s": 0.998,
-     "px": 202
+     "g": "efectos",
+     "k": "vfxDrawDying",
+     "img": "esqueleto/atlas.webp (derivado)",
+     "s": 0.993,
+     "px": 59
     },
     {
      "g": "decorado",
@@ -4206,11 +4276,60 @@
      "px": 72
     },
     {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x24",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/walk3.webp",
+     "s": 1.657,
+     "px": 51
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/atk1.webp",
+     "s": 1.657,
+     "px": 55
+    },
+    {
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/walk2.webp",
+     "s": 1.993,
+     "px": 100
+    },
+    {
      "g": "enemigo",
      "k": "esqueleto",
      "img": "esqueleto/atlas.webp",
-     "s": 0.747,
+     "s": 0.748,
      "px": 89
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/walk2.webp",
+     "s": 1.657,
+     "px": 55
+    },
+    {
+     "g": "guardian",
+     "k": "soporte",
+     "img": "v2/atlas.png",
+     "s": 0.996,
+     "px": 112
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 64
     },
     {
      "g": "decorado",
@@ -4229,72 +4348,23 @@
     {
      "g": "enemigo",
      "k": "esqueleto_h",
-     "img": "esqueleto_h/walk2.webp",
-     "s": 1.993,
-     "px": 100
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x24",
-     "s": 2.88,
-     "px": 58
-    },
-    {
-     "g": "enemigo",
-     "k": "zombie",
-     "img": "zombie/walk1.webp",
-     "s": 1.658,
-     "px": 56
-    },
-    {
-     "g": "enemigo",
-     "k": "zombie",
-     "img": "zombie/hit1.webp",
-     "s": 1.671,
-     "px": 60
-    },
-    {
-     "g": "enemigo",
-     "k": "zombie",
-     "img": "zombie/hit1.webp (derivado)",
-     "s": 1.671,
-     "px": 60
-    },
-    {
-     "g": "enemigo",
-     "k": "zombie",
-     "img": "zombie/walk3.webp",
-     "s": 1.658,
-     "px": 51
+     "img": "esqueleto_h/walk4.webp",
+     "s": 1.98,
+     "px": 89
     },
     {
      "g": "enemigo",
      "k": "esqueleto_h",
-     "img": "esqueleto_h/atk1.webp",
-     "s": 1.989,
-     "px": 111
+     "img": "esqueleto_h/walk3.webp",
+     "s": 1.979,
+     "px": 85
     },
     {
      "g": "guardian",
      "k": "tanque",
-     "img": "vendor/caballerito-estampida.webp",
-     "s": 0.503,
-     "px": 129
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png",
-     "s": 0.999,
-     "px": 112
-    },
-    {
-     "g": "guardian",
-     "k": "soporte",
-     "img": "v2/atlas.png (derivado)",
-     "s": 0.999,
-     "px": 112
+     "img": "tanque/atlas.webp (derivado)",
+     "s": 0.793,
+     "px": 67
     },
     {
      "g": "guardian",
@@ -4304,11 +4374,18 @@
      "px": 58
     },
     {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.112,
-     "px": 64
+     "g": "enemigo",
+     "k": "esqueleto_h",
+     "img": "esqueleto_h/walk1.webp",
+     "s": 1.982,
+     "px": 89
+    },
+    {
+     "g": "enemigo",
+     "k": "zombie",
+     "img": "zombie/walk1.webp",
+     "s": 1.666,
+     "px": 57
     },
     {
      "g": "decorado",
@@ -4316,18 +4393,11 @@
      "img": "canvas 34x62",
      "s": 2.4,
      "px": 82
-    },
-    {
-     "g": "efectos",
-     "k": "vfxDrawSprites",
-     "img": "abilities/holyHealBurst_02.webp",
-     "s": 0.86,
-     "px": 77
     }
    ],
    "perf": {
-    "renderMs": 17.17,
-    "flushMs": 561.4
+    "renderMs": 2.7,
+    "flushMs": 222.8
    }
   },
   {
@@ -4364,6 +4434,13 @@
     },
     {
      "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 20x20",
+     "s": 1.08,
+     "px": 22
+    },
+    {
+     "g": "decorado",
      "k": "aidDrawTall",
      "img": "canvas 30x70",
      "s": 2.4,
@@ -4387,15 +4464,15 @@
      "g": "enemigo",
      "k": "golem",
      "img": "v2/atlas.webp",
-     "s": 2.045,
+     "s": 2.042,
      "px": 176
     },
     {
      "g": "enemigo",
      "k": "demonio_mago",
      "img": "demonio_mago/atlas.webp",
-     "s": 1.031,
-     "px": 123
+     "s": 1.028,
+     "px": 122
     },
     {
      "g": "guardian",
@@ -4405,24 +4482,10 @@
      "px": 112
     },
     {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.111,
-     "px": 59
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x24",
-     "s": 2.88,
-     "px": 58
-    },
-    {
      "g": "enemigo",
      "k": "esqueleto",
      "img": "esqueleto/atlas.webp",
-     "s": 0.748,
+     "s": 0.75,
      "px": 89
     },
     {
@@ -4436,35 +4499,49 @@
      "g": "enemigo",
      "k": "demonio_menor",
      "img": "demonio_menor/atlas.webp",
-     "s": 0.952,
+     "s": 0.953,
      "px": 113
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x24",
+     "s": 2.88,
+     "px": 58
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.113,
+     "px": 59
     },
     {
      "g": "enemigo",
      "k": "zombie",
      "img": "zombie/hit1.webp",
-     "s": 1.668,
+     "s": 1.665,
      "px": 60
     },
     {
      "g": "enemigo",
      "k": "zombie",
      "img": "zombie/hit1.webp (derivado)",
-     "s": 1.668,
+     "s": 1.665,
      "px": 60
     },
     {
      "g": "enemigo",
      "k": "esqueleto_h",
      "img": "esqueleto_h/idle2.webp",
-     "s": 1.992,
-     "px": 98
+     "s": 1.981,
+     "px": 97
     },
     {
      "g": "guardian",
      "k": "tanque",
      "img": "tanque/atlas.webp (derivado)",
-     "s": 0.707,
+     "s": 0.708,
      "px": 70
     },
     {
@@ -4476,8 +4553,8 @@
     }
    ],
    "perf": {
-    "renderMs": 25.94,
-    "flushMs": 529.2
+    "renderMs": 3.24,
+    "flushMs": 216.5
    }
   },
   {
@@ -4506,13 +4583,6 @@
      "px": 216
     },
     {
-     "g": "otro",
-     "k": "infDrawMural",
-     "img": "canvas 132x54",
-     "s": 2.882,
-     "px": 380
-    },
-    {
      "g": "decorado",
      "k": "drawGoreDecals",
      "img": "canvas 20x20",
@@ -4528,24 +4598,17 @@
     },
     {
      "g": "decorado",
-     "k": "drawGoreDecals",
-     "img": "canvas 28x28",
-     "s": 1.08,
-     "px": 30
-    },
-    {
-     "g": "guardian",
-     "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
-     "s": 1.244,
-     "px": 86
+     "k": "drawCorpses",
+     "img": "demonio_mago/atlas.webp (derivado)",
+     "s": 1,
+     "px": 247
     },
     {
      "g": "decorado",
      "k": "drawCorpses",
-     "img": "v2/atlas.webp (derivado)",
-     "s": 0.776,
-     "px": 217
+     "img": "demonio_menor/atlas.webp (derivado)",
+     "s": 1,
+     "px": 247
     },
     {
      "g": "decorado",
@@ -4557,9 +4620,9 @@
     {
      "g": "decorado",
      "k": "drawCorpses",
-     "img": "demonio_menor/atlas.webp (derivado)",
-     "s": 0.997,
-     "px": 235
+     "img": "zombie/death3.webp (derivado)",
+     "s": 0.998,
+     "px": 202
     },
     {
      "g": "decorado",
@@ -4570,10 +4633,17 @@
     },
     {
      "g": "decorado",
-     "k": "drawCorpses",
-     "img": "zombie/death3.webp (derivado)",
-     "s": 0.998,
-     "px": 202
+     "k": "aidDrawTall",
+     "img": "canvas 64x44",
+     "s": 2.4,
+     "px": 154
+    },
+    {
+     "g": "decorado",
+     "k": "aidDrawTall",
+     "img": "canvas 20x24",
+     "s": 2.88,
+     "px": 58
     },
     {
      "g": "decorado",
@@ -4590,30 +4660,51 @@
      "px": 43
     },
     {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 64x44",
-     "s": 2.4,
-     "px": 154
+     "g": "jefe",
+     "k": "angel_corrompido",
+     "img": "canvas 816x565",
+     "s": 2.166,
+     "px": 221
     },
     {
      "g": "jefe",
      "k": "angel_corrompido",
-     "img": "canvas 816x565",
-     "s": 2.173,
-     "px": 222
+     "img": "canvas 102x113",
+     "s": 2.166,
+     "px": 221
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
      "s": 1.369,
-     "px": 58
+     "px": 57
     },
     {
      "g": "guardian",
      "k": "guerrero",
-     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "img": "abilities/holyShieldBubble_04.webp (derivado)",
+     "s": 1.38,
+     "px": 66
+    },
+    {
+     "g": "guardian",
+     "k": "tanque",
+     "img": "vendor/caballerito-grito.webp",
+     "s": 0.844,
+     "px": 216
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "mago/atlas.webp (derivado) (derivado)",
+     "s": 1.112,
+     "px": 64
+    },
+    {
+     "g": "guardian",
+     "k": "mago",
+     "img": "abilities/holyShieldBubble_04.webp (derivado)",
      "s": 1.38,
      "px": 66
     },
@@ -4621,36 +4712,15 @@
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 1.015,
+     "s": 1.014,
      "px": 114
     },
     {
      "g": "guardian",
      "k": "soporte",
-     "img": "abilities/holyShieldBubble_02.webp (derivado)",
+     "img": "abilities/holyShieldBubble_04.webp (derivado)",
      "s": 1.38,
      "px": 66
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "vendor/caballerito-torbellino.webp",
-     "s": 0.642,
-     "px": 164
-    },
-    {
-     "g": "guardian",
-     "k": "tanque",
-     "img": "abilities/holyShieldBubble_02.webp (derivado)",
-     "s": 1.38,
-     "px": 66
-    },
-    {
-     "g": "decorado",
-     "k": "aidDrawTall",
-     "img": "canvas 20x24",
-     "s": 2.88,
-     "px": 58
     },
     {
      "g": "decorado",
@@ -4661,8 +4731,8 @@
     }
    ],
    "perf": {
-    "renderMs": 28.41,
-    "flushMs": 845.9
+    "renderMs": 4.28,
+    "flushMs": 42.1
    }
   },
   {
@@ -4708,22 +4778,22 @@
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.395,
-     "px": 66
+     "s": 1.371,
+     "px": 58
     },
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.112,
-     "px": 61
+     "px": 63
     },
     {
      "g": "guardian",
      "k": "soporte",
      "img": "v2/atlas.png",
-     "s": 1.015,
-     "px": 114
+     "s": 0.998,
+     "px": 112
     },
     {
      "g": "decorado",
@@ -4734,8 +4804,8 @@
     }
    ],
    "perf": {
-    "renderMs": 3.04,
-    "flushMs": 56.3
+    "renderMs": 6.37,
+    "flushMs": 27.9
    }
   },
   {
@@ -4774,28 +4844,28 @@
      "g": "guardian",
      "k": "segador",
      "img": "v2/atlas.webp",
-     "s": 0.899,
+     "s": 0.898,
      "px": 82
     },
     {
      "g": "guardian",
      "k": "axiom",
      "img": "v2/atlas.webp",
-     "s": 0.877,
+     "s": 0.878,
      "px": 77
     },
     {
      "g": "guardian",
      "k": "profeta",
      "img": "v2/atlas.webp",
-     "s": 0.887,
+     "s": 0.888,
      "px": 83
     },
     {
      "g": "guardian",
      "k": "musashi",
      "img": "v2/atlas.webp",
-     "s": 0.922,
+     "s": 0.924,
      "px": 84
     },
     {
@@ -4807,8 +4877,8 @@
     }
    ],
    "perf": {
-    "renderMs": 7.62,
-    "flushMs": 29
+    "renderMs": 6.23,
+    "flushMs": 30.4
    }
   },
   {
@@ -4844,39 +4914,39 @@
      "px": 56
     },
     {
-     "g": "invocacion",
-     "k": "golem_nigro",
-     "img": "stone/atlas.webp",
-     "s": 1.809,
-     "px": 85
-    },
-    {
      "g": "guardian",
      "k": "cazadora",
      "img": "v2/atlas.webp",
-     "s": 0.967,
+     "s": 0.972,
      "px": 87
     },
     {
      "g": "guardian",
      "k": "nigromante",
      "img": "v2/atlas.webp",
-     "s": 0.918,
-     "px": 148
+     "s": 0.848,
+     "px": 137
     },
     {
      "g": "guardian",
      "k": "libertador",
      "img": "v2/atlas.webp",
-     "s": 0.922,
-     "px": 95
+     "s": 1.003,
+     "px": 103
     },
     {
      "g": "guardian",
      "k": "eren",
      "img": "v2/atlas.webp",
-     "s": 1.042,
-     "px": 133
+     "s": 1.101,
+     "px": 141
+    },
+    {
+     "g": "invocacion",
+     "k": "golem_nigro",
+     "img": "stone/atlas.webp",
+     "s": 1.809,
+     "px": 92
     },
     {
      "g": "decorado",
@@ -4887,8 +4957,8 @@
     }
    ],
    "perf": {
-    "renderMs": 13.32,
-    "flushMs": 106.6
+    "renderMs": 4.17,
+    "flushMs": 38.8
    }
   },
   {
@@ -4927,7 +4997,7 @@
      "g": "guardian",
      "k": "ynara",
      "img": "ynara/atlas.png",
-     "s": 1.007,
+     "s": 1.006,
      "px": 97
     },
     {
@@ -4948,7 +5018,7 @@
      "g": "guardian",
      "k": "eslabon",
      "img": "eslabon/atlas.webp",
-     "s": 1.063,
+     "s": 1.061,
      "px": 102
     },
     {
@@ -4960,8 +5030,8 @@
     }
    ],
    "perf": {
-    "renderMs": 10.68,
-    "flushMs": 96.2
+    "renderMs": 5.35,
+    "flushMs": 261.4
    }
   },
   {
@@ -5000,29 +5070,29 @@
      "g": "guardian",
      "k": "morwen",
      "img": "morwen/atlas.webp",
-     "s": 1.029,
+     "s": 1.027,
      "px": 99
     },
     {
      "g": "guardian",
      "k": "farolero",
      "img": "farolero/atlas.webp",
-     "s": 1.119,
-     "px": 107
+     "s": 1.3,
+     "px": 125
     },
     {
      "g": "guardian",
      "k": "iria",
      "img": "iria/atlas.webp",
-     "s": 1.028,
-     "px": 99
+     "s": 1.119,
+     "px": 107
     },
     {
      "g": "guardian",
      "k": "vesper",
      "img": "vesper/atlas.png",
-     "s": 1.275,
-     "px": 143
+     "s": 1.253,
+     "px": 140
     },
     {
      "g": "decorado",
@@ -5033,8 +5103,8 @@
     }
    ],
    "perf": {
-    "renderMs": 4.77,
-    "flushMs": 35.8
+    "renderMs": 2.84,
+    "flushMs": 53.9
    }
   },
   {
@@ -5073,29 +5143,29 @@
      "g": "guardian",
      "k": "nahir",
      "img": "nahir/atlas.png",
-     "s": 1.152,
+     "s": 1.151,
      "px": 129
     },
     {
      "g": "guardian",
      "k": "baltra",
      "img": "baltra/atlas.png",
-     "s": 1.236,
-     "px": 138
+     "s": 1.302,
+     "px": 146
     },
     {
      "g": "guardian",
      "k": "maura",
      "img": "maura/atlas.png",
-     "s": 1.045,
-     "px": 117
+     "s": 1.085,
+     "px": 122
     },
     {
      "g": "guardian",
      "k": "dariel",
      "img": "dariel/atlas.png",
-     "s": 1.174,
-     "px": 132
+     "s": 1.138,
+     "px": 127
     },
     {
      "g": "decorado",
@@ -5106,8 +5176,8 @@
     }
    ],
    "perf": {
-    "renderMs": 3.16,
-    "flushMs": 56.6
+    "renderMs": 2.68,
+    "flushMs": 83.3
    }
   },
   {
@@ -5153,21 +5223,21 @@
      "g": "guardian",
      "k": "tibor",
      "img": "tibor/atlas.png",
-     "s": 1.077,
+     "s": 1.076,
      "px": 121
     },
     {
      "g": "guardian",
      "k": "zahra",
      "img": "zahra/atlas.png",
-     "s": 1.103,
+     "s": 1.104,
      "px": 124
     },
     {
      "g": "guardian",
      "k": "renko",
      "img": "renko/atlas.png",
-     "s": 1.491,
+     "s": 1.494,
      "px": 167
     },
     {
@@ -5179,8 +5249,8 @@
     }
    ],
    "perf": {
-    "renderMs": 19.73,
-    "flushMs": 101.7
+    "renderMs": 1.8,
+    "flushMs": 31.4
    }
   },
   {
@@ -5226,14 +5296,14 @@
      "g": "guardian",
      "k": "nano_gm",
      "img": "nano_gm/atlas.png",
-     "s": 1.054,
+     "s": 1.055,
      "px": 118
     },
     {
      "g": "guardian",
      "k": "facu_gm",
      "img": "facu_gm/atlas.png",
-     "s": 1.054,
+     "s": 1.055,
      "px": 118
     },
     {
@@ -5249,11 +5319,18 @@
      "img": "ciudad/reja_0.webp",
      "s": 1.388,
      "px": 79
+    },
+    {
+     "g": "efectos",
+     "k": "drawFxContrastTop",
+     "img": "canvas 96x96",
+     "s": 1.05,
+     "px": 101
     }
    ],
    "perf": {
-    "renderMs": 9.51,
-    "flushMs": 60.5
+    "renderMs": 2.45,
+    "flushMs": 27.8
    }
   },
   {
@@ -5266,6 +5343,13 @@
      "img": "ciudad/barril_0.webp",
      "s": 0.587,
      "px": 35
+    },
+    {
+     "g": "decorado",
+     "k": "drawGoreDecals",
+     "img": "canvas 48x48",
+     "s": 1.2,
+     "px": 58
     },
     {
      "g": "decorado",
@@ -5292,14 +5376,14 @@
      "g": "guardian",
      "k": "khepri",
      "img": "khepri/atlas.png",
-     "s": 0.943,
+     "s": 0.944,
      "px": 106
     },
     {
      "g": "guardian",
      "k": "velmira",
      "img": "velmira/atlas.png",
-     "s": 0.999,
+     "s": 0.997,
      "px": 112
     },
     {
@@ -5322,11 +5406,18 @@
      "img": "ciudad/reja_0.webp",
      "s": 1.388,
      "px": 79
+    },
+    {
+     "g": "efectos",
+     "k": "drawFxContrastTop",
+     "img": "canvas 96x96",
+     "s": 1.05,
+     "px": 101
     }
    ],
    "perf": {
-    "renderMs": 8.65,
-    "flushMs": 364.4
+    "renderMs": 7.87,
+    "flushMs": 30.4
    }
   },
   {
@@ -5365,20 +5456,20 @@
      "g": "guardian",
      "k": "oriel",
      "img": "oriel/atlas.png",
-     "s": 1.071,
+     "s": 1.07,
      "px": 120
     },
     {
      "g": "guardian",
      "k": "guerrero",
      "img": "guerrero/atlas.webp (derivado) (derivado)",
-     "s": 1.369,
-     "px": 57
+     "s": 1.37,
+     "px": 58
     },
     {
      "g": "guardian",
      "k": "mago",
-     "img": "mago/atlas.webp (derivado)",
+     "img": "mago/atlas.webp (derivado) (derivado)",
      "s": 1.112,
      "px": 63
     },
@@ -5398,53 +5489,53 @@
     }
    ],
    "perf": {
-    "renderMs": 13.64,
-    "flushMs": 102.7
+    "renderMs": 4.87,
+    "flushMs": 91.6
    }
   }
  ],
  "grupos": {
   "decorado": {
-   "n": 388,
+   "n": 387,
    "min": 0.486,
-   "med": 2.04,
+   "med": 2.093,
    "max": 5.018,
-   "efMed": 2.04
-  },
-  "enemigo": {
-   "n": 114,
-   "min": 0.7,
-   "med": 1.462,
-   "max": 3.046,
-   "efMed": 1.462
-  },
-  "guardian": {
-   "n": 171,
-   "min": 0.503,
-   "med": 1.077,
-   "max": 1.491,
-   "efMed": 1.077
+   "efMed": 2.093
   },
   "otro": {
-   "n": 7,
+   "n": 12,
    "min": 0.307,
-   "med": 0.319,
+   "med": 0.307,
    "max": 2.882,
    "efMed": 1
   },
+  "enemigo": {
+   "n": 126,
+   "min": 0.309,
+   "med": 1.474,
+   "max": 3.154,
+   "efMed": 1.474
+  },
+  "guardian": {
+   "n": 177,
+   "min": 0.502,
+   "med": 1.112,
+   "max": 1.494,
+   "efMed": 1.112
+  },
   "jefe": {
-   "n": 17,
-   "min": 0.281,
-   "med": 2.58,
-   "max": 5.941,
-   "efMed": 2.58
+   "n": 15,
+   "min": 1.018,
+   "med": 2.581,
+   "max": 5.938,
+   "efMed": 2.581
   },
   "efectos": {
-   "n": 16,
-   "min": 0.71,
-   "med": 0.893,
-   "max": 1.44,
-   "efMed": 1
+   "n": 9,
+   "min": 0.828,
+   "med": 1.05,
+   "max": 1.4,
+   "efMed": 1.05
   },
   "invocacion": {
    "n": 1,
@@ -5458,81 +5549,81 @@
   {
    "g": "jefe",
    "k": "mn_cerbero",
-   "med": 5.022,
-   "min": 5.022,
-   "max": 5.022,
+   "med": 5.045,
+   "min": 5.045,
+   "max": 5.045,
    "arenas": "minas",
    "img": "mn_cerbero/atlas.webp"
   },
   {
    "g": "jefe",
    "k": "ab_morador",
-   "med": 3.183,
-   "min": 1.019,
-   "max": 5.941,
+   "med": 3.298,
+   "min": 1.018,
+   "max": 5.938,
    "arenas": "abismo",
-   "img": "abismo/tex_carne.webp | abismo/tent_segmento_2.webp | abismo/ojo_blink_3.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "cm_perro",
-   "med": 3.046,
-   "min": 3.046,
-   "max": 3.046,
-   "arenas": "ciudad",
-   "img": "cm_perro/atlas.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "cm_verdugo",
-   "med": 3.037,
-   "min": 3.037,
-   "max": 3.037,
-   "arenas": "ciudad",
-   "img": "cm_verdugo/atlas.webp"
+   "img": "abismo/tex_carne.webp | abismo/tent_segmento_2.webp | abismo/ojo_idle_4.webp"
   },
   {
    "g": "enemigo",
    "k": "mn_devoraluz",
-   "med": 3.02,
-   "min": 3.02,
-   "max": 3.02,
+   "med": 3.154,
+   "min": 3.154,
+   "max": 3.154,
    "arenas": "minas",
    "img": "mn_devoraluz/atlas.webp"
   },
   {
    "g": "enemigo",
+   "k": "cm_perro",
+   "med": 3.054,
+   "min": 3.027,
+   "max": 3.054,
+   "arenas": "ciudad",
+   "img": "cm_perro/atlas.webp | cm_perro/atlas.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_verdugo",
+   "med": 3.03,
+   "min": 3.03,
+   "max": 3.03,
+   "arenas": "ciudad",
+   "img": "cm_verdugo/atlas.webp"
+  },
+  {
+   "g": "enemigo",
    "k": "cm_acechante",
-   "med": 3.017,
-   "min": 3.017,
-   "max": 3.017,
+   "med": 3.018,
+   "min": 3.018,
+   "max": 3.018,
    "arenas": "ciudad",
    "img": "cm_acechante/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "cm_campanero",
-   "med": 3.012,
-   "min": 3.012,
-   "max": 3.012,
+   "med": 3.01,
+   "min": 3.01,
+   "max": 3.01,
    "arenas": "ciudad",
    "img": "cm_campanero/atlas.webp"
   },
   {
    "g": "jefe",
    "k": "minotauro",
-   "med": 3.002,
-   "min": 3.002,
-   "max": 3.002,
+   "med": 3.001,
+   "min": 3.001,
+   "max": 3.001,
    "arenas": "laberinto",
    "img": "v3/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "cm_espectro",
-   "med": 2.912,
-   "min": 2.912,
-   "max": 2.912,
+   "med": 2.913,
+   "min": 2.913,
+   "max": 2.913,
    "arenas": "ciudad",
    "img": "cm_espectro/atlas.webp"
   },
@@ -5548,209 +5639,191 @@
   {
    "g": "enemigo",
    "k": "mn_acechador",
-   "med": 2.872,
-   "min": 2.872,
-   "max": 2.872,
+   "med": 2.865,
+   "min": 2.865,
+   "max": 2.865,
    "arenas": "minas",
    "img": "mn_acechador/atlas.webp"
   },
   {
-   "g": "jefe",
-   "k": "leviatan",
-   "med": 2.695,
-   "min": 2.126,
-   "max": 4.656,
-   "arenas": "acuatica",
-   "img": "leviatan/coil_01.webp | leviatan/coil_02.webp | leviatan/dash_02.webp"
-  },
-  {
    "g": "enemigo",
    "k": "cm_raptor",
-   "med": 2.594,
-   "min": 2.594,
-   "max": 2.594,
+   "med": 2.599,
+   "min": 0.309,
+   "max": 2.609,
    "arenas": "ciudad",
-   "img": "cm_raptor/atlas.webp"
-  },
-  {
-   "g": "jefe",
-   "k": "demonio_mayor",
-   "med": 2.583,
-   "min": 2.583,
-   "max": 2.583,
-   "arenas": "fortaleza",
-   "img": "demonio_mayor/atlas.webp | demonio_mayor/atlas.webp (derivado)"
+   "img": "cm_raptor/atlas.webp | vendor/cadena-relampagos.webp"
   },
   {
    "g": "jefe",
    "k": "guardian_ancestral",
-   "med": 2.58,
-   "min": 2.58,
-   "max": 2.58,
+   "med": 2.586,
+   "min": 2.586,
+   "max": 2.586,
    "arenas": "bosque",
    "img": "guardian_ancestral/atlas.webp"
   },
   {
-   "g": "enemigo",
-   "k": "mn_escupidor",
-   "med": 2.474,
-   "min": 2.474,
-   "max": 2.474,
-   "arenas": "minas",
-   "img": "mn_escupidor/atlas.webp"
+   "g": "jefe",
+   "k": "demonio_mayor",
+   "med": 2.581,
+   "min": 2.581,
+   "max": 2.581,
+   "arenas": "fortaleza",
+   "img": "demonio_mayor/atlas.webp | demonio_mayor/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "cm_sectario",
-   "med": 2.473,
-   "min": 2.473,
-   "max": 2.473,
+   "med": 2.483,
+   "min": 2.483,
+   "max": 2.483,
    "arenas": "ciudad",
    "img": "cm_sectario/atlas.webp"
   },
   {
    "g": "enemigo",
+   "k": "mn_escupidor",
+   "med": 2.466,
+   "min": 2.466,
+   "max": 2.466,
+   "arenas": "minas",
+   "img": "mn_escupidor/atlas.webp"
+  },
+  {
+   "g": "jefe",
+   "k": "leviatan",
+   "med": 2.439,
+   "min": 1.923,
+   "max": 4.212,
+   "arenas": "acuatica",
+   "img": "leviatan/coil_01.webp | leviatan/coil_02.webp | leviatan/dash_02.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_tejedor",
+   "med": 2.436,
+   "min": 2.436,
+   "max": 2.436,
+   "arenas": "abismo",
+   "img": "ab_tejedor/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "cm_planidera",
+   "med": 2.38,
+   "min": 2.38,
+   "max": 2.38,
+   "arenas": "ciudad",
+   "img": "cm_planidera/atlas.webp"
+  },
+  {
+   "g": "enemigo",
    "k": "mn_consumidor",
-   "med": 2.453,
-   "min": 2.453,
-   "max": 2.453,
+   "med": 2.336,
+   "min": 2.336,
+   "max": 2.336,
    "arenas": "minas",
    "img": "mn_consumidor/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "ent",
-   "med": 2.442,
-   "min": 2.442,
-   "max": 2.442,
+   "med": 2.32,
+   "min": 2.32,
+   "max": 2.32,
    "arenas": "bosque",
-   "img": "ent/idle1.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "ab_tejedor",
-   "med": 2.42,
-   "min": 2.42,
-   "max": 2.42,
-   "arenas": "abismo",
-   "img": "ab_tejedor/atlas.webp | ab_tejedor/atlas.webp (derivado)"
-  },
-  {
-   "g": "enemigo",
-   "k": "cm_planidera",
-   "med": 2.366,
-   "min": 2.366,
-   "max": 2.366,
-   "arenas": "ciudad",
-   "img": "cm_planidera/atlas.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "anguila_electrica",
-   "med": 2.256,
-   "min": 2.256,
-   "max": 2.256,
-   "arenas": "acuatica",
-   "img": "anguila_electrica/idle_01.webp"
+   "img": "ent/idle2.webp"
   },
   {
    "g": "enemigo",
    "k": "cm_saqueador",
-   "med": 2.247,
-   "min": 2.247,
-   "max": 2.263,
+   "med": 2.246,
+   "min": 2.246,
+   "max": 2.249,
    "arenas": "ciudad",
    "img": "cm_saqueador/atlas.webp"
   },
   {
-   "g": "jefe",
-   "k": "angel_corrompido",
-   "med": 2.173,
-   "min": 2.173,
-   "max": 2.173,
-   "arenas": "infernal",
-   "img": "canvas 816x565"
-  },
-  {
    "g": "enemigo",
    "k": "mn_minero",
-   "med": 2.172,
-   "min": 2.172,
-   "max": 2.172,
+   "med": 2.17,
+   "min": 2.17,
+   "max": 2.17,
    "arenas": "minas",
    "img": "mn_minero/atlas.webp"
   },
   {
-   "g": "enemigo",
-   "k": "lev_tentaculo",
-   "med": 2.134,
-   "min": 2.134,
-   "max": 2.742,
-   "arenas": "acuatica",
-   "img": "kraken_joven/tent_02.webp | kraken_joven/tent_01.webp"
+   "g": "jefe",
+   "k": "angel_corrompido",
+   "med": 2.166,
+   "min": 2.166,
+   "max": 2.166,
+   "arenas": "infernal",
+   "img": "canvas 816x565 | canvas 102x113"
   },
   {
    "g": "enemigo",
    "k": "mn_esclavo",
-   "med": 2.127,
-   "min": 2.127,
-   "max": 2.127,
+   "med": 2.145,
+   "min": 2.145,
+   "max": 2.145,
    "arenas": "minas",
-   "img": "mn_esclavo/atlas.webp"
+   "img": "mn_esclavo/atlas.webp | mn_esclavo/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
-   "k": "esfinge",
-   "med": 2.065,
-   "min": 2.065,
-   "max": 2.065,
-   "arenas": "laberinto",
-   "img": "v3/atlas.webp (derivado)"
+   "k": "lev_tentaculo",
+   "med": 2.129,
+   "min": 2.129,
+   "max": 2.566,
+   "arenas": "acuatica",
+   "img": "kraken_joven/tent_03.webp | kraken_joven/tent_01.webp"
   },
   {
    "g": "enemigo",
    "k": "tiburon_blanco",
-   "med": 2.056,
-   "min": 2.056,
-   "max": 2.056,
+   "med": 2.064,
+   "min": 2.064,
+   "max": 2.064,
    "arenas": "acuatica",
    "img": "demonio_hielo_fuego/walk1.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "golem",
-   "med": 2.045,
-   "min": 2.045,
-   "max": 2.045,
+   "med": 2.042,
+   "min": 2.042,
+   "max": 2.042,
    "arenas": "infernal",
    "img": "v2/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "esqueleto_h",
-   "med": 1.992,
-   "min": 1.989,
+   "med": 1.981,
+   "min": 1.979,
    "max": 1.993,
    "arenas": "infernal",
-   "img": "esqueleto_h/walk2.webp | esqueleto_h/atk1.webp | esqueleto_h/idle2.webp"
+   "img": "esqueleto_h/walk2.webp | esqueleto_h/walk4.webp | esqueleto_h/walk3.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "esfinge",
+   "med": 1.969,
+   "min": 1.969,
+   "max": 1.969,
+   "arenas": "laberinto",
+   "img": "v3/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "mn_insecto",
-   "med": 1.962,
-   "min": 1.962,
-   "max": 1.962,
+   "med": 1.964,
+   "min": 1.964,
+   "max": 1.964,
    "arenas": "minas",
-   "img": "mn_insecto/atlas.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "demonio_hielo_fuego",
-   "med": 1.878,
-   "min": 1.878,
-   "max": 1.878,
-   "arenas": "hielo",
-   "img": "demonio_hielo_fuego/idle3.webp"
+   "img": "mn_insecto/atlas.webp | mn_insecto/atlas.webp (derivado)"
   },
   {
    "g": "invocacion",
@@ -5763,136 +5836,154 @@
   },
   {
    "g": "enemigo",
+   "k": "demonio_hielo_fuego",
+   "med": 1.788,
+   "min": 1.788,
+   "max": 1.788,
+   "arenas": "hielo",
+   "img": "demonio_hielo_fuego/idle3.webp"
+  },
+  {
+   "g": "enemigo",
    "k": "ab_acechador",
-   "med": 1.78,
-   "min": 1.78,
-   "max": 1.877,
+   "med": 1.778,
+   "min": 1.778,
+   "max": 1.778,
    "arenas": "abismo",
    "img": "ab_acechador/atlas.webp"
   },
   {
    "g": "enemigo",
+   "k": "ab_tentaculo",
+   "med": 1.677,
+   "min": 1.677,
+   "max": 1.679,
+   "arenas": "abismo",
+   "img": "abismo/tent_grande_0.webp"
+  },
+  {
+   "g": "enemigo",
    "k": "ab_heraldo",
-   "med": 1.682,
-   "min": 1.682,
-   "max": 1.686,
+   "med": 1.676,
+   "min": 1.676,
+   "max": 1.682,
    "arenas": "abismo",
    "img": "ab_heraldo/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "ab_jinete",
-   "med": 1.679,
-   "min": 1.679,
-   "max": 1.679,
+   "med": 1.676,
+   "min": 1.676,
+   "max": 1.676,
    "arenas": "abismo",
    "img": "v2/atlas.webp (derivado)"
   },
   {
-   "g": "enemigo",
-   "k": "ab_tentaculo",
-   "med": 1.679,
-   "min": 1.679,
-   "max": 1.68,
-   "arenas": "abismo",
-   "img": "abismo/tent_grande_0.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "zombie",
-   "med": 1.668,
-   "min": 1.658,
-   "max": 1.671,
-   "arenas": "infernal",
-   "img": "zombie/walk1.webp | zombie/hit1.webp | zombie/hit1.webp (derivado)"
-  },
-  {
    "g": "jefe",
    "k": "cm_presentador",
-   "med": 1.662,
-   "min": 1.662,
-   "max": 1.662,
+   "med": 1.663,
+   "min": 1.663,
+   "max": 1.663,
    "arenas": "ciudad",
    "img": "v2/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
-   "k": "golem_hielo",
-   "med": 1.591,
-   "min": 1.59,
-   "max": 1.597,
-   "arenas": "hielo",
-   "img": "golem_hielo/walk3.webp | golem_hielo/walk1.webp | golem_hielo/walk2.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "ab_errante",
-   "med": 1.532,
-   "min": 1.532,
-   "max": 1.538,
-   "arenas": "abismo",
-   "img": "ab_errante/atlas.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "bestia_bosque",
-   "med": 1.525,
-   "min": 1.525,
-   "max": 1.529,
-   "arenas": "bosque",
-   "img": "bestia_bosque/walk5.webp (derivado) (derivado) | bestia_bosque/walk5.webp (derivado) (derivado) (derivado) | bestia_bosque/idle1.webp (derivado) (derivado)"
+   "k": "zombie",
+   "med": 1.657,
+   "min": 1.657,
+   "max": 1.666,
+   "arenas": "infernal",
+   "img": "zombie/walk3.webp | zombie/atk1.webp | zombie/walk2.webp"
   },
   {
    "g": "enemigo",
    "k": "cu_sith",
-   "med": 1.524,
-   "min": 1.524,
-   "max": 1.524,
+   "med": 1.605,
+   "min": 1.605,
+   "max": 1.605,
    "arenas": "bosque",
    "img": "v3/atlas.webp"
   },
   {
    "g": "enemigo",
-   "k": "tiburon_joven",
+   "k": "golem_hielo",
+   "med": 1.591,
+   "min": 1.589,
+   "max": 1.597,
+   "arenas": "hielo",
+   "img": "golem_hielo/walk3.webp | golem_hielo/walk2.webp | golem_hielo/hit1.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "bestia_bosque",
+   "med": 1.528,
+   "min": 1.523,
+   "max": 1.529,
+   "arenas": "bosque",
+   "img": "bestia_bosque/walk4.webp (derivado) (derivado) | bestia_bosque/walk4.webp (derivado) (derivado) (derivado) | bestia_bosque/idle3.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
+   "k": "ab_errante",
+   "med": 1.526,
+   "min": 1.526,
+   "max": 1.532,
+   "arenas": "abismo",
+   "img": "ab_errante/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "anguila_electrica",
    "med": 1.506,
    "min": 1.506,
-   "max": 1.526,
+   "max": 1.506,
    "arenas": "acuatica",
-   "img": "esqueleto_h/walk1.webp (derivado)"
+   "img": "anguila_electrica/idle_03.webp"
   },
   {
    "g": "guardian",
    "k": "renko",
-   "med": 1.491,
-   "min": 1.491,
-   "max": 1.491,
+   "med": 1.494,
+   "min": 1.494,
+   "max": 1.494,
    "arenas": "ciudad",
    "img": "renko/atlas.png"
   },
   {
    "g": "enemigo",
+   "k": "tiburon_joven",
+   "med": 1.48,
+   "min": 1.48,
+   "max": 1.519,
+   "arenas": "acuatica",
+   "img": "esqueleto_h/walk1.webp (derivado) | esqueleto_h/walk1.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
    "k": "golem_piedra",
-   "med": 1.461,
-   "min": 1.461,
-   "max": 1.462,
+   "med": 1.463,
+   "min": 1.463,
+   "max": 1.465,
    "arenas": "laberinto",
-   "img": "v2/atlas.webp"
+   "img": "v2/atlas.webp | v2/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "duende_bosque",
-   "med": 1.438,
-   "min": 1.433,
+   "med": 1.445,
+   "min": 1.44,
    "max": 1.447,
    "arenas": "bosque",
-   "img": "duende_bosque/walk4.webp (derivado) (derivado) | duende_bosque/walk2.webp (derivado) (derivado) | duende_bosque/walk3.webp (derivado) (derivado)"
+   "img": "duende_bosque/walk1.webp (derivado) (derivado) | duende_bosque/walk3.webp (derivado) (derivado) | duende_bosque/walk2.webp (derivado) (derivado)"
   },
   {
    "g": "enemigo",
    "k": "escorpion_gigante",
-   "med": 1.417,
+   "med": 1.418,
    "min": 1.415,
-   "max": 1.418,
+   "max": 1.474,
    "arenas": "laberinto",
    "img": "escorpion_gigante/walk-strip.webp | escorpion_gigante/walk-strip.webp (derivado)"
   },
@@ -5901,45 +5992,72 @@
    "k": "guerrero",
    "med": 1.371,
    "min": 1.368,
-   "max": 1.395,
+   "max": 1.38,
    "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
-   "img": "guerrero/atlas.webp (derivado) (derivado) | abilities/holyShieldBubble_02.webp (derivado) | abilities/holyShieldBubble_03.webp (derivado)"
+   "img": "guerrero/atlas.webp (derivado) (derivado) | abilities/holyShieldBubble_03.webp (derivado) | abilities/holyShieldBubble_02.webp (derivado)"
   },
   {
    "g": "jefe",
    "k": "mago_hielo_cristal",
-   "med": 1.37,
-   "min": 0.281,
-   "max": 1.37,
+   "med": 1.367,
+   "min": 1.367,
+   "max": 1.367,
    "arenas": "hielo",
-   "img": "v2/atlas.webp | v2/atlas.webp (derivado) | vendor/cadena-relampagos.webp"
-  },
-  {
-   "g": "enemigo",
-   "k": "chaman",
-   "med": 1.349,
-   "min": 1.349,
-   "max": 1.349,
-   "arenas": "micelial",
-   "img": "chaman/atlas.webp (derivado)"
+   "img": "v2/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "sabueso",
-   "med": 1.341,
-   "min": 1.341,
-   "max": 1.341,
+   "med": 1.348,
+   "min": 1.348,
+   "max": 1.348,
    "arenas": "micelial",
    "img": "sabueso/atlas.webp (derivado)"
   },
   {
+   "g": "enemigo",
+   "k": "chaman",
+   "med": 1.343,
+   "min": 1.343,
+   "max": 1.343,
+   "arenas": "micelial",
+   "img": "chaman/atlas.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "baltra",
+   "med": 1.302,
+   "min": 1.302,
+   "max": 1.302,
+   "arenas": "ciudad",
+   "img": "baltra/atlas.png"
+  },
+  {
+   "g": "guardian",
+   "k": "farolero",
+   "med": 1.3,
+   "min": 1.3,
+   "max": 1.3,
+   "arenas": "ciudad",
+   "img": "farolero/atlas.webp"
+  },
+  {
    "g": "guardian",
    "k": "vesper",
-   "med": 1.275,
-   "min": 1.275,
-   "max": 1.275,
+   "med": 1.253,
+   "min": 1.253,
+   "max": 1.253,
    "arenas": "ciudad",
    "img": "vesper/atlas.png"
+  },
+  {
+   "g": "enemigo",
+   "k": "enjambre_hadas",
+   "med": 1.25,
+   "min": 1.25,
+   "max": 1.253,
+   "arenas": "bosque",
+   "img": "v3/atlas.webp"
   },
   {
    "g": "guardian",
@@ -5952,75 +6070,57 @@
   },
   {
    "g": "enemigo",
-   "k": "enjambre_hadas",
-   "med": 1.238,
-   "min": 1.238,
-   "max": 1.248,
-   "arenas": "bosque",
-   "img": "v3/atlas.webp | v3/atlas.webp (derivado)"
-  },
-  {
-   "g": "guardian",
-   "k": "baltra",
-   "med": 1.236,
-   "min": 1.236,
-   "max": 1.236,
-   "arenas": "ciudad",
-   "img": "baltra/atlas.png"
+   "k": "druida_arena",
+   "med": 1.219,
+   "min": 1.219,
+   "max": 1.219,
+   "arenas": "laberinto",
+   "img": "druida_arena/walk-strip.webp"
   },
   {
    "g": "enemigo",
    "k": "lobo_artico",
-   "med": 1.215,
-   "min": 1.215,
-   "max": 1.216,
+   "med": 1.213,
+   "min": 1.213,
+   "max": 1.217,
    "arenas": "hielo",
    "img": "lobo_artico/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "cristal_volador",
-   "med": 1.201,
-   "min": 1.201,
-   "max": 1.201,
+   "med": 1.202,
+   "min": 1.202,
+   "max": 1.202,
    "arenas": "hielo",
    "img": "cristal_volador/atlas.webp (derivado)"
   },
   {
    "g": "guardian",
-   "k": "dariel",
-   "med": 1.174,
-   "min": 1.174,
-   "max": 1.174,
-   "arenas": "ciudad",
-   "img": "dariel/atlas.png"
-  },
-  {
-   "g": "enemigo",
-   "k": "druida_arena",
-   "med": 1.161,
-   "min": 1.161,
-   "max": 1.161,
-   "arenas": "laberinto",
-   "img": "druida_arena/walk-strip.webp"
-  },
-  {
-   "g": "guardian",
    "k": "nahir",
-   "med": 1.152,
-   "min": 1.152,
-   "max": 1.152,
+   "med": 1.151,
+   "min": 1.151,
+   "max": 1.151,
    "arenas": "ciudad",
    "img": "nahir/atlas.png"
   },
   {
    "g": "enemigo",
-   "k": "nucleo_micelial",
-   "med": 1.141,
-   "min": 1.074,
-   "max": 1.27,
-   "arenas": "micelial",
-   "img": "fx/nucleo_3.webp | fx/nucleo_2.webp"
+   "k": "dragoncito_hielo",
+   "med": 1.148,
+   "min": 1.09,
+   "max": 1.148,
+   "arenas": "hielo",
+   "img": "v2/atlas.webp | v2/atlas.webp (derivado)"
+  },
+  {
+   "g": "guardian",
+   "k": "dariel",
+   "med": 1.138,
+   "min": 1.138,
+   "max": 1.138,
+   "arenas": "ciudad",
+   "img": "dariel/atlas.png"
   },
   {
    "g": "guardian",
@@ -6041,29 +6141,38 @@
    "img": "bront/atlas.png"
   },
   {
+   "g": "enemigo",
+   "k": "hinchado",
+   "med": 1.119,
+   "min": 1.119,
+   "max": 1.119,
+   "arenas": "micelial",
+   "img": "hinchado/atlas.webp | hinchado/atlas.webp (derivado)"
+  },
+  {
    "g": "guardian",
-   "k": "farolero",
+   "k": "iria",
    "med": 1.119,
    "min": 1.119,
    "max": 1.119,
    "arenas": "ciudad",
-   "img": "farolero/atlas.webp"
+   "img": "iria/atlas.webp"
   },
   {
    "g": "guardian",
    "k": "mago",
-   "med": 1.112,
+   "med": 1.113,
    "min": 1.111,
    "max": 1.38,
    "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
-   "img": "mago/atlas.webp (derivado) | abilities/holyShieldBubble_03.webp (derivado)"
+   "img": "mago/atlas.webp (derivado) (derivado) | abilities/holyShieldBubble_02.webp (derivado) | abilities/holyShieldBubble_01.webp (derivado)"
   },
   {
    "g": "guardian",
    "k": "zahra",
-   "med": 1.103,
-   "min": 1.103,
-   "max": 1.103,
+   "med": 1.104,
+   "min": 1.104,
+   "max": 1.104,
    "arenas": "ciudad",
    "img": "zahra/atlas.png"
   },
@@ -6086,121 +6195,112 @@
    "img": "vhal/atlas.png"
   },
   {
-   "g": "enemigo",
-   "k": "dragoncito_hielo",
-   "med": 1.092,
-   "min": 1.092,
-   "max": 1.092,
-   "arenas": "hielo",
+   "g": "guardian",
+   "k": "eren",
+   "med": 1.101,
+   "min": 1.101,
+   "max": 1.101,
+   "arenas": "ciudad",
    "img": "v2/atlas.webp"
+  },
+  {
+   "g": "enemigo",
+   "k": "nucleo_micelial",
+   "med": 1.094,
+   "min": 1.087,
+   "max": 1.223,
+   "arenas": "micelial",
+   "img": "fx/nucleo_3.webp | fx/nucleo_2.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "maura",
+   "med": 1.085,
+   "min": 1.085,
+   "max": 1.085,
+   "arenas": "ciudad",
+   "img": "maura/atlas.png"
   },
   {
    "g": "guardian",
    "k": "tibor",
-   "med": 1.077,
-   "min": 1.077,
-   "max": 1.077,
+   "med": 1.076,
+   "min": 1.076,
+   "max": 1.076,
    "arenas": "ciudad",
    "img": "tibor/atlas.png"
   },
   {
    "g": "guardian",
    "k": "oriel",
-   "med": 1.071,
-   "min": 1.071,
-   "max": 1.071,
+   "med": 1.07,
+   "min": 1.07,
+   "max": 1.07,
    "arenas": "ciudad",
    "img": "oriel/atlas.png"
   },
   {
-   "g": "enemigo",
-   "k": "hinchado",
-   "med": 1.07,
-   "min": 1.07,
-   "max": 1.07,
-   "arenas": "micelial",
-   "img": "hinchado/atlas.webp | hinchado/atlas.webp (derivado)"
-  },
-  {
    "g": "guardian",
    "k": "eslabon",
-   "med": 1.063,
-   "min": 1.063,
-   "max": 1.063,
+   "med": 1.061,
+   "min": 1.061,
+   "max": 1.061,
    "arenas": "ciudad",
    "img": "eslabon/atlas.webp"
   },
   {
    "g": "guardian",
    "k": "nano_gm",
-   "med": 1.054,
-   "min": 1.054,
-   "max": 1.054,
+   "med": 1.055,
+   "min": 1.055,
+   "max": 1.055,
    "arenas": "ciudad",
    "img": "nano_gm/atlas.png"
   },
   {
    "g": "guardian",
    "k": "facu_gm",
-   "med": 1.054,
-   "min": 1.054,
-   "max": 1.054,
+   "med": 1.055,
+   "min": 1.055,
+   "max": 1.055,
    "arenas": "ciudad",
    "img": "facu_gm/atlas.png"
   },
   {
-   "g": "guardian",
-   "k": "maura",
-   "med": 1.045,
-   "min": 1.045,
-   "max": 1.045,
-   "arenas": "ciudad",
-   "img": "maura/atlas.png"
-  },
-  {
-   "g": "guardian",
-   "k": "eren",
-   "med": 1.042,
-   "min": 1.042,
-   "max": 1.042,
-   "arenas": "ciudad",
-   "img": "v2/atlas.webp"
-  },
-  {
    "g": "enemigo",
    "k": "medusa",
-   "med": 1.04,
-   "min": 1.04,
-   "max": 1.04,
+   "med": 1.038,
+   "min": 1.038,
+   "max": 1.038,
    "arenas": "laberinto",
-   "img": "medusa/walk-strip.webp"
+   "img": "medusa/walk-strip.webp | medusa/walk-strip.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "demonio_mago",
-   "med": 1.031,
-   "min": 1.031,
-   "max": 1.031,
+   "med": 1.028,
+   "min": 1.028,
+   "max": 1.028,
    "arenas": "infernal",
    "img": "demonio_mago/atlas.webp"
   },
   {
    "g": "guardian",
    "k": "morwen",
-   "med": 1.029,
-   "min": 1.029,
-   "max": 1.029,
+   "med": 1.027,
+   "min": 1.027,
+   "max": 1.027,
    "arenas": "ciudad",
    "img": "morwen/atlas.webp"
   },
   {
    "g": "guardian",
-   "k": "iria",
-   "med": 1.028,
-   "min": 1.028,
-   "max": 1.028,
-   "arenas": "ciudad",
-   "img": "iria/atlas.webp"
+   "k": "soporte",
+   "med": 1.013,
+   "min": 0.996,
+   "max": 1.38,
+   "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
+   "img": "v2/atlas.png | abilities/holyShieldBubble_03.webp (derivado) | abilities/holyShieldBubble_02.webp (derivado)"
   },
   {
    "g": "guardian",
@@ -6214,29 +6314,29 @@
   {
    "g": "guardian",
    "k": "ynara",
-   "med": 1.007,
-   "min": 1.007,
-   "max": 1.007,
+   "med": 1.006,
+   "min": 1.006,
+   "max": 1.006,
    "arenas": "ciudad",
    "img": "ynara/atlas.png"
   },
   {
    "g": "guardian",
-   "k": "velmira",
-   "med": 0.999,
-   "min": 0.999,
-   "max": 0.999,
+   "k": "libertador",
+   "med": 1.003,
+   "min": 1.003,
+   "max": 1.003,
    "arenas": "ciudad",
-   "img": "velmira/atlas.png"
+   "img": "v2/atlas.webp"
   },
   {
    "g": "guardian",
-   "k": "soporte",
-   "med": 0.998,
-   "min": 0.996,
-   "max": 1.38,
-   "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
-   "img": "v2/atlas.png | abilities/holyShieldBubble_02.webp (derivado) | v2/atlas.png (derivado)"
+   "k": "velmira",
+   "med": 0.997,
+   "min": 0.997,
+   "max": 0.997,
+   "arenas": "ciudad",
+   "img": "velmira/atlas.png"
   },
   {
    "g": "enemigo",
@@ -6250,54 +6350,36 @@
   {
    "g": "guardian",
    "k": "cazadora",
-   "med": 0.967,
-   "min": 0.967,
-   "max": 0.967,
+   "med": 0.972,
+   "min": 0.972,
+   "max": 0.972,
    "arenas": "ciudad",
    "img": "v2/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "demonio_menor",
-   "med": 0.952,
-   "min": 0.952,
-   "max": 0.952,
+   "med": 0.953,
+   "min": 0.953,
+   "max": 0.953,
    "arenas": "infernal",
    "img": "demonio_menor/atlas.webp"
   },
   {
-   "g": "enemigo",
-   "k": "angel_hielo",
+   "g": "guardian",
+   "k": "khepri",
    "med": 0.944,
    "min": 0.944,
    "max": 0.944,
-   "arenas": "hielo",
-   "img": "v2/atlas.webp"
-  },
-  {
-   "g": "guardian",
-   "k": "khepri",
-   "med": 0.943,
-   "min": 0.943,
-   "max": 0.943,
    "arenas": "ciudad",
    "img": "khepri/atlas.png"
   },
   {
    "g": "enemigo",
-   "k": "sirena_abisal",
-   "med": 0.942,
-   "min": 0.942,
-   "max": 0.942,
-   "arenas": "acuatica",
-   "img": "medusa/walk-strip.webp (derivado)"
-  },
-  {
-   "g": "enemigo",
    "k": "automata",
-   "med": 0.938,
-   "min": 0.938,
-   "max": 0.938,
+   "med": 0.94,
+   "min": 0.94,
+   "max": 0.94,
    "arenas": "fortaleza",
    "img": "automata/atlas.webp"
   },
@@ -6306,52 +6388,52 @@
    "k": "infectado",
    "med": 0.925,
    "min": 0.925,
-   "max": 0.928,
+   "max": 0.929,
    "arenas": "micelial",
    "img": "infectado/atlas.webp"
   },
   {
    "g": "guardian",
    "k": "musashi",
-   "med": 0.922,
-   "min": 0.922,
-   "max": 0.922,
-   "arenas": "ciudad",
-   "img": "v2/atlas.webp"
-  },
-  {
-   "g": "guardian",
-   "k": "libertador",
-   "med": 0.922,
-   "min": 0.922,
-   "max": 0.922,
-   "arenas": "ciudad",
-   "img": "v2/atlas.webp"
-  },
-  {
-   "g": "guardian",
-   "k": "nigromante",
-   "med": 0.918,
-   "min": 0.918,
-   "max": 0.918,
+   "med": 0.924,
+   "min": 0.924,
+   "max": 0.924,
    "arenas": "ciudad",
    "img": "v2/atlas.webp"
   },
   {
    "g": "enemigo",
+   "k": "sirena_abisal",
+   "med": 0.921,
+   "min": 0.921,
+   "max": 0.921,
+   "arenas": "acuatica",
+   "img": "medusa/walk-strip.webp (derivado)"
+  },
+  {
+   "g": "enemigo",
    "k": "raiz_absorcion",
-   "med": 0.915,
-   "min": 0.915,
-   "max": 0.915,
+   "med": 0.916,
+   "min": 0.916,
+   "max": 0.916,
    "arenas": "micelial",
    "img": "fx/root_curl.webp"
   },
   {
    "g": "enemigo",
+   "k": "medusa_electrica",
+   "med": 0.915,
+   "min": 0.772,
+   "max": 0.915,
+   "arenas": "acuatica",
+   "img": "acechador/atlas.webp (derivado) | acechador/atlas.webp (derivado) (derivado)"
+  },
+  {
+   "g": "enemigo",
    "k": "peregrino",
-   "med": 0.905,
-   "min": 0.905,
-   "max": 0.905,
+   "med": 0.909,
+   "min": 0.904,
+   "max": 0.909,
    "arenas": "micelial",
    "img": "peregrino/atlas.webp | peregrino/atlas.webp (derivado)"
   },
@@ -6365,82 +6447,91 @@
    "img": "myla/atlas.png"
   },
   {
-   "g": "guardian",
-   "k": "segador",
-   "med": 0.899,
-   "min": 0.899,
-   "max": 0.899,
-   "arenas": "ciudad",
+   "g": "enemigo",
+   "k": "angel_hielo",
+   "med": 0.901,
+   "min": 0.901,
+   "max": 0.901,
+   "arenas": "hielo",
    "img": "v2/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "carcelero",
-   "med": 0.894,
-   "min": 0.894,
-   "max": 0.894,
+   "med": 0.899,
+   "min": 0.899,
+   "max": 0.899,
    "arenas": "fortaleza",
    "img": "carcelero/atlas.webp"
   },
   {
-   "g": "enemigo",
-   "k": "cangrejo_acorazado",
-   "med": 0.887,
-   "min": 0.887,
-   "max": 0.909,
-   "arenas": "acuatica",
-   "img": "arana/atlas.webp (derivado)"
+   "g": "guardian",
+   "k": "segador",
+   "med": 0.898,
+   "min": 0.898,
+   "max": 0.898,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
   },
   {
    "g": "guardian",
    "k": "profeta",
-   "med": 0.887,
-   "min": 0.887,
-   "max": 0.887,
+   "med": 0.888,
+   "min": 0.888,
+   "max": 0.888,
    "arenas": "ciudad",
    "img": "v2/atlas.webp"
   },
   {
    "g": "guardian",
    "k": "axiom",
-   "med": 0.877,
-   "min": 0.877,
-   "max": 0.877,
+   "med": 0.878,
+   "min": 0.878,
+   "max": 0.878,
+   "arenas": "ciudad",
+   "img": "v2/atlas.webp"
+  },
+  {
+   "g": "guardian",
+   "k": "nigromante",
+   "med": 0.848,
+   "min": 0.848,
+   "max": 0.848,
    "arenas": "ciudad",
    "img": "v2/atlas.webp"
   },
   {
    "g": "enemigo",
-   "k": "medusa_electrica",
-   "med": 0.85,
-   "min": 0.761,
-   "max": 0.85,
+   "k": "cangrejo_acorazado",
+   "med": 0.839,
+   "min": 0.772,
+   "max": 0.903,
    "arenas": "acuatica",
-   "img": "acechador/atlas.webp (derivado) | acechador/atlas.webp (derivado) (derivado)"
+   "img": "arana/atlas.webp (derivado) | arana/atlas.webp (derivado) (derivado)"
   },
   {
    "g": "enemigo",
    "k": "verdugo",
-   "med": 0.825,
-   "min": 0.825,
-   "max": 0.825,
+   "med": 0.827,
+   "min": 0.827,
+   "max": 0.827,
    "arenas": "fortaleza",
    "img": "verdugo/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "dama_bosque",
-   "med": 0.825,
-   "min": 0.825,
-   "max": 0.825,
+   "med": 0.822,
+   "min": 0.822,
+   "max": 0.822,
    "arenas": "bosque",
-   "img": "v2/atlas.webp"
+   "img": "v2/atlas.webp | v2/atlas.webp (derivado)"
   },
   {
    "g": "enemigo",
    "k": "acechador",
-   "med": 0.819,
-   "min": 0.819,
+   "med": 0.821,
+   "min": 0.821,
    "max": 0.821,
    "arenas": "micelial",
    "img": "acechador/atlas.webp"
@@ -6448,18 +6539,18 @@
   {
    "g": "enemigo",
    "k": "dragon_bronce",
-   "med": 0.816,
-   "min": 0.816,
-   "max": 0.816,
+   "med": 0.815,
+   "min": 0.815,
+   "max": 0.818,
    "arenas": "fortaleza",
    "img": "dragon_bronce/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "prisionero",
-   "med": 0.771,
-   "min": 0.771,
-   "max": 0.771,
+   "med": 0.772,
+   "min": 0.772,
+   "max": 0.772,
    "arenas": "fortaleza",
    "img": "prisionero/atlas.webp | prisionero/atlas.webp (derivado)"
   },
@@ -6467,329 +6558,320 @@
    "g": "guardian",
    "k": "tanque",
    "med": 0.765,
-   "min": 0.503,
+   "min": 0.502,
    "max": 1.38,
    "arenas": "ciudad,fortaleza,bosque,micelial,hielo,acuatica,laberinto,abismo,minas,infernal",
-   "img": "vendor/caballerito-grito.webp | tanque/atlas.webp (derivado) | vendor/caballerito-torbellino.webp"
+   "img": "vendor/caballerito-estampida.webp | tanque/atlas.webp (derivado) | vendor/caballerito-grito.webp"
   },
   {
    "g": "enemigo",
    "k": "hada_escarcha",
    "med": 0.76,
    "min": 0.76,
-   "max": 0.762,
+   "max": 0.76,
    "arenas": "hielo",
    "img": "hada_escarcha/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "engendro",
-   "med": 0.752,
-   "min": 0.752,
-   "max": 0.752,
+   "med": 0.751,
+   "min": 0.751,
+   "max": 0.751,
    "arenas": "fortaleza",
    "img": "engendro/atlas.webp"
   },
   {
    "g": "enemigo",
    "k": "esqueleto",
-   "med": 0.747,
-   "min": 0.747,
-   "max": 0.748,
+   "med": 0.748,
+   "min": 0.748,
+   "max": 0.75,
    "arenas": "infernal",
    "img": "esqueleto/atlas.webp"
   },
   {
    "g": "enemigo",
-   "k": "cristal_servo",
-   "med": 0.702,
-   "min": 0.702,
-   "max": 0.702,
-   "arenas": "hielo",
-   "img": "cristal_servo/atlas.webp"
-  },
-  {
-   "g": "enemigo",
    "k": "arana",
-   "med": 0.7,
-   "min": 0.7,
-   "max": 0.7,
+   "med": 0.703,
+   "min": 0.703,
+   "max": 0.703,
    "arenas": "fortaleza",
    "img": "arana/atlas.webp"
   },
   {
-   "g": "jefe",
-   "k": "madre_espora",
-   "med": 0.309,
-   "min": 0.309,
-   "max": 0.309,
-   "arenas": "micelial",
-   "img": "vendor/cadena-relampagos.webp"
+   "g": "enemigo",
+   "k": "cristal_servo",
+   "med": 0.703,
+   "min": 0.703,
+   "max": 0.703,
+   "arenas": "hielo",
+   "img": "cristal_servo/atlas.webp"
   }
  ],
  "dispersion": [
   {
    "arena": "ciudad",
    "escena": "oleada",
+   "crudoMin": 0.307,
+   "crudoMax": 3.15,
+   "actoresEfMax": 3.054,
+   "actoresEfMed": 1.371,
+   "perf": {
+    "renderMs": 25.28,
+    "flushMs": 135.5
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "plantel",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 2.263,
+   "actoresEfMax": 3.03,
+   "actoresEfMed": 2.483,
+   "perf": {
+    "renderMs": 4.47,
+    "flushMs": 40.7
+   }
+  },
+  {
+   "arena": "ciudad",
+   "escena": "jefe",
+   "crudoMin": 0.307,
+   "crudoMax": 3.15,
+   "actoresEfMax": 1.663,
    "actoresEfMed": 1.113,
    "perf": {
-    "renderMs": 3.26,
-    "flushMs": 71.5
-   }
-  },
-  {
-   "arena": "ciudad",
-   "escena": "plantel",
-   "crudoMin": 0.587,
-   "crudoMax": 3.15,
-   "actoresEfMax": 3.046,
-   "actoresEfMed": 2.473,
-   "perf": {
-    "renderMs": 4.24,
-    "flushMs": 62.2
-   }
-  },
-  {
-   "arena": "ciudad",
-   "escena": "jefe",
-   "crudoMin": 0.307,
-   "crudoMax": 3.15,
-   "actoresEfMax": 1.662,
-   "actoresEfMed": 1.112,
-   "perf": {
-    "renderMs": 4.45,
-    "flushMs": 36.6
+    "renderMs": 24.48,
+    "flushMs": 34.7
    }
   },
   {
    "arena": "fortaleza",
-   "escena": "oleada",
-   "crudoMin": 0.766,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.371,
-   "actoresEfMed": 1,
-   "perf": {
-    "renderMs": 21.63,
-    "flushMs": 45.3
-   }
-  },
-  {
-   "arena": "fortaleza",
-   "escena": "plantel",
-   "crudoMin": 0.7,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.369,
-   "actoresEfMed": 1,
-   "perf": {
-    "renderMs": 7.7,
-    "flushMs": 66.2
-   }
-  },
-  {
-   "arena": "fortaleza",
-   "escena": "jefe",
-   "crudoMin": 0.307,
-   "crudoMax": 2.88,
-   "actoresEfMax": 2.583,
-   "actoresEfMed": 1.372,
-   "perf": {
-    "renderMs": 17.01,
-    "flushMs": 316.6
-   }
-  },
-  {
-   "arena": "bosque",
-   "escena": "oleada",
-   "crudoMin": 0.544,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.525,
-   "actoresEfMed": 1.433,
-   "perf": {
-    "renderMs": 6.73,
-    "flushMs": 46.8
-   }
-  },
-  {
-   "arena": "bosque",
-   "escena": "plantel",
-   "crudoMin": 0.709,
-   "crudoMax": 2.88,
-   "actoresEfMax": 2.442,
-   "actoresEfMed": 1.238,
-   "perf": {
-    "renderMs": 21.7,
-    "flushMs": 315.1
-   }
-  },
-  {
-   "arena": "bosque",
-   "escena": "jefe",
-   "crudoMin": 0.307,
-   "crudoMax": 2.88,
-   "actoresEfMax": 2.58,
-   "actoresEfMed": 1,
-   "perf": {
-    "renderMs": 7.74,
-    "flushMs": 42.6
-   }
-  },
-  {
-   "arena": "micelial",
-   "escena": "oleada",
-   "crudoMin": 0.59,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.369,
-   "actoresEfMed": 1,
-   "perf": {
-    "renderMs": 13.3,
-    "flushMs": 58.4
-   }
-  },
-  {
-   "arena": "micelial",
-   "escena": "plantel",
-   "crudoMin": 0.59,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.371,
-   "actoresEfMed": 1,
-   "perf": {
-    "renderMs": 51.24,
-    "flushMs": 147
-   }
-  },
-  {
-   "arena": "micelial",
-   "escena": "jefe",
-   "crudoMin": 0.309,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.37,
-   "actoresEfMed": 1.015,
-   "perf": {
-    "renderMs": 25.1,
-    "flushMs": 119
-   }
-  },
-  {
-   "arena": "hielo",
-   "escena": "oleada",
-   "crudoMin": 0.76,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.597,
-   "actoresEfMed": 1.215,
-   "perf": {
-    "renderMs": 38.01,
-    "flushMs": 51.2
-   }
-  },
-  {
-   "arena": "hielo",
-   "escena": "plantel",
-   "crudoMin": 0.702,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.878,
-   "actoresEfMed": 1.092,
-   "perf": {
-    "renderMs": 14.72,
-    "flushMs": 189.2
-   }
-  },
-  {
-   "arena": "hielo",
-   "escena": "jefe",
-   "crudoMin": 0.281,
-   "crudoMax": 2.88,
-   "actoresEfMax": 1.37,
-   "actoresEfMed": 1.112,
-   "perf": {
-    "renderMs": 16.67,
-    "flushMs": 58.2
-   }
-  },
-  {
-   "arena": "acuatica",
    "escena": "oleada",
    "crudoMin": 0.708,
    "crudoMax": 2.88,
-   "actoresEfMax": 1.506,
+   "actoresEfMax": 1.369,
+   "actoresEfMed": 1.015,
+   "perf": {
+    "renderMs": 6.15,
+    "flushMs": 47.8
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "plantel",
+   "crudoMin": 0.703,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.372,
    "actoresEfMed": 1,
    "perf": {
-    "renderMs": 7.87,
-    "flushMs": 86.3
+    "renderMs": 11.7,
+    "flushMs": 38.2
+   }
+  },
+  {
+   "arena": "fortaleza",
+   "escena": "jefe",
+   "crudoMin": 0.307,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.581,
+   "actoresEfMed": 1.369,
+   "perf": {
+    "renderMs": 3.01,
+    "flushMs": 37.2
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "oleada",
+   "crudoMin": 0.307,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.528,
+   "actoresEfMed": 1.44,
+   "perf": {
+    "renderMs": 18.52,
+    "flushMs": 33.1
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "plantel",
+   "crudoMin": 0.765,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.32,
+   "actoresEfMed": 1.253,
+   "perf": {
+    "renderMs": 18.73,
+    "flushMs": 199.1
+   }
+  },
+  {
+   "arena": "bosque",
+   "escena": "jefe",
+   "crudoMin": 0.844,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.586,
+   "actoresEfMed": 1.38,
+   "perf": {
+    "renderMs": 14.95,
+    "flushMs": 62.6
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "oleada",
+   "crudoMin": 0.59,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.368,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 8.01,
+    "flushMs": 138.2
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "plantel",
+   "crudoMin": 0.562,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.37,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 10.13,
+    "flushMs": 408
+   }
+  },
+  {
+   "arena": "micelial",
+   "escena": "jefe",
+   "crudoMin": 0.307,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.371,
+   "actoresEfMed": 1.015,
+   "perf": {
+    "renderMs": 3.61,
+    "flushMs": 48
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "oleada",
+   "crudoMin": 0.765,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.597,
+   "actoresEfMed": 1.148,
+   "perf": {
+    "renderMs": 15.19,
+    "flushMs": 258
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "plantel",
+   "crudoMin": 0.703,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.788,
+   "actoresEfMed": 1.09,
+   "perf": {
+    "renderMs": 12.46,
+    "flushMs": 142.4
+   }
+  },
+  {
+   "arena": "hielo",
+   "escena": "jefe",
+   "crudoMin": 0.307,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.38,
+   "actoresEfMed": 1.369,
+   "perf": {
+    "renderMs": 14.31,
+    "flushMs": 241.9
+   }
+  },
+  {
+   "arena": "acuatica",
+   "escena": "oleada",
+   "crudoMin": 0.767,
+   "crudoMax": 2.88,
+   "actoresEfMax": 1.48,
+   "actoresEfMed": 1,
+   "perf": {
+    "renderMs": 19.55,
+    "flushMs": 105.1
    }
   },
   {
    "arena": "acuatica",
    "escena": "plantel",
-   "crudoMin": 0.766,
+   "crudoMin": 0.767,
    "crudoMax": 2.88,
-   "actoresEfMax": 2.256,
+   "actoresEfMax": 2.064,
    "actoresEfMed": 1,
    "perf": {
-    "renderMs": 5.41,
-    "flushMs": 33.3
+    "renderMs": 14.39,
+    "flushMs": 197.3
    }
   },
   {
    "arena": "acuatica",
    "escena": "jefe",
-   "crudoMin": 0.779,
-   "crudoMax": 4.656,
-   "actoresEfMax": 4.656,
+   "crudoMin": 0.544,
+   "crudoMax": 4.212,
+   "actoresEfMax": 4.212,
    "actoresEfMed": 1.38,
    "perf": {
-    "renderMs": 14.75,
-    "flushMs": 150.9
+    "renderMs": 13.07,
+    "flushMs": 123.8
    }
   },
   {
    "arena": "laberinto",
    "escena": "oleada",
-   "crudoMin": 0.792,
+   "crudoMin": 0.708,
    "crudoMax": 2.88,
-   "actoresEfMax": 1.461,
+   "actoresEfMax": 1.474,
    "actoresEfMed": 1.372,
    "perf": {
-    "renderMs": 17.02,
-    "flushMs": 266
+    "renderMs": 3.7,
+    "flushMs": 43.1
    }
   },
   {
    "arena": "laberinto",
    "escena": "plantel",
-   "crudoMin": 0.766,
+   "crudoMin": 0.707,
    "crudoMax": 2.88,
-   "actoresEfMax": 2.065,
-   "actoresEfMed": 1.161,
+   "actoresEfMax": 1.969,
+   "actoresEfMed": 1.219,
    "perf": {
-    "renderMs": 4.66,
-    "flushMs": 66.8
+    "renderMs": 5.18,
+    "flushMs": 194.2
    }
   },
   {
    "arena": "laberinto",
    "escena": "jefe",
-   "crudoMin": 0.646,
-   "crudoMax": 3.002,
-   "actoresEfMax": 3.002,
-   "actoresEfMed": 1.112,
+   "crudoMin": 0.642,
+   "crudoMax": 3.001,
+   "actoresEfMax": 3.001,
+   "actoresEfMed": 1.113,
    "perf": {
-    "renderMs": 7.06,
-    "flushMs": 101.4
+    "renderMs": 6.6,
+    "flushMs": 43.7
    }
   },
   {
    "arena": "abismo",
    "escena": "oleada",
-   "crudoMin": 0.642,
-   "crudoMax": 2.4,
-   "actoresEfMax": 1.877,
-   "actoresEfMed": 1.372,
+   "crudoMin": 0.766,
+   "crudoMax": 4.308,
+   "actoresEfMax": 1.682,
+   "actoresEfMed": 1.113,
    "perf": {
-    "renderMs": 6.14,
-    "flushMs": 61.7
+    "renderMs": 5.35,
+    "flushMs": 175.5
    }
   },
   {
@@ -6798,22 +6880,22 @@
    "crudoMin": 0.767,
    "crudoMax": 2.894,
    "actoresEfMax": 2.894,
-   "actoresEfMed": 1.68,
+   "actoresEfMed": 1.676,
    "perf": {
-    "renderMs": 14.46,
-    "flushMs": 69.7
+    "renderMs": 2.26,
+    "flushMs": 64.8
    }
   },
   {
    "arena": "abismo",
    "escena": "jefe",
    "crudoMin": 0.319,
-   "crudoMax": 5.941,
-   "actoresEfMax": 5.941,
-   "actoresEfMed": 1.112,
+   "crudoMax": 5.938,
+   "actoresEfMax": 5.938,
+   "actoresEfMed": 1.113,
    "perf": {
-    "renderMs": 16.24,
-    "flushMs": 109.5
+    "renderMs": 1.57,
+    "flushMs": 52.6
    }
   },
   {
@@ -6821,71 +6903,71 @@
    "escena": "oleada",
    "crudoMin": 0.707,
    "crudoMax": 2.028,
-   "actoresEfMax": 1.37,
+   "actoresEfMax": 1.368,
    "actoresEfMed": 1,
    "perf": {
-    "renderMs": 5.62,
-    "flushMs": 109.3
+    "renderMs": 4.28,
+    "flushMs": 54.5
    }
   },
   {
    "arena": "minas",
    "escena": "plantel",
-   "crudoMin": 0.765,
-   "crudoMax": 3.02,
-   "actoresEfMax": 3.02,
-   "actoresEfMed": 2.127,
+   "crudoMin": 0.319,
+   "crudoMax": 3.154,
+   "actoresEfMax": 3.154,
+   "actoresEfMed": 2.145,
    "perf": {
-    "renderMs": 3.83,
-    "flushMs": 160.6
+    "renderMs": 12.39,
+    "flushMs": 176.9
    }
   },
   {
    "arena": "minas",
    "escena": "jefe",
    "crudoMin": 0.486,
-   "crudoMax": 5.022,
-   "actoresEfMax": 5.022,
-   "actoresEfMed": 1.372,
+   "crudoMax": 5.045,
+   "actoresEfMax": 5.045,
+   "actoresEfMed": 1.112,
    "perf": {
-    "renderMs": 26.96,
-    "flushMs": 303.8
+    "renderMs": 4.42,
+    "flushMs": 34.2
    }
   },
   {
    "arena": "infernal",
    "escena": "oleada",
-   "crudoMin": 0.503,
+   "crudoMin": 0.647,
    "crudoMax": 2.882,
    "actoresEfMax": 1.993,
-   "actoresEfMed": 1.372,
+   "actoresEfMed": 1.657,
    "perf": {
-    "renderMs": 17.17,
-    "flushMs": 561.4
+    "renderMs": 2.7,
+    "flushMs": 222.8
    }
   },
   {
    "arena": "infernal",
    "escena": "plantel",
-   "crudoMin": 0.707,
+   "crudoMin": 0.708,
    "crudoMax": 2.882,
-   "actoresEfMax": 2.045,
-   "actoresEfMed": 1.111,
+   "actoresEfMax": 2.042,
+   "actoresEfMed": 1.113,
    "perf": {
-    "renderMs": 25.94,
-    "flushMs": 529.2
+    "renderMs": 3.24,
+    "flushMs": 216.5
    }
   },
   {
    "arena": "infernal",
    "escena": "jefe",
-   "crudoMin": 0.642,
-   "crudoMax": 2.882,
-   "actoresEfMax": 2.173,
-   "actoresEfMed": 1.369,
+   "crudoMin": 0.647,
+   "crudoMax": 2.88,
+   "actoresEfMax": 2.166,
+   "actoresEfMed": 1.38,
    "perf": {
-    "renderMs": 28.41,
-    "flushMs": 845.9
+    "renderMs": 4.28,
+    "flushMs": 42.1
    }
   },
   {
@@ -6893,11 +6975,11 @@
    "escena": "guardianes1",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.395,
-   "actoresEfMed": 1.015,
+   "actoresEfMax": 1.371,
+   "actoresEfMed": 1,
    "perf": {
-    "renderMs": 3.04,
-    "flushMs": 56.3
+    "renderMs": 6.37,
+    "flushMs": 27.9
    }
   },
   {
@@ -6908,8 +6990,8 @@
    "actoresEfMax": 1,
    "actoresEfMed": 1,
    "perf": {
-    "renderMs": 7.62,
-    "flushMs": 29
+    "renderMs": 6.23,
+    "flushMs": 30.4
    }
   },
   {
@@ -6917,11 +6999,11 @@
    "escena": "guardianes3",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.042,
+   "actoresEfMax": 1.101,
    "actoresEfMed": 1,
    "perf": {
-    "renderMs": 13.32,
-    "flushMs": 106.6
+    "renderMs": 4.17,
+    "flushMs": 38.8
    }
   },
   {
@@ -6929,11 +7011,11 @@
    "escena": "guardianes4",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.063,
-   "actoresEfMed": 1.007,
+   "actoresEfMax": 1.061,
+   "actoresEfMed": 1.006,
    "perf": {
-    "renderMs": 10.68,
-    "flushMs": 96.2
+    "renderMs": 5.35,
+    "flushMs": 261.4
    }
   },
   {
@@ -6941,11 +7023,11 @@
    "escena": "guardianes5",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.275,
-   "actoresEfMed": 1.029,
+   "actoresEfMax": 1.3,
+   "actoresEfMed": 1.119,
    "perf": {
-    "renderMs": 4.77,
-    "flushMs": 35.8
+    "renderMs": 2.84,
+    "flushMs": 53.9
    }
   },
   {
@@ -6953,11 +7035,11 @@
    "escena": "guardianes6",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.236,
-   "actoresEfMed": 1.152,
+   "actoresEfMax": 1.302,
+   "actoresEfMed": 1.138,
    "perf": {
-    "renderMs": 3.16,
-    "flushMs": 56.6
+    "renderMs": 2.68,
+    "flushMs": 83.3
    }
   },
   {
@@ -6965,11 +7047,11 @@
    "escena": "guardianes7",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.491,
-   "actoresEfMed": 1.103,
+   "actoresEfMax": 1.494,
+   "actoresEfMed": 1.104,
    "perf": {
-    "renderMs": 19.73,
-    "flushMs": 101.7
+    "renderMs": 1.8,
+    "flushMs": 31.4
    }
   },
   {
@@ -6978,10 +7060,10 @@
    "crudoMin": 0.587,
    "crudoMax": 3.15,
    "actoresEfMax": 1.242,
-   "actoresEfMed": 1.054,
+   "actoresEfMed": 1.055,
    "perf": {
-    "renderMs": 9.51,
-    "flushMs": 60.5
+    "renderMs": 2.45,
+    "flushMs": 27.8
    }
   },
   {
@@ -6992,8 +7074,8 @@
    "actoresEfMax": 1.123,
    "actoresEfMed": 1,
    "perf": {
-    "renderMs": 8.65,
-    "flushMs": 364.4
+    "renderMs": 7.87,
+    "flushMs": 30.4
    }
   },
   {
@@ -7001,11 +7083,11 @@
    "escena": "guardianes10",
    "crudoMin": 0.587,
    "crudoMax": 3.15,
-   "actoresEfMax": 1.369,
-   "actoresEfMed": 1.071,
+   "actoresEfMax": 1.37,
+   "actoresEfMed": 1.07,
    "perf": {
-    "renderMs": 13.64,
-    "flushMs": 102.7
+    "renderMs": 4.87,
+    "flushMs": 91.6
    }
   }
  ]
