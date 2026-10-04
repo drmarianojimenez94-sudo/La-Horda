@@ -46,7 +46,7 @@ def ring_sprite(o, crack_at=40, rx=4.6, ry=6.6):
                 px[q] = ol
     # luz que se escapa de la grieta
     ga = math.radians(crack_at)
-    for k, (rr, g) in enumerate(((rx * .78, 2), (rx * 1.15, 1), (rx * 1.55, 0))):
+    for k, (rr, g) in enumerate(((rx * .8, 2), (rx * 1.1, 1), (rx * 1.4, 0))):
         x = int(round(cx + rr * math.cos(ga) * (1 + k * .05)))
         y = int(round(cy + rr * math.sin(ga) * ry / rx))
         px[(x, y)] = glow[g]
