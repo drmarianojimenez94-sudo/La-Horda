@@ -619,7 +619,28 @@ function _msPiece(name){
 const M = {mode:"off", level:1, next:0, step:0, bar:0, timer:null, pending:null, arena:"_", P:MUSIC_ARENAS._,
   S:null, pk:null, sec:null, fi:0, sb:0, key:57, sc:MUSIC_SCALES.aeolian, ext:"", vl:null, ch:null, chRoot:57, bassR:45,
   int:0, lvBar:0, phase:1, phaseT:1, dirT:0, auto:null, seam:false, echo:null, cx:{melOn:false}};
-function _pieceFor(mode, arena){ return (mode==="boss" && arena==="infernal") ? "sorcerer" : (MUSIC_MODES[mode] || "menu"); }
+function _pieceFor(mode, arena){
+  if(mode==="boss" && arena==="infernal") return "sorcerer";
+  if(mode==="wave" && typeof MUSIC_WAVE_ARENA!=="undefined" && MUSIC_WAVE_ARENA[arena]) return _waveArenaScore(arena);
+  return MUSIC_MODES[mode] || "menu";
+}
+// Oleada propia de una arena (MUSIC_WAVE_ARENA, music-score.js): copia de `wave` con su forma, progresiones y
+// capas cambiadas. Se arma una vez y queda en MUSIC_SCORE["wave@arena"].
+function _waveArenaScore(arena){
+  const key = "wave@" + arena; if(MUSIC_SCORE[key]) return key;
+  const V = MUSIC_WAVE_ARENA[arena], B = MUSIC_SCORE.wave; if(!V || !B) return "wave";
+  const sec = {};
+  for(const k of Object.keys(B.sec)){
+    const b = B.sec[k], v = (V.sec && V.sec[k]) || {}, set = v.set || {};
+    let parts = b.parts.map((p, i)=>set[i]===undefined ? p : (set[i]===null ? null : Object.assign({}, p, set[i]))).filter(Boolean);
+    if(v.add) parts = parts.concat(v.add);
+    sec[k] = Object.assign({}, b, { ch:v.ch || b.ch, parts }, v.bars ? { bars:v.bars } : null);
+  }
+  const S = Object.assign({}, B, { sec, form:V.form || B.form });
+  delete S._c; if(V.swing!==undefined) S.swing = V.swing;
+  MUSIC_SCORE[key] = S;
+  return key;
+}
 function _stepDur(){
   const S = M.S; let bpm = S ? S.bpm : 80;
   if(S && S.arena) bpm *= (M.P.tempo||1);
