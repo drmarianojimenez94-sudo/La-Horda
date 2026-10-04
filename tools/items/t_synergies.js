@@ -85,7 +85,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   });
 
   // ---------------- 1) SINERGIAS ----------------
-  const data = await E(() => { const out = {}; for (const k of Object.keys(CLASSES)){ const L = TALENT_SYNERGIES[k] || [];
+  const data = await E(() => { const out = {}; for (const k of ['tanque','guerrero','mago','soporte','segador','axiom','profeta','musashi','cazadora','nigromante','libertador','eren']){ const L = TALENT_SYNERGIES[k] || []; /* los 12 del árbol con sinergias (los guardianes nuevos de main traen su propio sistema) */
       out[k] = { n: L.length, nodesOk: L.every(s => s.from.every(id => !!talentNodeById(k, id))), skillOk: L.every(s => s.skill === 'ult' || !!CLASSES[k].skills[s.skill]),
         textOk: L.every(s => { const t = talentSynergyText(k, s); return /^\+\d/.test(t) && /por punto en/.test(t) && !/undefined|NaN|\?/.test(t); }),
         crossOk: L.every(s => s.from.some(id => { const n = talentNodeById(k, id); return !(n.mods(1)||[]).some(m => m.targetSkill === s.skill && m.key === s.key); })) }; }
