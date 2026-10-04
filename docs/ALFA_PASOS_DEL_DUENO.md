@@ -3,6 +3,9 @@
 Esta guía es para vos, sin saber nada de servidores. Cada paso dice **dónde tocar** y **qué tiene que
 aparecer**. Si algo no coincide, pará y mirá la sección **F (si algo falla)**.
 
+**Qué necesitás:** una compu (es más cómodo que el celular), tu correo, el usuario de Render (y de
+Fly.io si lo tenés) y unos 20 minutos. Nada de esto toca el juego publicado ni el progreso de nadie.
+
 > **Regla de oro:** las direcciones de base de datos, contraseñas y códigos secretos **no se pegan en
 > ningún chat** (ni con Claude, ni WhatsApp, ni capturas). Se pegan **solo** en Neon / Render / Fly.io.
 
@@ -79,10 +82,14 @@ Una **variable** es un par **nombre = valor** que el servidor lee al arrancar. S
 2. En la lista, tocá el servicio **la-horda-relay**.
 3. En el menú de la izquierda tocá **Environment**.
 4. Para **cada** variable de la tabla B.3 que corresponda:
-   - Tocá **+ Add Environment Variable** (o **Edit** → **+ Add**).
+   - Tocá **+ Add Environment Variable** (o **Edit** → **+ Add**). Aparece una fila nueva con dos
+     cuadritos: el de la izquierda es **Key** y el de la derecha **Value**.
    - En **Key** escribí el nombre **exacto** (mayúsculas, guiones bajos, sin espacios).
    - En **Value** pegá o escribí el valor.
+   - Si la variable **ya existe** (la ves en la lista), no la agregues de nuevo: tocá **Edit**, cambiá el
+     valor y seguí.
 5. Cuando terminaste, tocá **Save Changes**. Si pregunta, elegí **Save, rebuild, and deploy**.
+   ¿No aparece **Save Changes**? Bajá hasta el final de la página: está abajo de la lista.
 6. Esperá 1 a 3 minutos (arriba aparece **Deploy live** en verde) y hacé el paso **C**.
 
 ### B.2 En Fly.io (servidor principal Fondal)
@@ -150,7 +157,8 @@ pruebas y harían el juego más lento. `PORT` lo pone Render/Fly.io solos.
    - Principal: **https://fondalstudios.com/la-horda/red/api/health**
    - Render: **https://la-horda-relay.onrender.com/api/health**
 2. Si el servidor estaba dormido puede tardar **hasta 1 minuto** en contestar: esperá y recargá.
-3. Tiene que aparecer un texto así (el orden puede cambiar):
+3. Vas a ver un texto corto entre llaves `{ … }`, sin diseño (es normal: es para máquinas). No hace
+   falta entenderlo entero: **buscá estas palabras** (el orden puede cambiar):
 
 | Si dice… | Significa | Qué hacer |
 |---|---|---|
