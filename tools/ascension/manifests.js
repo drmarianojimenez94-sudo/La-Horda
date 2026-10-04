@@ -30,9 +30,15 @@ for(const id of ids){
  if(category!=='FOUNDER')m.set={sourceArena:p.arena,pieces:['arma','casco','pechera','botas'],rewardCosmetic:'',rewardGrantsPower:false};
  m.budgets={particles:category==='FOUNDER'?96:64,summons:id==='oriel'?2:id==='khepri'?1:0,audioVoices:category==='FOUNDER'?4:3};
  // Arte GENERADO (tools/art/ascension_sprites.py): estructura completa, revisión visual humana PENDIENTE.
- const gen=JSON.parse(fs.readFileSync(path.join(ROOT,'docs/founders/generated-art.json'),'utf8'));
- if(gen[id])Object.assign(m.art,{atlas:gen[id].atlas,preview:gen[id].preview,directions:4,frameWidth:112,frameHeight:112,sha256:gen[id].sha256,animations:{idle:1,walk:4,attack:4,cast:4,hit:1,death:4,ultimate:4}});
- m.cosmetics.forEach((c,i)=>{const g=gen[id+'_alt'+(i+1)];if(g)c.preview=g.preview;});
+ // Arte instalado por El Pintor (tools/art/painter/install.py -> docs/art-gate/painter-installs.json); si no hay
+ // instalación registrada, cae al inventario del generador anterior.
+ const inst=JSON.parse(fs.readFileSync(path.join(ROOT,'docs/art-gate/painter-installs.json'),'utf8')),gen=JSON.parse(fs.readFileSync(path.join(ROOT,'docs/founders/generated-art.json'),'utf8'));
+ const artOf=pk=>{const dir='assets/sprites/champions/'+id+(pk===id?'':'/skins/'+pk);const f=path.join(ROOT,dir,'atlas.png');
+  if(inst[pk]&&fs.existsSync(f))return {atlas:dir+'/atlas.png',preview:dir+'/preview.png',sha256:require('node:crypto').createHash('sha256').update(fs.readFileSync(f)).digest('hex'),styleGate:inst[pk].styleGate};
+  return gen[pk]||null;};
+ const a0=artOf(id);
+ if(a0)Object.assign(m.art,{atlas:a0.atlas,preview:a0.preview,directions:4,frameWidth:112,frameHeight:112,sha256:a0.sha256,animations:{idle:1,walk:4,attack:4,cast:4,hit:1,death:4,ultimate:4}});
+ m.cosmetics.forEach((c,i)=>{const g=artOf(id+'_alt'+(i+1));if(g)c.preview=g.preview;});
  m.art.review={status:'PENDING',reviewer:'',evidence:'',note:'Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8).'};
  m.evidence={reference:'docs/balance/entry-gate-results.json',balance:'docs/balance/entry-gate-results.json',visuals:'docs/art-gate/roster-gate.json',audio:'',multiplayer:'docs/founders/online-presence-results.json',performance:'docs/founders/performance-results.json',style:stylePass('assets/sprites/champions/'+id+'/atlas.png')?'docs/art-gate/style-gate.json':''};
  const errors=validate(m);results[id]={category,releaseState:meta.releaseState,status:errors.length?'INCOMPLETE':'STRUCTURAL_PASS',errors};

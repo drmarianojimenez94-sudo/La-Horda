@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-10-04T09:15:06.699Z",
+  "generatedAt": "2026-10-04T22:56:54.660Z",
   "method": "score = 0.35·Jaccard(vocabulario) + 0.45·Jaccard(etiquetas de mecánica) + 0.2·mismo rol; DUPLICATE ≥ 0.45, REVIEW ≥ 0.32",
-  "rosterSize": 37,
+  "rosterSize": 38,
   "roleDistribution": {
     "tanque": 7,
     "asesino": 9,
     "mago": 12,
-    "soporte": 7
+    "soporte": 8
   },
   "report": [
     {
@@ -103,7 +103,7 @@
     {
       "id": "aurelia",
       "role": "mago",
-      "category": "STANDARD",
+      "category": "ASCENSION",
       "tags": [
         "geometry",
         "lightdark",
@@ -148,7 +148,7 @@
     {
       "id": "khepri",
       "role": "asesino",
-      "category": "STANDARD",
+      "category": "ASCENSION",
       "tags": [
         "swarm",
         "shield"
@@ -186,13 +186,20 @@
     {
       "id": "velmira",
       "role": "soporte",
-      "category": "STANDARD",
+      "category": "ASCENSION",
       "tags": [
         "mask"
       ],
       "verdict": "DISTINCT",
       "forbidden": null,
       "nearest": [
+        {
+          "other": "saelis",
+          "score": 0.219,
+          "text": 0.054,
+          "tags": 0,
+          "sharedTags": []
+        },
         {
           "other": "oriel",
           "score": 0.218,
@@ -206,20 +213,13 @@
           "text": 0.034,
           "tags": 0,
           "sharedTags": []
-        },
-        {
-          "other": "ynara",
-          "score": 0.211,
-          "text": 0.032,
-          "tags": 0,
-          "sharedTags": []
         }
       ]
     },
     {
       "id": "vhal",
       "role": "mago",
-      "category": "STANDARD",
+      "category": "ASCENSION",
       "tags": [
         "gravity",
         "dash"
@@ -259,7 +259,7 @@
     {
       "id": "bront",
       "role": "tanque",
-      "category": "STANDARD",
+      "category": "ASCENSION",
       "tags": [
         "gravity",
         "fortify",
@@ -300,7 +300,7 @@
     {
       "id": "oriel",
       "role": "soporte",
-      "category": "STANDARD",
+      "category": "ASCENSION",
       "tags": [
         "summon",
         "portal",

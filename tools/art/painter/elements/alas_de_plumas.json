@@ -1,0 +1,195 @@
+{
+ "name": "alas_de_plumas",
+ "description": "Par de alas de tres capas de plumas a la espalda.",
+ "layer": "behind",
+ "anchor": "shoulders",
+ "materials": {
+  "feather": {
+   "ramp": [
+    "#2a2a40",
+    "#5a5a80",
+    "#9a9ac0",
+    "#d8d8f0",
+    "#ffffff"
+   ],
+   "round": 0.45,
+   "jitter": 0.07
+  },
+  "down": {
+   "ramp": [
+    "#3a3a58",
+    "#7a7aa8",
+    "#c0c0e0"
+   ],
+   "round": 0.6
+  }
+ },
+ "shapes": [
+  {
+   "type": "poly",
+   "points": [
+    [
+     -4,
+     -2
+    ],
+    [
+     -24,
+     -14
+    ],
+    [
+     -28,
+     -6
+    ],
+    [
+     -24,
+     0
+    ],
+    [
+     -8,
+     4
+    ]
+   ],
+   "material": "feather",
+   "group": "w1",
+   "mirror": true,
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -4,
+     1
+    ],
+    [
+     -23,
+     -2
+    ],
+    [
+     -25,
+     5
+    ],
+    [
+     -19,
+     9
+    ],
+    [
+     -7,
+     7
+    ]
+   ],
+   "material": "feather",
+   "group": "w2",
+   "mirror": true,
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -4,
+     4
+    ],
+    [
+     -18,
+     8
+    ],
+    [
+     -18,
+     14
+    ],
+    [
+     -12,
+     15
+    ],
+    [
+     -6,
+     10
+    ]
+   ],
+   "material": "feather",
+   "group": "w3",
+   "mirror": true,
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "ellipse",
+   "center": [
+    -7,
+    1
+   ],
+   "radius": [
+    5,
+    4
+   ],
+   "material": "down",
+   "mirror": true,
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -2,
+     -2
+    ],
+    [
+     -20,
+     -16
+    ],
+    [
+     -24,
+     -6
+    ],
+    [
+     -10,
+     6
+    ]
+   ],
+   "material": "feather",
+   "group": "s1",
+   "views": [
+    "side"
+   ]
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -2,
+     2
+    ],
+    [
+     -18,
+     2
+    ],
+    [
+     -18,
+     10
+    ],
+    [
+     -8,
+     10
+    ]
+   ],
+   "material": "feather",
+   "group": "s2",
+   "views": [
+    "side"
+   ]
+  }
+ ],
+ "sway": 1
+}

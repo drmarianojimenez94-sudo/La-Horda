@@ -1,0 +1,74 @@
+{
+ "name": "hombreras_redondas",
+ "description": "Par de hombreras redondeadas.",
+ "layer": "front",
+ "anchor": "shoulderLeft",
+ "materials": {
+  "shell": {
+   "ramp": [
+    "#2a0e0a",
+    "#6a2a1c",
+    "#b0503a",
+    "#e08a68",
+    "#ffd0b0"
+   ],
+   "jitter": 0.07
+  }
+ },
+ "shapes": [
+  {
+   "type": "ellipse",
+   "center": [
+    1,
+    0
+   ],
+   "radius": [
+    5,
+    4
+   ],
+   "angle": -20,
+   "material": "shell",
+   "group": "top",
+   "mirror": true,
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "ellipse",
+   "center": [
+    0,
+    3
+   ],
+   "radius": [
+    4,
+    2.5
+   ],
+   "angle": -20,
+   "material": "shell",
+   "group": "rim",
+   "mirror": true,
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "ellipse",
+   "at": "shoulderFront",
+   "center": [
+    -3,
+    0
+   ],
+   "radius": [
+    5,
+    4
+   ],
+   "material": "shell",
+   "views": [
+    "side"
+   ]
+  }
+ ]
+}

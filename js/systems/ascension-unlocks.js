@@ -1,7 +1,7 @@
 "use strict";
 /* ============================================================
    js/systems/ascension-unlocks.js — CÓMO SE GANAN LOS CAMPEONES DE ASCENSIÓN
-   Los seis campeones de la categoría ASCENSION (js/data/champion-taxonomy.js) se ven siempre en Guardianes,
+   Los campeones de la categoría ASCENSION (js/data/champion-taxonomy.js) se ven siempre en Guardianes,
    la Tienda y el Códice. Bloqueados, se consiguen de dos maneras:
      · con un logro de un modo distinto de juego (uno por campeón, tabla de abajo), o
      · comprándolos en la Tienda por 9000 de oro.
@@ -21,6 +21,8 @@ const ASCENSION_UNLOCKS = [
     check:s=>((s.quests && s.quests.stats && s.quests.stats.coopWins)|0) >= 3},
   {id:"oriel",   mode:"Infierno",       how:"Ganá una arena en dificultad Infierno.",
     check:s=>Object.keys((s.diffCleared && s.diffCleared.infierno) || {}).length >= 1},
+  {id:"saelis",  mode:"Sin caídas",     how:"Ganá 3 arenas sin caer ni una vez.",
+    check:s=>((s.quests && s.quests.stats && s.quests.stats.deathless)|0) >= 3},
 ];
 function ascensionUnlockOf(id){ return ASCENSION_UNLOCKS.find(u=>u.id===id) || null; }
 // Texto corto para las tarjetas bloqueadas: "Se gana: … · o 🪙 9.000 en la Tienda".

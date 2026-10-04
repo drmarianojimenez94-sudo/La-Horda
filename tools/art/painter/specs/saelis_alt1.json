@@ -1,0 +1,119 @@
+{
+ "id": "saelis_alt1",
+ "name": "Heraldo del Ocaso",
+ "prompt": "Heraldo alado: túnica larga con manto, báculo de pastora, alas de plumas, halo y hombreras. Pelo platino trenzado.",
+ "body": "maura",
+ "head": "orsa",
+ "headLongHair": true,
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    15,
+    75
+   ],
+   "minChroma": 12,
+   "minL": 12,
+   "noSkin": true,
+   "ramp": [
+    "#2a1418",
+    "#5e2a30",
+    "#a05058",
+    "#e8a0a0"
+   ]
+  },
+  {
+   "part": "body",
+   "hue": [
+    75,
+    140
+   ],
+   "minChroma": 10,
+   "noSkin": true,
+   "to": "#8a2236",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "body",
+   "hue": [
+    20,
+    46
+   ],
+   "minChroma": 45,
+   "noSkin": true,
+   "to": "#c8701c",
+   "keepLight": 0.6
+  },
+  {
+   "part": "body",
+   "hue": [
+    25,
+    80
+   ],
+   "minChroma": 4,
+   "maxL": 50,
+   "noSkin": true,
+   "to": "#5a4250",
+   "keepLight": 0.62,
+   "chroma": 0.8,
+   "contrast": 0.9,
+   "darkL": 4
+  }
+ ],
+ "accessories": [
+  {
+   "element": "alas_de_plumas",
+   "materials": {
+    "feather": {
+     "ramp": [
+      "#0e0a10",
+      "#2a1a24",
+      "#5a3040",
+      "#a06070",
+      "#e8b0b8"
+     ]
+    },
+    "down": {
+     "ramp": [
+      "#1a0e14",
+      "#4a2a34",
+      "#8a5a66"
+     ]
+    }
+   }
+  },
+  {
+   "element": "halo_de_luz",
+   "materials": {
+    "light": {
+     "ramp": [
+      "#7a2a08",
+      "#d0601c",
+      "#ffb060",
+      "#fff0d0"
+     ]
+    }
+   }
+  },
+  {
+   "element": "hombreras_redondas",
+   "scale": 0.8,
+   "materials": {
+    "shell": {
+     "ramp": [
+      "#2a0a04",
+      "#5a1a08",
+      "#a8401c",
+      "#e8865a",
+      "#ffd0b0"
+     ]
+    }
+   }
+  }
+ ],
+ "install": {
+  "champion": "saelis",
+  "pack": "saelis_alt1"
+ }
+}

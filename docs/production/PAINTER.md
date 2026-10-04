@@ -50,3 +50,55 @@ python3 tools/art/painter/painter.py paint tools/art/painter/specs/<id>.json
 - Un campeón pintado no puede leerse como un croma del donante: cambia la cabeza **y** la paleta, y suma un
   accesorio o un arma propia cuando la silueta queda igual.
 - Pasa el Roster Art Gate (escala y pies) y el gate de estilo antes de dejar de ser concepto (`artPending`).
+
+## Elementos nuevos: la forja (`tools/art/painter/forge.py`)
+Para piezas que **ningún donante tiene** (coronas, hombreras, capas, alas, halos, emblemas, bandas) ya no hace
+falta escribir un módulo a medida: se crean **por datos** y se pintan con el mismo lenguaje del roster (volumen, luz
+arriba-izquierda, contorno oscuro de 1 px, píxel nítido).
+
+```
+node tools/factory/cli.js element list                                   # biblioteca (tools/art/painter/elements/*.json)
+node tools/factory/cli.js element new corona_de_hueso --kind crown        # parte de una plantilla
+node tools/factory/cli.js element anchors --on sira                       # dónde caen los anclajes en un donante
+node tools/factory/cli.js element preview corona_de_hueso --on sira       # hoja de contacto + gate
+node tools/factory/cli.js element check                                   # gate de toda la biblioteca
+```
+Plantillas: `crown`, `pauldrons`, `cape`, `emblem`, `sash`, `halo`, `wings`.
+
+**Un elemento** (`elements/<nombre>.json`):
+- `layer`: `front` (encima del cuerpo), `behind` (detrás: solo donde el cuadro está vacío) u `onbody` (pintado sobre
+  la figura: emblemas, bandas, tatuajes).
+- `materials`: `{"metal": {"ramp": ["#oscuro", …, "#claro"], "outline": "#…", "round": .55, "jitter": .05}}`. La rampa
+  necesita 3 tonos o más. El contorno tiene que ser oscuro: el gate de estilo lo exige.
+- `shapes`: `ellipse` (`center`, `radius`, `angle`), `poly` (`points`), `rect` (`box`), `ring` (`center`, `radius`,
+  `width`), `line` (`points`, `width`). Cada forma va anclada (`at`) a un punto que la forja **mide en cada cuadro**:
+  `headTop`, `head`, `neck`, `shoulders`, `shoulderLeft`, `shoulderRight`, `shoulderFront`, `shoulderBack`,
+  `chest`, `waist`, `feet`. Un punto puede anclarse a otra parte (`[x, y, "feet"]`), así una capa va de los hombros
+  a los tobillos en cualquier cuerpo.
+- Coordenadas en px de una cabeza de 24 px: se escalan con la cabeza del donante. `mirror` duplica la forma del
+  otro lado del eje; de perfil la forma se da vuelta sola según hacia dónde mira el cuadro; `flipUp` la espeja de
+  espaldas; `views` la limita a `down`/`side`/`up`; `group` une formas del mismo material en una sola pieza
+  sombreada; `sway` hace oscilar el elemento con el paso.
+- La pieza acompaña la animación (caminar, ataque, lanzamiento, definitiva) porque los anclajes salen del cuadro ya
+  armado; la fila de muerte queda sin elementos salvo `"rows"`.
+
+**Uso en una ficha:** `"accessories": [{"element": "alas_de_plumas"}, {"element": "hombreras_redondas",
+"materials": {"shell": {"ramp": [...]}}, "scale": 0.9}]`. Las rampas se cambian por ficha (skins). Ejemplo
+versionado: `specs/demo_forja.json` (no instalado; `docs/production/painter-forge-demo.png` compara `demo_fuego`
+con la misma ficha más tres elementos).
+
+**Gate de cada elemento** (sobre `baltra`, `sira` y `tibor`, cuerpos distintos): forma válida; dibuja en cada vista
+pedida; no sale de la celda; no baja de la línea de pies; no es pintura plana; y la hoja resultante sigue dentro del
+rango de estilo del roster. Si la pieza cambia la altura de cuerpo medida, avisa: después de instalar hay que correr
+`roster_gate.js --write`, como con cualquier apariencia. Resultado en `docs/art-gate/element-gate.json`.
+
+La forja es también la librería de dibujo compartida de los accesorios a medida (`bront_lib`, `khepri_lib` y
+`vhal_lib` eran copias idénticas y ahora la reexportan). `python3 tools/art/painter/test_forge.py --regress`
+comprueba el gate en casos negativos y que las 22 hojas instaladas se repintan idénticas.
+
+## Primer campeón con elementos de la forja: Saelis
+`specs/saelis.json` (y `saelis_alt1`, `saelis_alt2`): cuerpo de `maura`, cabeza de `orsa`, pelo platino por rampa, túnica y
+manto por corrimiento de tono (conserva la textura del donante: con rampas el gate de estilo marcaba pocos colores y
+demasiado contraste) y tres elementos de la forja: `alas_de_plumas`, `halo_de_luz` y `hombreras_redondas` (escala
+0,8). Cada skin solo cambia las rampas de los elementos y de la pintura. Las tres hojas pasan el gate de estilo y el
+Roster Art Gate. Captura en partida: `docs/production/saelis-ingame.png`.

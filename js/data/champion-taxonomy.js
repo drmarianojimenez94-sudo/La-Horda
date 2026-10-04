@@ -53,7 +53,8 @@ var CHAMPION_TAXONOMY = {
   velmira:  {category:"ASCENSION"},
   vhal:     {category:"ASCENSION"},
   bront:    {category:"ASCENSION"},
-  oriel:    {category:"ASCENSION"}
+  oriel:    {category:"ASCENSION"},
+  saelis:   {category:"ASCENSION"}
 };
 
 // EVENT infrastructure. Example shape (no event champion exists yet):

@@ -117,6 +117,12 @@ const ascOriginalDrawPortador=drawPortador;drawPortador=function(h,scale,alpha){
 /* ---------------- capa de suelo: zonas, objetos, telegraphs ---------------- */
 function ascRing(x,y,r,c,w=2,a=.8){ctx.save();ctx.globalAlpha*=a;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.strokeStyle='#0b0e16';ctx.lineWidth=w+3;ctx.stroke();ctx.strokeStyle=c;ctx.lineWidth=w;ctx.stroke();ctx.restore();}
 function ascFill(x,y,r,c,a){ctx.save();ctx.globalAlpha*=a;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();ctx.restore();}
+// Saelis: color de pluma por apariencia (base, Ocaso, Aurora Boreal) — cosmético.
+const SAELIS_FEATHER=[['#f4f6ff','#8a8ab0','#e0b030'],['#e8a0a8','#5a3040','#d0601c'],['#b8f0e8','#2a6a70','#5ad0a0']];
+function saelisColors(h){return SAELIS_FEATHER[Math.min(ascSkinIndex(h),SAELIS_FEATHER.length-1)];}
+function saelisFeatherDraw(x,y,ang,len,C,alpha){ctx.save();ctx.globalAlpha*=alpha;ctx.translate(x,y);ctx.rotate(ang);
+ ctx.fillStyle=C[0];ctx.strokeStyle='#0b0e16';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-len*.5,0);ctx.quadraticCurveTo(0,-len*.28,len*.5,0);ctx.quadraticCurveTo(0,len*.22,-len*.5,0);ctx.fill();ctx.stroke();
+ ctx.strokeStyle=C[1];ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-len*.6,0);ctx.lineTo(len*.45,0);ctx.stroke();ctx.restore();}
 const ascOriginalGround=drawPortadorGround;drawPortadorGround=function(){ascOriginalGround();ctx.save();const t=ascT();
  for(const o of portadorObjects){if(!o.asc||o.life<=0||!o.owner)continue;const h=o.owner,c=h.cls.glow,age=(o.maxLife||0)-o.life,fade=Math.min(1,o.life/300,age/150+.2);ctx.globalAlpha=fade;
   switch(o.kind){
@@ -162,6 +168,11 @@ const ascOriginalGround=drawPortadorGround;drawPortadorGround=function(){ascOrig
    ctx.strokeStyle='#ffd0dc';ctx.lineWidth=1.5;ctx.beginPath();for(let i=0;i<6;i++){const a=i*1.047;ctx.moveTo(Math.cos(a)*o.r*.3,Math.sin(a)*o.r*.5);ctx.lineTo(Math.cos(a)*o.r*.55,Math.sin(a)*o.r*.9);}ctx.stroke();ctx.restore();
    if(other&&o.side===0){ctx.save();ctx.globalAlpha=fade*.18;ctx.setLineDash([3,9]);portadorDrawLine(o.x,o.y,other.x,other.y,'#ffd0dc',2);ctx.restore();}break;}
   case 'as_scar':{ctx.save();ctx.strokeStyle='#e05a7a';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(o.x-o.r*.6,o.y-8);ctx.lineTo(o.x-o.r*.1,o.y+4);ctx.lineTo(o.x+o.r*.2,o.y-6);ctx.lineTo(o.x+o.r*.6,o.y+6);ctx.stroke();ctx.restore();break;}
+  case 'as_feather':{const C=saelisColors(h),bob=Math.sin(t*3+o.id)*1.5;ascFill(o.x,o.y+4,9,'#000000',.18*fade);saelisFeatherDraw(o.x,o.y-4+bob,-.5+Math.sin(t+o.id)*.15,18,C,fade);
+   if(o.life<1500)ascRing(o.x,o.y,o.r,C[2],1,.35*fade*(Math.sin(t*12)>0?1:.3));break;}
+  case 'as_sky':{const C=saelisColors(h),rise=Math.min(1,age/400);ascFill(o.x,o.y,o.r,C[1],.12*rise*fade);ascRing(o.x,o.y,o.r,C[2],2,.7*fade);
+   const n=fxBudget(10);for(let i=0;i<n;i++){const u=((t*.7+i/n)%1),ax=o.x+Math.cos(i*2.4)*o.r*.75*((i%3+1)/3),ay=o.y+Math.sin(i*2.4)*o.r*.45*((i%3+1)/3);
+    saelisFeatherDraw(ax+Math.sin(u*6+i)*6,ay-60*(1-u),.6+Math.sin(u*5+i)*.4,14,C,fade*Math.min(1,u*3,(1-u)*4));}break;}
   case 'as_great':{ctx.save();ctx.globalAlpha=fade*.3;ctx.fillStyle='#2a0612';ctx.beginPath();ctx.ellipse(o.x,o.y,o.r,o.r*.55,0,0,Math.PI*2);ctx.fill();ctx.restore();
    ctx.save();ctx.globalAlpha=fade;ctx.strokeStyle='#e05a7a';ctx.lineWidth=3;ctx.beginPath();for(let i=0;i<=16;i++){const u=i/16,x=o.x+(u-.5)*o.r*1.8,y=o.y+Math.sin(u*11+t*3)*10*(1-Math.abs(u-.5)*2);if(!i)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();ctx.restore();
    if(o.echo&&o.echo.until>runElapsedMs){const roster=['tanque','guerrero','musashi','cazadora','segador','eren'],k=roster[o.echo.champ%roster.length];ctx.save();ctx.globalAlpha=.45;try{drawChampPack(k,{x:o.echo.x,y:o.echo.y,classKey:k,_codexSet:'attack_down',_codexT:(500-(o.echo.until-runElapsedMs))/500},2,.45);}catch(e){}ctx.restore();ascRing(o.echo.x,o.echo.y,22,'#ffd0dc',2,.8);}
@@ -169,11 +180,15 @@ const ascOriginalGround=drawPortadorGround;drawPortadorGround=function(){ascOrig
   }
  }
  ctx.globalAlpha=1;
+ // Bendición del Plumaje: una pluma dorada girando sobre cada aliado bendecido (lectura sin color: forma de pluma).
+ for(const a of heroes)if(a.alive&&a._ascBlessUntil>runElapsedMs){const left=a._ascBlessUntil-runElapsedMs;saelisFeatherDraw(a.x+Math.cos(t*4)*10,a.y-62,t*4,12,['#fff0a0','#8a6418','#e0b030'],Math.min(1,left/300));}
  for(const h of heroes){if(!ascCandidate(h)||!h.alive)continue;
   if(h.classKey==='khepri')ascSwarmDraw(h);
   const q=h.asCue;if(q&&q.until>runElapsedMs){const a=Math.min(1,(q.until-runElapsedMs)/300);ctx.globalAlpha=a;
    if(['sentence','refract','star_bolt','mask_throw','plate_throw'].includes(q.action)&&q.bx!==undefined){ctx.save();ctx.globalAlpha=a*.85;portadorDrawLine(q.x,q.y,q.bx,q.by,q.action==='sentence'?'#1b1124':h.cls.glow,q.action==='sentence'?6:3);if(q.action==='sentence')portadorDrawLine(q.x,q.y,q.bx,q.by,'#e8c56a',1);ctx.restore();}
    if(['chorus','pressure','rift_echo'].includes(q.action)){if(q.points)for(const p of q.points)ascRing(p.x,p.y,q.r||120,h.cls.glow,2,a);else ascRing(q.x,q.y,q.r||120,h.cls.glow,3,a);}
+   if(q.action==='updraft'){const C=saelisColors(h);ascRing(q.x,q.y,(q.r||150)*(1.1-a*.4),C[0],3,a);for(const sh of q.shots||[]){ctx.save();ctx.globalAlpha=a;portadorDrawLine(sh.x,sh.y,sh.tx,sh.ty,C[0],2);ctx.restore();}}
+   if(q.action==='recall'){const C=saelisColors(h);for(const l of q.lines||[]){const u=1-a,x=l.x+(h.x-l.x)*u,y=l.y+(h.y-l.y)*u;saelisFeatherDraw(x,y-6,Math.atan2(h.y-l.y,h.x-l.x),16,C,1);}}
    if(q.action==='regent'||q.action==='high_tide'){ascRing(h.x,h.y,40+(1-a)*60,q.action==='regent'?'#e8c56a':'#7ff3ff',3,a);}
    ctx.globalAlpha=1;}
   // indicador de recurso legible (forma + número)
@@ -182,6 +197,7 @@ const ascOriginalGround=drawPortadorGround;drawPortadorGround=function(){ascOrig
   else if(h.classKey==='facu_gm')label=s.highTideUntil>runElapsedMs?'≋ MAREA ALTA':'~'.repeat(s.tide)+(s.tideNext?' →'+({current:'C',pressure:'P',wave:'O'})[s.tideNext]:'');
   else if(h.classKey==='khepri')label='✱'+Math.round(s.swarm);
   else if(h.classKey==='velmira')label=['☺','☠','✕','⛨'][s.mask|0]+(s.empowered?'+':'');
+  else if(h.classKey==='saelis')label='❦'+ascOwned(h,'feather').length;
   if(label)ctx.fillText(label,h.x-18,h.y-58);
  }
  ctx.restore();

@@ -1,10 +1,10 @@
 name: Champion entry balance
 on:
   pull_request:
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'tools/art/painter/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   push:
     branches: [main, 'chatgpt/**']
-    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'tools/art/painter/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -31,6 +31,9 @@ jobs:
       - run: node tools/quality/test-vfx-pools.js
       - run: node tools/crystal-wars/test-simulation.js
       - run: node tools/balance/check-entry-reference.js
+      - run: python3 -m pip install --quiet numpy pillow opencv-python-headless
+      - run: python3 tools/art/painter/test_forge.py --regress
+      - run: python3 tools/art/painter/forge.py check
       - run: npm install --prefix /tmp/horda-balance --no-audit --no-fund playwright@1.61.1
       - run: /tmp/horda-balance/node_modules/.bin/playwright install --with-deps chromium
       - run: node tools/balance/entry-gate.js

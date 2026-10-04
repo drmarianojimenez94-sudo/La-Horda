@@ -12,7 +12,8 @@ no inventa trazos, trabaja con los píxeles del arte aprobado y lo transforma.
      del cuadro del donante que mira hacia el mismo lado y se apoya en el cuello del cuerpo.
   4. PINTURA: cada material se repinta a la paleta pedida conservando la luz de cada píxel (sombras, brillos,
      texturas, contornos quedan intactos), así que el resultado se lee como el resto del roster.
-  5. ACCESORIOS: capas encima (pixrig) para lo que ningún donante tiene (coronas, máscaras, alas...).
+  5. ACCESORIOS: capas encima para lo que ningún donante tiene (coronas, máscaras, alas...): módulos a medida
+     (accessories/) o ELEMENTOS NUEVOS por datos de la forja (forge.py, elements/<nombre>.json).
 
 Uso:
   python3 tools/art/painter/painter.py materials <donante>            # describe los materiales de un donante
@@ -445,8 +446,13 @@ def assemble(spec):
         rules.append(r)
     out = recolor(out, out_mats.label, rules, out_mats)
     report['paintMaterials'] = out_mats.describe()
-    # accesorios: módulos tools/art/painter/accessories/<nombre>.py con draw(atlas, info, spec) -> atlas
+    # accesorios: módulos tools/art/painter/accessories/<nombre>.py con draw(atlas, info, spec) -> atlas, o
+    # elementos de la forja ({"element": "<nombre>"} -> tools/art/painter/elements/<nombre>.json, ver forge.py)
     for acc in spec.get('accessories', []):
+        if isinstance(acc, dict) and 'element' in acc:
+            sys.path.insert(0, str(HERE)); import forge
+            out = forge.apply(out, {'frames': frame_info, 'headmap': headmap, 'CELL': CELL, 'COLS': COLS, 'ROW_DIR': ROW_DIR}, acc)
+            continue
         import importlib.util
         name = acc if isinstance(acc, str) else acc['module']
         path = HERE / 'accessories' / (name + '.py')

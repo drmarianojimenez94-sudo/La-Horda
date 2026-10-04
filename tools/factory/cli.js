@@ -28,6 +28,11 @@ try {
       const r = spawnSync(bin, args, {cwd:ROOT, stdio:'inherit', timeout:600000});
       if (r.error || r.status !== 0) { process.exitCode = 1; console.error(`paint ${arg}: FAIL at ${args[0]}`); break; }
     }
+  } else if (command === 'element') {
+    // FORJA DE ELEMENTOS del Pintor (tools/art/painter/forge.py): piezas nuevas por datos (coronas, capas, alas...).
+    // element list | element new <nombre> --kind <plantilla> | element preview <nombre> [--on <donante|ficha>] | element check [nombres]
+    const r = spawnSync('python3', ['tools/art/painter/forge.py', ...process.argv.slice(3)], {cwd:ROOT, stdio:'inherit', timeout:600000});
+    process.exitCode = r.error ? 1 : (r.status || 0);
   } else if (command === 'gate') {
     const names = arg === 'all' ? Object.keys(GATES) : [arg];
     if (names.some(n => !GATES[n])) throw Error('Unknown gate. Use: ' + Object.keys(GATES).join(', ') + ', all');
@@ -37,5 +42,5 @@ try {
       const result = spawnSync(bin, args, {cwd:ROOT,stdio:'inherit',timeout:600000});
       if (result.error || result.status !== 0) { process.exitCode = 1; console.error(`${name}: FAIL (${result.error?.message || result.status})`); break; }
     }
-  } else throw Error('Usage: node tools/factory/cli.js new <id> <output.json> [--category=STANDARD|FAMILY|FOUNDER|EVENT|DEV|TESTER] | duplicity [ids] | validate <manifest.json> | paint <specId> [--install] | gate <name|all>');
+  } else throw Error('Usage: node tools/factory/cli.js new <id> <output.json> [--category=STANDARD|FAMILY|FOUNDER|EVENT|DEV|TESTER] | duplicity [ids] | validate <manifest.json> | paint <specId> [--install] | element <list|new|preview|check|anchors> ... | gate <name|all>');
 } catch (e) { console.error(e.message); process.exitCode = 1; }

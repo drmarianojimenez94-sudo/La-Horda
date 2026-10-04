@@ -6,7 +6,6 @@
       "releaseState": "TESTING",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "audio evidence required (file presence does not prove gate passed)"
       ]
@@ -16,7 +15,6 @@
       "releaseState": "TESTING",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "audio evidence required (file presence does not prove gate passed)"
       ]
@@ -26,7 +24,6 @@
       "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -39,7 +36,6 @@
       "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -52,7 +48,6 @@
       "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -65,7 +60,6 @@
       "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -78,7 +72,6 @@
       "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -91,7 +84,18 @@
       "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
-        "atlas hash must match reviewed content",
+        "visual review requires reviewer and evidence; structural checks cannot approve style",
+        "initial croma required",
+        "initial set required",
+        "set reward must reference its cosmetic",
+        "audio evidence required (file presence does not prove gate passed)"
+      ]
+    },
+    "saelis": {
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
+      "status": "INCOMPLETE",
+      "errors": [
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",

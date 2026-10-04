@@ -88,7 +88,7 @@
     "directions": 4,
     "frameWidth": 112,
     "frameHeight": 112,
-    "sha256": "9e62308df17399f4cfc6166fcc3153e248a7b803fdc4085f2a78491dc91fe3ce",
+    "sha256": "3f2e267b1c4466fc66f7ca82803f711c6b8b179ca4fc2ca991ba3e5448ca4aa7",
     "animations": {
       "idle": 1,
       "walk": 4,

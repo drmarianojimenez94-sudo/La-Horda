@@ -111,5 +111,17 @@ const ASCENSION = {
   skills:[['Abrir Cicatriz','portal',24,7000,320,38,6500,.9,'Abre un portal donde está y otro en el punto elegido. Aliados que entran salen por el otro; enemigos son rechazados.','rift'],
    ['Eco de la Cicatriz','rift_echo',24,6800,0,120,0,1.15,'Cada portal abierto pulsa: daña enemigos y cura un poco a los aliados cercanos.','rift'],
    ['Paso entre Mundos','rift_step',20,6200,300,70,0,1.2,'Oriel aparece en su otro portal (o en el punto elegido) y deja una grieta que daña.','rift'],
-   ['La Gran Cicatriz','great_rift',0,40000,280,200,6000,.8,'Abre una Cicatriz gigante: enemigos dentro se frenan y reciben daño; ecos de campeones caídos salen a golpear y los aliados dentro reciben −20% de daño.','rift']]}
+   ['La Gran Cicatriz','great_rift',0,40000,280,200,6000,.8,'Abre una Cicatriz gigante: enemigos dentro se frenan y reciben daño; ecos de campeones caídos salen a golpear y los aliados dentro reciben −20% de daño.','rift']]},
+ saelis:{name:'Saelis',title:'La Heraldo del Plumaje',origin:'Las copas altas del Bosque',tagline:'Saelis siembra Plumas que bendicen a su equipo y las hace volar de vuelta contra la Horda.',role:'soporte',color:'#9cd0f0',glow:'#fff4cc',stats:[100,10,.07,172,280,520,true],weapon:'Báculo de Plumas',arena:'bosque',setName:'Plumaje del Heraldo',
+  fantasy:'Soporte de bendiciones: deja Plumas en el suelo que aceleran y fortalecen a quien las recoge, y las convierte en proyectiles cuando la Horda se acerca.',
+  silhouette:'Heraldo de túnica larga y báculo de pastora; dos alas de plumas a la espalda, un aro dorado detrás de la cabeza y hombreras redondas.',
+  history:'Saelis cuidaba los nidos de las copas altas del Bosque cuando la Horda subió por los troncos. Las aves se fueron todas juntas, en una sola bandada, y le dejaron las plumas que perdieron al huir. Desde entonces las siembra en cada campo de batalla. Dice que una pluma en el suelo es una promesa: alguien va a volver a levantar vuelo.',
+  passive:['Muda Celeste','Sus habilidades dejan Plumas en el suelo (máx. 8). Un aliado (nunca ella) que pisa una Pluma la absorbe y recibe la Bendición del Plumaje: +15% de velocidad y +8% de daño durante 3 s.'],
+  weakness:'Sin curación ni escudos; depende de que su equipo recoja las Plumas a tiempo.',
+  voices:['Que nadie se quede en el suelo.','Todos levantaron vuelo.','Se me cae… la última pluma…'],
+  skins:[['Heraldo del Ocaso','Túnica granate, alas de plumas oscuras con puntas rosadas y un aro de fuego cobrizo.','Cuando el sol cae sobre el Bosque, Saelis siembra plumas rojas. Las que no se recogen antes de la noche arden solas.'],['Heraldo de la Aurora Boreal','Túnica verde agua, alas turquesa y un aro pálido que titila como el cielo del norte.','En la Gélida las plumas no caen: flotan. Saelis aprendió allí a esperar a que el cielo decida dónde dejarlas.']],
+  skills:[['Abanico de Plumas','feather_fan',22,5200,300,22,8000,.65,'Lanza cinco plumas en abanico: cada una daña a los dos primeros enemigos que cruza y queda clavada en el suelo como Pluma.','feather'],
+   ['Ráfaga Ascendente','updraft',26,8200,0,150,0,.8,'Bate las alas: aparta a los comunes, frena a los élites, bendice a los aliados cercanos y dispara cada Pluma cercana contra el enemigo más próximo.','feather'],
+   ['Llamado del Plumaje','recall',20,7000,0,26,0,.6,'Todas sus Plumas vuelan de regreso: dañan a los enemigos del camino y cada una le acorta 0,2 s las recargas.','feather'],
+   ['Cielo de Plumas','feather_sky',0,40000,260,220,5000,.5,'Abre un cielo sobre la zona: caen plumas sobre los enemigos de adentro, los aliados quedan bendecidos y al final seis Plumas quedan en el suelo.','feather']]}
 };

@@ -1,0 +1,53 @@
+{
+ "name": "emblema_de_pecho",
+ "description": "Emblema redondo en el pecho.",
+ "layer": "front",
+ "anchor": "chest",
+ "materials": {
+  "metal": {
+   "ramp": [
+    "#2a2a34",
+    "#6a6a7a",
+    "#b8b8c8",
+    "#f0f0ff"
+   ]
+  },
+  "gem": {
+   "ramp": [
+    "#0a2a3a",
+    "#1a7a9a",
+    "#8ae8ff"
+   ],
+   "round": 0.8
+  }
+ },
+ "views": [
+  "down"
+ ],
+ "shapes": [
+  {
+   "type": "ellipse",
+   "center": [
+    0,
+    0
+   ],
+   "radius": [
+    4,
+    4
+   ],
+   "material": "metal"
+  },
+  {
+   "type": "ellipse",
+   "center": [
+    0,
+    0
+   ],
+   "radius": [
+    2,
+    2
+   ],
+   "material": "gem"
+  }
+ ]
+}

@@ -380,9 +380,9 @@
       "name": "velmira level 1 horde damage",
       "ok": true,
       "details": [
-        72.68905599974096,
-        81.3623360004276,
-        81.3623360004276
+        73.35108000226319,
+        82.22148000262678,
+        82.22148000262678
       ]
     },
     {
@@ -405,7 +405,7 @@
     {
       "name": "velmira ultimate respects boss damage cap",
       "ok": true,
-      "details": 36.938880000000154
+      "details": 37.77840000000015
     },
     {
       "name": "velmira elites never executed",
@@ -564,9 +564,9 @@
       "name": "bront level 1 horde damage",
       "ok": true,
       "details": [
-        27.279999999329448,
-        27.279999999329448,
-        27.279999999329448
+        29.912520000711083,
+        29.912520000711083,
+        29.912520000711083
       ]
     },
     {
@@ -651,9 +651,9 @@
       "name": "oriel level 1 horde damage",
       "ok": true,
       "details": [
-        61.64684599637985,
-        111.02524199150503,
-        57.416345996782184
+        67.81080199964345,
+        122.12645399570465,
+        63.157301999628544
       ]
     },
     {
@@ -676,7 +676,7 @@
     {
       "name": "oriel ultimate respects boss damage cap",
       "ok": true,
-      "details": 79.66877599999998
+      "details": 87.63471199999913
     },
     {
       "name": "oriel elites never executed",
@@ -729,6 +729,98 @@
     },
     {
       "name": "oriel arena infernal bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis registered with taxonomy",
+      "ok": true
+    },
+    {
+      "name": "saelis kit 3 skills + ultimate with descriptions",
+      "ok": true
+    },
+    {
+      "name": "saelis level 1 horde damage",
+      "ok": true,
+      "details": [
+        91.04039998911321,
+        65.48519998975098,
+        30.87919999100268
+      ]
+    },
+    {
+      "name": "saelis bounded entities",
+      "ok": true,
+      "details": 1
+    },
+    {
+      "name": "saelis finite state",
+      "ok": true
+    },
+    {
+      "name": "saelis boss never displaced or stunned",
+      "ok": true
+    },
+    {
+      "name": "saelis boss alive (no one-shot)",
+      "ok": true
+    },
+    {
+      "name": "saelis ultimate respects boss damage cap",
+      "ok": true,
+      "details": 24.224199999999428
+    },
+    {
+      "name": "saelis elites never executed",
+      "ok": true
+    },
+    {
+      "name": "saelis timed objects expire",
+      "ok": true,
+      "details": []
+    },
+    {
+      "name": "saelis cleanup on death",
+      "ok": true
+    },
+    {
+      "name": "saelis arena ciudad bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena fortaleza bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena bosque bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena micelial bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena hielo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena acuatica bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena laberinto bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena abismo bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena minas bounds + finite",
+      "ok": true
+    },
+    {
+      "name": "saelis arena infernal bounds + finite",
       "ok": true
     },
     {
@@ -839,6 +931,55 @@
     },
     {
       "name": "Oriel portal moves allies",
+      "ok": true
+    },
+    {
+      "name": "Saelis fan leaves 5 feathers",
+      "ok": true
+    },
+    {
+      "name": "Saelis feathers capped at 8",
+      "ok": true
+    },
+    {
+      "name": "Saelis ally absorbs a feather and is blessed",
+      "ok": true
+    },
+    {
+      "name": "Saelis blessing adds damage",
+      "ok": true,
+      "details": [
+        108,
+        100
+      ]
+    },
+    {
+      "name": "Saelis updraft fires nearby feathers",
+      "ok": true,
+      "details": [
+        5,
+        34.07359999977052
+      ]
+    },
+    {
+      "name": "Saelis recall returns every feather and shortens cooldowns",
+      "ok": true,
+      "details": [
+        3000,
+        3000,
+        0
+      ]
+    },
+    {
+      "name": "Saelis sky opens",
+      "ok": true
+    },
+    {
+      "name": "Saelis sky leaves six feathers",
+      "ok": true
+    },
+    {
+      "name": "Saelis never blesses herself",
       "ok": true
     },
     {

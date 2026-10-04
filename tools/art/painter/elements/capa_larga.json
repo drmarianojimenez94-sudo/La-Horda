@@ -1,0 +1,128 @@
+{
+ "name": "capa_larga",
+ "description": "Capa que cae desde los hombros por detrás y termina sobre los tobillos.",
+ "layer": "behind",
+ "anchor": "shoulders",
+ "materials": {
+  "cloth": {
+   "ramp": [
+    "#12060e",
+    "#3a1026",
+    "#6e1e42",
+    "#a83a62",
+    "#d8708e"
+   ],
+   "round": 0.35,
+   "jitter": 0.08
+  },
+  "lining": {
+   "ramp": [
+    "#2a1a08",
+    "#6a4a18",
+    "#c09040"
+   ],
+   "round": 0.3
+  }
+ },
+ "shapes": [
+  {
+   "type": "poly",
+   "points": [
+    [
+     -11,
+     -1
+    ],
+    [
+     11,
+     -1
+    ],
+    [
+     14,
+     -8,
+     "feet"
+    ],
+    [
+     5,
+     -5,
+     "feet"
+    ],
+    [
+     0,
+     -7,
+     "feet"
+    ],
+    [
+     -5,
+     -5,
+     "feet"
+    ],
+    [
+     -14,
+     -8,
+     "feet"
+    ]
+   ],
+   "material": "cloth",
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -12,
+     -1
+    ],
+    [
+     -9,
+     -1
+    ],
+    [
+     -12,
+     -9,
+     "feet"
+    ],
+    [
+     -15,
+     -8,
+     "feet"
+    ]
+   ],
+   "material": "lining",
+   "mirror": true,
+   "views": [
+    "down"
+   ]
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -1,
+     -1
+    ],
+    [
+     -6,
+     -1
+    ],
+    [
+     -16,
+     -7,
+     "feet"
+    ],
+    [
+     -5,
+     -6,
+     "feet"
+    ]
+   ],
+   "material": "cloth",
+   "views": [
+    "side"
+   ]
+  }
+ ],
+ "sway": 1
+}
