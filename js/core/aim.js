@@ -110,7 +110,7 @@ function aimPointerUp(ev, cancelled){
   if(st.inspectOnly){ if(!cancelled) _denyFeedback(st.el, st.idx); return; }
   if(st.selfCast){ if(!cancelled && !useSkill(st.idx)) _denyFeedback(st.el, st.idx); return; }
   if(cancel){
-    if(st.sylva){ player.sylvaCharging = false; player.sylvaChargeTimer = 0; }
+    if(st.sylva){ player.sylvaCharging = false; player.sylvaChargeTimer = 0; if(netIsGuest()) netSendToHost({k:"sylva", on:false, aim:null, cancel:true}); }
     floatText(player.x, player.y-64, "Cancelado", null);
     return;
   }
@@ -123,7 +123,19 @@ function aimPointerUp(ev, cancelled){
   el.addEventListener("pointermove", aimPointerMove);
   el.addEventListener("pointerup", ev=>aimPointerUp(ev, false));
   el.addEventListener("pointercancel", ev=>aimPointerUp(ev, true));
+  // captura perdida sin pointerup (se escondieron los controles, cambio de pestaña): se cancela, no se lanza
+  el.addEventListener("lostpointercapture", ev=>{ if(ev.target===el && aimState && aimState.el===el) aimPointerUp(ev, true); });
 });
+// Suelta un apuntado en curso SIN lanzar (lo usa inputResetAll de js/core/input.js).
+function aimCancelActive(){
+  if(!aimState) return;
+  const st = aimState; aimState = null;
+  st.el.classList.remove("aiming","aim-cancel");
+  _showPad(false);
+  if(typeof abilityInspectorDisarm==="function") abilityInspectorDisarm(); // ficha de la habilidad (mantener): también se suelta
+  if(typeof abilityInspectorClose==="function" && (st.inspecting || (typeof abilityInspectorIsOpen==="function" && abilityInspectorIsOpen()))) abilityInspectorClose();
+  if(st.sylva && player){ player.sylvaCharging = false; player.sylvaChargeTimer = 0; if(typeof netIsGuest==="function" && netIsGuest()) netSendToHost({k:"sylva", on:false, aim:null, cancel:true}); }
+}
 
 /* ---------------- Previsualización en el mundo ---------------- */
 function _ellipse(x, y, r){ ctx.beginPath(); ctx.arc(x, y+6, r, 0, Math.PI*2); }

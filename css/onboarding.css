@@ -98,3 +98,43 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
 
 /* ---------- victoria: el "VICTORIA" entra agrandado (vicHeroIn) y durante 0,6 s asomaba scroll horizontal ---------- */
 #victory-screen{ overflow-x:hidden; }
+
+/* ---------- regalo inicial en el teléfono apaisado: el cartel de confirmar en UNA fila ----------
+   Antes era una caja de dos renglones (texto arriba, botones abajo) pegada al fondo: en 390 px de alto
+   tapaba el último renglón de la etiqueta de las cartas. En una fila (texto a la izquierda, botones a la
+   derecha) mide ~54 px y entra debajo de las cartas sin pisarlas. */
+@media (max-height:520px){
+  #starter-screen .arena-title{ margin-bottom:2px; }
+  #starter-screen .lobby-sub{ margin:0 0 4px; line-height:1.15; }
+  #starter-skin-grid{ margin:4px auto 6px; }
+  .starter-skin-card .starter-anim{ width:96px; height:96px; } /* la etiqueta de set ocupa 3 renglones: que igual entre todo en 390 px */
+  .starter-confirm{ display:flex; align-items:center; justify-content:center; gap:12px; width:fit-content; max-width:96vw; padding:6px 12px; margin:4px auto; }
+  .starter-confirm > div:first-child{ flex:0 1 auto; min-width:0; }
+  .starter-confirm .net-row{ flex:none; flex-wrap:nowrap; margin:0; }
+  #starter-confirm-text, #starter-skin-confirm-text{ font-size:1.15rem; line-height:1.1; }
+}
+/* en la compu (pantalla alta) la etiqueta de las cartas del regalo quedaba en ~9 px: ilegible */
+@media (min-height:521px){
+  .starter-lore{ font-size:0.8rem; line-height:1.2; }
+  .starter-skin-tag{ font-size:0.78rem; }
+  .starter-skin-card{ width:184px; }
+}
+
+/* ---------- fin de partida en el teléfono apaisado: los avisos van abajo a la derecha ----------
+   Arriba a la derecha (debajo del resumen de desafíos) tapaban el título de "Las últimas palabras" y los
+   valores de la columna derecha (Dificultad, Guardián) justo cuando uno los lee. Abajo, a los costados de
+   "Continuar", hay lugar libre: el botín recién levantado (hasta 2) a la izquierda y el resto a la derecha. */
+@media (max-height:520px){
+  #toast-stack.end{ top:auto; bottom:calc(6px + env(safe-area-inset-bottom, 0px)); width:min(210px, 25vw); max-height:92px; overflow:hidden; flex-direction:column-reverse; justify-content:flex-start; }
+  #toast-stack.end #loot-toasts{ position:fixed; left:calc(10px + env(safe-area-inset-left, 0px)); right:auto; bottom:calc(6px + env(safe-area-inset-bottom, 0px)); width:min(230px, 27vw); display:flex; flex-direction:column; }
+}
+
+/* ---------- regalo inicial: "Ver habilidades" abierto ----------
+   La ficha del guardián (championGuideHTML) mide más que la pantalla del teléfono: el cartel pegajoso se
+   salía por arriba y por abajo, y ya no se podía volver a tocar "Ver habilidades" ni leer la Definitiva.
+   Ahora el cartel no pasa del alto de la pantalla y se desliza por dentro; abierto, los botones van debajo. */
+.starter-confirm{ max-height:calc(100vh - 48px); max-height:calc(100dvh - 48px); overflow-y:auto; overscroll-behavior:contain; }
+.starter-confirm:has(details[open]){ display:block; width:min(760px, 96vw); text-align:center; }
+.starter-confirm:has(details[open]) .net-row{ position:sticky; bottom:-10px; justify-content:center; padding:6px 0 4px; margin-top:6px; background:rgba(20,12,8,0.97); }
+#starter-confirm details{ font-size:1rem; text-align:left; }
+#starter-confirm summary{ cursor:pointer; text-align:center; min-height:32px; line-height:32px; }

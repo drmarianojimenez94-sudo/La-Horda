@@ -48,7 +48,7 @@ let musicBus = null, musicDuck = null, reverbSend = null, _noiseBuf = null;
 // El silencio (botón 🔇) también se recuerda en este navegador.
 let audioEnabled = (()=>{ try{ return localStorage.getItem("horda_mute")!=="1"; }catch(e){ return true; } })(), musicStarted = false;
 // Volumen de música y de efectos (0..1), elegido por el jugador en la pausa y recordado en este navegador.
-const AUDIO_BASE = { music:0.34, sfx:0.55 };
+const AUDIO_BASE = { music:0.34, sfx:0.6 };
 // Nivel maestro antes del compresor. Medido con tools/audio/t_audio_mix.js: la partida queda en
 // ~-21 dBFS de RMS (se oye bien en el parlante de un celular) y el techo nunca pasa de -1,1 dBFS.
 const AUDIO_MASTER = 1.4;
@@ -177,7 +177,10 @@ function initAudio(){
     masterGain = audioCtx.createGain(); masterGain.gain.value = audioEnabled?AUDIO_MASTER:0; masterGain.connect(glue);
     // música: dos buses (A/B) para cruzar modos; cada uno con su envío a la reverb larga
     musicGain = audioCtx.createGain(); musicGain.gain.value = AUDIO_BASE.music*audioVol.music; musicGain.connect(masterGain);
-    musicDuck = audioCtx.createGain(); musicDuck.gain.value = 1; musicDuck.connect(musicGain);
+    musicDuck = audioCtx.createGain(); musicDuck.gain.value = 1;
+    // COMBATE DENSO: la música se corre un poco cuando suenan muchos efectos a la vez (ver _sfxDensity).
+    // Nodo aparte de musicDuck (el de los golpes grandes y la pausa) para que no se pisen.
+    AU.dens = audioCtx.createGain(); AU.dens.gain.value = 1; musicDuck.connect(AU.dens); AU.dens.connect(musicGain);
     AU.hallIn = audioCtx.createBiquadFilter(); AU.hallIn.type = "highpass"; AU.hallIn.frequency.value = 200;
     // salida de la reverb de música: mono -> estéreo (canal derecho 13 ms más tarde)
     AU.hallMix = audioCtx.createGain(); const mg = audioCtx.createChannelMerger(2), dl = audioCtx.createDelay(0.05); dl.delayTime.value = 0.013;
@@ -621,7 +624,28 @@ function _msPiece(name){
 const M = {mode:"off", level:1, next:0, step:0, bar:0, timer:null, pending:null, arena:"_", P:MUSIC_ARENAS._,
   S:null, pk:null, sec:null, fi:0, sb:0, key:57, sc:MUSIC_SCALES.aeolian, ext:"", vl:null, ch:null, chRoot:57, bassR:45,
   int:0, lvBar:0, phase:1, phaseT:1, dirT:0, auto:null, seam:false, echo:null, cx:{melOn:false}};
-function _pieceFor(mode, arena){ return (mode==="boss" && arena==="infernal") ? "sorcerer" : (MUSIC_MODES[mode] || "menu"); }
+function _pieceFor(mode, arena){
+  if(mode==="boss" && arena==="infernal") return "sorcerer";
+  if(mode==="wave" && typeof MUSIC_WAVE_ARENA!=="undefined" && MUSIC_WAVE_ARENA[arena]) return _waveArenaScore(arena);
+  return MUSIC_MODES[mode] || "menu";
+}
+// Oleada propia de una arena (MUSIC_WAVE_ARENA, music-score.js): copia de `wave` con su forma, progresiones y
+// capas cambiadas. Se arma una vez y queda en MUSIC_SCORE["wave@arena"].
+function _waveArenaScore(arena){
+  const key = "wave@" + arena; if(MUSIC_SCORE[key]) return key;
+  const V = MUSIC_WAVE_ARENA[arena], B = MUSIC_SCORE.wave; if(!V || !B) return "wave";
+  const sec = {};
+  for(const k of Object.keys(B.sec)){
+    const b = B.sec[k], v = (V.sec && V.sec[k]) || {}, set = v.set || {};
+    let parts = b.parts.map((p, i)=>set[i]===undefined ? p : (set[i]===null ? null : Object.assign({}, p, set[i]))).filter(Boolean);
+    if(v.add) parts = parts.concat(v.add);
+    sec[k] = Object.assign({}, b, { ch:v.ch || b.ch, parts }, v.bars ? { bars:v.bars } : null);
+  }
+  const S = Object.assign({}, B, { sec, form:V.form || B.form });
+  delete S._c; if(V.swing!==undefined) S.swing = V.swing;
+  MUSIC_SCORE[key] = S;
+  return key;
+}
 function _stepDur(){
   const S = M.S; let bpm = S ? S.bpm : 80;
   if(S && S.arena) bpm *= (M.P.tempo||1);
@@ -1021,6 +1045,26 @@ function _duck(amount, ms){
   musicDuck.gain.setTargetAtTime(state==="paused" ? 0.35 : 1, now + ms/1000, 0.25);
 }
 function _wet(g, hi){ g.connect(hi ? AU.wetHi : AU.wetLo); return g; }
+// Mezcla del combate denso (medido con la sonda de la tarea Q5: con la horda llena los efectos quedaban
+// a la par de la música, -0,5 dB). Con 3+ voces de efectos vivas la música baja ~2 dB y con 6+ ~5 dB; vuelve
+// sola en ~1 s cuando se calma. Los golpes se oyen sin subir el volumen general.
+function _sfxDensity(t0){
+  const g = AU.dens ? AU.dens.gain : null; if(!g) return;
+  // densidad = efectos por medio segundo (contador que decae) o voces vivas, lo que sea mayor
+  AU.rate = (AU.rate||0)*Math.exp(-Math.max(0, t0 - (AU.rateT||0))/0.5) + 1; AU.rateT = t0;
+  const n = Math.max(_sfxVoices.length, AU.rate), tgt = n >= 6 ? 0.5 : (n >= 3 ? 0.75 : 1);
+  if(tgt >= 1) return;
+  if(g.cancelAndHoldAtTime) g.cancelAndHoldAtTime(t0); else g.cancelScheduledValues(t0);
+  g.setTargetAtTime(tgt, t0, 0.04);
+  g.setTargetAtTime(1, t0 + 0.4, 0.35);
+}
+// Paneo estéreo leve según dónde está el golpe en pantalla (x del mundo): -0,55 .. 0,55. Sin cámara o sin
+// StereoPanner (Safari viejo), al centro.
+function _sfxPan(wx){
+  if(typeof wx!=="number" || !isFinite(wx) || !audioCtx.createStereoPanner) return 0;
+  try{ if(typeof worldToScreen!=="function" || typeof player==="undefined" || !player || typeof VW!=="number" || VW <= 0) return 0;
+    const s = worldToScreen(wx, player.y).x; return Math.max(-1, Math.min(1, (s - VW/2)/(VW/2)))*0.55; }catch(e){ return 0; }
+}
 // Material del golpe (carne, húmedo, piedra, hueso, caparazón, hielo, magia, fuego, metal). El juego
 // pasa una ETIQUETA de texto (sfxMatTag(enemigo)): así viaja liviana a los invitados en red.
 const SFX_MAT = { flesh:"flesh", rot:"wet", leaf:"wet", water:"wet", micSpore:"wet", micRoot:"wet", micBlood:"wet", ink:"wet", wet:"wet",
@@ -1080,7 +1124,8 @@ function _kindHit(t, x, D){
   else if(k==="lightning") _nz(t,AU.nz.white,0.08,0.1,D,"bandpass",3400,4);
   else if(k==="ice") _tone(t,"sine",2900,2850,0.1,0.035,D);
 }
-function playSfx(type, src){
+// src: material del enemigo (etiqueta de sfxMatTag) u objeto; wx: x del MUNDO donde suena (opcional, para el paneo)
+function playSfx(type, src, wx){
   if(!audioCtx) return;
   const cfg = SFX_CFG[type] || ARENA_SFX[type]; if(!cfg) return;
   const nowMs = performance.now();
@@ -1092,7 +1137,10 @@ function playSfx(type, src){
   if(AU.frN >= (SFX_FRAME_NODES[cfg.p]||1e9)) return;             // este cuadro ya creó demasiados nodos
   _sfxLast[type] = nowMs;
   if(!audioEnabled) return; // en silencio no se crea nada
-  const D = AU.sfxIn, W = AU.nz;
+  let D = AU.sfxIn; const W = AU.nz;
+  if(wx===undefined && src && typeof src==="object" && typeof src.x==="number") wx = src.x;
+  const pan = _sfxPan(wx);
+  if(pan && Math.abs(pan) > 0.04){ const sp = audioCtx.createStereoPanner(); sp.pan.value = pan; sp.connect(AU.sfxIn); D = sp; AU.frN++; }
   // variación por disparo: tono ±5% en golpes (±3% en los de arena, 0 en los afinados), volumen 0..-1,7 dB
   const pv = SFX_TUNED[type] ? 0 : (SFX_CFG[type] ? 0.05 : 0.03);
   _sv.on = true; _sv.p = 1 + (Math.random()*2-1)*pv; _sv.v = 1 - Math.random()*0.18; _sv.n = 0;
@@ -1211,7 +1259,15 @@ function playSfx(type, src){
     case "burnDeath": _matHit(t0,"fire",1.1,D); _nz(t0,W.pink,0.35,0.1,D,"bandpass",1200,0.6,0.05); len=0.38; break;
     case "zap": _nz(t0,W.white,0.12,0.14,D,"bandpass",3200,4); _tone(t0,"square",1400,700,0.1,0.05,D); _nz(t0,W.crackleHi,0.1,0.14,D); len=0.14; break;
     case "skillHit": _click(t0,0.14,D,2000); _sub(t0,105,0.13,0.3,D); _nz(t0,W.pink,0.08,0.16,D,"bandpass",1400,1); len=0.14; break;
-    case "threat": _tone(t0,"square",330,330,0.09,0.09,D); _tone(t0+0.12,"square",247,247,0.12,0.09,D); len=0.26; break;
+    // aviso de peligro (explosivo, afijo de élite, oleada que viene): antes era un bip cuadrado a -18,6 dBFS, el
+    // sonido más bajo del juego. Ahora dos pulsos graves que SUBEN (sierra filtrada + sub), ~9 dB más fuerte, y la
+    // música se corre un instante para que se oiga en plena horda.
+    case "threat": {
+      for(const [dt, f0] of [[0, 110], [0.17, 131]]){
+        _tone(t0+dt,"sawtooth",f0,f0*1.5,0.15,0.2,D,0.006); _tone(t0+dt,"triangle",f0*2,f0*3,0.15,0.2,D,0.006); _sub(t0+dt,f0*0.5,0.16,0.3,D);
+      }
+      _wet(_tone(t0+0.17,"triangle",393,393,0.18,0.06,D,0.01),0); _duck(0.6,450); len=0.36; break;
+    }
     case "emergencyHeal": _tone(t0,"sine",440,880,0.35,0.18,D,0.02); _wet(_tone(t0+0.05,"sine",660,1320,0.35,0.1,D,0.02),1); _noise(t0,0.3,0.05,"highpass",6000,0,D); len=0.4; break;
     default:
       // sonidos propios de una arena (ARENA_SFX, p.ej. La Fortaleza): mismo control de prioridad/voces
@@ -1223,6 +1279,7 @@ function playSfx(type, src){
   }
   } finally { _sv.on = false; AU.frN += _sv.n; }
   _sfxVoices.push(t0+len);
+  _sfxDensity(t0);
 }
 
 // Stylized comic cry for BERRINCHE; uses the user's existing SFX mixer and mute control.

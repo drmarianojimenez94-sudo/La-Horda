@@ -102,8 +102,16 @@ function netTradeOffer(to, uid){
   const why = it ? tradeBoundReason(it) : "Ese objeto ya no está en tu inventario.";
   if(why) return {ok:false, reason:why};
   const item = JSON.parse(JSON.stringify(it));
-  netTrade.out = {id:null, k:null, to, toName:other.name, uid, item, st:"sending", at:performance.now()};
+  const o = netTrade.out = {id:null, k:null, to, toName:other.name, uid, item, st:"sending", at:performance.now()};
   netSend({t:"trade", op:"offer", to, item});
+  // Un relay viejo no conoce {t:"trade"} y no contesta nada: antes la oferta quedaba para siempre en
+  // "Esperando que acepte…" con Cancelar deshabilitado. El relay nuevo contesta "sent" al instante.
+  setTimeout(()=>{
+    if(netTrade.out!==o || o.st!=="sending") return;
+    netTrade.out = null; netTrade.unsupported = true;
+    showNetToast("⚠ " + TRADE_NOT_ON_SERVER);
+    netRenderTrade();
+  }, 8000);
   netRenderTrade();
   return {ok:true};
 }
@@ -200,7 +208,9 @@ function _trClearLive(id){
   if(netTrade.out && netTrade.out.id===id) netTrade.out = null;
   if(netTrade.inc && netTrade.inc.id===id) netTrade.inc = null;
 }
+const TRADE_NOT_ON_SERVER = "El intercambio todavía no está disponible en el servidor (hay que actualizarlo).";
 function netTradeOnMsg(m){
+  netTrade.unsupported = false; // contestó: el servidor sí sabe intercambiar
   const T = _tradeSave(), id = m.id;
   switch(m.op){
     case "sent": {
@@ -259,6 +269,7 @@ function netTradeOnMsg(m){
 }
 netOn("trade", netTradeOnMsg);
 netOn("tradeError", (m)=>{
+  if(/^TRADE_/.test(m.code||"")) netTrade.unsupported = false;
   const txt = TRADE_ERRORS[m.code] || ("No se pudo: " + m.code);
   if(/^ROOMS_/.test(m.code||"")) return;
   const o = netTrade.out;
@@ -320,7 +331,7 @@ function netRenderTrade(){
   } else {
     const others = net.room.slots.map((s,k)=>({s,k})).filter(x=>x.s && x.s.connected && x.k!==net.slot);
     const n = tradeableItems().length;
-    body = others.length
+    body = netTrade.unsupported ? `<div class="net-hint">${TRADE_NOT_ON_SERVER}</div>` : others.length
       ? `<div class="tr-line">Darle un objeto de tu inventario a:</div><div class="net-row tr-targets">${others.map(x=>`<button class="btn small tr-to" data-tr-to="${x.k}" style="border-color:${NET_SLOT_COLORS[x.k]}" ${n?"":"disabled"}>${_trEsc(x.s.name)}</button>`).join("")}</div>
         <div class="net-hint">${n ? `${n} objeto${n===1?"":"s"} para dar.` : "No tenés objetos para dar (lo equipado y lo ligado a tu cuenta no se puede)."} Sin oro ni plata: es un regalo. Los dos confirman.</div>`
       : `<div class="net-hint">Cuando haya otro jugador en la sala le vas a poder dar un objeto de tu inventario.</div>`;

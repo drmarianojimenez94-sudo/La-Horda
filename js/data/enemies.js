@@ -33,7 +33,7 @@ const ENEMY_BASE = {
   angel_hielo:        {name:"Ángel de Hielo y Cristal", rank:"elite",    hp:110, dmg:13, speed:66,  radius:26, xp:16, gold:6,  scale:3.8, color:"#9ec8e8", ranged:true, range:280, projSpeed:230, visualAlias:"demonio_menor", freezeOnHit:true},
   demonio_hielo_fuego:{name:"Demonio de Hielo y Fuego", rank:"elite",    hp:150, dmg:15, speed:96,  radius:28, xp:22, gold:9,  scale:4.0, color:"#4a6ea8", ranged:false, dropsItem:true, visualAlias:"demonio_mago", slowOnHit:0.3, burnOnHit:true},
   dragon_hielo:       {name:"Tundraverx, Soberano de Hielo", rank:"elite", hp:420, dmg:20, speed:50, radius:44, xp:60, gold:24, scale:6.0, color:"#7fc0f0", ranged:true, range:320, projSpeed:260, dropsItem:true, visualAlias:"golem"},
-  mago_hielo_cristal: {name:"Mago de Hielo y Cristal",  rank:"jefe",     hp:1500,dmg:20, speed:56,  radius:40, xp:0,  gold:0,  scale:4.2, color:"#c9e6ff", ranged:true, range:320, projSpeed:270, visualAlias:"demonio_mago"},
+  mago_hielo_cristal: {name:"El Mago Gélido",           rank:"jefe",     hp:1500,dmg:20, speed:56,  radius:40, xp:0,  gold:0,  scale:4.2, color:"#c9e6ff", ranged:true, range:320, projSpeed:270, visualAlias:"demonio_mago"},
   // Guardianes de cristal del Mago (los invoca en combate; no salen en las oleadas normales)
   golem_cristal:      {name:"Gólem de Cristal",         rank:"normal",   hp:62,  dmg:9,  speed:44,  radius:24, xp:6,  gold:2,  scale:3.4, color:"#6fa8e8", ranged:false, visualAlias:"zombie", slowOnHit:0.25},
   cristal_servo:      {name:"Servo de Cristal",         rank:"normal",   hp:26,  dmg:6,  speed:92,  radius:16, xp:3,  gold:1,  scale:2.6, color:"#9ec8ff", ranged:false, visualAlias:"esqueleto", slowOnHit:0.15},

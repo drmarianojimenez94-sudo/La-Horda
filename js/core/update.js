@@ -561,7 +561,13 @@ function update(dt){
     // minuto sin depender solo del nivel de la arena en esta partida puntual.
     updatePacing(dt); // montaña rusa del nivel: calentamiento, oleada con aviso, respiro, clímax (pacing.js)
     const spawnInterval = Math.max(360, (1150 - lvlEff*95) * 0.77 * partyLevelScale().spawnRate * (arenaHook("spawnIntervalMult")||1) * (typeof endlessOn==="function" && endlessOn() ? endlessSpawnIntervalMult() : 1)) * pacingIntervalMult();
-    if(spawnTimer<=0 && !activeChampion){
+    // TOPE de enemigos comunes vivos a la vez (red de seguridad). Antes no había: si el equipo dejaba de matar
+    // (aliados caídos, nivel retenido por subjefes) la horda se acumulaba sin límite -se midieron 650 enemigos
+    // vivos en el nivel 9 de la Ciudad- y la partida quedaba imposible y cada vez más pesada. Cada arena puede
+    // pedir uno más bajo (gancho spawnCap, p.ej. mientras pelean sus subjefes).
+    const spawnCapped = spawnTimer<=0 && enemyAliveCount() >= (arenaHook("spawnCap") || ENEMY_SPAWN_CAP);
+    if(spawnCapped){ spawnTimer = 400; }
+    else if(spawnTimer<=0 && !activeChampion){
       spawnTimer = spawnInterval / (typeof alphaWorldMultiplier==="function" ? alphaWorldMultiplier("spawnRate") : 1);
       // Ráfaga inicial: en vez de un goteo de a uno, las primeras hordas aparecen en grupo
       // (sección "ritmo de oleadas" — preferir muchos enemigos débiles a pocos con mucha vida,

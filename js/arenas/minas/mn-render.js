@@ -154,7 +154,7 @@ function mnDrawWorld(now){
   for(const L of mnS.lights){ const a = mnLightInt(L); if(a <= 0 || !_mnVis(V, L.x - L.r, L.y - L.r, L.x + L.r, L.y + L.r)) continue; _mnGlow(L.x, L.y, L.r*0.8, _mnLightRgb(L), a*0.18); }
   // zonas de oscuridad (Escupidor) y fuego en el piso
   for(const Z of mnS.zones){ if(!_mnVis(V, Z.x - Z.r, Z.y - Z.r, Z.x + Z.r, Z.y + Z.r)) continue; const a = Math.min(1, Z.t/300, (Z.d - Z.t)/500);
-    ctx.save(); ctx.fillStyle = `rgba(20,0,30,${0.5*a})`; ctx.beginPath(); ctx.ellipse(Z.x, Z.y, Z.r, Z.r*0.7, 0, 0, Math.PI*2); ctx.fill();
+    ctx.save(); ctx.fillStyle = `rgba(20,0,30,${0.5*a})`; ctx.beginPath(); ctx.arc(Z.x, Z.y, Z.r, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = `rgba(190,90,255,${0.55*a})`; ctx.lineWidth = 2; ctx.setLineDash([6, 6]); ctx.lineDashOffset = t*10; ctx.stroke(); ctx.restore();
     _mnFx("mnDarkZone", 2 + ((t*6)|0) % 4, Z.x, Z.y, Z.r*1.1, 0.8*a, 0.6); }
   for(const F of mnS.fire){ if(!_mnVis(V, F.x - 80, F.y - 80, F.x + 80, F.y + 80)) continue; const a = Math.min(1, (F.d - F.t)/600);
@@ -539,10 +539,10 @@ function _mnDrawDrop(D, t){
     const dx = D.x2 - D.x, dy = D.y2 - D.y, L = Math.hypot(dx, dy)||1, nx = -dy/L*D.r, ny = dx/L*D.r;
     ctx.beginPath(); ctx.moveTo(D.x + nx, D.y + ny); ctx.lineTo(D.x2 + nx, D.y2 + ny); ctx.lineTo(D.x2 - nx, D.y2 - ny); ctx.lineTo(D.x - nx, D.y - ny); ctx.closePath(); ctx.fill(); ctx.stroke();
   } else {
-    ctx.beginPath(); ctx.ellipse(D.x, D.y, D.r, D.r*0.72, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = `rgba(${col},0.3)`; ctx.beginPath(); ctx.ellipse(D.x, D.y, D.r*q, D.r*0.72*q, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(D.x, D.y, D.r, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = `rgba(${col},0.3)`; ctx.beginPath(); ctx.arc(D.x, D.y, D.r*q, 0, Math.PI*2); ctx.fill();
     if(D.k==="amb"){ ctx.fillStyle = Math.sin(t*16) > 0 ? "#ff40ff" : "#fff"; ctx.font = pxFont(24); ctx.textAlign = "center"; ctx.fillText("!", D.x, D.y - 70); }
-    if(D.black){ ctx.strokeStyle = `rgba(255,220,140,${0.25 + 0.2*pulse})`; ctx.setLineDash([4, 8]); ctx.beginPath(); ctx.ellipse(D.x, D.y, D.black, D.black*0.72, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); }
+    if(D.black){ ctx.strokeStyle = `rgba(255,220,140,${0.25 + 0.2*pulse})`; ctx.setLineDash([4, 8]); ctx.beginPath(); ctx.arc(D.x, D.y, D.black, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); }
   }
   ctx.restore();
 }
@@ -595,7 +595,7 @@ function mnDrawScreen(){
 }
 function _mnMinimap(){
   const B = MN_BOUNDS, W = Math.min(150, VW*0.26), k = W/(B.x1 - B.x0), Hh = (B.y1 - B.y0)*k;
-  const X = VW - W - 12, Y = Math.max(70, VH*0.16), tx = x=>X + (x - B.x0)*k, ty = y=>Y + (y - B.y0)*k;
+  const X = hudMirrorX(VW - W - 12, W) /* modo zurdo: del otro lado (prefs.js) */, Y = Math.max(70, VH*0.16), tx = x=>X + (x - B.x0)*k, ty = y=>Y + (y - B.y0)*k;
   ctx.save(); ctx.globalAlpha = 0.9;
   ctx.fillStyle = "rgba(8,4,10,0.78)"; ctx.fillRect(X - 3, Y - 3, W + 6, Hh + 6); ctx.strokeStyle = "rgba(200,140,90,0.5)"; ctx.strokeRect(X - 3, Y - 3, W + 6, Hh + 6);
   ctx.fillStyle = "#2a2226"; for(const r of mnRocksNow()) ctx.fillRect(tx(r.x0), ty(r.y0), (r.x1 - r.x0)*k, (r.y1 - r.y0)*k);

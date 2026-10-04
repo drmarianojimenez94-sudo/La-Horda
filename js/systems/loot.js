@@ -18,7 +18,7 @@ function _pick(weights, rng){
 }
 // Pesos finales por categoría para una arena + calificación + protección (+ derrota).
 function lootTierWeights(arena, grade, pity, defeat){
-  const base = ARENA_LOOT[arena] || ARENA_LOOT.bosque;
+  const base = ARENA_LOOT[arena] || ARENA_LOOT.ciudad;
   const g = GRADE_LOOT[grade] || GRADE_LOOT.A;
   const df = typeof diffLootFactor==="function" ? diffLootFactor() : 1; // Pesadilla/Infierno: mejor rareza
   const w = {};
@@ -29,6 +29,20 @@ function lootTierWeights(arena, grade, pity, defeat){
     w[t] = v;
   }
   return w;
+}
+// Piso de rareza: lo que iba a salir por debajo de `floor` SUBE a `floor` (su peso pasa a esa categoría).
+// Las categorías de arriba no cambian su probabilidad: el piso no regala Legendarios, solo saca la basura.
+// "Por debajo" = orden de fuerza TIER_ORDER (común < raro < muy raro < legendario < mítico < set < único).
+function lootApplyFloor(w, floor){
+  if(!floor || typeof TIER_ORDER==="undefined" || TIER_ORDER[floor]===undefined || w[floor]===undefined) return w;
+  for(const t in w) if(t!==floor && (TIER_ORDER[t]||0) < TIER_ORDER[floor]){ w[floor] += w[t]; w[t] = 0; }
+  return w;
+}
+// Nivel de objeto (item-identity.js, ITEM_ILVL_*) de lo que cae en una arena: su número en la campaña;
+// lo que no tiene número (Arena Divina) cae con el tope.
+function lootItemLevelFor(arena){
+  const n = typeof campaignNumber==="function" ? campaignNumber(arena) : 0;
+  return Math.max(1, Math.min(ITEM_ILVL_MAX, n > 0 ? n : ITEM_ILVL_MAX));
 }
 // owned: Set de designIds que el guardián ya tiene (inventario), para elegir set/pieza.
 function _rollSetPiece(arena, owned, rng, classKey){
@@ -72,7 +86,10 @@ function rollLoot(o){
   }
   const items = [], got = {};
   for(let i=0;i<n;i++){
-    const tier = _pick(lootTierWeights(o.arena, grade, pity, defeat), rng);
+    // o.floor: piso de rareza del PRIMER objeto (el cofre de victoria, LOOT_VICTORY_FLOOR)
+    const w = lootTierWeights(o.arena, grade, pity, defeat);
+    if(i===0 && o.floor) lootApplyFloor(w, o.floor);
+    const tier = _pick(w, rng);
     got[tier] = true;
     if(tier==="set"){
       const sp = _rollSetPiece(o.arena, owned, rng, o.classKey);
@@ -128,6 +145,7 @@ function _rollChampionDesigned(classKey, rarity){
 function materializeLoot(spec, classKey, arena){
   const it = _materializeLootBase(spec, classKey, arena);
   if(it && it.designed && !Array.isArray(it.affixes) && typeof rollItemAffixes==="function") rollItemAffixes(it);
+  if(it) it.ilvl = lootItemLevelFor(arena || currentArena); // lo que cae en una arena más alta nace mejor
   return it;
 }
 function _materializeLootBase(spec, classKey, arena){
@@ -167,8 +185,11 @@ function ownedDesignIds(){
 function grantEndOfRunLoot(classKey, perf, victory){
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, save.lootPity||{});
   const res = rollLoot({arena:currentArena, grade:perf.grade, victory, runLevel, subjefes:subjefesDefeated,
-    owned:ownedDesignIds(), pity:save.lootPity, classKey});
+    owned:ownedDesignIds(), pity:save.lootPity, classKey, floor: victory ? LOOT_VICTORY_FLOOR : null});
   save.lootPity = res.pity;
+  // primera victoria de la campaña: el primer objeto es una mejora segura para una ranura vacía
+  const gift = firstWinLootDue(victory) ? firstWinLootSpec(classKey) : null;
+  if(gift){ save.firstWinLoot = true; if(res.items.length) res.items[0] = gift; else res.items.push(gift); }
   const items = []; let inventoryFull = false;
   for(const spec of res.items){
     const it = materializeLoot(spec, classKey, currentArena);
@@ -186,6 +207,30 @@ function grantEndOfRunLoot(classKey, perf, victory){
   const gems = grantRunGems(currentArena, res.grade, victory, runLevel); // Gemas: solo para mejorar objetos
   persist();
   return {items, inventoryFull, grade:res.grade, gems};
+}
+// ¿Esta victoria es la PRIMERA de la cuenta en la campaña? (una sola vez; ni la Horda Infinita ni la Divina)
+function firstWinLootDue(victory){
+  if(!victory || save.firstWinLoot) return false;
+  if(typeof endlessOn==="function" && endlessOn()) return false;
+  if(typeof divinaMode!=="undefined" && divinaMode) return false;
+  if(!(typeof campaignNumber==="function" && campaignNumber(currentArena) > 0)) return false;
+  // guardados que ya ganaron antes de esta regla: nada (la victoria actual ya marcó su arena como superada,
+  // y las estadísticas de desafíos todavía no la contaron: se cierran después del cofre)
+  const cleared = Object.keys(save.arenasCleared||{}).filter(a=>save.arenasCleared[a] && a!==currentArena);
+  let wins = 0; try{ if(typeof questsState==="function") wins = (questsState().stats||{}).wins|0; }catch(e){}
+  if(cleared.length || wins > 0){ save.firstWinLoot = "previa"; return false; }
+  return true;
+}
+// Objeto de la primera victoria: Muy Raro para la primera ranura vacía (FIRST_WIN_LOOT.slotOrder) o, si no
+// hay ninguna vacía, para la de menor stat relativo a su tabla.
+function firstWinLootSpec(classKey){
+  const order = FIRST_WIN_LOOT.slotOrder.filter(t=>ITEM_TYPES[t]);
+  let type = order.find(t=>!equippedItem(classKey, t));
+  if(!type){
+    const rel = t=>{ const it = equippedItem(classKey, t); return it ? itemStat(it)/RARITY_VALUES[t].legendario : 0; };
+    type = order.slice().sort((a,b)=>rel(a)-rel(b))[0];
+  }
+  return {tier:FIRST_WIN_LOOT.tier, type, firstWin:true};
 }
 // Categoría visible de un objeto (SET es verde aunque su poder base sea de legendario).
 function itemTier(it){ return it.set ? "set" : (LOOT_TIER_META[it.rarity] ? it.rarity : "comun"); }
@@ -209,9 +254,11 @@ function reforgeSetDuplicates(classKey, setId){
   const info = setDuplicateInfo(classKey, setId);
   if(info.dupes.length < 2) return {ok:false, reason:"Necesitás 2 piezas repetidas de este set"};
   if(!info.missing.length) return {ok:false, reason:"Ya tenés todas las piezas de este set"};
-  info.dupes.slice(0,2).forEach(it=>removeItemFromInventory(classKey, it.uid, false));
+  const used = info.dupes.slice(0,2);
+  used.forEach(it=>removeItemFromInventory(classKey, it.uid, false));
   const id = info.missing[(Math.random()*info.missing.length)|0];
   const it = makeDesignedItem(id); it.lootTier = "set";
+  const il = Math.min(...used.map(itemIlvl)); if(il > 1) it.ilvl = il; // conserva el nivel de objeto (el menor de las dos)
   if(typeof rollItemAffixes==="function") rollItemAffixes(it);
   addItemToInventory(classKey, it);
   persist();

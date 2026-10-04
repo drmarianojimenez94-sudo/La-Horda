@@ -418,9 +418,9 @@ function _abDrawGroundMarks(t){
     const q = Math.min(1, z.t/250)*Math.min(1, (z.d - z.t)/400), R = z.r*1.35;
     ctx.save();
     const rgb = z.k==="jaw" ? "255,70,150" : (z.k==="pull" ? "210,80,255" : "170,90,255");
-    ctx.fillStyle = `rgba(${rgb},${0.1*q})`; ctx.beginPath(); ctx.ellipse(z.x, z.y, R, R*AB_ASP, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = `rgba(${rgb},${0.1*q})`; ctx.beginPath(); ctx.arc(z.x, z.y, R, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = `rgba(${rgb},${0.6*q})`; ctx.lineWidth = 2;
-    for(let k=0;k<3;k++){ const rr = R*(1 - ((t*0.6 + k/3) % 1)); ctx.beginPath(); ctx.ellipse(z.x, z.y, rr, rr*AB_ASP, 0, 0, Math.PI*2); ctx.stroke(); }
+    for(let k=0;k<3;k++){ const rr = R*(1 - ((t*0.6 + k/3) % 1)); ctx.beginPath(); ctx.arc(z.x, z.y, rr, 0, Math.PI*2); ctx.stroke(); }
     ctx.restore();
     if(z.k==="grav") _abFx("abHeraldoZone", Math.floor(t*8), z.x, z.y, z.r*1.6, 0.85*q);
     else if(z.k==="pull") _abFx("abMorPull", Math.floor(t*8), z.x, z.y, z.r*1.5, 0.8*q);
@@ -584,7 +584,7 @@ function abDrawTop(){
   for(const o of abS.orbs){
     if(!inView(o.x, o.y, 80)) continue;
     ctx.save(); ctx.strokeStyle = `rgba(190,110,255,${0.35 + 0.2*Math.sin(t*8)})`; ctx.lineWidth = 2; ctx.setLineDash([5, 6]);
-    ctx.beginPath(); ctx.ellipse(o.tx, o.ty, AB_CFG.heraldo.zoneR, AB_CFG.heraldo.zoneR*AB_ASP, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+    ctx.beginPath(); ctx.arc(o.tx, o.ty, AB_CFG.heraldo.zoneR, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
     _abGlow(o.x, o.y, 40, "190,90,255", 0.7);
     if(!_abFx("abHeraldoOrb", Math.floor(t*10), o.x, o.y, 42, 1)){ ctx.fillStyle = "#c070ff"; ctx.beginPath(); ctx.arc(o.x, o.y, 10, 0, Math.PI*2); ctx.fill(); }
   }
@@ -603,7 +603,7 @@ function abDrawTop(){
     ctx.fillStyle = "rgba(10,4,16,0.8)"; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = urgent ? `rgba(255,70,90,${0.7 + 0.3*Math.sin(t*14)})` : "#e8c8ff"; ctx.lineWidth = 4;
     ctx.beginPath(); ctx.arc(cx, cy, 12, -Math.PI/2, -Math.PI/2 + q*Math.PI*2); ctx.stroke();
-    ctx.fillStyle = "#fff"; ctx.font = pxFont(11); ctx.textAlign = "center"; ctx.fillText("🤝", cx, cy + 4);
+    drawCanvasIcon(ctx, "🤝", cx, cy, 14, "#fff");
     ctx.restore();
   }
 }
@@ -631,7 +631,7 @@ function abDrawScreen(){
 }
 function _abMinimap(){
   const W = Math.min(150, VW*0.26), k = W/2200, Hh = 1560*k;
-  const X = VW - W - 12, Y = Math.max(70, VH*0.16), cx = X + W/2, cy = Y + Hh/2;
+  const X = hudMirrorX(VW - W - 12, W) /* modo zurdo: del otro lado (prefs.js) */, Y = Math.max(70, VH*0.16), cx = X + W/2, cy = Y + Hh/2;
   const tx = x=>cx + x*k, ty = y=>cy + y*k;
   ctx.save(); ctx.globalAlpha = 0.85;
   ctx.fillStyle = "rgba(6,2,12,0.72)"; ctx.beginPath(); ctx.ellipse(cx, cy, W/2 + 4, Hh/2 + 4, 0, 0, Math.PI*2); ctx.fill();

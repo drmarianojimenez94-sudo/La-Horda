@@ -9,7 +9,7 @@
    regalo": sus skins (de set y cromas) animadas como en la Tienda, la primera ya marcada (un toque
    en "¡La quiero!" alcanza). Al elegirla: "¡Es tuya!", queda equipada y sigue `onDone`.
    ============================================================ */
-let _starterPick = null, _starterDone = null, _starterSkinPick = null, _starterSkinBusy = false;
+let _starterPick = null, _starterDone = null, _starterSkinPick = null, _starterSkinBusy = false, _starterJustGot = null;
 const STARTER_ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
 
 function openStarterSelect(onDone){
@@ -38,7 +38,7 @@ function renderStarterSelect(){
     return `<button class="gallery-card starter-card ${_starterPick===c.id?"sel":""}" data-champ="${c.id}">
       <canvas class="champ-anim starter-anim" width="110" height="110" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
       <div class="gallery-card-name">${championShortName(c.id)}</div><div class="champ-title">${championTitle(c.id)}</div>
-      <div class="mychamp-meta">${STARTER_ROLE_LABEL[cls.roleCategory]||""}</div>
+      ${(STARTER_ROLE_LABEL[cls.roleCategory]||"") && STARTER_ROLE_LABEL[cls.roleCategory]!==championShortName(c.id) ? `<div class="mychamp-meta">${STARTER_ROLE_LABEL[cls.roleCategory]}</div>` : ""}
       <div class="starter-lore">${c.lore}</div>
     </button>`;
   }).join("");
@@ -49,7 +49,13 @@ function renderStarterSelect(){
       const box = document.getElementById("starter-confirm");
       document.getElementById("starter-confirm-text").innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? <details><summary>Ver habilidades</summary>${championGuideHTML(_starterPick)}</details>`;
       box.classList.remove("hidden");
-      box.scrollIntoView({block:"nearest", behavior:"smooth"});
+      // el cartel de confirmar es pegajoso (abajo): se baja todo lo posible sin perder de vista la carta
+      // elegida, así el cartel queda en su lugar debajo de las cartas y no tapa la etiqueta de otras
+      const sc = document.getElementById("starter-screen");
+      if(sc){
+        const top = card.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 8;
+        sc.scrollTo({top:Math.max(0, Math.min(sc.scrollHeight - sc.clientHeight, top)), behavior:"smooth"});
+      }
     });
   });
   const box = document.getElementById("starter-confirm"); if(box && !_starterPick) box.classList.add("hidden");
@@ -67,8 +73,10 @@ function grantStarterChampion(key){
 }
 document.getElementById("starter-yes-btn").addEventListener("click", ()=>{
   if(!_starterPick || !grantStarterChampion(_starterPick)) return;
-  if(typeof showNetToast==="function") showNetToast(`🎁 ${CLASSES[_starterPick].name} es tuyo`);
-  if(typeof needsStarterSkin==="function" && needsStarterSkin()){ openStarterSkinStep(); return; }
+  // el "¡X se une a tu equipo!" (neutro: hay guardianas) va en el subtítulo del paso 2 (antes era un aviso arriba a la derecha que tapaba el final
+  // del subtítulo); si no hay paso 2, un aviso normal (la pantalla que sigue no tiene nada arriba a la derecha)
+  if(typeof needsStarterSkin==="function" && needsStarterSkin()){ _starterJustGot = _starterPick; openStarterSkinStep(); return; }
+  if(typeof showNetToast==="function") showNetToast(`🎁 ${CLASSES[_starterPick].name} se une a tu equipo`);
   _starterFinish();
 });
 document.getElementById("starter-no-btn").addEventListener("click", ()=>{
@@ -115,7 +123,10 @@ function renderStarterSkinStep(){
     startChampAnimLoop();
     return;
   }
-  if(sub) sub.innerHTML = `Elegí una para <b style="color:${cls.color||"#ffcf5c"}">${_starterEsc(cls.name)}</b>: es tuya y la llevás puesta desde ya.`;
+  const nm = `<b style="color:${cls.color||"#ffcf5c"}">${_starterEsc(cls.name)}</b>`;
+  if(sub) sub.innerHTML = _starterJustGot===k
+    ? `🎁 ¡${nm} se une a tu equipo! Ahora elegí su skin: es tuya y la llevás puesta desde ya.`
+    : `Elegí una skin para ${nm}: es tuya y la llevás puesta desde ya.`;
   grid.innerHTML = opts.map(o=>`<button class="gallery-card starter-skin-card ${_starterSkinPick===o.id?"sel":""}" data-skin-gift="${o.id}">
       <span class="starter-skin-own hidden">¡Es tuya!</span>
       <canvas class="champ-anim starter-anim" width="110" height="110" data-class-key="${k}" data-skin="${o.id}" data-idle="1" style="background:${cls.color||"#888"}1c;"></canvas>
@@ -152,8 +163,8 @@ document.getElementById("starter-skin-yes-btn").addEventListener("click", ()=>{
   yes.disabled = true; document.getElementById("starter-skin-later-btn").disabled = true;
   if(row) row.classList.add("hidden"); // un instante de festejo y sigue solo
   if(typeof playSfx==="function") playSfx("levelup");
-  if(typeof showNetToast==="function") showNetToast(`🎨 ¡Es tuya! ${nm}${r.equipped ? " · equipada" : ""}`);
-  setTimeout(()=>{ _starterSkinBusy = false; if(state==="starter") _starterFinish(); }, 1100);
+  // sin aviso arriba a la derecha: el cartel de confirmar ya dice "¡Es tuya!" (el aviso tapaba el subtítulo)
+  setTimeout(()=>{ _starterSkinBusy = false; _starterJustGot = null; if(state==="starter") _starterFinish(); }, 1100);
 });
 document.getElementById("starter-skin-later-btn").addEventListener("click", ()=>{
   if(_starterSkinBusy) return;
