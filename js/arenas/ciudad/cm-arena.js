@@ -26,7 +26,9 @@ Object.assign(ANIM_PROFILES, {
 /* ---------------- atlas reales ----------------
    hMul = alto dibujado / radio. Escala respecto de un guardián (≈ 65 u): Saqueador 1.0 · Perro 0.7 ·
    Verdugo 1.6 · Campanero 1.35 · subjefes 1.8–2.0 · Presentador 2.1 → 3.0 (forma verdadera). */
-const CM_HMUL = {cm_saqueador:3.1, cm_perro:2.3, cm_raptor:3.1, cm_verdugo:2.9, cm_planidera:3.2, cm_acechante:2.8, cm_campanero:2.9, cm_sectario:3.1, cm_espectro:3.2,
+// Tope de escala de píxel (Q6 del alfa, docs/alfa/q6_arte_tecnico.md): Verdugo, Campanero, Acechante y Perro bajan
+// 2-10 % para no pasar de 3 píxeles de pantalla por píxel del arte en el celular (antes 3,1-3,4, más que un jefe).
+const CM_HMUL = {cm_saqueador:3.1, cm_perro:2.25, cm_raptor:3.1, cm_verdugo:2.6, cm_planidera:3.2, cm_acechante:2.65, cm_campanero:2.6, cm_sectario:3.1, cm_espectro:3.2,
   cm_maestro:3.8, cm_tramoyista:2.7, cm_dama:3.7, cm_presentador:3.5, cm_presentador2:3.3, cm_presentador3:3.4, cm_aldeano:2.6, cm_mujer:2.6, cm_nino:2.2};
 if(typeof CIUDAD_ATLAS!=="undefined") for(const k in CIUDAD_ATLAS){
   enemyAtlasPackLoad(k, CIUDAD_ATLAS[k].src, CIUDAD_ATLAS[k].meta);
