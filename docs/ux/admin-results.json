@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Anonymous rejected",
+    "ok": true
+  },
+  {
+    "name": "Ordinary user rejected",
+    "ok": true
+  },
+  {
+    "name": "Administrator status",
+    "ok": true
+  },
+  {
+    "name": "Minimal profile",
+    "ok": true
+  },
+  {
+    "name": "CAS rejects old version",
+    "ok": true
+  },
+  {
+    "name": "Invalid level 0",
+    "ok": true
+  },
+  {
+    "name": "Invalid level 100",
+    "ok": true
+  },
+  {
+    "name": "Invalid level 1.5",
+    "ok": true
+  },
+  {
+    "name": "Invalid level 4",
+    "ok": true
+  },
+  {
+    "name": "Unknown champion rejected",
+    "ok": true
+  },
+  {
+    "name": "Locked champion rejected",
+    "ok": true
+  },
+  {
+    "name": "Level updated",
+    "ok": true
+  },
+  {
+    "name": "Inventory and gold preserved",
+    "ok": true
+  },
+  {
+    "name": "Level budget and tree reset",
+    "ok": true
+  },
+  {
+    "name": "Increase succeeds",
+    "ok": true
+  }
+]

@@ -1,0 +1,134 @@
+{
+  "entries": [
+    {
+      "key": "tanque",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "guerrero",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "mago",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "soporte",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "segador",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "axiom",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "profeta",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "musashi",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "cazadora",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "nigromante",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "libertador",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "eren",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "ynara",
+      "role": "soporte",
+      "referenceVersion": 1,
+      "changes": {},
+      "budgetBefore": 0.8793664343221176,
+      "budgetAfter": 0.8793664343221176,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "myla",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "brasa",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "eslabon",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "morwen",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "farolero",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "iria",
+      "existing": true,
+      "changes": {}
+    }
+  ],
+  "runs": [
+    {
+      "key": "ynara",
+      "seed": 117,
+      "damage": 5719.385258774219,
+      "alive": true,
+      "hp": 260.32144,
+      "casts": 56,
+      "error": null
+    },
+    {
+      "key": "ynara",
+      "seed": 431,
+      "damage": 5552.193278643564,
+      "alive": true,
+      "hp": 274,
+      "casts": 56,
+      "error": null
+    },
+    {
+      "key": "ynara",
+      "seed": 991,
+      "damage": 5445.769593298487,
+      "alive": true,
+      "hp": 341.67144,
+      "casts": 57,
+      "error": null
+    }
+  ],
+  "violations": [],
+  "errors": []
+}

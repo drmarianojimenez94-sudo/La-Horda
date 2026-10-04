@@ -333,6 +333,7 @@ function equipItem(champKey, uid){
   champ.equipment = Object.assign(mkEquipment(), champ.equipment||{});
   const other = itemEquippedBy(uid);
   if(other && other!==champKey){ const eq = save.champions[other].equipment; for(const sl in eq) if(eq[sl]===uid) eq[sl] = null; }
+  if(typeof AlphaServices!=="undefined") AlphaServices.emit("equipment",{champion:champKey,equipment:item.type,...(item.set?{set:item.set}:{})});
   champ.equipment[item.type] = uid; // reemplaza lo que hubiera en esa ranura, sin duplicar bonificación
   invalidatePassiveCache();
   persist();

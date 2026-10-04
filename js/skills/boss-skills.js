@@ -415,10 +415,12 @@ function updateBossSkills(e, dt, tgt, dist, execOnly){
 
   if(t==="guardian_laberinto"){
     // Pisotón Sísmico (A, cuerpo a cuerpo) + Rocas del Laberinto (B, a distancia).
+    // Identidad de arena (lab-guardian.js): Laberinto de Piedra y su pisotón que lo derriba.
     skCdInit(e, 3500, 5000, 0);
+    if(typeof labGuardTick==="function" && labGuardTick(e, tgt, dist)) return false;
     if(e.skA<=0 && dist < 175){
       e.skA = 6500;
-      skCircleSlam(e, 175, 800, 1.3, {stun:600, knock:40}, "200,170,120", "¡Pisotón Sísmico!");
+      skCircleSlam(e, 175, 800, 1.3, {stun:600, knock:40}, "200,170,120", "¡Pisotón Sísmico!", null, ()=>{ if(typeof labGuardStompResolved==="function") labGuardStompResolved(e, 175); });
     } else if(e.skB<=0 && dist > 120 && dist < 580){
       e.skB = 8000;
       const pts = [{x:tgt.x, y:tgt.y}];

@@ -198,7 +198,8 @@ const want = a => !only.length || only.includes(a);
     await god();
     // anti-kite: todos lejos => ventisca marcada sobre ellos
     await E(() => { bossStrikes.length = 0; });
-    for (let k = 0; k < 10; k++) { await farFrom('mago_hielo_cristal', 900); await sleep(500); }
+    for (let k = 0; k < 80; k++) { await farFrom('mago_hielo_cristal', 900); await sleep(100); } // todos lejos de verdad ≥ 4 s (cada 500 ms el Mago y los bots se reacercaban y el contador bajaba)
+    console.log('  antikite', JSON.stringify(await E(() => { const e = hieBossMago(); return {state, ent: !!e, kite: e && Math.round(e._kiteMs || 0), d: e && heroes.map(h => Math.round(Math.hypot(h.x - e.x, h.y - e.y)) + (h.alive ? '' : 'x')), strikes: bossStrikes.map(s => s.kind), gh: HIE.gh && HIE.gh.st, boss: bossActive}; })));
     ok('hie_antikite', await E(() => bossStrikes.some(s => s.kind === 'ice')) || (await strikesNear('mago_hielo_cristal')) > 0);
     // transformación: el Demonio Gélido y su coraza
     await E(() => { const m = hieBossMago(); HIE.gh.cd = 1e9; m.hp = 1; damageEnemy(m, 1e9, {}); });

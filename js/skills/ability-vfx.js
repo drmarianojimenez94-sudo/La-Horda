@@ -14,6 +14,7 @@ function elementColor(sk, fallback){
 // Visuales de Nova de Escarcha que evolucionan con el nivel de maestría de la habilidad,
 // siguiendo la progresión de referencia N1 (anillo simple) -> N4 (círculo rúnico completo).
 function frostNovaVFX(caster, R, talentLevel){
+  vfxFrostCrown(caster.x,caster.y,R);
   const tier = tierOf(talentLevel);
   // N1: doble anillo de escarcha (siempre presente, crece con el área)
   particles.push({x:caster.x,y:caster.y, life:520, ring:true, maxLife:520, maxR:R, color:"#bfe8ff"});
@@ -114,8 +115,8 @@ function tieredBurstVFX(x, y, R, talentLevel, color, color2){
   // Capas que viajan por la red (las partículas de arriba son solo del anfitrión) y que crecen con
   // el nivel: así el salto Nv.1 → Nv.10 se ve igual en cooperativo y no depende de cada habilidad.
   const rgb = hexToRgb(color), k = 1 + 0.2*(tier-1);
-  if(tier>=2) vfxShock(x, y, R*0.2, R*1.15*k, rgb, 360, 1);
-  if(tier>=3) vfxBurst(x, y - 8, 6 + tier*3, "t_"+color, 150*k, 520, 3, 1, -50, 1);
+  vfxShock(x, y, R*0.2, R, rgb, 420, 2);
+  vfxBurst(x, y - 8, 6 + tier*2, "t_"+color, 110*k, 420, 3, 1, -40, 0);
   if(tier>=4) vfxShock(x, y, R*0.4, R*1.6*k, "255,255,255", 300, 1);
   if(talentLevel>=10){ vfxShock(x, y, R*0.6, R*2.2, rgb, 520, 2); vfxBurst(x, y - 10, 14, "t_"+color, 220, 650, 3.5, 2, -70, 1); }
   return tier;

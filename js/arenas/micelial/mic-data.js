@@ -33,6 +33,33 @@ const MIC_MAP = {
   ]
 };
 
+/* ---------------- GEOMETRÍA PINTADA = GEOMETRÍA JUGABLE ----------------
+   "Si se ve sólido, es sólido" (docs/bible/ARENA_BIBLE.md). El fondo pintado tiene montículos de
+   tocones, racimos de hongos, pilares y un estanque profundo DENTRO de la elipse caminable: antes se
+   atravesaban. Polígonos en PÍXELES DEL FONDO (1536x1024; mundo = MIC_WORLD.x0 + px*MIC_IMG.s),
+   trazados sobre el arte con tools/bible/arena-validator.js (lámina de depuración). c:[x,y,r] = círculo.
+   Separaciones mínimas >= 25 px de fondo (55 u): nunca cierran un bolsillo (lo verifica el validador). */
+const MIC_BG_SOLIDS = [
+  {id:"tocon_oeste",    p:[[520,300],[590,282],[650,318],[662,398],[622,440],[540,442],[508,392]]},
+  {id:"brasa_oeste",    p:[[345,365],[400,346],[446,372],[440,420],[362,426]]},
+  {id:"estaca_oeste",   c:[413,445,10]},
+  {id:"tocones_noreste",p:[[892,292],[1010,272],[1090,302],[1126,362],[1108,420],[1020,430],[930,402],[898,340]]},
+  {id:"tronco_puente",  p:[[1082,292],[1150,272],[1204,258],[1214,300],[1162,352],[1100,362]]},
+  {id:"tocon_norte",    c:[1015,250,14]},
+  {id:"hongos_norte",   p:[[790,200],[860,196],[872,250],[800,266]]},
+  {id:"raices_norte",   p:[[735,215],[800,205],[838,282],[826,346],[760,342],[730,282]]},
+  {id:"estanque_sur",   p:[[340,622],[470,622],[515,650],[505,705],[440,712],[352,700]], water:true},
+  // el trono de raíces y hongos que rodea al capullo (el círculo del capullo solo cubre su centro)
+  {id:"trono_madre",    p:[[700,430],[735,395],[790,385],[850,395],[890,440],[905,520],[880,590],[820,622],[760,622],[705,590],[690,520]]},
+  {id:"raices_suroeste",p:[[396,500],[470,486],[520,520],[512,582],[432,586],[396,552]]},
+  {id:"monticulo_sur",  p:[[548,690],[598,640],[642,680],[662,750],[602,800],[532,806],[536,762]]},
+  {id:"pilar_sur",      c:[723,790,16]},
+  {id:"hongos_sur",     p:[[868,700],[918,640],[958,650],[975,712],[968,762],[900,772]]},
+  {id:"hueco_sureste",  p:[[1030,700],[1066,652],[1122,640],[1172,662],[1160,702],[1110,762],[1060,806],[1032,782]]},
+  {id:"hongos_este",    p:[[1150,562],[1200,532],[1250,546],[1262,608],[1260,640],[1190,616],[1150,600]]},
+  {id:"roca_este",      c:[1009,597,12]}
+];
+
 /* ---------------- MICELIAL_STAGE: el ciclo de vida del escenario ---------------- */
 const MIC_STAGE = {GERM:0, COLON:1, MATUR:2, FLOR:3, CORAZON:4, MUERTA:5};
 const MIC_STAGES = [

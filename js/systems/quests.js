@@ -16,7 +16,7 @@
 
 const QUESTS_V = 1;
 function _qStatsDefault(){
-  return {runs:0, wins:0, losses:0, bosses:0, kills:0, subjefes:0, civ:0, fis:0, revives:0, timeMs:0,
+  return {runs:0, wins:0, losses:0, bosses:0, kills:0, subjefes:0, civ:0, fis:0, revives:0, duoEntries:0, timeMs:0,
     coopRuns:0, coopWins:0, full4:false, deathless:0, gradeA:0, gradeS:0, gradeSP:0,
     resoWins:0, resoBy:{}, divinaWins:0, divinaBest:0, maxRunKills:0, fastWinMs:0,
     night:false, closeWin:false, perfectRescue:false, duel5:false,
@@ -94,13 +94,13 @@ function _qLiveRun(){
   if(!R || R.ended || typeof player === "undefined" || !player || !player.stats) return null;
   const s = player.stats;
   const civ = (currentArena === "ciudad" && typeof cmS !== "undefined" && cmS) ? (cmS.saved|0) : 0;
-  return {kills:s.kills|0, fis:s.fissures|0, revives:s.revives|0, civ,
+  return {kills:s.kills|0, fis:s.fissures|0, revives:s.revives|0, duoEntries:s.duoEntries|0, civ,
     subjefes:(typeof subjefesDefeated !== "undefined" ? subjefesDefeated|0 : 0), timeMs:R.timeMs};
 }
 function questsView(){
   const q = questsState(), st = q.stats, live = _qLiveRun() || {};
   const V = Object.assign({}, st);
-  for(const k of ["kills","fis","revives","civ","subjefes","timeMs"]) V[k] = (st[k]||0) + (live[k]||0);
+  for(const k of ["kills","fis","revives","duoEntries","civ","subjefes","timeMs"]) V[k] = (st[k]||0) + (live[k]||0);
   V.maxRunKills = Math.max(st.maxRunKills||0, live.kills||0);
   V.minutes = Math.floor(V.timeMs/60000);
   V.cleared = save.arenasCleared || {};
@@ -155,7 +155,7 @@ function questsRoll(kind, key, V, exclude){
     if(out.length >= 3) break;
     if(t.champ && out.some(c=>c.champ)) continue;              // un solo desafío de guardián por rotación
     const c = {tpl:t.id, stat:t.stat, n:t.n[ix], gold:t.gold[ix], done:false};
-    if(t.champ){ const all = CHAMPION_CATALOG.map(x=>x.id); let i = Math.floor(rng()*all.length);
+    if(t.champ){ const all = CHAMPION_CATALOG.map(x=>x.id).filter(k=>typeof championInProgression!=="function" || championInProgression(k)); let i = Math.floor(rng()*all.length);
       for(let k=0;k<all.length && !owned.includes(all[i]); k++) i = (i+1) % all.length; c.champ = all[i]; }
     if(c.stat === "distinctArenas" || c.stat === "distinctChamps") c.set = [];
     c.base = _qChalStat(V, c);
@@ -330,7 +330,7 @@ function questsOnRunEnd(victory, opts){
   st.runs++; if(victory) st.wins++; else st.losses++;
   const kills = s.kills|0;
   st.kills += kills; st.maxRunKills = Math.max(st.maxRunKills, kills);
-  st.fis += s.fissures|0; st.revives += s.revives|0;
+  st.fis += s.fissures|0; st.revives += s.revives|0; st.duoEntries += s.duoEntries|0;
   if(!divina){ st.subjefes += (typeof subjefesDefeated !== "undefined" ? subjefesDefeated|0 : 0);
     if(currentArena === "ciudad" && typeof cmS !== "undefined" && cmS) st.civ += cmS.saved|0; }
   st.timeMs += R.timeMs;

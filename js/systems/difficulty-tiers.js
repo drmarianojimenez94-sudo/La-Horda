@@ -27,8 +27,8 @@
    ============================================================ */
 const DIFF_TIER_ORDER = ["normal", "pesadilla", "infierno"];
 const DIFF_TIERS = {
-  normal:   {label:"Normal",    color:"#d8cfb8", hp:1,    dmg:1,    bossDmg:1,    hitCap:1,    elite:1,   resist:0,    lootFactor:1,   itemLvl:0, xp:1,   gold:1,   lvlOffset:0,
-             desc:"La campaña como fue pensada."},
+  normal:   {label:"Normal",    color:"#d8cfb8", hp:0.9,  dmg:0.82, bossDmg:0.86, spawn:1.18,    hitCap:1,    elite:1,   resist:0,    lootFactor:1,   itemLvl:0, xp:1,   gold:1,   lvlOffset:0,
+             desc:"Campaña accesible: aprendé las arenas con margen para recuperarte."},
   pesadilla:{label:"Pesadilla", color:"#ff9a4a", hp:2.5,  dmg:2.3, bossDmg:1.3,  hitCap:1.3,  elite:1.8, resist:0.15, lootFactor:1.7, itemLvl:2, xp:1.6, gold:1.5, lvlOffset:36,
              desc:"La Horda vuelve con más vida, pega más fuerte, resiste el fuego, el hielo y el rayo, y trae más élites."},
   infierno: {label:"Infierno",  color:"#ff4a5a", hp:5.5,  dmg:4.5,  bossDmg:1.65, hitCap:1.6,  elite:2.6, resist:0.3,  lootFactor:2.6, itemLvl:4, xp:2.3, gold:2,   lvlOffset:62,
@@ -82,7 +82,7 @@ function diffSetSelected(k){
 function diffApplyToRun(rd, avgLevel){
   const T = diffTier(diffCurrent());
   rd.tier = diffCurrent();
-  if(T===DIFF_TIERS.normal) return rd;
+  if(T===DIFF_TIERS.normal){ rd.hp*=T.hp; rd.dmg*=T.dmg; rd.avgHp*=T.bossDmg; rd.spawnRate*=T.spawn; if(["bosque","hielo"].includes(currentArena)){rd.hp*=0.85;rd.dmg*=0.8;rd.spawnRate*=1.12;} return rd; }
   // nivel esperado corrido: el seguimiento parcial de REJUGAR mide la brecha contra ese nivel
   const exp = ((typeof currentArena!=="undefined" && DIFF.arenaLevel[currentArena]) || 1) + T.lvlOffset;
   const gap = Math.max(0, avgLevel - exp), rf = Math.min(DIFF.replayFollowMax, gap*DIFF.replayFollowPerLvl), rf0 = rd.replayFollow||0;

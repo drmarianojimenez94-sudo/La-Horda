@@ -146,13 +146,16 @@ const BOSS_ATTACKS = {
   levBite(e, t, d){
     if(!heroes.some(h=>h.alive && distance(e,h) <= 290)) return false;
     skCircleSlam(e, 225, 600, 1.1, {knock:40}, "120,210,230", null, "bossHeavyAttack");
+    e._levPose = "bite"; e._levPoseUntil = animNow + 1100; // pose de la hoja (mordida) mientras avisa y muerde
     vfxSprite("fxSpike", 0, e.x+e.fx*60, e.y+e.fy*40, 110, 900, null, 0.12, false, 0.95);
     bossAnnounce(e, "Mordida Abisal", "alejate del borde"); return true; },
   levCharge(e, t, d){
-    const tx = player.alive ? player : t; const dx = tx.x-e.x, dy = tx.y-e.y, l = Math.hypot(dx,dy)||1;
+    // el objetivo del director (héroe más cercano vivo), no el jugador LOCAL: en cooperativo el anfitrión
+    // apuntaba siempre a sí mismo
+    const tx = t; const dx = tx.x-e.x, dy = tx.y-e.y, l = Math.hypot(dx,dy)||1;
     e.fx = dx/l; e.fy = dy/l;
     skCharge(e, l, 1200, 900, 1.35, {knock:70}, "255,120,90", null);
-    e.levCharging = true;
+    e.levCharging = true; e._levPose = "dash"; e._levPoseUntil = animNow + 850 + Math.min(l + 110, 1200)/900*1000;
     bossAnnounce(e, "Embestida del Leviatán", "salí del carril"); return true; },
   levTail(e, t, d){
     if(!heroes.some(h=>h.alive && distance(e,h) <= 330)) return false;
@@ -407,6 +410,9 @@ function updateBossDirector(e, dt, tgt, dist){
   if(ph !== st.phase || life !== st.life){
     const first = st.phase===-1;
     st.phase = ph; st.life = life; st.idx = 0;
+    // la capa de fase de la música (audio.js) y el HUD leen bossPhase: sin esto quedaba en 1 toda la pelea
+    // (Minotauro, Guardián...). Nunca baja: el Ángel Gélido ya nace en fase 2 de la pelea de Hielo.
+    if(!d.byLevPhase) e.bossPhase = Math.max(e.bossPhase||1, Math.min(3, ph + 1 + life));
     if(!first){
       st.gap = 1400;
       const P = phases[ph];

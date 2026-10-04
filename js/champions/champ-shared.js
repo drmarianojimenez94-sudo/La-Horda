@@ -72,6 +72,7 @@ function heroSpeedMult(h){
   if(h.classKey==="eren") m *= erenSpeedMult(h);
   if(h.advAllyTimer>0) m *= 1 + EREN_CFG.advance.speedPct*EREN_CFG.advance.allyShare;
   m *= itemSpeedMult(h); // Paso del Cazador / Gracia Veloz (objetos)
+  m *= portadorSpeedMult(h);
   return m;
 }
 function heroAtkSpeedMult(h){
@@ -94,6 +95,24 @@ function heroDmgTakenMult(h){
   if(h.abHang) return 0;                       // Abismo: colgado del borde (el peligro es el reloj, no los golpes)
   if(h.classKey==="libertador") return libertadorDmgTakenMult(h);
   if(h.classKey==="eren") return erenDmgTakenMult(h);
+  return classicBastionMult(h);
+}
+// Anillo del Bastión en el piso, solo mientras protege a alguien (sin ruido cuando está solo).
+function drawClassicPassiveGround(t){
+  if(typeof heroes==="undefined" || !heroes || typeof CLASSIC_PASSIVES==="undefined") return;
+  const R = CLASSIC_PASSIVES.tanque.allyRadius;
+  for(const a of heroes){
+    if(!a.alive || a.classKey!=="tanque" || !inView(a.x, a.y, R)) continue;
+    if(!heroes.some(h=>h!==a && h.alive && Math.hypot(h.x-a.x, h.y-a.y) < R)) continue;
+    ctx.save(); ctx.globalAlpha = 0.16 + 0.05*Math.sin(t*2.2); ctx.strokeStyle = "#a9cdf0"; ctx.lineWidth = 3; ctx.setLineDash([14, 10]);
+    ctx.beginPath(); ctx.ellipse(a.x, a.y + 6, R, R*0.62, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore();
+  }
+}
+// Aldric — Bastión (CLASSIC_PASSIVES.tanque): los aliados cerca de un Aldric vivo reciben menos daño.
+function classicBastionMult(h){
+  if(!h || h.classKey==="tanque" || typeof heroes==="undefined" || !heroes) return 1;
+  const P = CLASSIC_PASSIVES.tanque;
+  for(const t of heroes){ if(t!==h && t.alive && t.classKey==="tanque" && Math.hypot(t.x-h.x, t.y-h.y) < P.allyRadius) return P.allyDmgTakenMult; }
   return 1;
 }
 function heroCcResist(h){

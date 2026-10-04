@@ -1,0 +1,187 @@
+name: Champion entry balance
+on:
+  pull_request:
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+  push:
+    branches: [main, 'chatgpt/**']
+    paths: ['js/**', 'css/**', 'server/**', 'tools/ux/**', 'tools/factory/**', 'tools/ascension/**', 'tools/founders/**', 'docs/founders/**', 'tools/alpha/**', 'tools/collection/**', 'tools/quality/**', 'docs/production/**', 'docs/ART_BIBLE.md', 'AGENTS.md', 'index.html', 'crystal-wars.html', 'tools/crystal-wars/**', 'docs/modes/**', 'docs/balance/**', 'tools/balance/**', 'tools/bible/**', 'tools/bosses/**', 'docs/bible/**', 'BALANCE_CAMPEONES.md', '.github/workflows/champion-entry-balance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  entry-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test tools/factory/test.js
+      - run: node tools/factory/boss-cli.js check
+      - run: node tools/alpha/public-defaults.js
+      - run: node tools/alpha/account-environments.js
+      - run: node tools/alpha/rooms-unit.js
+      - run: node tools/quality/test-single-champion-revive.js
+      - run: node tools/quality/test-floating-text.js
+      - run: node tools/quality/test-combat-language.js
+      - run: node tools/alpha/services-test.js
+      - run: node tools/alpha/event-receipts-test.js
+      - run: node tools/collection/check-collection.js
+      - run: node tools/quality/test-vfx-pools.js
+      - run: node tools/crystal-wars/test-simulation.js
+      - run: node tools/balance/check-entry-reference.js
+      - run: npm install --prefix /tmp/horda-balance --no-audit --no-fund playwright@1.61.1
+      - run: /tmp/horda-balance/node_modules/.bin/playwright install --with-deps chromium
+      - run: node tools/balance/entry-gate.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/champion-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/arena-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bible/boss-validator.js --strict
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/bosses/t_boss_arena_hooks.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-ability-inspector.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-tactical-panel.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-arena-briefing-tutorial.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-touch-targets.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/quality/test-classic-passives.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/test-text-overflow.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/portadores/test-elyra.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/portadores/test-ynara.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: npm ci --prefix server --no-audit --no-fund
+      - run: node tools/crystal-wars/browser-test.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/portadores/online-ynara.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/functional.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/online.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/ux/online-tactical.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node server/test-owner-recovery.js
+      - run: node tools/alpha/cloud-recovery.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node server/test-owner-policy.js
+      - run: node server/test-game-master.js
+      - run: node server/test-founders.js
+      - run: node server/test-presence.js
+      - run: node tools/alpha/gm-users-ui.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/founders/online-presence.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/alpha/gm-ui.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: |
+          python3 -m http.server 8813 > /tmp/alpha-http.log 2>&1 &
+          trap 'kill $!' EXIT
+          curl --retry 10 --retry-connrefused --retry-delay 1 --silent --fail http://127.0.0.1:8813/ > /dev/null
+          node tools/alpha/services-browser.js
+          node tools/alpha/navigation-profiles.js
+          node tools/alpha/training-test.js
+          node tools/alpha/training-player.js
+          node tools/alpha/main-flow.js
+          node tools/alpha/public-onboarding.js
+          node tools/collection/shop-pricing-browser.js
+          node tools/factory/event-runtime.js
+          node tools/factory/options-layout.js
+          node tools/art/alpha_set_skins/browser.js
+          node tools/art/unique_skins/check.js
+          node tools/collection/browser-collection.js
+          node tools/ascension/functional.js
+          node tools/ascension/performance.js
+          node tools/factory/duplicity.js
+          node tools/art/roster_gate.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+          SITE: http://127.0.0.1:8813
+          SE_BASE_URL: http://127.0.0.1:8813
+          ENTRY_BASE_URL: http://127.0.0.1:8813
+          FACTORY_BASE_URL: http://127.0.0.1:8813
+          ROSTER_BASE_URL: http://127.0.0.1:8813
+      - run: node test-admin.js
+        working-directory: server
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: champion-entry-balance-results
+          path: |
+            docs/balance/entry-gate-results.json
+            docs/ynara/
+            docs/elyra/
+            docs/ux/
+            docs/portadores/ynara-*
+            docs/founders/
+            docs/art-gate/
+
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: isolated-test-only
+          POSTGRES_DB: horda_test_operations
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm ci --prefix server --no-audit --no-fund
+      - run: node server/test-postgres.js
+        env:
+          HORDA_TEST_PG_URL: postgres://postgres:isolated-test-only@127.0.0.1:5432/horda_test_operations
+  safari-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install --prefix /tmp/horda-webkit --no-audit --no-fund playwright@1.61.1
+      - run: /tmp/horda-webkit/node_modules/.bin/playwright install --with-deps webkit
+      - run: |
+          python3 -m http.server 8814 > /tmp/webkit-http.log 2>&1 &
+          trap 'kill $!' EXIT
+          curl --retry 10 --retry-connrefused --retry-delay 1 --silent --fail http://127.0.0.1:8814/ > /dev/null
+          node tools/alpha/main-flow.js
+        env:
+          NODE_PATH: /tmp/horda-webkit/node_modules
+          SITE: http://127.0.0.1:8814
+          BROWSER: webkit

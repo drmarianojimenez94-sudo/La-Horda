@@ -1,0 +1,52 @@
+[
+  {
+    "id": "vesper",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "nahir",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "baltra",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "maura",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "dariel",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "orsa",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "tibor",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "zahra",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "renko",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  },
+  {
+    "id": "sira",
+    "status": "STRUCTURAL_PASS",
+    "errors": []
+  }
+]

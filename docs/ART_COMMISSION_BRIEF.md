@@ -1816,6 +1816,160 @@ Style: dark-fantasy detailed 16-bit pixel art, crisp pixels, no blur, no anti-al
 
 </details>
 
+## R — Redibujo por DENSIDAD DE PÍXEL medida (auditoría de jefes 2026-10)
+
+`node tools/art/arena_lineup.js <dir>` dibuja cada tipo con el código del juego, a escala real, junto al
+Caballero (Master Reference), y mide las **unidades de mundo por píxel de arte** contra la densidad típica del roster
+de campeones (mediana: 0,95 u/px). Con ×4 o más, el arte se ve en bloques al lado de los campeones: es "mezcla de densidades de píxel" (ART_BIBLE §1,
+NO) y pasa a **REDRAW REQUIRED**. Resultados completos: `docs/bible/generated/ENEMY_ART_AUDIT.md`.
+
+| Ficha | Entidad | Densidad medida | Estado |
+|---|---|---|---|
+| **R-01** | Titán de Piedra (`mn_titan`, subjefe de las Minas) | 4,78 u/px · **×5,0** | REDRAW — ficha nueva, abajo |
+| **F-01 → R** | Cerbero (`mn_cerbero`, jefe de las Minas) | 5,16 u/px · **×5,4** (el outlier más grande del juego) | REDRAW — sube de "faltante que se mantiene" a prioridad: usar los prompts de F-01 |
+
+Hasta que llegue el arte nuevo se conserva el actual (regla de preservación, ART_BIBLE §8): no se los escala
+con filtro ni se los "suaviza". Integración: `tools/art/redraw/` (mismo flujo que las demás hojas) y volver a
+correr `tools/art/arena_lineup.js` (objetivo: ≤ ×2,5).
+
+### R-01 · Titán de Piedra — `mn_titan`
+
+| Campo | Valor |
+|---|---|
+| Arena | 09 · Minas Profundas |
+| Rango | Subjefe (nivel 8) |
+| Rol en combate | Coloso lento (radio 54): golpe, onda sísmica en línea, lanza rocas, PISOTÓN que apaga las luces; desde el 50 % provoca derrumbes. |
+| Por qué | Arte de 47×63 px dibujado a ~153 u de alto: ×5,0 la densidad típica de los campeones. Sus animaciones están completas: el redibujo conserva los mismos estados. |
+| Paleta | #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal) |
+| Celda | 192×192 px (personaje ≈160 px de alto) |
+| Entrega | `mn_titan_1.png` … `mn_titan_5.png`, una fila por imagen |
+
+**Descripción visual:** el coloso minero de las Minas, fusionado con la roca: casco de minero gigante incrustado,
+vigas y cadenas clavadas en los hombros, grietas con fuego adentro y cristales infernales violetas en la espalda
+(el mismo motivo violeta del Devoraluz y del Portal). Silueta: brazos enormes hasta el piso, piernas cortas.
+
+**Planilla de animaciones:**
+
+| Imagen | Estado | Cuadros | Bucle |
+|---|---|---|---|
+| 1 | quieto (3) + caminar (5) | 8 | sí |
+| 2 | golpe / onda sísmica | 8 | no |
+| 3 | lanzar roca | 8 | no |
+| 4 | pisotón | 8 | no |
+| 5 | golpe recibido (2) + muerte (8) | 10 | no |
+
+```text
+PROMPT 1/5 — Titán de Piedra: quieto y caminar
+Hoja de sprites para un videojuego. PERSONAJE: EL TITÁN DE PIEDRA, un coloso minero corrompido: cuerpo de roca maciza fusionado con restos de un minero gigante (casco abollado incrustado en la cabeza, cadenas y vigas de madera clavadas en los hombros), grietas que dejan ver fuego adentro y cristales infernales violetas que le brotan de la espalda; brazos enormes hasta el piso, piernas cortas y anchas.
+PALETA: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+ESTA IMAGEN: quieto y caminar, 8 cuadros, mirando a la DERECHA, de perfil (el juego lo espeja para la izquierda). cuadros 1–3: quieto, respira pesado y le cae polvo; cuadros 4–8: camina lento, cada paso hace temblar el piso.
+Formato: UNA sola fila de 8 cuadros (8 columnas × 1 fila), celdas iguales de 192×192 px separadas por 1 px. Fondo transparente; si no se puede, un color plano magenta #FF00FF de borde a borde (sin degradé ni textura). El personaje tiene el MISMO tamaño en todos los cuadros (≈160 px de alto) y apoya los pies sobre la misma línea, centrado en su celda. Sin texto, sin números, sin marcos, sin sombra en el piso, sin escenario ni efectos de fondo.
+Estilo: pixel art 16-bit de fantasía oscura, detallado, píxeles nítidos, sin desenfoque, sin antialiasing, paleta limitada, silueta fuerte y contorno oscuro de 1 píxel, luz desde arriba a la izquierda, vista cenital 3/4 (cámara desde arriba en diagonal, como un ARPG clásico).
+```
+
+<details><summary>English</summary>
+
+```text
+PROMPT 1/5 — Stone Titan: idle and walk
+Sprite sheet for a video game. CHARACTER: THE STONE TITAN, a corrupted mining colossus: a massive rock body fused with the remains of a giant miner (a dented helmet embedded in the head, chains and wooden beams driven into the shoulders), cracks showing fire inside and violet infernal crystals sprouting from the back; huge arms reaching the floor, short wide legs.
+PALETTE: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+THIS IMAGE: idle and walk, 8 frames, facing RIGHT, side view (the game mirrors it for the left). frames 1–3: idle, heavy breathing with dust falling; frames 4–8: slow walk, each step shakes the ground.
+Format: ONE single row of 8 frames (8 columns × 1 row), equal 192×192 px cells with a 1 px gap. Transparent background; if not possible, a flat magenta #FF00FF background edge to edge (no gradient, no texture). The character is the SAME size in every frame (about 160 px tall), feet on the same baseline, centered in its cell. No text, no numbers, no frames or borders, no ground shadow, no scenery, no background effects.
+Style: dark-fantasy detailed 16-bit pixel art, crisp pixels, no blur, no anti-aliasing, limited palette, strong silhouette with a 1-pixel dark outline, light from the top left, top-down 3/4 view (classic ARPG camera).
+```
+
+</details>
+
+```text
+PROMPT 2/5 — Titán de Piedra: golpe y onda sísmica
+Hoja de sprites para un videojuego. PERSONAJE: EL TITÁN DE PIEDRA, un coloso minero corrompido: cuerpo de roca maciza fusionado con restos de un minero gigante (casco abollado incrustado en la cabeza, cadenas y vigas de madera clavadas en los hombros), grietas que dejan ver fuego adentro y cristales infernales violetas que le brotan de la espalda; brazos enormes hasta el piso, piernas cortas y anchas.
+PALETA: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+ESTA IMAGEN: golpe y onda sísmica, 8 cuadros, mirando a la DERECHA, de perfil (el juego lo espeja para la izquierda). cuadros 1–4: levanta los dos brazos sobre la cabeza; cuadros 5–8: los clava en el piso y la roca se raja hacia adelante.
+Formato: UNA sola fila de 8 cuadros (8 columnas × 1 fila), celdas iguales de 192×192 px separadas por 1 px. Fondo transparente; si no se puede, un color plano magenta #FF00FF de borde a borde (sin degradé ni textura). El personaje tiene el MISMO tamaño en todos los cuadros (≈160 px de alto) y apoya los pies sobre la misma línea, centrado en su celda. Sin texto, sin números, sin marcos, sin sombra en el piso, sin escenario ni efectos de fondo.
+Estilo: pixel art 16-bit de fantasía oscura, detallado, píxeles nítidos, sin desenfoque, sin antialiasing, paleta limitada, silueta fuerte y contorno oscuro de 1 píxel, luz desde arriba a la izquierda, vista cenital 3/4 (cámara desde arriba en diagonal, como un ARPG clásico).
+```
+
+<details><summary>English</summary>
+
+```text
+PROMPT 2/5 — Stone Titan: slam and seismic wave
+Sprite sheet for a video game. CHARACTER: THE STONE TITAN, a corrupted mining colossus: a massive rock body fused with the remains of a giant miner (a dented helmet embedded in the head, chains and wooden beams driven into the shoulders), cracks showing fire inside and violet infernal crystals sprouting from the back; huge arms reaching the floor, short wide legs.
+PALETTE: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+THIS IMAGE: slam and seismic wave, 8 frames, facing RIGHT, side view (the game mirrors it for the left). frames 1–4: raises both arms overhead; frames 5–8: drives them into the floor and the rock cracks forward.
+Format: ONE single row of 8 frames (8 columns × 1 row), equal 192×192 px cells with a 1 px gap. Transparent background; if not possible, a flat magenta #FF00FF background edge to edge (no gradient, no texture). The character is the SAME size in every frame (about 160 px tall), feet on the same baseline, centered in its cell. No text, no numbers, no frames or borders, no ground shadow, no scenery, no background effects.
+Style: dark-fantasy detailed 16-bit pixel art, crisp pixels, no blur, no anti-aliasing, limited palette, strong silhouette with a 1-pixel dark outline, light from the top left, top-down 3/4 view (classic ARPG camera).
+```
+
+</details>
+
+```text
+PROMPT 3/5 — Titán de Piedra: lanzar roca
+Hoja de sprites para un videojuego. PERSONAJE: EL TITÁN DE PIEDRA, un coloso minero corrompido: cuerpo de roca maciza fusionado con restos de un minero gigante (casco abollado incrustado en la cabeza, cadenas y vigas de madera clavadas en los hombros), grietas que dejan ver fuego adentro y cristales infernales violetas que le brotan de la espalda; brazos enormes hasta el piso, piernas cortas y anchas.
+PALETA: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+ESTA IMAGEN: lanzar roca, 8 cuadros, mirando a la DERECHA, de perfil (el juego lo espeja para la izquierda). cuadros 1–4: arranca un bloque del piso; cuadros 5–8: lo arroja hacia adelante.
+Formato: UNA sola fila de 8 cuadros (8 columnas × 1 fila), celdas iguales de 192×192 px separadas por 1 px. Fondo transparente; si no se puede, un color plano magenta #FF00FF de borde a borde (sin degradé ni textura). El personaje tiene el MISMO tamaño en todos los cuadros (≈160 px de alto) y apoya los pies sobre la misma línea, centrado en su celda. Sin texto, sin números, sin marcos, sin sombra en el piso, sin escenario ni efectos de fondo.
+Estilo: pixel art 16-bit de fantasía oscura, detallado, píxeles nítidos, sin desenfoque, sin antialiasing, paleta limitada, silueta fuerte y contorno oscuro de 1 píxel, luz desde arriba a la izquierda, vista cenital 3/4 (cámara desde arriba en diagonal, como un ARPG clásico).
+```
+
+<details><summary>English</summary>
+
+```text
+PROMPT 3/5 — Stone Titan: rock throw
+Sprite sheet for a video game. CHARACTER: THE STONE TITAN, a corrupted mining colossus: a massive rock body fused with the remains of a giant miner (a dented helmet embedded in the head, chains and wooden beams driven into the shoulders), cracks showing fire inside and violet infernal crystals sprouting from the back; huge arms reaching the floor, short wide legs.
+PALETTE: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+THIS IMAGE: rock throw, 8 frames, facing RIGHT, side view (the game mirrors it for the left). frames 1–4: tears a block out of the floor; frames 5–8: hurls it forward.
+Format: ONE single row of 8 frames (8 columns × 1 row), equal 192×192 px cells with a 1 px gap. Transparent background; if not possible, a flat magenta #FF00FF background edge to edge (no gradient, no texture). The character is the SAME size in every frame (about 160 px tall), feet on the same baseline, centered in its cell. No text, no numbers, no frames or borders, no ground shadow, no scenery, no background effects.
+Style: dark-fantasy detailed 16-bit pixel art, crisp pixels, no blur, no anti-aliasing, limited palette, strong silhouette with a 1-pixel dark outline, light from the top left, top-down 3/4 view (classic ARPG camera).
+```
+
+</details>
+
+```text
+PROMPT 4/5 — Titán de Piedra: pisotón
+Hoja de sprites para un videojuego. PERSONAJE: EL TITÁN DE PIEDRA, un coloso minero corrompido: cuerpo de roca maciza fusionado con restos de un minero gigante (casco abollado incrustado en la cabeza, cadenas y vigas de madera clavadas en los hombros), grietas que dejan ver fuego adentro y cristales infernales violetas que le brotan de la espalda; brazos enormes hasta el piso, piernas cortas y anchas.
+PALETA: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+ESTA IMAGEN: pisotón, 8 cuadros, mirando a la DERECHA, de perfil (el juego lo espeja para la izquierda). cuadros 1–4: levanta una pierna; cuadros 5–8: pisotón con onda de polvo y chispas (sin el anillo de efecto: ese lo pone el juego).
+Formato: UNA sola fila de 8 cuadros (8 columnas × 1 fila), celdas iguales de 192×192 px separadas por 1 px. Fondo transparente; si no se puede, un color plano magenta #FF00FF de borde a borde (sin degradé ni textura). El personaje tiene el MISMO tamaño en todos los cuadros (≈160 px de alto) y apoya los pies sobre la misma línea, centrado en su celda. Sin texto, sin números, sin marcos, sin sombra en el piso, sin escenario ni efectos de fondo.
+Estilo: pixel art 16-bit de fantasía oscura, detallado, píxeles nítidos, sin desenfoque, sin antialiasing, paleta limitada, silueta fuerte y contorno oscuro de 1 píxel, luz desde arriba a la izquierda, vista cenital 3/4 (cámara desde arriba en diagonal, como un ARPG clásico).
+```
+
+<details><summary>English</summary>
+
+```text
+PROMPT 4/5 — Stone Titan: stomp
+Sprite sheet for a video game. CHARACTER: THE STONE TITAN, a corrupted mining colossus: a massive rock body fused with the remains of a giant miner (a dented helmet embedded in the head, chains and wooden beams driven into the shoulders), cracks showing fire inside and violet infernal crystals sprouting from the back; huge arms reaching the floor, short wide legs.
+PALETTE: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+THIS IMAGE: stomp, 8 frames, facing RIGHT, side view (the game mirrors it for the left). frames 1–4: lifts one leg; frames 5–8: stomp with dust and sparks (no ring effect: the game adds it).
+Format: ONE single row of 8 frames (8 columns × 1 row), equal 192×192 px cells with a 1 px gap. Transparent background; if not possible, a flat magenta #FF00FF background edge to edge (no gradient, no texture). The character is the SAME size in every frame (about 160 px tall), feet on the same baseline, centered in its cell. No text, no numbers, no frames or borders, no ground shadow, no scenery, no background effects.
+Style: dark-fantasy detailed 16-bit pixel art, crisp pixels, no blur, no anti-aliasing, limited palette, strong silhouette with a 1-pixel dark outline, light from the top left, top-down 3/4 view (classic ARPG camera).
+```
+
+</details>
+
+```text
+PROMPT 5/5 — Titán de Piedra: golpe recibido y muerte
+Hoja de sprites para un videojuego. PERSONAJE: EL TITÁN DE PIEDRA, un coloso minero corrompido: cuerpo de roca maciza fusionado con restos de un minero gigante (casco abollado incrustado en la cabeza, cadenas y vigas de madera clavadas en los hombros), grietas que dejan ver fuego adentro y cristales infernales violetas que le brotan de la espalda; brazos enormes hasta el piso, piernas cortas y anchas.
+PALETA: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+ESTA IMAGEN: golpe recibido y muerte, 10 cuadros, mirando a la DERECHA, de perfil (el juego lo espeja para la izquierda). cuadros 1–2: golpe recibido (se le saltan esquirlas); cuadros 3–10: muerte, se desmorona en bloques y el fuego interior se apaga.
+Formato: UNA sola fila de 10 cuadros (10 columnas × 1 fila), celdas iguales de 192×192 px separadas por 1 px. Fondo transparente; si no se puede, un color plano magenta #FF00FF de borde a borde (sin degradé ni textura). El personaje tiene el MISMO tamaño en todos los cuadros (≈160 px de alto) y apoya los pies sobre la misma línea, centrado en su celda. Sin texto, sin números, sin marcos, sin sombra en el piso, sin escenario ni efectos de fondo.
+Estilo: pixel art 16-bit de fantasía oscura, detallado, píxeles nítidos, sin desenfoque, sin antialiasing, paleta limitada, silueta fuerte y contorno oscuro de 1 píxel, luz desde arriba a la izquierda, vista cenital 3/4 (cámara desde arriba en diagonal, como un ARPG clásico).
+```
+
+<details><summary>English</summary>
+
+```text
+PROMPT 5/5 — Stone Titan: hit and death
+Sprite sheet for a video game. CHARACTER: THE STONE TITAN, a corrupted mining colossus: a massive rock body fused with the remains of a giant miner (a dented helmet embedded in the head, chains and wooden beams driven into the shoulders), cracks showing fire inside and violet infernal crystals sprouting from the back; huge arms reaching the floor, short wide legs.
+PALETTE: #120c08 (negro), #4a3a2a (roca oscura), #8a6a4a (roca), #c8a878 (roca iluminada), #ff7a2a (grieta de fuego), #b04ad8 (cristal infernal).
+THIS IMAGE: hit and death, 10 frames, facing RIGHT, side view (the game mirrors it for the left). frames 1–2: hit reaction (shards fly off); frames 3–10: death, crumbles into blocks and the inner fire goes out.
+Format: ONE single row of 10 frames (10 columns × 1 row), equal 192×192 px cells with a 1 px gap. Transparent background; if not possible, a flat magenta #FF00FF background edge to edge (no gradient, no texture). The character is the SAME size in every frame (about 160 px tall), feet on the same baseline, centered in its cell. No text, no numbers, no frames or borders, no ground shadow, no scenery, no background effects.
+Style: dark-fantasy detailed 16-bit pixel art, crisp pixels, no blur, no anti-aliasing, limited palette, strong silhouette with a 1-pixel dark outline, light from the top left, top-down 3/4 view (classic ARPG camera).
+```
+
+</details>
+
+
+
 ## F — Faltantes que se mantienen (sin reemplazo)
 
 Tienen animación suficiente para no verse tiesos; se listan para completar el encargo. Mismo formato: prompts de una fila.

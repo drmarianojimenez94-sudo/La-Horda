@@ -43,7 +43,7 @@ Object.assign(SET_SKINS, {
  },
  "sistema": {
   "champ": "axiom",
-  "name": "Axiom, Skin Z · Realidad Corrupta",
+  "name": "Axiom, Realidad Corrupta",
   "src": "assets/sprites/champions/axiom/skins/sistema/preview.png",
   "preview": "assets/sprites/champions/axiom/skins/sistema/preview.png",
   "packs": {

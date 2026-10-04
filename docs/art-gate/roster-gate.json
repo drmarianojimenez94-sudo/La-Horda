@@ -1,0 +1,2834 @@
+{
+ "reference": {
+  "champion": "tanque",
+  "bodyPx": 59,
+  "foot": -2,
+  "tolerance": {
+   "height": 0.04,
+   "foot": 2
+  }
+ },
+ "appearances": 113,
+ "scaleFailures": [],
+ "presentationFailures": [],
+ "errors": [],
+ "metrics": {
+  "tanque": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 54,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 44,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 67,
+    "w": 57,
+    "foot": -2
+   }
+  },
+  "tanque@baluarte": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 60,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 56,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "tanque@tanque_ancestral": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 58,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 62,
+    "w": 55,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 58,
+    "foot": -2
+   }
+  },
+  "tanque@tanque_juicio": {
+   "front": {
+    "body": 58,
+    "full": 63,
+    "w": 60,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 47,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   }
+  },
+  "guerrero": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 47,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 65,
+    "w": 49,
+    "foot": -2
+   }
+  },
+  "guerrero@nocturno": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 53,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 48,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 53,
+    "foot": -2
+   }
+  },
+  "mago": {
+   "front": {
+    "body": 58,
+    "full": 61,
+    "w": 52,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 61,
+    "w": 52,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 61,
+    "w": 52,
+    "foot": -2
+   }
+  },
+  "mago@convergencia": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 67,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 54,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   }
+  },
+  "soporte": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 53,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 58,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 67,
+    "w": 56,
+    "foot": -2
+   }
+  },
+  "soporte@custodio": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 61,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 48,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 51,
+    "foot": -2
+   }
+  },
+  "segador": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 61,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 68,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 53,
+    "foot": -2
+   }
+  },
+  "segador@marea": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 48,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 52,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 52,
+    "foot": -2
+   }
+  },
+  "segador@segador_escarcha": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 56,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 56,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 64,
+    "w": 59,
+    "foot": -2
+   }
+  },
+  "axiom": {
+   "front": {
+    "body": 58,
+    "full": 65,
+    "w": 55,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 56,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 68,
+    "w": 67,
+    "foot": -2
+   }
+  },
+  "axiom@sistema": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 48,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 46,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 48,
+    "foot": -2
+   }
+  },
+  "axiom@axiom_piedra": {
+   "front": {
+    "body": 59,
+    "full": 67,
+    "w": 47,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 68,
+    "w": 46,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 71,
+    "w": 54,
+    "foot": -2
+   }
+  },
+  "profeta": {
+   "front": {
+    "body": 59,
+    "full": 68,
+    "w": 53,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 61,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 60,
+    "w": 41,
+    "foot": -2
+   }
+  },
+  "profeta@profecia": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 45,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 40,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 51,
+    "foot": -2
+   }
+  },
+  "profeta@profeta_ancestral": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 47,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 63,
+    "w": 45,
+    "foot": -2
+   }
+  },
+  "musashi": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 61,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 61,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 45,
+    "foot": -2
+   }
+  },
+  "musashi@errante": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 49,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 42,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 52,
+    "foot": -2
+   }
+  },
+  "musashi@musashi_ancestral": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 65,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 65,
+    "w": 71,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 66,
+    "foot": -2
+   }
+  },
+  "cazadora": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 57,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 49,
+    "foot": -2
+   }
+  },
+  "cazadora@manada": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 53,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 61,
+    "w": 47,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   }
+  },
+  "cazadora@cazadora_escarcha": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 61,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 54,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 53,
+    "foot": -2
+   }
+  },
+  "nigromante": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 67,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 43,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 40,
+    "foot": -2
+   }
+  },
+  "nigromante@requiem": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 60,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 66,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 64,
+    "w": 59,
+    "foot": -2
+   }
+  },
+  "nigromante@nigromante_escarcha": {
+   "front": {
+    "body": 58,
+    "full": 69,
+    "w": 60,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 68,
+    "w": 71,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 68,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "nigromante@nigromante_piedra": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 53,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 52,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   }
+  },
+  "libertador": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 55,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 58,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 42,
+    "foot": -2
+   }
+  },
+  "libertador@granadero": {
+   "front": {
+    "body": 58,
+    "full": 61,
+    "w": 41,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 41,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 42,
+    "foot": -2
+   }
+  },
+  "libertador@libertador_escarcha": {
+   "front": {
+    "body": 60,
+    "full": 62,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 60,
+    "w": 39,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 44,
+    "foot": -2
+   }
+  },
+  "libertador@libertador_ancestral": {
+   "front": {
+    "body": 58,
+    "full": 59,
+    "w": 45,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 60,
+    "w": 42,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 40,
+    "foot": -2
+   }
+  },
+  "eren": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 58,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 59,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 49,
+    "foot": -2
+   }
+  },
+  "eren@legion": {
+   "front": {
+    "body": 58,
+    "full": 60,
+    "w": 50,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 63,
+    "w": 52,
+    "foot": -2
+   }
+  },
+  "ynara": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 41,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 41,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 65,
+    "w": 43,
+    "foot": -2
+   }
+  },
+  "ynara@santa_paciencia": {
+   "front": {
+    "body": 59,
+    "full": 67,
+    "w": 47,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 44,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 66,
+    "w": 44,
+    "foot": -2
+   }
+  },
+  "ynara@ynara_celeste": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 41,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 38,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 42,
+    "foot": -2
+   }
+  },
+  "myla": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 45,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 66,
+    "w": 47,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 44,
+    "foot": -2
+   }
+  },
+  "myla@merienda_magica": {
+   "front": {
+    "body": 60,
+    "full": 61,
+    "w": 44,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 49,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 60,
+    "w": 43,
+    "foot": -2
+   }
+  },
+  "myla@myla_arandanos": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 60,
+    "w": 46,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 47,
+    "foot": -2
+   }
+  },
+  "brasa": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 45,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 61,
+    "w": 49,
+    "foot": -2
+   }
+  },
+  "brasa@ultimo_turno": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 48,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 43,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 51,
+    "foot": -2
+   }
+  },
+  "eslabon": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 56,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 59,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 64,
+    "w": 55,
+    "foot": -2
+   }
+  },
+  "eslabon@juramento_roto": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 63,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 62,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 59,
+    "foot": -2
+   }
+  },
+  "morwen": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 52,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 50,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 47,
+    "foot": -2
+   }
+  },
+  "morwen@vidrio_negro": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 49,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 55,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 47,
+    "foot": -2
+   }
+  },
+  "farolero": {
+   "front": {
+    "body": 59,
+    "full": 67,
+    "w": 55,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 66,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 68,
+    "w": 53,
+    "foot": -2
+   }
+  },
+  "farolero@lumbre_persistente": {
+   "front": {
+    "body": 59,
+    "full": 68,
+    "w": 61,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 66,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 68,
+    "w": 58,
+    "foot": -2
+   }
+  },
+  "iria": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 51,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 47,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   }
+  },
+  "iria@hilo_umbral": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 47,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 49,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 52,
+    "foot": -2
+   }
+  },
+  "vesper": {
+   "front": {
+    "body": 60,
+    "full": 66,
+    "w": 68,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 67,
+    "w": 65,
+    "foot": -2
+   }
+  },
+  "vesper@exp_vesper": {
+   "front": {
+    "body": 58,
+    "full": 69,
+    "w": 71,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 67,
+    "w": 66,
+    "foot": -2
+   }
+  },
+  "vesper@vesper_skin": {
+   "front": {
+    "body": 59,
+    "full": 68,
+    "w": 73,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 58,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 66,
+    "w": 66,
+    "foot": -2
+   }
+  },
+  "vesper@vesper_croma": {
+   "front": {
+    "body": 60,
+    "full": 66,
+    "w": 68,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 55,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 67,
+    "w": 65,
+    "foot": -2
+   }
+  },
+  "nahir": {
+   "front": {
+    "body": 59,
+    "full": 67,
+    "w": 52,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 61,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 71,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "nahir@exp_nahir": {
+   "front": {
+    "body": 59,
+    "full": 66,
+    "w": 58,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 60,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 70,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "nahir@nahir_skin": {
+   "front": {
+    "body": 58,
+    "full": 68,
+    "w": 57,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 64,
+    "w": 66,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 70,
+    "w": 63,
+    "foot": -2
+   }
+  },
+  "nahir@nahir_croma": {
+   "front": {
+    "body": 59,
+    "full": 67,
+    "w": 52,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 61,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 71,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "baltra": {
+   "front": {
+    "body": 59,
+    "full": 69,
+    "w": 62,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 66,
+    "w": 50,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 68,
+    "w": 58,
+    "foot": -2
+   }
+  },
+  "baltra@exp_baltra": {
+   "front": {
+    "body": 59,
+    "full": 75,
+    "w": 65,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 67,
+    "w": 52,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 67,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "baltra@baltra_skin": {
+   "front": {
+    "body": 59,
+    "full": 69,
+    "w": 58,
+    "foot": -2
+   },
+   "side": {
+    "body": 60,
+    "full": 69,
+    "w": 54,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 71,
+    "w": 64,
+    "foot": -2
+   }
+  },
+  "baltra@baltra_croma": {
+   "front": {
+    "body": 59,
+    "full": 69,
+    "w": 62,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 66,
+    "w": 50,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 68,
+    "w": 58,
+    "foot": -2
+   }
+  },
+  "maura": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 50,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 50,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 50,
+    "foot": -2
+   }
+  },
+  "maura@exp_maura": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 54,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 64,
+    "w": 53,
+    "foot": -2
+   }
+  },
+  "maura@maura_skin": {
+   "front": {
+    "body": 60,
+    "full": 67,
+    "w": 64,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "maura@maura_croma": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 50,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 50,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 50,
+    "foot": -2
+   }
+  },
+  "dariel": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 44,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 48,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 47,
+    "foot": -2
+   }
+  },
+  "dariel@exp_dariel": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 52,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 67,
+    "w": 59,
+    "foot": -2
+   }
+  },
+  "dariel@dariel_skin": {
+   "front": {
+    "body": 60,
+    "full": 61,
+    "w": 49,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 48,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 64,
+    "w": 57,
+    "foot": -2
+   }
+  },
+  "dariel@dariel_croma": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 44,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 48,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 47,
+    "foot": -2
+   }
+  },
+  "orsa": {
+   "front": {
+    "body": 58,
+    "full": 66,
+    "w": 50,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 68,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 54,
+    "foot": -2
+   }
+  },
+  "orsa@exp_orsa": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 50,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 70,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 68,
+    "w": 58,
+    "foot": -2
+   }
+  },
+  "orsa@orsa_skin": {
+   "front": {
+    "body": 58,
+    "full": 66,
+    "w": 56,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 74,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 63,
+    "w": 59,
+    "foot": -2
+   }
+  },
+  "orsa@orsa_croma": {
+   "front": {
+    "body": 58,
+    "full": 66,
+    "w": 50,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 68,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 54,
+    "foot": -2
+   }
+  },
+  "tibor": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 51,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 51,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 46,
+    "foot": -2
+   }
+  },
+  "tibor@exp_tibor": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 48,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 48,
+    "foot": -2
+   }
+  },
+  "tibor@tibor_skin": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 51,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 56,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 50,
+    "foot": -2
+   }
+  },
+  "tibor@tibor_croma": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 51,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 51,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 46,
+    "foot": -2
+   }
+  },
+  "zahra": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 45,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 38,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 44,
+    "foot": -2
+   }
+  },
+  "zahra@exp_zahra": {
+   "front": {
+    "body": 60,
+    "full": 61,
+    "w": 45,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 44,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 62,
+    "w": 49,
+    "foot": -2
+   }
+  },
+  "zahra@zahra_skin": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 43,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 39,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 44,
+    "foot": -2
+   }
+  },
+  "zahra@zahra_croma": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 45,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 38,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 44,
+    "foot": -2
+   }
+  },
+  "renko": {
+   "front": {
+    "body": 59,
+    "full": 66,
+    "w": 77,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 71,
+    "foot": -2
+   },
+   "up": {
+    "body": 61,
+    "full": 67,
+    "w": 69,
+    "foot": -2
+   }
+  },
+  "renko@exp_renko": {
+   "front": {
+    "body": 59,
+    "full": 67,
+    "w": 74,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 71,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 65,
+    "w": 61,
+    "foot": -2
+   }
+  },
+  "renko@renko_skin": {
+   "front": {
+    "body": 60,
+    "full": 67,
+    "w": 76,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 68,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 66,
+    "w": 61,
+    "foot": -2
+   }
+  },
+  "renko@renko_croma": {
+   "front": {
+    "body": 59,
+    "full": 66,
+    "w": 77,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 63,
+    "w": 71,
+    "foot": -2
+   },
+   "up": {
+    "body": 61,
+    "full": 67,
+    "w": 69,
+    "foot": -2
+   }
+  },
+  "sira": {
+   "front": {
+    "body": 60,
+    "full": 68,
+    "w": 56,
+    "foot": -2
+   },
+   "side": {
+    "body": 60,
+    "full": 61,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 65,
+    "w": 56,
+    "foot": -2
+   }
+  },
+  "sira@exp_sira": {
+   "front": {
+    "body": 59,
+    "full": 65,
+    "w": 58,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 64,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 64,
+    "w": 60,
+    "foot": -2
+   }
+  },
+  "sira@sira_skin": {
+   "front": {
+    "body": 59,
+    "full": 62,
+    "w": 54,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 57,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 62,
+    "w": 58,
+    "foot": -2
+   }
+  },
+  "sira@sira_croma": {
+   "front": {
+    "body": 60,
+    "full": 68,
+    "w": 56,
+    "foot": -2
+   },
+   "side": {
+    "body": 60,
+    "full": 61,
+    "w": 53,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 65,
+    "w": 56,
+    "foot": -2
+   }
+  },
+  "nano_gm": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 33,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 33,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 33,
+    "foot": -2
+   }
+  },
+  "nano_gm@nano_gm_alt1": {
+   "front": {
+    "body": 60,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "up": {
+    "body": 60,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "facu_gm": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 33,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 33,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 33,
+    "foot": -2
+   }
+  },
+  "facu_gm@facu_gm_alt1": {
+   "front": {
+    "body": 58,
+    "full": 60,
+    "w": 33,
+    "foot": -2
+   },
+   "side": {
+    "body": 58,
+    "full": 61,
+    "w": 32,
+    "foot": -2
+   },
+   "up": {
+    "body": 58,
+    "full": 60,
+    "w": 33,
+    "foot": -2
+   }
+  },
+  "aurelia": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 31,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "aurelia@aurelia_alt1": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 31,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "aurelia@aurelia_alt2": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 31,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "khepri": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 60,
+    "full": 69,
+    "w": 38,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "khepri@khepri_alt1": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 60,
+    "full": 69,
+    "w": 38,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "khepri@khepri_alt2": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 60,
+    "full": 69,
+    "w": 38,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "velmira": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 31,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 29,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 31,
+    "foot": -2
+   }
+  },
+  "velmira@velmira_alt1": {
+   "front": {
+    "body": 59,
+    "full": 64,
+    "w": 30,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 60,
+    "w": 28,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 64,
+    "w": 30,
+    "foot": -2
+   }
+  },
+  "velmira@velmira_alt2": {
+   "front": {
+    "body": 59,
+    "full": 61,
+    "w": 31,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 61,
+    "w": 29,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 61,
+    "w": 31,
+    "foot": -2
+   }
+  },
+  "vhal": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 37,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 31,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "vhal@vhal_alt1": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 37,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 31,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "vhal@vhal_alt2": {
+   "front": {
+    "body": 59,
+    "full": 59,
+    "w": 37,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 59,
+    "w": 31,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 34,
+    "foot": -2
+   }
+  },
+  "bront": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 32,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 46,
+    "foot": -2
+   }
+  },
+  "bront@bront_alt1": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 32,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 46,
+    "foot": -2
+   }
+  },
+  "bront@bront_alt2": {
+   "front": {
+    "body": 59,
+    "full": 63,
+    "w": 46,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 32,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 63,
+    "w": 46,
+    "foot": -2
+   }
+  },
+  "oriel": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 34,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 33,
+    "foot": -2
+   }
+  },
+  "oriel@oriel_alt1": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 34,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 33,
+    "foot": -2
+   }
+  },
+  "oriel@oriel_alt2": {
+   "front": {
+    "body": 59,
+    "full": 60,
+    "w": 34,
+    "foot": -2
+   },
+   "side": {
+    "body": 59,
+    "full": 62,
+    "w": 34,
+    "foot": -2
+   },
+   "up": {
+    "body": 59,
+    "full": 59,
+    "w": 33,
+    "foot": -2
+   }
+  }
+ },
+ "text": {
+  "tanque": {
+   "name": "Aldric, el Último Bastión",
+   "title": "el Último Bastión",
+   "role": "Resistencia, protección y control de área.",
+   "cardLore": "Aldric sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino.",
+   "history": "Aldric era capitán de la guardia cuando la Horda volvió a la Ciudad Maldita. Sostuvo la puerta norte tres noches seguidas, hasta que el escudo le quedó soldado al brazo. Nadie sabe cómo sigue en pie. Desde entonces camina delante de todos: dice que ya tiene la costumbre de recibir los golpes y que prefiere que sean suyos.",
+   "passive": "Los aliados a menos de 200 u de Aldric reciben 8% menos daño.",
+   "skills": [
+    "Gira sin parar dañando a su alrededor",
+    "Carga, arrastra y golpea a un enemigo",
+    "Grito que aumenta armadura, vida máxima y su tamaño",
+    "Provoca a los enemigos, se agiganta y gana armadura y vida máxima"
+   ],
+   "inCatalog": true
+  },
+  "guerrero": {
+   "name": "Kael, la Daga Carmesí",
+   "title": "la Daga Carmesí",
+   "role": "Daño físico cuerpo a cuerpo contra objetivos y jefes.",
+   "cardLore": "Kael encadena cortes y sangrados, y prepara trampas que castigan a toda una oleada.",
+   "history": "Kael cobraba por desaparecer a la gente equivocada. Cuando la ciudad cayó descubrió que los monstruos también sangran, y que él sabe exactamente dónde cortar. No pelea por los Guardianes ni por la gloria: pelea porque nadie le paga mejor que la venganza, y porque la Horda se llevó lo único que no estaba en venta.",
+   "passive": "Sus ataques básicos hacen 15% más de daño a enemigos que sangran o están envenenados.",
+   "skills": [
+    "Aplica un sangrado profundo",
+    "Tres golpes veloces; el último causa +300% de daño",
+    "Coloca una trampa que explota y encadena daño",
+    "Sigilo total y un triple golpe que envenena y encadena sangrado"
+   ],
+   "inCatalog": true
+  },
+  "mago": {
+   "name": "Thalen, el Tejedor Elemental",
+   "title": "el Tejedor Elemental",
+   "role": "Daño mágico, área y control elemental.",
+   "cardLore": "Thalen combina fuego, escarcha y relámpagos para controlar y devastar grupos de enemigos.",
+   "history": "Thalen estudió el fuego y el hielo como opuestos hasta entender que son el mismo idioma. Leyó sobre los Cuatro Guardianes en libros que el Hechicero Supremo había prohibido, y es de los pocos que sospecha que la historia oficial está incompleta. Cada hechizo que lanza es también una pregunta que todavía nadie le responde.",
+   "passive": "Las reacciones que provoca (Vapor, Quiebre, Conducción) pegan más: su bonus de daño crece 50%.",
+   "skills": [
+    "Crea un anillo de fuego que quema al pisarlo",
+    "Congela a los enemigos cercanos",
+    "Salta entre enemigos",
+    "3 novas de hielo, lluvia de rayos por 5s y armadura de fuego"
+   ],
+   "inCatalog": true
+  },
+  "soporte": {
+   "name": "Elyra, la Guardiana del Alba",
+   "title": "la Guardiana del Alba",
+   "role": "Sanadora a distancia: restaura a sus aliados y purifica las oleadas con luz en área.",
+   "cardLore": "Elyra cura y protege a su equipo; la misma luz que los salva purifica a la Horda.",
+   "history": "Elyra era la sanadora del último santuario que resistió en la ciudad. Aprendió que una bendición a tiempo salva más vidas que cualquier espada, y que la luz que cierra heridas también quema a lo que la Horda corrompió. Su juramento es sencillo y obstinado: que ninguna vida se pierda sin que alguien haya luchado por ella.",
+   "passive": "Sus curaciones a aliados con menos de 35% de vida curan 25% más.",
+   "skills": [
+    "Un pulso de luz cura a los aliados en 260 u y daña a todos los enemigos en 160 u por el 120% de su daño. Ambos radios crecen con la maestría.",
+    "Aumenta el daño de los aliados cercanos",
+    "Aumenta la defensa de los aliados cercanos",
+    "Cura y bendice a todo el equipo con ataque y defensa"
+   ],
+   "inCatalog": true
+  },
+  "segador": {
+   "name": "Segador, el Olvidado",
+   "title": "el Olvidado",
+   "role": "Berserker / tanque ofensivo. Cuanto más daño recibe, más peligroso se vuelve.",
+   "cardLore": "El Segador se vuelve más peligroso cuanto más cerca está de la muerte.",
+   "history": "Nadie sabe su nombre, ni siquiera él. Despertó entre los muertos de una guerra olvidada con una guadaña en las manos y una furia que no se apaga. La Horda lo reconoce como algo propio y lo teme por eso mismo. Cuanto más cerca está de volver a morir, más se parece a lo que los monstruos sueñan cuando sueñan con un cazador.",
+   "passive": "No regenera energía sola: la Furia se gana golpeando y recibiendo daño. Pelear es su recurso.",
+   "skills": [
+    "Corte horizontal amplio; golpea a varios enemigos frente a él",
+    "Recibe menos daño; cada golpe recibido genera más Furia",
+    "Intensifica su furor: más daño mientras dura, cura una porción al lanzarlo",
+    "Furia máxima: daño e impacto enormes, resiste el control y roba vida. Cada baja alarga la duración"
+   ],
+   "inCatalog": true
+  },
+  "axiom": {
+   "name": "Axiom, el Reescritor",
+   "title": "el Reescritor",
+   "role": "Manipula directamente las reglas de la realidad. Daño de área y control.",
+   "cardLore": "Axiom descubrió que la realidad tiene reglas: no lanza hechizos, las reescribe.",
+   "history": "Axiom descubrió que el mundo está construido con reglas, y que las reglas se pueden reescribir. Para él la Horda es un error en el sistema: una línea de código que alguien dejó abierta a propósito. Cada vez que corrige una zona del mapa encuentra otra firma del mismo autor. Quiere encontrar a quien la escribió antes de que termine el programa.",
+   "passive": "Cada enemigo que muere por sus habilidades le devuelve 3 de energía (hasta 15 por segundo).",
+   "skills": [
+    "Marca una zona; tras una breve demora, colapsa y daña/ralentiza en un área",
+    "Infecta al enemigo más cercano con código corrupto: se contagia de enemigo en enemigo y sigue dañando con el tiempo (más saltos y más daño al mejorarla)",
+    "Axiom se desplaza al instante en la dirección en la que mira; casi sin enfriamiento al llevarla al máximo",
+    "Fuerza el cierre de la realidad: 4 segundos de colores invertidos donde nadie más se mueve — al terminar, todo el daño cae de golpe sobre los enemigos cercanos"
+   ],
+   "inCatalog": true
+  },
+  "profeta": {
+   "name": "Ismara, la Profeta Ciega",
+   "title": "la Profeta Ciega",
+   "role": "Sanadora de apoyo cuerpo a cuerpo. Cura, protege y potencia a un aliado elegido.",
+   "cardLore": "Ismara ve el destino de sus aliados antes de que ocurra, y a veces alcanza para cambiarlo.",
+   "history": "Ismara entregó los ojos al Oráculo a cambio de ver unos segundos más adelante. A veces le alcanza para cambiar el destino de un aliado, y a veces solo para verlo venir. Pelea cuerpo a cuerpo porque nadie más está tan cerca del golpe que va a llegar. Sus visiones sobre los cristales la despiertan de noche: siempre terminan en el mismo lugar, en llamas.",
+   "passive": "Cada 4 golpes básicos consecutivos dispara sola un giro extra que golpea en área.",
+   "skills": [
+    "Cura al instante al aliado más herido. Si está gravemente herido, además revierte parte del daño reciente que recibió",
+    "Un aliado cercano se vuelve inmune a todo daño y a efectos negativos por unos segundos; al terminar, recibe una pequeña regeneración",
+    "Gira con su hoja y genera daño de área a su alrededor; si un enemigo está muy cerca, lo aturde brevemente",
+    "Se fusiona con un aliado: él recibe una gran curación, mucho más daño, velocidad de ataque y resistencia, y recarga sus habilidades casi al instante mientras dura"
+   ],
+   "inCatalog": true
+  },
+  "musashi": {
+   "name": "Musashi, el Rōnin del Bokken",
+   "title": "el Rōnin del Bokken",
+   "role": "Duelista. Daño físico single-target y ejecución: elige un rival y se vuelve cada vez más peligroso contra él.",
+   "cardLore": "Musashi carga un bokken en vez de una katana: elige un rival, lo estudia y lo termina.",
+   "history": "Musashi cruzó cien duelos para llegar a la Ciudad Maldita y ganó todos sin desenvainar una hoja de verdad. Cree que cualquier arma alcanza contra un rival al que se entiende por completo. Elige uno, lo estudia y lo termina de un solo corte. Ahora busca al único adversario que todavía no entiende: la Horda, que nunca pelea dos veces igual.",
+   "passive": "Marca a su rival: golpearlo acumula Concentración (hasta 10), que aumenta su daño contra ese objetivo.",
+   "skills": [
+    "Avanza y ejecuta un corte horizontal único y extremadamente rápido",
+    "Atraviesa a un enemigo y aparece detrás suyo; el siguiente básico gana probabilidad de crítico. Si se activa justo antes de recibir un golpe, es un Paso Perfecto: lo evita por completo",
+    "Ráfaga de cortes alrededor suyo que prioriza a su objetivo de duelo; cuantos menos enemigos haya, más cortes recibe cada uno",
+    "Se transporta con su objetivo de duelo a una arena privada: 1 contra 1 hasta que uno de los dos caiga o se acabe el tiempo"
+   ],
+   "inCatalog": true
+  },
+  "cazadora": {
+   "name": "Sylva, la Cazadora del Bosque",
+   "title": "la Cazadora del Bosque",
+   "role": "Tiradora extremadamente móvil que gana velocidad mientras persigue a su presa.",
+   "cardLore": "Sylva es una tiradora muy móvil que gana velocidad mientras persigue a su presa.",
+   "history": "Sylva creció entre los menhires de las Ruinas Célticas, antes de que se pudrieran. Conoce cada sendero, cada rastro y cada presa del bosque viejo. Volvió persiguiendo a la Horda y encontró al Guardián Ancestral convertido en otra cosa. Todavía no se lo perdona, y por eso nunca deja de moverse: quedarse quieta sería empezar a llorarlo.",
+   "passive": "Rastreo marca a su Presa e Impulso crece mientras se mueve o ataca: más velocidad y cadencia.",
+   "skills": [
+    "Mantené pulsado para cargar: más carga = más daño, velocidad, alcance y penetración. A carga máxima atraviesa varios enemigos",
+    "Coloca una trampa de raíces; inmoviliza (o ralentiza mucho a bosses) al primer enemigo que la pise",
+    "Tras un breve retraso, una lluvia de flechas cae sobre la zona; prioriza a su Presa si está cerca",
+    "Impulso al máximo fijo, puede correr y disparar a la vez, invoca a un Lobo Espectral que persigue a su Presa"
+   ],
+   "inCatalog": true
+  },
+  "nigromante": {
+   "name": "Ilvar, el Señor de las Criptas",
+   "title": "el Señor de las Criptas",
+   "role": "Señor de un ejército y cosechador de almas: los caídos se levantan a su lado, las almas alimentan su poder y maldice a la horda.",
+   "cardLore": "Ilvar levanta a los caídos, arma un coloso de carne y, si hace falta, se vuelve un demonio.",
+   "history": "Ilvar creció cuidando las criptas bajo la ciudad. Los vivos le tienen miedo; los muertos le obedecen. Levanta a los caídos, cose gólems con lo que queda y, si hace falta, deja que el Abismo lo use de puerta. Dice que la Horda y él hacen exactamente lo mismo, con una única diferencia: él les pide permiso a los muertos.",
+   "passive": "Los enemigos caídos dejan cadáveres: sus esqueletos se levantan solos de los cuerpos cercanos.",
+   "skills": [
+    "Arranca almas en un cono: daña, ralentiza y suelta almas. PASIVA: tus esqueletos se levantan solos de los cadáveres cercanos (hasta 6 al mejorarla)",
+    "Arma un gólem con los cadáveres cercanos (más cuerpos, más vida). Si ya tenés uno: salta al punto apuntado y APLASTA (daño y aturdimiento)",
+    "Maldice un área: daño continuo y más daño recibido; si un maldito muere, contagia a los cercanos",
+    "Absorbe temporalmente a todo tu ejército y te transforma en un Demonio Nigromántico; tu poder escala con cuántos absorbiste"
+   ],
+   "inCatalog": true
+  },
+  "libertador": {
+   "name": "San Martín, el Libertador",
+   "title": "el Libertador",
+   "role": "Tirador / Guerrero / Soporte ofensivo: disparos lentos y devastadores, bayoneta, mando y caballería.",
+   "cardLore": "San Martín castiga con disparos devastadores, bayoneta y cargas que quiebran ejércitos.",
+   "history": "José de San Martín ya cruzó una cordillera entera para liberar a medio continente. Ahora cruza otra, más extraña, para llegar a la Ciudad Maldita. Castiga con disparos lentos y devastadores, y lidera cargas capaces de quebrar ejércitos. Frente a la Horda repite lo mismo que dijo siempre: seamos libres, que lo demás no importa nada.",
+   "passive": "Una vez por partida, un golpe mortal lo deja en 1 de vida, invulnerable 2 s y más rápido.",
+   "skills": [
+    "Mantené para apuntar y soltá: embestida corta con la bayoneta. Mucho daño, sangrado y un pequeño tambaleo; se detiene al conectar",
+    "Levanta el sable, suena el clarín y aparecen Granaderos espectrales: +velocidad, +velocidad de ataque, +daño y resistencia al control para vos y tus aliados cercanos",
+    "Monta su caballo blanco y carga en línea: atraviesa y empuja a los comunes, aturde a los élite y baja la defensa de los jefes",
+    "Carga con Granaderos espectrales entre nieve y escarcha y queda 10 s a caballo: sable corvo, más velocidad y daño, menos daño recibido"
+   ],
+   "inCatalog": true
+  },
+  "eren": {
+   "name": "Eren, el Indómito",
+   "title": "el Indómito",
+   "role": "Guerrero / Berserker: movilidad extrema con ganchos, gana Furia con el riesgo y se transforma en El Portador.",
+   "cardLore": "Eren convierte el peligro en furia hasta liberar una fuerza capaz de hacer temblar la arena.",
+   "history": "Eren creció encerrado entre muros mientras algo enorme golpeaba del otro lado. Convierte el peligro en furia y la furia en velocidad. Cuando no alcanza, libera algo que no debería llevar adentro: El Portador. No quiere salvar el mundo ni heredar a los Cuatro; quiere que nada, nunca más, vuelva a encerrarlo.",
+   "passive": "Con menos de 25% de vida gana velocidad, daño y más Furia.",
+   "skills": [
+    "Mantené para apuntar y soltá: dispara los ganchos y sale volando. Durante el vuelo, volvé a usarla para un SEGUNDO gancho con cambio de dirección. Corta a los que pasan cerca",
+    "Por un momento recibís menos daño y cada golpe que te dan carga MUCHA más Furia. No es invulnerabilidad: es exponerse para transformarse antes",
+    "Grito de guerra: más velocidad, daño y Furia (más fuerte con poca vida). Los aliados cercanos reciben una parte",
+    "Con la Furia llena se transforma en El Portador: golpes en área, Sismo, Terremoto, Retumbar y regeneración. Llenar la Furia de nuevo desbloquea algo más"
+   ],
+   "inCatalog": true
+  },
+  "ynara": {
+   "name": "Ynara, la Médica de los Refugios",
+   "title": "El Ángel del Silencio",
+   "role": "Sanadora de área: estrogonof, agua y santa paciencia.",
+   "cardLore": "Ynara es una médica silenciosa: cura, protege y nunca pide perdón.",
+   "history": "Médica silenciosa y cuidadosa, Ynara sostiene los refugios con luz, agua limpia y estrogonof de pollo. Bajo su halo blanco guarda una paciencia finita y una bondad obstinada. Cura incluso a quien la hizo enojar. Nunca pide perdón: escucha, se queda callada y sigue cuidando. Cuando la paciencia se le termina, el halo se abre y los refugios entienden por qué la llaman santa.",
+   "passive": "Tras 8 s sin recibir golpes obtiene un escudo del 8% de vida. Al romperse por daño libera luz en un radio de 90. No se acumula; vuelve a prepararse tras perderlo.",
+   "skills": [
+    "Un abanico de luz daña y ralentiza 30% durante 1,5 s. Empuja comunes cercanos; jefes resisten el empuje y limitan el freno al 12%.",
+    "Sirve estrogonof de pollo: cada 600 ms cura 1% de vida y su vapor daña. Dentro reduce daño 8%. Máximo una fuente por Ynara.",
+    "Se desliza por terreno seguro y limpia ralentización. Deja una cortina de agua que daña y frena. No cruza muros ni vacíos.",
+    "Santuario móvil: cura 0,8% por pulso y daña cada 0,6 s. Cada golpe que reciben los aliados adentro carga paciencia (máx. 8); al final estalla una onda."
+   ],
+   "inCatalog": true
+  },
+  "myla": {
+   "name": "Myla, la Niña de la Cuchara",
+   "title": "La Maga del Yogur",
+   "role": "Maga de control: yogur, torres y ondas de llanto.",
+   "cardLore": "Myla controla el campo con torres de yogur, charcos pegajosos y un berrinche que sacude la arena.",
+   "history": "Myla descubrió que su merienda podía convertirse en magia. Con una cuchara encantada y una sonrisa desafiante levanta torres de yogur y cubre de crema los caminos de la Horda. Los adultos de los refugios dicen que es demasiado chica para pelear; ella responde que los monstruos también le tienen miedo a un berrinche. Donde otros ven oscuridad, ve una aventura por compartir.",
+   "passive": "Los disparos de sus torres ralentizan brevemente. Los jefes reciben una ralentización reducida.",
+   "skills": [
+    "Invoca una torre de yogur que dispara y ralentiza. Máximo dos; la tercera reemplaza la más antigua.",
+    "Lanza yogur al punto elegido: salpica y deja un charco pegajoso que daña y ralentiza.",
+    "Se envuelve en yogur protector: obtiene un escudo y limpia su ralentización.",
+    "En pañales y más grande, llora durante 6,5 segundos: cada onda de llanto daña y salpica yogur a su alrededor. Puede moverse; los jefes resisten parte de la ralentización."
+   ],
+   "inCatalog": true
+  },
+  "brasa": {
+   "name": "Brasa, la Mecánica Fugitiva",
+   "title": "La Última Maquinista",
+   "role": "Ingeniera de posición: torretas, presión y vapor.",
+   "cardLore": "Brasa vuelve contra la Horda la maquinaria de la Fábrica: torretas, purgas y desarmes.",
+   "history": "Brasa mantenía las máquinas de la Fábrica Sin Fin. Un día descubrió que una de sus cadenas no estaba hecha para un monstruo, sino para alguien que se había negado a obedecer. Escapó con los planos bajo el brazo y una llave inglesa que nunca suelta. Todavía no sabe quién estaba del otro lado de esa cadena, y desarma cada máquina de la Horda buscando la respuesta.",
+   "passive": "Las habilidades acumulan hasta tres cargas. El siguiente básico con tres cargas descarga un cono pequeño y consume la presión.",
+   "skills": [
+    "Monta una torreta fija con vida propia. Máximo dos; una tercera retira la más antigua.",
+    "Cono de vapor: descarga la presión y empuja comunes; ralentiza a jefes sin moverlos.",
+    "Retira la torreta más cercana, recupera parte de su recarga y acelera. Sin torreta también acelera.",
+    "Sobrecarga sus torretas. Sin ninguna, monta una temporal. Después deben enfriarse."
+   ],
+   "inCatalog": true
+  },
+  "eslabon": {
+   "name": "Garren, el Eslabón",
+   "title": "El Carcelero que Abrió la Puerta",
+   "role": "Tanque protector: cadenas, custodia y separación.",
+   "cardLore": "Garren abrió las celdas que custodiaba: ganchos, líneas y un grillete que protege al equipo.",
+   "history": "Garren custodió una prisión de portadores mucho después de los Cuatro. Lo llamaban el Eslabón porque nada salía de las celdas sin pasar por él. Una noche rompió su juramento y abrió todas las puertas. Conserva un grillete atado al brazo: el peso le recuerda que proteger también puede empezar por abrir una puerta.",
+   "passive": "Controlar a un enemigo concede 12% de resistencia durante 1,6 s, con 2,2 s de recarga interna. No acumula resistencia.",
+   "skills": [
+    "Engancha y acerca un enemigo. Los jefes reciben daño y ralentización, pero nunca se desplazan.",
+    "Tiende una cadena que frena a quienes la cruzan. No bloquea el movimiento aliado.",
+    "Absorbe parte del daño del aliado elegido, con presupuesto limitado. Solo, obtiene una guardia menor.",
+    "Un anillo móvil empuja comunes hacia afuera y protege aliados dentro. Reduce su velocidad mientras dura."
+   ],
+   "inCatalog": true
+  },
+  "morwen": {
+   "name": "Morwen, la Destiladora de Ecos",
+   "title": "La Destiladora de Ecos",
+   "role": "Alquimista: resina, catalizador y reacciones controladas.",
+   "cardLore": "Morwen destila reactivos de resina, sal y ecos que reaccionan entre sí.",
+   "history": "Morwen estudiaba las voces que el micelio repite cuando nadie escucha. Aprendió a destilar sus ecos en frascos sin entregarse a la Madre Espora, y descubrió que cada reactivo recuerda a quien lo pronunció. Viaja con un alambique a la espalda y etiqueta cada frasco con un nombre. En algunos todavía hay una voz que dice: váyanse, yo me quedo.",
+   "passive": "Resina y Catalizador reaccionan una sola vez, se consumen y dejan un residuo. Conserva hasta cinco residuos para Destilación.",
+   "skills": [
+    "Un frasco marca y ralentiza. Combinar Resina y Catalizador detona una sola reacción y consume ambos.",
+    "Cono de catalizador. Reacciona con Resina, causa daño inmediato y debilita brevemente.",
+    "Consume residuos para ganar escudo y limpiar ralentización o quemadura. Sin residuos da una cubierta menor.",
+    "Área que prolonga reactivos y permite una onda secundaria por reacción. Sin propagación infinita."
+   ],
+   "inCatalog": true
+  },
+  "farolero": {
+   "name": "Tobías, el Farolero",
+   "title": "La Última Luz",
+   "role": "Escolta: luz local, sendas y escudos por pulsos.",
+   "cardLore": "Tobías sostiene la luz para el equipo: linternas, destellos y caminos seguros en la oscuridad.",
+   "history": "Tobías encendía los faroles de las Minas Profundas. Volvió de otra expedición siguiendo el ruido de un yunque y no volvió con todos. Ahora baja otra vez con la misma lámpara. No promete que la oscuridad desaparezca: promete sostener la luz hasta que pase el último, y quedarse un rato más por si alguien vuelve.",
+   "passive": "Aliados a menos de 230 unidades que se mueven hacia el Farolero ganan 8% de velocidad. No se acumula con otros faroleros.",
+   "skills": [
+    "Coloca un farol, máximo uno, que protege cerca y da luz débil local. No enciende braseros ni elimina oscuridad especial.",
+    "Cono que desorienta comunes; contra jefes solo aplica ralentización reducida.",
+    "Senda que amortigua daño ambiental y ralentizaciones. No atraviesa vacíos ni evita peligros letales.",
+    "Círculo móvil de luz y pequeños escudos periódicos. No concede inmunidad ni borra mecánicas de arena."
+   ],
+   "inCatalog": true
+  },
+  "iria": {
+   "name": "Iria, la Tejedora de Límites",
+   "title": "La Tejedora de Sellos",
+   "role": "Control geométrico: anclas, hilos y triángulos.",
+   "cardLore": "Iria ancla, tensa y corta hilos entre puntos del mapa que castigan a quien los cruza.",
+   "history": "Iria reparaba límites pequeños bajo la sombra del Guardián del Laberinto: umbrales, cerrojos, costuras entre un pasillo y otro. Un día encontró puertas que nadie había roto, abiertas desde adentro. Aprendió a anclar hilos entre tres puntos y a sostener una fisura el tiempo justo para que alguien cruce. Sabe que el Sello de los Cuatro pesa más que toda su orden, y lo sostiene igual.",
+   "passive": "Hasta tres anclas se unen en orden, con un máximo de 400 unidades por hilo. Tensión activa su daño y control; no son paredes.",
+   "skills": [
+    "Coloca un sello, máximo tres. Las anclas cercanas se unen en orden; sus hilos no son paredes.",
+    "Activa los hilos: ralentizan y marcan a quien cruza. Con menos de dos anclas funciona cerca de Iria.",
+    "Consume el ancla más cercana al punto elegido y descarga sus hilos. Cada enemigo recibe un solo golpe.",
+    "Activa un triángulo de daño y control. Sin tres anclas válidas crea uno pequeño propio; no encierra ni desplaza jugadores."
+   ],
+   "inCatalog": true
+  },
+  "vesper": {
+   "name": "Vesper, la Costurera de Sombras",
+   "title": "La Costurera de Sombras",
+   "role": "Asesina de preparación: marca grupos, cose una salida y consume los hilos.",
+   "cardLore": "Vesper marca grupos con hilos de sombra, cose una salida y consume las puntadas.",
+   "history": "Vesper remendaba los trajes del teatro de la Ciudad. La noche del regreso encontró a su hermana frente a un espejo: el cuerpo seguía allí, pero la sombra ya se movía sola. Intentó sujetarla con el hilo con el que cosía nombres dentro de los abrigos. Desde entonces hilvana las sombras de los corrompidos, y sigue cada Cicatriz preguntándose cuánto queda de una persona.",
+   "passive": "Los básicos dejan hasta 3 puntadas por objetivo y dueña durante 5 s. Al caer un marcado libera una única rotura de hilo: no provoca cadenas de explosiones.",
+   "skills": [
+    "Abanico de agujas: daño y una puntada por enemigo.",
+    "Avanza por terreno seguro y deja una costura que daña en 4 pulsos.",
+    "Consume las puntadas cercanas: +20% de daño por puntada.",
+    "Cuatro cortes circulares; el último consume las marcas para amplificarse."
+   ],
+   "inCatalog": true
+  },
+  "nahir": {
+   "name": "Nahir, el Restaurador de Espejos",
+   "title": "El Vidrio Errante",
+   "role": "Flanqueador que usa reflejos breves para cubrir ángulos distintos.",
+   "cardLore": "Nahir pelea con fragmentos de espejo que repiten cada uno de sus golpes.",
+   "history": "Nahir restauraba espejos antes de entrar al Laberinto. En una galería encontró su propia imagen varios pasos por delante, arrodillada ante una figura que no aparecía en el cristal. Rompió el espejo, pero tres fragmentos conservaron aquel gesto: los lleva en las muñecas y cada uno repite lo que él hace. Busca una salida que su reflejo todavía no conozca.",
+   "passive": "Cambiar al menos 60° el ángulo de ataque contra el mismo enemigo añade 15% de daño; recarga interna 900 ms.",
+   "skills": [
+    "Proyecta astillas en abanico contra la horda.",
+    "Paso seguro que deja un reflejo inmóvil; máximo 3.",
+    "Corte lineal propio y ecos al 25% desde los reflejos; un eco por reflejo y objetivo.",
+    "Coloca 3 reflejos por 6 s. No son aliados adicionales ni copias autónomas."
+   ],
+   "inCatalog": true
+  },
+  "baltra": {
+   "name": "Baltra, la Campana Sumergida",
+   "title": "La Campana Hundida",
+   "role": "Tanque frontal que transforma golpes recibidos en ondas de campana.",
+   "cardLore": "Baltra sostiene al equipo bajo presión con una campana convertida en escafandra.",
+   "history": "Baltra cuidaba la campana de aviso de un poblado de la costa. Cuando el agua apareció donde antes había calles, se ató al badajo para seguir tocando mientras los demás subían. La encontraron dentro de la campana, respirando una bolsa de aire que nadie supo explicar. Convirtió el bronce en escafandra: su señal no promete victoria, promete que alguien sostiene la otra punta.",
+   "passive": "Recibir daño efectivo en vida o escudo suma vibración: máximo 5, una cada 500 ms.",
+   "skills": [
+    "Onda circular que consume vibración: +12% de daño por carga.",
+    "Guardia frontal de 25%; velocidad −20% mientras dura.",
+    "Golpe en cono: consume vibración y frena enemigos; jefes máximo 12%.",
+    "Tres tañidos; el último empuja comunes. No desplaza jefes."
+   ],
+   "inCatalog": true
+  },
+  "maura": {
+   "name": "Maura, la Pastora de Espinas",
+   "title": "La Pastora de Espinas",
+   "role": "Protectora de avance: recibe el choque, recoge semillas y abre un corredor.",
+   "cardLore": "Maura abre veredas de zarzas y protege lo vivo sin dejar que lo ocupe todo.",
+   "history": "Maura guiaba rebaños por senderos que ya no figuran en los mapas. Al volver a las Ruinas encontró las cercas convertidas en espinas y un camino que parecía respirar. No intentó dominar el bosque: cortó una vereda tan estrecha que solo se pasaba de a uno, y por ella salieron todos. Desde esa noche las zarzas crecen en su cayado, y ella las poda cada mañana.",
+   "passive": "Impactos directos generan hasta 5 semillas, como máximo una cada 500 ms.",
+   "skills": [
+    "Una línea de raíces daña, frena y deja un suelo de espinas temporal.",
+    "Escudo de 10% de vida; al expirar libera una sola descarga si sigue viva.",
+    "Corte circular que consume semillas; cura 1% por semilla, máximo 5%.",
+    "Seis pulsos móviles de espinas. No aumenta la hitbox ni crea un ejército."
+   ],
+   "inCatalog": true
+  },
+  "dariel": {
+   "name": "Dáriel, el Último Compás",
+   "title": "El Último Aplauso",
+   "role": "Músico de ritmo alternado: daño moderado, protección y recuperación acotada.",
+   "cardLore": "Dáriel marca el compás que coordina al equipo y lo saca del peligro.",
+   "history": "Dáriel dirigía la música entre escenas. Cuando el Presentador dejó de permitir que el público se levantara, cambió el final de una melodía por la señal de evacuación de los tramoyistas, y unos pocos siguieron el ritmo hasta las puertas de servicio. Él salió último, marcando el compás. Ahora viaja con los portadores tocando una canción que sabe callarse cuando todos cruzaron.",
+   "passive": "Alternar habilidades distintas acumula hasta 3 notas; repetir la misma no añade notas.",
+   "skills": [
+    "Cono sonoro: daño y −8% de daño enemigo durante 1,5 s; jefes −4%.",
+    "Aliados cercanos: escudo 4% sin acumular y velocidad +8%.",
+    "Daño circular y cura 1% +0,6% por nota consumida; máximo 2,8%.",
+    "Seis pulsos alternan daño y cura de 1% con escudo de 2%, sin acumulación."
+   ],
+   "inCatalog": true
+  },
+  "orsa": {
+   "name": "Orsa, la Guardacables",
+   "title": "La Cazadora del Trueno",
+   "role": "Tiradora que distribuye cargas y decide cuándo descargar la horda.",
+   "cardLore": "Orsa guarda descargas en el metal de su ballesta y responde a quien golpee desde abajo.",
+   "history": "Orsa revisaba los cables que llevaban señales entre los niveles de las Minas. Durante un apagón oyó tres golpes en una línea cortada hacía años, bajó con una bobina a la espalda y encontró una cuadrilla que repetía el mismo turno sin recordar cómo había empezado. Solo uno siguió el cable hasta la luz. Hoy su ballesta guarda descargas para que siempre quede una respuesta.",
+   "passive": "Los básicos dejan hasta 3 cargas por blanco y dueña durante 5 s.",
+   "skills": [
+    "Perno lineal que atraviesa varios enemigos y añade una carga.",
+    "Los próximos 3 básicos causan +25%; velocidad −25% mientras dure la postura.",
+    "Consume cargas cercanas para aumentar daño; la descarga salta a 2 vecinos como máximo, con presupuesto total de 12 blancos.",
+    "Tres barridos cargan objetivos; una descarga final consume las marcas cercanas."
+   ],
+   "inCatalog": true
+  },
+  "tibor": {
+   "name": "Tibor, el Rey sin Corona",
+   "title": "El Rey del Enjambre",
+   "role": "Mago territorial con una sola nube que debe conservar y recolocar.",
+   "cardLore": "Tibor guía un enjambre que marca enemigos, protege el aire limpio y castiga a la colonia.",
+   "history": "A Tibor lo llamaban rey porque era incapaz de dar una orden a sus abejas: les abría las cajas y esperaba. Cuando el micelio empezó a repetir voces humanas, una colonia se instaló en su carro y las demás quedaron cubiertas de cera gris. Las conduce por donde el aire todavía deja pasar la luz. Si encuentra un lugar seguro, piensa dejar allí la colmena y marcharse sin corona.",
+   "passive": "Fuerza de colonia 0–100. Sin nube recupera 9/s; cada pulso de nube cuesta 8. Una sola nube por dueño.",
+   "skills": [
+    "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
+    "Retira la nube, daña su recorrido y recupera 20 de fuerza. Escudo 7%; sin nube, 3%.",
+    "Salpicadura que daña, frena y mueve la nube al punto elegido.",
+    "Rellena la fuerza y reemplaza la nube por otra mayor durante 6 s."
+   ],
+   "inCatalog": true
+  },
+  "zahra": {
+   "name": "Zahra, la Mano de la Válvula",
+   "title": "La Devoradora de Brasas",
+   "role": "Maga de calor: gana potencia arriesgando sobrecalentarse y debe purgar.",
+   "cardLore": "Zahra descarga un calor contenido en ráfagas cortas y cuenta antes de volver a abrir el puño.",
+   "history": "Zahra abría las compuertas de los hornos de la Fábrica al final de cada turno. Una noche los indicadores dejaron de bajar y los capataces ordenaron mantener la línea. Ella arrancó el cierre de una válvula y sostuvo la salida mientras sus compañeros escapaban. Su guante absorbió un calor que vuelve cada vez que una Cicatriz está cerca, y aprendió a soltarlo de a poco.",
+   "passive": "Calor 0–100: desde 60, +15% de daño. A 100 entra 1,8 s en recuperación; puede usar Enfriar. Fuera de uso pierde 1,5/s.",
+   "skills": [
+    "Cono ardiente. Genera 30 de calor.",
+    "Consume el calor y extingue sus líneas cercanas; escudo de 4% a 12% según calor.",
+    "Avanza por suelo seguro y deja 4 pulsos de ceniza. Genera 25 de calor.",
+    "Consume el calor en 4 pulsos; +0,4% de daño por punto consumido."
+   ],
+   "inCatalog": true
+  },
+  "renko": {
+   "name": "Renko, el Jardinero de Nombres",
+   "title": "El Sepulturero sin Tumbas",
+   "role": "Tanque de preparación del terreno, sin obstáculos sólidos ni encierros.",
+   "cardLore": "Renko traza surcos que contienen el avance enemigo sin cerrar nunca una salida.",
+   "history": "Renko anotaba nombres para quienes ya no podían hacerlo. Cuando el cementerio empezó a devolver las lápidas al camino, dejó de cavar: no iba a entregar más recuerdos a una tierra que los repetía mal. Cargó las placas pequeñas en un carro y llevó a los vivos hasta la puerta norte. Busca un lugar donde dejar esos nombres y volver a llamarse, simplemente, jardinero.",
+   "passive": "Un básico contra un blanco junto a sus surcos produce una sacudida de ×0,25; recarga interna 900 ms.",
+   "skills": [
+    "Traza una línea que daña, frena y deja tierra removida; máximo 3.",
+    "Zona no sólida: reduce 8% el daño a aliados dentro. No se acumula con otros montículos.",
+    "Consume hasta 3 surcos para aumentar el daño circular un 20% por surco.",
+    "Tres sacudidas. La última aturde comunes 300 ms; los jefes no se aturden."
+   ],
+   "inCatalog": true
+  },
+  "sira": {
+   "name": "Sira, la Cartógrafa del Regreso",
+   "title": "La Cartógrafa de lo Perdido",
+   "role": "Maga que dibuja con su recorrido y convierte trayectos recientes en ataques.",
+   "cardLore": "Sira marca el camino de vuelta y borra las rutas que dejaron de ser seguras.",
+   "history": "El padre de Sira volvió del Laberinto con un mapa en blanco, señaló caminos que nadie más veía y un día salió sin abrigo. Sira siguió su última marca y encontró otras en muros, telas y huesos: no indicaban adónde ir, sino dónde alguien había conseguido regresar. Desde entonces registra sus propios pasos y borra las rutas que ya no son seguras.",
+   "passive": "Conserva hasta 12 puntos de los últimos 4 s. Un salto de más de 75 unidades o terreno inaccesible interrumpe el trazo.",
+   "skills": [
+    "Trazo recto que atraviesa hasta 12 enemigos.",
+    "Recorre hacia atrás hasta 170 unidades del trazo válido. Comprueba cada paso contra muros y vacíos.",
+    "Consume el trazo e impacta una sola vez por objetivo; sin ruta usa un círculo de radio 80.",
+    "Tres pulsos sobre una copia de la ruta; sin ruta dibuja un rombo local. No altera el mapa."
+   ],
+   "inCatalog": true
+  },
+  "nano_gm": {
+   "name": "Nano GM, el Regente del Umbral",
+   "title": "El Regente del Umbral",
+   "role": "Regente que reescribe las reglas locales de la arena: la Luz decide quién resiste y la Oscuridad, quién cae.",
+   "cardLore": "Nano GM alterna Luz y Oscuridad, reescribe las reglas de la Arena y la parte en dos con su Juicio.",
+   "history": "Antes de que el Forjador partiera el Sello, alguien escribió las reglas de las Arenas: cuánto pesa un golpe, qué cuenta como victoria. Los Regentes no pelearon contra la Horda; la observaron desde el umbral donde la luz y la sombra aún no se separaban. Nano es el primero que decidió cruzar. Sus tatuajes no son adorno: son las cláusulas del pacto, grabadas en la piel para que ninguna regla se le olvide. Cuando entra en combate, la arena lo reconoce antes que los campeones.",
+   "passive": "Cada habilidad tiene afinidad LUZ (protege, restaura, ordena) u OSCURIDAD (daña, debilita, ejecuta). Alternar afinidades acumula Equilibrio; con 2 de Luz y 2 de Sombra entra en FORMA DEL REGENTE (8 s): ambas afinidades a la vez, +20% daño, −15% daño recibido y más alcance.",
+   "skills": [
+    "Decreto de sombra en línea: daña y SENTENCIA (+15% de daño recibido, 4 s). Comunes sentenciados con menos de 22% de vida son ejecutados.",
+    "Ley de refugio en el suelo: aliados dentro reciben escudo, −15% de daño y regeneración; enemigos dentro se frenan.",
+    "Se traslada al punto elegido. Deja una runa opuesta a su última afinidad: Sombra estalla en daño; Luz cura al llegar.",
+    "Pausa dramática, alas desplegadas y la arena dividida: aliados restaurados; comunes ejecutados o devastados; élites y jefes reciben daño masivo respetando sus mecánicas. Entra en Forma del Regente."
+   ],
+   "inCatalog": true
+  },
+  "facu_gm": {
+   "name": "Facu GM, el Soberano de las Mareas",
+   "title": "El Soberano de las Mareas",
+   "role": "No usa el agua: el océano le responde. Encadena corrientes, presión y oleadas para ordenar el campo antes de que el enemigo entienda el patrón.",
+   "cardLore": "Facu GM encadena corriente, presión y oleada: el océano responde antes que sus órdenes.",
+   "history": "Las Arenas tienen fondo. Debajo del Acuático, más allá de donde el Leviatán dejó de bajar, hay una marea que no responde a ninguna luna. Facu fue el segundo Regente en cruzar el umbral y el único que volvió con el mar detrás. No lo domó: lo entendió. Sabe cuándo una corriente va a girar y cuándo una ola ya decidió romper. Por eso el agua llega antes que sus órdenes. Los guardianes del Acuático lo nombran en voz baja, como se nombra a la marea alta.",
+   "passive": "Flujo Corriente → Presión → Oleada: cada eslabón en orden sube la Marea (máx. 3), +20% de potencia y −15% de recarga a la siguiente. Con Marea 3, MAREA ALTA (8 s): básicos con ola, +15% de velocidad y doble área en la próxima. Romper el orden da Marea Baja y un escudo.",
+   "skills": [
+    "Abre una corriente en línea durante 3,5 s: arrastra a los comunes en su dirección y acelera a los aliados que la pisan. (Flujo: Corriente)",
+    "Implosión en el punto elegido: atrae a los comunes al centro, daña y frena. Los jefes solo reciben daño y lentitud. (Flujo: Presión)",
+    "Facu cabalga una ola a través de los enemigos: los aparta, deja espuma que frena y protege a los aliados que cruza. Se detiene ante muros y bordes. (Flujo: Oleada)",
+    "La arena se inunda: Facu se eleva sobre una ola, el remolino arrastra a la horda al centro, siluetas abisales cruzan bajo el agua y la ola final atraviesa el escenario. Nadie termina fuera de los límites."
+   ],
+   "inCatalog": true
+  },
+  "aurelia": {
+   "name": "Aurelia, la Arquitecta Solar",
+   "title": "La Arquitecta Solar",
+   "role": "Maga constructora: levanta geometría de luz sólida y convierte el terreno en un plano que castiga a quien lo cruza.",
+   "cardLore": "",
+   "history": "Aurelia trazaba los planos del Laberinto cuando todavía era un templo al sol. Vio cómo la Horda torció los pasillos para que nadie encontrara la salida. No intentó romper las paredes: aprendió a dibujar otras encima, de luz sólida, que duran lo suficiente para que alguien pase. Lleva el compás de su maestra y una regla: toda estructura que levanta debe tener una puerta.",
+   "passive": "Sus habilidades dejan Nodos Solares (máx. 3). Con tres nodos se forma un triángulo de luz: los enemigos dentro reciben daño periódico y se frenan.",
+   "skills": [
+    "Cristaliza un Nodo Solar en el punto elegido (máx. 3) con un pequeño estallido.",
+    "Rayo en línea; cada nodo que toca lo refracta hacia el enemigo más cercano.",
+    "Se traslada al nodo más lejano (o al punto elegido) y crea un nodo donde estaba.",
+    "Los nodos se elevan en una catedral geométrica de luz: pulsos de daño dentro y regeneración para aliados."
+   ],
+   "inCatalog": false
+  },
+  "khepri": {
+   "name": "Khepri, el Portador del Enjambre",
+   "title": "El Portador del Enjambre",
+   "role": "Asesino que comanda un enjambre visible: lo lanza, lo recoge y lo convierte en armadura.",
+   "cardLore": "",
+   "history": "En el Abismo, los escarabajos son lo único que la Horda no logró corromper: se comen lo que ella deja. Khepri fue sacerdote de un culto que los alimentaba para mantener limpias las tumbas. Cuando la Horda llegó, el enjambre lo eligió a él. No lo obedece por miedo: lo sigue porque Khepri siempre sabe dónde hay carroña.",
+   "passive": "Cada enemigo que muere cerca alimenta el enjambre (máx. 60 escarabajos). El enjambre es visible y potencia sus habilidades.",
+   "skills": [
+    "Envía el enjambre al punto elegido: atraviesa el campo, envuelve a los enemigos y vuelve.",
+    "Los escarabajos forman una armadura: escudo según el enjambre (consume 15).",
+    "Salto rasante: los escarabajos muerden todo lo que cruza.",
+    "Khepri se descompone en enjambre y cubre una región: daño continuo y −60% de daño recibido mientras dura."
+   ],
+   "inCatalog": false
+  },
+  "velmira": {
+   "name": "Velmira, la Reina de las Máscaras",
+   "title": "La Reina de las Máscaras",
+   "role": "Soporte de control: cada máscara es un estado mágico, y cambiar de rostro reescribe la próxima habilidad.",
+   "cardLore": "",
+   "history": "El teatro de la Ciudad cerró la noche del regreso, pero Velmira siguió dando funciones para los que se refugiaron en el escenario. Cuando el miedo era demasiado, les prestaba una máscara: quien se ponía la de la Valentía dejaba de temblar. Las máscaras aprendieron. Ahora flotan a su alrededor y cada una guarda la emoción de alguien que sobrevivió esa noche.",
+   "passive": "Lleva una máscara activa: Inspiración, Terror, Silencio o Protección. Cada habilidad aplica el efecto de la máscara; cambiar de rostro potencia la siguiente habilidad un 30%.",
+   "skills": [
+    "Lanza la máscara activa en línea: daña y aplica su efecto a enemigos y aliados que toca.",
+    "Las máscaras giran a su alrededor: aliados reciben el beneficio y enemigos el castigo de la máscara activa.",
+    "Cambia a la siguiente máscara con un pequeño salto: la próxima habilidad se potencia un 30%.",
+    "Cuatro máscaras espectrales gigantes actúan en secuencia: Inspiración, Terror, Silencio y Protección."
+   ],
+   "inCatalog": false
+  },
+  "vhal": {
+   "name": "Vhal, el Astrónomo Caído",
+   "title": "El Astrónomo Caído",
+   "role": "Mago gravitatorio: acumula Masa sobre la horda hasta que los enemigos se atraen entre sí y colapsan.",
+   "cardLore": "",
+   "history": "Vhal medía estrellas desde la torre más alta de la Gélida. La noche del regreso vio una caer hacia la arena y corrió a buscarla. La encontró viva. Desde entonces una parte de su cuerpo es cielo: se le ven las constelaciones debajo de la piel. Calcula órbitas para que la Horda se estrelle contra sí misma.",
+   "passive": "Sus habilidades acumulan Masa en los enemigos (máx. 5). Los enemigos con 3 o más Masa atraen poco a poco a los comunes cercanos.",
+   "skills": [
+    "Proyectil estelar en línea: daña y añade 1 de Masa.",
+    "Pozo en el punto elegido: atrae comunes al centro y daña; la Masa aumenta la atracción.",
+    "Se desplaza en arco alrededor del punto elegido dejando una estela que añade Masa.",
+    "Una estrella crece, se vuelve singularidad y colapsa: el estallido final escala con la Masa consumida."
+   ],
+   "inCatalog": false
+  },
+  "bront": {
+   "name": "Bront, la Fortaleza Viviente",
+   "title": "La Fortaleza Viviente",
+   "role": "Tanque que se desarma en placas defensivas y termina convertido en fortificación.",
+   "cardLore": "",
+   "history": "Nadie recuerda quién vestía a Bront. En la Fábrica encontraron la armadura vacía, de pie, sosteniendo una puerta mientras los últimos obreros escapaban. El cristal de su pecho es un fragmento del Sello que el Forjador escondió allí. Bront no habla de sí mismo; habla de las puertas que todavía tiene que sostener.",
+   "passive": "Al recibir daño desprende placas (una cada 2,5 s, máx. 4). Las placas protegen: aliados cerca reciben −12% de daño y enemigos que las tocan se frenan.",
+   "skills": [
+    "Lanza una placa que daña en línea y queda en el suelo como placa defensiva.",
+    "Levanta una muralla de placas frente a él: los enemigos que la cruzan reciben daño y se frenan mucho.",
+    "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
+    "Se ancla y se transforma en fortificación: +40% de reducción de daño, murallas alrededor y refugio para aliados."
+   ],
+   "inCatalog": false
+  },
+  "oriel": {
+   "name": "Oriel, la Portera de las Cicatrices",
+   "title": "La Portera de las Cicatrices",
+   "role": "Soporte de reposicionamiento: abre pares de portales a través de las Cicatrices de la Horda y convierte el mapa en un atajo para su equipo.",
+   "cardLore": "",
+   "history": "Las Cicatrices de la Horda unen arenas que no deberían tocarse. Oriel trabajaba en la Fábrica marcando las grietas para que nadie cayera. Un día una se abrió bajo sus pies y salió del otro lado del Fúngico, viva. Desde entonces sabe dónde se puede pasar. No cierra las Cicatrices: las usa para llevar a los suyos lejos de la Horda antes de que la Horda llegue.",
+   "passive": "Los aliados que atraviesan sus portales salen del otro lado con escudo y +20% de velocidad (3 s). Los enemigos que los tocan son rechazados y dañados.",
+   "skills": [
+    "Abre un portal donde está y otro en el punto elegido. Aliados que entran salen por el otro; enemigos son rechazados.",
+    "Cada portal abierto pulsa: daña enemigos y cura un poco a los aliados cercanos.",
+    "Oriel aparece en su otro portal (o en el punto elegido) y deja una grieta que daña.",
+    "Abre una Cicatriz gigante: enemigos dentro se frenan y reciben daño; ecos de campeones caídos salen a golpear y los aliados dentro reciben −20% de daño."
+   ],
+   "inCatalog": false
+  }
+ }
+}

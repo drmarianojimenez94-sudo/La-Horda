@@ -1,0 +1,106 @@
+{
+  "base": "66a0296",
+  "scope": "VFX/HUD regression, not competitive balance certification",
+  "referenceVersion": 1,
+  "checks": 282,
+  "regressionChecks": 98,
+  "skills": 72,
+  "simulations": 54,
+  "failures": [],
+  "errors": [],
+  "means": {
+    "tanque": {
+      "samples": 3,
+      "meanDamage": 9774.096189001548,
+      "survived": 3
+    },
+    "guerrero": {
+      "samples": 3,
+      "meanDamage": 11580.403711175199,
+      "survived": 3
+    },
+    "mago": {
+      "samples": 3,
+      "meanDamage": 16343.241839874108,
+      "survived": 3
+    },
+    "soporte": {
+      "samples": 3,
+      "meanDamage": 4786.0292245479,
+      "survived": 3
+    },
+    "segador": {
+      "samples": 3,
+      "meanDamage": 10733.75851913657,
+      "survived": 3
+    },
+    "axiom": {
+      "samples": 3,
+      "meanDamage": 14300.847345773202,
+      "survived": 3
+    },
+    "profeta": {
+      "samples": 3,
+      "meanDamage": 6329.0988670776205,
+      "survived": 3
+    },
+    "musashi": {
+      "samples": 3,
+      "meanDamage": 10763.290260770138,
+      "survived": 2
+    },
+    "cazadora": {
+      "samples": 3,
+      "meanDamage": 16832.385133583102,
+      "survived": 2
+    },
+    "nigromante": {
+      "samples": 3,
+      "meanDamage": 18784.258985448134,
+      "survived": 3
+    },
+    "libertador": {
+      "samples": 3,
+      "meanDamage": 11691.483524171994,
+      "survived": 3
+    },
+    "eren": {
+      "samples": 3,
+      "meanDamage": 13943.173652785985,
+      "survived": 3
+    },
+    "myla": {
+      "samples": 3,
+      "meanDamage": 20162.29602491877,
+      "survived": 3
+    },
+    "brasa": {
+      "samples": 3,
+      "meanDamage": 14284.360497522006,
+      "survived": 3
+    },
+    "eslabon": {
+      "samples": 3,
+      "meanDamage": 9042.3083036006,
+      "survived": 3
+    },
+    "morwen": {
+      "samples": 3,
+      "meanDamage": 12763.666813475429,
+      "survived": 3
+    },
+    "farolero": {
+      "samples": 3,
+      "meanDamage": 8819.033890497894,
+      "survived": 3
+    },
+    "iria": {
+      "samples": 3,
+      "meanDamage": 12038.13770567535,
+      "survived": 3
+    }
+  },
+  "visualReport": "combat-visual-results.json",
+  "simulationReport": "combat-results.json",
+  "regressionReport": "myla-regression-results.json"
+}

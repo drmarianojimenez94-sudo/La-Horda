@@ -40,7 +40,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
 
 (async () => {
   const relay = await startRelay();
-  const browser = await chromium.launch({ args: ['--no-sandbox'] });
+  const browser = await chromium.launch({ executablePath:process.env.CHROMIUM_PATH||undefined, args: ['--no-sandbox'] });
   const errors = [];
   async function device(name, opts){
     const ctx = await browser.newContext(Object.assign({ viewport: { width: 844, height: 390 }, hasTouch: true }, opts || {}));
@@ -57,7 +57,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     d.shot = async (n) => { if (OUT) { fs.mkdirSync(OUT, { recursive: true }); await d.page.screenshot({ path: path.join(OUT, n + '.png') }); } };
     d.vis = sel => d.page.isVisible(sel).catch(() => false);
     d.state = () => d.E(() => state);
-    d.token = () => d.E(() => (JSON.parse(localStorage.getItem('horda_account') || 'null') || {}).token);
+    d.token = () => d.E(() => (JSON.parse(localStorage.getItem(ACCOUNT_KEY) || 'null') || {}).token);
     d.waitFor = async (fn, ms, arg) => { const t0 = Date.now(); while (Date.now() - t0 < (ms || 10000)) { if (await d.E(fn, arg).catch(() => false)) return true; await sleep(100); } return false; };
     d.progress = (gold, lvl) => d.E(([g, l]) => { const k = Object.keys(save.champions)[0]; save.champions[k].unlocked = true; save.champions[k].level = l; save.starterChosen = true; save.gold = g; persist(); }, [gold, lvl]);
     // "sin conexión" con el servidor: se cortan solo los pedidos al servidor (el juego sigue servido)
@@ -167,7 +167,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
   await B.shot('04_clave_incorrecta');
   await B.page.fill('#acc-pass', PASS); await B.page.click('#acc-submit');
   await B.waitFor(() => state === 'mainmenu', 15000);
-  const bView = await B.E(() => ({ gold: save.gold, lvl: save.champions[Object.keys(save.champions)[0]].level, st: state }));
+  const bView = await B.E(() => ({ gold: save.gold, lvl: save.champions[Object.keys(save.champions)[0]].level, st: state,view:acct.view,status:document.querySelector(".acc-status")?.textContent,conflict:!!acct.conflict }));
   check('sync.B_ve_el_progreso_de_A', bView.gold === 14000 && bView.lvl === 8 && bView.st === 'mainmenu', bView);
 
   // ---------- 5) conflicto: A juega sin red mientras B sube otra cosa ----------
@@ -208,7 +208,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await V.page.click('[data-acc-tab="register"]');
     await V.fill(U_V, PASS, { pass2: PASS });
     await V.waitFor(() => state === 'starter' || state === 'mainmenu', 15000);
-    await V.E(() => { localStorage.removeItem('horda_account'); });
+    await V.E(() => { localStorage.removeItem(ACCOUNT_KEY); });
     await V.boot(URL_ACC);
     await V.page.click('#title-continue-btn');
     let msg = '';
@@ -247,7 +247,7 @@ async function cloudSave(token){ const r = await fetch(API + '/api/save', { head
     await D.page.click('#acc-logout-btn');
     await sleep(350); await D.page.click('#game-dialog .gd-ok');
     await D.waitFor(() => !accountState().logged && !!document.getElementById('acc-user'), 8000);
-    check('logout.cierra_sesion', !(await D.E(() => accountState().logged)) && !(await D.E(() => localStorage.getItem('horda_account'))));
+    check('logout.cierra_sesion', !(await D.E(() => accountState().logged)) && !(await D.E(() => localStorage.getItem(ACCOUNT_KEY))));
     check('logout.token_invalido_en_el_servidor', (await fetch(API + '/api/me', { headers: { authorization: 'Bearer ' + tokD } })).status === 401);
     check('logout.progreso_queda_en_el_dispositivo', (await D.E(() => save.gold)) === 4444);
     // entra a la cuenta de A (que tiene otro progreso): pregunta

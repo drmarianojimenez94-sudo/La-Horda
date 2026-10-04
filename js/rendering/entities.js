@@ -47,6 +47,7 @@ function drawHeroBody(h, drawScale, spinning, stealthed){
   // SKIN DE SET COMPLETO (única transformación visual completa por equipo). Solo si el arte existe
   // (SET_SKINS en set-effects.js); sin arte, el set completo se ve con su aura completa.
   if(typeof drawSetSkin==="function" && drawSetSkin(h, drawScale, stealthed?0.32:1)) return;
+  if(PORTADORES[h.classKey] && drawPortador(h, drawScale, stealthed?0.32:1)) return;
   // El Mago usa su propio atlas de sprites (arte provisto por el usuario) en vez del sprite
   // procedural; el resto de las clases sigue exactamente igual que antes.
   if(h.classKey==="mago" && drawMagoAtlas(h, drawScale, stealthed?0.32:1)){
@@ -147,10 +148,12 @@ function drawHeroOverlays(h, colossal, spinning){
       const a = t*7 + i*(6.28/windRings);
       ctx.save();
       ctx.globalAlpha = 0.55*prog + 0.15;
-      ctx.strokeStyle = "#9fe3ff"; ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(h.x, h.y, 24+i*11, a, a+1.7);
+      ctx.arc(h.x, h.y, (h.spinRadius||70)*(0.52+i*.09), a, a+1.7);
+      ctx.strokeStyle="#15243a";ctx.lineWidth=9;ctx.stroke();
+      ctx.strokeStyle = "#9fe3ff"; ctx.lineWidth = 5;
       ctx.stroke();
+      ctx.strokeStyle="#f1fbff";ctx.lineWidth=1.5;ctx.stroke();
       ctx.restore();
     }
 
@@ -186,6 +189,20 @@ function drawHeroOverlays(h, colossal, spinning){
   }
 
   if(h.stormTimer>0){
+    // Three elements share the actual storm range. Sparse arcs leave enemy tells visible.
+    ctx.save();
+    const calm=typeof JUICE!=='undefined'&&JUICE.reduceMotion;
+    const turn=calm?0:performance.now()/1800;
+    const fade=Math.min(1,h.stormTimer/450);
+    ctx.globalAlpha=.65*fade;
+    for(let i=0;i<3;i++){
+      const a=turn+i*Math.PI*2/3;
+      ctx.beginPath();ctx.arc(h.x,h.y,h.stormRadius,a,a+1.15);
+      ctx.strokeStyle='#151b32';ctx.lineWidth=8;ctx.stroke();
+      ctx.strokeStyle=['#ffa451','#97e4ff','#ffe793'][i];ctx.lineWidth=4;ctx.stroke();
+      ctx.strokeStyle='#fff8eb';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.restore();
     // armadura de fuego: aura roja pulsante con alguna chispa de hielo
     const now = performance.now()/1000;
     const pulse = 0.6+0.4*Math.sin(now*9);
@@ -486,6 +503,9 @@ function _entPush(y, e, h, w, p, s){
 }
 function _entSort(a, b){ return a.y-b.y; }
 function drawProjectileFx(p){
+  if(p.src && p.src.classKey==="myla" && p.fromBasic){
+    ctx.save();ctx.fillStyle=p.color;ctx.fillRect(p.x-5,p.y-4,10,8);ctx.fillRect(p.x-3,p.y-6,6,12);ctx.fillStyle="#ffffff";ctx.fillRect(p.x-3,p.y-3,4,4);ctx.restore();return;
+  }
   if(p.fortSpr && arenaHook("drawProjectile", p)) return;
   if(p.lob){
     // tiro en arco: sombra en el piso + proyectil elevado según la altura del arco

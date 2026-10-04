@@ -29,15 +29,33 @@ function netLog(ev, data){
   try{ console.log("[B1] "+line); }catch(e){}
   if(typeof netDebugRefresh==="function") netDebugRefresh();
 }
-function netServerUrl(){
-  if(net.serverOverride) return net.serverOverride; // vino en un enlace pegado en Multijugador
+function netNormalizeServer(value){
   try{
-    const q = new URLSearchParams(location.search).get("server");
-    if(q) return q;
-    const ls = localStorage.getItem("horda_server");
-    if(ls) return ls;
+    const u=new URL(String(value||""));
+    if(!["ws:","wss:"].includes(u.protocol)||u.username||u.password||u.search||u.hash) return "";
+    if(location.protocol==="https:" && u.protocol!=="wss:" && !["localhost","127.0.0.1","[::1]"].includes(u.hostname)) return "";
+    return u.href.replace(/\/+$/,"");
+  }catch(e){ return ""; }
+}
+function netInitialServer(){
+  try{
+    const q=new URLSearchParams(location.search).get("server");
+    if(q) return netNormalizeServer(q);
+    const stored=localStorage.getItem("horda_server");
+    if(stored) return netNormalizeServer(stored);
   }catch(e){}
-  return NET_CONFIG.serverUrl || "";
+  return netNormalizeServer(NET_CONFIG.serverUrl);
+}
+function netServerUrl(){ return net.serverOverride ? netNormalizeServer(net.serverOverride) : netInitialServer(); }
+function netEnvironment(url){
+  const value=netNormalizeServer(url||netServerUrl());
+  if(value==="wss://fondalstudios.com/la-horda/red") return {kind:"primary",label:"FONDAL · ALPHA PRINCIPAL"};
+  if(value==="wss://la-horda-relay.onrender.com") return {kind:"legacy",label:"RENDER · SERVIDOR ANTERIOR"};
+  return {kind:"test",label:"PRUEBAS · SERVIDOR MANUAL"};
+}
+function netEnvironmentHTML(){
+  const env=netEnvironment(), escape=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  return `<div class="net-environment"><b>${env.label}</b><span>${escape(netServerUrl())}</span>${env.kind!=="primary"?'<a class="btn secondary small" href="https://fondalstudios.com/la-horda/jugar/">IR A LA ALPHA PRINCIPAL</a>':''}</div>`;
 }
 function netAvailable(){ return !!netServerUrl(); }
 // Despierta al servidor apenas se entra a la pre-sala (en el plan gratuito se duerme tras 15 min
@@ -90,7 +108,11 @@ function _netConnectOnce(url, maxMs){
     try{ ws = new WebSocket(url); }catch(e){ net.status = "error"; reject(e); return; }
     net.ws = ws;
     const timer = setTimeout(()=>{ if(ws.readyState!==1){ try{ ws.onclose = null; ws.close(); }catch(e){} net.status = "closed"; if(net.ws===ws) net.ws = null; reject(new Error("tiempo agotado")); } }, maxMs);
-    ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url}); resolve();
+    ws.onopen = ()=>{ clearTimeout(timer); net.status = "open"; net.lastPongAt = performance.now(); netLog("CONNECTED", {url});
+      // Identidad de cuenta (Fundador): el relay la verifica con el servidor de cuentas; opcional.
+      const tok = typeof accountPresenceToken==="function" ? accountPresenceToken(url) : null;
+      if(tok){ try{ ws.send(JSON.stringify({t:"identify", token:tok})); }catch(e){} }
+      resolve();
       _netEmit("open"); }; // p.ej. terminar un intercambio que quedó a mitad (js/net/net-trade.js)
     ws.onerror = ()=>{ netLog("NETWORK_ERROR", {where:"socket"}); };
     ws.onclose = (ev)=>{
@@ -170,6 +192,8 @@ function _netHandle(m){
     case "chat": _netEmit("chat", m.m); return;
     case "trade": _netEmit("trade", m); return;   // intercambio en la sala (js/net/net-trade.js)
     case "rooms": _netEmit("rooms", m.list); return; // salas públicas (js/net/net-rooms.js)
+    case "identified": net.identity = { founder: m.founder || null }; _netEmit("identified", m); return;
+    case "presence": if(typeof founderPresenceShow==="function") founderPresenceShow(m.scope, m.founders, net.code); _netEmit("presence", m); return;
     case "closed":
       netLog(m.reason==="host_left" ? "HOST_LEFT" : "ROOM_CLOSED", {reason:m.reason});
       const role = net.role;
@@ -177,6 +201,8 @@ function _netHandle(m){
       _netEmit("closed", m.reason, role);
       return;
     case "error":
+      if(m.code==="NO_ROOM" && !net.room) return; // un relay viejo no conoce "identify": no es un error de sala
+      if(m.code==="CHAMP_NOT_OWNED"){ _netEmit("chatError", m.code); return; }
       if(/^CHAT_/.test(m.code||"")){ _netEmit("chatError", m.code); return; } // anti-spam del chat: aviso chico, no un error de red
       if(m.trade || /^(TRADE_|ROOMS_)/.test(m.code||"")){ _netEmit("tradeError", m); return; } // intercambio / lista de salas: no es un error de la sala
       if(!net.room) net._joinError = m; // crear/unirse espera esto para explicar por qué no se pudo (_netAwaitJoin)

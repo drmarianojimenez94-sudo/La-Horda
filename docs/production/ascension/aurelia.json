@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "id": "aurelia",
+  "name": "Aurelia",
+  "title": "La Arquitecta Solar",
+  "role": "mago",
+  "fantasy": "Maga constructora: levanta geometría de luz sólida y convierte el terreno en un plano que castiga a quien lo cruza.",
+  "lore": "Aurelia trazaba los planos del Laberinto cuando todavía era un templo al sol. Vio cómo la Horda torció los pasillos para que nadie encontrara la salida. No intentó romper las paredes: aprendió a dibujar otras encima, de luz sólida, que duran lo suficiente para que alguien pase. Lleva el compás de su maestra y una regla: toda estructura que levanta debe tener una puerta.",
+  "personality": "Toda estructura empieza con un punto. / Medí dos veces. Iluminé una. / El plano… quedó sin terminar…",
+  "silhouette": "Túnica de arquitecta con hombreras angulares, compás gigante a la espalda y tres prismas flotando en triángulo.",
+  "stats": {
+    "hp": 98,
+    "damage": 12,
+    "speed": 165
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Básico a distancia",
+      "cooldownMs": 520,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Pose de ataque",
+      "execution": "Golpe básico",
+      "impact": "Daño único",
+      "feedback": "Número de daño",
+      "vfx": "existing basic VFX",
+      "sfx": "hit"
+    },
+    "skills": [
+      {
+        "id": "prism",
+        "description": "Cristaliza un Nodo Solar en el punto elegido (máx. 3) con un pequeño estallido.",
+        "cooldownMs": 4200,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Prisma",
+        "impact": "Cristaliza un Nodo Solar en el punto elegido (máx. 3) con un pequeño estallido.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_aurelia_cast"
+      },
+      {
+        "id": "refract",
+        "description": "Rayo en línea; cada nodo que toca lo refracta hacia el enemigo más cercano.",
+        "cooldownMs": 6400,
+        "maxTargets": 20,
+        "hordeMechanism": "",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Refracción",
+        "impact": "Rayo en línea; cada nodo que toca lo refracta hacia el enemigo más cercano.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_aurelia_cast"
+      },
+      {
+        "id": "luminal",
+        "description": "Se traslada al nodo más lejano (o al punto elegido) y crea un nodo donde estaba.",
+        "cooldownMs": 8800,
+        "maxTargets": 20,
+        "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+        "anticipation": "Pose de cast y telegraph del área",
+        "execution": "Ejecución de Paso Luminal",
+        "impact": "Se traslada al nodo más lejano (o al punto elegido) y crea un nodo donde estaba.",
+        "feedback": "Impacto propio y número de daño",
+        "vfx": "js/champions/ascension/render.js",
+        "sfx": "asc_aurelia_cast"
+      }
+    ],
+    "ultimate": {
+      "id": "cathedral",
+      "description": "Los nodos se elevan en una catedral geométrica de luz: pulsos de daño dentro y regeneración para aliados.",
+      "cooldownMs": 40000,
+      "maxTargets": 60,
+      "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
+      "anticipation": "Pose de cast y telegraph del área",
+      "execution": "Ejecución de Catedral del Sol",
+      "impact": "Los nodos se elevan en una catedral geométrica de luz: pulsos de daño dentro y regeneración para aliados.",
+      "feedback": "Impacto propio y número de daño",
+      "vfx": "js/champions/ascension/render.js",
+      "sfx": "asc_aurelia_ult"
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/aurelia/atlas.png",
+    "preview": "assets/sprites/champions/aurelia/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "70a8c54b3798570ee6222a336d8d9b56477fa695fdee59e8056d1c708513f3aa",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": "",
+      "note": "Arte generado por código; requiere revisión humana del Visual Gate (docs/ART_BIBLE.md §8)."
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/ascension/runtime.js",
+    "codex": "js/champions/ascension/register.js",
+    "talents": "js/champions/ascension/register.js",
+    "mastery": "js/champions/ascension/register.js",
+    "set": "js/champions/ascension/register.js",
+    "kitTest": "tools/ascension/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "aurelia_alt1",
+      "type": "skin",
+      "champion": "aurelia",
+      "name": "Vitral del Mediodía",
+      "rarity": "Épica",
+      "tagline": "Túnica de paneles de vitral emplomado, compás de plomo y prismas de colores en lugar de oro.",
+      "lore": "Los vidrieros del Laberinto le regalaron un manto hecho con las ventanas que salvó.",
+      "visualTheme": "Túnica de paneles de vitral emplomado, compás de plomo y prismas de colores en lugar de oro.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/aurelia/skins/aurelia_alt1/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    },
+    {
+      "id": "aurelia_alt2",
+      "type": "skin",
+      "champion": "aurelia",
+      "name": "Catedral Corrupta",
+      "rarity": "Épica",
+      "tagline": "Armadura de piedra ennegrecida con grietas de luz roja y prismas de obsidiana.",
+      "lore": "Una vez dibujó una catedral para la Horda. Lleva sus restos para recordar que la luz también se puede torcer.",
+      "visualTheme": "Armadura de piedra ennegrecida con grietas de luz roja y prismas de obsidiana.",
+      "unlockSource": "alpha-test",
+      "collection": "Ascensión",
+      "vfxProfile": "js/champions/ascension/render.js",
+      "visualChanges": [
+        "secondarySilhouette",
+        "accessory",
+        "vfx"
+      ],
+      "preview": "assets/sprites/champions/aurelia/skins/aurelia_alt2/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null
+    }
+  ],
+  "set": {
+    "sourceArena": "laberinto",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 0,
+    "audioVoices": 3
+  },
+  "evidence": {
+    "reference": "docs/balance/entry-gate-results.json",
+    "balance": "docs/balance/entry-gate-results.json",
+    "visuals": "docs/art-gate/roster-gate.json",
+    "audio": "",
+    "multiplayer": "docs/founders/online-presence-results.json",
+    "performance": "docs/founders/performance-results.json"
+  },
+  "category": "STANDARD"
+}

@@ -1,0 +1,117 @@
+{
+ "scope": "tools/balance/known-champion-sim.js: autopilot, Bosque, level 20, 3 seeds x 150 s. Base = a8ca09e (without classic passives); new = with CLASSIC_PASSIVES. Run-to-run noise is about +/-10%.",
+ "base": [
+  {
+   "key": "tanque",
+   "role": "tanque",
+   "meanDamage": 4660,
+   "ceiling": 14180,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 1891,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "guerrero",
+   "role": "asesino",
+   "meanDamage": 5330,
+   "ceiling": 17385,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 1899,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "mago",
+   "role": "mago",
+   "meanDamage": 8270,
+   "ceiling": 20250,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 1832,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "soporte",
+   "role": "soporte",
+   "meanDamage": 3848,
+   "ceiling": 8804,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 2072,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "axiom",
+   "role": "mago",
+   "meanDamage": 8378,
+   "ceiling": 20250,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 1844,
+   "healing": 0,
+   "errors": 0
+  }
+ ],
+ "new": [
+  {
+   "key": "tanque",
+   "role": "tanque",
+   "meanDamage": 4466,
+   "ceiling": 14180,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 1301,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "guerrero",
+   "role": "asesino",
+   "meanDamage": 5371,
+   "ceiling": 17385,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 1827,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "mago",
+   "role": "mago",
+   "meanDamage": 8017,
+   "ceiling": 20250,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 2187,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "soporte",
+   "role": "soporte",
+   "meanDamage": 3992,
+   "ceiling": 8804,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 2525,
+   "healing": 0,
+   "errors": 0
+  },
+  {
+   "key": "axiom",
+   "role": "mago",
+   "meanDamage": 7609,
+   "ceiling": 20250,
+   "underCeiling": true,
+   "survived": "3/3",
+   "teamTaken": 2060,
+   "healing": 0,
+   "errors": 0
+  }
+ ]
+}

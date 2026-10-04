@@ -29,10 +29,15 @@ let activeChampion = null; // subjefe/jefe activo: mientras exista, se detiene l
 
 // Vida/daño del jefe: base de su ficha x poder del equipo (difficulty.js) x perilla de jefes.
 function scaleBossStats(e, type){
+  if(typeof AlphaServices!=="undefined")AlphaServices.announceBoss(e);
   e.hp = e.maxHp = Math.round(ENEMY_BASE[type].hp * runDifficulty.hp * DIFF.bossHp * (DIFF.bossHpType[type]||1) * (arenaMods().enemyHpMult||1));
   e.dmg = Math.round(runDifficulty.avgHp * (DIFF.bossDmgPct[currentArena]||0.12));
   e.basicMult = DIFF.bossBasicMult;
   if(typeof endlessOn==="function" && endlessOn()) endlessScaleBoss(e);
+  if(typeof alphaWorldMultiplier==="function"){
+    e.hp=e.maxHp=Math.max(1,Math.round(e.maxHp*alphaWorldMultiplier("bossHp")*alphaWorldMultiplier("difficulty")));
+    e.dmg*=alphaWorldMultiplier("enemyDamage")*alphaWorldMultiplier("difficulty");
+  }
 }
 // Llegada del jefe: la horda que quedaba se dispersa (muere con su animación, sin premio),
 // temblor, rugido y cambio de música. Después aparece su guía con 3 consejos (boss-hud.js).
@@ -47,6 +52,7 @@ function bossEntrance(e){
   vfxShake(12); flashScreen(0.3, "255,200,140"); playSfx("bossRoar");
   if(typeof setMusicMode==="function") setMusicMode("boss");
   bossHudShow(e);
+  if(typeof AlphaServices!=="undefined")AlphaServices.announceBoss(e);
 }
 function startBossFight(){
   bossActive = true;
@@ -72,6 +78,7 @@ function startBossFight(){
   }
   boss.bossPhase = 1;
   bossEntrance(boss);
+  if(!divinaMode && typeof bossTitleCard==="function" && bossTitleCard(boss)) return; // cartel grande (boss-blueprints.js)
   showBanner(currentArena==="hielo" ? "EL MAGO GÉLIDO DESPIERTA" : (currentArena==="bosque" ? "EL GUARDIÁN ANCESTRAL CORROMPIDO DESPIERTA" : (currentArena==="laberinto" ? "EL MINOTAURO DESPIERTA" : (currentArena==="acuatica" ? "¡EL LEVIATÁN EMERGE DE LAS PROFUNDIDADES!" : "EL DEMONIO MAYOR DESPIERTA"))));
 }
 
@@ -87,7 +94,7 @@ function beginLevelClear(){
     o.alive = false; o.hp = 0; n++;
     kills++;
     grantXP(player.classKey, Math.round(o.xp*0.5));
-    if(netIsHost()) for(const h of heroes) if(h.isRemote) netEmitTo(h._netSlot, "xp", [Math.round(o.xp*0.5)]);
+    if(netIsHost()) for(const h of heroes) if(h.isRemote) netEmitTo(h._netSlot, "xp", [Math.round(o.xp*0.5),h.classKey]);
     vfxOnDeath(o);
   }
   enemies = enemies.filter(o=>o.alive);

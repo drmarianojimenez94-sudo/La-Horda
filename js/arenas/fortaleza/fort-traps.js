@@ -100,7 +100,26 @@ function _fortTrapHitHero(h, pct, o){
   if(o.stun && !(h._fortStunImm>0)){ h.stunTimer = Math.max(h.stunTimer||0, o.stun); h._fortStunImm = 3200; }
   if(o.slow){ h.slowAmt = Math.max(h.slowAmt||0, o.slow); h.slowTimer = Math.max(h.slowTimer||0, o.slowMs||800); }
 }
+// EL CABALLERO EN SU PROPIA FÁBRICA (BOSS_BLUEPRINTS.caballero, gancho "caballero.trampa"): las trampas que la
+// cámara despierta en su fase 2 también lo alcanzan a él. Atraerlo a una prensa/engranaje/cadena/forja en
+// marcha lo golpea (% de su vida) y lo deja aturdido un instante. Una vez cada 9 s como máximo (no se
+// encadena), y nunca mientras clava la espada (inmune) o ya está aturdido.
+const FORT_KNIGHT_TRAP = {pct:0.035, stun:1100, cdMs:9000};
+function _fortTrapHitKnight(e, o){
+  if(!e.alive || (e._trapCd||0) > (typeof runElapsedMs!=="undefined" ? runElapsedMs : 0) || e.stunTimer > 0) return;
+  if(e.dmgTakenMult !== undefined && e.dmgTakenMult < 0.05) return;   // inmune (clavando la espada, transición)
+  const C = FORT_KNIGHT_TRAP;
+  e._trapCd = (typeof runElapsedMs!=="undefined" ? runElapsedMs : 0) + C.cdMs;
+  damageEnemy(e, Math.max(1, e.maxHp*C.pct), {src:{x:o.x, y:o.y}, critChanceOverride:0, fromProc:true});
+  if(!e.alive) return;
+  e.stunTimer = Math.max(e.stunTimer||0, C.stun); e.bossCharge = null;
+  floatText(e.x, e.y - e.radius*2.4, "¡TRAMPA!", "crit");
+  vfxShock(e.x, e.y, e.radius*0.5, e.radius*2.6, "255,170,90", 520, 2); vfxShake(7);
+  showBanner("⚙ ¡EL CABALLERO CAYÓ EN SU PROPIA MÁQUINA!");
+  if(typeof bossArenaEvent==="function") bossArenaEvent("caballero.trampa", e);
+}
 function _fortTrapHitEnemy(e, pct, o){
+  if(e.alive && e.type==="caballero"){ _fortTrapHitKnight(e, o); return; }
   if(!e.alive || e.rank==="jefe" || e.rank==="subjefe") return;
   if(e.flying && !o.air) return;
   const C = FORT_CFG.cycle;

@@ -1,0 +1,235 @@
+{
+  "checks": [
+    {
+      "name": "heals self and ally",
+      "ok": true
+    },
+    {
+      "name": "healing capped",
+      "ok": true
+    },
+    {
+      "name": "multi target pulse",
+      "ok": true
+    },
+    {
+      "name": "offensive boundary",
+      "ok": true
+    },
+    {
+      "name": "boss damaged without displacement",
+      "ok": true
+    },
+    {
+      "name": "does not resurrect",
+      "ok": true
+    },
+    {
+      "name": "mastery expands radius",
+      "ok": true
+    },
+    {
+      "name": "healthy bot attacks",
+      "ok": true
+    },
+    {
+      "name": "no bot waste without enemies",
+      "ok": true
+    },
+    {
+      "name": "identity tanque",
+      "ok": true
+    },
+    {
+      "name": "identity guerrero",
+      "ok": true
+    },
+    {
+      "name": "identity mago",
+      "ok": true
+    },
+    {
+      "name": "identity soporte",
+      "ok": true
+    },
+    {
+      "name": "four walk/cast frames down",
+      "ok": true
+    },
+    {
+      "name": "four walk/cast frames side",
+      "ok": true
+    },
+    {
+      "name": "four walk/cast frames left",
+      "ok": true
+    },
+    {
+      "name": "four walk/cast frames up",
+      "ok": true
+    },
+    {
+      "name": "arena bosque",
+      "ok": true
+    },
+    {
+      "name": "arena hielo",
+      "ok": true
+    },
+    {
+      "name": "arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "arena micelial",
+      "ok": true
+    },
+    {
+      "name": "arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "arena abismo",
+      "ok": true
+    },
+    {
+      "name": "arena minas",
+      "ok": true
+    },
+    {
+      "name": "arena infernal",
+      "ok": true
+    },
+    {
+      "name": "pulse VFX serialize",
+      "ok": true
+    },
+    {
+      "name": "run reset clears pulse",
+      "ok": true
+    },
+    {
+      "name": "Elyra marches in foreground",
+      "ok": true
+    },
+    {
+      "name": "new art shared by title and game",
+      "ok": true
+    }
+  ],
+  "runs": [
+    {
+      "seed": 117,
+      "sim": {
+        "t": 149998.50000000323,
+        "state": "playing",
+        "runLevel": 5,
+        "alive": true,
+        "hp": 276,
+        "maxHp": 276,
+        "kills": 386,
+        "boss": null,
+        "allies": [
+          {
+            "k": "tanque",
+            "alive": true,
+            "hp": 693
+          },
+          {
+            "k": "guerrero",
+            "alive": true,
+            "hp": 285
+          },
+          {
+            "k": "mago",
+            "alive": true,
+            "hp": 224
+          }
+        ],
+        "enemies": 10
+      },
+      "damage": 4233.692017055308,
+      "heal": 9893.351139839997,
+      "error": null
+    },
+    {
+      "seed": 431,
+      "sim": {
+        "t": 149998.50000000323,
+        "state": "playing",
+        "runLevel": 5,
+        "alive": true,
+        "hp": 276,
+        "maxHp": 276,
+        "kills": 388,
+        "boss": null,
+        "allies": [
+          {
+            "k": "tanque",
+            "alive": true,
+            "hp": 693
+          },
+          {
+            "k": "guerrero",
+            "alive": true,
+            "hp": 285
+          },
+          {
+            "k": "mago",
+            "alive": true,
+            "hp": 224
+          }
+        ],
+        "enemies": 11
+      },
+      "damage": 4061.9856841757974,
+      "heal": 9829.037998079997,
+      "error": null
+    },
+    {
+      "seed": 991,
+      "sim": {
+        "t": 149998.50000000323,
+        "state": "playing",
+        "runLevel": 5,
+        "alive": true,
+        "hp": 276,
+        "maxHp": 276,
+        "kills": 391,
+        "boss": null,
+        "allies": [
+          {
+            "k": "tanque",
+            "alive": true,
+            "hp": 693
+          },
+          {
+            "k": "guerrero",
+            "alive": true,
+            "hp": 280
+          },
+          {
+            "k": "axiom",
+            "alive": true,
+            "hp": 207
+          }
+        ],
+        "enemies": 14
+      },
+      "damage": 4724.294631100388,
+      "heal": 9484.209423359995,
+      "error": null
+    }
+  ],
+  "errors": [],
+  "mean": 4339.990777443832,
+  "ceiling": 8803.525500000002
+}

@@ -1,0 +1,114 @@
+{
+  "method": "10 arenas x 3 scripted experience profiles; one seed per profile/arena; expected level; no gear; 900s cap",
+  "results": [
+    {
+      "arena": "bosque",
+      "profile": "aprendiz",
+      "level": 6,
+      "phase": "final",
+      "result": "victory",
+      "seconds": 511,
+      "wave": 10,
+      "kills": 783,
+      "reserveUsed": true,
+      "active": "eren",
+      "boss": {
+        "type": "guardian_ancestral",
+        "hp": -43,
+        "max": 7498
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "bosque",
+      "profile": "ocasional",
+      "level": 6,
+      "phase": "final",
+      "result": "victory",
+      "seconds": 450,
+      "wave": 10,
+      "kills": 731,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "guardian_ancestral",
+        "hp": -8,
+        "max": 7498
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "bosque",
+      "profile": "habitual",
+      "level": 6,
+      "phase": "final",
+      "result": "victory",
+      "seconds": 530,
+      "wave": 10,
+      "kills": 745,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "guardian_ancestral",
+        "hp": -13,
+        "max": 7373
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "aprendiz",
+      "level": 17,
+      "phase": "final",
+      "result": "gameover",
+      "seconds": 438,
+      "wave": 10,
+      "kills": 968,
+      "reserveUsed": true,
+      "active": "eren",
+      "boss": {
+        "type": "mago_hielo_cristal",
+        "hp": 1137,
+        "max": 5578
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "ocasional",
+      "level": 17,
+      "phase": "final",
+      "result": "victory",
+      "seconds": 470,
+      "wave": 10,
+      "kills": 950,
+      "reserveUsed": true,
+      "active": "eren",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": -11,
+        "max": 11603
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "habitual",
+      "level": 17,
+      "phase": "final",
+      "result": "gameover",
+      "seconds": 583,
+      "wave": 10,
+      "kills": 983,
+      "reserveUsed": true,
+      "active": "mago",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": 8805,
+        "max": 11126
+      },
+      "autopilotError": null
+    }
+  ],
+  "errors": []
+}

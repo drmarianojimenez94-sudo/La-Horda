@@ -33,12 +33,12 @@ function _starterFinish(){
 function renderStarterSelect(){
   const pr = document.getElementById("starter-price"); if(pr) pr.textContent = fmtGold(CHAMPION_PRICE_GOLD);
   const grid = document.getElementById("starter-grid"); if(!grid) return;
-  grid.innerHTML = CHAMPION_CATALOG.map(c=>{
+  grid.innerHTML = CHAMPION_CATALOG.filter(c=>championMeta(c.id).starterEligible && shopChampionPurchasable(c.id)).map(c=>{
     const cls = CLASSES[c.id];
     return `<button class="gallery-card starter-card ${_starterPick===c.id?"sel":""}" data-champ="${c.id}">
       <canvas class="champ-anim starter-anim" width="110" height="110" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
-      <div class="gallery-card-name">${cls.name}</div>
-      ${(STARTER_ROLE_LABEL[cls.roleCategory]||"") && STARTER_ROLE_LABEL[cls.roleCategory]!==cls.name ? `<div class="mychamp-meta">${STARTER_ROLE_LABEL[cls.roleCategory]}</div>` : ""}
+      <div class="gallery-card-name">${championShortName(c.id)}</div><div class="champ-title">${championTitle(c.id)}</div>
+      ${(STARTER_ROLE_LABEL[cls.roleCategory]||"") && STARTER_ROLE_LABEL[cls.roleCategory]!==championShortName(c.id) ? `<div class="mychamp-meta">${STARTER_ROLE_LABEL[cls.roleCategory]}</div>` : ""}
       <div class="starter-lore">${c.lore}</div>
     </button>`;
   }).join("");
@@ -47,7 +47,7 @@ function renderStarterSelect(){
       _starterPick = card.getAttribute("data-champ");
       grid.querySelectorAll(".starter-card").forEach(c2=>c2.classList.toggle("sel", c2===card));
       const box = document.getElementById("starter-confirm");
-      document.getElementById("starter-confirm-text").innerHTML = `¿Empezar la campaña con <b>${CLASSES[_starterPick].name}</b>?`;
+      document.getElementById("starter-confirm-text").innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? <details><summary>Ver habilidades</summary>${championGuideHTML(_starterPick)}</details>`;
       box.classList.remove("hidden");
       // el cartel de confirmar es pegajoso (abajo): se baja todo lo posible sin perder de vista la carta
       // elegida, así el cartel queda en su lugar debajo de las cartas y no tapa la etiqueta de otras
@@ -86,8 +86,9 @@ document.getElementById("starter-no-btn").addEventListener("click", ()=>{
 });
 // El guardián seleccionado siempre tiene que ser uno PROPIO (si no, el primero que tenga).
 function ensureOwnedSelection(){
-  if(save.champions[selectedClass] && save.champions[selectedClass].unlocked) return true;
-  const own = Object.keys(CLASSES).find(k=>save.champions[k] && save.champions[k].unlocked);
+  const usable = k=>save.champions[k] && save.champions[k].unlocked && (typeof championPlayable!=="function" || championPlayable(k));
+  if(usable(selectedClass)) return true;
+  const own = Object.keys(CLASSES).find(usable);
   if(own){ selectedClass = own; return true; }
   return false;
 }

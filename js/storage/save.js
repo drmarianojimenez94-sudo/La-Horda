@@ -93,19 +93,8 @@ function defaultSave(){
 // Ciudad Maldita y va a la Mística, las cromas (1.500) y el segundo guardián (2.500). Quien ya recibió los
 // 10.000 los conserva: el oro se lee siempre del guardado persistido.
 let save = defaultSave();
-// MODO PRUEBA (pedido para seguir probando): todos los guardianes liberados y todas las arenas de la
-// campaña abiertas, en guardados nuevos y viejos. No toca niveles, oro, objetos ni talentos.
-// Para volver al modo campaña normal, poner esto en false. (Las pruebas automáticas de la campaña
-// lo apagan definiendo window.__campaignMode antes de cargar la página.)
-// BUGFIX 01: apagado. La campaña es secuencial (solo la Arena 1 abierta) y los guardianes se compran.
-const PLAYTEST_UNLOCK_ALL = false;
-function applyPlaytestUnlock(){
-  if(!PLAYTEST_UNLOCK_ALL) return;
-  let changed = !save.starterChosen;
-  for(const k in save.champions){ if(!save.champions[k].unlocked){ save.champions[k].unlocked = true; changed = true; } }
-  save.starterChosen = true;
-  if(changed) persist();
-}
+// La campaña normal nunca concede niveles ni desbloqueos de prueba al cargar.
+// Los perfiles antiguos se conservan hasta que su dueño elija reiniciarlos en Cuenta.
 // MODO DESARROLLADOR (auditoría pre-alfa): los regalos de prueba de abajo (nivel 90, todas las arenas,
 // todas las skins) ya NO se dan a cualquier perfil nuevo: un jugador que recibe el enlace por primera vez
 // juega la campaña real (guardián de regalo, Arena 01, nivel 1). Los perfiles que ya los recibieron los
@@ -114,6 +103,9 @@ function applyPlaytestUnlock(){
 function laHordaDevMode(){
   if(typeof window==="undefined" || window.__campaignMode) return false;
   try{
+    // Public URLs must never grant the old level-90/test inventory shortcut.
+    // Local debug mode is only a developer convenience, not an anti-cheat boundary.
+    if(!["localhost","127.0.0.1","[::1]"].includes(location.hostname)) return false;
     const q = new URLSearchParams(location.search).get("dev");
     if(q==="1") localStorage.setItem("laHordaDev", "1"); else if(q==="0") localStorage.removeItem("laHordaDev");
     return localStorage.getItem("laHordaDev")==="1";
@@ -158,7 +150,7 @@ function applyTestSkins(){
   persist();
 }
 function loadSave(){
-  try{ _loadSaveInner(); }finally{ applyPlaytestUnlock(); applyTestUnlock90(); applyTestSkins();
+  try{ _loadSaveInner(); }finally{ applyTestUnlock90(); applyTestSkins();
     // logros/desafíos/pase: completa los campos que falten (guardados viejos) y rota los desafíos del día
     if(typeof questsOnLoad==="function") questsOnLoad(); }
 }
@@ -171,6 +163,9 @@ function _loadSaveInner(){
       save = Object.assign(defaultSave(), parsed);
       save.itemSchemaV = ITEM_SCHEMA_VERSION;
       const defChamps = defaultSave().champions;
+      // Nunca se descarta progreso: también se conservan filas de campeones registrados fuera del
+      // catálogo público (INTERNAL/DRAFT de js/data/champion-taxonomy.js) o registrados más tarde.
+      if(typeof CLASSES!=="undefined") for(const k of Object.keys(parsed.champions||{})) if(!defChamps[k] && CLASSES[k]) defChamps[k] = mkChampion(false);
       save.champions = {};
       Object.keys(defChamps).forEach(k=>{
         const base = defChamps[k], loaded = (parsed.champions||{})[k] || {};
@@ -394,6 +389,8 @@ function needsStarterChampion(){
 let _persistTimer = null;
 function persistNow(){
   if(_persistTimer){ clearTimeout(_persistTimer); _persistTimer = null; }
+  // GM / TEST LAB: una sesión de prueba nunca escribe el progreso real (js/systems/test-lab.js).
+  if(typeof testLabActive==="function" && testLabActive()) return;
   // B1: mientras el anfitrión simula a un invitado, su guardián usa los datos del invitado;
   // netPersistView escribe siempre los datos propios del anfitrión.
   const data = (typeof netPersistView==="function") ? netPersistView(save) : save;

@@ -62,8 +62,10 @@ function mnDropsUpdate(dt){
     if(D.t < D.d) continue;
     const src = D.from ? mnById(D.from) : null;
     if(D.dmg > 0) for(const h of heroes){ if(h.alive && mnDropHits(D, h.x, h.y, (h.radius||18)*0.5)){ bossHitHero(h, D.dmg, {from:src, knock:D.knock||0, stun:D.stun||0}); if(D.torch) mnSnuffTorch(h, D.torch); } }
-    if(D.light){ mnLightsNear(D.x, D.y, D.lr || D.r + 40, L=>mnLightHit(L, D.light, D.lc || null)); }
-    if(D.black){ mnLightsBlackout(D.x, D.y, D.black, MN_CFG.light.tempOffMs, D.bn||0); }
+    let lit = 0; // luces afectadas por este golpe (gancho del Titán: BOSS_BLUEPRINTS.mn_titan)
+    if(D.light){ mnLightsNear(D.x, D.y, D.lr || D.r + 40, L=>{ const st = L.st, e0 = L.e; mnLightHit(L, D.light, D.lc || null); if(L.st!==st || L.e!==e0) lit++; }); }
+    if(D.black){ lit += mnLightsBlackout(D.x, D.y, D.black, MN_CFG.light.tempOffMs, D.bn||0); }
+    if(lit && src && src.type==="mn_titan" && typeof bossArenaEvent==="function") bossArenaEvent("mn_titan.luces", src);
     if(D.zone) mnDarkZone(D.x, D.y, D.zone, MN_CFG.light.zoneMs, "spit");
     if(D.fire){ mnS.fire.push({x:D.x, y:D.y, r:D.fire, t:0, d:4200, dps:D.dmg*0.18}); }
     if(D.rubble) mnRubbleAt(D.x, D.y);
