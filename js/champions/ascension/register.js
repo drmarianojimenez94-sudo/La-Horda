@@ -6,6 +6,8 @@ function ascensionTint(hex,toward,t){
  const a=hexToRgb(hex),b=hexToRgb(toward);if(!a||!b)return hex;
  const c=[a.r+(b.r-a.r)*t,a.g+(b.g-a.g)*t,a.b+(b.b-a.b)*t].map(v=>Math.round(v).toString(16).padStart(2,'0'));return '#'+c.join('');
 }
+// Proyectil propio de cada uno (skill-evolution.js drawProjStyle): ninguno comparte forma con otro guardián.
+const ASCENSION_PROJ={nano_gm:'halfmoon',facu_gm:'wave',aurelia:'prism',khepri:'scarab',velmira:'mask',vhal:'comet',bront:'fist',oriel:'key'};
 const ASCENSION_SKINS={};
 const ASCENSION_PENDING_SETS={}; // Sets de campeones INTERNAL: se registran al pasar a RELEASED // apariencias alternativas (perfil de VFX hasta que llegue el atlas encargado)
 for(const [k,p] of Object.entries(ASCENSION)){
@@ -24,7 +26,7 @@ for(const [k,p] of Object.entries(ASCENSION)){
  // Sprite de respaldo con paleta propia: provisorio hasta el atlas encargado (no es arte aprobado).
  PAL[k]={};for(const [c,v] of Object.entries(PAL[base]))PAL[k][c]=c==='a'?v:ascensionTint(v,p.color,.5);GRIDS[k]=GRIDS[base];
  CODEX_CHAMP_LORE[k]={origin:p.arena,history:p.history};HERO_VOICES[k]={pick:p.voices[0],win:p.voices[1],fall:p.voices[2]};
- ANIM_PROFILES[k]={...ANIM_PROFILES[base],basic:ranged?'ranged':'melee'};CHAMP_IDENTITY[k]={sig:'mark',proj:'glyph'};CODEX_SKILL_FX[k]=all.map(()=>({color:hexToRgb(p.color),fx:'zone'}));
+ ANIM_PROFILES[k]={...ANIM_PROFILES[base],basic:ranged?'ranged':'melee'};CHAMP_IDENTITY[k]={sig:'mark',proj:ASCENSION_PROJ[k]||'glyph'};CODEX_SKILL_FX[k]=all.map(()=>({color:hexToRgb(p.color),fx:'zone'}));
  ASCENSION_SKINS[k]=p.skins.map(([name,visualTheme,lore],i)=>({id:k+'_alt'+(i+1),champ:k,name,visualTheme,lore,founderOnly:!!p.founder,status:'GENERATED_PENDING_REVIEW',pack:k+'_alt'+(i+1)}));
  const tree={masteryRequirement:8,nodes:[],masteries:{}};
  q.skills.forEach((sk,b)=>{
