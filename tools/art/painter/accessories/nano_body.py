@@ -35,12 +35,12 @@ def hue_chroma(lab):
     return np.degrees(np.arctan2(lab[:, :, 2], lab[:, :, 1])) % 360, np.hypot(lab[:, :, 1], lab[:, :, 2])
 
 
-def ellipse(nk, grow=1.0):
+def ellipse(nk, grow=1.0, up=0):
     top, ny, nx = nk
-    h = ny - top
+    h = int(np.clip(ny - top, 28, 38))
     yy, xx = np.mgrid[0:CELL, 0:CELL]
-    cy, cx = (top + ny) / 2, nx
-    ry, rx = h / 2 + 3, (h * .62 + 3) * grow
+    cy, cx = ny - h / 2 - up / 2, nx
+    ry, rx = h / 2 + 3 + up / 2, (h * .62 + 3) * grow
     e = ((yy - cy) / ry) ** 2 + ((xx - cx) / rx) ** 2 <= 1
     e[ny + 1:] = False
     return e
@@ -78,24 +78,23 @@ def zahra_hair_walk(z, nk):
 
 
 def gauntlet(z, nk):
-    """componentes cobre/naranja grandes que no son las antiparras (las antiparras quedan arriba de la elipse)."""
+    """guantelete: píxeles cobre/naranja de componentes grandes, fuera de la caja de las antiparras (arriba y al
+    centro de la cabeza), con su contorno oscuro."""
     lab = lab_of(z)
     h, C = hue_chroma(lab)
     orange = (z[:, :, 3] > 0) & (C > 30) & (h > 28) & (h < 72) & ~P.skin_mask(z) & (lab[:, :, 0] > 14)
     top, ny, nx = nk
-    e = ellipse(nk)
-    etop = e.copy(); etop[top + int((ny - top) * .55):] = False
-    n, comp, st, _ = cv2.connectedComponentsWithStats(orange.astype(np.uint8), connectivity=8)
+    hh = int(np.clip(ny - top, 28, 38))
+    gog = np.zeros_like(orange)
+    gog[max(0, ny - hh - 8):ny - int(hh * .42), max(0, nx - 19):nx + 20] = True
+    cand = orange & ~gog
+    n, comp, st, _ = cv2.connectedComponentsWithStats(cand.astype(np.uint8), connectivity=8)
     g = np.zeros_like(orange)
     for j in range(1, n):
-        cj = comp == j
-        if st[j, cv2.CC_STAT_AREA] < 6:
-            continue
-        if (cj & etop).sum() / cj.sum() < .6:
-            g |= cj
-    # con su contorno oscuro
+        if st[j, cv2.CC_STAT_AREA] >= 40:   # ojos ámbar y hebillas no son guantelete
+            g |= comp == j
     g = cv2.dilate(g.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
-    return g & (z[:, :, 3] > 0) & ((lab[:, :, 0] < 22) | orange | g)
+    return g & (z[:, :, 3] > 0) & ~gog & ((lab[:, :, 0] < 22) | orange)
 
 
 def zahra_head_action(z, nk):
@@ -103,26 +102,57 @@ def zahra_head_action(z, nk):
     g = gauntlet(z, nk)
     lab = lab_of(z)
     h, C = hue_chroma(lab)
-    m = a & ellipse(nk, 1.15) & ~g
+    m = a & ellipse(nk, 1.3, up=6) & ~g
     m = largest(m)
-    return m, g
+    hairish = a & (lab[:, :, 0] < 30) & (C < 12) & ~g
+    hairish[nk[1] + 2:] = False
+    for _ in range(12):
+        gr = (cv2.dilate(m.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0) & hairish & ~m
+        if not gr.any():
+            break
+        m |= gr
+    # brazos (piel que no es la cara, guante) que entraron en la elipse: se quedan en el cuerpo
+    sk = P.skin_mask(z)
+    face = largest(sk & ellipse(nk, .8))
+    glove = a & (C >= 12) & (h > 25) & (h < 70) & (lab[:, :, 0] < 34) & ~ellipse(nk, .95)
+    out_e = ~ellipse(nk, .95)
+    n, comp = cv2.connectedComponents((sk & ~face).astype(np.uint8), connectivity=8)
+    armsk = np.zeros_like(sk)
+    for j in range(1, n):
+        cj = comp == j
+        if (cj & out_e).any():      # piel de brazo: sale de la cabeza; los brillos de las antiparras no
+            armsk |= cj
+    far = np.zeros_like(a); far[:, :max(0, nk[2] - 17)] = True; far[:, nk[2] + 18:] = True
+    far[:nk[1] - int(np.clip(nk[1] - nk[0], 28, 38) * .55)] = False
+    hair_s = (lab[:, :, 0] < 34) & (C < 16)
+    arm = (armsk | glove | (far & ~hair_s)) & m
+    arm = cv2.dilate(arm.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool) & m & ((lab[:, :, 0] < 20) | armsk | glove | far)
+    return m & ~arm, g | arm
 
 
-def dariel_head_action(d, nk):
+def dariel_head_action(d, nk, back=False):
     a = d[:, :, 3] > 0
     lab = lab_of(d)
     h, C = hue_chroma(lab)
     sk = P.skin_mask(d)
-    coat = (C > 18) & ((h < 36) | (h > 330)) & ~sk          # abrigo rojo
-    fork = (C > 34) & (h > 62) & (h < 105) & ~sk           # diapasón y pañuelo dorados
-    m = a & ellipse(nk) & ~coat & ~fork
+    face = np.zeros_like(sk) if back else largest(sk & ellipse(nk, .8))
+    coat = (C > 18) & ((h < 36) | (h > 330)) & ~face          # abrigo rojo
+    fork = (C > 30) & (h > 60) & (h < 108) & (lab[:, :, 0] > 42) & ~face   # diapasón y pañuelo dorados
+    hands = sk & ~face
+    m = largest(a & ellipse(nk) & ~coat & ~fork & ~hands)
+    core = ellipse(nk, .62)
+    op = largest(cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)).astype(bool))
+    rim = cv2.dilate(op.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
+    m = (m & core) | (m & rim)       # fuera del núcleo: sin líneas sueltas (mango del diapasón, dedos)
     m = largest(m)
-    m = fill_holes(m) & a
-    m &= ~((coat | fork) & ~fill_holes(largest(a & ellipse(nk) & ~coat & ~fork)))
-    return m
+    m = fill_holes(m) & a & ~fork & ~coat & ~hands
+    # contorno de lo excluido (manos, diapasón) fuera de la cara: afuera
+    ex = cv2.dilate((fork | coat | hands).astype(np.uint8), np.ones((5, 5), np.uint8)) > 0
+    m &= ~(ex & (lab[:, :, 0] < 22) & ~(cv2.dilate(face.astype(np.uint8), np.ones((5, 5), np.uint8)) > 0) & ~core)
+    return largest(m)
 
 
-def drop_orphans(img, minpx=12):
+def drop_orphans(img, minpx=30):
     a = (img[:, :, 3] > 0).astype(np.uint8)
     n, comp, st, _ = cv2.connectedComponentsWithStats(a, connectivity=8)
     if n <= 2:
@@ -175,12 +205,18 @@ def draw(atlas, info, opts):
 
     # cabezas de acción de Dariel, pintadas juntas (mismas percentiles en todas)
     dmask = np.zeros(D.shape[:2], bool)
+    dface = np.zeros(D.shape[:2], bool)
     for i in range(12, 32):
         r, c = divmod(i, COLS)
-        dmask[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] = dariel_head_action(P.cell(D, i), dn[i])
-    hr = [dict(r, region=dmask) for r in rules_of(opts.get('headPaint'))]
-    for r in hr:
-        r['region'] = dmask
+        dc = P.cell(D, i)
+        dmask[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] = dariel_head_action(dc, dn[i], i // COLS == 5)
+        # cara (piel + ojos/boca adentro): no se repinta; los brillos del pelo que parecen piel, sí
+        dface[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] = (fill_holes(largest(P.skin_mask(dc) & ellipse(dn[i], .8))) if i // COLS != 5 else np.zeros((CELL, CELL), bool))
+    hr = []
+    for r in rules_of(opts.get('headPaint')):
+        r['noSkin'] = False
+        r['region'] = dmask & ~dface
+        hr.append(r)
     Dp = P.recolor(D, np.zeros(D.shape[:2], np.int32), hr, None)
 
     for i in range(36):
@@ -220,7 +256,7 @@ def draw(atlas, info, opts):
         # acción
         znk, dnk = zn[i], dn[i]
         zh, g = zahra_head_action(zi, znk)
-        occl = g & ellipse(znk, 1.15) & (zi[:, :, 3] > 0)   # guantelete delante de la cara
+        occl = g & ellipse(znk, 1.3, up=6) & (zi[:, :, 3] > 0)   # guantelete delante de la cara
         base[zh] = 0
         dh = P.cell(dmask, i)
         dp = P.cell(Dp, i)

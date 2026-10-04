@@ -1,0 +1,177 @@
+{
+ "id": "khepri_alt1",
+ "name": "Khepri — Escarabajo de Lapislázuli",
+ "skinOf": "khepri",
+ "prompt": "Skin de Khepri: armadura de lapislázuli y oro, élitros de esmalte azul con vetas de oro, disco solar alado.",
+ "body": "nahir_skin",
+ "head": "vesper",
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    300,
+    25
+   ],
+   "minChroma": 10,
+   "to": "#22408f",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "all",
+   "hue": [
+    280,
+    345
+   ],
+   "minChroma": 10,
+   "to": "#2a4fb0",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "all",
+   "materialsOf": "#4e4139",
+   "take": 1,
+   "to": "#1c2a58",
+   "keepLight": 0.75,
+   "chroma": 1.0
+  },
+  {
+   "part": "all",
+   "hue": [
+    70,
+    95
+   ],
+   "minChroma": 25,
+   "noSkin": true,
+   "to": "#e3b44a",
+   "keepLight": 0.6,
+   "chroma": 1.1
+  },
+  {
+   "part": "all",
+   "hue": [
+    35,
+    70
+   ],
+   "minChroma": 20,
+   "noSkin": true,
+   "to": "#b8862c",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  }
+ ],
+ "accessories": [
+  {
+   "module": "khepri_base",
+   "shift": {
+    "18": [
+     3,
+     8
+    ]
+   },
+   "hair": [
+    "#0b0a14",
+    "#171a2c",
+    "#262c46",
+    "#3a4262"
+   ],
+   "stripes": [
+    "#3a2606",
+    "#8a6418",
+    "#d8ad44",
+    "#f8e39a"
+   ],
+   "stripeHue": [
+    240,
+    320
+   ],
+   "stripeSkip": 8,
+   "stripePeriod": 5,
+   "deathHood": [
+    "#0a1030",
+    "#14225e",
+    "#1f3a8a",
+    "#2f55b8"
+   ],
+   "deathBoxes": {
+    "32": [
+     30,
+     42,
+     62,
+     74
+    ],
+    "33": [
+     26,
+     48,
+     62,
+     78
+    ],
+    "34": [
+     12,
+     70,
+     46,
+     100
+    ],
+    "35": [
+     12,
+     70,
+     50,
+     102
+    ]
+   },
+   "deathMask": [
+    "#4a2e08",
+    "#9a6c1c",
+    "#d6ad48",
+    "#f6e19a"
+   ]
+  },
+  {
+   "module": "khepri_elytra",
+   "ramp": [
+    "#070c26",
+    "#0f1d5a",
+    "#1b3a98",
+    "#2f5fd0",
+    "#6f9cf0",
+    "#c4dafc"
+   ],
+   "rim": [
+    "#5a3a0c",
+    "#c0942e",
+    "#f8de8a"
+   ],
+   "flecks": {
+    "rate": 0.06,
+    "ramp": [
+     "#c99a34",
+     "#ffe9a0"
+    ]
+   }
+  },
+  {
+   "module": "khepri_disc",
+   "r": 8,
+   "dy": 0,
+   "ramp": [
+    "#5a1206",
+    "#a82a10",
+    "#de5a1c",
+    "#f6923a",
+    "#ffcf86"
+   ],
+   "rim": [
+    "#0f1d5a",
+    "#2f5fd0",
+    "#8fb4f4"
+   ],
+   "wings": [
+    "#3a2606",
+    "#8a6418",
+    "#d8ad44",
+    "#f8e39a"
+   ]
+  }
+ ]
+}

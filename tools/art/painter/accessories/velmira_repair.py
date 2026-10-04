@@ -58,6 +58,35 @@ def remap(px, keys, vals, rgb, P):
     return out
 
 
+def despeckle(out, CELL, COLS, n):
+    """Quita píxeles sueltos (componentes de <= n px) y restos cortados en el borde del cuadro."""
+    import cv2
+    for i in range(out.shape[0] // CELL * COLS):
+        r, c = divmod(i, COLS)
+        cimg = out[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL]
+        a = (cimg[:, :, 3] > 0).astype(np.uint8)
+        k, comp, st, _ = cv2.connectedComponentsWithStats(a, connectivity=8)
+        if k <= 2:
+            continue
+        big = 1 + int(np.argmax(st[1:, 4]))
+        for j in range(1, k):
+            if j == big:
+                continue
+            x, y, w, h, area = st[j]
+            edge = x <= 6 or x + w >= CELL - 6 or y <= 1
+            if area <= n or (edge and area < 80):
+                cimg[comp == j] = 0
+    return out
+
+
+def _repaint(P, d, opts):
+    """Repinta un cuadro del cuerpo con las reglas dadas (sin partes: todo el cuadro es "cuerpo")."""
+    rules = []
+    for rr in opts['paint']:
+        rr = dict(rr); rr.pop('part', None); rr['region'] = None; rules.append(rr)
+    return P.recolor(d.copy(), np.full(d.shape[:2], -1), rules, None)
+
+
 def draw(atlas, info, opts):
     P = _painter()
     CELL, COLS = info['CELL'], info['COLS']
@@ -78,14 +107,37 @@ def draw(atlas, info, opts):
         ys, xs = slice(r * CELL, (r + 1) * CELL), slice(c * CELL, (c + 1) * CELL)
         d = donor[ys, xs]
         o = out[ys, xs]
+        if isinstance(how, dict) and 'transplant' in how:
+            # cuadro sin cabeza nueva (p. ej. el primero de la muerte, todavía de pie): se repinta el cuerpo con
+            # "paint" y se le apoya la cabeza ya pintada de otro cuadro, mentón con mentón
+            src = int(how['transplant'])
+            base = _repaint(P, d, opts) if opts.get('paint') else d.copy()
+            nk = P.frame_neck(d)
+            old = P.head_mask(d, nk, how.get('longHair', False)) if nk else None
+            if old is not None:
+                base[old | P.skirt(d, nk, how.get('skirtRows', 4))] = 0
+            sr, sc = divmod(src, COLS)
+            scell = out[sr * CELL:(sr + 1) * CELL, sc * CELL:(sc + 1) * CELL]
+            sh = info['headmap'][sr * CELL:(sr + 1) * CELL, sc * CELL:(sc + 1) * CELL]
+            sf = info['frames'][src] if src in info['frames'] else info['frames'][str(src)]
+            dy = (nk[1] if nk else sf['neckY']) - sf['neckY'] + how.get('dy', 0)
+            dx = (nk[2] if nk else sf['neckX']) - sf['neckX'] + how.get('dx', 0)
+            yy, xx = np.where(sh & (scell[:, :, 3] > 0))
+            Y, X = yy + dy, xx + dx
+            ok = (Y >= 0) & (Y < CELL) & (X >= 0) & (X < CELL)
+            base[Y[ok], X[ok]] = scell[yy[ok], xx[ok]]
+            # huecos que dejó la cabeza vieja por debajo del mentón: se restauran del cuerpo repintado
+            if nk:
+                full = _repaint(P, d, opts) if opts.get('paint') else d
+                hole = (base[:, :, 3] == 0) & (full[:, :, 3] > 0)
+                hole[:nk[1] + 1] = False
+                base[hole] = full[hole]
+            out[ys, xs] = base
+            continue
         if how == 'full':
             m = d[:, :, 3] > 0
             if opts.get('paint'):
-                # se repinta el cuadro del cuerpo con las reglas dadas (como el pintor pinta la muerte)
-                rules = []
-                for rr in opts['paint']:
-                    rr = dict(rr); rr.pop('part', None); rr['region'] = None; rules.append(rr)
-                new = P.recolor(d.copy(), np.full(d.shape[:2], -1), rules, None)
+                new = _repaint(P, d, opts)
             else:
                 new = np.zeros_like(d)
                 new[m] = remap(d[m], keys, vals, rgb, P)
@@ -111,4 +163,6 @@ def draw(atlas, info, opts):
         if m.any():
             o[m] = remap(d[m], keys, vals, rgb, P)
             out[ys, xs] = o
+    if opts.get('despeckle'):
+        out = despeckle(out, CELL, COLS, int(opts['despeckle']))
     return out

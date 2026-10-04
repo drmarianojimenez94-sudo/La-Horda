@@ -1,0 +1,214 @@
+{
+ "id": "khepri_alt2",
+ "name": "Khepri — Plaga de Ceniza",
+ "skinOf": "khepri",
+ "prompt": "Skin de Khepri: caparazón gris ceniza agrietado con brasas, hoces de hueso, polillas de hollín, sol eclipsado.",
+ "body": "nahir",
+ "head": "vesper_set",
+ "paint": [
+  {
+   "part": "head",
+   "materialsOf": "#b6845a",
+   "take": 1,
+   "to": "#6d6660",
+   "keepLight": 0.6,
+   "chroma": 0.2
+  },
+  {
+   "part": "head",
+   "materialsOf": "#7f543d",
+   "take": 1,
+   "to": "#47423f",
+   "keepLight": 0.6,
+   "chroma": 0.2
+  },
+  {
+   "part": "head",
+   "hue": [
+    25,
+    60
+   ],
+   "minChroma": 40,
+   "to": "#7a2a12",
+   "keepLight": 0.7,
+   "chroma": 0.6
+  },
+  {
+   "part": "all",
+   "hue": [
+    180,
+    290
+   ],
+   "minChroma": 0,
+   "minL": 58,
+   "ramp": [
+    "#4a3e30",
+    "#9a8c76",
+    "#d8ccb4",
+    "#f4eedf"
+   ]
+  },
+  {
+   "part": "all",
+   "hue": [
+    240,
+    300
+   ],
+   "minChroma": 10,
+   "ramp": [
+    "#3a3026",
+    "#6e6252",
+    "#a89a84"
+   ]
+  },
+  {
+   "part": "all",
+   "hue": [
+    170,
+    245
+   ],
+   "minChroma": 8,
+   "to": "#3a3634",
+   "keepLight": 0.55,
+   "chroma": 0.15
+  },
+  {
+   "part": "all",
+   "hue": [
+    25,
+    80
+   ],
+   "minChroma": 14,
+   "noSkin": true,
+   "to": "#5a3a2a",
+   "keepLight": 0.7,
+   "chroma": 0.6
+  },
+  {
+   "part": "all",
+   "materialsOf": "#2c2b2d",
+   "take": 1,
+   "to": "#3a3836",
+   "keepLight": 0.7,
+   "chroma": 0.3
+  },
+  {
+   "part": "all",
+   "materialsOf": "#625d57",
+   "take": 1,
+   "to": "#8a8580",
+   "keepLight": 0.6,
+   "chroma": 0.3
+  }
+ ],
+ "accessories": [
+  {
+   "module": "khepri_base",
+   "shift": {
+    "14": [
+     0,
+     9
+    ],
+    "18": [
+     5,
+     6
+    ],
+    "22": [
+     -10,
+     7
+    ]
+   },
+   "deathHood": [
+    "#151313",
+    "#2c2928",
+    "#4a4644",
+    "#6d6764"
+   ],
+   "deathBoxes": {
+    "32": [
+     30,
+     42,
+     62,
+     74
+    ],
+    "33": [
+     26,
+     48,
+     62,
+     78
+    ],
+    "34": [
+     12,
+     70,
+     46,
+     100
+    ],
+    "35": [
+     12,
+     70,
+     50,
+     102
+    ]
+   },
+   "deathMask": [
+    "#3a3026",
+    "#6e6252",
+    "#a89a84",
+    "#d8ccb4"
+   ],
+   "stripeHue": [
+    0,
+    360
+   ]
+  },
+  {
+   "module": "khepri_elytra",
+   "ramp": [
+    "#121012",
+    "#2a2628",
+    "#4a4547",
+    "#6f6a69",
+    "#9c9693",
+    "#c6c0ba"
+   ],
+   "rim": [
+    "#3a3026",
+    "#8a7c66",
+    "#cfc2a6"
+   ],
+   "cracks": {
+    "n": 5,
+    "glow": [
+     "#a8340c",
+     "#f08a2a"
+    ]
+   }
+  },
+  {
+   "module": "khepri_disc",
+   "r": 8,
+   "dy": 0,
+   "ramp": [
+    "#0e0c0c",
+    "#1e1a19",
+    "#2e2826",
+    "#3e3532"
+   ],
+   "rim": [
+    "#6a1a06",
+    "#c8501a",
+    "#ffa04a"
+   ],
+   "horns": [
+    "#3a3026",
+    "#8a7c66",
+    "#cfc2a6",
+    "#efe6d4"
+   ]
+  },
+  {
+   "module": "khepri_moths",
+   "n": 3
+  }
+ ]
+}

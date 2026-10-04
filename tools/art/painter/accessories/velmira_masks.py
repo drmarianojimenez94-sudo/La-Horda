@@ -1,7 +1,8 @@
 """Velmira — cuatro máscaras de teatro flotando en semicírculo detrás de la cabeza.
 
 opts:
-  ramp     4 tonos de la cara de la máscara (oscuro -> claro), luz arriba a la izquierda
+  ramp     4 tonos de la máscara de comedia (oscuro -> claro), luz arriba a la izquierda
+  ramp2    (opcional) 4 tonos de la máscara de tragedia
   outline  contorno (1 px)
   hole     color de ojos/boca
   trim     (opcional) 2 tonos del ribete de la frente (oro, etc.)
@@ -26,11 +27,10 @@ COMEDY = [
     ".1111111.",
     "144444441",
     "122222221",
-    "123322331",
+    "133222331",
     "122222221",
     "132222231",
     ".1333331.",
-    ".1222221.",
     "..12221..",
     "...111...",
 ]
@@ -38,11 +38,10 @@ TRAGEDY = [
     ".1111111.",
     "144444441",
     "122222221",
-    "133222331",
+    "123323321",
     "122222221",
     "122333221",
     ".1322231.",
-    ".1222221.",
     "..12221..",
     "...111...",
 ]
@@ -50,7 +49,7 @@ TRAGEDY = [
 
 def mask_pixels(kind, o):
     """Lista de (dx, dy, rgba) de una máscara de 8x8 con sombreado de 4 tonos (luz arriba-izquierda)."""
-    ramp = [_hex(c) for c in o.get('ramp', ['#6b5a4a', '#b8a58a', '#e6d8bd', '#fff6e2'])]
+    ramp = [_hex(c) for c in (o.get('ramp2') if kind == 1 and o.get('ramp2') else o.get('ramp', ['#6b5a4a', '#b8a58a', '#e6d8bd', '#fff6e2']))]
     outline = _hex(o.get('outline', '#1a1016'))
     hole = _hex(o.get('hole', '#241420'))
     trim = [_hex(c) for c in o.get('trim', [])]
@@ -70,7 +69,7 @@ def mask_pixels(kind, o):
                 col = trim[1] if x <= 4 else trim[0]
             else:
                 # luz por posición: arriba-izquierda claro, abajo-derecha oscuro (4 tonos, dither suave en el medio)
-                t = 1 - (x * .55 + y * .75) / (8 * .55 + 9 * .75)
+                t = 1 - (x * .55 + y * .75) / (8 * .55 + 8 * .75)
                 t = t * 1.25 - .05
                 j = int(np.clip(round(t * 3 + (((x + y) & 1) * .35 - .17)), 0, 3))
                 col = ramp[j]

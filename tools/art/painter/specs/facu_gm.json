@@ -26,13 +26,12 @@
    "take": 1,
    "noSkin": true,
    "ramp": [
-    "#6a4512",
-    "#b07a2a",
-    "#dcae52",
-    "#f7e3a0",
-    "#fffbe8"
+    "#2f4a74",
+    "#5b7fa8",
+    "#9bb8d6",
+    "#d4e6f2"
    ],
-   "gamma": 0.85
+   "gamma": 1.0
   },
   {
    "part": "all",
@@ -40,9 +39,10 @@
    "take": 1,
    "noSkin": true,
    "ramp": [
-    "#2a1a08",
-    "#6b4618",
-    "#a87326"
+    "#16243f",
+    "#2f4a74",
+    "#5b7fa8",
+    "#9bb8d6"
    ]
   },
   {
@@ -51,10 +51,10 @@
    "take": 1,
    "noSkin": true,
    "ramp": [
-    "#1e1006",
-    "#55340f",
-    "#8f5f22",
-    "#c99a48"
+    "#100e12",
+    "#2b2424",
+    "#4d3e33",
+    "#80653f"
    ]
   },
   {
@@ -74,6 +74,10 @@
  ],
  "accessories": [
   {
+   "module": "facu_keel",
+   "body": "nahir"
+  },
+  {
    "module": "facu_head",
    "body": "nahir",
    "head": "dariel",
@@ -84,7 +88,25 @@
     "#3b3131",
     "#594a45"
    ],
-   "hairGamma": 0.9
+   "hairGamma": 0.9,
+   "grain": 0.55,
+   "hairGrain": 0.8,
+   "hairGrainL": 0.4
+  },
+  {
+   "module": "facu_mantle",
+   "body": "nahir",
+   "ripple": 0.6,
+   "foam": "#e4fffa",
+   "foam2": "#9ff0e4",
+   "frillRamp": [
+    "#137a8a",
+    "#3fc6c0",
+    "#bdf7ee"
+   ]
+  },
+  {
+   "module": "facu_crown"
   }
  ]
 }

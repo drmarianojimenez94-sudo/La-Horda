@@ -45,12 +45,12 @@ def shade(mask, ramp, light=(-.7, -.7), round_w=.55, jitter=.05, seed=0, outline
     dtn = dt / max(dt.max(), 1)
     ys, xs = np.nonzero(mask)
     cx, cy = xs.mean(), ys.mean()
-    sx, sy = max(xs.ptp(), 1), max(ys.ptp(), 1)
+    sx, sy = max(np.ptp(xs), 1), max(np.ptp(ys), 1)
     Y, X = np.mgrid[0:H, 0:W].astype(np.float32)
     g = -((X - cx) / sx * light[0] + (Y - cy) / sy * light[1])  # positivo hacia la luz
     g = (g - g[mask].min()) / max(np.ptp(g[mask]), 1e-3)
     t = round_w * np.sqrt(dtn) + (1 - round_w) * g + bias
-    rng = np.random.default_rng(seed)
+    rng = np.random.default_rng(abs(int(seed)))
     t = t + rng.normal(0, jitter, t.shape)
     out = np.zeros((H, W, 3), np.uint8)
     out[mask] = ramp_colors(ramp, t[mask])

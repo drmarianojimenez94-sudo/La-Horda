@@ -94,7 +94,7 @@ def draw(atlas, info, opts):
                 per, w = opts.get('stripePeriod', 6), opts.get('stripeWidth', 2)
                 Y = np.arange(CELL)[:, None].repeat(CELL, 1)
                 band = ((Y - top - 2) % per) < w
-                band[:top + 2] = False
+                band[:top + opts.get('stripeSkip', 2)] = False
                 sel = hood & band
                 _by_light(c, sel, opts['stripes'], lo=10, hi=60)
     return atlas

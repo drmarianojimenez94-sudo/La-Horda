@@ -13,17 +13,39 @@ RIM = ["#5a3a0c", "#b38a2c", "#f4d77a"]
 def draw(atlas, info, opts):
     ramp = opts.get('ramp', RAMP); rim = opts.get('rim', RIM); R = opts.get('r', 7)
     outline = opts.get('outline', '#140a08')
+    H = info['headmap']
     for i, f in info['frames'].items():
         c = cell_view(atlas, i)
-        cx = f['neckX'] + (2 if f['dir'] == 'side' else 0)
-        cy = f['top'] + opts.get('dy', -3)
+        r, k = divmod(i, 4)
+        hm = H[r * CELL:(r + 1) * CELL, k * CELL:(k + 1) * CELL] & (c[:, :, 3] > 0)
+        band = hm[:, max(0, f['neckX'] - 10):f['neckX'] + 11]
+        rows = np.nonzero(band.any(1))[0]
+        htop = int(rows[0]) if len(rows) else f['top']
+        cx = f['neckX'] + (opts.get('sideDx', -3) if f['dir'] == 'side' else 0)
+        cy = htop + opts.get('dy', -3)
         if opts.get('horns'):
-            # cuernos de lira que abrazan el disco (como en los tocados de Hathor/Khepri)
+            # cuernos de lira que abrazan el disco (tocado de Hathor/Khepri): arcos gruesos a cada lado
             for sgn in (-1, 1):
-                pts = [(cx + sgn * (R - 1), cy + R + 1), (cx + sgn * (R + 4), cy + 1), (cx + sgn * (R + 3), cy - R - 1),
-                       (cx + sgn * (R + 1), cy - R + 2), (cx + sgn * (R + 2), cy + 1), (cx + sgn * (R - 2), cy + R - 1)]
+                hm = np.zeros((CELL, CELL), np.uint8)
+                a0, a1 = (100, 230) if sgn < 0 else (-50, 80)
+                cv2.ellipse(hm, (int(cx), int(cy + 2)), (R + 3, R + 4), 0, a0, a1, 1, 4)
+                m = hm > 0
+                rgb, _ = shade(m, opts['horns'], round_w=.4, jitter=.05, seed=i + 3, outline=outline)
+                paste(c, rgb, m)
+        if opts.get('wings'):
+            # disco alado: alas de halcón horizontales con plumas marcadas
+            for sgn in (-1, 1):
+                pts = [(cx + sgn * (R - 2), cy - 3), (cx + sgn * (R + 13), cy - 5), (cx + sgn * (R + 16), cy - 2),
+                       (cx + sgn * (R + 12), cy + 1), (cx + sgn * (R + 8), cy + 3), (cx + sgn * (R - 2), cy + 4)]
                 m = poly_mask(pts)
-                rgb, _ = shade(m, opts['horns'], round_w=.3, jitter=.05, seed=i, outline=outline)
+                rgb, _ = shade(m, opts['wings'], round_w=.3, jitter=.05, seed=i + 5, outline=outline)
+                for fx in range(R + 1, R + 14, 3):
+                    x = cx + sgn * fx
+                    col = m[:, x] if 0 <= x < CELL else None
+                    if col is not None:
+                        ys = np.nonzero(col)[0]
+                        if len(ys) > 2:
+                            rgb[ys[1:-1], x] = (rgb[ys[1:-1], x].astype(np.float32) * .6).astype(np.uint8)
                 paste(c, rgb, m)
         m = ellipse_mask(cx, cy, R, R)
         rgb, _ = shade(m, ramp, round_w=.65, jitter=.04, seed=i, outline=outline)
