@@ -84,8 +84,23 @@ def despeckle(out, CELL, COLS, n):
 def _repaint(P, d, opts):
     """Repinta un cuadro del cuerpo con las reglas dadas (sin partes: todo el cuadro es "cuerpo")."""
     rules = []
+    claimed = np.zeros(d.shape[:2], bool)
+    lab = P.to_lab(d[:, :, :3].reshape(-1, 3)).reshape(d.shape[0], d.shape[1], 3)
+    h = np.degrees(np.arctan2(lab[:, :, 2], lab[:, :, 1])) % 360
+    ch = np.hypot(lab[:, :, 1], lab[:, :, 2])
     for rr in opts['paint']:
-        rr = dict(rr); rr.pop('part', None); rr['region'] = None; rules.append(rr)
+        rr = dict(rr); rr.pop('part', None); rr['region'] = None
+        if opts.get('noCascade'):
+            # cada regla elige sus píxeles por el color ORIGINAL del cuerpo; lo que una regla toma, no lo toma otra
+            a, b = rr.get('hue', [0, 360])
+            sel = ((h >= a) & (h <= b)) if a <= b else ((h >= a) | (h <= b))
+            sel &= ch >= rr.get('minChroma', 8)
+            if 'maxL' in rr: sel &= lab[:, :, 0] <= rr['maxL']
+            if 'minL' in rr: sel &= lab[:, :, 0] >= rr['minL']
+            rr['region'] = sel & ~claimed
+            rr['keepEyes'] = False
+            claimed |= sel
+        rules.append(rr)
     return P.recolor(d.copy(), np.full(d.shape[:2], -1), rules, None)
 
 

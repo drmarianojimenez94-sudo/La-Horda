@@ -102,7 +102,7 @@ def draw(atlas, info, o):
         if o.get('shaft'):
             # astil de otro material (cristal, hierro negro): las partes finas del metal que no son el ojo
             sh = [_hex(x) for x in o['shaft']]
-            m = (cand | (iron & thin_mask(c, 5))) & ~((c[:, :, :3] == np.array(bow)[:, None, None, :3]).all(-1).any(0) if False else np.zeros_like(cand))
+            m = cand | (iron & thin_mask(c, 5))
             if sel is not None:
                 m &= ~sel
             if m.any():
