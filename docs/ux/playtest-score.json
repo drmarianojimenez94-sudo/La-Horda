@@ -1,0 +1,350 @@
+{
+  "method": "10 arenas x 3 scripted experience profiles; one seed per profile/arena; expected level; no gear; 900s cap",
+  "results": [
+    {
+      "arena": "ciudad",
+      "profile": "aprendiz",
+      "level": 1,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 706,
+      "wave": 10,
+      "kills": 613,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "cm_presentador",
+        "hp": -13,
+        "max": 10724
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "ciudad",
+      "profile": "ocasional",
+      "level": 1,
+      "phase": "score",
+      "result": "gameover",
+      "seconds": 406,
+      "wave": 9,
+      "kills": 462,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": null,
+      "autopilotError": null
+    },
+    {
+      "arena": "ciudad",
+      "profile": "habitual",
+      "level": 1,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 626,
+      "wave": 10,
+      "kills": 558,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "cm_presentador",
+        "hp": -34,
+        "max": 10826
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "fortaleza",
+      "profile": "aprendiz",
+      "level": 1,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 568,
+      "wave": 10,
+      "kills": 670,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "caballero",
+        "hp": -9,
+        "max": 8259
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "fortaleza",
+      "profile": "ocasional",
+      "level": 1,
+      "phase": "score",
+      "result": "gameover",
+      "seconds": 353,
+      "wave": 9,
+      "kills": 597,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": null,
+      "autopilotError": null
+    },
+    {
+      "arena": "fortaleza",
+      "profile": "habitual",
+      "level": 1,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 826,
+      "wave": 10,
+      "kills": 712,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "caballero",
+        "hp": -5,
+        "max": 8259
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "bosque",
+      "profile": "aprendiz",
+      "level": 6,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 422,
+      "wave": 10,
+      "kills": 754,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "guardian_ancestral",
+        "hp": -48,
+        "max": 7498
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "bosque",
+      "profile": "ocasional",
+      "level": 6,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 420,
+      "wave": 10,
+      "kills": 754,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "guardian_ancestral",
+        "hp": -44,
+        "max": 7498
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "bosque",
+      "profile": "habitual",
+      "level": 6,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 419,
+      "wave": 10,
+      "kills": 739,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "guardian_ancestral",
+        "hp": -41,
+        "max": 7373
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "micelial",
+      "profile": "aprendiz",
+      "level": 12,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 535,
+      "wave": 10,
+      "kills": 965,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "madre_espora",
+        "hp": -47,
+        "max": 14988
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "micelial",
+      "profile": "ocasional",
+      "level": 12,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 535,
+      "wave": 10,
+      "kills": 946,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "madre_espora",
+        "hp": -9,
+        "max": 14988
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "micelial",
+      "profile": "habitual",
+      "level": 12,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 607,
+      "wave": 10,
+      "kills": 926,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "madre_espora",
+        "hp": -56,
+        "max": 14515
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "aprendiz",
+      "level": 17,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 439,
+      "wave": 10,
+      "kills": 1001,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": -41,
+        "max": 11603
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "ocasional",
+      "level": 17,
+      "phase": "score",
+      "result": "gameover",
+      "seconds": 276,
+      "wave": 8,
+      "kills": 682,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": null,
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "habitual",
+      "level": 17,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 441,
+      "wave": 10,
+      "kills": 996,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": -35,
+        "max": 11126
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "acuatica",
+      "profile": "aprendiz",
+      "level": 23,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 487,
+      "wave": 10,
+      "kills": 969,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "leviatan",
+        "hp": -26,
+        "max": 12797
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "acuatica",
+      "profile": "ocasional",
+      "level": 23,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 567,
+      "wave": 10,
+      "kills": 996,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "leviatan",
+        "hp": -37,
+        "max": 12797
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "acuatica",
+      "profile": "habitual",
+      "level": 23,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 473,
+      "wave": 10,
+      "kills": 996,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "leviatan",
+        "hp": 0,
+        "max": 12153
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "laberinto",
+      "profile": "aprendiz",
+      "level": 26,
+      "phase": "score",
+      "result": "victory",
+      "seconds": 408,
+      "wave": 10,
+      "kills": 960,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "minotauro",
+        "hp": -215,
+        "max": 24102
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "laberinto",
+      "profile": "ocasional",
+      "level": 26,
+      "phase": "score",
+      "result": "gameover",
+      "seconds": 375,
+      "wave": 10,
+      "kills": 924,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": null,
+      "autopilotError": null
+    }
+  ],
+  "errors": []
+}
