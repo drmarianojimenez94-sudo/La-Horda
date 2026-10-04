@@ -1,0 +1,36 @@
+{
+ "name": "banda_cruzada",
+ "description": "Banda cruzada del hombro a la cintura, pintada sobre el cuerpo.",
+ "layer": "onbody",
+ "anchor": "chest",
+ "materials": {
+  "cloth": {
+   "ramp": [
+    "#3a2a08",
+    "#8a6a18",
+    "#e0c050"
+   ],
+   "round": 0.3
+  }
+ },
+ "shapes": [
+  {
+   "type": "line",
+   "points": [
+    [
+     -8,
+     -8
+    ],
+    [
+     8,
+     9
+    ]
+   ],
+   "width": 3,
+   "material": "cloth",
+   "views": [
+    "down"
+   ]
+  }
+ ]
+}

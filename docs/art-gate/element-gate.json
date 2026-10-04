@@ -1,0 +1,106 @@
+{
+ "donors": [
+  "baltra",
+  "sira",
+  "tibor"
+ ],
+ "errors": [],
+ "elements": {
+  "alas_de_plumas": {
+   "pass": true,
+   "problems": [],
+   "warnings": [
+    "baltra cuadro 2: la altura de cuerpo medida pasa de 56 a 50 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 3: la altura de cuerpo medida pasa de 56 a 49 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 9: la altura de cuerpo medida pasa de 56 a 51 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 10: la altura de cuerpo medida pasa de 62 a 56 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 11: la altura de cuerpo medida pasa de 56 a 53 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 0: la altura de cuerpo medida pasa de 58 a 55 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 1: la altura de cuerpo medida pasa de 64 a 55 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 2: la altura de cuerpo medida pasa de 58 a 53 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 3: la altura de cuerpo medida pasa de 57 a 53 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 8: la altura de cuerpo medida pasa de 62 a 54 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 10: la altura de cuerpo medida pasa de 63 a 54 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 11: la altura de cuerpo medida pasa de 57 a 54 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)"
+   ]
+  },
+  "banda_cruzada": {
+   "pass": true,
+   "problems": [],
+   "warnings": []
+  },
+  "capa_larga": {
+   "pass": true,
+   "problems": [],
+   "warnings": [
+    "baltra cuadro 0: la altura de cuerpo medida pasa de 54 a 51 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 9: la altura de cuerpo medida pasa de 56 a 59 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)"
+   ]
+  },
+  "corona_de_picos": {
+   "pass": true,
+   "problems": [],
+   "warnings": [
+    "baltra cuadro 0: la altura de cuerpo medida pasa de 54 a 60 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 1: la altura de cuerpo medida pasa de 56 a 61 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 2: la altura de cuerpo medida pasa de 56 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 3: la altura de cuerpo medida pasa de 56 a 61 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 4: la altura de cuerpo medida pasa de 57 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 6: la altura de cuerpo medida pasa de 57 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 7: la altura de cuerpo medida pasa de 57 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 8: la altura de cuerpo medida pasa de 57 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 9: la altura de cuerpo medida pasa de 56 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 11: la altura de cuerpo medida pasa de 56 a 62 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)"
+   ]
+  },
+  "emblema_de_pecho": {
+   "pass": true,
+   "problems": [],
+   "warnings": []
+  },
+  "halo_de_luz": {
+   "pass": true,
+   "problems": [],
+   "warnings": [
+    "baltra cuadro 0: la altura de cuerpo medida pasa de 54 a 69 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 1: la altura de cuerpo medida pasa de 56 a 69 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 2: la altura de cuerpo medida pasa de 56 a 69 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 3: la altura de cuerpo medida pasa de 56 a 69 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 4: la altura de cuerpo medida pasa de 57 a 65 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 6: la altura de cuerpo medida pasa de 57 a 66 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 7: la altura de cuerpo medida pasa de 57 a 66 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 8: la altura de cuerpo medida pasa de 57 a 71 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 9: la altura de cuerpo medida pasa de 56 a 70 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 10: la altura de cuerpo medida pasa de 62 a 70 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "baltra cuadro 11: la altura de cuerpo medida pasa de 56 a 70 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 0: la altura de cuerpo medida pasa de 58 a 68 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 1: la altura de cuerpo medida pasa de 64 a 73 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 2: la altura de cuerpo medida pasa de 58 a 67 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 3: la altura de cuerpo medida pasa de 57 a 67 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 4: la altura de cuerpo medida pasa de 64 a 73 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 5: la altura de cuerpo medida pasa de 65 a 72 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 6: la altura de cuerpo medida pasa de 65 a 73 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 7: la altura de cuerpo medida pasa de 63 a 70 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 8: la altura de cuerpo medida pasa de 62 a 72 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 9: la altura de cuerpo medida pasa de 56 a 66 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 10: la altura de cuerpo medida pasa de 63 a 72 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "sira cuadro 11: la altura de cuerpo medida pasa de 57 a 67 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 0: la altura de cuerpo medida pasa de 66 a 73 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 1: la altura de cuerpo medida pasa de 66 a 73 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 2: la altura de cuerpo medida pasa de 67 a 75 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 3: la altura de cuerpo medida pasa de 69 a 76 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 8: la altura de cuerpo medida pasa de 70 a 77 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 9: la altura de cuerpo medida pasa de 68 a 76 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 10: la altura de cuerpo medida pasa de 67 a 75 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)",
+    "tibor cuadro 11: la altura de cuerpo medida pasa de 67 a 74 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)"
+   ]
+  },
+  "hombreras_redondas": {
+   "pass": true,
+   "problems": [],
+   "warnings": [
+    "sira cuadro 8: la altura de cuerpo medida pasa de 62 a 59 px (el Roster Art Gate re-escala la apariencia: correr roster_gate.js --write)"
+   ]
+  }
+ }
+}

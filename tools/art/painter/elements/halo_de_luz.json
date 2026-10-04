@@ -1,0 +1,53 @@
+{
+ "name": "halo_de_luz",
+ "description": "Aro de luz detrás de la cabeza.",
+ "layer": "behind",
+ "anchor": "head",
+ "materials": {
+  "light": {
+   "ramp": [
+    "#a07a18",
+    "#e0b030",
+    "#fff0a0",
+    "#fffbe6"
+   ],
+   "round": 0.9,
+   "outline": "#2a1c04"
+  }
+ },
+ "shapes": [
+  {
+   "type": "ring",
+   "center": [
+    0,
+    -5
+   ],
+   "radius": [
+    14,
+    13
+   ],
+   "width": 3,
+   "material": "light",
+   "views": [
+    "down",
+    "up"
+   ]
+  },
+  {
+   "type": "ring",
+   "center": [
+    -3,
+    -5
+   ],
+   "radius": [
+    5,
+    13
+   ],
+   "width": 3,
+   "material": "light",
+   "views": [
+    "side"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "name": "corona_de_picos",
+ "description": "Corona baja de picos con una gema al centro.",
+ "layer": "front",
+ "anchor": "headTop",
+ "materials": {
+  "metal": {
+   "ramp": [
+    "#4a2e0c",
+    "#8a5d1c",
+    "#d0a043",
+    "#f6e2a0"
+   ]
+  },
+  "gem": {
+   "ramp": [
+    "#2a0a3a",
+    "#7a2a9a",
+    "#d68cff"
+   ],
+   "round": 0.8
+  }
+ },
+ "shapes": [
+  {
+   "type": "rect",
+   "box": [
+    -8,
+    5,
+    8,
+    8
+   ],
+   "material": "metal",
+   "group": "crown"
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -8,
+     6
+    ],
+    [
+     -6,
+     0
+    ],
+    [
+     -4,
+     6
+    ]
+   ],
+   "material": "metal",
+   "group": "crown"
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     -3,
+     6
+    ],
+    [
+     0,
+     -3
+    ],
+    [
+     3,
+     6
+    ]
+   ],
+   "material": "metal",
+   "group": "crown"
+  },
+  {
+   "type": "poly",
+   "points": [
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     8,
+     6
+    ]
+   ],
+   "material": "metal",
+   "group": "crown"
+  },
+  {
+   "type": "ellipse",
+   "center": [
+    0,
+    6
+   ],
+   "radius": [
+    1.6,
+    1.6
+   ],
+   "material": "gem",
+   "views": [
+    "down",
+    "side"
+   ]
+  }
+ ]
+}
