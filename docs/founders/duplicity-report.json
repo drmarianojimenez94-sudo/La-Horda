@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T23:39:48.474Z",
+  "generatedAt": "2026-10-04T09:15:06.699Z",
   "method": "score = 0.35·Jaccard(vocabulario) + 0.45·Jaccard(etiquetas de mecánica) + 0.2·mismo rol; DUPLICATE ≥ 0.45, REVIEW ≥ 0.32",
   "rosterSize": 37,
   "roleDistribution": {
@@ -46,12 +46,12 @@
           ]
         },
         {
-          "other": "axiom",
+          "other": "morwen",
           "score": 0.339,
-          "text": 0.029,
+          "text": 0.03,
           "tags": 0.286,
           "sharedTags": [
-            "dash",
+            "shield",
             "mark"
           ]
         }
@@ -68,21 +68,9 @@
         "shield",
         "dash"
       ],
-      "verdict": "REVIEW",
+      "verdict": "DISTINCT",
       "forbidden": null,
       "nearest": [
-        {
-          "other": "bront",
-          "score": 0.382,
-          "text": 0.063,
-          "tags": 0.8,
-          "sharedTags": [
-            "gravity",
-            "fortify",
-            "shield",
-            "dash"
-          ]
-        },
         {
           "other": "khepri",
           "score": 0.3,
@@ -95,7 +83,16 @@
         {
           "other": "libertador",
           "score": 0.297,
-          "text": 0.063,
+          "text": 0.062,
+          "tags": 0.167,
+          "sharedTags": [
+            "dash"
+          ]
+        },
+        {
+          "other": "orsa",
+          "score": 0.296,
+          "text": 0.061,
           "tags": 0.167,
           "sharedTags": [
             "dash"
@@ -179,8 +176,8 @@
         },
         {
           "other": "cazadora",
-          "score": 0.22,
-          "text": 0.057,
+          "score": 0.219,
+          "text": 0.053,
           "tags": 0,
           "sharedTags": []
         }
@@ -205,15 +202,15 @@
         },
         {
           "other": "soporte",
-          "score": 0.213,
-          "text": 0.036,
+          "score": 0.212,
+          "text": 0.034,
           "tags": 0,
           "sharedTags": []
         },
         {
-          "other": "profeta",
-          "score": 0.213,
-          "text": 0.036,
+          "other": "ynara",
+          "score": 0.211,
+          "text": 0.032,
           "tags": 0,
           "sharedTags": []
         }
@@ -241,8 +238,8 @@
         },
         {
           "other": "axiom",
-          "score": 0.329,
-          "text": 0.048,
+          "score": 0.332,
+          "text": 0.055,
           "tags": 0.25,
           "sharedTags": [
             "dash"
@@ -250,8 +247,8 @@
         },
         {
           "other": "nigromante",
-          "score": 0.329,
-          "text": 0.047,
+          "score": 0.332,
+          "text": 0.056,
           "tags": 0.25,
           "sharedTags": [
             "dash"
@@ -266,42 +263,36 @@
       "tags": [
         "gravity",
         "fortify",
-        "shield",
-        "dash"
+        "shield"
       ],
       "verdict": "REVIEW",
       "forbidden": null,
       "nearest": [
         {
-          "other": "eslabon",
-          "score": 0.407,
-          "text": 0.078,
-          "tags": 0.4,
+          "other": "tanque",
+          "score": 0.341,
+          "text": 0.08,
+          "tags": 0.25,
           "sharedTags": [
-            "shield",
-            "dash"
+            "fortify"
+          ]
+        },
+        {
+          "other": "eslabon",
+          "score": 0.314,
+          "text": 0.069,
+          "tags": 0.2,
+          "sharedTags": [
+            "shield"
           ]
         },
         {
           "other": "baltra",
-          "score": 0.405,
-          "text": 0.07,
-          "tags": 0.4,
+          "score": 0.311,
+          "text": 0.06,
+          "tags": 0.2,
           "sharedTags": [
-            "shield",
-            "dash"
-          ]
-        },
-        {
-          "other": "facu_gm",
-          "score": 0.382,
-          "text": 0.063,
-          "tags": 0.8,
-          "sharedTags": [
-            "gravity",
-            "fortify",
-            "shield",
-            "dash"
+            "shield"
           ]
         }
       ]
@@ -321,9 +312,20 @@
       "forbidden": null,
       "nearest": [
         {
+          "other": "ynara",
+          "score": 0.393,
+          "text": 0.069,
+          "tags": 0.375,
+          "sharedTags": [
+            "heal",
+            "shield",
+            "dash"
+          ]
+        },
+        {
           "other": "soporte",
-          "score": 0.381,
-          "text": 0.09,
+          "score": 0.38,
+          "text": 0.085,
           "tags": 0.333,
           "sharedTags": [
             "heal",
@@ -334,16 +336,6 @@
           "other": "dariel",
           "score": 0.37,
           "text": 0.058,
-          "tags": 0.333,
-          "sharedTags": [
-            "heal",
-            "shield"
-          ]
-        },
-        {
-          "other": "profeta",
-          "score": 0.367,
-          "text": 0.05,
           "tags": 0.333,
           "sharedTags": [
             "heal",

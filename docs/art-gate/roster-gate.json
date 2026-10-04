@@ -10,12 +10,7 @@
  },
  "appearances": 113,
  "scaleFailures": [],
- "presentationFailures": [
-  {
-   "k": "nano_gm",
-   "reason": "historia 540 (esperado 260–480)"
-  }
- ],
+ "presentationFailures": [],
  "errors": [],
  "metrics": {
   "tanque": {
@@ -2716,11 +2711,11 @@
    "inCatalog": true
   },
   "nano_gm": {
-   "name": "Nano GM",
+   "name": "Nano GM, el Regente del Umbral",
    "title": "El Regente del Umbral",
    "role": "Regente que reescribe las reglas locales de la arena: la Luz decide quién resiste y la Oscuridad, quién cae.",
-   "cardLore": "Regente Fundador: alterna Luz y Oscuridad, reescribe las reglas locales de la Arena y la divide en su Juicio.",
-   "history": "Antes de que el Forjador partiera el Sello, alguien tuvo que escribir las reglas de las Arenas: cuánto pesa un golpe, cuándo se abre una puerta, qué cuenta como victoria. Los Regentes no pelearon contra la Horda; la observaron desde el umbral entre las arenas, donde la luz y la sombra todavía no se habían separado. Nano es el primero que decidió cruzar. Sus tatuajes no son adorno: son las cláusulas del pacto, grabadas en la piel para que ninguna regla se le olvide. Cuando entra en combate, la arena lo reconoce antes que los campeones.",
+   "cardLore": "Nano GM alterna Luz y Oscuridad, reescribe las reglas de la Arena y la parte en dos con su Juicio.",
+   "history": "Antes de que el Forjador partiera el Sello, alguien escribió las reglas de las Arenas: cuánto pesa un golpe, qué cuenta como victoria. Los Regentes no pelearon contra la Horda; la observaron desde el umbral donde la luz y la sombra aún no se separaban. Nano es el primero que decidió cruzar. Sus tatuajes no son adorno: son las cláusulas del pacto, grabadas en la piel para que ninguna regla se le olvide. Cuando entra en combate, la arena lo reconoce antes que los campeones.",
    "passive": "Cada habilidad tiene afinidad LUZ (protege, restaura, ordena) u OSCURIDAD (daña, debilita, ejecuta). Alternar afinidades acumula Equilibrio; con 2 de Luz y 2 de Sombra entra en FORMA DEL REGENTE (8 s): ambas afinidades a la vez, +20% daño, −15% daño recibido y más alcance.",
    "skills": [
     "Decreto de sombra en línea: daña y SENTENCIA (+15% de daño recibido, 4 s). Comunes sentenciados con menos de 22% de vida son ejecutados.",
@@ -2731,10 +2726,10 @@
    "inCatalog": true
   },
   "facu_gm": {
-   "name": "Facu GM",
+   "name": "Facu GM, el Soberano de las Mareas",
    "title": "El Soberano de las Mareas",
    "role": "No usa el agua: el océano le responde. Encadena corrientes, presión y oleadas para ordenar el campo antes de que el enemigo entienda el patrón.",
-   "cardLore": "Regente Fundador: encadena corriente, presión y oleada; el océano responde antes que sus órdenes.",
+   "cardLore": "Facu GM encadena corriente, presión y oleada: el océano responde antes que sus órdenes.",
    "history": "Las Arenas tienen fondo. Debajo del Acuático, más allá de donde el Leviatán dejó de bajar, hay una marea que no responde a ninguna luna. Facu fue el segundo Regente en cruzar el umbral y el único que volvió con el mar detrás. No lo domó: lo entendió. Sabe cuándo una corriente va a girar y cuándo una ola ya decidió romper. Por eso el agua llega antes que sus órdenes. Los guardianes del Acuático lo nombran en voz baja, como se nombra a la marea alta.",
    "passive": "Flujo Corriente → Presión → Oleada: cada eslabón en orden sube la Marea (máx. 3), +20% de potencia y −15% de recarga a la siguiente. Con Marea 3, MAREA ALTA (8 s): básicos con ola, +15% de velocidad y doble área en la próxima. Romper el orden da Marea Baja y un escudo.",
    "skills": [
@@ -2746,7 +2741,7 @@
    "inCatalog": true
   },
   "aurelia": {
-   "name": "Aurelia",
+   "name": "Aurelia, la Arquitecta Solar",
    "title": "La Arquitecta Solar",
    "role": "Maga constructora: levanta geometría de luz sólida y convierte el terreno en un plano que castiga a quien lo cruza.",
    "cardLore": "",
@@ -2761,7 +2756,7 @@
    "inCatalog": false
   },
   "khepri": {
-   "name": "Khepri",
+   "name": "Khepri, el Portador del Enjambre",
    "title": "El Portador del Enjambre",
    "role": "Asesino que comanda un enjambre visible: lo lanza, lo recoge y lo convierte en armadura.",
    "cardLore": "",
@@ -2776,7 +2771,7 @@
    "inCatalog": false
   },
   "velmira": {
-   "name": "Velmira",
+   "name": "Velmira, la Reina de las Máscaras",
    "title": "La Reina de las Máscaras",
    "role": "Soporte de control: cada máscara es un estado mágico, y cambiar de rostro reescribe la próxima habilidad.",
    "cardLore": "",
@@ -2791,7 +2786,7 @@
    "inCatalog": false
   },
   "vhal": {
-   "name": "Vhal",
+   "name": "Vhal, el Astrónomo Caído",
    "title": "El Astrónomo Caído",
    "role": "Mago gravitatorio: acumula Masa sobre la horda hasta que los enemigos se atraen entre sí y colapsan.",
    "cardLore": "",
@@ -2806,7 +2801,7 @@
    "inCatalog": false
   },
   "bront": {
-   "name": "Bront",
+   "name": "Bront, la Fortaleza Viviente",
    "title": "La Fortaleza Viviente",
    "role": "Tanque que se desarma en placas defensivas y termina convertido en fortificación.",
    "cardLore": "",
@@ -2815,13 +2810,13 @@
    "skills": [
     "Lanza una placa que daña en línea y queda en el suelo como placa defensiva.",
     "Levanta una muralla de placas frente a él: los enemigos que la cruzan reciben daño y se frenan mucho.",
-    "Carga hacia adelante empujando a los comunes y frenando a los élites.",
+    "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
     "Se ancla y se transforma en fortificación: +40% de reducción de daño, murallas alrededor y refugio para aliados."
    ],
    "inCatalog": false
   },
   "oriel": {
-   "name": "Oriel",
+   "name": "Oriel, la Portera de las Cicatrices",
    "title": "La Portera de las Cicatrices",
    "role": "Soporte de reposicionamiento: abre pares de portales a través de las Cicatrices de la Horda y convierte el mapa en un atajo para su equipo.",
    "cardLore": "",

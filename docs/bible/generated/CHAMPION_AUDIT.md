@@ -34,6 +34,81 @@
 | Zahra, la Mano de la Válvula (`zahra`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Renko, el Jardinero de Nombres (`renko`) | tanque | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 | Sira, la Cartógrafa del Regreso (`sira`) | mago | **PASS** | 0 | 0 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Nano GM (`nano_gm`) | mago | **FIX** | 3 | 4 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Facu GM (`facu_gm`) | asesino | **FIX** | 3 | 5 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Aurelia (`aurelia`) | mago | **FIX** | 3 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Khepri (`khepri`) | asesino | **FIX** | 3 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Velmira (`velmira`) | soporte | **FIX** | 3 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Vhal (`vhal`) | mago | **FIX** | 3 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Bront (`bront`) | tanque | **FIX** | 3 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
+| Oriel (`oriel`) | soporte | **FIX** | 3 | 3 | ✔ | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red | ✔efecto ✔VFX ✔SFX ✔red |
 
 ## Detalle de FAIL / WARNING
+
+### Nano GM — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.nano_gm
+- **FAIL** [lore] origen legible — infernal
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+- **WARNING** [metadata] Autoridad del GM: descripción larga (273): el tooltip usa shortDescription
+
+### Facu GM — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.facu_gm
+- **FAIL** [lore] origen legible — acuatica
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+- **WARNING** [metadata] Mente de Marea: descripción larga (269): el tooltip usa shortDescription
+- **WARNING** [metadata] El Océano Reclama la Arena: descripción larga (204): el tooltip usa shortDescription
+
+### Aurelia — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.aurelia
+- **FAIL** [lore] origen legible — laberinto
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Khepri — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.khepri
+- **FAIL** [lore] origen legible — abismo
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Velmira — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.velmira
+- **FAIL** [lore] origen legible — ciudad
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Vhal — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.vhal
+- **FAIL** [lore] origen legible — hielo
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Bront — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.bront
+- **FAIL** [lore] origen legible — fortaleza
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
+
+### Oriel — FIX
+- **FAIL** [identity] identidad registrada — falta CHAMPION_IDENTITY.oriel
+- **FAIL** [lore] origen legible — micelial
+- **WARNING** [lore] frase de catálogo — 0 caracteres
+- **FAIL** [lore] la frase nombra al campeón
+- **WARNING** [loot] set propio
+- **WARNING** [art] skins — 0 skins, 0 cromas
 

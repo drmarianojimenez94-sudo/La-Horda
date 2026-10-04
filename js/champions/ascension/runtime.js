@@ -138,7 +138,7 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
  case 'plate_throw':ascLine(h,h,end,sk.radius*area,e=>ascHit(h,e,dmg));ascObject(h,'plate',end,12000,{r:34},4);break;
  case 'plate_wall':{const c={x:h.x+dir.x*90,y:h.y+dir.y*90},px=-dir.y,py=dir.x,half=Math.min(110,range/2);
   ascObject(h,'wall',c,life,{ax:c.x-px*half,ay:c.y-py*half,bx:c.x+px*half,by:c.y+py*half,r:sk.radius*area,dmg,tick:0},3);break;}
- case 'ram':{const a={x:h.x,y:h.y};exDash(h,dir,Math.min(200,range));ascLine(h,a,h,sk.radius*area,e=>{ascHit(h,e,dmg);if(isEliteRank(e))e.stunTimer=Math.max(e.stunTimer||0,300);else ascSafeMove(e,dir.x,dir.y,60);});break;}
+ case 'crystal_pulse':{const r2=sk.radius*area;ascArea(h,h,r2,e=>{ascHit(h,e,dmg);if(isEliteRank(e))e.stunTimer=Math.max(e.stunTimer||0,300);else{const d=Math.hypot(e.x-h.x,e.y-h.y)||1;ascSafeMove(e,(e.x-h.x)/d,(e.y-h.y)/d,60);}},24);ascCue(h,'pressure',{x:h.x,y:h.y,r:r2});break;}
  case 'citadel':{s.citadelUntil=ascNow()+life;for(const o of ascOwned(h,'wall'))o.life=0;const R=r;
   for(let i=0;i<4;i++){const a=i*Math.PI/2,c={x:h.x+Math.cos(a)*R,y:h.y+Math.sin(a)*R},px=-Math.sin(a),py=Math.cos(a);ascObject(h,'wall',c,life,{ax:c.x-px*R*.7,ay:c.y-py*R*.7,bx:c.x+px*R*.7,by:c.y+py*R*.7,r:24,dmg:dmg,tick:0,citadel:true},4);}
   ascObject(h,'keep',{x:h.x,y:h.y},life,{r:R},1);break;}

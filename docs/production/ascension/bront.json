@@ -55,14 +55,14 @@
         "sfx": "asc_bront_cast"
       },
       {
-        "id": "ram",
-        "description": "Carga hacia adelante empujando a los comunes y frenando a los élites.",
+        "id": "crystal_pulse",
+        "description": "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
         "cooldownMs": 7600,
         "maxTargets": 20,
         "hordeMechanism": "Área/línea con límite de objetivos y techo por lanzamiento contra jefes",
         "anticipation": "Pose de cast y telegraph del área",
-        "execution": "Ejecución de Embestida del Cristal",
-        "impact": "Carga hacia adelante empujando a los comunes y frenando a los élites.",
+        "execution": "Ejecución de Pulso del Cristal",
+        "impact": "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
         "feedback": "Impacto propio y número de daño",
         "vfx": "js/champions/ascension/render.js",
         "sfx": "asc_bront_cast"

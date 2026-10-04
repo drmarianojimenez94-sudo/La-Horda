@@ -203,3 +203,14 @@ limpieza y golpes por lanzamiento, que este gate no mide; no se ajustó contra u
 Seguridad de definitivas: ejecución solo de comunes `normal` (nunca élites, jefes, estructuras ni
 objetivos), techo de daño por lanzamiento contra jefes (6–8% de vida máxima) y desplazamientos validados
 contra bordes y zonas inalcanzables. Evidencia: `tools/ascension/functional.js` (195 comprobaciones).
+
+**Integración con main (4 octubre 2026).** Tras incorporar la Biblia de Campeones y el lenguaje de combate
+de `main`, el gate volvió a medir a Velmira en 9.138 de daño medio, sobre su techo de soporte (8.804). Ajuste
+de kit (sin tocar la referencia): Máscara Arrojada 1,6 → 1,4 y Coro de Rostros 1,0 → 0,9. Gate de nuevo
+**PASS** (37 clases, 19 candidatas, 57 simulaciones). El análisis de duplicidad marcó a Bront como
+DUPLICATE del Caballero (0,462 ≥ 0,45: ambos cargaban hacia adelante). Se cambió la mecánica, no el
+detector: Embestida del Cristal (carga en línea) pasa a **Pulso del Cristal** (pulso a su alrededor
+sin desplazarse, 1,5×, radio 120, aparta comunes y aturde élites 0,3 s, máximo 24 objetivos). Bront queda
+REVIEW, no DUPLICATE. Los 8 campeones tienen ahora entrada en `CHAMPION_IDENTITY`, generada desde su
+catálogo (`js/champions/ascension/catalog.js`, sin duplicar texto). El validador de la Biblia los da
+PASS* (avisos: sin Set publicado mientras sean INTERNAL; pasivas largas con descripción corta).

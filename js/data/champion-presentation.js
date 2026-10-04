@@ -57,14 +57,6 @@ const CHAMPION_PRESENTATION = {
   zahra:{tagline:"Forjadora de ceniza: calienta su horno con cada golpe, lo enfría a tiempo y libera el calor acumulado."},
   renko:{tagline:"Zapador incansable: cava trincheras, levanta montículos y entierra a la Horda bajo su propio terreno."},
   sira:{tagline:"Cartógrafa de rutas vivas: dibuja su camino, lo recorre al revés y convierte el mapa en un arma."},
-  nano_gm:{tagline:"Regente Fundador: alterna Luz y Oscuridad, reescribe las reglas locales de la Arena y la divide en su Juicio."},
-  facu_gm:{tagline:"Regente Fundador: encadena corriente, presión y oleada; el océano responde antes que sus órdenes."},
-  aurelia:{tagline:"Arquitecta de luz sólida: deja nodos solares que se unen en triángulos y culmina en una catedral."},
-  khepri:{tagline:"Asesino del enjambre: lanza, recoge y viste a sus escarabajos; cada muerte cercana los alimenta."},
-  velmira:{tagline:"Reina de las cuatro máscaras: cada rostro es un estado y cambiar de máscara potencia el siguiente acto."},
-  vhal:{tagline:"Astrónomo de cuerpo estrellado: acumula Masa sobre la Horda hasta que colapsa sobre sí misma."},
-  bront:{tagline:"Armadura viviente: desprende placas protectoras, levanta murallas y se ancla como una ciudadela."},
-  oriel:{tagline:"Portera de las Cicatrices: abre pares de portales que llevan a su equipo lejos de la Horda."}
 };
 // Nombre propio sin epíteto: la identidad de la Biblia (js/data/champion-identity.js) deja CLASSES[id].name
 // como "Nombre, título"; las tarjetas muestran el título en su propia línea y no lo repiten.
