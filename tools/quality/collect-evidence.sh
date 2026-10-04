@@ -35,6 +35,7 @@ fi
 if want modes; then
   run crystal_sim node tools/crystal-wars/test-simulation.js
   run crystal_hub node tools/crystal-wars/hub-integration.js
+  SE_BASE_URL=http://127.0.0.1:8771 run endless node tools/items/t_endless.js
   run online node tools/ux/online.js
   run projectiles node tools/quality/test-projectile-identity.js
 fi

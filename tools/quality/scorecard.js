@@ -103,7 +103,7 @@ for (const [n, label] of [['menu_taps', 'toques para las acciones comunes'], ['t
 }
 
 /* ---------- MODOS DE JUEGO ---------- */
-for (const [n, label] of [['crystal_sim', 'Guerra de Cristales: simulación (partidas completas de bots)'], ['crystal_hub', 'Guerra de Cristales: integrada al hub, ida y vuelta'], ['online', 'cooperativo real por el relay (4 clientes)']]) {
+for (const [n, label] of [['crystal_sim', 'Guerra de Cristales: simulación (partidas completas de bots)'], ['crystal_hub', 'Guerra de Cristales: integrada al hub, ida y vuelta'], ['endless', 'Horda Infinita: rondas, jefes cada 5, mutadores, recompensa'], ['online', 'cooperativo real por el relay (4 clientes)']]) {
   const r = passRatio(n); M('Modos de juego', label, r && r.ratio * 100, 1, r ? `${r.pass} PASS / ${r.fail} FAIL` : undefined, '% de comprobaciones que pasan');
 }
 if (rows.length) { const h = winRate(byProf('habitual')); M('Modos de juego', 'campaña completa ganable por un jugador habitual', h * 100, 1, Math.round(h * 100) + ' %', '% de arenas ganadas por el perfil habitual'); }

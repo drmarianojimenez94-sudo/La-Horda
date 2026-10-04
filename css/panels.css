@@ -502,7 +502,7 @@
 #tactical-panel .tp-sub{ font-size:14px; color:var(--text-dim); }
 #tactical-panel .tp-bars{ display:flex; justify-content:center; flex-wrap:wrap; gap:4px 14px; font-size:15px; margin-top:3px; }
 #tactical-panel .tp-section{ background:rgba(20,12,8,0.78); border:1px solid #4a2a16; border-radius:8px; padding:6px 8px; margin-top:6px; }
-#tactical-panel .tp-h{ font-family:var(--font-pixel); font-size:8px; letter-spacing:1px; color:#d9a66a; text-transform:uppercase; margin-bottom:4px; }
+#tactical-panel .tp-h{ font-family:var(--font-pixel); font-size:11px; letter-spacing:1px; color:#d9a66a; text-transform:uppercase; margin-bottom:4px; }
 #tactical-panel .tp-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:6px; }
 #tactical-panel .tp-grid .ab-card{ font-size:13px; padding:6px 8px; }
 #tactical-panel .tp-grid .ab-name{ font-size:17px; }
