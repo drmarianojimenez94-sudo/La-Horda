@@ -1,12 +1,12 @@
 {
  "generatedBy": "tools/quality/scorecard.js",
  "date": "2026-10-04",
- "overall": 88,
+ "overall": 92,
  "target": 90,
  "aspects": {
   "Jugabilidad": {
    "weight": 20,
-   "score": 77,
+   "score": 82,
    "measured": 7,
    "total": 7
   },
@@ -18,14 +18,14 @@
   },
   "Arenas": {
    "weight": 12,
-   "score": 78,
+   "score": 98,
    "measured": 2,
    "total": 2
   },
   "Arte": {
    "weight": 14,
-   "score": 84,
-   "measured": 3,
+   "score": 97,
+   "measured": 4,
    "total": 4
   },
   "Audio": {
@@ -36,21 +36,21 @@
   },
   "HUD y presentación": {
    "weight": 14,
-   "score": null,
-   "measured": 0,
+   "score": 100,
+   "measured": 6,
    "total": 6
   },
   "Modos de juego": {
    "weight": 10,
-   "score": 100,
-   "measured": 1,
+   "score": 96,
+   "measured": 5,
    "total": 5
   },
   "Rendimiento": {
    "weight": 8,
-   "score": null,
-   "measured": 0,
-   "total": 1
+   "score": 57,
+   "measured": 3,
+   "total": 3
   }
  },
  "metrics": [
@@ -59,15 +59,15 @@
    "name": "victorias del perfil aprendiz",
    "score": 100,
    "weight": 1,
-   "raw": "50 % (1/2)",
+   "raw": "73 % (22/30)",
    "formula": "objetivo 50–80 %; −2,5 pts por punto porcentual afuera"
   },
   {
    "aspect": "Jugabilidad",
    "name": "victorias del perfil ocasional",
-   "score": 0,
+   "score": 58,
    "weight": 1,
-   "raw": "0 % (0/2)",
+   "raw": "53 % (16/30)",
    "formula": "objetivo 70–95 %; −2,5 pts por punto porcentual afuera"
   },
   {
@@ -75,7 +75,7 @@
    "name": "victorias del perfil habitual",
    "score": 100,
    "weight": 1,
-   "raw": "100 % (1/1)",
+   "raw": "93 % (28/30)",
    "formula": "objetivo 90–100 %; −2,5 pts por punto porcentual afuera"
   },
   {
@@ -83,15 +83,15 @@
    "name": "la habilidad importa (habitual ≥ ocasional ≥ aprendiz)",
    "score": 50,
    "weight": 1,
-   "raw": "100 / 0 / 50 %",
+   "raw": "93 / 53 / 73 %",
    "formula": "50 pts por cada escalón respetado"
   },
   {
    "aspect": "Jugabilidad",
    "name": "partidas que no terminan (tope 900 s)",
-   "score": 100,
+   "score": 75,
    "weight": 1,
-   "raw": "0/5",
+   "raw": "1/90",
    "formula": "−25 por partida trabada"
   },
   {
@@ -99,7 +99,7 @@
    "name": "duración de una arena ganada (mediana)",
    "score": 100,
    "weight": 0.5,
-   "raw": "532 s",
+   "raw": "476 s",
    "formula": "objetivo 6–13 min; −0,25 pts por segundo afuera"
   },
   {
@@ -159,25 +159,25 @@
   {
    "aspect": "Arenas",
    "name": "ninguna arena es un muro (gana ≥ 1 de 3 perfiles)",
-   "score": 50,
+   "score": 100,
    "weight": 1,
-   "raw": "ciudad 67% · fortaleza 0%",
+   "raw": "ciudad 78% · fortaleza 44% · bosque 56% · micelial 100% · hielo 56% · acuatica 100% · laberinto 78% · abismo 89% · minas 100% · infernal 33%",
    "formula": "% de arenas ganables por al menos un tercio de los perfiles"
   },
   {
    "aspect": "Arte",
    "name": "densidad de píxel coherente con los campeones (< ×2,5)",
-   "score": 85,
+   "score": 88,
    "weight": 1,
-   "raw": "85/100 tipos; 2 en REDRAW (≥ ×4)",
+   "raw": "88/100 tipos; 0 en REDRAW (≥ ×4)",
    "formula": "% de tipos de enemigo/jefe con densidad < ×2,5 la del roster"
   },
   {
    "aspect": "Arte",
    "name": "jefes con arte propio y a la densidad del juego",
-   "score": 68,
+   "score": 100,
    "weight": 1,
-   "raw": "19/28 (REDRAW = cuerpo prestado o densidad ≥ ×4)",
+   "raw": "28/28 (REDRAW = cuerpo prestado o densidad ≥ ×4)",
    "formula": "% de fichas de jefe sin REDRAW"
   },
   {
@@ -191,9 +191,9 @@
   {
    "aspect": "Arte",
    "name": "proyectiles con identidad propia",
-   "score": null,
+   "score": 100,
    "weight": 0.5,
-   "raw": "sin evidencia",
+   "raw": "2 PASS / 0 FAIL",
    "formula": "% de pruebas que pasan"
   },
   {
@@ -215,101 +215,118 @@
   {
    "aspect": "HUD y presentación",
    "name": "59 pantallas × 2 teléfonos: botones chicos, desbordes, letra diminuta, fuentes",
-   "score": null,
+   "score": 100,
    "weight": 1.5,
-   "raw": "sin evidencia",
+   "raw": "issues=0 fonts=0",
    "formula": "100 − 2 por problema"
   },
   {
    "aspect": "HUD y presentación",
    "name": "texto grande encimado en los momentos más cargados",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "maxBig=2 maxCenter=1 overlaps=0 lootCenter=0 errors=0",
    "formula": "−20 por texto grande de más (>2), −15 por superposición, −10 por botín al centro"
   },
   {
    "aspect": "HUD y presentación",
    "name": "toques para las acciones comunes",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "14 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "HUD y presentación",
    "name": "controles táctiles ≥ 44 px, en pantalla",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "15 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "HUD y presentación",
    "name": "texto dentro de su marco",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "1 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "HUD y presentación",
    "name": "290 contratos de interfaz (revivir, guías, layout)",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "1 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "Modos de juego",
    "name": "Guerra de Cristales: simulación (partidas completas de bots)",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "10 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "Modos de juego",
    "name": "Guerra de Cristales: integrada al hub, ida y vuelta",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "2 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "Modos de juego",
    "name": "Horda Infinita: rondas, jefes cada 5, mutadores, recompensa",
-   "score": null,
+   "score": 87,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "20 PASS / 3 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "Modos de juego",
    "name": "cooperativo real por el relay (4 clientes)",
-   "score": null,
+   "score": 100,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "1 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   },
   {
    "aspect": "Modos de juego",
    "name": "campaña completa ganable por un jugador habitual",
-   "score": 100,
+   "score": 93,
    "weight": 1,
-   "raw": "100 %",
+   "raw": "93 %",
    "formula": "% de arenas ganadas por el perfil habitual"
   },
   {
    "aspect": "Rendimiento",
-   "name": "carga en 4G simulado (portada, MB, tiempo a jugar)",
-   "score": null,
+   "name": "costo del código por cuadro con la horda más grande, CPU ×4 (update + render)",
+   "score": 49,
+   "weight": 1.5,
+   "raw": "infernal 10.8 ms → 60 fps (p95 22.7 ms, 62 enemigos; raf sin GPU 30 fps) · ciudad 12.2 ms → 60 fps (p95 20.5 ms, 36 enemigos; raf sin GPU 30 fps) · micelial 27.2 ms → 37 fps (p95 44.4 ms, 31 enemigos; raf sin GPU 30 fps)",
+   "formula": "peor arena: 20 fps → 0, 55 fps → 100 (fps = 1000 / máx(16,7 ms, mediana))"
+  },
+  {
+   "aspect": "Rendimiento",
+   "name": "cuadros con código lento (> 33 ms, CPU ×4)",
+   "score": 26,
    "weight": 1,
-   "raw": "sin evidencia",
+   "raw": "micelial 19 %",
+   "formula": "25 % → 0, 2 % → 100"
+  },
+  {
+   "aspect": "Rendimiento",
+   "name": "carga en 4G simulado (portada, MB, tiempo a jugar)",
+   "score": 100,
+   "weight": 1,
+   "raw": "7 PASS / 0 FAIL",
    "formula": "% de comprobaciones que pasan"
   }
  ],
  "humanJudgementPending": [
+  "FPS real en un teléfono de gama media (esta máquina no tiene GPU: el rasterizado del canvas se mide por software y no se puntúa)",
   "Si la música y los efectos SUENAN bien (son sintetizados; la tarjeta solo mide mezcla, niveles e identidad)",
   "Si el arte es lindo y coherente a la vista (la tarjeta mide densidad, arte propio y validadores técnicos)",
   "Sensación en un teléfono real (todo se midió en Chromium emulado)",

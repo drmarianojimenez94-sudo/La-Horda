@@ -1,0 +1,13 @@
+PASS seeded simulation is reproducible
+PASS waves mirror positions and stats
+PASS normalization ignores account stats and unknown roles
+PASS shop rejects bad keys, insufficient funds, closed windows and upgrade overflow
+PASS repair and threats have team cooldown, warning and bounded charges
+PASS damage and heals never cross teams
+PASS invalid abilities and cooldown spam cannot cast
+PASS forged coordinates cannot teleport a hero; movement normalized
+PASS crystal destruction, simultaneous draw, timeout and immutable end
+[{"seed":1,"seconds":510,"winner":0,"maxEnemies":40},{"seed":2,"seconds":509,"winner":1,"maxEnemies":44},{"seed":3,"seconds":578,"winner":0,"maxEnemies":43},{"seed":4,"seconds":600,"winner":1,"maxEnemies":46},{"seed":5,"seconds":579,"winner":1,"maxEnemies":45},{"seed":6,"seconds":511,"winner":1,"maxEnemies":44},{"seed":7,"seconds":510,"winner":0,"maxEnemies":44},{"seed":8,"seconds":475,"winner":1,"maxEnemies":35}]
+PASS complete bot matches stay bounded and terminate
+10 simulation tests passed
+exit=0 secs=1

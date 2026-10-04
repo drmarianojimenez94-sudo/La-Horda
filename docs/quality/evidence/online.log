@@ -1,0 +1,42 @@
+{
+  "checks": [
+    {
+      "name": "Four single-champion loadouts, no reserve",
+      "ok": true
+    },
+    {
+      "name": "Host rejects duplicate main champion",
+      "ok": true
+    },
+    {
+      "name": "Downed guest retains champion, team continues",
+      "ok": true
+    },
+    {
+      "name": "Dead guest input cannot move authoritative hero",
+      "ok": true
+    },
+    {
+      "name": "Host revival replicated without champion swap",
+      "ok": true
+    },
+    {
+      "name": "Revived guest can move",
+      "ok": true
+    },
+    {
+      "name": "Living guests prevent early defeat",
+      "ok": true
+    },
+    {
+      "name": "Team wipe ends all four clients",
+      "ok": true
+    },
+    {
+      "name": "Lobby preserves original single champions",
+      "ok": true
+    }
+  ],
+  "errors": []
+}
+exit=0 secs=28

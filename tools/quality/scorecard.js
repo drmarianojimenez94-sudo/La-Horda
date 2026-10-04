@@ -111,9 +111,18 @@ if (rows.length) { const h = winRate(byProf('habitual')); M('Modos de juego', 'c
 /* ---------- RENDIMIENTO ---------- */
 const fps = ['fps_infernal', 'fps_ciudad', 'fps_micelial'].map(n => { const s = log(n); const m = s && s.match(/\{[^\n]*"fpsMed"[^\n]*\}/); try { return m ? JSON.parse(m[0]) : null; } catch (e) { return null; } }).filter(Boolean);
 if (fps.length) {
-  const worst = fps.reduce((a, b) => a.fpsMed < b.fpsMed ? a : b);
-  M('Rendimiento', 'FPS (mediana) con la horda más grande, CPU ×4 más lenta', lin(worst.fpsMed, 20, 55), 1.5, fps.map(f => `${f.arena} ${f.fpsMed} fps (p95 ${f.p95} ms, ${f.slowPct}% lentos, ${f.maxEnemies} enemigos)`).join(' · '), 'peor arena: 20 fps → 0, 55 fps → 100');
-  M('Rendimiento', 'cuadros lentos (> 33 ms)', lin(worst.slowPct, 25, 2), 1, worst.slowPct + ' %', '25 % → 0, 2 % → 100');
+  // Lo que modela la CPU ×4 es el CÓDIGO del juego (update + render). El rasterizado y la composición del canvas van por
+  // la GPU en un celular; esta máquina no tiene GPU y los hace por software, así que el intervalo real entre cuadros
+  // (raf) se muestra pero no se puntúa: el FPS en un teléfono de verdad es juicio humano pendiente (ver abajo).
+  const sc = fps.filter(f => f.scriptMed != null);
+  if (sc.length) {
+    const worst = sc.reduce((a, b) => a.scriptMed > b.scriptMed ? a : b), slow = sc.reduce((a, b) => a.scriptSlowPct > b.scriptSlowPct ? a : b);
+    M('Rendimiento', 'costo del código por cuadro con la horda más grande, CPU ×4 (update + render)', lin(worst.scriptFps, 20, 55), 1.5, sc.map(f => `${f.arena} ${f.scriptMed} ms → ${f.scriptFps} fps (p95 ${f.scriptP95} ms, ${f.maxEnemies} enemigos; raf sin GPU ${f.fpsMed} fps)`).join(' · '), 'peor arena: 20 fps → 0, 55 fps → 100 (fps = 1000 / máx(16,7 ms, mediana))');
+    M('Rendimiento', 'cuadros con código lento (> 33 ms, CPU ×4)', lin(slow.scriptSlowPct, 25, 2), 1, `${slow.arena} ${slow.scriptSlowPct} %`, '25 % → 0, 2 % → 100');
+  } else {
+    const worst = fps.reduce((a, b) => a.fpsMed < b.fpsMed ? a : b);
+    M('Rendimiento', 'FPS (mediana) con la horda más grande, CPU ×4 más lenta', lin(worst.fpsMed, 20, 55), 1.5, fps.map(f => `${f.arena} ${f.fpsMed} fps`).join(' · '), 'peor arena: 20 fps → 0, 55 fps → 100');
+  }
 }
 { const r = passRatio('loadtime'); M('Rendimiento', 'carga en 4G simulado (portada, MB, tiempo a jugar)', r && r.ratio * 100, 1, r ? `${r.pass} PASS / ${r.fail} FAIL` : undefined, '% de comprobaciones que pasan'); }
 
@@ -126,7 +135,8 @@ for (const [a, w] of ASPECTS) {
 }
 const measured = ASPECTS.filter(([a]) => aspect[a].score !== null);
 const overall = measured.length ? Math.round(measured.reduce((s, [a, w]) => s + aspect[a].score * w, 0) / measured.reduce((s, [, w]) => s + w, 0)) : null;
-const HUMAN = ['Si la música y los efectos SUENAN bien (son sintetizados; la tarjeta solo mide mezcla, niveles e identidad)',
+const HUMAN = ['FPS real en un teléfono de gama media (esta máquina no tiene GPU: el rasterizado del canvas se mide por software y no se puntúa)',
+  'Si la música y los efectos SUENAN bien (son sintetizados; la tarjeta solo mide mezcla, niveles e identidad)',
   'Si el arte es lindo y coherente a la vista (la tarjeta mide densidad, arte propio y validadores técnicos)',
   'Sensación en un teléfono real (todo se midió en Chromium emulado)', 'Diversión y ritmo percibidos por personas'];
 const rep = {generatedBy: 'tools/quality/scorecard.js', date: new Date().toISOString().slice(0, 10), overall, target: 90, aspects: aspect, metrics, humanJudgementPending: HUMAN};

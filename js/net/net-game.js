@@ -397,7 +397,7 @@ function netHostCheckDefeat(){
     runEnding = true; // corta aparición de enemigos, refuerzos y revivir (ver update/updateRevives)
     netLog("TEAM_WIPE", {level:runLevel});
     showBanner("TEAM WIPE — todo el equipo cayó");
-    runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });
+    runLaterFlow(650, ()=>{ if(state==="playing") showGameOverScreen(); });
   }
 }
 // Mensajes de los invitados

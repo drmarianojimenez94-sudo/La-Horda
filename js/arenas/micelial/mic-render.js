@@ -137,7 +137,7 @@ function micDrawWorld(now){
   ctx.save();
   ctx.fillStyle = "#07040b"; ctx.fillRect(V.x0 - 50, V.y0 - 50, V.x1 - V.x0 + 100, V.y1 - V.y0 + 100);
   ctx.imageSmoothingEnabled = true;
-  if(MIC_BG_OK.a) _micDrawBg(MIC_BG.a, 1, V);
+  if(MIC_BG_OK.a && !(MIC_BG_OK.b && _micBlend >= 0.99)) _micDrawBg(MIC_BG.a, 1, V); // si el fondo B ya tapa todo, A no se ve: una pasada de pantalla completa menos
   if(MIC_BG_OK.b) _micDrawBg(MIC_BG.b, _micBlend, V);
   if(micS.dead){ const d = _micDesatCanvas(); if(d) _micDrawBg(d, _micDeadQ, V); }
   ctx.imageSmoothingEnabled = false;
@@ -239,10 +239,14 @@ function micDrawWorld(now){
   const mother = micMotherEntity();
   if(mother && inView(MIC_MOTHER_POS.x, MIC_MOTHER_POS.y - 250, 400)) _micDrawMother(mother, t);
   else if((M.st==="dying" || M.st==="dead") && inView(MIC_MOTHER_POS.x, MIC_MOTHER_POS.y - 250, 400)) _micDrawMotherDying(t);
-  // borde de la caverna: niebla oscura afuera de lo caminable
+  // borde de la caverna: niebla oscura afuera de lo caminable. Si la vista entera queda ADENTRO de la elipse (el borde
+  // ondulado nunca baja de 0,91 del radio; margen para el trazo de 50), no hay nada que pintar y se saltea: era un
+  // relleno de pantalla completa + dos trazos por cuadro (medido: ~5 ms con la CPU de un celular de gama media).
+  const E = MIC_MAP.ell, kIn = 0.91, mg = 45;
+  const viewInside = [[V.x0, V.y0], [V.x1, V.y0], [V.x0, V.y1], [V.x1, V.y1]].every(([x, y]) => ((x - E.cx)/(E.rx*kIn - mg))**2 + ((y - E.cy)/(E.ry*kIn - mg))**2 < 1);
+  if(viewInside) return;
   ctx.save();
   ctx.beginPath(); ctx.rect(V.x0 - 60, V.y0 - 60, V.x1 - V.x0 + 120, V.y1 - V.y0 + 120);
-  const E = MIC_MAP.ell;
   for(let i=72;i>=0;i--){ const a = i/72*Math.PI*2, kk = micEdgeK(a)*1.02; const x = E.cx + Math.cos(a)*E.rx*kk, y = E.cy + Math.sin(a)*E.ry*kk; if(i===72) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
   ctx.closePath();
   ctx.fillStyle = "rgba(5,2,9,0.72)"; ctx.fill("evenodd");

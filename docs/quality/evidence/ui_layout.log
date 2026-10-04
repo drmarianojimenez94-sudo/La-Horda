@@ -3,3 +3,157 @@
   iphone14 starter                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
   iphone14 starter_confirm          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
   iphone14 automatic_tutorial       small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 mainmenu                 small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 mainmenu_full            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 options                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 modes                    small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 arenaselect              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 guardianselect           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 prep_equipo              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 prep_talentos            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 prep_habilidades         small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 prep_arena               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 prep_online              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 inventory_objetos        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 inventory_recetas        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 inventory_coleccion      small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 inventory_item_preview   small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 item_preview_affixes     small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 mistica                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 shop_destacados          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 shop_campeones           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 shop_objetos             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 shop_item_preview        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 shop_skins               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 champdetail              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_home               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_campeones          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_bestiario          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_jefes              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_arenas             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 guardianes               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_champ_ficha        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_champ_equipo       small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_champ_talentos     small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_champ_habilidades  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_champ_skins        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_creature           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_boss               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 codex_arena              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 divina                   small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 quests_desafios          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 quests_logros            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 quests_pase              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 quests_perfil            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 quests_chestbar          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 quests_chest_open        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 dialog_confirm           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 dialog_alert             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 run_intro                small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 hud_playing              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 buff_choice              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 pause                    small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 gameover                 small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 victory                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 victory_step2            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 victory_step3            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 victory_step4            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphone14 camp                     small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+== iphoneSE 667x375
+  iphoneSE title                    small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE starter                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE starter_confirm          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE automatic_tutorial       small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE mainmenu                 small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE mainmenu_full            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE options                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE modes                    small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE arenaselect              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE guardianselect           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE prep_equipo              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE prep_talentos            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE prep_habilidades         small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE prep_arena               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE prep_online              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE inventory_objetos        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE inventory_recetas        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE inventory_coleccion      small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE inventory_item_preview   small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE item_preview_affixes     small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE mistica                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE shop_destacados          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE shop_campeones           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE shop_objetos             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE shop_item_preview        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE shop_skins               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE champdetail              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_home               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_campeones          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_bestiario          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_jefes              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_arenas             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE guardianes               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_champ_ficha        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_champ_equipo       small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_champ_talentos     small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_champ_habilidades  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_champ_skins        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_creature           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_boss               small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE codex_arena              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE divina                   small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE quests_desafios          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE quests_logros            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE quests_pase              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE quests_perfil            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE quests_chestbar          small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE quests_chest_open        small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE dialog_confirm           small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE dialog_alert             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE run_prologue             small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE run_intro                small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE hud_playing              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE buff_choice              small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE pause                    small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE gameover                 small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE victory                  small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE victory_step2            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE victory_step3            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE victory_step4            small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+  iphoneSE camp                     small=0 overflow=0 tiny=0 primary=0 fonts=0  ✓
+{
+ "perViewport": {
+  "iphone14": {
+   "small": 0,
+   "overflow": 0,
+   "tinyText": 0,
+   "primaryHidden": 0,
+   "fonts": 0,
+   "total": 0,
+   "rawElements": 0
+  },
+  "iphoneSE": {
+   "small": 0,
+   "overflow": 0,
+   "tinyText": 0,
+   "primaryHidden": 0,
+   "fonts": 0,
+   "total": 0,
+   "rawElements": 0
+  }
+ },
+ "issues": {},
+ "pageErrors": {
+  "iphone14": [],
+  "iphoneSE": []
+ }
+}
+SUMMARY issues=0 (elementos=0) fonts=0
+exit=0 secs=194

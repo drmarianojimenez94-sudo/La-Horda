@@ -16,6 +16,11 @@ let runTimers = [];
 let runEnding = false; // true desde que el jefe final cae (o el jugador muere) hasta salir de la partida
 let runCastOwner=null;
 function runLater(ms, fn){ const owner=runCastOwner, key=owner&&owner.classKey; runTimers.push({t:ms, fn:()=>{ if(!owner||(owner.alive&&owner.classKey===key)){ const prior=runCastOwner;runCastOwner=owner;try{fn();}finally{runCastOwner=prior;} } }}); }
+// Temporizador del FLUJO de la partida (victoria, derrota): sin dueño. runLater ata cada temporizador a quien estaba
+// lanzando una habilidad (si el lanzador cae, su efecto pendiente no sale); el fin de partida no es una habilidad: si el
+// equipo cae en medio de un lanzamiento (p. ej. una habilidad mata a un enemigo que explota y se lleva al último en pie),
+// atado al lanzador caído el fin no llegaba nunca y la partida quedaba "jugando" con todos muertos.
+function runLaterFlow(ms, fn){ const prior = runCastOwner; runCastOwner = null; try{ runLater(ms, fn); } finally { runCastOwner = prior; } }
 function clearRunTimers(){ runTimers.length = 0; }
 function updateRunTimers(dt){
   if(!runTimers.length) return;
@@ -266,7 +271,7 @@ function finishBossVictory(){
   if(ck){
     crystalAward(ck, boss ? boss.x : player.x, boss ? boss.y : player.y); wait = 3400;
   }
-  runLater(wait, ()=>{ if(state==="playing") showVictoryScreen(); });
+  runLaterFlow(wait, ()=>{ if(state==="playing") showVictoryScreen(); });
 }
 
 // Victoria por SALIDA (p.ej. atravesar el Portal Infernal de las Minas Profundas): la primera
@@ -290,5 +295,5 @@ function onPlayerDeath(){
   if(!divinaMode && heroes.some(h=>h.alive)){ showBanner("Has caído · un aliado puede revivirte"); return; }
   if(runEnding) return; // la victoria ya estaba en camino: no se pisa con una derrota
   runEnding = true;
-  runLater(650, ()=>{ if(state==="playing") showGameOverScreen(); });
+  runLaterFlow(650, ()=>{ if(state==="playing") showGameOverScreen(); });
 }
