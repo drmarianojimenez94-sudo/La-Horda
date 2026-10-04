@@ -72,7 +72,7 @@ const ASCENSION = {
   weakness:'Poco daño propio; elegir mal la máscara desperdicia la ventana.',
   voices:['¿Qué rostro querés que te muestre?','El telón baja. Ustedes quedan.','Sin máscara… solo queda… mi cara…'],
   skins:[['Mascarada Veneciana','Vestido de terciopelo vino, máscaras doradas con plumas y cetro de cristal de Murano.','Una compañía itinerante le regaló el vestuario de su última obra, que nunca llegó a estrenarse.'],['Reina del Réquiem Blanco','Vestido de luto blanco, máscaras de porcelana agrietada y cetro de hueso.','Para la función de los ausentes, todas las máscaras se vuelven blancas.']],
-  skills:[['Máscara Arrojada','mask_throw',22,4800,320,30,0,1.4,'Lanza la máscara activa en línea: daña y aplica su efecto a enemigos y aliados que toca.','mask'],
+  skills:[['Máscara Arrojada','mask_throw',22,4800,320,30,0,1.3,'Lanza la máscara activa en línea: daña y aplica su efecto a enemigos y aliados que toca.','mask'],
    ['Coro de Rostros','chorus',26,8600,0,170,0,.9,'Las máscaras giran a su alrededor: aliados reciben el beneficio y enemigos el castigo de la máscara activa.','mask'],
    ['Cambio de Rostro','face_swap',18,5200,140,90,0,.8,'Cambia a la siguiente máscara con un pequeño salto: la próxima habilidad se potencia un 30%.','mask'],
    ['El Gran Teatro','theatre',0,40000,0,260,5600,.9,'Cuatro máscaras espectrales gigantes actúan en secuencia: Inspiración, Terror, Silencio y Protección.','mask']]},

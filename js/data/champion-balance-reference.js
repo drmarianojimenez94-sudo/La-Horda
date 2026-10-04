@@ -1,8 +1,8 @@
 "use strict";
 // Generated from docs/balance/champion-entry-reference.json; do not drift from that file.
 const CHAMPION_BALANCE_REFERENCE = {
-  "version": 2,
-  "date": "2026-10-03",
+  "version": 3,
+  "date": "2026-10-04",
   "knownChampions": [
     "tanque",
     "guerrero",
@@ -228,6 +228,15 @@ const CHAMPION_BALANCE_REFERENCE = {
       "compositeCeiling": 1.6,
       "simulationCeilingMultiplier": 2.6,
       "rationale": "Regentes Fundadores: deliberadamente por encima de STANDARD pero acotados (sin valores infinitos). Mismo normalizador y misma simulación; solo cambia el techo, explícito y versionado."
+    },
+    "ascension": {
+      "categories": [
+        "ASCENSION"
+      ],
+      "statMultiplier": 1.1,
+      "compositeCeiling": 1.25,
+      "simulationCeilingMultiplier": 1.5,
+      "rationale": "Ascensión: campeones especiales que se ganan con logros o se compran por 9000 de oro. Pedido del dueño: levemente más fuertes que STANDARD. Mismo normalizador y misma simulación; el techo sube de 1,35 a 1,5 veces la media del rol, explícito y versionado."
     }
   }
 };

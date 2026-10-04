@@ -21,7 +21,7 @@ function whenAssetsReady(cb, onProgress){
   const core = [], rest = [];
   for(const src of ASSET_MANIFEST) ((lazy && LAZY_IMG.isDeferred(src)) ? rest : core).push(src);
   ASSET_LOAD.core.total = core.length; ASSET_LOAD.rest.total = rest.length;
-  const label = "Toca para continuar"; // el HTML arranca en "Cargando…" y deshabilitado (no se puede tocar antes de tiempo)
+  const label = "Tocá para continuar"; // el HTML arranca en "Cargando…" y deshabilitado (no se puede tocar antes de tiempo)
   function load(list, bucket, onStep){
     for(const src of list){
       const im = new Image();

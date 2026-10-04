@@ -140,7 +140,7 @@ const CLASSES = {
   },
   musashi:{
     name:"Musashi", icon:"⚔", color:"#5aa8d8", glow:"#bfe4ff",
-    role:"Duelista. Daño físico single-target y ejecución: elige un rival y se vuelve cada vez más peligroso contra él.", roleCategory:"asesino",
+    role:"Duelista. Daño físico a un solo objetivo y ejecución: elige un rival y se vuelve cada vez más peligroso contra él.", roleCategory:"asesino",
     // Asesino de velocidad: poca vida y poca defensa, pero muchísimos golpes (básico cada 260ms,
     // menos daño por golpe) y habilidades de enfriamiento bajo. Sobrevive matando rápido y con
     // Paso Fantasma, no aguantando.

@@ -25,6 +25,9 @@ async function netFetchRooms(){
   netRooms.busy = true; netRooms.at = performance.now(); // también si falla: no reintenta en cada segundo
   let t=0;
   try{
+    // servidor viejo sin /api (net-core.js: netCaps): ni se pide (404 sin CORS = error en la consola)
+    if(typeof netCapsProbe==="function" && netCaps.api===null) await netCapsProbe();
+    if(typeof netApiMissing==="function" && netApiMissing()){ netRooms.unsupported = true; netRooms.err = ""; netRooms.list = []; return []; }
     const ctl = typeof AbortController!=="undefined" ? new AbortController() : null;
     t = ctl ? setTimeout(()=>ctl.abort(), 12000) : 0;
     const r = await fetch(url, {cache:"no-store", signal: ctl ? ctl.signal : undefined});
@@ -61,8 +64,8 @@ function netRenderRoomsList(){
   const st = document.getElementById("mode-rooms-status");
   let html = "", msg = "";
   if(!netAvailable()) msg = "El modo online no está configurado en esta versión.";
-  else if(netRooms.unsupported) msg = "Este servidor todavía no lista salas públicas: entrá con el código.";
-  else if(netRooms.list===null) msg = netRooms.err || "Buscando salas…";
+  else if(netRooms.unsupported) msg = "Las salas abiertas todavía no están disponibles en el servidor: entrá con el código de tu amigo.";
+  else if(netRooms.list===null) msg = netRooms.err || (netRooms.busy && performance.now() - netRooms.at > 4000 ? "Despertando el servidor… (la primera vez puede tardar hasta un minuto)" : "Buscando salas…");
   else if(!netRooms.list.length) msg = netRooms.err || "No hay salas públicas abiertas ahora. Creá una y marcala 🌍 Pública en la Sala.";
   else { html = netRooms.list.map(_roomRowHTML).join(""); msg = netRooms.err; }
   if(box._html !== html){ box._html = html; box.innerHTML = html; }
@@ -113,6 +116,7 @@ async function netJoinPublicRoom(code, btn){
   setInterval(()=>{
     if(typeof state==="undefined" || !netAvailable() || document.hidden) return;
     const now = performance.now();
+    if(state==="modeselect" && netRooms.busy && netRooms.list===null) netRenderRoomsList(); // "Despertando el servidor…"
     if(state==="modeselect" && now - netRooms.at > NET_ROOMS_EVERY_MS && !netRooms.busy) netRefreshRooms();
     else if(state==="mainmenu" && now - netRooms.hubAt > NET_ROOMS_HUB_EVERY_MS && !netRooms.busy){ netRooms.hubAt = now; netFetchRooms().then(netRenderHubRooms); }
   }, 1000);

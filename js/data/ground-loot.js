@@ -28,6 +28,10 @@ const GROUND_LOOT_CFG = {
   grade:  {normal:"C", subelite:"C", elite:"B", named:"A", subjefe:"A", jefe:"S"},
   // Multiplicador de Legendario/Mítico/Set/Único por fuente (la horda común no llueve legendarios).
   highMult:{normal:0.05, subelite:0.08, elite:0.15, named:0.2, subjefe:0.3, jefe:0.45},
+  // PISO DE RAREZA del PRIMER objeto que suelta la fuente (alfa, Q4: una élite con nombre, con vida ×2,
+  // tiraba un objeto blanco como un esqueleto). Lo que iba a salir por debajo del piso sube al piso (la
+  // probabilidad de Legendario o más no cambia): el jefe da al menos un Muy Raro; élite con nombre y subjefe, un Raro.
+  floor:  {named:"raro", subjefe:"raro", jefe:"muyraro"},
   pickR: 52,          // radio para levantarlo al pasar por encima
   btnR: 120,          // radio del botón contextual "Levantar"
   nameR: 300,         // a esta distancia aparece el nombre flotante (Legendario o más: siempre en pantalla)

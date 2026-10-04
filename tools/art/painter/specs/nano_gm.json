@@ -1,0 +1,132 @@
+{
+ "id": "nano_gm",
+ "name": "Nano GM, El Regente del Umbral",
+ "prompt": "Joven atlético de pelo oscuro rizado; brazos cubiertos de tatuajes negros que se agrietan en runas; un ala de luz y una de sombra, asimétricas, semimaterializadas. Arma: Brazos del Umbral.",
+ "body": "zahra",
+ "head": "dariel",
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true,
+   "ramp": [
+    "#130d12",
+    "#2a2026",
+    "#43353d",
+    "#62505a"
+   ],
+   "gamma": 0.9
+  }
+ ],
+ "accessories": [
+  {
+   "module": "nano_body",
+   "body": "zahra",
+   "bodyPaint": [
+    {
+     "part": "body",
+     "hue": [
+      25,
+      75
+     ],
+     "minChroma": 36,
+     "noSkin": true,
+     "maxL": 66,
+     "ramp": [
+      "#0f0a17",
+      "#221636",
+      "#3a2758",
+      "#5e4590",
+      "#e8c56a"
+     ],
+     "gamma": 1.1
+    },
+    {
+     "part": "body",
+     "hue": [
+      0,
+      360
+     ],
+     "minChroma": 0,
+     "noSkin": true,
+     "maxL": 30,
+     "ramp": [
+      "#141219",
+      "#25212b",
+      "#3a343f",
+      "#554d5a"
+     ]
+    }
+   ],
+   "hairRamp": [
+    "#130d12",
+    "#2a2026",
+    "#43353d",
+    "#62505a"
+   ],
+   "head": "dariel",
+   "headPaint": [
+    {
+     "part": "head",
+     "hue": [
+      0,
+      360
+     ],
+     "minChroma": 0,
+     "noSkin": true,
+     "ramp": [
+      "#130d12",
+      "#2a2026",
+      "#43353d",
+      "#62505a"
+     ],
+     "gamma": 0.9
+    }
+   ],
+   "trimRamp": [
+    "#5a3a12",
+    "#a8782a",
+    "#e8c56a",
+    "#fff1c2"
+   ],
+   "gogglesWide": [
+    21
+   ]
+  },
+  {
+   "module": "nano_tattoo",
+   "ink": [
+    "#120a14",
+    "#2a1a2e"
+   ],
+   "rune": "#fff4d6",
+   "runeGlow": "#b9a6d8",
+   "eye": [
+    "#c99a3a",
+    "#ffe9a0"
+   ]
+  },
+  {
+   "module": "nano_wings",
+   "scale": 1.1,
+   "lightRamp": [
+    "#6b4a26",
+    "#a77b3c",
+    "#d4ab5c",
+    "#ecd08e",
+    "#fbecc4"
+   ],
+   "shadowRamp": [
+    "#0e0914",
+    "#1a1128",
+    "#2a1c40",
+    "#43306a",
+    "#6a52a0"
+   ]
+  }
+ ]
+}

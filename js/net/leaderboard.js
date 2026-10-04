@@ -61,9 +61,10 @@ function lbAfterRun(L){
   _lbSubmit(entry).then(r => {
     if(r.status === 200 && r.j.ok){ L.lb = Object.assign(L.lb, { st:"ok", rank:r.j.rank, total:r.j.total, improved:r.j.improved, gRank:r.j.guardianRank, gTotal:r.j.guardianTotal }); _lbClearPending(entry); }
     else if(r.status === 401){ L.lb.st = "noauth"; }
+    else if(r.status === 404){ L.lb.st = "unsupported"; _lbKeepPending(entry); } // servidor viejo: se manda cuando lo actualicen
     else { L.lb.st = "rejected"; L.lb.msg = (r.j && r.j.msg) || "El servidor no aceptó el puntaje."; }
     _lbRenderRunLine();
-  }).catch(() => { L.lb.st = "offline"; _lbKeepPending(entry); _lbRenderRunLine(); });
+  }).catch((e) => { L.lb.st = e && e.code === "NO_API" ? "unsupported" : "offline"; _lbKeepPending(entry); _lbRenderRunLine(); });
 }
 // Sin conexión: queda pendiente el mejor de la semana (se manda al volver al menú o al abrir el ranking).
 function _lbKeepPending(entry){
@@ -87,7 +88,7 @@ async function lbFlushPending(){
   LB.flushing = true;
   try{
     const r = await _lbSubmit({ score:p.score, round:p.round, guardian:p.guardian, week:p.week, durationMs:p.durationMs });
-    if(r.status !== 429) _lbClearPending(); // aceptado, rechazado o semana cerrada: no se reintenta más
+    if(r.status !== 429 && r.status !== 404) _lbClearPending(); // 404: servidor viejo, se manda cuando lo actualicen // aceptado, rechazado o semana cerrada: no se reintenta más
     return r.status === 200;
   }catch(e){ return false; }
   finally{ LB.flushing = false; }
@@ -102,6 +103,7 @@ function _lbRenderRunLine(){
   else if(s.st === "sending") html = `<span class="lb-rank-sub">Enviando tu puntaje al ranking…</span>`;
   else if(s.st === "offline") html = `<span class="lb-rank-sub">Sin conexión: tu puntaje se manda al ranking cuando vuelva la red.</span>`;
   else if(s.st === "rejected") html = `<span class="lb-rank-sub lb-warn">${_lbEsc(s.msg)}</span>`;
+  else if(s.st === "unsupported") html = `<span class="lb-rank-sub">${LB_NOT_ON_SERVER} Tu récord queda en este dispositivo.</span>`;
   else if(s.st === "zero") html = `<span class="lb-rank-sub">Sin puntaje esta vez: no entra al ranking.</span>`;
   else html = `<span class="lb-rank-sub">Tu récord queda en este dispositivo.</span><button class="btn small lb-acc-btn" id="en-lb-acc" type="button">Creá una cuenta para entrar al ranking</button>`;
   box.innerHTML = html + btn;
@@ -161,19 +163,24 @@ function lbOpen(opts){
   lbFlushPending().finally(() => { lbLoad(); lbCheckWeeklyReward(); });
   if(typeof playSfx==="function") playSfx("ready");
 }
+// Servidor viejo (sin /api/leaderboard): antes la tabla decía "No existe." (el 404 crudo del servidor).
+const LB_NOT_ON_SERVER = "El ranking todavía no está disponible en el servidor.";
 async function lbLoad(){
-  LB.loading = true; LB.err = ""; _lbRender();
+  LB.loading = true; LB.err = ""; LB.loadT0 = performance.now(); _lbRender();
+  // plan gratis: el servidor dormido tarda ~1 minuto en contestar; mientras tanto se dice por qué
+  clearTimeout(LB.loadTick); LB.loadTick = setTimeout(() => { if(LB.loading) _lbRender(); }, 4100); // un solo redibujo (no le saca los botones de abajo del dedo)
   if(!_lbCan()){ LB.loading = false; LB.err = "El ranking necesita conexión con el servidor."; _lbRender(); return; }
   const q = "?week=" + encodeURIComponent(LB.week) + (LB.guardian ? "&guardian=" + encodeURIComponent(LB.guardian) : "");
   const want = q;
   try{
     // con sesión va el token (para "me"); si se venció, se reintenta sin él
-    let r = await accountFetch("GET", "/api/leaderboard" + q, undefined, { timeout: 30000, auth: _lbLogged() });
-    if(r.status === 401) r = await accountFetch("GET", "/api/leaderboard" + q, undefined, { timeout: 30000, auth: false });
+    let r = await accountFetch("GET", "/api/leaderboard" + q, undefined, { timeout: 90000, auth: _lbLogged() });
+    if(r.status === 401) r = await accountFetch("GET", "/api/leaderboard" + q, undefined, { timeout: 90000, auth: false });
     if(want !== "?week=" + encodeURIComponent(LB.week) + (LB.guardian ? "&guardian=" + encodeURIComponent(LB.guardian) : "")) return; // cambió el filtro mientras tanto
     if(r.status === 200 && r.j && Array.isArray(r.j.entries)){ LB.data = r.j; LB.err = ""; }
+    else if(r.status === 404){ LB.data = null; LB.err = LB_NOT_ON_SERVER; }
     else { LB.data = null; LB.err = (r.j && r.j.msg) || "No se pudo cargar el ranking."; }
-  }catch(e){ LB.data = null; LB.err = "Sin conexión con el servidor: probá de nuevo en un rato."; }
+  }catch(e){ LB.data = null; LB.err = e && e.code === "NO_API" ? LB_NOT_ON_SERVER : e && e.code === "TIMEOUT" ? "El servidor no respondió: probá de nuevo en un minuto." : "Sin conexión con el servidor: probá de nuevo en un rato."; }
   LB.loading = false; _lbRender();
 }
 function _lbGuardianChips(){
@@ -188,7 +195,7 @@ function _lbRender(){
   const logged = _lbLogged(), S = _lbStore();
   const left = D && LB.week === cur ? _lbLeft(D.endsAt - Date.now()) : "";
   let body;
-  if(LB.loading && !D) body = `<div class="lb-empty">Cargando el ranking…</div>`;
+  if(LB.loading && !D) body = `<div class="lb-empty">${performance.now() - (LB.loadT0||0) > 4000 ? "Despertando el servidor… (la primera vez puede tardar hasta un minuto)" : "Cargando el ranking…"}</div>`;
   else if(LB.err && !D) body = `<div class="lb-empty lb-warn">${_lbEsc(LB.err)}</div>`;
   else if(D && !D.entries.length) body = `<div class="lb-empty">${LB.week === cur ? "Nadie entró todavía esta semana. ¡La tabla es tuya!" : "Nadie entró al ranking esa semana."}</div>`;
   else if(D) body = `<div class="lb-list" role="table">${D.entries.map(e => `<div class="lb-row${e.me ? " me" : ""}${e.rank <= 3 ? " top" + e.rank : ""}" role="row">

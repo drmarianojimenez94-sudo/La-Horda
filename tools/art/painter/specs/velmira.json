@@ -1,0 +1,148 @@
+{
+ "id": "velmira",
+ "name": "Velmira, La Reina de las Máscaras",
+ "prompt": "Reina de teatro: vestido de telón violeta con cuello alto, cetro de bambalinas, cuatro máscaras flotando en semicírculo detrás de la cabeza.",
+ "body": "maura_skin",
+ "head": "orsa",
+ "headLongHair": true,
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    60,
+    25
+   ],
+   "minChroma": 0,
+   "minL": 28,
+   "noSkin": true,
+   "ramp": [
+    "#5a3a10",
+    "#a07428",
+    "#d8b050",
+    "#f4e09a"
+   ]
+  },
+  {
+   "part": "head",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true,
+   "to": "#4b2f5e",
+   "keepLight": 0.45,
+   "chroma": 0.9,
+   "maxL": 75
+  },
+  {
+   "part": "body",
+   "hue": [
+    0,
+    36
+   ],
+   "minChroma": 28,
+   "to": "#9a50c8",
+   "keepLight": 0.5,
+   "chroma": 0.85,
+   "darkL": 4
+  },
+  {
+   "part": "body",
+   "hue": [
+    0,
+    80
+   ],
+   "minChroma": 4,
+   "maxL": 72,
+   "noSkin": true,
+   "to": "#3e2850",
+   "keepLight": 0.5,
+   "chroma": 1.2,
+   "darkL": 4
+  }
+ ],
+ "accessories": [
+  {
+   "module": "velmira_repair",
+   "donor": "maura_skin",
+   "auto": true,
+   "frames": {
+    "31": "full",
+    "32": {
+     "transplant": 0
+    },
+    "33": "full",
+    "34": "full",
+    "35": "full"
+   },
+   "paint": [
+    {
+     "part": "body",
+     "hue": [
+      0,
+      36
+     ],
+     "minChroma": 28,
+     "to": "#9a50c8",
+     "keepLight": 0.5,
+     "chroma": 0.85,
+     "darkL": 4
+    },
+    {
+     "part": "body",
+     "hue": [
+      0,
+      80
+     ],
+     "minChroma": 4,
+     "maxL": 72,
+     "noSkin": true,
+     "to": "#3e2850",
+     "keepLight": 0.5,
+     "chroma": 1.2,
+     "darkL": 4
+    },
+    {
+     "hue": [
+      100,
+      230
+     ],
+     "minChroma": 8,
+     "to": "#c0601c",
+     "keepLight": 0.6
+    }
+   ],
+   "despeckle": 4
+  },
+  {
+   "module": "velmira_masks",
+   "ramp": [
+    "#7a5418",
+    "#c08a2e",
+    "#e8c25a",
+    "#fff0b0"
+   ],
+   "outline": "#1c1020",
+   "hole": "#2a1238",
+   "override": {
+    "31": [
+     47,
+     75,
+     54
+    ],
+    "32": [
+     43,
+     73,
+     60
+    ]
+   },
+   "ramp2": [
+    "#5e4a78",
+    "#a690c4",
+    "#dcd0ec",
+    "#fbf8ff"
+   ]
+  }
+ ]
+}

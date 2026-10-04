@@ -63,13 +63,16 @@ const TEXT={cardLore:[STD.taglineMin,STD.taglineMax],history:[STD.loreMin,STD.lo
    for(const [key,views] of Object.entries(data.metrics)){const r={};for(const [v,m] of Object.entries(views)){if(!m.body)continue;const s=+(target/m.body).toFixed(4),dy=+(targetFoot-m.foot*s).toFixed(2);r[v]=[s,dy];}rows[key]=r;}
    // Refinamiento: la medición de masa no escala linealmente (re-muestreo de píxeles); se re-mide con los
    // factores aplicados y se corrige hasta converger.
-   for(let pass=0;pass<4;pass++){
+   const best={}; // por apariencia y vista: el factor que dejó el cuerpo más cerca del objetivo (algunas siluetas oscilan)
+   for(let pass=0;pass<8;pass++){
     const m2=(await measureAll(false,rows)).metrics;let off=0;
     for(const [key,views] of Object.entries(m2))for(const [v,m] of Object.entries(views)){const r=rows[key]&&rows[key][v];if(!r||!m.body)continue;
+     const err=Math.abs(m.body/target-1)+Math.abs(m.foot-targetFoot)/100,id=key+'|'+v;if(!best[id]||err<best[id].err)best[id]={err,r:[...r]};
      if(Math.abs(m.body/target-1)>.02){r[0]=+(r[0]*target/m.body).toFixed(4);off++;}
      if(Math.abs(m.foot-targetFoot)>1){r[1]=+(r[1]+(targetFoot-m.foot)).toFixed(2);off++;}}
     console.log('refine pass',pass+1,'adjusted',off);if(!off)break;
    }
+   for(const [id,b] of Object.entries(best)){const [key,v]=id.split('|');rows[key][v]=b.r;}
    const js='"use strict";\n// GENERADO por tools/art/roster_gate.js --write (no editar a mano). Factores [escala, corrección de pies]\n// por apariencia y vista para igualar el cuerpo al Caballero (tanque, '+target+' px de cuerpo a escala 2).\nvar CHAMP_ART_NORMALIZE = '+JSON.stringify(rows,null,0).replace(/\],"/g,'],"').replace(/\},"/g,'},\n"')+';\n';
    fs.writeFileSync(path.join(ROOT,'js/data/champion-art-normalize.js'),js);
    console.log('wrote factors for',Object.keys(rows).length,'appearances; reference body',target,'px, foot',targetFoot);

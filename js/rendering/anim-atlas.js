@@ -57,7 +57,7 @@ function drawAnimFrame(atlas, clip, n, x, y, drawScale, flip, alpha){
   ctx.scale(flip ? -1 : 1, 1);
   const wc = ANIM_WHITE ? whiteFrame(atlas.img, f.x, f.y, f.w, f.h) : null; // destello de golpe (juice.js)
   if(wc) ctx.drawImage(wc, 0, 0, wc.width, wc.height, -pivotX*s, -pivotY*s, f.w*s, f.h*s);
-  else ctx.drawImage(atlas.img, f.x, f.y, f.w, f.h, -pivotX*s, -pivotY*s, f.w*s, f.h*s);
+  else artMipDraw(atlas.img, f.x, f.y, f.w, f.h, -pivotX*s, -pivotY*s, f.w*s, f.h*s); // arte fino reducido: desde su mipmap (art-direction.js)
   ctx.restore();
 }
 // API de alto nivel: reproduce `clipName` para `entity` (necesita x,y,fx,animT) y lo dibuja.
@@ -105,7 +105,7 @@ function drawAnimFrameSized(img, clip, n, x, y, w, h, anchorXRatio, anchorYRatio
   } else {
     const wc = ANIM_WHITE ? whiteFrame(img, f.x, f.y, f.w, f.h) : null; // destello de golpe (juice.js)
     if(wc) ctx.drawImage(wc, 0, 0, wc.width, wc.height, -w*anchorXRatio, -h*anchorYRatio, w, h);
-    else ctx.drawImage(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h);
+    else artMipDraw(img, f.x, f.y, f.w, f.h, -w*anchorXRatio, -h*anchorYRatio, w, h); // arte fino reducido: desde su mipmap (art-direction.js)
   }
   ctx.restore();
 }

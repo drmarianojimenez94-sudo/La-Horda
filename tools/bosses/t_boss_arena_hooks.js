@@ -71,11 +71,15 @@ const ok = (name, cond, detail) => { assert(cond, name + (detail ? ' — ' + JSO
     r = await E(() => {
       const k = enemies.find(e => e.alive && e.type === 'kraken_joven'); k.grabCd = 9e9; k.summonCd = 0; k.summonWarn = 0;
       const n0 = enemies.filter(e => e.alive && (e.type === 'tiburon_joven' || e.type === 'cangrejo_acorazado')).length, c0 = bossArenaCount('kraken_joven.corriente');
-      update(16); const pt = k.summonPt && {x: k.summonPt.x, y: k.summonPt.y}, cur = k.summonPt && k.summonPt.cur;
-      const n1 = enemies.filter(e => e.alive && (e.type === 'tiburon_joven' || e.type === 'cangrejo_acorazado')).length;
-      for (let i = 0; i < 70; i++) update(16);
-      const n2 = enemies.filter(e => e.alive && (e.type === 'tiburon_joven' || e.type === 'cangrejo_acorazado')).length;
-      return {pt, cur, before: n1 - n0, after: n2 - n0, hook: bossArenaCount('kraken_joven.corriente') - c0, inFlow: pt ? !!acuFlowAt(pt.x, pt.y) || ACU.zones.some(z => z.type === 'remolino' && Math.hypot(z.x - pt.x, z.y - pt.y) < 120) : false};
+      // se cuentan los que APARECEN (los aliados pueden matar uno antes de que termine la ventana)
+      let born = 0; const sp0 = window.spawnEnemy; window.spawnEnemy = function (t) { const e = sp0.apply(this, arguments); if (t === 'tiburon_joven' || t === 'cangrejo_acorazado') born++; return e; };
+      let pt, cur, before;
+      try {
+        update(16); pt = k.summonPt && {x: k.summonPt.x, y: k.summonPt.y}; cur = k.summonPt && k.summonPt.cur;
+        before = born;
+        for (let i = 0; i < 70; i++) update(16);
+      } finally { window.spawnEnemy = sp0; }
+      return {pt, cur, before, after: born, alive: enemies.filter(e => e.alive && (e.type === 'tiburon_joven' || e.type === 'cangrejo_acorazado')).length - n0, hook: bossArenaCount('kraken_joven.corriente') - c0, inFlow: pt ? !!acuFlowAt(pt.x, pt.y) || ACU.zones.some(z => z.type === 'remolino' && Math.hypot(z.x - pt.x, z.y - pt.y) < 120) : false};
     });
     ok('Kraken: refuerzos con aviso, salen de una corriente real', r.cur && r.before === 0 && r.after >= 2 && r.hook === 1 && r.inFlow, r);
 

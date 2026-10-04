@@ -1,0 +1,114 @@
+{
+ "id": "bront_alt2",
+ "name": "Bront — Coloso de Hielo Negro",
+ "skinOf": "bront",
+ "prompt": "Skin de Bront: armadura de hielo negro, cristal blanco, escarcha.",
+ "body": "baltra_skin",
+ "paint": [
+  {
+   "part": "all",
+   "hue": [
+    30,
+    100
+   ],
+   "minChroma": 5,
+   "to": "#18232f",
+   "keepLight": 0.4,
+   "chroma": 1.25,
+   "contrast": 1.25
+  },
+  {
+   "part": "all",
+   "materialsOf": "#313035",
+   "take": 1,
+   "to": "#0c121c",
+   "keepLight": 0.6,
+   "chroma": 1.4
+  }
+ ],
+ "accessories": [
+  {
+   "module": "bront_core",
+   "donor": "baltra_skin",
+   "noFace": [
+    18,
+    19,
+    25
+   ],
+   "chestDy": 7,
+   "faceBox": {
+    "13": [
+     53,
+     60,
+     73,
+     80
+    ],
+    "30": [
+     45,
+     55,
+     68,
+     76
+    ]
+   },
+   "chestAt": {
+    "25": [
+     56,
+     82
+    ]
+   },
+   "noChest": [
+    19
+   ],
+   "rigDonor": "baltra",
+   "crystal": [
+    "#7a8a9a",
+    "#c8d4e0",
+    "#eef4fa",
+    "#ffffff",
+    "#ffffff"
+   ],
+   "glow": "#e8f4ff",
+   "glowAmt": 0.45,
+   "eyes": [
+    "#bfe6ff",
+    "#ffffff",
+    "#ffffff"
+   ],
+   "void": [
+    "#000000",
+    "#03060a",
+    "#08101a",
+    "#101c2a"
+   ]
+  },
+  {
+   "module": "bront_plates",
+   "size": [
+    8,
+    11
+   ],
+   "spread": 21,
+   "orbit": [
+    3,
+    3
+   ],
+   "ramp": [
+    "#05080c",
+    "#121a24",
+    "#2a3a4c",
+    "#5a7088",
+    "#a8c4dc"
+   ],
+   "frost": [
+    "#a8d4f0",
+    "#ffffff"
+   ]
+  },
+  {
+   "module": "bront_frost",
+   "rate": 0.7,
+   "icicles": 4,
+   "spread": 17
+  }
+ ]
+}

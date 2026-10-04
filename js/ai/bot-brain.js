@@ -223,8 +223,8 @@ function drawDownedMarkers(){
     ctx.fillStyle = "#8effb4"; ctx.fillRect(a.x-2.5, y-8, 5, 16); ctx.fillRect(a.x-8, y-2.5, 16, 5);
     // cooperativo: quién cayó y quién lo está reviviendo (lo mismo en todas las pantallas)
     if(netMatch){
-      ctx.font = "bold 12px monospace"; ctx.textAlign = "center";
-      const line = prog > 0 ? `↻ ${heroLabel(a._reviveBy)} ${Math.round(Math.min(1,prog)*100)}%` : `${heroLabel(a)} · CAÍDO`;
+      ctx.font = pxFont(13); ctx.textAlign = "center";
+      const line = prog > 0 ? `+ ${heroLabel(a._reviveBy)} ${Math.round(Math.min(1,prog)*100)}%` : `${heroLabel(a)} · CAÍDO`;
       const w = ctx.measureText(line).width + 10;
       ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(a.x - w/2, y - 34, w, 16);
       ctx.fillStyle = prog > 0 ? "#8effb4" : "#ffb09a"; ctx.fillText(line, a.x, y - 22);

@@ -36,7 +36,7 @@ function _glSource(e){
     if(rk==="elite" || rk==="named") chance = Math.min(0.9, chance * (1 + ENDLESS_CFG.lootGrowthPerRound*(EN.round-1)));
   }
   if(typeof alphaWorldMultiplier==="function") chance = Math.min(1, chance*alphaWorldMultiplier("drop"));
-  return {rk, grade, chance, hm:C.highMult[rk], count:C.count[rk], build:(C.buildChance||{})[rk]||0};
+  return {rk, grade, chance, hm:C.highMult[rk], count:C.count[rk], build:(C.buildChance||{})[rk]||0, floor:(C.floor||{})[rk]||null};
 }
 const GRADE_ORDER_GL = ["C","B","A","S","S+"];
 // PURA (la usa también el simulador de economía): cuántos objetos le caen a un jugador por esta baja.
@@ -46,9 +46,11 @@ function groundLootRollCount(src, rng){
   return src.count[0] + Math.floor(rng()*(src.count[1]-src.count[0]+1));
 }
 // PURA: rareza de un objeto del piso. pity = protección de ESTE guardado (no se modifica acá).
-function groundLootRollTier(arena, grade, hm, pity, rng){
+// floor: piso de rareza (GROUND_LOOT_CFG.floor, solo el primer objeto de la fuente).
+function groundLootRollTier(arena, grade, hm, pity, rng, floor){
   const w = lootTierWeights(arena, grade, pity, false);
   for(const t of ["legendario","mitico","set","unico"]) w[t] *= hm;
+  if(floor) lootApplyFloor(w, floor);
   return _pick(w, rng || Math.random) || "comun";
 }
 // Simulación: al morir un enemigo (combat.js → killEnemy).
@@ -70,17 +72,18 @@ function groundLootOnKill(e){
       const p = {x:e.x + Math.cos(a)*d, y:e.y + Math.sin(a)*d*0.7, radius:14};
       try{ clampToArena(p); if(typeof resolveWallCollision==="function") resolveWallCollision(p); clampToArena(p); }catch(err){}
       const x = Math.round(p.x), y = Math.round(p.y), b = build && i===n ? 1 : 0;
-      if(local) groundLootDrop(x, y, src.grade, src.hm, arena, src.rk, b, i===0?eventSetId:null);
-      else netEmitTo(h._netSlot, "groundLootDrop", [x, y, src.grade, src.hm, arena, src.rk, b, i===0?eventSetId:null]);
+      const fl = i===0 && src.floor ? src.floor : ""; // piso de rareza: solo el primero de la fuente
+      if(local) groundLootDrop(x, y, src.grade, src.hm, arena, src.rk, b, i===0?eventSetId:null, fl);
+      else netEmitTo(h._netSlot, "groundLootDrop", [x, y, src.grade, src.hm, arena, src.rk, b, i===0?eventSetId:null, fl]);
     }
   }
 }
 // Cliente del jugador (anfitrión: directo; invitado: por evento de red). Arma el objeto con SU guardado.
-function groundLootDrop(x, y, grade, hm, arena, rk, build, eventSetId){
+function groundLootDrop(x, y, grade, hm, arena, rk, build, eventSetId, floor){
   if(!player || typeof state==="undefined" || (state!=="playing" && state!=="buff" && state!=="paused")) return null;
   save.lootPity = Object.assign({legendario:0, set:0, mitico:0, unico:0}, save.lootPity||{});
   const classKey = player.classKey || selectedClass;
-  let tier = build ? "legendario" : groundLootRollTier(arena || currentArena, grade || "B", hm==null ? 1 : hm, save.lootPity);
+  let tier = build ? "legendario" : groundLootRollTier(arena || currentArena, grade || "B", hm==null ? 1 : hm, save.lootPity, null, floor || null);
   let spec = build ? {tier, build:true} : {tier};
   if(tier==="set"){ const sp = _rollSetPiece(arena, ownedDesignIds(), Math.random, classKey); spec = sp ? {tier, setId:sp.setId, designId:sp.designId, type:sp.type} : {tier:"legendario"}; tier = spec.tier; }
   if(eventSetId&&typeof SET_DB!=="undefined"&&SET_DB[eventSetId]){
@@ -117,7 +120,8 @@ function _glOverflow(){
   if(worst && !groundLootPick(worst)){ groundLoot.splice(groundLoot.indexOf(worst), 1); }
 }
 /* ---------------- reciclaje con el inventario lleno (regla: js/data/ground-loot.js, RECYCLE_GEM) ---------------- */
-function recyclable(it){ return !!(it && !it.designed && RECYCLE_GEM[it.rarity] !== undefined && !itemEquippedBy(it.uid)); }
+// Lo pagado con oro (tienda: it.bought; Mística: it.rerolls) nunca se recicla solo (reseña de economía, bug B2).
+function recyclable(it){ return !!(it && !it.designed && !it.bought && !(it.rerolls > 0) && RECYCLE_GEM[it.rarity] !== undefined && !itemEquippedBy(it.uid)); }
 // Suma el polvo de Gema del objeto; devuelve cuántas Gemas enteras se completaron.
 function recycleItemValue(it){
   const v = RECYCLE_GEM[it && it.rarity] || 0;
@@ -284,7 +288,7 @@ function groundLootDrawNames(){
   if(!groundLoot.length || !player || typeof ctx==="undefined" || typeof worldToScreen!=="function") return;
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.font = "17px 'VT323', monospace";
+  ctx.font = pxFont(14);
   const shown = [];
   const list = groundLoot.slice().sort((a,b)=>Math.hypot(player.x-a.x, player.y-a.y) - Math.hypot(player.x-b.x, player.y-b.y));
   for(const g of list){

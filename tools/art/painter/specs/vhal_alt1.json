@@ -1,0 +1,145 @@
+{
+ "id": "vhal_alt1",
+ "name": "Vhal — Eclipse Anular",
+ "skinOf": "vhal",
+ "prompt": "Skin de Vhal: túnica negra, anillo de fuego de eclipse en el pecho, astrolabio de oro, tocado de sol eclipsado.",
+ "body": "sira_set",
+ "head": "dariel_set",
+ "paint": [
+  {
+   "part": "head",
+   "materialsOf": "#623a2c",
+   "take": 2,
+   "noSkin": true,
+   "ramp": [
+    "#08070a",
+    "#141218",
+    "#24202a",
+    "#3a3440",
+    "#5a5260"
+   ]
+  },
+  {
+   "part": "head",
+   "hue": [
+    5,
+    35
+   ],
+   "minChroma": 30,
+   "noSkin": true,
+   "to": "#e8641a",
+   "keepLight": 0.5,
+   "chroma": 1.2
+  },
+  {
+   "part": "body",
+   "hue": [
+    5,
+    35
+   ],
+   "minChroma": 22,
+   "noSkin": true,
+   "to": "#1a1418",
+   "keepLight": 0.5,
+   "chroma": 0.3
+  },
+  {
+   "part": "body",
+   "hue": [
+    250,
+    330
+   ],
+   "minChroma": 8,
+   "to": "#141218",
+   "keepLight": 0.45,
+   "chroma": 0.25
+  },
+  {
+   "part": "body",
+   "materials": [
+    8,
+    1
+   ],
+   "to": "#2a2430",
+   "keepLight": 0.3,
+   "chroma": 0.4,
+   "contrast": 0.7
+  },
+  {
+   "part": "body",
+   "materials": [
+    7
+   ],
+   "to": "#d8a440",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  },
+  {
+   "part": "body",
+   "materials": [
+    5
+   ],
+   "to": "#3a3440",
+   "keepLight": 0.5,
+   "chroma": 0.3
+  },
+  {
+   "part": "body",
+   "materialsOf": "#8a573b",
+   "take": 1,
+   "to": "#4a3a30",
+   "keepLight": 0.6,
+   "chroma": 0.5
+  }
+ ],
+ "accessories": [
+  {
+   "module": "vhal_death",
+   "ramp": [
+    "#08070a",
+    "#141218",
+    "#24202a",
+    "#3a3440",
+    "#5a5260"
+   ]
+  },
+  {
+   "module": "vhal_stars",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "maxL": 30,
+   "density": 0.03,
+   "ramp": [
+    "#a8641a",
+    "#ffcf6a",
+    "#fff6d8"
+   ],
+   "chest": {
+    "shape": "ring",
+    "r": 7,
+    "dy": 10
+   }
+  },
+  {
+   "module": "vhal_astrolabe",
+   "r": [
+    8,
+    5
+   ],
+   "ramp": [
+    "#4a3010",
+    "#9a6c1c",
+    "#e2b448",
+    "#fff0a8"
+   ],
+   "core": [
+    "#e85a12",
+    "#ffb43a",
+    "#fff2b0"
+   ]
+  }
+ ]
+}

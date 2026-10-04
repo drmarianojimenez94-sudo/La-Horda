@@ -1687,9 +1687,9 @@
     "foot": -2
    },
    "up": {
-    "body": 61,
-    "full": 67,
-    "w": 69,
+    "body": 58,
+    "full": 65,
+    "w": 67,
     "foot": -2
    }
   },
@@ -1747,9 +1747,9 @@
     "foot": -2
    },
    "up": {
-    "body": 61,
-    "full": 67,
-    "w": 69,
+    "body": 58,
+    "full": 65,
+    "w": 67,
     "foot": -2
    }
   },
@@ -1836,440 +1836,440 @@
   "nano_gm": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 33,
+    "full": 82,
+    "w": 112,
     "foot": -2
    },
    "side": {
     "body": 59,
     "full": 61,
-    "w": 33,
+    "w": 57,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 60,
-    "w": 33,
+    "full": 66,
+    "w": 83,
     "foot": -2
    }
   },
   "nano_gm@nano_gm_alt1": {
    "front": {
-    "body": 60,
-    "full": 60,
-    "w": 34,
+    "body": 59,
+    "full": 70,
+    "w": 94,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 59,
+    "w": 54,
     "foot": -2
    },
    "up": {
-    "body": 60,
-    "full": 60,
-    "w": 34,
+    "body": 59,
+    "full": 62,
+    "w": 76,
     "foot": -2
    }
   },
   "facu_gm": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 33,
+    "full": 67,
+    "w": 52,
     "foot": -2
    },
    "side": {
-    "body": 59,
-    "full": 61,
-    "w": 33,
+    "body": 60,
+    "full": 63,
+    "w": 62,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 60,
-    "w": 33,
+    "body": 58,
+    "full": 69,
+    "w": 60,
     "foot": -2
    }
   },
   "facu_gm@facu_gm_alt1": {
    "front": {
-    "body": 58,
-    "full": 60,
-    "w": 33,
+    "body": 59,
+    "full": 67,
+    "w": 52,
     "foot": -2
    },
    "side": {
-    "body": 58,
-    "full": 61,
-    "w": 32,
+    "body": 60,
+    "full": 63,
+    "w": 62,
     "foot": -2
    },
    "up": {
     "body": 58,
-    "full": 60,
-    "w": 33,
+    "full": 69,
+    "w": 60,
     "foot": -2
    }
   },
   "aurelia": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 61,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 61,
+    "w": 65,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 57,
+    "full": 65,
+    "w": 62,
     "foot": -2
    }
   },
   "aurelia@aurelia_alt1": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 61,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 61,
+    "w": 65,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 57,
+    "full": 65,
+    "w": 62,
     "foot": -2
    }
   },
   "aurelia@aurelia_alt2": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 61,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 61,
+    "w": 65,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 57,
+    "full": 65,
+    "w": 62,
     "foot": -2
    }
   },
   "khepri": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 66,
+    "w": 54,
     "foot": -2
    },
    "side": {
-    "body": 60,
-    "full": 69,
-    "w": 38,
+    "body": 58,
+    "full": 62,
+    "w": 56,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 68,
+    "w": 54,
     "foot": -2
    }
   },
   "khepri@khepri_alt1": {
    "front": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 71,
+    "w": 60,
     "foot": -2
    },
    "side": {
-    "body": 60,
-    "full": 69,
-    "w": 38,
+    "body": 59,
+    "full": 63,
+    "w": 60,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 60,
-    "w": 34,
+    "full": 69,
+    "w": 57,
     "foot": -2
    }
   },
   "khepri@khepri_alt2": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 58,
+    "full": 66,
+    "w": 56,
     "foot": -2
    },
    "side": {
-    "body": 60,
-    "full": 69,
-    "w": 38,
+    "body": 59,
+    "full": 62,
+    "w": 61,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 58,
+    "full": 67,
+    "w": 56,
     "foot": -2
    }
   },
   "velmira": {
    "front": {
-    "body": 59,
-    "full": 61,
-    "w": 31,
+    "body": 58,
+    "full": 65,
+    "w": 57,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 61,
-    "w": 29,
+    "full": 62,
+    "w": 51,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 61,
-    "w": 31,
+    "full": 64,
+    "w": 59,
     "foot": -2
    }
   },
   "velmira@velmira_alt1": {
    "front": {
-    "body": 59,
-    "full": 64,
-    "w": 30,
+    "body": 58,
+    "full": 65,
+    "w": 57,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 60,
-    "w": 28,
+    "full": 64,
+    "w": 49,
     "foot": -2
    },
    "up": {
     "body": 59,
     "full": 64,
-    "w": 30,
+    "w": 61,
     "foot": -2
    }
   },
   "velmira@velmira_alt2": {
    "front": {
-    "body": 59,
-    "full": 61,
-    "w": 31,
+    "body": 58,
+    "full": 65,
+    "w": 57,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 61,
-    "w": 29,
+    "full": 62,
+    "w": 51,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 61,
-    "w": 31,
+    "full": 64,
+    "w": 59,
     "foot": -2
    }
   },
   "vhal": {
    "front": {
-    "body": 59,
-    "full": 59,
-    "w": 37,
+    "body": 60,
+    "full": 71,
+    "w": 71,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 63,
+    "w": 64,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 61,
+    "full": 66,
+    "w": 59,
     "foot": -2
    }
   },
   "vhal@vhal_alt1": {
    "front": {
     "body": 59,
-    "full": 59,
-    "w": 37,
+    "full": 67,
+    "w": 59,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 62,
+    "w": 63,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 58,
+    "full": 65,
+    "w": 60,
     "foot": -2
    }
   },
   "vhal@vhal_alt2": {
    "front": {
     "body": 59,
-    "full": 59,
-    "w": 37,
+    "full": 62,
+    "w": 58,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 59,
-    "w": 31,
+    "full": 63,
+    "w": 63,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 59,
-    "w": 34,
+    "body": 60,
+    "full": 67,
+    "w": 69,
     "foot": -2
    }
   },
   "bront": {
    "front": {
     "body": 59,
-    "full": 63,
-    "w": 46,
+    "full": 69,
+    "w": 62,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 32,
+    "full": 66,
+    "w": 50,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 63,
-    "w": 46,
+    "full": 68,
+    "w": 58,
     "foot": -2
    }
   },
   "bront@bront_alt1": {
    "front": {
     "body": 59,
-    "full": 63,
-    "w": 46,
+    "full": 66,
+    "w": 59,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 32,
+    "full": 63,
+    "w": 50,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 63,
-    "w": 46,
+    "body": 58,
+    "full": 64,
+    "w": 54,
     "foot": -2
    }
   },
   "bront@bront_alt2": {
    "front": {
-    "body": 59,
-    "full": 63,
-    "w": 46,
+    "body": 60,
+    "full": 75,
+    "w": 70,
     "foot": -2
    },
    "side": {
-    "body": 59,
-    "full": 62,
-    "w": 32,
+    "body": 60,
+    "full": 69,
+    "w": 54,
     "foot": -2
    },
    "up": {
-    "body": 59,
-    "full": 63,
-    "w": 46,
+    "body": 58,
+    "full": 71,
+    "w": 68,
     "foot": -2
    }
   },
   "oriel": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 80,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 34,
+    "full": 61,
+    "w": 66,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 59,
-    "w": 33,
+    "full": 64,
+    "w": 76,
     "foot": -2
    }
   },
   "oriel@oriel_alt1": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 80,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 34,
+    "full": 61,
+    "w": 66,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 59,
-    "w": 33,
+    "full": 64,
+    "w": 76,
     "foot": -2
    }
   },
   "oriel@oriel_alt2": {
    "front": {
-    "body": 59,
-    "full": 60,
-    "w": 34,
+    "body": 60,
+    "full": 66,
+    "w": 80,
     "foot": -2
    },
    "side": {
     "body": 59,
-    "full": 62,
-    "w": 34,
+    "full": 61,
+    "w": 66,
     "foot": -2
    },
    "up": {
     "body": 59,
-    "full": 59,
-    "w": 33,
+    "full": 64,
+    "w": 76,
     "foot": -2
    }
   }
@@ -2744,7 +2744,7 @@
    "name": "Aurelia, la Arquitecta Solar",
    "title": "La Arquitecta Solar",
    "role": "Maga constructora: levanta geometría de luz sólida y convierte el terreno en un plano que castiga a quien lo cruza.",
-   "cardLore": "",
+   "cardLore": "Aurelia levanta nodos de luz sólida que se unen en triángulos y culmina en una catedral.",
    "history": "Aurelia trazaba los planos del Laberinto cuando todavía era un templo al sol. Vio cómo la Horda torció los pasillos para que nadie encontrara la salida. No intentó romper las paredes: aprendió a dibujar otras encima, de luz sólida, que duran lo suficiente para que alguien pase. Lleva el compás de su maestra y una regla: toda estructura que levanta debe tener una puerta.",
    "passive": "Sus habilidades dejan Nodos Solares (máx. 3). Con tres nodos se forma un triángulo de luz: los enemigos dentro reciben daño periódico y se frenan.",
    "skills": [
@@ -2753,13 +2753,13 @@
     "Se traslada al nodo más lejano (o al punto elegido) y crea un nodo donde estaba.",
     "Los nodos se elevan en una catedral geométrica de luz: pulsos de daño dentro y regeneración para aliados."
    ],
-   "inCatalog": false
+   "inCatalog": true
   },
   "khepri": {
    "name": "Khepri, el Portador del Enjambre",
    "title": "El Portador del Enjambre",
    "role": "Asesino que comanda un enjambre visible: lo lanza, lo recoge y lo convierte en armadura.",
-   "cardLore": "",
+   "cardLore": "Khepri lanza, recoge y viste a su enjambre de escarabajos; cada muerte cercana lo alimenta.",
    "history": "En el Abismo, los escarabajos son lo único que la Horda no logró corromper: se comen lo que ella deja. Khepri fue sacerdote de un culto que los alimentaba para mantener limpias las tumbas. Cuando la Horda llegó, el enjambre lo eligió a él. No lo obedece por miedo: lo sigue porque Khepri siempre sabe dónde hay carroña.",
    "passive": "Cada enemigo que muere cerca alimenta el enjambre (máx. 60 escarabajos). El enjambre es visible y potencia sus habilidades.",
    "skills": [
@@ -2768,13 +2768,13 @@
     "Salto rasante: los escarabajos muerden todo lo que cruza.",
     "Khepri se descompone en enjambre y cubre una región: daño continuo y −60% de daño recibido mientras dura."
    ],
-   "inCatalog": false
+   "inCatalog": true
   },
   "velmira": {
    "name": "Velmira, la Reina de las Máscaras",
    "title": "La Reina de las Máscaras",
    "role": "Soporte de control: cada máscara es un estado mágico, y cambiar de rostro reescribe la próxima habilidad.",
-   "cardLore": "",
+   "cardLore": "Velmira cambia entre cuatro máscaras: cada rostro es un estado y el cambio potencia el siguiente acto.",
    "history": "El teatro de la Ciudad cerró la noche del regreso, pero Velmira siguió dando funciones para los que se refugiaron en el escenario. Cuando el miedo era demasiado, les prestaba una máscara: quien se ponía la de la Valentía dejaba de temblar. Las máscaras aprendieron. Ahora flotan a su alrededor y cada una guarda la emoción de alguien que sobrevivió esa noche.",
    "passive": "Lleva una máscara activa: Inspiración, Terror, Silencio o Protección. Cada habilidad aplica el efecto de la máscara; cambiar de rostro potencia la siguiente habilidad un 30%.",
    "skills": [
@@ -2783,13 +2783,13 @@
     "Cambia a la siguiente máscara con un pequeño salto: la próxima habilidad se potencia un 30%.",
     "Cuatro máscaras espectrales gigantes actúan en secuencia: Inspiración, Terror, Silencio y Protección."
    ],
-   "inCatalog": false
+   "inCatalog": true
   },
   "vhal": {
    "name": "Vhal, el Astrónomo Caído",
    "title": "El Astrónomo Caído",
    "role": "Mago gravitatorio: acumula Masa sobre la horda hasta que los enemigos se atraen entre sí y colapsan.",
-   "cardLore": "",
+   "cardLore": "Vhal acumula Masa sobre la Horda hasta que los enemigos se atraen entre sí y colapsan.",
    "history": "Vhal medía estrellas desde la torre más alta de la Gélida. La noche del regreso vio una caer hacia la arena y corrió a buscarla. La encontró viva. Desde entonces una parte de su cuerpo es cielo: se le ven las constelaciones debajo de la piel. Calcula órbitas para que la Horda se estrelle contra sí misma.",
    "passive": "Sus habilidades acumulan Masa en los enemigos (máx. 5). Los enemigos con 3 o más Masa atraen poco a poco a los comunes cercanos.",
    "skills": [
@@ -2798,13 +2798,13 @@
     "Se desplaza en arco alrededor del punto elegido dejando una estela que añade Masa.",
     "Una estrella crece, se vuelve singularidad y colapsa: el estallido final escala con la Masa consumida."
    ],
-   "inCatalog": false
+   "inCatalog": true
   },
   "bront": {
    "name": "Bront, la Fortaleza Viviente",
    "title": "La Fortaleza Viviente",
    "role": "Tanque que se desarma en placas defensivas y termina convertido en fortificación.",
-   "cardLore": "",
+   "cardLore": "Bront se desprende de placas protectoras, levanta murallas y se ancla como una ciudadela.",
    "history": "Nadie recuerda quién vestía a Bront. En la Fábrica encontraron la armadura vacía, de pie, sosteniendo una puerta mientras los últimos obreros escapaban. El cristal de su pecho es un fragmento del Sello que el Forjador escondió allí. Bront no habla de sí mismo; habla de las puertas que todavía tiene que sostener.",
    "passive": "Al recibir daño desprende placas (una cada 2,5 s, máx. 4). Las placas protegen: aliados cerca reciben −12% de daño y enemigos que las tocan se frenan.",
    "skills": [
@@ -2813,13 +2813,13 @@
     "El cristal del pecho late: daña a su alrededor, aparta a los comunes y aturde un instante a los élites.",
     "Se ancla y se transforma en fortificación: +40% de reducción de daño, murallas alrededor y refugio para aliados."
    ],
-   "inCatalog": false
+   "inCatalog": true
   },
   "oriel": {
    "name": "Oriel, la Portera de las Cicatrices",
    "title": "La Portera de las Cicatrices",
    "role": "Soporte de reposicionamiento: abre pares de portales a través de las Cicatrices de la Horda y convierte el mapa en un atajo para su equipo.",
-   "cardLore": "",
+   "cardLore": "Oriel abre pares de portales que sacan a su equipo del cerco de la Horda.",
    "history": "Las Cicatrices de la Horda unen arenas que no deberían tocarse. Oriel trabajaba en la Fábrica marcando las grietas para que nadie cayera. Un día una se abrió bajo sus pies y salió del otro lado del Fúngico, viva. Desde entonces sabe dónde se puede pasar. No cierra las Cicatrices: las usa para llevar a los suyos lejos de la Horda antes de que la Horda llegue.",
    "passive": "Los aliados que atraviesan sus portales salen del otro lado con escudo y +20% de velocidad (3 s). Los enemigos que los tocan son rechazados y dañados.",
    "skills": [
@@ -2828,7 +2828,7 @@
     "Oriel aparece en su otro portal (o en el punto elegido) y deja una grieta que daña.",
     "Abre una Cicatriz gigante: enemigos dentro se frenan y reciben daño; ecos de campeones caídos salen a golpear y los aliados dentro reciben −20% de daño."
    ],
-   "inCatalog": false
+   "inCatalog": true
   }
  }
 }

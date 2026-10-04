@@ -1,0 +1,244 @@
+{
+ "id": "oriel_alt1",
+ "name": "Oriel — Llavera del Alba",
+ "prompt": "Skin: capa crema con bordes de oro, llave de cristal, anillos de luz cálida.",
+ "body": "maura_set",
+ "head": "sira",
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true,
+   "maxL": 95,
+   "ramp": [
+    "#5a3018",
+    "#a86a3a",
+    "#dca46a",
+    "#f8dcae"
+   ],
+   "gamma": 0.9
+  },
+  {
+   "part": "body",
+   "hue": [
+    55,
+    80
+   ],
+   "minChroma": 10,
+   "minL": 45,
+   "to": "#f2e6cc",
+   "keepLight": 0.55,
+   "chroma": 0.9
+  },
+  {
+   "part": "body",
+   "hue": [
+    35,
+    56
+   ],
+   "minChroma": 18,
+   "maxL": 45,
+   "to": "#5c6a84",
+   "keepLight": 0.55,
+   "chroma": 0.45
+  },
+  {
+   "part": "body",
+   "hue": [
+    40,
+    80
+   ],
+   "minChroma": 5,
+   "maxL": 45,
+   "to": "#6a4418",
+   "keepLight": 0.6,
+   "chroma": 1.0
+  }
+ ],
+ "accessories": [
+  {
+   "module": "oriel_repair",
+   "donor": "maura_set",
+   "auto": true,
+   "despeckle": 4,
+   "paint": [
+    {
+     "hue": [
+      30,
+      60
+     ],
+     "minChroma": 12,
+     "maxL": 60,
+     "noSkin": true,
+     "ramp": [
+      "#5a3018",
+      "#a86a3a",
+      "#dca46a",
+      "#f8dcae"
+     ]
+    },
+    {
+     "part": "body",
+     "hue": [
+      55,
+      80
+     ],
+     "minChroma": 10,
+     "minL": 45,
+     "to": "#f2e6cc",
+     "keepLight": 0.55,
+     "chroma": 0.9
+    },
+    {
+     "part": "body",
+     "hue": [
+      35,
+      56
+     ],
+     "minChroma": 18,
+     "maxL": 45,
+     "to": "#5c6a84",
+     "keepLight": 0.55,
+     "chroma": 0.45
+    },
+    {
+     "part": "body",
+     "hue": [
+      40,
+      80
+     ],
+     "minChroma": 5,
+     "maxL": 45,
+     "to": "#6a4418",
+     "keepLight": 0.6,
+     "chroma": 1.0
+    },
+    {
+     "hue": [
+      100,
+      200
+     ],
+     "minChroma": 8,
+     "to": "#3a7a6a",
+     "keepLight": 0.6
+    }
+   ],
+   "neckBand": 9,
+   "minDx": 12,
+   "frames": {
+    "32": {
+     "transplant": 0,
+     "remap": true
+    },
+    "33": "full",
+    "34": "full",
+    "35": "full",
+    "12": [
+     [
+      38,
+      38,
+      49,
+      62
+     ]
+    ],
+    "16": [
+     [
+      47,
+      36,
+      54,
+      49
+     ],
+     [
+      47,
+      64,
+      53,
+      71
+     ]
+    ],
+    "24": [
+     [
+      35,
+      34,
+      43,
+      70
+     ]
+    ],
+    "28": [
+     [
+      34,
+      26,
+      39,
+      52
+     ]
+    ]
+   },
+   "detached": false,
+   "radius": 60,
+   "eraseHair": {
+    "hue": [
+     38,
+     58
+    ],
+    "minChroma": 14,
+    "side": "left",
+    "dx": 12,
+    "except": [
+     12,
+     16,
+     24,
+     28
+    ]
+   },
+   "noCascade": true
+  },
+  {
+   "module": "oriel_key",
+   "override": {
+    "32": [
+     42,
+     73,
+     58
+    ]
+   },
+   "bow": [
+    "#3a7a92",
+    "#7cc4d8",
+    "#c4f0f8",
+    "#ffffff"
+   ],
+   "bit": [
+    "#2e6a82",
+    "#6cb4cc",
+    "#b4e8f4",
+    "#f4ffff"
+   ],
+   "shaft": [
+    "#2a5a70",
+    "#5ea4bc",
+    "#a8e0ee",
+    "#e8fcff"
+   ],
+   "outline": "#10202a"
+  },
+  {
+   "module": "oriel_rings",
+   "dx": 34,
+   "dy": 4,
+   "ramp": [
+    "#6a4010",
+    "#c0882a",
+    "#f0c860",
+    "#fff2c0"
+   ],
+   "glow": [
+    "#f0a030",
+    "#ffd880",
+    "#fffbe8"
+   ]
+  }
+ ]
+}

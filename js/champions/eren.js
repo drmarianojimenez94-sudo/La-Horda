@@ -74,7 +74,7 @@ function erenRumblingCondition(h){
 function erenCheckRumbling(h){
   if(h.erenTitan && !h.erenRumblingReady && h.ultCharge >= h.ultMax && h.erenPhase!=="rumble" && erenRumblingCondition(h)){
     h.erenRumblingReady = true;
-    if(h===player || h.isRemote) showBanner("☠ EL RETUMBAR — Ultimate II disponible");
+    if(h===player || h.isRemote) showBanner("☠ EL RETUMBAR — Definitiva II disponible");
     vfxShock(h.x, h.y, 10, 120, "255,60,40", 600, 2);
   }
 }
@@ -596,7 +596,7 @@ function erenDrawRumbleTelegraph(f){
     ctx.beginPath(); ctx.ellipse(f.x, f.y, f.r*(0.55+0.45*k), f.r*(0.55+0.45*k)*0.6, 0, 0, Math.PI*2); ctx.fill();
     ctx.globalAlpha = 0.5 + 0.5*Math.abs(Math.sin(el/90)); ctx.strokeStyle = "#ff3a22"; ctx.lineWidth = 5;
     ctx.beginPath(); ctx.ellipse(f.x, f.y, f.r, f.r*0.6, 0, 0, Math.PI*2); ctx.stroke();
-    ctx.globalAlpha = 1; ctx.fillStyle = "#ffd0c0"; ctx.font = "bold 34px monospace"; ctx.textAlign = "center";
+    ctx.globalAlpha = 1; ctx.fillStyle = "#ffd0c0"; ctx.font = pxFont(30); ctx.textAlign = "center";
     ctx.fillText(String(Math.max(1, Math.ceil((1-k)*3))), f.x, f.y+12);
   }
   ctx.restore();

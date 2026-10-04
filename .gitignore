@@ -15,3 +15,6 @@ server/data/
 
 # salidas de experimentos del playtest (tools/ux/playtest.js con fase "exp"): datos de trabajo, no evidencia
 docs/ux/playtest-exp*.json
+tools/art/painter/out/
+tools/art/painter/__pycache__/
+tools/art/painter/accessories/__pycache__/

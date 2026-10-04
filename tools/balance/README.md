@@ -21,3 +21,7 @@ Tablas que se tocan: `js/data/loot.js` (botín), `js/systems/performance.js` (ca
   bajas: objetos por partida, legendarios que cambian la build y venta / oro peleando (objetivo <= 15 %).
 - `RUNS=runs.jsonl node xp_curve.js` — curva de la campaña con la XP de victoria vieja y la nueva
   (`victoryXpFor`, js/systems/progression.js): nivel al terminar cada arena y niveles que da la victoria.
+- `node q4_econ.js [raíz=repo] [N]` — economía del alfa (Q4) sin partidas, sirviendo el árbol desde el disco (sirve
+  para medir un árbol viejo extraído de otro commit): qué cae por arena y por fuente, nivel de objeto, primeras
+  mejoras de un perfil nuevo (con y sin el set regalado), set regalado vs. botín de 3 arenas, oro de la primera
+  partida y de crucero por fuente, y partidas para comprar cada cosa de la tienda. Números: `docs/alfa/q4_economia.md`.
