@@ -13,11 +13,13 @@ async function run(){
   assert.equal(ent.taxonomy().meta('nano_gm').category,'FOUNDER');assert.equal(ent.taxonomy().meta('facu_gm').category,'FOUNDER');
   assert.equal(ent.taxonomy().meta('nano_gm').purchasable,false);assert.equal(ent.taxonomy().meta('nano_gm').grantable,false);
   assert.equal(ent.taxonomy().requiresGrant('tanque'),false);assert.equal(ent.taxonomy().requiresGrant('myla'),false);assert.equal(ent.taxonomy().requiresGrant('nano_gm'),true);checks+=11;
-  // Ascensión: publicados, se compran (9000) o se ganan; el cliente decide como con STANDARD.
-  assert.equal(ent.taxonomy().meta('aurelia').category,'ASCENSION');assert.equal(ent.taxonomy().meta('aurelia').purchasable,true);assert.equal(ent.taxonomy().requiresGrant('aurelia'),false);checks+=3;
-  // Fixture: no queda ningún campeón sin publicar en el catálogo real, así que 'aurelia' hace de campeón INTERNAL
-  // en el resto de esta prueba (la regla del servidor para los no publicados se sigue verificando igual).
-  {const T=ent.taxonomy(),meta0=T.meta,rg0=T.requiresGrant;T.meta=id=>id==='aurelia'?Object.assign(meta0(id),{category:'STANDARD',releaseState:'INTERNAL'}):meta0(id);T.requiresGrant=id=>id==='aurelia'||rg0(id);}
+  // Ascensión: categoría propia; mientras su arte está pendiente (artPending) es un concepto: ni compra ni concesión,
+  // y el servidor la fuerza bloqueada como a cualquier campeón no publicado.
+  assert.equal(ent.taxonomy().meta('aurelia').category,'ASCENSION');assert.equal(ent.taxonomy().meta('aurelia').artPending,true);
+  assert.equal(ent.taxonomy().meta('aurelia').purchasable,false);assert.equal(ent.taxonomy().requiresGrant('aurelia'),true);checks+=4;
+  // Fixture: 'aurelia' hace de campeón INTERNAL concedible en el resto de esta prueba (concesión y revocación desde el
+  // panel), sin depender de si su arte ya se aprobó.
+  {const T=ent.taxonomy(),meta0=T.meta,rg0=T.requiresGrant;T.meta=id=>id==='aurelia'?Object.assign(meta0(id),{category:'STANDARD',releaseState:'INTERNAL',artPending:false,grantable:true,purchasable:true}):meta0(id);T.requiresGrant=id=>id==='aurelia'||rg0(id);}
 
   const seed=create({dataDir:dir,databaseUrl:'',adminUsers:'',log:()=>{}});await seed.ready;
   const nano=await seed.store.createUser({user:'NanoGM',userKey:'nanogm',name:'NanoGM',createdAt:Date.now(),lastLogin:0,passHash:await hashPassword('fixture-password')});
