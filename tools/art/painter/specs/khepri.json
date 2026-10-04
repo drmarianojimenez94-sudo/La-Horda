@@ -1,0 +1,160 @@
+{
+ "id": "khepri",
+ "name": "Khepri, El Portador del Enjambre",
+ "prompt": "Asesino con armadura ceremonial de escarabajo (#3fae8a), élitros abiertos a la espalda, dos hoces curvas, tocado con disco solar opaco.",
+ "body": "nahir",
+ "head": "vesper",
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    300,
+    25
+   ],
+   "minChroma": 10,
+   "to": "#226f56",
+   "keepLight": 0.6,
+   "chroma": 0.9
+  },
+  {
+   "part": "all",
+   "hue": [
+    180,
+    290
+   ],
+   "minChroma": 0,
+   "minL": 58,
+   "ramp": [
+    "#4a2e08",
+    "#9a6c1c",
+    "#d6ad48",
+    "#f6e19a",
+    "#fff8d8"
+   ]
+  },
+  {
+   "part": "all",
+   "hue": [
+    240,
+    300
+   ],
+   "minChroma": 10,
+   "ramp": [
+    "#3a2406",
+    "#7a5414",
+    "#b88a2c"
+   ]
+  },
+  {
+   "part": "all",
+   "hue": [
+    170,
+    245
+   ],
+   "minChroma": 8,
+   "to": "#2f9a76",
+   "keepLight": 0.6,
+   "chroma": 1.2
+  },
+  {
+   "part": "all",
+   "hue": [
+    25,
+    80
+   ],
+   "minChroma": 14,
+   "noSkin": true,
+   "to": "#b8892c",
+   "keepLight": 0.6,
+   "chroma": 1.1
+  },
+  {
+   "part": "all",
+   "materialsOf": "#2c2b2d",
+   "take": 1,
+   "to": "#203a32",
+   "keepLight": 0.8,
+   "chroma": 1.0
+  },
+  {
+   "part": "all",
+   "materialsOf": "#625d57",
+   "take": 1,
+   "to": "#4b6e62",
+   "keepLight": 0.7
+  }
+ ],
+ "accessories": [
+  {
+   "module": "khepri_base",
+   "shift": {
+    "14": [
+     0,
+     9
+    ],
+    "18": [
+     0,
+     6
+    ],
+    "22": [
+     -10,
+     7
+    ]
+   },
+   "hair": [
+    "#0b0a10",
+    "#1a1822",
+    "#2c2938",
+    "#433f52"
+   ],
+   "stripes": [
+    "#3a2606",
+    "#8a6418",
+    "#d2a640",
+    "#f4dc8a"
+   ],
+   "stripeHue": [
+    120,
+    200
+   ],
+   "deathHood": [
+    "#0c241d",
+    "#17503e",
+    "#2a8366",
+    "#5fc49a"
+   ],
+   "deathBoxes": {
+    "32": [
+     30,
+     42,
+     62,
+     74
+    ],
+    "33": [
+     26,
+     48,
+     62,
+     78
+    ],
+    "34": [
+     12,
+     70,
+     46,
+     100
+    ],
+    "35": [
+     12,
+     70,
+     50,
+     102
+    ]
+   },
+   "deathMask": [
+    "#4a2e08",
+    "#9a6c1c",
+    "#d6ad48",
+    "#f6e19a"
+   ]
+  }
+ ]
+}

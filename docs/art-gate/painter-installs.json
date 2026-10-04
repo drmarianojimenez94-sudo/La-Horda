@@ -1,0 +1,10 @@
+{
+ "aurelia": {
+  "champion": "aurelia",
+  "spec": "tools/art/painter/specs/aurelia.json",
+  "body": "sira_set",
+  "head": "maura_skin",
+  "styleGate": "PASS",
+  "date": "2026-10-04"
+ }
+}

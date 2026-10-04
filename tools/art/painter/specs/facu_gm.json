@@ -1,0 +1,23 @@
+{
+ "id": "facu_gm",
+ "name": "Facu GM, El Soberano de las Mareas",
+ "prompt": "Fundador. Joven musculoso de pelo oscuro rizado, postura de quien lee el mar. Manto de agua viva que nace de los hombros, corona de corrientes, Quilla Ceremonial (hoja de quilla hidrodinámica). Paleta: azul marino profundo + turquesa #2fd3c6 + espuma blanca, ribetes de bronce/oro.",
+ "body": "nahir",
+ "head": null,
+ "paint": [
+  {"part": "body", "hue": [165, 245], "minChroma": 8, "noSkin": true,
+   "ramp": ["#06142a", "#0a3256", "#0f6676", "#22b3ad", "#7fe9dc", "#e8fff9"], "gamma": 0.95},
+  {"part": "body", "hue": [0, 360], "minChroma": 0, "minL": 62, "noSkin": true,
+   "ramp": ["#5a3a10", "#a87326", "#dcae52", "#f7e3a0", "#fffbe8"], "gamma": 0.8},
+  {"part": "body", "hue": [245, 300], "minChroma": 10, "noSkin": true,
+   "ramp": ["#1a1408", "#5a3c14", "#9c6c26"]},
+  {"part": "body", "hue": [15, 85], "minChroma": 12, "maxL": 47, "noSkin": true,
+   "ramp": ["#2a1606", "#6b4318", "#b07a2e", "#e6be66"]},
+  {"part": "body", "hue": [0, 360], "minChroma": 0, "maxL": 61, "noSkin": true,
+   "ramp": ["#070b17", "#111c33", "#1d2f52", "#2f4a74", "#56769e"], "gamma": 0.9}
+ ],
+ "accessories": [
+  {"module": "facu_head", "body": "nahir", "head": "dariel",
+   "hairRamp": ["#0a0807", "#1b1411", "#32241d", "#4f392b", "#76563f"], "hairGamma": 0.9}
+ ]
+}

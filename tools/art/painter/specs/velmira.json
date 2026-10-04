@@ -1,0 +1,121 @@
+{
+ "id": "velmira",
+ "name": "Velmira, La Reina de las Máscaras",
+ "prompt": "Reina de teatro: vestido de telón violeta con cuello alto, cetro de bambalinas, cuatro máscaras flotando en semicírculo detrás de la cabeza.",
+ "body": "maura_skin",
+ "head": "orsa",
+ "headLongHair": true,
+ "paint": [
+  {
+   "part": "head",
+   "hue": [
+    60,
+    25
+   ],
+   "minChroma": 0,
+   "minL": 28,
+   "noSkin": true,
+   "ramp": [
+    "#5a3a10",
+    "#a07428",
+    "#d8b050",
+    "#f4e09a"
+   ]
+  },
+  {
+   "part": "head",
+   "hue": [
+    0,
+    360
+   ],
+   "minChroma": 0,
+   "noSkin": true,
+   "to": "#4b2f5e",
+   "keepLight": 0.45,
+   "chroma": 0.9,
+   "maxL": 75
+  },
+  {
+   "part": "body",
+   "hue": [
+    0,
+    36
+   ],
+   "minChroma": 28,
+   "to": "#9a50c8",
+   "keepLight": 0.5,
+   "chroma": 0.85
+  },
+  {
+   "part": "body",
+   "hue": [
+    18,
+    75
+   ],
+   "minChroma": 4,
+   "maxL": 72,
+   "noSkin": true,
+   "to": "#3e2850",
+   "keepLight": 0.5,
+   "chroma": 1.2
+  }
+ ],
+ "accessories": [
+  {
+   "module": "velmira_repair",
+   "donor": "maura_skin",
+   "auto": true,
+   "frames": {
+    "31": "full"
+   },
+   "paint": [
+    {
+     "part": "body",
+     "hue": [
+      0,
+      36
+     ],
+     "minChroma": 28,
+     "to": "#9a50c8",
+     "keepLight": 0.5,
+     "chroma": 0.85
+    },
+    {
+     "part": "body",
+     "hue": [
+      18,
+      75
+     ],
+     "minChroma": 4,
+     "maxL": 72,
+     "noSkin": true,
+     "to": "#3e2850",
+     "keepLight": 0.5,
+     "chroma": 1.2
+    }
+   ]
+  },
+  {
+   "module": "velmira_masks",
+   "ramp": [
+    "#8a7050",
+    "#cdb48c",
+    "#efe2c4",
+    "#fffaf0"
+   ],
+   "outline": "#1c1020",
+   "hole": "#2a1238",
+   "trim": [
+    "#a87a22",
+    "#e8c25a"
+   ],
+   "override": {
+    "31": [
+     47,
+     75,
+     54
+    ]
+   }
+  }
+ ]
+}

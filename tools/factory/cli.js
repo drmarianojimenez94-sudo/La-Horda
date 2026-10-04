@@ -17,6 +17,17 @@ try {
     const errors = validate(JSON.parse(fs.readFileSync(arg, 'utf8')));
     console.log(JSON.stringify({status:errors.length ? 'INCOMPLETE' : 'STRUCTURAL_PASS', errors, note:'STRUCTURAL_PASS is not visual, gameplay or release approval.'}, null, 2));
     if (errors.length) process.exitCode = 1;
+  } else if (command === 'paint') {
+    // EL PINTOR (docs/production/PAINTER.md): ficha -> hoja con el estilo del roster -> gate de estilo -> instalación.
+    // `paint <id>` pinta y verifica; `paint <id> --install` además la instala en el juego (después: roster_gate --write).
+    if (!/^[a-z][a-z0-9_]*$/.test(arg || '')) throw Error('paint requires a spec id (tools/art/painter/specs/<id>.json)');
+    const steps = [['python3', ['tools/art/painter/painter.py', 'paint', `tools/art/painter/specs/${arg}.json`]],
+      ['python3', ['tools/art/painter/style_gate.py', `tools/art/painter/out/${arg}/atlas.png`]]];
+    if (process.argv.includes('--install')) steps.push(['python3', ['tools/art/painter/install.py', arg]]);
+    for (const [bin, args] of steps) {
+      const r = spawnSync(bin, args, {cwd:ROOT, stdio:'inherit', timeout:600000});
+      if (r.error || r.status !== 0) { process.exitCode = 1; console.error(`paint ${arg}: FAIL at ${args[0]}`); break; }
+    }
   } else if (command === 'gate') {
     const names = arg === 'all' ? Object.keys(GATES) : [arg];
     if (names.some(n => !GATES[n])) throw Error('Unknown gate. Use: ' + Object.keys(GATES).join(', ') + ', all');
@@ -26,5 +37,5 @@ try {
       const result = spawnSync(bin, args, {cwd:ROOT,stdio:'inherit',timeout:600000});
       if (result.error || result.status !== 0) { process.exitCode = 1; console.error(`${name}: FAIL (${result.error?.message || result.status})`); break; }
     }
-  } else throw Error('Usage: node tools/factory/cli.js new <id> <output.json> [--category=STANDARD|FAMILY|FOUNDER|EVENT|DEV|TESTER] | duplicity [ids] | validate <manifest.json> | gate <name|all>');
+  } else throw Error('Usage: node tools/factory/cli.js new <id> <output.json> [--category=STANDARD|FAMILY|FOUNDER|EVENT|DEV|TESTER] | duplicity [ids] | validate <manifest.json> | paint <specId> [--install] | gate <name|all>');
 } catch (e) { console.error(e.message); process.exitCode = 1; }
