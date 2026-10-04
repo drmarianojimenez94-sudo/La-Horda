@@ -128,3 +128,13 @@ body.reduce-motion .hub-play.hub-next{ animation:none; }
   #toast-stack.end{ top:auto; bottom:calc(6px + env(safe-area-inset-bottom, 0px)); width:min(210px, 25vw); max-height:92px; overflow:hidden; flex-direction:column-reverse; justify-content:flex-start; }
   #toast-stack.end #loot-toasts{ position:fixed; left:calc(10px + env(safe-area-inset-left, 0px)); right:auto; bottom:calc(6px + env(safe-area-inset-bottom, 0px)); width:min(230px, 27vw); display:flex; flex-direction:column; }
 }
+
+/* ---------- regalo inicial: "Ver habilidades" abierto ----------
+   La ficha del guardián (championGuideHTML) mide más que la pantalla del teléfono: el cartel pegajoso se
+   salía por arriba y por abajo, y ya no se podía volver a tocar "Ver habilidades" ni leer la Definitiva.
+   Ahora el cartel no pasa del alto de la pantalla y se desliza por dentro; abierto, los botones van debajo. */
+.starter-confirm{ max-height:calc(100vh - 48px); max-height:calc(100dvh - 48px); overflow-y:auto; overscroll-behavior:contain; }
+.starter-confirm:has(details[open]){ display:block; width:min(760px, 96vw); text-align:center; }
+.starter-confirm:has(details[open]) .net-row{ position:sticky; bottom:-10px; justify-content:center; padding:6px 0 4px; margin-top:6px; background:rgba(20,12,8,0.97); }
+#starter-confirm details{ font-size:1rem; text-align:left; }
+#starter-confirm summary{ cursor:pointer; text-align:center; min-height:32px; line-height:32px; }
