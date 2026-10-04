@@ -52,11 +52,11 @@ porque los guardianes pesan unos 11 MB).
 
 ### Pruebas corridas (esta tanda)
 
-- `tools/audit/lazy_skins.js` (prueba nueva), sobre la base ya mezclada: **7 de 8 pasan.** Ninguna skin ni croma se
-  pide antes del título, todo termina de cargar, los 22 packs de skin quedan listos, no queda ninguna imagen
-  pendiente y la partida arranca. Falla "sin errores" por un solo mensaje, `ERR_TUNNEL_CONNECTION_FAILED`: es el
-  aviso que despierta al servidor online real, y el entorno de pruebas no tiene salida a internet. No tiene que ver
-  con la carga.
+- `tools/audit/lazy_skins.js` (prueba nueva), sobre la base ya mezclada: **pasan las 8 comprobaciones.** Ninguna
+  skin ni croma se pide antes del título, todo termina de cargar, los 22 packs de skin quedan listos, no queda
+  ninguna imagen pendiente, la partida arranca y no hay errores. La primera vez falló "sin errores" por un solo
+  mensaje, `ERR_TUNNEL_CONNECTION_FAILED`: es el aviso que despierta al servidor online real, y el entorno de pruebas
+  no tiene salida a internet. Ahora la prueba ignora ese mensaje.
 - Medición de carga (4G de 12 Mbit/s con 60 ms, CPU 4 veces más lenta, 844×390 con densidad de píxeles 2):
 
   | Carga | Hasta "Tocá para continuar" | Bajado antes del título |
