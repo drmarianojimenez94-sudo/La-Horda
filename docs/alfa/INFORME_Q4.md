@@ -77,7 +77,7 @@ Además, las piezas regaladas se pueden vender a 200 cada una.
   | t_camp | 31 |
   | t_endless | 29 (una falla suelta de mutadores que pasa al repetirla sola) |
 
-- **Sobre la base integrada:** se están corriendo. El resultado está en la §6, al final.
+- **Sobre la base integrada:** ver la §6.
 - **Simulación antes y después** con `tools/balance/q4_econ.js`, sobre las funciones reales del juego y 600
   partidas por arena: [`q4_economia.md`](q4_economia.md).
 
@@ -90,7 +90,48 @@ Además, las piezas regaladas se pueden vender a 200 cada una.
 
 ## 6. Pruebas sobre la base integrada
 
-(se completa al terminar la corrida)
+La base integrada es `main` (ff9054d) más los 7 equipos. Durante las corridas la máquina estuvo con una carga de
+40 a 110 sobre 4 núcleos. Varias pruebas cortaron por tiempo al cargar la página, que pide unos 1.800
+archivos. Por eso subí la espera de carga a 180 s en mis pruebas (`tools/items/`).
+
+**En verde:**
+
+| Prueba | PASS |
+|---|---|
+| t_q4_economia | 23 (también en la última fusión) |
+| t_ground_loot | 44 |
+| t_items | 60 |
+| t_itemization | 28 |
+| t_quests | 32 |
+| t_build_uniques | 36 |
+| t_sets | 48 |
+| t_starter_gift | 31 |
+| t_abismo | 34 |
+| t_campaign | 30 |
+
+El resto de `tools/items` (t_boons 80, t_synergies 62, t_story 36, t_nigro_* y demás) pasó sobre la base vieja,
+antes de fusionar `main`. Sobre la integrada no llegó a correr por la carga.
+
+**Ajusté una prueba porque cambió el juego, no por un error:** `t_items` esperaba exactamente 12 sets de
+campeón. `main` sumó los de la expedición y de Ascensión (hoy son 29), así que ahora pide al menos 12.
+
+**Fallas que ya estaban en `main` y no son de mi área.** Las verifiqué corriendo las mismas pruebas contra `main`
+sin mis cambios, y dan el mismo resultado:
+
+| Prueba | Fallas | Qué pasa |
+|---|---|---|
+| t_endless | 3 | La pantalla de resultados no aparece al morir |
+| t_cromas | 1 | Los 8 campeones de Ascensión no tienen croma |
+| t_camp | 1 | Falta el texto del herrero para los campeones nuevos |
+| t_crystals | 2 | El cartel del nivel cambió de texto |
+
+**NO VERIFICADO EN RUNTIME:**
+
+- t_difficulty: 4 fallas de calibración y del trazado de la Gélida. Son de Q2 y del mundo, no las comparé
+  contra `main`.
+- t_codex: cortó por tiempo.
+- La corrida completa de `tools/items` sobre la ÚLTIMA fusión: con esa carga, solo terminó t_q4_economia. El
+  resto pasó sobre la fusión anterior, que difiere solo en el trabajo de los otros equipos.
 
 ## 7. Detalle técnico
 
