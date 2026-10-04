@@ -6,6 +6,7 @@
       "releaseState": "TESTING",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "audio evidence required (file presence does not prove gate passed)"
       ]
@@ -15,15 +16,17 @@
       "releaseState": "TESTING",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "audio evidence required (file presence does not prove gate passed)"
       ]
     },
     "aurelia": {
-      "category": "STANDARD",
-      "releaseState": "INTERNAL",
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -32,10 +35,11 @@
       ]
     },
     "khepri": {
-      "category": "STANDARD",
-      "releaseState": "INTERNAL",
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -44,10 +48,11 @@
       ]
     },
     "velmira": {
-      "category": "STANDARD",
-      "releaseState": "INTERNAL",
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -56,10 +61,11 @@
       ]
     },
     "vhal": {
-      "category": "STANDARD",
-      "releaseState": "INTERNAL",
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -68,10 +74,11 @@
       ]
     },
     "bront": {
-      "category": "STANDARD",
-      "releaseState": "INTERNAL",
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
@@ -80,10 +87,11 @@
       ]
     },
     "oriel": {
-      "category": "STANDARD",
-      "releaseState": "INTERNAL",
+      "category": "ASCENSION",
+      "releaseState": "RELEASED",
       "status": "INCOMPLETE",
       "errors": [
+        "atlas hash must match reviewed content",
         "visual review requires reviewer and evidence; structural checks cannot approve style",
         "initial croma required",
         "initial set required",
