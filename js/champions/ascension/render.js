@@ -177,7 +177,7 @@ const ascOriginalGround=drawPortadorGround;drawPortadorGround=function(){ascOrig
    if(q.action==='regent'||q.action==='high_tide'){ascRing(h.x,h.y,40+(1-a)*60,q.action==='regent'?'#e8c56a':'#7ff3ff',3,a);}
    ctx.globalAlpha=1;}
   // indicador de recurso legible (forma + número)
-  const s=h.asState;if(!s)continue;ctx.font='11px monospace';ctx.fillStyle=h.cls.glow;let label='';
+  const s=h.asState;if(!s)continue;ctx.font=pxFont(12);ctx.fillStyle=h.cls.glow;let label='';
   if(h.classKey==='nano_gm')label=s.regentUntil>runElapsedMs?'◐ REGENTE':'○'.repeat(s.light)+' ◆'.repeat(s.dark);
   else if(h.classKey==='facu_gm')label=s.highTideUntil>runElapsedMs?'≋ MAREA ALTA':'~'.repeat(s.tide)+(s.tideNext?' →'+({current:'C',pressure:'P',wave:'O'})[s.tideNext]:'');
   else if(h.classKey==='khepri')label='✱'+Math.round(s.swarm);

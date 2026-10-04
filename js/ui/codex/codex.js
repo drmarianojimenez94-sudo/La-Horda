@@ -178,6 +178,17 @@ function codexRender(fresh){
   body.className = "cx-view cx-view-" + cur.view + (fresh ? " cx-enter" : "");
   body.scrollTop = 0;
   codexBind(body, cur);
+  codexScrollHints(body);
+}
+// Las filas que se deslizan de costado (.cx-scroll-x: animaciones, pestañas, skins, filtros) esconden la
+// barra: si algo queda afuera, el borde derecho se desvanece para que se note que hay más (antes el último
+// botón aparecía cortado a la mitad, "★ Pestilenc", y parecía un error).
+function codexScrollHints(root){
+  (root || document).querySelectorAll(".cx-scroll-x").forEach(el=>{
+    const upd = ()=> el.classList.toggle("fade-r", el.scrollWidth > el.clientWidth + 2 && el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+    if(!el.__cxHint){ el.__cxHint = true; el.addEventListener("scroll", upd, {passive:true}); }
+    upd(); requestAnimationFrame(upd);
+  });
 }
 // Engancha previews, vínculos y botones de la vista recién dibujada.
 function codexBind(body, cur){

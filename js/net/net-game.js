@@ -196,7 +196,7 @@ function netQuiet(fn){ _netRecDepth++; try{ return fn(); } finally { _netRecDept
 function netDrawNameTags(){
   if(!netMatch || !heroes) return;
   ctx.save();
-  ctx.font = "bold 13px monospace"; ctx.textAlign = "center";
+  ctx.font = pxFont(14); ctx.textAlign = "center";
   heroes.forEach((h,i)=>{
     const s = netMatch.slots && netMatch.slots[i];
     if(!s || s.kind!=="human" || h===player) return;
@@ -441,6 +441,7 @@ function netHostOnMsg(from, d){
     case "emerg": emergUse(h); return; // curación de emergencia del invitado
     case "sylva":
       if(state!=="playing" || !h.alive) return;
+      if(d.cancel){ h.sylvaCharging = false; h.sylvaChargeTimer = 0; return; } // el invitado canceló el apuntado: no dispara
       netWithHero(h, ()=>{ if(d.on) sylvaChargeStart(); else sylvaChargeRelease(netAimSafe(d.aim)); });
       return;
     case "revive": if(duoEnabled()) return; // el invitado mantiene (on:1) o suelta (on:0) el botón; el progreso es del anfitrión (updateRevives)

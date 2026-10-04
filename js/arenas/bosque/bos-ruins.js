@@ -390,12 +390,12 @@ function bosDrawGround(now){
     const lit = bosIsLit(r), R = r.st==="corrupt" ? BOS_CFG.pulseR + 20 : 150;
     if(r.st==="arming" || r.st==="finale" && r.arm < 1){
       ctx.save(); ctx.strokeStyle = `rgba(230,70,50,${0.25 + 0.35*r.arm})`; ctx.lineWidth = 2 + 2*r.arm; ctx.setLineDash([6, 8]);
-      ctx.beginPath(); ctx.ellipse(r.x, r.y, R*r.arm + 20, (R*r.arm + 20)*0.62, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore();
+      ctx.beginPath(); ctx.arc(r.x, r.y, R*r.arm + 20, 0, Math.PI*2); ctx.stroke(); ctx.restore();
     } else if(lit){
       const a = 0.14 + 0.08*Math.sin(now*4 + r.mx);
       ctx.save(); const g = ctx.createRadialGradient(r.x, r.y, 10, r.x, r.y, R);
       g.addColorStop(0, `rgba(220,40,30,${a*1.6})`); g.addColorStop(1, "rgba(120,10,10,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(r.x, r.y, R, R*0.62, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(r.x, r.y, R, 0, Math.PI*2); ctx.fill(); ctx.restore();
     }
   }
 }

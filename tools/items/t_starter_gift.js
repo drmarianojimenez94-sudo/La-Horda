@@ -1,5 +1,7 @@
 // REGALO INICIAL (js/systems/starter-gift.js): un guardián + UNA skin de ese guardián, sin oro de regalo.
-// Verifica con toques reales: perfil nuevo → guardián → skin (animada, "¡Es tuya!") → equipada → Ciudad;
+// Verifica con toques reales: perfil nuevo → guardián → skin (animada, "¡Es tuya!") → equipada → menú y
+// entrenamiento (desde #41 el primer ingreso ya no salta a la Ciudad: el entrenamiento cambia `save` por uno
+// de práctica, por eso lo guardado se lee de ALPHA_TRAINING.snapshot.save mientras dura);
 // skin de set (trae las piezas y la skin se ve); cerrar entre el guardián y la skin (vuelve a la skin);
 // guardián sin skins → vale; "Elegir después" → vale; canje del vale en la Tienda (sin cobrar oro);
 // guardados viejos (con los 10.000 de oro: los conservan y reciben el vale UNA vez; sin guardián: camino
@@ -38,6 +40,8 @@ async function boot(browser, opts = {}) {
   const reload = async () => { await page.reload({ waitUntil: 'load' }); await ready(); };
   return { ctx, page, E, tap, vis, reload, errors };
 }
+// el guardado REAL (durante el entrenamiento `save` es uno de práctica: js/systems/alpha-training.js)
+const REAL = '(typeof ALPHA_TRAINING!=="undefined" && ALPHA_TRAINING.active ? ALPHA_TRAINING.snapshot.save : save)';
 const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await E(fn).catch(() => false)) return true; await sleep(100); } return false; };
 
 (async () => {
@@ -72,8 +76,8 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
       stored: JSON.parse(localStorage.getItem('laHordaSave_v1')).champions.musashi.croma }), croma);
     check('SKIN.es_tuya_y_queda_equipada', own.owned && own.eq === croma && own.stored === croma && own.pending === false && own.chosen === croma && own.stamp && /¡Es tuya!/.test(own.txt), own);
     check('SKIN.regalo_no_cobra_oro_ni_da_vale', own.gold === 0 && own.v === 0, own);
-    const city = await waitFor(E, () => (!document.getElementById('run-intro').classList.contains('hidden') || state === 'playing') && currentArena === 'ciudad', 8000);
-    check('FLUJO.sigue_el_primer_arranque_a_la_Ciudad', city && await E(() => save.firstRun === 'jugando'), await E(() => ({ state, arena: currentArena, fr: save.firstRun })));
+    const next = await waitFor(E, () => state === 'mainmenu' || (state === 'playing' && typeof ALPHA_TRAINING !== 'undefined' && ALPHA_TRAINING.active), 8000);
+    check('FLUJO.sigue_al_menu_o_al_entrenamiento', next && await E((R) => eval(R).starterSkin && !eval(R).starterSkinPending, REAL), await E(() => ({ state, arena: currentArena })));
     check('FLUJO.sin_errores', B.errors.length === 0, B.errors);
     await B.ctx.close();
   }
@@ -108,7 +112,7 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
     await tap('#title-continue-btn');
     check('RECARGA.vuelve_a_la_skin_sin_repetir_el_guardian', pre.pending && pre.need && !pre.champ && await vis('#starter-step-skin') && !(await vis('#starter-step-champ')), pre);
     await tap('#starter-skin-later-btn');
-    const r = await E(() => ({ v: save.skinVoucher, pending: save.starterSkinPending, chosen: save.starterSkin, state }));
+    const r = await E((R) => { const S = eval(R); return { v: S.skinVoucher, pending: S.starterSkinPending, chosen: S.starterSkin, state }; }, REAL);
     check('DESPUES.elegir_despues_guarda_un_vale', r.v === 1 && r.pending === false && r.chosen === 'vale', r);
     await sleep(800);
     await B.ctx.close();
@@ -118,17 +122,18 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
   {
     const B = await boot(browser);
     const { E, tap, vis } = B;
-    await E(() => { for (const id of Object.keys(CROMA_SKINS)) if (CROMA_SKINS[id].champ === 'tanque') delete CROMA_SKINS[id]; }); // simula un guardián nuevo sin arte de skin
+    await E(() => { for (const id of Object.keys(CROMA_SKINS)) if (CROMA_SKINS[id].champ === 'tanque') delete CROMA_SKINS[id];
+      for (const id of Object.keys(SET_SKINS)) if (skinSetChamp(id) === 'tanque') delete SET_SKINS[id]; }); // simula un guardián nuevo sin arte de skin
     await tap('#title-continue-btn');
     await tap('.starter-card[data-champ="tanque"]');
     await tap('#starter-yes-btn');
     const s = await E(() => ({ sub: document.getElementById('starter-skin-sub').textContent, vale: !!document.querySelector('#starter-skin-grid .starter-skin-vale'), later: document.getElementById('starter-skin-later-btn').classList.contains('hidden') }));
     check('VALE.guardian_sin_skins_lo_explica', /todavía no tiene skins/.test(s.sub) && /vale de skin/.test(s.sub) && s.vale && s.later, s);
     await tap('#starter-skin-yes-btn');
-    await waitFor(E, () => !document.getElementById('run-intro').classList.contains('hidden'), 5000);
-    check('VALE.queda_guardado', await E(() => save.skinVoucher === 1 && save.starterSkin === 'vale' && !save.starterSkinPending));
-    // Tienda: cartel + canje sin oro
-    await E(() => { document.getElementById('run-intro').classList.add('hidden'); save.firstRun = null; setState('shop'); shopTab = 'destacados'; renderShop(); });
+    await waitFor(E, () => state === 'mainmenu' || state === 'playing', 5000);
+    check('VALE.queda_guardado', await E((R) => { const S = eval(R); return S.skinVoucher === 1 && S.starterSkin === 'vale' && !S.starterSkinPending; }, REAL));
+    // Tienda: cartel + canje sin oro (se sale del entrenamiento si arrancó)
+    await E(() => { if (typeof ALPHA_TRAINING !== 'undefined' && ALPHA_TRAINING.active) alphaTrainingSkip(); setState('shop'); shopTab = 'destacados'; renderShop(); });
     const sh = await E(() => ({ banner: (document.querySelector('.shop-vale-banner') || {}).textContent || '', btns: document.querySelectorAll('[data-voucher]').length }));
     check('TIENDA.cartel_y_botones_de_canje', /Tenés una skin de regalo: elegila/.test(sh.banner) && sh.btns >= 5, sh);
     const tgt = await E(() => Object.keys(CROMA_SKINS).find(id => CROMA_SKINS[id].champ === 'nigromante'));
@@ -159,12 +164,14 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
     const r = await E(() => ({ gold: save.gold, v: save.skinVoucher, notice: save.skinVoucherNotice, flag: save.starterGiftV1, lvl: save.champions.mago.level, pend: save.starterSkinPending, sgn: 'startGoldNotice' in save }));
     check('VIEJO.conserva_sus_10000_y_recibe_un_vale', r.gold >= 10000 /* + logros retroactivos */ && r.v === 1 && r.notice === true && r.flag === true && r.lvl === 12 && !r.pend && !r.sgn, r);
     await tap('#title-continue-btn');
+    await E(() => { if (typeof ALPHA_TRAINING !== 'undefined' && ALPHA_TRAINING.active) alphaTrainingSkip(); }); // perfil sin entrenamiento: se saltea (#41)
     const hub = await E(() => ({ state, toast: (document.getElementById('net-toast') || {}).textContent || '', badge: document.getElementById('hub-badge-shop').textContent, badgeOn: !document.getElementById('hub-badge-shop').classList.contains('hidden'),
       sub: document.querySelector('#mainmenu-tienda-btn .hub-tile-sub').textContent, notice: save.skinVoucherNotice }));
     check('VIEJO.aviso_en_el_hub', hub.state === 'mainmenu' && /Tenés una skin de regalo: elegila/.test(hub.toast) && hub.badgeOn && /REGALO/.test(hub.badge) && /Tenés una skin de regalo: elegila/.test(hub.sub) && hub.notice === false, hub);
     await B.reload();
     check('VIEJO.el_vale_no_se_repite_al_recargar', await E(() => save.skinVoucher === 1 && save.gold >= 10000));
     await tap('#title-continue-btn');
+    await E(() => { if (typeof ALPHA_TRAINING !== 'undefined' && ALPHA_TRAINING.active) alphaTrainingSkip(); });
     await tap('#mainmenu-tienda-btn');
     check('VIEJO.la_tienda_muestra_el_vale', await E(() => !!document.querySelector('.shop-vale-banner') && document.querySelectorAll('[data-voucher]').length > 0));
     check('VIEJO.sin_errores', B.errors.length === 0, B.errors);
@@ -189,8 +196,8 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
     await tap('#title-continue-btn');
     await tap('.starter-card[data-champ="guerrero"]');
     await tap('#starter-yes-btn');
-    const r = await E(() => ({ state, pending: save.starterSkinPending, need: needsStarterSkin() }));
-    check('WEBDRIVER.camino_viejo_sin_paso_de_skin', r.state === 'mainmenu' && !r.pending && !r.need, r);
+    const r = await E((R) => { const S = eval(R); return { state, pending: S.starterSkinPending, need: needsStarterSkin(), skin: !document.getElementById('starter-step-skin').offsetParent }; }, REAL);
+    check('WEBDRIVER.camino_viejo_sin_paso_de_skin', r.state !== 'starter' && !r.pending && !r.need, r);
     await B.ctx.close();
   }
 

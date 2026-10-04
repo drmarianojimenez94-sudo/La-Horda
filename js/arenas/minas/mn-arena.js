@@ -21,7 +21,9 @@ Object.assign(ANIM_PROFILES, {
 /* ---------------- atlas reales ----------------
    hMul = alto dibujado / radio. Escala respecto de un guardián (≈ 65 u): Esclavo 1.0 · Insecto 0.6 ·
    Minero 1.5 · Devoraluz 1.8 · Titán 2.6 · Cerbero 2.9 (el más grande de la campaña hasta acá). */
-const MN_HMUL = {mn_esclavo:3.2, mn_insecto:2.3, mn_acechador:3.1, mn_minero:3.0, mn_escupidor:3.0, mn_consumidor:3.5, mn_devoraluz:3.4, mn_titan:3.1, mn_cerbero:3.2};
+// Tope de escala de píxel (Q6 del alfa): el arte de Cerbero mide 36 px de alto y a 3,2 radios se veía en bloques de
+// 6 píxeles de pantalla; a 2,6 radios (el alto estándar de los enemigos es 2,4-2,7) sigue siendo el más grande hasta acá.
+const MN_HMUL = {mn_esclavo:3.2, mn_insecto:2.3, mn_acechador:3.1, mn_minero:3.0, mn_escupidor:3.0, mn_consumidor:3.5, mn_devoraluz:3.25, mn_titan:3.1, mn_cerbero:2.6};
 if(typeof MINAS_ATLAS!=="undefined") for(const k in MINAS_ATLAS){
   enemyAtlasPackLoad(k, MINAS_ATLAS[k].src, MINAS_ATLAS[k].meta);
   ENEMY_ATLAS_PACK[k].hMul = MN_HMUL[k] || 3;

@@ -86,7 +86,7 @@ function campaignStoryOnBuff(){
   if(!_campaignPendingPrologue){ if(el) el.classList.add("hidden"); return; }
   _campaignPendingPrologue = false;
   if(!el){ el = document.createElement("div"); el.id = "buff-story"; scr.insertBefore(el, document.getElementById("buff-cards")); }
-  el.innerHTML = `<div class="bs-who">EL HECHICERO SUPREMO · LA NOCHE EN QUE VOLVIÓ LA HORDA</div><div class="bs-say">«${CAMPAIGN_PROLOGUE}»</div>`;
+  el.innerHTML = `<div class="bs-who">PRÓLOGO · LA NOCHE EN QUE VOLVIÓ LA HORDA</div><div class="bs-say">${CAMPAIGN_PROLOGUE}</div>`;
   el.classList.remove("hidden");
 }
 // Al completar una arena: la escena de salida (la Cicatriz, lo que dice el Hechicero y la Crónica que se

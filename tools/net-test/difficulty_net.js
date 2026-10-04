@@ -34,7 +34,7 @@ async function client(browser, name, champ, cleared, url) {
   page.on('dialog', d => d.accept());
   await page.goto(url || `${SITE}/index.html?server=${encodeURIComponent(RELAY)}`, { timeout: 120000 });
   const c = { ctx, page, errors, name };
-  await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toca/.test(b.textContent); }, null, 60000);
+  await waitFor(c, () => { const b = document.getElementById('title-continue-btn'); return !!b && !b.disabled && /Toc[aá]/.test(b.textContent); }, null, 60000);
   await ev(c, ([k, cl]) => {
     for (const q in save.champions) save.champions[q].level = 40;
     save.champions[k].unlocked = true; save.starterChosen = true; selectedClass = k; save.lastChamp = k;

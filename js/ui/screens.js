@@ -33,6 +33,7 @@ function setState(s){
   if(typeof musicOnState==="function") musicOnState(s); // clima musical de cada pantalla
   if(s==="title" && typeof startTitleScene==="function") requestAnimationFrame(startTitleScene);
   if(s!=="playing" && typeof _persistTimer!=="undefined" && _persistTimer) persistNow();
+  if(s!=="playing" && typeof inputResetAll==="function") inputResetAll(); // se esconden los controles: nada queda apretado (input.js)
   Object.values(screens).forEach(el=>el.classList.add("hidden"));
   const hud = document.getElementById("hud");
   const controls = document.getElementById("controls");

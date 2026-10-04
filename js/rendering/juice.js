@@ -81,8 +81,10 @@ function screenShakeDecay(dt){
 // desplazamiento del cuadro: suma de senos desfasados (~10-15 Hz) -> vibra sin "temblequeo" al azar
 function juiceShakeOffset(){
   _shk.x = 0; _shk.y = 0;
-  if(screenShake <= 0 || JUICE.reduceMotion) return _shk;
-  const amp = Math.min(SHAKE_CAP, screenShake*0.5), t = animNow/1000;
+  // Opciones > Sacudida de pantalla (js/core/prefs.js): normal / reducida / apagada
+  const pm = typeof prefShakeMult==="function" ? prefShakeMult() : 1;
+  if(screenShake <= 0 || JUICE.reduceMotion || pm <= 0) return _shk;
+  const amp = Math.min(SHAKE_CAP, screenShake*0.5)*pm, t = animNow/1000;
   _shk.x = amp*(0.62*Math.sin(t*61.3 + 1.7) + 0.38*Math.sin(t*97.1 + 0.3));
   _shk.y = amp*(0.62*Math.sin(t*53.9 + 4.1) + 0.38*Math.sin(t*89.7 + 2.2));
   return _shk;
@@ -278,11 +280,12 @@ function drawStreakHud(){
   if(streakN < 5 || streakShowT <= 0) return;
   const a = Math.min(1, streakShowT/400);
   const pop = JUICE.reduceMotion ? 1 : 1 + 0.35*streakPop*streakPop;
-  const x = VW - 20, y = Math.round(VH*0.36);
+  const L = typeof hudLefty==="function" && hudLefty(); // modo zurdo: el HUD de la derecha pasa a la izquierda
+  const x = L ? 20 : VW - 20, y = Math.round(VH*0.36);
   const hot = streakN >= 50 ? "#ff8a3d" : (streakN >= 15 ? "#ffcf5c" : "#ffe7a8");
   ctx.save();
   ctx.globalAlpha = a;
-  ctx.textAlign = "right"; ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round";
+  ctx.textAlign = L ? "left" : "right"; ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round";
   ctx.font = pxFont(11);
   ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,0.85)"; ctx.strokeText("RACHA", x, y - 26);
   ctx.fillStyle = "#e8d8b0"; ctx.fillText("RACHA", x, y - 26);
@@ -294,8 +297,8 @@ function drawStreakHud(){
   ctx.restore();
   // barra que se vacía: cuánto queda para seguir la racha
   const w = 64, q = Math.max(0, streakShowT/STREAK_GAP);
-  ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(x - w, y + 6, w, 4);
-  ctx.fillStyle = hot; ctx.fillRect(x - w*q, y + 6, w*q, 4);
+  ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(L ? x : x - w, y + 6, w, 4);
+  ctx.fillStyle = hot; ctx.fillRect(L ? x : x - w*q, y + 6, w*q, 4);
   if(streakTierT > 0){
     ctx.globalAlpha = a*Math.min(1, streakTierT/300);
     ctx.font = pxFont(11); ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,0.85)";
