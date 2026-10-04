@@ -1,4 +1,4 @@
-"""La Dama del Telón (cm_dama; sus espejismos cm_espejismo usan el mismo cuerpo) — ficha P0-02.
+"""La Dama del Telón (cm_dama; sus espejismos cm_espejismo se dibujan con este mismo atlas, translúcidos: cm-render.js) — ficha P0-02.
 Mujer altísima y demacrada, piel gris pálida, corona de espinas doradas, un vestido que es un telón de teatro rojo y
 pesado que se arrastra y se abre en jirones, manos largas con uñas negras. Se mueve flotando, solemne.
 Celda 96×128, personaje ≈110 px. Paleta: #140a10 #4a1020 #9a1a2c #d0303a #c8b8b0 #e0b050."""
@@ -157,4 +157,4 @@ def build():
     return fr, S, {'anchor': round(G / H, 4), 'hMul': 3.6}
 
 
-TARGET = {'png': 'assets/sprites/arenas/ciudad/cm_dama/atlas.png', 'meta_file': 'js/assets/ciudad-meta.js', 'const': 'CIUDAD_ATLAS', 'aliases': ['cm_espejismo']}
+TARGET = {'png': 'assets/sprites/arenas/ciudad/cm_dama/atlas.png', 'meta_file': 'js/assets/ciudad-meta.js', 'const': 'CIUDAD_ATLAS'}

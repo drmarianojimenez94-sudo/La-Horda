@@ -12,8 +12,8 @@
    "name": "El Presentador",
    "rule": "La función se corta: interrumpí el GRAN NÚMERO o devolvele el cometa, y cubrite tras los pilares en la OVACIÓN.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "su arte propio es de 32 px dibujado a 4–5×: se ve en bloques; hoy usa el cuerpo del Mago de Hielo recoloreado",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2–1,7 (3 actos + transformación de 12 cuadros); falta el Visual Gate humano para PASS",
    "brief": "P0-01",
    "hooks": [
     {
@@ -108,8 +108,8 @@
    "name": "Maestro de Ceremonias",
    "rule": "Su MARCA (reflector) sigue a un guardián: llevala adentro de un REFUGIO en pie y el escudo verde la anula.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte de 24 px dibujado a 5×",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,1 (incluye teletransporte en humo rojo); falta el Visual Gate humano para PASS",
    "brief": "P0-03",
    "hooks": [
     {
@@ -179,8 +179,8 @@
    "name": "El Tramoyista",
    "rule": "Sus golpes y decorados rompen las estructuras: pelealo lejos de lo que tenés que proteger.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte de 32×46 px dibujado a ~5×",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2 (tramoya con poleas y sogas, arrastre y derrumbe); falta el Visual Gate humano para PASS",
    "brief": "P0-04",
    "hooks": [
     {
@@ -245,8 +245,8 @@
    "name": "La Dama del Telón",
    "rule": "Su línea de telón rompe estructuras; los espejismos tienen 1 de vida: limpiá rápido.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte de 27 px dibujado a ~5×",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,2 (el telón la envuelve y cae vacío; sus espejismos usan el mismo cuerpo); falta el Visual Gate humano para PASS",
    "brief": "P0-02",
    "hooks": [
     {
@@ -1279,8 +1279,8 @@
    "name": "El Carcelero del Vacío",
    "rule": "Si te engancha te arrastra al borde: soltate con una habilidad; sus cadenas rompen plataformas.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "arte propio de 37 px dibujado a ~5,6×; hoy usa un común de la Fábrica recoloreado",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,9 (cadenas como látigo, pisotón que agrieta, se rompen al morir); falta el Visual Gate humano para PASS",
    "brief": "P0-11",
    "hooks": [
     {
@@ -1441,8 +1441,8 @@
    "name": "Titán de Piedra",
    "rule": "Su PISOTÓN apaga las luces: esquivá y volvé a encender.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "densidad ×5,0 la del roster: arte de 47×63 px dibujado a 153 u; en pantalla se ve en bloques al lado de los campeones",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,0 (antes ×5,0); falta el Visual Gate humano para PASS",
    "brief": "R-01",
    "hooks": [
     {
@@ -1512,8 +1512,8 @@
    "name": "Cerbero, Guardián del Umbral",
    "rule": "Iluminado por varias luces a la vez, sus sombras se separan y queda EXPUESTO; a oscuras es más rápido.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "densidad ×5,4 la del roster: arte de 54×67 px dibujado a 181 u (el outlier más grande del juego)",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,1 (antes ×5,4; tres cabezas de bestia, fuego y sombra); falta el Visual Gate humano para PASS",
    "brief": "F-01",
    "hooks": [
     {
@@ -1806,8 +1806,8 @@
    "name": "El Ángel Corrompido (forma 1)",
    "rule": "CONVERGENCIA: rompé los 4 focos antes de que termine el ritual.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "es el Hechicero recoloreado con alas procedurales: no tiene cuerpo propio",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,9 (alas rotas rojas y negras, halo agrietado; los cristales los dibuja el juego); falta el Visual Gate humano para PASS",
    "brief": "F-02",
    "hooks": [
     {
@@ -1887,8 +1887,8 @@
    "name": "Gólem de Cuerpos (forma 2)",
    "rule": "EL EXAMEN: cortá el Número, hacelo chocar contra las barricadas o rompé la Red.",
    "design": "PASS",
-   "art": "REDRAW",
-   "artWhy": "su hoja propia es de 1 cuadro por estado",
+   "art": "FIX",
+   "artWhy": "arte propio dibujado con tools/art/pixrig a la densidad del juego, ×1,15 (32 cuadros; antes 1 por estado); falta el Visual Gate humano para PASS",
    "brief": "P0-12",
    "hooks": [
     {

@@ -48,6 +48,9 @@ jobs:
       - run: node tools/bosses/t_boss_arena_hooks.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/art/t_pixrig_bosses.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/quality/test-projectile-identity.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

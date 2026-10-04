@@ -43,35 +43,18 @@ enemyAtlasPackLoad("hechicero_supremo", HECH_DIR+"atlas.png", {"w":102,"h":113,"
   // mirando a la derecha; se toman por vista para que no gire sobre sí mismo al caminar.
   "sets":{"idle":[0,1,2,3],"walk":[8,10,11,10],"walk_down":[4,5,6,5],"cast":[16,17,18,19,20,21,22,23],"atk":[24,25,26,27],"hit":[28,29,30,31,32],"death":[33,34,35,36,37,38],"kneel":[36]}});
 ENEMY_ATLAS_PACK.hechicero_supremo.hMul = 4.2; // más grande que un héroe: se lee como subjefe
-enemyAtlasPackLoad("golem_cuerpos", HECH_DIR+"golem/atlas.png", {"w":327,"h":274,"cols":3,"refH":274,"anchor":0.9927,
-  "sets":{"idle":[1],"walk":[1],"atk":[2],"slam":[2],"hit":[1],"tf":[3,4,5],"pre":[6],"death":[2,5,4,3]}});
-ENEMY_ATLAS_PACK.golem_cuerpos.hMul = 3.3;
-// Ángel Corrompido: el mismo cuerpo del Hechicero, recoloreado una vez al cargar (oro → carmesí,
-// blanco → hueso sucio, sombras más negras). Hasta que arte real llegue (HS-01b en
-// LA_HORDA_COMBAT_MISSING_ASSETS.md), esto + alas + cristales lo separan del subjefe del nivel 9.
-{
-  const src = ENEMY_ATLAS_PACK.hechicero_supremo;
-  const AC = Object.assign({}, src, {ready:false, hMul:4.4});
-  ENEMY_ATLAS_PACK.angel_corrompido = AC;
-  const build = ()=>{
-    try{
-      const im = src.atlas, c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight;
-      const g = c.getContext("2d"); g.drawImage(im, 0, 0);
-      const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
-      for(let i=0;i<p.length;i+=4){
-        if(p[i+3]===0) continue;
-        const r = p[i], gg = p[i+1], b = p[i+2], l = r*0.3 + gg*0.59 + b*0.11, mx = Math.max(r,gg,b), mn = Math.min(r,gg,b);
-        let nr, ng, nb;
-        if(l < 55){ nr = l*0.75; ng = l*0.5; nb = l*0.6; }                                 // sombras: casi negras
-        else if(mx - mn < 34 && l > 150){ nr = l*0.82; ng = l*0.72; nb = l*0.72; }        // blancos: hueso sucio
-        else { nr = Math.min(255, l*1.05 + 30); ng = l*0.26; nb = l*0.32; }               // oro/color: carmesí
-        p[i] = nr*0.82 + r*0.18*0.6; p[i+1] = ng*0.82 + gg*0.18*0.6; p[i+2] = nb*0.82 + b*0.18*0.6;
-      }
-      g.putImageData(d, 0, 0); AC.atlas = c;
-    }catch(err){ AC.atlas = src.atlas; }
-    AC.ready = true;
-  };
-  if(src.atlas.complete && src.atlas.naturalWidth) build(); else src.atlas.addEventListener("load", build);
+// Gólem de Cuerpos: hoja propia de 32 cuadros (tools/art/pixrig/golem_cuerpos.py, ficha P0-12; antes era 1 cuadro por
+// estado y se le prestaba el cuerpo del Gólem de Cristal). "pre" = el montón de cuerpos, "tf" = se levanta y toma forma.
+if(typeof PIXRIG_ATLAS!=="undefined" && PIXRIG_ATLAS.golem_cuerpos){
+  const A = PIXRIG_ATLAS.golem_cuerpos;
+  enemyAtlasPackLoad("golem_cuerpos", A.src, A.meta);
+}
+// Ángel Corrompido: cuerpo propio (tools/art/pixrig/angel_corrompido.py, ficha F-02): túnica blanca manchada de
+// carmesí, alas rotas de plumas rojas y negras, halo agrietado. "cast0" es el mismo lanzamiento sin alas (la
+// cinemática de ascenso las hace nacer). Los cuatro cristales siguen dibujándose aparte (hechDrawAngelFront).
+if(typeof PIXRIG_ATLAS!=="undefined" && PIXRIG_ATLAS.angel_corrompido){
+  const A = PIXRIG_ATLAS.angel_corrompido;
+  enemyAtlasPackLoad("angel_corrompido", A.src, A.meta);
 }
 // efectos de la hoja (se usan con vfxSprite, que ya viaja por la red)
 acua2Load("hsOrb", [HECH_DIR+"fx/orb_small.png", HECH_DIR+"fx/orb_trail.png"]);
@@ -253,36 +236,6 @@ BOSS_DESIGNS.demonio_final = {
 };
 
 /* ---------------- dibujo del Ángel Corrompido: alas y cristales ---------------- */
-function _hBz(p0, p1, p2, p3, u){ const v = 1-u; return v*v*v*p0 + 3*v*v*u*p1 + 3*v*u*u*p2 + u*u*u*p3; }
-// Un ala corrupta: plumas largas y quebradas (silueta negra, cuerpo carmesí oscuro, vena encendida).
-function _hWing(c, cx, cy, side, t, s){
-  const N = 8, SEG = 16;
-  for(let i=0;i<N;i++){
-    const k = i/(N-1), torn = (i===3 || i===6) ? 0.78 : 1; // plumas rotas
-    const fl = Math.sin(t*1.7 + i*0.9), fl2 = Math.sin(t*1.1 + i*0.4);
-    const P = [[cx + side*4*s, cy],
-               [cx + side*(50 + k*30)*s, cy - (110 - k*60)*s + fl2*4*s],
-               [cx + side*(135 + k*40)*s + side*fl*5*s, cy - (70 - k*120)*s],
-               [cx + side*(160 + k*28)*s + side*fl*10*s, cy + (35 + k*125)*s]];
-    const wid = (17 - k*5)*s, L = [], R = [], M = [];
-    for(let j=0;j<=SEG;j++){
-      const u = j/SEG*torn;
-      const x = _hBz(P[0][0],P[1][0],P[2][0],P[3][0],u), y = _hBz(P[0][1],P[1][1],P[2][1],P[3][1],u);
-      const x2 = _hBz(P[0][0],P[1][0],P[2][0],P[3][0],Math.min(1,u+0.02)), y2 = _hBz(P[0][1],P[1][1],P[2][1],P[3][1],Math.min(1,u+0.02));
-      const dl = Math.hypot(x2-x, y2-y)||1, nx = -(y2-y)/dl, ny = (x2-x)/dl;
-      const w = wid*Math.sin(Math.min(1, u/torn)*Math.PI*0.92 + 0.08)*(j % 4 === 3 ? 0.55 : 1); // borde dentado
-      L.push([x + nx*w, y + ny*w]); R.push([x - nx*w*0.5, y - ny*w*0.5]); M.push([x, y]);
-    }
-    const path = (grow)=>{ c.beginPath(); c.moveTo(L[0][0], L[0][1]); for(const p of L) c.lineTo(p[0] + (p[0]-cx)*grow*0.02, p[1]); for(let j=R.length-1;j>=0;j--) c.lineTo(R[j][0], R[j][1]); c.closePath(); };
-    c.globalCompositeOperation = "source-over";
-    c.fillStyle = "#0e0306"; path(1.5); c.fill();                                  // silueta
-    c.fillStyle = i % 2 ? "#3b0a14" : "#4d0e1a"; path(0); c.fill();                // cuerpo
-    c.globalCompositeOperation = "lighter"; c.strokeStyle = "rgba(255,70,45,0.75)"; c.lineWidth = Math.max(1, 1.6*s);
-    c.beginPath(); for(let j=2;j<M.length;j++){ const p = M[j]; if(j===2) c.moveTo(p[0], p[1]); else c.lineTo(p[0], p[1]); } c.stroke(); // vena encendida
-    const tip = M[M.length-1]; c.globalAlpha = 0.7; c.drawImage(glowSprite("255,70,40"), tip[0] - 10*s, tip[1] - 10*s, 20*s, 20*s); c.globalAlpha = 1;
-  }
-  c.globalCompositeOperation = "source-over";
-}
 function _hAngelH(e){ const P = ENEMY_ATLAS_PACK.angel_corrompido; return e.radius*(P ? P.hMul : 4.4)*0.95; }
 function hechDrawAngelBack(e, pose){
   const q = e.cine==="ascend" && e.cineT > 0 ? Math.max(0, Math.min(1, (1100 - e.cineT)/900)) : 1;
@@ -294,7 +247,6 @@ function hechDrawAngelBack(e, pose){
   ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
   if(q > 0.01){
     const s = H/210*q;
-    _hWing(ctx, cx, cy, -1, t, s); _hWing(ctx, cx, cy, 1, t + 0.4, s);
     // brasas que caen de las alas (determinísticas: no cuestan memoria ni viajan por la red)
     ctx.globalCompositeOperation = "lighter"; ctx.fillStyle = "#ff6a3a";
     for(let i=0;i<14;i++){ const ph = (t*0.4 + i*0.071) % 1, side = i % 2 ? 1 : -1;
@@ -376,7 +328,7 @@ function hechEnemyTick(e, dt, tgt, dist){
       if(e.cineT <= 0){ e.cine = null; e.packSet = null; bossEntrance(e); showBanner("FORMA 2 DE 3 — EL GOLEM DE CUERPOS"); }
     } else if(e.type==="angel_corrompido" && e.cine==="ascend"){
       // 1) el Hechicero junta poder  2) te arranca los cristales  3) le nacen las alas corruptas
-      _hPack(e, "cast", 400);
+      _hPack(e, e._wings ? "cast" : "cast0", 400); // las alas nacen con el destello (cineT 1100)
       if(e.cineT <= 2900 && !e._stole){
         e._stole = true;
         if(typeof crystalSteal==="function") crystalSteal(player.x, player.y, e.x, e.y);

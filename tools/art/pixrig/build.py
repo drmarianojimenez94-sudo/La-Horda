@@ -43,6 +43,11 @@ def build_one(key, frames, sets, info, target, prev=None):
     refH = info.get('refH') or body_height(frames, sets[info.get('ref_set', 'idle')])
     meta = {'w': w, 'h': h, 'cols': 8, 'refH': refH, 'anchor': info['anchor'], 'sets': sets}
     if info.get('hMul'): meta['hMul'] = info['hMul']
+    if 'meta_file' not in target:  # atlas suelto (jefes sin archivo de arena): js/assets/pixrig-meta.js
+        target = dict(target, meta_file='js/assets/pixrig-meta.js', const='PIXRIG_ATLAS')
+        pm = os.path.join(ROOT, 'js/assets/pixrig-meta.js')
+        if not os.path.exists(pm):
+            open(pm, 'w', encoding='utf-8').write('"use strict";\n/* GENERADO por tools/art/pixrig/build.py: atlas de jefes dibujados con pixrig que no pertenecen a un\n   archivo de metadatos de arena. Se carga antes de los scripts de arena que los usan. */\nconst PIXRIG_ATLAS = {};\n')
     if 'meta_file' in target:
         update_meta(target['meta_file'], target['const'], target.get('key', key), target['png'], meta, target.get('extra'), target.get('aliases', ()))
     if prev: preview(frames, 2).save(prev.replace('.png', '_' + key + '.png'))

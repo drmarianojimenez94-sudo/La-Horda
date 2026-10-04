@@ -36,11 +36,6 @@
      brief    id de la ficha en docs/ART_COMMISSION_BRIEF.md
    ============================================================ */
 const BODY_SWAPS = {
-  /* ---- 10 · Arena Infernal: 2ª forma del jefe final (hoja de 1 cuadro por estado) ---- */
-  golem_cuerpos: {body:"golem_cristal", brief:"P0-12", hMul:2.9,
-    tint:{hueTo:354, satTo:0.34, minSat:0.1, sat:0.9, lum:0.86},
-    sets:{slam:"stomp", tf:"charge", pre:"idle"}},
-
   /* ---- 01 · Ciudad Maldita: el Presentador (3 actos), la Dama del Telón (y sus espejismos), el Maestro de
      Ceremonias y el Tramoyista ya tienen arte propio a la densidad del juego (tools/art/pixrig): sin préstamo. ---- */
 
@@ -71,14 +66,10 @@ const BODY_SWAPS = {
   sirena_abisal: {body:"medusa", brief:"P0-09", hMul:2.6,
     tint:{hueTo:192, satTo:0.38, minSat:0.08, lum:0.95}},
 
-  /* ---- 08 · Abismo: élite y subjefe (1 cuadro de caminar, arte a 4–5x) ---- */
+  /* ---- 08 · Abismo: élite (1 cuadro de caminar, arte a 4–5x). El Carcelero ya tiene arte propio (tools/art/pixrig). ---- */
   ab_jinete: {body:"jinete_sin_cabeza", brief:"P0-10", hMul:3.0,
     tint:{hue:52, sat:1.1, lum:1.0},
     sets:{prep:"front", charge:"walk", impact:"atk", turn:"hit"}, death:"frames"},
-  ab_carcelero: {body:"carcelero", brief:"P0-11", hMul:3.3,
-    tint:{hueTo:284, satTo:0.24, minSat:0.14, sat:0.85, lum:0.8},
-    sets:{drag:"chain", slam:"atk", break:"hit"}, death:"frames"},
-
   /* ---- 07 · Laberinto: élite sin ataque, golpe ni muerte propios ---- */
   esfinge: {body:"cu_sith", brief:"P1-01", hMul:2.5,
     tint:{hueTo:42, satTo:0.5, minSat:0.08, lum:1.05}, death:"frames",
