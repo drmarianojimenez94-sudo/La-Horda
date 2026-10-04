@@ -54,6 +54,7 @@ function fortDragonDirector(dt){
       fortInitEnemy(d);
       d.flying = true; d.hover = -70; d.bossPhase = 1;
       d.dcd = 1800; d.breathCd = 4500; d.bombCd = 9000; d.flapCd = 7000;
+      if(typeof bossArenaEvent==="function") bossArenaEvent("dragon_forja.horno", d);
       activeChampion = d;
       if(typeof setMusicMode==="function") setMusicMode("boss");
       playSfx("bossRoar");
@@ -415,6 +416,7 @@ function fortKnightToPhase(e, p){
     e.fortTrans = {t:0, dur:2400}; e.dmgTakenMult = 0.2;
     _fb(e, "plant", 2400);
     K.awake = 0;
+    if(typeof bossArenaEvent==="function") bossArenaEvent("caballero.camara", e);
     showBanner("CLAVA SU ESPADA… ¡LA FORTALEZA DESPIERTA!");
     playSfx("fortPhase2");
     vfxShock(e.x, e.y, 20, 420, "255,170,90", 1000, 2);

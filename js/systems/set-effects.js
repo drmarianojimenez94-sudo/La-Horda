@@ -331,7 +331,42 @@ function activeSetSkin(h){
   return _skinDef(activeSetSkinId(h));
 }
 // Skin a mostrar: la del set principal COMPLETO con arte; si no hay, la croma equipada en el guardián.
+function cosmeticSetCollected(id){
+  const set = typeof SET_DB!=="undefined" && SET_DB[id];
+  if(!set || !set.pieces) return false;
+  const ids = Object.keys(set.pieces).map(slot=>id+"_"+slot);
+  return ids.length > 0 && ids.every(key=>save.collection && save.collection[key] && Number(save.collection[key].n)>0);
+}
+function cosmeticUnlockCompletedSet(id){
+  if(!SET_SKINS[id] || !cosmeticSetCollected(id)) return false;
+  save.cosmeticUnlocks = Object.assign({}, save.cosmeticUnlocks, {[id]:true});
+  return true;
+}
+function cosmeticSkinEquippedId(k){
+  const c = save.champions[k], id = c && c.cosmeticSkin;
+  const d = id && Object.prototype.hasOwnProperty.call(SET_SKINS, id) && SET_SKINS[id];
+  return d && (!d.champ || d.champ===k) ? id : null;
+}
+function skinCosmeticEquip(k, id){
+  const c = save.champions[k]; if(!c || (typeof state!=="undefined" && state==="playing")) return false;
+  if(id){
+    const d = Object.prototype.hasOwnProperty.call(SET_SKINS, id) && SET_SKINS[id];
+    if(!d || (d.champ && d.champ!==k) || typeof skinOwnedFull!=="function" || !skinOwnedFull(id)) return false;
+  }
+  if(id) save.cosmeticUnlocks = Object.assign({}, save.cosmeticUnlocks, {[id]:true});
+  c.cosmeticSkin = id || "";
+  c.croma = null;
+  persist();
+  if(typeof cromaAfterEquip==="function") cromaAfterEquip(k);
+  if(typeof AlphaServices!=="undefined") AlphaServices.emit("skin", {champion:k, cosmetic:id || "original"});
+  return true;
+}
 function activeSetSkinId(h){
+  if(!h || !h.classKey) return null;
+  const explicit = cosmeticSkinEquippedId(h.classKey);
+  if(explicit) return explicit;
+  const rec = save.champions[h.classKey];
+  if(rec && rec.cosmeticSkin === "") return typeof cromaEquippedId === "function" ? cromaEquippedId(h.classKey) : null;
   const id = heroMainSet(h);
   if(id && setN(h, id) >= setFullCount(id)){ const d = SET_SKINS[id]; if(d && (!d.champ || d.champ === h.classKey)) return id; }
   return typeof cromaEquippedId === "function" ? cromaEquippedId(h.classKey) : null;
@@ -350,7 +385,7 @@ function drawSetSkin(h, drawScale, alpha){
     if(CHAMP_PACK[h.classKey] || !d.packs[h.classKey]) return false;
     return drawChampPack(h.classKey, h, drawScale, alpha);
   }
-  const im = setSkinImage(heroMainSet(h)); if(!im) return false;
+  const im = setSkinImage(activeSetSkinId(h)); if(!im) return false;
   const H = h.radius*2.7*(drawScale/(h.scale||2.0)), W = H*im.width/im.height;
   drawAnimFrameSized(im, {frames:[{x:0, y:0, w:im.width, h:im.height}]}, 0, h.x, h.y, W, H, 0.5, 0.94, (h.fx||0) < -0.12, alpha);
   return true;

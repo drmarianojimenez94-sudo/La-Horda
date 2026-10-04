@@ -73,6 +73,16 @@ function vfxCastFlash(x, y, rgb, ult, lvl){
   if(!inView(x, y, 120)) return;
   let f = null;
   for(let i=0;i<FX_CAST_MAX;i++){ if(!fxCasts[i].on){ f = fxCasts[i]; break; } }
+  // Una ráfaga de habilidades normales no debe ocultar la anticipación de una definitiva.
+  // Reutilizar primero el destello normal más avanzado; nunca aumentar el pool.
+  if(!f && ult){
+    for(const candidate of fxCasts){
+      if(!candidate.ult && (!f || candidate.t/candidate.dur > f.t/f.dur)) f = candidate;
+    }
+    if(!f) for(const candidate of fxCasts){
+      if(!f || candidate.t/candidate.dur > f.t/f.dur) f = candidate;
+    }
+  }
   if(!f) return;
   f.lvl = lvl||0;
   f.on = true; f.x = x; f.y = y; f.t = 0; f.dur = (ult ? 420 : 260) + (f.lvl >= 7 ? 260 : f.lvl >= 3 ? 140 : 0); f.rgb = rgb || "255,240,200"; f.ult = !!ult;
@@ -105,6 +115,11 @@ function _fxCastTier(f, q, a){
 function fxContrastUpdate(dt){
   for(let i=0;i<FX_FLASH_MAX;i++){ const f = fxFlashes[i]; if(f.on){ f.t += dt; if(f.t >= f.dur) f.on = false; } }
   for(let i=0;i<FX_CAST_MAX;i++){ const f = fxCasts[i]; if(f.on){ f.t += dt; if(f.t >= f.dur) f.on = false; } }
+}
+function fxContrastReset(){
+  for(const f of fxFlashes) f.on = false;
+  for(const f of fxCasts) f.on = false;
+  FX_GLOW.on = false;
 }
 // Se dibuja arriba de las entidades (después de los sprites de efecto).
 function drawFxContrastTop(){

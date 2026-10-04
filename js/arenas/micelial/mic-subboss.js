@@ -68,6 +68,7 @@ function micMicelioStartBuild(){
   e.micBuild = 1; e.dmgTakenMult = 0; e.bossPhase = 1; e.fx = 0; e.fy = 1;
   e.mcd = 1600; e.lashCd = 3500; e.rainCd = 7000; e.germCd = 10000; e.absorbCd = 0; e.absorbN = 0;
   activeChampion = e; // mientras esté, no aparecen oleadas
+  if(typeof bossArenaEvent==="function") bossArenaEvent("micelio.cadaveres", e);
   showBanner("¡La tierra tiembla! Algo se está armando…");
   playSfx("micRumble"); vfxShake(6);
   if(typeof setMusicMode==="function") setMusicMode("prelude");
@@ -116,7 +117,7 @@ function micAIMicelio(e, dt, tgt, dist){
       _micBossPack(e, "germ", 1200);
       bossHudHint("Germinación", "destruí el núcleo antes de que madure");
       const p = micPointNear(tgt.x, tgt.y, 180, 320, 60);
-      runLater(700, ()=>{ if(state==="playing" && e.alive && micS) micSpawnNucleo(p.x, p.y, 2); });
+      runLater(700, ()=>{ if(state==="playing" && e.alive && micS){ micSpawnNucleo(p.x, p.y, 2); if(typeof bossArenaEvent==="function") bossArenaEvent("micelio.germina", e); } });
       return true;
     }
     if(dist < C.clawR*0.8){
@@ -195,6 +196,7 @@ function micMicelioAbsorb(e){
   playSfx("micGerm");
 }
 function micRootLinkKilled(l){
+  if(typeof bossArenaEvent==="function") bossArenaEvent("micelio.raices", l.lk || null);
   vfxBurst(l.x, l.y-10, 12, "micRoot", 120, 500, 3, 1, -30, 0);
   playSfx("micRoot");
 }

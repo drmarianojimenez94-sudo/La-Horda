@@ -1,0 +1,47 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+function harness(href,initial={}){
+ const url=new URL(href), data=new Map(Object.entries(initial)), calls=[];
+ const storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};
+ const c={URL,URLSearchParams,location:url,localStorage:storage,sessionStorage:storage,console,performance:{now:()=>0},navigator:{},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},AbortController,CustomEvent:function(){},window:{addEventListener(){},dispatchEvent(){}},document:{addEventListener(){},getElementById:()=>null,querySelector:()=>null},fetch:async(url,options)=>{calls.push({url,options});return {status:200,json:async()=>({})}}};
+ vm.createContext(c);
+ for(const f of ['net-config','net-core','account'])vm.runInContext(fs.readFileSync(`js/net/${f}.js`,'utf8'),c);
+ return {c,data,calls,run:code=>vm.runInContext(code,c)};
+}
+(async()=>{
+ const legacy=JSON.stringify({token:'a'.repeat(64),user:'NanoGM',name:'NanoGM'});
+ const main=harness('https://fondalstudios.com/la-horda/jugar/',{horda_account:legacy,horda_account_sync:JSON.stringify({user:'nanogm',version:4})});
+ assert.equal(main.run('accountState().logged'),true);
+ assert.equal(main.run('acct.session.apiBase'),'https://fondalstudios.com/la-horda/red');
+ main.run('net.serverOverride="wss://manual.example.test"');
+ assert.equal(main.run('netEnvironment().kind'),'test');
+ await main.run('accountFetch("GET","/api/save")');
+ assert.equal(main.calls[0].url,'https://fondalstudios.com/la-horda/red/api/save');
+ assert.equal(main.calls[0].options.headers.authorization,'Bearer '+'a'.repeat(64));
+ assert.equal(main.data.get('horda_account'),legacy,'migration retains original session');
+ main.data.delete(main.run('ACCOUNT_KEY'));
+ const loggedOut=harness('https://fondalstudios.com/la-horda/jugar/',Object.fromEntries(main.data));
+ assert.equal(loggedOut.run('accountState().logged'),false,'legacy migration cannot resurrect logged-out session');
+ const other=harness('https://fondalstudios.com/la-horda/jugar/?server=wss://manual.example.test',{horda_account:legacy});
+ assert.equal(other.run('accountState().logged'),false,'manual server never inherits main token');
+ await other.run('accountFetch("GET","/api/save")');
+ assert.equal(other.calls[0].options.headers.authorization,undefined);
+ const old=harness('https://drmarianojimenez94-sudo.github.io/La-Horda/?server=wss://la-horda-relay.onrender.com',{horda_account:legacy});
+ assert.equal(old.run('accountState().logged'),true);
+ assert.equal(old.run('netEnvironment().kind'),'legacy');
+ const fresh=harness('https://drmarianojimenez94-sudo.github.io/La-Horda/',{horda_account:legacy});
+ assert.equal(fresh.run('accountState().logged'),false,'legacy Render credentials not transferred to Fondal');
+ for(const u of ['javascript:alert(1)','wss://user:password@x.test','wss://x.test/?token=secret','ws://remote.test'])assert.equal(main.run(`netNormalizeServer(${JSON.stringify(u)})`),'');
+ assert.equal(main.run('netNormalizeServer("ws://127.0.0.1:9910")'),'ws://127.0.0.1:9910');
+ main.run('var save={cosmeticUnlocks:{},gold:123}; function cosmeticCatalog(){return [{id:"skin_ok"}]}; function persistNow(){}; _acctEmit=()=>{}; acct.sync={version:4,user:"nanogm"}');
+ assert.equal(main.run('accountApplyEventReward({ok:true,cosmetic:"skin_ok",baseVersion:4,saveVersion:5})'),true);
+ assert.equal(main.run('acct.sync.version'),5);assert.equal(main.run('save.gold'),123);
+ main.run('accountApplyEventReward({ok:true,cosmetic:"skin_ok",baseVersion:8,saveVersion:9})');
+ assert.equal(main.run('acct.sync.version'),5,'concurrent cloud change not blindly overwritten');
+ assert.equal(main.run('accountApplyEventReward({ok:true,cosmetic:"unknown",baseVersion:5,saveVersion:6})'),false);
+ main.run('function defaultSave(){return {champions:{free:{unlocked:true,level:1}}}}');
+ assert.equal(main.run('_acctMeaningful({champions:{free:{unlocked:true,level:1}},gold:600})'),false,'free starter gifts are not earned progress');
+ assert.equal(main.run('_acctMeaningful({champions:{free:{unlocked:true,level:1,xp:1}}})'),true,'earned XP preserved');
+ assert.equal(main.run('_acctMeaningful({champions:{bought:{unlocked:true,level:1}}})'),true,'purchased champion preserved');
+ console.log('PASS account environments: principal/legacy/manual, token isolation, retained migration, URL validation, reward CAS');
+})().catch(e=>{console.error(e);process.exitCode=1});

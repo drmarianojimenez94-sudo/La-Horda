@@ -19,7 +19,12 @@ function clampToArena(ent){
   const inradius = R*Math.cos(Math.PI/8);
   if(d > inradius){
     const ang = Math.atan2(ny, nx);
-    const seg = Math.abs(((ang - Math.PI/8) % (Math.PI/4)) - Math.PI/8);
+    // ángulo respecto del centro del lado más cercano (los lados están centrados en k·π/4, igual que
+    // octPath en rendering/arena.js). Módulo POSITIVO: el `%` de JS conserva el signo y, con ángulos
+    // negativos (más de la mitad del coliseo), dejaba caminar hasta un 41 % más afuera de las paredes
+    // dibujadas (lo encontró tools/bible/arena-validator.js en la Arena Infernal).
+    const Q = Math.PI/4, rel = ((ang - Math.PI/8) % Q + Q) % Q;
+    const seg = Math.abs(rel - Math.PI/8);
     const maxD = inradius/Math.cos(seg);
     if(d > maxD){
       ent.x = Math.cos(ang)*maxD*SX;

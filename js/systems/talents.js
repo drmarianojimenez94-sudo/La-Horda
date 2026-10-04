@@ -153,6 +153,7 @@ function buyTalentNode(classKey, id, confirmed){
   const isFirstPickOfExclusive = node.type==="special" && node.exclusiveWith && (talentState(classKey).nodes[id]||0)===0;
   if(isFirstPickOfExclusive && !confirmed) return {ok:false, needsConfirm:true};
   const st = talentState(classKey);
+  if(typeof AlphaServices!=="undefined") AlphaServices.emit("talent",{champion:classKey,talent:id});
   st.nodes[id] = (st.nodes[id]||0) + 1; // el costo sale de la bolsa del árbol (derivada: treePointsAvailable)
   persist();
   return {ok:true};

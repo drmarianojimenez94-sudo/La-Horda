@@ -1,0 +1,102 @@
+{
+  "checks": [
+    {
+      "name": "grouped lobby banner for simultaneous founders",
+      "ok": true,
+      "details": [
+        "lobby:nano+facu"
+      ]
+    },
+    {
+      "name": "banner text: LOS GAME MASTERS HAN ENTRADO EN EL LOBBY",
+      "ok": true
+    },
+    {
+      "name": "identity verified by relay",
+      "ok": true
+    },
+    {
+      "name": "late guest triggers no founder banner",
+      "ok": true
+    },
+    {
+      "name": "relay marks founders in room (public data only)",
+      "ok": true
+    },
+    {
+      "name": "no private data in room state",
+      "ok": true
+    },
+    {
+      "name": "guest cannot take a founder champion",
+      "ok": true
+    },
+    {
+      "name": "arena banner reaches host and guests",
+      "ok": true,
+      "details": [
+        "nano+facu",
+        "nano+facu",
+        "nano+facu"
+      ]
+    },
+    {
+      "name": "heroes keep founder champions",
+      "ok": true
+    },
+    {
+      "name": "Nano + Facu cosmetic meeting fires once at start",
+      "ok": true
+    },
+    {
+      "name": "founder badge on ally HUD (verified)",
+      "ok": true
+    },
+    {
+      "name": "relay saw the founder disconnect",
+      "ok": true
+    },
+    {
+      "name": "founder identity restored after reconnect",
+      "ok": true
+    },
+    {
+      "name": "reconnect does not repeat banners",
+      "ok": true,
+      "details": {
+        "before": [
+          [
+            "lobby:nano+facu",
+            "arena:nano+facu"
+          ],
+          [
+            "lobby:nano+facu",
+            "arena:nano+facu"
+          ],
+          [
+            "arena:nano+facu"
+          ]
+        ],
+        "after": [
+          [
+            "lobby:nano+facu",
+            "arena:nano+facu"
+          ],
+          [
+            "lobby:nano+facu",
+            "arena:nano+facu"
+          ],
+          [
+            "arena:nano+facu"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "no page errors",
+      "ok": true,
+      "details": []
+    }
+  ],
+  "errors": []
+}

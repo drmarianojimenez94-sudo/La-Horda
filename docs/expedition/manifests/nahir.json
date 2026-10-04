@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "nahir",
+  "name": "Nahir",
+  "title": "El Vidrio Errante",
+  "role": "asesino",
+  "fantasy": "Flanqueador que usa reflejos breves para cubrir ángulos distintos.",
+  "lore": "Antes de entrar al Laberinto, Nahir restauraba espejos: devolvía a otros un rostro sin las manchas del tiempo. En una galería encontró su propia imagen varios pasos por delante. La siguió hasta verla arrodillarse ante una figura que no aparecía en el cristal. Rompió el espejo, pero tres fragmentos conservaron aquel gesto. Los lleva sujetos a sus muñecas; cada reflejo repite por un instante lo que él hace. Nahir busca una salida que su imagen todavía no conozca. No predice el futuro: teme que una elección repetida termine pareciéndose a un destino.",
+  "personality": "No sigas mi reflejo.",
+  "silhouette": "Máscara partida, media capa y dos hojas curvas; turquesa, gris y blanco opaco.",
+  "stats": {
+    "hp": 101,
+    "damage": 11,
+    "defense": 0.06,
+    "speed": 181
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Hojas de espejo, barrido cuerpo a cuerpo (máximo 12).",
+      "cooldownMs": 450,
+      "maxTargets": 12,
+      "hordeMechanism": "Barrido de hasta 12 blancos.",
+      "anticipation": "Secuencia propia de ataque por dirección, con anticipación corta.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Atlas propio y feedback de impacto del motor.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "shards",
+        "description": "Proyecta astillas en abanico contra la horda.",
+        "cooldownMs": 5500,
+        "energyCost": 24,
+        "range": 240,
+        "radius": 90,
+        "durationMs": 0,
+        "damageMultiplier": 2.85,
+        "maxTargets": 12,
+        "hordeMechanism": "Proyecta astillas en abanico contra la horda.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Proyecta astillas en abanico contra la horda.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "reflect",
+        "description": "Paso seguro que deja un reflejo inmóvil; máximo 3.",
+        "cooldownMs": 9500,
+        "energyCost": 25,
+        "range": 110,
+        "radius": 25,
+        "durationMs": 5000,
+        "damageMultiplier": 0,
+        "maxTargets": 12,
+        "hordeMechanism": "Paso seguro que deja un reflejo inmóvil; máximo 3.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Paso seguro que deja un reflejo inmóvil; máximo 3.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "cross",
+        "description": "Corte lineal propio y ecos al 25% desde los reflejos; un eco por reflejo y objetivo.",
+        "cooldownMs": 8000,
+        "energyCost": 30,
+        "range": 240,
+        "radius": 24,
+        "durationMs": 0,
+        "damageMultiplier": 3.15,
+        "maxTargets": 12,
+        "hordeMechanism": "Corte lineal propio y ecos al 25% desde los reflejos; un eco por reflejo y objetivo.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Corte lineal propio y ecos al 25% desde los reflejos; un eco por reflejo y objetivo.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      }
+    ],
+    "ultimate": {
+      "id": "gallery",
+      "description": "Coloca 3 reflejos por 6 s. No son aliados adicionales ni copias autónomas.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 130,
+      "radius": 70,
+      "durationMs": 6000,
+      "damageMultiplier": 0,
+      "maxTargets": 12,
+      "hordeMechanism": "Coloca 3 reflejos por 6 s. No son aliados adicionales ni copias autónomas.",
+      "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+      "execution": "Coloca 3 reflejos por 6 s. No son aliados adicionales ni copias autónomas.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+      "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+      "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+    },
+    "passive": {
+      "name": "Ángulo muerto",
+      "description": "Cambiar al menos 60° el ángulo de ataque contra el mismo enemigo añade 15% de daño; recarga interna 900 ms."
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/nahir/atlas.png",
+    "preview": "assets/sprites/champions/nahir/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "0a6417f894c029e2e3b61d12a47b46ba0312e3799b408a6589cb4dd1f4e350c1",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PASS",
+      "reviewer": "Codex — inspección visual frente a Tanque y revisión técnica",
+      "evidence": "docs/expedition/visual-review.json"
+    },
+    "productionPrompt": "Diseñar Nahir, El Vidrio Errante. Máscara partida, media capa y dos hojas curvas; turquesa, gris y blanco opaco. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "nahir_skin",
+      "champion": "nahir",
+      "name": "Obsidiana Real",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Máscara de obsidiana, hombrera angular y manto de ceremonia.",
+      "lore": "Un salón sin invitados le ofreció un trono. Nahir se llevó el espejo de la puerta y dejó la corona sobre el asiento.",
+      "visualTheme": "Máscara de obsidiana, hombrera angular y manto de ceremonia.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego, disponible para pruebas.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/nahir/skins/nahir_skin/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "nahir_set",
+      "champion": "nahir",
+      "name": "Vitral del Réquiem",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Armadura ligera de marcos de vitral y capa de pequeños paños.",
+      "lore": "Los vidrieros refugiados reunieron ventanas rotas para vestir a quien les encontró una salida.",
+      "visualTheme": "Armadura ligera de marcos de vitral y capa de pequeños paños.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Colección persistente del Set Galería Quebrada; se conserva al vender o desequipar.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/nahir/skins/nahir_set/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "nahir_croma",
+      "champion": "nahir",
+      "name": "Nahir — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "assets/sprites/champions/nahir/croma-preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Galería Quebrada",
+    "sourceArena": "laberinto",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "nahir_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Repetir arena y jefe. Peso doble en su arena temática; también disponible en otros mapas y tienda Alpha. Grant persistente por colección completa."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "docs/expedition/visual-review.json",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

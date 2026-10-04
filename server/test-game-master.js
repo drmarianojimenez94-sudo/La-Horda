@@ -1,0 +1,140 @@
+'use strict';
+// Never uses DATABASE_URL: all mutations are isolated to a fresh temporary directory.
+const assert=require('assert/strict'),fs=require('fs'),os=require('os'),path=require('path'),http=require('http');
+const {create}=require('./accounts');
+const {DEFAULTS,resetData}=require('./game-master');
+process.env.ADMIN_USERS='owner';
+let time=Date.now(),checks=0;
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),'horda-gm-'));
+const options={dataDir:dir,databaseUrl:'',now:()=>time,log:()=>{},originAllowed:o=>o==='https://game.test'};
+let app=create(options),server=http.createServer((q,s)=>app.handle(q,s)||s.end());
+async function run(){
+ const legacy={gold:123,legacyHieloOpen:true,legacyLabOpen:true,campaignV2:false,minasV1:false,legacyOpenArenas:['hielo'],arenasCleared:{infernal:true},divineArenaUnlocked:true,stash:[{uid:'new'}],collection:{baluarte_arma:{n:1}},champions:{tanque:{level:30,inventory:[{uid:'old'}],_legacyInventory:[{uid:'old2'}],equipment:{arma:'old'},skillMastery:[{alloc:4,useLvl:20,useXp:8}],ultMastery:{alloc:5,useLvl:9,useXp:3},cosmeticSkin:'baluarte'}}};
+ const reset=resetData(legacy,['championProgress','arenas','inventory','cosmetics']);
+ assert.deepEqual(reset.champions.tanque.skillMastery[0],{alloc:0,useLvl:1,useXp:0});
+ assert.deepEqual(reset.champions.tanque.ultMastery,{alloc:0,useLvl:1,useXp:0});
+ assert.equal(reset.champions.tanque.inventory,undefined);assert.equal(reset.champions.tanque._legacyInventory,undefined);assert.deepEqual(reset.stash,[]);
+ assert.equal(reset.legacyHieloOpen,false);assert.equal(reset.legacyLabOpen,false);assert.equal(reset.campaignV2,true);assert.equal(reset.minasV1,true);assert.equal(reset.divineArenaUnlocked,false);assert.deepEqual(reset.legacyOpenArenas,[]);
+ assert.equal(reset.champions.tanque.cosmeticSkin,'');assert.equal(reset.gold,123);assert.deepEqual(reset.collection,legacy.collection);assert.equal(legacy.champions.tanque.skillMastery[0].useLvl,20);checks+=15;
+
+ await app.ready;await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
+ async function api(method,url,body,token,expected=200,origin='https://game.test'){
+  const r=await fetch(base+url,{method,headers:{origin,'content-type':'application/json',...(token?{authorization:'Bearer '+token}:{})},body:body===undefined?undefined:JSON.stringify(body)});const j=await r.json();assert.equal(r.status,expected,url+' '+JSON.stringify(j));checks++;return j;
+ }
+ const owner=(await api('POST','/api/register',{user:'owner',pass:'unique-Password-123'},null,201)).token;
+ const player=(await api('POST','/api/register',{user:'tester',pass:'unique-Password-456'},null,201)).token;
+ const save={gold:50,champions:{tanque:{unlocked:true,level:20,xp:80,skillMastery:[{alloc:4}],equipment:{weapon:'one'}}},arenasCleared:{ciudad:true},stash:[{uid:'one'}],cosmeticUnlocks:{},cromas:{}};
+ await api('PUT','/api/save',{data:save,baseVersion:0},player);
+ await api('GET','/api/gm/dashboard',undefined,null,401);
+ for(const [m,p,b] of [['GET','/api/gm/dashboard'],['PUT','/api/gm/config',{version:0,config:{xp:2}}],['POST','/api/gm/events',{}],['POST','/api/gm/reset/preview',{}],['POST','/api/gm/gift',{}],['GET','/api/gm/players']])await api(m,p,b,player,403);
+ assert.equal((await api('GET','/api/gm/status',undefined,owner)).role,'OWNER');
+ assert.equal((await api('GET','/api/gm/status',undefined,player)).owner,false);
+ await api('GET','/api/gm/dashboard',undefined,owner,403,'https://evil.test');
+ let c=await api('GET','/api/gm/config',undefined,owner);
+ await api('PUT','/api/gm/config',{version:c.version,config:{xp:1000}},owner,400);
+ await api('PUT','/api/gm/config',{version:c.version,config:{payToWin:2}},owner,400);
+ c=await api('PUT','/api/gm/config',{version:c.version,config:{...DEFAULTS,xp:2}},owner);
+ await api('PUT','/api/gm/config',{version:0,config:DEFAULTS},owner,409);
+ const event={name:'Prueba',start:time-1000,end:time+10000,arenas:['micelial'],wave:10,multipliers:{xp:3},enemies:['zombie']};
+ await api('POST','/api/gm/events',{...event,boss:'minotauro'},owner,400);
+ await api('POST','/api/gm/events',{...event,arenas:['fake']},owner,400);
+ await api('POST','/api/gm/events',{...event,arenas:['../']},owner,400);
+ await api('POST','/api/gm/events',{...event,arenas:'micelial'},owner,400);
+ await api('POST','/api/gm/events',{...event,enabled:'false'},owner,400);
+ await api('POST','/api/gm/events',{...event,enemies:['minotauro']},owner,400);
+ await api('POST','/api/gm/events',{...event,end:time-2000},owner,400);
+ await api('POST','/api/gm/events',event,owner);
+ let world=await api('GET','/api/world');assert.equal(world.events.length,1);assert.equal(world.normalConfig.xp,2);
+ await api('POST','/api/gm/messages',{type:'banner',text:'Hola',image:'javascript:alert(1)',start:time,end:time+10000},owner,400);
+ await api('POST','/api/gm/messages',{type:'banner',text:'Hola',start:time+5000,end:time+10000},owner);
+ assert.equal((await api('GET','/api/world')).messages.length,0);
+ time+=6000;assert.equal((await api('GET','/api/world')).messages.length,1);
+ time+=6000;world=await api('GET','/api/world');assert.equal(world.events.length,0);assert.equal(world.messages.length,0);assert.equal(world.normalConfig.xp,2);
+ c=await api('GET','/api/gm/config',undefined,owner);c=await api('POST','/api/gm/config/defaults',{version:c.version},owner);assert.equal(c.config.xp,1);
+ await api('POST','/api/chat',{text:'hello'},null,401);
+ const chat=await api('POST','/api/chat',{text:'<script>hello</script>'},owner);assert.equal(chat.message.owner,true);assert.ok(!chat.message.text.includes('<'));
+ await api('POST','/api/gm/chat/pin',{id:chat.message.id},player,403);
+ await api('POST','/api/gm/chat/pin',{id:chat.message.id},owner);
+ assert.equal((await api('GET','/api/chat',undefined,player)).pinned.id,chat.message.id);
+ for(let i=0;i<8;i++)await api('POST','/api/chat',{text:'hello'},player);
+ await api('POST','/api/chat',{text:'hello'},player,429);
+ await api('POST','/api/telemetry',{events:[{name:'private_info',email:'private@example.com'}]},null,400);
+ await api('POST','/api/telemetry',{session:'a'.repeat(32),build:'test-build',events:[{name:'start',email:'private@example.com'},{name:'run_started',champion:'tanque',arena:'ciudad'},{name:'victory',durationMs:15000},{name:'pickup'},{name:'tutorial_step',step:'move'},{name:'tutorial_step_complete',step:'move'},{name:'tutorial_abandoned',step:'attack'}]});
+ let dash=await api('GET','/api/gm/dashboard',undefined,owner);assert.equal(dash.matches,1);assert.equal(dash.online,1);assert.equal(dash.activeMatchesEstimate,0);assert.equal(dash.victories,1);assert.equal(dash.averageDurationMs,15000);assert.equal(dash.metrics.dimensions.step['tutorial_step:move'],1);assert.equal(dash.metrics.dimensions.step['tutorial_step_complete:move'],1);assert.equal(dash.metrics.dimensions.step['tutorial_abandoned:attack'],1);
+ const persisted=fs.readFileSync(path.join(dir,'operations.json'),'utf8');assert.ok(!persisted.includes('private@example.com'));assert.ok(!persisted.includes('a'.repeat(32)));assert.ok(!persisted.includes(owner));
+ await api('POST','/api/gm/gift',{user:'tester',cosmetic:'fake'},owner,400);
+ await api('POST','/api/gm/gift',{user:'tester',cosmetic:'__proto__'},owner,400);
+ const cat=await api('GET','/api/gm/cosmetics',undefined,owner);assert.equal(cat.cosmetics.length,32);
+ await api('POST','/api/gm/gift',{user:'tester',cosmetic:'tanque_ancestral'},owner);
+ let current=await api('GET','/api/save',undefined,player);assert.equal(current.data.cosmeticUnlocks.tanque_ancestral,true);assert.equal(current.data.gold,50);assert.equal(current.data.champions.tanque.level,20);
+ const bulkPreview=await api('POST','/api/gm/reset/preview',{user:'all',fields:['gold']},owner);assert.equal(bulkPreview.accounts,1);assert.equal(bulkPreview.missingSave,1);assert.equal(bulkPreview.confirmation,'REINICIAR 1 CUENTAS');
+ await api('POST','/api/gm/reset/preview',{user:'tester',fields:['passHash']},owner,400);
+ let preview=await api('POST','/api/gm/reset/preview',{user:'tester',fields:['championProgress','arenas']},owner);
+ await api('POST','/api/gm/reset/confirm',{token:preview.token,confirmation:'yes'},owner,400);
+ await api('PUT','/api/save',{data:current.data,baseVersion:current.version},player);
+ await api('POST','/api/gm/reset/confirm',{token:preview.token,confirmation:preview.confirmation},owner,409);
+ preview=await api('POST','/api/gm/reset/preview',{user:'tester',fields:['championProgress','arenas']},owner);
+ await api('POST','/api/gm/reset/confirm',{token:preview.token,confirmation:preview.confirmation},owner);
+ await api('POST','/api/gm/reset/confirm',{token:preview.token,confirmation:preview.confirmation},owner,400);
+ current=await api('GET','/api/save',undefined,player);assert.equal(current.data.champions.tanque.level,1);assert.equal(current.data.gold,50);assert.equal(current.data.cromas.tanque_ancestral,true);assert.equal(current.data.stash.length,1);assert.deepEqual(current.data.arenasCleared,{});
+ const state=JSON.parse(fs.readFileSync(path.join(dir,'operations.json'),'utf8'));assert.equal(state.snapshots.length,1);assert.equal(JSON.parse(JSON.parse(fs.readFileSync(path.join(dir,"operation-snapshot-"+state.snapshots[0].id+".json"),"utf8")).data).champions.tanque.level,20);assert.ok(!state.snapshots[0].data);assert.equal(state.metrics.total.victory,1);
+ await app.close();app=create(options);await app.ready;
+ dash=await api('GET','/api/gm/dashboard',undefined,owner);assert.equal(dash.victories,1);assert.equal(dash.online,0);
+
+ // Price overrides are catalogue constrained and cannot enter event multiplier scope.
+ c=await api('GET','/api/gm/config',undefined,owner);
+ await api('PUT','/api/gm/config',{version:c.version,config:{...DEFAULTS,championPrices:{fake:1}}},owner,400);
+ await api('PUT','/api/gm/config',{version:c.version,config:{...DEFAULTS,cosmeticPrices:{tanque_ancestral:-1}}},owner,400);
+ c=await api('PUT','/api/gm/config',{version:c.version,config:{...DEFAULTS,championPrices:{tanque:123},cosmeticPrices:{tanque_ancestral:55}}},owner);assert.equal(c.config.championPrices.tanque,123);
+ await api('POST','/api/gm/events',{...event,start:time,end:time+500000,multipliers:{championPrices:{tanque:1}}},owner,400);
+ // Real authenticated event participation; metadata does not grant rewards on its own.
+ const rewardEvent=(await api('POST','/api/gm/events',{name:'Trial',start:time-1,end:time+300000,arenas:['laberinto'],wave:10,boss:'minotauro',set:'laberinto',cosmetic:'tanque_juicio'},owner)).event;
+ await api('POST','/api/events/start',{eventId:rewardEvent.id,arena:'laberinto'},null,401);
+ await api('POST','/api/events/start',{eventId:rewardEvent.id,arena:'bosque'},player,400);
+ const ticket=await api('POST','/api/events/start',{eventId:rewardEvent.id,arena:'laberinto'},player);assert.equal(ticket.minDurationMs,50000);
+ await api('POST','/api/events/complete',{ticket:ticket.ticket,wave:10,outcome:'victory',bossDefeated:'minotauro'},owner,404);
+ await api('POST','/api/events/complete',{ticket:ticket.ticket,wave:10,outcome:'victory',bossDefeated:'minotauro'},player,409);
+ // Event edits cannot swap an in-flight reward.
+ await api('POST','/api/gm/events',{...rewardEvent,cosmetic:'manada'},owner);
+ time+=51000;
+ await api('POST','/api/events/complete',{ticket:ticket.ticket,wave:9,outcome:'victory',bossDefeated:'minotauro'},player,422);
+ await api('POST','/api/events/complete',{ticket:ticket.ticket,wave:10,outcome:'victory',bossDefeated:'leviatan'},player,422);
+ const payload={ticket:ticket.ticket,wave:10,outcome:'victory',bossDefeated:'minotauro'};
+ const rewards=await Promise.all([api('POST','/api/events/complete',payload,player),api('POST','/api/events/complete',payload,player)]);
+ assert.equal(rewards.filter(r=>r.granted).length,1);assert.equal(rewards.filter(r=>r.alreadyGranted).length,1);assert.equal(rewards[0].cosmetic,'tanque_juicio');assert.equal(rewards[0].baseVersion,rewards[1].baseVersion);assert.equal(rewards[0].saveVersion,rewards[1].saveVersion);
+ current=await api('GET','/api/save',undefined,player);assert.equal(current.data.cosmeticUnlocks.tanque_juicio,true);assert.equal(current.data.cosmeticUnlocks.manada,undefined);
+ const gift=await api('POST','/api/gm/gift',{cohort:{eventId:rewardEvent.id},cosmetic:'manada'},owner);assert.equal(gift.granted,1);
+ await api('POST','/api/gm/gift',{cohort:{eventId:'fake'},cosmetic:'manada'},owner,404);
+ await api('POST','/api/gm/gift',{cohort:{createdBefore:time+100000},cosmetic:'manada'},owner,400);
+ await app.close();app=create(options);await app.ready;
+ assert.equal((await api('POST','/api/events/complete',payload,player)).alreadyGranted,true);
+ const peer=(await api('POST','/api/register',{user:'second',pass:'unique-Password-789'},null,201)).token;
+ await api('PUT','/api/save',{data:{...save,gold:555},baseVersion:0},peer);
+ let batch=await api('POST','/api/gm/reset/preview',{users:['tester','second'],fields:['gold']},owner);assert.equal(batch.accounts,2);assert.equal(batch.confirmation,'REINICIAR 2 CUENTAS');
+ let peerSave=await api('GET','/api/save',undefined,peer);await api('PUT','/api/save',{data:{...peerSave.data,gold:777},baseVersion:peerSave.version},peer);
+ await api('POST','/api/gm/reset/confirm',{token:batch.token,confirmation:batch.confirmation},owner,409);
+ assert.equal((await api('GET','/api/save',undefined,player)).data.gold,50);
+ batch=await api('POST','/api/gm/reset/preview',{users:['tester','second'],fields:['gold']},owner);
+ const completedBatch=await api('POST','/api/gm/reset/confirm',{token:batch.token,confirmation:batch.confirmation},owner);assert.equal(completedBatch.completed,2);assert.equal(completedBatch.conflicts,0);assert.equal(completedBatch.results.length,2);
+ for(const who of [player,peer])assert.equal((await api('GET','/api/save',undefined,who)).data.gold,0);
+ await api('POST','/api/gm/reset/confirm',{token:batch.token,confirmation:batch.confirmation},owner,400);
+ const batches=await api('GET','/api/gm/reset/batches',undefined,owner);assert.ok(batches.batches.some(b=>b.id===completedBatch.batchId&&b.results.every(r=>r.status==='completed')));
+ for(const r of completedBatch.results)assert.ok(fs.existsSync(path.join(dir,'operation-snapshot-'+r.snapshot+'.json')));
+
+ // A post-preflight race is reported per account, never silently called an atomic batch.
+ current=await api('GET','/api/save',undefined,player);await api('PUT','/api/save',{data:{...current.data,gold:88},baseVersion:current.version},player);
+ peerSave=await api('GET','/api/save',undefined,peer);await api('PUT','/api/save',{data:{...peerSave.data,gold:99},baseVersion:peerSave.version},peer);
+ batch=await api('POST','/api/gm/reset/preview',{users:['tester','second'],fields:['gold']},owner);
+ const realPut=app.store.putSave.bind(app.store),peerId=(await app.store.getUserByKey('second')).id;
+ app.store.putSave=async(uid,...args)=>uid===peerId?{conflict:true}:realPut(uid,...args);
+ const partial=await api('POST','/api/gm/reset/confirm',{token:batch.token,confirmation:batch.confirmation},owner);
+ app.store.putSave=realPut;assert.equal(partial.ok,false);assert.equal(partial.completed,1);assert.equal(partial.conflicts,1);
+ assert.equal((await api('GET','/api/save',undefined,player)).data.gold,0);assert.equal((await api('GET','/api/save',undefined,peer)).data.gold,99);
+ assert.ok((await api('GET','/api/gm/reset/batches',undefined,owner)).batches.some(b=>b.id===partial.batchId&&b.results.some(r=>r.status==='conflict')));
+ // Concurrent config writes: exactly one CAS wins.
+ c=await api('GET','/api/gm/config',undefined,owner);
+ const req=()=>fetch(base+'/api/gm/config',{method:'PUT',headers:{origin:'https://game.test','content-type':'application/json',authorization:'Bearer '+owner},body:JSON.stringify({version:c.version,config:{...DEFAULTS,xp:2}})});
+ const writes=await Promise.all([req(),req()]);assert.deepEqual(writes.map(x=>x.status).sort(),[200,409]);checks++;
+ console.log('PASS Game Master integration and negative security checks: '+checks);
+}
+run().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{await app.close();await new Promise(r=>server.close(r));fs.rmSync(dir,{recursive:true,force:true});});

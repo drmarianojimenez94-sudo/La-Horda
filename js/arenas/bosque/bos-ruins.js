@@ -95,6 +95,7 @@ function bosUpdate(dt){
     }
   }
   if(bossActive && boss && boss.alive && boss.type==="guardian_ancestral") bosBossRule(dt);
+  if(typeof bosDoppelRule==="function") bosDoppelRule();   // Doppelgängers atados a runas (bos-doppels.js)
   for(const r of BOS.runes){
     if(r.flash > 0) r.flash -= dt;
     r.t += dt;
@@ -285,7 +286,7 @@ function bosBossRule(dt){
   if(BOS.bossT <= 0){
     BOS.bossT = C.bossRearm[beast ? 1 : 0]*(0.85 + Math.random()*0.3);
     const pool = BOS.runes.filter(r=>r.st==="sealed" || r.st==="ctrl");
-    if(pool.length && awake < C.bossMaxActive[beast ? 1 : 0]){ const r = pool[(Math.random()*pool.length)|0]; bosArm(r); if(inView(r.x, r.y, 60)) floatText(r.x, r.y - 140, "¡El Guardián la corrompe!", "crit"); }
+    if(pool.length && awake < C.bossMaxActive[beast ? 1 : 0]){ const r = pool[(Math.random()*pool.length)|0]; bosArm(r); if(typeof bossArenaEvent==="function") bossArenaEvent("guardian_ancestral.rearma", e); if(inView(r.x, r.y, 60)) floatText(r.x, r.y - 140, "¡El Guardián la corrompe!", "crit"); }
   }
   // escudo de raíces + regeneración por runa activa
   const shield = C.bossShield[Math.min(C.bossShield.length - 1, lit)];
@@ -306,6 +307,7 @@ function bosBossPurified(r, by, byBoss){
   BOS.pur = (BOS.pur||0) + 1;
   damageEnemy(e, e.maxHp*C.bossPurDmg*(e._encMult ? 1/e._encMult : 1), {src:by || e, critChanceOverride:0, fromProc:true});
   bossExpose(e, C.bossPurExpose, 1.45, null);
+  if(typeof bossArenaEvent==="function") bossArenaEvent("guardian_ancestral.purifica", e);
   floatText(e.x, e.y - e.radius*2.6, byBoss ? "¡ROMPIÓ SU PROPIA RAÍZ!" : "¡LA CONEXIÓN SE CORTA!", "crit");
   if(!tutSeen("gd_rune")) tutSay("gd_rune", "Cada runa corrupta protege y cura al Guardián. PURIFICALAS (mantené la acción) o hacé que su Golpe del Bosque caiga encima: le duele y queda EXPUESTO.", null, 10000, true);
   // pierde la conexión con el bosque: la transformación llega antes
@@ -314,7 +316,7 @@ function bosBossPurified(r, by, byBoss){
 // sus golpes (raíces, lluvia de hojas, golpe pesado) rompen las runas corruptas donde caen
 function bosBossStrike(s){
   if(currentArena!=="bosque" || !bossActive || !boss || boss.type!=="guardian_ancestral") return;
-  for(const r of BOS.runes){ if(bosIsLit(r) && Math.hypot(r.x - s.x, r.y - s.y) <= s.r + 60){ bosSetState(r, "sealed"); r.flash = 900; vfxShock(r.x, r.y, 20, 200, "140,230,110", 600, 3); bosBossPurified(r, null, true); } }
+  for(const r of BOS.runes){ if(bosIsLit(r) && Math.hypot(r.x - s.x, r.y - s.y) <= s.r + 60){ bosSetState(r, "sealed"); r.flash = 900; vfxShock(r.x, r.y, 20, 200, "140,230,110", 600, 3); if(typeof bossArenaEvent==="function") bossArenaEvent("guardian_ancestral.runa_rota", boss); bosBossPurified(r, null, true); } }
 }
 BOSS_STRIKE_HOOKS.push(bosBossStrike);
 /* ---- NIVEL 10: las runas se desbordan -> explosión -> Guardián Ancestral Corrompido ---- */
@@ -353,11 +355,11 @@ function bosFinaleTick(dt){
 // ---- red ----
 const BOS_ST = ["ctrl","arming","active","corrupt","sealed","finale"];
 function bosNetState(){
-  return {r:BOS.runes.map(r=>[BOS_ST.indexOf(r.st), Math.round((r.arm||0)*1000), r.prog|0, r.by, r.flash|0, r.t|0]), a:BOS.amb.map(a=>[a.id, a.x, a.y, a.t|0, a.seed]), f:BOS.finale ? 1 : 0};
+  return {r:BOS.runes.map(r=>[BOS_ST.indexOf(r.st), Math.round((r.arm||0)*1000), r.prog|0, r.by, r.flash|0, r.t|0, typeof BOS_DOP!=="undefined" && r.dop ? BOS_DOP.types.indexOf(r.dop) : -1]), a:BOS.amb.map(a=>[a.id, a.x, a.y, a.t|0, a.seed]), f:BOS.finale ? 1 : 0};
 }
 function bosApplyNetState(s){
   if(!s) return;
-  if(s.r) s.r.forEach((v, i)=>{ const r = BOS.runes[i]; if(!r) return; const st = BOS_ST[v[0]] || "ctrl"; if(r.st!==st && BOS_CFG.containMs[st]) r.dur = BOS_CFG.containMs[st]; r.st = st; r.arm = v[1]/1000; r.prog = v[2]; r.by = v[3]; r.flash = v[4]; r.t = v[5]; r.done = false; });
+  if(s.r) s.r.forEach((v, i)=>{ const r = BOS.runes[i]; if(!r) return; const st = BOS_ST[v[0]] || "ctrl"; if(r.st!==st && BOS_CFG.containMs[st]) r.dur = BOS_CFG.containMs[st]; r.st = st; r.arm = v[1]/1000; r.prog = v[2]; r.by = v[3]; r.flash = v[4]; r.t = v[5]; r.done = false; r.dop = v[6] >= 0 && typeof BOS_DOP!=="undefined" ? BOS_DOP.types[v[6]] : null; });
   if(s.a) BOS.amb = s.a.map(v=>({id:v[0], x:v[1], y:v[2], t:v[3], seed:v[4], sprung:v[3] <= 0}));
   BOS.finale = s.f ? (BOS.finale || {t:0, stage:0}) : null;
 }
@@ -403,6 +405,7 @@ function bosDrawTall(it, now){
   const r = BOS.runes[it.bosRune-1]; if(!r) return;
   // glifo sobre el menhir: el color dice el estado; la barra se llena mientras se activa
   const x = r.mx, y = r.my - 78, col = BOS_COL[r.st] || BOS_COL.ctrl, lit = bosIsLit(r);
+  if(r.dop && typeof bosDoppelDrawTether==="function") bosDoppelDrawTether(r, now);
   ctx.save();
   ctx.fillStyle = "rgba(10,20,8,0.75)"; ctx.fillRect(x-7, y-12, 14, 24);
   const fill = r.st==="arming" || r.st==="finale" ? Math.round(22*Math.min(1, r.arm||0)) : (r.st==="ctrl" ? 0 : 22);

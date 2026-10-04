@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "tibor",
+  "name": "Tibor",
+  "title": "El Rey del Enjambre",
+  "role": "mago",
+  "fantasy": "Mago territorial con una sola nube que debe conservar y recolocar.",
+  "lore": "A Tibor lo llamaban rey porque era incapaz de dar una orden a sus abejas. Les abría las cajas y esperaba. Cuando el micelio empezó a repetir voces humanas, una colonia abandonó el apiario y se instaló en su carro. Las demás quedaron cubiertas de una cera gris. No sabe por qué esas sobrevivieron; se niega a atribuirse el mérito. Las conduce por zonas donde el aire todavía deja pasar la luz y marca con polen las cosas que deben evitar. Si alguna vez encuentra un lugar seguro, piensa dejar allí la colmena y marcharse sin corona.",
+  "personality": "Ellas eligen dónde quedarse.",
+  "silhouette": "Máscara de malla, colmena pequeña a la espalda e incensario; miel, marrón y crema.",
+  "stats": {
+    "hp": 99,
+    "damage": 9,
+    "defense": 0.07,
+    "speed": 155
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "Ataque con Incensario de apicultor, proyectil a distancia.",
+      "cooldownMs": 560,
+      "maxTargets": 1,
+      "hordeMechanism": "El kit aporta área.",
+      "anticipation": "Secuencia propia de ataque por dirección, con anticipación corta.",
+      "execution": "Ataque básico del motor con daño, alcance y recarga de la clase.",
+      "impact": "Daño real y pasiva al impactar, no al pulsar el botón.",
+      "feedback": "Impacto y número de daño del motor.",
+      "vfx": "Atlas propio y feedback de impacto del motor.",
+      "sfx": "Básico existente del motor, reutilizado explícitamente."
+    },
+    "skills": [
+      {
+        "id": "swarm",
+        "description": "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
+        "cooldownMs": 8500,
+        "energyCost": 30,
+        "range": 260,
+        "radius": 110,
+        "durationMs": 4800,
+        "damageMultiplier": 0.63,
+        "maxTargets": 12,
+        "hordeMechanism": "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Coloca una nube que daña cada 600 ms hasta agotarse o expirar.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "recall",
+        "description": "Retira la nube, daña su recorrido y recupera 20 de fuerza. Escudo 7%; sin nube, 3%.",
+        "cooldownMs": 10000,
+        "energyCost": 25,
+        "range": 260,
+        "radius": 30,
+        "durationMs": 0,
+        "damageMultiplier": 1.68,
+        "maxTargets": 12,
+        "hordeMechanism": "Retira la nube, daña su recorrido y recupera 20 de fuerza. Escudo 7%; sin nube, 3%.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Retira la nube, daña su recorrido y recupera 20 de fuerza. Escudo 7%; sin nube, 3%.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      },
+      {
+        "id": "pollen",
+        "description": "Salpicadura que daña, frena y mueve la nube al punto elegido.",
+        "cooldownMs": 6000,
+        "energyCost": 24,
+        "range": 260,
+        "radius": 90,
+        "durationMs": 4000,
+        "damageMultiplier": 1.365,
+        "maxTargets": 12,
+        "hordeMechanism": "Salpicadura que daña, frena y mueve la nube al punto elegido.",
+        "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+        "execution": "Salpicadura que daña, frena y mueve la nube al punto elegido.",
+        "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+        "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+        "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+        "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+      }
+    ],
+    "ultimate": {
+      "id": "hive_sky",
+      "description": "Rellena la fuerza y reemplaza la nube por otra mayor durante 6 s.",
+      "cooldownMs": 36000,
+      "energyCost": 0,
+      "range": 270,
+      "radius": 155,
+      "durationMs": 6000,
+      "damageMultiplier": 0.756,
+      "maxTargets": 12,
+      "hordeMechanism": "Rellena la fuerza y reemplaza la nube por otra mayor durante 6 s.",
+      "anticipation": "Pose de lanzamiento y destello del motor; básico/habilidad de respuesta inmediata. Zonas persistentes muestran su perímetro real.",
+      "execution": "Rellena la fuerza y reemplaza la nube por otra mayor durante 6 s.",
+      "impact": "Aplicación por anfitrión a blancos vivos; máximo 12 por evento. Escalado del motor y resistencias de jefes.",
+      "feedback": "Perímetro persistente, glifo del campeón, impacto, contadores y pose de recuperación.",
+      "vfx": "Glifo propio, dirección y perímetro; render.js. No depende de partículas decorativas.",
+      "sfx": "Acento sintetizado ex_<campeón>_cast/ult, mezcla y mute del motor; audio.js."
+    },
+    "passive": {
+      "name": "Colonia viva",
+      "description": "Fuerza de colonia 0–100. Sin nube recupera 9/s; cada pulso de nube cuesta 8. Una sola nube por dueño."
+    }
+  },
+  "art": {
+    "atlas": "assets/sprites/champions/tibor/atlas.png",
+    "preview": "assets/sprites/champions/tibor/preview.png",
+    "directions": 4,
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "sha256": "016a41728871a413f4d4fc3abb8bb4a1c4cfe2e635268e593879a51439307a07",
+    "animations": {
+      "idle": 1,
+      "walk": 4,
+      "attack": 4,
+      "cast": 4,
+      "hit": 1,
+      "death": 4,
+      "ultimate": 4
+    },
+    "review": {
+      "status": "PASS",
+      "reviewer": "Codex — inspección visual frente a Tanque y revisión técnica",
+      "evidence": "docs/expedition/visual-review.json"
+    },
+    "productionPrompt": "Diseñar Tibor, El Rey del Enjambre. Máscara de malla, colmena pequeña a la espalda e incensario; miel, marrón y crema. Referencia obligatoria assets/sprites/champions/tanque/atlas.png. Pixel art dark fantasy chibi, cabeza 40–45%, contorno oscuro 1 px, 2–3 tonos, 4–6 colores, alfa binario. Abajo, derecha, arriba e izquierda por espejo. Misma ropa, arma, proporciones y ancla de pies en idle, walk, attack, cast, hit, death y ultimate. No convertir ilustración HD en pixel art. No texto dentro del atlas. Primero aprobar turnaround; luego animar y comparar a escala de juego."
+  },
+  "integration": {
+    "runtime": "js/champions/expedition/runtime.js",
+    "codex": "js/champions/expedition/register.js",
+    "talents": "js/champions/expedition/register.js",
+    "mastery": "js/champions/expedition/register.js",
+    "set": "js/champions/expedition/register.js",
+    "kitTest": "tools/expedition/functional.js"
+  },
+  "cosmetics": [
+    {
+      "id": "tibor_skin",
+      "champion": "tibor",
+      "name": "Señor de las Polillas",
+      "type": "skin",
+      "rarity": "epic",
+      "tagline": "Capucha de seda nocturna, lámpara cerrada y alas bordadas en el manto.",
+      "lore": "En un refugio sin flores aprendió a seguir a las polillas que buscaban el calor de una ventana.",
+      "visualTheme": "Capucha de seda nocturna, lámpara cerrada y alas bordadas en el manto.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego, disponible para pruebas.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/tibor/skins/tibor_skin/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "tibor_set",
+      "champion": "tibor",
+      "name": "Colmena de Ámbar",
+      "type": "set",
+      "rarity": "epic",
+      "tagline": "Máscara de resina tallada, placas de apicultor y panales vacíos en el cinturón.",
+      "lore": "Conservó en ámbar la primera cera limpia que su colonia volvió a producir.",
+      "visualTheme": "Máscara de resina tallada, placas de apicultor y panales vacíos en el cinturón.",
+      "visualChanges": [
+        "clothing",
+        "accessory",
+        "secondarySilhouette"
+      ],
+      "unlockSource": "Colección persistente del Set Reina Errante; se conserva al vender o desequipar.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Geometría, duración y firma original; sin ventaja jugable.",
+      "sfxProfile": "Reutiliza original sin alterar señales.",
+      "preview": "assets/sprites/champions/tibor/skins/tibor_set/preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    },
+    {
+      "id": "tibor_croma",
+      "champion": "tibor",
+      "name": "Tibor — Ceniza del Alba",
+      "type": "croma",
+      "rarity": "rare",
+      "tagline": "Marfil, gris ceniza y acento del original.",
+      "lore": "El polvo del viaje cubre la ropa antes de que llegue la primera luz.",
+      "visualTheme": "Solo paleta; conserva vestuario y accesorios.",
+      "visualChanges": [
+        "palette"
+      ],
+      "unlockSource": "Tienda Alpha: oro del juego.",
+      "collection": "Expedición de los Diez",
+      "vfxProfile": "Original",
+      "sfxProfile": "Original",
+      "preview": "assets/sprites/champions/tibor/croma-preview.png",
+      "availability": "alpha-test",
+      "premiumPrice": null,
+      "currency": null
+    }
+  ],
+  "set": {
+    "name": "Reina Errante",
+    "sourceArena": "micelial",
+    "pieces": [
+      "arma",
+      "casco",
+      "pechera",
+      "botas"
+    ],
+    "rewardCosmetic": "tibor_set",
+    "rewardGrantsPower": false,
+    "bonuses": {
+      "2": "+5% HP",
+      "3": "+4% daño de habilidades",
+      "4": "−4% recargas"
+    },
+    "farmStatus": "Repetir arena y jefe. Peso doble en su arena temática; también disponible en otros mapas y tienda Alpha. Grant persistente por colección completa."
+  },
+  "budgets": {
+    "particles": 64,
+    "summons": 8,
+    "audioVoices": 4
+  },
+  "evidence": {
+    "reference": "docs/expedition/reference-results.txt",
+    "balance": "docs/expedition/entry-gate-results.json",
+    "visuals": "docs/expedition/visual-review.json",
+    "audio": "docs/expedition/audio-results.txt",
+    "multiplayer": "docs/expedition/online-results.json",
+    "performance": "docs/expedition/performance-results.json"
+  }
+}

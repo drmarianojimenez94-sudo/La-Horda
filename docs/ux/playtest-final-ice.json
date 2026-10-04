@@ -1,0 +1,60 @@
+{
+  "method": "10 arenas x 3 scripted experience profiles; one seed per profile/arena; expected level; no gear; 900s cap",
+  "results": [
+    {
+      "arena": "hielo",
+      "profile": "aprendiz",
+      "level": 17,
+      "phase": "final-ice",
+      "result": "victory",
+      "seconds": 429,
+      "wave": 10,
+      "kills": 978,
+      "reserveUsed": true,
+      "active": "eren",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": -84,
+        "max": 11603
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "ocasional",
+      "level": 17,
+      "phase": "final-ice",
+      "result": "victory",
+      "seconds": 430,
+      "wave": 10,
+      "kills": 984,
+      "reserveUsed": false,
+      "active": "mago",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": -14,
+        "max": 11603
+      },
+      "autopilotError": null
+    },
+    {
+      "arena": "hielo",
+      "profile": "habitual",
+      "level": 17,
+      "phase": "final-ice",
+      "result": "victory",
+      "seconds": 467,
+      "wave": 10,
+      "kills": 1006,
+      "reserveUsed": false,
+      "active": "eren",
+      "boss": {
+        "type": "angel_caido_hielo",
+        "hp": -247,
+        "max": 11126
+      },
+      "autopilotError": null
+    }
+  ],
+  "errors": []
+}
