@@ -11,7 +11,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
   const ctx = await b.newContext({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   await ctx.addInitScript(() => { window.__campaignMode = true; performance.setResourceTimingBufferSize(10000); });
   const p = await ctx.newPage(); const errs = []; let title = false; const early = [], bad = [];
-  p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text().slice(0, 160)); });
+  p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/ERR_TUNNEL_CONNECTION_FAILED|ERR_PROXY/.test(m.text())) errs.push(m.text().slice(0, 160)); }); // sin salida a internet: el aviso al servidor online real no cuenta
   p.on('request', r => { const u = r.url(); if (!title && /\/skins\/[^/]+\/(?!preview)|\/cromas\//.test(u)) early.push(u.slice(-70)); });
   p.on('response', r => { if (r.status() >= 400) bad.push(r.status() + ' ' + r.url().slice(-70)); });
   await p.goto(BASE + '/index.html?lazy=1');
