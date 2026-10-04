@@ -15,6 +15,9 @@ Escribe assets/sprites/arenas/minas/<ente>/atlas.png, assets/vfx/minas/*.png, js
 (+ bloque en js/assets/asset-manifest.js). Pixel art: coordenadas enteras, sin reescalar.
 usage: python3 extract.py <frames_dir>
 """
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'pixrig'))
+from keep import PIXRIG_KEYS, pixrig_keep
 import json, os, sys
 import numpy as np
 from PIL import Image
@@ -228,9 +231,11 @@ if __name__ == '__main__':
         atlas, w, h = pack(frames, 8)
         dest = f'assets/sprites/arenas/minas/{ent}'
         os.makedirs(os.path.join(REPO, dest), exist_ok=True)
-        atlas.save(os.path.join(REPO, dest, 'atlas.png'), optimize=True); manifest.append(f'{dest}/atlas.png')
+        if ent not in PIXRIG_KEYS: atlas.save(os.path.join(REPO, dest, 'atlas.png'), optimize=True)
+        manifest.append(f'{dest}/atlas.png')
         hs = sorted(frames[j].height for j in sets['walk']); refH = hs[len(hs)//2]
         atlases[ent] = {"src": f"{dest}/atlas.png", "meta": {"w": w, "h": h, "cols": 8, "refH": refH, "anchor": round((h - 1)/h, 4), "sets": sets}}
+        if ent in PIXRIG_KEYS: atlases[ent] = pixrig_keep('js/assets/minas-meta.js', 'MINAS_ATLAS', ent)  # redibujado: tools/art/pixrig
         for k, lst in sets.items():
             for j, fi in enumerate(lst): frames[fi].save(os.path.join(out, f'{ent}__{k}_{j}.png'))
         print(ent, atlas.size, {k: len(v) for k, v in sets.items()})
