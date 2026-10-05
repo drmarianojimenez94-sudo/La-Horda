@@ -211,6 +211,13 @@ va en `ITEM_ICON_ART`) y ficha del objeto `js/ui/item-preview.js`. Assets pendie
 - `js/ui/loot-ceremony.js` — cofre con ceremonia por rareza; `js/ui/inventory-ui.js` — Mi Inventario,
   recetario y colección.
 - `js/net/net-chat.js` — chat de la Sala (el anti-spam real vive en `server/relay.js`).
+- `js/net/fondal-telemetry.js` — avisos al panel del estudio. Solo actúa cuando el juego se sirve en
+  `fondalstudios.com/la-horda/jugar/` (mismo dominio que la web): carga `/medir.js` y le avisa
+  juego abierto, menú listo, inicio y fin de cada partida, pausa, control y señales; y avisa a
+  `/api/presencia` en qué modo está ("jugando ahora"). En GitHub Pages o un servidor local no pide
+  nada. Sin datos personales; respeta "Compartir métricas anónimas". Es el **primer** script de
+  `index.html`, y `setState` (`js/ui/screens.js`) le pasa cada cambio de pantalla con
+  `fondalOnState`. Los modos están en `FondalTelemetry.MODOS`. Prueba: `tools/net-test/fondal_telemetry.js`.
 - `js/arenas/infernal/inf-hechicero.js` — el Hechicero Supremo: subjefe del nivel 9 de la Infernal (huye al caer)
   y jefe final en 3 formas (Ángel Corrompido con los poderes de los 4 Guardianes → Golem de Cuerpos → Demonio Mayor —
   Forma Final, diseño `demonio_final`). Arte recortado con `tools/art/hechicero/`.

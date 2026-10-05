@@ -54,6 +54,9 @@ jobs:
       - run: node tools/regression/t_run_end.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/net-test/fondal_telemetry.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/art/t_pixrig_bosses.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

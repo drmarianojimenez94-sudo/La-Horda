@@ -30,6 +30,7 @@ function setState(s){
   if(["mainmenu","prep","title","modeselect"].includes(s) && ["playing","paused","gameover","victory"].includes(prev)) duoRestoreLead();
   state = s;
   if(typeof AlphaServices!=="undefined") AlphaServices.onState(s, prev);
+  if(typeof fondalOnState==="function"){ try{ fondalOnState(s, prev); }catch(e){} } // avisos al panel del estudio (fondal-telemetry.js); fuera de fondalstudios.com no hace nada
   if(typeof musicOnState==="function") musicOnState(s); // clima musical de cada pantalla
   if(s==="title" && typeof startTitleScene==="function") requestAnimationFrame(startTitleScene);
   if(s!=="playing" && typeof _persistTimer!=="undefined" && _persistTimer) persistNow();
