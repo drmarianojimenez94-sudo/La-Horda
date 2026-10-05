@@ -112,6 +112,39 @@ function routes(ctx){
     return {ok:true, version, champion, unlocked:grant};
   });
 
+  // Category grant ("Regalar toda la Familia"): grants, in one CAS write, every champion of a grantable taxonomy
+  // category (FAMILY, ASCENSION, ...) that the target does not own yet. Membership comes from the taxonomy, never from
+  // client ids. FOUNDER is rejected; champions individually not grantable (e.g. artPending) are skipped. Same ledger and
+  // one champion.grant audit entry per champion (tagged with the category), exactly like single grants.
+  route("POST", "/api/gm/user/champion-category", "GRANT_CONTENT", async({user, body}) => {
+    const u = await target(body.id), cats = ent.taxonomy().categories, category = body.category;
+    if(typeof category !== "string" || !Object.prototype.hasOwnProperty.call(cats, category)) fail("BAD_CATEGORY");
+    if(category === "FOUNDER") fail("FOUNDER_NOT_GRANTABLE", 403);
+    if(!cats[category].grantable) fail("NOT_GRANTABLE", 403);
+    needConfirm(body, true);
+    const origin = body.origin === "EVENT_REWARD" ? "EVENT_REWARD" : "ADMIN_GRANT", reason = reasonOf(body);
+    const members = ent.taxonomy().ids.filter(id => { const m = ent.taxonomy().meta(id); return m.category === category && m.category !== "FOUNDER" && m.grantable; });
+    const saved = await store().getSave(u.id), ledger = ent.ledgerChampions(await read(), u.id);
+    let version = saved ? saved.version : null, granted;
+    if(saved){
+      const owned = JSON.parse(saved.data).champions || {};
+      granted = members.filter(id => !(owned[id] && owned[id].unlocked));
+      if(granted.length){
+        const r = await editSave(u, body.baseVersion, d => { const c = d.champions = d.champions || {}; for(const id of granted) c[id] = Object.assign(c[id] || {}, {unlocked:true}); return null; });
+        version = r.version;
+      }
+    }else granted = members.filter(id => !(ledger[id] && !ledger[id].revokedAt));
+    if(granted.length) await mutate(s => {
+      const g = ((s.grants = s.grants || {})[u.id] = s.grants[u.id] || {champions:{}}).champions;
+      for(const id of granted){
+        g[id] = {origin, by:user.id, at:now(), reason};
+        audit(s, user, "champion.grant", {target:u.id, type:"champion", content:id, origin, reason, before:false, after:true, details:{category}}, now());
+      }
+      return null;
+    });
+    return {ok:true, version, category, granted};
+  });
+
   route("POST", "/api/gm/user/cosmetic", "GRANT_CONTENT", async({user, body}) => {
     const u = await target(body.id), grant = body.action === "grant";
     if(!["grant", "revoke"].includes(body.action)) fail("BAD_ACTION");

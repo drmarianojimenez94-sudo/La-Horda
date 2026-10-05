@@ -71,8 +71,10 @@ window.GMExt = (function(){
     Usa las rutas existentes del servidor (/api/gm/user/champion, /cosmetic, /currency, /premium, /mailbox): no agrega
     privilegios. El servidor vuelve a validar permisos, FOUNDER (nunca concedible), grantable y la versión del guardado. */
  const CAT_ORDER = ["ASCENSION", "STANDARD", "FAMILY", "EVENT", "TESTER", "DEV", "FOUNDER"];
- const CAT_HEAD = {ASCENSION:"ASCENSIÓN", STANDARD:"STANDARD", FAMILY:"FAMILY", EVENT:"EVENTO", TESTER:"TESTER", DEV:"DEV", FOUNDER:"FUNDADORES"};
+ const CAT_HEAD = {ASCENSION:"ASCENSIÓN", STANDARD:"STANDARD", FAMILY:"FAMILIA", EVENT:"EVENTO", TESTER:"TESTER", DEV:"DEV", FOUNDER:"FUNDADORES"};
  const CAT_HINT = {ASCENSION:"Se ganan al final de la campaña o con logros. Regalarlos los desbloquea ya.", FOUNDER:"Los asigna el sistema a su cuenta. No se regalan."};
+ // Grupos con «regalar todo el grupo» (una sola ruta del servidor, que decide qué campeones son de la categoría).
+ const CAT_BULK = {FAMILY:"Regalar toda la Familia", ASCENSION:"Regalar todos los de Ascensión"};
  const champName = id => (typeof CLASSES !== "undefined" && CLASSES[id]) ? (CLASSES[id].shortName || CLASSES[id].name) : id;
  async function openGift(ctx, id, onChange){
   const {node, api} = ctx, can = p => ctx.perms().length === 0 || ctx.perms().includes(p);
@@ -113,6 +115,18 @@ window.GMExt = (function(){
      if(!list.length) continue;
      const sec = node("section", undefined, "gm-gift-cat gm-cat-" + cat.toLowerCase()); sec.append(node("h3", CAT_HEAD[cat] || cat));
      if(CAT_HINT[cat]) sec.append(node("p", CAT_HINT[cat], "gm-muted"));
+     const catDef = typeof CHAMPION_CATEGORIES !== "undefined" ? CHAMPION_CATEGORIES[cat] : null;
+     if(CAT_BULK[cat] && catDef && catDef.grantable){
+      const missing = list.filter(c=>!c.unlocked && c.grantable), bar = node("div", undefined, "gm-gift-bulk");
+      const bulk = btn(bar, `${CAT_BULK[cat]} (${missing.length ? "le faltan " + missing.length : "ya los tiene todos"})`, async()=>{
+       const names = missing.map(c=>champName(c.id)).join(", ");
+       if(!await confirmDialog(ctx, {title:CAT_BULK[cat], user:who(), action:`${CAT_BULK[cat]}: ${names}`, before:"le faltan " + missing.length, after:"los tiene todos (regalo del GM)"})) return;
+       const r = await api("POST", "/user/champion-category", {id, category:cat, confirm:true, reason:reason.value, baseVersion:v()});
+       await after(r.granted.length ? r.granted.map(champName).join(", ") + " regalado" + (r.granted.length > 1 ? "s" : "") + " a " + a.user + "." : "Ya los tenía todos.");
+      }, "btn", CAT_BULK[cat]);
+      if(!missing.length){ bulk.disabled = true; bulk.onclick = null; }
+      sec.append(bar);
+     }
      const grid = node("div", undefined, "gm-gift-grid");
      for(const c of list){
       const name = champName(c.id), row = node("div", undefined, "gm-gift-item" + (c.unlocked ? " gm-owned" : ""));
