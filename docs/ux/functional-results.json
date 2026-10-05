@@ -469,6 +469,150 @@
       "ok": true
     },
     {
+      "name": "No automatic champion swap nano_gm",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move nano_gm",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion nano_gm",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion nano_gm",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap facu_gm",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move facu_gm",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion facu_gm",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion facu_gm",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap aurelia",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move aurelia",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion aurelia",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion aurelia",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap khepri",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move khepri",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion khepri",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion khepri",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap velmira",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move velmira",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion velmira",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion velmira",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap vhal",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move vhal",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion vhal",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion vhal",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap bront",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move bront",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion bront",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion bront",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap oriel",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move oriel",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion oriel",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion oriel",
+      "ok": true
+    },
+    {
+      "name": "No automatic champion swap saelis",
+      "ok": true
+    },
+    {
+      "name": "Dead cannot move saelis",
+      "ok": true
+    },
+    {
+      "name": "Revival keeps chosen champion saelis",
+      "ok": true
+    },
+    {
+      "name": "Return preserves champion saelis",
+      "ok": true
+    },
+    {
       "name": "myla_ref_0 rarity 0",
       "ok": true
     },
@@ -1006,6 +1150,42 @@
     },
     {
       "name": "Complete guide sira",
+      "ok": true
+    },
+    {
+      "name": "Complete guide nano_gm",
+      "ok": true
+    },
+    {
+      "name": "Complete guide facu_gm",
+      "ok": true
+    },
+    {
+      "name": "Complete guide aurelia",
+      "ok": true
+    },
+    {
+      "name": "Complete guide khepri",
+      "ok": true
+    },
+    {
+      "name": "Complete guide velmira",
+      "ok": true
+    },
+    {
+      "name": "Complete guide vhal",
+      "ok": true
+    },
+    {
+      "name": "Complete guide bront",
+      "ok": true
+    },
+    {
+      "name": "Complete guide oriel",
+      "ok": true
+    },
+    {
+      "name": "Complete guide saelis",
       "ok": true
     },
     {

@@ -135,7 +135,7 @@
         "alive": true,
         "hp": 276,
         "maxHp": 276,
-        "kills": 386,
+        "kills": 396,
         "boss": null,
         "allies": [
           {
@@ -154,10 +154,10 @@
             "hp": 224
           }
         ],
-        "enemies": 10
+        "enemies": 3
       },
-      "damage": 4233.692017055308,
-      "heal": 9893.351139839997,
+      "damage": 4069.073784187915,
+      "heal": 9552.232465919999,
       "error": null
     },
     {
@@ -169,7 +169,41 @@
         "alive": true,
         "hp": 276,
         "maxHp": 276,
-        "kills": 388,
+        "kills": 390,
+        "boss": null,
+        "allies": [
+          {
+            "k": "tanque",
+            "alive": true,
+            "hp": 693
+          },
+          {
+            "k": "guerrero",
+            "alive": true,
+            "hp": 239
+          },
+          {
+            "k": "mago",
+            "alive": true,
+            "hp": 224
+          }
+        ],
+        "enemies": 9
+      },
+      "damage": 4813.954221902013,
+      "heal": 9318.959416319996,
+      "error": null
+    },
+    {
+      "seed": 991,
+      "sim": {
+        "t": 149998.50000000323,
+        "state": "playing",
+        "runLevel": 5,
+        "alive": true,
+        "hp": 276,
+        "maxHp": 276,
+        "kills": 395,
         "boss": null,
         "allies": [
           {
@@ -188,48 +222,14 @@
             "hp": 224
           }
         ],
-        "enemies": 11
+        "enemies": 7
       },
-      "damage": 4061.9856841757974,
-      "heal": 9829.037998079997,
-      "error": null
-    },
-    {
-      "seed": 991,
-      "sim": {
-        "t": 149998.50000000323,
-        "state": "playing",
-        "runLevel": 5,
-        "alive": true,
-        "hp": 276,
-        "maxHp": 276,
-        "kills": 391,
-        "boss": null,
-        "allies": [
-          {
-            "k": "tanque",
-            "alive": true,
-            "hp": 693
-          },
-          {
-            "k": "guerrero",
-            "alive": true,
-            "hp": 280
-          },
-          {
-            "k": "axiom",
-            "alive": true,
-            "hp": 207
-          }
-        ],
-        "enemies": 14
-      },
-      "damage": 4724.294631100388,
-      "heal": 9484.209423359995,
+      "damage": 3673.1582449255566,
+      "heal": 9522.936913919997,
       "error": null
     }
   ],
   "errors": [],
-  "mean": 4339.990777443832,
+  "mean": 4185.395417005161,
   "ceiling": 8803.525500000002
 }
