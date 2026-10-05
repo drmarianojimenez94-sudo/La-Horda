@@ -11,7 +11,11 @@ let currentArena = "ciudad"; // arranca en la primera arena JUGABLE del orden ca
    GAME STATE
    ============================================================ */
 let state = "menu"; // title | modeselect | menu | prep | playing | buff | paused | gameover | victory
-let selectedClass = "guerrero";
+// Guardián por defecto de un perfil nuevo: el Mago (Thalen, el del entrenamiento). Antes era "guerrero" (el
+// Asesino), y un jugador sin guardián propio (perfil nuevo o reiniciado) quedaba con un Asesino bloqueado
+// elegido. El guardián elegido siempre tiene que ser uno PROPIO: ver ensureOwnedSelection (starter-select.js).
+const DEFAULT_CHAMPION = "mago";
+let selectedClass = DEFAULT_CHAMPION;
 let player, enemies, projectiles, particles, embers;
 let allies, heroes, potions, fireWalls, traps;
 let axiomZones; // zonas con demora/agrupamiento de Axiom (Error 404 y Bug de Colisión) — mismo patrón que traps/fireWalls, propio para no tocar el de otros guardianes
