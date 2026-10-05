@@ -155,6 +155,10 @@
 .opt-note{ font-size:0.8rem; color:var(--ui-dim); margin:6px 0 8px; line-height:1.35; }
 .opt-btns{ display:flex; gap:8px; margin-bottom:10px; }
 #opt-close-btn{ max-width:none; }
+.cw-gate-text{ font-size:0.95rem; color:var(--ui-ink); line-height:1.4; margin:6px 0 12px; }
+.cw-gate-btns{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+.cw-gate-btns .btn{ flex:1 1 160px; max-width:none; min-height:44px; }
+#cw-gate .ui-modal-panel > [data-cw-gate-close].btn{ width:100%; max-width:none; min-height:44px; }
 
 /* ============================================================
    TIENDA — vitrina

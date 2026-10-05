@@ -176,6 +176,19 @@
     </div>
     <div class="save-line hidden" id="mainmenu-gold-line"></div>
   </div>
+  <!-- GUERRA DE CRISTALES sin entrenamiento: explica por qué no entra y deja elegir (entrenar o saltarlo) -->
+  <div id="cw-gate" class="ui-modal hidden" role="dialog" aria-modal="true" aria-labelledby="cw-gate-title">
+    <div class="ui-modal-back" data-cw-gate-close></div>
+    <div class="ui-panel ui-modal-panel">
+      <div class="ui-panel-title" id="cw-gate-title">◆ Guerra de Cristales</div>
+      <p class="cw-gate-text" id="cw-gate-text">El Coliseo se abre después del entrenamiento (unos 2 minutos). Si ya sabés jugar, podés saltarlo y entrar ahora.</p>
+      <div class="cw-gate-btns">
+        <button class="btn small" id="cw-gate-train">Hacer el entrenamiento</button>
+        <button class="btn small secondary" id="cw-gate-skip">Ya sé jugar: entrar</button>
+      </div>
+      <button class="btn small secondary" data-cw-gate-close>Cancelar</button>
+    </div>
+  </div>
   <!-- OPCIONES (desde el hub): nombre, volumen y código de guardado -->
   <div id="hub-options" class="ui-modal hidden" role="dialog" aria-label="Opciones">
     <div class="ui-modal-back" data-opt-close></div>

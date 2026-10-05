@@ -49,5 +49,29 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       console.log(`PASS ${width}×${height}: tarjeta en el hub, ida al Coliseo y vuelta directa al hub`);
       await ctx.close();
     }
+    // sin entrenamiento: el botón explica por qué (no manda al tutorial en silencio) y "Ya sé jugar" entra
+    {
+      const ctx = await browser.newContext({viewport: {width: 667, height: 375}});
+      const page = await ctx.newPage(), errors = [];
+      page.on('pageerror', e => errors.push(e.message));
+      await page.goto(`http://127.0.0.1:${PORT}/`, {waitUntil: 'domcontentloaded'});
+      await page.waitForFunction(() => typeof setState === 'function' && typeof renderMainMenu === 'function', null, {timeout: 120000});
+      await page.evaluate(() => { save.tut = {}; save.firstRun = 'hub'; save.champions.tanque.unlocked = true; save.starterSkinPending = false; persistNow(); setState('mainmenu'); renderMainMenu(); });
+      await sleep(400);
+      await page.click('#hub-crystal-btn');
+      await page.waitForSelector('#cw-gate:not(.hidden)', {timeout: 5000});
+      const g = await page.evaluate(() => { const r = document.querySelector('#cw-gate .ui-modal-panel').getBoundingClientRect();
+        return {state, url: location.pathname, text: document.getElementById('cw-gate-text').innerText, skip: !document.getElementById('cw-gate-skip').classList.contains('hidden'),
+          fits: r.top >= 0 && r.bottom <= innerHeight + 1 && r.left >= 0 && r.right <= innerWidth + 1}; });
+      assert.equal(g.state, 'mainmenu', 'no entra al tutorial sin avisar');
+      assert(/entrenamiento/.test(g.text) && g.skip && g.fits, `aviso claro con opción de saltar (${JSON.stringify(g)})`);
+      if (OUT) await page.screenshot({path: path.join(OUT, 'gate_667.png')});
+      await page.click('#cw-gate-skip');
+      await page.waitForURL(/crystal-wars\.html/, {timeout: 15000, waitUntil: 'commit'});
+      await page.waitForSelector('#practice', {timeout: 15000});
+      assert.deepEqual(errors, [], 'sin errores de página');
+      console.log('PASS 667×375 sin entrenamiento: aviso con opción, "Ya sé jugar" entra al Coliseo');
+      await ctx.close();
+    }
   } finally { await browser.close(); server.kill(); }
 })().catch(e => { console.error(e.message || e); process.exitCode = 1; server.kill(); });
