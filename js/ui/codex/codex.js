@@ -274,6 +274,14 @@ function codexListHtml(sec){
   if(sec === "cronicas") return codexChronListHtml();
   return "";
 }
+// Campeón bloqueado = promesa: cómo se gana jugando y cuánto falta (Ascensión), además de la compra.
+function codexUnlockHintHtml(key){
+  const u = typeof ascensionUnlockOf==="function" ? ascensionUnlockOf(key) : null; if(!u) return "";
+  const p = typeof ascensionUnlockProgress==="function" ? ascensionUnlockProgress(key) : null;
+  return `<div class="cx-unlock" id="cx-unlock-hint"><div class="cx-unlock-how"><b>🏆 ${_cxEsc(u.mode)}</b> · ${_cxEsc(u.how)}</div>`
+    + (p ? `<div class="cx-unlock-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${p.need}" aria-valuenow="${p.have}"><div style="width:${p.pct}%"></div></div><div class="cx-unlock-n">${p.have} / ${p.need} · ${p.pct}%</div>` : "")
+    + `<div class="cx-unlock-or">o 🪙 ${fmtGold(shopChampionPrice(key))} en la Tienda</div></div>`;
+}
 function codexChampListHtml(){
   const cards = CHAMPION_CATALOG.filter(c=>typeof shopChampionVisible!=="function" || shopChampionVisible(c.id)).map(c=>{
     const cls = CLASSES[c.id], ch = save.champions[c.id], own = ch && ch.unlocked, sel = own && selectedClass===c.id, meta = championMeta(c.id);
@@ -393,7 +401,7 @@ function codexChampHtml(key){
     <div class="cx-stage-actions">${own
       ? (sel ? `<div class="cx-active">✔ Tu guardián para jugar</div>` : `<button class="cx-btn primary" id="cx-pick-btn">Elegir para jugar</button>`) + (typeof ASCENSION_SKINS!=="undefined" && ASCENSION_SKINS[key] && ASCENSION_SKINS[key].length ? `<button class="cx-btn" data-asc-skin="${key}">Apariencia: ${_cxEsc((ch.ascSkin|0) ? ASCENSION_SKINS[key][(ch.ascSkin|0)-1].name : "Original")}</button>` : "")
       : !championMeta(key).purchasable ? `<div class="cx-active">${championMeta(key).category==="FOUNDER" ? `${typeof founderBadgeHTML==="function" ? founderBadgeHTML(championMeta(key).founderKey,"md") : ""} 🪙 ${fmtGold(shopChampionPrice(key))} · ${championMeta(key).storeNotice}<br><small>${championMeta(key).inspectNotice}</small>` : "No disponible"}</div>`
-      : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>`}</div>`;
+      : `<button class="cx-btn primary" id="cx-buy-btn" ${save.gold < shopChampionPrice(key) ? "disabled" : ""}>🔓 Desbloquear · 🪙 ${fmtGold(shopChampionPrice(key))}</button>${codexUnlockHintHtml(key)}`}</div>`;
   const head = `<div class="cx-panel-head">${codexStepper()}<div class="cx-kicker">${HUB_ROLE_LABEL[cls.roleCategory]||""}${own ? " · Nv. " + ch.level : ""}</div>
       <h2 class="cx-title" style="color:${cls.color}">${_cxEsc(championShortName(key))}</h2><div class="cx-subtitle"><b>${_cxEsc(championTitle(key))}</b> · ${_cxEsc(cls.role)}</div>
       ${own ? `<div class="cx-xp"><div style="width:${pct}%"></div></div><div class="cx-dim">${ch.xp} / ${need} XP · Puntos sin gastar: <b>${ch.talentPoints||0}</b> · Talentos: <b>${treePointsAvailable(key)}</b></div>` : ""}
