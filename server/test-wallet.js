@@ -30,7 +30,12 @@ const ref = () => crypto.randomUUID();
   check('anónimo no ve billetera', (await api('GET', '/api/wallet')).status === 401);
   const w0 = await api('GET', '/api/wallet', undefined, UT);
   check('saldo inicial 0 y precios 9000/1000', w0.status === 200 && w0.j.premium === 0 && w0.j.prices.skinGold === 9000 && w0.j.prices.skinPremium === 1000 && w0.j.currency.id === 'brasas');
-  check('pagos apagados por defecto', w0.j.payments.enabled === false && w0.j.payments.packs.length === 0);
+  check('pagos apagados por defecto', w0.j.payments.enabled === false);
+  const pk = w0.j.payments.packs, byId = Object.fromEntries(pk.map(p => [p.id, p]));
+  check('packs listados con precio y moneda explícita', pk.length === 5 && pk.every(p => p.price && p.price.currency === 'USD' && p.price.amount > 0)
+    && byId.brasas_500.price.amount === 4.99 && byId.brasas_1000.price.amount === 9.99 && byId.brasas_2500.bonus === 250 && byId.brasas_5000.price.amount === 49.99, pk);
+  check('pack de bienvenida: una vez, 1000+200, disponible', byId.brasas_bienvenida && byId.brasas_bienvenida.once === true && byId.brasas_bienvenida.premium === 1000
+    && byId.brasas_bienvenida.bonus === 200 && byId.brasas_bienvenida.price.amount === 4.99 && byId.brasas_bienvenida.available === true, byId.brasas_bienvenida);
   check('comprar sin saldo: 402', (await api('POST', '/api/wallet/buy', { sku, ref: ref() }, UT)).status === 402);
 
   // acreditación desde el panel
@@ -67,7 +72,8 @@ const ref = () => crypto.randomUUID();
   check('sin guardado: no se entrega y se reintegra', b4.status === 409 && after.premium === 1000 && after.ledger.length === 3, { b4: b4.j, after });
 
   // pagos: apagados -> 501; webhook sin proveedor -> rechazado
-  check('checkout apagado: 501', (await api('POST', '/api/wallet/checkout', { pack: 'brasas_1000' }, UT)).status === 501);
+  const co = await api('POST', '/api/wallet/checkout', { pack: 'brasas_1000' }, UT);
+  check('checkout apagado: 501 PAYMENTS_DISABLED', co.status === 501 && co.j.error === 'PAYMENTS_DISABLED' && /pagos todavía no están conectados/.test(co.j.msg), co);
   const body = JSON.stringify({ pack: 'brasas_1000', userId: uid, paymentId: 'pay_123456' });
   check('webhook sin proveedor: rechazado', (await api('POST', '/api/payments/webhook', body)).status === 400);
   // con proveedor (firma HMAC): acredita una sola vez
@@ -78,6 +84,32 @@ const ref = () => crypto.randomUUID();
   const p2 = await api('POST', '/api/payments/webhook', body, undefined, { 'x-horda-signature': sig });
   const wp = (await api('GET', '/api/wallet', undefined, UT)).j;
   check('pago verificado acredita una sola vez', p1.status === 200 && p2.j.duplicate === true && wp.premium === 2500, { p1: p1.j, p2: p2.j, premium: wp.premium });
+  const signed = (o) => { const raw = JSON.stringify(o); return [raw, { 'x-horda-signature': crypto.createHmac('sha256', process.env.PAYMENTS_WEBHOOK_SECRET).update(raw).digest('hex') }]; };
+  const hook = (o) => { const [raw, h] = signed(o); return api('POST', '/api/payments/webhook', raw, undefined, h); };
+  // cuenta inexistente: rechazado, no se crea saldo
+  const u1 = await hook({ pack: 'brasas_1000', userId: 987654, paymentId: 'pay_unknown_user' });
+  check('webhook con cuenta inexistente: rechazado', u1.status === 404, u1);
+  // paquete desconocido o sin precio: rechazado
+  require('./premium-packs.json').packs.push({ id: 'brasas_sin_precio', premium: 100, bonus: 0, price: null });
+  const u2 = await hook({ pack: 'brasas_sin_precio', userId: uid, paymentId: 'pay_unpriced_1' });
+  const u3 = await hook({ pack: 'brasas_inventado', userId: uid, paymentId: 'pay_unknown_pack' });
+  check('webhook con paquete sin precio: rechazado', u2.status === 400, u2);
+  check('webhook con paquete desconocido: rechazado', u3.status === 400, u3);
+  check('el paquete sin precio no se ofrece', !(await api('GET', '/api/wallet', undefined, UT)).j.payments.packs.some(p => p.id === 'brasas_sin_precio'));
+  check('saldo intacto tras webhooks rechazados', (await api('GET', '/api/wallet', undefined, UT)).j.premium === 2500);
+  // pack de bienvenida: se acredita una sola vez por cuenta, aunque llegue otro pago distinto
+  const o1 = await hook({ pack: 'brasas_bienvenida', userId: uid, paymentId: 'pay_welcome_1' });
+  const o2 = await hook({ pack: 'brasas_bienvenida', userId: uid, paymentId: 'pay_welcome_2' });
+  const wo = (await api('GET', '/api/wallet', undefined, UT)).j;
+  check('pack de bienvenida acreditado una sola vez', o1.status === 200 && !o1.j.duplicate && o2.status === 200 && o2.j.alreadyBought === true && wo.premium === 2500 + 1200, { o1: o1.j, o2: o2.j, premium: wo.premium });
+  check('el servidor marca el pack de bienvenida como comprado', wo.payments.enabled === true && wo.payments.packs.find(p => p.id === 'brasas_bienvenida').available === false);
+  const other = (await api('GET', '/api/wallet', undefined, NT)).j;
+  check('otra cuenta sigue viendo el pack de bienvenida', other.payments.packs.find(p => p.id === 'brasas_bienvenida').available === true);
+  process.env.PAYMENTS_CHECKOUT_URL = 'https://pagos.example/checkout';
+  check('checkout del pack de bienvenida ya comprado: 409', (await api('POST', '/api/wallet/checkout', { pack: 'brasas_bienvenida' }, UT)).status === 409);
+  const c2 = await api('POST', '/api/wallet/checkout', { pack: 'brasas_2500' }, UT);
+  check('checkout con proveedor: redirige con precio USD', c2.status === 200 && /pack=brasas_2500/.test(c2.j.redirect) && c2.j.price.currency === 'USD', c2);
+  delete process.env.PAYMENTS_CHECKOUT_URL;
 
   fs.mkdirSync(path.join(__dirname, '../docs/ux'), { recursive: true });
   fs.writeFileSync(path.join(__dirname, '../docs/ux/wallet-results.json'), JSON.stringify(results, null, 2));

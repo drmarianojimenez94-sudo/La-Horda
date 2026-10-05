@@ -341,6 +341,7 @@ function fileStore(dir){
     },
     async walletGet(userId){ return { premium: (wallet.balances[userId] || {}).premium || 0 }; },
     async walletLedger(userId, limit){ return wallet.ledger.filter(e => e.userId === userId).slice(-(limit || 50)).reverse(); },
+    async walletHasRef(ref){ return !!(ref && wallet.refs[ref]); },
     // Aplica un movimiento de forma atómica: misma ref = devuelve el resultado anterior sin repetirlo; nunca deja saldo negativo.
     async walletApply(e){
       const job = walletChain.catch(() => {}).then(async () => {
@@ -389,6 +390,7 @@ function pgStore(url){
     async listUsers(){return (await q("SELECT * FROM horda_users ORDER BY id")).rows.map(rowUser);},
     async gmRead(){const r=await q("SELECT data FROM horda_operations WHERE id=1");return r.rows[0]?.data||null;},
     async walletGet(userId){ const r = await q("SELECT premium FROM horda_wallet WHERE user_id=$1", [userId]); return { premium: r.rows[0] ? Number(r.rows[0].premium) : 0 }; },
+    async walletHasRef(ref){ if(!ref) return false; const r = await q("SELECT 1 FROM horda_wallet_ledger WHERE ref=$1 LIMIT 1", [ref]); return r.rows.length > 0; },
     async walletLedger(userId, limit){ const r = await q("SELECT * FROM horda_wallet_ledger WHERE user_id=$1 ORDER BY id DESC LIMIT $2", [userId, limit || 50]);
       return r.rows.map(x => ({ id: Number(x.id), userId: Number(x.user_id), delta: Number(x.delta), balanceAfter: Number(x.balance_after), reason: x.reason, ref: x.ref, actor: x.actor == null ? null : Number(x.actor), at: Number(x.at) })); },
     async walletApply(e){

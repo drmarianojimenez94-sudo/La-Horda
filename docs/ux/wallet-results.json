@@ -16,6 +16,14 @@
     "ok": true
   },
   {
+    "name": "packs listados con precio y moneda explícita",
+    "ok": true
+  },
+  {
+    "name": "pack de bienvenida: una vez, 1000+200, disponible",
+    "ok": true
+  },
+  {
     "name": "comprar sin saldo: 402",
     "ok": true
   },
@@ -80,7 +88,7 @@
     "ok": true
   },
   {
-    "name": "checkout apagado: 501",
+    "name": "checkout apagado: 501 PAYMENTS_DISABLED",
     "ok": true
   },
   {
@@ -93,6 +101,46 @@
   },
   {
     "name": "pago verificado acredita una sola vez",
+    "ok": true
+  },
+  {
+    "name": "webhook con cuenta inexistente: rechazado",
+    "ok": true
+  },
+  {
+    "name": "webhook con paquete sin precio: rechazado",
+    "ok": true
+  },
+  {
+    "name": "webhook con paquete desconocido: rechazado",
+    "ok": true
+  },
+  {
+    "name": "el paquete sin precio no se ofrece",
+    "ok": true
+  },
+  {
+    "name": "saldo intacto tras webhooks rechazados",
+    "ok": true
+  },
+  {
+    "name": "pack de bienvenida acreditado una sola vez",
+    "ok": true
+  },
+  {
+    "name": "el servidor marca el pack de bienvenida como comprado",
+    "ok": true
+  },
+  {
+    "name": "otra cuenta sigue viendo el pack de bienvenida",
+    "ok": true
+  },
+  {
+    "name": "checkout del pack de bienvenida ya comprado: 409",
+    "ok": true
+  },
+  {
+    "name": "checkout con proveedor: redirige con precio USD",
     "ok": true
   }
 ]

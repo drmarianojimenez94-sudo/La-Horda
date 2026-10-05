@@ -63,6 +63,10 @@ function renderHub(){
   // TIENDA: con un vale de skin sin canjear (regalo inicial) la ficha lo dice; si no, ofertas nuevas del día
   const bs = document.getElementById("hub-badge-shop"), vale = (save.skinVoucher|0) > 0;
   if(bs){ bs.textContent = vale ? "🎁 REGALO" : "NUEVO"; bs.classList.toggle("hidden", !vale && (typeof shopDayKey!=="function" || save.shopDealsSeen === shopDayKey())); }
+  // OFERTA: hay ofertas del día (rotan a la medianoche; sin contadores falsos)
+  const bo = document.getElementById("hub-badge-offer");
+  if(bo){ let deals = 0; try{ deals = typeof shopDailyShowcase==="function" ? shopDailyShowcase().deals.length : 0; }catch(e){} bo.classList.toggle("hidden", !deals); }
+  if(typeof premiumRender==="function") premiumRender(); // chip ✦: siempre visible ("✦ —" sin sesión)
   const tsub = document.querySelector("#mainmenu-tienda-btn .hub-tile-sub");
   if(tsub) tsub.textContent = vale ? "Tenés una skin de regalo: elegila" : "Ofertas del día · skins";
   renderEndlessCards();
@@ -163,6 +167,8 @@ document.getElementById("hub-profile-btn").addEventListener("click", ()=>{
   if(typeof window.accountOpen==="function") window.accountOpen(); else openHubOptions();
 });
 document.getElementById("hub-options-btn").addEventListener("click", openHubOptions);
+// chip ✦ Brasas: abre la Tienda en la pestaña ✦ Brasas
+document.getElementById("hub-premium-btn").addEventListener("click", ()=>{ if(typeof shopOpen==="function") shopOpen("brasas"); });
 // cuentas: el chip se redibuja cuando cambia la sesión o el perfil
 for(const t of [window, document]) t.addEventListener("account-change", ()=>{ if(state==="mainmenu") renderHub(); });
 

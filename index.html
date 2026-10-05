@@ -132,15 +132,16 @@
   </div>
 
   <!-- MENÚ PRINCIPAL (HUB): JUGAR continúa la campaña; accesos a Guardianes, Tienda, Multijugador,
-       Códice y Desafíos; arriba el perfil (nombre, nivel de cuenta y oro). js/ui/hub.js -->
+       Códice y Desafíos; arriba el perfil (nombre, nivel de cuenta y oro) y las Brasas ✦. js/ui/hub.js -->
   <div id="mainmenu-screen" class="screen hidden hub-screen">
     <div class="hub-top">
       <button class="hub-profile" id="hub-profile-btn" data-account-chip aria-label="Perfil">
         <canvas class="champ-anim hub-profile-anim" width="40" height="40" data-class-key="mago" data-idle="1"></canvas>
         <span class="hub-profile-txt"><b class="hub-profile-name" id="hub-profile-name">Jugador</b><span class="hub-profile-lvl" id="hub-profile-lvl"></span></span>
         <span class="hub-gold" id="hub-gold">🪙 0</span>
-        <span class="hub-gold hub-premium" data-premium-chip hidden title="Brasas: moneda premium">✦ <b data-premium-balance>—</b></span>
       </button>
+      <!-- Brasas ✦ (moneda premium, solo apariencia): siempre visible; "+" abre la Tienda en la pestaña ✦ Brasas -->
+      <button class="hub-premium-btn" id="hub-premium-btn" data-premium-chip type="button" aria-label="Brasas: ver paquetes en la Tienda" title="Brasas: solo compran apariencia">✦ <b data-premium-balance>—</b><span class="hub-premium-plus" aria-hidden="true">+</span></button>
       <div class="hub-brand">LA HORDA</div>
       <button class="ui-icon-btn" id="hub-options-btn" aria-label="Opciones" title="Opciones">⚙</button>
       <button class="ui-icon-btn" id="mainmenu-back-btn" aria-label="Volver al título" title="Volver al título">⏏</button>
@@ -167,7 +168,7 @@
       </div>
       <div class="hub-grid" id="hub-grid">
         <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
-        <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span></button>
+        <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span><span class="ui-tag sale hub-tile-offer hidden" id="hub-badge-offer">OFERTA</span></button>
         <button class="hub-tile hub-tile-crystal" id="hub-crystal-btn"><span class="hub-tile-ico">◆</span><span class="hub-tile-title">CRISTALES</span><span class="hub-tile-sub">Guerra 2 contra 2</span></button>
         <button class="hub-tile" id="mainmenu-jugar-btn"><span class="hub-tile-ico">🌐</span><span class="hub-tile-title">MULTIJUGADOR</span><span class="hub-tile-sub">Sala con código · modos</span></button>
 <details class="hub-more"><summary>Explorar · Códice y desafíos</summary><div class="hub-actions">        <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>        <button class="hub-tile hidden" id="mainmenu-quests-btn" data-quests-open><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag new hub-tile-badge qs-badge hidden" id="hub-badge-quests"></span></button></div></details>
@@ -259,8 +260,9 @@
     <div id="champdetail-body"></div>
   </div>
 
-  <!-- TIENDA (vitrina): destacado del día, ofertas diarias, paquetes de skins y catálogo completo.
-       Todo se paga con oro ganado jugando: no hay compras con dinero real. js/ui/shop-ui.js -->
+  <!-- TIENDA (vitrina): destacado del día, ofertas diarias, skins y catálogo completo, todo con oro ganado jugando.
+       La pestaña ✦ Brasas muestra los paquetes de moneda premium (solo apariencia, nunca poder; el servidor decide
+       precio, saldo y entrega: js/systems/premium.js, server/wallet.js). js/ui/shop-ui.js -->
   <div id="shop-screen" class="screen hidden">
     <div class="ui-topbar">
       <button class="ui-back" id="shop-back-btn">‹ Menú</button>
@@ -272,6 +274,7 @@
       <button class="shop-tab" data-shop-tab="campeones">Guardianes</button>
       <button class="shop-tab" data-shop-tab="objetos">Objetos</button>
       <button class="shop-tab" data-shop-tab="skins">Skins</button>
+      <button class="shop-tab shop-tab-brasas" data-shop-tab="brasas">✦ Brasas</button>
     </div>
     <div id="shop-panel"></div>
   </div>

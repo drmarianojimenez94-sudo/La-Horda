@@ -111,9 +111,47 @@ async function premiumBuySkin(id){
 
 /* ---------- mostrar el saldo (hub y tienda) ---------- */
 function premiumLabel(){ return PREMIUM.premium == null ? "—" : PREMIUM.premium.toLocaleString("es-AR"); }
+// El chip ✦ se ve siempre (sin sesión muestra "✦ —"); la tienda redibuja su pestaña ✦ Brasas al llegar datos nuevos.
 function premiumRender(){
   for(const el of document.querySelectorAll("[data-premium-balance]")) el.textContent = premiumLabel();
-  for(const el of document.querySelectorAll("[data-premium-chip]")) el.hidden = PREMIUM.premium == null;
+  for(const el of document.querySelectorAll("[data-premium-chip]")) el.hidden = false;
+  try{ document.dispatchEvent(new CustomEvent("premium-change")); }catch(e){}
+}
+
+/* ---------- paquetes de Brasas (dinero real): el servidor dice cuáles hay, a qué precio y si se puede pagar ---------- */
+// "US$ 4,99": moneda explícita, nunca un número suelto
+function premiumPriceLabel(price){
+  if(!price || !Number.isFinite(price.amount)) return "";
+  const sym = { USD: "US$", ARS: "AR$", EUR: "€" }[price.currency] || price.currency;
+  return sym + " " + price.amount.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function premiumPacks(){ return (PREMIUM.payments && Array.isArray(PREMIUM.payments.packs)) ? PREMIUM.payments.packs : []; }
+function premiumPaymentsOn(){ return !!(PREMIUM.payments && PREMIUM.payments.enabled); }
+// Pack de bienvenida: solo si el servidor dice que todavía no se compró en esta cuenta
+function premiumWelcomePack(){ return premiumPacks().find(p => p.once && p.available) || null; }
+// Pedir un pago: el servidor arma el enlace de la pasarela; sin proveedor responde "todavía no conectados".
+async function premiumCheckout(packId){
+  if(!premiumAvailable()) return { ok: false, reason: "Iniciá sesión para comprar Brasas." };
+  let r;
+  try{ r = await accountFetch("POST", "/api/wallet/checkout", { pack: packId }); }
+  catch(e){ return { ok: false, reason: "Sin conexión con el servidor. No se cobró nada." }; }
+  if(r.status === 200 && r.j && r.j.redirect) return { ok: true, redirect: r.j.redirect };
+  if(r.status === 501) return { ok: false, soon: true, reason: (r.j && r.j.msg) || "Muy pronto: los pagos todavía no están conectados." };
+  await premiumRefresh(true);
+  return { ok: false, reason: (r.j && r.j.msg && r.j.msg !== r.j.error ? r.j.msg : "No se pudo iniciar el pago. No se cobró nada.") };
+}
+// Skins (arte propio, se pagan con Brasas) de un guardián que todavía no tenés
+function premiumChampSkinIds(k){
+  const out = [];
+  if(typeof SET_SKINS !== "undefined" && typeof skinSetChamp === "function")
+    for(const id of Object.keys(SET_SKINS)) if((typeof SET_DB === "undefined" || SET_DB[id]) && skinSetChamp(id) === k && !premiumSkinOwned(id)) out.push(id);
+  if(typeof CROMA_SKINS !== "undefined")
+    for(const id of Object.keys(CROMA_SKINS)) if(CROMA_SKINS[id].champ === k && premiumIsSkin(id) && !premiumSkinOwned(id)) out.push(id);
+  return out;
+}
+function premiumSkinPreview(id){
+  if(typeof SET_SKINS !== "undefined" && SET_SKINS[id]) return SET_SKINS[id].preview || SET_SKINS[id].src || "";
+  return typeof CROMA_SKINS !== "undefined" && CROMA_SKINS[id] ? CROMA_SKINS[id].preview || "" : "";
 }
 if(typeof window !== "undefined"){
   window.addEventListener("account-change", () => premiumRefresh(true));

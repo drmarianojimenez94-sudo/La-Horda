@@ -55,9 +55,23 @@ function showGameOverScreen(divinaOutcome){
   document.getElementById("go-progress").innerHTML = (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
     Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
-    ${defeatPenaltyLineHTML(penalty)}${typeof diffResultRowHTML==="function" ? diffResultRowHTML(false) : ""}${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}`;
+    ${defeatPenaltyLineHTML(penalty)}${typeof diffResultRowHTML==="function" ? diffResultRowHTML(false) : ""}${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}${endSkinsLinkHTML(player.classKey)}`;
   if(typeof questsOnRunEnd==="function") questsOnRunEnd(false); // después del castigo: lo que dan los desafíos no se descuenta
 }
+// Acceso discreto a las apariencias del guardián (Tienda → Skins, solo las suyas). Solo jugando solo, fuera de la
+// primera partida y si tiene skins que todavía no tenés. Es un botón más: nunca frena ni reemplaza "Continuar".
+function endSkinsLinkHTML(k){
+  if(!k || !CLASSES[k] || typeof shopOpen!=="function" || typeof premiumChampSkinIds!=="function") return "";
+  if((typeof netMatch!=="undefined" && netMatch) || (typeof netInRoom==="function" && netInRoom())) return "";
+  if(typeof save!=="undefined" && save.firstRun==="jugando") return "";
+  if(!premiumChampSkinIds(k).length) return "";
+  return `<div class="end-skins"><button type="button" class="end-skins-btn" data-end-skins="${k}">Ver apariencias de ${CLASSES[k].name}</button></div>`;
+}
+document.addEventListener("click", e=>{
+  const b = e.target.closest && e.target.closest("[data-end-skins]"); if(!b) return;
+  if(typeof state!=="undefined" && state!=="victory" && state!=="gameover") return;
+  shopOpen("skins", {champ: b.getAttribute("data-end-skins")});
+});
 // Renglón del castigo de la derrota: lo que se perdió o, en las primeras derrotas, el perdón
 // (progression.js: arenaFailureForgiveReason).
 function defeatPenaltyLineHTML(p){
@@ -211,6 +225,7 @@ const VICTORY_STEPS = [
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%;"></div></div>
       <div class="vic-sub" style="margin-top:-6px;">${champ.xp} / ${need} XP para el próximo nivel</div>
       <div class="vic-xp-row"><span>Oro total</span><b>${victoryData.gold}</b></div>
+      ${endSkinsLinkHTML(victoryData.classKey)}
       <div class="vic-xp-row"><span>Inventario de la cuenta</span><b>${stashUsedSlots()}/${INVENTORY_CAPACITY}</b></div>
       ${typeof storyVictoryScarHtml==="function" ? storyVictoryScarHtml(victoryData) : ""}
       ${victoryNextNoteHTML()}`;
