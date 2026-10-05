@@ -67,9 +67,9 @@ jobs:
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/crystal-wars/hub-integration.js
-      - run: node tools/crystal-wars/required-files.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/crystal-wars/required-files.js
       - run: node tools/ux/test-ability-inspector.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
