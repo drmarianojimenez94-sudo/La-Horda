@@ -19,7 +19,7 @@
 | Arena Gélida | 6 | Tundraverx, Soberano de Hielo | **PASS** | PASS | PASS | ✓ `frio`(a) ✓ `brasero`(p) · `fuego`(p) | 33/0 | — |
 | Arena Acuática | 6 | Kraken Joven | **PASS** | PASS | FIX (F-08) | ✓ `corriente`(a) · `charco`(p) | 39/0 | — |
 | Arena Acuática | 10 | Leviatán | **PASS** | PASS | FIX (F-08) | ✓ `charco`(a) · `marea`(p) ✓ `tentaculos`(p) | 68/4 | — |
-| Laberinto | 6 | Guardián del Laberinto | **PASS** | PASS | PASS | ✓ `muro`(a) ✓ `derrumbe`(p) | 81/22 | — |
+| Laberinto | 6 | Guardián del Laberinto | **PASS** | PASS | PASS | ✓ `muro`(a) ✓ `derrumbe`(p) | 83/22 | — |
 | Laberinto | 10 | Minotauro | **PASS*** | PASS | FIX | · `muro`(p) · `colapso`(p) | 224/196 | WARNING: ficha (BOSS_BLUEPRINTS) (ningún gancho 'auto': la arena sólo importa si el jugador la busca) |
 | Abismo | 9 | El Carcelero del Vacío | **PASS** | PASS | FIX (P0-11) | ✓ `gancho`(a) ✓ `plataformas`(a) | 22/0 | — |
 | Abismo | 10 | El Que Mora Debajo | **PASS** | PASS | PASS | ✓ `plataformas`(a) · `jinete`(p) ✓ `tentaculo`(p) | 42/6 | — |

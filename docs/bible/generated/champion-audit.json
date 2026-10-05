@@ -4438,7 +4438,7 @@
      "area": "ability",
      "name": "Definitiva BERRINCHE: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -4544,7 +4544,7 @@
      "selfChanged": 2,
      "spawned": 1,
      "vfx": 419,
-     "sfx": 5,
+     "sfx": 4,
      "floatText": 80,
      "netEvents": 7,
      "error": null
@@ -6275,7 +6275,7 @@
      "area": "ability",
      "name": "Hab. 1 Agujas de penumbra: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "60"
     },
     {
      "area": "ability",
@@ -6293,25 +6293,25 @@
      "area": "ability",
      "name": "Hab. 1 Agujas de penumbra: replicado a invitados",
      "level": "PASS",
-     "detail": "27 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Costura de fuga: efecto de juego",
      "level": "PASS",
-     "detail": "daño 395, enemigos con estado 1, aliados 0, propio 4, entidades 0"
+     "detail": "daño 380, enemigos con estado 0, aliados 0, propio 4, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Costura de fuga: VFX",
      "level": "PASS",
-     "detail": "106"
+     "detail": "115"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Costura de fuga: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
@@ -6323,19 +6323,19 @@
      "area": "ability",
      "name": "Hab. 2 Costura de fuga: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Deshilachar: efecto de juego",
      "level": "PASS",
-     "detail": "daño 494, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 494, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Deshilachar: VFX",
      "level": "PASS",
-     "detail": "44"
+     "detail": "49"
     },
     {
      "area": "ability",
@@ -6347,43 +6347,43 @@
      "area": "ability",
      "name": "Hab. 3 Deshilachar: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "8"
+     "detail": "9"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Deshilachar: replicado a invitados",
      "level": "PASS",
-     "detail": "22 eventos de red"
+     "detail": "26 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva La última puntada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1004, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 1029, enemigos con estado 1, aliados 3, propio 3, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva La última puntada: VFX",
      "level": "PASS",
-     "detail": "163"
+     "detail": "171"
     },
     {
      "area": "ability",
      "name": "Definitiva La última puntada: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
      "name": "Definitiva La última puntada: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "32"
+     "detail": "36"
     },
     {
      "area": "ability",
      "name": "Definitiva La última puntada: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "14 eventos de red"
     }
    ],
    "abilities": [
@@ -6391,7 +6391,7 @@
      "slot": 0,
      "name": "Agujas de penumbra",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "cone",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -6404,17 +6404,17 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 55,
+     "vfx": 60,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 27,
+     "netEvents": 30,
      "error": null
     },
     {
      "slot": 1,
      "name": "Costura de fuga",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -6422,15 +6422,15 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 395,
-     "enemiesAffected": 1,
+     "dmg": 380,
+     "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 4,
      "spawned": 0,
-     "vfx": 106,
-     "sfx": 4,
+     "vfx": 115,
+     "sfx": 3,
      "floatText": 20,
-     "netEvents": 5,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -6441,19 +6441,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 494,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 44,
+     "vfx": 49,
      "sfx": 4,
-     "floatText": 8,
-     "netEvents": 22,
+     "floatText": 9,
+     "netEvents": 26,
      "error": null
     },
     {
@@ -6464,19 +6462,19 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
-      "portCastUntil"
+      "portCastUntil",
+      "portSpeedBonus",
+      "portSpeedTimer"
      ],
-     "dmg": 1004,
-     "enemiesAffected": 0,
-     "alliesHelped": 0,
+     "dmg": 1029,
+     "enemiesAffected": 1,
+     "alliesHelped": 3,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 163,
-     "sfx": 3,
-     "floatText": 32,
-     "netEvents": 7,
+     "vfx": 171,
+     "sfx": 4,
+     "floatText": 36,
+     "netEvents": 14,
      "error": null
     }
    ],
@@ -6592,7 +6590,7 @@
      "area": "ability",
      "name": "Hab. 1 Astillas errantes: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "60"
     },
     {
      "area": "ability",
@@ -6610,7 +6608,7 @@
      "area": "ability",
      "name": "Hab. 1 Astillas errantes: replicado a invitados",
      "level": "PASS",
-     "detail": "27 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
@@ -6622,7 +6620,7 @@
      "area": "ability",
      "name": "Hab. 2 Reflejo fugitivo: VFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "16"
     },
     {
      "area": "ability",
@@ -6634,13 +6632,13 @@
      "area": "ability",
      "name": "Hab. 2 Reflejo fugitivo: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "1"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Reflejo fugitivo: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "10 eventos de red"
     },
     {
      "area": "ability",
@@ -6652,7 +6650,7 @@
      "area": "ability",
      "name": "Hab. 3 Corte cruzado: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "43"
     },
     {
      "area": "ability",
@@ -6670,37 +6668,37 @@
      "area": "ability",
      "name": "Hab. 3 Corte cruzado: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Galería de nadie: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 3, entidades 3"
+     "detail": "daño 0, enemigos con estado 10, aliados 0, propio 1, entidades 3"
     },
     {
      "area": "ability",
      "name": "Definitiva Galería de nadie: VFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "62"
     },
     {
      "area": "ability",
      "name": "Definitiva Galería de nadie: SFX",
      "level": "PASS",
-     "detail": "2"
+     "detail": "4"
     },
     {
      "area": "ability",
      "name": "Definitiva Galería de nadie: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "11"
     },
     {
      "area": "ability",
      "name": "Definitiva Galería de nadie: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "32 eventos de red"
     }
    ],
    "abilities": [
@@ -6708,7 +6706,7 @@
      "slot": 0,
      "name": "Astillas errantes",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "cone",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -6721,17 +6719,17 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 55,
+     "vfx": 60,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 27,
+     "netEvents": 30,
      "error": null
     },
     {
      "slot": 1,
      "name": "Reflejo fugitivo",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -6744,17 +6742,17 @@
      "alliesHelped": 0,
      "selfChanged": 4,
      "spawned": 1,
-     "vfx": 4,
+     "vfx": 16,
      "sfx": 2,
-     "floatText": 0,
-     "netEvents": 5,
+     "floatText": 1,
+     "netEvents": 10,
      "error": null
     },
     {
      "slot": 2,
      "name": "Corte cruzado",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -6767,10 +6765,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 43,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -6781,19 +6779,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 0,
-     "enemiesAffected": 0,
+     "enemiesAffected": 10,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 3,
-     "vfx": 6,
-     "sfx": 2,
-     "floatText": 0,
-     "netEvents": 7,
+     "vfx": 62,
+     "sfx": 4,
+     "floatText": 11,
+     "netEvents": 32,
      "error": null
     }
    ],
@@ -6903,13 +6899,13 @@
      "area": "ability",
      "name": "Hab. 1 Bronce vivo: efecto de juego",
      "level": "PASS",
-     "detail": "daño 491, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 491, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Bronce vivo: VFX",
      "level": "PASS",
-     "detail": "44"
+     "detail": "49"
     },
     {
      "area": "ability",
@@ -6927,7 +6923,7 @@
      "area": "ability",
      "name": "Hab. 1 Bronce vivo: replicado a invitados",
      "level": "PASS",
-     "detail": "22 eventos de red"
+     "detail": "25 eventos de red"
     },
     {
      "area": "ability",
@@ -6939,7 +6935,7 @@
      "area": "ability",
      "name": "Hab. 2 Bajo la campana: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -6957,7 +6953,7 @@
      "area": "ability",
      "name": "Hab. 2 Bajo la campana: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
@@ -6969,7 +6965,7 @@
      "area": "ability",
      "name": "Hab. 3 Badajo de retorno: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "60"
     },
     {
      "area": "ability",
@@ -6987,25 +6983,25 @@
      "area": "ability",
      "name": "Hab. 3 Badajo de retorno: replicado a invitados",
      "level": "PASS",
-     "detail": "27 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Que todos la escuchen: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1408, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 1483, enemigos con estado 10, aliados 6, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Que todos la escuchen: VFX",
      "level": "PASS",
-     "detail": "153"
+     "detail": "164"
     },
     {
      "area": "ability",
      "name": "Definitiva Que todos la escuchen: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -7017,7 +7013,7 @@
      "area": "ability",
      "name": "Definitiva Que todos la escuchen: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -7029,26 +7025,24 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 491,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 44,
+     "vfx": 49,
      "sfx": 4,
      "floatText": 8,
-     "netEvents": 22,
+     "netEvents": 25,
      "error": null
     },
     {
      "slot": 1,
      "name": "Bajo la campana",
      "kind": "expedition",
-     "targeting": "self_aoe",
+     "targeting": "cone",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -7061,17 +7055,17 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
      "floatText": 0,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
      "slot": 2,
      "name": "Badajo de retorno",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "cone",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -7084,10 +7078,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 55,
+     "vfx": 60,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 27,
+     "netEvents": 30,
      "error": null
     },
     {
@@ -7098,19 +7092,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 1408,
-     "enemiesAffected": 0,
-     "alliesHelped": 0,
-     "selfChanged": 3,
+     "dmg": 1483,
+     "enemiesAffected": 10,
+     "alliesHelped": 6,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 153,
-     "sfx": 3,
+     "vfx": 164,
+     "sfx": 5,
      "floatText": 30,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -7226,7 +7218,7 @@
      "area": "ability",
      "name": "Hab. 1 Raíces de paso: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "43"
     },
     {
      "area": "ability",
@@ -7244,19 +7236,19 @@
      "area": "ability",
      "name": "Hab. 1 Raíces de paso: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Corteza prestada: efecto de juego",
      "level": "PASS",
-     "detail": "daño 244, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 244, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Corteza prestada: VFX",
      "level": "PASS",
-     "detail": "33"
+     "detail": "38"
     },
     {
      "area": "ability",
@@ -7274,19 +7266,19 @@
      "area": "ability",
      "name": "Hab. 2 Corteza prestada: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Poda necesaria: efecto de juego",
      "level": "PASS",
-     "detail": "daño 487, enemigos con estado 0, aliados 0, propio 4, entidades 0"
+     "detail": "daño 487, enemigos con estado 0, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Poda necesaria: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "39"
     },
     {
      "area": "ability",
@@ -7304,25 +7296,25 @@
      "area": "ability",
      "name": "Hab. 3 Poda necesaria: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "21 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva El bosque camina: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1386, enemigos con estado 8, aliados 0, propio 3, entidades 1"
+     "detail": "daño 1409, enemigos con estado 8, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
      "name": "Definitiva El bosque camina: VFX",
      "level": "PASS",
-     "detail": "244"
+     "detail": "252"
     },
     {
      "area": "ability",
      "name": "Definitiva El bosque camina: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -7334,7 +7326,7 @@
      "area": "ability",
      "name": "Definitiva El bosque camina: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -7342,7 +7334,7 @@
      "slot": 0,
      "name": "Raíces de paso",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -7353,10 +7345,10 @@
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 43,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -7367,19 +7359,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 244,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 33,
+     "vfx": 38,
      "sfx": 3,
      "floatText": 6,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -7391,19 +7381,17 @@
      "effect": true,
      "selfKeys": [
       "hp",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 487,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 39,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 21,
      "error": null
     },
     {
@@ -7414,19 +7402,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 1386,
+     "dmg": 1409,
      "enemiesAffected": 8,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 1,
-     "vfx": 244,
-     "sfx": 3,
+     "vfx": 252,
+     "sfx": 4,
      "floatText": 48,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -7542,7 +7528,7 @@
      "area": "ability",
      "name": "Hab. 1 Nota discordante: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "60"
     },
     {
      "area": "ability",
@@ -7560,19 +7546,19 @@
      "area": "ability",
      "name": "Hab. 1 Nota discordante: replicado a invitados",
      "level": "PASS",
-     "detail": "27 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Marcha de salida: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 6, propio 4, entidades 0"
+     "detail": "daño 0, enemigos con estado 0, aliados 6, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Marcha de salida: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -7590,19 +7576,19 @@
      "area": "ability",
      "name": "Hab. 2 Marcha de salida: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Volver al estribillo: efecto de juego",
      "level": "PASS",
-     "detail": "daño 74, enemigos con estado 0, aliados 6, propio 4, entidades 0"
+     "detail": "daño 74, enemigos con estado 0, aliados 6, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Volver al estribillo: VFX",
      "level": "PASS",
-     "detail": "44"
+     "detail": "49"
     },
     {
      "area": "ability",
@@ -7620,25 +7606,25 @@
      "area": "ability",
      "name": "Hab. 3 Volver al estribillo: replicado a invitados",
      "level": "PASS",
-     "detail": "22 eventos de red"
+     "detail": "25 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Todavía hay una salida: efecto de juego",
      "level": "PASS",
-     "detail": "daño 134, enemigos con estado 3, aliados 6, propio 6, entidades 1"
+     "detail": "daño 128, enemigos con estado 1, aliados 6, propio 4, entidades 1"
     },
     {
      "area": "ability",
      "name": "Definitiva Todavía hay una salida: VFX",
      "level": "PASS",
-     "detail": "163"
+     "detail": "162"
     },
     {
      "area": "ability",
      "name": "Definitiva Todavía hay una salida: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -7650,7 +7636,7 @@
      "area": "ability",
      "name": "Definitiva Todavía hay una salida: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -7658,7 +7644,7 @@
      "slot": 0,
      "name": "Nota discordante",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "cone",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -7671,10 +7657,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 55,
+     "vfx": 60,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 27,
+     "netEvents": 30,
      "error": null
     },
     {
@@ -7685,20 +7671,18 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil",
       "exMarchUntil"
      ],
      "dmg": 0,
      "enemiesAffected": 0,
      "alliesHelped": 6,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
      "floatText": 0,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -7710,19 +7694,17 @@
      "effect": true,
      "selfKeys": [
       "hp",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 74,
      "enemiesAffected": 0,
      "alliesHelped": 6,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 0,
-     "vfx": 44,
+     "vfx": 49,
      "sfx": 4,
      "floatText": 8,
-     "netEvents": 22,
+     "netEvents": 25,
      "error": null
     },
     {
@@ -7736,19 +7718,17 @@
       "hp",
       "shield",
       "shieldTimer",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 134,
-     "enemiesAffected": 3,
+     "dmg": 128,
+     "enemiesAffected": 1,
      "alliesHelped": 6,
-     "selfChanged": 6,
+     "selfChanged": 4,
      "spawned": 1,
-     "vfx": 163,
-     "sfx": 6,
+     "vfx": 162,
+     "sfx": 4,
      "floatText": 36,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -7864,7 +7844,7 @@
      "area": "ability",
      "name": "Hab. 1 Perno conductor: VFX",
      "level": "PASS",
-     "detail": "29"
+     "detail": "41"
     },
     {
      "area": "ability",
@@ -7882,19 +7862,19 @@
      "area": "ability",
      "name": "Hab. 1 Perno conductor: replicado a invitados",
      "level": "PASS",
-     "detail": "16 eventos de red"
+     "detail": "17 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Apoyar la culata: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Apoyar la culata: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -7906,73 +7886,73 @@
      "area": "ability",
      "name": "Hab. 2 Apoyar la culata: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "1"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Apoyar la culata: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cerrar el circuito: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 247, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cerrar el circuito: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "49"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cerrar el circuito: SFX",
      "level": "PASS",
-     "detail": "2"
+     "detail": "4"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cerrar el circuito: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "8"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cerrar el circuito: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "25 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1502, enemigos con estado 2, aliados 0, propio 3, entidades 0"
+     "detail": "daño 1441, enemigos con estado 10, aliados 3, propio 5, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: VFX",
      "level": "PASS",
-     "detail": "200"
+     "detail": "199"
     },
     {
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "3"
     },
     {
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "40"
+     "detail": "44"
     },
     {
      "area": "ability",
      "name": "Definitiva Tormenta de rescate: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "14 eventos de red"
     }
    ],
    "abilities": [
@@ -7980,7 +7960,7 @@
      "slot": 0,
      "name": "Perno conductor",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -7993,10 +7973,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 29,
+     "vfx": 41,
      "sfx": 4,
      "floatText": 5,
-     "netEvents": 16,
+     "netEvents": 17,
      "error": null
     },
     {
@@ -8007,19 +7987,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 0,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
-     "floatText": 0,
-     "netEvents": 5,
+     "floatText": 1,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -8030,19 +8008,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 0,
+     "dmg": 247,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 3,
-     "sfx": 2,
-     "floatText": 0,
-     "netEvents": 5,
+     "vfx": 49,
+     "sfx": 4,
+     "floatText": 8,
+     "netEvents": 25,
      "error": null
     },
     {
@@ -8055,17 +8031,19 @@
      "selfKeys": [
       "fx",
       "fy",
-      "portCastUntil"
+      "portCastUntil",
+      "portSpeedBonus",
+      "portSpeedTimer"
      ],
-     "dmg": 1502,
-     "enemiesAffected": 2,
-     "alliesHelped": 0,
-     "selfChanged": 3,
+     "dmg": 1441,
+     "enemiesAffected": 10,
+     "alliesHelped": 3,
+     "selfChanged": 5,
      "spawned": 0,
-     "vfx": 200,
-     "sfx": 5,
-     "floatText": 40,
-     "netEvents": 7,
+     "vfx": 199,
+     "sfx": 3,
+     "floatText": 44,
+     "netEvents": 14,
      "error": null
     }
    ],
@@ -8175,19 +8153,19 @@
      "area": "ability",
      "name": "Hab. 1 Nube obrera: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1664, enemigos con estado 3, aliados 0, propio 1, entidades 1"
+     "detail": "daño 1632, enemigos con estado 2, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Nube obrera: VFX",
      "level": "PASS",
-     "detail": "416"
+     "detail": "415"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Nube obrera: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -8199,19 +8177,19 @@
      "area": "ability",
      "name": "Hab. 1 Nube obrera: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Volvé a casa: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 4, entidades 0"
+     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Volvé a casa: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -8229,7 +8207,7 @@
      "area": "ability",
      "name": "Hab. 2 Volvé a casa: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
@@ -8241,7 +8219,7 @@
      "area": "ability",
      "name": "Hab. 3 Polen de aviso: VFX",
      "level": "PASS",
-     "detail": "54"
+     "detail": "59"
     },
     {
      "area": "ability",
@@ -8259,25 +8237,25 @@
      "area": "ability",
      "name": "Hab. 3 Polen de aviso: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "29 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva El cielo zumba: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1996, enemigos con estado 3, aliados 0, propio 1, entidades 1"
+     "detail": "daño 1958, enemigos con estado 2, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
      "name": "Definitiva El cielo zumba: VFX",
      "level": "PASS",
-     "detail": "416"
+     "detail": "415"
     },
     {
      "area": "ability",
      "name": "Definitiva El cielo zumba: SFX",
      "level": "PASS",
-     "detail": "7"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -8289,7 +8267,7 @@
      "area": "ability",
      "name": "Definitiva El cielo zumba: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -8303,15 +8281,15 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 1664,
-     "enemiesAffected": 3,
+     "dmg": 1632,
+     "enemiesAffected": 2,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
-     "vfx": 416,
-     "sfx": 7,
+     "vfx": 415,
+     "sfx": 5,
      "floatText": 80,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -8323,19 +8301,17 @@
      "effect": true,
      "selfKeys": [
       "shieldTimer",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 0,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
      "floatText": 0,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -8353,10 +8329,10 @@
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 0,
-     "vfx": 54,
+     "vfx": 59,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 26,
+     "netEvents": 29,
      "error": null
     },
     {
@@ -8369,15 +8345,15 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 1996,
-     "enemiesAffected": 3,
+     "dmg": 1958,
+     "enemiesAffected": 2,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
-     "vfx": 416,
-     "sfx": 7,
+     "vfx": 415,
+     "sfx": 5,
      "floatText": 80,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -8493,7 +8469,7 @@
      "area": "ability",
      "name": "Hab. 1 Boca de horno: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "60"
     },
     {
      "area": "ability",
@@ -8511,19 +8487,19 @@
      "area": "ability",
      "name": "Hab. 1 Boca de horno: replicado a invitados",
      "level": "PASS",
-     "detail": "27 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Enfriar: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 4, entidades 0"
+     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Enfriar: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -8541,7 +8517,7 @@
      "area": "ability",
      "name": "Hab. 2 Enfriar: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
@@ -8553,7 +8529,7 @@
      "area": "ability",
      "name": "Hab. 3 Paso de ceniza: VFX",
      "level": "PASS",
-     "detail": "103"
+     "detail": "115"
     },
     {
      "area": "ability",
@@ -8571,25 +8547,25 @@
      "area": "ability",
      "name": "Hab. 3 Paso de ceniza: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Abrir todas las válvulas: efecto de juego",
      "level": "PASS",
-     "detail": "daño 2377, enemigos con estado 2, aliados 0, propio 3, entidades 0"
+     "detail": "daño 2331, enemigos con estado 1, aliados 6, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Abrir todas las válvulas: VFX",
      "level": "PASS",
-     "detail": "209"
+     "detail": "211"
     },
     {
      "area": "ability",
      "name": "Definitiva Abrir todas las válvulas: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -8601,7 +8577,7 @@
      "area": "ability",
      "name": "Definitiva Abrir todas las válvulas: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -8609,7 +8585,7 @@
      "slot": 0,
      "name": "Boca de horno",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "cone",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -8622,10 +8598,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 55,
+     "vfx": 60,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 27,
+     "netEvents": 30,
      "error": null
     },
     {
@@ -8637,26 +8613,24 @@
      "effect": true,
      "selfKeys": [
       "shieldTimer",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 0,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
      "floatText": 0,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
      "slot": 2,
      "name": "Paso de ceniza",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -8669,10 +8643,10 @@
      "alliesHelped": 0,
      "selfChanged": 4,
      "spawned": 0,
-     "vfx": 103,
+     "vfx": 115,
      "sfx": 3,
      "floatText": 20,
-     "netEvents": 5,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -8683,19 +8657,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 2377,
-     "enemiesAffected": 2,
-     "alliesHelped": 0,
-     "selfChanged": 3,
+     "dmg": 2331,
+     "enemiesAffected": 1,
+     "alliesHelped": 6,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 209,
-     "sfx": 5,
+     "vfx": 211,
+     "sfx": 4,
      "floatText": 40,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -8811,7 +8783,7 @@
      "area": "ability",
      "name": "Hab. 1 Surco de contención: VFX",
      "level": "PASS",
-     "detail": "35"
+     "detail": "44"
     },
     {
      "area": "ability",
@@ -8829,7 +8801,7 @@
      "area": "ability",
      "name": "Hab. 1 Surco de contención: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
@@ -8841,7 +8813,7 @@
      "area": "ability",
      "name": "Hab. 2 Montículo: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -8853,25 +8825,25 @@
      "area": "ability",
      "name": "Hab. 2 Montículo: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "1"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Montículo: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Devolver a la tierra: efecto de juego",
      "level": "PASS",
-     "detail": "daño 578, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 578, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Devolver a la tierra: VFX",
      "level": "PASS",
-     "detail": "44"
+     "detail": "49"
     },
     {
      "area": "ability",
@@ -8889,25 +8861,25 @@
      "area": "ability",
      "name": "Hab. 3 Devolver a la tierra: replicado a invitados",
      "level": "PASS",
-     "detail": "22 eventos de red"
+     "detail": "25 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Aquí siguen los nombres: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1408, enemigos con estado 10, aliados 0, propio 3, entidades 0"
+     "detail": "daño 1483, enemigos con estado 10, aliados 6, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Aquí siguen los nombres: VFX",
      "level": "PASS",
-     "detail": "153"
+     "detail": "164"
     },
     {
      "area": "ability",
      "name": "Definitiva Aquí siguen los nombres: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "5"
     },
     {
      "area": "ability",
@@ -8919,7 +8891,7 @@
      "area": "ability",
      "name": "Definitiva Aquí siguen los nombres: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -8927,7 +8899,7 @@
      "slot": 0,
      "name": "Surco de contención",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -8938,10 +8910,10 @@
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
-     "vfx": 35,
+     "vfx": 44,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -8959,10 +8931,10 @@
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
-     "floatText": 0,
-     "netEvents": 5,
+     "floatText": 1,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -8973,19 +8945,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 578,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 44,
+     "vfx": 49,
      "sfx": 4,
      "floatText": 8,
-     "netEvents": 22,
+     "netEvents": 25,
      "error": null
     },
     {
@@ -8996,19 +8966,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 1408,
+     "dmg": 1483,
      "enemiesAffected": 10,
-     "alliesHelped": 0,
-     "selfChanged": 3,
+     "alliesHelped": 6,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 153,
-     "sfx": 3,
+     "vfx": 164,
+     "sfx": 5,
      "floatText": 30,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -9124,7 +9092,7 @@
      "area": "ability",
      "name": "Hab. 1 Línea de tinta: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "44"
     },
     {
      "area": "ability",
@@ -9142,19 +9110,19 @@
      "area": "ability",
      "name": "Hab. 1 Línea de tinta: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Volver sobre los pasos: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 4, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Volver sobre los pasos: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -9166,25 +9134,25 @@
      "area": "ability",
      "name": "Hab. 2 Volver sobre los pasos: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "1"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Volver sobre los pasos: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Borrar el camino: efecto de juego",
      "level": "PASS",
-     "detail": "daño 640, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 640, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Borrar el camino: VFX",
      "level": "PASS",
-     "detail": "24"
+     "detail": "29"
     },
     {
      "area": "ability",
@@ -9202,37 +9170,37 @@
      "area": "ability",
      "name": "Hab. 3 Borrar el camino: replicado a invitados",
      "level": "PASS",
-     "detail": "14 eventos de red"
+     "detail": "17 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Atlas de los ausentes: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1203, enemigos con estado 1, aliados 0, propio 3, entidades 0"
+     "detail": "daño 1152, enemigos con estado 4, aliados 3, propio 3, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Atlas de los ausentes: VFX",
      "level": "PASS",
-     "detail": "96"
+     "detail": "98"
     },
     {
      "area": "ability",
      "name": "Definitiva Atlas de los ausentes: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "3"
     },
     {
      "area": "ability",
      "name": "Definitiva Atlas de los ausentes: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "18"
+     "detail": "22"
     },
     {
      "area": "ability",
      "name": "Definitiva Atlas de los ausentes: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "14 eventos de red"
     }
    ],
    "abilities": [
@@ -9240,7 +9208,7 @@
      "slot": 0,
      "name": "Línea de tinta",
      "kind": "expedition",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -9253,10 +9221,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 44,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -9267,19 +9235,19 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
-      "portCastUntil"
+      "portCastUntil",
+      "portSpeedBonus",
+      "portSpeedTimer"
      ],
      "dmg": 0,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 4,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
-     "floatText": 0,
-     "netEvents": 5,
+     "floatText": 1,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -9290,19 +9258,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 640,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 24,
+     "vfx": 29,
      "sfx": 4,
      "floatText": 4,
-     "netEvents": 14,
+     "netEvents": 17,
      "error": null
     },
     {
@@ -9313,19 +9279,19 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
-      "portCastUntil"
+      "portCastUntil",
+      "portSpeedBonus",
+      "portSpeedTimer"
      ],
-     "dmg": 1203,
-     "enemiesAffected": 1,
-     "alliesHelped": 0,
+     "dmg": 1152,
+     "enemiesAffected": 4,
+     "alliesHelped": 3,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 96,
-     "sfx": 4,
-     "floatText": 18,
-     "netEvents": 7,
+     "vfx": 98,
+     "sfx": 3,
+     "floatText": 22,
+     "netEvents": 14,
      "error": null
     }
    ],
@@ -9427,6 +9393,12 @@
     },
     {
      "area": "metadata",
+     "name": "Juicio del GM: descripción larga (316): el tooltip usa shortDescription",
+     "level": "WARNING",
+     "detail": ""
+    },
+    {
+     "area": "metadata",
      "name": "nombres de habilidad únicos",
      "level": "PASS",
      "detail": ""
@@ -9447,7 +9419,7 @@
      "area": "ability",
      "name": "Hab. 1 Sentencia Umbría: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "45"
     },
     {
      "area": "ability",
@@ -9465,7 +9437,7 @@
      "area": "ability",
      "name": "Hab. 1 Sentencia Umbría: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
@@ -9477,7 +9449,7 @@
      "area": "ability",
      "name": "Hab. 2 Edicto de Luz: VFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "9"
     },
     {
      "area": "ability",
@@ -9495,49 +9467,49 @@
      "area": "ability",
      "name": "Hab. 2 Edicto de Luz: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Inversión: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 2, propio 4, entidades 0"
+     "detail": "daño 874, enemigos con estado 0, aliados 2, propio 4, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Inversión: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "66"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Inversión: SFX",
      "level": "PASS",
-     "detail": "2"
+     "detail": "4"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Inversión: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "0"
+     "detail": "10"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Inversión: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Juicio del GM: efecto de juego",
      "level": "PASS",
-     "detail": "daño 2712, enemigos con estado 10, aliados 6, propio 8, entidades 0"
+     "detail": "daño 2712, enemigos con estado 10, aliados 6, propio 6, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Juicio del GM: VFX",
      "level": "PASS",
-     "detail": "53"
+     "detail": "69"
     },
     {
      "area": "ability",
@@ -9555,7 +9527,7 @@
      "area": "ability",
      "name": "Definitiva Juicio del GM: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -9563,7 +9535,7 @@
      "slot": 0,
      "name": "Sentencia Umbría",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -9576,10 +9548,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 45,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -9600,17 +9572,17 @@
      "alliesHelped": 0,
      "selfChanged": 4,
      "spawned": 1,
-     "vfx": 4,
+     "vfx": 9,
      "sfx": 2,
      "floatText": 1,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
      "slot": 2,
      "name": "Inversión",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -9618,15 +9590,15 @@
       "shieldTimer",
       "portCastUntil"
      ],
-     "dmg": 0,
+     "dmg": 874,
      "enemiesAffected": 0,
      "alliesHelped": 2,
      "selfChanged": 4,
      "spawned": 0,
-     "vfx": 3,
-     "sfx": 2,
-     "floatText": 0,
-     "netEvents": 5,
+     "vfx": 66,
+     "sfx": 4,
+     "floatText": 10,
+     "netEvents": 30,
      "error": null
     },
     {
@@ -9640,8 +9612,6 @@
       "hp",
       "shield",
       "shieldTimer",
-      "fx",
-      "fy",
       "portCastUntil",
       "portSpeedTimer",
       "portSpeedBonus"
@@ -9649,19 +9619,19 @@
      "dmg": 2712,
      "enemiesAffected": 10,
      "alliesHelped": 6,
-     "selfChanged": 8,
+     "selfChanged": 6,
      "spawned": 0,
-     "vfx": 53,
+     "vfx": 69,
      "sfx": 5,
      "floatText": 14,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
    "status": "PASS*",
    "summary": {
     "fail": 0,
-    "warning": 3,
+    "warning": 4,
     "pass": 33
    }
   },
@@ -9770,7 +9740,7 @@
      "area": "art",
      "name": "sprite visible en partida",
      "level": "PASS",
-     "detail": "787 píxeles"
+     "detail": "789 píxeles"
     },
     {
      "area": "ability",
@@ -9782,7 +9752,7 @@
      "area": "ability",
      "name": "Hab. 1 Corriente de Resaca: VFX",
      "level": "PASS",
-     "detail": "246"
+     "detail": "257"
     },
     {
      "area": "ability",
@@ -9800,19 +9770,19 @@
      "area": "ability",
      "name": "Hab. 1 Corriente de Resaca: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "6 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Presión Abisal: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1534, enemigos con estado 10, aliados 0, propio 3, entidades 0"
+     "detail": "daño 1534, enemigos con estado 10, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Presión Abisal: VFX",
      "level": "PASS",
-     "detail": "54"
+     "detail": "59"
     },
     {
      "area": "ability",
@@ -9830,25 +9800,25 @@
      "area": "ability",
      "name": "Hab. 2 Presión Abisal: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "29 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cabalgar la Ola: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1104, enemigos con estado 0, aliados 2, propio 4, entidades 0"
+     "detail": "daño 1215, enemigos con estado 1, aliados 2, propio 4, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cabalgar la Ola: VFX",
      "level": "PASS",
-     "detail": "43"
+     "detail": "58"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Cabalgar la Ola: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -9860,25 +9830,25 @@
      "area": "ability",
      "name": "Hab. 3 Cabalgar la Ola: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva El Océano Reclama la Arena: efecto de juego",
      "level": "PASS",
-     "detail": "daño 4895, enemigos con estado 1, aliados 6, propio 5, entidades 0"
+     "detail": "daño 5033, enemigos con estado 5, aliados 6, propio 3, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva El Océano Reclama la Arena: VFX",
      "level": "PASS",
-     "detail": "256"
+     "detail": "276"
     },
     {
      "area": "ability",
      "name": "Definitiva El Océano Reclama la Arena: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "10"
     },
     {
      "area": "ability",
@@ -9890,7 +9860,7 @@
      "area": "ability",
      "name": "Definitiva El Océano Reclama la Arena: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -9898,7 +9868,7 @@
      "slot": 0,
      "name": "Corriente de Resaca",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -9913,10 +9883,10 @@
      "alliesHelped": 1,
      "selfChanged": 5,
      "spawned": 0,
-     "vfx": 246,
+     "vfx": 257,
      "sfx": 4,
      "floatText": 48,
-     "netEvents": 5,
+     "netEvents": 6,
      "error": null
     },
     {
@@ -9927,26 +9897,24 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 1534,
      "enemiesAffected": 10,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 54,
+     "vfx": 59,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 26,
+     "netEvents": 29,
      "error": null
     },
     {
      "slot": 2,
      "name": "Cabalgar la Ola",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -9954,15 +9922,15 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 1104,
-     "enemiesAffected": 0,
+     "dmg": 1215,
+     "enemiesAffected": 1,
      "alliesHelped": 2,
      "selfChanged": 4,
      "spawned": 0,
-     "vfx": 43,
-     "sfx": 3,
+     "vfx": 58,
+     "sfx": 4,
      "floatText": 9,
-     "netEvents": 5,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -9975,19 +9943,17 @@
      "selfKeys": [
       "shield",
       "shieldTimer",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 4895,
-     "enemiesAffected": 1,
+     "dmg": 5033,
+     "enemiesAffected": 5,
      "alliesHelped": 6,
-     "selfChanged": 5,
+     "selfChanged": 3,
      "spawned": 0,
-     "vfx": 256,
-     "sfx": 5,
+     "vfx": 276,
+     "sfx": 10,
      "floatText": 54,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -10103,7 +10069,7 @@
      "area": "ability",
      "name": "Hab. 1 Prisma: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "60"
     },
     {
      "area": "ability",
@@ -10121,7 +10087,7 @@
      "area": "ability",
      "name": "Hab. 1 Prisma: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "29 eventos de red"
     },
     {
      "area": "ability",
@@ -10133,7 +10099,7 @@
      "area": "ability",
      "name": "Hab. 2 Refracción: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "46"
     },
     {
      "area": "ability",
@@ -10151,7 +10117,7 @@
      "area": "ability",
      "name": "Hab. 2 Refracción: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
@@ -10163,7 +10129,7 @@
      "area": "ability",
      "name": "Hab. 3 Paso Luminal: VFX",
      "level": "PASS",
-     "detail": "55"
+     "detail": "67"
     },
     {
      "area": "ability",
@@ -10175,31 +10141,31 @@
      "area": "ability",
      "name": "Hab. 3 Paso Luminal: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "10"
+     "detail": "12"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Paso Luminal: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "32 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Catedral del Sol: efecto de juego",
      "level": "PASS",
-     "detail": "daño 2007, enemigos con estado 2, aliados 0, propio 1, entidades 4"
+     "detail": "daño 1985, enemigos con estado 1, aliados 0, propio 1, entidades 4"
     },
     {
      "area": "ability",
      "name": "Definitiva Catedral del Sol: VFX",
      "level": "PASS",
-     "detail": "363"
+     "detail": "365"
     },
     {
      "area": "ability",
      "name": "Definitiva Catedral del Sol: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -10211,7 +10177,7 @@
      "area": "ability",
      "name": "Definitiva Catedral del Sol: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -10230,17 +10196,17 @@
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
-     "vfx": 55,
+     "vfx": 60,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 26,
+     "netEvents": 29,
      "error": null
     },
     {
      "slot": 1,
      "name": "Refracción",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -10253,17 +10219,17 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 46,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
      "slot": 2,
      "name": "Paso Luminal",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -10274,31 +10240,31 @@
      "alliesHelped": 0,
      "selfChanged": 2,
      "spawned": 1,
-     "vfx": 55,
+     "vfx": 67,
      "sfx": 4,
-     "floatText": 10,
-     "netEvents": 26,
+     "floatText": 12,
+     "netEvents": 32,
      "error": null
     },
     {
      "slot": "ult",
      "name": "Catedral del Sol",
      "kind": "ascension",
-     "targeting": "self_aoe",
+     "targeting": "point",
      "status": [],
      "effect": true,
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 2007,
-     "enemiesAffected": 2,
+     "dmg": 1985,
+     "enemiesAffected": 1,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 4,
-     "vfx": 363,
-     "sfx": 5,
+     "vfx": 365,
+     "sfx": 4,
      "floatText": 70,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -10408,19 +10374,19 @@
      "area": "ability",
      "name": "Hab. 1 Enjambre: efecto de juego",
      "level": "PASS",
-     "detail": "daño 2181, enemigos con estado 3, aliados 0, propio 1, entidades 0"
+     "detail": "daño 2199, enemigos con estado 4, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Enjambre: VFX",
      "level": "PASS",
-     "detail": "482"
+     "detail": "490"
     },
     {
      "area": "ability",
      "name": "Hab. 1 Enjambre: SFX",
      "level": "PASS",
-     "detail": "6"
+     "detail": "7"
     },
     {
      "area": "ability",
@@ -10432,19 +10398,19 @@
      "area": "ability",
      "name": "Hab. 1 Enjambre: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Caparazón Vivo: efecto de juego",
      "level": "PASS",
-     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 0, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Caparazón Vivo: VFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -10462,7 +10428,7 @@
      "area": "ability",
      "name": "Hab. 2 Caparazón Vivo: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
@@ -10474,7 +10440,7 @@
      "area": "ability",
      "name": "Hab. 3 Vuelo de Élitros: VFX",
      "level": "PASS",
-     "detail": "39"
+     "detail": "52"
     },
     {
      "area": "ability",
@@ -10492,25 +10458,25 @@
      "area": "ability",
      "name": "Hab. 3 Vuelo de Élitros: replicado a invitados",
      "level": "PASS",
-     "detail": "20 eventos de red"
+     "detail": "24 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Eclipse de Escarabajos: efecto de juego",
      "level": "PASS",
-     "detail": "daño 2574, enemigos con estado 6, aliados 0, propio 3, entidades 1"
+     "detail": "daño 2525, enemigos con estado 5, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
      "name": "Definitiva Eclipse de Escarabajos: VFX",
      "level": "PASS",
-     "detail": "628"
+     "detail": "624"
     },
     {
      "area": "ability",
      "name": "Definitiva Eclipse de Escarabajos: SFX",
      "level": "PASS",
-     "detail": "11"
+     "detail": "8"
     },
     {
      "area": "ability",
@@ -10522,7 +10488,7 @@
      "area": "ability",
      "name": "Definitiva Eclipse de Escarabajos: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -10536,15 +10502,15 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 2181,
-     "enemiesAffected": 3,
+     "dmg": 2199,
+     "enemiesAffected": 4,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 0,
-     "vfx": 482,
-     "sfx": 6,
+     "vfx": 490,
+     "sfx": 7,
      "floatText": 94,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -10555,26 +10521,24 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 0,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 3,
+     "vfx": 8,
      "sfx": 2,
      "floatText": 0,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
      "slot": 2,
      "name": "Vuelo de Élitros",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -10587,10 +10551,10 @@
      "alliesHelped": 0,
      "selfChanged": 4,
      "spawned": 0,
-     "vfx": 39,
+     "vfx": 52,
      "sfx": 4,
      "floatText": 7,
-     "netEvents": 20,
+     "netEvents": 24,
      "error": null
     },
     {
@@ -10601,19 +10565,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 2574,
-     "enemiesAffected": 6,
+     "dmg": 2525,
+     "enemiesAffected": 5,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 1,
-     "vfx": 628,
-     "sfx": 11,
+     "vfx": 624,
+     "sfx": 8,
      "floatText": 120,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -10729,7 +10691,7 @@
      "area": "ability",
      "name": "Hab. 1 Máscara Arrojada: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "45"
     },
     {
      "area": "ability",
@@ -10747,19 +10709,19 @@
      "area": "ability",
      "name": "Hab. 1 Máscara Arrojada: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Coro de Rostros: efecto de juego",
      "level": "PASS",
-     "detail": "daño 232, enemigos con estado 0, aliados 3, propio 5, entidades 0"
+     "detail": "daño 232, enemigos con estado 0, aliados 3, propio 3, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Coro de Rostros: VFX",
      "level": "PASS",
-     "detail": "54"
+     "detail": "59"
     },
     {
      "area": "ability",
@@ -10777,7 +10739,7 @@
      "area": "ability",
      "name": "Hab. 2 Coro de Rostros: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "29 eventos de red"
     },
     {
      "area": "ability",
@@ -10789,7 +10751,7 @@
      "area": "ability",
      "name": "Hab. 3 Cambio de Rostro: VFX",
      "level": "PASS",
-     "detail": "54"
+     "detail": "66"
     },
     {
      "area": "ability",
@@ -10807,25 +10769,25 @@
      "area": "ability",
      "name": "Hab. 3 Cambio de Rostro: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva El Gran Teatro: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1023, enemigos con estado 10, aliados 6, propio 7, entidades 1"
+     "detail": "daño 1040, enemigos con estado 10, aliados 6, propio 5, entidades 1"
     },
     {
      "area": "ability",
      "name": "Definitiva El Gran Teatro: VFX",
      "level": "PASS",
-     "detail": "210"
+     "detail": "218"
     },
     {
      "area": "ability",
      "name": "Definitiva El Gran Teatro: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -10837,7 +10799,7 @@
      "area": "ability",
      "name": "Definitiva El Gran Teatro: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -10845,7 +10807,7 @@
      "slot": 0,
      "name": "Máscara Arrojada",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -10860,10 +10822,10 @@
      "alliesHelped": 1,
      "selfChanged": 5,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 45,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -10874,8 +10836,6 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil",
       "portSpeedTimer",
       "portSpeedBonus"
@@ -10883,19 +10843,19 @@
      "dmg": 232,
      "enemiesAffected": 0,
      "alliesHelped": 3,
-     "selfChanged": 5,
+     "selfChanged": 3,
      "spawned": 0,
-     "vfx": 54,
+     "vfx": 59,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 26,
+     "netEvents": 29,
      "error": null
     },
     {
      "slot": 2,
      "name": "Cambio de Rostro",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -10908,10 +10868,10 @@
      "alliesHelped": 0,
      "selfChanged": 4,
      "spawned": 0,
-     "vfx": 54,
+     "vfx": 66,
      "sfx": 4,
      "floatText": 10,
-     "netEvents": 26,
+     "netEvents": 30,
      "error": null
     },
     {
@@ -10924,21 +10884,19 @@
      "selfKeys": [
       "shield",
       "shieldTimer",
-      "fx",
-      "fy",
       "portCastUntil",
       "portSpeedTimer",
       "portSpeedBonus"
      ],
-     "dmg": 1023,
+     "dmg": 1040,
      "enemiesAffected": 10,
      "alliesHelped": 6,
-     "selfChanged": 7,
+     "selfChanged": 5,
      "spawned": 1,
-     "vfx": 210,
-     "sfx": 5,
+     "vfx": 218,
+     "sfx": 6,
      "floatText": 44,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -11054,7 +11012,7 @@
      "area": "ability",
      "name": "Hab. 1 Estrella Errante: VFX",
      "level": "PASS",
-     "detail": "34"
+     "detail": "46"
     },
     {
      "area": "ability",
@@ -11072,25 +11030,25 @@
      "area": "ability",
      "name": "Hab. 1 Estrella Errante: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Pozo Gravitatorio: efecto de juego",
      "level": "PASS",
-     "detail": "daño 1349, enemigos con estado 0, aliados 0, propio 1, entidades 0"
+     "detail": "daño 1395, enemigos con estado 3, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Pozo Gravitatorio: VFX",
      "level": "PASS",
-     "detail": "353"
+     "detail": "367"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Pozo Gravitatorio: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "6"
     },
     {
      "area": "ability",
@@ -11102,19 +11060,19 @@
      "area": "ability",
      "name": "Hab. 2 Pozo Gravitatorio: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Órbita: efecto de juego",
      "level": "PASS",
-     "detail": "daño 84, enemigos con estado 0, aliados 0, propio 2, entidades 0"
+     "detail": "daño 97, enemigos con estado 0, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Órbita: VFX",
      "level": "PASS",
-     "detail": "13"
+     "detail": "18"
     },
     {
      "area": "ability",
@@ -11126,43 +11084,43 @@
      "area": "ability",
      "name": "Hab. 3 Órbita: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "2"
+     "detail": "3"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Órbita: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "9 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Colapso: efecto de juego",
      "level": "PASS",
-     "detail": "daño 732, enemigos con estado 0, aliados 0, propio 1, entidades 0"
+     "detail": "daño 826, enemigos con estado 2, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Definitiva Colapso: VFX",
      "level": "PASS",
-     "detail": "203"
+     "detail": "214"
     },
     {
      "area": "ability",
      "name": "Definitiva Colapso: SFX",
      "level": "PASS",
-     "detail": "4"
+     "detail": "6"
     },
     {
      "area": "ability",
      "name": "Definitiva Colapso: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "40"
+     "detail": "44"
     },
     {
      "area": "ability",
      "name": "Definitiva Colapso: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "14 eventos de red"
     }
    ],
    "abilities": [
@@ -11170,7 +11128,7 @@
      "slot": 0,
      "name": "Estrella Errante",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -11183,10 +11141,10 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 0,
-     "vfx": 34,
+     "vfx": 46,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
@@ -11199,15 +11157,15 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 1349,
-     "enemiesAffected": 0,
+     "dmg": 1395,
+     "enemiesAffected": 3,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 0,
-     "vfx": 353,
-     "sfx": 3,
+     "vfx": 367,
+     "sfx": 6,
      "floatText": 70,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -11220,15 +11178,15 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 84,
+     "dmg": 97,
      "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 2,
      "spawned": 0,
-     "vfx": 13,
+     "vfx": 18,
      "sfx": 3,
-     "floatText": 2,
-     "netEvents": 5,
+     "floatText": 3,
+     "netEvents": 9,
      "error": null
     },
     {
@@ -11241,15 +11199,15 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 732,
-     "enemiesAffected": 0,
+     "dmg": 826,
+     "enemiesAffected": 2,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 0,
-     "vfx": 203,
-     "sfx": 4,
-     "floatText": 40,
-     "netEvents": 7,
+     "vfx": 214,
+     "sfx": 6,
+     "floatText": 44,
+     "netEvents": 14,
      "error": null
     }
    ],
@@ -11365,7 +11323,7 @@
      "area": "ability",
      "name": "Hab. 1 Placa Arrojada: VFX",
      "level": "PASS",
-     "detail": "35"
+     "detail": "45"
     },
     {
      "area": "ability",
@@ -11383,25 +11341,25 @@
      "area": "ability",
      "name": "Hab. 1 Placa Arrojada: replicado a invitados",
      "level": "PASS",
-     "detail": "18 eventos de red"
+     "detail": "19 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: efecto de juego",
      "level": "PASS",
-     "detail": "daño 381, enemigos con estado 8, aliados 0, propio 3, entidades 1"
+     "detail": "daño 389, enemigos con estado 8, aliados 0, propio 3, entidades 1"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: VFX",
      "level": "PASS",
-     "detail": "370"
+     "detail": "384"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "7"
     },
     {
      "area": "ability",
@@ -11413,19 +11371,19 @@
      "area": "ability",
      "name": "Hab. 2 Muro de Placas: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "6 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Pulso del Cristal: efecto de juego",
      "level": "PASS",
-     "detail": "daño 306, enemigos con estado 0, aliados 0, propio 3, entidades 0"
+     "detail": "daño 306, enemigos con estado 0, aliados 0, propio 1, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Pulso del Cristal: VFX",
      "level": "PASS",
-     "detail": "44"
+     "detail": "49"
     },
     {
      "area": "ability",
@@ -11437,31 +11395,31 @@
      "area": "ability",
      "name": "Hab. 3 Pulso del Cristal: feedback (números/avisos)",
      "level": "PASS",
-     "detail": "8"
+     "detail": "12"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Pulso del Cristal: replicado a invitados",
      "level": "PASS",
-     "detail": "22 eventos de red"
+     "detail": "29 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva Ciudadela: efecto de juego",
      "level": "PASS",
-     "detail": "daño 207, enemigos con estado 4, aliados 6, propio 4, entidades 5"
+     "detail": "daño 211, enemigos con estado 4, aliados 6, propio 2, entidades 5"
     },
     {
      "area": "ability",
      "name": "Definitiva Ciudadela: VFX",
      "level": "PASS",
-     "detail": "188"
+     "detail": "196"
     },
     {
      "area": "ability",
      "name": "Definitiva Ciudadela: SFX",
      "level": "PASS",
-     "detail": "3"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -11473,7 +11431,7 @@
      "area": "ability",
      "name": "Definitiva Ciudadela: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -11481,7 +11439,7 @@
      "slot": 0,
      "name": "Placa Arrojada",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -11494,17 +11452,17 @@
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 1,
-     "vfx": 35,
+     "vfx": 45,
      "sfx": 4,
      "floatText": 6,
-     "netEvents": 18,
+     "netEvents": 19,
      "error": null
     },
     {
      "slot": 1,
      "name": "Muro de Placas",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "line",
      "status": [],
      "effect": true,
      "selfKeys": [
@@ -11512,15 +11470,15 @@
       "fy",
       "portCastUntil"
      ],
-     "dmg": 381,
+     "dmg": 389,
      "enemiesAffected": 8,
      "alliesHelped": 0,
      "selfChanged": 3,
      "spawned": 1,
-     "vfx": 370,
-     "sfx": 5,
+     "vfx": 384,
+     "sfx": 7,
      "floatText": 72,
-     "netEvents": 5,
+     "netEvents": 6,
      "error": null
     },
     {
@@ -11531,19 +11489,17 @@
      "status": [],
      "effect": true,
      "selfKeys": [
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 306,
      "enemiesAffected": 0,
      "alliesHelped": 0,
-     "selfChanged": 3,
+     "selfChanged": 1,
      "spawned": 0,
-     "vfx": 44,
+     "vfx": 49,
      "sfx": 4,
-     "floatText": 8,
-     "netEvents": 22,
+     "floatText": 12,
+     "netEvents": 29,
      "error": null
     },
     {
@@ -11555,19 +11511,17 @@
      "effect": true,
      "selfKeys": [
       "hp",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
-     "dmg": 207,
+     "dmg": 211,
      "enemiesAffected": 4,
      "alliesHelped": 6,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 5,
-     "vfx": 188,
-     "sfx": 3,
+     "vfx": 196,
+     "sfx": 4,
      "floatText": 36,
-     "netEvents": 7,
+     "netEvents": 10,
      "error": null
     }
    ],
@@ -11683,7 +11637,7 @@
      "area": "ability",
      "name": "Hab. 1 Abrir Cicatriz: VFX",
      "level": "PASS",
-     "detail": "65"
+     "detail": "70"
     },
     {
      "area": "ability",
@@ -11701,19 +11655,19 @@
      "area": "ability",
      "name": "Hab. 1 Abrir Cicatriz: replicado a invitados",
      "level": "PASS",
-     "detail": "5 eventos de red"
+     "detail": "8 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Eco de la Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 240, enemigos con estado 0, aliados 6, propio 4, entidades 0"
+     "detail": "daño 240, enemigos con estado 0, aliados 6, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 2 Eco de la Cicatriz: VFX",
      "level": "PASS",
-     "detail": "44"
+     "detail": "49"
     },
     {
      "area": "ability",
@@ -11731,25 +11685,25 @@
      "area": "ability",
      "name": "Hab. 2 Eco de la Cicatriz: replicado a invitados",
      "level": "PASS",
-     "detail": "22 eventos de red"
+     "detail": "25 eventos de red"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Paso entre Mundos: efecto de juego",
      "level": "PASS",
-     "detail": "daño 449, enemigos con estado 1, aliados 0, propio 2, entidades 0"
+     "detail": "daño 439, enemigos con estado 0, aliados 0, propio 2, entidades 0"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Paso entre Mundos: VFX",
      "level": "PASS",
-     "detail": "157"
+     "detail": "166"
     },
     {
      "area": "ability",
      "name": "Hab. 3 Paso entre Mundos: SFX",
      "level": "PASS",
-     "detail": "5"
+     "detail": "4"
     },
     {
      "area": "ability",
@@ -11761,25 +11715,25 @@
      "area": "ability",
      "name": "Hab. 3 Paso entre Mundos: replicado a invitados",
      "level": "PASS",
-     "detail": "26 eventos de red"
+     "detail": "30 eventos de red"
     },
     {
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: efecto de juego",
      "level": "PASS",
-     "detail": "daño 771, enemigos con estado 10, aliados 0, propio 1, entidades 1"
+     "detail": "daño 759, enemigos con estado 10, aliados 0, propio 1, entidades 1"
     },
     {
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: VFX",
      "level": "PASS",
-     "detail": "452"
+     "detail": "451"
     },
     {
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: SFX",
      "level": "PASS",
-     "detail": "9"
+     "detail": "7"
     },
     {
      "area": "ability",
@@ -11791,7 +11745,7 @@
      "area": "ability",
      "name": "Definitiva La Gran Cicatriz: replicado a invitados",
      "level": "PASS",
-     "detail": "7 eventos de red"
+     "detail": "10 eventos de red"
     }
    ],
    "abilities": [
@@ -11814,10 +11768,10 @@
      "alliesHelped": 0,
      "selfChanged": 5,
      "spawned": 2,
-     "vfx": 65,
+     "vfx": 70,
      "sfx": 3,
      "floatText": 13,
-     "netEvents": 5,
+     "netEvents": 8,
      "error": null
     },
     {
@@ -11829,40 +11783,38 @@
      "effect": true,
      "selfKeys": [
       "hp",
-      "fx",
-      "fy",
       "portCastUntil"
      ],
      "dmg": 240,
      "enemiesAffected": 0,
      "alliesHelped": 6,
-     "selfChanged": 4,
+     "selfChanged": 2,
      "spawned": 0,
-     "vfx": 44,
+     "vfx": 49,
      "sfx": 4,
      "floatText": 8,
-     "netEvents": 22,
+     "netEvents": 25,
      "error": null
     },
     {
      "slot": 2,
      "name": "Paso entre Mundos",
      "kind": "ascension",
-     "targeting": "point",
+     "targeting": "dash",
      "status": [],
      "effect": true,
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 449,
-     "enemiesAffected": 1,
+     "dmg": 439,
+     "enemiesAffected": 0,
      "alliesHelped": 0,
      "selfChanged": 2,
      "spawned": 0,
-     "vfx": 157,
-     "sfx": 5,
+     "vfx": 166,
+     "sfx": 4,
      "floatText": 30,
-     "netEvents": 26,
+     "netEvents": 30,
      "error": null
     },
     {
@@ -11875,15 +11827,328 @@
      "selfKeys": [
       "portCastUntil"
      ],
-     "dmg": 771,
+     "dmg": 759,
      "enemiesAffected": 10,
      "alliesHelped": 0,
      "selfChanged": 1,
      "spawned": 1,
-     "vfx": 452,
-     "sfx": 9,
+     "vfx": 451,
+     "sfx": 7,
      "floatText": 86,
-     "netEvents": 7,
+     "netEvents": 10,
+     "error": null
+    }
+   ],
+   "status": "PASS*",
+   "summary": {
+    "fail": 0,
+    "warning": 1,
+    "pass": 34
+   }
+  },
+  {
+   "key": "saelis",
+   "name": "Saelis, la Heraldo del Plumaje",
+   "role": "soporte",
+   "checks": [
+    {
+     "area": "identity",
+     "name": "nombre propio",
+     "level": "PASS",
+     "detail": "Saelis"
+    },
+    {
+     "area": "identity",
+     "name": "título",
+     "level": "PASS",
+     "detail": "la Heraldo del Plumaje"
+    },
+    {
+     "area": "identity",
+     "name": "nombre de menú = \"Nombre, título\"",
+     "level": "PASS",
+     "detail": "Saelis, la Heraldo del Plumaje"
+    },
+    {
+     "area": "lore",
+     "name": "largo de historia",
+     "level": "PASS",
+     "detail": "332 caracteres (banda 260-480)"
+    },
+    {
+     "area": "lore",
+     "name": "origen legible",
+     "level": "PASS",
+     "detail": "Las copas altas del Bosque"
+    },
+    {
+     "area": "lore",
+     "name": "frase de catálogo",
+     "level": "PASS",
+     "detail": "90 caracteres"
+    },
+    {
+     "area": "lore",
+     "name": "la frase nombra al campeón",
+     "level": "PASS",
+     "detail": "Saelis"
+    },
+    {
+     "area": "role",
+     "name": "rol",
+     "level": "PASS",
+     "detail": "soporte"
+    },
+    {
+     "area": "kit",
+     "name": "pasiva",
+     "level": "PASS",
+     "detail": "Muda Celeste"
+    },
+    {
+     "area": "kit",
+     "name": "kit completo 3+1",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "progression",
+     "name": "árbol de talentos",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "loot",
+     "name": "set propio",
+     "level": "PASS",
+     "detail": "asc_saelis"
+    },
+    {
+     "area": "art",
+     "name": "skins",
+     "level": "WARNING",
+     "detail": "0 skins, 0 cromas"
+    },
+    {
+     "area": "metadata",
+     "name": "nombres de habilidad únicos",
+     "level": "PASS",
+     "detail": ""
+    },
+    {
+     "area": "art",
+     "name": "sprite visible en partida",
+     "level": "PASS",
+     "detail": "404 píxeles"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 1 Abanico de Plumas: efecto de juego",
+     "level": "PASS",
+     "detail": "daño 155, enemigos con estado 0, aliados 0, propio 3, entidades 5"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 1 Abanico de Plumas: VFX",
+     "level": "PASS",
+     "detail": "60"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 1 Abanico de Plumas: SFX",
+     "level": "PASS",
+     "detail": "4"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 1 Abanico de Plumas: feedback (números/avisos)",
+     "level": "PASS",
+     "detail": "9"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 1 Abanico de Plumas: replicado a invitados",
+     "level": "PASS",
+     "detail": "28 eventos de red"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 2 Ráfaga Ascendente: efecto de juego",
+     "level": "PASS",
+     "detail": "daño 212, enemigos con estado 0, aliados 3, propio 1, entidades 0"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 2 Ráfaga Ascendente: VFX",
+     "level": "PASS",
+     "detail": "59"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 2 Ráfaga Ascendente: SFX",
+     "level": "PASS",
+     "detail": "4"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 2 Ráfaga Ascendente: feedback (números/avisos)",
+     "level": "PASS",
+     "detail": "10"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 2 Ráfaga Ascendente: replicado a invitados",
+     "level": "PASS",
+     "detail": "29 eventos de red"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 3 Llamado del Plumaje: efecto de juego",
+     "level": "PASS",
+     "detail": "daño 0, enemigos con estado 0, aliados 3, propio 3, entidades 0"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 3 Llamado del Plumaje: VFX",
+     "level": "PASS",
+     "detail": "8"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 3 Llamado del Plumaje: SFX",
+     "level": "PASS",
+     "detail": "2"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 3 Llamado del Plumaje: feedback (números/avisos)",
+     "level": "PASS",
+     "detail": "1"
+    },
+    {
+     "area": "ability",
+     "name": "Hab. 3 Llamado del Plumaje: replicado a invitados",
+     "level": "PASS",
+     "detail": "9 eventos de red"
+    },
+    {
+     "area": "ability",
+     "name": "Definitiva Cielo de Plumas: efecto de juego",
+     "level": "PASS",
+     "detail": "daño 238, enemigos con estado 4, aliados 3, propio 1, entidades 1"
+    },
+    {
+     "area": "ability",
+     "name": "Definitiva Cielo de Plumas: VFX",
+     "level": "PASS",
+     "detail": "261"
+    },
+    {
+     "area": "ability",
+     "name": "Definitiva Cielo de Plumas: SFX",
+     "level": "PASS",
+     "detail": "7"
+    },
+    {
+     "area": "ability",
+     "name": "Definitiva Cielo de Plumas: feedback (números/avisos)",
+     "level": "PASS",
+     "detail": "48"
+    },
+    {
+     "area": "ability",
+     "name": "Definitiva Cielo de Plumas: replicado a invitados",
+     "level": "PASS",
+     "detail": "10 eventos de red"
+    }
+   ],
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Abanico de Plumas",
+     "kind": "ascension",
+     "targeting": "cone",
+     "status": [],
+     "effect": true,
+     "selfKeys": [
+      "fx",
+      "fy",
+      "portCastUntil"
+     ],
+     "dmg": 155,
+     "enemiesAffected": 0,
+     "alliesHelped": 0,
+     "selfChanged": 3,
+     "spawned": 5,
+     "vfx": 60,
+     "sfx": 4,
+     "floatText": 9,
+     "netEvents": 28,
+     "error": null
+    },
+    {
+     "slot": 1,
+     "name": "Ráfaga Ascendente",
+     "kind": "ascension",
+     "targeting": "self_aoe",
+     "status": [],
+     "effect": true,
+     "selfKeys": [
+      "portCastUntil"
+     ],
+     "dmg": 212,
+     "enemiesAffected": 0,
+     "alliesHelped": 3,
+     "selfChanged": 1,
+     "spawned": 0,
+     "vfx": 59,
+     "sfx": 4,
+     "floatText": 10,
+     "netEvents": 29,
+     "error": null
+    },
+    {
+     "slot": 2,
+     "name": "Llamado del Plumaje",
+     "kind": "ascension",
+     "targeting": "self_aoe",
+     "status": [],
+     "effect": true,
+     "selfKeys": [
+      "portCastUntil",
+      "portSpeedBonus",
+      "portSpeedTimer"
+     ],
+     "dmg": 0,
+     "enemiesAffected": 0,
+     "alliesHelped": 3,
+     "selfChanged": 3,
+     "spawned": 0,
+     "vfx": 8,
+     "sfx": 2,
+     "floatText": 1,
+     "netEvents": 9,
+     "error": null
+    },
+    {
+     "slot": "ult",
+     "name": "Cielo de Plumas",
+     "kind": "ascension",
+     "targeting": "point",
+     "status": [],
+     "effect": true,
+     "selfKeys": [
+      "portCastUntil"
+     ],
+     "dmg": 238,
+     "enemiesAffected": 4,
+     "alliesHelped": 3,
+     "selfChanged": 1,
+     "spawned": 1,
+     "vfx": 261,
+     "sfx": 7,
+     "floatText": 48,
+     "netEvents": 10,
      "error": null
     }
    ],

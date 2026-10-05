@@ -47,7 +47,7 @@ function _abMeta(sk){
 }
 function _abTargeting(sk, meta){
   if(meta.targeting) return meta.targeting;
-  const prof = typeof AIM_PROFILES!=="undefined" ? AIM_PROFILES[sk.kind] : null;
+  const prof = typeof aimProfileOf==="function" ? aimProfileOf(sk) : null;
   if(prof) return prof.type;
   if(sk.kind==="piercing_shot") return "line";
   const r = sk.radius||sk.outerR||0, range = sk.range||0;

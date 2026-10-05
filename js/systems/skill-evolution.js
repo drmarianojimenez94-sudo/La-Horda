@@ -361,6 +361,13 @@ function drawProjStyle(p, style, r){
       ctx.strokeStyle = c; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(-r*1.75, 0, r*0.5, 0, Math.PI*2); ctx.stroke();
       ctx.globalAlpha = 0.5 + 0.5*Math.sin(t/50); ctx.fillStyle = "#ffffff"; ctx.fillRect(-r*1.8, -1, r*0.25, 2);
       break;
+    case "feather":     // Saelis, la Heraldo del Plumaje: pluma con raquis dorado que gira suave al volar
+      ctx.rotate(Math.sin(t/90)*0.25);
+      ctx.fillStyle = "#1a1626"; ctx.beginPath(); ctx.moveTo(r*1.8, 0); ctx.quadraticCurveTo(0, -r*1.05, -r*1.6, -r*0.15); ctx.lineTo(-r*1.6, r*0.15); ctx.quadraticCurveTo(0, r*1.05, r*1.8, 0); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(r*1.5, 0); ctx.quadraticCurveTo(0, -r*0.8, -r*1.35, -r*0.1); ctx.lineTo(-r*1.35, r*0.1); ctx.quadraticCurveTo(0, r*0.8, r*1.5, 0); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#e0b030"; ctx.fillRect(-r*2.1, -0.75, r*3.7, 1.5);
+      ctx.globalAlpha = 0.5 + 0.5*Math.sin(t/50); ctx.fillStyle = "#ffffff"; ctx.fillRect(r*0.2, -r*0.45, r*0.6, 1.5); ctx.globalAlpha = 1;
+      break;
     case "exglyph":     // expedición sin forma propia todavía: su marca de identidad (expedition/render.js)
       if(typeof exGlyph!=="function" || !p.src) { ctx.restore(); return false; }
       ctx.rotate(-ang); exGlyph(p.src.classKey, 0, 0, r*1.1, c);

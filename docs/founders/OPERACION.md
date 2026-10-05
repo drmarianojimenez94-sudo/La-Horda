@@ -77,6 +77,7 @@ no permiso: Facu GM no tiene acceso al panel salvo que el OWNER le asigne un rol
 | `GET /api/gm/user?id=` | VIEW_USERS | Ficha completa |
 | `GET /api/gm/user/save?id=` | EDIT_USER_PROGRESS | Inspeccionar guardado (auditado) |
 | `POST /api/gm/user/champion` | GRANT_CONTENT (+REVOKE_CONTENT) | Conceder/revocar; revocar exige `confirm:true` |
+| `POST /api/gm/user/champion-category` | GRANT_CONTENT | Regala todos los campeones de una categoría concedible (FAMILY, ASCENSION…) que el jugador no tiene; exige `confirm:true` (428); FOUNDER → 403. Una entrada `champion.grant` por campeón |
 | `POST /api/gm/user/cosmetic` | GRANT_CONTENT (+REVOKE_CONTENT) | Skins/cromas |
 | `POST /api/gm/user/currency` | MODIFY_CURRENCY | Oro/gemas; bajar exige confirmación |
 | `POST /api/gm/user/level` | EDIT_USER_PROGRESS | Nivel; bajar exige confirmación |

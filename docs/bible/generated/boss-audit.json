@@ -120,7 +120,7 @@
     {
      "id": "cm_maestro.refugio",
      "mode": "player",
-     "n": 1
+     "n": 2
     }
    ],
    "checks": [
@@ -218,12 +218,12 @@
     {
      "name": "el equipo puede dañarlo",
      "level": "PASS",
-     "detail": "vida mínima 67.3%"
+     "detail": "vida mínima 66.7%"
     },
     {
      "name": "no es trivial",
      "level": "PASS",
-     "detail": "queda 67.3%"
+     "detail": "queda 66.7%"
     },
     {
      "name": "gancho de arena: cm_tramoyista.estructura",
@@ -1166,7 +1166,7 @@
     {
      "name": "telegraphs (avisos antes del golpe)",
      "level": "PASS",
-     "detail": "81 avisos, 22 golpes diferidos en la pelea"
+     "detail": "83 avisos, 22 golpes diferidos en la pelea"
     },
     {
      "name": "patrones distintos",
@@ -1190,7 +1190,7 @@
     }
    ],
    "status": "PASS",
-   "tele": 81,
+   "tele": 83,
    "strikes": 22,
    "kinds": 5
   },

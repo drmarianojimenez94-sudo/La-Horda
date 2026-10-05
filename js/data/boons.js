@@ -265,7 +265,7 @@ const PORTADOR_BOON_KITS = {
 for(const [champ,k] of Object.entries(PORTADOR_BOON_KITS)){
  const defs=[
   {skill:0,fx:[{t:"ground",at:"caster",r:[90,105,120],dur:[2000,2500,3000],dps:[.15,.2,.25],slow:.12}],desc:r=>`La primera habilidad deja una zona de control: ${[2,2.5,3][r]} s, ralentización 12% y daño gradual.`,test:"zone"},
-  {skill:1,fx:[{t:"echo",at:"ahead",delay:350,r:[95,110,125],pct:[.3,.4,.5]}],desc:r=>`La segunda habilidad añade un estallido demorado de daño en área (${[30,40,50][r]}% de su unidad de daño).`,test:"echo"},
+  {skill:1,fx:[{t:"echo",at:"ahead",delay:350,r:[95,110,125],pct:[.3,.4,.5]}],desc:r=>`La segunda habilidad añade un estallido demorado de daño en área (${[30,40,50][r]}% de su unidad de daño).`,test:"dmg"},
   {skill:2,fx:[{t:"ally",at:"caster",r:210,shield:[.03,.05,.07]}],desc:r=>`La tercera habilidad protege aliados cercanos con un escudo del ${[3,5,7][r]}% de su vida.`,test:"shield"},
   {skill:"ult",fx:[{t:"ground",at:"caster",r:160,dur:[2500,3000,3500],dps:[.2,.3,.4]}],desc:r=>`La definitiva deja una zona de daño durante ${[2.5,3,3.5][r]} s.`,test:"zone"},
   {skill:1,duo:[champ+"_ref_0",champ+"_ref_2"],fx:[{t:"ally",at:"caster",r:210,shield:.05},{t:"burst",at:"caster",r:115,pct:.35}],desc:()=>"Dúo: la segunda habilidad libera un pulso de daño y protege al equipo con un escudo del 5%.",test:"shield"}

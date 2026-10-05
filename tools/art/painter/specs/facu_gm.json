@@ -1,7 +1,7 @@
 {
  "id": "facu_gm",
  "name": "Facu GM, El Soberano de las Mareas",
- "prompt": "Fundador. Joven musculoso de pelo oscuro rizado, postura de quien lee el mar. Manto de agua viva que nace de los hombros, corona de corrientes, Quilla Ceremonial (hoja de quilla hidrodinámica). Paleta: azul marino profundo + turquesa #2fd3c6 + espuma blanca, ribetes de bronce/oro.",
+ "prompt": "Fundador celeste. Joven musculoso de pelo oscuro rizado; armadura azul cielo con ribetes de oro, manto de agua clara que nace de los hombros, corona de corrientes celeste y oro, alas de plumas blancas y celestes, Quilla Ceremonial.",
  "body": "nahir",
  "head": null,
  "paint": [
@@ -11,14 +11,14 @@
    "take": 3,
    "noSkin": true,
    "ramp": [
-    "#06142a",
-    "#0a3256",
-    "#0f6676",
-    "#22b3ad",
-    "#7fe9dc",
-    "#e8fff9"
+    "#1a4a80",
+    "#2f74b8",
+    "#5aa8e4",
+    "#94d0f8",
+    "#d4ecff",
+    "#ffffff"
    ],
-   "gamma": 0.95
+   "gamma": 0.75
   },
   {
    "part": "all",
@@ -26,10 +26,10 @@
    "take": 1,
    "noSkin": true,
    "ramp": [
-    "#2f4a74",
-    "#5b7fa8",
-    "#9bb8d6",
-    "#d4e6f2"
+    "#5e3c12",
+    "#9a6a26",
+    "#d3a24c",
+    "#f3d98c"
    ],
    "gamma": 1.0
   },
@@ -39,11 +39,12 @@
    "take": 1,
    "noSkin": true,
    "ramp": [
-    "#16243f",
-    "#2f4a74",
-    "#5b7fa8",
-    "#9bb8d6"
-   ]
+    "#2a4a7a",
+    "#4a7ab0",
+    "#8ab4e0",
+    "#cfe4f8"
+   ],
+   "gamma": 0.85
   },
   {
    "part": "all",
@@ -63,16 +64,37 @@
    "take": 2,
    "noSkin": true,
    "ramp": [
-    "#070b17",
-    "#111c33",
-    "#1d2f52",
-    "#2f4a74",
-    "#56769e"
+    "#122a54",
+    "#1f4a84",
+    "#3470b0",
+    "#5a98d4",
+    "#8cc0ec"
    ],
-   "gamma": 0.9
+   "gamma": 0.8
   }
  ],
  "accessories": [
+  {
+   "element": "alas_de_plumas",
+   "materials": {
+    "feather": {
+     "ramp": [
+      "#3a5a8a",
+      "#7aa8dc",
+      "#c4e0fa",
+      "#eef7ff",
+      "#ffffff"
+     ]
+    },
+    "down": {
+     "ramp": [
+      "#5a7ab0",
+      "#a8ccf0",
+      "#e6f4ff"
+     ]
+    }
+   }
+  },
   {
    "module": "facu_keel",
    "body": "nahir"
@@ -97,16 +119,29 @@
    "module": "facu_mantle",
    "body": "nahir",
    "ripple": 0.6,
-   "foam": "#e4fffa",
-   "foam2": "#9ff0e4",
+   "foam": "#ffffff",
+   "foam2": "#cfe8ff",
    "frillRamp": [
-    "#137a8a",
-    "#3fc6c0",
-    "#bdf7ee"
+    "#3a78c0",
+    "#8cc8f4",
+    "#eaf6ff"
    ]
   },
   {
-   "module": "facu_crown"
+   "module": "facu_crown",
+   "water": [
+    "#1f4a8a",
+    "#3f7ac8",
+    "#8cc0f0",
+    "#d4ecff",
+    "#ffffff"
+   ],
+   "metal": [
+    "#5e3c12",
+    "#9a6a26",
+    "#d3a24c",
+    "#f3d98c"
+   ]
   }
  ]
 }

@@ -22,8 +22,8 @@
         "classes": [
           "brasa",
           "ynara",
-          "tanque",
-          "eren"
+          "eslabon",
+          "orsa"
         ],
         "casts": 4,
         "objects": [
@@ -32,8 +32,16 @@
             "owner": 0
           },
           {
+            "kind": "chain",
+            "owner": 2
+          },
+          {
             "kind": "patience",
             "owner": 1
+          },
+          {
+            "kind": "shot",
+            "owner": 0
           }
         ]
       },
@@ -45,8 +53,16 @@
             "owner": 0
           },
           {
+            "kind": "chain",
+            "owner": 2
+          },
+          {
             "kind": "patience",
             "owner": 1
+          },
+          {
+            "kind": "shot",
+            "owner": 0
           }
         ],
         "patience": 1,
@@ -66,11 +82,15 @@
         "classes": [
           "ynara",
           "iria",
-          "tanque",
-          "libertador"
+          "maura",
+          "cazadora"
         ],
         "casts": 4,
         "objects": [
+          {
+            "kind": "ex_forest",
+            "owner": 2
+          },
           {
             "kind": "triangle",
             "owner": 1
@@ -84,6 +104,10 @@
       "rg": {
         "k": "iria",
         "objects": [
+          {
+            "kind": "ex_forest",
+            "owner": 2
+          },
           {
             "kind": "triangle",
             "owner": 1

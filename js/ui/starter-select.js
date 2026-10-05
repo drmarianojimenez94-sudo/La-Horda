@@ -12,8 +12,11 @@
 let _starterPick = null, _starterDone = null, _starterSkinPick = null, _starterSkinBusy = false, _starterJustGot = null;
 const STARTER_ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
 
+// Sin elección explícita, el regalo propuesto es el Mago (DEFAULT_CHAMPION): ya viene marcado y un toque en
+// "Sí" alcanza; tocar otra carta lo cambia. Solo se marca si de verdad está entre los guardianes de regalo.
+function _starterOptions(){ return CHAMPION_CATALOG.filter(c=>championMeta(c.id).starterEligible && shopChampionPurchasable(c.id)); }
 function openStarterSelect(onDone){
-  _starterPick = null; _starterDone = onDone || null;
+  _starterPick = _starterOptions().some(c=>c.id===DEFAULT_CHAMPION) ? DEFAULT_CHAMPION : null; _starterDone = onDone || null;
   setState("starter");
   // ya tiene guardián y le falta la skin de regalo (cerró el juego en el medio): directo al paso 2
   if(!needsStarterChampion() && typeof needsStarterSkin==="function" && needsStarterSkin()){ openStarterSkinStep(); return; }
@@ -33,7 +36,7 @@ function _starterFinish(){
 function renderStarterSelect(){
   const pr = document.getElementById("starter-price"); if(pr) pr.textContent = fmtGold(CHAMPION_PRICE_GOLD);
   const grid = document.getElementById("starter-grid"); if(!grid) return;
-  grid.innerHTML = CHAMPION_CATALOG.filter(c=>championMeta(c.id).starterEligible && shopChampionPurchasable(c.id)).map(c=>{
+  grid.innerHTML = _starterOptions().map(c=>{
     const cls = CLASSES[c.id];
     return `<button class="gallery-card starter-card ${_starterPick===c.id?"sel":""}" data-champ="${c.id}">
       <canvas class="champ-anim starter-anim" width="110" height="110" data-class-key="${c.id}" data-idle="1" style="background:${cls.color}1c;"></canvas>
@@ -46,9 +49,7 @@ function renderStarterSelect(){
     card.addEventListener("click", ()=>{
       _starterPick = card.getAttribute("data-champ");
       grid.querySelectorAll(".starter-card").forEach(c2=>c2.classList.toggle("sel", c2===card));
-      const box = document.getElementById("starter-confirm");
-      document.getElementById("starter-confirm-text").innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? <details><summary>Ver habilidades</summary>${championGuideHTML(_starterPick)}</details>`;
-      box.classList.remove("hidden");
+      _starterShowConfirm();
       // el cartel de confirmar es pegajoso (abajo): se baja todo lo posible sin perder de vista la carta
       // elegida, así el cartel queda en su lugar debajo de las cartas y no tapa la etiqueta de otras
       const sc = document.getElementById("starter-screen");
@@ -59,7 +60,14 @@ function renderStarterSelect(){
     });
   });
   const box = document.getElementById("starter-confirm"); if(box && !_starterPick) box.classList.add("hidden");
+  if(_starterPick) _starterShowConfirm();
   startChampAnimLoop();
+}
+function _starterShowConfirm(){
+  const box = document.getElementById("starter-confirm"), txt = document.getElementById("starter-confirm-text");
+  if(!box || !txt || !_starterPick || !CLASSES[_starterPick]) return;
+  txt.innerHTML = `¿Elegir a <b>${CLASSES[_starterPick].name}</b>? <details><summary>Ver habilidades</summary>${championGuideHTML(_starterPick)}</details>`;
+  box.classList.remove("hidden");
 }
 function grantStarterChampion(key){
   if(!CLASSES[key] || !save.champions[key]) return false;
@@ -84,12 +92,15 @@ document.getElementById("starter-no-btn").addEventListener("click", ()=>{
   document.getElementById("starter-confirm").classList.add("hidden");
   document.querySelectorAll(".starter-card").forEach(c=>c.classList.remove("sel"));
 });
-// El guardián seleccionado siempre tiene que ser uno PROPIO (si no, el primero que tenga).
+// El guardián seleccionado siempre tiene que ser uno PROPIO: si no, el Mago si es tuyo, y si no el primero
+// que tengas. Sin ningún guardián propio (perfil nuevo o reiniciado: todavía falta el de regalo) queda el
+// Mago por defecto y devuelve false; nunca queda apuntando a otro guardián bloqueado (ej. el Asesino).
 function ensureOwnedSelection(){
   const usable = k=>save.champions[k] && save.champions[k].unlocked && (typeof championPlayable!=="function" || championPlayable(k));
   if(usable(selectedClass)) return true;
-  const own = Object.keys(CLASSES).find(usable);
+  const own = usable(DEFAULT_CHAMPION) ? DEFAULT_CHAMPION : Object.keys(CLASSES).find(usable);
   if(own){ selectedClass = own; return true; }
+  if(CLASSES[DEFAULT_CHAMPION]) selectedClass = DEFAULT_CHAMPION;
   return false;
 }
 

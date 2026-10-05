@@ -40,7 +40,7 @@ function ascLine(h,a,b,r,fn,cap){for(const e of ascTargets(h,e=>seSegDist(e.x,e.
 function ascArea(h,p,r,fn,cap){for(const e of ascTargets(h,e=>distance(e,p)<=r+(e.radius||0),cap))fn(e);}
 function ascTeleport(h,p){if(!p)return false;const o={x:p.x,y:p.y,radius:h.radius||18};clampToArena(o);resolveWallCollision(o);
  if((arenaHas('heroReachable')&&!arenaHook('heroReachable',h,o))||(currentArena==='abismo'&&abS&&!abSafeAt(o.x,o.y)))return false;h.x=o.x;h.y=o.y;return true;}
-function ascCue(h,action,extra={}){const dir=aimDir(h,200);h.asCue={action,x:h.x,y:h.y,angle:Math.atan2(dir.y,dir.x),until:ascNow()+(extra.ult?900:420),...extra};}
+function ascCue(h,action,extra={}){const dir={x:h.fx||1,y:h.fy||0};h.asCue={action,x:h.x,y:h.y,angle:Math.atan2(dir.y,dir.x),until:ascNow()+(extra.ult?900:420),...extra};}
 
 /* ---------------- Saelis: Plumas y Bendición del Plumaje ---------------- */
 const SAELIS_FEATHERS=8;
@@ -87,11 +87,11 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
  if(!h.alive||h.fused)return;
  const s=ascState(h),k=h.classKey,castId=k+':'+(++s.castN)+':'+ascNow();
  let r=Math.min(isUlt?480:240,(sk.radius||100)*area),range=Math.min(420,(sk.range||200)*area),life=Math.min(9000,(sk.duration||2400)*dur);
- const dir=aimDir(h,range||200),end={x:h.x+dir.x*range,y:h.y+dir.y*range},origin={x:h.x,y:h.y},point=()=>portadorPoint(h,range,r);
+ const aimed=!!aimProfileOf(sk,h),dir=aimed?aimDir(h,range||200):{x:h.fx||1,y:h.fy||0},end={x:h.x+dir.x*range,y:h.y+dir.y*range},origin={x:h.x,y:h.y},point=()=>portadorPoint(h,range,r);
  if(s.empowered&&sk.action!=='face_swap'){dmg*=1.3;power*=1.3;s.empowered=false;}
  let big=1;
  if(k==='facu_gm'&&!isUlt){const m=facuFlow(h,sk);dmg*=m;power*=m;if(s.bigNext&&s.highTideUntil>ascNow()){big=2;r*=2;s.bigNext=false;}}
- let aff=k==='nano_gm'?nanoAffinity(h,sk):null;if(k==='nano_gm'&&nanoRegent(h)){dmg*=1.2;r*=1.15;}
+ let aff=k==='nano_gm'?nanoAffinity(h,sk):null;if(k==='nano_gm'&&nanoRegent(h)){dmg*=1.2;r*=1.15;}const monster=k==='nano_gm'&&s.monsterUntil>ascNow();if(monster){r*=1.4;area*=1.4;}
  ascCue(h,sk.action,{ult:!!isUlt,r,range,bx:end.x,by:end.y});
  if(typeof playSfx==='function')playSfx('asc_'+k+(isUlt?'_ult':'_cast'));
  h.portCastState=isUlt?'ultimate':'cast';h.portCastUntil=ascNow()+(isUlt?700:420);
@@ -99,12 +99,12 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
  switch(sk.action){
  // ---- Nano GM ----
  case 'sentence':{const both=aff==='both';
-  ascLine(h,h,end,sk.radius,e=>{ascHit(h,e,dmg);seVuln(e,.15,4000);e._ascSentencedUntil=ascNow()+4000;if(e.alive&&ascCanExecute(e)&&e.hp/e.maxHp<.22)ascExecute(h,e);});
+  ascLine(h,h,end,sk.radius,e=>{ascHit(h,e,dmg);seVuln(e,.15,4000);e._ascSentencedUntil=ascNow()+4000;if(e.alive&&ascCanExecute(e)&&e.hp/e.maxHp<.22)ascExecute(h,e);});ascArea(h,end,70*area,e=>{ascHit(h,e,dmg*.6);seVuln(e,.15,4000);},16);
   if(both)for(const a of heroes)if(a.alive&&seSegDist(a.x,a.y,h.x,h.y,end.x,end.y)<60)exShield(h,a,.04,3000);break;}
  case 'edict':ascObject(h,'edict',point(),life,{r,dmg:dmg*.35,both:aff==='both',tick:0},2);break;
  case 'invert':{const dest=point(),eff=aff==='both'?'both':aff;
   ascObject(h,'rune',origin,700,{r:sk.radius*area,dmg,eff,tick:600},2);
-  if(ascTeleport(h,dest)&&(eff==='light'||eff==='both'))for(const a of ascAllies(h,h,150)){exHeal(h,a,.06);exShield(h,a,.04,2500);}
+  const moved=ascTeleport(h,dest);if(moved)ascArea(h,h,sk.radius*area*1.3,e=>ascHit(h,e,dmg*.8),20);if(moved&&(eff==='light'||eff==='both'))for(const a of ascAllies(h,h,150)){exHeal(h,a,.06);exShield(h,a,.04,2500);}
   break;}
  case 'judgement':ascObject(h,'judgement',{x:h.x,y:h.y},2600,{r,dmg,castId,fired:false},1);h._ascLiftUntil=ascNow()+2600;break;
  // ---- Facu GM ----
@@ -118,7 +118,7 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
   for(const n of nodes)if(seSegDist(n.x,n.y,h.x,h.y,end.x,end.y)<40){const t=ascTargets(h,e=>distance(e,n)<260,1)[0];if(t){ascHit(h,t,dmg*.6);n.beamTo={x:t.x,y:t.y,until:ascNow()+300};}}
   break;}
  case 'luminal':{const nodes=ascOwned(h,'node').sort((a,b)=>distance(b,h)-distance(a,h)),dest=nodes[0]?{x:nodes[0].x,y:nodes[0].y}:point();
-  ascObject(h,'node',origin,9000*dur,{r:16},3);if(ascTeleport(h,dest))ascArea(h,h,sk.radius*area,e=>ascHit(h,e,dmg));break;}
+  ascObject(h,'node',origin,9000*dur,{r:16},3);if(ascTeleport(h,dest))ascArea(h,h,sk.radius*area,e=>ascHit(h,e,dmg));for(const a of ascAllies(h,h,160))kitBuff(h,a,4000,{dmg:.15,label:'LUZ SÓLIDA'});break;}
  case 'cathedral':{let nodes=ascOwned(h,'node').slice(-3);const c=portadorPoint(h,200,140);
   if(nodes.length<3){for(const n of nodes)n.life=0;nodes=[0,1,2].map(i=>{const a=-Math.PI/2+i*2.094,p={x:c.x+Math.cos(a)*140,y:c.y+Math.sin(a)*140,radius:16};clampToArena(p);return ascObject(h,'node',p,life+500,{r:16},3);}).filter(Boolean);}
   const [A,B,C]=nodes;if(A&&B&&C)ascObject(h,'cathedral',{x:(A.x+B.x+C.x)/3,y:(A.y+B.y+C.y)/3},life,{ax:A.x,ay:A.y,bx:B.x,by:B.y,cx:C.x,cy:C.y,r,dmg,castId,tick:0},1);
@@ -139,13 +139,13 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
  case 'well':ascObject(h,'well',point(),life,{r,dmg,tick:0,massTick:0},2);break;
  case 'orbit':{const c=point(),a0=Math.atan2(h.y-c.y,h.x-c.x),rad=Math.max(60,Math.min(160,distance(h,c))),pts=[{x:h.x,y:h.y}];
   for(let i=1;i<=8;i++){const a=a0+i*Math.PI/8,p={x:c.x+Math.cos(a)*rad,y:c.y+Math.sin(a)*rad};if(!exSafeStep(h,p))break;pts.push({x:h.x,y:h.y});}
-  ascObject(h,'trail',pts[0],1800,{points:pts,r:sk.radius*area,dmg,hit:false},2);break;}
- case 'collapse':ascObject(h,'collapse',point(),life,{r,dmg,castId,tick:0,fired:false},1);break;
+  ascObject(h,'trail',pts[0],1800,{points:pts,r:sk.radius*area,dmg,hit:false},2);kitBuff(h,h,4000,{dmg:.15,label:'INERCIA'});break;}
+ case 'collapse':{const p=point();ascObject(h,'collapse',p,life,{r,dmg,castId,tick:0,fired:false},1);for(const a of ascAllies(h,h,320))kitBuff(h,a,life,{dmg:.1,label:'GRAVEDAD'});break;}
  // ---- Bront ----
  case 'plate_throw':ascLine(h,h,end,sk.radius*area,e=>ascHit(h,e,dmg));ascObject(h,'plate',end,12000,{r:34},4);break;
  case 'plate_wall':{const c={x:h.x+dir.x*90,y:h.y+dir.y*90},px=-dir.y,py=dir.x,half=Math.min(110,range/2);
   ascObject(h,'wall',c,life,{ax:c.x-px*half,ay:c.y-py*half,bx:c.x+px*half,by:c.y+py*half,r:sk.radius*area,dmg,tick:0},3);break;}
- case 'crystal_pulse':{const r2=sk.radius*area;ascArea(h,h,r2,e=>{ascHit(h,e,dmg);if(isEliteRank(e))e.stunTimer=Math.max(e.stunTimer||0,300);else{const d=Math.hypot(e.x-h.x,e.y-h.y)||1;ascSafeMove(e,(e.x-h.x)/d,(e.y-h.y)/d,60);}},24);ascCue(h,'pressure',{x:h.x,y:h.y,r:r2});break;}
+ case 'crystal_pulse':{const r2=sk.radius*area;ascArea(h,h,r2,e=>{ascHit(h,e,dmg);if(isEliteRank(e))e.stunTimer=Math.max(e.stunTimer||0,300);else{const d=Math.hypot(e.x-h.x,e.y-h.y)||1;ascSafeMove(e,(e.x-h.x)/d,(e.y-h.y)/d,60);}},24);ascCue(h,'pressure',{x:h.x,y:h.y,r:r2});for(const a of ascAllies(h,h,r2+60))kitBuff(h,a,3000,{armor:.2,label:'CRISTAL'});break;}
  case 'citadel':{s.citadelUntil=ascNow()+life;for(const o of ascOwned(h,'wall'))o.life=0;const R=r;
   for(let i=0;i<4;i++){const a=i*Math.PI/2,c={x:h.x+Math.cos(a)*R,y:h.y+Math.sin(a)*R},px=-Math.sin(a),py=Math.cos(a);ascObject(h,'wall',c,life,{ax:c.x-px*R*.7,ay:c.y-py*R*.7,bx:c.x+px*R*.7,by:c.y+py*R*.7,r:24,dmg:dmg,tick:0,citadel:true},4);}
   ascObject(h,'keep',{x:h.x,y:h.y},life,{r:R},1);break;}
@@ -165,10 +165,24 @@ function ascensionCast(h,sk,isUlt,dmg,area,dur,power){
   ascCue(h,'updraft',{r,shots});break;}
  case 'recall':{const fs=ascOwned(h,'feather'),lines=[];for(const f of fs){ascLine(h,f,h,sk.radius*area,e=>ascHit(h,e,dmg),6);lines.push({x:f.x,y:f.y});f.life=0;}
   if(h.cds)for(let i=0;i<h.cds.length;i++)h.cds[i]=Math.max(0,h.cds[i]-200*fs.length);
+  kitBuff(h,h,2000,{speed:.2,label:'VUELO'});for(const a of ascAllies(h,h,130))if(a!==h)saelisBless(h,a,2000);
   ascCue(h,'recall',{lines});break;}
  case 'feather_sky':ascObject(h,'sky',point(),life,{r,dmg,castId,tick:0},1);break;
  }
+ ascCastFx(h,sk,!!isUlt,r,origin,end);
 }
+// Efecto temático de cada acción (kit-shared.js): agua, vórtice, luz, sombra, viento, púas...
+const ASC_FX={sentence:'dark',edict:'light',invert:'rune',judgement:'dark',current:'wave',pressure:'vortex',ride:'water',ocean:'wave',
+ prism:'light',refract:'light',luminal:'light',cathedral:'light',swarm_send:'spark',carapace:'shield',elytra:'wind',eclipse:'dark',
+ mask_throw:'spark',chorus:'rune',face_swap:'spark',theatre:'rune',star_bolt:'bolt',well:'vortex',orbit:'rune',collapse:'vortex',
+ plate_throw:'spike',plate_wall:'earth',crystal_pulse:'shield',citadel:'shield',portal:'vortex',rift_echo:'rune',rift_step:'dark',great_rift:'dark',
+ feather_fan:'feather',updraft:'wind',recall:'feather',feather_sky:'feather'};
+function ascCastFx(h,sk,isUlt,r,origin,end){const th=ASC_FX[sk.action];if(!th)return;const prof=aimProfileOf(sk,h);
+ if(prof&&prof.type==='line')kitFxLine(th,origin.x,origin.y,end.x,end.y,prof.w);
+ else if(prof&&prof.type==='cone'){if(typeof vfxSkillCone==='function')vfxSkillCone(h.x,h.y,Math.hypot(end.x-h.x,end.y-h.y),Math.atan2(end.y-h.y,end.x-h.x),.85,h.cls.glow);kitFx(th,h.x+(end.x-h.x)*.6,h.y+(end.y-h.y)*.6,r*.6,{ult:isUlt});}
+ else if(prof&&prof.type==='dash'){kitFxLine(th,origin.x,origin.y,h.x,h.y,prof.w);kitFx(th,h.x,h.y,r*.6,{ult:isUlt});}
+ else if(prof&&prof.type==='point'&&h._lastAimPt)kitFx(th,h._lastAimPt.x,h._lastAimPt.y,r,{ult:isUlt});
+ else kitFx(th,h.x,h.y,r,{ult:isUlt});}
 function ascMass(e,n){if(!e.alive)return;const m=e._ascMass&&e._ascMass.until>ascNow()?e._ascMass.n:0;e._ascMass={n:Math.min(5,m+n),until:ascNow()+8000};}
 function ascMassOf(e){return e._ascMass&&e._ascMass.until>ascNow()?e._ascMass.n:0;}
 
@@ -186,7 +200,7 @@ function ascUpdateObject(o,dt){
   else if(!o.fired){o.fired=true;
    for(const a of heroes)if(a.alive&&!a.fused){const before=a.hp;a.hp=Math.min(a.maxHp,a.hp+a.maxHp*.25*arenaRuleHealMult());if(h.stats)h.stats.healingDone=(h.stats.healingDone||0)+a.hp-before;exShield(h,a,.15,6000);a.portSpeedTimer=Math.max(a.portSpeedTimer||0,6000);a.portSpeedBonus=.2;}
    ascArea(h,o,o.r,e=>{if(ascCanExecute(e)&&e.hp/e.maxHp<=.45)ascExecute(h,e);else ascHit(h,e,isBossRank(e)?o.dmg:o.dmg*(isEliteRank(e)?1.6:1.2),o.castId,.07);},60);
-   nanoEnterRegent(h,8000,true);if(typeof playSfx==='function')playSfx('asc_judgement');
+   nanoEnterRegent(h,8000,true);s.monsterUntil=ascNow()+8000;if(typeof playSfx==='function')playSfx('asc_judgement');if(typeof vfxShake==='function')vfxShake(10);kitFx('dark',o.x,o.y,o.r,{ult:true});kitFx('light',o.x,o.y,o.r*.6,{ult:true});
   }break;
  case 'as_current':o.hitTick=(o.hitTick||0)-dt;
   if(o.tick<=0){o.tick=120;ascLine(h,o,{x:o.bx,y:o.by},o.r,e=>ascSafeMove(e,o.dx,o.dy,9),24);for(const a of heroes)if(a.alive&&seSegDist(a.x,a.y,o.x,o.y,o.bx,o.by)<o.r+20){a.portSpeedTimer=Math.max(a.portSpeedTimer||0,600);a.portSpeedBonus=.25;}}
@@ -214,7 +228,7 @@ function ascUpdateObject(o,dt){
   {ascHit(h,e,o.dmg);ascMass(e,1);}}break;
  case 'as_collapse':
   if(age<1500){if(o.tick<=0){o.tick=500;ascArea(h,o,120,e=>ascHit(h,e,o.dmg*.3,o.castId,.08));}}
-  else if(age<3700){if(o.tick<=0){o.tick=200;ascArea(h,o,320,e=>ascPullTo(e,o,isEliteRank(e)?5:14),40);}}
+  else if(age<3700){if(o.tick<=0){o.tick=200;ascArea(h,o,320,e=>{ascPullTo(e,o,isEliteRank(e)?5:14);portadorSlow(h,e,.3,400);},40);}}
   else if(!o.fired){o.fired=true;let mass=0;ascArea(h,o,o.r,e=>{mass+=ascMassOf(e);},40);const mult=Math.min(3,1+.15*mass);
    ascArea(h,o,o.r,e=>{ascHit(h,e,o.dmg*mult,o.castId,.08);if(e._ascMass)e._ascMass.n=0;},40);if(typeof playSfx==='function')playSfx('asc_collapse');}
   break;
@@ -243,7 +257,7 @@ const ascOriginalObject=ynaraUpdateObject;ynaraUpdateObject=function(o,dt){retur
 const ascOriginalHero=updatePortadorHero;updatePortadorHero=function(h,dt){ascOriginalHero(h,dt);if(!ascCandidate(h))return;const s=ascState(h),t=ascNow();
  // apariencia del propio jugador en el héroe (el anfitrión la replica a los invitados en el snapshot)
  if(h===player&&save.champions[h.classKey])h.ascSkin=save.champions[h.classKey].ascSkin|0;
- if(!h.alive||h.fused){for(const o of portadorObjects)if(o.owner===h&&o.asc)o.life=0;for(const e of enemies){if(e._ascMass&&h.classKey==='vhal')delete e._ascMass;}s.rideLeft=0;s.regentUntil=0;s.eclipseUntil=0;s.citadelUntil=0;s.highTideUntil=0;return;}
+ if(!h.alive||h.fused){for(const o of portadorObjects)if(o.owner===h&&o.asc)o.life=0;for(const e of enemies){if(e._ascMass&&h.classKey==='vhal')delete e._ascMass;}s.rideLeft=0;s.regentUntil=0;s.monsterUntil=0;s.eclipseUntil=0;s.citadelUntil=0;s.highTideUntil=0;return;}
  // Cabalgar la Ola: desplazamiento fluido en ~0,5 s, validado paso a paso.
  if(s.rideLeft>0){const step=Math.min(s.rideLeft,dt*.62);let moved=0;
   while(moved<step){const st=Math.min(6,step-moved);if(!exSafeStep(h,{x:h.x+s.rideDX*st,y:h.y+s.rideDY*st})){s.rideLeft=0;break;}moved+=st;}

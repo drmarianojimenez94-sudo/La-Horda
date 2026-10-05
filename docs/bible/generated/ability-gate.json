@@ -1,0 +1,2840 @@
+{
+ "schemaVersion": 1,
+ "categories": [
+  "AREA",
+  "MULTIPLE",
+  "POTENCIA",
+  "CURA",
+  "CONTROL",
+  "MOVILIDAD",
+  "INVOCA"
+ ],
+ "champions": [
+  {
+   "key": "tanque",
+   "name": "Aldric, el Último Bastión",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Torbellino",
+     "kind": "spin_channel",
+     "err": null,
+     "damaged": 4,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 188,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 1,
+     "name": "Embestida",
+     "kind": "charge_drag",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 16,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": 2,
+     "name": "Grito de Guerra",
+     "kind": "war_cry",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Grito Provocador",
+     "kind": "taunt_provoke",
+     "err": null,
+     "damaged": 0,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "POTENCIA",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "guerrero",
+   "name": "Kael, la Daga Carmesí",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Corte Sangrante",
+     "kind": "bleed_hit",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "CONTROL"
+     ],
+     "vfx": 12,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": 1,
+     "name": "Triple Golpe",
+     "kind": "triple_hit",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "CONTROL"
+     ],
+     "vfx": 25,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": 2,
+     "name": "Trampa de Área",
+     "kind": "area_trap",
+     "err": null,
+     "damaged": 4,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 29,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "Pestilencia Sombría",
+     "kind": "shadow_stealth",
+     "err": null,
+     "damaged": 4,
+     "statused": 4,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 49,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "mago",
+   "name": "Thalen, el Tejedor Elemental",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Muro de Fuego",
+     "kind": "fire_wall",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 56,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Nova de Escarcha",
+     "kind": "frost_nova",
+     "err": null,
+     "damaged": 6,
+     "statused": 6,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 47,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Cadena de Relámpago",
+     "kind": "chain",
+     "err": null,
+     "damaged": 4,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 32,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": "ult",
+     "name": "Cataclismo Elemental",
+     "kind": "elemental_storm",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 378,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "soporte",
+   "name": "Elyra, la Guardiana del Alba",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Alba Purificadora",
+     "kind": "team_heal_aoe",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA"
+     ],
+     "vfx": 59,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 1,
+     "name": "Bendición de Guerra",
+     "kind": "team_atk_buff",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Escudo Sagrado",
+     "kind": "team_shield_buff",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Bendición Suprema",
+     "kind": "team_grand_buff",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 11,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "segador",
+   "name": "Segador, el Olvidado",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Tajo del Segador",
+     "kind": "cone_slash",
+     "err": null,
+     "damaged": 4,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 28,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Armadura de la Furia",
+     "kind": "fury_armor",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Último Aliento",
+     "kind": "last_stand_burst",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Segador de Almas",
+     "kind": "berserker_ult",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "axiom",
+   "name": "Axiom, el Reescritor",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Error 404",
+     "kind": "glitch_delay_nova",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 53,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Sobrescribir",
+     "kind": "overwrite_nova",
+     "err": null,
+     "damaged": 2,
+     "statused": 2,
+     "cats": [
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 16,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": 2,
+     "name": "Teletransporte",
+     "kind": "teleport_blink",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "MOVILIDAD"
+     ],
+     "vfx": 3,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "Force Quit",
+     "kind": "force_quit_ult",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 59,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "la definitiva suma 1 categorías (AREA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "profeta",
+   "name": "Ismara, la Profeta Ciega",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Destino Restaurado",
+     "kind": "retro_heal",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 1,
+     "name": "Visión del Inmortal",
+     "kind": "brief_immunity",
+     "err": null,
+     "damaged": 0,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "POTENCIA",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 545,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Danza del Augurio",
+     "kind": "self_spin_stun",
+     "err": null,
+     "damaged": 4,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 26,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Ascensión del Elegido",
+     "kind": "ascension_fusion",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 6,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "musashi",
+   "name": "Musashi, el Rōnin del Bokken",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Corte del Rōnin",
+     "kind": "ronin_slash",
+     "err": null,
+     "damaged": 1,
+     "statused": 0,
+     "cats": [
+      "MOVILIDAD"
+     ],
+     "vfx": 12,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": 1,
+     "name": "Paso Fantasma",
+     "kind": "ghost_step",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "MOVILIDAD"
+     ],
+     "vfx": 3,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": 2,
+     "name": "Mil Cortes",
+     "kind": "thousand_cuts",
+     "err": null,
+     "damaged": 9,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 86,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Último Duelo",
+     "kind": "last_duel_ult",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "MOVILIDAD"
+     ],
+     "vfx": 5,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "la definitiva suma 2 categorías (POTENCIA, MOVILIDAD); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "cazadora",
+   "name": "Sylva, la Cazadora del Bosque",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Flecha Perforante",
+     "kind": "piercing_shot",
+     "err": null,
+     "damaged": 1,
+     "statused": 0,
+     "cats": [],
+     "vfx": 9,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Trampa del Bosque",
+     "kind": "forest_trap",
+     "err": null,
+     "damaged": 0,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "CONTROL"
+     ],
+     "vfx": 3,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Lluvia de la Cazadora",
+     "kind": "hunter_rain",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 73,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "Cacería Salvaje",
+     "kind": "wild_hunt_ult",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "CONTROL"
+     ],
+     "vfx": 39,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "Hab. 1 Flecha Perforante: sin efecto medible",
+    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
+    "la definitiva suma 1 categorías (CONTROL); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "nigromante",
+   "name": "Ilvar, el Señor de las Criptas",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Cosecha de Almas",
+     "kind": "soul_harvest",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 62,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Gólem de Carne",
+     "kind": "summon_golem",
+     "err": null,
+     "damaged": 9,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 145,
+     "aims": false,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Plaga de los Condenados",
+     "kind": "condemned_plague",
+     "err": null,
+     "damaged": 0,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "CONTROL"
+     ],
+     "vfx": 7,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "Encarnación del Abismo",
+     "kind": "abyss_incarnation_ult",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 3,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "la definitiva suma 1 categorías (CURA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "libertador",
+   "name": "San Martín, el Libertador",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Bayoneta",
+     "kind": "sm_bayonet",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 10,
+     "aims": false,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": 1,
+     "name": "¡Granaderos, a la carga!",
+     "kind": "sm_granaderos",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 9,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Carga de San Lorenzo",
+     "kind": "sm_san_lorenzo",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 94,
+     "aims": false,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "Cruce de los Andes",
+     "kind": "sm_andes_ult",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "MOVILIDAD",
+      "INVOCA"
+     ],
+     "vfx": 179,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "eren",
+   "name": "Eren, el Indómito",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Equipo de Maniobras",
+     "kind": "eren_hook",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 80,
+     "aims": false,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": 1,
+     "name": "Instinto de Supervivencia",
+     "kind": "eren_instinct",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [],
+     "vfx": 4,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "¡Avancen!",
+     "kind": "eren_advance",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 82,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "El Portador",
+     "kind": "eren_titan_ult",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 11,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "Hab. 2 Instinto de Supervivencia: sin efecto medible",
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "ynara",
+   "name": "Ynara, la Médica de los Refugios",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Mirada fulminante",
+     "kind": "yn_gaze",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 55,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Estrogonof reparador",
+     "kind": "yn_stroganoff",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 408,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "No quiero seguir esta conversación",
+     "kind": "yn_leave",
+     "err": null,
+     "damaged": 9,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 182,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": "ult",
+     "name": "Santa Paciencia",
+     "kind": "yn_patience",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 372,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "myla",
+   "name": "Myla, la Niña de la Cuchara",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Torre de Yogur",
+     "kind": "my_tower",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 31,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Yogurazo",
+     "kind": "my_splash",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 355,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Burbuja Cremosa",
+     "kind": "my_bubble",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 4,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "BERRINCHE",
+     "kind": "my_tantrum",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 418,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "brasa",
+   "name": "Brasa, la Mecánica Fugitiva",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Centinela de Latón",
+     "kind": "br_turret",
+     "err": null,
+     "damaged": 1,
+     "statused": 0,
+     "cats": [
+      "INVOCA"
+     ],
+     "vfx": 32,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Purga de Vapor",
+     "kind": "br_purge",
+     "err": null,
+     "damaged": 9,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 51,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 2,
+     "name": "Desmontaje Rápido",
+     "kind": "br_dismantle",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 3,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Turno de Emergencia",
+     "kind": "br_overclock",
+     "err": null,
+     "damaged": 1,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "INVOCA"
+     ],
+     "vfx": 43,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "la definitiva suma 2 categorías (POTENCIA, INVOCA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "eslabon",
+   "name": "Garren, el Eslabón",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Cadena de Retorno",
+     "kind": "es_hook",
+     "err": null,
+     "damaged": 1,
+     "statused": 1,
+     "cats": [
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 9,
+     "aims": true,
+     "aimProfile": "target"
+    },
+    {
+     "slot": 1,
+     "name": "Línea Infranqueable",
+     "kind": "es_line",
+     "err": null,
+     "damaged": 8,
+     "statused": 8,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 326,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Custodia",
+     "kind": "es_guard",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [],
+     "vfx": 3,
+     "aims": false,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "Nadie Queda Atrás",
+     "kind": "es_ring",
+     "err": null,
+     "damaged": 9,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 158,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "Hab. 3 Custodia: sin efecto medible",
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "morwen",
+   "name": "Morwen, la Destiladora de Ecos",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Resina Amarga",
+     "kind": "mo_resin",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 55,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Sal de Ruptura",
+     "kind": "mo_salt",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 56,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 2,
+     "name": "Destilación",
+     "kind": "mo_distill",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 3,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Alambique del Silencio",
+     "kind": "mo_alembic",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 409,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": false,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "farolero",
+   "name": "Tobías, el Farolero",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Farol de Guardia",
+     "kind": "fa_lantern",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA",
+      "INVOCA"
+     ],
+     "vfx": 3,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Destello",
+     "kind": "fa_flash",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 56,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 2,
+     "name": "Paso Seguro",
+     "kind": "fa_path",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "INVOCA"
+     ],
+     "vfx": 3,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": "ult",
+     "name": "Vigilia",
+     "kind": "fa_vigil",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 3,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "iria",
+   "name": "Iria, la Tejedora de Límites",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Ancla",
+     "kind": "ir_anchor",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "INVOCA"
+     ],
+     "vfx": 3,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Tensión",
+     "kind": "ir_tension",
+     "err": null,
+     "damaged": 4,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 24,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Corte de Hilo",
+     "kind": "ir_cut",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 55,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "Sello de los Tres Caminos",
+     "kind": "ir_triangle",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "INVOCA"
+     ],
+     "vfx": 3,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": false,
+   "problems": [
+    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
+    "la definitiva suma 1 categorías (INVOCA); se piden 3+"
+   ],
+   "status": "INFO"
+  },
+  {
+   "key": "vesper",
+   "name": "Vesper, la Costurera de Sombras",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Agujas de penumbra",
+     "kind": "expedition:needles",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 60,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Costura de fuga",
+     "kind": "expedition:seam",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 201,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": 2,
+     "name": "Deshilachar",
+     "kind": "expedition:unpick",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA"
+     ],
+     "vfx": 54,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "La última puntada",
+     "kind": "expedition:last_stitch",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 194,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "nahir",
+   "name": "Nahir, el Restaurador de Espejos",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Astillas errantes",
+     "kind": "expedition:shards",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 60,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Reflejo fugitivo",
+     "kind": "expedition:reflect",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "MOVILIDAD",
+      "INVOCA"
+     ],
+     "vfx": 15,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": 2,
+     "name": "Corte cruzado",
+     "kind": "expedition:cross",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 63,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": "ult",
+     "name": "Galería de nadie",
+     "kind": "expedition:gallery",
+     "err": null,
+     "damaged": 0,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "POTENCIA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 59,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "baltra",
+   "name": "Baltra, la Campana Sumergida",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Bronce vivo",
+     "kind": "expedition:bell",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 54,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 1,
+     "name": "Bajo la campana",
+     "kind": "expedition:guard",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 2,
+     "name": "Badajo de retorno",
+     "kind": "expedition:counter",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 60,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": "ult",
+     "name": "Que todos la escuchen",
+     "kind": "expedition:toll",
+     "err": null,
+     "damaged": 10,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 164,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "maura",
+   "name": "Maura, la Pastora de Espinas",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Raíces de paso",
+     "kind": "expedition:roots",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 63,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Corteza prestada",
+     "kind": "expedition:bark",
+     "err": null,
+     "damaged": 4,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA"
+     ],
+     "vfx": 28,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Poda necesaria",
+     "kind": "expedition:shear",
+     "err": null,
+     "damaged": 6,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA"
+     ],
+     "vfx": 39,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "El bosque camina",
+     "kind": "expedition:walking_forest",
+     "err": null,
+     "damaged": 9,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 278,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "dariel",
+   "name": "Dáriel, el Último Compás",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Nota discordante",
+     "kind": "expedition:discord",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 60,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Marcha de salida",
+     "kind": "expedition:march",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Volver al estribillo",
+     "kind": "expedition:refrain",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA"
+     ],
+     "vfx": 54,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Todavía hay una salida",
+     "kind": "expedition:concert",
+     "err": null,
+     "damaged": 9,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 146,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "orsa",
+   "name": "Orsa, la Guardacables",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Perno conductor",
+     "kind": "expedition:pierce",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 66,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Apoyar la culata",
+     "kind": "expedition:brace",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Cerrar el circuito",
+     "kind": "expedition:discharge",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 54,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Tormenta de rescate",
+     "kind": "expedition:storm",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 199,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "tibor",
+   "name": "Tibor, el Rey sin Corona",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Nube obrera",
+     "kind": "expedition:swarm",
+     "err": null,
+     "damaged": 10,
+     "statused": 3,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 420,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Volvé a casa",
+     "kind": "expedition:recall",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Polen de aviso",
+     "kind": "expedition:pollen",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 59,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "El cielo zumba",
+     "kind": "expedition:hive_sky",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 411,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "zahra",
+   "name": "Zahra, la Mano de la Válvula",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Boca de horno",
+     "kind": "expedition:furnace",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 60,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Enfriar",
+     "kind": "expedition:quench",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Paso de ceniza",
+     "kind": "expedition:ash_step",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 201,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "Abrir todas las válvulas",
+     "kind": "expedition:vent",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 194,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "renko",
+   "name": "Renko, el Jardinero de Nombres",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Surco de contención",
+     "kind": "expedition:trench",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 63,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Montículo",
+     "kind": "expedition:mound",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Devolver a la tierra",
+     "kind": "expedition:burial",
+     "err": null,
+     "damaged": 7,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 44,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Aquí siguen los nombres",
+     "kind": "expedition:faults",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 164,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "sira",
+   "name": "Sira, la Cartógrafa del Regreso",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Línea de tinta",
+     "kind": "expedition:ink_line",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 64,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Volver sobre los pasos",
+     "kind": "expedition:retrace",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "MOVILIDAD"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Borrar el camino",
+     "kind": "expedition:erase",
+     "err": null,
+     "damaged": 4,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 29,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Atlas de los ausentes",
+     "kind": "expedition:atlas",
+     "err": null,
+     "damaged": 7,
+     "statused": 4,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 113,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "nano_gm",
+   "name": "Nano GM, el Regente del Umbral",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Sentencia Umbría",
+     "kind": "ascension:sentence",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 65,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Edicto de Luz",
+     "kind": "ascension:edict",
+     "err": null,
+     "damaged": 0,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "POTENCIA",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 8,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Inversión",
+     "kind": "ascension:invert",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "MOVILIDAD"
+     ],
+     "vfx": 66,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "Juicio del GM",
+     "kind": "ascension:judgement",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 69,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "facu_gm",
+   "name": "Facu GM, el Soberano de las Mareas",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Corriente de Resaca",
+     "kind": "ascension:current",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 342,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Presión Abisal",
+     "kind": "ascension:pressure",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 59,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Cabalgar la Ola",
+     "kind": "ascension:ride",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CURA",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 68,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "El Océano Reclama la Arena",
+     "kind": "ascension:ocean",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 264,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "aurelia",
+   "name": "Aurelia, la Arquitecta Solar",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Prisma",
+     "kind": "ascension:prism",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "INVOCA"
+     ],
+     "vfx": 54,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Refracción",
+     "kind": "ascension:refract",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 66,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 2,
+     "name": "Paso Luminal",
+     "kind": "ascension:luminal",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "MOVILIDAD",
+      "INVOCA"
+     ],
+     "vfx": 66,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "Catedral del Sol",
+     "kind": "ascension:cathedral",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 364,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "khepri",
+   "name": "Khepri, el Portador del Enjambre",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Enjambre",
+     "kind": "ascension:swarm_send",
+     "err": null,
+     "damaged": 10,
+     "statused": 4,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 493,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Caparazón Vivo",
+     "kind": "ascension:carapace",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Vuelo de Élitros",
+     "kind": "ascension:elytra",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "MOVILIDAD"
+     ],
+     "vfx": 67,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "Eclipse de Escarabajos",
+     "kind": "ascension:eclipse",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 620,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "velmira",
+   "name": "Velmira, la Reina de las Máscaras",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Máscara Arrojada",
+     "kind": "ascension:mask_throw",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA"
+     ],
+     "vfx": 65,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Coro de Rostros",
+     "kind": "ascension:chorus",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA"
+     ],
+     "vfx": 54,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Cambio de Rostro",
+     "kind": "ascension:face_swap",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "MOVILIDAD"
+     ],
+     "vfx": 66,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "El Gran Teatro",
+     "kind": "ascension:theatre",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 217,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "vhal",
+   "name": "Vhal, el Astrónomo Caído",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Estrella Errante",
+     "kind": "ascension:star_bolt",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 66,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Pozo Gravitatorio",
+     "kind": "ascension:well",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 364,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Órbita",
+     "kind": "ascension:orbit",
+     "err": null,
+     "damaged": 2,
+     "statused": 0,
+     "cats": [
+      "MULTIPLE",
+      "POTENCIA",
+      "MOVILIDAD"
+     ],
+     "vfx": 18,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": "ult",
+     "name": "Colapso",
+     "kind": "ascension:collapse",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 214,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "bront",
+   "name": "Bront, la Fortaleza Viviente",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Placa Arrojada",
+     "kind": "ascension:plate_throw",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "INVOCA"
+     ],
+     "vfx": 64,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 1,
+     "name": "Muro de Placas",
+     "kind": "ascension:plate_wall",
+     "err": null,
+     "damaged": 7,
+     "statused": 7,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 341,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 2,
+     "name": "Pulso del Cristal",
+     "kind": "ascension:crystal_pulse",
+     "err": null,
+     "damaged": 7,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA"
+     ],
+     "vfx": 44,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Ciudadela",
+     "kind": "ascension:citadel",
+     "err": null,
+     "damaged": 4,
+     "statused": 4,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CURA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 191,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "oriel",
+   "name": "Oriel, la Portera de las Cicatrices",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Abrir Cicatriz",
+     "kind": "ascension:portal",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CURA",
+      "CONTROL",
+      "MOVILIDAD",
+      "INVOCA"
+     ],
+     "vfx": 214,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Eco de la Cicatriz",
+     "kind": "ascension:rift_echo",
+     "err": null,
+     "damaged": 7,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA"
+     ],
+     "vfx": 44,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Paso entre Mundos",
+     "kind": "ascension:rift_step",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "MOVILIDAD"
+     ],
+     "vfx": 86,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": "ult",
+     "name": "La Gran Cicatriz",
+     "kind": "ascension:great_rift",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 459,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "saelis",
+   "name": "Saelis, la Heraldo del Plumaje",
+   "role": "soporte",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Abanico de Plumas",
+     "kind": "ascension:feather_fan",
+     "err": null,
+     "damaged": 3,
+     "statused": 0,
+     "cats": [
+      "MULTIPLE",
+      "INVOCA"
+     ],
+     "vfx": 60,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Ráfaga Ascendente",
+     "kind": "ascension:updraft",
+     "err": null,
+     "damaged": 9,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA"
+     ],
+     "vfx": 54,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": 2,
+     "name": "Llamado del Plumaje",
+     "kind": "ascension:recall",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Cielo de Plumas",
+     "kind": "ascension:feather_sky",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL",
+      "INVOCA"
+     ],
+     "vfx": 263,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  }
+ ],
+ "pageErrors": []
+}

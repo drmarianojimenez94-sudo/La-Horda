@@ -40,9 +40,42 @@ const AIM_PROFILES = {
   // Retumbar: 6 pasos de 0,52 s a 95 u/s, unas 300 u de recorrido (EREN_CFG.retumbar)
   titan_retumbar:   {type:"dash", w:120, range:()=>{ const R = typeof EREN_CFG!=="undefined" && EREN_CFG.retumbar; return R ? R.steps*R.stepMs/1000*R.speed : 300; }}
 };
+// Kits por ACCIÓN (Ascensión y Expedición comparten un "kind" genérico y se distinguen por sk.action): cada acción
+// declara su forma con los mismos topes de radio/alcance que usa su runtime (ascensionCast / expeditionCast), así el
+// premarcado muestra exactamente dónde cae. Las que no están acá salen alrededor del campeón (sin apuntar).
+const _ascR = sk => Math.min(240, sk.radius||100), _ascRange = sk => Math.min(420, sk.range||200);
+const _exR = sk => Math.min(230, sk.radius||100), _exRange = sk => Math.min(400, sk.range||200);
+const ACTION_AIM_PROFILES = {
+  // Ascensión
+  "ascension:sentence":{type:"line", w:26, range:_ascRange}, "ascension:edict":{type:"point", r:_ascR, range:_ascRange},
+  "ascension:invert":{type:"dash", w:30, move:true, range:_ascRange},
+  "ascension:current":{type:"line", w:40, range:_ascRange}, "ascension:pressure":{type:"point", r:_ascR, range:_ascRange},
+  "ascension:ride":{type:"dash", w:44, range:sk=>Math.min(340,_ascRange(sk))},
+  "ascension:prism":{type:"point", r:_ascR, range:_ascRange}, "ascension:refract":{type:"line", w:24, range:_ascRange},
+  "ascension:luminal":{type:"dash", w:30, move:true, range:_ascRange}, "ascension:cathedral":{type:"point", r:()=>140, range:()=>200},
+  "ascension:swarm_send":{type:"point", r:_ascR, range:_ascRange}, "ascension:elytra":{type:"dash", w:36, range:sk=>Math.min(220,_ascRange(sk))},
+  "ascension:mask_throw":{type:"line", w:30, range:_ascRange}, "ascension:face_swap":{type:"dash", w:30, range:sk=>Math.min(140,_ascRange(sk))},
+  "ascension:star_bolt":{type:"line", w:24, range:_ascRange}, "ascension:well":{type:"point", r:_ascR, range:_ascRange},
+  "ascension:orbit":{type:"point", r:()=>60, range:_ascRange}, "ascension:collapse":{type:"point", r:_ascR, range:_ascRange},
+  "ascension:plate_throw":{type:"line", w:32, range:_ascRange}, "ascension:plate_wall":{type:"line", w:52, range:()=>110},
+  "ascension:portal":{type:"point", r:()=>38, range:_ascRange}, "ascension:rift_step":{type:"dash", w:30, move:true, range:_ascRange},
+  "ascension:great_rift":{type:"point", r:_ascR, range:_ascRange},
+  "ascension:feather_fan":{type:"cone", range:_ascRange}, "ascension:feather_sky":{type:"point", r:_ascR, range:_ascRange},
+  // Expedición
+  "expedition:needles":{type:"cone", range:_exRange}, "expedition:seam":{type:"dash", w:30, range:sk=>Math.min(150,_exRange(sk))},
+  "expedition:ash_step":{type:"dash", w:30, range:sk=>Math.min(150,_exRange(sk))}, "expedition:shards":{type:"cone", range:_exRange},
+  "expedition:reflect":{type:"dash", w:30, range:sk=>Math.min(150,_exRange(sk))}, "expedition:cross":{type:"line", w:28, range:_exRange},
+  "expedition:guard":{type:"cone", range:()=>120}, "expedition:counter":{type:"cone", range:_exRange},
+  "expedition:roots":{type:"line", w:30, range:_exRange}, "expedition:discord":{type:"cone", range:_exRange},
+  "expedition:pierce":{type:"line", w:20, range:_exRange}, "expedition:swarm":{type:"point", r:_exR, range:_exRange},
+  "expedition:hive_sky":{type:"point", r:_exR, range:_exRange}, "expedition:pollen":{type:"point", r:_exR, range:_exRange},
+  "expedition:furnace":{type:"cone", range:_exRange}, "expedition:trench":{type:"line", w:30, range:_exRange},
+  "expedition:mound":{type:"point", r:_exR, range:_exRange}, "expedition:ink_line":{type:"line", w:22, range:_exRange}
+};
+function aimKindKey(sk){ return sk && (sk.kind==="ascension" || sk.kind==="expedition") ? sk.kind+":"+sk.action : sk && sk.kind; }
 // caster (opcional): algunas se apuntan solo en cierto estado (el gólem ya invocado); sin caster, el del jugador.
 function aimProfileOf(sk, caster){
-  const p = sk ? AIM_PROFILES[sk.kind] || null : null;
+  const p = sk ? AIM_PROFILES[sk.kind] || ACTION_AIM_PROFILES[aimKindKey(sk)] || null : null;
   if(p && p.when){ const c = caster || (typeof player!=="undefined" ? player : null); if(!p.when(c)) return null; }
   return p;
 }

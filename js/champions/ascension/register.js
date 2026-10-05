@@ -7,7 +7,7 @@ function ascensionTint(hex,toward,t){
  const c=[a.r+(b.r-a.r)*t,a.g+(b.g-a.g)*t,a.b+(b.b-a.b)*t].map(v=>Math.round(v).toString(16).padStart(2,'0'));return '#'+c.join('');
 }
 // Proyectil propio de cada uno (skill-evolution.js drawProjStyle): ninguno comparte forma con otro guardián.
-const ASCENSION_PROJ={nano_gm:'halfmoon',facu_gm:'wave',aurelia:'prism',khepri:'scarab',velmira:'mask',vhal:'comet',bront:'fist',oriel:'key'};
+const ASCENSION_PROJ={nano_gm:'halfmoon',facu_gm:'wave',aurelia:'prism',khepri:'scarab',velmira:'mask',vhal:'comet',bront:'fist',oriel:'key',saelis:'feather'};
 const ASCENSION_SKINS={};
 const ASCENSION_PENDING_SETS={}; // Sets de campeones INTERNAL: se registran al pasar a RELEASED // apariencias alternativas (perfil de VFX hasta que llegue el atlas encargado)
 for(const [k,p] of Object.entries(ASCENSION)){

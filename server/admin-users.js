@@ -8,6 +8,7 @@ const adminLevels = require("./admin-levels");
 
 function routes(ctx){
   const {route, mutate, read, audit, fail, text, getStore, summarize, now, isOwner, founders, cosmetics, gameplay, shopCatalog} = ctx;
+  const seenAt = ctx.seenAt || (() => 0), ONLINE_MS = 5 * 60000;
   const store = () => getStore();
   const num = v => Number.isSafeInteger(v) ? v : typeof v === "string" && /^\d{1,15}$/.test(v.trim()) ? Number(v) : NaN;
 
@@ -18,7 +19,7 @@ function routes(ctx){
   function publicAccount(u, ops){
     const f = ent.founderOf(founders(), u.id);
     return {id:u.id, user:u.user, name:u.name || u.user, createdAt:u.createdAt, lastLogin:u.lastLogin || 0,
-      roles:rbac.rolesOf(u, ops, isOwner), founder:f ? {key:f.key, champion:f.champion} : null};
+      roles:rbac.rolesOf(u, ops, isOwner), founder:f ? {key:f.key, champion:f.champion} : null, seenAt:seenAt(u.id)};
   }
   function sheet(u, saved, ops){
     let data = null; try{ data = saved ? JSON.parse(saved.data) : null; }catch(e){}
@@ -61,8 +62,10 @@ function routes(ctx){
     let users = await store().listUsers();
     users = users.filter(u => !q || u.user.toLowerCase().includes(q) || String(u.name || "").toLowerCase().includes(q) || String(u.id) === q);
     const view = users.map(u => publicAccount(u, ops));
-    const filtered = view.filter(u => filter === "founder" ? !!u.founder : filter === "staff" ? u.roles.length > 0 : filter === "recent" ? u.lastLogin >= t - 7 * 86400000 : true)
-      .sort((a, b) => b.lastLogin - a.lastLogin).slice(0, 100);
+    // online: cuentas con una petición autenticada en los últimos 5 minutos (presencia en memoria del servidor).
+    const active = u => Math.max(u.lastLogin, u.seenAt);
+    const filtered = view.filter(u => filter === "founder" ? !!u.founder : filter === "staff" ? u.roles.length > 0 : filter === "recent" ? active(u) >= t - 7 * 86400000 : filter === "online" ? u.seenAt >= t - ONLINE_MS : true)
+      .sort((a, b) => active(b) - active(a)).slice(0, 100);
     for(const u of filtered){ const m = await store().getSaveMeta(u.id); u.summary = m ? m.summary : null; u.saveVersion = m ? m.version : null; }
     return {users:filtered, total:users.length};
   });
@@ -107,6 +110,39 @@ function routes(ctx){
       return null;
     });
     return {ok:true, version, champion, unlocked:grant};
+  });
+
+  // Category grant ("Regalar toda la Familia"): grants, in one CAS write, every champion of a grantable taxonomy
+  // category (FAMILY, ASCENSION, ...) that the target does not own yet. Membership comes from the taxonomy, never from
+  // client ids. FOUNDER is rejected; champions individually not grantable (e.g. artPending) are skipped. Same ledger and
+  // one champion.grant audit entry per champion (tagged with the category), exactly like single grants.
+  route("POST", "/api/gm/user/champion-category", "GRANT_CONTENT", async({user, body}) => {
+    const u = await target(body.id), cats = ent.taxonomy().categories, category = body.category;
+    if(typeof category !== "string" || !Object.prototype.hasOwnProperty.call(cats, category)) fail("BAD_CATEGORY");
+    if(category === "FOUNDER") fail("FOUNDER_NOT_GRANTABLE", 403);
+    if(!cats[category].grantable) fail("NOT_GRANTABLE", 403);
+    needConfirm(body, true);
+    const origin = body.origin === "EVENT_REWARD" ? "EVENT_REWARD" : "ADMIN_GRANT", reason = reasonOf(body);
+    const members = ent.taxonomy().ids.filter(id => { const m = ent.taxonomy().meta(id); return m.category === category && m.category !== "FOUNDER" && m.grantable; });
+    const saved = await store().getSave(u.id), ledger = ent.ledgerChampions(await read(), u.id);
+    let version = saved ? saved.version : null, granted;
+    if(saved){
+      const owned = JSON.parse(saved.data).champions || {};
+      granted = members.filter(id => !(owned[id] && owned[id].unlocked));
+      if(granted.length){
+        const r = await editSave(u, body.baseVersion, d => { const c = d.champions = d.champions || {}; for(const id of granted) c[id] = Object.assign(c[id] || {}, {unlocked:true}); return null; });
+        version = r.version;
+      }
+    }else granted = members.filter(id => !(ledger[id] && !ledger[id].revokedAt));
+    if(granted.length) await mutate(s => {
+      const g = ((s.grants = s.grants || {})[u.id] = s.grants[u.id] || {champions:{}}).champions;
+      for(const id of granted){
+        g[id] = {origin, by:user.id, at:now(), reason};
+        audit(s, user, "champion.grant", {target:u.id, type:"champion", content:id, origin, reason, before:false, after:true, details:{category}}, now());
+      }
+      return null;
+    });
+    return {ok:true, version, category, granted};
   });
 
   route("POST", "/api/gm/user/cosmetic", "GRANT_CONTENT", async({user, body}) => {

@@ -36,13 +36,13 @@ async function realIntegration(browser){
   await page.getByRole('button',{name:'Editar evento',exact:true}).click();await page.locator('input[name=name]').fill('Evento editado UI');await page.getByRole('button',{name:'Guardar evento',exact:true}).click();await page.getByRole('heading',{name:'Evento editado UI',exact:true}).waitFor();
   event=(await request('GET','/api/gm/events',undefined,owner)).events[0];assert.equal(event.name,'Evento editado UI');
   await page.getByRole('button',{name:'Finalizar evento',exact:true}).click();await page.getByText('Evento finalizado; configuración normal conservada.',{exact:true}).waitFor();assert.equal((await request('GET','/api/gm/events',undefined,owner)).events[0].enabled,false);
-  await page.getByRole('button',{name:'Jugadores',exact:true}).click();await page.locator('input[name=user]').fill('uitester');await page.getByRole('button',{name:'Buscar jugador'}).click();await page.getByRole('button',{name:/uitester · uitester/i}).click();
-  const detail=page.locator('.gm-card').first();await detail.locator('select[name=cosmeticId]').selectOption(cosmeticId);await detail.getByRole('button',{name:'Regalar cosmético',exact:true}).click();await page.getByText(/Regalos entregados: 1/).waitFor();assert.equal((await request('GET','/api/save',undefined,player)).data.cosmeticUnlocks[cosmeticId],true);
+  await page.getByRole('button',{name:'Regalos masivos',exact:true}).click();
+  const everyone=page.locator('.gm-card').filter({has:page.getByRole('heading',{name:'Regalo para toda la Alpha'})});await everyone.locator('select[name=cosmeticId]').selectOption(cosmeticId);await everyone.getByRole('button',{name:'Regalar a todos',exact:true}).click();await page.getByText(/Regalos entregados: 2/).waitFor();assert.equal((await request('GET','/api/save',undefined,player)).data.cosmeticUnlocks[cosmeticId],true);
   await page.getByRole('button',{name:'Reinicios',exact:true}).click();await page.locator('select[name=resetScope]').selectOption('all');await page.locator('input[name=gold]').check();await page.getByRole('button',{name:'Previsualizar reinicio',exact:true}).click();await page.getByText('Cuentas afectadas: 2',{exact:true}).waitFor();
   await page.locator('input[name=confirmation]').fill('REINICIAR 2 CUENTAS');await page.getByRole('button',{name:'Confirmar reinicio de los datos seleccionados'}).click();await page.getByText('Cuentas reiniciadas y respaldadas: 2. Conflictos: 0.',{exact:true}).waitFor();
   for(const token of [owner,player])assert.equal((await request('GET','/api/save',undefined,token)).data.gold,0);
   assert.equal(fs.readdirSync(dir).filter(n=>n.startsWith('operation-snapshot-')).length,2);
-  for(const width of [667,844,1440]){await page.setViewportSize({width,height:width===1440?900:390});for(const tab of ['Resumen','Configuración','Eventos','Noticias y chat','Jugadores','Reinicios','Registro']){await page.getByRole('button',{name:tab,exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('[data-gm-tab]')].every(b=>!b.disabled));assert(await page.locator('#game-master').evaluate(n=>n.scrollWidth<=n.clientWidth+1),'real overflow '+tab+' '+width);}}
+  for(const width of [667,844,1440]){await page.setViewportSize({width,height:width===1440?900:390});for(const tab of ['Resumen','Configuración','Eventos','Noticias y chat','Regalos masivos','Reinicios','Registro']){await page.getByRole('button',{name:tab,exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('[data-gm-tab]')].every(b=>!b.disabled));assert(await page.locator('#game-master').evaluate(n=>n.scrollWidth<=n.clientWidth+1),'real overflow '+tab+' '+width);}}
   assert.deepEqual(errors,[]);console.log('Game Master real API/browser: PASS (gold prices+preservation, boss/set/reward event, edit/cancel, gift, batch reset+snapshots, all tabs landscape).');
  }finally{await page?.close();if(server)await new Promise(r=>server.close(r));await app.close();fs.rmSync(dir,{recursive:true,force:true});if(oldAdmin===undefined)delete process.env.ADMIN_USERS;else process.env.ADMIN_USERS=oldAdmin;}
 }
@@ -63,7 +63,6 @@ async function realIntegration(browser){
     '/api/gm/config':{version:4,config:{itemPrices:{fixture:99},xp:2,gold:1,drop:1,difficulty:1,enemyHp:1,enemyDamage:1,bossHp:1,eliteRate:1,spawnRate:1}},
     '/api/gm/events':{events:[]},'/api/chat':{messages:[{id:'m1',name:'<img src=x onerror=alert(1)>',text:'<script>alert(1)</script>'}]},
     '/api/gm/players?q=test':{players:[{user:'test',name:'Tester'}]},
-    '/api/admin/profile':{user:'test',version:4,champions:[{key:'tank',level:12,unlocked:true}]},
     '/api/gm/reset/preview':{token:'preview-token',confirmation:'REINICIAR test',accounts:1},
     '/api/gm/reset/confirm':{ok:true},'/api/gm/gift':{granted:1,conflicts:0,missingSave:0}
    };return {status:200,j:data[url]||{ok:true}};
@@ -91,17 +90,19 @@ async function realIntegration(browser){
  assert.equal(await page.locator('#game-master img,#game-master script').count(),0);
  await page.getByRole('button',{name:'Fijar este mensaje'}).click();
  assert(await page.evaluate(()=>requests.some(r=>r.url==='/api/gm/chat/pin'&&r.body.id==='m1')));
- await page.getByRole('button',{name:'Jugadores',exact:true}).click();
- await page.locator('input[name=user]').fill('test');await page.getByRole('button',{name:'Buscar jugador'}).click();
- await page.getByRole('button',{name:'Tester · test'}).click();
+ await page.getByRole('button',{name:'Regalos masivos',exact:true}).click();await page.getByRole('heading',{name:'Regalo para toda la Alpha'}).waitFor();
+ await page.getByRole('button',{name:'Reinicios',exact:true}).click();
+ await page.locator('input[name=query]').fill('test');await page.getByRole('button',{name:'Buscar cuentas'}).click();
+ await page.getByLabel('Tester · test').check();
  await page.locator('input[name=gold]').check();await page.getByRole('button',{name:'Previsualizar reinicio'}).click();
  await page.locator('input[name=confirmation]').fill('wrong');await page.getByRole('button',{name:'Confirmar reinicio de los datos seleccionados'}).click();
  assert.equal(await page.evaluate(()=>requests.filter(r=>r.url==='/api/gm/reset/confirm').length),0);
  await page.locator('input[name=confirmation]').fill('REINICIAR test');await page.getByRole('button',{name:'Confirmar reinicio de los datos seleccionados'}).click();
  assert(await page.evaluate(()=>requests.some(r=>r.url==='/api/gm/reset/confirm'&&r.body.token==='preview-token')));
+ assert(await page.evaluate(()=>requests.some(r=>r.url==='/api/gm/reset/preview'&&r.body.users&&r.body.users[0]==='test')));
  await page.getByRole('button',{name:'Reinicios',exact:true}).click();await page.locator('select[name=resetScope]').selectOption('all');await page.locator('input[name=gold]').check();await page.getByRole('button',{name:'Previsualizar reinicio'}).click();assert(await page.evaluate(()=>requests.some(r=>r.url==='/api/gm/reset/preview'&&r.body.user==='all')));
  for(const width of [667,844,1440]){await page.setViewportSize({width,height:width===1440?900:390});assert(await page.locator('#game-master').evaluate(n=>n.scrollWidth<=n.clientWidth+1),'horizontal overflow '+width);}
- await page.getByRole('button',{name:'Entrar como jugador',exact:true}).click();await page.waitForSelector('#game-master',{state:'detached'});
+ await page.getByRole('button',{name:'⟵ Volver a la campaña',exact:true}).click();await page.waitForSelector('#game-master',{state:'detached'});
  await page.evaluate(()=>{allow=false;location.hash='game-master';});await page.getByRole('alert').waitFor();assert.equal(await page.locator('#game-master').count(),0);
  assert.deepEqual(errors,[]);await realIntegration(browser);await browser.close();console.log('Game Master UI: PASS (owner route, API payloads, XSS, reset confirmation, 667/844/1440 overflow).');
 })().catch(e=>{console.error(e);process.exit(1);});
