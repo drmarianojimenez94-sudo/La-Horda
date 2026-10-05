@@ -22,7 +22,9 @@ const SECRET='secreto-de-prueba-brasas-0123';
  async function request(method,url,body,token,headers){const r=await fetch(base+url,{method,headers:{'content-type':'application/json',...(token?{authorization:'Bearer '+token}:{}),...(headers||{})},body:body===undefined?undefined:(typeof body==='string'?body:JSON.stringify(body))});let j=null;try{j=await r.json();}catch(e){}return {status:r.status,j};}
  const reg=await request('POST','/api/register',{user:'Brasero',pass:'player-password'});assert.equal(reg.status,201,JSON.stringify(reg.j));const token=reg.j.token;
  const champs={tanque:{unlocked:true,level:3},mago:{unlocked:true,level:3},arquero:{unlocked:true,level:2}};
- await request('PUT','/api/save',{data:{gold:500,champions:champs,arenasCleared:{},stash:[],cromas:{},cosmeticUnlocks:{},firstRun:null},baseVersion:0},token);
+ // guardado con formato actual: sin las marcas de migración, la carga aplica el reinicio de la etapa de prueba
+ // (guardianes bloqueados → guardián de regalo) y la sincronización tardía dejaba el juego en esa pantalla
+ await request('PUT','/api/save',{data:{gold:500,champions:champs,arenasCleared:{},stash:[],cromas:{},cosmeticUnlocks:{},firstRun:null,starterChosen:true,starterGiftV1:true,starterSkin:'vale',playtestV1Bonus:true,campaignResetV1:true,campaignResetV2:true,campaignResetV3:true,testStageV1:true},baseVersion:0},token);
  const userId=(await app.store.getUserByKey('brasero')).id;assert(Number.isSafeInteger(userId),'user id');
  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox','--disable-dev-shm-usage']});let checks=0;const ok=(c,m)=>{assert(c,m);checks++;};
  async function open(logged,w,h){
@@ -31,6 +33,7 @@ const SECRET='secreto-de-prueba-brasas-0123';
   const page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/index.html?lazy=0&api='+encodeURIComponent(base));
   await page.waitForFunction(()=>typeof assetsAllReady==='function'&&assetsAllReady()&&typeof shopOpen==='function'&&typeof renderMainMenu==='function');
+  if(logged)await page.waitForFunction(()=>acct.lastPull&&!acct.pulling&&!acct.applying,null,{timeout:30000});
   // perfil fuera de la primera partida, con guardianes propios (para la tira "¿Qué compro con Brasas?")
   await page.evaluate(c=>{for(const k of Object.keys(c)){save.champions[k]=Object.assign(save.champions[k]||{},c[k]);}save.firstRun=null;selectedClass='tanque';setState('mainmenu');renderMainMenu();},champs);
   return {page,ctx,errors};
