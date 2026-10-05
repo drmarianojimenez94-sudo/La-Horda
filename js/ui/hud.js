@@ -305,7 +305,7 @@ function renderParty(){
       row.innerHTML = `
         <div class="ally-badge" style="color:${a.cls.color};background:${a.cls.color}22;">${a.cls.icon}</div>
         <div class="ally-meta">
-          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+hudClassName(a.cls) : (typeof isBotHero==="function" && isBotHero(a) ? "BOT · " : "")+hudClassName(a.cls)}${a.netFounder && typeof founderBadgeHTML==="function" ? founderBadgeHTML(a.netFounder, "sm") : ""}</div>
+          <div class="ally-name">${a.netName && a.netName!=="BOT" ? a.netName+" · "+hudClassName(a.cls) : hudClassName(a.cls)}${a.netFounder && typeof founderBadgeHTML==="function" ? founderBadgeHTML(a.netFounder, "sm") : ""}</div>
           <div class="ally-hp-track"><div class="ally-hp-fill shield-seg" id="ally-shieldbar-${i}"></div><div class="ally-hp-fill" id="ally-hp-${i}"></div></div>
         </div>
         <span class="status-badge atk hidden" id="ally-atk-${i}">⚔</span>

@@ -427,7 +427,7 @@ function renderPrepSummary(){
     return;
   }
   const sb = document.getElementById("prep-start-btn"); if(sb){ sb.disabled = false; sb.textContent = "Comenzar"; }
-  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los ocupan bots (o tus amigos, con una sala online)";
+  document.getElementById("lobby-sub").textContent = "4 lugares · los lugares libres los completa el juego (o tus amigos, con una sala online)";
   const slots = document.getElementById("lobby-slots");
   if(typeof netLobby!=="undefined") netLobby.slotsHTML = ""; // la vista solo reemplaza la de la sala online
   const team = [selectedClass, ...(lobbyAllies||[])];
@@ -437,7 +437,7 @@ function renderPrepSummary(){
     if(!key) return `<div class="lobby-slot empty"><div class="lobby-empty">＋</div><div class="lobby-name">Esperando jugador…</div></div>`;
     const cls = CLASSES[key], lv = save.champions[key].level, you = i===0;
     return `<div class="lobby-slot ${you?"you":""}">
-      <div class="lobby-tag ${you?"you":"bot"}">${you?"VOS":"BOT"}</div>
+      <div class="lobby-tag ${you?"you":"bot"}">${you?"VOS":"EQUIPO"}</div>
       <canvas class="champ-anim lobby-anim" width="120" height="120" data-class-key="${key}" data-idle="1" data-ph="${i*1.3}" style="background:${cls.color}1c;"></canvas>
       <div class="lobby-name">${cls.name}</div>
       <div class="lobby-meta">${ROLE_LABEL[cls.roleCategory]||""}</div>

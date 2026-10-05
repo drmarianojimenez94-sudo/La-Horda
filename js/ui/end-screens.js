@@ -54,7 +54,7 @@ function showGameOverScreen(divinaOutcome){
   const arenaRows = arenaHas("resultsHTML") ? (arenaHook("resultsHTML", false)||"") : "";   // p.ej. civiles rescatados (Ciudad Maldita)
   document.getElementById("go-progress").innerHTML = (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
-    Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
+    ${typeof botDisclosureText==="function" && botDisclosureText() ? `<small style="opacity:.7">${botDisclosureText()}</small><br>` : ""}Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
     ${defeatPenaltyLineHTML(penalty)}${typeof diffResultRowHTML==="function" ? diffResultRowHTML(false) : ""}${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}${endSkinsLinkHTML(player.classKey)}`;
   if(typeof questsOnRunEnd==="function") questsOnRunEnd(false); // después del castigo: lo que dan los desafíos no se descuenta
 }
@@ -191,7 +191,8 @@ const VICTORY_STEPS = [
       <div class="perf-note">Se mide lo que aporta tu rol, comparado con tu equipo.</div>
       ${rows}
       <div class="vic-party-title">Todo el equipo</div>
-      ${partyRows}`;
+      ${partyRows}
+      ${typeof botDisclosureText==="function" && botDisclosureText() ? `<div class="perf-note">${botDisclosureText()}</div>` : ""}`;
   },
   // 2. BONUS DE RECOMPENSA + BOTÍN
   function(){

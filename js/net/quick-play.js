@@ -47,11 +47,9 @@ function quickPlayCancel(leave){
   if(was && leave && typeof netInRoom==="function" && netInRoom() && net.role==="host"){ try{ netLeaveRoom(); }catch(e){} if(typeof renderPrepSummary==="function") renderPrepSummary(); }
 }
 function quickPlayGoNow(){
-  const alone = typeof netHumanCount==="function" ? netHumanCount() <= 1 : true;
   _qpClear(); QP.busy = false;
   if(typeof state==="undefined" || state!=="prep") return;
   const btn = document.getElementById("prep-start-btn"); if(btn && !btn.disabled) btn.click();
-  if(alone && typeof showNetToast==="function") showNetToast("Tus compañeros son BOTs. Si entra alguien, se suma en la próxima partida.");
 }
 function _qpTick(){
   if(!QP.busy) return;
@@ -60,7 +58,7 @@ function _qpTick(){
   if(humans > QP.humans) QP.endAt = Math.max(QP.endAt, performance.now() + QUICKPLAY_JOIN_EXTRA_MS);
   QP.humans = humans;
   const left = Math.max(0, Math.ceil((QP.endAt - performance.now()) / 1000));
-  _qpBar(`<span class="qp-txt">⚡ ${humans>1 ? humans + " jugadores en la sala" : "Buscando compañeros"}… empieza en <b>${left}</b> s${humans<4 ? " · los lugares vacíos los ocupan <b>BOTs</b>" : ""}</span>
+  _qpBar(`<span class="qp-txt">⚡ ${humans>1 ? humans + " jugadores en la sala" : "Buscando compañeros"}… empieza en <b>${left}</b> s${humans<4 ? " · los lugares libres los completa el juego" : ""}</span>
     <button class="btn small" data-qp-now>Empezar ya</button><button class="btn small secondary" data-qp-cancel>Cancelar</button>`);
   // todos los humanos listos (o 4 humanos): no hace falta esperar más
   if(humans >= 4 || left <= 0 || (humans > 1 && typeof netNotReady=="function" && netNotReady().length===0)) quickPlayGoNow();

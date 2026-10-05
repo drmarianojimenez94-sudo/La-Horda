@@ -28,7 +28,7 @@ Los problemas reales no son de falta de sistemas sino de **cuatro cosas**:
 
 | # | Prio | Problema | Evidencia | Estado de la solución |
 |---|---|---|---|---|
-| 1 | P0 | Un solo humano no tiene entrada directa a una partida de 4 ni sabe cuáles son los bots | `net-game.js` (bots solo al pulsar Comenzar), `allies.js heroLabel` ocultaba "BOT" | **IMPLEMENTADO** en esta rama (⚡ JUGAR YA + etiquetas) |
+| 1 | P0 | Un solo humano no tiene entrada directa a una partida de 4 | `net-game.js` (bots solo al pulsar Comenzar) | **IMPLEMENTADO** (⚡ JUGAR YA; compañeros con nombre propio) |
 | 2 | P1 | Golpe básico sin aviso (`update.js` ~497) | auditoría de gameplay | PROPUESTO |
 | 3 | P1 | Sin telemetría de decisiones (campeón elegido, ítem saltado, desbloqueo visto, abandono) | `alpha-services.js` lista blanca; `champion_selected` documentado y nunca emitido | PROPUESTO (requiere cambio de lista blanca en servidor) |
 | 4 | P1 | Gate de entrada sin poder de detección (3 semillas, nivel 20, sin equipo; satura) | `BALANCE_CAMPEONES.md` "Tres muestras no bastan" | PROPUESTO |
@@ -72,7 +72,7 @@ disponible, (3) colección con destino claro (sets, Guardianes, maestría).**
 
 ## 6. Plan de población (cold start)
 
-Principios: humanos primero → completar con bots rotulados → empezar rápido → bots salen cuando sobran humanos.
+Principios: humanos primero → completar con compañeros del juego con nombre propio → empezar rápido → los compañeros del juego salen cuando sobran humanos.
 
 | Población concurrente | Comportamiento objetivo |
 |---|---|
@@ -85,8 +85,8 @@ Principios: humanos primero → completar con bots rotulados → empezar rápido
 - `js/net/quick-play.js` + tarjeta ⚡ JUGAR YA: unirse a la mejor sala pública con lugar (nivel parecido, más gente
   primero); si no hay, abrir una pública; esperar 8 s (+12 s por cada humano que entra; empieza antes si todos
   están listos); al terminar, los lugares vacíos los ocupan bots. Sin servidor online: solo con bots.
-- Etiqueta "BOT · Clase" en HUD, avisos y sobre el personaje (solo y online). Antes `heroLabel` ocultaba "BOT".
-- Pruebas: `tools/net/quick-play.js` (relay real, 2 navegadores) y `tools/alpha/bot-labels.js`.
+- Compañeros del juego con **nombre propio** (HUD, avisos, etiqueta sobre el personaje; `js/ai/bot-identity.js`): único, estable por guardián en la sesión y distinto al de un humano. Sin carteles "BOT" en juego (decisión del propietario: dar sensación de comunidad).
+- Pruebas: `tools/net/quick-play.js` (relay real, 2 navegadores) y `tools/alpha/bot-identity.js`.
 
 **PROPUESTO (siguiente)**
 - *Backfill humano* (bot → humano en partida): la auditoría lista el estado a transferir (loadout, campeón libre,
@@ -94,7 +94,7 @@ Principios: humanos primero → completar con bots rotulados → empezar rápido
   el cambio de nivel (pantalla de mejoras) para evitar saltos de stats. Requiere relajar `STARTED` en el relay solo
   para lugares de bot.
 - *Bots con personalidad* (agresión, avaricia, cautela, trabajo en equipo; habilidad separada), nombres propios
-  rotulados "BOT", frases contextuales deterministas y sin spam. Decisión de arquitectura: **utility AI sobre el
+  con nombre propio, frases contextuales deterministas y sin spam. Decisión de arquitectura: **utility AI sobre el
   `bot-brain.js` existente**, no aprendizaje automático (calidad suficiente, coste ≈ 0, latencia ≈ 0, depurable).
 - Métricas de matchmaking: tiempo hasta primer humano, proporción humano/bot, revancha, abandono.
 
@@ -161,4 +161,11 @@ Riesgo: se vuelven predecibles → variar parámetros por sesión.
 **Una sola cola pública.** Problema: fragmentar población pequeña. Decisión: ⚡ JUGAR YA usa la lista de salas públicas
 existente; no crea colas por modo/dificultad.
 
-**Bots siempre rotulados.** Decisión: "BOT · Clase" en toda superficie. Motivo: transparencia (principio del prompt).
+**Compañeros del juego sin rótulo "BOT" en juego (decisión del propietario, reemplaza la regla inicial del prompt).**
+Problema: con pocos jugadores un cartel "BOT" sobre cada compañero rompe la sensación de comunidad. Decisión: nombre propio
+estable y distinto al de los humanos; ni el HUD ni los avisos ni la etiqueta dicen "BOT". Límites que se mantienen, y por qué:
+(1) transparencia **general**, no por personaje: la Sala y el modo ⚡ JUGAR YA dicen que el juego completa los lugares libres,
+Opciones lo explica y el resultado de la partida avisa "incluyó compañeros controlados por el juego"; (2) los compañeros del
+juego no dicen ser personas ni inventan historias personales; (3) nunca se muestran cifras de jugadores conectados que incluyan
+compañeros del juego ni se usan como prueba social para vender. Riesgo: si se descubre que eran compañeros del juego y no
+había aviso, se pierde confianza → por eso el aviso general existe. Revisable por el propietario.

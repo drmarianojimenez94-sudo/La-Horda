@@ -24,7 +24,7 @@ const relay=spawn(process.execPath,['server/relay.js'],{cwd:path.resolve(__dirna
   await A.p.waitForFunction(()=>netInRoom()&&net.role==='host',null,{timeout:20000});
   await A.p.waitForFunction(()=>{const e=document.getElementById('qp-bar');return e&&/Empezar ya/.test(e.innerText);},null,{timeout:10000});
   ok(await A.p.locator('#qp-bar').isVisible(),'barra de búsqueda visible');
-  const txt=await A.p.locator('#qp-bar').innerText();ok(/BOT/.test(txt)&&/Empezar ya/.test(txt)&&/Cancelar/.test(txt),'la barra dice que los vacíos son BOTs '+txt);
+  const txt=await A.p.locator('#qp-bar').innerText();ok(/completa el juego/.test(txt)&&/Empezar ya/.test(txt)&&/Cancelar/.test(txt),'la barra explica que el juego completa los lugares '+txt);
   await delay(1300); // el relay guarda la lista de salas 1 s
   const rooms=await (await fetch('http://127.0.0.1:'+PORT+'/api/rooms')).json();ok(rooms.rooms.length===1&&rooms.rooms[0].humans===1,'sala pública con 1 humano '+JSON.stringify(rooms));
   // ---- B toca JUGAR YA y se une a la sala de A ----
@@ -42,9 +42,12 @@ const relay=spawn(process.execPath,['server/relay.js'],{cwd:path.resolve(__dirna
   await A.p.waitForFunction(()=>netNotReady().length===0,null,{timeout:10000});
   // con todos los humanos listos, JUGAR YA empieza solo (no hace falta tocar "Empezar ya")
   await A.p.waitForFunction(()=>state==='playing'&&netMatch,null,{timeout:60000});
-  const g=await A.p.evaluate(()=>({kinds:netMatch.slots.map(s=>s.kind),labels:heroes.map(h=>heroLabel(h)),prefLeft:netPublicPref()}));
+  const g=await A.p.evaluate(()=>({kinds:netMatch.slots.map(s=>s.kind),slots:netMatch.slots.map(s=>({kind:s.kind,name:s.name})),humanNames:netMatch.slots.filter(s=>s.kind==='human').map(s=>s.name),labels:heroes.map(h=>heroLabel(h)),prefLeft:netPublicPref()}));
   ok(g.kinds.filter(k=>k==='human').length===2&&g.kinds.filter(k=>k==='bot').length===2,'2 humanos + 2 bots '+JSON.stringify(g.kinds));
-  ok(g.labels.filter(l=>/^BOT · /.test(l)).length===2,'los bots se rotulan "BOT · Clase" '+JSON.stringify(g.labels));
+  const botNames=g.slots.filter(x=>x.kind==='bot').map(x=>x.name);
+  ok(botNames.length===2&&botNames.every(n=>n&&n!=='BOT'&&!/bot/i.test(n))&&new Set(botNames).size===2,'compañeros del juego con nombre propio, sin "BOT" '+JSON.stringify(botNames));
+  ok(botNames.every(n=>g.labels.includes(n)),'los avisos usan ese nombre '+JSON.stringify(g.labels));
+  ok(!g.humanNames.some(n=>botNames.includes(n)),'no repiten el nombre de un humano');
   ok(g.prefLeft===false,'la preferencia "pública" del jugador se restituye');
   ok(await A.p.evaluate(()=>!document.getElementById('qp-bar')),'la barra desaparece al empezar');
   assert.deepEqual(A.errors,[],'A sin errores');assert.deepEqual(B.errors,[],'B sin errores');
@@ -59,6 +62,6 @@ const relay=spawn(process.execPath,['server/relay.js'],{cwd:path.resolve(__dirna
   const s=await C.p.evaluate(()=>({state,bots:allies.filter(a=>a.isBot).length,net:!!netMatch}));
   ok(s.state==='playing'&&s.bots>=1&&!s.net,'sin servidor: partida con bots '+JSON.stringify(s));
   assert.deepEqual(C.errors,[],'C sin errores');await C.ctx.close();
-  console.log(`PASS quick-play: ${checks} checks (sala pública, humanos primero, bots rotulados, sin servidor)`);
+  console.log(`PASS quick-play: ${checks} checks (sala pública, humanos primero, compañeros con nombre propio, sin servidor)`);
  }finally{await b.close();relay.kill();fs.rmSync(data,{recursive:true,force:true});}
 })().catch(e=>{console.error(e.message||e);relay.kill();process.exit(1);});
