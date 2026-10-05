@@ -22,7 +22,7 @@ function expeditionCast(h,sk,isUlt,dmg,area,dur,power){
  if(!h.alive||h.fused)return;
  const s=exState(h),idx=h.cls.skills.indexOf(sk),master=idx>=0&&portadorMaster(h,idx);
  if(master){if(['reflect','brace','mound'].includes(sk.action))dur*=1.1;else if(sk.action==='retrace')area*=1.1;else {dmg*=1.1;power*=1.1;}}
- const r=Math.min(230,(sk.radius||100)*area),range=Math.min(400,(sk.range||200)*area),life=Math.min(9000,(sk.duration||2400)*dur),dir=aimDir(h,range),point=()=>portadorPoint(h,range,r),end={x:h.x+dir.x*range,y:h.y+dir.y*range},origin={x:h.x,y:h.y};
+ const r=Math.min(230,(sk.radius||100)*area),range=Math.min(400,(sk.range||200)*area),life=Math.min(9000,(sk.duration||2400)*dur),dir=aimProfileOf(sk,h)?aimDir(h,range):{x:h.fx||1,y:h.fy||0},point=()=>portadorPoint(h,range,r),end={x:h.x+dir.x*range,y:h.y+dir.y*range},origin={x:h.x,y:h.y};
  h.exCue={action:sk.action,x:h.x,y:h.y,bx:end.x,by:end.y,r,range,angle:Math.atan2(dir.y,dir.x),until:runElapsedMs+(isUlt?650:350),ult:!!isUlt};
  if(typeof playSfx==='function')playSfx('ex_'+h.classKey+(isUlt?'_ult':'_cast'));
  h.portCastState=isUlt?'ultimate':'cast';h.portCastUntil=runElapsedMs+(isUlt?650:420);
@@ -32,16 +32,16 @@ function expeditionCast(h,sk,isUlt,dmg,area,dur,power){
  switch(sk.action){
  case 'needles':exCone(h,range,dmg,e=>exMark(h,e,1));break;
  case 'seam':case 'ash_step':exDash(h,dir,Math.min(150,range));exObject(h,'line',origin,life,{bx:h.x,by:h.y,r,dmg,interval:life/4,tick:1,left:4},2);if(sk.action==='ash_step')s.heat=Math.min(100,s.heat+25);break;
- case 'unpick':for(const e of exTargets(h,e=>distance(h,e)<r)){const m=exMark(h,e),n=m.n;m.n=0;exHit(h,e,dmg*(1+n*.2));}break;
- case 'last_stitch':exPulse(h,'stitch',life,r,dmg,4);break;
+ case 'unpick':for(const e of exTargets(h,e=>distance(h,e)<r)){const m=exMark(h,e),n=m.n;m.n=0;exHit(h,e,dmg*(1+n*.2));}kitBuff(h,h,3000,{dmg:.15,label:'AFILADA'});break;
+ case 'last_stitch':exPulse(h,'stitch',life,r,dmg,4);for(const a of heroes)if(a.alive&&distance(a,h)<r+80)kitBuff(h,a,life,{speed:.15,label:'+VELOCIDAD'});break;
  case 'shards':exCone(h,range,dmg);break;
- case 'reflect':exDash(h,dir,Math.min(150,range));exObject(h,'reflection',origin,life,{r:25},3);break;
+ case 'reflect':exDash(h,dir,Math.min(150,range));exObject(h,'reflection',origin,life,{r:25},3);kitBuff(h,h,3000,{dmg:.15,label:'VENTAJA'});break;
  case 'cross':{const refs=exOwned(h,'reflection').slice(0,3),a={x:h.x,y:h.y};for(const e of exTargets(h,e=>[a,...refs].some(p=>seSegDist(e.x,e.y,p.x,p.y,end.x,end.y)<r+(e.radius||0)))){let mult=seSegDist(e.x,e.y,a.x,a.y,end.x,end.y)<r+(e.radius||0)?1:0;for(const p of refs)if(seSegDist(e.x,e.y,p.x,p.y,end.x,end.y)<r+(e.radius||0))mult+=.25;exHit(h,e,dmg*Math.min(1.75,mult));}break;}
- case 'gallery':for(const o of exOwned(h,'reflection'))o.life=0;for(let i=0;i<3;i++){const a=i*Math.PI*2/3,aim=h.aim;h.aim={x:h.x+Math.cos(a)*100,y:h.y+Math.sin(a)*100};const p=point();h.aim=aim;exObject(h,'reflection',p,life,{r:25},3);}break;
+ case 'gallery':for(const o of exOwned(h,'reflection'))o.life=0;for(let i=0;i<3;i++){const a=i*Math.PI*2/3,p={x:h.x+Math.cos(a)*100,y:h.y+Math.sin(a)*100,radius:18};clampToArena(p);resolveWallCollision(p);exObject(h,'reflection',p,life,{r:25},3);}for(const o of exOwned(h,'reflection'))exArea(h,o,80,dmg*.6,e=>portadorSlow(h,e,.3,1200));kitBuff(h,h,life,{dmg:.15,label:'GALERÍA'});break;
  case 'bell':exArea(h,h,r,dmg*(1+s.vibration*.12));s.vibration=0;break;
  case 'guard':s.guardUntil=runElapsedMs+life;s.guardX=dir.x;s.guardY=dir.y;break;
  case 'counter':exCone(h,range,dmg*(1+s.vibration*.12),e=>portadorSlow(h,e,.3,1200));s.vibration=0;break;
- case 'toll':exPulse(h,'toll',life,r,dmg,3);break;
+ case 'toll':exPulse(h,'toll',life,r,dmg,3);for(const a of heroes)if(a.alive&&distance(a,h)<r+60)exShield(h,a,.06,life);for(const e of exTargets(h,e=>distance(h,e)<r))portadorSlow(h,e,.3,1500);break;
  case 'roots':exLine(h,h,end,r,dmg,e=>portadorSlow(h,e,.3,1400));exObject(h,'thorns',point(),Math.min(3000,life),{r:70,dmg:0},2);break;
  case 'bark':exShield(h,h,Math.min(.15,.1*power),life);exObject(h,'bark',h,life,{r,dmg});break;
  case 'shear':exArea(h,h,r,dmg);exHeal(h,h,s.seeds*.01);s.seeds=0;break;
@@ -51,26 +51,39 @@ function expeditionCast(h,sk,isUlt,dmg,area,dur,power){
  case 'refrain':exArea(h,h,r,dmg);for(const a of heroes)if(distance(a,h)<r)exHeal(h,a,.01+s.notes*.006);s.notes=0;break;
  case 'concert':exPulse(h,'concert',life,r,dmg,6);break;
  case 'pierce':exLine(h,h,end,r,dmg,e=>exMark(h,e,1));break;
- case 'brace':s.braceUntil=runElapsedMs+life;s.shots=3;break;
- case 'discharge':exDischarge(h,r,dmg);break;
- case 'storm':exPulse(h,'storm',life,r,dmg,4,{range});break;
+ case 'brace':s.braceUntil=runElapsedMs+life;s.shots=3;kitBuff(h,h,life,{dmg:.2,label:'AFIRMADA'});break;
+ case 'discharge':exArea(h,h,r*.7,dmg*.5);exDischarge(h,r,dmg);break;
+ case 'storm':exPulse(h,'storm',life,r,dmg,4,{range});for(const e of exTargets(h,e=>distance(h,e)<range))portadorSlow(h,e,.25,1500);for(const a of heroes)if(a.alive&&distance(a,h)<range)kitBuff(h,a,life,{speed:.15,label:'+VELOCIDAD'});break;
  case 'swarm':case 'hive_sky':if(isUlt)s.colony=100;exObject(h,'swarm',point(),life,{r,dmg,tick:1,interval:600,left:Math.min(12,Math.ceil(life/600))});break;
  case 'recall':{const cloud=exOwned(h,'swarm')[0];if(cloud){exLine(h,cloud,h,r,dmg);cloud.life=0;s.colony=Math.min(100,s.colony+20);}exShield(h,h,cloud?.07:.03,3000);break;}
  case 'pollen':{const p=point();exArea(h,p,r,dmg,e=>portadorSlow(h,e,.25,1200));const cloud=exOwned(h,'swarm')[0];if(cloud){cloud.x=p.x;cloud.y=p.y;}break;}
  case 'furnace':exCone(h,range,dmg);s.heat=Math.min(100,s.heat+30);break;
  case 'quench':exShield(h,h,.04+s.heat*.0008,3000);s.heat=0;for(const o of exOwned(h,'line'))if(distance(h,o)<range)o.life=0;break;
- case 'vent':exPulse(h,'vent',life,r,dmg*(1+s.heat*.004),4);s.heat=0;break;
+ case 'vent':exPulse(h,'vent',life,r,dmg*(1+s.heat*.004),4);s.heat=0;for(const a of heroes)if(a.alive&&distance(a,h)<r+60)exShield(h,a,.05,life);break;
  case 'trench':exLine(h,h,end,r,dmg,e=>portadorSlow(h,e,.3,1500));exObject(h,'soil',point(),life,{r:65},3);break;
- case 'mound':exObject(h,'mound',point(),life,{r});break;
+ case 'mound':exObject(h,'mound',point(),life,{r});kitBuff(h,h,3000,{armor:.2,label:'CUBIERTO'});break;
  case 'burial':{const soil=exOwned(h,'soil');exArea(h,h,r,dmg*(1+soil.length*.2));for(const o of soil)o.life=0;break;}
- case 'faults':exPulse(h,'faults',life,r,dmg,3);break;
+ case 'faults':exPulse(h,'faults',life,r,dmg,3);for(const a of heroes)if(a.alive&&distance(a,h)<r+60)exShield(h,a,.05,life);break;
  case 'ink_line':exLine(h,h,end,r,dmg);break;
- case 'retrace':{const route=exRoute(h).reverse();let moved=0;outer:for(const p of route){while(distance(h,p)>6){const l=distance(h,p),d={x:(p.x-h.x)/l,y:(p.y-h.y)/l};if(moved+6>Math.min(200,range)||!exSafeStep(h,{x:h.x+d.x*6,y:h.y+d.y*6}))break outer;moved+=6;}}s.route=[];break;}
+ case 'retrace':{const route=exRoute(h).reverse();let moved=0;outer:for(const p of route){while(distance(h,p)>6){const l=distance(h,p),d={x:(p.x-h.x)/l,y:(p.y-h.y)/l};if(moved+6>Math.min(200,range)||!exSafeStep(h,{x:h.x+d.x*6,y:h.y+d.y*6}))break outer;moved+=6;}}s.route=[];if(moved<20){const back={x:-dir.x,y:-dir.y};exDash(h,back,Math.min(120,range));}kitBuff(h,h,2500,{speed:.2,label:'ATAJO'});break;}
  case 'erase':{const points=exRoute(h);if(points.length>1)exRouteHit(h,points,r,dmg);else exArea(h,h,80,dmg);s.route=[];break;}
- case 'atlas':{let points=exRoute(h);if(points.length<2)points=[{x:h.x,y:h.y-80},{x:h.x+80,y:h.y},{x:h.x,y:h.y+80},{x:h.x-80,y:h.y},{x:h.x,y:h.y-80}];exPulse(h,'atlas',life,r,dmg,3,{points});break;}
+ case 'atlas':{let points=exRoute(h);if(points.length<2)points=[{x:h.x,y:h.y-80},{x:h.x+80,y:h.y},{x:h.x,y:h.y+80},{x:h.x-80,y:h.y},{x:h.x,y:h.y-80}];exPulse(h,'atlas',life,r,dmg,3,{points});for(const e of exTargets(h,e=>distance(h,e)<r+80))portadorSlow(h,e,.3,1500);for(const a of heroes)if(a.alive&&distance(a,h)<r+80)kitBuff(h,a,life,{speed:.15,label:'+VELOCIDAD'});break;}
  }
  if(s.heat>=100){s.heat=0;s.recoverUntil=runElapsedMs+1800;}
+ exCastFx(h,sk,!!isUlt,r,origin,end);
 }
+// Efecto temático de cada acción (kit-shared.js).
+const EX_FX={needles:'dark',seam:'dark',unpick:'slash',last_stitch:'dark',shards:'spark',reflect:'spark',cross:'spark',gallery:'spark',
+ bell:'wave',guard:'shield',counter:'wave',toll:'wave',roots:'earth',bark:'shield',shear:'slash',walking_forest:'earth',
+ discord:'rune',march:'shield',refrain:'light',concert:'rune',pierce:'bolt',brace:'spark',discharge:'bolt',storm:'bolt',
+ swarm:'spark',recall:'shield',pollen:'spark',hive_sky:'spark',furnace:'fire',quench:'water',ash_step:'fire',vent:'fire',
+ trench:'earth',mound:'earth',burial:'earth',faults:'earth',ink_line:'rune',retrace:'wind',erase:'rune',atlas:'rune'};
+function exCastFx(h,sk,isUlt,r,origin,end){const th=EX_FX[sk.action];if(!th||typeof kitFx!=='function')return;const prof=aimProfileOf(sk,h);
+ if(prof&&prof.type==='line')kitFxLine(th,origin.x,origin.y,end.x,end.y,prof.w);
+ else if(prof&&prof.type==='cone'){kitFx(th,h.x+(end.x-h.x)*.6,h.y+(end.y-h.y)*.6,r*.6,{ult:isUlt});}
+ else if(prof&&prof.type==='dash'){kitFxLine(th,origin.x,origin.y,h.x,h.y,prof.w);kitFx(th,h.x,h.y,r*.6,{ult:isUlt});}
+ else if(prof&&prof.type==='point'&&h._lastAimPt)kitFx(th,h._lastAimPt.x,h._lastAimPt.y,r,{ult:isUlt});
+ else kitFx(th,h.x,h.y,r,{ult:isUlt});}
 function exUpdateObject(o,dt){
  if(!o.ex)return false;const h=o.owner,s=exState(h),oldLife=o.life;
  if(h.fused){o.life=0;return true;}

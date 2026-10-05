@@ -31,6 +31,26 @@ function ascNanoWings(h,scale,alpha){
  if(P.halo||regent){ctx.globalAlpha*=.8;ctx.beginPath();ctx.arc(0,-6,9,0,Math.PI*2);ctx.strokeStyle=P.edge;ctx.lineWidth=1.5;ctx.stroke();if(regent){ctx.beginPath();ctx.arc(0,-6,9,Math.PI*.5,Math.PI*1.5);ctx.fillStyle=P.light;ctx.globalAlpha*=.35;ctx.fill();}}
  ctx.restore();
 }
+/* ---------------- Nano: FORMA DEL JUICIO (8 s tras la definitiva): monstruo en blanco y negro ---------------- */
+function nanoMonster(h){return !!(h&&h.classKey==='nano_gm'&&h.asState&&h.asState.monsterUntil>runElapsedMs);}
+function nanoMonsterK(h){const s=h.asState,left=s.monsterUntil-runElapsedMs,el=8000-left;return Math.max(0,Math.min(1,el/350,left/500));}
+// Alas gigantes de esquirlas blancas y negras, cuernos y ojos encendidos (encima del cuerpo escalado).
+function nanoMonsterDraw(h,scale){const k=nanoMonsterK(h);if(k<=0)return;const t=ascT(),flap=Math.sin(t*5)*.12;
+ ctx.save();ctx.translate(h.x,h.y-26*scale*1.5);ctx.scale(scale*1.5,scale*1.5);ctx.globalAlpha*=.95*k;
+ for(const side of [-1,1]){ctx.save();ctx.scale(side,1);ctx.rotate(flap*side);
+  for(let i=0;i<7;i++){const a=-.15-i*.2,L=(22+i*7)*k;ctx.save();ctx.rotate(a);ctx.beginPath();ctx.moveTo(2,-3);ctx.lineTo(L,-2);ctx.lineTo(L*.86,4);ctx.lineTo(L*.6,1);ctx.lineTo(3,3);ctx.closePath();
+   ctx.fillStyle=i%2?'#f4f4f4':'#0a0a0c';ctx.fill();ctx.strokeStyle=i%2?'#0a0a0c':'#f4f4f4';ctx.lineWidth=.9;ctx.stroke();ctx.restore();}
+  ctx.restore();}
+ // cuernos
+ for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(side*5,-16);ctx.quadraticCurveTo(side*13,-26,side*9,-36);ctx.quadraticCurveTo(side*8,-26,side*2,-18);ctx.closePath();ctx.fillStyle='#0a0a0c';ctx.fill();ctx.strokeStyle='#f4f4f4';ctx.lineWidth=.8;ctx.stroke();}
+ // ojos
+ ctx.fillStyle='#ffffff';ctx.shadowColor='#ffffff';for(const side of [-1,1]){ctx.beginPath();ctx.ellipse(side*3.5,-6,2.2,1.1,0,0,Math.PI*2);ctx.fill();}
+ ctx.restore();}
+// Cuerpo 1,5x y ennegrecido mientras dura la forma (el filtro solo donde el navegador lo soporta; si no, solo escala).
+(function(){if(typeof drawHeroBody!=='function')return;const o=drawHeroBody;
+ drawHeroBody=function(h,drawScale){if(!nanoMonster(h))return o.apply(this,arguments);const k=1+.5*nanoMonsterK(h);
+  ctx.save();ctx.translate(h.x,h.y);ctx.scale(k,k);ctx.translate(-h.x,-h.y);const f=ctx.filter;if(typeof f==='string')ctx.filter='grayscale(1) brightness(.45) contrast(1.8)';
+  try{return o.apply(this,arguments);}finally{ctx.filter=f;ctx.restore();try{nanoMonsterDraw(h,(drawScale||2)/2);}catch(e){}}};})();
 function ascNanoConduits(h,scale,alpha){
  const P=ascSkinOf(h),s=h.asState||{},n=fxBudget(s.regentUntil>runElapsedMs?10:5),t=ascT(),lift=ascLift(h);
  ctx.save();ctx.globalAlpha=alpha*.85;
@@ -204,6 +224,10 @@ const ascOriginalGround=drawPortadorGround;drawPortadorGround=function(){ascOrig
 };
 /* ---------------- capa superior: Juicio (desaturación) y encuentro Nano + Facu ---------------- */
 const ascOriginalTop=drawPortadorTop;drawPortadorTop=function(){ascOriginalTop();
+ const mon=heroes.find(h=>h.alive&&nanoMonster(h));
+ if(mon){const k=nanoMonsterK(mon),el=8000-(mon.asState.monsterUntil-runElapsedMs);ctx.save();ctx.globalAlpha=(JUICE.reduceFx?.6:1)*k;ctx.globalCompositeOperation='saturation';ctx.fillStyle='#808080';ctx.fillRect(mon.x-2400,mon.y-2400,4800,4800);
+  ctx.globalCompositeOperation='source-over';if(el<260&&!JUICE.reduceFx){ctx.globalAlpha=.55*(1-el/260);ctx.fillStyle='#ffffff';ctx.fillRect(mon.x-2400,mon.y-2400,4800,4800);}
+  ctx.globalAlpha=.5*k;for(let i=0;i<2;i++){const rr=60+((runElapsedMs/6+i*90)%180);ctx.beginPath();ctx.arc(mon.x,mon.y,rr,0,Math.PI*2);ctx.strokeStyle=i?'#ffffff':'#0a0a0c';ctx.lineWidth=3;ctx.stroke();}ctx.restore();}
  const j=portadorObjects.find(o=>o.asc&&o.kind==='as_judgement'&&o.life>0);
  if(j){const age=(j.maxLife||0)-j.life,a=Math.min(1,age/250,j.life/400)*(JUICE.reduceFx?.5:1);ctx.save();
   ctx.globalAlpha=.55*a;ctx.globalCompositeOperation='saturation';ctx.fillStyle='#808080';ctx.fillRect(j.x-2400,j.y-2400,4800,4800);
