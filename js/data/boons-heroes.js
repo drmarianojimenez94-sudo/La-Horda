@@ -15,7 +15,7 @@ const HERO_BOONS = {
     ["ult","Veredicto Final","holy","stun",[{t:"echo",at:"caster",delay:900,rMul:1,pct:[1,1.4,1.8],status:{stun:[500,750,1000]}}],r=>`El Juicio del GM cierra con un veredicto que estalla en toda la zona y aturde ${_R([.5,.75,1],r)} s.`],
     [0,"Regente del Umbral","holy","shield",[{t:"burst",at:"caster",r:150,pct:.8,status:{vuln:.2,vulnMs:5000}},{t:"ally",at:"caster",r:240,shield:.08}],r=>"Dúo: la Sentencia Umbría también estalla alrededor de Nano (vulnerables +20%) y escuda 8% a los aliados."]]},
   facu_gm:{duo:[0,1], cards:[
-    [0,"Resaca Profunda","frost","pull",[{t:"pull",at:"ahead",r:[150,170,190],px:[40,55,70]}],r=>`La Corriente de Resaca arrastra a la Horda hacia el centro del canal (${_R([40,55,70],r)} px).`],
+    [0,"Resaca Profunda","frost","hits",[{t:"pull",at:"ahead",r:[150,170,190],px:[40,55,70]}],r=>`La Corriente de Resaca arrastra a la Horda hacia el centro del canal (${_R([40,55,70],r)} px).`],
     [1,"Fosa Helada","frost","zone",[{t:"ground",at:"aim",r:[95,110,125],dur:[3000,3500,4000],dps:[.25,.35,.45],slow:[.3,.4,.5]}],r=>`La Presión Abisal deja una fosa de agua helada: frena ${_R([30,40,50],r)}% y daña.`],
     [2,"Estela de Espuma","frost","hits",[{t:"line",w:56,pct:[.6,.8,1],status:{slow:.35}}],r=>`Cabalgar la Ola deja una estela que golpea (${_R([60,80,100],r)}% de daño) y frena a todo lo que cruza.`],
     ["ult","Marea Viva","frost","shield",[{t:"ally",at:"caster",r:280,shield:[.08,.12,.16]}],r=>`El Océano Reclama la Arena escuda ${_R([8,12,16],r)}% de vida a todos los aliados cercanos.`],
