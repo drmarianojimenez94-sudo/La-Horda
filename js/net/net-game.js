@@ -199,12 +199,12 @@ function netDrawNameTags(){
   ctx.font = pxFont(14); ctx.textAlign = "center";
   heroes.forEach((h,i)=>{
     const s = netMatch.slots && netMatch.slots[i];
-    if(!s || s.kind!=="human" || h===player) return;
+    if(!s || h===player || (s.kind!=="human" && s.kind!=="bot")) return;
     const y = h.y - 74;
-    const label = `P${i+1} ${s.name}`;
+    const label = s.kind==="bot" ? `BOT · ${h.cls ? (h.cls.hudName || h.cls.name) : ""}` : `P${i+1} ${s.name}`;
     ctx.fillStyle = "rgba(0,0,0,0.55)"; const w = ctx.measureText(label).width + 10;
     ctx.fillRect(h.x - w/2, y - 12, w, 16);
-    ctx.fillStyle = h.alive ? (NET_SLOT_COLORS[i]||"#8fe0ff") : "#ff9a7a";
+    ctx.fillStyle = h.alive ? (s.kind==="bot" ? "#c9c9c9" : (NET_SLOT_COLORS[i]||"#8fe0ff")) : "#ff9a7a";
     ctx.fillText(label, h.x, y);
   });
   ctx.restore();

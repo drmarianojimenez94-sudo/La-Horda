@@ -202,7 +202,24 @@ function tryReviveAlly(a){
   if(netIsGuest()) return;
   reviveHero(a, player);
 }
-function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : h.cls.name) : ""; }
+// Los compañeros controlados por el juego se dicen bots en todos lados (HUD, avisos, etiqueta sobre el personaje):
+// nunca pasan por una persona.
+function isBotHero(h){ return !!h && !h.isDivineFoe && (h.isBot || h.netName==="BOT") && h!==player; }
+// Partida en solitario: etiqueta "BOT · Clase" sobre cada compañero (en online la dibuja netDrawNameTags).
+function botDrawNameTags(){
+  if(typeof heroes==="undefined" || !heroes || state!=="playing") return;
+  let any = false; for(const h of heroes) if(h.alive && isBotHero(h)){ any = true; break; }
+  if(!any) return;
+  ctx.save(); ctx.font = pxFont(14); ctx.textAlign = "center";
+  for(const h of heroes){
+    if(!h.alive || !isBotHero(h)) continue;
+    const label = "BOT · " + (h.cls ? (h.cls.hudName || h.cls.name) : ""), w = ctx.measureText(label).width + 10, y = h.y - 74;
+    ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(h.x - w/2, y - 12, w, 16);
+    ctx.fillStyle = "#c9c9c9"; ctx.fillText(label, h.x, y);
+  }
+  ctx.restore();
+}
+function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : (isBotHero(h) ? "BOT · " : "") + (h.cls.hudName || h.cls.name)) : ""; }
 // Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
 function reviveHero(a, by){
   if(duoEnabled()) return;

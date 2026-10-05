@@ -394,3 +394,10 @@ body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.r
   .brasas-welcome-buy{ width:110px; }
   .brasas-rule{ font-size:0.95rem; }
 }
+
+/* ⚡ JUGAR YA: barra de búsqueda de compañeros (js/net/quick-play.js) */
+.mode-quickplay{ border-color:var(--ui-gold, #ffd34d); }
+.qp-bar{ position:fixed; left:50%; top:max(8px, env(safe-area-inset-top)); transform:translateX(-50%); z-index:70; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px;
+  max-width:calc(100vw - 16px); padding:6px 10px; background:rgba(12,10,8,0.94); border:2px solid #000; box-shadow:0 0 0 2px var(--ui-gold, #ffd34d); font-family:var(--ui-font); color:var(--ui-ink); }
+.qp-bar .qp-txt{ font-size:1rem; }
+.qp-bar .btn{ min-height:44px; }

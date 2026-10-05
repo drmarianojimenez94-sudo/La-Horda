@@ -149,7 +149,7 @@ function render(){
     }
   }
   for(const h of heroes){ if(h.wolf) drawSpectralWolf(h.wolf); }
-  if(netMatch) netDrawNameTags(); // B1: nombre de cada amigo sobre su guardián
+  if(netMatch) netDrawNameTags(); else botDrawNameTags(); // B1: nombre de cada amigo sobre su guardián; en solitario, "BOT" sobre cada compañero
   drawMusashiAfterimages();
   drawDownedMarkers();
   drawNigroGolemFx(); // impactos / chorros / rayos de los golpes del gólem
