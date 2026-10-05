@@ -573,9 +573,37 @@ window.GAME_MODE_REGISTRY.crystalWars = {id:"crystalWars", name:"Guerra de Crist
 })();
 document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
   if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al Coliseo."); return; }
-  if(!HordaOnboarding.ready(save)){ alphaFirstRunContinue(); return; }
+  if(!HordaOnboarding.ready(save)){ cwGateOpen(); return; }
+  cwGo();
+});
+function cwGo(){
   const url=new URL("crystal-wars.html",location.href);
   const server=new URLSearchParams(location.search).get("server");
   if(server)url.searchParams.set("server",server);
   location.href=url.href;
-});
+}
+// Sin entrenamiento hecho (ni saltado) el Coliseo no abre: antes el botón mandaba al tutorial sin decir por qué y
+// parecía que el modo no andaba. Ahora lo explica y deja elegir; sin guardián propio, primero el de regalo.
+function cwGateOpen(){
+  const m=document.getElementById("cw-gate"); if(!m){ alphaFirstRunContinue(); return; }
+  const noChamp=typeof needsStarterChampion==="function"&&(needsStarterChampion()||(typeof needsStarterSkin==="function"&&needsStarterSkin()));
+  document.getElementById("cw-gate-text").textContent=noChamp
+    ? "Primero elegí tu guardián de regalo. Después hacé el entrenamiento (unos 2 minutos) o saltalo si ya sabés jugar, y se abre el Coliseo."
+    : "El Coliseo se abre después del entrenamiento (unos 2 minutos). Si ya sabés jugar, podés saltarlo y entrar ahora.";
+  document.getElementById("cw-gate-skip").classList.toggle("hidden", noChamp);
+  document.getElementById("cw-gate-train").textContent=noChamp?"Elegir mi guardián":"Hacer el entrenamiento";
+  m.classList.remove("hidden"); document.getElementById("cw-gate-train").focus();
+}
+function cwGateClose(){ const m=document.getElementById("cw-gate"); if(m) m.classList.add("hidden"); }
+(function(){
+  const m=document.getElementById("cw-gate"); if(!m) return;
+  m.querySelectorAll("[data-cw-gate-close]").forEach(b=>b.addEventListener("click", cwGateClose));
+  document.getElementById("cw-gate-train").addEventListener("click", ()=>{ cwGateClose(); alphaFirstRunContinue(); });
+  document.getElementById("cw-gate-skip").addEventListener("click", ()=>{
+    if(typeof acct!=="undefined"&&(acct.applying||acct.pulling||acct.conflict)){ showNetToast("Esperá a que termine la sincronización de tu cuenta."); return; }
+    save.tut=save.tut||{}; save.tut.trainingSkipped=1; persistNow();
+    if(typeof AlphaServices!=="undefined") AlphaServices.emit("tutorial_skipped",{from:"crystal-wars"});
+    cwGateClose(); cwGo();
+  });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape"&&!m.classList.contains("hidden")) cwGateClose(); });
+})();
