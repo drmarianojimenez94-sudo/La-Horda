@@ -41,7 +41,7 @@ const TYPES={'.html':'text/html','.js':'text/javascript','.css':'text/css','.png
   const gift=page.getByRole('dialog',{name:'Regalar a jugador1'});await gift.waitFor();checks++;
   // Campeón: categorías con ASCENSIÓN primero; Fundadores visibles pero sin botón.
   const heads=await gift.locator('.gm-gift-cat h3').allInnerTexts();
-  assert.equal(heads[0],'ASCENSIÓN');assert(heads.indexOf('STANDARD')<heads.indexOf('FAMILY')&&heads.indexOf('FAMILY')<heads.indexOf('FUNDADORES'),'category order '+heads);assert.equal(heads.at(-1),'FUNDADORES');checks+=3;
+  assert.equal(heads[0],'ASCENSIÓN');assert(heads.indexOf('STANDARD')<heads.indexOf('FAMILIA')&&heads.indexOf('FAMILIA')<heads.indexOf('FUNDADORES'),'category order '+heads);assert.equal(heads.at(-1),'FUNDADORES');checks+=3;
   assert.equal(await gift.getByRole('button',{name:/Regalar (Nano|Facu) GM/}).count(),0,'founder never grantable from UI');assert.equal(await gift.locator('.gm-cat-founder .gm-gift-state').filter({hasText:'No se regala'}).count(),2);checks+=2;
   const aurelia=gift.locator('.gm-gift-item').filter({hasText:'Aurelia'});assert.match(await aurelia.innerText(),/Bloqueado/);checks++;
   await gift.getByRole('button',{name:'Regalar Aurelia',exact:true}).click();await page.getByRole('alertdialog').getByText('bloqueado').waitFor();await page.getByRole('button',{name:'Cancelar',exact:true}).click();
@@ -71,6 +71,16 @@ const TYPES={'.html':'text/html','.js':'text/javascript','.css':'text/css','.png
   const sheetGold=page.locator('form').filter({has:page.locator('select[name=field]')});await sheetGold.locator('input[name=value]').fill('100');await sheetGold.getByRole('button',{name:'Aplicar valor'}).click();
   await page.getByRole('alertdialog').getByText('750').waitFor();await page.getByRole('button',{name:'Confirmar',exact:true}).click();await page.getByText('Valor actualizado.').waitFor();
   assert.equal((await request('GET','/api/save',undefined,player)).data.gold,100);checks++;
+  // Familia completa: un botón por grupo (cuenta lo que falta), confirmación, una sola ruta del servidor.
+  await page.getByRole('button',{name:'Usuarios',exact:true}).click();await onlineCard.getByRole('button',{name:'Regalar a jugador1',exact:true}).click();await gift.waitFor();
+  const famBtn=gift.getByRole('button',{name:'Regalar toda la Familia',exact:true});assert.match(await famBtn.innerText(),/le faltan 2/);assert.equal(await famBtn.isEnabled(),true);checks+=2;
+  assert.equal(await gift.getByRole('button',{name:'Regalar todos los de Ascensión',exact:true}).count(),1);assert.equal(await gift.locator('.gm-cat-founder .gm-gift-bulk').count(),0);checks+=2;
+  await famBtn.click();await page.getByRole('alertdialog').getByText(/Myla/).waitFor();await page.getByRole('button',{name:'Cancelar',exact:true}).click();
+  assert.notEqual((await request('GET','/api/save',undefined,player)).data.champions.ynara?.unlocked,true,'cancel grants nothing');checks++;
+  await famBtn.click();await page.getByRole('button',{name:'Confirmar',exact:true}).click();await gift.getByText(/regalados a jugador1\./).waitFor();
+  {const d=(await request('GET','/api/save',undefined,player)).data;assert.equal(d.champions.myla.unlocked,true);assert.equal(d.champions.ynara.unlocked,true);checks+=2;}
+  assert.match(await famBtn.innerText(),/ya los tiene todos/);assert.equal(await famBtn.isDisabled(),true);checks+=2;
+  await page.keyboard.press('Escape');await gift.waitFor({state:'detached'});
   if(process.env.GM_GIFT_SHOTS){const dir=process.env.GM_GIFT_SHOTS;await page.setViewportSize({width:844,height:390});await page.getByRole('button',{name:'Usuarios',exact:true}).click();await onlineCard.getByRole('button',{name:'Regalar a jugador1',exact:true}).click();await gift.waitFor();await page.waitForTimeout(300);await page.screenshot({path:dir+'/gift-dialog-campeon-844x390.png'});await page.setViewportSize({width:667,height:375});await tab('Brasas ✦');await page.waitForTimeout(200);await page.screenshot({path:dir+'/gift-dialog-brasas-667x375.png'});await page.keyboard.press('Escape');await page.setViewportSize({width:844,height:390});}
   await page.getByRole('button',{name:'Registro',exact:true}).click();await page.getByText(/currency\.set/).first().waitFor();await page.getByText(/champion\.revoke/).first().waitFor();checks+=2;
   for(const w of [667,844,1440]){await page.setViewportSize({width:w,height:w===1440?900:390});for(const t of ['Usuarios','Registro','Test Lab']){await page.getByRole('button',{name:t,exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('[data-gm-tab]')].every(b=>!b.disabled));assert(await page.locator('#game-master').evaluate(n=>n.scrollWidth<=n.clientWidth+1),'overflow '+t+' '+w);checks++;}}

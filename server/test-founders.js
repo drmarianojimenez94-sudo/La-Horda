@@ -103,6 +103,24 @@ async function run(){
    // Conectados ahora: presencia en memoria por petición autenticada; solo staff la ve.
    const online=await api('GET','/api/gm/users?filter=online',undefined,nanoT);const me=online.users.find(u=>u.user==='player1');assert.ok(me&&me.seenAt>0);
    await api('GET','/api/gm/users?filter=online',undefined,player,403);checks+=12;}
+  // Regalar una categoría completa (FAMILIA): misma ruta de concesión, ledger y auditoría; los miembros salen de la taxonomía.
+  {const fam=ent.taxonomy().ids.filter(id=>ent.taxonomy().meta(id).category==='FAMILY');assert.ok(fam.includes('myla')&&fam.includes('ynara'));
+   sheet=await api('GET','/api/gm/user?id='+p1.id,undefined,nanoT);const owned=fam.filter(id=>sheet.champions.find(c=>c.id===id).unlocked);assert.ok(owned.includes('myla')&&!owned.includes('ynara'));
+   const cat=b=>({id:p1.id,category:'FAMILY',confirm:true,reason:'familia',baseVersion:sheet.save.version,...b});
+   await api('POST','/api/gm/user/champion-category',cat(),player,403);
+   await api('POST','/api/gm/user/champion-category',cat({confirm:undefined}),nanoT,428);
+   await api('POST','/api/gm/user/champion-category',cat({category:'FOUNDER'}),nanoT,403);
+   await api('POST','/api/gm/user/champion-category',cat({category:'__proto__'}),nanoT,400);
+   await api('POST','/api/gm/user/champion-category',cat({baseVersion:0}),nanoT,409);
+   r=await api('POST','/api/gm/user/champion-category',cat(),nanoT);assert.deepEqual(r.granted,fam.filter(id=>!owned.includes(id)));
+   got=await api('GET','/api/save',undefined,player);for(const id of fam)assert.equal(got.data.champions[id].unlocked,true,id);
+   assert.notEqual(got.data.champions.nano_gm?.unlocked,true);assert.notEqual(got.data.champions.facu_gm?.unlocked,true);
+   const up=await api('PUT','/api/save',{data:got.data,baseVersion:got.version},player);assert.deepEqual(up.enforced||[],[]);
+   got=await api('GET','/api/save',undefined,player);assert.equal(got.data.champions.ynara.unlocked,true);
+   const au=(await api('GET','/api/gm/audit?action=champion.grant',undefined,nanoT)).entries.filter(e=>e.target===p1.id&&e.details&&e.details.category==='FAMILY');
+   assert.deepEqual(au.map(e=>e.content).sort(),r.granted.slice().sort());assert.ok(au.every(e=>e.origin==='ADMIN_GRANT'&&e.reason==='familia'));
+   // Repetir no concede nada (ya los tiene todos).
+   sheet=await api('GET','/api/gm/user?id='+p1.id,undefined,nanoT);r=await api('POST','/api/gm/user/champion-category',cat(),nanoT);assert.deepEqual(r.granted,[]);checks+=14;}
 
   // Currency: lowering requires confirmation; bounds validated.
   sheet=await api('GET','/api/gm/user?id='+p1.id,undefined,nanoT);
