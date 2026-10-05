@@ -687,6 +687,11 @@ function create(opts){
     await store.createSession(s);
     return { token, expiresAt: s.expiresAt };
   }
+  // Presencia para el panel GM ("Conectados ahora"): última petición autenticada de cada cuenta. Solo en memoria
+  // (no se guarda en disco ni en la base), con tope de tamaño; se pierde al reiniciar el servidor.
+  const seen = new Map();
+  function markSeen(id, t){ if(seen.size >= 20000 && !seen.has(id)){ const cut = t - 15 * 60000; for(const [k, v] of seen) if(v < cut) seen.delete(k); if(seen.size >= 20000) return; } seen.set(id, t); }
+  const seenAt = id => seen.get(id) || 0;
   async function auth(req, bodyToken){
     const m = /^Bearer\s+([a-f0-9]{64})$/i.exec(String(req.headers.authorization || ""));
     const token = m ? m[1].toLowerCase() : (typeof bodyToken === "string" && /^[a-f0-9]{64}$/i.test(bodyToken) ? bodyToken.toLowerCase() : null);
@@ -701,6 +706,7 @@ function create(opts){
     if(!u){ await store.deleteSession(h); return { error: "NO_SESSION" }; }
     // vencimiento deslizante: una sesión que se usa no vence (se renueva al pasar la mitad)
     if(s.expiresAt - now < SESSION_TTL_MS / 2){ s.expiresAt = now + SESSION_TTL_MS; await store.touchSession(h, s.expiresAt); }
+    markSeen(u.id, now);
     return { user: u, session: s, tokenHash: h };
   }
   const authFail = (req, res, a) => err(req, res, 401, a.error, a.error === "SESSION_EXPIRED" ? "Tu sesión venció. Entrá de nuevo." : "Tenés que entrar a tu cuenta.");
@@ -894,7 +900,7 @@ function create(opts){
     }
   };
 
-  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,ownerAccess,founderOf,founders:()=>founderBindings}));
+  Object.assign(routes, gameMaster.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,ownerAccess,founderOf,founders:()=>founderBindings,seenAt}));
   Object.assign(routes, walletMod.routes({getStore:()=>store,auth,send,err,readBody,summarize,now:now0,isOwner,log}));
 
   // Devuelve true si atendió el pedido (todo lo que empieza con /api/).

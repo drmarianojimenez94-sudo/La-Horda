@@ -269,7 +269,7 @@ function routes(ctx){
    return {ok:true,granted:!!cosmeticId,alreadyGranted:false,cosmetic:cosmeticId,cosmeticType,saveVersion,baseVersion};
   });
  });
- require('./admin-users').routes({route,mutate,read,audit,fail,text,getStore,summarize,now,isOwner,founders:ctx.founders||(()=>({})),cosmetics,gameplay,shopCatalog});
+ require('./admin-users').routes({route,mutate,read,audit,fail,text,getStore,summarize,now,isOwner,founders:ctx.founders||(()=>({})),seenAt:ctx.seenAt||(()=>0),cosmetics,gameplay,shopCatalog});
  return result;
 }
 module.exports={routes,DEFAULTS,EVENTS,RESET_FIELDS,multipliers,resetData,catalog,gameplayCatalog,stateOf,audit};

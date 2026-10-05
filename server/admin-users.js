@@ -8,6 +8,7 @@ const adminLevels = require("./admin-levels");
 
 function routes(ctx){
   const {route, mutate, read, audit, fail, text, getStore, summarize, now, isOwner, founders, cosmetics, gameplay, shopCatalog} = ctx;
+  const seenAt = ctx.seenAt || (() => 0), ONLINE_MS = 5 * 60000;
   const store = () => getStore();
   const num = v => Number.isSafeInteger(v) ? v : typeof v === "string" && /^\d{1,15}$/.test(v.trim()) ? Number(v) : NaN;
 
@@ -18,7 +19,7 @@ function routes(ctx){
   function publicAccount(u, ops){
     const f = ent.founderOf(founders(), u.id);
     return {id:u.id, user:u.user, name:u.name || u.user, createdAt:u.createdAt, lastLogin:u.lastLogin || 0,
-      roles:rbac.rolesOf(u, ops, isOwner), founder:f ? {key:f.key, champion:f.champion} : null};
+      roles:rbac.rolesOf(u, ops, isOwner), founder:f ? {key:f.key, champion:f.champion} : null, seenAt:seenAt(u.id)};
   }
   function sheet(u, saved, ops){
     let data = null; try{ data = saved ? JSON.parse(saved.data) : null; }catch(e){}
@@ -61,8 +62,10 @@ function routes(ctx){
     let users = await store().listUsers();
     users = users.filter(u => !q || u.user.toLowerCase().includes(q) || String(u.name || "").toLowerCase().includes(q) || String(u.id) === q);
     const view = users.map(u => publicAccount(u, ops));
-    const filtered = view.filter(u => filter === "founder" ? !!u.founder : filter === "staff" ? u.roles.length > 0 : filter === "recent" ? u.lastLogin >= t - 7 * 86400000 : true)
-      .sort((a, b) => b.lastLogin - a.lastLogin).slice(0, 100);
+    // online: cuentas con una petición autenticada en los últimos 5 minutos (presencia en memoria del servidor).
+    const active = u => Math.max(u.lastLogin, u.seenAt);
+    const filtered = view.filter(u => filter === "founder" ? !!u.founder : filter === "staff" ? u.roles.length > 0 : filter === "recent" ? active(u) >= t - 7 * 86400000 : filter === "online" ? u.seenAt >= t - ONLINE_MS : true)
+      .sort((a, b) => active(b) - active(a)).slice(0, 100);
     for(const u of filtered){ const m = await store().getSaveMeta(u.id); u.summary = m ? m.summary : null; u.saveVersion = m ? m.version : null; }
     return {users:filtered, total:users.length};
   });
