@@ -146,6 +146,7 @@ jobs:
           node tools/art/alpha_set_skins/browser.js
           node tools/art/unique_skins/check.js
           node tools/collection/browser-collection.js
+          node tools/collection/codex-unlock-progress.js
           node tools/items/t_boons.js
           node tools/ascension/functional.js
           node tools/ascension/performance.js

@@ -241,3 +241,11 @@ button.cx-card:hover, button.cx-home-card:hover, button.cx-chapter:hover, button
 .cx-home-count{ font-size:1rem; line-height:1.2; }
 /* hay más a la derecha (codexScrollHints, js/ui/codex/codex.js): el borde se desvanece */
 .cx-scroll-x.fade-r{ -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 40px), transparent); mask-image:linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
+
+/* ficha de campeón bloqueado: cómo se gana y cuánto falta */
+.cx-unlock{ margin-top:8px; padding:8px 10px; background:var(--ui-inset, rgba(0,0,0,.35)); border:2px solid #000; text-align:left; }
+.cx-unlock-how{ font-size:0.95rem; line-height:1.35; }
+.cx-unlock-bar{ height:10px; margin:6px 0 2px; background:#000; border:2px solid #000; }
+.cx-unlock-bar > div{ height:100%; background:var(--ui-gold, #ffd34d); }
+.cx-unlock-n{ font-size:0.85rem; color:var(--ui-dim, #b9b0a0); }
+.cx-unlock-or{ margin-top:4px; font-size:0.8rem; color:var(--ui-dim, #b9b0a0); }

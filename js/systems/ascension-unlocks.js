@@ -24,6 +24,24 @@ const ASCENSION_UNLOCKS = [
   {id:"saelis",  mode:"Sin caídas",     how:"Ganá 3 arenas sin caer ni una vez.",
     check:s=>((s.quests && s.quests.stats && s.quests.stats.deathless)|0) >= 3},
 ];
+// Progreso hacia el logro: {have, need, pct} (los logros de "una vez" cuentan 0/1). Lo muestra la ficha del Códice.
+const ASCENSION_PROGRESS = {
+  aurelia:s=>({have:(s.arenasCleared && s.arenasCleared.infernal) ? 1 : 0, need:1}),
+  khepri: s=>({have:Math.min(10, Math.max((s.endless && s.endless.best && (s.endless.best.roundMax|0)) || 0, (s.endless && s.endless.best && (s.endless.best.round|0)) || 0)), need:10}),
+  velmira:s=>({have:Math.min(1, ((s.quests && s.quests.stats && s.quests.stats.divinaWins)|0)), need:1}),
+  vhal:   s=>({have:Math.min(3, Object.keys((s.diffCleared && s.diffCleared.pesadilla) || {}).length), need:3}),
+  bront:  s=>({have:Math.min(3, ((s.quests && s.quests.stats && s.quests.stats.coopWins)|0)), need:3}),
+  oriel:  s=>({have:Math.min(1, Object.keys((s.diffCleared && s.diffCleared.infierno) || {}).length), need:1}),
+  saelis: s=>({have:Math.min(3, ((s.quests && s.quests.stats && s.quests.stats.deathless)|0)), need:3})
+};
+function ascensionUnlockProgress(id, s){
+  const f = ASCENSION_PROGRESS[id]; s = s || (typeof save !== "undefined" ? save : null);
+  if(!f || !s) return null;
+  let r = null; try{ r = f(s); }catch(e){ return null; }
+  if(!r) return null;
+  r.pct = Math.max(0, Math.min(100, Math.round(r.have / r.need * 100)));
+  return r;
+}
 function ascensionUnlockOf(id){ return ASCENSION_UNLOCKS.find(u=>u.id===id) || null; }
 // Texto corto para las tarjetas bloqueadas: "Se gana: … · o 🪙 9.000 en la Tienda".
 function ascensionUnlockHint(id){
