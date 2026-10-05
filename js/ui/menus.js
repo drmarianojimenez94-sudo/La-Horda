@@ -580,7 +580,12 @@ function cwGo(){
   const url=new URL("crystal-wars.html",location.href);
   const server=new URLSearchParams(location.search).get("server");
   if(server)url.searchParams.set("server",server);
-  location.href=url.href;
+  // Si el servidor donde está publicado el juego no tiene la página del Coliseo (404), se avisa acá en vez de mandar al
+  // jugador a una pantalla negra de error. Cualquier otra respuesta (o sin red / archivo local) navega como siempre.
+  fetch(url.href, {method:"HEAD", cache:"no-store"}).then(r=>{
+    if(r.status===404){ if(typeof showNetToast==="function") showNetToast("Guerra de Cristales todavía no está publicada en este servidor. Avisale a quien administra el juego."); return; }
+    location.href = url.href;
+  }, ()=>{ location.href = url.href; });
 }
 // Sin entrenamiento hecho (ni saltado) el Coliseo no abre: antes el botón mandaba al tutorial sin decir por qué y
 // parecía que el modo no andaba. Ahora lo explica y deja elegir; sin guardián propio, primero el de regalo.

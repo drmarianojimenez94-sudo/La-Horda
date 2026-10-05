@@ -269,3 +269,18 @@ Límites a tener en cuenta:
   `docs/MULTIPLAYER_B1.md` (multijugador y Render).
 - Pruebas del comportamiento "Render plan gratis" (dormido, reinicio en sala y en partida, servidor
   viejo): `tools/net-test/server_restart.js`, `tools/net-test/old_server.js`, `tools/net-test/coldstart.js`.
+
+
+## Si "Guerra de Cristales" muestra "No esta: /crystal-wars.html"
+
+Ese texto no sale del juego: lo devuelve el servidor donde está publicado, porque **le falta la página del Coliseo**. El juego
+ahora avisa con un mensaje claro en lugar de mostrar la pantalla negra, pero para que el modo abra hay que publicar sus
+archivos. La lista exacta (19 archivos) la imprime:
+
+```
+node tools/crystal-wars/required-files.js
+```
+
+Incluye `crystal-wars.html`, `css/crystal-wars.css`, `js/modes/crystal-wars/*`, `js/net/net-config.js`,
+`js/systems/onboarding-access.js` y las imágenes de `assets/` que usa. Si el servidor publica una lista fija de archivos,
+agregá esa lista; si publica la carpeta entera, volvé a publicar con la versión actual.

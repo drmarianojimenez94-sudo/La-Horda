@@ -73,5 +73,23 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       console.log('PASS 667×375 sin entrenamiento: aviso con opción, "Ya sé jugar" entra al Coliseo');
       await ctx.close();
     }
+    // servidor sin la página del Coliseo (404): mensaje claro y el jugador se queda en el juego (no pantalla negra de error)
+    {
+      const ctx = await browser.newContext({viewport: {width: 667, height: 375}});
+      const page = await ctx.newPage(), errors = [];
+      page.on('pageerror', e => errors.push(e.message));
+      await page.route('**/crystal-wars.html*', route => route.fulfill({status: 404, contentType: 'text/plain', body: 'No esta: /crystal-wars.html'}));
+      await page.goto(`http://127.0.0.1:${PORT}/`, {waitUntil: 'domcontentloaded'});
+      await page.waitForFunction(() => typeof setState === 'function' && typeof renderMainMenu === 'function', null, {timeout: 120000});
+      await page.evaluate(() => { save.tut = save.tut || {}; save.tut.training = 1; save.firstRun = 'hub'; save.champions.tanque.unlocked = true; persistNow(); setState('mainmenu'); renderMainMenu(); });
+      await sleep(400);
+      await page.click('#hub-crystal-btn');
+      await page.waitForFunction(() => /todavía no está publicada/.test(document.body.innerText), null, {timeout: 8000});
+      assert(!/crystal-wars\.html/.test(page.url()), 'no navega a la página que da 404');
+      assert.equal(await page.evaluate(() => state), 'mainmenu', 'sigue en el hub');
+      assert.deepEqual(errors, [], 'sin errores de página');
+      console.log('PASS 404 del Coliseo: aviso claro y el jugador se queda en el hub');
+      await ctx.close();
+    }
   } finally { await browser.close(); server.kill(); }
 })().catch(e => { console.error(e.message || e); process.exitCode = 1; server.kill(); });
