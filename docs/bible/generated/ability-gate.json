@@ -54,7 +54,8 @@
      "damaged": 0,
      "statused": 0,
      "cats": [
-      "POTENCIA"
+      "POTENCIA",
+      "CURA"
      ],
      "vfx": 5,
      "aims": false,
@@ -70,6 +71,7 @@
      "cats": [
       "AREA",
       "POTENCIA",
+      "CURA",
       "CONTROL"
      ],
      "vfx": 5,
@@ -221,7 +223,7 @@
       "POTENCIA",
       "CONTROL"
      ],
-     "vfx": 323,
+     "vfx": 378,
      "aims": false,
      "aimProfile": null
     }
@@ -333,7 +335,8 @@
      "damaged": 0,
      "statused": 0,
      "cats": [
-      "POTENCIA"
+      "POTENCIA",
+      "CURA"
      ],
      "vfx": 5,
      "aims": false,
@@ -347,7 +350,8 @@
      "damaged": 0,
      "statused": 0,
      "cats": [
-      "POTENCIA"
+      "POTENCIA",
+      "CURA"
      ],
      "vfx": 5,
      "aims": false,
@@ -361,7 +365,8 @@
      "damaged": 0,
      "statused": 0,
      "cats": [
-      "POTENCIA"
+      "POTENCIA",
+      "CURA"
      ],
      "vfx": 5,
      "aims": false,
@@ -371,7 +376,7 @@
    "isNew": false,
    "problems": [
     "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
-    "la definitiva suma 1 categorías (POTENCIA); se piden 3+"
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
    ],
    "status": "INFO"
   },
@@ -724,7 +729,9 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
+     "cats": [
+      "CURA"
+     ],
      "vfx": 3,
      "aims": false,
      "aimProfile": null
@@ -732,8 +739,7 @@
    ],
    "isNew": false,
    "problems": [
-    "Definitiva Encarnación del Abismo: sin efecto medible",
-    "la definitiva suma 0 categorías (); se piden 3+"
+    "la definitiva suma 1 categorías (CURA); se piden 3+"
    ],
    "status": "INFO"
   },
@@ -870,7 +876,8 @@
      "damaged": 0,
      "statused": 0,
      "cats": [
-      "POTENCIA"
+      "POTENCIA",
+      "CURA"
      ],
      "vfx": 11,
      "aims": false,
@@ -881,7 +888,7 @@
    "problems": [
     "Hab. 2 Instinto de Supervivencia: sin efecto medible",
     "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
-    "la definitiva suma 1 categorías (POTENCIA); se piden 3+"
+    "la definitiva suma 2 categorías (POTENCIA, CURA); se piden 3+"
    ],
    "status": "INFO"
   },
@@ -916,6 +923,8 @@
      "cats": [
       "AREA",
       "MULTIPLE",
+      "POTENCIA",
+      "CURA",
       "CONTROL",
       "INVOCA"
      ],
@@ -960,10 +969,8 @@
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "myla",
@@ -1008,7 +1015,9 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
+     "cats": [
+      "CURA"
+     ],
      "vfx": 4,
      "aims": false,
      "aimProfile": null
@@ -1033,9 +1042,7 @@
    ],
    "isNew": false,
    "problems": [
-    "Hab. 3 Burbuja Cremosa: sin efecto medible",
-    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
+    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos"
    ],
    "status": "INFO"
   },
@@ -1229,7 +1236,9 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
+     "cats": [
+      "CURA"
+     ],
      "vfx": 3,
      "aims": false,
      "aimProfile": null
@@ -1253,11 +1262,8 @@
     }
    ],
    "isNew": false,
-   "problems": [
-    "Hab. 3 Destilación: sin efecto medible",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "INFO"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "farolero",
@@ -1273,6 +1279,7 @@
      "statused": 0,
      "cats": [
       "POTENCIA",
+      "CURA",
       "INVOCA"
      ],
      "vfx": 3,
@@ -1421,7 +1428,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 55,
+     "vfx": 60,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -1438,7 +1445,7 @@
       "CONTROL",
       "MOVILIDAD"
      ],
-     "vfx": 189,
+     "vfx": 201,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -1451,9 +1458,10 @@
      "statused": 0,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "POTENCIA"
      ],
-     "vfx": 49,
+     "vfx": 54,
      "aims": false,
      "aimProfile": null
     },
@@ -1463,23 +1471,21 @@
      "kind": "expedition:last_stitch",
      "err": null,
      "damaged": 9,
-     "statused": 1,
+     "statused": 2,
      "cats": [
       "AREA",
       "MULTIPLE",
+      "POTENCIA",
       "CONTROL"
      ],
-     "vfx": 186,
+     "vfx": 194,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
-    "la definitiva suma 2 categorías (AREA, CONTROL); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "nahir",
@@ -1497,7 +1503,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 55,
+     "vfx": 60,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -1509,10 +1515,11 @@
      "damaged": 0,
      "statused": 0,
      "cats": [
+      "POTENCIA",
       "MOVILIDAD",
       "INVOCA"
      ],
-     "vfx": 3,
+     "vfx": 15,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -1527,7 +1534,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 54,
+     "vfx": 63,
      "aims": true,
      "aimProfile": "line"
     },
@@ -1537,21 +1544,21 @@
      "kind": "expedition:gallery",
      "err": null,
      "damaged": 0,
-     "statused": 0,
+     "statused": 10,
      "cats": [
+      "AREA",
+      "POTENCIA",
+      "CONTROL",
       "INVOCA"
      ],
-     "vfx": 3,
+     "vfx": 59,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
-    "la definitiva suma 1 categorías (INVOCA); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "baltra",
@@ -1569,7 +1576,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 49,
+     "vfx": 54,
      "aims": false,
      "aimProfile": null
     },
@@ -1583,7 +1590,7 @@
      "cats": [
       "POTENCIA"
      ],
-     "vfx": 3,
+     "vfx": 8,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -1599,7 +1606,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 55,
+     "vfx": 60,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -1609,21 +1616,21 @@
      "kind": "expedition:toll",
      "err": null,
      "damaged": 10,
-     "statused": 0,
+     "statused": 9,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
      ],
-     "vfx": 153,
+     "vfx": 164,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "la definitiva suma 1 categorías (AREA); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "maura",
@@ -1642,7 +1649,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 54,
+     "vfx": 63,
      "aims": true,
      "aimProfile": "line"
     },
@@ -1655,9 +1662,10 @@
      "statused": 0,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "CURA"
      ],
-     "vfx": 23,
+     "vfx": 28,
      "aims": false,
      "aimProfile": null
     },
@@ -1670,9 +1678,10 @@
      "statused": 0,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "CURA"
      ],
-     "vfx": 34,
+     "vfx": 39,
      "aims": false,
      "aimProfile": null
     },
@@ -1689,16 +1698,14 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 273,
+     "vfx": 278,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "dariel",
@@ -1716,7 +1723,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 55,
+     "vfx": 60,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -1731,7 +1738,7 @@
       "POTENCIA",
       "CURA"
      ],
-     "vfx": 3,
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -1747,7 +1754,7 @@
       "MULTIPLE",
       "CURA"
      ],
-     "vfx": 49,
+     "vfx": 54,
      "aims": false,
      "aimProfile": null
     },
@@ -1757,7 +1764,7 @@
      "kind": "expedition:concert",
      "err": null,
      "damaged": 9,
-     "statused": 2,
+     "statused": 1,
      "cats": [
       "AREA",
       "MULTIPLE",
@@ -1765,7 +1772,7 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 144,
+     "vfx": 146,
      "aims": false,
      "aimProfile": null
     }
@@ -1790,7 +1797,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 54,
+     "vfx": 66,
      "aims": true,
      "aimProfile": "line"
     },
@@ -1804,7 +1811,7 @@
      "cats": [
       "POTENCIA"
      ],
-     "vfx": 3,
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -1813,10 +1820,13 @@
      "name": "Cerrar el circuito",
      "kind": "expedition:discharge",
      "err": null,
-     "damaged": 0,
+     "damaged": 9,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 54,
      "aims": false,
      "aimProfile": null
     },
@@ -1826,24 +1836,21 @@
      "kind": "expedition:storm",
      "err": null,
      "damaged": 10,
-     "statused": 2,
+     "statused": 10,
      "cats": [
       "AREA",
       "MULTIPLE",
+      "POTENCIA",
       "CONTROL"
      ],
-     "vfx": 200,
+     "vfx": 199,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 3 Cerrar el circuito: sin efecto medible",
-    "falta otra habilidad (distinta de la de área) que dañe a varios enemigos",
-    "la definitiva suma 2 categorías (AREA, CONTROL); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "tibor",
@@ -1856,14 +1863,14 @@
      "kind": "expedition:swarm",
      "err": null,
      "damaged": 10,
-     "statused": 4,
+     "statused": 3,
      "cats": [
       "AREA",
       "MULTIPLE",
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 415,
+     "vfx": 420,
      "aims": true,
      "aimProfile": "point"
     },
@@ -1874,8 +1881,10 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -1891,7 +1900,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 54,
+     "vfx": 59,
      "aims": true,
      "aimProfile": "point"
     },
@@ -1901,24 +1910,21 @@
      "kind": "expedition:hive_sky",
      "err": null,
      "damaged": 10,
-     "statused": 4,
+     "statused": 1,
      "cats": [
       "AREA",
       "MULTIPLE",
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 415,
+     "vfx": 411,
      "aims": true,
      "aimProfile": "point"
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 2 Volvé a casa: sin efecto medible",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "zahra",
@@ -1936,7 +1942,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 55,
+     "vfx": 60,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -1947,8 +1953,10 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -1958,13 +1966,14 @@
      "kind": "expedition:ash_step",
      "err": null,
      "damaged": 9,
-     "statused": 0,
+     "statused": 2,
      "cats": [
       "AREA",
       "MULTIPLE",
+      "CONTROL",
       "MOVILIDAD"
      ],
-     "vfx": 183,
+     "vfx": 201,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -1974,24 +1983,21 @@
      "kind": "expedition:vent",
      "err": null,
      "damaged": 9,
-     "statused": 1,
+     "statused": 2,
      "cats": [
       "AREA",
       "MULTIPLE",
+      "CURA",
       "CONTROL"
      ],
-     "vfx": 186,
+     "vfx": 194,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 2 Enfriar: sin efecto medible",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
-    "la definitiva suma 2 categorías (AREA, CONTROL); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "renko",
@@ -2011,7 +2017,7 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 54,
+     "vfx": 63,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2022,8 +2028,10 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2038,7 +2046,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 39,
+     "vfx": 44,
      "aims": false,
      "aimProfile": null
     },
@@ -2052,20 +2060,17 @@
      "cats": [
       "AREA",
       "MULTIPLE",
+      "CURA",
       "CONTROL"
      ],
-     "vfx": 153,
+     "vfx": 164,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 2 Montículo: sin efecto medible",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
-    "la definitiva suma 2 categorías (AREA, CONTROL); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "sira",
@@ -2083,7 +2088,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 54,
+     "vfx": 64,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2094,8 +2099,11 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "POTENCIA",
+      "MOVILIDAD"
+     ],
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -2110,7 +2118,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 24,
+     "vfx": 29,
      "aims": false,
      "aimProfile": null
     },
@@ -2120,23 +2128,21 @@
      "kind": "expedition:atlas",
      "err": null,
      "damaged": 7,
-     "statused": 0,
+     "statused": 4,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
      ],
-     "vfx": 108,
+     "vfx": 113,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 2 Volver sobre los pasos: sin efecto medible",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
-    "la definitiva suma 1 categorías (AREA); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "nano_gm",
@@ -2155,7 +2161,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 54,
+     "vfx": 65,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2169,10 +2175,11 @@
      "cats": [
       "AREA",
       "POTENCIA",
+      "CURA",
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 3,
+     "vfx": 8,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2181,12 +2188,15 @@
      "name": "Inversión",
      "kind": "ascension:invert",
      "err": null,
-     "damaged": 0,
+     "damaged": 10,
      "statused": 0,
      "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
       "MOVILIDAD"
      ],
-     "vfx": 3,
+     "vfx": 66,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -2204,7 +2214,7 @@
       "CURA",
       "CONTROL"
      ],
-     "vfx": 53,
+     "vfx": 69,
      "aims": false,
      "aimProfile": null
     }
@@ -2224,13 +2234,14 @@
      "kind": "ascension:current",
      "err": null,
      "damaged": 10,
-     "statused": 0,
+     "statused": 1,
      "cats": [
       "AREA",
       "MULTIPLE",
-      "POTENCIA"
+      "POTENCIA",
+      "CONTROL"
      ],
-     "vfx": 328,
+     "vfx": 342,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2246,7 +2257,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 54,
+     "vfx": 59,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2265,7 +2276,7 @@
       "CONTROL",
       "MOVILIDAD"
      ],
-     "vfx": 53,
+     "vfx": 68,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -2282,7 +2293,7 @@
       "CURA",
       "CONTROL"
      ],
-     "vfx": 262,
+     "vfx": 264,
      "aims": false,
      "aimProfile": null
     }
@@ -2308,7 +2319,7 @@
       "MULTIPLE",
       "INVOCA"
      ],
-     "vfx": 49,
+     "vfx": 54,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2323,7 +2334,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 54,
+     "vfx": 66,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2337,10 +2348,11 @@
      "cats": [
       "AREA",
       "MULTIPLE",
+      "POTENCIA",
       "MOVILIDAD",
       "INVOCA"
      ],
-     "vfx": 54,
+     "vfx": 66,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -2354,19 +2366,18 @@
      "cats": [
       "AREA",
       "MULTIPLE",
+      "CURA",
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 356,
+     "vfx": 364,
      "aims": true,
      "aimProfile": "point"
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "khepri",
@@ -2379,13 +2390,13 @@
      "kind": "ascension:swarm_send",
      "err": null,
      "damaged": 10,
-     "statused": 5,
+     "statused": 4,
      "cats": [
       "AREA",
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 488,
+     "vfx": 493,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2396,8 +2407,10 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "CURA"
+     ],
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -2413,7 +2426,7 @@
       "MULTIPLE",
       "MOVILIDAD"
      ],
-     "vfx": 54,
+     "vfx": 67,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -2423,7 +2436,7 @@
      "kind": "ascension:eclipse",
      "err": null,
      "damaged": 10,
-     "statused": 4,
+     "statused": 2,
      "cats": [
       "AREA",
       "MULTIPLE",
@@ -2431,17 +2444,14 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 621,
+     "vfx": 620,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 2 Caparazón Vivo: sin efecto medible",
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "velmira",
@@ -2460,7 +2470,7 @@
       "MULTIPLE",
       "POTENCIA"
      ],
-     "vfx": 54,
+     "vfx": 65,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2476,7 +2486,7 @@
       "MULTIPLE",
       "POTENCIA"
      ],
-     "vfx": 49,
+     "vfx": 54,
      "aims": false,
      "aimProfile": null
     },
@@ -2492,7 +2502,7 @@
       "MULTIPLE",
       "MOVILIDAD"
      ],
-     "vfx": 54,
+     "vfx": 66,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -2511,7 +2521,7 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 209,
+     "vfx": 217,
      "aims": false,
      "aimProfile": null
     }
@@ -2536,7 +2546,7 @@
       "AREA",
       "MULTIPLE"
      ],
-     "vfx": 54,
+     "vfx": 66,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2546,12 +2556,13 @@
      "kind": "ascension:well",
      "err": null,
      "damaged": 10,
-     "statused": 0,
+     "statused": 2,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "CONTROL"
      ],
-     "vfx": 353,
+     "vfx": 364,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2564,9 +2575,10 @@
      "statused": 0,
      "cats": [
       "MULTIPLE",
+      "POTENCIA",
       "MOVILIDAD"
      ],
-     "vfx": 13,
+     "vfx": 18,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2576,22 +2588,21 @@
      "kind": "ascension:collapse",
      "err": null,
      "damaged": 10,
-     "statused": 0,
+     "statused": 10,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
      ],
-     "vfx": 203,
+     "vfx": 214,
      "aims": true,
      "aimProfile": "point"
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo",
-    "la definitiva suma 1 categorías (AREA); se piden 3+"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "bront",
@@ -2610,7 +2621,7 @@
       "MULTIPLE",
       "INVOCA"
      ],
-     "vfx": 54,
+     "vfx": 64,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2627,7 +2638,7 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 324,
+     "vfx": 341,
      "aims": true,
      "aimProfile": "line"
     },
@@ -2640,9 +2651,10 @@
      "statused": 0,
      "cats": [
       "AREA",
-      "MULTIPLE"
+      "MULTIPLE",
+      "POTENCIA"
      ],
-     "vfx": 39,
+     "vfx": 44,
      "aims": false,
      "aimProfile": null
     },
@@ -2661,16 +2673,14 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 183,
+     "vfx": 191,
      "aims": false,
      "aimProfile": null
     }
    ],
    "isNew": true,
-   "problems": [
-    "ninguna habilidad de POTENCIACIÓN (buff propio o de aliados) ni cura/escudo"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   },
   {
    "key": "oriel",
@@ -2683,15 +2693,17 @@
      "kind": "ascension:portal",
      "err": null,
      "damaged": 9,
-     "statused": 0,
+     "statused": 2,
      "cats": [
       "AREA",
       "MULTIPLE",
       "POTENCIA",
+      "CURA",
+      "CONTROL",
       "MOVILIDAD",
       "INVOCA"
      ],
-     "vfx": 203,
+     "vfx": 214,
      "aims": true,
      "aimProfile": "point"
     },
@@ -2707,7 +2719,7 @@
       "MULTIPLE",
       "CURA"
      ],
-     "vfx": 39,
+     "vfx": 44,
      "aims": false,
      "aimProfile": null
     },
@@ -2723,7 +2735,7 @@
       "MULTIPLE",
       "MOVILIDAD"
      ],
-     "vfx": 74,
+     "vfx": 86,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -2741,7 +2753,7 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 439,
+     "vfx": 459,
      "aims": true,
      "aimProfile": "point"
     }
@@ -2766,7 +2778,7 @@
       "MULTIPLE",
       "INVOCA"
      ],
-     "vfx": 54,
+     "vfx": 60,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -2782,7 +2794,7 @@
       "MULTIPLE",
       "POTENCIA"
      ],
-     "vfx": 49,
+     "vfx": 54,
      "aims": false,
      "aimProfile": null
     },
@@ -2793,8 +2805,10 @@
      "err": null,
      "damaged": 0,
      "statused": 0,
-     "cats": [],
-     "vfx": 3,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -2804,7 +2818,7 @@
      "kind": "ascension:feather_sky",
      "err": null,
      "damaged": 10,
-     "statused": 1,
+     "statused": 2,
      "cats": [
       "AREA",
       "MULTIPLE",
@@ -2812,16 +2826,14 @@
       "CONTROL",
       "INVOCA"
      ],
-     "vfx": 249,
+     "vfx": 263,
      "aims": true,
      "aimProfile": "point"
     }
    ],
    "isNew": true,
-   "problems": [
-    "Hab. 3 Llamado del Plumaje: sin efecto medible"
-   ],
-   "status": "FAIL"
+   "problems": [],
+   "status": "PASS"
   }
  ],
  "pageErrors": []

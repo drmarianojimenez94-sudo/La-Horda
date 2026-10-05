@@ -82,7 +82,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 5
+    "seconds": 2
    },
    "status": "PASS"
   },
@@ -165,7 +165,7 @@
    "summary": {
     "fail": 0,
     "warning": 1,
-    "seconds": 4
+    "seconds": 2
    },
    "status": "WARNING"
   },
@@ -254,7 +254,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 3
+    "seconds": 1
    },
    "status": "PASS"
   },
@@ -337,7 +337,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "PASS"
   },
@@ -426,7 +426,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "PASS"
   },
@@ -515,7 +515,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "PASS"
   },
@@ -604,7 +604,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "PASS"
   },
@@ -723,7 +723,7 @@
    "summary": {
     "fail": 0,
     "warning": 1,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "WARNING"
   },
@@ -806,7 +806,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "PASS"
   },
@@ -895,7 +895,7 @@
    "summary": {
     "fail": 0,
     "warning": 0,
-    "seconds": 2
+    "seconds": 1
    },
    "status": "PASS"
   }
