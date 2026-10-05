@@ -52,10 +52,15 @@ function routes(ctx){
         if(role){ const a = await auth(req); if(!a.user) fail("NO_SESSION", 401); user = a.user; if(role === "owner" && !isOwner(user)) fail("FORBIDDEN", 403); }
         const body = method === "GET" ? {} : await readBody(req, 16384);
         send(req, res, 200, await fn({ req, user, body, ip }));
-      }catch(e){ if(e.status) return err(req, res, e.status, e.message, e.message); throw e; }
+      }catch(e){ if(e.status) return err(req, res, e.status, e.message, e.human || e.message); throw e; }
     };
   }
   const store = () => { const s = getStore(); if(!s || !s.walletApply) fail("WALLET_DOWN", 503); return s; };
+  // ¿ya se acreditó este paquete de una sola vez a la cuenta? (lo decide el libro del servidor, nunca el cliente)
+  const bought = (userId) => async (packId) => {
+    const ref = payments.onceRef(packId, userId);
+    return store().walletHasRef ? store().walletHasRef(ref) : !!(await store().walletLedger(userId, 100000)).find(e => e.ref === ref);
+  };
 
   // Entrega una skin en el guardado del jugador, con control de versión (reintenta si el cliente subió algo en el medio)
   async function grantSkin(userId, sku){
@@ -80,7 +85,7 @@ function routes(ctx){
     const w = await store().walletGet(user.id);
     return { currency: CURRENCY, premium: w.premium, prices: { skinGold: SKIN_PRICE_GOLD, skinPremium: SKIN_PRICE_PREMIUM },
       ledger: (await store().walletLedger(user.id, 20)).map(e => ({ delta: e.delta, balanceAfter: e.balanceAfter, reason: e.reason, at: e.at })),
-      payments: payments.publicInfo() };
+      payments: await payments.publicInfo(bought(user.id)) };
   });
 
   // Comprar una skin con Brasas. ref: identificador del intento que genera el cliente (reintentar = mismo ref).
@@ -111,15 +116,18 @@ function routes(ctx){
   // El Game Master acredita y ve saldos desde el panel de usuarios (server/admin-users.js, permiso MODIFY_CURRENCY).
 
   // Pagos con dinero real (apagado hasta configurar un proveedor: server/payments.js)
-  route("POST", "/api/wallet/checkout", "user", async ({ user, body }) => payments.checkout({ user, pack: body.pack, now }));
+  route("POST", "/api/wallet/checkout", "user", async ({ user, body }) => payments.checkout({ user, pack: body.pack, bought: bought(user.id) }));
   result["POST /api/payments/webhook"] = async (req, res) => {
     try{
       const raw = await new Promise((ok, ko) => { let b = ""; req.on("data", c => { b += c; if(b.length > 65536){ ko(Object.assign(new Error("TOO_BIG"), { code: "TOO_BIG" })); req.destroy(); } }); req.on("end", () => ok(b)); req.on("error", ko); });
       const credit = payments.verifyWebhook(req.headers, raw);   // null si el proveedor no está configurado o la firma no es válida
       if(!credit) return err(req, res, 400, "BAD_WEBHOOK", "Webhook no verificado.");
-      const r = await store().walletApply({ userId: credit.userId, delta: credit.premium, reason: "purchase:" + credit.pack, ref: "pay:" + credit.paymentId, actor: null, at: now() });
-      log("WALLET_PURCHASE", { user: credit.userId, pack: credit.pack, duplicate: !!r.duplicate });
-      send(req, res, 200, { ok: true, duplicate: !!r.duplicate });
+      if(!(await store().getUser(credit.userId))) return err(req, res, 404, "UNKNOWN_USER", "Cuenta inexistente.");
+      // paquete de una sola vez: la referencia es por cuenta (once:<pack>:<userId>), así un segundo pago nunca acredita
+      const r = await store().walletApply({ userId: credit.userId, delta: credit.premium, reason: "purchase:" + credit.pack + ":" + credit.paymentId, ref: payments.creditRef(credit), actor: null, at: now() });
+      const alreadyBought = !!(r.duplicate && credit.once);
+      log(alreadyBought ? "WALLET_ONCE_REPEATED" : "WALLET_PURCHASE", { user: credit.userId, pack: credit.pack, paymentId: credit.paymentId, duplicate: !!r.duplicate });
+      send(req, res, 200, { ok: true, duplicate: !!r.duplicate, alreadyBought });
     }catch(e){ if(e.status) return err(req, res, e.status, e.message, e.message); throw e; }
   };
   return result;

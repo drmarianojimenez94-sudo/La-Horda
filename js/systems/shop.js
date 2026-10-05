@@ -237,19 +237,15 @@ function skinAutoEquip(setId){
    VITRINA DE LA TIENDA: DESTACADO + OFERTAS DEL DÍA
    Rotación diaria DETERMINÍSTICA: la semilla es la fecha local (shopDayKey), así que todos los jugadores
    ven la misma vitrina el mismo día y no cambia al recargar. Se renueva a la medianoche.
-   - Destacado: una skin de set (su set completo, como paquete) o un guardián, con descuento. El orden
+   - Destacado: una skin de set (solo la apariencia) o un guardián, con descuento. El orden
      del día es fijo; si ya tenés el primero, pasa al siguiente de la lista.
    - 4 ofertas: objetos del catálogo (legendarios con nombre, de guardián, básicos Muy Raros o
      Legendarios) con 15-30 % de descuento; cada una se compra una vez por día.
    Todo se paga con ORO ganado jugando (nada de poder se compra con dinero real). Míticos y Únicos
-   siguen fuera de la tienda.
+   siguen fuera de la tienda. Las Brasas ✦ (moneda premium, solo apariencia) viven en js/systems/premium.js.
    ============================================================ */
 const SHOP_DEAL_OFF = [15, 20, 25, 30];
 const SHOP_DEALS_PER_DAY = 4;
-// MONEDA PREMIUM: estructura lista y APAGADA. Si algún día existe será SOLO cosmética (skins, marcos,
-// efectos) y nunca dará poder. No hay pasarela de pago: mientras enabled sea false no se muestra ni
-// cobra nada, y ningún precio del juego la usa (currency:"gold" en todas las ofertas).
-const SHOP_PREMIUM = {enabled:false, id:"brasas", name:"Brasas", icon:"✦", cosmeticOnly:true};
 function _shopShuffle(arr, rng){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = (rng()*(i+1))|0; const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 function _shopDisc(base, off){ return base===0 ? 0 : Math.min(base, Math.max(1, Math.round(base*(1-off/100)/10)*10)); }
 let _shopShowcaseCache = null;
@@ -301,7 +297,7 @@ function shopBuyDeal(id, expectedPrice){
   if(r.ok){ _shopDealsState().bought[id] = true; persist(); }
   return r;
 }
-// Destacado del día: el guardián o la skin (su set completo, las piezas que falten) con descuento.
+// Destacado del día: el guardián o la skin (solo la apariencia, ver premium.js) con descuento.
 function shopBuyFeatured(expected){
   const f = shopDailyShowcase().featured;
   if(!f || f.owned) return {ok:false, reason:"Ya es tuyo"};

@@ -1,7 +1,9 @@
 # Game Master and Alpha operations
 
 Implemented in `server/game-master.js` using existing account bearer authentication,
-CORS, body limits and IP limits. No payment processing or premium currency exists.
+CORS, body limits and IP limits. The premium currency (Brasas ✦, cosmetics only) lives in
+`server/wallet.js`; real-money payments (`server/payments.js`) stay **disabled** until the owner
+configures a provider. See `docs/production/PREMIUM_CURRENCY.md`.
 
 ## Deployment and owner policy
 

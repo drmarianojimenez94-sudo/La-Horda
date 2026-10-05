@@ -117,7 +117,11 @@ jobs:
       - run: node server/test-game-master.js
       - run: node server/test-founders.js
       - run: node server/test-presence.js
+      - run: node server/test-wallet.js
       - run: node tools/alpha/gm-users-ui.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/collection/brasas-store.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/founders/online-presence.js
