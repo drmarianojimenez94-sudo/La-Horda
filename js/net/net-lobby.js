@@ -99,6 +99,7 @@ function netRenderLobbyBar(){
   const c = document.getElementById("net-create-btn");
   if(c) c.addEventListener("click", async ()=>{
     if(!isArenaUnlocked(currentArena)){ netLobby.lastError = "Esa arena todavía no la desbloqueaste."; netRenderLobbyBar(); return; }
+    if(typeof ensureOwnedSelection==="function" && !ensureOwnedSelection()){ netLobby.lastError = "Elegí primero un guardián tuyo."; netRenderLobbyBar(); return; }
     c.disabled = true; c.textContent = netConnectLabel(0); netLobby.lastError = "";
     const ni2 = document.getElementById("net-name-input"); if(ni2) netSetPlayerName(ni2.value);
     try{ await netCreateRoom(currentArena, selectedClass, save.champions[selectedClass].level, secs=>{ if(c.isConnected) c.textContent = netConnectLabel(secs); }); }

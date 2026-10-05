@@ -187,6 +187,8 @@ function _acctRefreshUi(){
   try{ if(typeof renderSaveLine === "function") renderSaveLine(); }catch(e){}
   try{ if(typeof updateMenuBrandSub === "function") updateMenuBrandSub(); }catch(e){}
   try{ if(typeof state !== "undefined" && state === "mainmenu" && typeof renderMainMenu === "function") renderMainMenu(); }catch(e){}
+  // se aplicó una nube sin guardián propio estando en el menú: al guardián de regalo (fuera de acct.applying)
+  try{ if(typeof state !== "undefined" && state === "mainmenu" && _acctNeedsStarterFlow()) setTimeout(() => { if(state === "mainmenu" && _acctNeedsStarterFlow()) alphaFirstRunContinue(); }, 0); }catch(e){}
   try{ if(typeof state !== "undefined" && state === "codex" && typeof codexRender === "function") codexRender(); }catch(e){}
 }
 function _acctBackup(suffix, raw){ if(!raw) return; try{ localStorage.setItem(SAVE_KEY + suffix, raw); }catch(e){} }
@@ -677,8 +679,14 @@ function _acctFinish(toast){
   if(after){ after(); return; }
   _acctGoBack(back);
 }
+// Perfil sin ningún guardián propio (cuenta nueva, progreso reiniciado o una nube sin guardián): nunca se
+// cae al menú con un guardián bloqueado elegido; primero el guardián de regalo (y el entrenamiento, si falta).
+function _acctNeedsStarterFlow(){
+  return typeof needsStarterChampion === "function" && needsStarterChampion() && typeof alphaFirstRunContinue === "function";
+}
 function _acctGoBack(back){
   const s = back || "mainmenu";
+  if(s === "mainmenu" && _acctNeedsStarterFlow()){ alphaFirstRunContinue(); return; }
   if(typeof setState === "function") setState(s);
   if(s === "mainmenu" && typeof renderMainMenu === "function") renderMainMenu();
   if(s === "codex" && typeof codexRender === "function") codexRender();
