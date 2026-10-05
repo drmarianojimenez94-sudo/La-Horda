@@ -71,7 +71,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
       duoOk: L.filter(b=>b.duo).every(b => b.duo.every(id => BOON_BY_ID[id] && BOON_BY_ID[id].champ === k)),
       skillOk: L.every(b => !!boonSkillOf(b)), descOk: L.every(b => [0,1,2].every(r => typeof b.desc(r) === 'string' && !/undefined|NaN/.test(b.desc(r)))) }; } return out; });
   const badData = Object.entries(data).filter(([k,v]) => v.n < 4 || v.duos < 1 || !v.rarityOk || !v.duoOk || !v.skillOk || !v.descOk);
-  check('DATA.12_guardianes_con_4+_refuerzos_rareza_y_duo', Object.keys(data).length === 12 && badData.length === 0, badData.length ? badData : Object.fromEntries(Object.entries(data).map(([k,v])=>[k, v.n+'+'+v.duos])));
+  check('DATA.todos_los_guardianes_con_4+_refuerzos_rareza_y_duo', Object.keys(data).length >= 38 && badData.length === 0, badData.length ? badData : Object.fromEntries(Object.entries(data).map(([k,v])=>[k, v.n+'+'+v.duos])));
 
   // ---- cada refuerzo transforma algo medible
   const list = await E(() => BOONS.map(b => ({ id: b.id, champ: b.champ, skill: b.minion ? 'minion' : b.skill, test: b.test })));
@@ -95,7 +95,7 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     (byChamp[b.champ] = byChamp[b.champ] || []).push(ok);
     check(`BOON.${b.champ}.${b.id} (${b.test})`, ok, { sin: a, con: z });
   }
-  check('BOON.todos_los_guardianes_probados', Object.keys(byChamp).length === 12, Object.keys(byChamp));
+  check('BOON.todos_los_guardianes_probados', Object.keys(byChamp).length === Object.keys(data).length, Object.keys(byChamp));
 
   // ---- rareza: el épico rinde más que el común (mismo refuerzo)
   const rar = await E(() => ({ c: __measure('segador', 'sg_rebote', 0, 0).hits, e: __measure('segador', 'sg_rebote', 2, 0).hits,
