@@ -202,24 +202,23 @@ function tryReviveAlly(a){
   if(netIsGuest()) return;
   reviveHero(a, player);
 }
-// Los compañeros controlados por el juego se dicen bots en todos lados (HUD, avisos, etiqueta sobre el personaje):
-// nunca pasan por una persona.
-function isBotHero(h){ return !!h && !h.isDivineFoe && (h.isBot || h.netName==="BOT") && h!==player; }
-// Partida en solitario: etiqueta "BOT · Clase" sobre cada compañero (en online la dibuja netDrawNameTags).
+// Compañero controlado por el juego (para la transparencia general y las pruebas; nunca se rotula sobre el personaje).
+function isBotHero(h){ return !!h && !h.isDivineFoe && h!==player && (h.isBot || h.netName==="BOT"); }
+// Partida en solitario: nombre sobre cada compañero, igual que los de un equipo online.
 function botDrawNameTags(){
   if(typeof heroes==="undefined" || !heroes || state!=="playing") return;
-  let any = false; for(const h of heroes) if(h.alive && isBotHero(h)){ any = true; break; }
+  let any = false; for(const h of heroes) if(h.alive && isBotHero(h) && h.netName){ any = true; break; }
   if(!any) return;
   ctx.save(); ctx.font = pxFont(14); ctx.textAlign = "center";
-  for(const h of heroes){
-    if(!h.alive || !isBotHero(h)) continue;
-    const label = "BOT · " + (h.cls ? (h.cls.hudName || h.cls.name) : ""), w = ctx.measureText(label).width + 10, y = h.y - 74;
+  heroes.forEach((h,i)=>{
+    if(!h.alive || !isBotHero(h) || !h.netName) return;
+    const label = `P${i+1} ${h.netName}`, w = ctx.measureText(label).width + 10, y = h.y - 74;
     ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(h.x - w/2, y - 12, w, 16);
-    ctx.fillStyle = "#c9c9c9"; ctx.fillText(label, h.x, y);
-  }
+    ctx.fillStyle = (typeof NET_SLOT_COLORS!=="undefined" && NET_SLOT_COLORS[i]) || "#8fe0ff"; ctx.fillText(label, h.x, y);
+  });
   ctx.restore();
 }
-function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : (isBotHero(h) ? "BOT · " : "") + (h.cls.hudName || h.cls.name)) : ""; }
+function heroLabel(h){ return h ? (h.netName && h.netName!=="BOT" ? h.netName : (h.cls.hudName || h.cls.name)) : ""; }
 // Revivir (lo usa el jugador con el botón y también los bots entre sí, ver bot-brain.js).
 function reviveHero(a, by){
   if(duoEnabled()) return;

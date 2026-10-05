@@ -187,7 +187,7 @@ function netRenderLobbySlots(){
   const slots = document.getElementById("lobby-slots"); if(!slots || !net.room) return;
   slots._next = [0,1,2,3].map(i=>{
     const s = net.room.slots[i];
-    if(!s) return `<div class="lobby-slot empty"><div class="lobby-empty">＋</div><div class="lobby-name">Esperando jugador…</div><div class="lobby-meta">al comenzar: BOT</div></div>`;
+    if(!s) return `<div class="lobby-slot empty"><div class="lobby-empty">＋</div><div class="lobby-name">Esperando jugador…</div><div class="lobby-meta">al comenzar: lo completa el juego</div></div>`;
     const you = i===net.slot, key = you ? selectedClass : s.champ, skin = you ? (champSkinId(selectedClass)||"") : (netSlotSkin(i)||"");
     const cls = CLASSES[key] || CLASSES.guerrero;
     const lv = you ? save.champions[selectedClass].level : s.level;
@@ -276,7 +276,7 @@ function netRefreshLobby(){
   if(!netInRoom()){ renderPrepSummary(); return; }
   const a = ARENA_MODS[currentArena]||{};
   document.getElementById("lobby-title").textContent = "Sala · " + (a.label||"Arena");
-  document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres serán bots al comenzar`;
+  document.getElementById("lobby-sub").textContent = `4 lugares · ${netHumanCount()} conectado${netHumanCount()===1?"":"s"} · los libres los completa el juego al comenzar`;
   renderLobbyArena();
   netRenderLobbyBar();
   if(typeof prepSecSync==="function") prepSecSync(); // pestañas de la Sala (js/ui/prep-sections.js)

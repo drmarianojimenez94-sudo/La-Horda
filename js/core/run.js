@@ -131,7 +131,9 @@ function startRun(fromLevel){
     autoEquipBest(k); // el bot se pone lo mejor que tenga disponible de partidas anteriores
     const ang = (i/others.length)*Math.PI*2 + Math.PI/4;
     // B1: los guardianes de amigos conectados entran como humanos (sin los ajustes de bot)
-    allies.push(makeHero(k, !netIsHumanChamp(k), Math.cos(ang)*70, Math.sin(ang)*70));
+    const a = makeHero(k, !netIsHumanChamp(k), Math.cos(ang)*70, Math.sin(ang)*70);
+    if(a.isBot) a.netName = botNameFor(k, [CLASSES[selectedClass] && (typeof netPlayerName==="function" ? netPlayerName() : "")]); // nombre propio, como cualquier jugador
+    allies.push(a);
   });
   heroes = [player, ...allies];
   for(const h of heroes) resetSetRunState(h);
