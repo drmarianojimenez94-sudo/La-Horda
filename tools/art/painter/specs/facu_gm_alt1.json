@@ -76,6 +76,27 @@
  ],
  "accessories": [
   {
+   "element": "alas_de_plumas",
+   "materials": {
+    "feather": {
+     "ramp": [
+      "#0a0614",
+      "#24123e",
+      "#4a2a7a",
+      "#8a5ac8",
+      "#c8a8f0"
+     ]
+    },
+    "down": {
+     "ramp": [
+      "#140a24",
+      "#3a1e5e",
+      "#7a4ab0"
+     ]
+    }
+   }
+  },
+  {
    "module": "facu_keel",
    "body": "nahir",
    "ramp": [
