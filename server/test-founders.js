@@ -89,6 +89,20 @@ async function run(){
   r=await api('POST','/api/gm/user/champion',{id:p1.id,champion:'aurelia',action:'revoke',confirm:true,reason:'fin test',baseVersion:got.version+1},nanoT);
   got=await api('GET','/api/save',undefined,player);assert.equal(got.data.champions.aurelia.unlocked,false);
   const forged2=await api('PUT','/api/save',{data:{...got.data,champions:{...got.data.champions,aurelia:{unlocked:true}}},baseVersion:got.version},player);assert.deepEqual(forged2.enforced,[{id:'aurelia',unlocked:false}]);
+  // Ascensión REAL (sin fixture): bloqueado hasta el final de la campaña, pero concedible desde el panel; la concesión
+  // queda en el guardado del jugador y sobrevive a su próxima subida.
+  {const km=ent.taxonomy().meta('khepri');assert.equal(km.category,'ASCENSION');assert.equal(km.grantable,true);assert.equal(ent.taxonomy().requiresGrant('khepri'),false);
+   sheet=await api('GET','/api/gm/user?id='+p1.id,undefined,nanoT);const row=sheet.champions.find(c=>c.id==='khepri');
+   assert.equal(row.category,'ASCENSION');assert.equal(row.grantable,true);assert.equal(row.unlocked,false);
+   r=await api('POST','/api/gm/user/champion',{id:p1.id,champion:'khepri',action:'grant',reason:'regalo Ascensión',baseVersion:sheet.save.version},nanoT);
+   got=await api('GET','/api/save',undefined,player);assert.equal(got.data.champions.khepri.unlocked,true);
+   const up=await api('PUT','/api/save',{data:got.data,baseVersion:got.version},player);assert.deepEqual(up.enforced||[],[]);
+   got=await api('GET','/api/save',undefined,player);assert.equal(got.data.champions.khepri.unlocked,true);
+   sheet=await api('GET','/api/gm/user?id='+p1.id,undefined,nanoT);assert.equal(sheet.champions.find(c=>c.id==='khepri').unlocked,true);
+   assert.ok((await api('GET','/api/gm/audit?action=champion.grant',undefined,nanoT)).entries.some(e=>e.content==='khepri'&&e.target===p1.id&&e.origin==='ADMIN_GRANT'));
+   // Conectados ahora: presencia en memoria por petición autenticada; solo staff la ve.
+   const online=await api('GET','/api/gm/users?filter=online',undefined,nanoT);const me=online.users.find(u=>u.user==='player1');assert.ok(me&&me.seenAt>0);
+   await api('GET','/api/gm/users?filter=online',undefined,player,403);checks+=12;}
 
   // Currency: lowering requires confirmation; bounds validated.
   sheet=await api('GET','/api/gm/user?id='+p1.id,undefined,nanoT);

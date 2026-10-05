@@ -918,4 +918,7 @@ function _acctRenderChip(){
   window.addEventListener("online", () => { if(acct.session && acct.sync && acct.sync.dirty){ acct.retryMs = 0; _acctSchedule(1000); } });
   // sesión recordada: se entra directo y la nube se baja en segundo plano (nunca frena el arranque)
   setTimeout(() => { _acctRenderChip(); if(acct.session){ accountPull("inicio"); accountRefreshIdentity(); } }, 0);
+  // Presencia: con la pestaña visible y sesión abierta, una consulta liviana cada 2 minutos mantiene a la
+  // cuenta en "Conectados ahora" del panel GM (el servidor solo recuerda la hora, en memoria).
+  setInterval(() => { if(acct.session && document.visibilityState === "visible") accountFetch("GET", "/api/me", undefined, { timeout: 10000 }).catch(() => {}); }, 120000);
 })();
