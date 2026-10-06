@@ -205,6 +205,7 @@ function updateHUD(){
   }
   const pct = bossActive ? 100 : Math.min(100, levelTimer/levelDuration*100);
   hudCss(document.getElementById("wave-timer-bar"), "width", hudPct(pct));
+  if(typeof goalChipTick==="function") goalChipTick(); // cartel fijo: OBJETIVO (js/ui/goal-guide.js)
 
   const ultPct = player.ultCharge/player.ultMax*100;
   hudCss(document.getElementById("ult-ring"), "background", `conic-gradient(var(--ult) ${Math.round(ultPct*3.6)}deg, #2a1c10 0deg)`);

@@ -23,6 +23,7 @@ const {chromium}=require('playwright');
     const step=()=>ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id;
     const advance=()=>{alphaTrainingTick(10);alphaTrainingTick(1400);return step();};
     const out=[];
+    alphaTrainingTick(7000);out.push(advance()); // paso 1: la misión (SOBREVIVIR) se lee y sigue sola
     player.x+=220;out.push(advance());
     enemies.forEach(e=>{e.lastHitBy=player;killEnemy(e);});out.push(advance());
     useSkill(0);out.push(advance());
@@ -38,7 +39,7 @@ const {chromium}=require('playwright');
     enemies.forEach(e=>{e.lastHitBy=player;killEnemy(e);});alphaTrainingTick(10);alphaTrainingTick(1400);
     return {out,complete:save.tut.training,active:ALPHA_TRAINING.active,state};
    });
-   assert.deepEqual(results.out,['attack','skill','inspect','cooldown','ultimate','danger','potion','xp','loot','tactical','revive','objective']);
+   assert.deepEqual(results.out,['move','attack','skill','inspect','cooldown','ultimate','danger','potion','xp','loot','tactical','revive','objective']);
    assert.equal(results.complete,1);assert.equal(results.active,false);assert.equal(results.state,'mainmenu');
    const restored=JSON.parse(await page.evaluate(()=>JSON.stringify(save)));const before=JSON.parse(initial);delete restored.tut;delete before.tut;assert.deepEqual(restored,before,'training altered campaign data');
    // Exit / reload never stores rehearsal loot or xp. Pausing must preserve tutorial.
@@ -65,7 +66,7 @@ const {chromium}=require('playwright');
    });
    assert.deepEqual(sequence,[1,2,3,4,5,6,7,8,9,10]);
    assert.deepEqual(errors,[]);
-   console.log('PASS training '+size.width+'x'+size.height+' real engine/actions, all 13 steps, save isolation, pause/exit/no time limit, guide bounds');
+   console.log('PASS training '+size.width+'x'+size.height+' real engine/actions, all 14 steps, save isolation, pause/exit/no time limit, guide bounds');
    await page.close();
   }
  }finally{await browser.close();}

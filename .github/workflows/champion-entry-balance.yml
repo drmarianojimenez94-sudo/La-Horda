@@ -141,6 +141,7 @@ jobs:
           node tools/alpha/services-browser.js
           node tools/alpha/navigation-profiles.js
           node tools/alpha/training-test.js
+          node tools/alpha/goal-guide.js
           node tools/alpha/training-player.js
           node tools/alpha/main-flow.js
           node tools/alpha/bot-identity.js

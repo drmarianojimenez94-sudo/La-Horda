@@ -226,3 +226,5 @@
 #run-intro .abr-s{font-size:0.92rem; color:#c9b39a;}
 #run-intro .abr-tut{margin-top:4px; font-family:'VT323',monospace; font-size:0.98rem; color:#5cf0ff;}
 @media (max-width:700px){ #run-intro .abr-grid{grid-template-columns:1fr;} }
+#run-intro .ri-goalrow{border:1px solid #ffcf5c;background:rgba(60,40,6,.55);border-radius:6px;padding:4px 6px;}
+#run-intro .ri-goalrow .ri-goal{color:#ffe9a8;}

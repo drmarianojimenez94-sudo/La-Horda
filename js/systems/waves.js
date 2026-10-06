@@ -104,6 +104,6 @@ function beginLevelClear(){
   enemies = enemies.filter(o=>o.alive);
   vfxShock(player.x, player.y, 30, 900, "255,220,140", 900, 2);
   flashScreen(0.25, "255,230,170"); playSfx("clear");
-  if(!(typeof endlessOn==="function" && endlessOn())) showBanner(`¡NIVEL ${runLevel} SUPERADO!`);
+  if(!(typeof endlessOn==="function" && endlessOn())) showBanner(runLevel>=LEVEL_COUNT ? `¡NIVEL ${runLevel} SUPERADO!` : `¡NIVEL ${runLevel} SUPERADO! Sobreviviste`);
   else showBanner(`¡RONDA ${EN.round} CONTENIDA!`);
 }

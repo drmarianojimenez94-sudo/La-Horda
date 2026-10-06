@@ -83,6 +83,7 @@ function runIntroShow(arena, onGo){
     save.storyPrologueSeen = true;
     pages.push(...(typeof CAMPAIGN_PROLOGUE_PAGES!=="undefined" ? CAMPAIGN_PROLOGUE_PAGES : [{who:"PRÓLOGO", title:"LA NOCHE EN QUE VOLVIÓ LA HORDA", text:CAMPAIGN_PROLOGUE}]));
   }
+  if(typeof goalMissionPages==="function") pages.unshift(...goalMissionPages()); // misión: SOBREVIVIR, antes de la historia
   const act = typeof storyActOf==="function" ? storyActOf(arena) : null;
   if(act && act.arenas[0]===arena && typeof save!=="undefined" && !(save.storyActsSeen && save.storyActsSeen[act.n])){
     save.storyActsSeen = save.storyActsSeen || {}; save.storyActsSeen[act.n] = 1;
@@ -147,7 +148,7 @@ function runIntroFill(el, arena, B){
   el.querySelector(".ri-say").textContent = "«" + B.say + "»";
   el.querySelector(".ri-kill").textContent = B.kill;
   el.querySelector(".ri-help").textContent = B.help;
-  el.querySelector(".ri-goal").textContent = B.goal;
+  el.querySelector(".ri-goal").textContent = (/^Sobreviv/.test(B.goal) ? "" : "SOBREVIVÍ: aguantá 10 niveles con vida. ") + B.goal;
   const first = el.querySelector(".ri-first");
   if(first){ first.hidden = arena !== "infernal"; first.textContent = arena === "infernal" ? "🏆 " + FIRST_FINISH_NOTICE : ""; }
   const cr = el.querySelector(".ri-crystals");

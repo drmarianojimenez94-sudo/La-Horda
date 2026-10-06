@@ -115,18 +115,18 @@ function tutTick(){
       if(player.cds && player.cds.some(c=>c>0)) tutDone("b_skill");
     } else {
       tutMark("basics");
-      tutSay("b_end", "¡Eso es! Aguantá hasta que termine el tiempo del nivel. Yo te aviso cuando aparezca algo nuevo.", null, 5000);
+      tutSay("b_end", "¡Eso es! Recordá: tu misión es SOBREVIVIR. Aguantá hasta que el reloj llegue a cero (lo ves arriba a la izquierda). Yo te aviso cuando aparezca algo nuevo.", null, 5000);
     }
   }
   // ---- conceptos de combate, cuando aparecen por primera vez (después de los básicos) ----
   if(tutSeen("basics") && !TUT.key){
     const near = (r)=>enemies.some(e=>e.alive && (Array.isArray(r) ? r.includes(e.rank) : e.rank===r) && Math.hypot(e.x-player.x, e.y-player.y) < 520);
     if(!tutSeen("cooldown")) tutSay("cooldown", "Cada habilidad necesita recargarse: esperá a que el botón se llene otra vez para volver a usarla.", null, 6000);
-    else if(!tutSeen("hurt") && player.alive && player.hp < player.maxHp*0.5) tutSay("hurt", "¡Estás perdiendo vida! Alejate de la horda y agarrá las pociones ROJAS. Si hace falta, usá la curación de emergencia (botón verde, 1 por nivel).", null, 7000);
+    else if(!tutSeen("hurt") && player.alive && player.hp < player.maxHp*0.5) tutSay("hurt", "¡Cuidado! La barra roja es tu vida y se está vaciando: si llega a cero, caés. Alejate de la horda y agarrá las pociones ROJAS. Si hace falta, usá la curación de emergencia (botón verde, 1 por nivel).", null, 7000);
     else if(!tutSeen("energy") && player.energy < player.maxEnergy*0.2) tutSay("energy", "Te quedaste sin energía (barra azul) y sin ella no hay habilidades. Se recarga sola, o más rápido con las pociones AZULES.", null, 7000);
     else if(!tutSeen("elite") && near(["elite","subelite"])) tutSay("elite", "Ese enemigo que brilla es un ÉLITE: tiene más vida y pega más fuerte, pero deja mejor botín.", null, 7000);
     else if(!tutSeen("boss") && near(["jefe","subjefe"])) tutSay("boss", "¡Un jefe! Antes de cada golpe fuerte el suelo se marca: salí de la marca antes de que se llene.", null, 8000);
-    else if(!tutSeen("levelup") && runLevel >= 2) tutSay("levelup", "Nivel superado: elegí un refuerzo para esta partida. Tomá lo que te falte (vida, daño o velocidad).", null, 7000);
+    else if(!tutSeen("levelup") && runLevel >= 2) tutSay("levelup", "¡Sobreviviste al nivel! Se terminó el tiempo y los monstruos cayeron. Elegí una mejora para esta partida (vida, daño o velocidad) y empieza el siguiente nivel.", null, 7000);
     else if(!tutSeen("skillup") && document.querySelector(".skill-plus:not(.hidden)")) tutSay("skillup", "¡Subiste de nivel y tenés un punto! Tocá el + junto a una habilidad para hacerla más fuerte.", "Tocá el + junto a una habilidad", 12000);
   }
   if(TUT.key==="skillup" && !document.querySelector(".skill-plus:not(.hidden)")) tutDone("skillup");

@@ -49,7 +49,7 @@ function arenaBriefingDecorate(el, arena){
   let box = card.querySelector(".abr");
   if(!box){
     box = document.createElement("div"); box.className = "abr";
-    const goalRow = el.querySelector(".ri-goal"); const anchor = goalRow ? goalRow.closest(".ri-row") : null;
+    const anchor = el.querySelector(".ri-crystals") ? el.querySelector(".ri-help").closest(".ri-row") : null;
     if(anchor && anchor.nextSibling) card.insertBefore(box, anchor.nextSibling); else card.appendChild(box);
   }
   box.innerHTML = arenaBriefingHTML(arena);
