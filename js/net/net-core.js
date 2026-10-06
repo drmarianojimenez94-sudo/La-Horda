@@ -312,7 +312,7 @@ function netInviteUrl(){
   return u.toString();
 }
 function netRoomCodeFromUrl(){
-  try{ const c = new URLSearchParams(location.search).get("room"); return c ? c.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8) : null; }catch(e){ return null; }
+  try{ const sp = new URLSearchParams(location.search); if(sp.get("cw")==="1" || sp.get("next")==="crystal-wars") return null; const c = sp.get("room"); return c ? c.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8) : null; }catch(e){ return null; }
 }
 // Latido/ping: mide la latencia y detecta conexiones caídas (iPhone con pantalla bloqueada).
 setInterval(()=>{

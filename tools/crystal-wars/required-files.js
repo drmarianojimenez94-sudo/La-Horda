@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 'use strict';
-// Lista los archivos que el servidor tiene que publicar para que "Guerra de Cristales" abra (crystal-wars.html y todo lo
-// que carga) y verifica que existan en el repositorio. Sirve para el paso de publicar el juego: si el servidor responde
-// "No esta: /crystal-wars.html", es que falta publicar esta lista.
+// Guerra de Cristales vive dentro de index.html: para que abra, el servidor tiene que publicar la versión ACTUAL del juego
+// (index.html con su pantalla del Coliseo) y estos archivos propios del modo. Este script los lista y verifica que existan en
+// el repositorio. crystal-wars.html ya no es una página: solo redirige los enlaces de invitación viejos a index.html?cw=1.
 // Uso: node tools/crystal-wars/required-files.js [--json]
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const ROOT=path.resolve(__dirname,'../..');
 const read=f=>fs.readFileSync(path.join(ROOT,f),'utf8');
-const files=new Set(['crystal-wars.html']);
-const html=read('crystal-wars.html');
-for(const m of html.matchAll(/(?:src|href)="([^"#?]+)(?:[?#][^"]*)?"/g)){ if(!/^(https?:)?\/\//.test(m[1])&&!m[1].startsWith('index.html')) files.add(m[1]); }
+const files=new Set(['index.html','crystal-wars.html']);
+const html=read('index.html');
+if(!html.includes('id="crystalwars-screen"')){ console.error('index.html no tiene la pantalla #crystalwars-screen'); process.exit(1); }
+for(const m of html.matchAll(/(?:src|href)="([^"#?]+)(?:[?#][^"]*)?"/g)){ if(/crystal-wars/.test(m[1])) files.add(m[1]); }
+files.add('js/ai/bot-identity.js'); // nombres de los compañeros que completa el juego (lo usa el Coliseo)
 const client=read('js/modes/crystal-wars/client.js');
 for(const m of client.matchAll(/'(assets\/[^']*\.(?:png|webp|jpg|ogg|mp3))'/g)) files.add(m[1]);
 // imágenes armadas con un número o con la clase: walk1..4 del esqueleto y el atlas de cada rol

@@ -1,12 +1,103 @@
-/* Tipografía pixel de La Horda (misma que index.html, css/base.css) */
-@font-face{font-family:'Press Start 2P';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/fonts/press-start-2p-latin.woff2) format('woff2')}
-@font-face{font-family:'VT323 Texto';font-style:normal;font-weight:400;font-display:swap;size-adjust:120%;src:url(../assets/fonts/vt323-latin.woff2) format('woff2')}
-:root{color-scheme:dark;--bg:#10131f;--panel:#1b2131;--line:#374053;--gold:#ebc16f;--blue:#75c9fa;--amber:#ffb66f}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#253048,var(--bg) 65%);color:#e8edf5;font:17px/1.35 'VT323 Texto',system-ui,sans-serif;min-height:100vh}button,input,select{font:inherit}button,a{touch-action:manipulation}button{border:1px solid var(--line);border-radius:7px;padding:11px 15px;background:#252e40;color:#fff;cursor:pointer;min-height:44px}button:hover{border-color:var(--gold)}button:disabled{opacity:.4;cursor:default}.primary{background:var(--gold);color:#211b14;font-weight:800}a{color:var(--gold);text-decoration:none}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:1.4px}header button{font-size:11px;padding:5px 10px}main{max-width:1020px;margin:auto;padding:44px 24px}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px}h1{font-size:clamp(38px,7vw,76px);line-height:1.05;letter-spacing:2px;margin:18px 0}h1 em{font-style:normal;color:var(--gold)}.intro{max-width:600px;font-size:18px;color:#b4c1d3}.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:30px 0}.rules b{color:var(--gold);font-size:12px;letter-spacing:1px}.rules p{color:#b4c1d3;margin:8px 0}.setup,#room{padding:24px;border:1px solid var(--line);border-radius:12px;background:#171d2c}.setup{display:grid;grid-template-columns:1fr 1fr;gap:35px}label{display:block;margin:8px 0;color:#c2ccdb}input,select{width:100%;background:#0f1522;border:1px solid #465268;border-radius:5px;padding:11px;color:#fff}small,#kit{color:#aebed2;font-size:12px}.connect{display:flex;flex-direction:column;justify-content:center;gap:10px}.join,.actions,.room-head{display:flex;gap:10px;align-items:center}.join input{min-width:0}#room{margin-top:20px}.room-head{justify-content:space-between}#slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}.slot{padding:12px;background:#101722;border-left:3px solid var(--blue)}.slot.amber{border-color:var(--amber)}#status{min-height:25px;color:var(--gold)}[hidden]{display:none!important}#game{max-width:1050px;margin:auto;padding:12px}#scoreboard{display:grid;grid-template-columns:1fr 100px 1fr;gap:20px;padding:6px 10px 12px}#scoreboard span{display:block;font-size:12px}#scoreboard b{font-size:12px;letter-spacing:2px}.blue{color:var(--blue)}.amber{color:var(--amber);text-align:right}.clock{text-align:center}.clock strong{font-size:23px}meter{width:100%;height:10px}#stage{position:relative;border:1px solid #45506b;border-radius:8px;overflow:hidden;background:#10141d}canvas{display:block;width:100%;height:min(54vh,560px);touch-action:none}#notice{position:absolute;top:12px;left:12px;right:100px;color:#ffe29d;font-size:13px;pointer-events:none;text-shadow:0 2px 3px #000}#vital{position:absolute;bottom:10px;left:12px;background:#0d1327dc;padding:6px 10px;border-radius:6px;font-size:12px}#view{position:absolute;top:8px;right:8px;font-size:11px;padding:6px}#supply{padding:12px 0}#supply>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:12px}#shards{color:var(--gold)}#shop{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}#shop button{font-size:11px;padding:8px 5px}#controls{display:flex;gap:15px;align-items:center;justify-content:space-between}#joystick{width:92px;height:92px;border-radius:50%;background:#24324988;border:1px solid #57677f;position:relative;flex-shrink:0;touch-action:none;user-select:none}#joystick i{position:absolute;width:34px;height:34px;background:#a4b5cf66;border:1px solid #acbcd1;border-radius:50%;left:28px;top:28px}#joystick span{position:absolute;bottom:3px;width:100%;text-align:center;font-size:9px;color:#8d9cb4;pointer-events:none}#skills{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1}#skills button{font-size:11px;min-height:65px;padding:5px}.keys{color:#8d9bb0;font-size:11px}#quit{font-size:11px;background:transparent}dialog{max-width:420px;width:90%;border:1px solid #716143;border-radius:12px;padding:30px;background:#171e2f;color:#e8edf5}dialog::backdrop{background:#050812ce}dialog h2{font-size:28px;color:var(--gold)}.actions{flex-wrap:wrap}@media(max-width:600px){header{padding:10px 12px}header>span{display:none}main{padding:25px 16px}.rules{gap:12px;font-size:12px}.setup{grid-template-columns:1fr;gap:15px;padding:18px}#scoreboard{gap:10px;grid-template-columns:1fr 70px 1fr}#slots{grid-template-columns:1fr}.slot{font-size:13px}#game{padding:8px}#controls{gap:8px}#skills{gap:4px}#skills button{font-size:10px}canvas{height:42vh;min-height:245px}#shop{grid-template-columns:repeat(2,1fr)}#supply>div:first-child{font-size:11px}.keys{margin:6px 0}.rules b{font-size:10px}}@media(max-height:520px) and (orientation:landscape){body:has(#game:not([hidden])) header{display:none}#game{display:grid;grid-template-columns:1fr 230px;gap:6px}#scoreboard{grid-column:1/-1}#stage{grid-row:2/5}canvas{height:72vh}#supply{padding:0}#shop,#skills{grid-template-columns:repeat(2,1fr)}#controls{align-items:flex-end}#joystick{width:70px;height:70px}#joystick i{left:17px;top:17px}#quit{grid-column:2}.keys{display:none}}
+/* Guerra de Cristales dentro de index.html: TODOS los estilos van acotados a #crystalwars-screen para no pisar el resto del juego.
+   (Las letras pixel "Press Start 2P" y "VT323 Texto" ya las define css/base.css.) */
+/* contenedor: la pantalla del juego ocupa todo y hace scroll; el contenido vive en #cw-root */
+#crystalwars-screen.screen{align-items:stretch;justify-content:flex-start;overflow-y:auto}
+#crystalwars-screen #cw-root{min-height:100%}
+#crystalwars-screen{color-scheme:dark;--bg:#10131f;--panel:#1b2131;--line:#374053;--gold:#ebc16f;--blue:#75c9fa;--amber:#ffb66f}
+#crystalwars-screen *{box-sizing:border-box}
+#crystalwars-screen.screen{padding:0;display:block;text-align:left;margin:0;background:radial-gradient(ellipse at 50% 0,#253048,var(--bg) 65%);color:#e8edf5;font:17px/1.35 'VT323 Texto',system-ui,sans-serif}
+#crystalwars-screen button,#crystalwars-screen input,#crystalwars-screen select{font:inherit}
+#crystalwars-screen button,#crystalwars-screen a{touch-action:manipulation}
+#crystalwars-screen button{border:1px solid var(--line);border-radius:7px;padding:11px 15px;background:#252e40;color:#fff;cursor:pointer;min-height:44px}
+#crystalwars-screen button:hover{border-color:var(--gold)}
+#crystalwars-screen button:disabled{opacity:.4;cursor:default}
+#crystalwars-screen .primary{background:var(--gold);color:#211b14;font-weight:800}
+#crystalwars-screen a{color:var(--gold);text-decoration:none}
+#crystalwars-screen header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:1.4px}
+#crystalwars-screen header button{font-size:11px;padding:5px 10px}
+#crystalwars-screen main{max-width:1020px;margin:auto;padding:44px 24px}
+#crystalwars-screen .eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px}
+#crystalwars-screen h1{font-size:clamp(38px,7vw,76px);line-height:1.05;letter-spacing:2px;margin:18px 0}
+#crystalwars-screen h1 em{font-style:normal;color:var(--gold)}
+#crystalwars-screen .intro{max-width:600px;font-size:18px;color:#b4c1d3}
+#crystalwars-screen .rules{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:30px 0}
+#crystalwars-screen .rules b{color:var(--gold);font-size:12px;letter-spacing:1px}
+#crystalwars-screen .rules p{color:#b4c1d3;margin:8px 0}
+#crystalwars-screen .setup,#crystalwars-screen #room{padding:24px;border:1px solid var(--line);border-radius:12px;background:#171d2c}
+#crystalwars-screen .setup{display:grid;grid-template-columns:1fr 1fr;gap:35px}
+#crystalwars-screen label{display:block;margin:8px 0;color:#c2ccdb}
+#crystalwars-screen input,#crystalwars-screen select{width:100%;background:#0f1522;border:1px solid #465268;border-radius:5px;padding:11px;color:#fff}
+#crystalwars-screen small,#crystalwars-screen #kit{color:#aebed2;font-size:12px}
+#crystalwars-screen .connect{display:flex;flex-direction:column;justify-content:center;gap:10px}
+#crystalwars-screen .join,#crystalwars-screen .actions,#crystalwars-screen .room-head{display:flex;gap:10px;align-items:center}
+#crystalwars-screen .join input{min-width:0}
+#crystalwars-screen #room{margin-top:20px}
+#crystalwars-screen .room-head{justify-content:space-between}
+#crystalwars-screen #slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+#crystalwars-screen .slot{padding:12px;background:#101722;border-left:3px solid var(--blue)}
+#crystalwars-screen .slot.amber{border-color:var(--amber)}
+#crystalwars-screen #status{min-height:25px;color:var(--gold)}
+#crystalwars-screen [hidden]{display:none!important}
+#crystalwars-screen #cw-game{max-width:1050px;margin:auto;padding:12px}
+#crystalwars-screen #scoreboard{display:grid;grid-template-columns:1fr 100px 1fr;gap:20px;padding:6px 10px 12px}
+#crystalwars-screen #scoreboard span{display:block;font-size:12px}
+#crystalwars-screen #scoreboard b{font-size:12px;letter-spacing:2px}
+#crystalwars-screen .blue{color:var(--blue)}
+#crystalwars-screen .amber{color:var(--amber);text-align:right}
+#crystalwars-screen .clock{text-align:center}
+#crystalwars-screen .clock strong{font-size:23px}
+#crystalwars-screen meter{width:100%;height:10px}
+#crystalwars-screen #cw-stage{position:relative;border:1px solid #45506b;border-radius:8px;overflow:hidden;background:#10141d}
+#crystalwars-screen canvas{display:block;width:100%;height:min(54vh,560px);touch-action:none}
+#crystalwars-screen #notice{position:absolute;top:12px;left:12px;right:100px;color:#ffe29d;font-size:13px;pointer-events:none;text-shadow:0 2px 3px #000}
+#crystalwars-screen #vital{position:absolute;bottom:10px;left:12px;background:#0d1327dc;padding:6px 10px;border-radius:6px;font-size:12px}
+#crystalwars-screen #view{position:absolute;top:8px;right:8px;font-size:11px;padding:6px}
+#crystalwars-screen #supply{padding:12px 0}
+#crystalwars-screen #supply>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:12px}
+#crystalwars-screen #shards{color:var(--gold)}
+#crystalwars-screen #shop{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+#crystalwars-screen #shop button{font-size:11px;padding:8px 5px}
+#crystalwars-screen #cw-controls{display:flex;gap:15px;align-items:center;justify-content:space-between}
+#crystalwars-screen #joystick{width:92px;height:92px;border-radius:50%;background:#24324988;border:1px solid #57677f;position:relative;flex-shrink:0;touch-action:none;user-select:none}
+#crystalwars-screen #joystick i{position:absolute;width:34px;height:34px;background:#a4b5cf66;border:1px solid #acbcd1;border-radius:50%;left:28px;top:28px}
+#crystalwars-screen #joystick span{position:absolute;bottom:3px;width:100%;text-align:center;font-size:9px;color:#8d9cb4;pointer-events:none}
+#crystalwars-screen #skills{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1}
+#crystalwars-screen #skills button{font-size:11px;min-height:65px;padding:5px}
+#crystalwars-screen .keys{color:#8d9bb0;font-size:11px}
+#crystalwars-screen #quit{font-size:11px;background:transparent}
+#crystalwars-screen dialog{max-width:420px;width:90%;border:1px solid #716143;border-radius:12px;padding:30px;background:#171e2f;color:#e8edf5}
+#crystalwars-screen dialog::backdrop{background:#050812ce}
+#crystalwars-screen dialog h2{font-size:28px;color:var(--gold)}
+#crystalwars-screen .actions{flex-wrap:wrap}
+@media(max-width:600px){#crystalwars-screen header{padding:10px 12px}
+#crystalwars-screen header>span{display:none}
+#crystalwars-screen main{padding:25px 16px}
+#crystalwars-screen .rules{gap:12px;font-size:12px}
+#crystalwars-screen .setup{grid-template-columns:1fr;gap:15px;padding:18px}
+#crystalwars-screen #scoreboard{gap:10px;grid-template-columns:1fr 70px 1fr}
+#crystalwars-screen #slots{grid-template-columns:1fr}
+#crystalwars-screen .slot{font-size:13px}
+#crystalwars-screen #cw-game{padding:8px}
+#crystalwars-screen #cw-controls{gap:8px}
+#crystalwars-screen #skills{gap:4px}
+#crystalwars-screen #skills button{font-size:10px}
+#crystalwars-screen canvas{height:42vh;min-height:245px}
+#crystalwars-screen #shop{grid-template-columns:repeat(2,1fr)}
+#crystalwars-screen #supply>div:first-child{font-size:11px}
+#crystalwars-screen .keys{margin:6px 0}
+#crystalwars-screen .rules b{font-size:10px}
+}
+@media(max-height:520px) and (orientation:landscape){#crystalwars-screen:has(#cw-game:not([hidden])) header{display:none}
+#crystalwars-screen #cw-game{display:grid;grid-template-columns:1fr 230px;gap:6px}
+#crystalwars-screen #scoreboard{grid-column:1/-1}
+#crystalwars-screen #cw-stage{grid-row:2/5}
+#crystalwars-screen canvas{height:72vh}
+#crystalwars-screen #supply{padding:0}
+#crystalwars-screen #shop,#crystalwars-screen #skills{grid-template-columns:repeat(2,1fr)}
+#crystalwars-screen #cw-controls{align-items:flex-end}
+#crystalwars-screen #joystick{width:70px;height:70px}
+#crystalwars-screen #joystick i{left:17px;top:17px}
+#crystalwars-screen #quit{grid-column:2}
+#crystalwars-screen .keys{display:none}
+}
 
-/* títulos, botones y marcador con la letra pixel del juego */
-/* (la letra grande no trae todas las tildes en mayúscula: solo para textos sin "Í/Á/É/Ó/Ú") */
-h1,#scoreboard b,#clock{font-family:'Press Start 2P',system-ui,monospace;letter-spacing:.02em}
-h1{font-size:clamp(22px,6vw,46px);line-height:1.25}
-#clock{font-size:14px}
-h2,.eyebrow,.rules b,button,#result-title{font-family:'VT323 Texto',system-ui,monospace;letter-spacing:.04em}
-button{font-size:17px;line-height:1.1}

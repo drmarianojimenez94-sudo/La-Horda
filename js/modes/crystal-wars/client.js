@@ -1,14 +1,19 @@
-/* Browser adapter: shared relay protocol, separate CW build and no account writes. */
+/* Browser adapter: shared relay protocol, separate CW build and no account writes.
+ * Guerra de Cristales vive DENTRO de index.html (pantalla #crystalwars-screen). Este archivo solo define
+ * window.CrystalWarsUI; nada se carga ni se dibuja hasta la primera vez que se abre (open): así no pesa en el arranque
+ * del juego. close() desconecta y suelta todo; onExit lo pone el juego (js/ui/menus.js) para volver al hub. */
 (function(){
 'use strict';
-const C=CrystalWars,$=id=>document.getElementById(id),q=new URLSearchParams(location.search);
-// Direct invitations also go through the first-run tutorial. Preserve the room
-// and relay across the round trip; never accept an arbitrary redirect URL.
-if(!HordaOnboarding.storedReady()){
- const start=new URL('index.html',location.href);start.searchParams.set('next','crystal-wars');
- for(const key of ['room','server'])if(q.has(key))start.searchParams.set(key,q.get(key));
- location.replace(start.href);return;
-}
+let api=null;
+window.CrystalWarsUI={
+ onExit:null,
+ open(opts){if(!api)api=boot();api.open(opts||{});},
+ close(){return api?api.close():true;},
+ isOpen(){return !!(api&&api.active());}
+};
+function boot(){
+const C=CrystalWars,ID={game:'cw-game',stage:'cw-stage',controls:'cw-controls'},$=id=>document.getElementById(ID[id]||id),query=()=>new URLSearchParams(location.search);
+let openOpts={},active=false,raf=0;
 const skeletons=[1,2,3,4].map(i=>{const img=new Image();img.src='assets/sprites/enemies/infernal/esqueleto_h/walk'+i+'.png';return img;});
 const golem=new Image();golem.src='assets/sprites/enemies/laberinto/golem_piedra/walk-strip.png';
 // Arte del juego reutilizado (sin assets nuevos): piso de piedra de las Minas, portal de la Horda del Abismo y el
@@ -27,7 +32,7 @@ function send(m){if(ws&&ws.readyState===WebSocket.OPEN){ws.send(JSON.stringify(m
 function message(d,to){return send({t:'msg',d,to});}
 function kit(){const r=C.ROLES[$('champ').value];$('kit').textContent=r.skills.join(' · ');if(room)send({t:'update',champ:$('champ').value,ready:false});}
 $('champ').onchange=kit;kit();
-function server(){const raw=q.get('server')||NET_CONFIG.serverUrl;const u=new URL(raw);if(!['ws:','wss:'].includes(u.protocol))throw Error('Dirección de servidor inválida');return u.href;}
+function server(){const raw=openOpts.server||query().get('server')||NET_CONFIG.serverUrl;const u=new URL(raw);if(!['ws:','wss:'].includes(u.protocol))throw Error('Dirección de servidor inválida');return u.href;}
 function identity(){return {protocol:1,build:C.VERSION,champ:$('champ').value,name:$('name').value.trim()||'Guardián',level:1,clientId};}
 async function connect(){
  if(ws&&ws.readyState===1)return;if(connection)return connection;closing=false;
@@ -45,12 +50,12 @@ $('join').onclick=async()=>{const code=parseCode($('code').value);if(!/^[A-Z0-9]
 $('name').onchange=()=>{if(room)send({t:'update',name:$('name').value.trim()||'Guardián',ready:false});};
 function renderRoom(){
  $('room').hidden=!room;$('create').disabled=!!room;$('join').disabled=!!room;$('practice').disabled=!!room;
- if(!room)return;$('room-code').textContent=room.code;$('slots').replaceChildren();room.slots.forEach((p,i)=>{const el=document.createElement('div');el.className='slot'+(i>1?' amber':'');el.textContent='J'+(i+1)+' · '+(p&&p.connected?(p.name+' · '+(C.ROLES[p.champ]?.name||'Tanque')+' · '+(p.ready?'LISTO':'Preparando')):'BOT');$('slots').appendChild(el);});
+ if(!room)return;$('room-code').textContent=room.code;$('slots').replaceChildren();room.slots.forEach((p,i)=>{const el=document.createElement('div');el.className='slot'+(i>1?' amber':'');el.textContent='J'+(i+1)+' · '+(p&&p.connected?(p.name+' · '+(C.ROLES[p.champ]?.name||'Tanque')+' · '+(p.ready?'LISTO':'Preparando')):'Lugar libre · lo completa el juego');$('slots').appendChild(el);});
  $('start').hidden=!host;$('ready').hidden=host;$('ready').textContent=room.slots[slot]?.ready?'✔ LISTO':'ESTOY LISTO';$('start').disabled=room.state!=='lobby'||room.slots.some((p,i)=>i>0&&p&&p.connected&&!p.ready);
  $('champ').disabled=room.state!=='lobby';$('name').disabled=room.state!=='lobby';
 }
 $('ready').onclick=()=>send({t:'update',ready:!room.slots[slot]?.ready});
-$('copy').onclick=async()=>{const u=new URL(location.href);u.searchParams.set('room',room.code);try{await navigator.clipboard.writeText(u.href);status('Invitación copiada.');}catch{status('Invitación: '+u.href);}};
+$('copy').onclick=async()=>{const u=new URL(location.href);u.hash='';const srv=openOpts.server||query().get('server');u.search='';u.searchParams.set('cw','1');u.searchParams.set('room',room.code);if(srv)u.searchParams.set('server',srv);try{await navigator.clipboard.writeText(u.href);status('Invitación copiada.');}catch{status('Invitación: '+u.href);}};
 function disconnect(){closing=true;clearTimeout(retryTimer);if(ws){send({t:'leave'});ws.close();}ws=null;room=null;connection=null;host=false;offline=true;$('champ').disabled=false;$('name').disabled=false;renderRoom();}
 $('leave').onclick=()=>{disconnect();status('Saliste de la sala.');};
 function receive(m){
@@ -72,13 +77,14 @@ function receive(m){
 }
 function begin(){
  offline=!room;host=!!room;slot=0;inputs={};for(const k of Object.keys(remoteTimes))delete remoteTimes[k];sim=C.create(room?room.slots:[{connected:true,champ:$('champ').value,name:$('name').value||'Guardián'}],crypto.getRandomValues(new Uint32Array(1))[0]);
+ if(typeof botNameFor==='function'){const taken=sim.heroes.filter(h=>!h.bot).map(h=>h.name);for(const h of sim.heroes)if(h.bot)h.name=botNameFor('cw-'+h.role,taken);}
  matchId=crypto.randomUUID();snapshotN=0;shownResult=false;viewOther=false;acc=0;last=performance.now();closeResult();showGame();if(room){send({t:'start'});broadcast();}
 }
 $('practice').onclick=begin;$('start').onclick=()=>{if(host&&room?.state==='lobby'&&!$('start').disabled)begin();};
 function showGame(){ $('lobby').hidden=true;$('game').hidden=false;drawControls(); }
 function showLobby(){ $('lobby').hidden=false;$('game').hidden=true;keys={};joy={x:0,y:0};renderRoom(); }
 function closeResult(){if($('result').open)$('result').close();}
-function showResult(){if(shownResult)return;shownResult=true;const team=sim.heroes[slot].team;$('result-title').textContent=sim.winner===-1?'EMPATE':sim.winner===team?'CRISTAL VICTORIOSO':'CRISTAL DERROTADO';$('result-detail').textContent='Zafiro '+Math.ceil(sim.teams[0].hp)+' · Ámbar '+Math.ceil(sim.teams[1].hp)+' · '+sim.wave+' oleadas. Esta prueba no modifica tu campaña.';$('rematch').textContent=offline?'VOLVER A ENTRENAR':host?'VOLVER A LA SALA':'ESPERAR EN LA SALA';$('result').showModal();beep(sim.winner===team?660:180);}
+function showResult(){if(shownResult)return;shownResult=true;const team=sim.heroes[slot].team;$('result-title').textContent=sim.winner===-1?'EMPATE':sim.winner===team?'CRISTAL VICTORIOSO':'CRISTAL DERROTADO';$('result-detail').textContent='Zafiro '+Math.ceil(sim.teams[0].hp)+' · Ámbar '+Math.ceil(sim.teams[1].hp)+' · '+sim.wave+' oleadas. Esta prueba no modifica tu campaña.'+(sim.heroes.some(h=>h.bot)?' Algunos compañeros son controlados por el juego.':'');$('rematch').textContent=offline?'VOLVER A ENTRENAR':host?'VOLVER A LA SALA':'ESPERAR EN LA SALA';$('result').showModal();beep(sim.winner===team?660:180);}
 function abort(reason){if(sim)sim.ended=true;shownResult=true;$('result-title').textContent='PARTIDA INTERRUMPIDA';$('result-detail').textContent=reason+' No se registra victoria ni derrota.';if(!$('result').open)$('result').showModal();}
 $('rematch').onclick=()=>{closeResult();if(room&&host)send({t:'lobby',arena:'crystal-wars'});sim=null;showLobby();};
 $('result').addEventListener('cancel',e=>e.preventDefault());
@@ -90,7 +96,7 @@ function drawControls(){
  $('shop').replaceChildren();for(const [key,item]of Object.entries(C.SHOP)){const b=document.createElement('button');b.dataset.key=key;b.textContent=item.name+' · '+item.cost+' ◆';b.onclick=()=>act('buy',key);$('shop').appendChild(b);}
 }
 function movement(){let x=joy.x+(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),y=joy.y+(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);const n=Math.max(1,Math.hypot(x,y));return {x:x/n,y:y/n};}
-window.addEventListener('keydown',e=>{if(!sim||sim.ended||/INPUT|SELECT/.test(e.target.tagName))return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();keys[e.key.length===1?e.key.toLowerCase():e.key]=true;if(!e.repeat&&/^[1-4]$/.test(e.key))act('skill',+e.key-1);});
+window.addEventListener('keydown',e=>{if(!active||!sim||sim.ended||/INPUT|SELECT/.test(e.target.tagName))return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();keys[e.key.length===1?e.key.toLowerCase():e.key]=true;if(!e.repeat&&/^[1-4]$/.test(e.key))act('skill',+e.key-1);});
 window.addEventListener('keyup',e=>{delete keys[e.key.length===1?e.key.toLowerCase():e.key];});
 window.addEventListener('blur',()=>{keys={};joy={x:0,y:0};if(!offline&&!host)message({k:'cw-input',id:matchId,x:0,y:0});});
 const stick=$('joystick');let pointer=null;
@@ -124,9 +130,18 @@ function render(){
  [...$('shop').children].forEach(b=>{const k=b.dataset.key;b.disabled=!supply||viewOther||t.shards<C.SHOP[k].cost||(k==='upgrade'&&t.upgrade>=3)||(k==='repair'&&(t.hp>=t.maxHp||sim.time<t.repairAt))||(['swarm','brute'].includes(k)&&sim.time<t.sendAt);});
 }
 function broadcast(){message({k:'cw-state',id:matchId,n:++snapshotN,state:sim});}
-function frame(now){const dt=Math.min(.15,Math.max(0,(now-(last||now))/1000));last=now;if(sim){if(!sim.ended){const move=viewOther?{x:0,y:0}:movement();inputs[slot]=move;if(offline||host){for(const h of sim.heroes)if(h.slot!==slot&&!h.bot&&now-(remoteTimes[h.slot]||0)>350)inputs[h.slot]={x:0,y:0};acc+=dt;while(acc>=1/30&&!sim.ended){C.step(sim,1/30,inputs);acc-=1/30;}if(sim.ended){showResult();if(host)broadcast();}if(host&&now-lastSend>100){lastSend=now;broadcast();}}else if(now-lastSend>60){lastSend=now;message({k:'cw-input',id:matchId,...move});}}render();}requestAnimationFrame(frame);}
-if(q.get('room')){$('code').value=q.get('room');status('Elegí tu nombre y campeón; después tocá UNIRSE.');}
-// Preserve the explicitly selected test server when returning to the main game.
-if(q.get('server'))$('back').href='index.html?server='+encodeURIComponent(q.get('server'));
-requestAnimationFrame(frame);
+function frame(now){if(!active){raf=0;return;}const dt=Math.min(.15,Math.max(0,(now-(last||now))/1000));last=now;if(sim){if(!sim.ended){const move=viewOther?{x:0,y:0}:movement();inputs[slot]=move;if(offline||host){for(const h of sim.heroes)if(h.slot!==slot&&!h.bot&&now-(remoteTimes[h.slot]||0)>350)inputs[h.slot]={x:0,y:0};acc+=dt;while(acc>=1/30&&!sim.ended){C.step(sim,1/30,inputs);acc-=1/30;}if(sim.ended){showResult();if(host)broadcast();}if(host&&now-lastSend>100){lastSend=now;broadcast();}}else if(now-lastSend>60){lastSend=now;message({k:'cw-input',id:matchId,...move});}}render();}raf=requestAnimationFrame(frame);}
+function open(o){
+ openOpts=o||{};active=true;
+ if(openOpts.room){$('code').value=String(openOpts.room).toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8);status('Elegí tu nombre y campeón; después tocá UNIRSE.');}
+ if(!sim)showLobby();last=performance.now();if(!raf)raf=requestAnimationFrame(frame);
+}
+// Sale de la pantalla: si hay una partida en curso pide confirmar. Devuelve false si el jugador se queda.
+function close(){
+ if(sim&&!sim.ended&&!confirm('¿Salir de la partida? Si sos anfitrión, se cerrará para todos.'))return false;
+ disconnect();sim=null;closeResult();showLobby();keys={};joy={x:0,y:0};active=false;return true;
+}
+$('back').onclick=()=>{if(close()!==false&&typeof window.CrystalWarsUI.onExit==='function')window.CrystalWarsUI.onExit();};
+return {open,close,active:()=>active};
+}
 })();

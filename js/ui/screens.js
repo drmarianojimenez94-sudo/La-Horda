@@ -17,6 +17,7 @@ const screens = {
   shop: document.getElementById("shop-screen"),
   modeselect: document.getElementById("modeselect-screen"),
   divina: document.getElementById("divina-screen"),
+  crystalwars: document.getElementById("crystalwars-screen"),
   arenaselect: document.getElementById("arenaselect-screen"),
   menu: document.getElementById("menu-screen"),
   prep: document.getElementById("prep-screen"),
