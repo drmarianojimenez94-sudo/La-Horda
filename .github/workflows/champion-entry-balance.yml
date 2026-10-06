@@ -125,6 +125,9 @@ jobs:
       - run: node tools/collection/brasas-store.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/collection/welcome-picks.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/founders/online-presence.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
@@ -144,6 +147,7 @@ jobs:
           node tools/net/quick-play.js
           node tools/alpha/public-onboarding.js
           node tools/collection/shop-pricing-browser.js
+          node tools/collection/pricing-sync.js
           node tools/factory/event-runtime.js
           node tools/factory/options-layout.js
           node tools/art/alpha_set_skins/browser.js
