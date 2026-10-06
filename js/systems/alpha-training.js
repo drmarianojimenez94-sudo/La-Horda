@@ -52,7 +52,7 @@ const ALPHA_TRAINING_STEPS = Object.freeze([
   {id:"xp", title:"10 · Experiencia y nivel", text:"Derrotar enemigos da XP. Te falta muy poco: derrotá otro esqueleto y mirá subir el nivel del campeón (es permanente; el nivel de la arena es solo de esta partida).", target:"Derrotá al esqueleto y subí de nivel"},
   {id:"loot", title:"11 · Botín", text:"Los enemigos pueden dejar equipo. Acercate al objeto luminoso para recogerlo. Después podrás equiparlo fuera de la arena.", target:"Recogé el objeto"},
   {id:"tactical", title:"12 · Panel táctico", text:"Tocá ❚❚ arriba a la derecha: el Panel táctico muestra tu kit, recargas, estados y equipo. Sola pausa; en multijugador la partida SIGUE. Cerralo con Continuar.", target:"Abrí el Panel táctico y volvé"},
-  {id:"revive", title:"13 · Reanimar", text:"Elyra cayó. Parate a su lado y MANTENÉ ✚ (unos 5 s). Un golpe no te corta; soltar o alejarte, sí.", target:"Mantené ✚ junto a Elyra hasta revivirla"},
+  {id:"revive", title:"13 · Reanimar", text:"Elyra cayó. Parate a su lado y MANTENÉ el botón REVIVIR ✚ (unos 5 s). Un golpe no te corta; soltar o alejarte, sí.", target:"Mantené ✚ junto a Elyra hasta revivirla"},
   {id:"objective", title:"14 · Resumen final", text:"Última prueba: derrotá a estos tres enemigos. Recordá: en cada arena SOBREVIVÍS 10 niveles (aguantás hasta que el reloj llegue a cero), en el 10 vences a un jefe y, si caen todos tus guardianes, perdés.", target:"Derrotá a los tres enemigos"}
 ]);
 function alphaTrainingActive(){return ALPHA_TRAINING.active;}

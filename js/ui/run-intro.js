@@ -112,7 +112,7 @@ function runIntroFill(el, arena, B){
     whenAssetsReady(()=>{ if(!RUN_INTRO.prologue){ go.disabled = false; go.textContent = "¡A LA BATALLA!"; } },
       pct=>{ if(!RUN_INTRO.prologue && go.disabled) go.textContent = "Preparando la arena… " + pct + "%"; });
   }
-  const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá en cualquier lado para empezar";
+  const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá ¡A LA BATALLA! para empezar";
   // "Saltar ▸▸" (arriba a la izquierda, sobre el arte): con la historia en pantalla, un toque lleva directo a la
   // ficha de la arena (primer arranque corto)
   let skip = el.querySelector(".ri-skip");
@@ -263,6 +263,9 @@ function runIntroDraw(cv, t){
 }
 (()=>{
   const el = document.getElementById("run-intro"); if(!el) return;
-  el.addEventListener("click", runIntroGo);
+  el.addEventListener("click", (e)=>{ // en la ficha larga, deslizar/tocar el texto NO empieza la partida: solo el botón (o el fondo)
+    if(!RUN_INTRO.prologue && e.target.closest && e.target.closest(".ri-card") && !e.target.closest(".ri-go")) return;
+    runIntroGo();
+  });
   document.addEventListener("keydown", (e)=>{ if(RUN_INTRO.open && (e.key==="Enter" || e.key===" ")) runIntroGo(); });
 })();
