@@ -38,12 +38,12 @@ let SKINS = null;
 function skinCatalog(){
   if(SKINS) return SKINS;
   const noop = () => {};
-  const c = { CROMA_SKINS: {}, SET_SKINS: {}, champPackLoadAtlas: noop, champPackCloneAtlas: noop, champPackLoadSheets: noop, console: { log: noop, warn: noop } };
+  const c = { CROMA_SKINS: {}, CROMA_CRYSTALS: {}, SET_SKINS: {}, champPackLoadAtlas: noop, champPackCloneAtlas: noop, champPackLoadSheets: noop, console: { log: noop, warn: noop } };
   vm.createContext(c);
   const root = path.join(__dirname, "..");
   for(const f of ["js/assets/croma-skins-meta.js", "js/assets/set-skins-meta.js", "js/assets/portadores-meta.js", "js/assets/ynara-meta.js",
                   "js/assets/complete-set-skins-meta.js", "js/assets/alpha-set-skins-meta.js", "js/assets/unique-skins-meta.js",
-                  "js/assets/extra-skins-meta.js", "js/champions/expedition/art.js"]){
+                  "js/assets/extra-skins-meta.js", "js/champions/expedition/catalog.js", "js/champions/expedition/art.js", "js/champions/expedition/cosmetics.js"]){
     const file = path.join(root, f); if(!fs.existsSync(file)) continue;
     try{ vm.runInContext(fs.readFileSync(file, "utf8"), c, { timeout: 1000, filename: f }); }catch(e){ /* un archivo que no es solo metadata no rompe el catálogo */ }
   }
