@@ -78,7 +78,7 @@ function welcomePicksOpen(){
 function welcomePicksMount(panel){
   const w = premiumWelcomePending(); if(!panel || !w) return;
   const box = document.createElement("div"); box.className = "shop-vale-banner wp-banner";
-  box.innerHTML = `🎁 <b>Tenés ${w.remaining} campeón${w.remaining > 1 ? "es" : ""} de regalo por elegir</b> (Pack de bienvenida). <button class="shop-btn hot" type="button" data-wp-open>Reclamar mis ${w.remaining} campeón${w.remaining > 1 ? "es" : ""}</button>`;
+  box.innerHTML = `🎁 <b>Tenés ${w.remaining} ${w.remaining > 1 ? "campeones" : "campeón"} de regalo por elegir</b> (Pack de bienvenida). <button class="shop-btn hot" type="button" data-wp-open>Reclamar mis ${w.remaining} ${w.remaining > 1 ? "campeones" : "campeón"}</button>`;
   panel.insertBefore(box, panel.firstChild);
   box.querySelector("[data-wp-open]").addEventListener("click", () => welcomePicksOpen());
 }

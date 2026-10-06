@@ -519,7 +519,12 @@ function renderShopBrasas(panel){
   panel.querySelectorAll("[data-brasas-skin]").forEach(b=> b.addEventListener("click", ()=> shopOpen("skins", {champ: b.getAttribute("data-brasas-champ")})));
 }
 document.addEventListener("premium-change", ()=>{
-  if(typeof state!=="undefined" && state==="shop" && shopTab==="brasas"){ const p = document.getElementById("shop-panel"); if(p) renderShopBrasas(p); }
+  if(typeof state==="undefined" || state!=="shop") return;
+  const p = document.getElementById("shop-panel"); if(!p) return;
+  if(shopTab==="brasas") renderShopBrasas(p);
+  // el cartel "Reclamar mis N campeones" sigue al estado del servidor, en cualquier pestaña
+  p.querySelectorAll(".wp-banner").forEach(n=>n.remove());
+  if(typeof welcomePicksMount==="function") welcomePicksMount(p);
 });
 // Abrir la tienda en una pestaña: "brasas" (chip ✦ del hub) o "skins" con foco en un guardián (final de partida)
 function shopOpen(tab, opts){
