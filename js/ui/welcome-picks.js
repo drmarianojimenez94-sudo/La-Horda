@@ -28,7 +28,7 @@ function _wpRender(){
       const c = CLASSES[k], on = WELCOME_PICKS.sel.includes(k);
       return `<button type="button" class="wp-card ${on ? "on" : ""}" role="option" aria-selected="${on}" data-wp-pick="${k}" style="--hc:${c.color || "#ff7a2e"}">
         <canvas class="champ-anim wp-anim" width="72" height="72" data-class-key="${k}" data-idle="1" data-skin="" style="background:${c.color || "#888"}1c;"></canvas>
-        <span class="wp-name" style="color:${c.color || "var(--ui-ink)"}">${_wpEsc(c.name)}</span>
+        <span class="wp-name" style="color:${c.color || "var(--ui-ink)"}">${_wpEsc(premiumChampName(k))}</span>
         <span class="wp-role">${_wpEsc((c.role || "").split(".")[0])}</span>
         <span class="wp-mark">${on ? "✔ ELEGIDO" : "Tocá para elegir"}</span></button>`;
     }).join("") || '<div class="inv-empty">Ya tenés todos los campeones disponibles para el regalo.</div>'}</div>
@@ -52,7 +52,7 @@ function welcomePicksOpen(){
       _wpRender(); return;
     }
     if(t.hasAttribute("data-wp-claim") && !t.disabled && !WELCOME_PICKS.busy){
-      const chosen = WELCOME_PICKS.sel.slice(), names = chosen.map(k => CLASSES[k].name);
+      const chosen = WELCOME_PICKS.sel.slice(), names = chosen.map(k => premiumChampName(k));
       const ok = await gameConfirm(`¿Reclamar a ${names.join(", ")}? Es un regalo del Pack de bienvenida y no se puede cambiar después.`, { okText: "Reclamar" });
       if(!ok) return;
       WELCOME_PICKS.busy = true; _wpRender();
@@ -81,9 +81,7 @@ function welcomePicksMount(panel){
   box.innerHTML = `🎁 <b>Tenés ${w.remaining} ${w.remaining > 1 ? "campeones" : "campeón"} de regalo por elegir</b> (Pack de bienvenida). <button class="shop-btn hot" type="button" data-wp-open>Reclamar mis ${w.remaining} ${w.remaining > 1 ? "campeones" : "campeón"}</button>`;
   panel.insertBefore(box, panel.firstChild);
   box.querySelector("[data-wp-open]").addEventListener("click", () => welcomePicksOpen());
+  // una vez por sesión, al estar en la Tienda con el pago ya acreditado y elecciones pendientes (después, queda el cartel)
+  if(!WELCOME_PICKS.prompted && typeof state !== "undefined" && state === "shop" && PREMIUM.at){ WELCOME_PICKS.prompted = true; setTimeout(welcomePicksOpen, 0); }
 }
-if(typeof document !== "undefined") document.addEventListener("premium-change", () => {
-  if(welcomePicksIsOpen()){ _wpRender(); return; }
-  // una vez por sesión, al estar en la Tienda con el pago ya acreditado y elecciones pendientes
-  if(!WELCOME_PICKS.prompted && typeof state !== "undefined" && state === "shop" && PREMIUM.at && premiumWelcomePending()){ WELCOME_PICKS.prompted = true; welcomePicksOpen(); }
-});
+if(typeof document !== "undefined") document.addEventListener("premium-change", () => { if(welcomePicksIsOpen()) _wpRender(); });

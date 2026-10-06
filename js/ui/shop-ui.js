@@ -406,7 +406,7 @@ function renderShopSkins(panel){
   }).join("");
   const pending = Object.keys(SET_DB).filter(id=>!withSkin.includes(id)).map(id=>SET_DB[id].name);
   const focusBar = focus ? `<div class="shop-skin-focus" data-skin-focus="${focus}"><span>Apariencias de <b style="color:${CLASSES[focus].color}">${CLASSES[focus].name}</b></span><button class="shop-btn sec" type="button" id="shop-skin-focus-clear">Ver todas</button></div>` : "";
-  panel.innerHTML = `${focusBar}<div class="lobby-note">Reunir un set o recibir un regalo desbloquea su apariencia. Usarla no cambia tus objetos ni estadísticas. Cada apariencia se paga con Brasas ✦ o con oro: el precio de las dos está a la vista.</div>
+  panel.innerHTML = `${focusBar}<div class="lobby-note">Reunir un set o recibir un regalo desbloquea su apariencia. Usarla no cambia tus objetos ni estadísticas. Cada apariencia se paga con Brasas o con oro: el precio de las dos está a la vista.</div>
     ${_shopCollectionsHTML({champ:focus})}
     ${cards || !focus ? `<div class="shop-skin-list">${cards || '<div class="inv-empty">Todavía no hay skins.</div>'}</div>` : ""}
     ${focus ? "" : `<div class="shop-soon-box shop-soon-small">Sets sin skin todavía (arte pendiente, ver docs/assets_faltantes/skins_sets/): ${pending.join(" · ")}. Con el set completo se ve su aura plena.</div>`}`;
@@ -441,7 +441,7 @@ function _brasasPackCard(p, welcome){
   if(welcome) return `<div class="brasas-pack welcome" data-brasas-pack="${p.id}">
     <div class="brasas-welcome-main"><div class="brasas-pack-top"><span class="ui-tag hot">UNA SOLA VEZ</span>${p.bonus ? `<span class="ui-tag sale brasas-bonus">+${p.bonus.toLocaleString("es-AR")} de regalo</span>` : ""}</div>
       <div class="brasas-pack-amt">✦ ${total.toLocaleString("es-AR")}</div><div class="brasas-pack-name">+ ${p.championGifts||PRICING.welcome.champions} campeones</div></div>
-    <div class="brasas-welcome-note"><b>${p.championGifts||PRICING.welcome.champions} campeones de regalo, a tu elección</b> (en la Tienda valen 🪙 ${fmtGold((p.championGifts||PRICING.welcome.champions)*PRICING.gold.champion)} de oro) + ✦ ${(p.premium+(p.bonus||0)).toLocaleString("es-AR")} Brasas (${p.premium.toLocaleString("es-AR")} + ${(p.bonus||0).toLocaleString("es-AR")} de regalo), todo por ${price}. Se compra una sola vez por cuenta. Los campeones también se consiguen jugando, con oro.</div>
+    <div class="brasas-welcome-note"><b>${p.championGifts||PRICING.welcome.champions} campeones de regalo, a tu elección</b> (en la Tienda valen 🪙 ${fmtGold((p.championGifts||PRICING.welcome.champions)*PRICING.gold.champion)} de oro) + ${(p.premium+(p.bonus||0)).toLocaleString("es-AR")} Brasas (${p.premium.toLocaleString("es-AR")} + ${(p.bonus||0).toLocaleString("es-AR")} de regalo), todo por ${price}. Se compra una sola vez por cuenta. Los campeones también se consiguen jugando, con oro.</div>
     <div class="brasas-welcome-buy"><div class="brasas-pack-price">${price}</div>${btn}</div>
   </div>`;
   return `<div class="brasas-pack" data-brasas-pack="${p.id}">
@@ -461,7 +461,7 @@ function _brasasWhatHTML(){
     if(picks.length>=3) break;
   }
   if(!picks.length) return "";
-  return `<div class="shop-row-head"><span class="shop-row-title">¿QUÉ COMPRO CON BRASAS?</span><span class="shop-renew">croma ✦ ${premiumFmt(PRICING.brasas.croma)} · skin ✦ ${premiumFmt(PRICING.brasas.set)} · diseño propio ✦ ${premiumFmt(PRICING.brasas.autor)}</span></div>
+  return `<div class="shop-row-head"><span class="shop-row-title">¿QUÉ COMPRO CON BRASAS?</span><span class="shop-renew">croma ${premiumFmt(PRICING.brasas.croma)} · skin ${premiumFmt(PRICING.brasas.set)} · diseño propio ${premiumFmt(PRICING.brasas.autor)} Brasas</span></div>
     <div class="brasas-what">${picks.map(({id, k})=>`<button type="button" class="brasas-what-card" data-brasas-skin="${id}" data-brasas-champ="${k}">
       <img src="${premiumSkinPreview(id)}" alt="" loading="lazy"><span class="brasas-what-name">${premiumSkinName(id)}</span><span class="shop-item-sub">${CLASSES[k].name} · ✦ ${premiumFmt(premiumPrice(id))}</span></button>`).join("")}</div>`;
 }
@@ -477,8 +477,8 @@ function _shopCollectionsHTML(opts){
     const q = premiumCollection(k), c = CLASSES[k], can = PREMIUM.premium != null && PREMIUM.premium >= q.price;
     return `<div class="shop-bundle shop-col" data-col-card="${k}">
       <div class="shop-col-imgs">${q.ids.slice(0,3).map(id=>`<img src="${premiumSkinPreview(id)}" alt="" loading="lazy">`).join("")}</div>
-      <div class="shop-bundle-name" style="color:${c.color||"var(--ui-gold)"}">Colección de ${c.name}</div>
-      <div class="shop-item-sub">${q.n} apariencias · sueltas ✦ ${premiumFmt(q.sum)} · <b>ahorrás ✦ ${premiumFmt(q.save)} (${q.offPct}%)</b></div>
+      <div class="shop-bundle-name" style="color:${c.color||"var(--ui-gold)"}">Colección de ${premiumChampName(k)}</div>
+      <div class="shop-item-sub">${q.n} apariencias · sueltas ${premiumFmt(q.sum)} Brasas · <b>ahorrás ${premiumFmt(q.save)} (${q.offPct}%)</b></div>
       <div class="shop-deal-buy"><button type="button" class="shop-btn premium-btn" data-col-premium="${k}" ${PREMIUM.premium != null && !can ? "disabled" : ""} title="${PREMIUM.premium == null ? "Entrá con tu cuenta para usar Brasas" : can ? "Pagar con Brasas" : "No te alcanzan las Brasas"}">✦ ${premiumFmt(q.price)}</button></div></div>`;
   }).join("");
   return `<div class="shop-row-head"><span class="shop-row-title">COLECCIONES</span><span class="shop-renew">varias apariencias de un campeón, más baratas juntas · solo apariencia</span></div><div class="shop-strip ui-scroll-x">${cards}</div>`;
@@ -501,7 +501,7 @@ function renderShopBrasas(panel){
     ${status}
     ${welcome ? _brasasPackCard(welcome, true) : ""}
     ${logged && regular.length ? `<div class="brasas-packs">${regular.map(p=>_brasasPackCard(p, false)).join("")}</div>
-    <div class="brasas-fine">Precios en dólares estadounidenses (US$), finales y a la vista antes de pagar. Cada apariencia tiene precio fijo en Brasas: croma ${premiumFmt(PRICING.brasas.croma)} ✦, skin ${premiumFmt(PRICING.brasas.set)} ✦, skin con diseño propio ${premiumFmt(PRICING.brasas.autor)} ✦. Los campeones no se compran con Brasas: se compran con oro. Sin cajas sorpresa: comprás exactamente lo que ves.</div>` : ""}
+    <div class="brasas-fine">Precios en dólares estadounidenses (US$), finales y a la vista antes de pagar. Cada apariencia tiene precio fijo en Brasas: croma ${premiumFmt(PRICING.brasas.croma)}, skin ${premiumFmt(PRICING.brasas.set)} y skin con diseño propio ${premiumFmt(PRICING.brasas.autor)} Brasas. Los campeones no se compran con Brasas: se compran con oro. Sin cajas sorpresa: comprás exactamente lo que ves.</div>` : ""}
     ${_brasasWhatHTML()}
     ${logged ? _shopCollectionsHTML({limit:4}) : ""}`;
   const lg = panel.querySelector("#brasas-login");

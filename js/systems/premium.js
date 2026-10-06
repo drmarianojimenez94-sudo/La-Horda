@@ -34,6 +34,8 @@ function premiumGoldPrice(id){
   const d = typeof CROMA_SKINS !== "undefined" ? CROMA_SKINS[id] : null;
   return pricingCosmeticGold(premiumTier(id), d ? d.price : 0);
 }
+// Nombre corto del campeón ("Axiom, el Reengendrado" -> "Axiom")
+function premiumChampName(k){ return typeof CLASSES !== "undefined" && CLASSES[k] ? String(CLASSES[k].name).split(",")[0] : k; }
 function premiumFmt(n){ return n.toLocaleString("es-AR"); }
 
 /* ---------- precio en oro por escalón (9000 set · 12000 diseño propio · croma: su precio propio) ---------- */
@@ -132,7 +134,7 @@ async function premiumBuySkin(id){
   if(premiumSkinOwned(id)) return { ok: false, reason: "Ya es tuya" };
   const price = premiumPrice(id); if(!(price > 0)) return { ok: false, reason: PREMIUM_ERR.BAD_SKU };
   const o = await premiumPost("/api/wallet/buy", { sku: id, ref: premiumNewRef(), expectedPrice: price });
-  if(!o.r) return { ok: false, reason: o.code === "INSUFFICIENT" ? `No te alcanzan las Brasas (cuesta ${premiumFmt(price)} ✦).` : o.fail };
+  if(!o.r) return { ok: false, reason: o.code === "INSUFFICIENT" ? `No te alcanzan las Brasas (cuesta ${premiumFmt(price)}).` : o.fail };
   premiumApply(o.r.j);
   if(typeof AlphaServices !== "undefined") AlphaServices.emit("skin", { skin: id, currency: "premium", price });
   return { ok: true, premium: o.r.j.premium };
@@ -148,7 +150,7 @@ async function premiumBuyCollection(k, expectedPrice){
   if(q.n < PRICING.collection.minPieces) return { ok: false, reason: PREMIUM_ERR.NOT_A_COLLECTION };
   if(expectedPrice != null && expectedPrice !== q.price) return { ok: false, reason: PREMIUM_ERR.PRICE_CHANGED };
   const o = await premiumPost("/api/wallet/buy-collection", { champion: k, ref: premiumNewRef(), expectedPrice: q.price });
-  if(!o.r) return { ok: false, reason: o.code === "INSUFFICIENT" ? `No te alcanzan las Brasas (cuesta ${premiumFmt(q.price)} ✦).` : o.fail };
+  if(!o.r) return { ok: false, reason: o.code === "INSUFFICIENT" ? `No te alcanzan las Brasas (cuesta ${premiumFmt(q.price)}).` : o.fail };
   premiumApply(o.r.j);
   if(typeof AlphaServices !== "undefined") AlphaServices.emit("collection", { champion: k, currency: "premium", price: q.price, n: q.n });
   return { ok: true, n: o.r.j.n, saved: o.r.j.saved, premium: o.r.j.premium };
@@ -235,7 +237,7 @@ if(typeof document !== "undefined") document.addEventListener("click", e => {
   const id = b.getAttribute("data-skin-premium");
   if(!premiumAvailable()){ gameAlert("Para pagar con Brasas tenés que entrar con tu cuenta (Opciones → Cuenta)."); return; }
   const gold = premiumGoldPrice(id), gnote = gold > 0 ? ` (o ${premiumFmt(gold)} de oro jugando)` : "";
-  gameConfirm(`¿Comprar ${premiumTier(id) === "croma" ? "el croma" : "la skin"} ${premiumSkinName(id)} por ${premiumFmt(premiumPrice(id))} ✦ Brasas${gnote}? Es solo apariencia: no cambia estadísticas.`, { okText: "Comprar con Brasas" }).then(async ok => {
+  gameConfirm(`¿Comprar ${premiumTier(id) === "croma" ? "el croma" : "la skin"} ${premiumSkinName(id)} por ${premiumFmt(premiumPrice(id))} Brasas${gnote}? Es solo apariencia: no cambia estadísticas.`, { okText: "Comprar con Brasas" }).then(async ok => {
     if(!ok) return;
     b.disabled = true;
     const r = await premiumBuySkin(id);
@@ -259,8 +261,8 @@ if(typeof document !== "undefined") document.addEventListener("click", e => {
   const k = b.getAttribute("data-col-premium"), q = premiumCollection(k);
   if(!premiumAvailable()){ gameAlert("Para pagar con Brasas tenés que entrar con tu cuenta (Opciones → Cuenta)."); return; }
   if(q.n < PRICING.collection.minPieces){ gameAlert(PREMIUM_ERR.NOT_A_COLLECTION); return; }
-  const nm = typeof CLASSES !== "undefined" && CLASSES[k] ? CLASSES[k].name : k;
-  gameConfirm(`¿Comprar la colección de ${nm} (${q.n} apariencias) por ${premiumFmt(q.price)} ✦ Brasas? Sueltas suman ${premiumFmt(q.sum)} ✦: ahorrás ${premiumFmt(q.save)} ✦ (${q.offPct}%). Es solo apariencia: no cambia estadísticas.`, { okText: "Comprar colección" }).then(async ok => {
+  const nm = premiumChampName(k);
+  gameConfirm(`¿Comprar la colección de ${nm} (${q.n} apariencias) por ${premiumFmt(q.price)} Brasas? Sueltas suman ${premiumFmt(q.sum)}: ahorrás ${premiumFmt(q.save)} Brasas (${q.offPct}%). Es solo apariencia: no cambia estadísticas.`, { okText: "Comprar colección" }).then(async ok => {
     if(!ok) return;
     b.disabled = true;
     const r = await premiumBuyCollection(k, q.price);

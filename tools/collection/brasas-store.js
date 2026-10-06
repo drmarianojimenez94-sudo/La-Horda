@@ -39,7 +39,7 @@ const SECRET='secreto-de-prueba-brasas-0123';
   return {page,ctx,errors};
  }
  const noOverflow=async(page,label)=>{const r=await page.evaluate(()=>{const bad=[];const de=document.documentElement;if(de.scrollWidth>de.clientWidth+1)bad.push('document '+de.scrollWidth+'>'+de.clientWidth);
-   for(const sel of ['#shop-screen','#shop-panel','#shop-tabs','.hub-top','.brasas-head','.brasas-packs','.brasas-what','.brasas-pack.welcome','.shop-skin-focus'])for(const n of document.querySelectorAll(sel)){if(n.offsetParent===null)continue;if(n.scrollWidth>n.clientWidth+1)bad.push(sel+' '+n.scrollWidth+'>'+n.clientWidth);}
+   for(const sel of ['#shop-screen','#shop-panel','#shop-tabs','.hub-top','.brasas-head','.brasas-packs','.brasas-what','.brasas-pack.welcome','.shop-skin-focus','.shop-col','.shop-skin-info'])for(const n of document.querySelectorAll(sel)){if(n.offsetParent===null)continue;if(n.scrollWidth>n.clientWidth+1)bad.push(sel+' '+n.scrollWidth+'>'+n.clientWidth);}
    for(const n of document.querySelectorAll('.brasas-pack, .brasas-what-card, .shop-tab, #hub-premium-btn')){if(n.offsetParent===null)continue;const r=n.getBoundingClientRect();if(r.right>innerWidth+1||r.left<-1)bad.push((n.className||n.id)+' fuera de pantalla '+Math.round(r.left)+'..'+Math.round(r.right));if(n.scrollWidth>n.clientWidth+2)bad.push((n.className||n.id)+' texto desborda');}
    return bad;});assert.deepEqual(r,[],'overflow '+label);checks++;};
  try{
@@ -95,6 +95,15 @@ const SECRET='secreto-de-prueba-brasas-0123';
   await page.evaluate(()=>premiumRefresh(true));await page.locator('[data-brasas-soon]').first().waitFor();checks++;
   // otras pestañas siguen andando
   for(const t of ['destacados','campeones','objetos','skins','brasas']){await page.locator(`.shop-tab[data-shop-tab="${t}"]`).click();ok(await page.evaluate(t=>shopTab===t,t),'tab '+t);}
+  // Skins: colecciones con descuento real y precio en Brasas + oro a la vista
+  await page.locator('.shop-tab[data-shop-tab="skins"]').click();
+  ok(await page.locator('[data-col-card]').count()>0,'hay colecciones');
+  const col=await page.evaluate(()=>{const k=document.querySelector('[data-col-card]').dataset.colCard,q=premiumCollection(k);return {k,q,txt:document.querySelector('[data-col-card]').innerText};});
+  ok(col.q.price<col.q.sum&&col.q.save===col.q.sum-col.q.price&&col.txt.includes(col.q.price.toLocaleString('es-AR')),'descuento honesto '+JSON.stringify(col));
+  ok(await page.evaluate(()=>{const b=document.querySelector('[data-skin-buy]');return !b||!!b.parentElement.querySelector('[data-skin-premium]')&&b.parentElement.querySelector('[data-skin-premium]').getBoundingClientRect().left<=b.getBoundingClientRect().left+1;}),'Brasas primero, oro como alternativa');
+  for(const [w,h] of [[844,390],[667,375]]){await page.setViewportSize({width:w,height:h});await page.waitForTimeout(150);await noOverflow(page,'skins '+w);}
+  await page.setViewportSize({width:844,height:390});await page.addStyleTag({content:'#qs-toasts{display:none!important}'});await page.screenshot({path:path.join(SHOTS,'shop-skins-brasas-844x390.png')});
+  await page.locator('.shop-tab[data-shop-tab="brasas"]').click();
   ok(!(await page.locator('#shop-panel').innerText()).includes('set completo'),'sin textos de set completo');
   await page.locator('.shop-tab[data-shop-tab="destacados"]').click();
   ok(!(await page.locator('#shop-panel').innerText()).includes('PAQUETES DE SKINS'),'sin PAQUETES DE SKINS');
