@@ -189,6 +189,15 @@ const ref = () => crypto.randomUUID();
   await api('POST', '/api/gm/user/premium', { id: c2id, amount: 2000, reason: 'prueba', ref: ref() }, AT);
   check('con una sola pieza faltante no es colección: se compra suelta', (await api('POST', '/api/wallet/buy-collection', { champion: cc, ref: ref(), expectedPrice: wallet.pricing().pricingBrasas(list[0].tier) }, CT2)).status === 409);
 
+  // compras simultáneas de la MISMA apariencia con referencias distintas: se cobra una sola vez (candado por cuenta)
+  {
+    const price0 = wallet.pricing().pricingBrasas(list[0].tier), before = (await api('GET', '/api/wallet', undefined, CT2)).j.premium;
+    const burst = await Promise.all([ref(), ref(), ref(), ref()].map(r => api('POST', '/api/wallet/buy', { sku: list[0].id, ref: r, expectedPrice: price0 }, CT2)));
+    const after = (await api('GET', '/api/wallet', undefined, CT2)).j.premium;
+    check('4 compras simultáneas de la misma apariencia: se cobra una sola', burst.filter(r => r.status === 200).length === 1 && burst.filter(r => r.status === 409).length === 3 && before - after === price0,
+      { statuses: burst.map(r => r.status), before, after, price0 });
+  }
+
   process.env.PAYMENTS_CHECKOUT_URL = 'https://pagos.example/checkout';
   check('checkout del pack de bienvenida ya comprado: 409', (await api('POST', '/api/wallet/checkout', { pack: 'brasas_bienvenida' }, UT)).status === 409);
   const c2 = await api('POST', '/api/wallet/checkout', { pack: 'brasas_2500' }, UT);

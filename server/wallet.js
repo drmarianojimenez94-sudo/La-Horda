@@ -164,7 +164,7 @@ function routes(ctx){
 
   // Comprar una apariencia (skin de set, skin independiente o croma) con Brasas. ref: identificador del intento que genera el
   // cliente (reintentar = mismo ref). El precio lo pone el servidor; expectedPrice es lo que el jugador VIO y debe coincidir.
-  route("POST", "/api/wallet/buy", "user", async ({ user, body }) => {
+  route("POST", "/api/wallet/buy", "user", async ({ user, body }) => withLock("buy:" + user.id, async () => {   // un candado por cuenta: dos compras simultáneas no cobran dos veces
     const ref = refOf(body.ref); if(!ref) fail("BAD_REF");
     const sku = Object.hasOwn(skinCatalog(), body.sku) ? skinCatalog()[body.sku] : null; if(!sku) fail("BAD_SKU");
     const price = brasasOf(sku); if(!(price > 0)) fail("BAD_SKU");
@@ -187,11 +187,11 @@ function routes(ctx){
     // mismo formato que los premios de evento: el cliente lo aplica con accountApplyEventReward (avanza la versión sin conflicto)
     return { ok: true, sku: sku.id, kind: sku.kind, price, cosmetic: sku.id, cosmeticType: isCromaKind(sku) ? "croma" : "skin", cosmetics: [cosmeticOut(sku)],
       premium: (await store().walletGet(user.id)).premium, saveVersion: g.saveVersion, baseVersion: g.baseVersion };
-  });
+ }));
 
   // Colección de un campeón: todas sus apariencias que todavía no tenés, con descuento por cantidad (ahorro calculado contra
   // la suma de los precios sueltos de ESAS piezas). Una sola compra, un solo cobro, un solo asiento en el libro.
-  route("POST", "/api/wallet/buy-collection", "user", async ({ user, body }) => {
+  route("POST", "/api/wallet/buy-collection", "user", async ({ user, body }) => withLock("buy:" + user.id, async () => {   // mismo candado que la compra individual
     const ref = refOf(body.ref); if(!ref) fail("BAD_REF");
     const champ = typeof body.champion === "string" ? body.champion : "";
     const all = Object.values(skinCatalog()).filter(s => s.champion === champ); if(!champ || !all.length) fail("BAD_CHAMPION");
@@ -213,7 +213,7 @@ function routes(ctx){
     log("WALLET_BUY_COLLECTION", { user: user.id, champion: champ, n: missing.length, price: q.price, save: q.save, premium: debit.premium });
     return { ok: true, champion: champ, n: missing.length, price: q.price, offPct: q.offPct, saved: q.save, cosmetics: missing.map(cosmeticOut),
       premium: (await store().walletGet(user.id)).premium, saveVersion: g.saveVersion, baseVersion: g.baseVersion };
-  });
+  }));
 
   // Elegir uno de los 3 campeones de regalo del Pack de bienvenida.
   route("POST", "/api/wallet/welcome/claim", "user", async ({ user, body }) => withLock("welcome:" + user.id, async () => {
