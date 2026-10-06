@@ -83,14 +83,22 @@ function accountEnvironmentHTML(){
   const ws=ACCOUNT_API_BASE.replace(/^http/,"ws"), e=netEnvironment(ws);
   return `<div class="net-environment"><b>${e.label}</b><span>${_acctEsc(ACCOUNT_API_BASE)}</span>${e.kind!=="primary"?'<span>Cuenta y progreso separados del servidor principal.</span><a class="btn secondary small" href="https://fondalstudios.com/la-horda/jugar/">IR A FONDAL</a>':''}</div>`;
 }
-// Apply the server's cosmetic grant without replacing loot earned since the upload.
+// Apply the server's grant (one cosmetic, a list of cosmetics, and/or champions) without replacing loot earned since the upload.
 function accountApplyEventReward(response){
-  if(!response?.ok || !acct.session || !acct.sync || !response.cosmetic) return false;
-  const known=typeof cosmeticCatalog==="function"?cosmeticCatalog().some(c=>c.id===response.cosmetic):false;
-  if(!known) return false;
-  save.cosmeticUnlocks=save.cosmeticUnlocks||{};
-  save.cosmeticUnlocks[response.cosmetic]=true;
-  if(response.cosmeticType==="croma"){save.cromas=save.cromas||{};save.cromas[response.cosmetic]=true;}
+  if(!response?.ok || !acct.session || !acct.sync) return false;
+  const known=typeof cosmeticCatalog==="function"?new Set(cosmeticCatalog().map(c=>c.id)):new Set();
+  const cos=(Array.isArray(response.cosmetics)?response.cosmetics:(response.cosmetic?[{id:response.cosmetic,type:response.cosmeticType}]:[])).filter(c=>c&&known.has(c.id));
+  const champs=(Array.isArray(response.champions)?response.champions:[]).filter(id=>typeof CLASSES!=="undefined"&&CLASSES[id]);
+  if(!cos.length&&!champs.length) return false;
+  for(const c of cos){
+    save.cosmeticUnlocks=save.cosmeticUnlocks||{};
+    save.cosmeticUnlocks[c.id]=true;
+    if(c.type==="croma"){save.cromas=save.cromas||{};save.cromas[c.id]=true;}
+  }
+  for(const id of champs){
+    save.champions[id]=Object.assign(save.champions[id]||(typeof mkChampion==="function"?mkChampion(true):{}),{unlocked:true});
+    save.starterChosen=true;
+  }
   const y=acct.sync;
   // Advance CAS only when the exact pre-grant version is still our version.
   if(Number.isInteger(response.baseVersion) && response.baseVersion===y.version && Number.isInteger(response.saveVersion)) y.version=response.saveVersion;

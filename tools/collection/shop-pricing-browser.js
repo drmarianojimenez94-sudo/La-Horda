@@ -35,7 +35,10 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
    const missing0=shopSetMissing('baluarte').length;
    before=save.gold;result=shopBuySetBundle('baluarte',true);check('skin purchase is appearance only',result.ok&&save.gold===before-800&&!!save.cosmeticUnlocks.baluarte&&shopSetMissing('baluarte').length===missing0);
    save.stash=[];save.collection={};save.cosmeticUnlocks={};prices.cosmetic={};prices.item[key]=123;
-   check('equipment bundle sum (skin keeps its own 9000 price)',shopSetPrice('baluarte')===3723&&shopSkinPrice('baluarte')===SKIN_PRICE_GOLD);
+   check('equipment bundle sum (skin keeps its own 9000 price)',shopSetPrice('baluarte')===3723&&shopSkinPrice('baluarte')===9000&&shopSkinPrice('baluarte')===PRICING.gold.cosmetic.set);
+   check('tiered cosmetic quotes: set 9000 gold / 800 Brasas, authored skin 12000 / 1200',premiumGoldPrice('baluarte')===9000&&premiumPrice('baluarte')===800&&premiumGoldPrice('tanque_ancestral')===12000&&premiumPrice('tanque_ancestral')===1200&&cromaPrice('tanque_ancestral')===12000);
+   check('champions are gold only: standard 2500, never sold for Brasas',shopChampionPrice('mago')===2500&&premiumPrice('mago')===0&&pricingBrasas('champion')===0);
+   check('Ascension has its own gold price per champion',shopChampionPrice('khepri')===8000&&shopChampionPrice('oriel')===14000&&shopChampionPrice('aurelia')===12000&&CHAMPION_CATALOG.find(c=>c.id==='aurelia').priceGold===12000);
    save.gold=100;before=JSON.stringify({stash:save.stash,gold:save.gold});result=shopBuySetBundle('baluarte',false);check('insufficient bundle atomic',!result.ok&&JSON.stringify({stash:save.stash,gold:save.gold})===before);
    save.gold=100000;save.stash=Array.from({length:INVENTORY_CAPACITY-1},(_,i)=>({uid:'dummy'+i}));before=JSON.stringify({stash:save.stash,gold:save.gold});result=shopBuySetBundle('baluarte',false);check('full inventory atomic',!result.ok&&JSON.stringify({stash:save.stash,gold:save.gold})===before);
    save.stash=[];prices.item=Object.fromEntries(setPieceIds('baluarte').map(id=>['d:'+id,10000000]));prices.cosmetic={};check('large bundle sum never becomes free',shopSetPrice('baluarte')===40000000);
