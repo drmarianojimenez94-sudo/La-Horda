@@ -29,8 +29,9 @@ require('node:fs').mkdirSync('docs/public-alpha',{recursive:true});
    await p.reload();await p.locator('#title-continue-btn').click();
    await p.locator('#alpha-training-panel').waitFor({state:'visible'});
    await p.getByRole('button',{name:'Saltar tutorial',exact:true}).click();
-   await p.waitForURL('**/crystal-wars.html?**');
-   assert.equal(new URL(p.url()).searchParams.get('room'),'ABC123');
+   // el recorrido termina abriendo Guerra de Cristales DENTRO del juego, con el código de la invitación
+   await p.waitForFunction(()=>state==='crystalwars',null,{timeout:20000});
+   assert.equal(await p.locator('#code').inputValue(),'ABC123');
    assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('laHordaSave_v1')).tut.trainingSkipped),1);
    assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('laHordaSave_v1')).tut.training),undefined);
    await p.goto(base+'/index.html');await p.locator('#title-continue-btn').click();

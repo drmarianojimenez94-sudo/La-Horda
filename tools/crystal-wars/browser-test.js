@@ -9,14 +9,14 @@ async function until(url){for(let i=0;i<50;i++){try{if((await fetch(url)).ok)ret
  await Promise.all([until('http://127.0.0.1:'+port),until('http://127.0.0.1:'+relayPort+'/health')]);
  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});const pages=[];
  for(let i=0;i<4;i++){
-  const context=await browser.newContext({viewport:i===0?{width:1280,height:1000}:{width:390,height:844},hasTouch:i>0,isMobile:i>0});const p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));
-  await p.addInitScript(()=>{localStorage.setItem('laHordaSave_v1',JSON.stringify({tut:{training:1}}));const Native=window.WebSocket;window.__cwMessages=[];window.WebSocket=class extends Native{constructor(...args){super(...args);this.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.d?.k==='cw-state'){window.__cwSnapshot=m.d;window.__cwMessages.push(m.d.id);}});window.__cwSocket=this;}};});
-  await p.goto('http://127.0.0.1:'+port+'/crystal-wars.html?server=ws://127.0.0.1:'+relayPort);await p.locator('#name').fill('Tester '+i);await p.locator('#champ').selectOption(['tanque','mago','guerrero','soporte'][i]);pages.push(p);
+  const context=await browser.newContext({viewport:i===0?{width:1280,height:1000}:{width:844,height:390},hasTouch:i>0,isMobile:i>0});const p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));
+  await p.addInitScript(rp=>{localStorage.setItem('laHordaSave_v1',JSON.stringify({tut:{training:1}}));const Native=window.WebSocket;window.__cwMessages=[];window.WebSocket=class extends Native{constructor(...args){super(...args);if(!String(args[0]).includes(':'+rp))return;this.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.d?.k==='cw-state'){window.__cwSnapshot=m.d;window.__cwMessages.push(m.d.id);}});window.__cwSocket=this;}};},relayPort);
+  await p.goto('http://127.0.0.1:'+port+'/index.html?server=ws://127.0.0.1:'+relayPort);await p.waitForFunction(()=>typeof cwGo==='function'&&typeof CrystalWarsUI!=='undefined');await p.evaluate(()=>{save.tut=save.tut||{};save.tut.training=1;cwGo();});await p.locator('#crystalwars-screen:not(.hidden) #name').waitFor();await p.locator('#name').fill('Tester '+i);await p.locator('#champ').selectOption(['tanque','mago','guerrero','soporte'][i]);pages.push(p);
  }
  const host=pages[0];await host.locator('#create').click();await host.waitForFunction(()=>document.querySelector('#room-code').textContent.length===6);const code=await host.locator('#room-code').textContent();
  for(const p of pages.slice(1)){await p.locator('#code').fill(code);await p.locator('#join').click();await p.locator('#ready').waitFor({state:'visible'});await p.locator('#ready').click();}
  await host.waitForFunction(()=>!document.querySelector('#start').disabled);await host.screenshot({path:'/tmp/cw-lobby.png'});await host.locator('#start').click();
- for(const p of pages)await p.locator('#game').waitFor({state:'visible'});
+ for(const p of pages)await p.locator('#cw-game').waitFor({state:'visible'});
  await pages[1].waitForFunction(()=>window.__cwSnapshot?.state.time>1);const first=await pages[1].evaluate(()=>window.__cwSnapshot);assert.equal(first.state.heroes[1].role,'mago');assert.equal(first.state.heroes[2].team,1);assert(first.state.heroes.every(h=>!h.bot));
  const y=first.state.heroes[1].y;await pages[1].keyboard.down('w');await pages[1].waitForFunction(y=>window.__cwSnapshot.state.heroes[1].y<y-20,y);await pages[1].keyboard.up('w');
  // A guest cannot submit an authoritative snapshot, spend for another slot, or teleport.

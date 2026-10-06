@@ -1,23 +1,7 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#10131f"><title>Guerra de Cristales · La Horda</title><link rel="stylesheet" href="css/crystal-wars.css"></head>
-<body>
-<header><a id="back" href="index.html?return=hub">‹ LA HORDA</a><span>COLISEO · ALPHA</span><button id="sound" aria-pressed="false">Sonido: apagado</button></header>
-<main id="lobby">
- <div class="eyebrow">DOS EQUIPOS · UNA HORDA · DIEZ MINUTOS</div><h1>GUERRA DE<br><em>CRISTALES</em></h1>
- <p class="intro">Defendé tu cristal con un compañero. Convertí las bajas en fragmentos y enviá monstruos al equipo rival.</p>
- <div class="rules"><div><b>01 / RESISTÍ</b><p>El ataque básico es automático. Movete y combiná tus cuatro habilidades.</p></div><div><b>02 / DECIDÍ</b><p>Al comienzo de cada oleada, tenés 7 segundos para reparar, mejorar o enviar amenazas.</p></div><div><b>03 / CONQUISTÁ</b><p>Destruí el cristal rival. A los 10 minutos gana el que conserve más vida. Los empates cuentan.</p></div></div>
- <section class="setup"><div><label for="name">Tu nombre</label><input id="name" maxlength="24" placeholder="Guardián"><label for="champ">Tu campeón</label><select id="champ"></select><p id="kit"></p><small>Cuatro kits adaptados al Coliseo. Mismo poder inicial para todos, sin equipo de campaña ni compras de poder.</small></div>
- <div class="connect"><button class="primary" id="practice">ENTRENAR CON BOTS</button><button id="create">CREAR SALA PRIVADA</button><label for="code">Código o enlace de tu amigo</label><div class="join"><input id="code" maxlength="240" placeholder="ABC123"><button id="join">UNIRSE</button></div></div></section>
- <section id="room" hidden><div class="room-head"><h2>SALA <span id="room-code"></span></h2><button id="copy">Copiar invitación</button></div><p>J1 + J2: equipo Zafiro. J3 + J4: equipo Ámbar. Los lugares libres se completan con bots.</p><div id="slots"></div><div class="actions"><button id="ready">ESTOY LISTO</button><button id="start" class="primary">COMENZAR 2 CONTRA 2</button><button id="leave">Salir de la sala</button></div></section>
- <p id="status" role="status" aria-live="polite">Entrenamiento disponible sin conexión. Online usa el servidor configurado de La Horda.</p>
-</main>
-<section id="game" hidden>
- <div id="scoreboard"><div class="blue"><b>ZAFIRO</b><span id="blue-hp"></span><meter id="blue-meter" max="1200"></meter></div><div class="clock"><strong id="clock">10:00</strong><span id="wave"></span></div><div class="amber"><b>ÁMBAR</b><span id="amber-hp"></span><meter id="amber-meter" max="1200"></meter></div></div>
- <div id="stage"><canvas id="battle" aria-label="Arena de Guerra de Cristales"></canvas><div id="notice" role="status"></div><div id="vital"></div><button id="view">Ver rival</button></div>
- <div id="supply"><div><strong id="shards"></strong><span id="phase"></span></div><div id="shop"></div></div>
- <div id="controls"><div id="joystick" aria-label="Joystick de movimiento"><i></i><span>MOVER</span></div><div id="skills"></div></div><p class="keys">PC: WASD / flechas para moverte · 1–4 habilidades · Ataque básico automático</p>
- <button id="quit">Abandonar partida</button>
-</section>
-<dialog id="result"><span class="eyebrow">GUERRA DE CRISTALES</span><h2 id="result-title"></h2><p id="result-detail"></p><button id="rematch" class="primary">VOLVER A LA SALA</button></dialog>
-<script src="js/systems/onboarding-access.js"></script><script src="js/net/net-config.js"></script><script src="js/modes/crystal-wars/simulation.js"></script><script src="js/modes/crystal-wars/atlas.js"></script><script src="js/modes/crystal-wars/client.js"></script>
-</body></html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Guerra de Cristales · La Horda</title>
+<!-- Guerra de Cristales ahora vive dentro de index.html. Esta página solo redirige, para que los enlaces de invitación
+     viejos (crystal-wars.html?room=ABC123&server=...) sigan abriendo la sala. -->
+<script>(function(){var q=new URLSearchParams(location.search),u=new URL('index.html',location.href);u.searchParams.set('cw','1');
+for(var k of ['room','server'])if(q.has(k))u.searchParams.set(k,q.get(k));location.replace(u.href);})();</script>
+</head><body><p><a href="index.html?cw=1">Abrir Guerra de Cristales</a></p></body></html>
