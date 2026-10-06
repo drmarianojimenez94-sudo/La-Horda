@@ -38,7 +38,7 @@ Tiempo de obtención con oro: **crucero ≈ 835 de oro por partida** (jugador so
 | Fundadores | — | no se compran | — | — | Solo por concesión del sistema. |
 | Skin de colección (skin de set) | ✦ **800** · o 🪙 9.000 | `brasas.set` / `gold.cosmetic.set` | 10,8 | 2,7 / 10,8 | Transformación del set. También se gana reuniendo el set. |
 | Skin con diseño propio (independiente) | ✦ **1.200** · o 🪙 12.000 | `brasas.autor` / `gold.cosmetic.autor` | 14,4 | 3,6 / 14,4 | Arte propio, solo se compra. 23 en el catálogo. |
-| Croma (otra paleta) | ✦ **300** · o 🪙 su precio propio (1.000 o 1.500) | `brasas.croma` | 1,2–1,8 | 0,3–0,45 / 1,2–1,8 | Recolor simple: el escalón más bajo, a propósito. 10 en el catálogo. |
+| Croma (otra paleta) | ✦ **300** · o 🪙 su precio propio (1.000) | `brasas.croma` | 1,2–1,8 | 0,3–0,45 / 1,2–1,8 | Recolor simple: el escalón más bajo, a propósito. 10 en el catálogo. |
 | Colección de un campeón (2 apariencias o más que te falten) | ✦ suma suelta − **15 % (2 piezas) / 20 % (3 o más)** | `PRICING.collection` | — | — | Ejemplo medido: 3 apariencias de Aldric sueltas ✦ 3.200 → ✦ 2.560 (ahorro ✦ 640). Solo Brasas. |
 | Pack de bienvenida | US$ 6,99 (una vez) | 500 + 200 ✦ y **3 campeones a elección** | — | — | Ver §4. |
 | Equipo: arquetipo (común/raro/muy raro/legendario) | 🪙 oro | 150 / 400 / 1.100 / 3.200 | 0,2 / 0,5 / 1,3 / 3,8 | — | Q4: el poder se gana jugando. |
