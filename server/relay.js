@@ -43,6 +43,15 @@ const PROTOCOL = 1;             // debe coincidir con NET_PROTOCOL del cliente (
 const MAX_HUMANS = 4;
 const MAX_ROOMS = parseInt(process.env.MAX_ROOMS || "300", 10);
 const MAX_MSG_BYTES = 256 * 1024;
+// Tope por conexión (cubeta de fichas): el juego manda ~20-40 mensajes/s; más de eso sostenido es un cliente roto o un
+// ataque contra el anfitrión (que simula la partida). Se descartan los excedentes y, si insiste, se corta la conexión.
+const MSG_RATE_PER_S = parseInt(process.env.MSG_RATE_PER_S || "120", 10), MSG_BURST = parseInt(process.env.MSG_BURST || "240", 10), MSG_ABUSE_KICK = 600;
+function msgRateOk(ws){
+  const now = Date.now(), b = ws._bucket || (ws._bucket = { tokens: MSG_BURST, t: now, dropped: 0 });
+  b.tokens = Math.min(MSG_BURST, b.tokens + (now - b.t) / 1000 * MSG_RATE_PER_S); b.t = now;
+  if(b.tokens >= 1){ b.tokens -= 1; return true; }
+  b.dropped++; return false;
+}
 const RECONNECT_GRACE_MS = 3 * 60 * 1000;   // un invitado caído conserva su lugar este tiempo
 const ROOM_IDLE_MS = 45 * 60 * 1000;        // salas sin actividad se borran
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin 0/O/1/I para dictarlo sin errores
@@ -375,6 +384,11 @@ wss.on("connection", (ws, req) => {
   ws.on("message", (buf) => {
     let msg; try{ msg = JSON.parse(buf.toString()); }catch(e){ return; }
     if(!msg || typeof msg.t !== "string") return;
+    if(!msgRateOk(ws)){
+      if(ws._bucket.dropped === 1) log("RATE_LIMIT", { code: ws._room || "", slot: ws._slot });
+      if(ws._bucket.dropped === MSG_ABUSE_KICK){ log("RATE_KICK", { code: ws._room || "", slot: ws._slot }); try{ ws.close(1008, "rate"); }catch(e){} }
+      return;
+    }
     ws._queue = ws._queue.then(async () => {
       if(msg.t === "identify"){
         const id = await presence.identify(ws, msg.token);

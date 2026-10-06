@@ -69,3 +69,32 @@ Antes de ampliar a todo el roster: probar parejas de roles, igualar rendimiento 
   y el cristal del Ángel como cristal del equipo (recoloreado a ámbar para el rival; se agrieta por debajo del 50 %).
   Héroes más grandes (76 u) y tipografía pixel de La Horda (Press Start 2P para títulos, VT323 para el resto).
 - Prueba: `node tools/crystal-wars/hub-integration.js` (844×390 y 667×375: tarjeta visible, ≥ 44 px, ida y vuelta al hub).
+
+
+## Auditoría y mejoras de competitividad (CW-2, octubre 2026)
+
+**Qué NO se pudo hacer:** el servidor de producción (`fondalstudios.com`) no es alcanzable desde el entorno de esta sesión (el proxy de salida devuelve 403 para ese dominio). La auditoría se hizo contra el MISMO `server/relay.js` ejecutado en local (4 clientes reales de navegador). Falta una prueba de punta a punta contra Fondal: publicar el build actual, redeplegar el relay y correr `node tools/crystal-wars/browser-test.js` con `?server=wss://fondalstudios.com/la-horda/red`. Para permitirlo desde esta sesión hay que agregar el dominio en *Allowed domains* del entorno.
+
+**Hallazgos de la auditoría**
+1. Balance de roles (bots, 660 partidas, línea base CW-1): Tanque 33 % y Sanadora 31 % de victorias contra Asesino 67 % y Mago 69 % — dos roles eran trampa.
+2. Pocas partidas se resolvían: 14 % terminaban por tiempo; el que “más vida conservara” ganaba sin dramatismo.
+3. Una sola estrategia de compra (defensiva) dominaba y enviar monstruos casi nunca valía la pena (política agresiva ~17–25 %).
+4. Sin estadísticas ni cierre de partida: no se sabía quién aportó qué, ni había racha.
+5. Pantalla de juego en celular horizontal (844×390): el marcador quedaba recortado y la arena ocupaba ~ una cuarta parte de la pantalla.
+6. **Servidor:** el relay no limitaba mensajes por conexión: un invitado podía inundar al anfitrión (que simula la partida). Corregido.
+7. Texto de reglas engañoso (“destruí el cristal rival”): nunca se ataca directamente al cristal rival; se presiona con envíos y caídas.
+
+**Cambios (build `CW-2`)**
+- Rebalance de roles (Tanque daño 44 / cadencia .55; Sanadora daño 29 / .5; Asesino 29; Mago 21).
+- Nuevas decisiones de compra: **Barrera** (+150 de escudo al cristal, 40 ◆, enfriamiento 20 s) y **Furia** (+43 % de velocidad de ataque 20 s, 50 ◆). Costes de envíos ajustados (16 / 42 ◆) y mejora a 38 ◆.
+- **Ayuda del cristal** (remontada): al comienzo de cada oleada el equipo que va 250 o más de vida abajo recibe +6 fragmentos.
+- **Eclipse** a los 8 min: los dos cristales pierden vida cada vez más rápido; las partidas se resuelven (99–100 % terminan en cristal) con duración media ~8,4 min.
+- Presión creciente: oleadas hasta 36 enemigos y daño enemigo +7 % por oleada.
+- Estadísticas por jugador (daño, bajas, curación, caídas, envíos), estrella al mejor de cada equipo y racha/mejor racha local (solo partidas online; el entrenamiento contra bots no suma). Se guarda únicamente en `localStorage` (`cw-record`); no toca la cuenta ni la campaña.
+- Celular horizontal: arena a pantalla completa con controles flotantes; los suministros aparecen solo durante la ventana de compra.
+- Relay: cubeta de fichas por conexión (120 mensajes/s sostenidos, ráfaga 240); se descartan los excedentes y se corta tras 600 descartes. Prueba `server/test-relay.js` (inundación).
+- Políticas de los bots (`balanced / economy / aggro / turtle`) sirven también para verificar que ninguna estrategia domine.
+
+**Resultados medidos** (`node tools/crystal-wars/balance-gate.js`, partidas de bots): roles 49–53 %, políticas de compra 38–56 %, ventaja de lado 48 %, empates 0 %, 100 % terminan en cristal, 503 s de duración media. Es una puerta de CI.
+
+**Límites honestos:** los bots son simples; miden el modo pero NO a jugadores humanos. No hay matchmaking, ranking verificado ni anti-cheat (el anfitrión sigue siendo de confianza; ver arriba). Las salas son privadas, así que sin amigos el modo no tiene cola pública. Próximos pasos propuestos: cola pública con relleno de bots, ranking por temporada con simulación en el servidor, partidas de 1 contra 1, y pruebas reales con 10+ personas.

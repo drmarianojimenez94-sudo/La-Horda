@@ -30,6 +30,7 @@ jobs:
       - run: node tools/collection/check-collection.js
       - run: node tools/quality/test-vfx-pools.js
       - run: node tools/crystal-wars/test-simulation.js
+      - run: node tools/crystal-wars/balance-gate.js
       - run: node tools/balance/check-entry-reference.js
       - run: python3 -m pip install --quiet numpy pillow opencv-python-headless
       - run: python3 tools/art/painter/test_forge.py --regress
@@ -119,6 +120,7 @@ jobs:
       - run: node server/test-founders.js
       - run: node server/test-presence.js
       - run: node server/test-wallet.js
+      - run: node server/test-relay.js
       - run: node tools/alpha/gm-users-ui.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules

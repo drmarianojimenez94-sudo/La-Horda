@@ -353,9 +353,9 @@
 <div id="cw-root">
 <header><button id="back" type="button">‹ LA HORDA</button><span>COLISEO · ALPHA</span><button id="sound" aria-pressed="false">Sonido: apagado</button></header>
 <main id="lobby">
- <div class="eyebrow">DOS EQUIPOS · UNA HORDA · DIEZ MINUTOS</div><h1>GUERRA DE<br><em>CRISTALES</em></h1>
- <p class="intro">Defendé tu cristal con un compañero. Convertí las bajas en fragmentos y enviá monstruos al equipo rival.</p>
- <div class="rules"><div><b>01 / RESISTÍ</b><p>El ataque básico es automático. Movete y combiná tus cuatro habilidades.</p></div><div><b>02 / DECIDÍ</b><p>Al comienzo de cada oleada, tenés 7 segundos para reparar, mejorar o enviar amenazas.</p></div><div><b>03 / CONQUISTÁ</b><p>Destruí el cristal rival. A los 10 minutos gana el que conserve más vida. Los empates cuentan.</p></div></div>
+ <div class="eyebrow">DOS EQUIPOS · UNA HORDA · ECLIPSE A LOS 8 MINUTOS</div><h1>GUERRA DE<br><em>CRISTALES</em></h1>
+ <p class="intro">Cada equipo defiende su cristal contra la misma horda. Ganás cuando el cristal rival cae: por sus errores, por tus envíos de monstruos o por el Eclipse final. Convertí las bajas en fragmentos y decidí cómo usarlos.</p>
+ <div class="rules"><div><b>01 / RESISTÍ</b><p>El ataque básico es automático. Movete y combiná tus cuatro habilidades.</p></div><div><b>02 / DECIDÍ</b><p>Al comienzo de cada oleada, tenés 7 segundos para reparar, mejorar o enviar amenazas.</p></div><div><b>03 / REMATÁ</b><p>Pasados los 8 minutos llega el ECLIPSE: los dos cristales se apagan cada vez más rápido. Gana el que más vida conserve. Si vas perdiendo, el cristal te ayuda con fragmentos extra.</p></div></div>
  <section class="setup"><div><label for="name">Tu nombre</label><input id="name" maxlength="24" placeholder="Guardián"><label for="champ">Tu campeón</label><select id="champ"></select><p id="kit"></p><small>Cuatro kits adaptados al Coliseo. Mismo poder inicial para todos, sin equipo de campaña ni compras de poder.</small></div>
  <div class="connect"><button class="primary" id="practice">ENTRENAR CON BOTS</button><button id="create">CREAR SALA PRIVADA</button><label for="code">Código o enlace de tu amigo</label><div class="join"><input id="code" maxlength="240" placeholder="ABC123"><button id="join">UNIRSE</button></div></div></section>
  <section id="room" hidden><div class="room-head"><h2>SALA <span id="room-code"></span></h2><button id="copy">Copiar invitación</button></div><p>J1 + J2: equipo Zafiro. J3 + J4: equipo Ámbar. Los lugares libres se completan con bots.</p><div id="slots"></div><div class="actions"><button id="ready">ESTOY LISTO</button><button id="start" class="primary">COMENZAR 2 CONTRA 2</button><button id="leave">Salir de la sala</button></div></section>
@@ -368,7 +368,7 @@
  <div id="cw-controls"><div id="joystick" aria-label="Joystick de movimiento"><i></i><span>MOVER</span></div><div id="skills"></div></div><p class="keys">PC: WASD / flechas para moverte · 1–4 habilidades · Ataque básico automático</p>
  <button id="quit">Abandonar partida</button>
 </section>
-<dialog id="result"><span class="eyebrow">GUERRA DE CRISTALES</span><h2 id="result-title"></h2><p id="result-detail"></p><button id="rematch" class="primary">VOLVER A LA SALA</button></dialog>
+<dialog id="result"><span class="eyebrow">GUERRA DE CRISTALES</span><h2 id="result-title"></h2><p id="result-detail"></p><div id="result-stats"></div><p id="result-record"></p><button id="rematch" class="primary">VOLVER A LA SALA</button></dialog>
 </div>
   </div>
 
