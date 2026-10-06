@@ -30,6 +30,8 @@ async function until(url){for(let i=0;i<50;i++){try{if((await fetch(url)).ok)ret
  // Accelerate the actual host simulation to exercise a complete networked result.
  await host.evaluate(()=>{const step=CrystalWars.step;CrystalWars.step=(...args)=>{for(let i=0;i<250;i++)step(...args);};});
  for(const p of pages)await p.locator('#result[open]').waitFor({timeout:15000});
+ for(const p of pages)assert((await p.locator('#result-stats tbody tr').count())===4,'resultados con estadísticas de los cuatro jugadores');
+ if(process.env.CW_SHOT)await pages[1].screenshot({path:process.env.CW_SHOT});
  const outcomes=await Promise.all(pages.slice(1).map(p=>p.evaluate(()=>window.__cwSnapshot.state.winner)));assert(outcomes.every(w=>w===outcomes[0]));
  await host.locator('#rematch').click();for(const p of pages)await p.locator('#lobby').waitFor({state:'visible'});assert.equal(await host.locator('#room-code').textContent(),code);
  for(const p of pages.slice(1))await p.locator('#ready').click();await host.waitForFunction(()=>!document.querySelector('#start').disabled);await host.locator('#start').click();await pages[1].waitForFunction(id=>window.__cwSnapshot.id!==id,first.id);

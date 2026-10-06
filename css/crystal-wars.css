@@ -87,17 +87,43 @@
 #crystalwars-screen .keys{margin:6px 0}
 #crystalwars-screen .rules b{font-size:10px}
 }
-@media(max-height:520px) and (orientation:landscape){#crystalwars-screen:has(#cw-game:not([hidden])) header{display:none}
-#crystalwars-screen #cw-game{display:grid;grid-template-columns:1fr 230px;gap:6px}
-#crystalwars-screen #scoreboard{grid-column:1/-1}
-#crystalwars-screen #cw-stage{grid-row:2/5}
-#crystalwars-screen canvas{height:72vh}
-#crystalwars-screen #supply{padding:0}
-#crystalwars-screen #shop,#crystalwars-screen #skills{grid-template-columns:repeat(2,1fr)}
-#crystalwars-screen #cw-controls{align-items:flex-end}
-#crystalwars-screen #joystick{width:70px;height:70px}
-#crystalwars-screen #joystick i{left:17px;top:17px}
-#crystalwars-screen #quit{grid-column:2}
+/* Celular horizontal: la arena ocupa TODA la pantalla y el resto flota encima (marcador arriba, joystick abajo a la izquierda,
+   habilidades abajo a la derecha, suministros a la derecha solo cuando se pueden usar). Sin scroll, sin recortes. */
+@media(max-height:520px) and (orientation:landscape){
+#crystalwars-screen:has(#cw-game:not([hidden])) header{display:none}
+#crystalwars-screen #cw-game{position:fixed;inset:0;max-width:none;margin:0;padding:0;display:block;overflow:hidden}
+#crystalwars-screen #cw-stage{position:absolute;inset:0;border:0;border-radius:0}
+#crystalwars-screen canvas{height:100%;min-height:0}
+#crystalwars-screen #scoreboard{position:absolute;z-index:4;top:3px;left:50%;transform:translateX(-50%);width:min(560px,72vw);grid-template-columns:1fr 78px 1fr;gap:8px;padding:3px 10px 4px;background:#0b1020d9;border:1px solid #45506b;border-radius:8px}
+#crystalwars-screen #scoreboard span{font-size:10px}
+#crystalwars-screen #scoreboard b{font-size:10px;letter-spacing:1px}
+#crystalwars-screen .clock strong{font-size:18px}
+#crystalwars-screen meter{height:7px}
+#crystalwars-screen #notice{top:50px;left:50%;right:auto;transform:translateX(-50%);width:min(480px,60vw);text-align:center;font-size:12px}
+#crystalwars-screen #vital{bottom:6px;left:50%;transform:translateX(-50%);font-size:11px;padding:4px 8px}
+#crystalwars-screen #view{top:40px;bottom:auto;left:6px;right:auto;font-size:10px;padding:4px 8px}
+#crystalwars-screen #supply{position:absolute;z-index:4;right:6px;top:46px;width:204px;padding:6px;background:#0b1020e6;border:1px solid #45506b;border-radius:8px}
+#crystalwars-screen #supply>div:first-child{flex-direction:column;gap:1px;font-size:10px}
+#crystalwars-screen #shop{display:none;grid-template-columns:repeat(2,1fr);gap:4px;margin-top:5px}
+#crystalwars-screen #cw-game.supply #shop{display:grid}
+#crystalwars-screen #cw-game.supply #supply{border-color:#ffcf5c}
+#crystalwars-screen #shop button{font-size:9px;padding:5px 3px;min-height:34px}
+#crystalwars-screen #cw-controls{position:absolute;z-index:3;left:8px;right:8px;bottom:6px;pointer-events:none;align-items:flex-end}
+#crystalwars-screen #joystick{width:84px;height:84px;pointer-events:auto}
+#crystalwars-screen #joystick i{left:25px;top:25px}
+#crystalwars-screen #skills{pointer-events:auto;flex:none;width:176px;grid-template-columns:repeat(2,1fr);gap:5px}
+#crystalwars-screen #skills button{min-height:46px;font-size:9px;padding:3px}
+#crystalwars-screen #quit{position:absolute;z-index:4;top:6px;left:6px;font-size:10px;padding:4px 8px}
+#crystalwars-screen dialog{max-width:560px;padding:12px 18px;max-height:96vh;overflow:auto}
+#crystalwars-screen dialog h2{font-size:20px;margin:2px 0}
+#crystalwars-screen dialog p{margin:4px 0;font-size:12px}
+#crystalwars-screen #result-stats table{font-size:10px;margin:4px 0}
+#crystalwars-screen #rematch{padding:8px 14px;font-size:12px}
 #crystalwars-screen .keys{display:none}
 }
 
+#crystalwars-screen #result-stats table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
+#crystalwars-screen #result-stats th,#crystalwars-screen #result-stats td{padding:4px 5px;border-bottom:1px solid #2b3749;text-align:right}
+#crystalwars-screen #result-stats th:first-child,#crystalwars-screen #result-stats td:first-child{text-align:left}
+#crystalwars-screen #result-stats tr.me td{color:#ffe9a8;font-weight:700}
+#crystalwars-screen #result-record{color:#ffe9a8;font-size:12px;margin:4px 0 10px}

@@ -147,6 +147,23 @@ function client(){
   host.ws.close();
   const closed = await Promise.all([guests[0], guests[1], back].map(g => g.wait(m => m.t === "closed")));
   check("host_left.room_closed", closed.every(m => m.reason === "host_left"));
+  // límite de mensajes: un invitado que inunda al anfitrión es frenado y, si insiste, cortado; el tráfico normal sigue intacto
+  {
+    const h2 = await client();
+    h2.send({ t: "create", protocol: 1, arena: "crystal-wars", name: "H2", champ: "tanque", clientId: "H2", build: "CW-2" });
+    const c2 = (await h2.wait(m => m.t === "joined")).room.code;
+    const g2 = await client();
+    g2.send({ t: "join", protocol: 1, code: c2, name: "Spam", champ: "mago", clientId: "G2", build: "CW-2" });
+    await g2.wait(m => m.t === "joined");
+    h2.inbox.length = 0;
+    for(let i = 0; i < 2000; i++) g2.send({ t: "msg", d: { k: "cw-input", i } });
+    await new Promise(r => setTimeout(r, 800));
+    const got = h2.inbox.filter(m => m.t === "msg").length;
+    check("flood.limited", got > 0 && got < 700, got);
+    const kicked = await new Promise(r => { if(g2.ws.readyState === 3) return r(true); g2.ws.on("close", () => r(true)); setTimeout(() => r(false), 1500); });
+    check("flood.kicked_after_sustained_abuse", kicked);
+    h2.ws.close();
+  }
   console.log("SUMMARY", JSON.stringify({ fails }));
   server.close(); process.exit(fails ? 1 : 0);
 })().catch(e => { console.log("FAIL exception", e.message); process.exit(1); });
