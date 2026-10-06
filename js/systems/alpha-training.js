@@ -83,7 +83,7 @@ function alphaTrainingEnterStep(){
   if(s.id==='ultimate'){runLevel=Math.max(runLevel,ULT_MIN_ARENA_LEVEL);player.ultCharge=player.ultMax;player.ultCd=0;alphaTrainingSpawn(3);}
   if(s.id==='potion'){player.hp=player.maxHp*.45;dropPotion(player.x+110,player.y,'heal');t.potion=potions[potions.length-1];t.potion.life=300000;}
   if(s.id==='xp')save.champions.mago.xp=xpToNext(save.champions.mago.level)-1;
-  if(s.id==='loot')t.loot=groundLootDrop(player.x+100,player.y,'B',1,'ciudad','training',false);
+  if(s.id==='loot')t.loot=groundLootDrop(player.x+70,player.y,'B',1,'ciudad','training',false);
   if(s.id==='danger')alphaTrainingDanger();
   if(s.id==='revive')alphaTrainingDowned();
   const arenaLabel=document.getElementById('hud-arena');if(arenaLabel)arenaLabel.textContent='Entrenamiento';
@@ -111,7 +111,7 @@ function alphaTrainingSatisfied(id,m,h){
   if(id==='ultimate') return h.ultCd>0;
   if(id==='potion') return m.potionPicked===true;
   if(id==='xp') return m.newLevel>m.level;
-  if(id==='loot') return m.loot>0;
+  if(id==='loot') return m.loot>0||ALPHA_TRAINING.phaseTime>=20000; // si el objeto quedó inalcanzable (lava, pared), el paso se da por hecho a los 20 s
   if(id==='objective') return !!ALPHA_TRAINING.foes&&ALPHA_TRAINING.foes.length>=3&&ALPHA_TRAINING.foes.every(e=>!e.alive); // el equipo cuenta: Elyra también pelea
   if(id==='inspect') return m.inspected===true;
   if(id==='danger') return m.dodged===true;
