@@ -560,7 +560,7 @@ function openCrystalWars(){ document.getElementById("mode-crystal-wars-btn").cli
 window.GAME_MODE_REGISTRY = window.GAME_MODE_REGISTRY || {};
 window.GAME_MODE_REGISTRY.crystalWars = {id:"crystalWars", name:"Guerra de Cristales", icon:"◆",
   desc:"Coliseo 2 contra 2: defendé tu cristal, reuní fragmentos y enviá la Horda al rival.", unlock:()=>true, open:openCrystalWars, coop:true};
-// volver del Coliseo (crystal-wars.html → index.html?return=hub): directo al hub, sin pasar por la portada
+// volver al hub sin pasar por la portada (index.html?return=hub; el Coliseo ya no navega: ver cwGo)
 (function(){
   let q; try{ q = new URLSearchParams(location.search); }catch(e){ return; }
   if(q.get("return")!=="hub") return;
@@ -576,17 +576,34 @@ document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
   if(!HordaOnboarding.ready(save)){ cwGateOpen(); return; }
   cwGo();
 });
-function cwGo(){
-  const url=new URL("crystal-wars.html",location.href);
-  const server=new URLSearchParams(location.search).get("server");
-  if(server)url.searchParams.set("server",server);
-  // Si el servidor donde está publicado el juego no tiene la página del Coliseo (404), se avisa acá en vez de mandar al
-  // jugador a una pantalla negra de error. Cualquier otra respuesta (o sin red / archivo local) navega como siempre.
-  fetch(url.href, {method:"HEAD", cache:"no-store"}).then(r=>{
-    if(r.status===404){ if(typeof showNetToast==="function") showNetToast("Guerra de Cristales todavía no está publicada en este servidor. Avisale a quien administra el juego."); return; }
-    location.href = url.href;
-  }, ()=>{ location.href = url.href; });
+// Guerra de Cristales es una pantalla más del juego (state "crystalwars", js/modes/crystal-wars/client.js): no hay otra página
+// a la que navegar. Si el servidor donde está publicado el juego es una versión vieja sin esos archivos, se avisa claro.
+function cwExit(){ setState("mainmenu"); if(typeof renderMainMenu==="function") renderMainMenu(); }
+function cwGo(opts){
+  if(typeof CrystalWarsUI==="undefined" || typeof CrystalWars==="undefined"){
+    if(typeof showNetToast==="function") showNetToast("Guerra de Cristales todavía no está publicada en este servidor. Avisale a quien administra el juego.");
+    return;
+  }
+  const server = new URLSearchParams(location.search).get("server");
+  CrystalWarsUI.onExit = cwExit;
+  setState("crystalwars");
+  CrystalWarsUI.open(Object.assign(server ? {server} : {}, opts || {}));
 }
+// Enlace directo (index.html?cw=1&room=ABC123&server=...): invitaciones y el viejo crystal-wars.html (que ahora redirige acá).
+// Quien ya hizo el entrenamiento entra solo; quien no, hace primero el recorrido normal y al terminar abre la sala
+// (alphaOnboardingDestination en js/systems/alpha-training.js).
+(function(){
+  let q; try{ q = new URLSearchParams(location.search); }catch(e){ return; }
+  if(q.get("cw")!=="1") return;
+  const link = {}; for(const k of ["room","server"]) if(q.has(k)) link[k] = q.get(k);
+  window.__cwLink = link;
+  let n = 0, clicked = false;
+  const t = setInterval(()=>{
+    if(++n > 600 || state==="crystalwars"){ clearInterval(t); return; }
+    if(state==="title" && !clicked && HordaOnboarding.storedReady()){ const b = document.getElementById("title-continue-btn"); if(b && !b.disabled){ clicked = true; b.click(); } }
+    if(state==="mainmenu" && HordaOnboarding.ready(save)){ clearInterval(t); cwGo(link); }
+  }, 100);
+})();
 // Sin entrenamiento hecho (ni saltado) el Coliseo no abre: antes el botón mandaba al tutorial sin decir por qué y
 // parecía que el modo no andaba. Ahora lo explica y deja elegir; sin guardián propio, primero el de regalo.
 function cwGateOpen(){

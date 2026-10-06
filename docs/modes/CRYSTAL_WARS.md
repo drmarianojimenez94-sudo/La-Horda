@@ -4,7 +4,7 @@ Estado: prototipo Alpha para entrenamiento y salas privadas. No es una temporada
 
 ## Cómo entrar
 
-La Horda → Multijugador / Modos → Guerra de Cristales. También se puede abrir `crystal-wars.html` en el mismo alojamiento estático del juego.
+La Horda → Multijugador / Modos → Guerra de Cristales. Es una pantalla más de `index.html` (state `crystalwars`). Enlace directo: `index.html?cw=1&room=ABC123[&server=…]`; el viejo `crystal-wars.html` solo redirige ahí para no romper invitaciones.
 
 1. Elegir nombre y campeón.
 2. Entrenar con bots o crear una sala privada.
@@ -30,7 +30,7 @@ PC: WASD/flechas; habilidades 1–4. Táctil: joystick y cuatro botones. Básico
 
 ## Integración y decisiones
 
-`index.html` añade una tarjeta y `js/ui/menus.js` abre el modo conservando una eventual URL de servidor de prueba. La simulación vive en `js/modes/crystal-wars/` y la presentación en `crystal-wars.html` y `css/crystal-wars.css`.
+`index.html` contiene la pantalla `#crystalwars-screen` y la tarjeta; `js/ui/menus.js` (`cwGo`) la abre conservando una eventual URL de servidor de prueba, y `js/modes/crystal-wars/client.js` no carga nada hasta la primera apertura (`CrystalWarsUI.open/close`). La simulación vive en `js/modes/crystal-wars/` y la presentación en `crystal-wars.html` y `css/crystal-wars.css`.
 
 Se reutilizan `NET_CONFIG.serverUrl`, el protocolo 1 de `server/relay.js`, los atlas de los cuatro campeones, la animación del esqueleto y la del gólem. El build `CW-1` separa sus salas de las de campaña; no requiere cambiar el servidor actual. Las salas son privadas. No se creó infraestructura adicional.
 

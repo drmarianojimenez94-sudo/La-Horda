@@ -271,16 +271,18 @@ Límites a tener en cuenta:
   viejo): `tools/net-test/server_restart.js`, `tools/net-test/old_server.js`, `tools/net-test/coldstart.js`.
 
 
-## Si "Guerra de Cristales" muestra "No esta: /crystal-wars.html"
+## Si "Guerra de Cristales" muestra "No esta: /crystal-wars.html" (o dice que no está publicada)
 
-Ese texto no sale del juego: lo devuelve el servidor donde está publicado, porque **le falta la página del Coliseo**. El juego
-ahora avisa con un mensaje claro en lugar de mostrar la pantalla negra, pero para que el modo abra hay que publicar sus
-archivos. La lista exacta (19 archivos) la imprime:
+Ese texto no sale del juego: lo devuelve el servidor donde está publicado, porque **tiene una versión vieja del juego**.
+Guerra de Cristales ahora es una pantalla **dentro de `index.html`** (ya no es una página aparte), así que la solución es
+**publicar la versión actual completa del juego**: `index.html`, `crystal-wars.html` (solo redirige los enlaces de invitación
+viejos), `manifest.webmanifest` y las carpetas `css/`, `js/` y `assets/`. No hace falta publicar `tools/`, `docs/`, `server/` ni
+`art-source/`. Si el servidor publica una lista fija de archivos, agregá la que imprime:
 
 ```
 node tools/crystal-wars/required-files.js
 ```
 
-Incluye `crystal-wars.html`, `css/crystal-wars.css`, `js/modes/crystal-wars/*`, `js/net/net-config.js`,
-`js/systems/onboarding-access.js` y las imágenes de `assets/` que usa. Si el servidor publica una lista fija de archivos,
-agregá esa lista; si publica la carpeta entera, volvé a publicar con la versión actual.
+Si el juego publicado es una versión vieja, el botón avisa "todavía no está publicada en este servidor" en lugar de mostrar una
+pantalla negra. Además conviene redesplegar el servidor de salas (`server/relay.js`, en Fly.io) con la versión actual: si no, puede
+responder "El servidor necesita actualizarse" al crear salas de Cristales.
