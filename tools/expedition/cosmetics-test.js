@@ -4,7 +4,7 @@ const {chromium}=require('playwright'),fs=require('fs');
  const p=await b.newPage({viewport:{width:1100,height:1400}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8806');await p.waitForFunction(()=>typeof EXPEDITION!=='undefined'&&Object.keys(EXPEDITION).every(k=>CHAMP_PACK[k]?.ready));
  await p.evaluate(()=>{cromaLoadAll();});await p.waitForFunction(()=>Object.values(CROMA_SKINS).filter(d=>EXPEDITION[d.champ]).every(d=>Object.values(d.packs).every(k=>CHAMP_PACK[k]?.ready)));
  const result=await p.evaluate(()=>{
-  const checks=[],previews={},check=(name,ok)=>checks.push({name,ok:!!ok});state='prep';save.gold=100000;save.collection={};save.cosmeticUnlocks={};
+  const checks=[],previews={},check=(name,ok)=>checks.push({name,ok:!!ok});state='prep';save.gold=10000000;/* oro de sobra: se compra la skin de cada campeón seguidas y su precio (12.000 de oro, js/data/pricing.js) no es lo que se prueba */save.collection={};save.cosmeticUnlocks={};
   for(const k of Object.keys(EXPEDITION)){
    const rec=save.champions[k],before=JSON.stringify([rec.level,rec.equipment,rec.talents,CLASSES[k]]);check(k+' starts locked at level 1',!rec.unlocked&&rec.level===1);
    const id=k+'_skin',set='exp_'+k,cid=k+'_croma';check(k+' buy and equip real skin',cromaBuy(id).ok&&cromaEquip(k,id)&&activeSetSkinId({classKey:k})===id);

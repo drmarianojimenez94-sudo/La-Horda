@@ -39,7 +39,7 @@ const SECRET='secreto-de-prueba-brasas-0123';
   return {page,ctx,errors};
  }
  const noOverflow=async(page,label)=>{const r=await page.evaluate(()=>{const bad=[];const de=document.documentElement;if(de.scrollWidth>de.clientWidth+1)bad.push('document '+de.scrollWidth+'>'+de.clientWidth);
-   for(const sel of ['#shop-screen','#shop-panel','#shop-tabs','.hub-top','.brasas-head','.brasas-packs','.brasas-what','.brasas-pack.welcome','.shop-skin-focus'])for(const n of document.querySelectorAll(sel)){if(n.offsetParent===null)continue;if(n.scrollWidth>n.clientWidth+1)bad.push(sel+' '+n.scrollWidth+'>'+n.clientWidth);}
+   for(const sel of ['#shop-screen','#shop-panel','#shop-tabs','.hub-top','.brasas-head','.brasas-packs','.brasas-what','.brasas-pack.welcome','.shop-skin-focus','.shop-col','.shop-skin-info'])for(const n of document.querySelectorAll(sel)){if(n.offsetParent===null)continue;if(n.scrollWidth>n.clientWidth+1)bad.push(sel+' '+n.scrollWidth+'>'+n.clientWidth);}
    for(const n of document.querySelectorAll('.brasas-pack, .brasas-what-card, .shop-tab, #hub-premium-btn')){if(n.offsetParent===null)continue;const r=n.getBoundingClientRect();if(r.right>innerWidth+1||r.left<-1)bad.push((n.className||n.id)+' fuera de pantalla '+Math.round(r.left)+'..'+Math.round(r.right));if(n.scrollWidth>n.clientWidth+2)bad.push((n.className||n.id)+' texto desborda');}
    return bad;});assert.deepEqual(r,[],'overflow '+label);checks++;};
  try{
@@ -64,12 +64,13 @@ const SECRET='secreto-de-prueba-brasas-0123';
   await page.locator('.shop-tab[data-shop-tab="brasas"].on').waitFor();checks++;
   await page.locator('[data-brasas-pack="brasas_bienvenida"]').waitFor();checks++;
   const prices=await page.$$eval('.brasas-packs .brasas-pack',ns=>ns.map(n=>({id:n.dataset.brasasPack,price:n.querySelector('.brasas-pack-price').textContent.trim(),amt:n.querySelector('.brasas-pack-amt').textContent.trim(),bonus:(n.querySelector('.brasas-bonus')||{}).textContent||''})));
-  assert.deepEqual(prices.map(p=>p.price),['US$ 4,99','US$ 9,99','US$ 24,99','US$ 49,99'],JSON.stringify(prices));checks++;
-  ok(prices[2].bonus.includes('+250')&&prices[3].bonus.includes('+750')&&prices[2].amt.includes('2.750'),'bonus visible '+JSON.stringify(prices));
-  const wtxt=await page.locator('[data-brasas-pack="brasas_bienvenida"]').innerText();ok(/US\$ 4,99/.test(wtxt)&&/1\.200/.test(wtxt)&&/\+200/.test(wtxt)&&/UNA SOLA VEZ/i.test(wtxt),'bienvenida '+wtxt);
+  assert.deepEqual(prices.map(p=>p.price),['US$ 4,99','US$ 9,99','US$ 24,99','US$ 49,99','US$ 99,99'],JSON.stringify(prices));checks++;
+  ok(prices[1].bonus.includes('+100')&&prices[2].bonus.includes('+300')&&prices[3].bonus.includes('+1.000')&&prices[4].bonus.includes('+3.000')&&prices[2].amt.includes('2.800'),'bonus visible '+JSON.stringify(prices));
+  const perUsd=await page.evaluate(()=>premiumPacks().filter(p=>!p.once).map(p=>(p.premium+p.bonus)/p.price.amount));ok(perUsd.every((v,i)=>!i||v>perUsd[i-1]),'valor por dólar creciente '+perUsd);
+  const wtxt=await page.locator('[data-brasas-pack="brasas_bienvenida"]').innerText();ok(/US\$ 6,99/.test(wtxt)&&/700/.test(wtxt)&&/\+200/.test(wtxt)&&/UNA SOLA VEZ/i.test(wtxt)&&/3 campeones de regalo/.test(wtxt)&&/7\.500/.test(wtxt),'bienvenida '+wtxt);
   // pagos sin pasarela: "Muy pronto", deshabilitado, sin compras simuladas
   ok(await page.locator('[data-brasas-buy]').count()===0,'sin botón de compra activo');
-  const soon=page.locator('[data-brasas-soon]');ok(await soon.count()===5&&await soon.first().isDisabled()&&(await soon.first().innerText()).includes('Muy pronto'),'Muy pronto deshabilitado');
+  const soon=page.locator('[data-brasas-soon]');ok(await soon.count()===6&&await soon.first().isDisabled()&&(await soon.first().innerText()).includes('Muy pronto'),'Muy pronto deshabilitado');
   await page.locator('[data-brasas-soon-note]').getByText('Los pagos todavía no están conectados',{exact:false}).waitFor();checks++;
   const co=await page.evaluate(()=>premiumCheckout('brasas_1000'));ok(!co.ok&&co.soon&&/todavía no están conectados/.test(co.reason),'checkout 501 '+JSON.stringify(co));
   ok((await page.locator('.brasas-what .brasas-what-card').count())===3,'tres skins de ejemplo');
@@ -85,12 +86,24 @@ const SECRET='secreto-de-prueba-brasas-0123';
   ok(again.status===200&&again.j.alreadyBought===true,'segundo pago de bienvenida no acredita');
   await page.evaluate(()=>premiumRefresh(true));
   await page.locator('[data-brasas-pack="brasas_bienvenida"]').waitFor({state:'detached'});checks++;
-  ok(/1\.200/.test(await page.locator('.brasas-bal').innerText()),'saldo 1.200');
-  ok(await page.locator('[data-brasas-buy]').count()===4,'con pasarela: botones Comprar');
+  ok(/\b700\b/.test(await page.locator('.brasas-bal').innerText()),'saldo 700');
+  ok(await page.locator('[data-brasas-buy]').count()===5,'con pasarela: botones Comprar');
+  // el pago ya está acreditado y quedan 3 elecciones: la Tienda ofrece reclamarlos (y abre la pantalla una vez)
+  await page.locator('#welcome-picks .wp-panel').waitFor();checks++;await page.locator('#welcome-picks [data-wp-close]').click();
+  await page.locator('.wp-banner [data-wp-open]').waitFor();ok(/Reclamar mis 3 campeones/i.test(await page.locator(".wp-banner").innerText()),'cartel de reclamo '+await page.locator('.wp-banner').innerText());
   delete process.env.PAYMENTS_PROVIDER;delete process.env.PAYMENTS_WEBHOOK_SECRET;
   await page.evaluate(()=>premiumRefresh(true));await page.locator('[data-brasas-soon]').first().waitFor();checks++;
   // otras pestañas siguen andando
   for(const t of ['destacados','campeones','objetos','skins','brasas']){await page.locator(`.shop-tab[data-shop-tab="${t}"]`).click();ok(await page.evaluate(t=>shopTab===t,t),'tab '+t);}
+  // Skins: colecciones con descuento real y precio en Brasas + oro a la vista
+  await page.locator('.shop-tab[data-shop-tab="skins"]').click();
+  ok(await page.locator('[data-col-card]').count()>0,'hay colecciones');
+  const col=await page.evaluate(()=>{const k=document.querySelector('[data-col-card]').dataset.colCard,q=premiumCollection(k);return {k,q,txt:document.querySelector('[data-col-card]').innerText};});
+  ok(col.q.price<col.q.sum&&col.q.save===col.q.sum-col.q.price&&col.txt.includes(col.q.price.toLocaleString('es-AR')),'descuento honesto '+JSON.stringify(col));
+  ok(await page.evaluate(()=>{const b=document.querySelector('[data-skin-buy]');return !b||!!b.parentElement.querySelector('[data-skin-premium]')&&b.parentElement.querySelector('[data-skin-premium]').getBoundingClientRect().left<=b.getBoundingClientRect().left+1;}),'Brasas primero, oro como alternativa');
+  for(const [w,h] of [[844,390],[667,375]]){await page.setViewportSize({width:w,height:h});await page.waitForTimeout(150);await noOverflow(page,'skins '+w);}
+  await page.setViewportSize({width:844,height:390});await page.addStyleTag({content:'#qs-toasts{display:none!important}'});await page.screenshot({path:path.join(SHOTS,'shop-skins-brasas-844x390.png')});
+  await page.locator('.shop-tab[data-shop-tab="brasas"]').click();
   ok(!(await page.locator('#shop-panel').innerText()).includes('set completo'),'sin textos de set completo');
   await page.locator('.shop-tab[data-shop-tab="destacados"]').click();
   ok(!(await page.locator('#shop-panel').innerText()).includes('PAQUETES DE SKINS'),'sin PAQUETES DE SKINS');

@@ -62,6 +62,9 @@ const ARENA_BRIEF = {
     help:"Cerrá las fisuras: mantené ✖ junto a una (quema un poco, pero corta la horda). Alguien está encadenado en el fondo.",
     goal:"Llegá al corazón del Infierno. Ahí te voy a estar esperando."}
 };
+// Aviso (solo texto, sin sistema que adjudique): "completar el juego" = vencer al Rey de la Horda en la Arena Infernal, la misma condición
+// que abre a Aurelia (js/systems/ascension-unlocks.js). Mismo texto que la tarjeta de Campaña (#campaign-first-notice en index.html).
+const FIRST_FINISH_NOTICE = "El primer jugador en completar el juego puede pedir un campeón con diseño propio.";
 const RUN_INTRO = { open:false, raf:0, t0:0, onGo:null, prologue:false, pages:[], arena:null };
 
 function runIntroShow(arena, onGo){
@@ -145,6 +148,8 @@ function runIntroFill(el, arena, B){
   el.querySelector(".ri-kill").textContent = B.kill;
   el.querySelector(".ri-help").textContent = B.help;
   el.querySelector(".ri-goal").textContent = B.goal;
+  const first = el.querySelector(".ri-first");
+  if(first){ first.hidden = arena !== "infernal"; first.textContent = arena === "infernal" ? "🏆 " + FIRST_FINISH_NOTICE : ""; }
   const cr = el.querySelector(".ri-crystals");
   if(cr){ const show = typeof crystalRowHtml==="function" && (crystalsOwned().length > 0 || CRYSTAL_BY_ARENA[arena] || arena==="infernal"); cr.innerHTML = show ? crystalRowHtml() + (typeof resonancePickerHtml==="function" ? '<div class="res-wrap">' + resonancePickerHtml() + '</div>' : "") : ""; if(show && typeof resonanceBindPicker==="function") resonanceBindPicker(cr); cr.style.display = show ? "" : "none"; }
 }

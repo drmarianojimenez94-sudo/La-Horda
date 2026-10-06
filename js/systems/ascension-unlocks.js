@@ -4,7 +4,7 @@
    Los campeones de la categoría ASCENSION (js/data/champion-taxonomy.js) se ven siempre en Guardianes,
    la Tienda y el Códice. Bloqueados, se consiguen de dos maneras:
      · con un logro de un modo distinto de juego (uno por campeón, tabla de abajo), o
-     · comprándolos en la Tienda por 9000 de oro.
+     · comprándolos en la Tienda con oro (precio propio por campeón según lo difícil que es ganarlo: js/data/pricing.js).
    La comprobación corre al terminar cada partida (questsOnRunEnd) y al cargar el guardado (retroactivo: quien ya
    cumplió el logro antes de esta versión lo recibe al entrar). Nada de esto toca a los Fundadores.
    ============================================================ */
@@ -43,10 +43,10 @@ function ascensionUnlockProgress(id, s){
   return r;
 }
 function ascensionUnlockOf(id){ return ASCENSION_UNLOCKS.find(u=>u.id===id) || null; }
-// Texto corto para las tarjetas bloqueadas: "Se gana: … · o 🪙 9.000 en la Tienda".
+// Texto corto para las tarjetas bloqueadas: "Se gana: … · o 🪙 <precio> en la Tienda".
 function ascensionUnlockHint(id){
   const u = ascensionUnlockOf(id); if(!u) return "";
-  const price = typeof shopChampionPrice === "function" ? shopChampionPrice(id) : 9000;
+  const price = typeof shopChampionPrice === "function" ? shopChampionPrice(id) : pricingChampionGold(id, "ASCENSION");
   return `${u.mode}: ${u.how} · o 🪙 ${typeof fmtGold === "function" ? fmtGold(price) : price} en la Tienda`;
 }
 // Entrega los que ya se ganaron. silent=true al cargar (sin carteles en el título); devuelve los nuevos.

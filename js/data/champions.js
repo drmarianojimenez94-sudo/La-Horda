@@ -13,7 +13,7 @@
 // Tienda por CHAMPION_PRICE_GOLD de oro. Para agregar un guardián nuevo alcanza con sumar una fila.
 // ETAPA DE PRUEBA (BUGFIX 01): todos los guardianes a 1.000 de oro para poder probarlos. El precio de
 // la economía final era 5.000 (un guardián nuevo como meta real): volver a ese valor al cerrar la prueba.
-const CHAMPION_PRICE_GOLD = 2500; // alfa: el regalo inicial es UN guardián (+ una skin); el segundo se gana jugando (antes 1.000 con 10.000 de oro de regalo: se compraban todos de entrada)
+const CHAMPION_PRICE_GOLD = PRICING.gold.champion; // 2500 (fuente única: js/data/pricing.js) · alfa: el regalo inicial es UN guardián (+ una skin); el segundo se gana jugando (antes 1.000 con 10.000 de oro de regalo: se compraban todos de entrada)
 const CHAMPION_PRICE_GOLD_FINAL = 5000; // precio definitivo (se vuelve a él al terminar la etapa de prueba)
 const CHAMPION_CATALOG = [
   {id:"tanque",   priceGold:CHAMPION_PRICE_GOLD, unlockedByDefault:false, lore:"Aldric sostiene la primera línea: atrae a la Horda, protege al equipo y arrasa con su torbellino."},

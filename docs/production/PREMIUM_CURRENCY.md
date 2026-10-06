@@ -1,9 +1,12 @@
 # Brasas ✦ — moneda premium
 
 ## Reglas
-- **Toda skin** (apariencia con arte propio) cuesta **9000 de oro o 1000 Brasas** y da **solo la apariencia**
-  (`js/systems/premium.js`). Las piezas de set se compran aparte como equipo; completar el set sigue regalando la skin.
-- Los **cromas** (cambios de paleta) conservan su precio propio en oro.
+- Las Brasas compran **apariencia**: skins de colección (✦ 800 · o 9.000 de oro), skins con diseño propio (✦ 1.200 · o 12.000 de oro),
+  cromas (✦ 300 · o su precio en oro) y **colecciones** (todas las apariencias que te falten de un campeón, con 15 % / 20 % de
+  descuento real). Fuente única de precios: `js/data/pricing.js`; el servidor la ejecuta y es quien decide. Tabla completa y
+  justificación: `docs/economy/PRECIOS.md`.
+- Comprar una skin da **solo la apariencia** (`js/systems/premium.js`). Las piezas de set se compran aparte como equipo.
+- **Los campeones no se compran con Brasas**: se compran con oro. Única excepción: el Pack de bienvenida regala 3 elecciones de campeón.
 - Las Brasas viven en el **servidor** (`server/wallet.js`): el cliente solo muestra el saldo y pide compras.
 - Las Brasas **solo compran apariencia, nunca poder**. Sin cajas sorpresa ni gacha: se compra exactamente lo que se ve,
   con el precio siempre a la vista (en moneda real con su código, p. ej. `US$ 4,99`).
@@ -11,11 +14,12 @@
 ## Paquetes (precios sugeridos, `server/premium-packs.json`)
 | Paquete | Brasas | Precio sugerido |
 |---|---|---|
-| `brasas_bienvenida` — Pack de bienvenida (`once: true`, una vez por cuenta) | 1000 + 200 | US$ 4,99 |
+| `brasas_bienvenida` — Pack de bienvenida (`once: true`, una vez por cuenta, `championGifts: 3`) | 500 + 200 y 3 campeones a elección | US$ 6,99 |
 | `brasas_500` | 500 | US$ 4,99 |
-| `brasas_1000` | 1000 | US$ 9,99 |
-| `brasas_2500` | 2500 + 250 | US$ 24,99 |
-| `brasas_5000` | 5000 + 750 | US$ 49,99 |
+| `brasas_1000` | 1000 + 100 | US$ 9,99 |
+| `brasas_2500` | 2500 + 300 | US$ 24,99 |
+| `brasas_5000` | 5000 + 1000 | US$ 49,99 |
+| `brasas_10000` | 10000 + 3000 | US$ 99,99 |
 
 Cada precio lleva su moneda explícita (`{"currency":"USD","amount":4.99}`). Un paquete sin precio no se ofrece ni se
 acredita. El dueño confirma los montos finales en su proveedor antes de cobrar.
@@ -33,8 +37,10 @@ acredita. El dueño confirma los montos finales en su proveedor antes de cobrar.
 ## Servidor
 | Ruta | Qué hace |
 |---|---|
-| `GET /api/wallet` | saldo, libro, precios y `payments: {enabled, currency, packs:[{id, premium, bonus, once, available, price:{currency, amount}}]}` (`enabled` es false sin proveedor) |
-| `POST /api/wallet/buy {sku, ref, expectedPrice}` | debita 1000 ✦ (ref idempotente), entrega la skin en el guardado de la nube con CAS y reintegra si no pudo |
+| `GET /api/wallet` | saldo, libro, precios por escalón, `welcome: {entitled, claimed, remaining, eligible}` y `payments: {enabled, currency, packs:[{id, premium, bonus, once, available, price:{currency, amount}}]}` (`enabled` es false sin proveedor) |
+| `POST /api/wallet/buy {sku, ref, expectedPrice}` | debita el precio del escalón (✦ 300 / 800 / 1200; `expectedPrice` obligatorio: si no coincide, 409), ref idempotente, entrega en el guardado de la nube con CAS y reintegra si no pudo |
+| `POST /api/wallet/buy-collection {champion, ref, expectedPrice}` | cobra la colección de un campeón (mínimo 2 apariencias que falten) con descuento, un solo asiento en el libro, entrega todas y reintegra si no pudo |
+| `POST /api/wallet/welcome/claim {champion}` | una de las 3 elecciones del Pack de bienvenida: asiento de monto 0 con referencia única por campeón, candado por cuenta, sin compra 403, cuarto 409 |
 | `POST /api/gm/user/premium {id, amount, reason, ref, confirm?}` | panel de administración (permiso `MODIFY_CURRENCY`): acredita o descuenta con motivo obligatorio, queda en el registro (`currency.premium`) |
 | `POST /api/wallet/checkout {pack}` | inicia un pago; sin proveedor: 501 `PAYMENTS_DISABLED` con "Los pagos todavía no están conectados…"; pack de una vez ya comprado: 409 |
 | `POST /api/payments/webhook` | acredita un pago verificado una sola vez (`pay:<paymentId>`; pack `once`: `once:<pack>:<userId>`). Rechaza firma inválida, paquete desconocido o sin precio (400) y cuentas inexistentes (404) |

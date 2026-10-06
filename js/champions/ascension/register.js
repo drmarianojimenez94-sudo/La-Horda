@@ -20,7 +20,7 @@ for(const [k,p] of Object.entries(ASCENSION)){
   passive:{name:p.passive[0],desc:p.passive[1],ico:'◇'},category:meta.category};
  // Todos tienen fila en el guardado (bloqueada); el cargador la conserva y el servidor fuerza
  // unlocked:false para los no publicados que la cuenta no tenga concedidos.
- if(championPlayable(k))CHAMPION_CATALOG.push({id:k,priceGold:meta.showcasePrice||meta.priceGold||CHAMPION_PRICE_GOLD,unlockedByDefault:false,lore:p.history,category:meta.category});
+ if(championPlayable(k))CHAMPION_CATALOG.push({id:k,priceGold:meta.showcasePrice||pricingChampionGold(k,meta.category),unlockedByDefault:false,lore:p.history,category:meta.category});
  save.champions[k] ||= mkChampion(false);
  CLASS_WEAPON_LABEL[k]=p.weapon;SCORE_CONFIG[k]=SCORE_CONFIG[base];CHAMP_ITEM_AFFINITY[k]={...CHAMP_ITEM_AFFINITY[base]};
  // Sprite de respaldo con paleta propia: provisorio hasta el atlas encargado (no es arte aprobado).

@@ -19,9 +19,9 @@ var CHAMPION_CATEGORIES = {
     competitiveAllowed:false, adminOnly:false, founderPresence:true, specialLobbyPresentation:true, starterEligible:false, balanceProfile:"founder",
     showcasePrice:9999, storeNotice:"ESTE CAMPEÓN NO SE COMPRA. SE CONCEDE.", inspectNotice:"Campeón de Fundador. Solo puede ser concedido por el sistema."},
   // ASCENSIÓN: campeones especiales (más fuertes y mejor logrados). Se ven SIEMPRE en Guardianes (bloqueados si no
-  // son tuyos); se ganan con logros de campaña y modos (js/systems/ascension-unlocks.js) o se compran por 9000 de oro.
+  // son tuyos); se ganan con logros de campaña y modos (js/systems/ascension-unlocks.js) o se compran con oro (precio propio, js/data/pricing.js).
   ASCENSION:{label:"Ascensión", badge:"ASCENSIÓN", order:1.5, visibleInStore:true, purchasable:true, grantable:true,
-    competitiveAllowed:true, adminOnly:false, founderPresence:false, specialLobbyPresentation:false, starterEligible:false, balanceProfile:"ascension", priceGold:9000},
+    competitiveAllowed:true, adminOnly:false, founderPresence:false, specialLobbyPresentation:false, starterEligible:false, balanceProfile:"ascension"},  // precio de oro propio por campeón: js/data/pricing.js (PRICING.gold.ascension)
   // EVENT: availability comes from CHAMPION_EVENT_WINDOWS (dates live in data, never in code).
   EVENT:    {label:"Event", badge:"EVENTO", order:3, visibleInStore:true, purchasable:false, grantable:true,
     competitiveAllowed:true, adminOnly:false, founderPresence:false, specialLobbyPresentation:false, starterEligible:false, balanceProfile:"standard"},
