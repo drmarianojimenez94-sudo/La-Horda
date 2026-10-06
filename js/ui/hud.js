@@ -125,7 +125,7 @@ function updateHUD(){
   // árbol de talentos completo -solo el nombre de la Maestría elegida, nada más-.
   const emblemHtml = (champMastery && tree && tree.masteries[champMastery]) ? ` <span class="mastery-emblem" title="Maestría: ${tree.masteries[champMastery].name}">★</span>` : "";
   hudHtml(plevelEl, `${hudClassName(CLASSES[player.classKey])} · Nv. ${save.champions[player.classKey].level}${emblemHtml}`);
-  hudTxt(document.getElementById("hud-level"), String(Math.min(runLevel,10)));
+  hudTxt(document.getElementById("hud-level"), (typeof ALPHA_TRAINING!=="undefined" && ALPHA_TRAINING.active) ? "1" : String(Math.min(runLevel,10))); // en el entrenamiento el nivel de la arena no avanza
   if(typeof endlessHudTick==="function") endlessHudTick(); // Horda Infinita: ronda, puntaje y mutadores
   hudTxt(document.getElementById("hud-kills"), String(kills));
   const totalSec = Math.floor((runElapsedMs||0)/1000);
@@ -205,6 +205,7 @@ function updateHUD(){
   }
   const pct = bossActive ? 100 : Math.min(100, levelTimer/levelDuration*100);
   hudCss(document.getElementById("wave-timer-bar"), "width", hudPct(pct));
+  if(typeof goalChipTick==="function") goalChipTick(); // cartel fijo: OBJETIVO (js/ui/goal-guide.js)
 
   const ultPct = player.ultCharge/player.ultMax*100;
   hudCss(document.getElementById("ult-ring"), "background", `conic-gradient(var(--ult) ${Math.round(ultPct*3.6)}deg, #2a1c10 0deg)`);

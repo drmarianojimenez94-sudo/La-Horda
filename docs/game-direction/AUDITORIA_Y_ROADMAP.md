@@ -169,3 +169,10 @@ Opciones lo explica y el resultado de la partida avisa "incluyó compañeros con
 juego no dicen ser personas ni inventan historias personales; (3) nunca se muestran cifras de jugadores conectados que incluyan
 compañeros del juego ni se usan como prueba social para vender. Riesgo: si se descubre que eran compañeros del juego y no
 había aviso, se pierde confianza → por eso el aviso general existe. Revisable por el propietario.
+
+## Claridad del objetivo (primera arena) — prueba con personas simuladas
+Método: 3 personas simuladas por modelo (Mateo 10, Dani 16, Marta 45) juegan solo con lo visible y responden 15 preguntas. LÍMITE: son modelos, no personas; no sustituyen una prueba con chicos reales (con consentimiento). Ninguna llegó a ver la victoria.
+- Antes: objetivo escondido al final de una ficha con scroll; no sabían por qué se pierde ni qué pasa al acabarse el tiempo del nivel; tutorial trabado en el paso Botín (Mateo).
+- Cambios: cartel fijo «OBJETIVO: sobrevivir · tiempo», tarjeta de misión, objetivo primero en la ficha, motivo de la derrota, «Sobreviviste», resumen de la primera victoria, tutorial en 14 pasos.
+- Después (Marta, Dani): ambos responden objetivo, cómo se gana, cómo se pierde y qué pasa al acabar el tiempo correctamente.
+- Pendiente (P1): flecha/botón claro para rescatar civiles, marcador sobre el aliado caído, cola de alertas, marca roja más fácil de esquivar, explicar los «+» de mejora, cuándo usar la ★, refuerzos con nombres técnicos, textos del Hechicero más cortos. Repetir con Mateo y con chicos reales.

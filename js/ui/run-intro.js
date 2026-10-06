@@ -83,6 +83,7 @@ function runIntroShow(arena, onGo){
     save.storyPrologueSeen = true;
     pages.push(...(typeof CAMPAIGN_PROLOGUE_PAGES!=="undefined" ? CAMPAIGN_PROLOGUE_PAGES : [{who:"PRÓLOGO", title:"LA NOCHE EN QUE VOLVIÓ LA HORDA", text:CAMPAIGN_PROLOGUE}]));
   }
+  if(typeof goalMissionPages==="function") pages.unshift(...goalMissionPages()); // misión: SOBREVIVIR, antes de la historia
   const act = typeof storyActOf==="function" ? storyActOf(arena) : null;
   if(act && act.arenas[0]===arena && typeof save!=="undefined" && !(save.storyActsSeen && save.storyActsSeen[act.n])){
     save.storyActsSeen = save.storyActsSeen || {}; save.storyActsSeen[act.n] = 1;
@@ -111,7 +112,7 @@ function runIntroFill(el, arena, B){
     whenAssetsReady(()=>{ if(!RUN_INTRO.prologue){ go.disabled = false; go.textContent = "¡A LA BATALLA!"; } },
       pct=>{ if(!RUN_INTRO.prologue && go.disabled) go.textContent = "Preparando la arena… " + pct + "%"; });
   }
-  const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá en cualquier lado para empezar";
+  const tap = el.querySelector(".ri-tap"); if(tap) tap.textContent = pro ? "tocá para seguir" : "tocá ¡A LA BATALLA! para empezar";
   // "Saltar ▸▸" (arriba a la izquierda, sobre el arte): con la historia en pantalla, un toque lleva directo a la
   // ficha de la arena (primer arranque corto)
   let skip = el.querySelector(".ri-skip");
@@ -147,7 +148,7 @@ function runIntroFill(el, arena, B){
   el.querySelector(".ri-say").textContent = "«" + B.say + "»";
   el.querySelector(".ri-kill").textContent = B.kill;
   el.querySelector(".ri-help").textContent = B.help;
-  el.querySelector(".ri-goal").textContent = B.goal;
+  el.querySelector(".ri-goal").textContent = (/^Sobreviv/.test(B.goal) ? "" : "SOBREVIVÍ: aguantá 10 niveles con vida. ") + B.goal;
   const first = el.querySelector(".ri-first");
   if(first){ first.hidden = arena !== "infernal"; first.textContent = arena === "infernal" ? "🏆 " + FIRST_FINISH_NOTICE : ""; }
   const cr = el.querySelector(".ri-crystals");
@@ -262,6 +263,9 @@ function runIntroDraw(cv, t){
 }
 (()=>{
   const el = document.getElementById("run-intro"); if(!el) return;
-  el.addEventListener("click", runIntroGo);
+  el.addEventListener("click", (e)=>{ // en la ficha larga, deslizar/tocar el texto NO empieza la partida: solo el botón (o el fondo)
+    if(!RUN_INTRO.prologue && e.target.closest && e.target.closest(".ri-card") && !e.target.closest(".ri-go")) return;
+    runIntroGo();
+  });
   document.addEventListener("keydown", (e)=>{ if(RUN_INTRO.open && (e.key==="Enter" || e.key===" ")) runIntroGo(); });
 })();

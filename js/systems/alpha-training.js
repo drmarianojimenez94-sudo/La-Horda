@@ -40,19 +40,20 @@ function alphaTrainingSkip(){
   setState('mainmenu');renderMainMenu();alphaOnboardingDestination();
 }
 const ALPHA_TRAINING_STEPS = Object.freeze([
-  {id:"move", title:"1 · Movimiento", text:"Practicamos con Thalen; después volvés a tu campeón. Usá el joystick de abajo a la izquierda para moverte.", target:"Movete por la arena"},
-  {id:"attack", title:"2 · Ataque básico", text:"Mantené el botón Ataque de la derecha. Tu mago dispara al enemigo cercano. Derrotá al esqueleto.", target:"Derrotá al enemigo con Ataque"},
-  {id:"skill", title:"3 · Habilidades", text:"Las habilidades pegan mucho más que el ataque. Tocá una. Si la mantenés y arrastrás, elegís dónde cae.", target:"Lanzá una habilidad"},
-  {id:"inspect", title:"4 · Consultar una habilidad", text:"¿Qué hace cada botón? MANTENÉ apretada una habilidad sin arrastrar: aparece su ficha y NO se lanza. Soltá para cerrarla.", target:"Mantené una habilidad para leer su ficha"},
-  {id:"cooldown", title:"5 · Recarga", text:"El barrido del botón y el número indican cuánto falta. Esperá y usá otra vez la misma habilidad.", target:"Volvé a usar la habilidad cuando recargue"},
-  {id:"ultimate", title:"6 · Definitiva", text:"La definitiva (botón ★) se carga peleando y se habilita avanzada la arena. Te la cargué: usala contra el grupo.", target:"Lanzá tu definitiva"},
-  {id:"danger", title:"7 · Peligro", text:"Una marca roja en el piso avisa un golpe: cuando se llena, pega. Salí de la marca antes de que se llene.", target:"Esquivá el golpe marcado"},
-  {id:"potion", title:"8 · Vida y pickups", text:"La barra roja es tu vida. La reduje para practicar: caminá sobre la poción roja a tu derecha. Las azules recuperan energía.", target:"Recogé la poción roja"},
-  {id:"xp", title:"9 · XP y nivel", text:"Derrotar enemigos da XP. Te falta muy poco: derrotá otro esqueleto y mirá subir el nivel del campeón (es permanente; el nivel de la arena es solo de esta partida).", target:"Derrotá al esqueleto y subí de nivel"},
-  {id:"loot", title:"10 · Botín", text:"Los enemigos pueden dejar equipo. Acercate al objeto luminoso para recogerlo. Después podrás equiparlo fuera de la arena.", target:"Recogé el objeto"},
-  {id:"tactical", title:"11 · Panel táctico", text:"Tocá ❚❚ arriba a la derecha: el Panel táctico muestra tu kit, recargas, estados y equipo. Sola pausa; en multijugador la partida SIGUE. Cerralo con Continuar.", target:"Abrí el Panel táctico y volvé"},
-  {id:"revive", title:"12 · Reanimar", text:"Elyra cayó. Parate a su lado y MANTENÉ ✚ (unos 5 s). Un golpe no te corta; soltar o alejarte, sí.", target:"Mantené ✚ junto a Elyra hasta revivirla"},
-  {id:"objective", title:"13 · Objetivo", text:"Última prueba: derrotá a estos tres enemigos. En campaña, cada arena tiene su propio objetivo: leelo en la ficha antes de entrar.", target:"Derrotá a los tres enemigos"}
+  {id:"goal", title:"1 · Tu misión: SOBREVIVIR", text:"En el juego te rodea una horda de monstruos. Tu misión es una sola: SOBREVIVIR. Cada nivel dura un ratito; cuando el reloj llega a cero, los monstruos caen. Se pierde si todos los guardianes del equipo caen. Primero practiquemos.", target:"Leé la misión (se sigue sola)"},
+  {id:"move", title:"2 · Movimiento", text:"Practicamos con Thalen; después volvés a tu campeón. Usá el joystick de abajo a la izquierda para moverte.", target:"Movete por la arena"},
+  {id:"attack", title:"3 · Ataque básico", text:"Mantené el botón Ataque de la derecha. Tu mago dispara al enemigo cercano. Derrotá al esqueleto.", target:"Derrotá al enemigo con Ataque"},
+  {id:"skill", title:"4 · Habilidades", text:"Las habilidades pegan mucho más que el ataque. Tocá una. Si la mantenés y arrastrás, elegís dónde cae.", target:"Lanzá una habilidad"},
+  {id:"inspect", title:"5 · Consultar una habilidad", text:"¿Qué hace cada botón? MANTENÉ apretada una habilidad sin arrastrar: aparece su ficha y NO se lanza. Soltá para cerrarla.", target:"Mantené una habilidad para leer su ficha"},
+  {id:"cooldown", title:"6 · Recarga", text:"El barrido del botón y el número indican cuánto falta. Esperá a que se llene el MISMO botón que usaste recién (el que está resaltado) y tocalo otra vez.", target:"Volvé a usar la habilidad cuando recargue"},
+  {id:"ultimate", title:"7 · Definitiva", text:"La definitiva (botón ★) se carga peleando y se habilita avanzada la arena. Te la cargué: usala contra el grupo.", target:"Lanzá tu definitiva"},
+  {id:"danger", title:"8 · Peligro", text:"Una marca roja en el piso avisa un golpe: cuando se llena, pega. Salí de la marca antes de que se llene.", target:"Esquivá el golpe marcado"},
+  {id:"potion", title:"9 · Vida y pociones", text:"La barra roja es tu vida. La reduje para practicar: caminá sobre la poción roja a tu derecha. Las azules recuperan energía.", target:"Recogé la poción roja"},
+  {id:"xp", title:"10 · Experiencia y nivel", text:"Derrotar enemigos da XP. Te falta muy poco: derrotá otro esqueleto y mirá subir el nivel del campeón (es permanente; el nivel de la arena es solo de esta partida).", target:"Derrotá al esqueleto y subí de nivel"},
+  {id:"loot", title:"11 · Botín", text:"Los enemigos pueden dejar equipo. Acercate al objeto luminoso para recogerlo. Después podrás equiparlo fuera de la arena.", target:"Recogé el objeto"},
+  {id:"tactical", title:"12 · Panel táctico", text:"Tocá ❚❚ arriba a la derecha: el Panel táctico muestra tu kit, recargas, estados y equipo. Sola pausa; en multijugador la partida SIGUE. Cerralo con Continuar.", target:"Abrí el Panel táctico y volvé"},
+  {id:"revive", title:"13 · Reanimar", text:"Elyra cayó. Parate a su lado y MANTENÉ el botón REVIVIR ✚ (unos 5 s). Un golpe no te corta; soltar o alejarte, sí.", target:"Mantené ✚ junto a Elyra hasta revivirla"},
+  {id:"objective", title:"14 · Resumen final", text:"Última prueba: derrotá a estos tres enemigos. Recordá: en cada arena SOBREVIVÍS 10 niveles (aguantás hasta que el reloj llegue a cero), en el 10 vences a un jefe y, si caen todos tus guardianes, perdés.", target:"Derrotá a los tres enemigos"}
 ]);
 function alphaTrainingActive(){return ALPHA_TRAINING.active;}
 function alphaTrainingEmit(event, extra){ window.dispatchEvent(new CustomEvent("horda-alpha",{detail:Object.assign({event,mode:"training"},extra||{})})); }
@@ -82,7 +83,7 @@ function alphaTrainingEnterStep(){
   if(s.id==='ultimate'){runLevel=Math.max(runLevel,ULT_MIN_ARENA_LEVEL);player.ultCharge=player.ultMax;player.ultCd=0;alphaTrainingSpawn(3);}
   if(s.id==='potion'){player.hp=player.maxHp*.45;dropPotion(player.x+110,player.y,'heal');t.potion=potions[potions.length-1];t.potion.life=300000;}
   if(s.id==='xp')save.champions.mago.xp=xpToNext(save.champions.mago.level)-1;
-  if(s.id==='loot')t.loot=groundLootDrop(player.x+100,player.y,'B',1,'ciudad','training',false);
+  if(s.id==='loot')t.loot=groundLootDrop(player.x+70,player.y,'B',1,'ciudad','training',false);
   if(s.id==='danger')alphaTrainingDanger();
   if(s.id==='revive')alphaTrainingDowned();
   const arenaLabel=document.getElementById('hud-arena');if(arenaLabel)arenaLabel.textContent='Entrenamiento';
@@ -102,6 +103,7 @@ function alphaTrainingDowned(){
   const e=spawnEnemy('esqueleto',false,false);e.x=a.x+60;e.y=a.y;e.hp=e.maxHp=9999;e.dmg=1;e.speed=40;e.xp=0;
 }
 function alphaTrainingSatisfied(id,m,h){
+  if(id==='goal') return ALPHA_TRAINING.phaseTime>=7000;
   if(id==='move') return m.distance>=200;
   if(id==='attack') return (h.stats.kills||0)>m.kills;
   if(id==='skill') return (h.stats.skillCasts||0)>m.casts;
@@ -109,7 +111,7 @@ function alphaTrainingSatisfied(id,m,h){
   if(id==='ultimate') return h.ultCd>0;
   if(id==='potion') return m.potionPicked===true;
   if(id==='xp') return m.newLevel>m.level;
-  if(id==='loot') return m.loot>0;
+  if(id==='loot') return m.loot>0||ALPHA_TRAINING.phaseTime>=20000; // si el objeto quedó inalcanzable (lava, pared), el paso se da por hecho a los 20 s
   if(id==='objective') return !!ALPHA_TRAINING.foes&&ALPHA_TRAINING.foes.length>=3&&ALPHA_TRAINING.foes.every(e=>!e.alive); // el equipo cuenta: Elyra también pelea
   if(id==='inspect') return m.inspected===true;
   if(id==='danger') return m.dodged===true;

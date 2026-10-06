@@ -9,6 +9,7 @@ const stage=()=>page.evaluate(()=>ALPHA_TRAINING.active?ALPHA_TRAINING_STEPS[ALP
 const until=async(id,ms=25000)=>{try{await page.waitForFunction(want=>(ALPHA_TRAINING.active?ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id:'done')===want,id,{timeout:ms});}catch(e){const st=await page.evaluate(()=>({step:ALPHA_TRAINING.active?ALPHA_TRAINING_STEPS[ALPHA_TRAINING.step].id:'done',metrics:ALPHA_TRAINING.metrics,danger:ALPHA_TRAINING.danger,ally:ALPHA_TRAINING.ally&&{alive:ALPHA_TRAINING.ally.alive,x:ALPHA_TRAINING.ally.x,y:ALPHA_TRAINING.ally.y,revT:ALPHA_TRAINING.ally._reviveT},player:{x:player.x,y:player.y,alive:player.alive,hp:player.hp},state}));throw Error('stuck waiting for '+id+': '+JSON.stringify(st));}console.log('PASS novice reached '+id);};
 async function hold(id,ms){const b=await page.locator(id).boundingBox();await page.mouse.move(b.x+b.width/2,b.y+b.height/2);await page.mouse.down();try{await page.waitForTimeout(ms);}finally{await page.mouse.up();}}
 const joy=await page.locator('#joy-base').boundingBox(),center={x:joy.x+joy.width/2,y:joy.y+joy.height/2};
+await until('move',12000); // paso 1: la misión se lee sola (7 s)
 await page.mouse.move(center.x,center.y);await page.mouse.down();await page.mouse.move(center.x+36,center.y);await page.waitForTimeout(2000);await page.mouse.up();await until('attack');
 await hold('#btn-basic',4000);await until('skill');
 await page.locator('#btn-s1').click();await until('inspect');

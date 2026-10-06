@@ -50,9 +50,9 @@ function showGameOverScreen(divinaOutcome){
   const perf = computePerformance(player);
   const loot = grantEndOfRunLoot(player.classKey, perf, false);
   const lootLine = loot.items.length ? loot.items.map(it=>{ const tm = LOOT_TIER_META[itemTier(it)]; return `<b style="color:${tm.color};">${it.name}</b>`; }).join(", ") : (runLevel>=DEFEAT_LOOT.minLevel ? "inventario lleno" : `sin botín (desde el nivel ${DEFEAT_LOOT.minLevel} te llevás un objeto aunque pierdas)`);
-  document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} bajas · Calificación <b style="color:${perf.color};">${perf.grade}</b>`;
+  document.getElementById("go-stats").innerHTML = `Nivel ${runLevel} · ${kills} enemigos vencidos · Calificación <b style="color:${perf.color};">${perf.grade}</b>`;
   const arenaRows = arenaHas("resultsHTML") ? (arenaHook("resultsHTML", false)||"") : "";   // p.ej. civiles rescatados (Ciudad Maldita)
-  document.getElementById("go-progress").innerHTML = (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
+  document.getElementById("go-progress").innerHTML = (typeof goalDefeatHtml==="function" ? goalDefeatHtml(runLevel) : "") + (typeof storyDefeatHtml==="function" ? storyDefeatHtml(player.classKey) : "") +
     `${CLASSES[player.classKey].name} ahora en Nv. <b>${save.champions[player.classKey].level}</b> &nbsp;·&nbsp; Oro total: <b>${save.gold}</b><br>Sin puntos de control: la próxima incursión comienza en el Nivel 1.<br>
     ${typeof botDisclosureText==="function" && botDisclosureText() ? `<small style="opacity:.7">${botDisclosureText()}</small><br>` : ""}Botín: ${lootLine}${loot.gems?` · <b style="color:#7fe8ff;">+${loot.gems} Gema${loot.gems>1?"s":""}</b>`:""}<br>
     ${defeatPenaltyLineHTML(penalty)}${typeof diffResultRowHTML==="function" ? diffResultRowHTML(false) : ""}${arenaRows ? `<div class="res-rows" style="margin-top:8px;">${arenaRows}</div>` : ""}${endSkinsLinkHTML(player.classKey)}`;
@@ -112,7 +112,7 @@ function buildVictoryData(){
   grantXP(classKey, victoryXpBonus);
   return {
     classKey, perf, score:perf.score, rewards:loot.items, floorLoot, gems:loot.gems||0, partyScores, inventoryFull:loot.inventoryFull, victoryXpBonus, arena: currentArena,
-    kills, gold: save.gold, subjefes: subjefesDefeated,
+    kills, gold: save.gold, subjefes: subjefesDefeated, firstClear: typeof runFirstClear!=="undefined" && runFirstClear,
     arenaRows: arenaHas("resultsHTML") ? (arenaHook("resultsHTML", true)||"") : "",   // p.ej. civiles rescatados (Ciudad Maldita)
     level: save.champions[classKey].level,
     stats: player.stats
@@ -170,9 +170,9 @@ const VICTORY_STEPS = [
         <div class="res-row"><span>Dificultad</span><b>${ARENA_LOOT_LABEL[victoryData.arena]||"—"}</b></div>
         ${typeof diffResultRowHTML==="function" ? diffResultRowHTML(true) : ""}
         <div class="res-row"><span>Guardián</span><b>${CLASSES[victoryData.classKey].name} · Nv. ${victoryData.level}</b></div>
-        <div class="res-row"><span>Bajas</span><b>${victoryData.kills}</b></div>
+        <div class="res-row"><span>Enemigos vencidos</span><b>${victoryData.kills}</b></div>
         ${victoryData.arenaRows||""}
-      </div>${typeof storyVictoryHtml==="function" ? storyVictoryHtml(victoryData) : ""}`;
+      </div>${typeof goalVictoryRecapHtml==="function" && victoryData.firstClear ? goalVictoryRecapHtml(victoryData) : ""}${typeof storyVictoryHtml==="function" ? storyVictoryHtml(victoryData) : ""}`;
   },
   // 1. PERFORMANCE
   function(){

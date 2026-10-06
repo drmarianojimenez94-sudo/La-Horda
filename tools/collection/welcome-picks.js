@@ -128,7 +128,7 @@ const SECRET='secreto-de-prueba-brasas-0123';
    await page.setViewportSize({width:844,height:390});
    await page.screenshot({path:path.join(SHOTS,'campaign-first-notice-844x390.png')});
    // presentación de la Arena Infernal: aparece; en otra arena no
-   await page.evaluate(()=>{window.__autoConfirm=true;runIntroShow('infernal',()=>{});});
+   await page.evaluate(()=>{window.__autoConfirm=true;save.tut=save.tut||{};save.tut.goalMission=1;runIntroShow('infernal',()=>{});});
    const f=page.locator('#run-intro .ri-first');await f.waitFor({state:'visible'});ok((await f.innerText()).includes('El primer jugador en completar el juego puede pedir un campeón con diseño propio.'),'aviso en la Arena Infernal');
    for(const [w,h] of [[844,390],[667,375]]){await page.setViewportSize({width:w,height:h});await page.waitForTimeout(120);await noOverflow(page,'infernal '+w);}
    await page.evaluate(()=>{RUN_INTRO.open=false;document.getElementById('run-intro').classList.add('hidden');runIntroShow('ciudad',()=>{});});

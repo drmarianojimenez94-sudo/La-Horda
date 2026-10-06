@@ -248,6 +248,7 @@ function onBossDefeated(){
 }
 // Cierre de la victoria (arena superada, desbloqueos, pantalla final). Lo llama onBossDefeated o,
 // si la arena tiene su propia secuencia de muerte del jefe, la arena cuando esa secuencia termina.
+let runFirstClear = false;
 function finishBossVictory(){
   if(typeof endlessOn==="function" && endlessOn()){ endlessBossDown(); return; } // Horda Infinita: el jefe es una ronda, no el cierre de la arena
   bossActive = false;
@@ -260,6 +261,7 @@ function finishBossVictory(){
   save.arenasCleared = save.arenasCleared || {};
   const wasOpen = {}; for(const k of ARENA_ORDER) wasOpen[k] = isArenaUnlocked(k);
   const firstClear = !save.arenasCleared[currentArena];
+  runFirstClear = firstClear && !Object.keys(save.arenasCleared).length; // la primera victoria de la cuenta: resumen de todo lo aprendido (goal-guide.js)
   save.arenasCleared[currentArena] = true;
   const nextArena = ARENA_ORDER.find(k=>k!==currentArena && !wasOpen[k] && isArenaUnlocked(k));
   if(firstClear && nextArena){ save.justUnlockedArena = nextArena; setTimeout(()=>showBanner(`🔓 NUEVA ARENA: ${campaignNumberLabel(nextArena)} — ${(ARENA_MODS[nextArena]||{}).label||nextArena}`, 2), 2600); }

@@ -99,3 +99,8 @@
 }
 @media(prefers-reduced-motion:reduce){#controls .ability-btn,#controls .skill-plus{animation:none!important;}}
 body.reduce-motion #controls .ability-btn,body.reduce-motion #controls .skill-plus{animation:none!important;}
+/* Objetivo siempre visible (js/ui/goal-guide.js): "OBJETIVO: sobrevivir · 0:18" */
+#hud #goal-chip{width:100%;box-sizing:border-box;padding:4px 7px;border-radius:8px;border:1px solid #ffcf5c;background:rgba(40,28,6,.92);color:#ffe9a8;font-size:.82rem;font-weight:700;line-height:1.2;text-align:left;}
+#hud #goal-chip.hidden{display:none;}
+.go-why,.go-recap{margin:8px 0;padding:8px 10px;border-radius:8px;border:1px solid #ffcf5c;background:rgba(40,28,6,.6);color:#ffe9a8;text-align:left;font-size:.95rem;line-height:1.35;}
+.go-recap ul{margin:6px 0 0 18px;padding:0;}
