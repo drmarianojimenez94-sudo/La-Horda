@@ -103,6 +103,7 @@
 .hub-premium, .ui-chip.premium{ color:#ffb0e8; }
 .premium-btn{ background:linear-gradient(180deg,#5a2470,#3a1450) !important; border-color:#c070ff !important; color:#ffe0f8 !important; }
 .premium-btn:disabled{ opacity:.55; }
+.shop-deal-buy .premium-btn, .shop-skin-equip .premium-btn, .shop-hero-buy .premium-btn{ order:-1; } /* Brasas primero, oro como alternativa */
 .hub-brand{ flex:1; min-width:0; text-align:center; font-family:var(--ui-font-brand); font-size:1.05rem; color:var(--ui-accent-2); letter-spacing:0.06em;
   text-shadow:3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; white-space:nowrap; }
 .hub-main{ flex:1 1 auto; min-height:0; width:100%; max-width:1000px; display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1fr); gap:10px; }
@@ -366,7 +367,7 @@ body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.r
 .brasas-welcome-main{ flex:none; display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; }
 .brasas-welcome-note{ flex:1; min-width:0; font-size:0.85rem; color:var(--ui-ink); line-height:1.35; }
 .brasas-welcome-buy{ flex:none; display:flex; flex-direction:column; align-items:center; gap:4px; width:130px; }
-.brasas-packs{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px; }
+.brasas-packs{ display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px; }
 .brasas-pack{ position:relative; display:flex; flex-direction:column; align-items:center; gap:3px; min-width:0; padding:8px 6px; text-align:center;
   background:linear-gradient(160deg, var(--ui-bg-1), var(--ui-bg-2)); border:2px solid #5a2e6a; box-shadow:var(--ui-hi), var(--ui-shadow-sm); }
 .brasas-pack.welcome{ border:3px solid #ffb0e8; background:radial-gradient(ellipse at 50% 20%, rgba(192,112,255,0.30), transparent 70%), linear-gradient(160deg,#2a1230,#140a16); }
@@ -388,7 +389,7 @@ body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.r
   background:transparent; border:1px solid #7a3e8e; border-radius:4px; }
 @media (max-width:700px) and (max-height:520px){
   .hub-premium-btn{ font-size:1rem; padding:2px 4px 2px 8px; }
-  .brasas-packs{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .brasas-packs{ grid-template-columns:repeat(3, minmax(0,1fr)); }
   .brasas-pack.welcome{ gap:8px; padding:6px 8px; }
   .brasas-welcome-note{ font-size:0.75rem; }
   .brasas-welcome-buy{ width:110px; }
@@ -401,3 +402,32 @@ body.reduce-motion .shop-hero-art::after, body.reduce-motion .ui-tag.new, body.r
   max-width:calc(100vw - 16px); padding:6px 10px; background:rgba(12,10,8,0.94); border:2px solid #000; box-shadow:0 0 0 2px var(--ui-gold, #ffd34d); font-family:var(--ui-font); color:var(--ui-ink); }
 .qp-bar .qp-txt{ font-size:1rem; }
 .qp-bar .btn{ min-height:44px; }
+
+/* Colecciones de apariencias (Brasas) */
+.shop-col{ flex-basis:190px; }
+.shop-col-imgs{ display:flex; gap:2px; width:100%; height:64px; overflow:hidden; border:2px solid #000; background:#07040a; }
+.shop-col-imgs img{ flex:1 1 0; min-width:0; height:100%; object-fit:cover; object-position:50% 18%; image-rendering:pixelated; }
+.shop-col .shop-item-sub{ white-space:normal; line-height:1.25; }
+/* Elegir los campeones de regalo del Pack de bienvenida (js/ui/welcome-picks.js) */
+#welcome-picks{ position:fixed; inset:0; z-index:125; display:flex; align-items:center; justify-content:center; box-sizing:border-box;
+  padding:calc(8px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px));
+  background:radial-gradient(ellipse at 50% 45%, rgba(60,20,8,0.55), rgba(0,0,0,0.86) 70%); }
+.wp-panel{ display:flex; flex-direction:column; width:100%; max-width:760px; max-height:100%; box-sizing:border-box; padding:8px 12px 10px; gap:6px;
+  background:linear-gradient(160deg,#2a1230,#140a16); border:3px solid #000; box-shadow:0 0 0 2px #c070ff, 6px 6px 0 #000; color:var(--ui-ink); }
+.wp-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.wp-title{ font-family:var(--ui-font); font-size:1.3rem; color:#ffe0f8; line-height:1.1; }
+.wp-sub{ font-size:0.8rem; color:var(--ui-dim); line-height:1.3; margin-top:2px; }
+.wp-later{ flex:none; min-height:40px; }
+.wp-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(112px,1fr)); gap:6px; overflow-y:auto; min-height:0; padding:2px; -webkit-overflow-scrolling:touch; }
+.wp-card{ display:flex; flex-direction:column; align-items:center; gap:1px; min-width:0; padding:5px 4px; cursor:pointer; font-family:inherit; color:var(--ui-ink); text-align:center;
+  background:rgba(10,6,4,0.65); border:2px solid #3a2a40; }
+.wp-card.on{ border-color:var(--hc,#ffb0e8); background:rgba(192,112,255,0.18); box-shadow:0 0 0 2px var(--hc,#ffb0e8) inset; }
+.wp-anim{ width:56px; height:56px; image-rendering:pixelated; }
+.wp-name{ font-family:var(--ui-font); font-size:1.05rem; line-height:1.05; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wp-role{ font-size:0.68rem; color:var(--ui-dim); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wp-mark{ font-size:0.7rem; color:#ffb0e8; }
+.wp-foot{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.wp-count{ font-family:var(--ui-font); font-size:1.1rem; }
+.wp-foot .shop-btn{ min-height:44px; }
+.wp-banner{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; }
+@media (max-height:420px){ .wp-panel{ padding:6px 10px 8px; gap:4px; } .wp-title{ font-size:1.1rem; } .wp-sub{ font-size:0.72rem; } .wp-grid{ grid-template-columns:repeat(auto-fill, minmax(100px,1fr)); } .wp-anim{ width:44px; height:44px; } }
