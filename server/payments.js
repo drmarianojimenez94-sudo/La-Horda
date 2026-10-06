@@ -28,7 +28,7 @@ async function publicInfo(bought){
   const out = [];
   for(const p of sellable()){
     const once = !!p.once;
-    out.push({ id: p.id, name: p.name || null, premium: p.premium, bonus: p.bonus || 0, once,
+    out.push({ id: p.id, name: p.name || null, premium: p.premium, bonus: p.bonus || 0, once, championGifts: p.championGifts || 0,
       available: once && bought ? !(await bought(p.id)) : true,
       price: { currency: p.price.currency, amount: p.price.amount } });
   }

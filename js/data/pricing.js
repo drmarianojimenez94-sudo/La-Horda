@@ -22,12 +22,13 @@ var PRICING = {
   },
   // Brasas ✦ por escalón. "croma": cambio de paleta · "set": skin de una colección (también se gana reuniendo el set)
   // · "autor": skin independiente con diseño propio (solo se compra).
-  brasas: { croma: 300, set: 800, autor: 1200 },
+  brasas: { croma: 300, set: 800, autor: 1200 },  // ✦ (1 ✦ ≈ US$ 0,01 en el pack base: ver server/premium-packs.json)
   // Colección de un guardián: todas sus apariencias que todavía no tenés, con descuento por cantidad (ahorro calculado
   // contra la suma de los precios sueltos de ESAS piezas; no hay precio "tachado" inventado).
   collection: { minPieces: 2, offPct: { 2: 15, 3: 20 } },
   // Pack de bienvenida: además de las Brasas, regala 3 elecciones de campeón STANDARD (se compran con oro: 3 × 2500).
-  welcome: { pack: "brasas_bienvenida", champions: 3 }
+  // Elegibles: solo categoría STANDARD publicada (nunca Ascensión, Fundadores, Evento ni Familia). Los decide el servidor.
+  welcome: { pack: "brasas_bienvenida", champions: 3, category: "STANDARD" }
 };
 
 // Escalón de una apariencia: "set" si es una skin de colección, "autor" si es una skin independiente, "croma" si es paleta.
