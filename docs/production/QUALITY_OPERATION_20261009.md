@@ -63,6 +63,24 @@ Revisión visual realizada. Integración pendiente de CI. Evidencia antes/despu�
 `docs/quality/2026-10-09/performance.json` y `performance-after.json`. No son mediciones
 de teléfono físico ni garantizan 60 FPS sostenidos.
 
+## Auditoría de presupuesto de talentos
+
+38/38 campeones tienen tres ramas y tres maestrías declaradas. En 19 (los diez de
+Expedición y los nueve de Ascensión), todos los nodos ordinarios cuestan 27 puntos:
+se pueden completar con los 30 de nivel 99. Las maestrías agregan gasto, pero eso
+no garantiza especialización entre ramas ordinarias. Es una brecha P0 pendiente.
+Los otros costos ordinarios son 71, 87, 121 o 123, según árbol.
+
+26 árboles no declaran flags de transformación en sus nodos. Este análisis de datos
+**no prueba ausencia de comportamiento funcional**: los multiplicadores también pueden
+ser consumidos por lógica especial. Se necesita trazabilidad por habilidad y pruebas
+comparativas antes de aprobar Talent Gate completo. Datos en `talent-structure.json`.
+
+CI también detectó cinco expectativas antiguas de nivel 5 en `t_boons.js`. Se corrigieron
+para exigir 39 bloqueado/40 habilitado, requisitos y presupuesto independientes, y la
+migración histórica en dos etapas con respaldo de nodos y reembolso del kit una sola vez.
+La suite completa de refuerzos pasó localmente, con cero errores de página.
+
 ## Producción y seguridad
 
 El cliente apunta a `wss://fondalstudios.com/la-horda/red` y presenta como alpha principal
@@ -98,7 +116,7 @@ representativa con jugadores/dispositivos. Son juicios técnicos limitados a lo 
 | Sistema | Estimación | Brecha principal |
 |---|---:|---|
 | Persistencia | 75 | Producción y más historiales reales no verificados |
-| Talent Gate | 70 | Transformaciones profundas y previsualización para todo el roster |
+| Talent Gate | 60 | 19 árboles ordinarios cuestan 27 de 30 puntos; faltan especializaciones reales |
 | Ability Gate | 70 | Duraciones, todas las pasivas y PvP exhaustivo aún faltan |
 | Fábrica artística | 60 | Los números no certifican identidad; revisión animada y escala |
 | Cinco campeones nuevos | 15 | Solo producción visual candidata; ningún kit nuevo jugable |

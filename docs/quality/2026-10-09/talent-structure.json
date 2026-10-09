@@ -1,0 +1,268 @@
+[
+  {
+    "champion": "tanque",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 3
+  },
+  {
+    "champion": "guerrero",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 2
+  },
+  {
+    "champion": "mago",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 2
+  },
+  {
+    "champion": "soporte",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 2
+  },
+  {
+    "champion": "segador",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 2
+  },
+  {
+    "champion": "axiom",
+    "branches": 3,
+    "maxOrdinaryCost": 121,
+    "masteries": 3,
+    "transformations": 4
+  },
+  {
+    "champion": "profeta",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 2
+  },
+  {
+    "champion": "musashi",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 4
+  },
+  {
+    "champion": "cazadora",
+    "branches": 3,
+    "maxOrdinaryCost": 87,
+    "masteries": 3,
+    "transformations": 3
+  },
+  {
+    "champion": "nigromante",
+    "branches": 3,
+    "maxOrdinaryCost": 71,
+    "masteries": 3,
+    "transformations": 5
+  },
+  {
+    "champion": "libertador",
+    "branches": 3,
+    "maxOrdinaryCost": 71,
+    "masteries": 3,
+    "transformations": 2
+  },
+  {
+    "champion": "eren",
+    "branches": 3,
+    "maxOrdinaryCost": 71,
+    "masteries": 3,
+    "transformations": 3
+  },
+  {
+    "champion": "ynara",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "myla",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "brasa",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "eslabon",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "morwen",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "farolero",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "iria",
+    "branches": 3,
+    "maxOrdinaryCost": 123,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "vesper",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "nahir",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "baltra",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "maura",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "dariel",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "orsa",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "tibor",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "zahra",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "renko",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "sira",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "nano_gm",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "facu_gm",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "aurelia",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "khepri",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "velmira",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "vhal",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "bront",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "oriel",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  },
+  {
+    "champion": "saelis",
+    "branches": 3,
+    "maxOrdinaryCost": 27,
+    "masteries": 3,
+    "transformations": 0
+  }
+]
