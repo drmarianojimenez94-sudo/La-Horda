@@ -21,3 +21,11 @@ test('founder particle ceiling bounded',()=>{const m=founder();m.budgets.particl
 test('category must match taxonomy',()=>{const m=valid();m.id='myla';m.category='STANDARD';for(const c of m.cosmetics)c.champion='myla';assert.match(validate(m,root).join('\n'),/must match/);});
 test('unknown category rejected',()=>{const m=valid();m.category='VIP';assert.match(validate(m,root).join('\n'),/category must be one of/);});
 test('standard keeps 64 particle ceiling',()=>{const m=valid();m.budgets.particles=96;assert.match(validate(m,root).join('\n'),/bounded by 64/);});
+
+test('schema 1 remains compatible when executable gates expand',()=>{
+ const m=valid();for(const gate of ['talents','abilities','resources','passives'])delete m.evidence[gate];
+ assert.deepEqual(validate(m,root),[]);
+ const {GATES}=require('./contracts');
+ for(const gate of ['talents','abilities'])assert.ok(GATES[gate],gate+' remains executable');
+ delete m.evidence.balance;assert.ok(validate(m,root).some(e=>/balance evidence/.test(e)));
+});
