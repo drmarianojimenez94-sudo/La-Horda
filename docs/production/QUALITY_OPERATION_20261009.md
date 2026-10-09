@@ -20,8 +20,16 @@ No se duplicaron esos motores. Esta ejecución **no completa el alcance comercia
 - **#78, draft:** diez recetas artísticas y tres elementos reutilizables, reproducibles
   por fábrica. Sin integración a catálogo, sin habilidades nuevas, sin Art Gate aprobado.
 
-Consultar GitHub para el estado final de merges; este archivo documenta evidencia,
-no usa la mera existencia de un PR como prueba de integración.
+Estado de integración comprobado: #76 mergeado en `2680edd0f182fd877c5608a97ffd6f67564a76f3`.
+CI completo, Safari y PostgreSQL aprobados; smoke sobre el main resultante: 27 contratos,
+Talent Gate y referencia de balance PASS. #74 cerrado como sustituido.
+#77 mergeado en `04c007fdd6a1ccd445ca5efc859c19fad9b3929c`: CI general, taller,
+Safari y PostgreSQL aprobados; smoke en main con 27 contratos, negativos de Art Gate
+y 3.366 controles de recursos aprobados.
+#79 mergeado en `0186c9972754896f2e5f3d77ae054344c6cbaed4`: CI completo, Safari y
+PostgreSQL aprobados. Smoke sobre main: ambas apariencias de NanoGM, filtro del cuerpo,
+alas/conductos, restauración del contexto y modo normal PASS; cero errores de página.
+#78 conserva condición de borrador, sin campeones registrados.
 
 ## Pruebas ejecutadas localmente
 
@@ -45,8 +53,8 @@ no usa la mera existencia de un PR como prueba de integración.
 | Art Gate completo | NO APROBADO para los cinco nuevos; falta revisión animada y escala real |
 
 Evidencia seleccionada en `docs/quality/2026-10-09/`. Chromium local 153 headless;
-CI usa la versión declarada en el workflow. WebKit/PostgreSQL de #76 pasan en CI;
-la suite completa debe seguirse hasta su resultado final. Emulación ≠ iPhone físico.
+CI usa la versión declarada en el workflow. Las revisiones finales de #76/#77/#79
+pasaron la suite completa, WebKit y PostgreSQL antes del merge. Emulación ≠ iPhone físico.
 
 ## Rendimiento: corrección en PR #79
 
@@ -59,7 +67,7 @@ de otro campeón. Aislamiento: quitar composición del escenario no ayudó; limi
 filtro al sprite (sin repetirlo por cada trazo de alas/conductos) dio p95 33,4 ms.
 PR #79 implementa esa corrección: estrés completo repetido, p50 16,7 ms / p95 33,4 ms,
 225/225 controles funcionales y prueba de ambas apariencias/contexto gráfico pasan.
-Revisión visual realizada. Integración pendiente de CI. Evidencia antes/después en
+Revisión visual realizada. Integrado mediante #79 con CI completo aprobado. Evidencia antes/después en
 `docs/quality/2026-10-09/performance.json` y `performance-after.json`. No son mediciones
 de teléfono físico ni garantizan 60 FPS sostenidos.
 
@@ -79,7 +87,10 @@ comparativas antes de aprobar Talent Gate completo. Datos en `talent-structure.j
 CI también detectó cinco expectativas antiguas de nivel 5 en `t_boons.js`. Se corrigieron
 para exigir 39 bloqueado/40 habilitado, requisitos y presupuesto independientes, y la
 migración histórica en dos etapas con respaldo de nodos y reembolso del kit una sola vez.
-La suite completa de refuerzos pasó localmente, con cero errores de página.
+La suite completa de refuerzos pasó localmente, con cero errores de página. CI reveló
+además una comparación no reproducible de FacuGM: dos combates con azar distinto.
+#77/#79 agregan semilla reiniciada por medición (restaurada en finally) y control negativo
+sin refuerzo; pasan localmente sin reducir umbrales ni modificar balance del juego.
 
 ## Producción y seguridad
 
@@ -115,6 +126,8 @@ representativa con jugadores/dispositivos. Son juicios técnicos limitados a lo 
 
 | Sistema | Estimación | Brecha principal |
 |---|---:|---|
+| Combate y balance | 65 | Simulaciones y refuerzos probados; falta playtest competitivo prolongado |
+| Arenas y jefes | 65 | Cobertura funcional, sin certificar identidad y diversión de todos los escenarios |
 | Persistencia | 75 | Producción y más historiales reales no verificados |
 | Talent Gate | 60 | 19 árboles ordinarios cuestan 27 de 30 puntos; faltan especializaciones reales |
 | Ability Gate | 70 | Duraciones, todas las pasivas y PvP exhaustivo aún faltan |
@@ -123,16 +136,19 @@ representativa con jugadores/dispositivos. Son juicios técnicos limitados a lo 
 | Multijugador | 75 | Cuatro clientes locales pasan; falta red móvil real y carga prolongada |
 | UI/onboarding | 65 | Regresiones móviles parciales; falta estudio de uso y retención |
 | Game Master | 75 | RBAC/owner local probado; acceso de NanoGM real no comprobado |
+| Economía | 55 | Billetera y tienda probadas; costos, equidad percibida y mercado pendientes |
 | Monetización comercial | 25 | Proveedor, revisión legal, conciliación y mercado pendientes |
 | Comunidad | 20 | Plan preparado; canales y operaciones no publicados |
-| Rendimiento físico | 0 | Sin evaluación en dispositivo físico; 0 es ausencia de validación |
+| Rendimiento | 45 | Mejora headless medida; p95 de NanoGM aún supera 16,7 ms y faltan dispositivos físicos |
+| Telemetría | 50 | Eventos y privacidad probados localmente; no hay D1/D7 real validado |
 
 No existe una nota global defendible de 10/10 a partir de estas pruebas.
 
 ## Backlog ordenado para retomar sin repetir
 
-1. Cerrar CI de #76/#77 y resolver cualquier fallo; merge con SHA esperado y smoke posterior.
-   #74 queda sustituido por #76, no volver a aplicar su migración destructiva de maestrías.
+1. Verificar despliegue de main `0186c99` en Fondal Studios con respaldo y acceso autorizados.
+   Los merges de #76/#77/#79 están terminados; #74 fue cerrado como sustituido.
+   No volver a aplicar su migración destructiva de maestrías.
 2. Cinco kits completos con pasivas y tres ramas transformadoras. Implementar primero
    Solciju (fermentación, barricas, vino maldito, Gran Reserva); luego Brakk, Veyra, Morveth,
    Aelith. Pruebas de daño, duración, cooldown, límites por dueño, muerte, arena y red.
