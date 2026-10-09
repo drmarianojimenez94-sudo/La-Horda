@@ -9,7 +9,7 @@ caminar (frente, perfil y espalda):
   sombreado desvío de luz local dentro de la figura (volumen, no relleno plano)
   detalle   fracción del interior con bordes internos (pliegues, texturas, adornos)
 Pasa si cada medida cae dentro del rango del roster con un 15 % de tolerancia. Escribe docs/art-gate/style-gate.json.
-  python3 tools/art/painter/style_gate.py                 # roster encargado + campeones registrados
+  python3 tools/art/painter/style_gate.py --strict        # falla ante defectos del roster medible
   python3 tools/art/painter/style_gate.py <atlas.png> ... # hojas sueltas (salidas del pintor)
 """
 import json, sys, glob
@@ -24,11 +24,11 @@ CELL = 112
 TOL = .15
 
 
-def frames(path):
+def frames(path, rows=3):
     a = np.array(Image.open(path).convert('RGBA'))
-    if a.shape[0] < CELL * 3 or a.shape[1] < CELL * 4:
+    if a.shape[0] < CELL * rows or a.shape[1] < CELL * 4:
         return []
-    return [a[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] for r in range(3) for c in range(4)]
+    return [a[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] for r in range(rows) for c in range(4)]
 
 
 def measure(f):
@@ -76,29 +76,48 @@ def check(m, rng):
 
 def main():
     ref_rows, rng = reference()
-    targets = sys.argv[1:]
+    strict = "--strict" in sys.argv
+    targets = [arg for arg in sys.argv[1:] if arg != "--strict"]
+    explicit = bool(targets)
     if not targets:
         targets = sorted(set(glob.glob(str(ROOT / 'assets/sprites/champions/*/atlas.png'))
                              + glob.glob(str(ROOT / 'assets/sprites/champions/*/skins/*/atlas.png'))))
-    out = {'tolerance': TOL, 'range': rng, 'reference': ref_rows, 'sheets': {}}
+    out = {'tolerance': TOL, 'range': rng, 'reference': ref_rows, 'sheets': {}, 'skipped': []}
     bad = 0
     for t in targets:
         p = Path(t)
-        if Image.open(p).size != (448, 1008):
-            continue  # el gate cubre el formato 4x9 de la Expedición, la Ascensión y el pintor
-        m = sheet_metrics(p)
-        if not m:
-            continue
-        f = check(m, rng)
+        f = []
+        m = None
+        try:
+            with Image.open(p) as image:
+                supported = image.size == (448, 1008)
+            if not supported:
+                if not explicit:
+                    out['skipped'].append(str(p))
+                    continue  # otros formatos necesitan su propio gate, no reciben PASS
+                f.append('formato no soportado: se requiere atlas 448x1008')
+            else:
+                m = sheet_metrics(p)
+                if m is None:
+                    f.append('sin cuadros medibles: atlas vacío o incompleto')
+                else:
+                    f.extend(check(m, rng))
+                    if any(measure(frame) is None for frame in frames(p, rows=9)):
+                        f.append('faltan cuadros de animación medibles')
+        except (OSError, ValueError) as exc:
+            f.append('atlas ilegible: ' + str(exc))
         key = str(p.relative_to(ROOT)) if p.is_absolute() and ROOT in p.parents else str(p)
         out['sheets'][key] = {'metrics': m, 'pass': not f, 'fails': f}
         bad += bool(f)
         print(('PASS ' if not f else 'FAIL ') + key + ('' if not f else '  ' + '; '.join(f)))
-    if len(sys.argv) == 1:
+    if not explicit:
         (ROOT / 'docs/art-gate').mkdir(parents=True, exist_ok=True)
         (ROOT / 'docs/art-gate/style-gate.json').write_text(json.dumps(out, indent=1, ensure_ascii=False))
     print('rango del roster:', json.dumps({k: [round(a, 3), round(b, 3)] for k, (a, b) in rng.items()}))
-    sys.exit(1 if bad and len(sys.argv) > 1 else 0)
+    if not out["sheets"]:
+        print("FAIL: ningún atlas validado")
+        bad += 1
+    sys.exit(1 if bad and (explicit or strict) else 0)
 
 
 if __name__ == '__main__':

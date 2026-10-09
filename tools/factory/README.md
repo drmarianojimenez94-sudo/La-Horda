@@ -33,3 +33,13 @@ FACTORY_BASE_URL=http://127.0.0.1:8805 node tools/factory/event-runtime.js
 ```
 
 Los eventos con jefe seleccionan el encuentro nativo de su arena (nueve directores aprobados, nivel 10), no trasplantan controladores contextuales a mapas incompatibles. Hielo exige derrotar la forma final. El Set configurado dirige tiradas de Set y garantiza una pieza al derrotar al jefe durante el evento. La recompensa cosmética requiere ticket de cuenta, victoria final y validación temporal/objetivo del servidor; tiene retry en Resultados y propiedad idempotente. Los recibos ya ganados sobreviven a recargas en una cola local de hasta 20 por servidor/cuenta (sin sesión ni token); se restauran al entrar y se eliminan al confirmar, invalidarse o vencer. `node tools/alpha/event-receipts-test.js` prueba persistencia, cambios de cuenta/servidor y reintentos. Esto no es anticheat autoritativo: la simulación Alpha sigue en el cliente/host. El servidor valida permisos, catálogo, cuenta, ticket y repetición. Los multiplicadores temporales expiran sin sobrescribir configuración normal.
+
+## Gates ejecutables de progreso y habilidades
+
+- `gate talents`: carga/migración local y nube, niveles 1/39/40/60/90/99, idempotencia, maestría irreversible y caché por nivel.
+- `gate abilities`: medición diferencial de efectos en el motor y canario negativo; los clásicos conservan diagnóstico INFO.
+- `gate resources`: entradas reales de lanzamiento en 38 campeones a seis niveles; rechaza gasto sin energía, durante cooldown, pausa o muerte, y comprueba recursos finitos. Informa explícitamente excepciones por estado del kit y la definitiva transformada de Eren.
+- `gate passives`: pasivas clásicas con daño, curación y límites medidos.
+- `gate style`: métricas del roster en modo estricto; candidatos vacíos, ilegibles, incompletos o de formato incorrecto fallan. Los formatos ajenos al pintor se enumeran como omitidos, nunca PASS.
+
+Estas pruebas se complementan: recursos finitos no demuestran daño correcto, la comparación de categorías no certifica duración ni multijugador, y el gate de estilo numérico no sustituye la revisión visual contra el Caballero.
