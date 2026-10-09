@@ -49,8 +49,8 @@ function nanoMonsterDraw(h,scale){const k=nanoMonsterK(h);if(k<=0)return;const t
 // Cuerpo 1,5x y ennegrecido mientras dura la forma (el filtro solo donde el navegador lo soporta; si no, solo escala).
 (function(){if(typeof drawHeroBody!=='function')return;const o=drawHeroBody;
  drawHeroBody=function(h,drawScale){if(!nanoMonster(h))return o.apply(this,arguments);const k=1+.5*nanoMonsterK(h);
-  ctx.save();ctx.translate(h.x,h.y);ctx.scale(k,k);ctx.translate(-h.x,-h.y);const f=ctx.filter;if(typeof f==='string')ctx.filter='grayscale(1) brightness(.45) contrast(1.8)';
-  try{return o.apply(this,arguments);}finally{ctx.filter=f;ctx.restore();try{nanoMonsterDraw(h,(drawScale||2)/2);}catch(e){}}};})();
+  ctx.save();ctx.translate(h.x,h.y);ctx.scale(k,k);ctx.translate(-h.x,-h.y);
+  try{return o.apply(this,arguments);}finally{ctx.restore();try{nanoMonsterDraw(h,(drawScale||2)/2);}catch(e){}}};})();
 function ascNanoConduits(h,scale,alpha){
  const P=ascSkinOf(h),s=h.asState||{},n=fxBudget(s.regentUntil>runElapsedMs?10:5),t=ascT(),lift=ascLift(h);
  ctx.save();ctx.globalAlpha=alpha*.85;
@@ -127,7 +127,15 @@ const ascOriginalDrawPortador=drawPortador;drawPortador=function(h,scale,alpha){
  if(k==='velmira'){const s=h.asState||{};for(let i=0;i<4;i++){const a=Math.PI*(1.15+i*.23),cur=i===(s.mask|0);ascMaskShape(ASC_MASKS[i],h.x+Math.cos(a)*20,h.y-38*scale/2+Math.sin(a)*14-8,cur?7:4.5,alpha*(cur?.95:.55),cur?'#f3d1ff':'#b48cc8');}}
  if(k==='aurelia'){const t=ascT();ctx.save();ctx.globalAlpha=alpha*.85;ctx.fillStyle='#fff1b8';ctx.strokeStyle='#8a5a00';for(let i=0;i<3;i++){const a=t*1.4+i*2.094,x=h.x+Math.cos(a)*18,y=h.y-34+Math.sin(a)*6;ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x+3,y);ctx.lineTo(x,y+5);ctx.lineTo(x-3,y);ctx.closePath();ctx.fill();ctx.stroke();}ctx.restore();}
  if(k==='oriel'){const t=ascT();ctx.save();ctx.globalAlpha=alpha*.7;ctx.strokeStyle='#ffd0dc';ctx.lineWidth=1.5;for(const side of [-1,1]){ctx.beginPath();ctx.ellipse(h.x+side*18,h.y-26,4,9,side*.3+Math.sin(t*2)*.1,0,Math.PI*2);ctx.stroke();}ctx.restore();}
- const out=ascOriginalDrawPortador(ascBodyTarget(h,lift),scale,alpha);
+ // El filtro pertenece al cuerpo: envolver también alas/conductos ejecutaba el
+ // pipeline de color para cada trazo y multiplicaba el costo de la transformación.
+ let out;
+ if(nanoMonster(h)){
+  ctx.save();try{
+   if(typeof ctx.filter==='string')ctx.filter='grayscale(1) brightness(.45) contrast(1.8)';
+   out=ascOriginalDrawPortador(ascBodyTarget(h,lift),scale,alpha);
+  }finally{ctx.restore();}
+ }else out=ascOriginalDrawPortador(ascBodyTarget(h,lift),scale,alpha);
  if(k==='nano_gm')ascNanoConduits(h,scale,alpha);
  if(k==='vhal'){const t=ascT(),n=fxBudget(7);ctx.save();ctx.fillStyle='#d9e1ff';for(let i=0;i<n;i++){ctx.globalAlpha=alpha*(.35+.65*Math.abs(Math.sin(t*2+i*1.7)));ctx.fillRect(h.x-8+((i*37)%17),h.y-36+((i*23)%26),1.5,1.5);}ctx.restore();}
  if(k==='bront'){const t=ascT(),cit=(h.asState||{}).citadelUntil>runElapsedMs;ctx.save();ctx.globalAlpha=alpha*(.6+.4*Math.sin(t*3));ctx.fillStyle='#bfe8ff';ctx.beginPath();ctx.moveTo(h.x,h.y-30);ctx.lineTo(h.x+4,h.y-24);ctx.lineTo(h.x,h.y-18);ctx.lineTo(h.x-4,h.y-24);ctx.closePath();ctx.fill();
