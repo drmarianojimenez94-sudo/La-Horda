@@ -24,11 +24,11 @@ CELL = 112
 TOL = .15
 
 
-def frames(path):
+def frames(path, rows=3):
     a = np.array(Image.open(path).convert('RGBA'))
-    if a.shape[0] < CELL * 3 or a.shape[1] < CELL * 4:
+    if a.shape[0] < CELL * rows or a.shape[1] < CELL * 4:
         return []
-    return [a[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] for r in range(3) for c in range(4)]
+    return [a[r * CELL:(r + 1) * CELL, c * CELL:(c + 1) * CELL] for r in range(rows) for c in range(4)]
 
 
 def measure(f):
@@ -102,8 +102,8 @@ def main():
                     f.append('sin cuadros medibles: atlas vacío o incompleto')
                 else:
                     f.extend(check(m, rng))
-                    if any(measure(frame) is None for frame in frames(p)):
-                        f.append('faltan cuadros de caminar medibles')
+                    if any(measure(frame) is None for frame in frames(p, rows=9)):
+                        f.append('faltan cuadros de animación medibles')
         except (OSError, ValueError) as exc:
             f.append('atlas ilegible: ' + str(exc))
         key = str(p.relative_to(ROOT)) if p.is_absolute() and ROOT in p.parents else str(p)

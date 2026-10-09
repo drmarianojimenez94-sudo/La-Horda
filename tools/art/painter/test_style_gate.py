@@ -24,4 +24,7 @@ with tempfile.TemporaryDirectory() as tmp:
     donor.paste((0,0,0,0), (0,0,112,112)); incomplete=tmp/'incomplete.png'; donor.save(incomplete)
     result = subprocess.run([sys.executable, str(HERE/'style_gate.py'), str(incomplete)], capture_output=True, text=True)
     assert result.returncode != 0 and 'faltan cuadros' in result.stdout
+    attack = Image.open(valid).convert('RGBA'); attack.paste((0,0,0,0), (0,336,112,448)); attack.save(incomplete)
+    result = subprocess.run([sys.executable, str(HERE/'style_gate.py'), str(incomplete)], capture_output=True, text=True)
+    assert result.returncode != 0 and 'faltan cuadros' in result.stdout
 print('PASS style gate: empty, wrong grid, corrupt and missing frames rejected; reference accepted')
