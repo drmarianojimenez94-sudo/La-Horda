@@ -1,5 +1,5 @@
 // Pruebas de los REFUERZOS DE HABILIDAD (js/data/boons.js + js/systems/boons.js) y de los
-// TALENTOS TEMPRANOS (árbol desde el nivel 5 con su propia bolsa, js/systems/talents.js).
+// TALENT GATE (árbol desde el nivel 40 con su propia bolsa, js/systems/talents.js).
 //   Por cada guardián y cada refuerzo (también los dúos): se lanza la habilidad SIN y CON el
 //   refuerzo, en la misma escena (muñecos quietos alrededor), y se mide que transforme algo
 //   medible (daño, enemigos alcanzados, estado aplicado, zona en el piso, escudo, curación,
@@ -13,7 +13,7 @@ const BASE = process.env.SE_BASE_URL || 'http://127.0.0.1:8822';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL ') + n + (x !== undefined ? '  ' + JSON.stringify(x).slice(0, 500) : '')); if (!ok) fails++; };
 (async () => {
-  const browser = await chromium.launch({ args: ['--no-sandbox'] });
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || chromium.executablePath(), args: ['--no-sandbox'] });
   const page = await (await browser.newContext({ viewport: { width: 900, height: 506 } })).newPage();
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
@@ -142,36 +142,37 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
     state = 'playing'; return out; });
   check('ENDLESS.eleccion_con_1_refuerzo', en.n === 3 && en.boons === 1, en);
 
-  // ---- talentos tempranos
+  // ---- Talent Gate 40: la bolsa del árbol no consume puntos del kit
   const tal = await E(() => { const k = 'mago', c = save.champions[k]; c.talents = mkTalentState(); c.treeBonus = 0;
     const tree = talentTreeFor(k), roots = tree.nodes.filter(n => !n.requires), c2 = tree.nodes.find(n => n.requires === roots[0].id);
-    c.level = 4; const at4 = { pts: treePointsAvailable(k), buy: buyTalentNode(k, roots[0].id, true).ok };
-    c.level = 5; const tp0 = c.talentPoints; const at5 = { pts: treePointsAvailable(k), buy: buyTalentNode(k, roots[0].id, true).ok, left: treePointsAvailable(k), tpSame: c.talentPoints === tp0 };
-    c.level = 7; for (let i = 0; i < 3; i++) buyTalentNode(k, roots[0].id, true); const c2at7 = talentNodeLockReason(k, c2);
-    c.level = 8; const c2at8 = talentNodeLockReason(k, c2);
-    const curve = [5,10,19,30,40].map(l => treePointsEarned(l)); const tiers = tree.nodes.map(n => talentNodeMinLevel(k, n));
-    const d = document.createElement('div'); document.body.appendChild(d); renderTalentTree(d, k, () => {}); const banner = (d.querySelector('.talent-lock-banner')||{}).textContent || ''; d.remove();
-    return { at4, at5, c2at7, c2at8, curve, maxTier: Math.max(...tiers), banner: banner.slice(0, 200) }; });
-  check('TALENTOS.primer_punto_en_nivel_5', !tal.at4.buy && tal.at4.pts === 0 && tal.at5.pts === 1 && tal.at5.buy && tal.at5.left === 0 && tal.at5.tpSame, tal);
-  check('TALENTOS.escalones_por_nivel', /nivel 8/.test(tal.c2at7||'') && tal.c2at8 === null && tal.maxTier <= 26, tal);
-  check('TALENTOS.ritmo_durante_la_campania', JSON.stringify(tal.curve) === '[1,7,16,29,40]' && /Escalones/.test(tal.banner), tal);
+    c.level = 39; const at39 = { pts: treePointsAvailable(k), buy: buyTalentNode(k, roots[0].id, true).ok };
+    c.level = 40; const tp0 = c.talentPoints; const at40 = { pts: treePointsAvailable(k), buy: buyTalentNode(k, roots[0].id, true).ok, left: treePointsAvailable(k), tpSame: c.talentPoints === tp0 };
+    c.level = 44; for (let i = 0; i < 3; i++) buyTalentNode(k, roots[0].id, true); const c2at44 = talentNodeLockReason(k, c2);
+    c.level = 45; const c2at45 = talentNodeLockReason(k, c2);
+    c.level = 46; const c2at46 = talentNodeLockReason(k, c2);
+    const curve = [1,39,40,60,90,99].map(l => treePointsEarned(l)); const tiers = tree.nodes.map(n => talentNodeMinLevel(k, n));
+    c.level=39; const d = document.createElement('div'); document.body.appendChild(d); renderTalentTree(d, k, () => {}); const banner = (d.querySelector('.talent-lock-banner')||{}).textContent || ''; d.remove();
+    return { at39, at40, c2at44, c2at45, c2at46, curve, maxTier: Math.max(...tiers), banner: banner.slice(0, 200) }; });
+  check('TALENTOS.primer_punto_exclusivamente_en_40', !tal.at39.buy && tal.at39.pts === 0 && tal.at40.pts === 1 && tal.at40.buy && tal.at40.left === 0 && tal.at40.tpSame, tal);
+  check('TALENTOS.escalon_y_presupuesto_independientes', /nivel 45/.test(tal.c2at44||'') && /Sin puntos/.test(tal.c2at45||'') && tal.c2at46 === null && tal.maxTier <= 75, tal);
+  check('TALENTOS.curva_hasta_99_y_previsualizacion_bloqueada', JSON.stringify(tal.curve) === '[0,0,1,11,26,30]' && /nivel 40/.test(tal.banner), tal);
 
   // ---- migración de un guardado viejo (árbol pagado con la bolsa compartida)
-  const mig = await E(() => { const old = JSON.parse(JSON.stringify(save)); delete old.talentTreeV2;
+  const mig = await E(() => { const old = JSON.parse(JSON.stringify(save)); delete old.talentTreeV2; delete old.talentGate40V1;
     const c = old.champions.axiom; c.level = 40; c.xp = 0; c.talentPoints = 3; c.unlocked = true;
     c.skillMastery = [{useXp:0,useLvl:1,alloc:10},{useXp:0,useLvl:1,alloc:10},{useXp:0,useLvl:1,alloc:6}]; c.ultMastery = {useXp:0,useLvl:1,alloc:0};
     c.talents = { nodes: {ax_sis_c1:3, ax_sis_c2:3, ax_sis_c3:3, ax_sis_s1:1}, picks:{}, mastery:null, masteryNodes:{} }; // 13 puntos gastados
     const g = old.champions.guerrero; g.level = 12; g.talentPoints = 11; g.talents = { nodes:{}, picks:{}, mastery:null, masteryNodes:{} };
     const h = old.champions.tanque; h.level = 9; h.talentPoints = 0; h.skillMastery = [{useXp:0,useLvl:1,alloc:3},{useXp:0,useLvl:1,alloc:3},{useXp:0,useLvl:1,alloc:0}];
     h.talents = { nodes: {tq_x:0}, picks:{}, mastery:null, masteryNodes:{} };
-    const tn = talentTreeFor('tanque').nodes.filter(n => !n.requires).slice(0, 2); h.talents.nodes = {[tn[0].id]:3, [tn[1].id]:2}; // 5 gastados a nivel 9 (hoy daría 5)
+    const tn = talentTreeFor('tanque').nodes.filter(n => !n.requires).slice(0, 2); h.talents.nodes = {[tn[0].id]:3, [tn[1].id]:2}; // inversión histórica: se respalda, no se activa antes de 40
     localStorage.setItem(SAVE_KEY, JSON.stringify(old)); loadSave();
     const A = save.champions.axiom, G = save.champions.guerrero, T = save.champions.tanque;
-    const out = { flag: save.talentTreeV2, axTP: A.talentPoints, axNodes: A.talents.nodes, axTree: treePointsAvailable('axiom'), axBonus: A.treeBonus||0,
-      gTP: G.talentPoints, gTree: treePointsAvailable('guerrero'), tTP: T.talentPoints, tTree: treePointsAvailable('tanque'), tNodes: Object.values(T.talents.nodes).reduce((a,b)=>a+b,0) };
+    const out = { flag: save.talentTreeV2 && save.talentGate40V1, axBackup:A.talentGate40Legacy.nodes, axTP: A.talentPoints, axNodes: A.talents.nodes, axTree: treePointsAvailable('axiom'), axBonus: A.treeBonus||0,
+      gTP: G.talentPoints, gTree: treePointsAvailable('guerrero'), tTP: T.talentPoints, tTree: treePointsAvailable('tanque'), tNodes: Object.values(T.talents.nodes).reduce((a,b)=>a+b,0), tBackup:Object.values(T.talentGate40Legacy.nodes).reduce((a,b)=>a+b,0) };
     loadSave(); out.again = save.champions.axiom.talentPoints; return out; });
-  check('MIGRACION.nodos_intactos_y_puntos_devueltos', mig.flag === true && mig.axTP === 16 && mig.axNodes.ax_sis_s1 === 1 && mig.axNodes.ax_sis_c1 === 3 && mig.axTree === 27 && mig.again === 16, mig);
-  check('MIGRACION.puntos_retroactivos_y_sin_deuda', mig.gTP === 11 && mig.gTree === 9 && mig.tTP === 5 && mig.tTree === 0 && mig.tNodes === 5, mig);
+  check('MIGRACION.respaldo_y_reembolso_legacy_una_vez', mig.flag === true && mig.axTP === 16 && Object.keys(mig.axNodes).length === 0 && mig.axBackup.ax_sis_s1 === 1 && mig.axBackup.ax_sis_c1 === 3 && mig.axTree === 1 && mig.axBonus === 0 && mig.again === 16, mig);
+  check('MIGRACION.nivel_bajo_conserva_respaldo_sin_habilitar_arbol', mig.gTP === 11 && mig.gTree === 0 && mig.tTP === 5 && mig.tTree === 0 && mig.tNodes === 0 && mig.tBackup === 5, mig);
 
   // ---- partida real con bots que tienen refuerzos: nada se rompe
   const real = await E(() => { let casts = 0; for (const [cls, arena] of [['mago','bosque'], ['nigromante','hielo'], ['libertador','acuatica'], ['eren','infernal']]){
