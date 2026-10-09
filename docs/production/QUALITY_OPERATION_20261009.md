@@ -48,15 +48,20 @@ Evidencia seleccionada en `docs/quality/2026-10-09/`. Chromium local 153 headles
 CI usa la versión declarada en el workflow. WebKit/PostgreSQL de #76 pasan en CI;
 la suite completa debe seguirse hasta su resultado final. Emulación ≠ iPhone físico.
 
-## Rendimiento: señal pendiente
+## Rendimiento: corrección en PR #79
 
 Estrés local de Ascensión: 150 enemigos, seis segundos de lanzamiento repetido por
 campeón, viewport 844×390. Diez campeones, sin errores de página. NanoGM: p50 99,9 ms,
 p95 116,6 ms; FacuGM: p95 33,3 ms; los otros ocho: p95 16,7–16,8 ms.
 El script pasa sus límites de entidades/partículas, pero no exige un presupuesto de FPS.
-Por ello **no equivale a aprobar rendimiento**. Repetir NanoGM primero/último, aislar
-calentamiento/carga de recursos y perfilar antes de atribuir causa. Evidencia completa
-en `docs/quality/2026-10-09/performance.json`. No son mediciones de teléfono físico.
+Por ello **no equivale a aprobar rendimiento**. NanoGM repitió p95 100,1 ms después
+de otro campeón. Aislamiento: quitar composición del escenario no ayudó; limitar el
+filtro al sprite (sin repetirlo por cada trazo de alas/conductos) dio p95 33,4 ms.
+PR #79 implementa esa corrección: estrés completo repetido, p50 16,7 ms / p95 33,4 ms,
+225/225 controles funcionales y prueba de ambas apariencias/contexto gráfico pasan.
+Revisión visual realizada. Integración pendiente de CI. Evidencia antes/después en
+`docs/quality/2026-10-09/performance.json` y `performance-after.json`. No son mediciones
+de teléfono físico ni garantizan 60 FPS sostenidos.
 
 ## Producción y seguridad
 
