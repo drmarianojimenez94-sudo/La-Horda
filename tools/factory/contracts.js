@@ -5,6 +5,8 @@ const crypto = require('node:crypto');
 const ROOT = path.resolve(__dirname, '../..');
 const GATES = {
   reference: ['node', 'tools/balance/check-entry-reference.js'],
+  talents: ['node', 'tools/quality/test-talent-gate.js'],
+  abilities: ['node', 'tools/bible/ability-gate.js', '--strict'],
   balance: ['node', 'tools/balance/entry-gate.js'],
   visuals: ['node', 'tools/art/roster_visual_test.js'],
   style: ['python3', 'tools/art/painter/style_gate.py'],

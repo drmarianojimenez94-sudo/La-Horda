@@ -23,21 +23,11 @@ function talentSkillCdMult(classKey, skillKey){
    sabe nada de ningún guardián en particular -agregar/balancear un talento es tocar solo su
    entrada de datos, nunca esta sección-.
 
-   Moneda (TALENTOS TEMPRANOS, reseña del crítico #3): el árbol tiene SU PROPIA bolsa, separada de
-   save.champions[classKey].talentPoints (esa sigue siendo la de las 4 ranuras del kit, que se suben
-   con el "+" del HUD). Antes los dos compartían bolsa y el árbol recién se abría en el nivel 40, o
-   sea al terminar la campaña: el jugador casual nunca veía una build. Ahora:
-     - Puntos de árbol GANADOS = f(nivel) (treePointsEarned): el primero en el nivel 5, uno por nivel
-       desde ahí y uno extra en cada nivel redondo (10, 20, 30...). Nivel 40 = 40 puntos.
-     - Puntos GASTADOS = suma de costo×rango de lo comprado (árbol + mini-árbol de la Maestría).
-     - Disponibles = ganados + treeBonus (migración) - gastados. Se DERIVA, no se guarda: perder
-       nivel por la derrota y volver a subirlo nunca regala puntos dos veces.
-     - Cada escalón de una rama se abre por nivel según su profundidad (TALENT_TIER_LEVELS): la
-       build crece durante toda la campaña (con la curva de progression.js: ~nivel 19 al ganar la
-       1ra arena, ~30 a mitad de campaña, ~40 al final).
-   Migración (save.js, talentTreeV2): lo que un guardado viejo había gastado en el árbol se DEVUELVE
-   a la bolsa del kit, los nodos comprados se conservan y, si gastó más de lo que hoy daría su nivel,
-   la diferencia queda en treeBonus (nunca queda "debiendo").
+   El árbol usa una bolsa separada del kit: se abre en nivel 40 con un punto,
+   gana uno cada dos niveles y llega a 30 en nivel 99. La Maestría abre en 90.
+   Los puntos disponibles se derivan del nivel y del gasto, sin duplicarlos al
+   bajar y recuperar niveles. Las compras de Maestría sobreviven al respec.
+   Los guardados anteriores migran en save.js con respaldo de asignaciones.
 
    Nodo: {id, branch, type:"common"|"special", maxRank, cost, requires:id|null,
           exclusiveWith:id|null, minLevel, name, desc, rankDesc(rank), mods(rank)}
@@ -54,12 +44,12 @@ function talentSkillCdMult(classKey, skillKey){
    mismo formato de nodo para miniTree, con minLevel:90 implícito.
    ============================================================ */
 const TALENT_MASTERY_MIN_LEVEL = 90;
-const TALENT_TREE_MIN_LEVEL = 40; // Talent Gate: el árbol se habilita recién al nivel 40   // primer punto y primer escalón del árbol (antes 40)
+const TALENT_TREE_MIN_LEVEL = 40; // primer punto y primer escalón del árbol
 // Nivel que abre cada escalón de una rama, según su profundidad (0 = nodo raíz de la rama).
 const TALENT_TIER_LEVELS = [40, 45, 50, 60, 75];
-// Puntos de árbol ganados a un nivel dado (el primero en el nivel 5; +1 extra en cada nivel redondo).
+// Puntos de árbol: nivel 40 = 1, nivel 99 = 30.
 function treePointsEarned(level){
-  level = level|0;
+  level = Math.min(99, Math.max(0, level|0));
   if(level < TALENT_TREE_MIN_LEVEL) return 0;
   return 1 + Math.floor((level - TALENT_TREE_MIN_LEVEL)/2); // escasez: 1 punto inicial y uno cada 2 niveles
 }
@@ -94,7 +84,7 @@ function talentNodeDepth(classKey, node){
   return (_TALENT_DEPTH[key] = d);
 }
 function talentNodeMinLevel(classKey, node){
-  if(node.minLevel) return node.minLevel;
+  if(node.minLevel) return Math.max(TALENT_TREE_MIN_LEVEL, node.minLevel);
   const d = talentNodeDepth(classKey, node);
   return TALENT_TIER_LEVELS[Math.min(d, TALENT_TIER_LEVELS.length-1)];
 }
@@ -242,7 +232,7 @@ function talentPurchasedNodesWithRank(classKey){
     if(rank>0) out.push({node, rank});
   }
   const tree = talentTreeFor(classKey);
-  if(tree && tree.masteries && st.mastery){
+  if(champion.level >= TALENT_MASTERY_MIN_LEVEL && tree && tree.masteries && st.mastery){
     const m = tree.masteries[st.mastery];
     if(m && m.miniTree){
       for(const node of m.miniTree){
@@ -261,7 +251,7 @@ function talentModsSignature(classKey){
   // qué está equipado, la firma cambia y el caché se recalcula -si no, un ítem recién puesto
   // no se notaría hasta la próxima compra de talento-.
   const equipSig = champ && champ.equipment ? EQUIP_SLOT_TYPES.map(t=>champ.equipment[t]||"").join(",") : "";
-  return JSON.stringify([champ && champ.level>=TALENT_TREE_MIN_LEVEL, st.nodes, st.mastery, st.masteryNodes, equipSig]);
+  return JSON.stringify([champ && champ.level>=TALENT_TREE_MIN_LEVEL, champ && champ.level>=TALENT_MASTERY_MIN_LEVEL, st.nodes, st.mastery, st.masteryNodes, equipSig]);
 }
 // Aplica un array de mods (formato común a nodos de talento e ítems legendarios/míticos) a los
 // baldes global/bySkill -única lógica de aplicación, para no duplicarla entre ambas fuentes.
@@ -391,11 +381,15 @@ function talentSynergySkillLine(classKey, skillKey){
 }
 
 /* ---------------- RESPEC POR ORO ----------------
-   Reiniciar el árbol de un guardián: devuelve TODO lo gastado (árbol + mini-árbol de la Maestría)
+   Reiniciar el árbol de un guardián: devuelve solo lo gastado en el árbol ordinario
    a su bolsa -la bolsa se deriva de nivel + treeBonus - gastado, así que nunca se pierde un punto-.
    El primero es gratis; después cuesta según el nivel del guardián y cada reinicio encarece el
-   siguiente. La Maestría elegida se conserva (es permanente por diseño). Solo fuera de partida. */
+   siguiente. La Maestría elegida y sus nodos se conservan (son permanentes por diseño). Solo fuera de partida. */
 const TALENT_RESPEC_BASE = 100, TALENT_RESPEC_PER_LEVEL = 40, TALENT_RESPEC_GROWTH = 0.25, TALENT_RESPEC_MAX_STEPS = 8;
+function talentRespecRefund(classKey){
+  const st = talentState(classKey);
+  return talentAllNodes(classKey).reduce((sum, node)=>sum + (st.nodes[node.id]||0)*(node.cost||1), 0);
+}
 function talentRespecCount(classKey){ const c = save.champions[classKey]; return c ? (c.talentRespecs|0) : 0; }
 function talentRespecCost(classKey){
   const c = save.champions[classKey]; if(!c) return 0;
@@ -408,7 +402,7 @@ function talentRespecLockReason(classKey){
   const c = save.champions[classKey];
   if(!c) return "Guardián inexistente";
   if((typeof state!=="undefined" && (state==="playing" || state==="paused" || state==="buff")) || (typeof netMatch!=="undefined" && netMatch)) return "No se puede reiniciar durante una partida";
-  if(treePointsSpent(classKey) <= 0) return "No hay puntos invertidos para reiniciar";
+  if(talentRespecRefund(classKey) <= 0) return "No hay puntos del árbol ordinario para reiniciar";
   const cost = talentRespecCost(classKey);
   if((save.gold||0) < cost) return `Oro insuficiente (cuesta ${cost}, tenés ${save.gold||0})`;
   return null;
@@ -418,17 +412,17 @@ function talentRespec(classKey, confirmed){
   const reason = talentRespecLockReason(classKey);
   if(reason) return {ok:false, reason};
   const cost = talentRespecCost(classKey);
-  if(!confirmed) return {ok:false, needsConfirm:true, cost, refund:treePointsSpent(classKey)};
+  if(!confirmed) return {ok:false, needsConfirm:true, cost, refund:talentRespecRefund(classKey)};
   const c = save.champions[classKey], st = talentState(classKey);
   const before = treePointsAvailable(classKey) + treePointsSpent(classKey);
   save.gold -= cost;
-  st.nodes = {}; st.picks = {}; st.masteryNodes = {};
+  st.nodes = {}; st.picks = {};
   c.talentRespecs = (c.talentRespecs|0) + 1;
   delete TALENT_MODS_CACHE[classKey];
   if(typeof invalidatePassiveCache==="function") invalidatePassiveCache();
   persist();
   if(typeof net!=="undefined" && net && net.role==="guest" && typeof netSendLoadout==="function") netSendLoadout(true);
-  return {ok:true, cost, points:treePointsAvailable(classKey), lost: before - treePointsAvailable(classKey)};
+  return {ok:true, cost, points:treePointsAvailable(classKey), lost: before - treePointsAvailable(classKey) - treePointsSpent(classKey)};
 }
 
 // Teletransporte de Axiom con cargas (sección 12/37): una carga bancada se gasta SIN tocar el
