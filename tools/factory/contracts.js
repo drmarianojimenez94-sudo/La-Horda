@@ -7,9 +7,11 @@ const GATES = {
   reference: ['node', 'tools/balance/check-entry-reference.js'],
   talents: ['node', 'tools/quality/test-talent-gate.js'],
   abilities: ['node', 'tools/bible/ability-gate.js', '--strict'],
+  resources: ['node', 'tools/quality/test-ability-resources.js'],
+  passives: ['node', 'tools/quality/test-classic-passives.js'],
   balance: ['node', 'tools/balance/entry-gate.js'],
   visuals: ['node', 'tools/art/roster_visual_test.js'],
-  style: ['python3', 'tools/art/painter/style_gate.py'],
+  style: ['python3', 'tools/art/painter/style_gate.py', '--strict'],
   audio: ['node', 'tools/audio/t_audio_mix.js'],
   multiplayer: ['node', 'tools/net-test/lobby_code_skins.js'],
   performance: ['node', 'tools/audit/fps.js']
