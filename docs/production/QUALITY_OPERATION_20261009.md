@@ -15,6 +15,8 @@ No se duplicaron esos motores. Esta ejecución **no completa el alcance comercia
   imágenes vacías, corruptas, tamaño incorrecto y cualquiera de las 36 celdas ausente.
   Modo global estricto propaga fallos. Regresiones de Expedición e Ynara actualizadas
   para exigir talentos bloqueados antes de 40, no para habilitarlos prematuramente.
+  La lista ejecutable de gates queda separada de la evidencia versionada de manifiestos
+  schema 1; los diez contratos existentes conservan sus requisitos originales.
 - **#78, draft:** diez recetas artísticas y tres elementos reutilizables, reproducibles
   por fábrica. Sin integración a catálogo, sin habilidades nuevas, sin Art Gate aprobado.
 
@@ -26,7 +28,7 @@ no usa la mera existencia de un PR como prueba de integración.
 | Verificación | Resultado y alcance |
 |---|---|
 | Talent Gate | PASS: niveles 1/39/40/60/90/99, recarga, migración one-shot, nube y respec |
-| Factory contract | 26/26; incluye controles negativos |
+| Factory contract | 27/27; incluye controles negativos y compatibilidad de evidencia schema 1 |
 | Referencia de balance | PASS, sin cambiar knownChampions |
 | Balance Gate | PASS: 38 registrados, 20 candidatos existentes, 60 simulaciones de 150 s |
 | Ability Gate diferencial | 38 campeones, cero FAIL nuevos, cero page errors; clásicos con INFO |
@@ -45,6 +47,16 @@ no usa la mera existencia de un PR como prueba de integración.
 Evidencia seleccionada en `docs/quality/2026-10-09/`. Chromium local 153 headless;
 CI usa la versión declarada en el workflow. WebKit/PostgreSQL de #76 pasan en CI;
 la suite completa debe seguirse hasta su resultado final. Emulación ≠ iPhone físico.
+
+## Rendimiento: señal pendiente
+
+Estrés local de Ascensión: 150 enemigos, seis segundos de lanzamiento repetido por
+campeón, viewport 844×390. Diez campeones, sin errores de página. NanoGM: p50 99,9 ms,
+p95 116,6 ms; FacuGM: p95 33,3 ms; los otros ocho: p95 16,7–16,8 ms.
+El script pasa sus límites de entidades/partículas, pero no exige un presupuesto de FPS.
+Por ello **no equivale a aprobar rendimiento**. Repetir NanoGM primero/último, aislar
+calentamiento/carga de recursos y perfilar antes de atribuir causa. Evidencia completa
+en `docs/quality/2026-10-09/performance.json`. No son mediciones de teléfono físico.
 
 ## Producción y seguridad
 
