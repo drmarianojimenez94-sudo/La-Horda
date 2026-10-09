@@ -54,14 +54,14 @@ function talentSkillCdMult(classKey, skillKey){
    mismo formato de nodo para miniTree, con minLevel:90 implícito.
    ============================================================ */
 const TALENT_MASTERY_MIN_LEVEL = 90;
-const TALENT_TREE_MIN_LEVEL = 5;   // primer punto y primer escalón del árbol (antes 40)
+const TALENT_TREE_MIN_LEVEL = 40; // Talent Gate: el árbol se habilita recién al nivel 40   // primer punto y primer escalón del árbol (antes 40)
 // Nivel que abre cada escalón de una rama, según su profundidad (0 = nodo raíz de la rama).
-const TALENT_TIER_LEVELS = [5, 8, 12, 18, 26];
+const TALENT_TIER_LEVELS = [40, 45, 50, 60, 75];
 // Puntos de árbol ganados a un nivel dado (el primero en el nivel 5; +1 extra en cada nivel redondo).
 function treePointsEarned(level){
   level = level|0;
   if(level < TALENT_TREE_MIN_LEVEL) return 0;
-  return (level - TALENT_TREE_MIN_LEVEL + 1) + Math.floor(level/10);
+  return 1 + Math.floor((level - TALENT_TREE_MIN_LEVEL)/2); // escasez: 1 punto inicial y uno cada 2 niveles
 }
 // Lo gastado en el árbol y en el mini-árbol de la Maestría (costo × rango).
 function treePointsSpent(classKey){
@@ -114,7 +114,7 @@ function talentState(classKey){
   if(!c.talents) c.talents = mkTalentState();
   return c.talents;
 }
-function talentRank(classKey, id){ return talentState(classKey).nodes[id] || 0; }
+function talentRank(classKey, id){ const c=save.champions[classKey]; return c && c.level>=TALENT_TREE_MIN_LEVEL ? (talentState(classKey).nodes[id] || 0) : 0; }
 function talentAllNodes(classKey){
   const tree = talentTreeFor(classKey);
   return tree ? tree.nodes : [];
@@ -130,6 +130,7 @@ function talentNodeLockReason(classKey, node){
   const champ = save.champions[classKey];
   const st = talentState(classKey);
   const rank = st.nodes[node.id] || 0;
+  if(!champ || champ.level < TALENT_TREE_MIN_LEVEL) return `Requiere nivel ${TALENT_TREE_MIN_LEVEL}`;
   if(rank >= node.maxRank) return "MÁX";
   { const need = talentNodeMinLevel(classKey, node); if(champ.level < need) return `Requiere nivel ${need}`; }
   { const taken = [].concat(node.exclusiveWith||[]).find(x=>(st.nodes[x]||0) > 0); // exclusiveWith: id o lista de ids
@@ -233,6 +234,8 @@ function buyMasteryNode(classKey, id, confirmed){
 // talentSkillMods), sin que ninguna fórmula de combate necesite saber qué talento existe.
 function talentPurchasedNodesWithRank(classKey){
   const out = [];
+  const champion = save.champions[classKey];
+  if(!champion || champion.level < TALENT_TREE_MIN_LEVEL) return out; // guardados antiguos no activan talentos prematuros
   const st = talentState(classKey);
   for(const node of talentAllNodes(classKey)){
     const rank = st.nodes[node.id]||0;
@@ -258,7 +261,7 @@ function talentModsSignature(classKey){
   // qué está equipado, la firma cambia y el caché se recalcula -si no, un ítem recién puesto
   // no se notaría hasta la próxima compra de talento-.
   const equipSig = champ && champ.equipment ? EQUIP_SLOT_TYPES.map(t=>champ.equipment[t]||"").join(",") : "";
-  return JSON.stringify([st.nodes, st.mastery, st.masteryNodes, equipSig]);
+  return JSON.stringify([champ && champ.level>=TALENT_TREE_MIN_LEVEL, st.nodes, st.mastery, st.masteryNodes, equipSig]);
 }
 // Aplica un array de mods (formato común a nodos de talento e ítems legendarios/míticos) a los
 // baldes global/bySkill -única lógica de aplicación, para no duplicarla entre ambas fuentes.
@@ -345,6 +348,8 @@ function talentSkillMods(classKey, skillKey){
    tiene ahí el loadout del invitado, así que cada héroe usa SUS puntos. */
 function talentSynergies(classKey){ return (typeof TALENT_SYNERGIES!=="undefined" && TALENT_SYNERGIES[classKey]) || []; }
 function talentSynergyPoints(classKey, syn){
+  const c = save.champions[classKey];
+  if(!c || c.level < TALENT_TREE_MIN_LEVEL) return 0;
   const st = talentState(classKey);
   return syn.from.reduce((s,id)=>s + ((st.nodes||{})[id]||0), 0);
 }
