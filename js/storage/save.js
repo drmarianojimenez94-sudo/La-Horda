@@ -240,7 +240,8 @@ function _loadSaveInner(){
       // árbol vuelve a la bolsa del kit, los nodos comprados quedan y los puntos del árbol se dan
       // retroactivos según el nivel (si gastó más de lo que hoy daría su nivel, la diferencia queda
       // en treeBonus para que nunca quede "debiendo").
-      if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
+      if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); }
+      if(!parsed.talentGate40V1){ talentGate40Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
       save.recycleDust = Math.max(0, Math.min(0.99, +parsed.recycleDust || 0));
       // dificultades: guardados de antes no las tienen (todo en Normal); forma segura siempre
@@ -267,6 +268,27 @@ function _loadSaveInner(){
 }
 // true si el último loadSave() falló: persistNow no pisa el guardado real con el de fábrica.
 let saveLoadFailed = false;
+
+// Migración one-shot del Talent Gate 40: conserva el nivel y la maestría,
+// reintegra nodos del árbol a una bolsa derivada sin puntos heredados.
+// Se conservan las compras antiguas para auditoría en backup de la cuenta.
+function talentGate40Migrate(){
+  save.talentGate40V1 = true;
+  for(const k in save.champions){
+    const c = save.champions[k];
+    if(!c) continue;
+    if(!c.talents) continue;
+    const spent = typeof treePointsSpent === "function" ? treePointsSpent(k) : 0;
+    if(spent > 0){
+      c.talentGate40Legacy = {nodes:Object.assign({},c.talents.nodes||{}),masteryNodes:Object.assign({},c.talents.masteryNodes||{}),spent:spent};
+      c.talents.nodes = {};
+      c.talents.masteryNodes = {};
+    }
+    c.treeBonus = 0;
+  }
+  if(typeof TALENT_MODS_CACHE!=="undefined") for(const k in TALENT_MODS_CACHE) delete TALENT_MODS_CACHE[k];
+}
+
 function talentTreeV2Migrate(){
   save.talentTreeV2 = true;
   if(typeof treePointsSpent!=="function") return;
