@@ -162,7 +162,7 @@ function renderTalentTree(panel, classKey, rerender){
     }).join("")}</div>`;
   }
   {
-    const spent = treePointsSpent(classKey), cost = talentRespecCost(classKey), why = talentRespecLockReason(classKey);
+    const spent = talentRespecRefund(classKey), cost = talentRespecCost(classKey), why = talentRespecLockReason(classKey);
     const costTxt = cost > 0 ? `🪙 ${typeof fmtGold==="function" ? fmtGold(cost) : cost}` : "gratis (el primero)";
     const ptsTxt = spent===1 ? "el punto invertido" : `los ${spent} puntos invertidos`;
     html += `<div class="tt-respec"><span>Reiniciar el árbol te devuelve ${spent>0 ? ptsTxt : "lo invertido"} · ${costTxt}</span>
@@ -221,7 +221,7 @@ function renderTalentTree(panel, classKey, rerender){
       const res = talentRespec(classKey, false);
       if(!res.needsConfirm){ if(res.reason) gameAlert(res.reason); return; }
       const costTxt = res.cost > 0 ? `Cuesta 🪙 ${typeof fmtGold==="function" ? fmtGold(res.cost) : res.cost} de oro.` : "Este primer reinicio es gratis.";
-      gameConfirm(`Vas a reiniciar el árbol de talentos de ${cls.name}: ${res.refund===1 ? "se te devuelve el punto invertido para usarlo de nuevo" : `se te devuelven los ${res.refund} puntos invertidos para repartirlos de nuevo`} (la Maestría elegida se conserva). ${costTxt} ¿Continuar?`, {okText:"Reiniciar"}).then(ok=>{
+      gameConfirm(`Vas a reiniciar el árbol de talentos de ${cls.name}: ${res.refund===1 ? "se te devuelve el punto invertido para usarlo de nuevo" : `se te devuelven los ${res.refund} puntos invertidos para repartirlos de nuevo`} (la Maestría elegida y sus nodos son permanentes y se conservan). ${costTxt} ¿Continuar?`, {okText:"Reiniciar"}).then(ok=>{
         if(!ok) return;
         const r2 = talentRespec(classKey, true);
         if(r2.ok) rerender(); else if(r2.reason) gameAlert(r2.reason);

@@ -5,6 +5,8 @@ const crypto = require('node:crypto');
 const ROOT = path.resolve(__dirname, '../..');
 const GATES = {
   reference: ['node', 'tools/balance/check-entry-reference.js'],
+  talents: ['node', 'tools/quality/test-talent-gate.js'],
+  abilities: ['node', 'tools/bible/ability-gate.js', '--strict'],
   balance: ['node', 'tools/balance/entry-gate.js'],
   visuals: ['node', 'tools/art/roster_visual_test.js'],
   style: ['python3', 'tools/art/painter/style_gate.py'],
@@ -12,6 +14,9 @@ const GATES = {
   multiplayer: ['node', 'tools/net-test/lobby_code_skins.js'],
   performance: ['node', 'tools/audit/fps.js']
 };
+// Schema 1 is persisted. New runnable gates cannot silently change its required fields.
+// cli.js gate all still executes every release gate; STRUCTURAL_PASS is not approval.
+const MANIFEST_V1_EVIDENCE = ['reference','balance','visuals','style','audio','multiplayer','performance'];
 function safeFile(file, root = ROOT) {
   if (typeof file !== 'string' || !file || path.isAbsolute(file)) return null;
   const resolved = path.resolve(root, file);
@@ -99,7 +104,7 @@ function validate(m, root = ROOT) {
   } else check(m.set == null, 'FOUNDER has no Set (no loot, no progression rewards)');
   const budgets = m.budgets || {}, caps = BUDGETS[category] || BUDGETS.STANDARD;
   for (const [key, cap] of Object.entries(caps)) check(Number.isInteger(budgets[key]) && budgets[key] >= 0 && budgets[key] <= cap, `budgets.${key} must be bounded by ${cap}`);
-  for (const gate of Object.keys(GATES)) check(!!safeFile(m.evidence?.[gate], root), `${gate} evidence required (file presence does not prove gate passed)`);
+  for (const gate of MANIFEST_V1_EVIDENCE) check(!!safeFile(m.evidence?.[gate], root), `${gate} evidence required (file presence does not prove gate passed)`);
   return errors;
 }
 function scaffold(id, category = 'STANDARD') {

@@ -56,7 +56,8 @@ function defaultSave(){
     codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
     ciudadV1:true,          // la Ciudad Maldita (Arena 01) pasó a ser jugable (ver loadSave: nadie pierde la arena que ya tenía abierta)
-    talentTreeV2:true,      // el árbol de talentos tiene su propia bolsa desde el nivel 5 (ver talentTreeV2Migrate)
+    talentTreeV2:true,      // bolsa del árbol separada de las mejoras del kit
+    talentGate40V1:true,    // los perfiles nuevos ya usan el árbol desde nivel 40
     minasV1:true,           // las Minas Profundas (Arena 09) pasaron a ser jugables y la campaña se reordenó (ver minasV1Migrate)
     legacyOpenArenas:[],    // arenas que un guardado viejo ya tenía abiertas antes del orden canónico
     campaignResetV1:true,   // modo campaña: ver campaignReset() en loadSave
@@ -211,8 +212,10 @@ function _loadSaveInner(){
       // (ej. antes de una prueba real con amigos) sin tocar a un guardado recién creado, que ya
       // nace con todas las flags en true. Si hace falta otro reinicio más, agregar campaignResetV4
       // igual (acá, en defaultSave() y en campaignReset()).
-      if(!parsed.campaignResetV3){ campaignReset(raw); }
-      if(!parsed.testStageV1){ testStageReset(raw); }
+      // Retirar los reinicios de pruebas: una marca ausente no autoriza borrar progreso.
+      // El reinicio voluntario sigue disponible en Cuenta, con sus respaldos.
+      save.campaignResetV1 = save.campaignResetV2 = save.campaignResetV3 = true;
+      save.testStageV1 = true;
       // REGALO INICIAL: guardados de antes del guardián + skin de regalo (después de los reinicios: quien
       // quedó sin guardián lo elige ahora con su skin; quien ya tenía uno recibe un vale de skin)
       if(!parsed.starterGiftV1){ starterGiftMigrate(); }
@@ -240,7 +243,8 @@ function _loadSaveInner(){
       // árbol vuelve a la bolsa del kit, los nodos comprados quedan y los puntos del árbol se dan
       // retroactivos según el nivel (si gastó más de lo que hoy daría su nivel, la diferencia queda
       // en treeBonus para que nunca quede "debiendo").
-      if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
+      if(!parsed.talentTreeV2){ talentTreeV2Migrate(); persistNow(); }
+      if(!parsed.talentGate40V1){ save.talentGate40V1 = false; talentGate40Migrate(); persistNow(); } // ya mismo (no con demora): recargar antes nunca devuelve dos veces
       save.gems = parsed.gems || 0;
       save.recycleDust = Math.max(0, Math.min(0.99, +parsed.recycleDust || 0));
       // dificultades: guardados de antes no las tienen (todo en Normal); forma segura siempre
@@ -267,6 +271,32 @@ function _loadSaveInner(){
 }
 // true si el último loadSave() falló: persistNow no pisa el guardado real con el de fábrica.
 let saveLoadFailed = false;
+
+// Migración one-shot del Talent Gate 40. Reasigna el árbol ordinario con la nueva
+// economía, pero nunca revoca decisiones irreversibles de Maestría. El respaldo
+// viaja con la cuenta; nivel, kit, inventario y monedas no se modifican.
+function talentGate40Migrate(){
+  if(save.talentGate40V1) return;
+  for(const k in save.champions){
+    const c = save.champions[k];
+    if(!c) continue;
+    const st = c.talents || mkTalentState();
+    const spent = typeof treePointsSpent === "function" ? treePointsSpent(k) : 0;
+    if(Object.keys(st.nodes||{}).length || Object.keys(st.masteryNodes||{}).length || c.treeBonus){
+      c.talentGate40Legacy = c.talentGate40Legacy || {
+        nodes:Object.assign({},st.nodes||{}), picks:Object.assign({},st.picks||{}),
+        mastery:st.mastery||null, masteryNodes:Object.assign({},st.masteryNodes||{}),
+        spent, treeBonus:c.treeBonus||0
+      };
+    }
+    st.nodes = {}; st.picks = {};
+    c.talents = st;
+    c.treeBonus = 0;
+  }
+  save.talentGate40V1 = true;
+  if(typeof TALENT_MODS_CACHE!=="undefined") for(const k in TALENT_MODS_CACHE) delete TALENT_MODS_CACHE[k];
+}
+
 function talentTreeV2Migrate(){
   save.talentTreeV2 = true;
   if(typeof treePointsSpent!=="function") return;
