@@ -43,6 +43,8 @@ jobs:
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/quality/test-ability-resources.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/quality/test-nano-render.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
