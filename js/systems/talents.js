@@ -81,7 +81,7 @@ function treePointsSpent(classKey){
 function treePointsAvailable(classKey){
   const c = save.champions[classKey];
   if(!c) return 0;
-  return Math.max(0, treePointsEarned(c.level) + (c.treeBonus||0) - treePointsSpent(classKey));
+  return Math.max(0, treePointsEarned(c.level) - treePointsSpent(classKey)); // no regalar puntos heredados
 }
 // Profundidad de un nodo en su rama (cadena de requires) -> nivel que lo abre. Un nodo con
 // minLevel explícito en los datos lo respeta (ninguno lo trae hoy: lo decide el escalón).
