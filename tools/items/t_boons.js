@@ -37,6 +37,10 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
       return pos.map(([x,y]) => __dummy(x, y));
     };
     window.__measure = (cls, boonId, rar, skill) => {
+      // Mismo mundo inicial en ambos brazos; no comparar críticos/procs aleatorios distintos.
+      const oldRandom=Math.random; let seed=window.__boonTestSeed||12345;
+      Math.random=()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296;};
+      try {
       const foes = __scene(cls);
       if (boonId) player.boons = {[boonId]: rar};
       const b = boonId ? BOON_BY_ID[boonId] : null;
@@ -62,8 +66,12 @@ let fails = 0; const check = (n, ok, x) => { console.log((ok ? 'PASS ' : 'FAIL '
       for (const e of foes){ if (e._p) seen.poison++; if (e._b) seen.bleed++; if (e._u) seen.burn++; if (e._s) seen.stun++; if (e._w) seen.slow++; if (e._v) seen.vuln++; }
       // daño útil del jugador (stats) y enemigos que golpeó: la arena puede regenerar vida a la horda
       return { dmg: Math.round((player.stats ? player.stats.dmgDealt : 0) - dmg0), hits: foes.filter(e=>e.lastHitBy===player).length, stunMs: Math.round(stunMs), dot: Math.round(foes.reduce((s,e)=>s+(e._dot||0), 0)*10)/10, zones, shield: Math.round(shield), heal: Math.round(heal), pull: Math.round(d0 - dist), ...seen };
+      }finally{Math.random=oldRandom;}
     };
   });
+
+  const repeat = await E(() => ({a:__measure('facu_gm',null,0,2),b:__measure('facu_gm',null,0,2)}));
+  check('ESCENA.control_sin_refuerzo_reproducible', JSON.stringify(repeat.a)===JSON.stringify(repeat.b), repeat);
 
   // ---- datos: al menos 4 por guardián, rareza con valores distintos y dúos que apuntan a refuerzos del mismo guardián
   const data = await E(() => { const out = {}; for (const k of Object.keys(CLASSES)){ const L = BOONS.filter(b=>b.champ===k); out[k] = { n: L.filter(b=>!b.duo).length, duos: L.filter(b=>b.duo).length,
