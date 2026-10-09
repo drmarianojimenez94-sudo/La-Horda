@@ -1,0 +1,33 @@
+{
+  "id": "solciju",
+  "name": "Solciju, la Enóloga",
+  "prompt": "Túnica de vino tinto, pelo plateado, barrica de fermentación a la espalda.",
+  "body": "maura_skin",
+  "head": "maura_skin",
+  "paint": [
+    {
+      "part": "body",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "ramp": [
+        "#210d20",
+        "#571932",
+        "#973c57",
+        "#d48698"
+      ]
+    }
+  ],
+  "accessories": [
+    {
+      "element": "banda_cruzada"
+    },
+    {
+      "element": "quality_wine_cask"
+    }
+  ],
+  "notes": "CANDIDATO NO APROBADO. Cabeza y cuerpo comparten donante para conservar identidad entre caminar, ataque y muerte. Requiere separación visual del donante, revisión de todas las animaciones, escala y kit completo antes de registrar."
+}

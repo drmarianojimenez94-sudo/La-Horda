@@ -1,0 +1,75 @@
+{
+  "status": "DRAFT_NOT_PLAYABLE",
+  "candidates": [
+    {
+      "id": "solciju",
+      "atlasSha256": "66dcdb5550b4a383376dd6576d675de9353d65cf382dc06871445f8dd646c19b",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "solciju_alt1",
+      "atlasSha256": "848a57c796ef55208ad72a3c7860a3dcaa02a9bf51c54061c86fb335e72e0ba1",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "brakk",
+      "atlasSha256": "82e4fa6d025c9191db75f4bb705d289fbd405c1c9daafe98f6cc7746a10d1bc4",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "brakk_alt1",
+      "atlasSha256": "bcb1262b902f484add122bfde57ee8fd61aa66df9eaa65a626122b314bacdea2",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "veyra",
+      "atlasSha256": "ed8f19af366aa4d7f53224e7d1c85f106dd0c57292340488a456cbe480093fab",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "veyra_alt1",
+      "atlasSha256": "ec8c6743c50de2194d240270246360c7f616f044e625222b931b7421f119e352",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "morveth",
+      "atlasSha256": "69dfc53a8ac46395ffc7154198ae19f16c07938551103c89b3325327665dd121",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "morveth_alt1",
+      "atlasSha256": "fb630ad1ebcf9e1b0aab2e43c3eb1c232f335f419ec10ef58ea8861dc0de4ccb",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "aelith",
+      "atlasSha256": "f2fbe02a893861a179e34f7e064e24aacb5bd44d08f474d9187366c2347d4a4a",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    },
+    {
+      "id": "aelith_alt1",
+      "atlasSha256": "fae3b6a37e7315d5d38812faf8ca198aba9096feb752e207fe9d491e53eb0929",
+      "numericStyle": "PASS",
+      "visualStatus": "PENDING_REVIEW",
+      "installed": false
+    }
+  ]
+}
