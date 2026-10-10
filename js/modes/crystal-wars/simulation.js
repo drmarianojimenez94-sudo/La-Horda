@@ -2,25 +2,26 @@
  * No account, campaign, inventory, currency or DOM dependencies. */
 (function(root){
   'use strict';
-  const VERSION='CW-2', WIDTH=880, HEIGHT=620, DURATION=600;
+  const VERSION='CW-3', WIDTH=880, HEIGHT=620, DURATION=420;
   const ROLES={
     tanque:{name:'Tanque',hp:240,speed:150,damage:44,range:90,rate:.55,color:'#7bc6ff',skills:['Torbellino','Embestida','Baluarte','Grito del cristal']},
     guerrero:{name:'Asesino',hp:155,speed:195,damage:29,range:100,rate:.48,color:'#ffb18e',skills:['Corte expansivo','Paso sombrío','Trampa de sombras','Pestilencia']},
     mago:{name:'Mago',hp:125,speed:165,damage:21,range:290,rate:.65,color:'#c6a2ff',skills:['Nova elemental','Traslación','Anillo de fuego','Cataclismo']},
-    soporte:{name:'Sanadora',hp:165,speed:170,damage:29,range:260,rate:.5,color:'#98f3bd',skills:['Pulso vital','Paso protector','Bendición','Santuario']}
+    soporte:{name:'Sanadora',hp:165,speed:170,damage:22,range:260,rate:.5,color:'#98f3bd',skills:['Pulso vital','Paso protector','Bendición','Santuario']}
   };
-  const SHOP={repair:{name:'Reparar +180',cost:35},upgrade:{name:'Daño de equipo +12%',cost:38},swarm:{name:'Enviar 5 acechadores',cost:16},brute:{name:'Enviar un coloso',cost:42},ward:{name:'Barrera +150',cost:40},surge:{name:'Furia 20 s',cost:50}};
+  const SHOP={repair:{name:'Reparar +180',cost:35},upgrade:{name:'Daño de equipo +12%',cost:38},swarm:{name:'Enviar 5 acechadores',cost:16},brute:{name:'Enviar un coloso',cost:42},ward:{name:'Barrera +125',cost:40},surge:{name:'Furia 20 s',cost:50}};
   const POLICIES=['balanced','economy','aggro','turtle'];
-  const ECLIPSE_AT=480,ECLIPSE_DPS=3;
+  const ECLIPSE_AT=300,ECLIPSE_DPS=3;
+  const FIRST_WAVE=.75,WAVE_INTERVAL=24,SUPPLY_WINDOW=7,SEND_DELAY=3;
   const CATCHUP_GAP=250,CATCHUP_SHARDS=6,MAX_WAVE_SIZE=36;
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
   function random(s){s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;}
   function create(slots=[],seed=7){
-    const s={version:VERSION,rng:seed>>>0,time:0,wave:0,nextWave:5,id:0,winner:null,ended:false,phase:'preparing',enemies:[],effects:[],pending:[],teams:[0,1].map(()=>({hp:1200,maxHp:1200,shards:30,upgrade:0,purchases:0,sendAt:0,repairAt:0,kills:0,ward:0,wardAt:0,surgeUntil:0,surgeAt:0,assist:0,policy:'balanced'})),heroes:[]};
+    const s={version:VERSION,rng:seed>>>0,time:0,wave:0,nextWave:FIRST_WAVE,id:0,winner:null,ended:false,phase:'preparing',enemies:[],effects:[],pending:[],teams:[0,1].map(()=>({hp:1200,maxHp:1200,shards:30,upgrade:0,purchases:0,sendAt:0,repairAt:0,kills:0,ward:0,wardAt:0,surgeUntil:0,surgeAt:0,assist:0,policy:'balanced'})),heroes:[]};
     const defaults=['tanque','mago','tanque','mago'];
-    s.heroes=defaults.map((fallback,i)=>{const slot=slots[i]||{},role=own(ROLES,slot.champ)?slot.champ:fallback,c=ROLES[role];return {slot:i,team:Math.floor(i/2),role,name:String(slot.name||('BOT '+(i+1))).slice(0,24),bot:!slot.connected,x:380+(i%2)*110,y:430,hp:c.hp,maxHp:c.hp,cd:[0,0,0,0],basic:0,stats:{dmg:0,kills:0,heal:0,deaths:0,sent:0},shield:0,shieldUntil:0,respawn:0,dx:0,dy:0,anim:0,botBuy:10+i%2};});
+    s.heroes=defaults.map((fallback,i)=>{const slot=slots[i]||{},role=own(ROLES,slot.champ)?slot.champ:fallback,c=ROLES[role];return {slot:i,team:Math.floor(i/2),role,name:String(slot.name||('BOT '+(i+1))).slice(0,24),bot:!slot.connected,x:380+(i%2)*110,y:300,hp:c.hp,maxHp:c.hp,cd:[0,0,0,0],basic:0,stats:{dmg:0,kills:0,heal:0,deaths:0,sent:0},shield:0,shieldUntil:0,respawn:0,dx:0,dy:0,anim:0,botBuy:10+i%2};});
     return s;
   }
   function effect(s,kind,team,x,y,r,color,life=.4,extra={}){s.effects.push(Object.assign({id:++s.id,kind,team,x,y,r,color,until:s.time+life},extra));if(s.effects.length>160)s.effects.shift();}
@@ -36,28 +37,28 @@
     return true;
   }
   function heal(s,h,amount,r){for(const a of s.heroes)if(a.team===h.team&&a.hp>0&&dist(a,h)<=r){const before=a.hp;a.hp=Math.min(a.maxHp,a.hp+amount);h.stats.heal+=a.hp-before;}}
-  function shopOpen(s){return !s.ended&&(s.wave===0||s.time<s.nextWave-28);}
+  function shopOpen(s){return !s.ended&&(s.wave===0||s.time<s.nextWave-(WAVE_INTERVAL-SUPPLY_WINDOW));}
   function buy(s,slot,key){
     const h=s.heroes[slot];if(!h||!own(SHOP,key)||!shopOpen(s))return false;
     const t=s.teams[h.team],item=SHOP[key];
     if(t.shards<item.cost)return false;
     if(key==='repair'&&(t.hp>=t.maxHp||s.time<t.repairAt))return false;
     if(key==='upgrade'&&t.upgrade>=3)return false;
-    if(key==='ward'&&(t.ward>=150||s.time<t.wardAt))return false;
+    if(key==='ward'&&(t.ward>=125||s.time<t.wardAt))return false;
     if(key==='surge'&&(s.time<t.surgeAt||s.time<t.surgeUntil))return false;
     if((key==='swarm'||key==='brute')&&(s.time<t.sendAt||s.pending.filter(p=>p.team!==h.team).length>=2))return false;
     t.shards-=item.cost;t.purchases++;
     if(key==='repair'){t.hp=Math.min(t.maxHp,t.hp+180);t.repairAt=s.time+15;}
     else if(key==='upgrade')t.upgrade++;
-    else if(key==='ward'){t.ward=150;t.wardAt=s.time+20;}
+    else if(key==='ward'){t.ward=125;t.wardAt=s.time+20;}
     else if(key==='surge'){t.surgeUntil=s.time+20;t.surgeAt=s.time+35;}
-    else{h.stats.sent++;t.sendAt=s.time+10;s.pending.push({id:++s.id,team:1-h.team,kind:key,due:s.time+5});}
+    else{h.stats.sent++;t.sendAt=s.time+10;s.pending.push({id:++s.id,team:1-h.team,kind:key,due:s.time+SEND_DELAY,sender:slot});}
     return true;
   }
-  function spawn(s,team,kind,x){
+  function spawn(s,team,kind,x,sentBy=null){
     if(s.enemies.filter(e=>e.team===team&&e.hp>0).length>=75)return;
     const brute=kind==='brute',scale=1+s.wave*.14;
-    s.enemies.push({id:++s.id,team,kind,x:x===undefined?80+random(s)*(WIDTH-160):x,y:55,hp:(brute?330:38)*scale,maxHp:(brute?330:38)*scale,speed:brute?28:34+Math.min(20,s.wave),damage:(brute?20:7)*(1+s.wave*.07),attack:0,slowUntil:0});
+    s.enemies.push({id:++s.id,team,kind,sentBy,x:x===undefined?80+random(s)*(WIDTH-160):x,y:55,hp:(brute?330:38)*scale,maxHp:(brute?330:38)*scale,speed:brute?44:52+Math.min(20,s.wave),damage:(brute?20:7)*(1+s.wave*.07),attack:0,slowUntil:0});
   }
   function crystalHit(s,team,amount){const t=s.teams[team];if(t.ward>0){const a=Math.min(t.ward,amount);t.ward-=a;amount-=a;}t.hp=Math.max(0,t.hp-amount);}
   function hitHero(s,h,amount){let absorb=Math.min(h.shield,amount);h.shield-=absorb;h.hp=Math.max(0,h.hp-(amount-absorb));if(!h.hp){h.respawn=s.time+8;h.stats.deaths++;crystalHit(s,h.team,65);effect(s,'burst',h.team,h.x,h.y,70,'#ff7169');}}
@@ -65,17 +66,18 @@
   // Políticas de compra de los bots (también sirven para probar que ninguna estrategia domine).
   function botChoice(s,h,t){
     const low=t.hp<800,p=t.policy;
-    if(p==='economy')return low?'repair':t.upgrade<3?'upgrade':t.ward<=0?'ward':'brute';
+    // In the faster opening, the third investment must wait until a defence is established.
+    if(p==='economy')return low?'repair':t.upgrade<(s.wave>=5?3:2)?'upgrade':t.ward<=0?'ward':'brute';
     if(p==='aggro')return t.hp<500?'repair':s.time>=t.sendAt?(t.shards>=55&&s.wave%2===0?'brute':'swarm'):'upgrade';
     if(p==='turtle')return low?'repair':t.ward<=0?'ward':t.upgrade<3?'upgrade':'surge';
     return low?'repair':t.upgrade<2?'upgrade':t.ward<=0&&t.hp<1000?'ward':'swarm';
   }
   function step(s,dt,inputs={}){
     if(s.ended||!Number.isFinite(dt)||dt<=0)return;s.time+=Math.min(dt,.1);dt=Math.min(dt,.1);
-    if(s.time>=s.nextWave){s.wave++;s.nextWave+=35;for(const [i,t] of s.teams.entries()){const gap=s.teams[1-i].hp-t.hp;t.shards=Math.min(200,t.shards+10+(gap>=CATCHUP_GAP?CATCHUP_SHARDS:0));if(gap>=CATCHUP_GAP)t.assist++;}const n=Math.min(MAX_WAVE_SIZE,6+s.wave);for(let i=0;i<n;i++){const x=70+random(s)*(WIDTH-140);spawn(s,0,'grunt',x);spawn(s,1,'grunt',x);}if(s.wave%3===0){spawn(s,0,'brute',440);spawn(s,1,'brute',440);}}
+    if(s.time>=s.nextWave){s.wave++;s.nextWave+=WAVE_INTERVAL;for(const [i,t] of s.teams.entries()){const gap=s.teams[1-i].hp-t.hp;t.shards=Math.min(200,t.shards+10+(gap>=CATCHUP_GAP?CATCHUP_SHARDS:0));if(gap>=CATCHUP_GAP)t.assist++;}const n=Math.min(MAX_WAVE_SIZE,6+s.wave);for(let i=0;i<n;i++){const x=70+random(s)*(WIDTH-140);spawn(s,0,'grunt',x);spawn(s,1,'grunt',x);}if(s.wave%3===0){spawn(s,0,'brute',440);spawn(s,1,'brute',440);}}
     if(s.time>=ECLIPSE_AT){const k=ECLIPSE_DPS*(1+(s.time-ECLIPSE_AT)/60)*dt;for(let i=0;i<2;i++)crystalHit(s,i,k);} // Eclipse: ambos cristales se apagan, cada vez más rápido
     s.phase=shopOpen(s)?'supply':'combat';
-    for(const p of s.pending)if(p.due<=s.time){for(let i=0;i<(p.kind==='swarm'?5:1);i++)spawn(s,p.team,p.kind==='swarm'?'runner':'brute');}
+    for(const p of s.pending)if(p.due<=s.time){for(let i=0;i<(p.kind==='swarm'?5:1);i++)spawn(s,p.team,p.kind==='swarm'?'runner':'brute',undefined,p.sender);}
     s.pending=s.pending.filter(p=>p.due>s.time);
     for(const h of s.heroes){
       h.cd=h.cd.map(v=>Math.max(0,v-dt));h.basic=Math.max(0,h.basic-dt);if(s.time>=h.shieldUntil)h.shield=0;
@@ -98,6 +100,6 @@
     for(const f of s.effects)if(f.kind==='zone'&&f.nextTick<=s.time&&f.until>s.time){f.nextTick=s.time+.5;for(const e of s.enemies)if(e.team===f.team&&dist(e,f)<f.r)damage(s,e,f.damage*(1+s.teams[f.team].upgrade*.12),s.heroes[f.owner]);}
     s.enemies=s.enemies.filter(e=>e.hp>0);s.effects=s.effects.filter(f=>f.until>s.time);finish(s);
   }
-  const api={ECLIPSE_AT,POLICIES,VERSION,WIDTH,HEIGHT,DURATION,ROLES,SHOP,create,step,ability,buy,shopOpen};
+  const api={FIRST_WAVE,WAVE_INTERVAL,SUPPLY_WINDOW,SEND_DELAY,ECLIPSE_AT,POLICIES,VERSION,WIDTH,HEIGHT,DURATION,ROLES,SHOP,create,step,ability,buy,shopOpen};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CrystalWars=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
