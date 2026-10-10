@@ -1,0 +1,52 @@
+name: Five champion workshop
+on:
+  push:
+    paths:
+      - 'js/champions/quality-five/**'
+      - 'tools/quality-five/**'
+      - 'tools/balance/entry-gate.js'
+      - 'tools/bible/ability-gate.js'
+      - '.github/workflows/quality-five-workshop.yml'
+  pull_request:
+    paths:
+      - 'js/champions/quality-five/**'
+      - 'tools/quality-five/**'
+      - 'tools/balance/entry-gate.js'
+      - 'tools/bible/ability-gate.js'
+      - '.github/workflows/quality-five-workshop.yml'
+permissions:
+  contents: read
+jobs:
+  workshop-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NODE_PATH: /tmp/horda-workshop/node_modules
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --prefix /tmp/horda-workshop --no-audit --no-fund playwright@1.61.1
+      - run: /tmp/horda-workshop/node_modules/.bin/playwright install --with-deps chromium
+      - run: npm ci --prefix server --no-audit --no-fund
+      - run: node --test tools/factory/test.js
+      - run: node tools/balance/check-entry-reference.js
+      - run: node tools/balance/test-entry-report.js
+      - run: node tools/quality-five/functional.js
+      - run: node tools/quality-five/brakk-functional.js
+      - run: node tools/quality-five/temporal-plague-functional.js
+      - run: node tools/quality-five/online.js
+      - run: node tools/bible/ability-gate.js --strict --workshop-quality
+      - run: node tools/balance/entry-gate.js --workshop-quality
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-five-workshop-evidence
+          path: |
+            docs/production/quality-five/functional-results.json
+            docs/production/quality-five/brakk-functional-results.json
+            docs/production/quality-five/temporal-plague-functional-results.json
+            docs/production/quality-five/online-results.json
+            docs/production/quality-five/workshop-entry-results.json
+            docs/production/quality-five/ability/

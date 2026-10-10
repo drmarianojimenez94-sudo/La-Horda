@@ -1,0 +1,74 @@
+{
+  "name": "quality_hourglass",
+  "description": "Reloj de arena de Aelith sobre el pecho.",
+  "layer": "front",
+  "anchor": "chest",
+  "materials": {
+    "gold": {
+      "ramp": [
+        "#483016",
+        "#967343",
+        "#e0c790"
+      ]
+    },
+    "glass": {
+      "ramp": [
+        "#173445",
+        "#548798",
+        "#b7dcdf"
+      ]
+    }
+  },
+  "shapes": [
+    {
+      "type": "poly",
+      "points": [
+        [
+          -4,
+          -5
+        ],
+        [
+          4,
+          -5
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          -4,
+          5
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "material": "glass"
+    },
+    {
+      "type": "rect",
+      "box": [
+        -5,
+        -6,
+        5,
+        -4
+      ],
+      "material": "gold"
+    },
+    {
+      "type": "rect",
+      "box": [
+        -5,
+        4,
+        5,
+        6
+      ],
+      "material": "gold"
+    }
+  ]
+}

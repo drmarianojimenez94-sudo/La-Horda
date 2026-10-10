@@ -1,0 +1,535 @@
+{
+  "status": "PASS",
+  "scope": "Solciju and Veyra workshop runtime, not release approval",
+  "checks": [
+    {
+      "name": "not registered in production",
+      "ok": true
+    },
+    {
+      "name": "L1 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L1 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L1 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L1 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L1 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L1 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L39 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L39 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L39 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L39 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L39 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L39 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L40 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L40 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L40 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L40 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L40 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L40 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L60 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L60 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L60 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L60 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L60 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L60 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L90 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L90 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L90 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L90 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L90 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L90 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L99 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L99 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L99 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L99 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L99 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L99 finite stats",
+      "ok": true
+    },
+    {
+      "name": "passive caps at three",
+      "ok": true
+    },
+    {
+      "name": "passive consumes ripe marks and slows",
+      "ok": true
+    },
+    {
+      "name": "marks expire",
+      "ok": true
+    },
+    {
+      "name": "marks isolated by owner",
+      "ok": true
+    },
+    {
+      "name": "boss slow capped at 12 percent",
+      "ok": true
+    },
+    {
+      "name": "two casks maximum",
+      "ok": true
+    },
+    {
+      "name": "replacing casks does not detonate",
+      "ok": true
+    },
+    {
+      "name": "casks explode only once",
+      "ok": true
+    },
+    {
+      "name": "one reserve maximum",
+      "ok": true
+    },
+    {
+      "name": "all constructs expire",
+      "ok": true
+    },
+    {
+      "name": "death clears constructs",
+      "ok": true
+    },
+    {
+      "name": "death clears owner marks",
+      "ok": true
+    },
+    {
+      "name": "fusion clears constructs",
+      "ok": true
+    },
+    {
+      "name": "L39 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L40 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L60 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L90 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L99 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "hospitality heals allies",
+      "ok": true
+    },
+    {
+      "name": "cellar transforms cask into protection",
+      "ok": true
+    },
+    {
+      "name": "L60 mastery flag gate",
+      "ok": true
+    },
+    {
+      "name": "L90 mastery flag gate",
+      "ok": true
+    },
+    {
+      "name": "L99 mastery flag gate",
+      "ok": true
+    },
+    {
+      "name": "concentrated reserve adds two marks",
+      "ok": true
+    },
+    {
+      "name": "cellar mastery detonates owned casks",
+      "ok": true
+    },
+    {
+      "name": "restorative reserve actually heals",
+      "ok": true
+    },
+    {
+      "name": "persistent cues restore canvas state",
+      "ok": true
+    },
+    {
+      "name": "Arena Divina basic applies fermentation",
+      "ok": true
+    },
+    {
+      "name": "hospitality never heals rival",
+      "ok": true
+    },
+    {
+      "name": "Arena Divina wine damages opponent",
+      "ok": true
+    },
+    {
+      "name": "talent points cannot complete tree",
+      "ok": true
+    },
+    {
+      "name": "cooldown prevents duplicate spend",
+      "ok": true
+    },
+    {
+      "name": "snapshot retains construct owner",
+      "ok": true
+    },
+    {
+      "name": "snapshot serializable and bounded",
+      "ok": true
+    },
+    {
+      "name": "reset clears objects",
+      "ok": true
+    },
+    {
+      "name": "Veyra L1 cleave hits multiple",
+      "ok": true
+    },
+    {
+      "name": "Veyra L1 bleed ticks and expires",
+      "ok": true
+    },
+    {
+      "name": "Veyra L1 pact cost and buff",
+      "ok": true
+    },
+    {
+      "name": "Veyra L39 cleave hits multiple",
+      "ok": true
+    },
+    {
+      "name": "Veyra L39 bleed ticks and expires",
+      "ok": true
+    },
+    {
+      "name": "Veyra L39 pact cost and buff",
+      "ok": true
+    },
+    {
+      "name": "Veyra L40 cleave hits multiple",
+      "ok": true
+    },
+    {
+      "name": "Veyra L40 bleed ticks and expires",
+      "ok": true
+    },
+    {
+      "name": "Veyra L40 pact cost and buff",
+      "ok": true
+    },
+    {
+      "name": "Veyra L60 cleave hits multiple",
+      "ok": true
+    },
+    {
+      "name": "Veyra L60 bleed ticks and expires",
+      "ok": true
+    },
+    {
+      "name": "Veyra L60 pact cost and buff",
+      "ok": true
+    },
+    {
+      "name": "Veyra L90 cleave hits multiple",
+      "ok": true
+    },
+    {
+      "name": "Veyra L90 bleed ticks and expires",
+      "ok": true
+    },
+    {
+      "name": "Veyra L90 pact cost and buff",
+      "ok": true
+    },
+    {
+      "name": "Veyra L99 cleave hits multiple",
+      "ok": true
+    },
+    {
+      "name": "Veyra L99 bleed ticks and expires",
+      "ok": true
+    },
+    {
+      "name": "Veyra L99 pact cost and buff",
+      "ok": true
+    },
+    {
+      "name": "Veyra refresh does not stack bleed",
+      "ok": true
+    },
+    {
+      "name": "Veyra basic has twelve-victim cap",
+      "ok": true
+    },
+    {
+      "name": "Veyra bleed cannot tick forever",
+      "ok": true
+    },
+    {
+      "name": "Veyra bounded bleeding targets",
+      "ok": true
+    },
+    {
+      "name": "Veyra death clears bleed",
+      "ok": true
+    },
+    {
+      "name": "Veyra ultimate consumes bleed heals and slows",
+      "ok": true
+    },
+    {
+      "name": "Veyra pact cleanse transformation",
+      "ok": true
+    },
+    {
+      "name": "Veyra transformed telegraph is line",
+      "ok": true
+    },
+    {
+      "name": "Veyra low-health passive increases damage",
+      "ok": true
+    },
+    {
+      "name": "Veyra cannot sacrifice life without paying energy",
+      "ok": true
+    },
+    {
+      "name": "Veyra pact cooldown prevents double sacrifice",
+      "ok": true
+    },
+    {
+      "name": "Veyra delayed frame cannot create extra bleed ticks",
+      "ok": true
+    },
+    {
+      "name": "Solciju delayed frame respects four-pulse budget",
+      "ok": true
+    },
+    {
+      "name": "Veyra dash stops at thin wall",
+      "ok": true
+    },
+    {
+      "name": "Veyra L39 transformation level gate",
+      "ok": true
+    },
+    {
+      "name": "Veyra L40 transformation level gate",
+      "ok": true
+    },
+    {
+      "name": "Veyra L60 transformation level gate",
+      "ok": true
+    },
+    {
+      "name": "Veyra L90 transformation level gate",
+      "ok": true
+    },
+    {
+      "name": "Veyra L99 transformation level gate",
+      "ok": true
+    },
+    {
+      "name": "Veyra mastery 0 changes ultimate",
+      "ok": true
+    },
+    {
+      "name": "Veyra mastery 1 changes ultimate",
+      "ok": true
+    },
+    {
+      "name": "Veyra mastery 2 changes ultimate",
+      "ok": true
+    },
+    {
+      "name": "solciju arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "solciju arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "solciju arena bosque",
+      "ok": true
+    },
+    {
+      "name": "solciju arena micelial",
+      "ok": true
+    },
+    {
+      "name": "solciju arena hielo",
+      "ok": true
+    },
+    {
+      "name": "solciju arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "solciju arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "solciju arena abismo",
+      "ok": true
+    },
+    {
+      "name": "solciju arena minas",
+      "ok": true
+    },
+    {
+      "name": "solciju arena infernal",
+      "ok": true
+    },
+    {
+      "name": "veyra arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "veyra arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "veyra arena bosque",
+      "ok": true
+    },
+    {
+      "name": "veyra arena micelial",
+      "ok": true
+    },
+    {
+      "name": "veyra arena hielo",
+      "ok": true
+    },
+    {
+      "name": "veyra arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "veyra arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "veyra arena abismo",
+      "ok": true
+    },
+    {
+      "name": "veyra arena minas",
+      "ok": true
+    },
+    {
+      "name": "veyra arena infernal",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

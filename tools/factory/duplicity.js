@@ -25,6 +25,7 @@ const tagsOf=text=>new Set(Object.entries(TAGS).filter(([,re])=>re.test(text)).m
  const base=process.env.FACTORY_BASE_URL||'http://127.0.0.1:8750';const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
  try{
   const p=await b.newPage();await p.goto(base);await p.waitForFunction(()=>typeof CLASSES!=='undefined'&&typeof CHAMPION_ENTRY_BALANCE!=='undefined');
+  if(process.argv.includes('--workshop-quality'))for(const k of ['solciju','veyra','brakk','morveth','aelith']){await p.addScriptTag({path:path.resolve(__dirname,'../../js/champions/quality-five/'+k+'.js')});await p.addScriptTag({path:path.resolve(__dirname,'../quality-five/'+(k==='solciju'?'register-fixture.js':'register-'+k+'-fixture.js'))});}
   const roster=await p.evaluate(()=>Object.keys(CLASSES).map(k=>{const c=CLASSES[k],P=typeof PORTADORES!=='undefined'?PORTADORES[k]:null,A=typeof ASCENSION!=='undefined'?ASCENSION[k]:null;
    const skills=[...(c.skills||[]),c.ultimate].filter(Boolean);
    return {id:k,name:c.name,role:c.roleCategory,title:(P&&P.title)||'',fantasy:[c.role,(A&&A.fantasy)||'',(A&&A.silhouette)||'',c.passive?c.passive.name+' '+c.passive.desc:''].join(' '),
@@ -41,7 +42,7 @@ const tagsOf=text=>new Set(Object.entries(TAGS).filter(([,re])=>re.test(text)).m
    report.push({id,role:c.role,category:c.category,tags:[...cg],verdict,forbidden,nearest:pairs.slice(0,3)});}
   const roles={};for(const r of roster.filter(r=>r.category!=='FOUNDER'))roles[r.role]=(roles[r.role]||0)+1;
   const out={generatedAt:new Date().toISOString(),method:'score = 0.35·Jaccard(vocabulario) + 0.45·Jaccard(etiquetas de mecánica) + 0.2·mismo rol; DUPLICATE ≥ 0.45, REVIEW ≥ 0.32',rosterSize:roster.length,roleDistribution:roles,report};
-  fs.mkdirSync(path.resolve(__dirname,'../../docs/founders'),{recursive:true});fs.writeFileSync(path.resolve(__dirname,'../../docs/founders/duplicity-report.json'),JSON.stringify(out,null,2)+'\n');
+  const output=path.resolve(__dirname,process.argv.includes('--workshop-quality')?'../../docs/production/quality-five/duplicity-report.json':'../../docs/founders/duplicity-report.json');fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(out,null,2)+'\n');
   for(const r of report)console.log(`${r.id.padEnd(9)} ${String(r.verdict).padEnd(9)} nearest=${r.nearest?r.nearest.map(n=>n.other+':'+n.score).join(', '):r.error}${r.forbidden?' FORBIDDEN:'+r.forbidden:''}`);
   console.log('role distribution (non-founder):',JSON.stringify(roles));
   if(failed)process.exitCode=1;

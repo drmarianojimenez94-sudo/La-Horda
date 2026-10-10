@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "morveth",
+  "name": "Morveth",
+  "title": "El Jardinero de la Peste",
+  "role": "mago",
+  "fantasy": "Mago invocador con contagio terminal",
+  "lore": "Morveth cuidaba el jardín de un hospital sitiado. Cuando las medicinas se agotaron, descubrió un micelio capaz de retener la infección en sus raíces. Ahora transporta aquel cultivo en una urna agrietada. Sus hongos necesitan tiempo y terreno para extenderse; arrancarlos deja al jardinero expuesto. No busca una cura perfecta, sino impedir que la próxima cosecha sean los vivos.",
+  "personality": "Reservado y paciente.",
+  "silhouette": "PENDIENTE: revisión visual y continuidad en todas las poses.",
+  "stats": {
+    "hp": 96,
+    "damage": 8.5,
+    "speed": 152
+  },
+  "kit": {
+    "basic": {
+      "id": "morveth_basic",
+      "description": "Proyectil mágico individual.",
+      "cooldownMs": 600,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Dirección de ataque.",
+      "execution": "tools/quality-five/register-morveth-fixture.js",
+      "impact": "Daño base normalizado por rol.",
+      "feedback": "Proyectil heredado; identidad visual pendiente.",
+      "vfx": "exglyph",
+      "sfx": ""
+    },
+    "skills": [
+      {
+        "id": "mor_plant",
+        "description": "Planta un hongo destructible que libera seis pulsos de esporas. Máximo tres hongos.",
+        "cooldownMs": 8000,
+        "maxTargets": 12,
+        "hordeMechanism": "Pulsos y contagio limitado.",
+        "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+        "execution": "js/champions/quality-five/morveth.js",
+        "impact": "Planta un hongo destructible que libera seis pulsos de esporas. Máximo tres hongos.",
+        "feedback": "kitFx y entidades con radio y expiración.",
+        "vfx": "dark/shield",
+        "sfx": ""
+      },
+      {
+        "id": "mor_spores",
+        "description": "Daña un abanico e infecta a sus víctimas durante tres pulsos.",
+        "cooldownMs": 6000,
+        "maxTargets": 12,
+        "hordeMechanism": "Pulsos y contagio limitado.",
+        "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+        "execution": "js/champions/quality-five/morveth.js",
+        "impact": "Daña un abanico e infecta a sus víctimas durante tres pulsos.",
+        "feedback": "kitFx y entidades con radio y expiración.",
+        "vfx": "dark/shield",
+        "sfx": ""
+      },
+      {
+        "id": "mor_symbiosis",
+        "description": "Obtiene 15% de armadura y sana 2% de vida. Consume un hongo cercano para sanar 4% en total.",
+        "cooldownMs": 12000,
+        "maxTargets": 12,
+        "hordeMechanism": "Pulsos y contagio limitado.",
+        "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+        "execution": "js/champions/quality-five/morveth.js",
+        "impact": "Obtiene 15% de armadura y sana 2% de vida. Consume un hongo cercano para sanar 4% en total.",
+        "feedback": "kitFx y entidades con radio y expiración.",
+        "vfx": "dark/shield",
+        "sfx": ""
+      }
+    ],
+    "ultimate": {
+      "id": "mor_garden",
+      "description": "Cuatro pulsos infectan, dañan y ralentizan. Los aliados dentro del jardín reciben protección.",
+      "cooldownMs": 36000,
+      "maxTargets": 12,
+      "hordeMechanism": "Pulsos y contagio limitado.",
+      "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+      "execution": "js/champions/quality-five/morveth.js",
+      "impact": "Cuatro pulsos infectan, dañan y ralentizan. Los aliados dentro del jardín reciben protección.",
+      "feedback": "kitFx y entidades con radio y expiración.",
+      "vfx": "dark/shield",
+      "sfx": ""
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/quality-five/morveth.js",
+    "codex": "tools/quality-five/register-morveth-fixture.js",
+    "talents": "tools/quality-five/register-morveth-fixture.js",
+    "mastery": "tools/quality-five/register-morveth-fixture.js",
+    "set": "",
+    "kitTest": "tools/quality-five/temporal-plague-functional.js"
+  },
+  "cosmetics": [],
+  "set": {
+    "sourceArena": "",
+    "pieces": [],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 32,
+    "summons": 4,
+    "audioVoices": 2
+  },
+  "evidence": {
+    "reference": "docs/balance/champion-entry-reference.json",
+    "talents": "docs/production/quality-five/temporal-plague-functional-results.json",
+    "abilities": "docs/production/quality-five/ability/ability-gate.json",
+    "resources": "docs/production/quality-five/temporal-plague-functional-results.json",
+    "passives": "docs/production/quality-five/temporal-plague-functional-results.json",
+    "balance": "docs/production/quality-five/workshop-entry-results.json",
+    "visuals": "",
+    "style": "",
+    "audio": "",
+    "multiplayer": "docs/production/quality-five/online-results.json",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

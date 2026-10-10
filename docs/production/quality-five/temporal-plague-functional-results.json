@@ -1,0 +1,531 @@
+{
+  "status": "PASS",
+  "scope": "Morveth and Aelith workshop engine tests; not art, balance or multiplayer approval",
+  "checks": [
+    {
+      "name": "not published in roster",
+      "ok": true
+    },
+    {
+      "name": "morveth L1 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L1 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L1 utility armor",
+      "ok": true
+    },
+    {
+      "name": "morveth L1 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "morveth L39 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L39 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L39 utility armor",
+      "ok": true
+    },
+    {
+      "name": "morveth L39 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "morveth L40 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L40 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L40 utility armor",
+      "ok": true
+    },
+    {
+      "name": "morveth L40 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "morveth L60 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L60 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L60 utility armor",
+      "ok": true
+    },
+    {
+      "name": "morveth L60 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "morveth L90 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L90 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L90 utility armor",
+      "ok": true
+    },
+    {
+      "name": "morveth L90 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "morveth L99 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L99 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "morveth L99 utility armor",
+      "ok": true
+    },
+    {
+      "name": "morveth L99 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "aelith L1 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L1 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L1 utility armor",
+      "ok": true
+    },
+    {
+      "name": "aelith L1 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "aelith L39 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L39 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L39 utility armor",
+      "ok": true
+    },
+    {
+      "name": "aelith L39 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "aelith L40 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L40 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L40 utility armor",
+      "ok": true
+    },
+    {
+      "name": "aelith L40 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "aelith L60 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L60 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L60 utility armor",
+      "ok": true
+    },
+    {
+      "name": "aelith L60 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "aelith L90 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L90 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L90 utility armor",
+      "ok": true
+    },
+    {
+      "name": "aelith L90 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "aelith L99 first skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L99 second skill hits crowd",
+      "ok": true
+    },
+    {
+      "name": "aelith L99 utility armor",
+      "ok": true
+    },
+    {
+      "name": "aelith L99 ultimate damage control and protection",
+      "ok": true
+    },
+    {
+      "name": "infection budget twelve",
+      "ok": true
+    },
+    {
+      "name": "infections expire after three ticks",
+      "ok": true
+    },
+    {
+      "name": "contagion on first lethal tick",
+      "ok": true
+    },
+    {
+      "name": "secondary contagion cannot chain false",
+      "ok": true
+    },
+    {
+      "name": "contagion on last lethal tick",
+      "ok": true
+    },
+    {
+      "name": "secondary contagion cannot chain true",
+      "ok": true
+    },
+    {
+      "name": "mushroom cap three",
+      "ok": true
+    },
+    {
+      "name": "enemy destroys mushroom",
+      "ok": true
+    },
+    {
+      "name": "symbiosis consumes own nearby mushroom",
+      "ok": true
+    },
+    {
+      "name": "echo cannot detonate early",
+      "ok": true
+    },
+    {
+      "name": "echo detonates at deadline",
+      "ok": true
+    },
+    {
+      "name": "echo never repeats after expiry",
+      "ok": true
+    },
+    {
+      "name": "echo cap two",
+      "ok": true
+    },
+    {
+      "name": "passive cooldown floors and current skill exclusion",
+      "ok": true
+    },
+    {
+      "name": "debt not early",
+      "ok": true
+    },
+    {
+      "name": "debt arrives once",
+      "ok": true
+    },
+    {
+      "name": "morveth L39 roots gate",
+      "ok": true
+    },
+    {
+      "name": "morveth L40 roots gate",
+      "ok": true
+    },
+    {
+      "name": "morveth L60 roots gate",
+      "ok": true
+    },
+    {
+      "name": "morveth L90 roots gate",
+      "ok": true
+    },
+    {
+      "name": "morveth L99 roots gate",
+      "ok": true
+    },
+    {
+      "name": "morveth second transformation",
+      "ok": true
+    },
+    {
+      "name": "morveth shared utility protects team",
+      "ok": true
+    },
+    {
+      "name": "morveth utility excludes PvP rivals",
+      "ok": true
+    },
+    {
+      "name": "morveth damages PvP rivals",
+      "ok": true
+    },
+    {
+      "name": "morveth L60 heal mastery gate",
+      "ok": true
+    },
+    {
+      "name": "morveth L90 heal mastery gate",
+      "ok": true
+    },
+    {
+      "name": "morveth L99 heal mastery gate",
+      "ok": true
+    },
+    {
+      "name": "morveth first mastery",
+      "ok": true
+    },
+    {
+      "name": "morveth third mastery",
+      "ok": true
+    },
+    {
+      "name": "morveth boss slow cap",
+      "ok": true
+    },
+    {
+      "name": "morveth energy required",
+      "ok": true
+    },
+    {
+      "name": "morveth cooldown required",
+      "ok": true
+    },
+    {
+      "name": "morveth death cleanup",
+      "ok": true
+    },
+    {
+      "name": "morveth fusion cleanup",
+      "ok": true
+    },
+    {
+      "name": "morveth ordinary tree cannot be filled",
+      "ok": true
+    },
+    {
+      "name": "morveth canvas restored",
+      "ok": true
+    },
+    {
+      "name": "morveth snapshot owner and bounded state",
+      "ok": true
+    },
+    {
+      "name": "morveth reset cleanup",
+      "ok": true
+    },
+    {
+      "name": "morveth arena bosque",
+      "ok": true
+    },
+    {
+      "name": "morveth arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "morveth arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "morveth arena micelial",
+      "ok": true
+    },
+    {
+      "name": "morveth arena hielo",
+      "ok": true
+    },
+    {
+      "name": "morveth arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "morveth arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "morveth arena abismo",
+      "ok": true
+    },
+    {
+      "name": "morveth arena minas",
+      "ok": true
+    },
+    {
+      "name": "morveth arena infernal",
+      "ok": true
+    },
+    {
+      "name": "aelith L39 echo delay gate",
+      "ok": true
+    },
+    {
+      "name": "aelith L40 echo delay gate",
+      "ok": true
+    },
+    {
+      "name": "aelith L60 echo delay gate",
+      "ok": true
+    },
+    {
+      "name": "aelith L90 echo delay gate",
+      "ok": true
+    },
+    {
+      "name": "aelith L99 echo delay gate",
+      "ok": true
+    },
+    {
+      "name": "aelith second transformation",
+      "ok": true
+    },
+    {
+      "name": "aelith shared utility protects team",
+      "ok": true
+    },
+    {
+      "name": "aelith utility excludes PvP rivals",
+      "ok": true
+    },
+    {
+      "name": "aelith damages PvP rivals",
+      "ok": true
+    },
+    {
+      "name": "aelith L60 heal mastery gate",
+      "ok": true
+    },
+    {
+      "name": "aelith L90 heal mastery gate",
+      "ok": true
+    },
+    {
+      "name": "aelith L99 heal mastery gate",
+      "ok": true
+    },
+    {
+      "name": "aelith first mastery",
+      "ok": true
+    },
+    {
+      "name": "aelith third mastery",
+      "ok": true
+    },
+    {
+      "name": "aelith boss slow cap",
+      "ok": true
+    },
+    {
+      "name": "aelith energy required",
+      "ok": true
+    },
+    {
+      "name": "aelith cooldown required",
+      "ok": true
+    },
+    {
+      "name": "aelith death cleanup",
+      "ok": true
+    },
+    {
+      "name": "aelith fusion cleanup",
+      "ok": true
+    },
+    {
+      "name": "aelith ordinary tree cannot be filled",
+      "ok": true
+    },
+    {
+      "name": "aelith canvas restored",
+      "ok": true
+    },
+    {
+      "name": "aelith snapshot owner and bounded state",
+      "ok": true
+    },
+    {
+      "name": "aelith reset cleanup",
+      "ok": true
+    },
+    {
+      "name": "aelith arena bosque",
+      "ok": true
+    },
+    {
+      "name": "aelith arena ciudad",
+      "ok": true
+    },
+    {
+      "name": "aelith arena fortaleza",
+      "ok": true
+    },
+    {
+      "name": "aelith arena micelial",
+      "ok": true
+    },
+    {
+      "name": "aelith arena hielo",
+      "ok": true
+    },
+    {
+      "name": "aelith arena acuatica",
+      "ok": true
+    },
+    {
+      "name": "aelith arena laberinto",
+      "ok": true
+    },
+    {
+      "name": "aelith arena abismo",
+      "ok": true
+    },
+    {
+      "name": "aelith arena minas",
+      "ok": true
+    },
+    {
+      "name": "aelith arena infernal",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

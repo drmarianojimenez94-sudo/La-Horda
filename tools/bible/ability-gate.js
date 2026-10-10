@@ -20,7 +20,7 @@
    Escribe docs/bible/generated/ability-gate.json y ABILITY_GATE.md (sin ONLY). */
 const fs = require('node:fs'), path = require('node:path'), {spawn} = require('node:child_process');
 let chromium; try { ({chromium} = require('playwright')); } catch (e) { ({chromium} = require(process.env.PLAYWRIGHT_MODULE || '/opt/node22/lib/node_modules/playwright')); }
-const ROOT = path.resolve(__dirname, '../..'), PORT = +(process.env.ABILITY_GATE_PORT || 8833), OUT = path.join(ROOT, 'docs/bible/generated');
+const ROOT = path.resolve(__dirname, '../..'), PORT = +(process.env.ABILITY_GATE_PORT || 8833), OUT = path.join(ROOT, process.argv.includes('--workshop-quality')?'docs/production/quality-five/ability':'docs/bible/generated');
 const server = process.env.ABILITY_BASE_URL ? null : spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], {cwd: ROOT, stdio: 'ignore'});
 const BASE = process.env.ABILITY_BASE_URL || `http://127.0.0.1:${PORT}/`;
 process.on('exit', () => server && server.kill());
@@ -36,6 +36,7 @@ const CATS = ['AREA', 'MULTIPLE', 'POTENCIA', 'CURA', 'CONTROL', 'MOVILIDAD', 'I
     await page.goto(BASE, {waitUntil: 'domcontentloaded', timeout: 120000});
     await page.waitForFunction(() => typeof startRun === 'function' && typeof CHAMPION_BALANCE_REFERENCE !== 'undefined' && typeof aimProfileOf === 'function', null, {timeout: 120000});
     await page.waitForTimeout(1500);
+    if(process.argv.includes('--workshop-quality'))for(const file of ['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js','js/champions/quality-five/brakk.js','tools/quality-five/register-brakk-fixture.js','js/champions/quality-five/morveth.js','tools/quality-five/register-morveth-fixture.js','js/champions/quality-five/aelith.js','tools/quality-five/register-aelith-fixture.js'])await page.addScriptTag({path:path.join(ROOT,file)});
     const roster = (await page.evaluate(() => Object.keys(CLASSES))).filter(k => !process.env.ONLY || process.env.ONLY.split(',').includes(k));
     const known = await page.evaluate(() => CHAMPION_BALANCE_REFERENCE.knownChampions || []);
     const results = [];
@@ -165,7 +166,7 @@ const CATS = ['AREA', 'MULTIPLE', 'POTENCIA', 'CURA', 'CONTROL', 'MOVILIDAD', 'I
       console.log(`${r.status.padEnd(5)} ${k.padEnd(11)} ${r.isNew ? 'nuevo ' : 'clásico'} ` + r.abilities.map(a => `[${a.cats.join('+') || '—'}${a.aims ? (a.aimProfile ? ' ◎' : ' ✗apunta') : ''}]`).join(' '));
       for (const p of problems) console.log('       · ' + p);
     }
-    if (!process.env.ONLY) {
+    if (!process.env.ONLY || process.argv.includes('--workshop-quality')) {
       fs.mkdirSync(OUT, {recursive: true});
       fs.writeFileSync(path.join(OUT, 'ability-gate.json'), JSON.stringify({schemaVersion: 1, categories: CATS, champions: results, pageErrors}, null, 1) + '\n');
       fs.writeFileSync(path.join(OUT, 'ABILITY_GATE.md'), md(results));

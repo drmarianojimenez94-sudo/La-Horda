@@ -1,0 +1,295 @@
+{
+  "id": "aelith_study",
+  "name": "Aelith — estudio de identidad",
+  "prompt": "Cronomante de abrigo de grafito, trenzas oscuras, banda de cobre y reloj de arena. Sin capa azul ni cabello plateado de Sira.",
+  "body": "dariel_skin",
+  "head": "orsa",
+  "headLongHair": true,
+  "paint": [
+    {
+      "part": "body",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "to": "#72534a",
+      "keepLight": 0.65,
+      "contrast": 1.0,
+      "chroma": 1.0
+    },
+    {
+      "part": "head",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "to": "#493342",
+      "keepLight": 0.65,
+      "contrast": 1.0,
+      "chroma": 1.0
+    }
+  ],
+  "accessories": [
+    {
+      "element": "banda_cruzada"
+    },
+    {
+      "element": "quality_hourglass"
+    }
+  ],
+  "notes": "ESTUDIO NO APROBADO. PoseHeadOverrides ensambla cuatro cabezas de muerte de Orsa sobre el abrigo de Dariel. Revisar continuidad, arma temporal propia y escala antes de publicar.",
+  "poseHeadOverrides": {
+    "32": {
+      "sourceFrame": 32,
+      "sourcePolygon": [
+        [
+          12,
+          46
+        ],
+        [
+          69,
+          44
+        ],
+        [
+          74,
+          66
+        ],
+        [
+          59,
+          73
+        ],
+        [
+          42,
+          78
+        ],
+        [
+          29,
+          88
+        ],
+        [
+          12,
+          91
+        ]
+      ],
+      "erasePolygon": [
+        [
+          31,
+          36
+        ],
+        [
+          78,
+          36
+        ],
+        [
+          80,
+          61
+        ],
+        [
+          68,
+          69
+        ],
+        [
+          40,
+          70
+        ],
+        [
+          32,
+          60
+        ]
+      ],
+      "offset": [
+        7,
+        -6
+      ]
+    },
+    "33": {
+      "sourceFrame": 33,
+      "sourcePolygon": [
+        [
+          11,
+          45
+        ],
+        [
+          72,
+          45
+        ],
+        [
+          74,
+          64
+        ],
+        [
+          62,
+          73
+        ],
+        [
+          42,
+          78
+        ],
+        [
+          22,
+          84
+        ],
+        [
+          10,
+          78
+        ]
+      ],
+      "erasePolygon": [
+        [
+          28,
+          50
+        ],
+        [
+          69,
+          48
+        ],
+        [
+          76,
+          64
+        ],
+        [
+          71,
+          79
+        ],
+        [
+          50,
+          85
+        ],
+        [
+          30,
+          79
+        ]
+      ],
+      "offset": [
+        1,
+        7
+      ]
+    },
+    "34": {
+      "sourceFrame": 34,
+      "sourcePolygon": [
+        [
+          13,
+          57
+        ],
+        [
+          69,
+          55
+        ],
+        [
+          76,
+          75
+        ],
+        [
+          69,
+          85
+        ],
+        [
+          49,
+          93
+        ],
+        [
+          27,
+          103
+        ],
+        [
+          10,
+          99
+        ]
+      ],
+      "erasePolygon": [
+        [
+          27,
+          72
+        ],
+        [
+          70,
+          69
+        ],
+        [
+          78,
+          83
+        ],
+        [
+          77,
+          98
+        ],
+        [
+          67,
+          104
+        ],
+        [
+          31,
+          102
+        ]
+      ],
+      "offset": [
+        -3,
+        3
+      ]
+    },
+    "35": {
+      "sourceFrame": 35,
+      "sourcePolygon": [
+        [
+          17,
+          72
+        ],
+        [
+          57,
+          72
+        ],
+        [
+          65,
+          82
+        ],
+        [
+          65,
+          95
+        ],
+        [
+          50,
+          106
+        ],
+        [
+          20,
+          105
+        ],
+        [
+          13,
+          96
+        ]
+      ],
+      "erasePolygon": [
+        [
+          8,
+          80
+        ],
+        [
+          33,
+          76
+        ],
+        [
+          45,
+          81
+        ],
+        [
+          45,
+          104
+        ],
+        [
+          8,
+          106
+        ]
+      ],
+      "offset": [
+        -7,
+        0
+      ]
+    }
+  }
+}

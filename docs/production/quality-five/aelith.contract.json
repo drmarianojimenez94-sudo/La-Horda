@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "aelith",
+  "name": "Aelith",
+  "title": "La Ladrona de Segundos",
+  "role": "mago",
+  "fantasy": "Maga temporal con segundos hurtados",
+  "lore": "Aelith reparaba relojes en una estación donde ningún tren volvía a tiempo. Tras la llegada de la Horda descubrió que los instantes perdidos seguían allí, suspendidos entre los dientes de los engranajes. Aprendió a soltarlos en ecos breves, incapaz de cambiar lo ocurrido. Cada aceleración exige una pausa después: roba segundos a su propio futuro, nunca una vida entera al pasado.",
+  "personality": "Impaciente, ingeniosa y consciente de cada deuda.",
+  "silhouette": "PENDIENTE: revisión visual y continuidad en todas las poses.",
+  "stats": {
+    "hp": 98,
+    "damage": 10,
+    "speed": 158
+  },
+  "kit": {
+    "basic": {
+      "id": "aelith_basic",
+      "description": "Proyectil mágico individual.",
+      "cooldownMs": 560,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Dirección de ataque.",
+      "execution": "tools/quality-five/register-aelith-fixture.js",
+      "impact": "Daño base normalizado por rol.",
+      "feedback": "Proyectil heredado; identidad visual pendiente.",
+      "vfx": "exglyph",
+      "sfx": ""
+    },
+    "skills": [
+      {
+        "id": "ael_echo",
+        "description": "Daña un área y deja un eco que repite 30% del daño tras 0,8 s. Máximo dos ecos.",
+        "cooldownMs": 6500,
+        "maxTargets": 12,
+        "hordeMechanism": "Impactos en área y eco temporizado.",
+        "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+        "execution": "js/champions/quality-five/aelith.js",
+        "impact": "Daña un área y deja un eco que repite 30% del daño tras 0,8 s. Máximo dos ecos.",
+        "feedback": "kitFx y entidades con radio y expiración.",
+        "vfx": "rune/wind",
+        "sfx": ""
+      },
+      {
+        "id": "ael_fracture",
+        "description": "Abre una línea que daña y ralentiza a sus enemigos durante 1,8 s.",
+        "cooldownMs": 8000,
+        "maxTargets": 12,
+        "hordeMechanism": "Impactos en área y eco temporizado.",
+        "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+        "execution": "js/champions/quality-five/aelith.js",
+        "impact": "Abre una línea que daña y ralentiza a sus enemigos durante 1,8 s.",
+        "feedback": "kitFx y entidades con radio y expiración.",
+        "vfx": "rune/wind",
+        "sfx": ""
+      },
+      {
+        "id": "ael_haste",
+        "description": "Gana 25% de velocidad y 10% de armadura durante 3 s. Después sufre 15% de lentitud durante 0,8 s.",
+        "cooldownMs": 12000,
+        "maxTargets": 12,
+        "hordeMechanism": "Impactos en área y eco temporizado.",
+        "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+        "execution": "js/champions/quality-five/aelith.js",
+        "impact": "Gana 25% de velocidad y 10% de armadura durante 3 s. Después sufre 15% de lentitud durante 0,8 s.",
+        "feedback": "kitFx y entidades con radio y expiración.",
+        "vfx": "rune/wind",
+        "sfx": ""
+      }
+    ],
+    "ultimate": {
+      "id": "ael_hour",
+      "description": "Tres pulsos dañan y ralentizan enemigos. Escuda a aliados dentro del círculo.",
+      "cooldownMs": 37000,
+      "maxTargets": 12,
+      "hordeMechanism": "Impactos en área y eco temporizado.",
+      "anticipation": "Perfiles nativos de punto y cono/línea según acción.",
+      "execution": "js/champions/quality-five/aelith.js",
+      "impact": "Tres pulsos dañan y ralentizan enemigos. Escuda a aliados dentro del círculo.",
+      "feedback": "kitFx y entidades con radio y expiración.",
+      "vfx": "rune/wind",
+      "sfx": ""
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/quality-five/aelith.js",
+    "codex": "tools/quality-five/register-aelith-fixture.js",
+    "talents": "tools/quality-five/register-aelith-fixture.js",
+    "mastery": "tools/quality-five/register-aelith-fixture.js",
+    "set": "",
+    "kitTest": "tools/quality-five/temporal-plague-functional.js"
+  },
+  "cosmetics": [],
+  "set": {
+    "sourceArena": "",
+    "pieces": [],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 32,
+    "summons": 3,
+    "audioVoices": 2
+  },
+  "evidence": {
+    "reference": "docs/balance/champion-entry-reference.json",
+    "talents": "docs/production/quality-five/temporal-plague-functional-results.json",
+    "abilities": "docs/production/quality-five/ability/ability-gate.json",
+    "resources": "docs/production/quality-five/temporal-plague-functional-results.json",
+    "passives": "docs/production/quality-five/temporal-plague-functional-results.json",
+    "balance": "docs/production/quality-five/workshop-entry-results.json",
+    "visuals": "",
+    "style": "",
+    "audio": "",
+    "multiplayer": "docs/production/quality-five/online-results.json",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

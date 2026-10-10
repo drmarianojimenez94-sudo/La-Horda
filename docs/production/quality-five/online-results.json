@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "scope": "local real relay, two clients; no production accounts or cosmetics",
+  "checks": [
+    {
+      "name": "Veyra active bleed state belongs only to host",
+      "ok": true,
+      "hostBleeds": 5,
+      "guestBleeds": 0
+    },
+    {
+      "name": "veyra guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "veyra",
+        "casts": 4,
+        "damage": 508.0844999999999,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "veyra",
+        "owned": [],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "veyra death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "solciju guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "solciju",
+        "casts": 4,
+        "damage": 177.72480000000002,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "solciju",
+        "owned": [
+          "sol_cask",
+          "sol_reserve"
+        ],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "Solciju reserve and cask replicate with guest owner",
+      "ok": true
+    },
+    {
+      "name": "solciju death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "Brakk wall and turret replicate with guest owner",
+      "ok": true,
+      "builds": [
+        "brk_wall",
+        "brk_turret"
+      ]
+    },
+    {
+      "name": "brakk guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "brakk",
+        "casts": 4,
+        "damage": 277.178,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "brakk",
+        "casts": 3,
+        "owned": [],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "brakk death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "Morveth infections remain host authoritative",
+      "ok": true,
+      "hs": 4,
+      "gs": 0
+    },
+    {
+      "name": "morveth guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "morveth",
+        "casts": 4,
+        "damage": 99.80960000000003,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "morveth",
+        "casts": 4,
+        "owned": [
+          "mor_garden"
+        ],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "morveth ultimate replicates with guest owner",
+      "ok": true
+    },
+    {
+      "name": "morveth death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "aelith guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "aelith",
+        "casts": 4,
+        "damage": 344.82525000000004,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "aelith",
+        "owned": [
+          "ael_hour"
+        ],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "aelith ultimate replicates with guest owner",
+      "ok": true
+    },
+    {
+      "name": "aelith death removes owned effects",
+      "ok": true
+    }
+  ],
+  "errors": []
+}
