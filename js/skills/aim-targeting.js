@@ -92,11 +92,22 @@ function aimRangeOf(caster, sk, idx){
   return (sk.range||200) * area;
 }
 const _AIM_RANK_W = {normal:1, subelite:1.5, elite:3, subjefe:5, jefe:6};
+// Crystal Wars keeps opponents outside `enemies`; use the same side-aware list as damage.
+function aimHostiles(caster){return divinaMode?portadorEnemies(caster):enemies;}
+function aimNearestHostile(caster,range){
+  let best=null,nearest=Infinity;
+  for(const e of aimHostiles(caster)){
+    if(!e.alive||e.cineT>0||(e.isDuelLocked&&e.duelOwner!==caster))continue;
+    const d=Math.hypot(e.x-caster.x,e.y-caster.y);
+    if(d<nearest&&(!range||d<=range)){best=e;nearest=d;}
+  }
+  return best;
+}
 // Punto con más enemigos (ponderados por rango) dentro del alcance. null si no hay nadie cerca.
 function bestClusterPoint(caster, range, radius){
   const cand = [];
-  for(const e of enemies){
-    if(!e.alive || (e.isDuelLocked && e.duelOwner!==caster)) continue;
+  for(const e of aimHostiles(caster)){
+    if(!e.alive || e.cineT>0 || (e.isDuelLocked && e.duelOwner!==caster)) continue;
     const d = Math.hypot(e.x-caster.x, e.y-caster.y);
     if(d <= range + radius*0.6) cand.push(e);
   }
@@ -137,7 +148,7 @@ function aimPoint(caster, range, radius, moveMode){
 function aimDir(caster, range){
   if(caster.aim && caster.aim.dx!==undefined){ caster.fx = caster.aim.dx; caster.fy = caster.aim.dy; }
   else {
-    const t = nearestEnemyTo(caster, range||300);
+    const t = aimNearestHostile(caster, range||300);
     if(t) _faceTo(caster, t.x, t.y);
   }
   return {x:caster.fx, y:caster.fy};
@@ -146,13 +157,13 @@ function aimDir(caster, range){
 function aimTarget(caster, range){
   if(caster.aim && caster.aim.x!==undefined){
     let best = null, bd = Infinity;
-    for(const e of enemies){
-      if(!e.alive || (e.isDuelLocked && e.duelOwner!==caster)) continue;
+    for(const e of aimHostiles(caster)){
+      if(!e.alive || e.cineT>0 || (e.isDuelLocked && e.duelOwner!==caster)) continue;
       if(Math.hypot(e.x-caster.x, e.y-caster.y) > range + (e.radius||20)) continue;
       const d = Math.hypot(e.x-caster.aim.x, e.y-caster.aim.y) - (e.radius||20);
       if(d < bd){ bd = d; best = e; }
     }
     if(best) return best;
   }
-  return nearestEnemyTo(caster, range);
+  return aimNearestHostile(caster, range);
 }

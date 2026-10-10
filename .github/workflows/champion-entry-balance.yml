@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 22
       - run: node --test tools/factory/test.js
+      - run: node --test tools/regression/test-aim-hostiles.js
       - run: node tools/factory/boss-cli.js check
       - run: node tools/quality/test-talent-gate.js
       - run: node tools/alpha/public-defaults.js
@@ -43,6 +44,9 @@ jobs:
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/quality/test-ability-resources.js
+        env:
+          NODE_PATH: /tmp/horda-balance/node_modules
+      - run: node tools/quality/test-nano-render.js
         env:
           NODE_PATH: /tmp/horda-balance/node_modules
       - run: node tools/bible/champion-validator.js --strict

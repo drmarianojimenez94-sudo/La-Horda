@@ -1,8 +1,36 @@
 # Cinco campeones: taller visual, no lanzamiento
 
-Estado: **DRAFT / NO JUGABLES**. Ninguna receta de este directorio instala campeones,
-registra habilidades ni concede skins. Solciju, Brakk, Veyra, Morveth y Aelith aún
-necesitan sus kits, pasivas, talentos transformadores, lore, Códice y pruebas de red.
+Estado: **DRAFT / NO PUBLICADOS**. Ninguna receta de este directorio instala campeones
+ni concede skins. Solciju tiene un primer runtime ejecutable únicamente mediante la
+fixture de pruebas; Brakk, Veyra, Morveth y Aelith todavía no tienen kits propios.
+
+## Taller de Solciju — 10 de octubre UTC
+
+`js/champions/quality-five/solciju.js` implementa fermentación, vino de área, dos barricas
+temporizadas, brindis y Gran Reserva. Tres transformaciones ordinarias y tres maestrías
+distintas se prueban con el sistema real de talentos. Árbol ordinario: 33 puntos, presupuesto
+máximo: 30. El registro de pruebas está exclusivamente en `tools/quality-five/register-fixture.js`;
+el juego publicado no carga ninguno de estos módulos ni desbloquea el candidato.
+
+Repetir con Playwright disponible y `CHROMIUM_PATH` si corresponde:
+
+```
+node tools/quality-five/functional.js
+node tools/balance/check-entry-reference.js
+node tools/balance/entry-gate.js --workshop-solciju
+node --test tools/factory/test.js
+node tools/factory/cli.js validate docs/production/quality-five/solciju.contract.json
+```
+
+El último comando debe seguir informando INCOMPLETE: el contrato fue creado con la fábrica,
+pero arte final, audio, cosméticos, sets, balance completo y multiplayer de dos clientes
+siguen pendientes. Las pruebas funcionales verifican seis niveles, daño, temporizadores,
+limpieza, talentos, maestrías, recursos y serialización; no equivalen a aprobación comercial.
+El entry gate del taller ejecuta además todos los candidatos existentes con los mismos
+umbrales y semillas, sin modificar `knownChampions`.
+
+Aelith: diseño rechazado por similitud con Sira (cuerpo y cabeza de `sira_skin`/`sira_set`).
+Rediseño pendiente de cabello, vestimenta y silueta; el atlas actual no se aprueba ni instala.
 
 ## Producción reproducible
 
