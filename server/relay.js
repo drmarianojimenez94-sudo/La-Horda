@@ -207,6 +207,7 @@ function handle(ws, msg){
         if(m.ws && m.ws !== ws){ send(m.ws, { t: "closed", reason: "replaced" }); m.ws._room = null; }
         m.ws = ws; m.lostAt = 0;
         if(msg.champ && presence.champAllowed(ws, clean(msg.champ, 24))) m.champ = clean(msg.champ, 24);
+        if(!presence.champAllowed(ws, m.champ)) m.champ = ""; // A reconnect must revalidate the preserved exclusive champion.
         m.founder = presence.memberFounder(ws); // reconnect: identity refreshed, banner NOT repeated
         ws._room = code; ws._slot = slot;
         r.touched = Date.now();

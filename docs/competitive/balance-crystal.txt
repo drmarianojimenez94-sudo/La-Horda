@@ -1,0 +1,4 @@
+roles % { tanque: 44, guerrero: 59, mago: 50, soporte: 47 } partidas 270 cristal % 100 empates % 0 duración media s 307
+políticas % { balanced: 56, economy: 51, aggro: 40, turtle: 54 }
+espejo lado 1 % 45
+PASS balance gate de Guerra de Cristales

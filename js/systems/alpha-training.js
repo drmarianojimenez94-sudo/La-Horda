@@ -30,7 +30,7 @@ function alphaOnboardingDestination(){
   const q=new URLSearchParams(location.search);
   if((q.get('next')!=='crystal-wars'&&q.get('cw')!=='1')||!HordaOnboarding.ready(save))return;
   if(state==='crystalwars'||typeof cwGo!=='function')return;
-  const link={};for(const key of ['room','server'])if(q.has(key))link[key]=q.get(key);
+  const link={};for(const key of ['room','server','mode'])if(q.has(key))link[key]=q.get(key);
   cwGo(link); // Guerra de Cristales es una pantalla del juego (js/ui/menus.js)
 }
 function alphaTrainingSkip(){

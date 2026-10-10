@@ -4,7 +4,8 @@
  * hay demasiados empates o partidas que no terminan en cristal, o la duración media se sale del rango objetivo.
  * Los bots miden el modo, no a humanos: no reemplaza partidas reales. */
 const C=require('../../js/modes/crystal-wars/simulation'),assert=require('node:assert/strict');
-const roles=Object.keys(C.ROLES),P=C.POLICIES;
+// This gate compares the four base archetypes; full roster gets its own coverage gate.
+const roles=['tanque','guerrero','mago','soporte'],P=C.POLICIES;
 const seedOffset=Number(process.env.CW_BALANCE_SEED_OFFSET||0);
 assert(Number.isSafeInteger(seedOffset),'invalid seed offset');
 const run=(slots,seed,pa,pb)=>{const s=C.create(slots,seed+seedOffset);if(pa)s.teams[0].policy=pa;if(pb)s.teams[1].policy=pb;while(!s.ended&&s.time<C.DURATION+1)C.step(s,1/30);return s;};

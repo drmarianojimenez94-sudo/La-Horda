@@ -553,13 +553,23 @@ document.getElementById("menu-btn-2").addEventListener("click", ()=>{
 })();
 
 // Crystal Wars has isolated match state and shares the configured room relay.
-function openCrystalWars(){ document.getElementById("mode-crystal-wars-btn").click(); }
+function openCrystalWars(){ competitiveOpen("crystal"); }
+function openColiseum(){ competitiveOpen("coliseum"); }
+let competitivePendingMode = "crystal";
+function competitiveOpen(mode){
+  if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al competitivo."); return; }
+  competitivePendingMode = mode === "coliseum" ? "coliseum" : "crystal";
+  if(!HordaOnboarding.ready(save)){ cwGateOpen(); return; }
+  cwGo({mode:competitivePendingMode});
+}
 // acceso directo desde el hub (tarjeta propia, como la Horda Infinita)
 (function(){ const b = document.getElementById("hub-crystal-btn"); if(b) b.addEventListener("click", openCrystalWars); })();
+(function(){ const b = document.getElementById("hub-coliseum-btn"); if(b) b.addEventListener("click", openColiseum); })();
 // registro de modos (mismo formato que la Horda Infinita: js/data/endless.js)
 window.GAME_MODE_REGISTRY = window.GAME_MODE_REGISTRY || {};
-window.GAME_MODE_REGISTRY.crystalWars = {id:"crystalWars", name:"Guerra de Cristales", icon:"◆",
-  desc:"Coliseo 2 contra 2: defendé tu cristal, reuní fragmentos y enviá la Horda al rival.", unlock:()=>true, open:openCrystalWars, coop:true};
+window.GAME_MODE_REGISTRY.crystalWars = {id:"crystalWars", name:"Convergencia — Guerra de Cristales", icon:"◆",
+  desc:"Defensa 2 contra 2, obstáculos y cartas tácticas contra el campo rival.", unlock:()=>true, open:openCrystalWars, coop:true};
+window.GAME_MODE_REGISTRY.coliseum = {id:"coliseum", name:"Coliseo", icon:"⚔", desc:"Combate directo 2 contra 2: cobertura, monstruos y 15 eliminaciones para ganar.", unlock:()=>true, open:openColiseum, coop:true};
 // volver al hub sin pasar por la portada (index.html?return=hub; el Coliseo ya no navega: ver cwGo)
 (function(){
   let q; try{ q = new URLSearchParams(location.search); }catch(e){ return; }
@@ -571,17 +581,14 @@ window.GAME_MODE_REGISTRY.crystalWars = {id:"crystalWars", name:"Guerra de Crist
     if(btn && !btn.disabled && state==="title"){ clearInterval(t); btn.click(); }
   }, 100);
 })();
-document.getElementById("mode-crystal-wars-btn").addEventListener("click", ()=>{
-  if(typeof netInRoom==="function" && netInRoom()){ showNetToast("Salí de tu sala actual antes de entrar al Coliseo."); return; }
-  if(!HordaOnboarding.ready(save)){ cwGateOpen(); return; }
-  cwGo();
-});
+document.getElementById("mode-crystal-wars-btn").addEventListener("click", openCrystalWars);
+document.getElementById("mode-coliseum-btn").addEventListener("click", openColiseum);
 // Guerra de Cristales es una pantalla más del juego (state "crystalwars", js/modes/crystal-wars/client.js): no hay otra página
 // a la que navegar. Si el servidor donde está publicado el juego es una versión vieja sin esos archivos, se avisa claro.
 function cwExit(){ setState("mainmenu"); if(typeof renderMainMenu==="function") renderMainMenu(); }
 function cwGo(opts){
   if(typeof CrystalWarsUI==="undefined" || typeof CrystalWars==="undefined"){
-    if(typeof showNetToast==="function") showNetToast("Guerra de Cristales todavía no está publicada en este servidor. Avisale a quien administra el juego.");
+    if(typeof showNetToast==="function") showNetToast("El competitivo todavía no está publicado en este servidor. Avisale a quien administra el juego.");
     return;
   }
   const server = new URLSearchParams(location.search).get("server");
@@ -595,7 +602,7 @@ function cwGo(opts){
 (function(){
   let q; try{ q = new URLSearchParams(location.search); }catch(e){ return; }
   if(q.get("cw")!=="1") return;
-  const link = {}; for(const k of ["room","server"]) if(q.has(k)) link[k] = q.get(k);
+  const link = {}; for(const k of ["room","server","mode"]) if(q.has(k)) link[k] = q.get(k);
   window.__cwLink = link;
   let n = 0, clicked = false;
   const t = setInterval(()=>{
@@ -610,8 +617,8 @@ function cwGateOpen(){
   const m=document.getElementById("cw-gate"); if(!m){ alphaFirstRunContinue(); return; }
   const noChamp=typeof needsStarterChampion==="function"&&(needsStarterChampion()||(typeof needsStarterSkin==="function"&&needsStarterSkin()));
   document.getElementById("cw-gate-text").textContent=noChamp
-    ? "Primero elegí tu guardián de regalo. Después hacé el entrenamiento (unos 2 minutos) o saltalo si ya sabés jugar, y se abre el Coliseo."
-    : "El Coliseo se abre después del entrenamiento (unos 2 minutos). Si ya sabés jugar, podés saltarlo y entrar ahora.";
+    ? "Primero elegí tu guardián de regalo. Después hacé el entrenamiento (unos 2 minutos) o saltalo si ya sabés jugar, y se abren los modos competitivos."
+    : "Los modos competitivos se abren después del entrenamiento (unos 2 minutos). Si ya sabés jugar, podés saltarlo y entrar ahora.";
   document.getElementById("cw-gate-skip").classList.toggle("hidden", noChamp);
   document.getElementById("cw-gate-train").textContent=noChamp?"Elegir mi guardián":"Hacer el entrenamiento";
   m.classList.remove("hidden"); document.getElementById("cw-gate-train").focus();
@@ -625,7 +632,7 @@ function cwGateClose(){ const m=document.getElementById("cw-gate"); if(m) m.clas
     if(typeof acct!=="undefined"&&(acct.applying||acct.pulling||acct.conflict)){ showNetToast("Esperá a que termine la sincronización de tu cuenta."); return; }
     save.tut=save.tut||{}; save.tut.trainingSkipped=1; persistNow();
     if(typeof AlphaServices!=="undefined") AlphaServices.emit("tutorial_skipped",{from:"crystal-wars"});
-    cwGateClose(); cwGo();
+    cwGateClose(); cwGo({mode:competitivePendingMode});
   });
   document.addEventListener("keydown", e=>{ if(e.key==="Escape"&&!m.classList.contains("hidden")) cwGateClose(); });
 })();

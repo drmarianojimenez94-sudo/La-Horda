@@ -171,7 +171,8 @@
       <div class="hub-grid" id="hub-grid">
         <button class="hub-tile" id="mainmenu-guardianes-btn"><span class="hub-tile-ico">🛡</span><span class="hub-tile-title">GUARDIANES</span><span class="hub-tile-sub">Equipo · talentos · skins</span><span class="ui-tag hub-tile-badge hidden" id="hub-badge-guard"></span></button>
         <button class="hub-tile" id="mainmenu-tienda-btn"><span class="hub-tile-ico">🪙</span><span class="hub-tile-title">TIENDA</span><span class="hub-tile-sub">Ofertas del día · skins</span><span class="ui-tag new hub-tile-badge hidden" id="hub-badge-shop">NUEVO</span><span class="ui-tag sale hub-tile-offer hidden" id="hub-badge-offer">OFERTA</span></button>
-        <button class="hub-tile hub-tile-crystal" id="hub-crystal-btn"><span class="hub-tile-ico">◆</span><span class="hub-tile-title">CRISTALES</span><span class="hub-tile-sub">Guerra 2 contra 2</span></button>
+        <button class="hub-tile hub-tile-crystal" id="hub-crystal-btn"><span class="hub-tile-ico">◆</span><span class="hub-tile-title">CONVERGENCIA</span><span class="hub-tile-sub">Guerra de Cristales · 2v2</span></button>
+        <button class="hub-tile hub-tile-crystal" id="hub-coliseum-btn"><span class="hub-tile-ico">⚔</span><span class="hub-tile-title">COLISEO</span><span class="hub-tile-sub">Combate directo · 2v2</span></button>
         <button class="hub-tile" id="mainmenu-jugar-btn"><span class="hub-tile-ico">🌐</span><span class="hub-tile-title">MULTIJUGADOR</span><span class="hub-tile-sub">Sala con código · modos</span></button>
 <details class="hub-more"><summary>Explorar · Códice y desafíos</summary><div class="hub-actions">        <button class="hub-tile" id="mainmenu-codex-btn"><span class="hub-tile-ico">📖</span><span class="hub-tile-title">CÓDICE</span><span class="hub-tile-sub">Bestiario · jefes · lore</span></button>        <button class="hub-tile hidden" id="mainmenu-quests-btn" data-quests-open><span class="hub-tile-ico">🏆</span><span class="hub-tile-title">DESAFÍOS</span><span class="hub-tile-sub">Logros · pase</span><span class="ui-tag new hub-tile-badge qs-badge hidden" id="hub-badge-quests"></span></button></div></details>
       </div>
@@ -182,8 +183,8 @@
   <div id="cw-gate" class="ui-modal hidden" role="dialog" aria-modal="true" aria-labelledby="cw-gate-title">
     <div class="ui-modal-back" data-cw-gate-close></div>
     <div class="ui-panel ui-modal-panel">
-      <div class="ui-panel-title" id="cw-gate-title">◆ Guerra de Cristales</div>
-      <p class="cw-gate-text" id="cw-gate-text">El Coliseo se abre después del entrenamiento (unos 2 minutos). Si ya sabés jugar, podés saltarlo y entrar ahora.</p>
+      <div class="ui-panel-title" id="cw-gate-title">◆ Competitivo de La Horda</div>
+      <p class="cw-gate-text" id="cw-gate-text">Los modos competitivos se abren después del entrenamiento (unos 2 minutos). Si ya sabés jugar, podés saltarlo y entrar ahora.</p>
       <div class="cw-gate-btns">
         <button class="btn small" id="cw-gate-train">Hacer el entrenamiento</button>
         <button class="btn small secondary" id="cw-gate-skip">Ya sé jugar: entrar</button>
@@ -336,8 +337,12 @@
         <div class="mode-card-note" id="campaign-first-notice">🏆 El primer jugador en completar el juego puede pedir un campeón con diseño propio.</div>
       </button>
       <button class="mode-card" id="mode-crystal-wars-btn">
-        <div class="mode-card-title">◆ GUERRA DE CRISTALES <span class="ui-tag">ALPHA</span></div>
-        <div class="mode-card-desc">Coliseo 2 contra 2: defendé tu cristal, reuní fragmentos y enviá la Horda al rival. Salas privadas y entrenamiento con bots.</div>
+        <div class="mode-card-title">◆ CONVERGENCIA <span class="ui-tag">ALPHA</span></div>
+        <div class="mode-card-desc">Guerra de Cristales 2 contra 2: defendé tu núcleo, esquivá obstáculos y lanzá cartas al campo rival. Ambos equipos siempre visibles.</div>
+      </button>
+      <button class="mode-card" id="mode-coliseum-btn">
+        <div class="mode-card-title">⚔ COLISEO <span class="ui-tag">ALPHA</span></div>
+        <div class="mode-card-desc">Combate directo 2 contra 2 en una arena compartida, con cobertura y monstruos neutrales. Gana el primer equipo en alcanzar 15 eliminaciones.</div>
       </button>
       <button class="mode-card mode-endless hidden" id="mode-endless-btn">
         <div class="mode-card-title">♾ HORDA INFINITA <span class="ui-tag hidden" id="mode-endless-lock">🔒</span></div>
@@ -351,12 +356,12 @@
        Lógica en js/modes/crystal-wars/*, estilos acotados a esta pantalla en css/crystal-wars.css. -->
   <div id="crystalwars-screen" class="screen hidden">
 <div id="cw-root">
-<header><button id="back" type="button">‹ LA HORDA</button><span>COLISEO · ALPHA</span><button id="sound" aria-pressed="false">Sonido: apagado</button></header>
+<header><button id="back" type="button">‹ LA HORDA</button><span id="competitive-title">CONVERGENCIA · ALPHA</span><button id="sound" aria-pressed="false">Sonido: apagado</button></header>
 <main id="lobby">
- <div class="eyebrow">DOS EQUIPOS · UNA HORDA · ECLIPSE A LOS 5 MINUTOS</div><h1>GUERRA DE<br><em>CRISTALES</em></h1>
+ <div class="eyebrow">DOS EQUIPOS · UNA HORDA · ECLIPSE A LOS 5 MINUTOS</div><h1>CONVERGENCIA<br><em>GUERRA DE CRISTALES</em></h1>
  <p class="intro">Cada equipo defiende su cristal contra la misma horda. Ganás cuando el cristal rival cae: por sus errores, por tus envíos de monstruos o por el Eclipse final. Convertí las bajas en fragmentos y decidí cómo usarlos.</p>
  <div class="rules"><div><b>01 / RESISTÍ</b><p>Entrás directo en acción. El ataque básico es automático: movete y combiná tus cuatro habilidades.</p></div><div><b>02 / DECIDÍ</b><p>Al comienzo de cada oleada, tenés 7 segundos para reparar, mejorar o enviar amenazas. Mirá cómo atacan en el campo rival, siempre visible.</p></div><div><b>03 / REMATÁ</b><p>Pasados los 5 minutos llega el ECLIPSE: los dos cristales se apagan cada vez más rápido. Gana el que más vida conserve. Si vas perdiendo, el cristal te ayuda con fragmentos extra.</p></div></div>
- <section class="setup"><div><label for="name">Tu nombre</label><input id="name" maxlength="24" placeholder="Guardián"><label for="champ">Tu campeón</label><select id="champ"></select><p id="kit"></p><small>Cuatro kits adaptados al Coliseo. Mismo poder inicial para todos, sin equipo de campaña ni compras de poder.</small></div>
+ <section class="setup"><div><label for="competitive-mode">Modo competitivo</label><select id="competitive-mode"><option value="crystal">Convergencia — Guerra de Cristales</option><option value="coliseum">Coliseo — Combate 2 contra 2</option></select><label for="name">Tu nombre</label><input id="name" maxlength="24" placeholder="Guardián"><label for="champ">Tu campeón</label><select id="champ"></select><p id="kit"></p><small>Plantel de guardianes con perfiles competitivos adaptados y estadísticas normalizadas. Sin ventajas por nivel, equipo de campaña o compras. Los personajes exclusivos conservan sus restricciones.</small></div>
  <div class="connect"><button class="primary" id="practice">ENTRENAR CON BOTS</button><button id="create">CREAR SALA PRIVADA</button><label for="code">Código o enlace de tu amigo</label><div class="join"><input id="code" maxlength="240" placeholder="ABC123"><button id="join">UNIRSE</button></div></div></section>
  <section id="room" hidden><div class="room-head"><h2>SALA <span id="room-code"></span></h2><button id="copy">Copiar invitación</button></div><p>J1 + J2: equipo Zafiro. J3 + J4: equipo Ámbar. Los lugares libres se completan con bots.</p><div id="slots"></div><div class="actions"><button id="ready">ESTOY LISTO</button><button id="start" class="primary">COMENZAR 2 CONTRA 2</button><button id="leave">Salir de la sala</button></div></section>
  <p id="status" role="status" aria-live="polite">Entrenamiento disponible sin conexión. Online usa el servidor configurado de La Horda.</p>
@@ -794,7 +799,7 @@
 <script src="js/net/net-trade.js"></script>
 <script src="js/net/net-rooms.js"></script>
 <script src="js/net/quick-play.js"></script>
-<script src="js/modes/crystal-wars/simulation.js"></script><script src="js/modes/crystal-wars/atlas.js"></script><script src="js/modes/crystal-wars/client.js"></script>
+<script src="js/modes/crystal-wars/roster.js"></script><script src="js/modes/crystal-wars/simulation.js"></script><script src="js/modes/crystal-wars/atlas.js"></script><script src="js/modes/crystal-wars/client.js"></script>
 <script src="js/net/net-debug.js"></script>
 <script src="js/net/account.js"></script>
 <script src="js/systems/premium.js"></script>

@@ -145,3 +145,36 @@
 #crystalwars-screen #scoreboard .clock span{font-size:9px;line-height:10px}
 #crystalwars-screen #notice{top:42px;left:50%;width:170px;font-size:10px}
 }
+/* Competitive hub: clear mode identity, readable tactical cards and persistent rival view. */
+#crystalwars-screen #competitive-mode{border-color:#b69759;background:linear-gradient(120deg,#17263c,#292238);font-size:20px;min-height:48px}
+#crystalwars-screen #cw-stage{box-shadow:0 0 0 1px #111a2c,0 16px 48px #0006;background:radial-gradient(ellipse,#223850,#0b101c)}
+#crystalwars-screen #shop .cw-card{position:relative;border-color:#83b8db;background:linear-gradient(145deg,#20354f,#161c34);box-shadow:inset 0 0 18px #73d5ff15;font-weight:bold;color:#dff5ff}
+#crystalwars-screen #shop .cw-card[data-key="meteor"]{border-color:#d79666;background:linear-gradient(145deg,#51322e,#211a30);color:#ffe0ba}
+#crystalwars-screen button:focus-visible,#crystalwars-screen select:focus-visible{outline:2px solid #fff2b7;outline-offset:3px}
+#crystalwars-screen #shop .cw-card:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 3px 14px #8fe4ff38}
+#crystalwars-screen #skills button:not(:disabled){border-bottom:3px solid #8babc5}
+#crystalwars-screen #vital{border:1px solid #7692a555;pointer-events:none}
+@media(max-height:520px) and (orientation:landscape){
+#crystalwars-screen #shop{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+#crystalwars-screen #cw-game:not(.supply) #shop button:not(.cw-card){display:none}
+#crystalwars-screen #cw-game:not(.supply) #shop{grid-template-columns:repeat(2,minmax(0,1fr))}
+#crystalwars-screen #cw-game.supply #shop{grid-template-columns:repeat(4,minmax(0,1fr))}
+#crystalwars-screen #supply{max-height:92px;overflow-y:auto}
+#crystalwars-screen #shop button{min-height:30px;line-height:1.1}
+}
+@media(prefers-reduced-motion:reduce){#crystalwars-screen #shop .cw-card:not(:disabled):hover{transform:none}}
+#crystalwars-screen .cw-kit-guide{margin:10px 0;padding:10px;border:1px solid #465268;border-radius:7px;background:#101829}
+#crystalwars-screen .cw-kit-guide summary{cursor:pointer;color:#e8c885;min-height:28px}
+#crystalwars-screen .cw-kit-guide p,#crystalwars-screen .cw-help-dialog p{font-size:15px;line-height:1.5;color:#c3d3e5}
+#crystalwars-screen .cw-kit-guide strong,#crystalwars-screen .cw-help-dialog strong{color:#fff0c8}
+#crystalwars-screen .cw-signature{padding:10px;background:#2a2440;border-left:3px solid #c0a1ff}
+#crystalwars-screen #cw-help{font-size:11px;margin-left:8px}
+#crystalwars-screen .cw-help-dialog{max-width:660px;max-height:90vh;overflow:auto}
+@media(max-height:520px) and (orientation:landscape){#crystalwars-screen #cw-help{position:absolute;right:6px;top:6px;z-index:5;font-size:9px;padding:4px 7px;min-height:28px;max-width:100px}#crystalwars-screen .cw-help-dialog p{font-size:12px}}
+/* One horizontal hand keeps every card touch-sized on small landscape phones. */
+@media(max-height:520px) and (orientation:landscape){
+#crystalwars-screen #shop,#crystalwars-screen #cw-game.supply #shop,#crystalwars-screen #cw-game:not(.supply) #shop{display:flex;overflow-x:auto;overscroll-behavior-x:contain;gap:5px;padding-bottom:3px;scroll-snap-type:x proximity}
+#crystalwars-screen #shop button{flex:0 0 104px;min-height:44px;font-size:11px;padding:5px;scroll-snap-align:start}
+#crystalwars-screen #supply{overflow-y:visible;max-height:90px}
+#crystalwars-screen #skills button{min-height:46px;font-size:10px}
+}
