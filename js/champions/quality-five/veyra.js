@@ -70,6 +70,19 @@ updatePortadorHero=function(h,dt){veyOriginalHero(h,dt);if(h.classKey!=='veyra')
  h.veyraBleeds=veyraBleeds(h).filter(b=>b.left>0);
 };
 NET_SKIP_KEYS.add('veyraBleeds');
+// Generic melee basics hit every nearby enemy. Give this candidate an explicit
+// twelve-victim budget without changing the existing roster's basic attacks.
+let veyBasicOwner=null,veyBasicBudget=0;
+const veyOriginalBasic=triggerBasic;
+triggerBasic=function(h){h=h||player;const owner=veyBasicOwner,budget=veyBasicBudget;
+ if(h.classKey==='veyra'){veyBasicOwner=h;veyBasicBudget=12;}
+ try{return veyOriginalBasic(h);}finally{veyBasicOwner=owner;veyBasicBudget=budget;}
+};
+const veyOriginalDamage=damageEnemy;
+damageEnemy=function(e,amount,opts={}){
+ if(veyBasicOwner&&opts.fromBasic&&opts.src===veyBasicOwner&&veyBasicBudget--<=0)return;
+ return veyOriginalDamage(e,amount,opts);
+};
 ACTION_AIM_PROFILES['expedition:vey_cut']={type:'cone',range:sk=>Math.min(180,sk.range)};
 ACTION_AIM_PROFILES['expedition:vey_dash']={type:'dash',w:28,range:sk=>Math.min(180,sk.range)};
 const veyOriginalAim=aimProfileOf;

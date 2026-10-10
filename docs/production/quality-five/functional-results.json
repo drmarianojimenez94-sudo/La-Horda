@@ -367,6 +367,10 @@
       "ok": true
     },
     {
+      "name": "Veyra basic has twelve-victim cap",
+      "ok": true
+    },
+    {
       "name": "Veyra bleed cannot tick forever",
       "ok": true
     },

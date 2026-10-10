@@ -38,12 +38,14 @@ alas/conductos, restauración del contexto y modo normal PASS; cero errores de p
   brindis y Gran Reserva. Tres transformaciones ordinarias y tres maestrías funcionales.
 - Veyra: sangrado con presupuesto de ticks y objetivos, desplazamiento seguro, pacto
   con costo de vida y definitiva que consume heridas; pasiva de riesgo y transformaciones.
-- Ambos: árboles de 33 puntos ordinarios frente al máximo de 30; 131 comprobaciones en
+- Ambos: árboles de 33 puntos ordinarios frente al máximo de 30; 132 comprobaciones en
   seis niveles y ejecuciones breves en las diez arenas. Ability Gate diferencial estricto
   PASS, canario sin efectos rechazado. Relay local real con dos clientes PASS, sin tocar
   cuentas de producción. Evidencia y límites en `docs/production/quality-five/README.md`.
 - Balance de entrada: 66 simulaciones, 22 candidatos incluyendo los dos del taller,
-  sin exceder techos. El daño medido es bajo respecto de sus roles y necesita calibración.
+  una repetición anterior pasó; la última falla por Saelis (10.368,17 > 9.781,695).
+  Se conserva el fallo y queda pendiente aislar la variación. El daño de los dos candidatos
+  nuevos es bajo respecto de sus roles y necesita calibración.
   Aprobar el techo no equivale a aprobar balance competitivo ni una calificación 8/10.
 - Aelith: rechazada visualmente por similitud con Sira. Brakk, Morveth y Aelith aún sin
   kits propios. Ninguno de los cinco tiene una skin final aprobada ni publicación jugable.

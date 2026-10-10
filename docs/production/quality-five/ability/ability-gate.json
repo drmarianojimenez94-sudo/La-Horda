@@ -101,7 +101,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 126,
+     "vfx": 128,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -118,7 +118,7 @@
       "CONTROL",
       "MOVILIDAD"
      ],
-     "vfx": 124,
+     "vfx": 126,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -132,7 +132,7 @@
      "cats": [
       "POTENCIA"
      ],
-     "vfx": 6,
+     "vfx": 8,
      "aims": false,
      "aimProfile": null
     },
@@ -149,7 +149,7 @@
       "CURA",
       "CONTROL"
      ],
-     "vfx": 43,
+     "vfx": 45,
      "aims": false,
      "aimProfile": null
     }

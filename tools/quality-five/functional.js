@@ -72,6 +72,8 @@ const server=http.createServer((req,res)=>{
     player.hp=player.maxHp/2;const before=player.hp;cast(2);check('Veyra L'+level+' pact cost and buff',player.hp<before&&player.hp>=1&&player.portSpeedTimer>0);
    }
    start(60,'veyra');e=enemy();for(let i=0;i<25;i++)cast(0);check('Veyra refresh does not stack bleed',veyraBleeds(player).length===1&&veyraBleeds(player)[0].left===3);
+   start(60,'veyra');const crowd=Array.from({length:20},(_,i)=>enemy(25+i));player.basicCd=0;triggerBasic(player);check('Veyra basic has twelve-victim cap',crowd.filter(x=>x.hp<1e7).length===12);
+   start(60,'veyra');e=enemy();cast(0);
    tick(3100);const finalHP=e.hp;tick(10000);check('Veyra bleed cannot tick forever',e.hp===finalHP);
    start(60,'veyra');for(let i=0;i<20;i++){const target=enemy(30+i);veyraBleed(player,target,1);}check('Veyra bounded bleeding targets',veyraBleeds(player).length===12);player.alive=false;tick(50);check('Veyra death clears bleed',veyraBleeds(player).length===0);
    start(60,'veyra');e=enemy(30,'jefe');cast(0);player.hp=player.maxHp/2;const beforeUlt=player.hp;cast('ult');check('Veyra ultimate consumes bleed heals and slows',veyraBleeds(player).every(b=>b.left===0)&&player.hp>beforeUlt&&e.slowAmt>0&&e.slowAmt<=.12);

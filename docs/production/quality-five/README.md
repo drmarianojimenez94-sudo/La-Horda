@@ -39,7 +39,7 @@ pacto que consume vida actual y definitiva que consume heridas. Pasiva de riesgo
 debajo de 40% de vida. Tres transformaciones desde nivel 40 y tres decisiones de maestría
 desde nivel 90; los árboles siguen costando 33 puntos ordinarios frente a 30 disponibles.
 
-`functional-results.json`: suite conjunta con 131 comprobaciones, incluidas ejecuciones
+`functional-results.json`: suite conjunta con 132 comprobaciones, incluidas ejecuciones
 breves en las diez arenas. No representa campañas completas ni QA en teléfonos físicos.
 `solciju-functional.json` y `solciju-entry-results.json` conservan la primera medición aislada.
 `ability/ability-gate.json`: Ability Gate diferencial estricto de ambos candidatos, PASS;
@@ -50,7 +50,7 @@ Arte, audio, cosméticos y sets siguen pendientes. Los contratos de fábrica se 
 INCOMPLETE honestamente. El workflow `Five champion workshop` repite los gates técnicos
 sin habilitar candidatos en el catálogo público.
 
-Última calibración del taller: 66 simulaciones de 150 s, 22 candidatos técnicos, cero
+Calibración anterior del taller: 66 simulaciones de 150 s, 22 candidatos técnicos, cero
 violaciones del techo. Solciju: daño medio 8.494 y supervivencia 3/3; Veyra: 4.291 y 3/3.
 Referencias de rol: mago 15.000, asesino 12.877. El gate comprueba sobrepotencia y errores;
 estos resultados bajos requieren revisar alcance, frecuencia efectiva y desempeño solo
@@ -92,3 +92,24 @@ que requieren revisión en escena. No se han bajado umbrales para producir un PA
 
 La hoja de contacto muestra frente/perfil/espalda, no sustituye revisión animada.
 No publicar estos prototipos como contenido ya disponible ni atribuirles balance aprobado.
+
+## Última repetición: Balance Gate bloqueado
+
+Tras limitar el básico de Veyra a doce víctimas, la repetición completa registró una
+violación en Saelis: daño medio 10.368,17 frente al techo 9.781,695. Cero errores JS.
+Solciju (8.218,78) y Veyra (5.471,67) siguen por debajo de sus techos y sobrevivieron 3/3.
+`workshop-entry-results.json` conserva el fallo, no se reemplaza por el pase anterior.
+Las envolturas nuevas no alteran intencionalmente el kit de Saelis; la causa de la variación
+no está aislada. El RNG global también es consumido por efectos, como documenta la
+referencia. Pendiente: reproducción controlada en contextos frescos y comparación con main;
+no modificar techos ni nerfear Saelis sin aislar la causa. Gate global del taller: FAIL.
+
+## Nuevo estudio de Aelith
+
+`node tools/factory/cli.js paint aelith_study` genera `aelith-study.png` (copia de la hoja
+para revisión). Usa abrigo de Dariel y cabeza trenzada de Orsa, con paleta propia: ya no usa
+el cuerpo/cabello de Sira. Primera paleta rechazada por 877 colores; la pintura que conserva
+variación de luz/croma pasó el mismo gate numérico, sin cambiar umbrales.
+**Revisión visual: RECHAZADA para publicación**. La fila final conserva la cabeza de Dariel:
+el ensamblador no intercambia cabezas en muerte. Resolver continuidad en esas cuatro celdas,
+arma temporal propia y escala antes de sustituir la receta principal. No es la skin final.

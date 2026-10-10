@@ -1,0 +1,45 @@
+{
+  "id": "aelith_study",
+  "name": "Aelith — estudio de identidad",
+  "prompt": "Cronomante de abrigo de grafito, trenzas oscuras, banda de cobre y reloj de arena. Sin capa azul ni cabello plateado de Sira.",
+  "body": "dariel_skin",
+  "head": "orsa",
+  "headLongHair": true,
+  "paint": [
+    {
+      "part": "body",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "to": "#72534a",
+      "keepLight": 0.65,
+      "contrast": 1.0,
+      "chroma": 1.0
+    },
+    {
+      "part": "head",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "to": "#493342",
+      "keepLight": 0.65,
+      "contrast": 1.0,
+      "chroma": 1.0
+    }
+  ],
+  "accessories": [
+    {
+      "element": "banda_cruzada"
+    },
+    {
+      "element": "quality_hourglass"
+    }
+  ],
+  "notes": "ESTUDIO NO APROBADO. Ensamble nuevo para alejarse de Sira. Revisar cabeza, manos, arma, muerte y animación antes de reemplazar receta principal."
+}
