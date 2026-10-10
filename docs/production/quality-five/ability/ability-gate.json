@@ -230,6 +230,152 @@
    "isNew": true,
    "problems": [],
    "status": "PASS"
+  },
+  {
+   "key": "morveth",
+   "name": "Morveth",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Huerto maldito",
+     "kind": "expedition:mor_plant",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 172,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Exhalación de peste",
+     "kind": "expedition:mor_spores",
+     "err": null,
+     "damaged": 10,
+     "statused": 0,
+     "cats": [
+      "AREA",
+      "MULTIPLE"
+     ],
+     "vfx": 150,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 2,
+     "name": "Simbiosis",
+     "kind": "expedition:mor_symbiosis",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Jardín de la peste",
+     "kind": "expedition:mor_garden",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 254,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "aelith",
+   "name": "Aelith",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Instante roto",
+     "kind": "expedition:ael_echo",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 77,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Fractura de segundos",
+     "kind": "expedition:ael_fracture",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 69,
+     "aims": true,
+     "aimProfile": "line"
+    },
+    {
+     "slot": 2,
+     "name": "Tiempo prestado",
+     "kind": "expedition:ael_haste",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "La hora imposible",
+     "kind": "expedition:ael_hour",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 121,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
   }
  ],
  "pageErrors": []

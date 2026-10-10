@@ -397,6 +397,28 @@
       "budgetBefore": 0.9277673626790386,
       "budgetAfter": 0.9277673626790386,
       "needsGameplaySimulation": true
+    },
+    {
+      "key": "morveth",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.8765705255891922,
+      "budgetAfter": 0.8765705255891922,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "aelith",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9795630576349127,
+      "budgetAfter": 0.9795630576349127,
+      "needsGameplaySimulation": true
     }
   ],
   "runs": [
@@ -1019,6 +1041,60 @@
       "alive": true,
       "hp": 365,
       "casts": 51,
+      "error": null
+    },
+    {
+      "key": "morveth",
+      "seed": 117,
+      "damage": 7229.985908309685,
+      "alive": true,
+      "hp": 203,
+      "casts": 65,
+      "error": null
+    },
+    {
+      "key": "morveth",
+      "seed": 431,
+      "damage": 7212.555822554216,
+      "alive": true,
+      "hp": 203,
+      "casts": 67,
+      "error": null
+    },
+    {
+      "key": "morveth",
+      "seed": 991,
+      "damage": 7656.770916417172,
+      "alive": true,
+      "hp": 203,
+      "casts": 68,
+      "error": null
+    },
+    {
+      "key": "aelith",
+      "seed": 117,
+      "damage": 8590.775235443616,
+      "alive": true,
+      "hp": 205,
+      "casts": 62,
+      "error": null
+    },
+    {
+      "key": "aelith",
+      "seed": 431,
+      "damage": 8768.12642168259,
+      "alive": true,
+      "hp": 205,
+      "casts": 62,
+      "error": null
+    },
+    {
+      "key": "aelith",
+      "seed": 991,
+      "damage": 9082.386003845011,
+      "alive": true,
+      "hp": 181.4386419392676,
+      "casts": 61,
       "error": null
     }
   ],

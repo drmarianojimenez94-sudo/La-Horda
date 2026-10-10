@@ -33,7 +33,7 @@
       "host": {
         "key": "solciju",
         "casts": 4,
-        "damage": 138.84750000000003,
+        "damage": 177.72480000000002,
         "bleeds": 0
       },
       "guest": {
@@ -72,12 +72,70 @@
       },
       "guest": {
         "key": "brakk",
+        "casts": 3,
         "owned": [],
         "bleeds": 0
       }
     },
     {
       "name": "brakk death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "Morveth infections remain host authoritative",
+      "ok": true,
+      "hs": 4,
+      "gs": 0
+    },
+    {
+      "name": "morveth guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "morveth",
+        "casts": 4,
+        "damage": 99.80960000000003,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "morveth",
+        "casts": 4,
+        "owned": [
+          "mor_garden"
+        ],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "morveth ultimate replicates with guest owner",
+      "ok": true
+    },
+    {
+      "name": "morveth death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "aelith guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "aelith",
+        "casts": 4,
+        "damage": 344.82525000000004,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "aelith",
+        "owned": [
+          "ael_hour"
+        ],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "aelith ultimate replicates with guest owner",
+      "ok": true
+    },
+    {
+      "name": "aelith death removes owned effects",
       "ok": true
     }
   ],

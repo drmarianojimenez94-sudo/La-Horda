@@ -5,10 +5,10 @@ const servers=[spawn('python3',['-m','http.server','8857','--bind','127.0.0.1'],
 const checks=[],errors=[];let browser;
 const reportPath='docs/production/quality-five/online-results.json';
 fs.writeFileSync(reportPath,JSON.stringify({status:'RUNNING',scope:'local relay workshop'})+'\n');
-const modules=['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js','js/champions/quality-five/brakk.js','tools/quality-five/register-brakk-fixture.js'];
+const modules=['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js','js/champions/quality-five/brakk.js','tools/quality-five/register-brakk-fixture.js','js/champions/quality-five/morveth.js','tools/quality-five/register-morveth-fixture.js','js/champions/quality-five/aelith.js','tools/quality-five/register-aelith-fixture.js'];
 (async()=>{try{
  await new Promise(r=>setTimeout(r,900));browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});
- for(const [host,guest] of [['solciju','veyra'],['veyra','solciju'],['solciju','brakk']]){
+ for(const [host,guest] of [['solciju','veyra'],['veyra','solciju'],['solciju','brakk'],['aelith','morveth'],['morveth','aelith']]){
   const ac=await browser.newContext(),gc=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true});
   const a=await ac.newPage(),g=await gc.newPage();
   for(const [p,k] of [[a,host],[g,guest]]){
@@ -33,6 +33,7 @@ const modules=['js/champions/quality-five/solciju.js','tools/quality-five/regist
    const hostBleeds=await a.evaluate(()=>(heroes[1].veyraBleeds||[]).filter(x=>x.left>0).length),guestBleeds=await g.evaluate(()=>(player.veyraBleeds||[]).length);
    checks.push({name:'Veyra active bleed state belongs only to host',ok:hostBleeds>0&&guestBleeds===0,hostBleeds,guestBleeds});
   }
+  if(guest==='morveth'){const hs=await a.evaluate(()=>(heroes[1].morvethInfections||[]).length),gs=await g.evaluate(()=>(player.morvethInfections||[]).length);checks.push({name:'Morveth infections remain host authoritative',ok:hs>0&&gs===0,hs,gs});}
   if(guest==='brakk'){
    const builds=await g.evaluate(()=>portadorObjects.filter(o=>o.owner===player&&o.brakk&&o.life>0).map(o=>o.kind));
    checks.push({name:'Brakk wall and turret replicate with guest owner',ok:builds.includes('brk_wall')&&builds.includes('brk_turret'),builds});
@@ -41,9 +42,10 @@ const modules=['js/champions/quality-five/solciju.js','tools/quality-five/regist
   const hh=await a.evaluate(()=>({key:heroes[1].classKey,casts:heroes[1].stats.skillCasts,damage:heroes[1].stats.dmgDealt,bleeds:(heroes[1].veyraBleeds||[]).length}));
   const gg=await g.evaluate(()=>({key:player.classKey,casts:player.stats.skillCasts,owned:portadorObjects.filter(o=>o.owner===player).map(o=>o.kind),bleeds:(player.veyraBleeds||[]).length}));
   checks.push({name:guest+' guest casts simulated by host',ok:hh.key===guest&&gg.key===guest&&hh.casts>=4&&hh.damage>0,host:hh,guest:gg});
+  if(['morveth','aelith'].includes(guest))checks.push({name:guest+' ultimate replicates with guest owner',ok:gg.owned.includes(guest==='morveth'?'mor_garden':'ael_hour')});
   if(guest==='solciju')checks.push({name:'Solciju reserve and cask replicate with guest owner',ok:gg.owned.includes('sol_reserve')&&gg.owned.includes('sol_cask')});
   await a.evaluate(()=>{heroes[1].alive=false;heroes[1].hp=0;});await g.waitForTimeout(500);
-  checks.push({name:guest+' death removes owned effects',ok:await a.evaluate(()=>!portadorObjects.some(o=>o.owner===heroes[1]&&o.life>0)&&!(heroes[1].veyraBleeds||[]).length)});
+  checks.push({name:guest+' death removes owned effects',ok:await a.evaluate(()=>!portadorObjects.some(o=>o.owner===heroes[1]&&o.life>0)&&!(heroes[1].veyraBleeds||[]).length&&!(heroes[1].morvethInfections||[]).length)});
   await ac.close();await gc.close();
  }
  const status=errors.length||checks.some(c=>!c.ok)?'FAIL':'PASS';

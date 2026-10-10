@@ -171,3 +171,42 @@ Prueba adicional de Arena Divina: muros bloquean al rival, no desplazan estructu
 La primera ampliación de colisión reveló una recursión entre `clampToArena` y `aidCollideEnemy` en simulación larga; se agregó guardia de reentrada y regresión por el punto de entrada nativo. El entry gate ahora escribe RUNNING al iniciar y FAIL ante excepciones, evitando conservar un PASS anterior cuando falla Chromium o el motor. `tools/balance/test-entry-report.js` verifica ese caso negativo en sus cuatro modos.
 
 Repetición final tras corregir recursión: **69 simulaciones PASS**. Medias de daño: {'solciju': 8665.53, 'veyra': 4936.1, 'brakk': 3877.75, 'saelis': 8929.92}. Cero errores/violaciones.
+
+## Morveth y Aelith — runtime comprobado, 10/10
+
+Morveth implementa infección de tres pulsos, contagio limitado a tres vecinos y una
+sola generación secundaria; tres hongos destructibles, consumo por Simbiosis y jardín
+de cuatro pulsos. Se corrigió el contagio omitido cuando la muerte ocurría en el último
+pulso. Aelith implementa ecos fijos temporizados, fractura lineal, aceleración con deuda
+y definitiva de tres pulsos. Cada tercer lanzamiento reduce otras activas 0,5 s con
+piso de 1 s; nunca reduce la definitiva ni modifica el reloj global. No registra rutas
+ni teletransporta como Sira.
+
+Ambos tienen tres transformaciones y tres maestrías en fixtures de taller. Coste
+ordinario: 33 puntos frente a 30 disponibles. Habilidades y pasivas reales, Códice e
+historia; los contratos generados por la fábrica siguen INCOMPLETE por arte, skins,
+Set, audio y performance pendientes. No están registrados en producción.
+
+- `temporal-plague-functional-results.json`: 131 comprobaciones PASS, niveles
+  1/39/40/60/90/99, transformaciones, maestrías, jefes, Arena Divina, snapshots,
+  limpieza, diez arenas breves, recursos y límites temporales/de entidades.
+- Regresión Solciju/Veyra: 132 PASS; Brakk: 81 PASS.
+- Ability Gate estricto: cinco candidatos PASS, canario negativo rechazado.
+- Relay local real: 17 comprobaciones PASS, dos clientes, invitados con los cinco
+  kits, dueño de objetos, autoridad de infecciones y limpieza. No prueba servidor
+  oficial, reconexión ni el motor separado de Cristales.
+- Entry Gate: 75 simulaciones PASS, 43 clases técnicas, 25 candidatas; referencia y
+  techos intactos. Medias de daño: {'solciju': 8665.53, 'veyra': 4936.1, 'brakk': 3877.75, 'morveth': 7366.44, 'aelith': 8813.76}.
+- Fábrica: 27 tests PASS; referencia sincronizada; reporte de gate invalida PASS
+  obsoletos en sus cuatro modos.
+
+La herramienta de duplicidad ahora admite `--workshop-quality` sin publicar fixtures
+ni sobrescribir el informe del roster. Resultado conservado: Solciju/Morwen y
+Veyra/Eren **DUPLICATE**; Brakk, Morveth y Aelith **REVIEW**. No se modificaron los
+umbrales ni el vocabulario del detector para obtener aprobación. Aelith: Axiom 0,390;
+Sira no aparece entre sus tres vecinos principales. Es diagnóstico léxico/mecánico,
+no prueba visual. Resolver esas revisiones antes de publicación.
+
+Reproducir nuevos tests: `node tools/quality-five/temporal-plague-functional.js`.
+CI ejecuta esta suite además de las anteriores. Balance de admisión en Bosque no
+equivale a equilibrio competitivo ni a cinco campeones comercialmente terminados.
