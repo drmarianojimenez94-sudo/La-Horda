@@ -21,9 +21,9 @@ test('hostile minions and structures count; friendly structures never do',()=>{
  c.divinaStructures=[friendly,enemy];assert.equal(c.aimTarget(h,200),enemy);
  c.divinaStructures=[friendly];c.divinaMinions=[enemy];assert.equal(c.aimTarget(h,200),enemy);
 });
-test('PvE excludes dead, cinematic, duel-locked and out-of-range enemies',()=>{
+test('PvE preserves exclusion of dead, duel-locked and out-of-range enemies',()=>{
  const {c,h}=fixture(),valid={x:80,y:0,alive:true};
- c.enemies=[{x:1,y:0,alive:false},{x:2,y:0,alive:true,cineT:10},{x:3,y:0,alive:true,isDuelLocked:true,duelOwner:{}},valid,{x:800,y:0,alive:true}];
+ c.enemies=[{x:1,y:0,alive:false},{x:3,y:0,alive:true,isDuelLocked:true,duelOwner:{}},valid,{x:800,y:0,alive:true}];
  assert.equal(c.aimTarget(h,100),valid);assert.deepEqual({...c.bestClusterPoint(h,100,20)},{x:80,y:0});assert.equal(c.aimTarget(h,50),null);
 });
 test('manual direction and point remain authoritative and range-bounded',()=>{

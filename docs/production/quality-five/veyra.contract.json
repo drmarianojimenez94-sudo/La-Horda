@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "veyra",
+  "name": "Veyra",
+  "title": "La Última Herida",
+  "role": "asesino",
+  "fantasy": "Asesina de alto riesgo con sangrado y movilidad.",
+  "lore": "",
+  "personality": "Determinada, reservada y tenaz.",
+  "silhouette": "PENDIENTE: distinguir de Vesper y su set.",
+  "stats": {
+    "hp": 95,
+    "damage": 11,
+    "speed": 178
+  },
+  "kit": {
+    "basic": {
+      "id": "basic",
+      "description": "",
+      "cooldownMs": 0,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "",
+      "execution": "",
+      "impact": "",
+      "feedback": "",
+      "vfx": "",
+      "sfx": ""
+    },
+    "skills": [
+      {
+        "id": "skill_1",
+        "description": "",
+        "cooldownMs": 0,
+        "maxTargets": 1,
+        "hordeMechanism": "",
+        "anticipation": "",
+        "execution": "",
+        "impact": "",
+        "feedback": "",
+        "vfx": "",
+        "sfx": ""
+      },
+      {
+        "id": "skill_2",
+        "description": "",
+        "cooldownMs": 0,
+        "maxTargets": 1,
+        "hordeMechanism": "",
+        "anticipation": "",
+        "execution": "",
+        "impact": "",
+        "feedback": "",
+        "vfx": "",
+        "sfx": ""
+      },
+      {
+        "id": "skill_3",
+        "description": "",
+        "cooldownMs": 0,
+        "maxTargets": 1,
+        "hordeMechanism": "",
+        "anticipation": "",
+        "execution": "",
+        "impact": "",
+        "feedback": "",
+        "vfx": "",
+        "sfx": ""
+      }
+    ],
+    "ultimate": {
+      "id": "ultimate",
+      "description": "",
+      "cooldownMs": 0,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "",
+      "execution": "",
+      "impact": "",
+      "feedback": "",
+      "vfx": "",
+      "sfx": ""
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/quality-five/veyra.js",
+    "codex": "",
+    "talents": "",
+    "mastery": "",
+    "set": "",
+    "kitTest": "tools/quality-five/functional.js"
+  },
+  "cosmetics": [],
+  "set": {
+    "sourceArena": "",
+    "pieces": [],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 32,
+    "summons": 0,
+    "audioVoices": 2
+  },
+  "evidence": {
+    "reference": "",
+    "talents": "",
+    "abilities": "",
+    "resources": "",
+    "passives": "",
+    "balance": "",
+    "visuals": "",
+    "style": "",
+    "audio": "",
+    "multiplayer": "",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

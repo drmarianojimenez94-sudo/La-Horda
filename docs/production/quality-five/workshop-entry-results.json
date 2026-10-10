@@ -1,0 +1,988 @@
+{
+  "entries": [
+    {
+      "key": "tanque",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "guerrero",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "mago",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "soporte",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "segador",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "axiom",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "profeta",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "musashi",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "cazadora",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "nigromante",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "libertador",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "eren",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "ynara",
+      "role": "soporte",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.8793664343221176,
+      "budgetAfter": 0.8793664343221176,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "myla",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "brasa",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "eslabon",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "morwen",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "farolero",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "iria",
+      "existing": true,
+      "changes": {}
+    },
+    {
+      "key": "vesper",
+      "role": "asesino",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9352691297364502,
+      "budgetAfter": 0.9352691297364502,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "nahir",
+      "role": "asesino",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9041991703051369,
+      "budgetAfter": 0.9041991703051369,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "baltra",
+      "role": "tanque",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9510321886569562,
+      "budgetAfter": 0.9510321886569562,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "maura",
+      "role": "tanque",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9438040821054386,
+      "budgetAfter": 0.9438040821054386,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "dariel",
+      "role": "soporte",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.8973621870996422,
+      "budgetAfter": 0.8973621870996422,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "orsa",
+      "role": "asesino",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.8089411430166761,
+      "budgetAfter": 0.8089411430166761,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "tibor",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9376266824667794,
+      "budgetAfter": 0.9376266824667794,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "zahra",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9475377029579239,
+      "budgetAfter": 0.9475377029579239,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "renko",
+      "role": "tanque",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9222846291336073,
+      "budgetAfter": 0.9222846291336073,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "sira",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9230363612324324,
+      "budgetAfter": 0.9230363612324324,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "nano_gm",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": "founder",
+      "ceiling": 1.6,
+      "changes": {
+        "baseDef": {
+          "from": 0.15,
+          "to": 0.099
+        },
+        "baseHP": {
+          "from": 150,
+          "to": 143.88
+        },
+        "baseDmg": {
+          "from": 15,
+          "to": 14.388
+        }
+      },
+      "budgetBefore": 1.6608020052689692,
+      "budgetAfter": 1.599942206524673,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "facu_gm",
+      "role": "asesino",
+      "referenceVersion": 3,
+      "profile": "founder",
+      "ceiling": 1.6,
+      "changes": {
+        "baseDef": {
+          "from": 0.14,
+          "to": 0.11
+        }
+      },
+      "budgetBefore": 1.376685026784636,
+      "budgetAfter": 1.376685026784636,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "aurelia",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {},
+      "budgetBefore": 1.1081016381103874,
+      "budgetAfter": 1.1081016381103874,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "khepri",
+      "role": "asesino",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {},
+      "budgetBefore": 0.939759540909546,
+      "budgetAfter": 0.939759540909546,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "velmira",
+      "role": "soporte",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {
+        "baseDef": {
+          "from": 0.09,
+          "to": 0.108
+        }
+      },
+      "budgetBefore": 1.0809985309986876,
+      "budgetAfter": 1.0809985309986876,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "vhal",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {},
+      "budgetBefore": 1.0533281910998815,
+      "budgetAfter": 1.0533281910998815,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "bront",
+      "role": "tanque",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {
+        "baseDmg": {
+          "from": 8,
+          "to": 8.772
+        }
+      },
+      "budgetBefore": 0.9618546877554464,
+      "budgetAfter": 0.9618133730511407,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "oriel",
+      "role": "soporte",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {
+        "baseDef": {
+          "from": 0.08,
+          "to": 0.108
+        },
+        "baseHP": {
+          "from": 102,
+          "to": 103.95
+        },
+        "baseDmg": {
+          "from": 10,
+          "to": 9.307
+        }
+      },
+      "budgetBefore": 1.1279353763397535,
+      "budgetAfter": 1.1278893453819276,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "saelis",
+      "role": "soporte",
+      "referenceVersion": 3,
+      "profile": "ascension",
+      "ceiling": 1.25,
+      "changes": {
+        "baseDef": {
+          "from": 0.07,
+          "to": 0.108
+        },
+        "baseHP": {
+          "from": 100,
+          "to": 103.95
+        },
+        "baseDmg": {
+          "from": 10,
+          "to": 9.68
+        }
+      },
+      "budgetBefore": 1.1297535581579354,
+      "budgetAfter": 1.1297535553451041,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "solciju",
+      "role": "mago",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.9786128313914287,
+      "budgetAfter": 0.9786128313914287,
+      "needsGameplaySimulation": true
+    },
+    {
+      "key": "veyra",
+      "role": "asesino",
+      "referenceVersion": 3,
+      "profile": null,
+      "ceiling": 1.15,
+      "changes": {},
+      "budgetBefore": 0.8804437443544069,
+      "budgetAfter": 0.8804437443544069,
+      "needsGameplaySimulation": true
+    }
+  ],
+  "runs": [
+    {
+      "key": "ynara",
+      "seed": 117,
+      "damage": 6280.732770138088,
+      "alive": true,
+      "hp": 274,
+      "casts": 57,
+      "error": null
+    },
+    {
+      "key": "ynara",
+      "seed": 431,
+      "damage": 5050.220076635558,
+      "alive": true,
+      "hp": 274,
+      "casts": 56,
+      "error": null
+    },
+    {
+      "key": "ynara",
+      "seed": 991,
+      "damage": 5374.804971112839,
+      "alive": true,
+      "hp": 274,
+      "casts": 57,
+      "error": null
+    },
+    {
+      "key": "vesper",
+      "seed": 117,
+      "damage": 6384.762369434281,
+      "alive": true,
+      "hp": 218,
+      "casts": 70,
+      "error": null
+    },
+    {
+      "key": "vesper",
+      "seed": 431,
+      "damage": 7274.298247322026,
+      "alive": true,
+      "hp": 218,
+      "casts": 72,
+      "error": null
+    },
+    {
+      "key": "vesper",
+      "seed": 991,
+      "damage": 8940.304195067785,
+      "alive": true,
+      "hp": 198.460688,
+      "casts": 70,
+      "error": null
+    },
+    {
+      "key": "nahir",
+      "seed": 117,
+      "damage": 6723.051050231461,
+      "alive": true,
+      "hp": 189.02596268,
+      "casts": 67,
+      "error": null
+    },
+    {
+      "key": "nahir",
+      "seed": 431,
+      "damage": 8779.647935724646,
+      "alive": true,
+      "hp": 215,
+      "casts": 67,
+      "error": null
+    },
+    {
+      "key": "nahir",
+      "seed": 991,
+      "damage": 7066.311826517191,
+      "alive": true,
+      "hp": 215,
+      "casts": 67,
+      "error": null
+    },
+    {
+      "key": "baltra",
+      "seed": 117,
+      "damage": 6479.756364357807,
+      "alive": true,
+      "hp": 365.23152,
+      "casts": 63,
+      "error": null
+    },
+    {
+      "key": "baltra",
+      "seed": 431,
+      "damage": 6271.054794314211,
+      "alive": true,
+      "hp": 332.01446400000003,
+      "casts": 64,
+      "error": null
+    },
+    {
+      "key": "baltra",
+      "seed": 991,
+      "damage": 7648.049595443624,
+      "alive": true,
+      "hp": 366,
+      "casts": 64,
+      "error": null
+    },
+    {
+      "key": "maura",
+      "seed": 117,
+      "damage": 6790.346044334089,
+      "alive": true,
+      "hp": 351.44912790877623,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "maura",
+      "seed": 431,
+      "damage": 8631.136692800426,
+      "alive": true,
+      "hp": 310.048,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "maura",
+      "seed": 991,
+      "damage": 3776.5212985230546,
+      "alive": true,
+      "hp": 352,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "dariel",
+      "seed": 117,
+      "damage": 6085.750546554411,
+      "alive": true,
+      "hp": 243,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "dariel",
+      "seed": 431,
+      "damage": 5853.037716267093,
+      "alive": true,
+      "hp": 276,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "dariel",
+      "seed": 991,
+      "damage": 5873.927273598378,
+      "alive": true,
+      "hp": 276,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "orsa",
+      "seed": 117,
+      "damage": 7709.55371485424,
+      "alive": true,
+      "hp": 215,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "orsa",
+      "seed": 431,
+      "damage": 8886.195899303953,
+      "alive": true,
+      "hp": 215,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "orsa",
+      "seed": 991,
+      "damage": 9677.122379918936,
+      "alive": true,
+      "hp": 202.909376,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "tibor",
+      "seed": 117,
+      "damage": 10335.911308109042,
+      "alive": true,
+      "hp": 251,
+      "casts": 62,
+      "error": null
+    },
+    {
+      "key": "tibor",
+      "seed": 431,
+      "damage": 10929.814794870985,
+      "alive": true,
+      "hp": 213,
+      "casts": 63,
+      "error": null
+    },
+    {
+      "key": "tibor",
+      "seed": 991,
+      "damage": 10483.005351351592,
+      "alive": true,
+      "hp": 213,
+      "casts": 73,
+      "error": null
+    },
+    {
+      "key": "zahra",
+      "seed": 117,
+      "damage": 7854.836295184808,
+      "alive": true,
+      "hp": 213,
+      "casts": 59,
+      "error": null
+    },
+    {
+      "key": "zahra",
+      "seed": 431,
+      "damage": 8124.498272350365,
+      "alive": true,
+      "hp": 168.12752057800012,
+      "casts": 61,
+      "error": null
+    },
+    {
+      "key": "zahra",
+      "seed": 991,
+      "damage": 6788.095550311975,
+      "alive": true,
+      "hp": 268,
+      "casts": 59,
+      "error": null
+    },
+    {
+      "key": "renko",
+      "seed": 117,
+      "damage": 6153.462573133471,
+      "alive": true,
+      "hp": 360,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "renko",
+      "seed": 431,
+      "damage": 6608.738044288143,
+      "alive": true,
+      "hp": 354.979376,
+      "casts": 59,
+      "error": null
+    },
+    {
+      "key": "renko",
+      "seed": 991,
+      "damage": 6437.322543486147,
+      "alive": true,
+      "hp": 345.42609523199997,
+      "casts": 59,
+      "error": null
+    },
+    {
+      "key": "sira",
+      "seed": 117,
+      "damage": 8286.095237159712,
+      "alive": true,
+      "hp": 180.89280000000002,
+      "casts": 63,
+      "error": null
+    },
+    {
+      "key": "sira",
+      "seed": 431,
+      "damage": 7811.103223822373,
+      "alive": true,
+      "hp": 185,
+      "casts": 62,
+      "error": null
+    },
+    {
+      "key": "sira",
+      "seed": 991,
+      "damage": 8180.789483728958,
+      "alive": true,
+      "hp": 210,
+      "casts": 62,
+      "error": null
+    },
+    {
+      "key": "nano_gm",
+      "seed": 117,
+      "damage": 14287.31993198774,
+      "alive": true,
+      "hp": 265,
+      "casts": 77,
+      "error": null
+    },
+    {
+      "key": "nano_gm",
+      "seed": 431,
+      "damage": 14610.507140875437,
+      "alive": true,
+      "hp": 259.31978,
+      "casts": 77,
+      "error": null
+    },
+    {
+      "key": "nano_gm",
+      "seed": 991,
+      "damage": 14575.021874833488,
+      "alive": true,
+      "hp": 334,
+      "casts": 77,
+      "error": null
+    },
+    {
+      "key": "facu_gm",
+      "seed": 117,
+      "damage": 12251.603720831037,
+      "alive": true,
+      "hp": 265.79777676599997,
+      "casts": 78,
+      "error": null
+    },
+    {
+      "key": "facu_gm",
+      "seed": 431,
+      "damage": 11030.344187478915,
+      "alive": true,
+      "hp": 239.9656,
+      "casts": 82,
+      "error": null
+    },
+    {
+      "key": "facu_gm",
+      "seed": 991,
+      "damage": 14102.220058987219,
+      "alive": true,
+      "hp": 274.13752,
+      "casts": 81,
+      "error": null
+    },
+    {
+      "key": "aurelia",
+      "seed": 117,
+      "damage": 12388.837863897348,
+      "alive": true,
+      "hp": 219,
+      "casts": 88,
+      "error": null
+    },
+    {
+      "key": "aurelia",
+      "seed": 431,
+      "damage": 11090.46602814961,
+      "alive": true,
+      "hp": 219,
+      "casts": 79,
+      "error": null
+    },
+    {
+      "key": "aurelia",
+      "seed": 991,
+      "damage": 10414.459023279675,
+      "alive": true,
+      "hp": 219,
+      "casts": 78,
+      "error": null
+    },
+    {
+      "key": "khepri",
+      "seed": 117,
+      "damage": 10813.338031508487,
+      "alive": true,
+      "hp": 221.270976,
+      "casts": 68,
+      "error": null
+    },
+    {
+      "key": "khepri",
+      "seed": 431,
+      "damage": 10156.96284831061,
+      "alive": true,
+      "hp": 227,
+      "casts": 68,
+      "error": null
+    },
+    {
+      "key": "khepri",
+      "seed": 991,
+      "damage": 9872.572760048828,
+      "alive": true,
+      "hp": 227,
+      "casts": 68,
+      "error": null
+    },
+    {
+      "key": "velmira",
+      "seed": 117,
+      "damage": 8669.055339068478,
+      "alive": true,
+      "hp": 268,
+      "casts": 81,
+      "error": null
+    },
+    {
+      "key": "velmira",
+      "seed": 431,
+      "damage": 8891.030877569725,
+      "alive": true,
+      "hp": 268,
+      "casts": 83,
+      "error": null
+    },
+    {
+      "key": "velmira",
+      "seed": 991,
+      "damage": 8352.59431774417,
+      "alive": true,
+      "hp": 268,
+      "casts": 82,
+      "error": null
+    },
+    {
+      "key": "vhal",
+      "seed": 117,
+      "damage": 9225.423263044027,
+      "alive": true,
+      "hp": 273,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "vhal",
+      "seed": 431,
+      "damage": 12476.055657565306,
+      "alive": true,
+      "hp": 187.811896,
+      "casts": 72,
+      "error": null
+    },
+    {
+      "key": "vhal",
+      "seed": 991,
+      "damage": 11290.267152901868,
+      "alive": true,
+      "hp": 217,
+      "casts": 70,
+      "error": null
+    },
+    {
+      "key": "bront",
+      "seed": 117,
+      "damage": 5721.296004104451,
+      "alive": true,
+      "hp": 329.62771968,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "bront",
+      "seed": 431,
+      "damage": 7143.624643048038,
+      "alive": true,
+      "hp": 366.785984,
+      "casts": 72,
+      "error": null
+    },
+    {
+      "key": "bront",
+      "seed": 991,
+      "damage": 7509.82658548081,
+      "alive": true,
+      "hp": 378,
+      "casts": 67,
+      "error": null
+    },
+    {
+      "key": "oriel",
+      "seed": 117,
+      "damage": 8209.486127948841,
+      "alive": true,
+      "hp": 268,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "oriel",
+      "seed": 431,
+      "damage": 7581.065076112054,
+      "alive": true,
+      "hp": 268,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "oriel",
+      "seed": 991,
+      "damage": 8911.876428790265,
+      "alive": true,
+      "hp": 268,
+      "casts": 70,
+      "error": null
+    },
+    {
+      "key": "saelis",
+      "seed": 117,
+      "damage": 9197.134318030883,
+      "alive": true,
+      "hp": 268,
+      "casts": 84,
+      "error": null
+    },
+    {
+      "key": "saelis",
+      "seed": 431,
+      "damage": 8452.263659375409,
+      "alive": true,
+      "hp": 268,
+      "casts": 85,
+      "error": null
+    },
+    {
+      "key": "saelis",
+      "seed": 991,
+      "damage": 9142.98574146417,
+      "alive": true,
+      "hp": 268,
+      "casts": 93,
+      "error": null
+    },
+    {
+      "key": "solciju",
+      "seed": 117,
+      "damage": 7780.766847116034,
+      "alive": true,
+      "hp": 212,
+      "casts": 61,
+      "error": null
+    },
+    {
+      "key": "solciju",
+      "seed": 431,
+      "damage": 7942.67617314726,
+      "alive": true,
+      "hp": 267,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "solciju",
+      "seed": 991,
+      "damage": 8516.515890128356,
+      "alive": true,
+      "hp": 212,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "veyra",
+      "seed": 117,
+      "damage": 4648.260745780351,
+      "alive": true,
+      "hp": 209,
+      "casts": 64,
+      "error": null
+    },
+    {
+      "key": "veyra",
+      "seed": 431,
+      "damage": 4831.8841922244865,
+      "alive": true,
+      "hp": 209,
+      "casts": 64,
+      "error": null
+    },
+    {
+      "key": "veyra",
+      "seed": 991,
+      "damage": 3714.5867194240595,
+      "alive": true,
+      "hp": 174.600143104,
+      "casts": 64,
+      "error": null
+    }
+  ],
+  "violations": [],
+  "errors": []
+}

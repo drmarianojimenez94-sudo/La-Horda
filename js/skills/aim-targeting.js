@@ -97,7 +97,7 @@ function aimHostiles(caster){return divinaMode?portadorEnemies(caster):enemies;}
 function aimNearestHostile(caster,range){
   let best=null,nearest=Infinity;
   for(const e of aimHostiles(caster)){
-    if(!e.alive||e.cineT>0||(e.isDuelLocked&&e.duelOwner!==caster))continue;
+    if(!e.alive||(e.isDuelLocked&&e.duelOwner!==caster))continue;
     const d=Math.hypot(e.x-caster.x,e.y-caster.y);
     if(d<nearest&&(!range||d<=range)){best=e;nearest=d;}
   }
@@ -107,7 +107,7 @@ function aimNearestHostile(caster,range){
 function bestClusterPoint(caster, range, radius){
   const cand = [];
   for(const e of aimHostiles(caster)){
-    if(!e.alive || e.cineT>0 || (e.isDuelLocked && e.duelOwner!==caster)) continue;
+    if(!e.alive || (e.isDuelLocked && e.duelOwner!==caster)) continue;
     const d = Math.hypot(e.x-caster.x, e.y-caster.y);
     if(d <= range + radius*0.6) cand.push(e);
   }
@@ -158,7 +158,7 @@ function aimTarget(caster, range){
   if(caster.aim && caster.aim.x!==undefined){
     let best = null, bd = Infinity;
     for(const e of aimHostiles(caster)){
-      if(!e.alive || e.cineT>0 || (e.isDuelLocked && e.duelOwner!==caster)) continue;
+      if(!e.alive || (e.isDuelLocked && e.duelOwner!==caster)) continue;
       if(Math.hypot(e.x-caster.x, e.y-caster.y) > range + (e.radius||20)) continue;
       const d = Math.hypot(e.x-caster.aim.x, e.y-caster.aim.y) - (e.radius||20);
       if(d < bd){ bd = d; best = e; }

@@ -1,0 +1,163 @@
+{
+ "schemaVersion": 1,
+ "categories": [
+  "AREA",
+  "MULTIPLE",
+  "POTENCIA",
+  "CURA",
+  "CONTROL",
+  "MOVILIDAD",
+  "INVOCA"
+ ],
+ "champions": [
+  {
+   "key": "solciju",
+   "name": "Solciju",
+   "role": "mago",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Vino maldito",
+     "kind": "expedition:sol_wine",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 40,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Barrica añeja",
+     "kind": "expedition:sol_cask",
+     "err": null,
+     "damaged": 10,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 47,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Brindis a solas",
+     "kind": "expedition:sol_toast",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA",
+      "CURA"
+     ],
+     "vfx": 6,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Gran Reserva",
+     "kind": "expedition:sol_reserve",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 142,
+     "aims": true,
+     "aimProfile": "point"
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "veyra",
+   "name": "Veyra",
+   "role": "asesino",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Abrir la herida",
+     "kind": "expedition:vey_cut",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL"
+     ],
+     "vfx": 126,
+     "aims": true,
+     "aimProfile": "cone"
+    },
+    {
+     "slot": 1,
+     "name": "Paso escarlata",
+     "kind": "expedition:vey_dash",
+     "err": null,
+     "damaged": 9,
+     "statused": 2,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CONTROL",
+      "MOVILIDAD"
+     ],
+     "vfx": 124,
+     "aims": true,
+     "aimProfile": "dash"
+    },
+    {
+     "slot": 2,
+     "name": "Pacto de dolor",
+     "kind": "expedition:vey_pact",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 6,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "La última herida",
+     "kind": "expedition:vey_final",
+     "err": null,
+     "damaged": 9,
+     "statused": 9,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 43,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  }
+ ],
+ "pageErrors": []
+}

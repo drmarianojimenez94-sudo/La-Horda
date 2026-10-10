@@ -4,9 +4,13 @@ const server=process.env.ENTRY_BASE_URL?null:spawn('python3',['-m','http.server'
  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.ENTRY_BASE_URL||'http://127.0.0.1:8796');await page.waitForFunction(()=>typeof CHAMPION_ENTRY_BALANCE!=='undefined');
  // Explicit workshop load: same normalization, seeds and ceilings as released candidates.
  // Does not remove the existing candidates or add anything to knownChampions.
- if(process.argv.includes('--workshop-solciju')){
+ if(process.argv.includes('--workshop-solciju')||process.argv.includes('--workshop-quality')){
   await page.addScriptTag({path:'js/champions/quality-five/solciju.js'});
   await page.addScriptTag({path:'tools/quality-five/register-fixture.js'});
+ }
+ if(process.argv.includes('--workshop-quality')){
+  await page.addScriptTag({path:'js/champions/quality-five/veyra.js'});
+  await page.addScriptTag({path:'tools/quality-five/register-veyra-fixture.js'});
  }
  if(process.argv.includes('--self-test'))await page.evaluate(()=>{
   const key='__entry_fixture',R=CHAMPION_BALANCE_REFERENCE.roles.mago;
@@ -31,6 +35,6 @@ const server=process.env.ENTRY_BASE_URL?null:spawn('python3',['-m','http.server'
   const rs=runs.filter(r=>r.key===entry.key),mean=rs.reduce((s,r)=>s+r.damage,0)/rs.length,ceiling=ref.roles[entry.role].simulation.meanDamage150s*(entry.profile&&ref.profiles&&ref.profiles[entry.profile]?ref.profiles[entry.profile].simulationCeilingMultiplier:1.35);
   if(rs.some(r=>r.error||!Number.isFinite(r.hp)||!Number.isFinite(r.damage)||r.casts<1)||mean>ceiling)violations.push({key:entry.key,mean,ceiling,reason:'simulation outside entry benchmark'});
  }
- fs.mkdirSync('docs/balance',{recursive:true});fs.writeFileSync(process.argv.includes('--workshop-solciju')?'docs/production/quality-five/solciju-entry-results.json':process.argv.includes('--self-test')?'docs/balance/entry-self-test-results.json':'docs/balance/entry-gate-results.json',JSON.stringify({entries,runs,violations,errors},null,2));
+ fs.mkdirSync('docs/balance',{recursive:true});fs.writeFileSync(process.argv.includes('--workshop-quality')?'docs/production/quality-five/workshop-entry-results.json':process.argv.includes('--workshop-solciju')?'docs/production/quality-five/solciju-entry-results.json':process.argv.includes('--self-test')?'docs/balance/entry-self-test-results.json':'docs/balance/entry-gate-results.json',JSON.stringify({entries,runs,violations,errors},null,2));
  if(errors.length||violations.length)throw Error(JSON.stringify({errors,violations}));console.log(JSON.stringify({registered:entries.length,newChampions:entries.filter(e=>!e.existing).length,simulations:runs.length,status:'PASS'}));
  }finally{if(browser)await browser.close();if(server)server.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});

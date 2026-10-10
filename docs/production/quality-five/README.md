@@ -1,8 +1,8 @@
 # Cinco campeones: taller visual, no lanzamiento
 
 Estado: **DRAFT / NO PUBLICADOS**. Ninguna receta de este directorio instala campeones
-ni concede skins. Solciju tiene un primer runtime ejecutable únicamente mediante la
-fixture de pruebas; Brakk, Veyra, Morveth y Aelith todavía no tienen kits propios.
+ni concede skins. Solciju y Veyra tienen un primer runtime ejecutable únicamente mediante
+fixtures de pruebas; Brakk, Morveth y Aelith todavía no tienen kits propios.
 
 ## Taller de Solciju — 10 de octubre UTC
 
@@ -18,6 +18,8 @@ Repetir con Playwright disponible y `CHROMIUM_PATH` si corresponde:
 node tools/quality-five/functional.js
 node tools/balance/check-entry-reference.js
 node tools/balance/entry-gate.js --workshop-solciju
+node tools/balance/entry-gate.js --workshop-quality
+ONLY=solciju,veyra node tools/bible/ability-gate.js --strict --workshop-quality
 node --test tools/factory/test.js
 node tools/factory/cli.js validate docs/production/quality-five/solciju.contract.json
 ```
@@ -28,6 +30,24 @@ siguen pendientes. Las pruebas funcionales verifican seis niveles, daño, tempor
 limpieza, talentos, maestrías, recursos y serialización; no equivalen a aprobación comercial.
 El entry gate del taller ejecuta además todos los candidatos existentes con los mismos
 umbrales y semillas, sin modificar `knownChampions`.
+
+## Veyra y validación conjunta
+
+Veyra incorpora corte con sangrado de tres pulsos, desplazamiento que respeta paredes,
+pacto que consume vida actual y definitiva que consume heridas. Pasiva de riesgo por
+debajo de 40% de vida. Tres transformaciones desde nivel 40 y tres decisiones de maestría
+desde nivel 90; los árboles siguen costando 33 puntos ordinarios frente a 30 disponibles.
+
+`functional-results.json`: suite conjunta con 127 comprobaciones, incluidas ejecuciones
+breves en las diez arenas. No representa campañas completas ni QA en teléfonos físicos.
+`solciju-functional.json` y `solciju-entry-results.json` conservan la primera medición aislada.
+`ability/ability-gate.json`: Ability Gate diferencial estricto de ambos candidatos, PASS;
+el canario sin efectos sigue siendo rechazado. Arte, audio, cosméticos, sets y dos clientes
+reales siguen pendientes. Los contratos de fábrica se mantienen INCOMPLETE honestamente.
+
+La implementación detectó un defecto compartido: el autoapuntado no consultaba rivales de
+Guerras de Cristales. Corrección aislada para producción en PR #80; los candidatos quedan
+en el taller del PR #78. No atribuir a un candidato las aprobaciones de los campeones existentes.
 
 Aelith: diseño rechazado por similitud con Sira (cuerpo y cabeza de `sira_skin`/`sira_set`).
 Rediseño pendiente de cabello, vestimenta y silueta; el atlas actual no se aprueba ni instala.
