@@ -365,8 +365,44 @@ def recolor(img, label, rules, mats):
     return out
 
 
+def pose_head(body_frame, donor_frame, override):
+    """Opt-in polygon assembly for non-upright poses. Coordinates are cell-local.
+
+    Never infer a dead character's neck from upright anatomy; a recipe supplies
+    reviewed source/erase polygons and an integer translation. Reject clipping.
+    """
+    def polygon(points):
+        if not isinstance(points, list) or len(points) < 3:
+            raise ValueError('pose head requires a polygon of at least three points')
+        if any(not isinstance(p, list) or len(p) != 2 or any(type(v) is not int or not 0 <= v < CELL for v in p) for p in points):
+            raise ValueError('pose head polygon outside frame')
+        mask = np.zeros((CELL, CELL), np.uint8)
+        cv2.fillPoly(mask, [np.array(points, np.int32)], 1)
+        return mask.astype(bool)
+    source = polygon(override.get('sourcePolygon')) & (donor_frame[:, :, 3] > 0)
+    erase = polygon(override.get('erasePolygon'))
+    offset = override.get('offset')
+    if not isinstance(offset, list) or len(offset) != 2 or any(type(v) is not int for v in offset):
+        raise ValueError('pose head requires integer offset')
+    if not source.any():
+        raise ValueError('pose head selects no donor pixels')
+    ys, xs = np.where(source)
+    X, Y = xs + offset[0], ys + offset[1]
+    if np.any((X < 0) | (X >= CELL) | (Y < 0) | (Y >= CELL)):
+        raise ValueError('pose head would clip donor pixels')
+    result = body_frame.copy()
+    result[erase] = 0
+    result[Y, X] = donor_frame[ys, xs]
+    mask = np.zeros((CELL, CELL), bool)
+    mask[Y, X] = True
+    return result, mask
+
+
 # ---------------------------------------------------------------- ensamble
 def assemble(spec):
+    overrides = spec.get('poseHeadOverrides', {})
+    if not isinstance(overrides, dict) or any(not isinstance(k, str) or not k.isdigit() or str(int(k)) != k or not 0 <= int(k) < COLS * ROWS or not isinstance(v, dict) for k, v in overrides.items()):
+        raise ValueError('pose head override requires valid frame keys and objects')
     body_key = spec['body']
     body = load_donor(body_key)
     bm = Materials(body, spec.get('bodyMaterials', 10))
@@ -386,6 +422,16 @@ def assemble(spec):
     for i in range(COLS * ROWS):
         row = i // COLS
         b = cell(body, i).copy()
+        override = overrides.get(str(i))
+        if override is not None:
+            source_index = override.get('sourceFrame')
+            if hd is None or type(source_index) is not int or not 0 <= source_index < COLS * ROWS:
+                raise ValueError('pose head requires a distinct donor and valid source frame')
+            result, mask = pose_head(b, cell(hd, source_index), override)
+            put_cell(out, i, result)
+            put_cell(headmap, i, mask)
+            report['frames'].append({'i': i, 'src': source_index, 'poseOverride': True})
+            continue
         if ROW_DIR[row] == 'death':
             # tendido: la "cabeza" es lo que tiene el color del pelo del cuerpo (medido de frente); se pinta igual
             cc = crown_color(cell(body, 0), frame_neck(cell(body, 0)))
