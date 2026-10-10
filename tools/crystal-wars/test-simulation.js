@@ -3,10 +3,10 @@ const assert=require('node:assert/strict'),C=require('../../js/modes/crystal-war
 let passed=0;function test(name,fn){fn();passed++;console.log('PASS',name);}
 function advance(s,seconds){for(let i=0;i<seconds*30&&!s.ended;i++)C.step(s,1/30);}
 test('seeded simulation is reproducible',()=>{const a=C.create([],22),b=C.create([],22);advance(a,100);advance(b,100);assert.deepEqual(a,b);});
-test('waves mirror positions and stats',()=>{const s=C.create();s.heroes.forEach(h=>{h.bot=false;h.hp=0;h.respawn=100;});advance(s,5.1);const a=s.enemies.filter(e=>e.team===0),b=s.enemies.filter(e=>e.team===1);assert.equal(a.length,7);a.forEach((e,i)=>{assert.equal(e.x,b[i].x);assert.equal(e.hp,b[i].hp);});});
+test('waves mirror positions and stats',()=>{const s=C.create();s.heroes.forEach(h=>{h.bot=false;h.hp=0;h.respawn=100;});advance(s,C.FIRST_WAVE+.1);const a=s.enemies.filter(e=>e.team===0),b=s.enemies.filter(e=>e.team===1);assert.equal(a.length,7);a.forEach((e,i)=>{assert.equal(e.x,b[i].x);assert.equal(e.hp,b[i].hp);});});
 test('normalization ignores account stats and unknown roles',()=>{const s=C.create([{connected:true,champ:'mago',level:999,hp:100000},{champ:'__proto__'}]);assert.equal(s.heroes[0].hp,125);assert.equal(s.heroes[1].role,'mago');});
-test('shop rejects bad keys, insufficient funds, closed windows and upgrade overflow',()=>{const s=C.create();assert.equal(C.buy(s,0,'__proto__'),false);assert.equal(C.buy(s,0,'upgrade'),false);s.teams[0].shards=200;for(let i=0;i<3;i++)assert(C.buy(s,0,'upgrade'));assert.equal(C.buy(s,0,'upgrade'),false);s.time=20;s.wave=1;s.nextWave=40;assert.equal(C.buy(s,0,'swarm'),false);});
-test('repair and threats have team cooldown, warning and bounded charges',()=>{const s=C.create();s.teams[0].hp=800;s.teams[0].shards=200;assert(C.buy(s,0,'repair'));assert.equal(s.teams[0].hp,980);assert.equal(C.buy(s,1,'repair'),false);assert(C.buy(s,0,'swarm'));assert.equal(s.pending[0].team,1);assert.equal(s.pending[0].due,5);assert.equal(C.buy(s,1,'brute'),false);s.heroes.forEach(h=>h.bot=false);advance(s,4);assert.equal(s.enemies.length,0);advance(s,1.1);assert.equal(s.enemies.filter(e=>e.kind==='runner'&&e.team===1).length,5);});
+test('shop rejects bad keys, insufficient funds, closed windows and upgrade overflow',()=>{const s=C.create();assert.equal(C.buy(s,0,'__proto__'),false);assert.equal(C.buy(s,0,'upgrade'),false);s.teams[0].shards=200;for(let i=0;i<3;i++)assert(C.buy(s,0,'upgrade'));assert.equal(C.buy(s,0,'upgrade'),false);s.time=10;s.wave=1;s.nextWave=C.FIRST_WAVE+C.WAVE_INTERVAL;assert.equal(C.buy(s,0,'swarm'),false);});
+test('repair and threats have team cooldown, warning and bounded charges',()=>{const s=C.create();s.teams[0].hp=800;s.teams[0].shards=200;assert(C.buy(s,0,'repair'));assert.equal(s.teams[0].hp,980);assert.equal(C.buy(s,1,'repair'),false);assert(C.buy(s,0,'swarm'));assert.equal(s.pending[0].team,1);assert.equal(s.pending[0].due,C.SEND_DELAY);assert.equal(C.buy(s,1,'brute'),false);s.heroes.forEach(h=>h.bot=false);advance(s,C.SEND_DELAY-.2);assert.equal(s.enemies.filter(e=>e.kind==='runner').length,0);advance(s,.3);assert.equal(s.enemies.filter(e=>e.kind==='runner'&&e.team===1).length,5);});
 test('damage and heals never cross teams',()=>{const s=C.create();s.heroes.forEach(h=>{h.x=300;h.y=300;h.hp=50;h.bot=false;});s.heroes[0].role='soporte';s.enemies=[0,1].map(team=>({team,x:300,y:300,hp:1000,slowUntil:0,kind:'grunt'}));C.ability(s,0,0);assert(s.enemies[0].hp<1000);assert.equal(s.enemies[1].hp,1000);assert.equal(s.heroes[0].hp,92);assert.equal(s.heroes[1].hp,92);assert.equal(s.heroes[2].hp,50);});
 test('invalid abilities and cooldown spam cannot cast',()=>{const s=C.create();assert.equal(C.ability(s,0,NaN),false);assert.equal(C.ability(s,0,4),false);assert(C.ability(s,0,3));assert.equal(C.ability(s,0,3),false);});
 test('forged coordinates cannot teleport a hero; movement normalized',()=>{const s=C.create([{connected:true,champ:'tanque'}]);const h=s.heroes[0],x=h.x,y=h.y;C.step(s,.1,{0:{x:Infinity,y:NaN}});assert.equal(h.x,x);assert.equal(h.y,y);C.step(s,.1,{0:{x:999,y:999}});assert(Math.hypot(h.x-x,h.y-y)<=15.00001);});
@@ -14,9 +14,27 @@ test('crystal destruction, simultaneous draw, timeout and immutable end',()=>{fo
 test('complete bot matches stay bounded and terminate',()=>{const results=[];for(let seed=1;seed<=8;seed++){const s=C.create([],seed);let max=0;while(!s.ended&&s.time<601){C.step(s,1/30);max=Math.max(max,s.enemies.length);assert(s.teams.every(t=>t.shards>=0&&t.shards<=200&&t.hp>=0&&t.hp<=1200));assert(max<=150);}assert(s.ended);results.push({seed,seconds:Math.round(s.time),winner:s.winner,maxEnemies:max});}console.log(JSON.stringify(results));});
 
 test('stats attribute damage, kills, healing, deaths and sends to heroes',()=>{const s=C.create();s.heroes.forEach(h=>{h.bot=false;});const h=s.heroes[0];h.role='soporte';s.enemies=[{team:0,x:h.x,y:h.y,hp:5,maxHp:5,slowUntil:0,kind:'grunt'}];s.heroes[1].hp=10;C.ability(s,0,0);assert(h.stats.dmg>0&&h.stats.dmg<=5.0001);assert.equal(h.stats.kills,1);assert(h.stats.heal>0);s.teams[0].shards=200;assert(C.buy(s,0,'swarm'));assert.equal(h.stats.sent,1);});
-test('barrier absorbs crystal damage once, has cooldown and cap',()=>{const s=C.create();s.teams[0].shards=200;assert(C.buy(s,0,'ward'));assert.equal(s.teams[0].ward,150);assert.equal(C.buy(s,1,'ward'),false);s.heroes[0].hp=1;s.heroes[0].shield=0;s.heroes[0].bot=false;const before=s.teams[0].hp;s.enemies=[{team:0,kind:'grunt',x:s.heroes[0].x,y:s.heroes[0].y,hp:9999,maxHp:9999,speed:0,damage:5,attack:0,slowUntil:0}];s.heroes.forEach(x=>x.bot=false);C.step(s,.05);assert.equal(s.teams[0].hp,before,'barrier took the 65 damage');assert(s.teams[0].ward<150);});
+test('barrier absorbs crystal damage once, has cooldown and cap',()=>{const s=C.create();s.teams[0].shards=200;assert(C.buy(s,0,'ward'));assert.equal(s.teams[0].ward,125);assert.equal(C.buy(s,1,'ward'),false);s.heroes[0].hp=1;s.heroes[0].shield=0;s.heroes[0].bot=false;const before=s.teams[0].hp;s.enemies=[{team:0,kind:'grunt',x:s.heroes[0].x,y:s.heroes[0].y,hp:9999,maxHp:9999,speed:0,damage:5,attack:0,slowUntil:0}];s.heroes.forEach(x=>x.bot=false);C.step(s,.05);assert.equal(s.teams[0].hp,before,'barrier took the 65 damage');assert(s.teams[0].ward<125);});
 test('fury speeds up attacks for twenty seconds and then rests',()=>{const s=C.create();s.teams[0].shards=200;assert(C.buy(s,0,'surge'));assert(s.teams[0].surgeUntil>s.time);assert.equal(C.buy(s,1,'surge'),false);});
 test('catch-up gives the trailing team extra shards at wave start, never the leader',()=>{const s=C.create();s.teams[0].hp=900;s.time=s.nextWave-.01;const a=s.teams[0].shards,b=s.teams[1].shards;C.step(s,.05);assert(s.teams[0].shards-a>s.teams[1].shards-b);assert.equal(s.teams[1].assist,0);});
 test('eclipse drains both crystals symmetrically and forces a result',()=>{const s=C.create();s.heroes.forEach(h=>{h.bot=false;h.hp=0;h.respawn=1e9;});s.time=C.ECLIPSE_AT;const a=s.teams[0].hp;C.step(s,.1);assert(s.teams[0].hp<a);assert.equal(s.teams[0].hp,s.teams[1].hp);});
 test('bot buying policies are valid and every policy completes a match',()=>{for(const p of C.POLICIES){const s=C.create([],11);s.teams[0].policy=p;while(!s.ended&&s.time<601)C.step(s,1/30);assert(s.ended,p);}});
+test('opening is active within a second and every role can deal damage within six seconds',()=>{
+ for(const role of Object.keys(C.ROLES))for(const seed of [7,117,431,991]){
+  const s=C.create([{connected:true,champ:role},{connected:true},{connected:true},{connected:true}],seed);
+  advance(s,1);assert.equal(s.wave,1);advance(s,5);assert(s.heroes[0].stats.dmg>0,role+' seed '+seed);
+ }
+});
+test('sending preserves origin through arrival without hitting the sender field',()=>{
+ const s=C.create([{connected:true},{connected:true},{connected:true},{connected:true}]);
+ assert(C.buy(s,0,'swarm'));assert.equal(s.pending[0].sender,0);
+ advance(s,C.SEND_DELAY+.1);const sent=s.enemies.filter(e=>e.sentBy===0);
+ assert.equal(sent.length,5);assert(sent.every(e=>e.team===1));
+});
+test('supply window and cadence follow the exported pacing constants',()=>{
+ const s=C.create();s.heroes.forEach(h=>h.bot=false);advance(s,1);
+ assert.equal(s.nextWave,C.FIRST_WAVE+C.WAVE_INTERVAL);assert(C.shopOpen(s));
+ advance(s,C.SUPPLY_WINDOW);assert(!C.shopOpen(s));
+ advance(s,C.WAVE_INTERVAL-C.SUPPLY_WINDOW);assert.equal(s.wave,2);assert(C.shopOpen(s));
+});
 console.log(passed+' simulation tests passed');

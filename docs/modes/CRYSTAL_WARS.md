@@ -1,4 +1,4 @@
-# Guerra de Cristales — primera versión jugable
+# Guerra de Cristales — CW-3, ritmo y visión simultánea
 
 Estado: prototipo Alpha para entrenamiento y salas privadas. No es una temporada clasificatoria ni un lanzamiento comercial. Implementado a partir de main d1ae0d6.
 
@@ -12,18 +12,18 @@ La Horda → Multijugador / Modos → Guerra de Cristales. Es una pantalla más 
 4. J1 y J2 forman Zafiro; J3 y J4 forman Ámbar. Con dos personas, ambas cooperan contra dos bots. Los espacios libres se completan con bots identificados.
 5. El anfitrión inicia cuando los invitados están listos.
 
-PC: WASD/flechas; habilidades 1–4. Táctil: joystick y cuatro botones. Básico automático. Observar al rival bloquea acciones hasta volver a la propia arena.
+PC: WASD/flechas; habilidades 1–4. Táctil: joystick y cuatro botones. Básico automático. Ambos campos están visibles simultáneamente. Ampliar el rival mantiene movimiento, habilidades y compras en el propio campo.
 
 ## Reglas implementadas
 
 - Dos arenas separadas de 880 × 620, cristales de 1.200 HP.
-- Diez minutos máximos; victoria por cristal destruido o mayor vida al finalizar. Empate explícito si coinciden.
-- Oleadas simétricas cada 35 segundos; coloso cada tres oleadas. Límite de 75 enemigos por arena.
-- Cinco segundos iniciales de preparación; siete segundos de suministros al inicio de cada oleada.
+- Siete minutos máximos; Eclipse a los cinco minutos; victoria por cristal destruido o mayor vida al finalizar. Empate explícito si coinciden.
+- Oleadas simétricas cada 24 segundos; coloso cada tres oleadas. Límite de 75 enemigos por arena.
+- Primera oleada a los 0,75 segundos; siete segundos de suministros al inicio de cada oleada.
 - 30 fragmentos iniciales, 10 por oleada, 1 por baja normal y 5 por coloso. Bolsa compartida por equipo, máximo 200.
 - Reparación: 35 fragmentos, +180 HP, enfriamiento compartido de 15 segundos.
-- Mejora: 45 fragmentos, +12% daño de equipo, máximo tres mejoras.
-- Cinco acechadores: 25 fragmentos. Coloso: 55. Envío limitado por equipo, 10 segundos entre envíos, aviso de cinco segundos al rival.
+- Mejora: 38 fragmentos, +12% daño de equipo, máximo tres mejoras.
+- Cinco acechadores: 16 fragmentos. Coloso: 42. Envío limitado por equipo, 10 segundos entre envíos, aviso de tres segundos al rival.
 - Caer resta 65 HP al propio cristal; regreso tras ocho segundos con protección temporal.
 - Cuatro roles: tanque, asesino, mago y sanadora; cada uno tiene un kit propio del Coliseo con daño de área. Sus habilidades adaptadas están definidas en `simulation.js`; NO se afirma que sean las implementaciones completas de campaña.
 - Sin nivel de cuenta, inventario, reservas de dúo ni bonificaciones permanentes. Sin premios, castigos, logros ni escrituras al guardado de campaña. Solo se persiste un identificador de reconexión en sessionStorage.
@@ -32,13 +32,13 @@ PC: WASD/flechas; habilidades 1–4. Táctil: joystick y cuatro botones. Básico
 
 `index.html` contiene la pantalla `#crystalwars-screen` y la tarjeta; `js/ui/menus.js` (`cwGo`) la abre conservando una eventual URL de servidor de prueba, y `js/modes/crystal-wars/client.js` no carga nada hasta la primera apertura (`CrystalWarsUI.open/close`). La simulación vive en `js/modes/crystal-wars/` y la presentación en `crystal-wars.html` y `css/crystal-wars.css`.
 
-Se reutilizan `NET_CONFIG.serverUrl`, el protocolo 1 de `server/relay.js`, los atlas de los cuatro campeones, la animación del esqueleto y la del gólem. El build `CW-1` separa sus salas de las de campaña; no requiere cambiar el servidor actual. Las salas son privadas. No se creó infraestructura adicional.
+Se reutilizan `NET_CONFIG.serverUrl`, el protocolo 1 de `server/relay.js`, los atlas de los cuatro campeones, la animación del esqueleto y la del gólem. El build `CW-3` separa sus salas de las de campaña; no requiere cambiar el servidor actual. Las salas son privadas. No se creó infraestructura adicional.
 
 La simulación es controlada por el anfitrión, igual que el cooperativo existente. Los invitados envían intenciones de movimiento y acciones; nunca posiciones, daño, fragmentos ni resultados autoritativos. Se validan movimiento, índices, recursos, ventanas y cooldowns. Los snapshots viajan a 10 Hz, las entradas aproximadamente a 16 Hz y la simulación a 30 Hz. El resultado final se envía inmediatamente, incluso entre intervalos de snapshot.
 
 El anfitrión aún es una fuente de confianza: este modelo NO es apropiado para premios monetarios, clasificaciones públicas verificadas ni anti-cheat competitivo. Eso exige simulación/validación en servidor. No hay migración de anfitrión. Su desconexión interrumpe la partida sin adjudicar victoria; el invitado desconectado se reemplaza por un bot y puede recuperar el mismo lugar. Al volver a la sala se conserva el código para la revancha.
 
-## Validación reproducible
+## Validación reproducible (resultados históricos CW-1; actualización CW-3 al final)
 
 ```sh
 node tools/crystal-wars/test-simulation.js
@@ -98,3 +98,37 @@ Antes de ampliar a todo el roster: probar parejas de roles, igualar rendimiento 
 **Resultados medidos** (`node tools/crystal-wars/balance-gate.js`, partidas de bots): roles 49–53 %, políticas de compra 38–56 %, ventaja de lado 48 %, empates 0 %, 100 % terminan en cristal, 503 s de duración media. Es una puerta de CI.
 
 **Límites honestos:** los bots son simples; miden el modo pero NO a jugadores humanos. No hay matchmaking, ranking verificado ni anti-cheat (el anfitrión sigue siendo de confianza; ver arriba). Las salas son privadas, así que sin amigos el modo no tiene cola pública. Próximos pasos propuestos: cola pública con relleno de bots, ranking por temporada con simulación en el servidor, partidas de 1 contra 1, y pruebas reales con 10+ personas.
+
+
+## CW-3 — revisión pedida por el jugador (10/10/2026 UTC)
+
+Implementado en rama desde `18f6b7b`:
+
+- Dos campos dibujados en cada cuadro. El botón cambia el espacio asignado al rival, sin suspender movimiento ni bloquear habilidades/compras.
+- Los envíos conservan `sender` / `sentBy` en el estado autoritativo. El campo rival muestra cuenta regresiva, unidades enviadas vivas y anillos dorados que las distinguen de la oleada natural.
+- Primer despliegue 5 → 0,75 s; oleadas 35 → 24 s; envíos 5 → 3 s. Héroes comienzan más cerca del frente; enemigos normales pasan de 34 + oleada a 52 + oleada y colosos de 28 a 44 unidades/s. Límite de enemigos sin cambios.
+- Eclipse 8 → 5 min, límite 10 → 7 min. El objetivo de duración media del gate pasa explícitamente de 300–560 s a 180–390 s por la petición de partidas más ágiles; **los límites de victorias por rol, política y lado no se relajan**.
+- Con el ritmo nuevo, Sanadora dominaba (65 % en la primera tanda). Daño 29 → 22, conserva curas. Barrera 150 → 125 para no favorecer en exceso la defensa. El bot económico posterga su tercera inversión hasta la quinta oleada.
+- Suministros móviles ubicados entre joystick y habilidades, sin cubrir el campo rival con el panel de compras.
+- `CW-3` evita mezclar clientes con distintas reglas dentro de una sala.
+
+Validación local:
+
+- 19 pruebas deterministas de simulación: las anteriores y contacto antes de 6 s en los cuatro roles × cuatro semillas, atribución de envíos y ventanas de suministro.
+- Cuatro navegadores contra relay local: campos simultáneos, movimiento/habilidades/compras con foco rival, llegada atribuida, entradas falsificadas, reconexión, resultado, revancha y caída del anfitrión. Sin errores JS.
+- Capturas y límites de controles a 844×390 y 667×375; escritorio 1280×1000. Emulación Chromium, no certificación de dispositivos físicos.
+- Integración de hub, tutorial saltado, regreso, archivo faltante e invitaciones antiguas: PASS.
+- Las políticas con solo 8 semillas oscilaron entre aprobado y fallido al cambiar el lote. Se aumentan a 32 semillas por pareja (384 partidas de políticas), manteniendo umbrales. Se comprueba además un lote separado con `CW_BALANCE_SEED_OFFSET=100000`.
+
+Pendiente solicitado: **plantel completo**. El modo aún ofrece cuatro kits, no los 38 de campaña. Su motor aislado implementa solo esos cuatro: la ampliación requiere adaptar efectos, pasivas, invocaciones y atlas, con pruebas por campeón y cliente. No se presentan cambios de nombre/imagen sobre un kit genérico como campeones completos. Esta entrega resuelve visión y ritmo; no da ese reclamo por terminado.
+
+No se modifican progreso, billeteras, permisos ni servidor de producción. El taller de cinco campeones permanece en PR #78 con su diagnóstico de Saelis y sus gates incompletos guardados.
+
+Resultados finales del gate CW-3 (804 partidas por lote, 1.608 en total):
+
+| Lote | Tanque | Asesino | Mago | Sanadora | Políticas min–max | Lado Zafiro | Media | Resultado |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| Semillas habituales | 43% | 47% | 59% | 50% | 48–52% | 42% | 260 s | PASS |
+| Offset 100000 | 42% | 47% | 56% | 55% | 46–54% | 49% | 259 s | PASS |
+
+El 100% (redondeado) de las partidas de composición terminan por cristal; empates 1% / 0%. Son simulaciones con bots, no una evaluación de diversión ni balance competitivo humano.
