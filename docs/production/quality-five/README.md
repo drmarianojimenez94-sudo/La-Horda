@@ -39,7 +39,7 @@ pacto que consume vida actual y definitiva que consume heridas. Pasiva de riesgo
 debajo de 40% de vida. Tres transformaciones desde nivel 40 y tres decisiones de maestría
 desde nivel 90; los árboles siguen costando 33 puntos ordinarios frente a 30 disponibles.
 
-`functional-results.json`: suite conjunta con 127 comprobaciones, incluidas ejecuciones
+`functional-results.json`: suite conjunta con 131 comprobaciones, incluidas ejecuciones
 breves en las diez arenas. No representa campañas completas ni QA en teléfonos físicos.
 `solciju-functional.json` y `solciju-entry-results.json` conservan la primera medición aislada.
 `ability/ability-gate.json`: Ability Gate diferencial estricto de ambos candidatos, PASS;

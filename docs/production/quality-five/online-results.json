@@ -14,7 +14,7 @@
       "host": {
         "key": "veyra",
         "casts": 4,
-        "damage": 551.0320199999999,
+        "damage": 650.3481600000001,
         "bleeds": 0
       },
       "guest": {
@@ -33,7 +33,7 @@
       "host": {
         "key": "solciju",
         "casts": 4,
-        "damage": 161.06310000000002,
+        "damage": 138.84750000000003,
         "bleeds": 0
       },
       "guest": {

@@ -2,6 +2,8 @@
 const {chromium}=require('playwright');
 const fs=require('node:fs'),http=require('node:http'),path=require('node:path');
 const root=path.resolve(__dirname,'../..');
+const reportPath=path.join(root,'docs/production/quality-five/functional-results.json');
+fs.writeFileSync(reportPath,JSON.stringify({status:'RUNNING',scope:'workshop, not release approval'})+'\n');
 const server=http.createServer((req,res)=>{
  const file=path.resolve(root,'.'+decodeURIComponent(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));
  if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}
@@ -76,6 +78,10 @@ const server=http.createServer((req,res)=>{
    start(60,'veyra');save.champions.veyra.talents.nodes.veyra_t2transform=1;player.slowTimer=2000;player.slowAmt=.3;cast(2);check('Veyra pact cleanse transformation',player.slowTimer===0&&player.slowAmt===0);
    save.champions.veyra.talents.nodes.veyra_t0transform=1;check('Veyra transformed telegraph is line',aimProfileOf(player.cls.skills[0],player).type==='line');
    start(60,'veyra');e=enemy();const initialHP=e.hp;veyraHit(player,e,10,false);const normal=initialHP-e.hp;player.hp=player.maxHp*.3;const lowHP=e.hp;veyraHit(player,e,10,false);check('Veyra low-health passive increases damage',lowHP-e.hp>normal*1.1);
+   start(60,'veyra');player.energy=0;const unpaidHP=player.hp;useSkill(2);check('Veyra cannot sacrifice life without paying energy',player.hp===unpaidHP&&!(player.portSpeedTimer>0));
+   player.energy=player.maxEnergy;player.cds=[0,0,0];useSkill(2);const paidHP=player.hp,paidEnergy=player.energy;useSkill(2);check('Veyra pact cooldown prevents double sacrifice',player.hp===paidHP&&player.energy===paidEnergy&&player.cds[2]>0);
+   start(60,'veyra');e=enemy();veyraBleed(player,e,10);updatePortadorHero(player,100000);const afterLongTick=e.hp;updatePortadorHero(player,100000);check('Veyra delayed frame cannot create extra bleed ticks',afterLongTick<1e7&&e.hp===afterLongTick&&veyraBleeds(player).length===0);
+   start();e=enemy();cast('ult');const reserve=portadorOwned(player,'sol_reserve')[0];solcijuUpdate(reserve,100000);const afterReserve=e.hp;solcijuUpdate(reserve,100000);check('Solciju delayed frame respects four-pulse budget',afterReserve<1e7&&e.hp===afterReserve&&reserve.left===0);
    start(60,'veyra');const oldResolve=resolveWallCollision,wall=player.x+40,origin=player.x;resolveWallCollision=q=>{oldResolve(q);if(q.x>wall&&q.x<wall+20)q.x=wall;};cast(1);resolveWallCollision=oldResolve;check('Veyra dash stops at thin wall',player.x<=wall&&player.x>origin);
    for(const level of [39,40,60,90,99]){start(level,'veyra');save.champions.veyra.talents.nodes.veyra_t0transform=1;check('Veyra L'+level+' transformation level gate',(aimProfileOf(player.cls.skills[0],player).type==='line')===(level>=40));}
    for(const b of [0,1,2]){
@@ -90,7 +96,7 @@ const server=http.createServer((req,res)=>{
   });
   checks.unshift({name:'not registered in production',ok:absent});
   const result={status:errors.length||checks.some(c=>!c.ok)?'FAIL':'PASS',scope:'Solciju and Veyra workshop runtime, not release approval',checks,errors};
-  fs.writeFileSync(path.join(root,'docs/production/quality-five/functional-results.json'),JSON.stringify(result,null,2)+'\n');
+  fs.writeFileSync(reportPath,JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify({status:result.status,checks:checks.length,failed:checks.filter(c=>!c.ok),errors}));if(result.status==='FAIL')process.exitCode=1;
  }finally{if(browser)await browser.close();server.close();}
-})().catch(e=>{console.error(e);server.close();process.exitCode=1;});
+})().catch(e=>{fs.writeFileSync(reportPath,JSON.stringify({status:'FAIL',errors:[e.message]},null,2)+'\n');console.error(e);server.close();process.exitCode=1;});

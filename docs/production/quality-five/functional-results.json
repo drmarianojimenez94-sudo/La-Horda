@@ -395,6 +395,22 @@
       "ok": true
     },
     {
+      "name": "Veyra cannot sacrifice life without paying energy",
+      "ok": true
+    },
+    {
+      "name": "Veyra pact cooldown prevents double sacrifice",
+      "ok": true
+    },
+    {
+      "name": "Veyra delayed frame cannot create extra bleed ticks",
+      "ok": true
+    },
+    {
+      "name": "Solciju delayed frame respects four-pulse budget",
+      "ok": true
+    },
+    {
       "name": "Veyra dash stops at thin wall",
       "ok": true
     },

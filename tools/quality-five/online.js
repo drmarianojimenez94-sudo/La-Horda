@@ -3,6 +3,8 @@ const {chromium}=require('playwright'),{spawn}=require('node:child_process'),fs=
 const dataDir=fs.mkdtempSync(path.join(os.tmpdir(),'horda-workshop-relay-'));
 const servers=[spawn('python3',['-m','http.server','8857','--bind','127.0.0.1'],{stdio:'ignore'}),spawn('node',['server/relay.js'],{env:{...process.env,PORT:'8858',DATA_DIR:dataDir,DATABASE_URL:''},stdio:'ignore'})];
 const checks=[],errors=[];let browser;
+const reportPath='docs/production/quality-five/online-results.json';
+fs.writeFileSync(reportPath,JSON.stringify({status:'RUNNING',scope:'local relay workshop'})+'\n');
 const modules=['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js'];
 (async()=>{try{
  await new Promise(r=>setTimeout(r,900));browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});
@@ -41,6 +43,6 @@ const modules=['js/champions/quality-five/solciju.js','tools/quality-five/regist
   await ac.close();await gc.close();
  }
  const status=errors.length||checks.some(c=>!c.ok)?'FAIL':'PASS';
- fs.writeFileSync('docs/production/quality-five/online-results.json',JSON.stringify({status,scope:'local real relay, two clients; no production accounts or cosmetics',checks,errors},null,2)+'\n');
+ fs.writeFileSync(reportPath,JSON.stringify({status,scope:'local real relay, two clients; no production accounts or cosmetics',checks,errors},null,2)+'\n');
  console.log(JSON.stringify({status,checks,errors}));if(status==='FAIL')process.exitCode=1;
-}finally{if(browser)await browser.close();servers.forEach(s=>s.kill());fs.rmSync(dataDir,{recursive:true,force:true});}})().catch(e=>{console.error(e);process.exitCode=1;});
+}finally{if(browser)await browser.close();servers.forEach(s=>s.kill());fs.rmSync(dataDir,{recursive:true,force:true});}})().catch(e=>{fs.writeFileSync(reportPath,JSON.stringify({status:'FAIL',checks,errors:[...errors,e.message]},null,2)+'\n');console.error(e);process.exitCode=1;});

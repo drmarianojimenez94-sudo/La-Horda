@@ -18,7 +18,8 @@ No se duplicaron esos motores. Esta ejecución **no completa el alcance comercia
   La lista ejecutable de gates queda separada de la evidencia versionada de manifiestos
   schema 1; los diez contratos existentes conservan sus requisitos originales.
 - **#78, draft:** diez recetas artísticas y tres elementos reutilizables, reproducibles
-  por fábrica. Sin integración a catálogo, sin habilidades nuevas, sin Art Gate aprobado.
+  por fábrica. El avance del 10 de octubre UTC añade kits ejecutables de Solciju y Veyra
+  exclusivamente en el taller, sin integración al catálogo ni Art Gate aprobado.
 
 Estado de integración comprobado: #76 mergeado en `2680edd0f182fd877c5608a97ffd6f67564a76f3`.
 CI completo, Safari y PostgreSQL aprobados; smoke sobre el main resultante: 27 contratos,
@@ -30,6 +31,33 @@ y 3.366 controles de recursos aprobados.
 PostgreSQL aprobados. Smoke sobre main: ambas apariencias de NanoGM, filtro del cuerpo,
 alas/conductos, restauración del contexto y modo normal PASS; cero errores de página.
 #78 conserva condición de borrador, sin campeones registrados.
+
+## Avance del 10 de octubre UTC (noche del 9 en Argentina)
+
+- Solciju: fermentación por objetivo/dueño, vino de área, dos barricas temporizadas,
+  brindis y Gran Reserva. Tres transformaciones ordinarias y tres maestrías funcionales.
+- Veyra: sangrado con presupuesto de ticks y objetivos, desplazamiento seguro, pacto
+  con costo de vida y definitiva que consume heridas; pasiva de riesgo y transformaciones.
+- Ambos: árboles de 33 puntos ordinarios frente al máximo de 30; 131 comprobaciones en
+  seis niveles y ejecuciones breves en las diez arenas. Ability Gate diferencial estricto
+  PASS, canario sin efectos rechazado. Relay local real con dos clientes PASS, sin tocar
+  cuentas de producción. Evidencia y límites en `docs/production/quality-five/README.md`.
+- Balance de entrada: 66 simulaciones, 22 candidatos incluyendo los dos del taller,
+  sin exceder techos. El daño medido es bajo respecto de sus roles y necesita calibración.
+  Aprobar el techo no equivale a aprobar balance competitivo ni una calificación 8/10.
+- Aelith: rechazada visualmente por similitud con Sira. Brakk, Morveth y Aelith aún sin
+  kits propios. Ninguno de los cinco tiene una skin final aprobada ni publicación jugable.
+- PR #80: corrección compartida del autoapuntado en Cristales, que buscaba enemigos de
+  campaña en vez del bando rival. Cuatro regresiones, suite táctil completa y control
+  local de jefes PASS. CI pendiente; no atribuir todavía merge a este PR.
+- Render: conexión disponible, pero sin workspace seleccionado. El único resultado es
+  `My Workspace`; la herramienta exige confirmación antes de seleccionarlo. No se
+  inspeccionaron ni modificaron servicios y no se confirmó el servidor oficial/NanoGM.
+
+Próximo trabajo concreto: calibrar los dos kits con distintos perfiles/arenas; completar
+arte original y tres campeones restantes; mantener los contratos INCOMPLETE hasta cerrar
+todos los requisitos. Continuar después con la brecha de especialización de los 19 árboles
+existentes. La meta global de 8/10 permanece pendiente, no certificada.
 
 ## Pruebas ejecutadas localmente
 
