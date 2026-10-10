@@ -114,3 +114,7 @@ variación de luz/croma pasó el mismo gate numérico, sin cambiar umbrales.
 **Revisión visual: RECHAZADA para publicación**. La fila final conserva la cabeza de Dariel:
 el ensamblador no intercambia cabezas en muerte. Resolver continuidad en esas cuatro celdas,
 arma temporal propia y escala antes de sustituir la receta principal. No es la skin final.
+
+## Pausa del taller — prioridad solicitada: Guerra de Cristales
+
+El diagnóstico `node tools/balance/diagnose-entry.js saelis` completó 18 muestras en contextos nuevos (producción, módulos sin registrar, taller; dos repeticiones por semilla). Hay variación incluso en producción: no prueba causalidad de los candidatos. `entry-diagnostic.json` es diagnóstico, no aprobación; se preserva el último fallo del gate completo. El protocolo compartido está en `tools/balance/run-entry-simulation.js`, sin cambiar semillas ni umbrales. Próximo paso al retomar: aislar azar/tiempo del motor, y luego repetir el gate completo. El usuario pidió priorizar selección, visión simultánea y ritmo de Cristales.
