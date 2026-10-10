@@ -247,3 +247,40 @@ de cabeza de Aelith está corregida en el estudio. Siguen pendientes diferenciac
 de los kits señalados, cinco paquetes artísticos completos, SFX/Sets, rendimiento
 físico móvil, roster completo en Cristales y validación del servidor/NanoGM.
 No hay evidencia suficiente para certificar 80/100 en todos los sistemas.
+
+## Producción comprobada por HTTP — 10/10, 10:14–10:19 UTC
+
+El servidor canónico volvió a responder desde este entorno: frontend HTTP 200 y
+health `ok: true`, `status: ready`. Sin embargo, **la publicación está atrasada**:
+
+- Audio servido coincide byte a byte con `072150fa` (anterior al PR #82).
+- Simulación de Cristales servida coincide con el primer padre de `072150fa`
+  (anterior al PR #81): versión **CW-2**, mientras main tiene **CW-3**.
+- La configuración pública de red coincide con main y apunta a
+  `wss://fondalstudios.com/la-horda/red`.
+- Se repitió Cristales y health con query nueva y `Cache-Control: no-cache`.
+- Health declara **`store: file`, `persistent: false`**. Esto no demuestra pérdida
+  de cuentas ni inspecciona el volumen, pero tampoco certifica persistencia segura.
+- `/api/gm/status` responde **401 sin sesión**, como corresponde; no se verificó
+  una sesión real de NanoGM ni su vínculo OWNER.
+
+Evidencia con huellas SHA-256 y alcance: `canonical-release-20261010.json`.
+La documentación identifica Fly.io como principal y Render como legado; los headers
+HTTP observados (`server: Fly/...`, `via: 2 fly.io, 2 fly.io`) corroboran Fly.io. No hay capacidad Fly.io conectada ni CLI instalada en este entorno; Sites
+no devuelve sitios propios ni compartidos editables. No se alteró Render, no se
+crearon cuentas y no se modificaron datos ni configuración de producción.
+
+**Bloqueo P0 de despliegue:** el operador del servidor canónico debe habilitar un
+acceso adecuado o ejecutar el despliegue verificado. Antes de reiniciar: comprobar
+el volumen real de DATA_DIR y generar/verificar respaldo restaurable de cuentas,
+guardados, billeteras, operaciones y demás datos del directorio. No basta con
+cambiar DATA_PERSISTENT para ocultar el aviso. Preservar sesiones/permisos según
+el procedimiento de mantenimiento, coordinar partidas activas y disponer rollback.
+Después: desplegar frontend y relay del mismo commit validado; comprobar CW-3 y
+huellas de assets, health persistente, login/OWNER de NanoGM, guardado y una sala.
+No se inventó un comando Fly sin conocer app, volumen y configuración canónicos.
+
+Este bloqueo explica por qué un jugador puede seguir viendo la versión anterior
+aunque el arreglo esté mergeado. Las tareas de arte/skins, diferenciación de kits,
+talentos pendientes y roster completo de Cristales siguen siendo trabajo de código
+y contenido separado: tampoco se declaran terminadas.
