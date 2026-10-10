@@ -146,8 +146,8 @@ function render(){
  const box=canvas.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);if(canvas.width!==Math.round(box.width*dpr)||canvas.height!==Math.round(box.height*dpr)){canvas.width=Math.round(box.width*dpr);canvas.height=Math.round(box.height*dpr);}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#111723';ctx.fillRect(0,0,box.width,box.height);
  const gap=8,ownWidth=(box.width-gap)*(viewOther?.4:.6);
  const compact=matchMedia('(max-height:520px) and (orientation:landscape)').matches,top=compact?40:34,height=box.height-(compact?94:0);
- drawArena(me.team,0,ownWidth,height,dpr,top);
- drawArena(1-me.team,ownWidth+gap,box.width-ownWidth-gap,height,dpr,top);
+ drawArena(me.team,0,ownWidth,height-(viewOther?36:0),dpr,top);
+ drawArena(1-me.team,ownWidth+gap,box.width-ownWidth-gap,height-(viewOther?0:36),dpr,top);
  for(const [i,key]of ['blue','amber'].entries()){$(key+'-hp').textContent=Math.ceil(sim.teams[i].hp)+' / 1200';$(key+'-meter').value=sim.teams[i].hp;}
  const left=Math.max(0,Math.ceil(C.DURATION-sim.time));$('clock').textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');$('wave').textContent='Oleada '+sim.wave;
  $('shards').textContent='◆ '+t.shards+' fragmentos · Mejora '+t.upgrade+'/3'+(t.ward>0?' · Barrera '+Math.ceil(t.ward):'')+(sim.time<t.surgeUntil?' · FURIA '+Math.ceil(t.surgeUntil-sim.time)+' s':'');const supply=C.shopOpen(sim);$('game').classList.toggle('supply',supply);$('phase').textContent=supply?'SUMINISTROS · '+Math.ceil(sim.wave===0?sim.nextWave-sim.time:sim.nextWave-(C.WAVE_INTERVAL-C.SUPPLY_WINDOW)-sim.time)+' s':'Suministros en '+Math.ceil(sim.nextWave-sim.time)+' s';

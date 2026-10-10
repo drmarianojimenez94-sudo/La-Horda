@@ -7,7 +7,7 @@ const C=require('../../js/modes/crystal-wars/simulation'),assert=require('node:a
 const roles=Object.keys(C.ROLES),P=C.POLICIES;
 const seedOffset=Number(process.env.CW_BALANCE_SEED_OFFSET||0);
 assert(Number.isSafeInteger(seedOffset),'invalid seed offset');
-const run=(slots,seed,pa,pb)=>{const s=C.create(slots,seed+seedOffset);if(pa)s.teams[0].policy=pa;if(pb)s.teams[1].policy=pb;while(!s.ended&&s.time<601)C.step(s,1/30);return s;};
+const run=(slots,seed,pa,pb)=>{const s=C.create(slots,seed+seedOffset);if(pa)s.teams[0].policy=pa;if(pb)s.teams[1].policy=pb;while(!s.ended&&s.time<C.DURATION+1)C.step(s,1/30);return s;};
 const pct=(a,b)=>b?a/b*100:0,fail=[];
 // CW-3: requested faster matches, target mean 3–6.5 minutes; role/side/policy ceilings unchanged.
 // roles: todas las parejas, N semillas
