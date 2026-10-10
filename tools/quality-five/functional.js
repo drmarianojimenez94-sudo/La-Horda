@@ -59,9 +59,9 @@ const server=http.createServer((req,res)=>{
    start(60);save.champions.solciju.talents.nodes.solciju_t2transform=1;
    const rival=heroes.pop();rival.x=player.x+35;rival.y=player.y;rival.hp=rival.maxHp/2;rival.invulnTimer=0;
    divinaEnemies=[rival];divinaMinions=[];divinaStructures=[];divinaMode=true;
-   player.basicCd=0;triggerBasic(player);check('Crystal Wars basic applies fermentation',solcijuMark(player,rival).n===1);
+   player.basicCd=0;triggerBasic(player);check('Arena Divina basic applies fermentation',solcijuMark(player,rival).n===1);
    const rivalHP=rival.hp;cast(2);check('hospitality never heals rival',rival.hp===rivalHP&&!(rival._kitArmorUntil>runElapsedMs));
-   cast(0);check('Crystal Wars wine damages opponent',rival.hp<rivalHP);divinaMode=false;divinaEnemies=[];
+   cast(0);check('Arena Divina wine damages opponent',rival.hp<rivalHP);divinaMode=false;divinaEnemies=[];
    start(99);check('talent points cannot complete tree',TALENT_TREES.solciju.nodes.reduce((n,x)=>n+x.cost*x.maxRank,0)>treePointsAvailable('solciju'));
    start();enemy();player.cds=[0,0,0];player.energy=player.maxEnergy;const en=player.energy;useSkill(0);const spent=player.energy;useSkill(0);check('cooldown prevents duplicate spend',spent<en&&player.energy===spent&&player.cds[0]>0);
    start();enemy();cast(1);_netHeroIdx=new Map(heroes.map((h,i)=>[h,i]));netMatch={snapN:0,last:{},lastG:{},lastH:[{},{},{},{}]};const snap=netBuildSnapshot(true,true);check('snapshot retains construct owner',snap.c.portadorObjects.u.some(([id,o])=>o.solciju&&o.owner.$h===0));check('snapshot serializable and bounded',JSON.stringify(snap).length<300000);netMatch=null;

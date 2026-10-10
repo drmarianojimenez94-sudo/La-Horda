@@ -11,6 +11,8 @@ const server=process.env.ENTRY_BASE_URL?null:spawn('python3',['-m','http.server'
  if(process.argv.includes('--workshop-quality')){
   await page.addScriptTag({path:'js/champions/quality-five/veyra.js'});
   await page.addScriptTag({path:'tools/quality-five/register-veyra-fixture.js'});
+  await page.addScriptTag({path:'js/champions/quality-five/brakk.js'});
+  await page.addScriptTag({path:'tools/quality-five/register-brakk-fixture.js'});
  }
  if(process.argv.includes('--self-test'))await page.evaluate(()=>{
   const key='__entry_fixture',R=CHAMPION_BALANCE_REFERENCE.roles.mago;

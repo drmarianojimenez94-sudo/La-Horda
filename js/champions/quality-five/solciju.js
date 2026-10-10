@@ -31,7 +31,7 @@ function solcijuObject(h,kind,p,life,data,cap){
   return portadorAdd(h,kind,p,life,{solciju:true,...data});
 }
 function solcijuAllies(h,p,r){
-  // Never buff opponents in Crystal Wars, even if they share the heroes array.
+  // Never buff opponents in Arena Divina, even if they share the heroes array.
   const team=divinaMode&&divinaEnemies.includes(h)?divinaEnemies:heroes;
   return team.filter(a=>a.alive&&!a.fused&&distance(a,p)<=r);
 }
@@ -109,7 +109,7 @@ updatePortadorHero=function(h,dt){solOriginalHero(h,dt);if(h.classKey==='solciju
   for(const e of portadorEnemies(h))if(e._solMarks)delete e._solMarks[heroes.indexOf(h)];
 }};
 NET_SKIP_KEYS.add('_solMarks');
-// Crystal Wars basics bypass damageEnemy. Track only the synchronous basic hit,
+// Arena Divina basics bypass damageEnemy. Track only the synchronous basic hit,
 // so spell/proc damage cannot accidentally generate an extra passive stack.
 let solBasicOwner=null;
 const solOriginalBasic=triggerBasic;

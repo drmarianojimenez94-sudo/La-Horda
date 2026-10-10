@@ -67,7 +67,7 @@ Object.assign(ARENA_SFX, {
   mnDevDeath:  _mnsx(4, 800, (t,D)=>{ _tone(t,"sawtooth",160,30,1.4,0.14,D,0.02); [523,659,784].forEach((f,i)=>_tone(t+0.6+i*0.08,"triangle",f,f,0.5,0.06,D,0.02)); return 1.6; }),
   mnDevBreath: _mnsx(3, 400, (t,D)=>{ _noise(t,0.7,0.24,"bandpass",700,0.6,D); return 0.7; }),
   mnRumble:    _mnsx(4, 1200,(t,D)=>{ _noise(t,1.8,0.4,"lowpass",180,0,D); _tone(t,"sine",40,30,1.8,0.4,D,0.2); _duck(0.5,1500); return 1.8; }),
-  mnChains:    _mnsx(3, 1200,(t,D)=>{ for(let i=0;i<9;i++) _noise(t+i*0.12+Math.random()*0.04,0.05,0.16,"bandpass",2000+Math.random()*1200,7,D); return 1.2; }),
+  mnChains:    _mnsx(3, 1200,(t,D)=>{ for(let i=0;i<9;i++) _noise(t+i*0.12+audioRandom()*0.04,0.05,0.16,"bandpass",2000+audioRandom()*1200,7,D); return 1.2; }),
   mnTripleRoar:_mnsx(5, 3000,(t,D)=>{ [55,82,123].forEach((f,i)=>{ _tone(t+i*0.18,"sawtooth",f,f*1.6,1.8,0.12,D,0.15); }); _noise(t,2.2,0.25,"bandpass",400,0.7,D); _duck(0.3,2500); return 2.4; }),
   mnChainBreak:_mnsx(4, 800, (t,D)=>{ for(let i=0;i<6;i++) _tone(t+i*0.04,"triangle",2200-i*200,900,0.2,0.06,D,0.005); _noise(t,0.4,0.3,"highpass",2500,0,D); return 0.6; }),
   mnPortalHum: _mnsx(4, 1500,(t,D)=>{ _tone(t,"sawtooth",48,52,2.4,0.12,D,0.4); _tone(t,"sine",96,98,2.4,0.08,D,0.4); return 2.4; }),

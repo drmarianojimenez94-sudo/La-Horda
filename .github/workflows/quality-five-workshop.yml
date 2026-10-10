@@ -33,6 +33,7 @@ jobs:
       - run: node --test tools/factory/test.js
       - run: node tools/balance/check-entry-reference.js
       - run: node tools/quality-five/functional.js
+      - run: node tools/quality-five/brakk-functional.js
       - run: node tools/quality-five/online.js
       - run: node tools/bible/ability-gate.js --strict --workshop-quality
       - run: node tools/balance/entry-gate.js --workshop-quality
@@ -42,6 +43,7 @@ jobs:
           name: quality-five-workshop-evidence
           path: |
             docs/production/quality-five/functional-results.json
+            docs/production/quality-five/brakk-functional-results.json
             docs/production/quality-five/online-results.json
             docs/production/quality-five/workshop-entry-results.json
             docs/production/quality-five/ability/

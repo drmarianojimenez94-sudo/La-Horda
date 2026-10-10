@@ -454,7 +454,7 @@ function bosDrawScreen(){
 Object.assign(ARENA_SFX, {
   bosRuneReady: {p:2, gap:800, play:(t,D)=>{ [523,659,784].forEach((f,i)=>_tone(t+i*0.07,"sine",f,f,0.5,0.06,D,0.02)); return 0.7; }},
   bosRuneFire:  {p:4, gap:300, play:(t,D)=>{ _tone(t,"sine",110,55,0.6,0.35,D); for(let i=0;i<6;i++) _noise(t+i*0.05,0.06,0.2,"bandpass",400+i*90,3,D); [392,523].forEach((f,i)=>_tone(t+0.1+i*0.08,"triangle",f,f*1.01,0.5,0.08,D,0.02)); return 0.8; }},
-  bosRustle:    {p:3, gap:900, play:(t,D)=>{ for(let i=0;i<10;i++) _noise(t+i*0.07,0.08,0.14,"highpass",2400+Math.random()*1500,0,D); return 0.8; }},
+  bosRustle:    {p:3, gap:900, play:(t,D)=>{ for(let i=0;i<10;i++) _noise(t+i*0.07,0.08,0.14,"highpass",2400+audioRandom()*1500,0,D); return 0.8; }},
   bosSpring:    {p:3, gap:300, play:(t,D)=>{ _noise(t,0.25,0.25,"bandpass",1200,1,D); _tone(t,"sawtooth",220,110,0.2,0.08,D); return 0.3; }}
 });
 

@@ -1,0 +1,209 @@
+{
+  "status": "COMPLETE",
+  "diagnosticOnly": true,
+  "fixedClock": true,
+  "key": "saelis",
+  "runs": [
+    {
+      "mode": "production",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8832.12275182881,
+      "alive": true,
+      "hp": 268,
+      "casts": 92,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9065.001951872398,
+      "alive": true,
+      "hp": 268,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7559.54032786762,
+      "alive": true,
+      "hp": 268,
+      "casts": 86,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8832.12275182881,
+      "alive": true,
+      "hp": 268,
+      "casts": 92,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9065.001951872398,
+      "alive": true,
+      "hp": 268,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7559.54032786762,
+      "alive": true,
+      "hp": 268,
+      "casts": 86,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8832.12275182881,
+      "alive": true,
+      "hp": 268,
+      "casts": 92,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9065.001951872398,
+      "alive": true,
+      "hp": 268,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7559.54032786762,
+      "alive": true,
+      "hp": 268,
+      "casts": 86,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8832.12275182881,
+      "alive": true,
+      "hp": 268,
+      "casts": 92,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9065.001951872398,
+      "alive": true,
+      "hp": 268,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7559.54032786762,
+      "alive": true,
+      "hp": 268,
+      "casts": 86,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8832.12275182881,
+      "alive": true,
+      "hp": 268,
+      "casts": 92,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9065.001951872398,
+      "alive": true,
+      "hp": 268,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7559.54032786762,
+      "alive": true,
+      "hp": 268,
+      "casts": 86,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8832.12275182881,
+      "alive": true,
+      "hp": 268,
+      "casts": 92,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9065.001951872398,
+      "alive": true,
+      "hp": 268,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7559.54032786762,
+      "alive": true,
+      "hp": 268,
+      "casts": 86,
+      "error": null
+    }
+  ],
+  "errors": [],
+  "audioSourceSha256": "c301357a5a6757d1ad5f7202aa9dfe439fa4a8ed2740bc90f65ea6e747bcc507",
+  "scope": "Diagnostic before arena audio callbacks were isolated; not release approval"
+}

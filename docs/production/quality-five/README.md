@@ -1,8 +1,8 @@
 # Cinco campeones: taller visual, no lanzamiento
 
 Estado: **DRAFT / NO PUBLICADOS**. Ninguna receta de este directorio instala campeones
-ni concede skins. Solciju y Veyra tienen un primer runtime ejecutable únicamente mediante
-fixtures de pruebas; Brakk, Morveth y Aelith todavía no tienen kits propios.
+ni concede skins. Solciju, Veyra y Brakk tienen runtimes ejecutables únicamente mediante
+fixtures de pruebas; Morveth y Aelith todavía no tienen kits propios.
 
 ## Taller de Solciju — 10 de octubre UTC
 
@@ -57,7 +57,7 @@ estos resultados bajos requieren revisar alcance, frecuencia efectiva y desempe�
 antes de ajustar números. No son evidencia de balance competitivo 8/10.
 
 La implementación detectó un defecto compartido: el autoapuntado no consultaba rivales de
-Guerras de Cristales. Corrección integrada mediante PR #80 en `18f6b7ba48dd69696f75efaf005e44a387667a1d`,
+Arena Divina. Corrección integrada mediante PR #80 en `18f6b7ba48dd69696f75efaf005e44a387667a1d`,
 con CI completo, Safari y PostgreSQL aprobados; los candidatos quedan
 en el taller del PR #78. No atribuir a un candidato las aprobaciones de los campeones existentes.
 
@@ -94,16 +94,16 @@ que requieren revisión en escena. No se han bajado umbrales para producir un PA
 La hoja de contacto muestra frente/perfil/espalda, no sustituye revisión animada.
 No publicar estos prototipos como contenido ya disponible ni atribuirles balance aprobado.
 
-## Última repetición: Balance Gate bloqueado
+## Fallo histórico del Balance Gate — causa investigada el 10/10
 
 Tras limitar el básico de Veyra a doce víctimas, la repetición completa registró una
 violación en Saelis: daño medio 10.368,17 frente al techo 9.781,695. Cero errores JS.
 Solciju (8.218,78) y Veyra (5.471,67) siguen por debajo de sus techos y sobrevivieron 3/3.
-`workshop-entry-results.json` conserva el fallo, no se reemplaza por el pase anterior.
+El fallo original permanece en el historial del PR #78; el reporte actual corresponde a la nueva ejecución después del arreglo de audio.
 Las envolturas nuevas no alteran intencionalmente el kit de Saelis; la causa de la variación
 no está aislada. El RNG global también es consumido por efectos, como documenta la
 referencia. Pendiente: reproducción controlada en contextos frescos y comparación con main;
-no modificar techos ni nerfear Saelis sin aislar la causa. Gate global del taller: FAIL.
+No se modificaron techos ni se nerfeó Saelis; ver resolución debajo.
 
 ## Nuevo estudio de Aelith
 
@@ -118,3 +118,50 @@ arma temporal propia y escala antes de sustituir la receta principal. No es la s
 ## Pausa del taller — prioridad solicitada: Guerra de Cristales
 
 El diagnóstico `node tools/balance/diagnose-entry.js saelis` completó 18 muestras en contextos nuevos (producción, módulos sin registrar, taller; dos repeticiones por semilla). Hay variación incluso en producción: no prueba causalidad de los candidatos. `entry-diagnostic.json` es diagnóstico, no aprobación; se preserva el último fallo del gate completo. El protocolo compartido está en `tools/balance/run-entry-simulation.js`, sin cambiar semillas ni umbrales. Próximo paso al retomar: aislar azar/tiempo del motor, y luego repetir el gate completo. El usuario pidió priorizar selección, visión simultánea y ritmo de Cristales.
+
+Corrección de alcance (10/10): los tests históricos rotulados «Crystal Wars» en `solciju-functional.json` usaban `divinaMode` y ejercitaban Arena Divina. No acreditan compatibilidad con el motor separado de Guerra de Cristales (`js/modes/crystal-wars`). Los nombres de las pruebas actuales se corrigieron.
+
+## Reanudación y causa aislada — 10/10
+
+El PR #81 de Cristales se integró a main (`072150f`). Se retomó el bloqueo de balance:
+`playSfx` consumía el RNG de combate y omitía voces según el reloj real del audio.
+Congelar performance.now por sí solo no resolvió la variación. Se aisló el azar de audio,
+incluidos cuatro callbacks de arenas; arreglo de producción en PR #82.
+
+Último gate completo del taller con ese arreglo: **PASS**, 66 simulaciones de 150 s,
+22 candidatos, cero errores y cero violaciones. Medias: {'saelis': 8929.92, 'solciju': 8665.53, 'veyra': 4936.1}.
+`workshop-entry-results.json` contiene esa ejecución. El diagnóstico de reloj fijo
+es diagnóstico, no aprobación. El reloj fijo es optativo en el helper; el gate
+normal conserva su protocolo, semillas, candidatos y techos.
+
+Esto cierra el fallo reproducido de audio, pero no convierte al taller en un lanzamiento:
+arte/skins, Morveth/Aelith y pruebas completas de modos siguen pendientes.
+
+## Brakk — runtime de taller
+
+Muros destructibles con colisión contra enemigos comunes, torretas destructibles de seis
+ráfagas, reparación y Demolición final (sacrifica construcciones, golpea, ralentiza y
+escuda). Los aliados atraviesan sus muros para evitar encierros; los jefes pueden
+destruirlos y no son desplazados. Pasiva: 8% de mitigación cerca de una construcción propia.
+Límite: dos muros y dos torretas, doce víctimas de básico y seis ráfagas por torreta.
+
+Tres transformaciones: muro más ancho de menor duración; ráfaga penetrante; protección
+de aliados. Tres maestrías: escombros prolongados, cura de emergencia, escudo compartido.
+Árbol ordinario de 33 puntos frente a 30 disponibles. Códice e historia en el fixture.
+No tiene aún arte, audio, skin ni Set aprobados: el contrato generado con la fábrica
+se mantiene **INCOMPLETE** y `index.html` no carga al campeón.
+
+`brakk-functional-results.json`: 76 comprobaciones PASS a niveles 1/39/40/60/90/99,
+colisión real, destrucción, pasiva, talentos, maestrías, recursos, snapshots, limpieza y
+ejecuciones breves en las diez arenas. No equivale a diez campañas completas.
+Ability Gate estricto: Solciju/Veyra/Brakk PASS; canario sin efectos rechazado.
+`online-results.json`: nueve comprobaciones PASS con relay real y dos navegadores,
+incluidos construcción y lanzamiento de Brakk invitado, réplica del dueño y limpieza.
+No prueba Guerras de Cristales, servidor oficial ni reconexión.
+
+Reproducir: `node tools/quality-five/brakk-functional.js`,
+`node tools/quality-five/online.js`,
+`ONLY=solciju,veyra,brakk node tools/bible/ability-gate.js --strict --workshop-quality`,
+`node tools/balance/entry-gate.js --workshop-quality`.
+
+Última ejecución con Brakk: **69 simulaciones PASS**, 41 clases técnicas, 23 candidatos de referencia, cero errores y cero violaciones. Brakk: daño medio 4290.15, supervivencia 3/3. Es calibración de admisión en Bosque, no balance competitivo completo.

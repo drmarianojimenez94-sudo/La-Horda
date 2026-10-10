@@ -43,6 +43,18 @@
    caída del grupo) bajan un momento la música para oírse.
    Medido con tools/audio/t_audio_mix.js (pico, RMS, nodos, costo por cuadro).
    ============================================================ */
+// Cosmetic entropy must not consume combat/loot RNG. Voice limiting follows the
+// AudioContext clock, so a skipped sound otherwise changes the next combat roll.
+// Private Mulberry32 stream: reproducible noise, independent of mute and frame timing.
+const audioRandom = (()=>{
+  let seed = 0x61756469;
+  return ()=>{
+    let x = seed = (seed + 0x6D2B79F5) | 0;
+    x = Math.imul(x ^ (x >>> 15), x | 1);
+    x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+  };
+})();
 let audioCtx = null, masterGain = null, musicGain = null, sfxGain = null;
 let musicBus = null, musicDuck = null, reverbSend = null, _noiseBuf = null;
 // El silencio (botón 🔇) también se recuerda en este navegador.
@@ -71,7 +83,7 @@ function _mkNoise(){
   const w = W.getChannelData(0), h = H.getChannelData(0), p = P.getChannelData(0), b = B.getChannelData(0), c = C.getChannelData(0), ch = CH_.getChannelData(0);
   let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, br=0;
   for(let i=0;i<n;i++){
-    const x = Math.random()*2-1; w[i] = x;
+    const x = audioRandom()*2-1; w[i] = x;
     // rosa (filtro de Paul Kellet) y marrón (integrado con fuga): más cuerpo, menos siseo
     b0 = 0.99886*b0 + x*0.0555179; b1 = 0.99332*b1 + x*0.0750759; b2 = 0.969*b2 + x*0.153852;
     b3 = 0.8665*b3 + x*0.3104856; b4 = 0.55*b4 + x*0.5329522; b5 = -0.7616*b5 - x*0.016898;
@@ -79,8 +91,8 @@ function _mkNoise(){
     br = (br + 0.02*x)/1.02; b[i] = br;
   }
   // chisporroteo: impulsos sueltos que decaen (hielo que se quiebra, fuego, piedra que cruje)
-  for(let i=0;i<n;){ i += 20 + Math.floor(Math.random()*260); const a = (0.3+Math.random()*0.7)*(Math.random()<0.5?-1:1), L = 4+Math.floor(Math.random()*40);
-    for(let k=0;k<L && i+k<n;k++) c[i+k] += a*(Math.random()*2-1)*(1-k/L); }
+  for(let i=0;i<n;){ i += 20 + Math.floor(audioRandom()*260); const a = (0.3+audioRandom()*0.7)*(audioRandom()<0.5?-1:1), L = 4+Math.floor(audioRandom()*40);
+    for(let k=0;k<L && i+k<n;k++) c[i+k] += a*(audioRandom()*2-1)*(1-k/L); }
   // versiones brillantes (diferencia de muestras = paso-altos suave): chasquidos y cristal
   for(let i=1;i<n;i++){ h[i] = w[i]-w[i-1]; ch[i] = c[i]-c[i-1]; }
   const norm = d=>{ let m = 0; for(let i=0;i<n;i++) m = Math.max(m, Math.abs(d[i])); if(m) for(let i=0;i<n;i++) d[i] /= m; };
@@ -99,9 +111,9 @@ function _mkIR(len, tone, er, size){
   const d = ir.getChannelData(0); let lp = 0, env = 1, a = 0;
   for(let i=pre;i<n;i++){
     if((i & 255)===0 || i===pre){ const fc = tone*(1-0.8*i/n); a = 1-Math.exp(-2*Math.PI*fc/sr); }
-    lp += a*((Math.random()*2-1) - lp); d[i] = lp*env; env *= k;
+    lp += a*((audioRandom()*2-1) - lp); d[i] = lp*env; env *= k;
   }
-  for(let j=0;j<8;j++){ const q = pre + Math.floor(sr*(0.004 + Math.random()*0.045*(size||1))); if(q<n) d[q] += (er||0.4)*Math.pow(0.72, j)*(Math.random()<0.5?-1:1); }
+  for(let j=0;j<8;j++){ const q = pre + Math.floor(sr*(0.004 + audioRandom()*0.045*(size||1))); if(q<n) d[q] += (er||0.4)*Math.pow(0.72, j)*(audioRandom()<0.5?-1:1); }
   return ir;
 }
 // Cambia el espacio de la arena: el nuevo entra y el viejo se apaga y se desenchufa de la entrada
@@ -252,7 +264,7 @@ function _nz(t, buf, len, vol, dest, ftype, freq, q, attack, rate){
   if(ftype){ const f = audioCtx.createBiquadFilter(); f.type = ftype; f.frequency.value = Math.min(20000, freq); if(q) f.Q.value = q; s.connect(f); f.connect(g); }
   else s.connect(g);
   g.connect(dest||musicBus);
-  s.start(t, Math.random()*0.9); s.stop(t+attack+len+0.05);
+  s.start(t, audioRandom()*0.9); s.stop(t+attack+len+0.05);
   return g;
 }
 function _noise(t, len, vol, ftype, freq, q, dest){ return _nz(t, _noiseBuf, len, vol, dest, ftype, freq, q); }
@@ -393,8 +405,8 @@ function kHat(t, v, P){
   switch(P.kit){
     case "forge": _nz(t, AU.nz.white, 0.018, 0.14*v, musicBus, "bandpass", 5200, 9); return; // tic mecánico
     case "tribal": _nz(t, AU.nz.white, 0.05, 0.07*v, musicBus, "bandpass", 6500, 1.5); return; // sonajero
-    case "wet": if(v>0.8) iDrip(t, 0.02*v, 1200+Math.random()*900); return;
-    case "glass": _tone(t, "sine", 6200+Math.random()*1500, 0, 0.025, 0.018*v); return;
+    case "wet": if(v>0.8) iDrip(t, 0.02*v, 1200+audioRandom()*900); return;
+    case "glass": _tone(t, "sine", 6200+audioRandom()*1500, 0, 0.025, 0.018*v); return;
     case "stone": dBlock(t, 1800, 0.35*v); return;
     case "mine": if(v>0.8) dBlock(t, 2400, 0.25*v); return;
     case "sub": case "void": return;
@@ -440,7 +452,7 @@ const MUSIC_ARENAS = {
     sc:{ boss:"phrygian" }, lead:"choirL",
     layer(md, s, bar, t, sd, bass, pad){
       if(s===0 || s===3 || s===6 || s===10 || s===13) iPulse(pad[(s/3|0)%pad.length]-12, t, md==="boss" ? 0.07 : 0.055, sd*2.4);
-      if(s===8 && bar%2===0) iDrip(t, 0.025, 1300+Math.random()*900);
+      if(s===8 && bar%2===0) iDrip(t, 0.025, 1300+audioRandom()*900);
     } },
   // Arena Gélida — Do, acordes abiertos; campanas frías y viento
   hielo:    { tr:3, tempo:0.94, bright:1.35, padWave:"triangle", kit:"glass", hall:[2.6, 9000, 0.3, 1.5], room:[0.9, 10000, 0.45, 1.2],
@@ -455,7 +467,7 @@ const MUSIC_ARENAS = {
   acuatica: { tr:-1, tempo:0.9, bright:1.1, padWave:"triangle", kit:"sub", hall:[2.4, 5500, 0.25, 1.4], room:[0.8, 5000, 0.35, 1.1], wet:1.1,
     ext:"7", lead:"horn",
     layer(md, s, bar, t, sd, bass, pad){
-      if(s%2===1 && Math.random()<0.45) iDrip(t, 0.022, _mf(81 - 1 + PENTA[(Math.random()*6)|0]));
+      if(s%2===1 && audioRandom()<0.45) iDrip(t, 0.022, _mf(81 - 1 + PENTA[(audioRandom()*6)|0]));
       if(s===0 && bar%2===0) iDrone(bass, t, sd*32, 0.03, 900);
       if(md==="boss" && s===4 && bar%2===0) _tone(t, "sine", _mf(pad[0]), _mf(pad[0]-5), sd*20, 0.05, reverbSend, sd*6);
     } },
@@ -481,7 +493,7 @@ const MUSIC_ARENAS = {
     layer(md, s, bar, t, sd){
       if(s%4===0) dTom(t, 72, 0.5);
       if(s===7 || s===15) iAnvil(t, 0.04, 1040 + (bar%2)*140);
-      if(s%2===1 && Math.random()<0.08) iDrip(t, 0.018, 1100+Math.random()*800);
+      if(s%2===1 && audioRandom()<0.08) iDrip(t, 0.018, 1100+audioRandom()*800);
     } },
   // Arena Infernal — Mi frigio dominante, la más rápida; tambores de guerra, metales y toms
   infernal: { tr:-5, tempo:1.1, bright:1.2, kit:"war", hall:[2.2, 4000, 0.4, 1.4], room:[0.7, 4500, 0.5, 1],
@@ -794,7 +806,7 @@ function _playStep(s, t){
         if(e.ai < 0) break;
         const i = e.ai, n = vl[i % vl.length] + 12*(Math.floor(i/vl.length) + e.ao) + (p.o||0);
         const acc = p.acc && (s % 4)===0 ? p.acc : 1, len = e.len*sd*(p.len||0.9);
-        const g = _play1(p.i, n, tg + (Math.random()-0.5)*0.004, len, v*acc*dyn*(0.93 + Math.random()*0.14), (p.c||2200)*br);
+        const g = _play1(p.i, n, tg + (audioRandom()-0.5)*0.004, len, v*acc*dyn*(0.93 + audioRandom()*0.14), (p.c||2200)*br);
         if(p.e && g && M.echo) try{ g.connect(M.echo); }catch(err){}
         break;
       }
@@ -815,7 +827,7 @@ function _playStep(s, t){
         const f = fill8 && p.f8 ? p.f8 : (fill4 && p.f4 ? p.f4 : null), dv = (p.v||1)*dyn;
         for(const lane of "ksohTtmcgb"){
           const str = (f && f[lane]!==undefined) ? f[lane] : p[lane]; if(!str) continue;
-          const ch = str[s % str.length]; if(ch && ch!==".") _drum(lane, ch, tg + (Math.random()-0.5)*0.004, dv, sd, s, arena ? P : null);
+          const ch = str[s % str.length]; if(ch && ch!==".") _drum(lane, ch, tg + (audioRandom()-0.5)*0.004, dv, sd, s, arena ? P : null);
         }
         break;
       }
@@ -1103,7 +1115,7 @@ function _matHit(t, mat, k, D){
     case "ice":   _nz(t,W.crackleHi,0.1,0.34*k,D); _wet(_tone(t,"sine",2600,2520,0.18,0.06*k,D),0); _tone(t,"sine",3900,3820,0.12,0.04*k,D); _nz(t,W.bright,0.04,0.12*k,D); break;
     case "magic": _wet(_tone(t,"triangle",880,1320,0.16,0.07*k,D),1); _tone(t,"triangle",1330,1980,0.14,0.045*k,D); _nz(t,W.white,0.1,0.14*k,D,"bandpass",2600,3); _tone(t,"sine",220,110,0.1,0.18*k,D); break;
     case "fire":  _nz(t,W.crackleHi,0.24,0.22*k,D); _nz(t,W.brown,0.18,0.3*k,D,0,0,0,0,0.55); _tone(t,"sine",150,60,0.08,0.22*k,D); break;
-    case "metal": { const f = 560 + Math.random()*260;
+    case "metal": { const f = 560 + audioRandom()*260;
       _wet(_tone(t,"triangle",f,f*0.995,0.26,0.1*k,D),0); _tone(t,"sine",f*2.76,f*2.74,0.16,0.05*k,D); _tone(t,"sine",f*5.4,f*5.37,0.09,0.03*k,D); _click(t,0.22*k,D,3000); break; }
     default:      _tone(t,"sine",150,55,0.09,0.32*k,D); _nz(t,W.brown,0.1,0.34*k,D); if(k>1.2) _nz(t,W.white,0.03,0.12*k,D,"bandpass",1800,1.5); // carne
   }
@@ -1143,7 +1155,7 @@ function playSfx(type, src, wx){
   if(pan && Math.abs(pan) > 0.04){ const sp = audioCtx.createStereoPanner(); sp.pan.value = pan; sp.connect(AU.sfxIn); D = sp; AU.frN++; }
   // variación por disparo: tono ±5% en golpes (±3% en los de arena, 0 en los afinados), volumen 0..-1,7 dB
   const pv = SFX_TUNED[type] ? 0 : (SFX_CFG[type] ? 0.05 : 0.03);
-  _sv.on = true; _sv.p = 1 + (Math.random()*2-1)*pv; _sv.v = 1 - Math.random()*0.18; _sv.n = 0;
+  _sv.on = true; _sv.p = 1 + (audioRandom()*2-1)*pv; _sv.v = 1 - audioRandom()*0.18; _sv.n = 0;
   let len = 0.15;
   try{
   switch(type){

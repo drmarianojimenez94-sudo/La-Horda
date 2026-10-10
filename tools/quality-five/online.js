@@ -5,10 +5,10 @@ const servers=[spawn('python3',['-m','http.server','8857','--bind','127.0.0.1'],
 const checks=[],errors=[];let browser;
 const reportPath='docs/production/quality-five/online-results.json';
 fs.writeFileSync(reportPath,JSON.stringify({status:'RUNNING',scope:'local relay workshop'})+'\n');
-const modules=['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js'];
+const modules=['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js','js/champions/quality-five/brakk.js','tools/quality-five/register-brakk-fixture.js'];
 (async()=>{try{
  await new Promise(r=>setTimeout(r,900));browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});
- for(const [host,guest] of [['solciju','veyra'],['veyra','solciju']]){
+ for(const [host,guest] of [['solciju','veyra'],['veyra','solciju'],['solciju','brakk']]){
   const ac=await browser.newContext(),gc=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true});
   const a=await ac.newPage(),g=await gc.newPage();
   for(const [p,k] of [[a,host],[g,guest]]){
@@ -32,6 +32,10 @@ const modules=['js/champions/quality-five/solciju.js','tools/quality-five/regist
   if(guest==='veyra'){
    const hostBleeds=await a.evaluate(()=>(heroes[1].veyraBleeds||[]).filter(x=>x.left>0).length),guestBleeds=await g.evaluate(()=>(player.veyraBleeds||[]).length);
    checks.push({name:'Veyra active bleed state belongs only to host',ok:hostBleeds>0&&guestBleeds===0,hostBleeds,guestBleeds});
+  }
+  if(guest==='brakk'){
+   const builds=await g.evaluate(()=>portadorObjects.filter(o=>o.owner===player&&o.brakk&&o.life>0).map(o=>o.kind));
+   checks.push({name:'Brakk wall and turret replicate with guest owner',ok:builds.includes('brk_wall')&&builds.includes('brk_turret'),builds});
   }
   await g.evaluate(()=>useUltimate());await g.waitForTimeout(400);
   const hh=await a.evaluate(()=>({key:heroes[1].classKey,casts:heroes[1].stats.skillCasts,damage:heroes[1].stats.dmgDealt,bleeds:(heroes[1].veyraBleeds||[]).length}));

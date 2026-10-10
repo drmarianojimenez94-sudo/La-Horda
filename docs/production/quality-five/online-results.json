@@ -14,7 +14,7 @@
       "host": {
         "key": "veyra",
         "casts": 4,
-        "damage": 650.3481600000001,
+        "damage": 508.0844999999999,
         "bleeds": 0
       },
       "guest": {
@@ -51,6 +51,33 @@
     },
     {
       "name": "solciju death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "Brakk wall and turret replicate with guest owner",
+      "ok": true,
+      "builds": [
+        "brk_wall",
+        "brk_turret"
+      ]
+    },
+    {
+      "name": "brakk guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "brakk",
+        "casts": 4,
+        "damage": 376.871836,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "brakk",
+        "owned": [],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "brakk death removes owned effects",
       "ok": true
     }
   ],

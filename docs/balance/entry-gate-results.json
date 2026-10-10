@@ -369,7 +369,16 @@
     {
       "key": "ynara",
       "seed": 117,
-      "damage": 5442.874428350646,
+      "damage": 6133.325214219868,
+      "alive": true,
+      "hp": 241,
+      "casts": 56,
+      "error": null
+    },
+    {
+      "key": "ynara",
+      "seed": 431,
+      "damage": 5747.895270217603,
       "alive": true,
       "hp": 274,
       "casts": 56,
@@ -377,143 +386,134 @@
     },
     {
       "key": "ynara",
-      "seed": 431,
-      "damage": 5605.66186506365,
-      "alive": true,
-      "hp": 274,
-      "casts": 56,
-      "error": null
-    },
-    {
-      "key": "ynara",
       "seed": 991,
-      "damage": 5418.043802188969,
+      "damage": 5225.542523318996,
       "alive": true,
-      "hp": 274,
-      "casts": 58,
+      "hp": 266.48152576,
+      "casts": 57,
       "error": null
     },
     {
       "key": "vesper",
       "seed": 117,
-      "damage": 9849.700315200313,
+      "damage": 7403.857850531687,
       "alive": true,
       "hp": 218,
-      "casts": 73,
+      "casts": 71,
       "error": null
     },
     {
       "key": "vesper",
       "seed": 431,
-      "damage": 8377.301472717541,
+      "damage": 9822.493129538623,
       "alive": true,
       "hp": 218,
-      "casts": 69,
+      "casts": 83,
       "error": null
     },
     {
       "key": "vesper",
       "seed": 991,
-      "damage": 9253.334251729446,
+      "damage": 7200.541274903555,
       "alive": true,
-      "hp": 198.060448,
-      "casts": 70,
+      "hp": 218,
+      "casts": 71,
       "error": null
     },
     {
       "key": "nahir",
       "seed": 117,
-      "damage": 7632.677767772093,
+      "damage": 7878.294478823658,
       "alive": true,
       "hp": 215,
-      "casts": 66,
-      "error": null
-    },
-    {
-      "key": "nahir",
-      "seed": 431,
-      "damage": 9206.513422380356,
-      "alive": true,
-      "hp": 215,
-      "casts": 66,
-      "error": null
-    },
-    {
-      "key": "nahir",
-      "seed": 991,
-      "damage": 7365.413454423956,
-      "alive": true,
-      "hp": 215,
-      "casts": 67,
-      "error": null
-    },
-    {
-      "key": "baltra",
-      "seed": 117,
-      "damage": 5458.25644379082,
-      "alive": true,
-      "hp": 427.44027392,
       "casts": 75,
       "error": null
     },
     {
+      "key": "nahir",
+      "seed": 431,
+      "damage": 6989.517132047458,
+      "alive": true,
+      "hp": 131.31680000000006,
+      "casts": 67,
+      "error": null
+    },
+    {
+      "key": "nahir",
+      "seed": 991,
+      "damage": 9523.214388505186,
+      "alive": true,
+      "hp": 204.4559168,
+      "casts": 68,
+      "error": null
+    },
+    {
+      "key": "baltra",
+      "seed": 117,
+      "damage": 5419.609314785542,
+      "alive": true,
+      "hp": 366,
+      "casts": 64,
+      "error": null
+    },
+    {
       "key": "baltra",
       "seed": 431,
-      "damage": 5029.033109176083,
+      "damage": 7656.517899854345,
       "alive": true,
-      "hp": 290.00199999999995,
-      "casts": 70,
+      "hp": 447.1472,
+      "casts": 64,
       "error": null
     },
     {
       "key": "baltra",
       "seed": 991,
-      "damage": 6144.453355865583,
+      "damage": 6632.413611413871,
       "alive": true,
-      "hp": 362.00086400000004,
-      "casts": 63,
+      "hp": 365.8760956390561,
+      "casts": 64,
       "error": null
     },
     {
       "key": "maura",
       "seed": 117,
-      "damage": 7375.410895430763,
+      "damage": 6540.350311829865,
       "alive": true,
       "hp": 352,
-      "casts": 70,
+      "casts": 65,
       "error": null
     },
     {
       "key": "maura",
       "seed": 431,
-      "damage": 5687.38787335839,
+      "damage": 5998.052244185057,
+      "alive": true,
+      "hp": 352,
+      "casts": 61,
+      "error": null
+    },
+    {
+      "key": "maura",
+      "seed": 991,
+      "damage": 6273.736828211816,
       "alive": true,
       "hp": 352,
       "casts": 59,
       "error": null
     },
     {
-      "key": "maura",
-      "seed": 991,
-      "damage": 6854.627954515083,
-      "alive": true,
-      "hp": 332.26,
-      "casts": 61,
-      "error": null
-    },
-    {
       "key": "dariel",
       "seed": 117,
-      "damage": 5156.549351249227,
+      "damage": 5838.676719377621,
       "alive": true,
-      "hp": 276,
-      "casts": 60,
+      "hp": 243,
+      "casts": 69,
       "error": null
     },
     {
       "key": "dariel",
       "seed": 431,
-      "damage": 5678.635700708908,
+      "damage": 5964.427145829658,
       "alive": true,
       "hp": 276,
       "casts": 60,
@@ -522,70 +522,70 @@
     {
       "key": "dariel",
       "seed": 991,
-      "damage": 5426.80770577547,
+      "damage": 5525.870737141106,
       "alive": true,
       "hp": 276,
-      "casts": 71,
-      "error": null
-    },
-    {
-      "key": "orsa",
-      "seed": 117,
-      "damage": 8706.632891539337,
-      "alive": true,
-      "hp": 254,
-      "casts": 61,
-      "error": null
-    },
-    {
-      "key": "orsa",
-      "seed": 431,
-      "damage": 8401.02090921699,
-      "alive": true,
-      "hp": 254,
       "casts": 60,
       "error": null
     },
     {
       "key": "orsa",
-      "seed": 991,
-      "damage": 7620.574080298633,
+      "seed": 117,
+      "damage": 8217.615198789408,
       "alive": true,
       "hp": 215,
       "casts": 60,
       "error": null
     },
     {
+      "key": "orsa",
+      "seed": 431,
+      "damage": 7854.036188626504,
+      "alive": true,
+      "hp": 215,
+      "casts": 60,
+      "error": null
+    },
+    {
+      "key": "orsa",
+      "seed": 991,
+      "damage": 8405.178566518469,
+      "alive": true,
+      "hp": 254,
+      "casts": 60,
+      "error": null
+    },
+    {
       "key": "tibor",
       "seed": 117,
-      "damage": 9664.865579216603,
+      "damage": 10091.829308986818,
       "alive": true,
-      "hp": 208.2580034100001,
+      "hp": 181.206576,
+      "casts": 62,
+      "error": null
+    },
+    {
+      "key": "tibor",
+      "seed": 431,
+      "damage": 9596.910201316156,
+      "alive": true,
+      "hp": 268,
       "casts": 65,
       "error": null
     },
     {
       "key": "tibor",
-      "seed": 431,
-      "damage": 10335.630558332788,
-      "alive": true,
-      "hp": 213,
-      "casts": 64,
-      "error": null
-    },
-    {
-      "key": "tibor",
       "seed": 991,
-      "damage": 11524.483576657365,
+      "damage": 12365.415902873907,
       "alive": true,
-      "hp": 268,
-      "casts": 62,
+      "hp": 209.2972464,
+      "casts": 63,
       "error": null
     },
     {
       "key": "zahra",
       "seed": 117,
-      "damage": 9014.379340630836,
+      "damage": 7755.904617035781,
       "alive": true,
       "hp": 213,
       "casts": 60,
@@ -594,25 +594,25 @@
     {
       "key": "zahra",
       "seed": 431,
-      "damage": 9603.906821841767,
+      "damage": 8468.95128206792,
       "alive": true,
-      "hp": 232.9156,
-      "casts": 67,
+      "hp": 213,
+      "casts": 60,
       "error": null
     },
     {
       "key": "zahra",
       "seed": 991,
-      "damage": 7871.397795175795,
+      "damage": 7718.3949632644,
       "alive": true,
       "hp": 213,
-      "casts": 60,
+      "casts": 59,
       "error": null
     },
     {
       "key": "renko",
       "seed": 117,
-      "damage": 5282.874627756357,
+      "damage": 5508.2408934340465,
       "alive": true,
       "hp": 360,
       "casts": 60,
@@ -621,289 +621,289 @@
     {
       "key": "renko",
       "seed": 431,
-      "damage": 5422.450871545538,
+      "damage": 4987.88573562399,
       "alive": true,
-      "hp": 535,
+      "hp": 360,
       "casts": 60,
       "error": null
     },
     {
       "key": "renko",
       "seed": 991,
-      "damage": 6997.968677436207,
+      "damage": 5634.37837540258,
       "alive": true,
-      "hp": 317,
+      "hp": 360,
       "casts": 60,
       "error": null
     },
     {
       "key": "sira",
       "seed": 117,
-      "damage": 8711.172440184955,
+      "damage": 7466.207814950429,
       "alive": true,
       "hp": 210,
-      "casts": 67,
+      "casts": 62,
       "error": null
     },
     {
       "key": "sira",
       "seed": 431,
-      "damage": 8018.490444724664,
+      "damage": 7400.358567313919,
       "alive": true,
-      "hp": 170.10840000000002,
-      "casts": 77,
+      "hp": 210,
+      "casts": 62,
       "error": null
     },
     {
       "key": "sira",
       "seed": 991,
-      "damage": 7967.4150425432645,
+      "damage": 6744.307280068147,
       "alive": true,
-      "hp": 210,
-      "casts": 71,
+      "hp": 248,
+      "casts": 63,
       "error": null
     },
     {
       "key": "nano_gm",
       "seed": 117,
-      "damage": 13350.333395315405,
+      "damage": 13039.859264665714,
       "alive": true,
       "hp": 265,
-      "casts": 77,
+      "casts": 76,
       "error": null
     },
     {
       "key": "nano_gm",
       "seed": 431,
-      "damage": 11982.145898833392,
+      "damage": 14300.955271681592,
       "alive": true,
       "hp": 265,
-      "casts": 74,
-      "error": null
-    },
-    {
-      "key": "nano_gm",
-      "seed": 991,
-      "damage": 12006.862010866704,
-      "alive": true,
-      "hp": 265,
-      "casts": 80,
-      "error": null
-    },
-    {
-      "key": "facu_gm",
-      "seed": 117,
-      "damage": 10907.688432760613,
-      "alive": true,
-      "hp": 286,
-      "casts": 93,
-      "error": null
-    },
-    {
-      "key": "facu_gm",
-      "seed": 431,
-      "damage": 12145.979287376453,
-      "alive": true,
-      "hp": 286,
-      "casts": 77,
-      "error": null
-    },
-    {
-      "key": "facu_gm",
-      "seed": 991,
-      "damage": 10133.973073345052,
-      "alive": true,
-      "hp": 273.9656,
-      "casts": 78,
-      "error": null
-    },
-    {
-      "key": "aurelia",
-      "seed": 117,
-      "damage": 10577.286744764937,
-      "alive": true,
-      "hp": 326,
-      "casts": 80,
-      "error": null
-    },
-    {
-      "key": "aurelia",
-      "seed": 431,
-      "damage": 11656.37974668036,
-      "alive": true,
-      "hp": 276,
-      "casts": 80,
-      "error": null
-    },
-    {
-      "key": "aurelia",
-      "seed": 991,
-      "damage": 9413.884557978734,
-      "alive": true,
-      "hp": 219,
-      "casts": 79,
-      "error": null
-    },
-    {
-      "key": "khepri",
-      "seed": 117,
-      "damage": 9611.086772487337,
-      "alive": true,
-      "hp": 227,
-      "casts": 68,
-      "error": null
-    },
-    {
-      "key": "khepri",
-      "seed": 431,
-      "damage": 10164.90299719204,
-      "alive": true,
-      "hp": 227,
-      "casts": 68,
-      "error": null
-    },
-    {
-      "key": "khepri",
-      "seed": 991,
-      "damage": 8906.030183242252,
-      "alive": true,
-      "hp": 236,
-      "casts": 67,
-      "error": null
-    },
-    {
-      "key": "velmira",
-      "seed": 117,
-      "damage": 8375.278651190773,
-      "alive": true,
-      "hp": 268,
-      "casts": 81,
-      "error": null
-    },
-    {
-      "key": "velmira",
-      "seed": 431,
-      "damage": 8424.739152603452,
-      "alive": true,
-      "hp": 330.45376256,
-      "casts": 81,
-      "error": null
-    },
-    {
-      "key": "velmira",
-      "seed": 991,
-      "damage": 9189.498026228895,
-      "alive": true,
-      "hp": 268,
       "casts": 87,
       "error": null
     },
     {
-      "key": "vhal",
-      "seed": 117,
-      "damage": 9763.960785207864,
+      "key": "nano_gm",
+      "seed": 991,
+      "damage": 12416.054800410837,
       "alive": true,
-      "hp": 273,
+      "hp": 265,
       "casts": 75,
       "error": null
     },
     {
-      "key": "vhal",
-      "seed": 431,
-      "damage": 11412.766853063778,
-      "alive": true,
-      "hp": 256,
-      "casts": 73,
-      "error": null
-    },
-    {
-      "key": "vhal",
-      "seed": 991,
-      "damage": 11594.640880618363,
-      "alive": true,
-      "hp": 191,
-      "casts": 73,
-      "error": null
-    },
-    {
-      "key": "bront",
+      "key": "facu_gm",
       "seed": 117,
-      "damage": 6042.346299297602,
+      "damage": 12746.671631206491,
       "alive": true,
-      "hp": 372.60288,
-      "casts": 70,
-      "error": null
-    },
-    {
-      "key": "bront",
-      "seed": 431,
-      "damage": 7385.246171127015,
-      "alive": true,
-      "hp": 378,
-      "casts": 70,
-      "error": null
-    },
-    {
-      "key": "bront",
-      "seed": 991,
-      "damage": 6475.097506517322,
-      "alive": true,
-      "hp": 378,
-      "casts": 72,
-      "error": null
-    },
-    {
-      "key": "oriel",
-      "seed": 117,
-      "damage": 8313.708586199813,
-      "alive": true,
-      "hp": 268,
-      "casts": 73,
-      "error": null
-    },
-    {
-      "key": "oriel",
-      "seed": 431,
-      "damage": 7402.027200052611,
-      "alive": true,
-      "hp": 236,
+      "hp": 286,
       "casts": 78,
       "error": null
     },
     {
-      "key": "oriel",
+      "key": "facu_gm",
+      "seed": 431,
+      "damage": 11692.673295215887,
+      "alive": true,
+      "hp": 273.106,
+      "casts": 77,
+      "error": null
+    },
+    {
+      "key": "facu_gm",
       "seed": 991,
-      "damage": 7973.648386800987,
+      "damage": 12248.860852866652,
+      "alive": true,
+      "hp": 317,
+      "casts": 77,
+      "error": null
+    },
+    {
+      "key": "aurelia",
+      "seed": 117,
+      "damage": 10445.58409656791,
+      "alive": true,
+      "hp": 213.651552,
+      "casts": 78,
+      "error": null
+    },
+    {
+      "key": "aurelia",
+      "seed": 431,
+      "damage": 13517.085974424386,
+      "alive": true,
+      "hp": 214.54296,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "key": "aurelia",
+      "seed": 991,
+      "damage": 11391.47822424994,
+      "alive": true,
+      "hp": 206.2656,
+      "casts": 80,
+      "error": null
+    },
+    {
+      "key": "khepri",
+      "seed": 117,
+      "damage": 12796.2563860105,
+      "alive": true,
+      "hp": 268,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "khepri",
+      "seed": 431,
+      "damage": 10172.26523210782,
+      "alive": true,
+      "hp": 227,
+      "casts": 68,
+      "error": null
+    },
+    {
+      "key": "khepri",
+      "seed": 991,
+      "damage": 7142.5258570523065,
+      "alive": true,
+      "hp": 227,
+      "casts": 69,
+      "error": null
+    },
+    {
+      "key": "velmira",
+      "seed": 117,
+      "damage": 8339.871575242454,
+      "alive": true,
+      "hp": 268,
+      "casts": 83,
+      "error": null
+    },
+    {
+      "key": "velmira",
+      "seed": 431,
+      "damage": 7872.6434975096445,
       "alive": true,
       "hp": 338,
+      "casts": 81,
+      "error": null
+    },
+    {
+      "key": "velmira",
+      "seed": 991,
+      "damage": 9410.097761358998,
+      "alive": true,
+      "hp": 268,
+      "casts": 81,
+      "error": null
+    },
+    {
+      "key": "vhal",
+      "seed": 117,
+      "damage": 12116.620740952902,
+      "alive": true,
+      "hp": 139.367368,
+      "casts": 73,
+      "error": null
+    },
+    {
+      "key": "vhal",
+      "seed": 431,
+      "damage": 10257.889558083141,
+      "alive": true,
+      "hp": 217,
+      "casts": 73,
+      "error": null
+    },
+    {
+      "key": "vhal",
+      "seed": 991,
+      "damage": 12530.344319336833,
+      "alive": true,
+      "hp": 217,
+      "casts": 73,
+      "error": null
+    },
+    {
+      "key": "bront",
+      "seed": 117,
+      "damage": 6008.974416664303,
+      "alive": true,
+      "hp": 373.172576,
+      "casts": 69,
+      "error": null
+    },
+    {
+      "key": "bront",
+      "seed": 431,
+      "damage": 5787.43542960719,
+      "alive": true,
+      "hp": 376.61801614079997,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "bront",
+      "seed": 991,
+      "damage": 4637.801745462673,
+      "alive": true,
+      "hp": 378,
+      "casts": 69,
+      "error": null
+    },
+    {
+      "key": "oriel",
+      "seed": 117,
+      "damage": 7073.604373120457,
+      "alive": true,
+      "hp": 263.377448,
+      "casts": 73,
+      "error": null
+    },
+    {
+      "key": "oriel",
+      "seed": 431,
+      "damage": 7431.540232707472,
+      "alive": true,
+      "hp": 262.25440000000003,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "oriel",
+      "seed": 991,
+      "damage": 9730.721584947709,
+      "alive": true,
+      "hp": 249.531294420893,
+      "casts": 71,
+      "error": null
+    },
+    {
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8808.163557113538,
+      "alive": true,
+      "hp": 316,
       "casts": 85,
       "error": null
     },
     {
       "key": "saelis",
-      "seed": 117,
-      "damage": 7294.714348446039,
-      "alive": true,
-      "hp": 268,
-      "casts": 84,
-      "error": null
-    },
-    {
-      "key": "saelis",
       "seed": 431,
-      "damage": 8814.974865404089,
+      "damage": 9215.254698374709,
       "alive": true,
       "hp": 268,
-      "casts": 84,
+      "casts": 83,
       "error": null
     },
     {
       "key": "saelis",
       "seed": 991,
-      "damage": 8002.032591316122,
+      "damage": 8766.328797801907,
       "alive": true,
       "hp": 268,
-      "casts": 80,
+      "casts": 83,
       "error": null
     }
   ],

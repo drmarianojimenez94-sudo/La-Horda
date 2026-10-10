@@ -4,8 +4,9 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const run = require('./run-entry-simulation');
 const key = process.argv[2] || 'saelis';
-const output = 'docs/production/quality-five/entry-diagnostic.json';
-const report = { status: 'RUNNING', diagnosticOnly: true, key, runs: [], errors: [] };
+const fixedClock=process.argv.includes('--fixed-clock');
+const output = 'docs/production/quality-five/entry-diagnostic'+(fixedClock?'-fixed-clock':'')+'.json';
+const report = { status: 'RUNNING', diagnosticOnly: true, fixedClock, audioSourceSha256: require('node:crypto').createHash('sha256').update(fs.readFileSync('js/audio/audio.js')).digest('hex'), key, runs: [], errors: [] };
 function save() { fs.writeFileSync(output, JSON.stringify(report, null, 2)); }
 (async () => {
   let browser, server;
@@ -34,7 +35,7 @@ function save() { fs.writeFileSync(output, JSON.stringify(report, null, 2)); }
           const exists = await page.evaluate(k => !!CLASSES[k], key);
           if (!exists) throw new Error(`Unknown champion: ${key}`);
           await page.addScriptTag({ path: 'tools/balance/autopilot.js' });
-          const result = { mode, repeat, ...await run(page, key, seed) };
+          const result = { mode, repeat, ...await run(page, key, seed, {fixedClock}) };
           report.runs.push(result);
           save();
           console.log(JSON.stringify(result));

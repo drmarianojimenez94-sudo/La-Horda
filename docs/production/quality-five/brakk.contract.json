@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "brakk",
+  "name": "Brakk",
+  "title": "El Arquitecto del Fin",
+  "role": "tanque",
+  "fantasy": "Constructor de muros y torretas destructibles que sacrifica para proteger al grupo.",
+  "lore": "Brakk calculó durante años las murallas de una ciudad que sus gobernantes decidieron abandonar. Cuando llegó la Horda, convirtió los planos de evacuación en fortificaciones y abrió rutas entre los derrumbes. Desde entonces construye refugios que sabe temporales: cada torre compra segundos y cada muro guarda una salida. Carga los nombres de quienes no logró salvar grabados en su martillo.",
+  "personality": "Metódico, protector, severo consigo mismo.",
+  "silhouette": "PENDIENTE: diseño de constructor distinguible de donantes.",
+  "stats": {
+    "hp": 165,
+    "damage": 9,
+    "speed": 140
+  },
+  "kit": {
+    "basic": {
+      "id": "brakk_basic",
+      "description": "Martillo cuerpo a cuerpo.",
+      "cooldownMs": 650,
+      "maxTargets": 12,
+      "hordeMechanism": "",
+      "anticipation": "Premarcado de punto para muro/torreta; lanzamientos instantáneos con animación.",
+      "execution": "js/champions/quality-five/brakk.js",
+      "impact": "Martillo cuerpo a cuerpo.",
+      "feedback": "Efectos kitFx/kitFxLine y construcciones visibles con vida.",
+      "vfx": "kitFx earth/shield/spike; barra de vida de construcción.",
+      "sfx": ""
+    },
+    "skills": [
+      {
+        "id": "brk_wall",
+        "description": "Muro destructible que daña al emerger.",
+        "cooldownMs": 8500,
+        "maxTargets": 12,
+        "hordeMechanism": "Emergencia en área y ráfagas de torreta con límite de víctimas.",
+        "anticipation": "Premarcado de punto para muro/torreta; lanzamientos instantáneos con animación.",
+        "execution": "js/champions/quality-five/brakk.js",
+        "impact": "Muro destructible que daña al emerger.",
+        "feedback": "Efectos kitFx/kitFxLine y construcciones visibles con vida.",
+        "vfx": "kitFx earth/shield/spike; barra de vida de construcción.",
+        "sfx": ""
+      },
+      {
+        "id": "brk_turret",
+        "description": "Torreta destructible de seis ráfagas.",
+        "cooldownMs": 10000,
+        "maxTargets": 3,
+        "hordeMechanism": "Emergencia en área y ráfagas de torreta con límite de víctimas.",
+        "anticipation": "Premarcado de punto para muro/torreta; lanzamientos instantáneos con animación.",
+        "execution": "js/champions/quality-five/brakk.js",
+        "impact": "Torreta destructible de seis ráfagas.",
+        "feedback": "Efectos kitFx/kitFxLine y construcciones visibles con vida.",
+        "vfx": "kitFx earth/shield/spike; barra de vida de construcción.",
+        "sfx": ""
+      },
+      {
+        "id": "brk_repair",
+        "description": "Repara construcciones cercanas y protege al lanzador.",
+        "cooldownMs": 12000,
+        "maxTargets": 4,
+        "hordeMechanism": "",
+        "anticipation": "Premarcado de punto para muro/torreta; lanzamientos instantáneos con animación.",
+        "execution": "js/champions/quality-five/brakk.js",
+        "impact": "Repara construcciones cercanas y protege al lanzador.",
+        "feedback": "Efectos kitFx/kitFxLine y construcciones visibles con vida.",
+        "vfx": "kitFx earth/shield/spike; barra de vida de construcción.",
+        "sfx": ""
+      }
+    ],
+    "ultimate": {
+      "id": "brk_final",
+      "description": "Consume construcciones, daña, ralentiza y escuda.",
+      "cooldownMs": 36000,
+      "maxTargets": 12,
+      "hordeMechanism": "Emergencia en área y ráfagas de torreta con límite de víctimas.",
+      "anticipation": "Premarcado de punto para muro/torreta; lanzamientos instantáneos con animación.",
+      "execution": "js/champions/quality-five/brakk.js",
+      "impact": "Consume construcciones, daña, ralentiza y escuda.",
+      "feedback": "Efectos kitFx/kitFxLine y construcciones visibles con vida.",
+      "vfx": "kitFx earth/shield/spike; barra de vida de construcción.",
+      "sfx": ""
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/quality-five/brakk.js",
+    "codex": "tools/quality-five/register-brakk-fixture.js",
+    "talents": "tools/quality-five/register-brakk-fixture.js",
+    "mastery": "tools/quality-five/register-brakk-fixture.js",
+    "set": "",
+    "kitTest": "tools/quality-five/brakk-functional.js"
+  },
+  "cosmetics": [],
+  "set": {
+    "sourceArena": "",
+    "pieces": [],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 32,
+    "summons": 4,
+    "audioVoices": 2
+  },
+  "evidence": {
+    "reference": "docs/balance/champion-entry-reference.json",
+    "talents": "docs/production/quality-five/brakk-functional-results.json",
+    "abilities": "docs/production/quality-five/ability/ability-gate.json",
+    "resources": "docs/production/quality-five/brakk-functional-results.json",
+    "passives": "docs/production/quality-five/brakk-functional-results.json",
+    "balance": "docs/production/quality-five/workshop-entry-results.json",
+    "visuals": "",
+    "style": "",
+    "audio": "",
+    "multiplayer": "docs/production/quality-five/online-results.json",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

@@ -101,7 +101,7 @@
       "MULTIPLE",
       "CONTROL"
      ],
-     "vfx": 128,
+     "vfx": 126,
      "aims": true,
      "aimProfile": "cone"
     },
@@ -118,7 +118,7 @@
       "CONTROL",
       "MOVILIDAD"
      ],
-     "vfx": 126,
+     "vfx": 124,
      "aims": true,
      "aimProfile": "dash"
     },
@@ -132,7 +132,7 @@
      "cats": [
       "POTENCIA"
      ],
-     "vfx": 8,
+     "vfx": 6,
      "aims": false,
      "aimProfile": null
     },
@@ -149,7 +149,80 @@
       "CURA",
       "CONTROL"
      ],
-     "vfx": 45,
+     "vfx": 43,
+     "aims": false,
+     "aimProfile": null
+    }
+   ],
+   "isNew": true,
+   "problems": [],
+   "status": "PASS"
+  },
+  {
+   "key": "brakk",
+   "name": "Brakk",
+   "role": "tanque",
+   "abilities": [
+    {
+     "slot": 0,
+     "name": "Muro de asedio",
+     "kind": "expedition:brk_wall",
+     "err": null,
+     "damaged": 10,
+     "statused": 1,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "POTENCIA",
+      "CONTROL"
+     ],
+     "vfx": 47,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 1,
+     "name": "Torreta de clavos",
+     "kind": "expedition:brk_turret",
+     "err": null,
+     "damaged": 3,
+     "statused": 0,
+     "cats": [
+      "MULTIPLE",
+      "POTENCIA"
+     ],
+     "vfx": 81,
+     "aims": true,
+     "aimProfile": "point"
+    },
+    {
+     "slot": 2,
+     "name": "Apuntalar",
+     "kind": "expedition:brk_repair",
+     "err": null,
+     "damaged": 0,
+     "statused": 0,
+     "cats": [
+      "POTENCIA"
+     ],
+     "vfx": 8,
+     "aims": false,
+     "aimProfile": null
+    },
+    {
+     "slot": "ult",
+     "name": "Demolición final",
+     "kind": "expedition:brk_final",
+     "err": null,
+     "damaged": 10,
+     "statused": 10,
+     "cats": [
+      "AREA",
+      "MULTIPLE",
+      "CURA",
+      "CONTROL"
+     ],
+     "vfx": 49,
      "aims": false,
      "aimProfile": null
     }

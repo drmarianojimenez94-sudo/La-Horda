@@ -85,7 +85,7 @@ Object.assign(ARENA_SFX, {
   cmBoom:       _cmsx(4, 200, (t,D)=>{ _noise(t,0.6,0.5,"lowpass",600,0,D); _tone(t,"sine",80,30,0.6,0.5,D); return 0.6; }),
   cmWhisper:    _cmsx(2, 700, (t,D)=>{ _noise(t,0.8,0.08,"bandpass",2200,6,D); _tone(t,"sine",300,260,0.8,0.02,D,0.2); return 0.8; }),
   cmCurtain:    _cmsx(4, 600, (t,D)=>{ _noise(t,1.2,0.22,"lowpass",400,0,D); _noise(t,1.2,0.08,"bandpass",1200,1,D); return 1.2; }),
-  cmApplause:   _cmsx(4, 1500,(t,D)=>{ for(let i=0;i<28;i++) _noise(t+i*0.045+Math.random()*0.02,0.03,0.12,"bandpass",1600+Math.random()*1200,2,D); return 1.4; }),
+  cmApplause:   _cmsx(4, 1500,(t,D)=>{ for(let i=0;i<28;i++) _noise(t+i*0.045+audioRandom()*0.02,0.03,0.12,"bandpass",1600+audioRandom()*1200,2,D); return 1.4; }),
   cmLaugh:      _cmsx(4, 900, (t,D)=>{ for(let i=0;i<5;i++) _tone(t+i*0.13,"sawtooth",180-i*6,150-i*6,0.1,0.07,D,0.01); return 0.7; }),
   cmBlackout:   _cmsx(5, 1500,(t,D)=>{ _tone(t,"sawtooth",220,40,1.2,0.12,D,0.02); _noise(t,0.1,0.35,"lowpass",300,0,D); _duck(0.3,2000); return 1.2; }),
   cmSpot:       _cmsx(3, 600, (t,D)=>{ _tone(t,"square",90,90,0.06,0.2,D,0); _noise(t,0.3,0.1,"highpass",4000,0,D); return 0.3; }),

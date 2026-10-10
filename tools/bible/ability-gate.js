@@ -36,7 +36,7 @@ const CATS = ['AREA', 'MULTIPLE', 'POTENCIA', 'CURA', 'CONTROL', 'MOVILIDAD', 'I
     await page.goto(BASE, {waitUntil: 'domcontentloaded', timeout: 120000});
     await page.waitForFunction(() => typeof startRun === 'function' && typeof CHAMPION_BALANCE_REFERENCE !== 'undefined' && typeof aimProfileOf === 'function', null, {timeout: 120000});
     await page.waitForTimeout(1500);
-    if(process.argv.includes('--workshop-quality'))for(const file of ['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js'])await page.addScriptTag({path:path.join(ROOT,file)});
+    if(process.argv.includes('--workshop-quality'))for(const file of ['js/champions/quality-five/solciju.js','tools/quality-five/register-fixture.js','js/champions/quality-five/veyra.js','tools/quality-five/register-veyra-fixture.js','js/champions/quality-five/brakk.js','tools/quality-five/register-brakk-fixture.js'])await page.addScriptTag({path:path.join(ROOT,file)});
     const roster = (await page.evaluate(() => Object.keys(CLASSES))).filter(k => !process.env.ONLY || process.env.ONLY.split(',').includes(k));
     const known = await page.evaluate(() => CHAMPION_BALANCE_REFERENCE.knownChampions || []);
     const results = [];
