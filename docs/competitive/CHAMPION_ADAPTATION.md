@@ -67,3 +67,5 @@ Los cuatro marcos de habilidades (tanque, asesino, mago y soporte) se combinan c
 ## Verificación
 
 `node tests/competitive-roster.test.js` comprueba cobertura contra las fuentes actuales de campaña, estadísticas base iguales dentro de cada rol, metadatos de exclusividad, compatibilidad de especialidades y que todos los recortes y clips pertenecen al PNG real del campeón. Estas comprobaciones estructurales no equivalen a una aprobación subjetiva de calidad artística ni a demostrar equilibrio competitivo; las pruebas del motor y los enfrentamientos simulados verifican las mecánicas.
+
+`node tests/competitive-signatures.test.js` verifica las diez firmas en combate: bonificación y contrapartida, ciclo de cadencia, curación sin sobrecontar exceso de daño, ralentización limitada y protección frente a amplificaciones acumulativas de escudos. El Coliseo usa coeficientes propios para daño, escudos y curación; las ventajas porcentuales de las firmas se aplican sobre esos valores normalizados.

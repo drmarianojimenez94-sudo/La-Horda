@@ -1,0 +1,759 @@
+{
+  "version": "CW-4",
+  "step": 0.1,
+  "method": "Exploratory: each champion versus its reference archetype, same ally, four allies, two seeds, both sides. Not a human PvP balance gate.",
+  "modes": {
+    "crystal": {
+      "profiles": {
+        "tanque": {
+          "wins": 8,
+          "games": 16,
+          "damage": 163680.76871999988,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 10230,
+          "averageDeaths": 3.5
+        },
+        "guerrero": {
+          "wins": 8,
+          "games": 16,
+          "damage": 197727.088232001,
+          "deaths": 163,
+          "winRate": 50,
+          "averageDamage": 12358,
+          "averageDeaths": 10.2
+        },
+        "mago": {
+          "wins": 8,
+          "games": 16,
+          "damage": 151309.37101599973,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 9457,
+          "averageDeaths": 3.5
+        },
+        "soporte": {
+          "wins": 8,
+          "games": 16,
+          "damage": 131936.4110080002,
+          "deaths": 35,
+          "winRate": 50,
+          "averageDamage": 8246,
+          "averageDeaths": 2.2
+        },
+        "segador": {
+          "wins": 7,
+          "games": 16,
+          "damage": 148894.096544,
+          "deaths": 42,
+          "winRate": 43.8,
+          "averageDamage": 9306,
+          "averageDeaths": 2.6
+        },
+        "axiom": {
+          "wins": 8,
+          "games": 16,
+          "damage": 151309.37101599973,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 9457,
+          "averageDeaths": 3.5
+        },
+        "profeta": {
+          "wins": 8,
+          "games": 16,
+          "damage": 149141.19999199992,
+          "deaths": 30,
+          "winRate": 50,
+          "averageDamage": 9321,
+          "averageDeaths": 1.9
+        },
+        "musashi": {
+          "wins": 8,
+          "games": 16,
+          "damage": 197727.088232001,
+          "deaths": 163,
+          "winRate": 50,
+          "averageDamage": 12358,
+          "averageDeaths": 10.2
+        },
+        "cazadora": {
+          "wins": 7.5,
+          "games": 16,
+          "damage": 191900.217400001,
+          "deaths": 164,
+          "winRate": 46.9,
+          "averageDamage": 11994,
+          "averageDeaths": 10.3
+        },
+        "nigromante": {
+          "wins": 11,
+          "games": 16,
+          "damage": 168800.7239520006,
+          "deaths": 57,
+          "winRate": 68.8,
+          "averageDamage": 10550,
+          "averageDeaths": 3.6
+        },
+        "libertador": {
+          "wins": 7.5,
+          "games": 16,
+          "damage": 191900.217400001,
+          "deaths": 164,
+          "winRate": 46.9,
+          "averageDamage": 11994,
+          "averageDeaths": 10.3
+        },
+        "eren": {
+          "wins": 7.5,
+          "games": 16,
+          "damage": 191900.217400001,
+          "deaths": 164,
+          "winRate": 46.9,
+          "averageDamage": 11994,
+          "averageDeaths": 10.3
+        },
+        "ynara": {
+          "wins": 8,
+          "games": 16,
+          "damage": 131936.4110080002,
+          "deaths": 35,
+          "winRate": 50,
+          "averageDamage": 8246,
+          "averageDeaths": 2.2
+        },
+        "myla": {
+          "wins": 10,
+          "games": 16,
+          "damage": 171265.95999200063,
+          "deaths": 68,
+          "winRate": 62.5,
+          "averageDamage": 10704,
+          "averageDeaths": 4.3
+        },
+        "brasa": {
+          "wins": 8,
+          "games": 16,
+          "damage": 151309.37101599973,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 9457,
+          "averageDeaths": 3.5
+        },
+        "eslabon": {
+          "wins": 8,
+          "games": 16,
+          "damage": 163680.76871999988,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 10230,
+          "averageDeaths": 3.5
+        },
+        "morwen": {
+          "wins": 10,
+          "games": 16,
+          "damage": 171265.95999200063,
+          "deaths": 68,
+          "winRate": 62.5,
+          "averageDamage": 10704,
+          "averageDeaths": 4.3
+        },
+        "farolero": {
+          "wins": 10,
+          "games": 16,
+          "damage": 149085.32516000004,
+          "deaths": 31,
+          "winRate": 62.5,
+          "averageDamage": 9318,
+          "averageDeaths": 1.9
+        },
+        "iria": {
+          "wins": 8,
+          "games": 16,
+          "damage": 151309.37101599973,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 9457,
+          "averageDeaths": 3.5
+        },
+        "vesper": {
+          "wins": 8,
+          "games": 16,
+          "damage": 197727.088232001,
+          "deaths": 163,
+          "winRate": 50,
+          "averageDamage": 12358,
+          "averageDeaths": 10.2
+        },
+        "nahir": {
+          "wins": 11,
+          "games": 16,
+          "damage": 180530.30293600063,
+          "deaths": 150,
+          "winRate": 68.8,
+          "averageDamage": 11283,
+          "averageDeaths": 9.4
+        },
+        "baltra": {
+          "wins": 8,
+          "games": 16,
+          "damage": 163680.76871999988,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 10230,
+          "averageDeaths": 3.5
+        },
+        "maura": {
+          "wins": 7,
+          "games": 16,
+          "damage": 148894.096544,
+          "deaths": 42,
+          "winRate": 43.8,
+          "averageDamage": 9306,
+          "averageDeaths": 2.6
+        },
+        "dariel": {
+          "wins": 8,
+          "games": 16,
+          "damage": 131936.4110080002,
+          "deaths": 35,
+          "winRate": 50,
+          "averageDamage": 8246,
+          "averageDeaths": 2.2
+        },
+        "orsa": {
+          "wins": 11,
+          "games": 16,
+          "damage": 180530.30293600063,
+          "deaths": 150,
+          "winRate": 68.8,
+          "averageDamage": 11283,
+          "averageDeaths": 9.4
+        },
+        "tibor": {
+          "wins": 10,
+          "games": 16,
+          "damage": 171265.95999200063,
+          "deaths": 68,
+          "winRate": 62.5,
+          "averageDamage": 10704,
+          "averageDeaths": 4.3
+        },
+        "zahra": {
+          "wins": 8,
+          "games": 16,
+          "damage": 151309.37101599973,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 9457,
+          "averageDeaths": 3.5
+        },
+        "renko": {
+          "wins": 9.5,
+          "games": 16,
+          "damage": 174973.1255359998,
+          "deaths": 59,
+          "winRate": 59.4,
+          "averageDamage": 10936,
+          "averageDeaths": 3.7
+        },
+        "sira": {
+          "wins": 9,
+          "games": 16,
+          "damage": 171949.34522400072,
+          "deaths": 62,
+          "winRate": 56.3,
+          "averageDamage": 10747,
+          "averageDeaths": 3.9
+        },
+        "nano_gm": {
+          "wins": 8,
+          "games": 16,
+          "damage": 164359.84284000023,
+          "deaths": 68,
+          "winRate": 50,
+          "averageDamage": 10272,
+          "averageDeaths": 4.3
+        },
+        "facu_gm": {
+          "wins": 8,
+          "games": 16,
+          "damage": 197727.088232001,
+          "deaths": 163,
+          "winRate": 50,
+          "averageDamage": 12358,
+          "averageDeaths": 10.2
+        },
+        "aurelia": {
+          "wins": 9,
+          "games": 16,
+          "damage": 171949.34522400072,
+          "deaths": 62,
+          "winRate": 56.3,
+          "averageDamage": 10747,
+          "averageDeaths": 3.9
+        },
+        "khepri": {
+          "wins": 11,
+          "games": 16,
+          "damage": 180530.30293600063,
+          "deaths": 150,
+          "winRate": 68.8,
+          "averageDamage": 11283,
+          "averageDeaths": 9.4
+        },
+        "velmira": {
+          "wins": 8,
+          "games": 16,
+          "damage": 131936.4110080002,
+          "deaths": 35,
+          "winRate": 50,
+          "averageDamage": 8246,
+          "averageDeaths": 2.2
+        },
+        "vhal": {
+          "wins": 9,
+          "games": 16,
+          "damage": 171949.34522400072,
+          "deaths": 62,
+          "winRate": 56.3,
+          "averageDamage": 10747,
+          "averageDeaths": 3.9
+        },
+        "bront": {
+          "wins": 8,
+          "games": 16,
+          "damage": 163680.76871999988,
+          "deaths": 56,
+          "winRate": 50,
+          "averageDamage": 10230,
+          "averageDeaths": 3.5
+        },
+        "oriel": {
+          "wins": 10,
+          "games": 16,
+          "damage": 149085.32516000004,
+          "deaths": 31,
+          "winRate": 62.5,
+          "averageDamage": 9318,
+          "averageDeaths": 1.9
+        },
+        "saelis": {
+          "wins": 8,
+          "games": 16,
+          "damage": 131936.4110080002,
+          "deaths": 35,
+          "winRate": 50,
+          "averageDamage": 8246,
+          "averageDeaths": 2.2
+        }
+      },
+      "archetypes": {
+        "tanque": {
+          "wins": 55.5,
+          "games": 112,
+          "winRate": 49.6
+        },
+        "guerrero": {
+          "wins": 87.5,
+          "games": 160,
+          "winRate": 54.7
+        },
+        "mago": {
+          "wins": 116,
+          "games": 208,
+          "winRate": 55.8
+        },
+        "soporte": {
+          "wins": 68,
+          "games": 128,
+          "winRate": 53.1
+        }
+      },
+      "games": 608,
+      "sideWins": [
+        275,
+        329
+      ],
+      "draws": 4,
+      "seconds": 189443.10000000132,
+      "averageSeconds": 312
+    },
+    "coliseum": {
+      "profiles": {
+        "tanque": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27411.963400000008,
+          "deaths": 114,
+          "winRate": 50,
+          "averageDamage": 1713,
+          "averageDeaths": 7.1
+        },
+        "guerrero": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25142.75282000001,
+          "deaths": 126,
+          "winRate": 50,
+          "averageDamage": 1571,
+          "averageDeaths": 7.9
+        },
+        "mago": {
+          "wins": 8,
+          "games": 16,
+          "damage": 23314.687399999973,
+          "deaths": 98,
+          "winRate": 50,
+          "averageDamage": 1457,
+          "averageDeaths": 6.1
+        },
+        "soporte": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27339.506240000046,
+          "deaths": 88,
+          "winRate": 50,
+          "averageDamage": 1709,
+          "averageDeaths": 5.5
+        },
+        "segador": {
+          "wins": 12,
+          "games": 16,
+          "damage": 28398.11910000004,
+          "deaths": 110,
+          "winRate": 75,
+          "averageDamage": 1775,
+          "averageDeaths": 6.9
+        },
+        "axiom": {
+          "wins": 8,
+          "games": 16,
+          "damage": 23314.687399999973,
+          "deaths": 98,
+          "winRate": 50,
+          "averageDamage": 1457,
+          "averageDeaths": 6.1
+        },
+        "profeta": {
+          "wins": 6,
+          "games": 16,
+          "damage": 33548.31117999992,
+          "deaths": 96,
+          "winRate": 37.5,
+          "averageDamage": 2097,
+          "averageDeaths": 6
+        },
+        "musashi": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25142.75282000001,
+          "deaths": 126,
+          "winRate": 50,
+          "averageDamage": 1571,
+          "averageDeaths": 7.9
+        },
+        "cazadora": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25026.607620000028,
+          "deaths": 128,
+          "winRate": 50,
+          "averageDamage": 1564,
+          "averageDeaths": 8
+        },
+        "nigromante": {
+          "wins": 14,
+          "games": 16,
+          "damage": 23789.49394000002,
+          "deaths": 96,
+          "winRate": 87.5,
+          "averageDamage": 1487,
+          "averageDeaths": 6
+        },
+        "libertador": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25026.607620000028,
+          "deaths": 128,
+          "winRate": 50,
+          "averageDamage": 1564,
+          "averageDeaths": 8
+        },
+        "eren": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25026.607620000028,
+          "deaths": 128,
+          "winRate": 50,
+          "averageDamage": 1564,
+          "averageDeaths": 8
+        },
+        "ynara": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27339.506240000046,
+          "deaths": 88,
+          "winRate": 50,
+          "averageDamage": 1709,
+          "averageDeaths": 5.5
+        },
+        "myla": {
+          "wins": 4,
+          "games": 16,
+          "damage": 21073.93780000001,
+          "deaths": 108,
+          "winRate": 25,
+          "averageDamage": 1317,
+          "averageDeaths": 6.8
+        },
+        "brasa": {
+          "wins": 8,
+          "games": 16,
+          "damage": 23314.687399999973,
+          "deaths": 98,
+          "winRate": 50,
+          "averageDamage": 1457,
+          "averageDeaths": 6.1
+        },
+        "eslabon": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27411.963400000008,
+          "deaths": 114,
+          "winRate": 50,
+          "averageDamage": 1713,
+          "averageDeaths": 7.1
+        },
+        "morwen": {
+          "wins": 4,
+          "games": 16,
+          "damage": 21073.93780000001,
+          "deaths": 108,
+          "winRate": 25,
+          "averageDamage": 1317,
+          "averageDeaths": 6.8
+        },
+        "farolero": {
+          "wins": 12,
+          "games": 16,
+          "damage": 30425.61168,
+          "deaths": 74,
+          "winRate": 75,
+          "averageDamage": 1902,
+          "averageDeaths": 4.6
+        },
+        "iria": {
+          "wins": 8,
+          "games": 16,
+          "damage": 23314.687399999973,
+          "deaths": 98,
+          "winRate": 50,
+          "averageDamage": 1457,
+          "averageDeaths": 6.1
+        },
+        "vesper": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25142.75282000001,
+          "deaths": 126,
+          "winRate": 50,
+          "averageDamage": 1571,
+          "averageDeaths": 7.9
+        },
+        "nahir": {
+          "wins": 6,
+          "games": 16,
+          "damage": 25029.212380000023,
+          "deaths": 126,
+          "winRate": 37.5,
+          "averageDamage": 1564,
+          "averageDeaths": 7.9
+        },
+        "baltra": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27411.963400000008,
+          "deaths": 114,
+          "winRate": 50,
+          "averageDamage": 1713,
+          "averageDeaths": 7.1
+        },
+        "maura": {
+          "wins": 12,
+          "games": 16,
+          "damage": 28398.11910000004,
+          "deaths": 110,
+          "winRate": 75,
+          "averageDamage": 1775,
+          "averageDeaths": 6.9
+        },
+        "dariel": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27339.506240000046,
+          "deaths": 88,
+          "winRate": 50,
+          "averageDamage": 1709,
+          "averageDeaths": 5.5
+        },
+        "orsa": {
+          "wins": 6,
+          "games": 16,
+          "damage": 25029.212380000023,
+          "deaths": 126,
+          "winRate": 37.5,
+          "averageDamage": 1564,
+          "averageDeaths": 7.9
+        },
+        "tibor": {
+          "wins": 4,
+          "games": 16,
+          "damage": 21073.93780000001,
+          "deaths": 108,
+          "winRate": 25,
+          "averageDamage": 1317,
+          "averageDeaths": 6.8
+        },
+        "zahra": {
+          "wins": 8,
+          "games": 16,
+          "damage": 23314.687399999973,
+          "deaths": 98,
+          "winRate": 50,
+          "averageDamage": 1457,
+          "averageDeaths": 6.1
+        },
+        "renko": {
+          "wins": 2,
+          "games": 16,
+          "damage": 28547.461840000004,
+          "deaths": 116,
+          "winRate": 12.5,
+          "averageDamage": 1784,
+          "averageDeaths": 7.3
+        },
+        "sira": {
+          "wins": 10,
+          "games": 16,
+          "damage": 22613.678280000004,
+          "deaths": 96,
+          "winRate": 62.5,
+          "averageDamage": 1413,
+          "averageDeaths": 6
+        },
+        "nano_gm": {
+          "wins": 8,
+          "games": 16,
+          "damage": 22161.002659999976,
+          "deaths": 104,
+          "winRate": 50,
+          "averageDamage": 1385,
+          "averageDeaths": 6.5
+        },
+        "facu_gm": {
+          "wins": 8,
+          "games": 16,
+          "damage": 25142.75282000001,
+          "deaths": 126,
+          "winRate": 50,
+          "averageDamage": 1571,
+          "averageDeaths": 7.9
+        },
+        "aurelia": {
+          "wins": 10,
+          "games": 16,
+          "damage": 22613.678280000004,
+          "deaths": 96,
+          "winRate": 62.5,
+          "averageDamage": 1413,
+          "averageDeaths": 6
+        },
+        "khepri": {
+          "wins": 6,
+          "games": 16,
+          "damage": 25029.212380000023,
+          "deaths": 126,
+          "winRate": 37.5,
+          "averageDamage": 1564,
+          "averageDeaths": 7.9
+        },
+        "velmira": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27339.506240000046,
+          "deaths": 88,
+          "winRate": 50,
+          "averageDamage": 1709,
+          "averageDeaths": 5.5
+        },
+        "vhal": {
+          "wins": 10,
+          "games": 16,
+          "damage": 22613.678280000004,
+          "deaths": 96,
+          "winRate": 62.5,
+          "averageDamage": 1413,
+          "averageDeaths": 6
+        },
+        "bront": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27411.963400000008,
+          "deaths": 114,
+          "winRate": 50,
+          "averageDamage": 1713,
+          "averageDeaths": 7.1
+        },
+        "oriel": {
+          "wins": 12,
+          "games": 16,
+          "damage": 30425.61168,
+          "deaths": 74,
+          "winRate": 75,
+          "averageDamage": 1902,
+          "averageDeaths": 4.6
+        },
+        "saelis": {
+          "wins": 8,
+          "games": 16,
+          "damage": 27339.506240000046,
+          "deaths": 88,
+          "winRate": 50,
+          "averageDamage": 1709,
+          "averageDeaths": 5.5
+        }
+      },
+      "archetypes": {
+        "tanque": {
+          "wins": 58,
+          "games": 112,
+          "winRate": 51.8
+        },
+        "guerrero": {
+          "wins": 74,
+          "games": 160,
+          "winRate": 46.3
+        },
+        "mago": {
+          "wins": 104,
+          "games": 208,
+          "winRate": 50
+        },
+        "soporte": {
+          "wins": 70,
+          "games": 128,
+          "winRate": 54.7
+        }
+      },
+      "games": 608,
+      "sideWins": [
+        322,
+        286
+      ],
+      "draws": 0,
+      "seconds": 87268.79999999874,
+      "averageSeconds": 144
+    }
+  }
+}

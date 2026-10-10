@@ -84,10 +84,10 @@ const ROLES={
     "range": 100,
     "rate": 0.48,
     "skills": [
-      "Corte Sombrío",
-      "Paso Sombrío",
-      "Campo Sombrío",
-      "Ruptura Sombrío"
+      "Corte de Sombras",
+      "Paso de Sombras",
+      "Campo de Sombras",
+      "Ruptura de Sombras"
     ],
     "skillDescriptions": [
       "Golpe circular de corto alcance.",
