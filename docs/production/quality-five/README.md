@@ -16,6 +16,7 @@ Repetir con Playwright disponible y `CHROMIUM_PATH` si corresponde:
 
 ```
 node tools/quality-five/functional.js
+node tools/quality-five/online.js
 node tools/balance/check-entry-reference.js
 node tools/balance/entry-gate.js --workshop-solciju
 node tools/balance/entry-gate.js --workshop-quality
@@ -42,8 +43,18 @@ desde nivel 90; los árboles siguen costando 33 puntos ordinarios frente a 30 di
 breves en las diez arenas. No representa campañas completas ni QA en teléfonos físicos.
 `solciju-functional.json` y `solciju-entry-results.json` conservan la primera medición aislada.
 `ability/ability-gate.json`: Ability Gate diferencial estricto de ambos candidatos, PASS;
-el canario sin efectos sigue siendo rechazado. Arte, audio, cosméticos, sets y dos clientes
-reales siguen pendientes. Los contratos de fábrica se mantienen INCOMPLETE honestamente.
+el canario sin efectos sigue siendo rechazado. `online-results.json`: relay local real,
+dos navegadores aislados, ambos candidatos como invitado, efectos atribuidos al dueño y
+limpieza al morir. No prueba el servidor de producción, reconexión ni teléfonos físicos.
+Arte, audio, cosméticos y sets siguen pendientes. Los contratos de fábrica se mantienen
+INCOMPLETE honestamente. El workflow `Five champion workshop` repite los gates técnicos
+sin habilitar candidatos en el catálogo público.
+
+Última calibración del taller: 66 simulaciones de 150 s, 22 candidatos técnicos, cero
+violaciones del techo. Solciju: daño medio 8.494 y supervivencia 3/3; Veyra: 4.291 y 3/3.
+Referencias de rol: mago 15.000, asesino 12.877. El gate comprueba sobrepotencia y errores;
+estos resultados bajos requieren revisar alcance, frecuencia efectiva y desempeño solo
+antes de ajustar números. No son evidencia de balance competitivo 8/10.
 
 La implementación detectó un defecto compartido: el autoapuntado no consultaba rivales de
 Guerras de Cristales. Corrección aislada para producción en PR #80; los candidatos quedan

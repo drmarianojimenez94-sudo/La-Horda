@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "scope": "local real relay, two clients; no production accounts or cosmetics",
+  "checks": [
+    {
+      "name": "Veyra active bleed state belongs only to host",
+      "ok": true,
+      "hostBleeds": 5,
+      "guestBleeds": 0
+    },
+    {
+      "name": "veyra guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "veyra",
+        "casts": 4,
+        "damage": 551.0320199999999,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "veyra",
+        "owned": [],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "veyra death removes owned effects",
+      "ok": true
+    },
+    {
+      "name": "solciju guest casts simulated by host",
+      "ok": true,
+      "host": {
+        "key": "solciju",
+        "casts": 4,
+        "damage": 161.06310000000002,
+        "bleeds": 0
+      },
+      "guest": {
+        "key": "solciju",
+        "owned": [
+          "sol_cask",
+          "sol_reserve"
+        ],
+        "bleeds": 0
+      }
+    },
+    {
+      "name": "Solciju reserve and cask replicate with guest owner",
+      "ok": true
+    },
+    {
+      "name": "solciju death removes owned effects",
+      "ok": true
+    }
+  ],
+  "errors": []
+}
