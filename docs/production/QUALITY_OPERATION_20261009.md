@@ -51,7 +51,9 @@ alas/conductos, restauración del contexto y modo normal PASS; cero errores de p
   kits propios. Ninguno de los cinco tiene una skin final aprobada ni publicación jugable.
 - PR #80: corrección compartida del autoapuntado en Cristales, que buscaba enemigos de
   campaña en vez del bando rival. Cuatro regresiones, suite táctil completa y control
-  local de jefes PASS. CI pendiente; no atribuir todavía merge a este PR.
+  local de jefes PASS. Integrado en main: `18f6b7ba48dd69696f75efaf005e44a387667a1d`.
+  CI completo (push y PR), Safari y PostgreSQL aprobados. Smoke posterior sobre main:
+  cuatro regresiones de apuntado, referencia de balance y Talent Gate PASS.
 - Render: conexión disponible, pero sin workspace seleccionado. El único resultado es
   `My Workspace`; la herramienta exige confirmación antes de seleccionarlo. No se
   inspeccionaron ni modificaron servicios y no se confirmó el servidor oficial/NanoGM.

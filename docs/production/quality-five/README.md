@@ -57,7 +57,8 @@ estos resultados bajos requieren revisar alcance, frecuencia efectiva y desempe�
 antes de ajustar números. No son evidencia de balance competitivo 8/10.
 
 La implementación detectó un defecto compartido: el autoapuntado no consultaba rivales de
-Guerras de Cristales. Corrección aislada para producción en PR #80; los candidatos quedan
+Guerras de Cristales. Corrección integrada mediante PR #80 en `18f6b7ba48dd69696f75efaf005e44a387667a1d`,
+con CI completo, Safari y PostgreSQL aprobados; los candidatos quedan
 en el taller del PR #78. No atribuir a un candidato las aprobaciones de los campeones existentes.
 
 Aelith: diseño rechazado por similitud con Sira (cuerpo y cabeza de `sira_skin`/`sira_set`).
