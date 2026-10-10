@@ -52,7 +52,7 @@ Object.assign(ARENA_SFX, {
   fortSteamHiss: _fsx(2, 300, (t,D)=>{ _noise(t,1.2,0.12,"highpass",4000,0,D); return 1.2; }),
   fortSteam:     _fsx(3, 200, (t,D)=>{ _noise(t,0.7,0.35,"highpass",2500,0,D); _noise(t,0.3,0.2,"lowpass",500,0,D); return 0.7; }),
   fortSteamBig:  _fsx(3, 300, (t,D)=>{ _noise(t,1.1,0.45,"highpass",1800,0,D); _tone(t,"sine",90,60,0.4,0.25,D); return 1.1; }),
-  fortChain:     _fsx(2, 250, (t,D)=>{ for(let i=0;i<6;i++) _noise(t+i*0.06,0.03,0.16,"bandpass",3200+Math.random()*800,8,D); return 0.4; }),
+  fortChain:     _fsx(2, 250, (t,D)=>{ for(let i=0;i<6;i++) _noise(t+i*0.06,0.03,0.16,"bandpass",3200+audioRandom()*800,8,D); return 0.4; }),
   fortChainThrow:_fsx(2, 200, (t,D)=>{ _noise(t,0.25,0.14,"bandpass",2400,3,D); for(let i=0;i<4;i++) _noise(t+0.05+i*0.04,0.02,0.12,"bandpass",4200,8,D); return 0.3; }),
   fortChainHit:  _fsx(3, 150, (t,D)=>{ _noise(t,0.12,0.3,"bandpass",2800,4,D); _tone(t,"triangle",900,500,0.12,0.08,D); return 0.15; }),
   fortChainSweep:_fsx(3, 400, (t,D)=>{ for(let i=0;i<9;i++) _noise(t+i*0.07,0.03,0.18,"bandpass",2600+i*120,6,D); _noise(t,0.6,0.12,"lowpass",700,0,D); return 0.7; }),
