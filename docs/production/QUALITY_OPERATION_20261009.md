@@ -223,3 +223,27 @@ No existe una nota global defendible de 10/10 a partir de estas pruebas.
    suspensión, reconexión y PvP/cooperativo con red real. HUD/tutorial/arenas: playtests.
 8. Economía, precios y antifraude; mantener cobros apagados hasta autorización específica.
    Comunidad y telemetría D1/D7 cuando existan canales y cuentas verificadas.
+
+## Actualización 10/10 — cinco runtimes comprobados y fábrica de poses
+
+PR #78, commit `fa4b352`: implementados Morveth y Aelith en taller. Ya existen los
+cinco kits ejecutables, pero ninguno se publica hasta completar sus paquetes.
+Morveth/Aelith: 131 controles funcionales PASS; regresiones Solciju/Veyra 132 y Brakk
+81 PASS; Ability Gate cinco PASS y canario rechazado; red con relay real 17 PASS;
+Balance Gate 75 simulaciones PASS sin modificar referencia ni techos.
+
+Duplicidad: Solciju/Morwen y Veyra/Eren marcados DUPLICATE; otros tres REVIEW. No
+se oculta el resultado ni se cambia el detector para aprobar. Aelith no comparte
+rutas/regreso con Sira, pero su kit aún requiere revisión respecto de Axiom.
+
+PR #83 mejora la fábrica: ensamblaje explícito de cabeza en poses no erguidas,
+rechazo de clipping y entradas inválidas. Seis tests específicos, 51 comprobaciones
+de regresión y negativos del estilo PASS. El estudio de Aelith conserva cabeza
+y trenza en sus cuatro poses de muerte; sigue pendiente arma propia, accesorios,
+skin, escala y validación visual final. No se instala el estudio.
+
+Actualiza el backlog anterior: Morveth/Aelith ya no están sin kit; la discontinuidad
+de cabeza de Aelith está corregida en el estudio. Siguen pendientes diferenciación
+de los kits señalados, cinco paquetes artísticos completos, SFX/Sets, rendimiento
+físico móvil, roster completo en Cristales y validación del servidor/NanoGM.
+No hay evidencia suficiente para certificar 80/100 en todos los sistemas.

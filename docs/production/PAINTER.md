@@ -28,7 +28,7 @@ Ejemplo versionado: `specs/demo_fuego.json` (no instalado).
 2. **Ensamble.** `body` (cuerpo, ropa, arma y poses) de un donante + `head` (cara, pelo, tocado) de otro. La cabeza se
    detecta por la cara (bloque de piel) y se apoya en el mentón del cuerpo cuadro por cuadro; en ataques y lanzamientos
    se toma la cabeza del cuadro de caminar que mira hacia el mismo lado. En la muerte queda la cabeza del cuerpo,
-   repintada con la rampa del pelo.
+   repintada con la rampa del pelo, salvo que la receta defina `poseHeadOverrides`.
 3. **Pintura.** Reglas en orden (cada una ve el resultado de la anterior):
    - selección: `part` (`head` | `body` | `all`), `hue: [desde, hasta]` en grados Lab + `minChroma`, `minL`/`maxL`,
      `materialsOf: "#hex"` + `take` (materiales de color parecido), `noSkin`.
@@ -102,3 +102,20 @@ manto por corrimiento de tono (conserva la textura del donante: con rampas el ga
 demasiado contraste) y tres elementos de la forja: `alas_de_plumas`, `halo_de_luz` y `hombreras_redondas` (escala
 0,8). Cada skin solo cambia las rampas de los elementos y de la pintura. Las tres hojas pasan el gate de estilo y el
 Roster Art Gate. Captura en partida: `docs/production/saelis-ingame.png`.
+
+## Cabezas en poses de muerte y otras poses no erguidas
+
+`poseHeadOverrides` permite sustituir la geometría de cabeza completa antes de pintar,
+sin modificar el comportamiento de las recetas existentes. Cada clave es un índice de
+cuadro; su valor contiene `sourceFrame`, `sourcePolygon`, `erasePolygon` y `offset: [x,y]`.
+Los polígonos usan coordenadas enteras locales de 0 a 111. El donante es `head`.
+El recorte toma únicamente píxeles opacos; solo se borra el polígono indicado del cuerpo.
+Si el traslado pierde píxeles fuera de la celda, la fábrica falla en lugar de recortarlos.
+La máscara resultante recibe las reglas `part: head`, conservando color entre poses.
+
+Los puntos y el desplazamiento requieren inspección de cada pose: esta opción no
+certifica anatomía, continuidad del traje ni aprobación del Art Gate.
+`python tools/art/painter/test_pose_heads.py` comprueba sustitución real de silueta,
+ausencia de efectos fuera de la máscara, entradas inválidas y rechazo de clipping.
+`python tools/art/painter/test_forge.py --regress` exige que las recetas instaladas
+sin esta opción sigan generando píxeles idénticos.

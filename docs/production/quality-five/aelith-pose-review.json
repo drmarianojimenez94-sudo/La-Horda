@@ -1,0 +1,15 @@
+{
+  "status": "PARTIAL_REVIEW_NOT_RELEASE_APPROVAL",
+  "atlasSha256": "507f854dccb46ddbc90e77e2b976a0e18a32ae1b74f98fcef48d0c801b076677",
+  "reviewer": "Codex visual inspection",
+  "headContinuity": "All four death frames now use Orsa head geometry and the study hair palette.",
+  "numericStyle": "PASS",
+  "regression": "51 factory checks PASS; installed recipes pixel-identical",
+  "pending": [
+    "Distinct temporal weapon",
+    "Full costume continuity and accessories in death",
+    "Skin redesign",
+    "Roster scale and in-game animation review"
+  ],
+  "evidence": "docs/production/quality-five/aelith-death-study.png"
+}

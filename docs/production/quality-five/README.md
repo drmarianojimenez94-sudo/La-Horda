@@ -210,3 +210,17 @@ no prueba visual. Resolver esas revisiones antes de publicación.
 Reproducir nuevos tests: `node tools/quality-five/temporal-plague-functional.js`.
 CI ejecuta esta suite además de las anteriores. Balance de admisión en Bosque no
 equivale a equilibrio competitivo ni a cinco campeones comercialmente terminados.
+
+### Aelith: continuidad de cabeza corregida en el estudio
+
+La fábrica incorpora máscaras explícitas por pose (`poseHeadOverrides`) y rechaza
+clipping. Las cuatro poses de muerte del estudio ahora usan geometría de cabeza de
+Orsa y su paleta, en vez de conservar la cabeza de Dariel. Se inspeccionó
+`aelith-death-study.png`; estilo numérico PASS. Regresión de fábrica: 51 controles
+PASS, recetas instaladas pixel a pixel iguales. La mejora de fábrica se entrega
+separadamente; el estudio no se instala.
+
+**Revisión parcial, no Art Gate PASS:** queda arma temporal propia, continuidad de
+accesorios/traje, skin, escala y animación en partida. La receta original de Aelith
+basada en Sira sigue rechazada y no se publica. `aelith-pose-review.json` identifica
+la huella exacta del estudio y el alcance de esta revisión.
