@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 22
       - run: node --test tools/factory/test.js
+      - run: node --test tools/regression/test-aim-hostiles.js
       - run: node tools/factory/boss-cli.js check
       - run: node tools/quality/test-talent-gate.js
       - run: node tools/alpha/public-defaults.js
