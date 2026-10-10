@@ -80,7 +80,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       await page.evaluate(() => { save.tut = save.tut || {}; save.tut.training = 1; save.firstRun = 'hub'; save.champions.tanque.unlocked = true; persistNow(); setState('mainmenu'); renderMainMenu(); });
       await sleep(400);
       await page.click('#hub-crystal-btn');
-      await page.waitForFunction(() => /todavía no está publicada/.test(document.body.innerText), null, {timeout: 8000});
+      await page.waitForFunction(() => /El competitivo todavía no está publicado/.test(document.body.innerText), null, {timeout: 8000});
       assert.equal(await page.evaluate(() => state), 'mainmenu', 'sigue en el hub');
       console.log('PASS archivos del Coliseo ausentes: aviso claro y el jugador se queda en el hub');
       await ctx.close();
