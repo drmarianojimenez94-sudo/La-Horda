@@ -32,6 +32,7 @@ jobs:
       - run: npm ci --prefix server --no-audit --no-fund
       - run: node --test tools/factory/test.js
       - run: node tools/balance/check-entry-reference.js
+      - run: node tools/balance/test-entry-report.js
       - run: node tools/quality-five/functional.js
       - run: node tools/quality-five/brakk-functional.js
       - run: node tools/quality-five/online.js

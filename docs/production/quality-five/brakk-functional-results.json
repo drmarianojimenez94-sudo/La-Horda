@@ -159,6 +159,10 @@
       "ok": true
     },
     {
+      "name": "native clamp and dynamic collision do not recurse",
+      "ok": true
+    },
+    {
       "name": "wall never traps its owner",
       "ok": true
     },
@@ -236,6 +240,22 @@
     },
     {
       "name": "rubble extends slow while boss resistance holds",
+      "ok": true
+    },
+    {
+      "name": "Arena Divina rival collides with wall",
+      "ok": true
+    },
+    {
+      "name": "crew never protects rival",
+      "ok": true
+    },
+    {
+      "name": "Arena Divina demolition damages rival",
+      "ok": true
+    },
+    {
+      "name": "wall cannot displace static PvP structures",
       "ok": true
     },
     {

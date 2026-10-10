@@ -151,7 +151,7 @@ de aliados. Tres maestrías: escombros prolongados, cura de emergencia, escudo c
 No tiene aún arte, audio, skin ni Set aprobados: el contrato generado con la fábrica
 se mantiene **INCOMPLETE** y `index.html` no carga al campeón.
 
-`brakk-functional-results.json`: 76 comprobaciones PASS a niveles 1/39/40/60/90/99,
+`brakk-functional-results.json`: 81 comprobaciones PASS a niveles 1/39/40/60/90/99,
 colisión real, destrucción, pasiva, talentos, maestrías, recursos, snapshots, limpieza y
 ejecuciones breves en las diez arenas. No equivale a diez campañas completas.
 Ability Gate estricto: Solciju/Veyra/Brakk PASS; canario sin efectos rechazado.
@@ -165,3 +165,9 @@ Reproducir: `node tools/quality-five/brakk-functional.js`,
 `node tools/balance/entry-gate.js --workshop-quality`.
 
 Última ejecución con Brakk: **69 simulaciones PASS**, 41 clases técnicas, 23 candidatos de referencia, cero errores y cero violaciones. Brakk: daño medio 4290.15, supervivencia 3/3. Es calibración de admisión en Bosque, no balance competitivo completo.
+
+Prueba adicional de Arena Divina: muros bloquean al rival, no desplazan estructuras estáticas y Cuadrilla no protege al enemigo. Colisiones preservan límites del mapa y transitabilidad del escenario. No sustituye el test del motor independiente de Cristales.
+
+La primera ampliación de colisión reveló una recursión entre `clampToArena` y `aidCollideEnemy` en simulación larga; se agregó guardia de reentrada y regresión por el punto de entrada nativo. El entry gate ahora escribe RUNNING al iniciar y FAIL ante excepciones, evitando conservar un PASS anterior cuando falla Chromium o el motor. `tools/balance/test-entry-report.js` verifica ese caso negativo en sus cuatro modos.
+
+Repetición final tras corregir recursión: **69 simulaciones PASS**. Medias de daño: {'solciju': 8665.53, 'veyra': 4936.1, 'brakk': 3877.75, 'saelis': 8929.92}. Cero errores/violaciones.

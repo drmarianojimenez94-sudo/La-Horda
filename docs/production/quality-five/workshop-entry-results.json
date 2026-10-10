@@ -1,4 +1,5 @@
 {
+  "status": "PASS",
   "entries": [
     {
       "key": "tanque",
@@ -996,28 +997,28 @@
     {
       "key": "brakk",
       "seed": 117,
-      "damage": 4865.298876438752,
+      "damage": 4238.420546430781,
       "alive": true,
-      "hp": 348.05619471999995,
-      "casts": 51,
+      "hp": 354.39744,
+      "casts": 56,
       "error": null
     },
     {
       "key": "brakk",
       "seed": 431,
-      "damage": 4219.682449932544,
+      "damage": 3522.2136254081934,
       "alive": true,
-      "hp": 358.71456000000006,
-      "casts": 55,
+      "hp": 354.958752,
+      "casts": 52,
       "error": null
     },
     {
       "key": "brakk",
       "seed": 991,
-      "damage": 3785.457208089266,
+      "damage": 3872.6009197741564,
       "alive": true,
-      "hp": 425.5131752,
-      "casts": 52,
+      "hp": 365,
+      "casts": 51,
       "error": null
     }
   ],

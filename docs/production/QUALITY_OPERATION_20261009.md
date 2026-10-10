@@ -3,7 +3,7 @@
 ## Estado verificable
 
 Auditoría inicial de main: `82fe9af06cff48f9069dbed340f5fa8e772bd055`.
-PR #73 y #75 ya integrados; #74 abierto. El repositorio tiene 38 campeones registrados,
+PR #73 y #75 ya integrados; #74 cerrado y sustituido por #76. El repositorio tiene 38 campeones registrados,
 fábrica, Art Bible, balance por rol y medición dinámica de habilidades existentes.
 No se duplicaron esos motores. Esta ejecución **no completa el alcance comercial**.
 
@@ -47,9 +47,9 @@ alas/conductos, restauración del contexto y modo normal PASS; cero errores de p
   Se conserva el fallo y queda pendiente aislar la variación. El daño de los dos candidatos
   nuevos es bajo respecto de sus roles y necesita calibración.
   Aprobar el techo no equivale a aprobar balance competitivo ni una calificación 8/10.
-- Aelith: rechazada visualmente por similitud con Sira. Brakk, Morveth y Aelith aún sin
-  kits propios. Ninguno de los cinco tiene una skin final aprobada ni publicación jugable.
-- PR #80: corrección compartida del autoapuntado en Cristales, que buscaba enemigos de
+- Aelith: rechazada visualmente por similitud con Sira. En ese punto Brakk, Morveth y Aelith aún no tenían
+  kits propios; ver actualización posterior de Brakk debajo. Ninguno de los cinco tiene una skin final aprobada ni publicación jugable.
+- PR #80: corrección compartida del autoapuntado en Arena Divina, que buscaba enemigos de
   campaña en vez del bando rival. Cuatro regresiones, suite táctil completa y control
   local de jefes PASS. Integrado en main: `18f6b7ba48dd69696f75efaf005e44a387667a1d`.
   CI completo (push y PR), Safari y PostgreSQL aprobados. Smoke posterior sobre main:
@@ -164,7 +164,7 @@ representativa con jugadores/dispositivos. Son juicios técnicos limitados a lo 
 | Talent Gate | 60 | 19 árboles ordinarios cuestan 27 de 30 puntos; faltan especializaciones reales |
 | Ability Gate | 70 | Duraciones, todas las pasivas y PvP exhaustivo aún faltan |
 | Fábrica artística | 60 | Los números no certifican identidad; revisión animada y escala |
-| Cinco campeones nuevos | 15 | Solo producción visual candidata; ningún kit nuevo jugable |
+| Cinco campeones nuevos | 35 | Tres kits de taller medidos; dos kits y todos los paquetes visuales completos pendientes |
 | Multijugador | 75 | Cuatro clientes locales pasan; falta red móvil real y carga prolongada |
 | UI/onboarding | 65 | Regresiones móviles parciales; falta estudio de uso y retención |
 | Game Master | 75 | RBAC/owner local probado; acceso de NanoGM real no comprobado |
@@ -176,22 +176,50 @@ representativa con jugadores/dispositivos. Son juicios técnicos limitados a lo 
 
 No existe una nota global defendible de 10/10 a partir de estas pruebas.
 
+## Actualización verificable — 10 de octubre, 08 UTC
+
+- **PR #81 mergeado** a main: `072150fae13e1443feda1c56fedf64d456a9d652`.
+  Cristales muestra ambos campos, atribuye los envíos y acelera el arranque. Siete
+  controles CI aprobados. 19 regresiones de simulación sobre main PASS. La validación
+  previa incluyó 1.608 partidas de bots y clientes reales. Sigue habiendo cuatro kits;
+  no se afirmó que el plantel completo estuviera adaptado.
+- **PR #82**: separa azar de audio y combate. Se aisló la primera divergencia de
+  `playSfx` según límite de voces y otra de `bosRustle`. Fijar reloj solamente no bastaba.
+  185 callbacks de sonidos PASS con RNG de combate prohibido; mismo replay de 60 s
+  con sonido/silencio idéntico; mezcla completa PASS; plantel público 60 simulaciones PASS.
+  Merge a main `829de547796003f2f8a8e9acbcee6aeeb014d2ec`, con seis checks CI aprobados (push y PR: general, Safari y PostgreSQL).
+- **PR #78 draft**, `f5bd97831542c1a453ae1e5cdf7792e102534a19`: añade Brakk.
+  Muros y torretas destructibles, reparación, demolición, pasiva, tres transformaciones
+  y tres maestrías. 81 controles funcionales PASS; Solciju/Veyra mantienen 132.
+  Ability Gate de tres candidatos PASS y canario rechazado; nueve controles del relay
+  con dos clientes PASS. Gate completo con audio aislado: **69 simulaciones PASS**,
+  23 candidatos técnicos, cero errores/violaciones. No se tocaron referencias ni techos.
+- Los tres candidatos siguen fuera de `index.html`. Los contratos siguen INCOMPLETE.
+  Aelith conserva rechazo visual: similitud inicial con Sira y cabeza discontinua en
+  la muerte del nuevo estudio. Morveth y Aelith no tienen kit. Cinco skins sin aprobación.
+- Los tests históricos que decían Crystal Wars pero usaban `divinaMode` ejercitaban
+  Arena Divina; los nombres actuales están corregidos. No prueban el motor de Cristales.
+- Producción/NanoGM reales sin confirmar. No se modificaron servicios, cuentas ni billeteras.
+  Cobros reales continúan sin activarse. Las notas anteriores son estimaciones de auditoría;
+  la meta global **8/10 no está alcanzada ni certificada**.
+
 ## Backlog ordenado para retomar sin repetir
 
-1. Verificar despliegue de main `0186c99` en Fondal Studios con respaldo y acceso autorizados.
-   Los merges de #76/#77/#79 están terminados; #74 fue cerrado como sustituido.
-   No volver a aplicar su migración destructiva de maestrías.
-2. Cinco kits completos con pasivas y tres ramas transformadoras. Implementar primero
-   Solciju (fermentación, barricas, vino maldito, Gran Reserva); luego Brakk, Veyra, Morveth,
-   Aelith. Pruebas de daño, duración, cooldown, límites por dueño, muerte, arena y red.
-3. Completar identidad visual de las diez recetas de #78, animación y escala frente al
-   Caballero; solo después integrar atlas, Códice, maestrías y catálogo. No convertir DRAFT
-   a RELEASED para eludir balance ni usar knownChampions como excepción.
-4. Auditar presupuesto del árbol: transformaciones accesibles con 30 puntos máximos,
-   requisitos, opciones irreversibles y previsualización de cambios por campeón.
-5. Confirmar despliegue canónico, almacenamiento durable y NanoGM con sesión autorizada.
-   Antes de cualquier restauración o migración real, verificar respaldos.
-6. QA iPhone 13 Pro físico, Android y desktop: FPS p95, memoria, calor, pantallas verticales,
-   carga lenta, pestaña suspendida, desconexión. PvP/cooperativo con red real y bots.
-7. Economía y antifraude de producción; mantener cobros apagados hasta autorización específica.
-8. Activar plan comunitario de `COMMUNITY_ALPHA_20261009.md` cuando haya canales verificados.
+1. #82 integrado; conservar el PR #78 como taller mientras falten gates y verificar el despliegue de main.
+   No repetir #73/#75/#76/#77/#79/#80/#81 ni reabrir #74: la migración segura ya existe.
+2. Implementar Morveth y Aelith; completar arte/animación/skins, SFX y Sets de los cinco.
+   Solciju, Veyra y Brakk ya tienen runtime: extender sus pruebas y calibración, no rehacerlos.
+   Calibrar también supervivencia, jefes, solo/cooperativo y PvP, no solo el techo de daño.
+3. Resolver cabeza de Aelith en las cuatro poses de muerte, identidad temporal propia y
+   diferenciación del resto; revisar las 36 celdas de cada apariencia, cuatro direcciones,
+   contorno/alfa y escala real frente al Caballero. Nunca usar knownChampions para omitir gates.
+4. Corregir especialización de los 19 árboles ordinarios de 27 puntos; añadir transformaciones
+   reales y previsualización. Preservar compras legítimas, maestrías irreversibles y nube.
+5. Adaptar el plantel completo al motor separado de Cristales con kits reales, no alias de
+   sus cuatro roles. Validar claridad de envíos, ritmo, bots, balance y control táctil.
+6. Confirmar despliegue canónico, almacenamiento durable y acceso real de NanoGM. Antes de
+   restaurar/migrar datos, verificar respaldos. No confundir Render legado con Fondal Studios.
+7. QA iPhone/Android físicos y desktop: FPS p95, memoria, calor, orientación, carga lenta,
+   suspensión, reconexión y PvP/cooperativo con red real. HUD/tutorial/arenas: playtests.
+8. Economía, precios y antifraude; mantener cobros apagados hasta autorización específica.
+   Comunidad y telemetría D1/D7 cuando existan canales y cuentas verificadas.

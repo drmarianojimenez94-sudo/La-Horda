@@ -70,14 +70,19 @@ function brakkUpdate(o,dt){
 }
 // Enemy-only solid segments: allies may pass to prevent trapping teammates.
 // Bosses are never displaced; they still attack and destroy the temporary wall.
+let brakkResolvingCollision=false;
 function brakkCollide(e){
- if(!e?.alive||isBossRank(e))return;
+ if(brakkResolvingCollision||!e?.alive||isBossRank(e)||(divinaMode&&divinaStructures.includes(e)))return;
+ brakkResolvingCollision=true;try{
  for(const o of portadorObjects){
   if(o.kind!=='brk_wall'||o.life<=0||o.hp<=0||!o.owner?.alive||o.owner.fused||(divinaMode?!portadorEnemies(o.owner).includes(e):heroes.includes(e)||(e.isDuelLocked&&e.duelOwner!==o.owner)))continue;
   const x=e.x-o.x,y=e.y-o.y,l=x*o.dx+y*o.dy,n=-x*o.dy+y*o.dx,rr=e.radius||18;
   if(Math.abs(l)>o.r+rr||Math.abs(n)>=10+rr)continue;
-  const push=(n>=0?1:-1)*(10+rr)-n;e.x-=o.dy*push;e.y+=o.dx*push;
+  const before={x:e.x,y:e.y},push=(n>=0?1:-1)*(10+rr)-n;e.x-=o.dy*push;e.y+=o.dx*push;
+  clampToArena(e);brkWallCollision(e);
+  if((arenaHas('heroReachable')&&!arenaHook('heroReachable',before,e))||(currentArena==='abismo'&&abS&&!abSafeAt(e.x,e.y))){e.x=before.x;e.y=before.y;}
  }
+ }finally{brakkResolvingCollision=false;}
 }
 const brkCast=expeditionCast;expeditionCast=function(h,sk,...args){return sk.action?.startsWith('brk_')?brakkCast(h,sk,...args):brkCast(h,sk,...args);};
 const brkObjects=ynaraUpdateObject;ynaraUpdateObject=function(o,dt){return brakkUpdate(o,dt)||brkObjects(o,dt);};

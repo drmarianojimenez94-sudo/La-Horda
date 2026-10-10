@@ -39,6 +39,7 @@ const server=http.createServer((req,res)=>{
    }
    start();const melee=Array.from({length:20},(_,i)=>enemy(20+i));player.basicCd=0;triggerBasic(player);check('basic twelve victim budget',melee.filter(e=>e.hp<1e7).length===12);
    start();let e=enemy();cast(0);let w=brakkOwned(player)[0];e.x=w.x;e.y=w.y;brakkCollide(e);check('wall actually displaces a hostile from segment',distance(e,w)>=e.radius+9);
+   e.x=w.x;e.y=w.y;clampToArena(e);check('native clamp and dynamic collision do not recurse',Number.isFinite(e.x)&&Number.isFinite(e.y));
    const pos={x:player.x,y:player.y};player.x=w.x;player.y=w.y;brakkCollide(player);check('wall never traps its owner',player.x===w.x&&player.y===w.y);Object.assign(player,pos);
    e.rank='jefe';e.x=w.x;e.y=w.y;brakkCollide(e);check('wall does not displace bosses',e.x===w.x&&e.y===w.y);
    e.rank='normal';e.dmg=1e5;e.x=w.x;e.y=w.y;tick(2600);check('enemies destroy wall',w.hp<=0&&w.life===0);
@@ -52,6 +53,14 @@ const server=http.createServer((req,res)=>{
    for(const level of [60,90,99]){start(level);Object.assign(save.champions.brakk.talents,{mastery:'brakk_2',masteryNodes:{brakk_t2master:1}});for(const h of heroes){h.x=player.x;h.y=player.y;}cast('ult');check('L'+level+' mastery allied shield gate',(heroes[1].shield>0)===(level>=90));}
    start(90);Object.assign(save.champions.brakk.talents,{mastery:'brakk_1',masteryNodes:{brakk_t1master:1}});player.hp=player.maxHp/2;cast(2);check('renew mastery actually heals',player.hp>player.maxHp/2);
    start(90);Object.assign(save.champions.brakk.talents,{mastery:'brakk_0',masteryNodes:{brakk_t0master:1}});e=enemy(30,'jefe');cast('ult');check('rubble extends slow while boss resistance holds',e.slowTimer>=3000&&e.slowAmt<=.12);
+   start(60);save.champions.brakk.talents.nodes.brakk_t2transform=1;
+   const rival=heroes.pop();rival.x=player.x+30;rival.y=player.y;rival.invulnTimer=0;rival.hp=rival.maxHp;
+   divinaEnemies=[rival];divinaMinions=[];divinaStructures=[];divinaMode=true;
+   cast(0);w=brakkOwned(player)[0];rival.x=w.x;rival.y=w.y;const old={x:rival.x,y:rival.y};brakkCollide(rival);check('Arena Divina rival collides with wall',rival.x!==old.x||rival.y!==old.y);
+   rival.x=player.x+30;rival.y=player.y;const rivalHP=rival.hp;cast(2);check('crew never protects rival',!(rival._kitArmorUntil>runElapsedMs)&&rival.hp===rivalHP);
+   cast('ult');check('Arena Divina demolition damages rival',rival.hp<rivalHP);
+   cast(0);w=brakkOwned(player)[0];const structure={alive:true,x:w.x,y:w.y,radius:20};divinaStructures=[structure];brakkCollide(structure);check('wall cannot displace static PvP structures',structure.x===w.x&&structure.y===w.y);
+   divinaMode=false;divinaEnemies=[];divinaStructures=[];
    start(99);check('ordinary tree cannot be completed',TALENT_TREES.brakk.nodes.reduce((s,n)=>s+n.maxRank*n.cost,0)>treePointsAvailable('brakk'));
    start();player.energy=0;useSkill(0);check('no energy no free construction',!brakkOwned(player).length);player.energy=player.maxEnergy;useSkill(0);const energy=player.energy;useSkill(0);check('cooldown stops duplicate construction',brakkOwned(player).length===1&&player.energy===energy&&player.cds[0]>0);
    start();cast(0);cast(1);const a=ctx.globalAlpha;drawPortadorGround();check('render restores canvas alpha',a===ctx.globalAlpha);
