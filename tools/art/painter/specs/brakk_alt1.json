@@ -1,0 +1,34 @@
+{
+  "id": "brakk_alt1",
+  "name": "Brakk — Arquitecto Glacial",
+  "prompt": "Fortaleza de hielo con barba blanca, corona cristalina y hombros de escarcha.",
+  "body": "renko_skin",
+  "head": "renko_skin",
+  "paint": [
+    {
+      "part": "body",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "ramp": [
+        "#142638",
+        "#28546e",
+        "#5797b7",
+        "#bbdfe9"
+      ]
+    }
+  ],
+  "accessories": [
+    {
+      "element": "corona_de_picos"
+    },
+    {
+      "element": "hombreras_redondas"
+    }
+  ],
+  "notes": "CANDIDATO NO APROBADO. Cabeza y cuerpo comparten donante para conservar identidad entre caminar, ataque y muerte. Requiere separación visual del donante, revisión de todas las animaciones, escala y kit completo antes de registrar.",
+  "skinOf": "brakk"
+}

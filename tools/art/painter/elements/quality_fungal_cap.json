@@ -1,0 +1,72 @@
+{
+  "name": "quality_fungal_cap",
+  "description": "Sombrero de micelio con placas de esporas.",
+  "layer": "front",
+  "anchor": "headTop",
+  "materials": {
+    "cap": {
+      "ramp": [
+        "#192222",
+        "#3b6656",
+        "#82a36b"
+      ]
+    },
+    "spore": {
+      "ramp": [
+        "#5b5430",
+        "#a2954b",
+        "#d2d192"
+      ]
+    }
+  },
+  "shapes": [
+    {
+      "type": "ellipse",
+      "center": [
+        0,
+        5
+      ],
+      "radius": [
+        16,
+        7
+      ],
+      "material": "cap"
+    },
+    {
+      "type": "ellipse",
+      "center": [
+        -8,
+        3
+      ],
+      "radius": [
+        2,
+        2
+      ],
+      "material": "spore"
+    },
+    {
+      "type": "ellipse",
+      "center": [
+        3,
+        1
+      ],
+      "radius": [
+        3,
+        2
+      ],
+      "material": "spore"
+    },
+    {
+      "type": "ellipse",
+      "center": [
+        9,
+        6
+      ],
+      "radius": [
+        2,
+        1.5
+      ],
+      "material": "spore"
+    }
+  ]
+}

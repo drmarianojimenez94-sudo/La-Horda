@@ -16,8 +16,9 @@ const GATES = {
   multiplayer: ['node', 'tools/net-test/lobby_code_skins.js'],
   performance: ['node', 'tools/audit/fps.js']
 };
-// Schema 1 is persisted. New runnable gates cannot silently change its required fields.
-// cli.js gate all still executes every release gate; STRUCTURAL_PASS is not approval.
+// Schema 1 is a persisted format: adding a runnable gate must not silently
+// add required fields to historical manifests. Runtime release gates remain
+// mandatory through cli.js gate all; structural validity is never release approval.
 const MANIFEST_V1_EVIDENCE = ['reference','balance','visuals','style','audio','multiplayer','performance'];
 function safeFile(file, root = ROOT) {
   if (typeof file !== 'string' || !file || path.isAbsolute(file)) return null;

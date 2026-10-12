@@ -1,0 +1,34 @@
+{
+  "id": "solciju_alt1",
+  "name": "Solciju — Viuda de Medianoche",
+  "prompt": "Vestido de luto, manto de viuda, tocado de espinas y plata envejecida.",
+  "body": "maura_set",
+  "head": "maura_set",
+  "paint": [
+    {
+      "part": "body",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "ramp": [
+        "#10121d",
+        "#26283a",
+        "#50546c",
+        "#9296b5"
+      ]
+    }
+  ],
+  "accessories": [
+    {
+      "element": "capa_larga"
+    },
+    {
+      "element": "quality_wine_cask"
+    }
+  ],
+  "notes": "CANDIDATO NO APROBADO. Cabeza y cuerpo comparten donante para conservar identidad entre caminar, ataque y muerte. Requiere separación visual del donante, revisión de todas las animaciones, escala y kit completo antes de registrar.",
+  "skinOf": "solciju"
+}

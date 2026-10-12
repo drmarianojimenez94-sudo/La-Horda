@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-10-10T10:17:17.736051+00:00",
+  "status": "BLOCKED_DEPLOYMENT_DRIFT_AND_UNVERIFIED_PERSISTENCE",
+  "expectedMain": "829de547796003f2f8a8e9acbcee6aeeb014d2ec",
+  "frontendHttpStatus": 200,
+  "healthUrl": "https://fondalstudios.com/la-horda/red/api/health",
+  "health": {
+    "ok": true,
+    "store": "file",
+    "persistent": false,
+    "status": "ready"
+  },
+  "files": [
+    {
+      "path": "js/audio/audio.js",
+      "url": "https://fondalstudios.com/la-horda/jugar/js/audio/audio.js",
+      "observedSha256": "833545db57a9bad39843f29db0e188182f807b0575444c1c57608322a0fbe8be",
+      "expectedSha256": "c301357a5a6757d1ad5f7202aa9dfe439fa4a8ed2740bc90f65ea6e747bcc507",
+      "matchesMain": false
+    },
+    {
+      "path": "js/modes/crystal-wars/simulation.js",
+      "url": "https://fondalstudios.com/la-horda/jugar/js/modes/crystal-wars/simulation.js",
+      "observedSha256": "9f7a97a751da911540a295ce5e0e13b0fa6c909e624e1142429f13a116d16cdb",
+      "expectedSha256": "81069a69a8646b33f698f733c7d14f807744a791b5af1cfc489ddbac6b596b95",
+      "matchesMain": false
+    },
+    {
+      "path": "js/net/net-config.js",
+      "url": "https://fondalstudios.com/la-horda/jugar/js/net/net-config.js",
+      "observedSha256": "2ff3ee5869319e3742581ddaae56743e4c103c8118119a63015997b2cc21d6fe",
+      "expectedSha256": "2ff3ee5869319e3742581ddaae56743e4c103c8118119a63015997b2cc21d6fe",
+      "matchesMain": true
+    }
+  ],
+  "cacheBypassConfirmed": true,
+  "observedCrystalVersion": "CW-2",
+  "expectedCrystalVersion": "CW-3",
+  "historicalMatches": {
+    "audio": "same bytes as 072150fa (before PR82)",
+    "crystals": "same bytes as first parent of 072150fa (before PR81)"
+  },
+  "limits": [
+    "HTTP health is not a backup or volume inspection.",
+    "NanoGM authentication/OWNER binding not verified.",
+    "No Fly.io deployment capability or CLI available; Sites owner/editor inventories empty.",
+    "Render is a separate legacy server, not a safe replacement."
+  ],
+  "writesToProduction": false,
+  "gmUnauthenticatedHttpStatus": 401,
+  "gmCapabilityVerified": false,
+  "hostingResponseHeaders": {
+    "server": "Fly/268b58352a (2026-10-09)",
+    "via": "2 fly.io, 2 fly.io"
+  }
+}

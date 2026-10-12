@@ -1,0 +1,295 @@
+{
+  "status": "PASS",
+  "scope": "Solciju workshop runtime, not release approval",
+  "checks": [
+    {
+      "name": "not registered in production",
+      "ok": true
+    },
+    {
+      "name": "L1 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L1 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L1 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L1 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L1 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L1 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L39 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L39 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L39 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L39 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L39 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L39 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L40 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L40 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L40 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L40 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L40 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L40 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L60 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L60 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L60 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L60 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L60 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L60 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L90 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L90 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L90 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L90 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L90 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L90 finite stats",
+      "ok": true
+    },
+    {
+      "name": "L99 wine area damage",
+      "ok": true
+    },
+    {
+      "name": "L99 cask telegraph delays damage",
+      "ok": true
+    },
+    {
+      "name": "L99 cask damages multiple enemies",
+      "ok": true
+    },
+    {
+      "name": "L99 toast heals and protects",
+      "ok": true
+    },
+    {
+      "name": "L99 ultimate damages/slows/protects",
+      "ok": true
+    },
+    {
+      "name": "L99 finite stats",
+      "ok": true
+    },
+    {
+      "name": "passive caps at three",
+      "ok": true
+    },
+    {
+      "name": "passive consumes ripe marks and slows",
+      "ok": true
+    },
+    {
+      "name": "marks expire",
+      "ok": true
+    },
+    {
+      "name": "marks isolated by owner",
+      "ok": true
+    },
+    {
+      "name": "boss slow capped at 12 percent",
+      "ok": true
+    },
+    {
+      "name": "two casks maximum",
+      "ok": true
+    },
+    {
+      "name": "replacing casks does not detonate",
+      "ok": true
+    },
+    {
+      "name": "casks explode only once",
+      "ok": true
+    },
+    {
+      "name": "one reserve maximum",
+      "ok": true
+    },
+    {
+      "name": "all constructs expire",
+      "ok": true
+    },
+    {
+      "name": "death clears constructs",
+      "ok": true
+    },
+    {
+      "name": "death clears owner marks",
+      "ok": true
+    },
+    {
+      "name": "fusion clears constructs",
+      "ok": true
+    },
+    {
+      "name": "L39 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L40 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L60 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L90 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "L99 transformation gate",
+      "ok": true
+    },
+    {
+      "name": "hospitality heals allies",
+      "ok": true
+    },
+    {
+      "name": "cellar transforms cask into protection",
+      "ok": true
+    },
+    {
+      "name": "L60 mastery flag gate",
+      "ok": true
+    },
+    {
+      "name": "L90 mastery flag gate",
+      "ok": true
+    },
+    {
+      "name": "L99 mastery flag gate",
+      "ok": true
+    },
+    {
+      "name": "concentrated reserve adds two marks",
+      "ok": true
+    },
+    {
+      "name": "cellar mastery detonates owned casks",
+      "ok": true
+    },
+    {
+      "name": "restorative reserve actually heals",
+      "ok": true
+    },
+    {
+      "name": "persistent cues restore canvas state",
+      "ok": true
+    },
+    {
+      "name": "Crystal Wars basic applies fermentation",
+      "ok": true
+    },
+    {
+      "name": "hospitality never heals rival",
+      "ok": true
+    },
+    {
+      "name": "Crystal Wars wine damages opponent",
+      "ok": true
+    },
+    {
+      "name": "talent points cannot complete tree",
+      "ok": true
+    },
+    {
+      "name": "cooldown prevents duplicate spend",
+      "ok": true
+    },
+    {
+      "name": "snapshot retains construct owner",
+      "ok": true
+    },
+    {
+      "name": "snapshot serializable and bounded",
+      "ok": true
+    },
+    {
+      "name": "reset clears objects",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

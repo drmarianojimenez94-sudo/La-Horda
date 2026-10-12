@@ -1,0 +1,331 @@
+{
+  "status": "PASS",
+  "scope": "Brakk workshop engine tests; not art, balance or multiplayer approval",
+  "checks": [
+    {
+      "name": "not published in roster",
+      "ok": true
+    },
+    {
+      "name": "L1 wall emergence hits crowd",
+      "ok": true
+    },
+    {
+      "name": "L1 wall has finite health and lifetime",
+      "ok": true
+    },
+    {
+      "name": "L1 turret windup",
+      "ok": true
+    },
+    {
+      "name": "L1 turret damages crowd then expires",
+      "ok": true
+    },
+    {
+      "name": "L1 repair heals construct and buffs armor",
+      "ok": true
+    },
+    {
+      "name": "L1 demolition damages slows shields and consumes",
+      "ok": true
+    },
+    {
+      "name": "L39 wall emergence hits crowd",
+      "ok": true
+    },
+    {
+      "name": "L39 wall has finite health and lifetime",
+      "ok": true
+    },
+    {
+      "name": "L39 turret windup",
+      "ok": true
+    },
+    {
+      "name": "L39 turret damages crowd then expires",
+      "ok": true
+    },
+    {
+      "name": "L39 repair heals construct and buffs armor",
+      "ok": true
+    },
+    {
+      "name": "L39 demolition damages slows shields and consumes",
+      "ok": true
+    },
+    {
+      "name": "L40 wall emergence hits crowd",
+      "ok": true
+    },
+    {
+      "name": "L40 wall has finite health and lifetime",
+      "ok": true
+    },
+    {
+      "name": "L40 turret windup",
+      "ok": true
+    },
+    {
+      "name": "L40 turret damages crowd then expires",
+      "ok": true
+    },
+    {
+      "name": "L40 repair heals construct and buffs armor",
+      "ok": true
+    },
+    {
+      "name": "L40 demolition damages slows shields and consumes",
+      "ok": true
+    },
+    {
+      "name": "L60 wall emergence hits crowd",
+      "ok": true
+    },
+    {
+      "name": "L60 wall has finite health and lifetime",
+      "ok": true
+    },
+    {
+      "name": "L60 turret windup",
+      "ok": true
+    },
+    {
+      "name": "L60 turret damages crowd then expires",
+      "ok": true
+    },
+    {
+      "name": "L60 repair heals construct and buffs armor",
+      "ok": true
+    },
+    {
+      "name": "L60 demolition damages slows shields and consumes",
+      "ok": true
+    },
+    {
+      "name": "L90 wall emergence hits crowd",
+      "ok": true
+    },
+    {
+      "name": "L90 wall has finite health and lifetime",
+      "ok": true
+    },
+    {
+      "name": "L90 turret windup",
+      "ok": true
+    },
+    {
+      "name": "L90 turret damages crowd then expires",
+      "ok": true
+    },
+    {
+      "name": "L90 repair heals construct and buffs armor",
+      "ok": true
+    },
+    {
+      "name": "L90 demolition damages slows shields and consumes",
+      "ok": true
+    },
+    {
+      "name": "L99 wall emergence hits crowd",
+      "ok": true
+    },
+    {
+      "name": "L99 wall has finite health and lifetime",
+      "ok": true
+    },
+    {
+      "name": "L99 turret windup",
+      "ok": true
+    },
+    {
+      "name": "L99 turret damages crowd then expires",
+      "ok": true
+    },
+    {
+      "name": "L99 repair heals construct and buffs armor",
+      "ok": true
+    },
+    {
+      "name": "L99 demolition damages slows shields and consumes",
+      "ok": true
+    },
+    {
+      "name": "basic twelve victim budget",
+      "ok": true
+    },
+    {
+      "name": "wall actually displaces a hostile from segment",
+      "ok": true
+    },
+    {
+      "name": "native clamp and dynamic collision do not recurse",
+      "ok": true
+    },
+    {
+      "name": "wall never traps its owner",
+      "ok": true
+    },
+    {
+      "name": "wall does not displace bosses",
+      "ok": true
+    },
+    {
+      "name": "enemies destroy wall",
+      "ok": true
+    },
+    {
+      "name": "passive works only near own construction",
+      "ok": true
+    },
+    {
+      "name": "construction cap four",
+      "ok": true
+    },
+    {
+      "name": "death clears construction",
+      "ok": true
+    },
+    {
+      "name": "fusion clears construction",
+      "ok": true
+    },
+    {
+      "name": "delayed frame cannot create extra turret shots",
+      "ok": true
+    },
+    {
+      "name": "L39 wall tradeoff gated",
+      "ok": true
+    },
+    {
+      "name": "L40 wall tradeoff gated",
+      "ok": true
+    },
+    {
+      "name": "L60 wall tradeoff gated",
+      "ok": true
+    },
+    {
+      "name": "L90 wall tradeoff gated",
+      "ok": true
+    },
+    {
+      "name": "L99 wall tradeoff gated",
+      "ok": true
+    },
+    {
+      "name": "crew protects nearby allies",
+      "ok": true
+    },
+    {
+      "name": "piercing turret changes target pattern",
+      "ok": true
+    },
+    {
+      "name": "L60 mastery allied shield gate",
+      "ok": true
+    },
+    {
+      "name": "L90 mastery allied shield gate",
+      "ok": true
+    },
+    {
+      "name": "L99 mastery allied shield gate",
+      "ok": true
+    },
+    {
+      "name": "renew mastery actually heals",
+      "ok": true
+    },
+    {
+      "name": "rubble extends slow while boss resistance holds",
+      "ok": true
+    },
+    {
+      "name": "Arena Divina rival collides with wall",
+      "ok": true
+    },
+    {
+      "name": "crew never protects rival",
+      "ok": true
+    },
+    {
+      "name": "Arena Divina demolition damages rival",
+      "ok": true
+    },
+    {
+      "name": "wall cannot displace static PvP structures",
+      "ok": true
+    },
+    {
+      "name": "ordinary tree cannot be completed",
+      "ok": true
+    },
+    {
+      "name": "no energy no free construction",
+      "ok": true
+    },
+    {
+      "name": "cooldown stops duplicate construction",
+      "ok": true
+    },
+    {
+      "name": "render restores canvas alpha",
+      "ok": true
+    },
+    {
+      "name": "snapshot attributes builds to owner",
+      "ok": true
+    },
+    {
+      "name": "snapshot bounded",
+      "ok": true
+    },
+    {
+      "name": "reset clears builds",
+      "ok": true
+    },
+    {
+      "name": "arena bosque finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena ciudad finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena fortaleza finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena micelial finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena hielo finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena acuatica finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena laberinto finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena abismo finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena minas finite hero and builds",
+      "ok": true
+    },
+    {
+      "name": "arena infernal finite hero and builds",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

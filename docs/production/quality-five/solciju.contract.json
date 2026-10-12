@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "solciju",
+  "name": "Solciju",
+  "title": "La Enóloga",
+  "role": "mago",
+  "fantasy": "Control de zonas mediante vino maldito, fermentación y barricas.",
+  "lore": "Solciju conservaba las últimas cosechas de una ciudad que ya nadie recordaba. Cuando la peste alcanzó sus bodegas, descubrió que el vino retenía algo más que años: atrapaba las maldiciones de quienes lo bebían. Ahora recorre las ruinas con una reserva que jamás ofrece por cortesía. Dice detestar la compañía, pero siempre guarda una copa para quien sobreviva a su lado.",
+  "personality": "Irónica, reservada y protectora a su pesar.",
+  "silhouette": "PENDIENTE: distinguir de Maura; copa, barrica y vestimenta de bodeguera.",
+  "stats": {
+    "hp": 98,
+    "damage": 10,
+    "speed": 157
+  },
+  "kit": {
+    "basic": {
+      "id": "solciju_basic",
+      "description": "Proyectil que añade fermentación al impactar.",
+      "cooldownMs": 560,
+      "maxTargets": 1,
+      "hordeMechanism": "",
+      "anticipation": "Orientación al objetivo; animación de ataque simultánea al golpe.",
+      "execution": "js/skills/abilities.js: triggerBasic",
+      "impact": "damageEnemy y daño atribuido al dueño.",
+      "feedback": "Animación y efecto de impacto del motor.",
+      "vfx": "Proyectil básico del motor.",
+      "sfx": ""
+    },
+    "skills": [
+      {
+        "id": "sol_wine",
+        "description": "Salpica vino en un área y añade una marca de fermentación.",
+        "cooldownMs": 6200,
+        "maxTargets": 12,
+        "hordeMechanism": "Daño a varios objetivos con límite de doce.",
+        "anticipation": "Premarcado manual de área/dirección; lanzamiento inmediato.",
+        "execution": "js/champions/quality-five/solciju.js: acción sol_wine",
+        "impact": "Salpica vino en un área y añade una marca de fermentación.",
+        "feedback": "Daño/curación y estados del motor; kitFx temático.",
+        "vfx": "kitFx / kitFxLine del runtime; premarcado en ACTION_AIM_PROFILES.",
+        "sfx": ""
+      },
+      {
+        "id": "sol_cask",
+        "description": "Coloca una barrica que estalla tras 2,4 s. Máximo dos; reemplazar una no la detona.",
+        "cooldownMs": 8500,
+        "maxTargets": 12,
+        "hordeMechanism": "Daño a varios objetivos con límite de doce.",
+        "anticipation": "Premarcado manual de área/dirección; lanzamiento inmediato.",
+        "execution": "js/champions/quality-five/solciju.js: acción sol_cask",
+        "impact": "Coloca una barrica que estalla tras 2,4 s. Máximo dos; reemplazar una no la detona.",
+        "feedback": "Daño/curación y estados del motor; kitFx temático.",
+        "vfx": "kitFx / kitFxLine del runtime; premarcado en ACTION_AIM_PROFILES.",
+        "sfx": ""
+      },
+      {
+        "id": "sol_toast",
+        "description": "Obtiene 15% de armadura durante 3 s y recupera 4% de vida máxima.",
+        "cooldownMs": 11000,
+        "maxTargets": 4,
+        "hordeMechanism": "Apoyo y supervivencia durante oleadas.",
+        "anticipation": "Activación sobre el propio campeón.",
+        "execution": "js/champions/quality-five/solciju.js: acción sol_toast",
+        "impact": "Obtiene 15% de armadura durante 3 s y recupera 4% de vida máxima.",
+        "feedback": "Daño/curación y estados del motor; kitFx temático.",
+        "vfx": "kitFx / kitFxLine del runtime; premarcado en ACTION_AIM_PROFILES.",
+        "sfx": ""
+      }
+    ],
+    "ultimate": {
+      "id": "sol_reserve",
+      "description": "Cuatro pulsos de vino dañan y ralentizan enemigos. Protege a aliados dentro del área.",
+      "cooldownMs": 36000,
+      "maxTargets": 12,
+      "hordeMechanism": "Daño de área y control.",
+      "anticipation": "Premarcado manual; zona persistente con pulsos temporizados.",
+      "execution": "js/champions/quality-five/solciju.js: acción sol_reserve",
+      "impact": "Cuatro pulsos de vino dañan y ralentizan enemigos. Protege a aliados dentro del área.",
+      "feedback": "kitFx de definitiva y estados medidos por Ability Gate.",
+      "vfx": "kitFx con ult:true.",
+      "sfx": ""
+    }
+  },
+  "art": {
+    "atlas": "",
+    "preview": "",
+    "directions": 4,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "sha256": "",
+    "animations": {
+      "idle": 0,
+      "walk": 0,
+      "attack": 0,
+      "cast": 0,
+      "hit": 0,
+      "death": 0,
+      "ultimate": 0
+    },
+    "review": {
+      "status": "PENDING",
+      "reviewer": "",
+      "evidence": ""
+    }
+  },
+  "integration": {
+    "runtime": "js/champions/quality-five/solciju.js",
+    "codex": "tools/quality-five/register-fixture.js",
+    "talents": "tools/quality-five/register-fixture.js",
+    "mastery": "tools/quality-five/register-fixture.js",
+    "set": "",
+    "kitTest": "tools/quality-five/functional.js"
+  },
+  "cosmetics": [],
+  "set": {
+    "sourceArena": "",
+    "pieces": [],
+    "rewardCosmetic": "",
+    "rewardGrantsPower": false
+  },
+  "budgets": {
+    "particles": 32,
+    "summons": 5,
+    "audioVoices": 2
+  },
+  "evidence": {
+    "reference": "docs/production/quality-five/workshop-entry-results.json",
+    "talents": "docs/production/quality-five/functional-results.json",
+    "abilities": "docs/production/quality-five/ability/ability-gate.json",
+    "resources": "docs/production/quality-five/functional-results.json",
+    "passives": "docs/production/quality-five/functional-results.json",
+    "balance": "docs/production/quality-five/workshop-entry-results.json",
+    "visuals": "",
+    "style": "",
+    "audio": "",
+    "multiplayer": "docs/production/quality-five/online-results.json",
+    "performance": ""
+  },
+  "category": "STANDARD"
+}

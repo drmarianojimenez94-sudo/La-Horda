@@ -1,0 +1,30 @@
+{
+  "id": "brakk",
+  "name": "Brakk, el Arquitecto del Fin",
+  "prompt": "Constructor acorazado con casco cerrado y hombreras de obra en bronce.",
+  "body": "renko",
+  "head": "renko",
+  "paint": [
+    {
+      "part": "body",
+      "hue": [
+        0,
+        360
+      ],
+      "minChroma": 8,
+      "noSkin": true,
+      "ramp": [
+        "#302413",
+        "#675036",
+        "#a8844d",
+        "#d9bd81"
+      ]
+    }
+  ],
+  "accessories": [
+    {
+      "element": "hombreras_redondas"
+    }
+  ],
+  "notes": "CANDIDATO NO APROBADO. Cabeza y cuerpo comparten donante para conservar identidad entre caminar, ataque y muerte. Requiere separación visual del donante, revisión de todas las animaciones, escala y kit completo antes de registrar."
+}

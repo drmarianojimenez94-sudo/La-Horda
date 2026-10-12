@@ -1,0 +1,56 @@
+{
+  "name": "quality_wine_cask",
+  "description": "Barrica de fermentación portátil de Solciju.",
+  "layer": "behind",
+  "anchor": "shoulders",
+  "materials": {
+    "wood": {
+      "ramp": [
+        "#281516",
+        "#653126",
+        "#ad7044"
+      ]
+    },
+    "iron": {
+      "ramp": [
+        "#151722",
+        "#40444e",
+        "#85828d"
+      ]
+    }
+  },
+  "shapes": [
+    {
+      "type": "ellipse",
+      "center": [
+        -17,
+        4
+      ],
+      "radius": [
+        8,
+        10
+      ],
+      "material": "wood"
+    },
+    {
+      "type": "rect",
+      "box": [
+        -24,
+        -2,
+        -10,
+        0
+      ],
+      "material": "iron"
+    },
+    {
+      "type": "rect",
+      "box": [
+        -24,
+        8,
+        -10,
+        10
+      ],
+      "material": "iron"
+    }
+  ]
+}

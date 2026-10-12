@@ -1,0 +1,97 @@
+{
+  "note": "Headless Chromium, 150 enemies, repeated casts; relative evidence only (not a device test).",
+  "rows": [
+    {
+      "champion": "nano_gm",
+      "frames": 81,
+      "p50": 99.9,
+      "p95": 116.6,
+      "maxObjects": 5,
+      "maxFamilyParticles": 0,
+      "heapMB": 22
+    },
+    {
+      "champion": "facu_gm",
+      "frames": 323,
+      "p50": 16.7,
+      "p95": 33.3,
+      "maxObjects": 9,
+      "maxFamilyParticles": 0,
+      "heapMB": 20
+    },
+    {
+      "champion": "aurelia",
+      "frames": 354,
+      "p50": 16.7,
+      "p95": 16.7,
+      "maxObjects": 4,
+      "maxFamilyParticles": 0,
+      "heapMB": 24
+    },
+    {
+      "champion": "khepri",
+      "frames": 351,
+      "p50": 16.7,
+      "p95": 16.8,
+      "maxObjects": 2,
+      "maxFamilyParticles": 0,
+      "heapMB": 24,
+      "swarm": 0
+    },
+    {
+      "champion": "velmira",
+      "frames": 353,
+      "p50": 16.7,
+      "p95": 16.7,
+      "maxObjects": 1,
+      "maxFamilyParticles": 0,
+      "heapMB": 20
+    },
+    {
+      "champion": "vhal",
+      "frames": 351,
+      "p50": 16.7,
+      "p95": 16.8,
+      "maxObjects": 5,
+      "maxFamilyParticles": 0,
+      "heapMB": 26
+    },
+    {
+      "champion": "bront",
+      "frames": 352,
+      "p50": 16.7,
+      "p95": 16.8,
+      "maxObjects": 9,
+      "maxFamilyParticles": 0,
+      "heapMB": 22
+    },
+    {
+      "champion": "oriel",
+      "frames": 356,
+      "p50": 16.7,
+      "p95": 16.7,
+      "maxObjects": 5,
+      "maxFamilyParticles": 0,
+      "heapMB": 28
+    },
+    {
+      "champion": "myla",
+      "frames": 350,
+      "p50": 16.7,
+      "p95": 16.8,
+      "maxObjects": 6,
+      "maxFamilyParticles": 177,
+      "heapMB": 24
+    },
+    {
+      "champion": "ynara",
+      "frames": 350,
+      "p50": 16.7,
+      "p95": 16.8,
+      "maxObjects": 3,
+      "maxFamilyParticles": 45,
+      "heapMB": 22
+    }
+  ],
+  "errors": []
+}

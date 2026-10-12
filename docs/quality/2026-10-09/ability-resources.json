@@ -1,0 +1,182 @@
+{
+  "champions": 38,
+  "checks": 3366,
+  "failed": [],
+  "exceptions": [
+    {
+      "champion": "libertador",
+      "level": 1,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 1,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 39,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 39,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 40,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 40,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 60,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 60,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 90,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 90,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 99,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "libertador",
+      "level": 99,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 1,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 1,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 1,
+      "reason": "transformed ultimate has a separate fury contract"
+    },
+    {
+      "champion": "eren",
+      "level": 39,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 39,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 39,
+      "reason": "transformed ultimate has a separate fury contract"
+    },
+    {
+      "champion": "eren",
+      "level": 40,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 40,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 40,
+      "reason": "transformed ultimate has a separate fury contract"
+    },
+    {
+      "champion": "eren",
+      "level": 60,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 60,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 60,
+      "reason": "transformed ultimate has a separate fury contract"
+    },
+    {
+      "champion": "eren",
+      "level": 90,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 90,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 90,
+      "reason": "transformed ultimate has a separate fury contract"
+    },
+    {
+      "champion": "eren",
+      "level": 99,
+      "slot": 1,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 99,
+      "slot": 2,
+      "reason": "kit state blocks action"
+    },
+    {
+      "champion": "eren",
+      "level": 99,
+      "reason": "transformed ultimate has a separate fury contract"
+    }
+  ],
+  "errors": []
+}

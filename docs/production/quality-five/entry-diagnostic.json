@@ -1,0 +1,206 @@
+{
+  "status": "COMPLETE",
+  "diagnosticOnly": true,
+  "key": "saelis",
+  "runs": [
+    {
+      "mode": "production",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 9517.990463873351,
+      "alive": true,
+      "hp": 268,
+      "casts": 94,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 8714.280198184022,
+      "alive": true,
+      "hp": 268,
+      "casts": 82,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 9088.369559288594,
+      "alive": true,
+      "hp": 332.451296,
+      "casts": 82,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 9184.937415471844,
+      "alive": true,
+      "hp": 338,
+      "casts": 96,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9130.173544753137,
+      "alive": true,
+      "hp": 268,
+      "casts": 84,
+      "error": null
+    },
+    {
+      "mode": "production",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 9235.589926072003,
+      "alive": true,
+      "hp": 268,
+      "casts": 84,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8630.886646770781,
+      "alive": true,
+      "hp": 255.317248,
+      "casts": 95,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9272.865956575213,
+      "alive": true,
+      "hp": 268,
+      "casts": 85,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 7971.971405964681,
+      "alive": true,
+      "hp": 268,
+      "casts": 82,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 9761.504783991695,
+      "alive": true,
+      "hp": 268,
+      "casts": 94,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9774.383482781841,
+      "alive": true,
+      "hp": 268,
+      "casts": 89,
+      "error": null
+    },
+    {
+      "mode": "modules-only",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 8730.994432512685,
+      "alive": true,
+      "hp": 268,
+      "casts": 90,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 9146.979995440592,
+      "alive": true,
+      "hp": 268,
+      "casts": 94,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 7909.857346059424,
+      "alive": true,
+      "hp": 268,
+      "casts": 83,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 0,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 8586.603318958234,
+      "alive": true,
+      "hp": 268,
+      "casts": 82,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 117,
+      "damage": 8749.450920148833,
+      "alive": true,
+      "hp": 331.9688,
+      "casts": 94,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 431,
+      "damage": 9651.730597063999,
+      "alive": true,
+      "hp": 268,
+      "casts": 85,
+      "error": null
+    },
+    {
+      "mode": "workshop",
+      "repeat": 1,
+      "key": "saelis",
+      "seed": 991,
+      "damage": 8227.214350222175,
+      "alive": true,
+      "hp": 268,
+      "casts": 82,
+      "error": null
+    }
+  ],
+  "errors": []
+}
