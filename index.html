@@ -43,6 +43,7 @@
 <link rel="stylesheet" href="css/loot.css">
 <link rel="stylesheet" href="css/onboarding.css">
 <link rel="stylesheet" href="css/combat-readability.css">
+<link rel="stylesheet" href="css/howto.css">
 <link rel="stylesheet" href="css/duo-ux.css">
 <link rel="stylesheet" href="css/alpha-services.css">
 <link rel="stylesheet" href="css/game-master.css">
@@ -143,7 +144,7 @@
     <div class="title-fire-glow"></div>
     <canvas id="title-canvas"></canvas>
     <div class="brand title-brand">LA HORDA</div>
-    <div class="brand-sub">UN CAMINO AL INFIERNO, LLENO DE MONSTRUOS</div>
+    <div class="brand-sub">SOBREVIVÍ A LA HORDA CON TU EQUIPO · MEJORÁ EN CADA NIVEL</div>
     <button class="btn wide" id="title-continue-btn" disabled>Cargando…</button>
     <!-- B1: invitación a una sala online (?room=CÓDIGO en la URL) -->
     <label class="hidden" id="title-join-name">Tu nombre <input maxlength="16" placeholder="Jugador"></label>
@@ -164,6 +165,7 @@
       <!-- Brasas ✦ (moneda premium, solo apariencia): siempre visible; "+" abre la Tienda en la pestaña ✦ Brasas -->
       <button class="hub-premium-btn" id="hub-premium-btn" data-premium-chip type="button" aria-label="Brasas: ver paquetes en la Tienda" title="Brasas: solo compran apariencia">✦ <b data-premium-balance>—</b><span class="hub-premium-plus" aria-hidden="true">+</span></button>
       <div class="hub-brand">LA HORDA</div>
+      <button class="ui-icon-btn" id="hub-howto-btn" aria-label="Cómo se juega" title="Cómo se juega">?</button>
       <button class="ui-icon-btn" id="hub-options-btn" aria-label="Opciones" title="Opciones">⚙</button>
       <button class="ui-icon-btn" id="mainmenu-back-btn" aria-label="Volver al título" title="Volver al título">⏏</button>
     </div>
@@ -526,6 +528,7 @@
       <label class="pause-motion" title="Menos partículas y sin destellos en definitivas, banners y efectos especiales. No cambia el daño ni los avisos de peligro">✨ Reducir efectos intensos <input type="checkbox" id="opt-reduce-fx"></label>
     </div>
     <button class="btn small secondary pause-opts-btn" id="pause-opts-btn">⚙ Opciones: zurdo, texto, vibración…</button>
+    <button class="btn small secondary" id="pause-howto-btn">❓ Cómo se juega</button>
     <div id="stats-panel"></div>
     <button class="btn wide" id="resume-btn">Continuar</button>
     <button class="btn secondary" id="quit-btn">Abandonar arena</button>
@@ -802,6 +805,7 @@
 <script src="js/ui/pixel-font-fix.js"></script>
 <script src="js/ui/pixel-icons.js"></script>
 <script src="js/ui/goal-guide.js"></script>
+<script src="js/ui/how-to-play.js"></script>
 <script src="js/ui/run-intro.js"></script>
 <script src="js/ui/arena-briefing.js"></script>
 <script src="js/ui/menus.js"></script>

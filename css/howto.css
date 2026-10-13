@@ -1,0 +1,11 @@
+/* ¿Cómo se juega? — se desplaza si no entra; botones y texto del mismo tamaño que el resto de los menús */
+#howto{position:fixed;inset:0;z-index:9000;background:rgba(6,4,2,.82);display:flex;align-items:center;justify-content:center;padding:10px;box-sizing:border-box;}
+#howto.hidden{display:none;}
+#howto .howto-card{width:min(560px,100%);max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;padding:12px 14px;border:2px solid #ffcf5c;border-radius:12px;background:#1c1208;color:#f3e6c8;}
+#howto .howto-title{font-weight:800;letter-spacing:.06em;color:#ffcf5c;font-size:1rem;margin-bottom:8px;text-align:center;}
+#howto .howto-step{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-top:1px solid rgba(255,207,92,.18);}
+#howto .howto-step:first-child{border-top:0;}
+#howto .howto-ic{font-size:1.5rem;line-height:1.2;flex:0 0 2rem;text-align:center;}
+#howto .howto-step b{color:#ffe9a8;font-size:.92rem;}
+#howto .howto-step p{margin:2px 0 0;font-size:.86rem;line-height:1.35;overflow-wrap:anywhere;}
+#howto .btn{margin-top:10px;min-height:44px;}
