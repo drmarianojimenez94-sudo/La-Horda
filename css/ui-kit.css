@@ -25,7 +25,15 @@
   /* tipografías y tiempos */
   --ui-font:var(--font-retro); --ui-font-brand:var(--font-pixel); --ui-font-body:var(--font-body);
   --ui-t:120ms; --ui-ease:cubic-bezier(.2,.8,.2,1);
+  /* HUD de partida compartido por Campaña, Coliseo y Guerra de Cristales (mismos paneles, barras y botones) */
+  --hud-panel-bg:rgba(10,6,4,0.78); --hud-panel-line:var(--panel-b); --hud-panel-r:12px;
+  --hud-ink:var(--text); --hud-dim:var(--text-dim); --hud-gold:var(--ui-gold); --hud-track:#241410;
+  --team-a:#6fd3ff; --team-b:#ffb86a; --team-c:#7dffa0; --team-d:#ff7a8a;
+  /* acento propio de cada modo: Campaña = brasa; Coliseo = arena dorada; Cristales = cristal celeste */
+  --mode-accent:var(--ember1); --mode-accent-2:var(--ember3);
 }
+body[data-mode="coliseo"]{ --mode-accent:#e8c26a; --mode-accent-2:#ffd76a; }
+body[data-mode="cristales"]{ --mode-accent:#6fd3ff; --mode-accent-2:#bfe8ff; }
 
 /* ---------- estados comunes de todo lo que se toca ---------- */
 .btn, .shop-btn, .cx-btn, .cx-back, .ui-back, .ui-icon-btn, .mode-card, .hub-tile, .hub-play, .hub-profile,

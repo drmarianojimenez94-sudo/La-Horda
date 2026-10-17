@@ -21,7 +21,7 @@ function colHudBuild(){
   el.querySelector(".col-pit").addEventListener("click", ()=>colSpecPit());
   _colHud = el; return el;
 }
-function colHudShow(){ const el = colHudBuild(); el.classList.remove("hidden"); document.body.classList.add("lanes-on"); const lv = document.getElementById("hud-level"), sp = lv && lv.parentElement; if(sp) sp.innerHTML = 'Ronda <b id="hud-level">0</b> · Vencidos <b id="hud-kills">0</b>'; }
+function colHudShow(){ const el = colHudBuild(); el.classList.remove("hidden"); document.body.classList.add("lanes-on"); document.body.dataset.mode = "coliseo"; const lv = document.getElementById("hud-level"), sp = lv && lv.parentElement; if(sp) sp.innerHTML = 'Ronda <b id="hud-level">0</b> · Vencidos <b id="hud-kills">0</b>'; }
 function colHudSync(s){ if(_colHud) _colHud.style.display = (s === "playing" && LN && LN.mode === "coliseo") ? "" : "none"; }
 function colHudHide(){ if(_colHud){ _colHud.classList.add("hidden"); } const r = document.getElementById("col-result"); if(r) r.classList.add("hidden"); }
 function _colClock(ms){ const left = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0"); }

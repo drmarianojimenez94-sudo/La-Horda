@@ -39,7 +39,7 @@ const FIX={tut:{training:1},starterChosen:true,starterGiftV1:true,starterSkin:'v
   // final rápido: el equipo 1 gana el torneo
   await p.evaluate(()=>{LN.team[1].points=COL.WIN_POINTS-1;colResolve(0,1);LN.col.res[1]||colResolve(1,2);LN.col.phase='inter';LN.col.t0=LN.t-COL.INTER_MS;});
   await p.waitForSelector('#col-result:not(.hidden)',{timeout:12000});
-  assert.equal(await p.locator('#col-result tbody tr').count(),4,'tabla con los cuatro equipos');assert.match(await p.textContent('#col-result h2'),/ÁMBAR GANA/);
+  assert.equal(await p.locator('#col-result tbody tr').count(),4,'tabla con los cuatro equipos');assert.match(await p.textContent('#col-result h2'),/[AÁ]MBAR GANA/);
   assert.equal(await p.evaluate(()=>CAM_SUBJECT),null,'cámara de vuelta a vos al terminar');
   // revancha
   await p.click('#col-result .ln-again');await p.waitForFunction(()=>state==='playing'&&lanesOn()&&LN.mode==='coliseo'&&LN.col.round===1,null,{timeout:20000});

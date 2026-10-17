@@ -38,14 +38,14 @@ function lanesHudBuild(){
 }
 function _lnPill(on){ const lv = document.getElementById("hud-level"), sp = lv && lv.parentElement; if(!sp) return;
   sp.innerHTML = on ? 'Oleada <b id="hud-level">0</b> · Vencidos <b id="hud-kills">0</b>' : 'Nivel <b id="hud-level">1</b>/10 · Vencidos <b id="hud-kills">0</b>'; }
-function lanesHudShow(){ const el = lanesHudBuild(); el.classList.remove("hidden"); document.body.classList.add("lanes-on"); _lnPill(true); }
+function lanesHudShow(){ const el = lanesHudBuild(); el.classList.remove("hidden"); document.body.classList.add("lanes-on"); document.body.dataset.mode = (typeof LN !== "undefined" && LN && LN.mode === "coliseo") ? "coliseo" : "cristales"; _lnPill(true); }
 function lanesHudSync(s){
   if(_lnHud) _lnHud.style.display = (s === "playing" && LN && LN.mode !== "coliseo") ? "" : "none";
   if(typeof colHudSync === "function") colHudSync(s);
   // se fue de la Sala sin jugar (salió de la sala, cerró el menú): se devuelve el guardado real
   if(LN && LN.lobby && s !== "prep" && !(typeof netMatch !== "undefined" && netMatch) && !(typeof netInRoom === "function" && netInRoom())) lanesRestore();
 }
-function lanesHudHide(){ _lnPill(false); if(typeof colHudHide === "function") colHudHide(); if(_lnHud) _lnHud.classList.add("hidden"); document.body.classList.remove("lanes-on"); const r = document.getElementById("lanes-result"); if(r) r.classList.add("hidden"); }
+function lanesHudHide(){ _lnPill(false); if(typeof colHudHide === "function") colHudHide(); if(_lnHud) _lnHud.classList.add("hidden"); document.body.classList.remove("lanes-on"); delete document.body.dataset.mode; const r = document.getElementById("lanes-result"); if(r) r.classList.add("hidden"); }
 function _lnMin(ms){ const t = Math.ceil(ms / 1000); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); }
 function _lnClock(ms){ const left = Math.max(0, Math.ceil((LANES.TIME_LIMIT_MS - ms) / 1000)); return Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0"); }
 

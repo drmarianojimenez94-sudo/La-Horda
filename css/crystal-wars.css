@@ -3,38 +3,40 @@
 /* contenedor: la pantalla del juego ocupa todo y hace scroll; el contenido vive en #cw-root */
 #crystalwars-screen.screen{align-items:stretch;justify-content:flex-start;overflow-y:auto}
 #crystalwars-screen #cw-root{min-height:100%}
-#crystalwars-screen{color-scheme:dark;--bg:#10131f;--panel:#1b2131;--line:#374053;--gold:#ebc16f;--blue:#75c9fa;--amber:#ffb66f}
+#crystalwars-screen{color-scheme:dark;--bg:var(--ui-bg-2);--panel:var(--ui-bg-1);--line:var(--ui-line-hi);--gold:var(--mode-accent-2);--blue:var(--team-a);--amber:var(--team-b)}
+#crystalwars-screen[data-mode="coliseo"]{--mode-accent:#e8c26a;--mode-accent-2:#ffd76a}
+#crystalwars-screen[data-mode="cristales"]{--mode-accent:#6fd3ff;--mode-accent-2:#bfe8ff}
 #crystalwars-screen *{box-sizing:border-box}
-#crystalwars-screen.screen{padding:0;display:block;text-align:left;margin:0;background:radial-gradient(ellipse at 50% 0,#253048,var(--bg) 65%);color:#e8edf5;font:17px/1.35 'VT323 Texto',system-ui,sans-serif}
+#crystalwars-screen.screen{padding:0;display:block;text-align:left;margin:0;background:radial-gradient(ellipse at 50% 0,#3a2415,var(--bg) 65%);color:var(--text);font:17px/1.35 'VT323 Texto',system-ui,sans-serif}
 #crystalwars-screen button,#crystalwars-screen input,#crystalwars-screen select{font:inherit}
 #crystalwars-screen button,#crystalwars-screen a{touch-action:manipulation}
-#crystalwars-screen button{border:1px solid var(--line);border-radius:7px;padding:11px 15px;background:#252e40;color:#fff;cursor:pointer;min-height:44px}
-#crystalwars-screen button:hover{border-color:var(--gold)}
+#crystalwars-screen button{border:3px solid #000;border-radius:6px;padding:11px 15px;background:var(--ui-btn);box-shadow:var(--ui-bevel),var(--ui-shadow-sm);color:var(--text);cursor:pointer;min-height:44px}
+#crystalwars-screen button:hover{filter:brightness(1.18)}
 #crystalwars-screen button:disabled{opacity:.4;cursor:default}
-#crystalwars-screen .primary{background:var(--gold);color:#211b14;font-weight:800}
+#crystalwars-screen .primary{background:var(--ui-btn-hot);color:#fff;font-weight:800;text-shadow:2px 2px 0 #000}
 #crystalwars-screen a{color:var(--gold);text-decoration:none}
-#crystalwars-screen header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:1.4px}
+#crystalwars-screen header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 24px;border-bottom:3px solid var(--mode-accent);font-size:12px;letter-spacing:1.4px}
 #crystalwars-screen header button{font-size:11px;padding:5px 10px}
 #crystalwars-screen main{max-width:1020px;margin:auto;padding:44px 24px}
 #crystalwars-screen .eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px}
 #crystalwars-screen h1{font-size:clamp(38px,7vw,76px);line-height:1.05;letter-spacing:2px;margin:18px 0}
 #crystalwars-screen h1 em{font-style:normal;color:var(--gold)}
-#crystalwars-screen .intro{max-width:600px;font-size:18px;color:#b4c1d3}
+#crystalwars-screen .intro{max-width:600px;font-size:18px;color:var(--text-dim)}
 #crystalwars-screen .rules{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:30px 0}
 #crystalwars-screen .rules b{color:var(--gold);font-size:12px;letter-spacing:1px}
-#crystalwars-screen .rules p{color:#b4c1d3;margin:8px 0}
-#crystalwars-screen .setup,#crystalwars-screen #room{padding:24px;border:1px solid var(--line);border-radius:12px;background:#171d2c}
+#crystalwars-screen .rules p{color:var(--text-dim);margin:8px 0}
+#crystalwars-screen .setup,#crystalwars-screen #room{padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--ui-bg-1)}
 #crystalwars-screen .setup{display:grid;grid-template-columns:1fr 1fr;gap:35px}
-#crystalwars-screen label{display:block;margin:8px 0;color:#c2ccdb}
-#crystalwars-screen input,#crystalwars-screen select{width:100%;background:#0f1522;border:1px solid #465268;border-radius:5px;padding:11px;color:#fff}
-#crystalwars-screen small,#crystalwars-screen #kit{color:#aebed2;font-size:12px}
+#crystalwars-screen label{display:block;margin:8px 0;color:var(--text-dim)}
+#crystalwars-screen input,#crystalwars-screen select{width:100%;background:var(--ui-inset);border:1px solid var(--ui-line-hi);border-radius:5px;padding:11px;color:#fff}
+#crystalwars-screen small,#crystalwars-screen #kit{color:var(--text-dim);font-size:12px}
 #crystalwars-screen .connect{display:flex;flex-direction:column;justify-content:center;gap:10px}
 #crystalwars-screen .join,#crystalwars-screen .actions,#crystalwars-screen .room-head{display:flex;gap:10px;align-items:center}
 #crystalwars-screen .join input{min-width:0}
 #crystalwars-screen #room{margin-top:20px}
 #crystalwars-screen .room-head{justify-content:space-between}
 #crystalwars-screen #slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-#crystalwars-screen .slot{padding:12px;background:#101722;border-left:3px solid var(--blue)}
+#crystalwars-screen .slot{padding:12px;background:var(--ui-inset);border-left:3px solid var(--blue)}
 #crystalwars-screen .slot.amber{border-color:var(--amber)}
 #crystalwars-screen #status{min-height:25px;color:var(--gold)}
 #crystalwars-screen [hidden]{display:none!important}
@@ -47,10 +49,10 @@
 #crystalwars-screen .clock{text-align:center}
 #crystalwars-screen .clock strong{font-size:23px}
 #crystalwars-screen meter{width:100%;height:10px}
-#crystalwars-screen #cw-stage{position:relative;border:1px solid #45506b;border-radius:8px;overflow:hidden;background:#10141d}
+#crystalwars-screen #cw-stage{position:relative;border:1px solid var(--ui-line-hi);border-radius:8px;overflow:hidden;background:var(--ui-inset)}
 #crystalwars-screen canvas{display:block;width:100%;height:min(54vh,560px);touch-action:none}
-#crystalwars-screen #notice{position:absolute;top:12px;left:12px;right:100px;color:#ffe29d;font-size:13px;pointer-events:none;text-shadow:0 2px 3px #000}
-#crystalwars-screen #vital{position:absolute;bottom:10px;left:12px;background:#0d1327dc;padding:6px 10px;border-radius:6px;font-size:12px}
+#crystalwars-screen #notice{position:absolute;top:12px;left:12px;right:100px;color:var(--mode-accent-2);font-size:13px;pointer-events:none;text-shadow:0 2px 3px #000}
+#crystalwars-screen #vital{position:absolute;bottom:10px;left:12px;background:#0a0604c7;padding:6px 10px;border-radius:6px;font-size:12px}
 #crystalwars-screen #view{position:absolute;top:8px;right:8px;font-size:11px;padding:6px}
 #crystalwars-screen #supply{padding:12px 0}
 #crystalwars-screen #supply>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:12px}
@@ -58,15 +60,15 @@
 #crystalwars-screen #shop{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
 #crystalwars-screen #shop button{font-size:11px;padding:8px 5px}
 #crystalwars-screen #cw-controls{display:flex;gap:15px;align-items:center;justify-content:space-between}
-#crystalwars-screen #joystick{width:92px;height:92px;border-radius:50%;background:#24324988;border:1px solid #57677f;position:relative;flex-shrink:0;touch-action:none;user-select:none}
-#crystalwars-screen #joystick i{position:absolute;width:34px;height:34px;background:#a4b5cf66;border:1px solid #acbcd1;border-radius:50%;left:28px;top:28px}
-#crystalwars-screen #joystick span{position:absolute;bottom:3px;width:100%;text-align:center;font-size:9px;color:#8d9cb4;pointer-events:none}
+#crystalwars-screen #joystick{width:92px;height:92px;border-radius:50%;background:#3a241588;border:1px solid var(--ui-line-hi);position:relative;flex-shrink:0;touch-action:none;user-select:none}
+#crystalwars-screen #joystick i{position:absolute;width:34px;height:34px;background:#ffb58a55;border:1px solid var(--ember3);border-radius:50%;left:28px;top:28px}
+#crystalwars-screen #joystick span{position:absolute;bottom:3px;width:100%;text-align:center;font-size:9px;color:var(--text-dim);pointer-events:none}
 #crystalwars-screen #skills{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1}
 #crystalwars-screen #skills button{font-size:11px;min-height:65px;padding:5px}
-#crystalwars-screen .keys{color:#8d9bb0;font-size:11px}
+#crystalwars-screen .keys{color:var(--text-dim);font-size:11px}
 #crystalwars-screen #quit{font-size:11px;background:transparent}
-#crystalwars-screen dialog{max-width:420px;width:90%;border:1px solid #716143;border-radius:12px;padding:30px;background:#171e2f;color:#e8edf5}
-#crystalwars-screen dialog::backdrop{background:#050812ce}
+#crystalwars-screen dialog{max-width:420px;width:90%;border:1px solid #000;border-radius:12px;padding:30px;background:var(--ui-bg-1);color:var(--text)}
+#crystalwars-screen dialog::backdrop{background:#080503ce}
 #crystalwars-screen dialog h2{font-size:28px;color:var(--gold)}
 #crystalwars-screen .actions{flex-wrap:wrap}
 @media(max-width:600px){#crystalwars-screen header{padding:10px 12px}
@@ -94,7 +96,7 @@
 #crystalwars-screen #cw-game{position:fixed;inset:0;max-width:none;margin:0;padding:0;display:block;overflow:hidden}
 #crystalwars-screen #cw-stage{position:absolute;inset:0;border:0;border-radius:0}
 #crystalwars-screen canvas{height:100%;min-height:0}
-#crystalwars-screen #scoreboard{position:absolute;z-index:4;top:3px;left:50%;transform:translateX(-50%);width:min(560px,72vw);grid-template-columns:1fr 78px 1fr;gap:8px;padding:3px 10px 4px;background:#0b1020d9;border:1px solid #45506b;border-radius:8px}
+#crystalwars-screen #scoreboard{position:absolute;z-index:4;top:3px;left:50%;transform:translateX(-50%);width:min(560px,72vw);grid-template-columns:1fr 78px 1fr;gap:8px;padding:3px 10px 4px;background:#0a0604c7;border:1px solid var(--ui-line-hi);border-radius:8px}
 #crystalwars-screen #scoreboard span{font-size:10px}
 #crystalwars-screen #scoreboard b{font-size:10px;letter-spacing:1px}
 #crystalwars-screen .clock strong{font-size:18px}
@@ -102,11 +104,11 @@
 #crystalwars-screen #notice{top:50px;left:50%;right:auto;transform:translateX(-50%);width:min(480px,60vw);text-align:center;font-size:12px}
 #crystalwars-screen #vital{bottom:6px;left:50%;transform:translateX(-50%);font-size:11px;padding:4px 8px}
 #crystalwars-screen #view{top:40px;bottom:auto;left:6px;right:auto;font-size:10px;padding:4px 8px}
-#crystalwars-screen #supply{position:absolute;z-index:4;right:6px;top:46px;width:204px;padding:6px;background:#0b1020e6;border:1px solid #45506b;border-radius:8px}
+#crystalwars-screen #supply{position:absolute;z-index:4;right:6px;top:46px;width:204px;padding:6px;background:#0a0604d6;border:1px solid var(--ui-line-hi);border-radius:8px}
 #crystalwars-screen #supply>div:first-child{flex-direction:column;gap:1px;font-size:10px}
 #crystalwars-screen #shop{display:none;grid-template-columns:repeat(2,1fr);gap:4px;margin-top:5px}
 #crystalwars-screen #cw-game.supply #shop{display:grid}
-#crystalwars-screen #cw-game.supply #supply{border-color:#ffcf5c}
+#crystalwars-screen #cw-game.supply #supply{border-color:var(--ember3)}
 #crystalwars-screen #shop button{font-size:9px;padding:5px 3px;min-height:34px}
 #crystalwars-screen #cw-controls{position:absolute;z-index:3;left:8px;right:8px;bottom:6px;pointer-events:none;align-items:flex-end}
 #crystalwars-screen #joystick{width:84px;height:84px;pointer-events:auto}
@@ -123,10 +125,10 @@
 }
 
 #crystalwars-screen #result-stats table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
-#crystalwars-screen #result-stats th,#crystalwars-screen #result-stats td{padding:4px 5px;border-bottom:1px solid #2b3749;text-align:right}
+#crystalwars-screen #result-stats th,#crystalwars-screen #result-stats td{padding:4px 5px;border-bottom:1px solid var(--ui-line);text-align:right}
 #crystalwars-screen #result-stats th:first-child,#crystalwars-screen #result-stats td:first-child{text-align:left}
-#crystalwars-screen #result-stats tr.me td{color:#ffe9a8;font-weight:700}
-#crystalwars-screen #result-record{color:#ffe9a8;font-size:12px;margin:4px 0 10px}
+#crystalwars-screen #result-stats tr.me td{color:var(--hud-gold);font-weight:700}
+#crystalwars-screen #result-record{color:var(--hud-gold);font-size:12px;margin:4px 0 10px}
 
 /* Both arenas remain visible; supply choices use the space between the touch controls. */
 @media(max-height:520px) and (orientation:landscape){
@@ -146,14 +148,14 @@
 #crystalwars-screen #notice{top:42px;left:50%;width:170px;font-size:10px}
 }
 /* Competitive hub: clear mode identity, readable tactical cards and persistent rival view. */
-#crystalwars-screen #competitive-mode{border-color:#b69759;background:linear-gradient(120deg,#17263c,#292238);font-size:20px;min-height:48px}
-#crystalwars-screen #cw-stage{box-shadow:0 0 0 1px #111a2c,0 16px 48px #0006;background:radial-gradient(ellipse,#223850,#0b101c)}
-#crystalwars-screen #shop .cw-card{position:relative;border-color:#83b8db;background:linear-gradient(145deg,#20354f,#161c34);box-shadow:inset 0 0 18px #73d5ff15;font-weight:bold;color:#dff5ff}
-#crystalwars-screen #shop .cw-card[data-key="meteor"]{border-color:#d79666;background:linear-gradient(145deg,#51322e,#211a30);color:#ffe0ba}
+#crystalwars-screen #competitive-mode{border-color:var(--mode-accent);background:linear-gradient(120deg,#3a2415,#1a0f0a);font-size:20px;min-height:48px}
+#crystalwars-screen #cw-stage{box-shadow:0 0 0 1px #000,0 16px 48px #0006;background:radial-gradient(ellipse,#3a2415,var(--ui-bg-2))}
+#crystalwars-screen #shop .cw-card{position:relative;border-color:var(--team-a);background:linear-gradient(145deg,#2a3a4a,#121a24);box-shadow:inset 0 0 18px #73d5ff15;font-weight:bold;color:var(--text)}
+#crystalwars-screen #shop .cw-card[data-key="meteor"]{border-color:var(--team-b);background:linear-gradient(145deg,#4a2a14,#1a0f0a);color:var(--text)}
 #crystalwars-screen button:focus-visible,#crystalwars-screen select:focus-visible{outline:2px solid #fff2b7;outline-offset:3px}
 #crystalwars-screen #shop .cw-card:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 3px 14px #8fe4ff38}
-#crystalwars-screen #skills button:not(:disabled){border-bottom:3px solid #8babc5}
-#crystalwars-screen #vital{border:1px solid #7692a555;pointer-events:none}
+#crystalwars-screen #skills button:not(:disabled){border-bottom:3px solid var(--mode-accent)}
+#crystalwars-screen #vital{border:1px solid var(--ui-line-hi);pointer-events:none}
 @media(max-height:520px) and (orientation:landscape){
 #crystalwars-screen #shop{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
 #crystalwars-screen #cw-game:not(.supply) #shop button:not(.cw-card){display:none}
@@ -163,11 +165,11 @@
 #crystalwars-screen #shop button{min-height:30px;line-height:1.1}
 }
 @media(prefers-reduced-motion:reduce){#crystalwars-screen #shop .cw-card:not(:disabled):hover{transform:none}}
-#crystalwars-screen .cw-kit-guide{margin:10px 0;padding:10px;border:1px solid #465268;border-radius:7px;background:#101829}
-#crystalwars-screen .cw-kit-guide summary{cursor:pointer;color:#e8c885;min-height:28px}
-#crystalwars-screen .cw-kit-guide p,#crystalwars-screen .cw-help-dialog p{font-size:15px;line-height:1.5;color:#c3d3e5}
-#crystalwars-screen .cw-kit-guide strong,#crystalwars-screen .cw-help-dialog strong{color:#fff0c8}
-#crystalwars-screen .cw-signature{padding:10px;background:#2a2440;border-left:3px solid #c0a1ff}
+#crystalwars-screen .cw-kit-guide{margin:10px 0;padding:10px;border:1px solid var(--ui-line-hi);border-radius:7px;background:var(--ui-inset)}
+#crystalwars-screen .cw-kit-guide summary{cursor:pointer;color:var(--mode-accent-2);min-height:28px}
+#crystalwars-screen .cw-kit-guide p,#crystalwars-screen .cw-help-dialog p{font-size:15px;line-height:1.5;color:var(--text-dim)}
+#crystalwars-screen .cw-kit-guide strong,#crystalwars-screen .cw-help-dialog strong{color:var(--text)}
+#crystalwars-screen .cw-signature{padding:10px;background:#2a1a3a;border-left:3px solid var(--ui-epic)}
 #crystalwars-screen #cw-help{font-size:11px;margin-left:8px}
 #crystalwars-screen .cw-help-dialog{max-width:660px;max-height:90vh;overflow:auto}
 @media(max-height:520px) and (orientation:landscape){#crystalwars-screen #cw-help{position:absolute;right:6px;top:6px;z-index:5;font-size:9px;padding:4px 7px;min-height:28px;max-width:100px}#crystalwars-screen .cw-help-dialog p{font-size:12px}}
