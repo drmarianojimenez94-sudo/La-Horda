@@ -213,7 +213,12 @@ const VICTORY_STEPS = [
     const floorNote = fl.length ? `<div class="vic-reward-note">Del piso juntaste lo que quedaba: ${fl.map(it=>`<b style="color:${itemColor(it)};">${it.name}</b>`).join(", ")}</div>` : "";
     return `${summary}${gemNote}${floorNote}${fullNote}<div class="loot-reveal">${cards || '<div class="vic-reward-note">El cofre vino vacío esta vez.</div>'}</div>`;
   },
-  // 3. XP / RECURSOS
+  // 3. EL LIBRO DE LA HORDA: fragmento de la arena (se omite si no hay: ver storyVictoryBookOffer)
+  function(){
+    document.getElementById("victory-step-title").textContent = "Fragmento del Libro";
+    return typeof storyVictoryBookHtml==="function" ? storyVictoryBookHtml(victoryData) : "";
+  },
+  // 4. XP / RECURSOS
   function(){
     document.getElementById("victory-step-title").textContent = "XP y recursos";
     const champ = save.champions[victoryData.classKey];
@@ -264,6 +269,7 @@ function victoryGoNextArena(){
 function renderVictoryStep(){
   const body = document.getElementById("victory-step-body");
   body.innerHTML = VICTORY_STEPS[victoryStep]();
+  if(typeof codexBookPaintArts==="function") codexBookPaintArts(body); // ilustración del fragmento del Libro (si este paso la trae)
   const bindLootButtons = (root)=>{
     root.querySelectorAll("[data-vic-equip]").forEach(btn=> btn.addEventListener("click", ()=>{ equipItem(victoryData.classKey, btn.getAttribute("data-vic-equip")); btn.textContent = "Equipado"; btn.disabled = true; }));
     root.querySelectorAll("[data-vic-keep]").forEach(btn=> btn.addEventListener("click", ()=>{ btn.textContent = "Guardado ✓"; btn.disabled = true; }));
@@ -304,8 +310,14 @@ function showVictoryScreen(){
   if(typeof questsOnRunEnd==="function") questsOnRunEnd(true); // logros, desafíos y XP de cuenta
   if(netMatch) netOnEndScreen(true);
 }
+// pasos que se omiten solos (hoy: el fragmento del Libro en arenas que no lo tienen)
+VICTORY_STEPS[3].skip = ()=>!(typeof storyVictoryBookOffer==="function" && storyVictoryBookOffer(victoryData));
 document.getElementById("victory-next-btn").addEventListener("click", ()=>{
-  if(victoryStep < VICTORY_STEPS.length-1){ victoryStep++; renderVictoryStep(); return; }
+  if(victoryStep < VICTORY_STEPS.length-1){
+    victoryStep++;
+    while(victoryStep < VICTORY_STEPS.length-1 && VICTORY_STEPS[victoryStep].skip && VICTORY_STEPS[victoryStep].skip()) victoryStep++;
+    renderVictoryStep(); return;
+  }
   if(state==="victory" && !victoryIsOnline()){
     // último paso (solo): el Campamento de los Portadores (camp.js) y, con "Seguir", a la Sala con la próxima
     // arena; la primera victoria del perfil nuevo va al hub, con JUGAR resaltado (hub.js: firstRunToHub)

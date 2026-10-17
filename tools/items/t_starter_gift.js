@@ -76,6 +76,10 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
       stored: JSON.parse(localStorage.getItem('laHordaSave_v1')).champions.musashi.croma }), croma);
     check('SKIN.es_tuya_y_queda_equipada', own.owned && own.eq === croma && own.stored === croma && own.pending === false && own.chosen === croma && own.stamp && /¡Es tuya!/.test(own.txt), own);
     check('SKIN.regalo_no_cobra_oro_ni_da_vale', own.gold === 0 && own.v === 0, own);
+    // EL LIBRO DE LA HORDA: tras elegir al primer campeón se abre la gran introducción (se saltea siempre); el flujo sigue al cerrarla
+    const book = await waitFor(E, () => typeof BOOK !== 'undefined' && BOOK.open && BOOK.kind === 'intro', 4000);
+    check('FLUJO.tras_la_skin_se_abre_el_Libro_de_la_Horda_(salteable)', book, await E(() => ({ state, open: typeof BOOK !== 'undefined' && BOOK.open })));
+    if (book) await tap('#codex-book .bk-skip');
     const next = await waitFor(E, () => state === 'mainmenu' || (state === 'playing' && typeof ALPHA_TRAINING !== 'undefined' && ALPHA_TRAINING.active), 8000);
     check('FLUJO.sigue_al_menu_o_al_entrenamiento', next && await E((R) => eval(R).starterSkin && !eval(R).starterSkinPending, REAL), await E(() => ({ state, arena: currentArena })));
     check('FLUJO.sin_errores', B.errors.length === 0, B.errors);
@@ -130,6 +134,7 @@ const waitFor = async (E, fn, ms = 8000) => { const t0 = Date.now(); while (Date
     const s = await E(() => ({ sub: document.getElementById('starter-skin-sub').textContent, vale: !!document.querySelector('#starter-skin-grid .starter-skin-vale'), later: document.getElementById('starter-skin-later-btn').classList.contains('hidden') }));
     check('VALE.guardian_sin_skins_lo_explica', /todavía no tiene skins/.test(s.sub) && /vale de skin/.test(s.sub) && s.vale && s.later, s);
     await tap('#starter-skin-yes-btn');
+    if (await waitFor(E, () => typeof BOOK !== 'undefined' && BOOK.open, 3000)) await tap('#codex-book .bk-skip'); // la intro del Libro (se saltea)
     await waitFor(E, () => state === 'mainmenu' || state === 'playing', 5000);
     check('VALE.queda_guardado', await E((R) => { const S = eval(R); return S.skinVoucher === 1 && S.starterSkin === 'vale' && !S.starterSkinPending; }, REAL));
     // Tienda: cartel + canje sin oro (se sale del entrenamiento si arrancó)

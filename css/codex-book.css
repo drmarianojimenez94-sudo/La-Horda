@@ -1,0 +1,104 @@
+/* ============================================================
+   css/codex-book.css — EL LIBRO DE LA HORDA (js/ui/codex/codex-book.js): libro abierto con hoja que se da
+   vuelta en 3D, ilustración en canvas a la izquierda y texto a la derecha. Todo escala con --bk-h / --bk-w
+   (los fija el JS según la pantalla; pensado para celular en horizontal, 844×390). Sin imágenes de terceros.
+   ============================================================ */
+#codex-book{ position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; font-family:'VT323',monospace; color:#2b1a0e;
+  user-select:none; -webkit-user-select:none; animation:bkIn .35s ease-out; --bk-h:320px; --bk-w:688px; }
+#codex-book.hidden{ display:none; }
+@keyframes bkIn{ from{ opacity:0; } to{ opacity:1; } }
+.bk-veil{ position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%, rgba(58,32,16,0.97), rgba(5,2,1,1) 75%); }
+#codex-book.bk-short .bk-veil{ background:radial-gradient(ellipse at 50% 50%, rgba(30,16,8,0.95), rgba(3,1,1,0.99) 80%); }
+.bk-stage{ position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; max-width:100vw; }
+.bk-book{ position:relative; display:flex; width:var(--bk-w); height:var(--bk-h); perspective:2200px; border-radius:3px;
+  box-shadow:0 0 0 5px #4a2c18, 0 0 0 7px #1a0d06, 0 0 0 8px rgba(224,176,96,0.55), 0 18px 46px rgba(0,0,0,0.75); }
+.bk-left, .bk-right{ position:relative; flex:0 0 50%; width:50%; height:100%; box-sizing:border-box; overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(255,246,214,0.55), rgba(255,246,214,0) 70%),
+    repeating-linear-gradient(0deg, rgba(120,80,30,0.05) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, #ecdcb2, #d9c08a); }
+.bk-left{ border-radius:3px 0 0 3px; box-shadow:inset -22px 0 24px -14px rgba(70,38,12,0.55), inset 0 0 40px rgba(110,70,24,0.35); }
+.bk-right{ border-radius:0 3px 3px 0; box-shadow:inset 22px 0 24px -14px rgba(70,38,12,0.55), inset 0 0 40px rgba(110,70,24,0.35); }
+.bk-art, .bk-art2{ position:absolute; inset:calc(var(--bk-h)*0.03); width:calc(100% - var(--bk-h)*0.06); height:calc(100% - var(--bk-h)*0.06); display:block; }
+.bk-text{ position:absolute; inset:0; padding:calc(var(--bk-h)*0.075) calc(var(--bk-h)*0.075) calc(var(--bk-h)*0.09) calc(var(--bk-h)*0.095); box-sizing:border-box; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:center; text-align:left; }
+.bk-kicker{ font-family:'VT323',monospace; font-size:calc(var(--bk-h)*0.05); letter-spacing:0.14em; color:#8a4a1a; line-height:1.1; margin-bottom:calc(var(--bk-h)*0.012); text-transform:uppercase; }
+.bk-title{ margin:0 0 calc(var(--bk-h)*0.03); font-family:'VT323',monospace; font-weight:400; font-size:calc(var(--bk-h)*0.088); line-height:0.95; color:#4a1a0a; text-shadow:0 1px 0 rgba(255,240,200,0.6); }
+.bk-body p{ margin:0 0 calc(var(--bk-h)*0.018); font-size:calc(var(--bk-h)*0.0625); line-height:1.04; color:#2b1a0e; }
+.bk-body p:first-child::first-letter{ color:#8e1b16; font-size:1.35em; line-height:0.8; }
+.bk-pg{ position:absolute; bottom:calc(var(--bk-h)*0.025); font-size:calc(var(--bk-h)*0.045); color:#8a6a40; }
+.bk-pgl{ left:calc(var(--bk-h)*0.08); } .bk-pgr{ right:calc(var(--bk-h)*0.08); }
+.bk-spine{ position:absolute; left:50%; top:-2px; bottom:-2px; width:6px; margin-left:-3px; z-index:4; pointer-events:none;
+  background:linear-gradient(90deg, rgba(40,20,6,0.0), rgba(40,20,6,0.55) 50%, rgba(40,20,6,0.0)); }
+/* la hoja que se da vuelta: arranca cubriendo la página derecha y su dorso es la ilustración nueva */
+.bk-leaf{ position:absolute; left:50%; top:0; width:50%; height:100%; z-index:3; transform-origin:0 50%; transform-style:preserve-3d; visibility:hidden;
+  transition:transform 0.85s cubic-bezier(0.55,0.05,0.25,1); }
+.bk-leaf.on{ visibility:visible; }
+.bk-leaf.flip, .bk-leaf.flipped{ transform:rotateY(-180deg); }
+.bk-leaf.notrans{ transition:none; }
+.bk-face{ position:absolute; inset:0; overflow:hidden; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background:radial-gradient(ellipse at 50% 50%, rgba(255,246,214,0.55), rgba(255,246,214,0) 70%), linear-gradient(180deg, #ecdcb2, #d9c08a); box-shadow:inset 22px 0 24px -14px rgba(70,38,12,0.55); }
+.bk-back{ transform:rotateY(180deg); box-shadow:inset -22px 0 24px -14px rgba(70,38,12,0.55); }
+.bk-bar{ display:flex; align-items:center; justify-content:center; gap:14px; min-height:40px; }
+.bk-nav{ min-width:44px; min-height:40px; padding:0 14px; font-family:'VT323',monospace; font-size:1.7rem; line-height:1; color:#f0dcb0; cursor:pointer;
+  background:linear-gradient(180deg, #4a2c18, #2a170c); border:2px solid #b07a3c; box-shadow:0 2px 0 #000; }
+.bk-nav:disabled{ opacity:0.35; cursor:default; }
+.bk-nav:active:not(:disabled){ transform:translateY(1px); }
+.bk-dots{ display:flex; gap:7px; align-items:center; }
+.bk-dots i{ width:9px; height:9px; border-radius:50%; background:rgba(240,220,176,0.22); border:1px solid rgba(224,176,96,0.55); }
+.bk-dots i.done{ background:rgba(224,176,96,0.55); } .bk-dots i.on{ background:#ffd98a; box-shadow:0 0 8px rgba(255,217,138,0.9); }
+.bk-skip{ position:fixed; top:calc(8px + env(safe-area-inset-top, 0px)); right:calc(10px + env(safe-area-inset-right, 0px)); z-index:5; min-height:40px; padding:0 14px;
+  font-family:'VT323',monospace; font-size:1.3rem; color:#f0dcb0; cursor:pointer; background:rgba(26,13,6,0.85); border:2px solid #b07a3c; box-shadow:0 2px 0 #000; }
+.bk-skip:hover, .bk-nav:hover:not(:disabled){ border-color:#ffd98a; }
+.bk-skip:focus-visible, .bk-nav:focus-visible{ outline:3px solid #ffd98a; outline-offset:2px; }
+.bk-timer{ display:none; position:absolute; left:50%; bottom:calc(50% - var(--bk-h)*0.5 - 22px); width:calc(var(--bk-w)*0.4); height:3px; margin-left:calc(var(--bk-w)*-0.2); background:rgba(224,176,96,0.2); }
+.bk-timer i{ display:block; height:100%; width:0; background:#e0b060; box-shadow:0 0 6px #e0b060; }
+#codex-book.bk-short .bk-timer{ display:block; }
+#codex-book.bk-short .bk-bar{ display:none; }
+#codex-book.bk-short .bk-pg{ display:none; }
+#codex-book.bk-short .bk-skip{ background:rgba(26,13,6,0.6); }
+#codex-book.bk-single .bk-bar{ display:none; }
+/* vertical (celular parado): una sola columna, sin giro de página */
+#codex-book.bk-portrait .bk-book{ flex-direction:column; }
+#codex-book.bk-portrait .bk-left{ flex:0 0 46%; width:100%; height:46%; border-radius:3px 3px 0 0; box-shadow:inset 0 -18px 20px -14px rgba(70,38,12,0.55); }
+#codex-book.bk-portrait .bk-right{ flex:1 1 auto; width:100%; height:54%; border-radius:0 0 3px 3px; box-shadow:inset 0 18px 20px -14px rgba(70,38,12,0.55); }
+#codex-book.bk-portrait .bk-leaf, #codex-book.bk-portrait .bk-spine{ display:none; }
+#codex-book.bk-portrait .bk-text{ padding:12px 16px; justify-content:flex-start; }
+#codex-book.bk-portrait .bk-title{ font-size:calc(var(--bk-w)*0.075); } #codex-book.bk-portrait .bk-body p{ font-size:calc(var(--bk-w)*0.05); }
+#codex-book.bk-portrait .bk-kicker{ font-size:calc(var(--bk-w)*0.04); }
+@media (prefers-reduced-motion:reduce){ #codex-book{ animation:none; } .bk-leaf{ transition:none; } }
+body.book-open{ overflow:hidden; }
+
+/* ---------- Códice › El Libro ---------- */
+.cx-home-book{ font:inherit; color:inherit; cursor:pointer; display:flex; align-items:center; gap:12px; width:100%; margin-top:12px; padding:10px 14px; text-align:left !important; }
+.cx-home-book .cxc-ico{ flex:0 0 auto; width:34px; height:42px; position:relative; border:2px solid #2a170a; box-shadow:0 0 10px rgba(255,150,70,0.45); background:linear-gradient(135deg, #7a3a1e, #3a1a0c); }
+.cx-home-book .cxc-title{ font-family:var(--font-pixel); font-size:0.78rem; color:var(--cx-gold); letter-spacing:1px; display:flex; align-items:center; gap:7px; }
+.cx-home-book .cxc-txt{ flex:1 1 auto; display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cx-home-book .cxc-ico::before{ content:""; position:absolute; left:4px; right:4px; top:6px; bottom:6px; background:linear-gradient(90deg, #ecdcb2 0 46%, #3a1a0c 46% 54%, #ecdcb2 54%); border:1px solid #2a170a; }
+.cx-home-book .cxc-ico::after{ display:none; }
+.cx-home-book .cxb-new{ margin-left:8px; }
+.cxb-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px; margin-bottom:10px; }
+.cxb-card{ display:flex !important; flex-direction:column; align-items:flex-start; gap:3px; text-align:left !important; padding:10px 12px; min-height:74px; font:inherit; color:inherit; }
+.cxb-card .cxb-ico{ font-size:1.2rem; line-height:1; }
+.cxb-card .cxb-name{ font-family:var(--font-retro); font-size:1.2rem; letter-spacing:0.5px; color:var(--cx-gold); line-height:1; }
+.cxb-card .cxb-sub{ font-family:var(--font-retro); font-size:1.02rem; line-height:1.05; color:var(--cx-dim); }
+.cxb-card.locked{ opacity:0.55; }
+.cxb-new{ display:inline-block; font-family:var(--font-pixel); font-size:0.42rem; letter-spacing:1px; padding:3px 6px; color:#1a0d06; background:#ffd98a; box-shadow:0 0 8px rgba(255,217,138,0.7); }
+.cxb-card .cxb-new{ position:absolute; top:6px; right:6px; }
+.cxb-opts{ display:flex; flex-direction:column; gap:6px; align-items:flex-start; }
+.cxb-opts h3{ margin:0; }
+/* victoria: paso "Fragmento del Libro" (pergamino con la ilustración, la historia y lo que se aprende) */
+.vic-book{ display:flex; gap:12px; align-items:stretch; max-width:640px; margin:4px auto 0; padding:10px; text-align:left; color:#2b1a0e;
+  background:radial-gradient(ellipse at 50% 50%, rgba(255,246,214,0.5), rgba(255,246,214,0) 70%), linear-gradient(180deg, #ecdcb2, #d9c08a);
+  border:3px solid #4a2c18; box-shadow:0 0 0 1px #b07a3c, inset 0 0 30px rgba(110,70,24,0.35), 0 6px 18px rgba(0,0,0,0.6); }
+.vic-book .vb-art{ flex:0 0 30%; width:30%; min-height:150px; align-self:stretch; display:block; }
+.vic-book .vb-txt{ flex:1 1 auto; min-width:0; }
+.vic-book .vb-k{ font-family:'VT323',monospace; font-size:1rem; letter-spacing:0.12em; color:#8a4a1a; line-height:1.1; }
+.vic-book .vb-title{ margin:2px 0 4px; font-family:'VT323',monospace; font-weight:400; font-size:1.75rem; line-height:0.95; color:#4a1a0a; }
+.vic-book .vb-lore{ margin:0 0 6px; font-family:'VT323',monospace; font-size:1.08rem; line-height:1.02; }
+.vic-book .vb-lesson{ font-family:'VT323',monospace; font-size:1.05rem; line-height:1.02; padding:5px 8px; border-left:3px solid #8e1b16; background:rgba(142,27,22,0.08); }
+.vic-book .vb-lesson b{ display:block; font-weight:400; letter-spacing:0.1em; color:#8e1b16; }
+.vic-book .vb-read{ margin-top:7px; }
+#victory-step-body:has(.vic-book){ max-width:min(720px, 94vw); }
+.vic-book{ margin-bottom:64px; }
+@media (max-width:560px){ .vic-book{ flex-direction:column; } .vic-book .vb-art{ width:100%; flex-basis:auto; min-height:120px; } }

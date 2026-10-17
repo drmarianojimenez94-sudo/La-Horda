@@ -9,13 +9,15 @@
    regalo": sus skins (de set y cromas) animadas como en la Tienda, la primera ya marcada (un toque
    en "¡La quiero!" alcanza). Al elegirla: "¡Es tuya!", queda equipada y sigue `onDone`.
    ============================================================ */
+let _starterJoins = false; // el camino que sigue es entrar a la sala de otro: el Libro no lo demora (queda en el Códice)
 let _starterPick = null, _starterDone = null, _starterSkinPick = null, _starterSkinBusy = false, _starterJustGot = null;
 const STARTER_ROLE_LABEL = {tanque:"Tanque", asesino:"Asesino", mago:"Mago", soporte:"Soporte"};
 
 // Sin elección explícita, el regalo propuesto es el Mago (DEFAULT_CHAMPION): ya viene marcado y un toque en
 // "Sí" alcanza; tocar otra carta lo cambia. Solo se marca si de verdad está entre los guardianes de regalo.
 function _starterOptions(){ return CHAMPION_CATALOG.filter(c=>championMeta(c.id).starterEligible && shopChampionPurchasable(c.id)); }
-function openStarterSelect(onDone){
+function openStarterSelect(onDone, opts){
+  _starterJoins = !!(opts && opts.joinsRoom);
   _starterPick = _starterOptions().some(c=>c.id===DEFAULT_CHAMPION) ? DEFAULT_CHAMPION : null; _starterDone = onDone || null;
   setState("starter");
   // ya tiene guardián y le falta la skin de regalo (cerró el juego en el medio): directo al paso 2
@@ -31,7 +33,11 @@ function _starterShowStep(step){
 }
 function _starterFinish(){
   const next = _starterDone; _starterDone = null;
-  if(next) next(); else { setState("mainmenu"); renderMainMenu(); }
+  const go = next || (()=>{ setState("mainmenu"); renderMainMenu(); });
+  // EL LIBRO DE LA HORDA: tras elegir al primer campeón, la gran introducción (js/ui/codex/codex-book.js). Se puede saltear
+  // siempre y nunca se muestra si el camino que sigue es unirse a una sala (ahí no se demora a nadie).
+  if(typeof codexBookMaybeIntro==="function" && codexBookMaybeIntro(go, {joinsRoom:_starterJoins})) return;
+  go();
 }
 function renderStarterSelect(){
   const pr = document.getElementById("starter-price"); if(pr) pr.textContent = fmtGold(CHAMPION_PRICE_GOLD);

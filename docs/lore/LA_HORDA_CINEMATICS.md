@@ -21,6 +21,9 @@
 | 10 | Fusión fallida / Rey de la Horda | Jefe final, formas 1→3 | Carteles de forma + "NACE EL REY DE LA HORDA" | — |
 | 11 | **Final — Los nuevos Guardianes** | Victoria de la Infernal (primera vez; se repite desde el Códice) | **Epílogo por pantallas** (`STORY_EPILOGUE`): texto sobre el arte de la Infernal, las Minas y la Ciudad + los cuatro cristales dibujados en vivo; "Fin del Libro Primero" | Escena de los campeones con los cristales |
 | 11b | **Post-créditos** | Después del epílogo | 2 pantallas (`STORY_POSTCREDITS`): gradas de oro → Arena Divina; la Horda sin rey en el Abismo → Horda Infinita | Arte de las gradas de la Arena Divina |
+| L1 | **El Libro de la Horda — introducción** | Al terminar de elegir al primer campeón (una vez por perfil; se relee desde Códice › El Libro) | Libro animado de 8 páginas con hoja 3D e ilustraciones procedurales (`BOOK_INTRO_PAGES`, `js/ui/codex/codex-book.js`). Se saltea siempre; no aparece si el flujo sigue hacia una sala | Arte final de pincel/tinta hecho a mano (hoy: canvas procedural + panorámicas de arena teñidas) |
+| L2 | **El Libro — fragmentos entre arenas** | Paso "Fragmento del Libro" de la victoria de cada arena de la campaña (01–10) | Historia + lección de sistemas (modos, progresión, equipo, maestría, talentos, dificultades, cooperativo, Tienda, Brasas, lo que sigue); versión animada opcional (`BOOK_FRAGMENTS`) | — |
+| L3 | **El Libro — página de carga** | Antes de entrar a una arena de campaña en solitario (hasta 3 veces por arena, apagable) | Una página que se da vuelta sola (≈3 s, un toque la saltea; `BOOK_SHORT_LINES`) | — |
 | 12 | Puente al Coliseo | Arena Divina | Tarjeta "COLISEO — PRÓXIMAMENTE" | Cuando exista el PvP |
 
 ## Prompts de arte (hoja completa, pixel art 16-bit dark fantasy, fondo transparente)

@@ -280,6 +280,24 @@ function storyVictoryScarHtml(vd){
   if(pg) html += `<div class="sv-chron">✒ Crónica encontrada: <b>«${_stEsc(pg.title)}»</b> · ${_stEsc(chronicleBook(pg.book).name)} <span>(Códice › Crónicas)</span></div>`;
   return `<div class="story-vic scar">${html}</div>`;
 }
+// EL LIBRO DE LA HORDA: paso propio de la victoria con el fragmento de esta arena (historia + lo que se aprende de cómo se
+// juega). El texto se lee directo acá; "Leer en el libro" abre la versión animada (opcional, se saltea y se relee en el
+// Códice). Se omite si la arena no tiene fragmento (Divina, Horda Infinita, Guerra de Cristales). "Continuar" no se frena.
+function storyVictoryBookOffer(vd){
+  if(typeof BOOK_FRAGMENTS==="undefined" || !vd || !BOOK_FRAGMENTS[vd.arena]) return false;
+  if((typeof endlessOn==="function" && endlessOn()) || (typeof divinaMode!=="undefined" && divinaMode) || (typeof lanesOn==="function" && lanesOn())) return false;
+  return true;
+}
+function storyVictoryBookHtml(vd){
+  if(!storyVictoryBookOffer(vd)) return "";
+  const F = BOOK_FRAGMENTS[vd.arena], isNew = typeof codexBookFragmentSeen==="function" && !codexBookFragmentSeen(vd.arena), num = typeof campaignNumberLabel==="function" ? campaignNumberLabel(vd.arena) : "";
+  if(typeof codexBookMarkFragment==="function") codexBookMarkFragment(vd.arena); // verlo acá cuenta como leído (queda releíble en el Códice)
+  return `<article class="vic-book"><canvas class="vb-art" data-book-art="arena:${_stEsc(vd.arena)}" aria-hidden="true"></canvas>
+    <div class="vb-txt"><div class="vb-k">📖 EL LIBRO DE LA HORDA · ARENA ${_stEsc(num)}${isNew ? ' <span class="cxb-new">NUEVO</span>' : ""}</div>
+      <h3 class="vb-title">${_stEsc(F.title)}</h3><p class="vb-lore">${_stEsc(F.lore)}</p>
+      <div class="vb-lesson"><b>${_stEsc(F.topicTitle)}</b>${_stEsc(F.lesson)}</div>
+      <button class="btn secondary small vb-read" data-book-frag="${_stEsc(vd.arena)}" data-book-force>Leer en el libro ▸</button></div></article>`;
+}
 function storyDefeatHtml(classKey){
   const H = HERO_VOICES[classKey], cls = CLASSES[classKey];
   return H && H.fall && cls ? `<div class="story-def" style="--hc:${cls.color||"#ffd98a"}">«${_stEsc(H.fall)}» <b>— ${_stEsc(cls.name)}</b></div>` : "";

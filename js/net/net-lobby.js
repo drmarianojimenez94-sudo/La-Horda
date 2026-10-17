@@ -404,7 +404,7 @@ function showNetToast(text){
     const inp = document.querySelector("#title-join-name input");
     if(inp) netSetPlayerName(inp.value);
     // modo campaña: un invitado nuevo también elige primero su guardián de regalo, y recién ahí entra
-    if(typeof needsStarterChampion==="function" && needsStarterChampion()){ openStarterSelect(()=>{ setState("title"); doJoin(); }); return; }
+    if(typeof needsStarterChampion==="function" && needsStarterChampion()){ openStarterSelect(()=>{ setState("title"); doJoin(); }, {joinsRoom:true}); return; }
     doJoin();
   });
   async function doJoin(){
@@ -446,7 +446,7 @@ function netRenderModeJoin(){
     inp.value = pre.code;
     // modo campaña: si todavía no eligió su guardián de regalo, primero eso y después entra
     if(typeof needsStarterChampion==="function" && needsStarterChampion()){
-      openStarterSelect(()=>{ setState("modeselect"); netRenderModeJoin(); netJoinWithCode(pre.code, btn, "UNIRSE"); });
+      openStarterSelect(()=>{ setState("modeselect"); netRenderModeJoin(); netJoinWithCode(pre.code, btn, "UNIRSE"); }, {joinsRoom:true});
       return;
     }
     netJoinWithCode(v, btn, "UNIRSE");

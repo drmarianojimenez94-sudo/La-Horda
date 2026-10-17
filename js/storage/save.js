@@ -54,6 +54,7 @@ function defaultSave(){
     micelialMigrated:true,  // idem para el Reino Micelial (4ta arena, antes del Hielo)
     abismoMigrated:true,    // idem para la Arena del Abismo (antes del Laberinto): save.legacyLabOpen
     codex:{seen:{}, kills:{}},  // Códice: criaturas vistas y derrotadas (js/ui/codex/codex-track.js)
+    codexBook:{v:1, introSeen:false, introAt:0, frag:{}, shortCount:{}, shortOff:false}, // EL LIBRO DE LA HORDA (js/systems/codex-narrative.js): intro vista, fragmentos leídos, cargas cortas
     campaignV2:true,        // ORDEN CANÓNICO de la campaña (ver loadSave: migración de arenas abiertas y cristales)
     ciudadV1:true,          // la Ciudad Maldita (Arena 01) pasó a ser jugable (ver loadSave: nadie pierde la arena que ya tenía abierta)
     talentTreeV2:true,      // bolsa del árbol separada de las mejoras del kit
@@ -252,6 +253,9 @@ function _loadSaveInner(){
       save.diffCleared = {pesadilla:Object.assign({}, dc.pesadilla||{}), infierno:Object.assign({}, dc.infierno||{})};
       if(!["normal","pesadilla","infierno"].includes(save.diffSelected)) save.diffSelected = "normal";
       save.defeatCount = Math.max(0, parsed.defeatCount|0);
+      // EL LIBRO DE LA HORDA: guardados de antes no lo tienen. Quien ya tiene guardián o ya jugó NO ve la gran introducción
+      // a la fuerza (queda releíble en el Códice) y sus arenas superadas figuran como fragmentos ya leídos. No se pierde nada.
+      if(typeof codexBookMigrate==="function"){ save.codexBook = codexBookMigrate(parsed); if(!parsed.codexBook) persist(); }
       // Si hubo migración de rareza, se escribe de vuelta ya mismo: si no, el localStorage
       // se queda con las claves viejas hasta la próxima mutación (equipar/vender/etc.), y una
       // sesión que solo mira sin tocar nada perdería el arreglo al cerrar el navegador.

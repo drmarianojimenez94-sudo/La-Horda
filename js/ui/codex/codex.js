@@ -22,7 +22,7 @@ const CODEX_SECTIONS = [
 // CRÓNICAS: las páginas que se encuentran jugando la campaña (js/systems/story.js, textos en
 // js/data/story-text.js). Va como franja debajo de las cuatro secciones grandes.
 const CODEX_CHRON_SECTION = {id:"cronicas", label:"CRÓNICAS", icon:"✒", blurb:"Páginas perdidas por el camino: diarios, cartas y cantos que cuentan lo que el Hechicero calló."};
-function codexSectionDef(id){ return CODEX_SECTIONS.find(s=>s.id===id) || (id===CODEX_CHRON_SECTION.id ? CODEX_CHRON_SECTION : null); }
+function codexSectionDef(id){ return CODEX_SECTIONS.find(s=>s.id===id) || (id===CODEX_CHRON_SECTION.id ? CODEX_CHRON_SECTION : null) || (typeof BOOK_SECTION!=="undefined" && id===BOOK_SECTION.id ? BOOK_SECTION : null); }
 // Kills para DOMINAR una criatura (arquitectura lista; se muestra como sello).
 const CODEX_MASTERY = {normal:60, subelite:30, elite:15, invocacion:40, estructura:20, apendice:10, subjefe:3, jefe:3};
 
@@ -261,7 +261,9 @@ function codexHomeHtml(){
       ${card(CODEX_SECTIONS[1], _pv({kind:"enemy", key:cre, anim:"walk", arena:codexArenaOfType(cre), silhouette:!knownCre.length}), `${N.creatures[0]} / ${N.creatures[1]} descubiertas · ${N.creatures[2]} derrotadas`)}
       ${card(CODEX_SECTIONS[2], _pv(!knownBoss.length && boss.veil ? {kind:"ambient", arena:boss.arena, veil:true} : {kind:"enemy", forms:codexBossTypes(boss).slice(0,1), key:codexBossTypes(boss)[0], anim:"idle", arena:boss.arena, silhouette:!knownBoss.length}), `${N.bosses[0]} / ${N.bosses[1]} descubiertos · ${N.bosses[2]} derrotados`)}
       ${card(CODEX_SECTIONS[3], `<div class="cx-home-arena" style="background-image:url('${arenaImg}')"></div>${_pv({kind:"ambient", arena:"infernal", bg:"none"}, "cx-pv cx-amb")}`, `${N.arenas[0]} / ${N.arenas[1]} completadas`)}
-    </div>${typeof CHRONICLE_PAGES!=="undefined" ? `<button class="cx-sec cx-home-chron" data-sec="${CODEX_CHRON_SECTION.id}"><span class="cxc-ico" aria-hidden="true"></span>
+    </div>${typeof BOOK_SECTION!=="undefined" && typeof codexBookUnread==="function" ? `<button class="cx-sec cx-home-book" data-sec="${BOOK_SECTION.id}"><span class="cxc-ico" aria-hidden="true"></span>
+      <span class="cxc-txt"><span class="cxc-title"><span class="cx-home-ico">${BOOK_SECTION.icon}</span>${BOOK_SECTION.label}${(!codexBookSave().introSeen || codexBookUnread().length) ? ' <span class="cxb-new">NUEVO</span>' : ""}</span><span class="cx-home-blurb">${BOOK_SECTION.blurb}</span></span>
+      <span class="cx-home-count">${codexBookFragmentCount()} / ${Object.keys(BOOK_FRAGMENTS).length} fragmentos</span></button>` : ""}${typeof CHRONICLE_PAGES!=="undefined" ? `<button class="cx-sec cx-home-chron" data-sec="${CODEX_CHRON_SECTION.id}"><span class="cxc-ico" aria-hidden="true"></span>
       <span class="cxc-txt"><span class="cxc-title"><span class="cx-home-ico">${CODEX_CHRON_SECTION.icon}</span>${CODEX_CHRON_SECTION.label}</span><span class="cx-home-blurb">${CODEX_CHRON_SECTION.blurb}</span></span>
       <span class="cx-home-count">${chronicleCount()} / ${CHRONICLE_PAGES.length} páginas</span></button>` : ""}</div>`;
 }
@@ -274,6 +276,7 @@ function codexListHtml(sec){
   if(sec === "jefes") return codexBossListHtml();
   if(sec === "arenas") return codexArenaListHtml();
   if(sec === "cronicas") return codexChronListHtml();
+  if(sec === "libro" && typeof codexBookListHtml==="function") return codexBookListHtml();
   return "";
 }
 // Campeón bloqueado = promesa: cómo se gana jugando y cuánto falta (Ascensión), además de la compra.

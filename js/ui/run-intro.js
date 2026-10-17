@@ -67,7 +67,25 @@ const ARENA_BRIEF = {
 const FIRST_FINISH_NOTICE = "El primer jugador en completar el juego puede pedir un campeón con diseño propio.";
 const RUN_INTRO = { open:false, raf:0, t0:0, onGo:null, prologue:false, pages:[], arena:null };
 
+// ¿Esta entrada va a mostrar pantallas de historia (prólogo, misión, cartel de acto)? Solo lee: no marca nada como visto.
+function runIntroHasStoryPages(arena){
+  if(typeof save==="undefined") return false;
+  if(!save.storyPrologueSeen && typeof ARENA_ORDER!=="undefined" && arena===ARENA_ORDER[0] && typeof CAMPAIGN_PROLOGUE==="string") return true;
+  if(typeof goalNeedsMission==="function" && goalNeedsMission()) return true;
+  const act = typeof storyActOf==="function" ? storyActOf(arena) : null;
+  return !!(act && act.arenas[0]===arena && !(save.storyActsSeen && save.storyActsSeen[act.n]));
+}
+let _riBookGate = false; // true mientras la página corta del Libro está en pantalla (la continuación vuelve a entrar acá)
 function runIntroShow(arena, onGo){
+  // EL LIBRO DE LA HORDA: carga corta (una página que se da vuelta, ≈3 s, se saltea con un toque). Solo en solitario (esta
+  // pantalla no se usa en salas), nunca encima de las pantallas de historia y como mucho 3 veces por arena (codex-narrative.js).
+  if(!_riBookGate && ARENA_BRIEF[arena] && typeof codexBookShort==="function" && !runIntroHasStoryPages(arena)){
+    _riBookGate = true;
+    let took = false;
+    try{ took = codexBookShort(arena, ()=>{ runIntroShow(arena, onGo); }); }catch(err){ console.error("Libro: carga corta", err); took = false; }
+    if(took) return;
+  }
+  _riBookGate = false;
   const el = document.getElementById("run-intro"); const B = ARENA_BRIEF[arena];
   if(!el || !B){
     // sin ficha: igual se espera a que termine de bajar el arte de las arenas (preload.js)

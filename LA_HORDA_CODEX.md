@@ -152,3 +152,42 @@ ni habilidades. La compra de skins y objetos sigue en la Tienda: el Códice abre
   atrás y flechas; maquetación a 844×390 y 667×375 sin desbordes; rendimiento; y elegir en el Códice → la Sala.
 - Regresión: las 18 suites de `tools/items/`, `tools/regression/t_func.js` (94/94, con la navegación de campeones
   ya adentro del Códice) y los *smoke* de Fortaleza y Micelial.
+
+## 9. El Libro de la Horda (el Códice como eje narrativo)
+
+El Códice también es el **libro que cuenta la historia y enseña el juego**. Narra Ismena, la escriba del Archivo de la
+Ciudad Maldita (la misma de la Crónica de la Noche del Regreso). Se muestra de tres formas y siempre se puede releer en
+**Códice › El Libro** (`id:"libro"`, franja en la home, con insignia NUEVO también en el botón CÓDICE del menú).
+
+| Momento | Qué es | Dónde está |
+|---|---|---|
+| **Introducción** | Libro animado de 8 páginas (universo, guerra, la Horda, la noche del regreso, las Cicatrices, la voz dorada, la misión, cómo sigue). Una vez, al terminar de elegir al primer campeón | `starter-select.js` → `codexBookMaybeIntro` |
+| **Fragmentos** | Uno por arena de la campaña: página de historia + página "lo que aprendiste". Aparecen como paso propio de la victoria ("Fragmento del Libro") y quedan en el Códice | `story.js` (`storyVictoryBookHtml`), `end-screens.js` (paso 3, se omite solo si no hay fragmento) |
+| **Página de carga** | Una página que se da vuelta sola (≈3 s) antes de entrar a una arena de campaña en solitario; hasta 3 veces por arena; se apaga desde el Códice | `run-intro.js` → `codexBookShort` |
+
+Recorrido de temas (lo verifica `t_codex_book_logic.js`): 01 modos · 02 progresión (XP, oro, cofre) · 03 equipo y Gemas ·
+04 maestría de habilidades · 05 talentos (desde el nivel 40) · 06 dificultades (Pesadilla/Infierno) · 07 cooperativo y
+rol · 08 oro y Tienda · 09 Brasas ✦ (solo apariencia, sin presionar) · 10 lo que sigue + resumen de historia, modos y
+progresión. Los textos no spoilean la traición del Hechicero antes de la Infernal.
+
+**Reglas que no se rompen:** omitir/saltear siempre posible (botón, Esc, tocar); omitir cuenta como visto; nunca
+bloquea una partida ni "Continuar"; todo es **local** (sin eventos de red); la intro y la carga no aparecen dentro de una
+sala/partida y se cierran solas si el jugador entra a una; quien llega a unirse a una sala con un perfil nuevo no ve la
+intro en ese momento (queda con insignia en el Códice); movimiento reducido = sin giro de página. Las pruebas
+automáticas viejas (`navigator.webdriver`) siguen el camino de antes, sin libro por iniciativa propia (igual que el regalo
+inicial); las que miden el libro definen `window.__codexBook = true` (o `__firstRun` / `?primera=1`). El paso de la victoria,
+la lista del Códice y las relecturas no dependen de eso (son contenido a pedido).
+
+**Guardado:** `save.codexBook = {v, introSeen, introAt, frag:{arena:ts}, shortCount:{arena:n}, shortOff}`. Los guardados
+anteriores migran en `loadSave` (`codexBookMigrate`): no se pierde nada; quien ya tenía campeón o arenas superadas no ve la
+intro a la fuerza y sus arenas figuran como fragmentos leídos (valor `1`, sin insignia, releíbles).
+
+**Arte:** 100% propio. Las ilustraciones se dibujan en vivo en canvas (`codex-book-art.js`: 18 escenas procedurales) y las
+de arena reusan las panorámicas existentes de `assets/ui/codex/arenas/` teñidas de tinta. Sin recursos de terceros.
+
+**Cómo sumar contenido:** una página de la intro = una fila en `BOOK_INTRO_PAGES`; un tema nuevo = editar el `lesson` del
+fragmento de la arena (≤ 360 caracteres por página; el test lo exige); una escena nueva = una función en `BOOK_SCENES`
+y su nombre en `BOOK_ART_NAMES`.
+
+**QA:** `node tools/items/t_codex_book_logic.js` (headless, sin navegador) y
+`node tools/items/t_codex_book.js [carpeta]` (Playwright, 844×390, con capturas).

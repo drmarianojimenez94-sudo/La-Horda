@@ -97,7 +97,7 @@ async function netJoinPublicRoom(code, btn){
   };
   // modo campaña: si todavía no eligió su guardián de regalo, primero eso y después entra
   if(typeof needsStarterChampion==="function" && needsStarterChampion()){
-    openStarterSelect(()=>{ setState("modeselect"); netRenderModeJoin(); go(); });
+    openStarterSelect(()=>{ setState("modeselect"); netRenderModeJoin(); go(); }, {joinsRoom:true});
     return;
   }
   go();
