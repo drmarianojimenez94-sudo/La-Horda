@@ -569,7 +569,8 @@ function drawArena(){
   octPath(ARENA_RADIUS);
   ctx.clip();
 
-  if(floorPattern){ ctx.fillStyle = floorPattern; ctx.fillRect(-ARENA_RADIUS*1.3,-ARENA_RADIUS*1.3,ARENA_RADIUS*2.6,ARENA_RADIUS*2.6); }
+  if(currentArena==="bosque" && typeof bsvDrawGround==="function" && bsvDrawGround()){ /* suelo de selva horneado (bos-selva.js) */ }
+  else if(floorPattern){ ctx.fillStyle = floorPattern; ctx.fillRect(-ARENA_RADIUS*1.3,-ARENA_RADIUS*1.3,ARENA_RADIUS*2.6,ARENA_RADIUS*2.6); }
   else { ctx.fillStyle="#1d130e"; ctx.fillRect(-ARENA_RADIUS*1.3,-ARENA_RADIUS*1.3,ARENA_RADIUS*2.6,ARENA_RADIUS*2.6); }
 
   if(st.rings){

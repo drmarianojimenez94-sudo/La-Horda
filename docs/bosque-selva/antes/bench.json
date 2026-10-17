@@ -1,0 +1,114 @@
+{
+ "label": "antes",
+ "note": "Chromium headless con viewport 844x390 y CPU throttling: NO es una prueba en un iPhone real.",
+ "viewport": "844x390@DPR3",
+ "secs": 10,
+ "runs": [
+  {
+   "cpuThrottle": 1,
+   "frameMs": {
+    "n": 326,
+    "avg": 30.78,
+    "p50": 33.3,
+    "p95": 50,
+    "p99": 50.1,
+    "max": 83.4
+   },
+   "fpsAvg": 32.5,
+   "renderMs": {
+    "n": 328,
+    "avg": 2.55,
+    "p50": 2.4,
+    "p95": 4.4,
+    "p99": 5.5,
+    "max": 6.1
+   },
+   "updateMs": {
+    "n": 328,
+    "avg": 1.32,
+    "p50": 1.2,
+    "p95": 2.3,
+    "p99": 4,
+    "max": 7.2
+   },
+   "enemiesAlive": 17,
+   "props": 46,
+   "solids": 20,
+   "walls": 6,
+   "inBounds": true
+  },
+  {
+   "cpuThrottle": 4,
+   "frameMs": {
+    "n": 52,
+    "avg": 203.84,
+    "p50": 183.3,
+    "p95": 400,
+    "p99": 733.3,
+    "max": 733.3
+   },
+   "fpsAvg": 4.9,
+   "renderMs": {
+    "n": 54,
+    "avg": 12.78,
+    "p50": 13,
+    "p95": 21.5,
+    "p99": 23.1,
+    "max": 23.1
+   },
+   "updateMs": {
+    "n": 54,
+    "avg": 5.64,
+    "p50": 5.7,
+    "p95": 9.6,
+    "p99": 14.4,
+    "max": 14.4
+   },
+   "enemiesAlive": 6,
+   "props": 46,
+   "solids": 20,
+   "walls": 6,
+   "inBounds": true
+  },
+  {
+   "cpuThrottle": 6,
+   "frameMs": {
+    "n": 40,
+    "avg": 247.07,
+    "p50": 233.4,
+    "p95": 366.6,
+    "p99": 366.7,
+    "max": 366.7
+   },
+   "fpsAvg": 4,
+   "renderMs": {
+    "n": 42,
+    "avg": 14.02,
+    "p50": 12.7,
+    "p95": 25.3,
+    "p99": 30,
+    "max": 30
+   },
+   "updateMs": {
+    "n": 42,
+    "avg": 12.65,
+    "p50": 7.9,
+    "p95": 57.2,
+    "p99": 83.4,
+    "max": 83.4
+   },
+   "enemiesAlive": 5,
+   "props": 46,
+   "solids": 20,
+   "walls": 6,
+   "inBounds": true
+  }
+ ],
+ "setup": {
+  "order0": "ciudad",
+  "arena": "bosque",
+  "x": 0,
+  "y": 0
+ },
+ "pageErrors": []
+}

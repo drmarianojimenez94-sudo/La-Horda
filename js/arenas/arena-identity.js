@@ -133,9 +133,10 @@ function aidBuildBosque(){
   aidProp(aidArtRuinArch(), 540, -300, {flip:true, passThrough:true, battlefield:"arch"}); // arco: se pasa por la abertura, las patas chocan aidSolids.push({x:540-52, y:-298, r:14}, {x:540+50, y:-298, r:14});
   [[-300,-420],[330,430],[-760,-60]].forEach(([x,y])=>aidProp(aidArtCelticStatue(), x, y, {solid:14, light:{r:60, rgb:"140,230,110", a:0.28, dy:-38}}));
   // arroyo con puente natural de raíces (decorativo, se cruza caminando)
-  aidDecal(aidArtStream(), 420, 470, {scale:1.5});
+  // (el arroyo con vado ahora va horneado en el suelo: js/arenas/bosque/bos-selva.js)
   for(let i=0;i<24;i++){ const s = aidFreeSpot(rnd, 160, 900, 10); if(s) aidDecal(aidArtMoss(i%6), s.x, s.y, {flip:rnd()<0.5}); }
   for(let i=0;i<10;i++){ const s = aidFreeSpot(rnd, 380, 900, 20); if(s) aidDecal(aidArtRoots(i%4), s.x, s.y, {flip:rnd()<0.5}); }
+  if(typeof bsvBuild==="function") bsvBuild(rnd); // selva: suelo con senderos y terrazas, rocas, zarzales, troncos, templo en ruinas
 }
 function aidBuildLaberinto(){
   const rnd = aidRng(222 ^ _aidSalt());

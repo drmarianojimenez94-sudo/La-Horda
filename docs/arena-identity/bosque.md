@@ -28,3 +28,7 @@ sus bloques a `js/arenas/bosque/` y registrar los mismos ganchos que usa La Fort
 - **Pruebas:** `BOS.*`, `TUT.*` y `ENV.el_fuego_quema_la_maleza_de_la_emboscada` en `tools/identity/t_identity.js`.
 - **Divergencia con el documento de diseño (anotada, no cambiada):** el documento pide "Guardián Élfico / Bestia" como jefes; el juego tiene al Jinete Sin Cabeza y a los 4 Dobladores. No se reemplazó contenido canon existente.
 - **EN DESARROLLO:** ocultamiento de los héroes en la maleza (propuesto, no implementado).
+
+## Rediseño "selva fantástica" (`js/arenas/bosque/bos-selva.js`)
+
+Suelo horneado con senderos, terrazas y arroyo; rocas, zarzales, troncos, árboles extra y templo en ruinas con colisión real y navegación verificada; los tiros rectos chocan con lo alto (árboles, menhires, rocas, columnas, muros). Detalle, capturas y mediciones: [`docs/bosque-selva/README.md`](../bosque-selva/README.md). Pruebas: `node tools/art/bosque-selva-test.js`.

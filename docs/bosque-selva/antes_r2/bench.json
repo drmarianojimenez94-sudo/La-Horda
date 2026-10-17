@@ -1,0 +1,129 @@
+{
+ "label": "antes_r2",
+ "note": "Chromium headless con viewport 844x390 y CPU throttling: NO es una prueba en un iPhone real.",
+ "viewport": "844x390@DPR3",
+ "secs": 6,
+ "runs": [
+  {
+   "cpuThrottle": 1,
+   "frameMs": {
+    "n": 47,
+    "avg": 151.06,
+    "p50": 66.6,
+    "p95": 549.9,
+    "p99": 1399.9,
+    "max": 1399.9
+   },
+   "fpsAvg": 6.6,
+   "renderMs": {
+    "n": 49,
+    "avg": 19.51,
+    "p50": 4.2,
+    "p95": 38.5,
+    "p99": 388.4,
+    "max": 388.4
+   },
+   "updateMs": {
+    "n": 49,
+    "avg": 12.29,
+    "p50": 1.5,
+    "p95": 9.8,
+    "p99": 495.9,
+    "max": 495.9
+   },
+   "enemiesAlive": 6,
+   "props": 46,
+   "solids": 20,
+   "walls": 6,
+   "inBounds": true,
+   "syncRenderMs": {
+    "avg": 6.49,
+    "p50": 1.5,
+    "p95": 29.4
+   }
+  },
+  {
+   "cpuThrottle": 4,
+   "frameMs": {
+    "n": 41,
+    "avg": 144.71,
+    "p50": 116.7,
+    "p95": 300,
+    "p99": 566.7,
+    "max": 566.7
+   },
+   "fpsAvg": 6.9,
+   "renderMs": {
+    "n": 43,
+    "avg": 10.04,
+    "p50": 6.1,
+    "p95": 17.4,
+    "p99": 88.3,
+    "max": 88.3
+   },
+   "updateMs": {
+    "n": 43,
+    "avg": 10.15,
+    "p50": 3.6,
+    "p95": 16,
+    "p99": 207.2,
+    "max": 207.2
+   },
+   "enemiesAlive": 5,
+   "props": 46,
+   "solids": 20,
+   "walls": 6,
+   "inBounds": true,
+   "syncRenderMs": {
+    "avg": 2.82,
+    "p50": 1.2,
+    "p95": 9.9
+   }
+  },
+  {
+   "cpuThrottle": 6,
+   "frameMs": {
+    "n": 38,
+    "avg": 156.57,
+    "p50": 133.4,
+    "p95": 666.7,
+    "p99": 816.7,
+    "max": 816.7
+   },
+   "fpsAvg": 6.4,
+   "renderMs": {
+    "n": 40,
+    "avg": 11.86,
+    "p50": 2.2,
+    "p95": 64.1,
+    "p99": 144,
+    "max": 144
+   },
+   "updateMs": {
+    "n": 40,
+    "avg": 7.34,
+    "p50": 3.3,
+    "p95": 29.6,
+    "p99": 40.1,
+    "max": 40.1
+   },
+   "enemiesAlive": 5,
+   "props": 46,
+   "solids": 20,
+   "walls": 6,
+   "inBounds": true,
+   "syncRenderMs": {
+    "avg": 12.18,
+    "p50": 2.9,
+    "p95": 36.4
+   }
+  }
+ ],
+ "setup": {
+  "order0": "ciudad",
+  "arena": "bosque",
+  "x": 0,
+  "y": 0
+ },
+ "pageErrors": []
+}

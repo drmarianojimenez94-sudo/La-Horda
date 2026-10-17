@@ -1,0 +1,53 @@
+{
+ "label": "despues",
+ "note": "Chromium headless con viewport 844x390 y CPU throttling: NO es una prueba en un iPhone real.",
+ "viewport": "844x390@DPR3",
+ "secs": 3,
+ "runs": [
+  {
+   "cpuThrottle": 1,
+   "frameMs": {
+    "n": 28,
+    "avg": 104.76,
+    "p50": 66.6,
+    "p95": 249.9,
+    "p99": 550.1,
+    "max": 550.1
+   },
+   "fpsAvg": 9.5,
+   "renderMs": {
+    "n": 30,
+    "avg": 13.98,
+    "p50": 4.2,
+    "p95": 57.1,
+    "p99": 175,
+    "max": 175
+   },
+   "updateMs": {
+    "n": 30,
+    "avg": 6.61,
+    "p50": 1.4,
+    "p95": 19.9,
+    "p99": 98.3,
+    "max": 98.3
+   },
+   "enemiesAlive": 3,
+   "props": 81,
+   "solids": 55,
+   "walls": 6,
+   "inBounds": true,
+   "syncRenderMs": {
+    "avg": 3.78,
+    "p50": 1.7,
+    "p95": 11.5
+   }
+  }
+ ],
+ "setup": {
+  "order0": "ciudad",
+  "arena": "bosque",
+  "x": 0,
+  "y": 0
+ },
+ "pageErrors": []
+}
