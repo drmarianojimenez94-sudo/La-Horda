@@ -143,6 +143,7 @@ const REVIVE_BTN_HOLD_MS = REVIVE_DURATION_MS;
 let reviveBtnHoldRaf = null, reviveBtnTarget = null;
 function reviveTargetValid(a){
   if(duoEnabled()) return false;
+  if(typeof lanesOn==="function" && lanesOn() && lanesNoRevive(a, player)) return false; // Coliseo: sin botón de revivir
   return !!(a && !a.alive && a!==player && player && player.alive && state==="playing" && !runEnding && !divinaMode
     && distance(player, a) < REVIVE_RANGE && !reviveBusyFor(a, player));
 }

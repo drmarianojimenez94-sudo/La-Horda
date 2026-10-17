@@ -168,7 +168,7 @@ function reviveBusyFor(a, r){
   if(netIsGuest()) return a._reviveT > 0; // el invitado solo ve lo que manda el anfitrión
   return a._reviveBy.alive && runElapsedMs - (a._revTouchAt||0) <= REVIVE_GRACE_MS;
 }
-function reviverCanAct(r){ if(duoEnabled()) return false; return !!(r && r.alive && !r.fused); }
+function reviverCanAct(r){ if(duoEnabled()) return false; if(typeof lanesOn==="function" && lanesOn() && lanesNoRevive(null, r)) return false; return !!(r && r.alive && !r.fused); }
 function cancelRevivesBy(r){ if(!r || !heroes) return; for(const a of heroes){ if(a._reviveBy===r){ a._reviveBy = null; a._reviveT = 0; } } }
 // Un cuadro de progreso de r sobre a. Devuelve true si lo terminó de revivir.
 function reviveStep(a, r, dur, dt){

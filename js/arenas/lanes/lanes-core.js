@@ -391,7 +391,7 @@ function lanesFinish(winnerTeam, why){
   showBanner(winnerTeam === -1 ? "¡EMPATE!" : (winnerTeam === (player && player.team) ? "¡VICTORIA!" : "CRISTAL CAÍDO"));
   setTimeout(()=>{ if(LN === L && typeof lanesShowResult === "function") lanesShowResult(); }, 1600);
 }
-function lanesNoRevive(a, by){ return !!LN && LN.mode === "coliseo" && !!LN.col && LN.col.phase === "fight"; }
+function lanesNoRevive(a, by){ return !!LN && LN.mode === "coliseo"; } // Coliseo competitivo: en ninguna fase se revive; solo hay reaparición por temporizador (lanesHeroTick)
 function lanesOnPlayerDeath(){ if(LN && LN.mode === "coliseo") return; /* reaparece solo (lanesHeroTick): nunca hay derrota por caer */ showBanner("Caíste · volvés en " + Math.round((LN && player && player._respawnAt ? Math.max(0, player._respawnAt - LN.t) : LANES.RESPAWN_MS) / 1000) + " s"); }
 
 ARENA_DEFS.convergencia = {
